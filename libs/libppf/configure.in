@@ -38,4 +38,4 @@ AC_C_CONST
 
 dnl Checks for library functions.
 
-AC_OUTPUT(Makefile src/Makefile ppf/Makefile test/Makefile doc/Makefile)
+AC_OUTPUT(Makefile src/Makefile ppf/Makefile test/Makefile)
