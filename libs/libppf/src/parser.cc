@@ -18,20 +18,81 @@
 */
 
 #include "ppf/parser.h"
+#include "ppf/programmablepropertyexception.h"
+
+#include <fstream>
 
 using namespace ppf;
 
 Parser::Parser()
 {
-  
+  interp = Tcl_CreateInterp();
+  if (Tcl_Init(interp) == TCL_ERROR) {
+    throw ProgrammablePropertyException("Failed to init TCL interpreter.", 3);
+  }
+  rootBundle = new Bundle(interp);  
 }
 
-BoundBundle* Parser::parse(string filename)
+BoundBundle Parser::parse(string filename)
 {
+  string line;
+  ifstream file(filename.c_str());
+  StringList bundles;
+  string property;
+  string expression;
+  Bundle* currentBundle;
   
+  while (!file.eof()) {
+    getline(file, line);
+    line = trim(line);
+    if (line.length() != 0 && line[0] != '#') {
+      parse(line, &bundles, &property, &expression);
+      currentBundle = rootBundle;
+      for (StringList::iterator name = bundles.begin();
+	   name != bundles.end(); name++) {
+	currentBundle = currentBundle->newBundle(*name);
+      }
+      currentBundle->newProperty(property, expression);
+    }
+  }
+  file.close();
+  return BoundBundle(rootBundle, 0, "");
 }
 
 Parser::~Parser()
 {
-  
+  delete rootBundle;
+}
+
+string Parser::trim(string line)
+{
+  while (line[0] == ' ' || line[0] == '\t') {
+    line = line.substr(1);
+  }
+  return line;
+}
+
+void Parser::parse(string line,
+		   StringList* bundles, string* property, string* expression)
+{
+  StringList atoms;
+  split(line, &atoms);
+  *expression = atoms.back();
+  atoms.pop_back();
+  if (atoms.back() != "=") {
+    throw
+      ProgrammablePropertyException(string("Missing '=' sign: ") + line, 2);
+  }
+  atoms.pop_back();
+  *property = atoms.back();
+  atoms.pop_back();
+  *bundles = atoms;
+}
+
+void Parser::split(string line, StringList* atoms)
+{
+  while (line.length() > 0) {
+    atoms->push_back(line.substr(0, line.find(" ")));
+    line = line.substr(line.find(" ") + 1);
+  }
 }

@@ -22,6 +22,11 @@
 
 #include "ppf/boundbundle.h"
 
+#include <string>
+#include <list>
+
+using namespace std;
+
 namespace ppf
 {
   
@@ -31,12 +36,22 @@ class Parser
   
   Parser();
 
-  BoundBundle* parse(string);
+  BoundBundle parse(string);
   
   virtual ~Parser();
 
  private:
   
+  typedef list<string> StringList;
+
+  string trim(string);
+
+  void parse(string, StringList*, string*, string*);
+  
+  void split(string, StringList*);
+
+  Tcl_Interp* interp;
+  Bundle* rootBundle;
 };
 
 }    

@@ -29,8 +29,15 @@ Bundle::Bundle(Tcl_Interp* interp)
 
 Bundle* Bundle::newBundle(string regexp)
 {
-  Bundle* bundle = new Bundle(interp);
-  bundles[regexp] = bundle;
+  Bundle* bundle;
+  if (bundles.find(regexp) == bundles.end()) {
+    bundle = new Bundle(interp);
+    bundles[regexp] = bundle;
+  }
+  else {
+    bundle = bundles[regexp];
+  }
+  return bundle;
 }
 
 Bundle* Bundle::getBundle(string name, string bindings)
