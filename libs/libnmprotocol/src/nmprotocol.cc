@@ -104,6 +104,11 @@ void NMProtocol::heartbeat()
       notifyListeners(midiMessage);
       delete midiMessage;
     }
+    else if (timeout > 0) {
+      // Resend last message, as we always expect an answer we can parse
+      midiDriver->send(sendQueue.front().getContent());
+      timeout = time(0) + TIMEOUT_INTERVAL;
+    }
 
     receiveBytes.clear();
     bitStream.setSize(0);
