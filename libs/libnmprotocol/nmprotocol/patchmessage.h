@@ -46,6 +46,8 @@ class PatchMessage : public virtual MidiMessage
     
   void append(Packet* packet);
 
+  void setSlot(int slot);
+
   void getPatch(Patch* patch);
 
   int getPid();

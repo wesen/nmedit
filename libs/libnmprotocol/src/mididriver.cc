@@ -18,6 +18,7 @@
 */
 
 #include "nmprotocol/mididriver.h"
+#include "nmprotocol/midiexception.h"
 
 #ifdef ALSA
 #include "nmprotocol/alsadriver.h"
@@ -51,6 +52,8 @@ MidiDriver* MidiDriver::createDriver(string driverName)
     return new ALSADriver();
   }
   #endif
+
+  throw MidiException(string("Driver not available: ") + driverName, 0);
 
   return 0;
 }

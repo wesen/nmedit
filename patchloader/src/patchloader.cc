@@ -11,17 +11,86 @@
 
 #include "nmpatch/patch.h"
 
-void load(string, string, string, string, string);
+void load(string, string, int, string, string, string);
+
+extern char *optarg;
+extern int optind;
 
 int main(int argc, char** argv)
 {
   try {
-    
     MidiMessage::usePDLFile("/usr/local/lib/nmprotocol/midi.pdl", 0);
     PatchMessage::usePDLFile("/usr/local/lib/nmprotocol/patch.pdl", 0);
 
+    string patchname, drivername, input, output;
+    bool error = false;
+    int slot = 0;
+
+    int option;
+    while ((option = getopt(argc, argv, "n:s:d:i:o:")) != -1) {
+
+      switch(option) {
+
+      case 'n':
+	patchname = string(optarg);
+	break;
+	
+      case 'd':
+	drivername = string(optarg);
+	break;
+
+      case 'i':
+	input = string(optarg);
+	break;
+	
+      case 'o':
+	output = string(optarg);
+	break;
+	
+      case 's':
+	sscanf(optarg, "%d", &slot);
+	if (slot < 0 || slot > 3) {
+	  error = true;
+	}
+	break;
+
+      case '?':
+	error = true;
+
+      default:
+	break;
+      }
+    }
+    
+    if (error || optind >= argc) {
+      printf("usage: %s -n patchname -s {0,1,2,3} -d mididriver -i midiinput "
+	     "-o midioutput patchfile\n\n", argv[0]);
+
+      printf("Available midi drivers:\n");
+      MidiDriver::StringList drivers = MidiDriver::getDrivers();
+      for (MidiDriver::StringList::iterator i = drivers.begin();
+	   i != drivers.end(); i++) {
+	printf(" %s\n", (*i).c_str());
+	MidiDriver* driver = MidiDriver::createDriver(*i);
+	printf("  inputs:");
+	MidiDriver::StringList inputs = driver->getMidiInputPorts();
+	for (MidiDriver::StringList::iterator j = inputs.begin();
+	     j != inputs.end(); j++) {
+	  printf(" %s", (*j).c_str());
+	}
+	printf("\n  outputs:");
+	MidiDriver::StringList outputs = driver->getMidiOutputPorts();
+	for (MidiDriver::StringList::iterator j = outputs.begin();
+	     j != outputs.end(); j++) {
+	  printf(" %s", (*j).c_str());
+	}
+	printf("\n\n");
+      }
+      exit(1);
+    }
+
     printf("Loading patch...\n");
-    load(argv[1], argv[2], "ALSA", "/dev/snd/midiC1D0", "/dev/snd/midiC1D0");
+    load(argv[optind], patchname, slot, drivername, input, output);
     printf("Done.\n");
 
   }
@@ -37,14 +106,15 @@ int main(int argc, char** argv)
   }
 }
 
-void load(string filename, string patchname,
-	  string driverName, string input, string output)
+void load(string filename, string patchname, int slot,
+	  string drivername, string input, string output)
 {
   Patch* patch = new Patch(filename);
   patch->setName(patchname);
   PatchMessage patchMessage(patch);
+  patchMessage.setSlot(slot);
   
-  MidiDriver* driver = MidiDriver::createDriver(driverName);
+  MidiDriver* driver = MidiDriver::createDriver(drivername);
   driver->connect(input, output);
   
   NMProtocol nmProtocol;
