@@ -63,6 +63,7 @@ class Module
   void removeListener(ModuleListener*);
 
   void notifyListeners(ModuleType::Parameter, int);
+  void notifyListenersPos(int, int);
 
  private:
   

@@ -30,6 +30,7 @@ class ModuleListener
   virtual ~ModuleListener() {}
 
   virtual void parameterChanged(ModuleType::Parameter, int) {}
+  virtual void positionChanged(int, int) {}
 };
 
 #endif

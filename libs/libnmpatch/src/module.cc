@@ -45,6 +45,7 @@ void Module::setPosition(int x, int y)
 {
   xpos = x;
   ypos = y;
+  notifyListenersPos(x, y);
 }
 
 int Module::getXPosition()
@@ -113,6 +114,14 @@ void Module::notifyListeners(ModuleType::Parameter parameter, int value)
   for (ModuleListenerList::iterator i = listeners.begin();
        i != listeners.end(); i++) {
     (*i)->parameterChanged(parameter, value);
+  }
+}
+
+void Module::notifyListenersPos(int x, int y)
+{
+  for (ModuleListenerList::iterator i = listeners.begin();
+       i != listeners.end(); i++) {
+    (*i)->positionChanged(x, y);
   }
 }
 
