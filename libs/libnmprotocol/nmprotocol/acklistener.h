@@ -17,50 +17,33 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef NMPROTOCOL_H
-#define NMPROTOCOL_H
+#ifndef ACKLISTENER_H
+#define ACKLISTENER_H
 
-#include <list>
-#include <utility>
-#include <time.h>
+#include "nmprotocol/nmprotocol.h"
+#include "nmprotocol/nmprotocollistener.h"
 
-#include "nmprotocol/mididriver.h"
-
-class MidiDriver;
-class NMProtocolListener;
-class MidiMessage;
-
-class NMProtocol
+class AckListener : public NMProtocolListener
 {
  public:
 
-  typedef pair<MidiDriver::Bytes, bool> SendTuple;
-  typedef list<SendTuple> MessageList;
+  AckListener(NMProtocol::MessageList* sendQueue, time_t* timeout) {
+    this->sendQueue = sendQueue;
+    this->timeout = timeout;
+  }
 
-  NMProtocol();
-  virtual ~NMProtocol();
+  virtual ~AckListener() {
+  }
   
-  void useMidiDriver(MidiDriver* midiDriver);
-
-  void addListener(NMProtocolListener* listener);
-  void removeListener(NMProtocolListener* listener);
-  void notifyListeners(MidiMessage* midiMessage);
-
-  void heartbeat();
-
-  void send(MidiMessage* midiMessage);
-  bool sendQueueIsEmpty();
+  void messageReceived(AckMessage message) {
+    sendQueue->pop_front();
+    *timeout = 0;
+  }
 
  private:
   
-  typedef list<NMProtocolListener*> ListenerList;
-
-  MidiDriver* midiDriver;
-  ListenerList listeners;
-  MessageList sendQueue;
-
-  time_t timeout;
-  static int TIMEOUT_INTERVAL;
+  NMProtocol::MessageList* sendQueue;
+  time_t* timeout;
 };
 
 #endif

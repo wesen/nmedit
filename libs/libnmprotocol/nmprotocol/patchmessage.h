@@ -49,7 +49,6 @@ class PatchMessage : public virtual MidiMessage
   void getPatch(Patch* patch);
 
   int getPid();
-  void setPid(int pid);
 
  private:
 

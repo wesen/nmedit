@@ -21,9 +21,15 @@
 #include "nmprotocol/mididriver.h"
 #include "nmprotocol/midimessage.h"
 #include "nmprotocol/patchmessage.h"
+#include "nmprotocol/midiexception.h"
+#include "nmprotocol/acklistener.h"
+
+int NMProtocol::TIMEOUT_INTERVAL = 3; /* seconds */
 
 NMProtocol::NMProtocol()
 {
+  timeout = 0;
+  addListener(new AckListener(&sendQueue, &timeout));
 }
 
 NMProtocol::~NMProtocol()
@@ -58,9 +64,22 @@ void NMProtocol::heartbeat()
   MidiDriver::Bytes receiveBytes;
   BitStream bitStream;
 
-  if (sendQueue.size() > 0) {
-    midiDriver->send(sendQueue.front());
-    sendQueue.pop_front();
+  if (timeout != 0 && time(0) > timeout) {
+    sendQueue.clear();
+    throw MidiException("Communication timed out.", timeout);
+  }
+
+  if (sendQueue.size() > 0 && timeout == 0) {
+    midiDriver->send(sendQueue.front().first);
+
+    // Set up timer for expected ack response
+    if (sendQueue.front().second) {
+      timeout = time(0) + TIMEOUT_INTERVAL;
+    }
+    else {
+      timeout = 0;
+      sendQueue.pop_front();
+    }
   }
 
   midiDriver->receive(receiveBytes);
@@ -94,6 +113,12 @@ void NMProtocol::send(MidiMessage* midiMessage)
     while(bitStream.isAvailable(8)) {
       sendBytes.push_back((unsigned char)bitStream.getInt(8));
     }
-    sendQueue.push_back(sendBytes);
+    sendQueue.push_back(SendTuple(sendBytes, midiMessage->expectsAck()));
   }
 }
+
+bool NMProtocol::sendQueueIsEmpty()
+{
+  return sendQueue.size() == 0;
+}
+ 

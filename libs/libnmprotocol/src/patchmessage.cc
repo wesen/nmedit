@@ -51,6 +51,7 @@ void PatchMessage::init()
   cc = 0x1c;
   slot = 0;
   pid = 0;
+  wantAck = true;
 
   if (patchProtocol == 0) {
     patchProtocol = new Protocol(patchPdlFile);
@@ -388,7 +389,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     // Pad. Extra bits are ignored later.
     partialPatchStream.append(0, 6);
 
-    // Generate sysex bistream with fake checksum
+    // Generate sysex bistream
     IntStream intStream;
     intStream.append(cc + first + 2*last);
     first = 0;
@@ -397,21 +398,11 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     while (partialPatchStream.isAvailable(7)) {
       intStream.append(partialPatchStream.getInt(7));
     }
-    int checksum = 0;
-    intStream.append(checksum);
+    addChecksum(&intStream);
 
+    // Generate sysex bitstream
     BitStream bitStream;
     MidiMessage::getBitStream(intStream, &bitStream);
-
-    // Calculate checksum
-    checksum = MidiMessage::calculateChecksum(bitStream);
-    intStream.setSize(intStream.getSize()-1);
-    intStream.append(checksum);
-
-    // Generate sysex bitstream with checksum
-    bitStream.setSize(0);
-    MidiMessage::getBitStream(intStream, &bitStream);
-    
     bitStreamList->push_back(bitStream);
   }
 }
@@ -704,11 +695,6 @@ void PatchMessage::getPatch(Patch* patch)
 int PatchMessage::getPid()
 {
   return pid;
-}
-
-void PatchMessage::setPid(int pid)
-{
-  this->pid = pid;
 }
 
 void PatchMessage::appendName(string name, IntStream& intStream)

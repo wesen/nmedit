@@ -53,7 +53,6 @@ int main(int argc, char** argv)
     Patch* patch = new Patch(argv[1]);
     patch->setName("Big_Phaser_Pad");
     PatchMessage patchMessage(patch);
-    patchMessage.setPid(0x42);
     MidiMessage::BitStreamList bitStreamList;
     BitStream bitStream;
     patchMessage.getBitStream(&bitStreamList);
@@ -80,7 +79,6 @@ int main(int argc, char** argv)
 
     while(1) {
       nmProtocol.heartbeat();
-      sleep(1);
     }
 
     nmProtocol.useMidiDriver(0);

@@ -52,6 +52,7 @@ void MidiMessage::usePDLFile(string filename, Tracer* tracer)
 MidiMessage::MidiMessage()
 {
   patchMessage = 0;
+  wantAck = false;
 
   if (protocol == 0) {
     protocol = new Protocol(pdlFile);
@@ -170,4 +171,23 @@ int MidiMessage::calculateChecksum(BitStream bitStream)
   checksum = checksum % 128;
 
   return checksum;
+}
+
+void MidiMessage::addChecksum(IntStream* intStream)
+{
+  int checksum = 0;
+  intStream->append(checksum);
+
+  BitStream bitStream;
+  getBitStream(*intStream, &bitStream);
+
+  checksum = calculateChecksum(bitStream);
+
+  intStream->setSize(intStream->getSize()-1);
+  intStream->append(checksum);
+}
+
+bool MidiMessage::expectsAck()
+{
+  return wantAck;
 }

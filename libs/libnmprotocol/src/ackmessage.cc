@@ -61,6 +61,9 @@ void AckMessage::getBitStream(BitStreamList* bitStreamList)
   intStream.append(pid1);
   intStream.append(type);
   intStream.append(pid2);
+  if (type == 0x36) {
+    addChecksum(&intStream);
+  }
 
   BitStream bitStream;
   MidiMessage::getBitStream(intStream, &bitStream);

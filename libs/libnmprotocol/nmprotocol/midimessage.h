@@ -53,14 +53,19 @@ class MidiMessage
 
   virtual void notifyListener(NMProtocolListener* listener) = 0;
 
+  virtual bool expectsAck();
+
  protected:
 
   MidiMessage();
   
   void getBitStream(IntStream intStream, BitStream* bitStream);
 
+  void addChecksum(IntStream* intStream);
+
   int cc;
   int slot;
+  int wantAck;
 
  private:
 

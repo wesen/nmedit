@@ -46,7 +46,6 @@ int main(int argc, char** argv)
     Patch* patch = new Patch(argv[1]);
     patch->setName("Big_Phaser_Pad");
     PatchMessage patchMessage(patch);
-    patchMessage.setPid(0x42);
     MidiMessage::BitStreamList bitStreamList;
     patchMessage.getBitStream(&bitStreamList);
 
