@@ -17,35 +17,39 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "nmprotocol/requestpatchmessage.h"
+#include "nmprotocol/getpatchlistmessage.h"
 #include "nmprotocol/nmprotocollistener.h"
 #include "pdl/packet.h"
 
-RequestPatchMessage::RequestPatchMessage()
+GetPatchListMessage::GetPatchListMessage(int section, int position)
 {
   cc = 0x17;
   slot = 0;
   pp = 0x41;
-  ssc = 0x35;
-  wantAck = true;
+  ssc = 0x14;
+  this->section = section;
+  this->position = position;
+  wantAck = false;
 }
 
-RequestPatchMessage::RequestPatchMessage(Packet* packet)
+GetPatchListMessage::GetPatchListMessage(Packet* packet)
 {
   slot = packet->getVariable("slot");
 }
 
-RequestPatchMessage::~RequestPatchMessage()
+GetPatchListMessage::~GetPatchListMessage()
 {
 }
 
-void RequestPatchMessage::getBitStream(BitStreamList* bitStreamList)
+void GetPatchListMessage::getBitStream(BitStreamList* bitStreamList)
 {
   IntStream intStream;
   intStream.append(cc);
   intStream.append(slot);
   intStream.append(pp);
   intStream.append(ssc);
+  intStream.append(section);
+  intStream.append(position);
   MidiMessage::addChecksum(&intStream);
   
   BitStream bitStream;
@@ -53,7 +57,7 @@ void RequestPatchMessage::getBitStream(BitStreamList* bitStreamList)
   bitStreamList->push_back(bitStream);
 }
 
-void RequestPatchMessage::notifyListener(NMProtocolListener* listener)
+void GetPatchListMessage::notifyListener(NMProtocolListener* listener)
 {
-  // Message is not sent by the synt
+  // Message is not sent by the synth
 }

@@ -717,19 +717,6 @@ void PatchMessage::storeEndPosition(IntStream intStream,
   sectionEndPositions->push_back(patchStream.getSize()/8-1);
 }
 
-string PatchMessage::getName(Packet* name)
-{
-  string result;
-  Packet::VariableList chars = name->getVariableList("chars");
-  for (Packet::VariableList::iterator i = chars.begin();
-       i != chars.end(); i++) {
-    if (*i != 0) {
-      result += (char)*i;
-    }
-  }
-  return result;
-}
-
 Module* PatchMessage::getModule(Patch* patch, ModuleSection::Type section,
 				int index, string context)
 {

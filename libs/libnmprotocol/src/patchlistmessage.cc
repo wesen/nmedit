@@ -17,43 +17,64 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "nmprotocol/requestpatchmessage.h"
+#include "nmprotocol/patchlistmessage.h"
 #include "nmprotocol/nmprotocollistener.h"
 #include "pdl/packet.h"
 
-RequestPatchMessage::RequestPatchMessage()
+PatchListMessage::PatchListMessage(int section, int position)
 {
   cc = 0x17;
   slot = 0;
-  pp = 0x41;
-  ssc = 0x35;
-  wantAck = true;
+  this->section = section;
+  this->position = position;
+  wantAck = false;
 }
 
-RequestPatchMessage::RequestPatchMessage(Packet* packet)
+PatchListMessage::PatchListMessage(Packet* packet)
 {
   slot = packet->getVariable("slot");
+  section =
+    packet->getPacket("data")->getPacket("patchList")->getVariable("section");
+  section =
+    packet->getPacket("data")->getPacket("patchList")->getVariable("position");
+
+  Packet* list =
+    packet->getPacket("data")->getPacket("patchList")->getPacket("names");
+  while (list != 0) {
+    names.push_back(getName(list->getPacket("name")));
+    list = list->getPacket("next");
+  }
 }
 
-RequestPatchMessage::~RequestPatchMessage()
+PatchListMessage::~PatchListMessage()
 {
 }
 
-void RequestPatchMessage::getBitStream(BitStreamList* bitStreamList)
+void PatchListMessage::getBitStream(BitStreamList* bitStreamList)
 {
   IntStream intStream;
-  intStream.append(cc);
-  intStream.append(slot);
-  intStream.append(pp);
-  intStream.append(ssc);
-  MidiMessage::addChecksum(&intStream);
   
   BitStream bitStream;
   MidiMessage::getBitStream(intStream, &bitStream);
   bitStreamList->push_back(bitStream);
 }
 
-void RequestPatchMessage::notifyListener(NMProtocolListener* listener)
+void PatchListMessage::notifyListener(NMProtocolListener* listener)
 {
-  // Message is not sent by the synt
+  listener->messageReceived(*this);
+}
+
+int PatchListMessage::getSection()
+{
+  return section;
+}
+
+int PatchListMessage::getPosition()
+{
+  return position;
+}
+
+PatchListMessage::StringList PatchListMessage::getNames()
+{
+  return names;
 }

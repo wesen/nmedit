@@ -66,7 +66,6 @@ class PatchMessage : public virtual MidiMessage
   void init();
   void appendName(string name, IntStream& patchStream);
   void storeEndPosition(IntStream intStream, PositionList* endPositions);
-  string getName(Packet* name);
   Module* getModule(Patch* patch, ModuleSection::Type section,
 		    int index, string context);};
 

@@ -33,6 +33,7 @@ class Protocol;
 class NMProtocolListener;
 class PatchMessage;
 class Tracer;
+class Packet;
 
 class MidiMessage
 {
@@ -64,6 +65,8 @@ class MidiMessage
   void getBitStream(IntStream intStream, BitStream* bitStream);
 
   void addChecksum(IntStream* intStream);
+
+  string getName(Packet* name);
 
   int cc;
   int slot;

@@ -17,28 +17,31 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef NMPROTOCOLLISTENER_H
-#define NMPROTOCOLLISTENER_H
+#ifndef GETPATCHLISTMESSAGE_H
+#define GETPATCHLISTMESSAGE_H
 
-#include "nmprotocol/iammessage.h"
-#include "nmprotocol/lightmessage.h"
-#include "nmprotocol/patchmessage.h"
-#include "nmprotocol/ackmessage.h"
-#include "nmprotocol/patchlistmessage.h"
+#include "nmprotocol/midimessage.h"
 
-class NMProtocolListener
+class Packet;
+
+class GetPatchListMessage : public virtual MidiMessage
 {
  public:
 
-  NMProtocolListener();
-  virtual ~NMProtocolListener();
+  GetPatchListMessage(int section, int position);
+  GetPatchListMessage(Packet* packet);
+  virtual ~GetPatchListMessage();
 
-  virtual void messageReceived(IAmMessage message);
-  virtual void messageReceived(LightMessage message);
-  virtual void messageReceived(PatchMessage message);
-  virtual void messageReceived(AckMessage message);
-  virtual void messageReceived(PatchListMessage message);
+  virtual void getBitStream(BitStreamList* bitStreamList);
+
+  virtual void notifyListener(NMProtocolListener* listener);
+    
+ private:
   
+  int pp;
+  int ssc;
+  int section;
+  int position;
 };
 
 #endif

@@ -24,6 +24,7 @@
 #include "nmprotocol/lightmessage.h"
 #include "nmprotocol/patchmessage.h"
 #include "nmprotocol/ackmessage.h"
+#include "nmprotocol/patchlistmessage.h"
 #include "nmprotocol/midiexception.h"
 #include "pdl/packetparser.h"
 #include "pdl/protocol.h"
@@ -103,7 +104,12 @@ MidiMessage* MidiMessage::create(BitStream* bitStream)
 
     case 0x16:
       if (checksumIsCorrect(*bitStream)) {
+	if (packet.getPacket("data")->getVariable("type") == 0x13) {
+	  return new PatchListMessage(&packet);
+	}
+	else {
 	  return new AckMessage(&packet);
+	}
       }
       break;
       
@@ -126,6 +132,12 @@ MidiMessage* MidiMessage::create(BitStream* bitStream)
 	PatchMessage* returnValue = patchMessage;
 	patchMessage = 0;
 	return returnValue;
+      }
+      break;
+
+    case 0x22:
+      if (checksumIsCorrect(*bitStream)) {
+	  return new PatchListMessage(&packet);
       }
       break;
 
@@ -196,4 +208,17 @@ bool MidiMessage::expectsAck()
 void MidiMessage::setSlot(int slot)
 {
   this->slot = slot;
+}
+
+string MidiMessage::getName(Packet* name)
+{
+  string result;
+  Packet::VariableList chars = name->getVariableList("chars");
+  for (Packet::VariableList::iterator i = chars.begin();
+       i != chars.end(); i++) {
+    if (*i != 0) {
+      result += (char)*i;
+    }
+  }
+  return result;
 }
