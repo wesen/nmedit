@@ -1,6 +1,7 @@
 CXXFLAGS = -DALSA
 INCLUDES = -I.. -I../../libpdl -I../../libnmpatch
 
+EXTRA_DIST = patch.pdl midi.pdl
 
 lib_LTLIBRARIES = libnmprotocol.la
 
@@ -8,3 +9,6 @@ libnmprotocol_la_SOURCES = alsadriver.cc iammessage.cc lightmessage.cc mididrive
 
 libnmprotocol_la_LIBADD = -L../../libpdl/src -lpdl
 libnmprotocol_la_LDFLAGS = -release 1 -no-undefined -static
+
+pdlfiledir = $(pkglibdir)
+pdlfile_DATA = patch.pdl midi.pdl
