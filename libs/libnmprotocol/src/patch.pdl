@@ -614,7 +614,7 @@ Param127 % 1 :=
 
 MorphMap % 1 :=
 	morph1:7 morph2:7 morph3:7 morph4:7 nknobs:13
-	nknob*Morph$morphs
+	nknobs*Morph$morphs
 	;
 
 Morph % 1 :=

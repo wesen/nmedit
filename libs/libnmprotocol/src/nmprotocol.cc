@@ -79,12 +79,16 @@ void NMProtocol::heartbeat()
 
 void NMProtocol::send(MidiMessage* midiMessage)
 {
-  BitStream bitStream;
-  MidiDriver::Bytes sendBytes;
+  MidiMessage::BitStreamList bitStreamList;
 
-  midiMessage->getBitStream(&bitStream);
-  while(bitStream.isAvailable(8)) {
-    sendBytes.push_back((unsigned char)bitStream.getInt(8));
+  midiMessage->getBitStream(&bitStreamList);
+  for(MidiMessage::BitStreamList::iterator i = bitStreamList.begin();
+      i != bitStreamList.end(); i++) {
+    MidiDriver::Bytes sendBytes;
+    BitStream bitStream = (*i);
+    while(bitStream.isAvailable(8)) {
+      sendBytes.push_back((unsigned char)bitStream.getInt(8));
+    }
+    sendQueue.push_back(sendBytes);
   }
-  sendQueue.push_back(sendBytes);
 }

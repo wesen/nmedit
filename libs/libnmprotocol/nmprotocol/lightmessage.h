@@ -32,7 +32,7 @@ class LightMessage : public virtual MidiMessage
   LightMessage(Packet* packet);
   virtual ~LightMessage();
 
-  virtual void getBitStream(BitStream* bitStream);
+  virtual void getBitStream(BitStreamList* bitStreamList);
 
   virtual void notifyListener(NMProtocolListener* listener);
     

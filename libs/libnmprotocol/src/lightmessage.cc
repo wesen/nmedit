@@ -87,7 +87,7 @@ LightMessage::~LightMessage()
 {
 }
 
-void LightMessage::getBitStream(BitStream* bitStream)
+void LightMessage::getBitStream(BitStreamList* bitStreamList)
 {
   IntStream intStream;
   intStream.append(cc);
@@ -99,7 +99,10 @@ void LightMessage::getBitStream(BitStream* bitStream)
     intStream.append(lights[i]);
   }
   intStream.append(checksum);
-  MidiMessage::getBitStream(&intStream, bitStream);
+
+  BitStream bitStream;
+  MidiMessage::getBitStream(intStream, &bitStream);
+  bitStreamList->push_back(bitStream);
 }
 
 void LightMessage::notifyListener(NMProtocolListener* listener)

@@ -18,9 +18,21 @@ public:
   Listener() {}
   virtual ~Listener() {}
 
-  void messageReceived(PatchMessage message) {
-    Patch* patch = message.getPatch();
-    printf("%s", patch->write().c_str());    
+  void messageReceived(IAmMessage message) {
+    printf("IAmMessage: ");
+    printf("Sender: %d ", message.getSender());
+    printf("VersionHigh: %d ", message.getVersionHigh());
+    printf("VersionLow: %d \n", message.getVersionLow());
+  }
+
+  void messageReceived(LightMessage message) {
+    printf("LightMessage: ");
+    printf("pid: %d ", message.getPid());
+    printf("StartIndex: %d ", message.getStartIndex());
+    for (int i = 0; i < 20; i++) {
+      printf("%d ", message.getLightStatus(i));
+    }
+    printf("\n");
   }
 };
 
@@ -49,12 +61,23 @@ int main(int argc, char** argv)
       printf("\n");
     }
 
-    printf("\nParse patch\n\n");
-    MidiMessage* midiMessage = MidiMessage::create(&bitStream);
-    if (midiMessage != 0) {
-      midiMessage->notifyListener(new Listener());
-      delete midiMessage;
+    MidiDriver* driver =
+      MidiDriver::createDriver(*MidiDriver::getDrivers().begin());
+    driver->connect(*driver->getMidiInputPorts().begin(),
+		    *driver->getMidiOutputPorts().begin());
+
+    NMProtocol nmProtocol;
+    nmProtocol.addListener(new Listener());
+    nmProtocol.useMidiDriver(driver);
+
+    nmProtocol.send(&patchMessage);
+
+    while(1) {
+      nmProtocol.heartbeat();
     }
+
+    nmProtocol.useMidiDriver(0);
+    driver->disconnect();
   }
   catch (MidiException& exception) {
     printf("Exception: %s %d\n",

@@ -38,6 +38,11 @@ int IntStream::getPosition()
   return position;
 }
 
+int IntStream::getSize()
+{
+  return ints.size();
+}
+
 void IntStream::setPosition(int position)
 {
   this->position = position;

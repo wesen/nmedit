@@ -39,7 +39,7 @@ class IAmMessage : public virtual MidiMessage
 
   void setVersion(int high, int low);
 
-  virtual void getBitStream(BitStream* bitStream);
+  virtual void getBitStream(BitStreamList* bitStreamList);
 
   virtual void notifyListener(NMProtocolListener* listener);
     

@@ -24,6 +24,7 @@
 #include "pdl/intstream.h"
 
 #include <string>
+#include <list>
 
 using namespace std;
 
@@ -35,13 +36,18 @@ class MidiMessage
 {
  public:
 
+  typedef list<BitStream> BitStreamList;
+
   static void usePDLFile(string filename);
+
+  static int calculateChecksum(BitStream bitStream);
+  static bool checksumIsCorrect(BitStream bitStream);
 
   static MidiMessage* create(BitStream* bitStream);
 
   virtual ~MidiMessage();
 
-  virtual void getBitStream(BitStream* bitStream) = 0;
+  virtual void getBitStream(BitStreamList* bitStreamList) = 0;
 
   virtual void notifyListener(NMProtocolListener* listener) = 0;
 
@@ -49,14 +55,12 @@ class MidiMessage
 
   MidiMessage();
   
-  void getBitStream(IntStream* intStream, BitStream* bitStream);
+  void getBitStream(IntStream intStream, BitStream* bitStream);
 
   int cc;
   int slot;
 
  private:
-  
-  static bool checksumIsCorrect(BitStream* bitStream);
   
   static Protocol* protocol;
   static PacketParser* packetParser;

@@ -38,15 +38,19 @@ class PatchMessage : public virtual MidiMessage
   PatchMessage(Packet* packet);
   virtual ~PatchMessage();
 
-  virtual void getBitStream(BitStream* bitStream);
+  virtual void getBitStream(BitStreamList* bitStreamList);
 
   virtual void notifyListener(NMProtocolListener* listener);
     
   Patch* getPatch();
 
+  int getPid();
+  void setPid(int pid);
+
  private:
 
   Patch* patch;
+  int pid;
   int checksum;
 
   static Protocol* patchProtocol;

@@ -124,6 +124,7 @@ void pdlerror(char* s) {
 bool init_pdl_parser(const char* filename, Protocol* p)
 {
   protocol = p;
+  pdlinstream.close();
   pdlinstream.open(filename);
   istream pdlin(pdlinstream.rdbuf());
 

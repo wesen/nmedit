@@ -44,11 +44,11 @@ MidiMessage::~MidiMessage()
 {
 }
 
-void MidiMessage::getBitStream(IntStream* intStream, BitStream* bitStream)
+void MidiMessage::getBitStream(IntStream intStream, BitStream* bitStream)
 {
-  bool success = packetParser->generate(intStream, bitStream);
+  bool success = packetParser->generate(&intStream, bitStream);
 
-  if (!success || intStream->isAvailable(1)) {
+  if (!success || intStream.isAvailable(1)) {
     throw MidiException("Information mismatch in generate.", 0);
   }
 }
@@ -67,7 +67,7 @@ MidiMessage* MidiMessage::create(BitStream* bitStream)
 
     case 0x14:
       bitStream->setPosition(0);
-      if (checksumIsCorrect(bitStream)) {
+      if (checksumIsCorrect(*bitStream)) {
 	switch (packet.getPacket("data")->getVariable("sc")) {
 	  
 	case 0x39:
@@ -97,16 +97,12 @@ MidiMessage* MidiMessage::create(BitStream* bitStream)
   return 0;
 }
 
-bool MidiMessage::checksumIsCorrect(BitStream* bitStream)
+bool MidiMessage::checksumIsCorrect(BitStream bitStream)
 {
-  int checksum = 0;
+  int checksum = calculateChecksum(bitStream);
 
-  while (bitStream->isAvailable(24)) {
-    checksum += bitStream->getInt(8);
-  }
-  checksum = checksum % 128;
-
-  int messageChecksum = bitStream->getInt(8);
+  bitStream.setPosition(bitStream.getSize()-16);
+  int messageChecksum = bitStream.getInt(8);
   
   if (messageChecksum == checksum) {
     return true;
@@ -114,4 +110,17 @@ bool MidiMessage::checksumIsCorrect(BitStream* bitStream)
   
   printf("Checksum mismatch %d != %d.\n", messageChecksum, checksum);
   return false;
+}
+
+int MidiMessage::calculateChecksum(BitStream bitStream)
+{
+  int checksum = 0;
+  bitStream.setPosition(0);
+  
+  while (bitStream.isAvailable(24)) {
+    checksum += bitStream.getInt(8);
+  }
+  checksum = checksum % 128;
+
+  return checksum;
 }

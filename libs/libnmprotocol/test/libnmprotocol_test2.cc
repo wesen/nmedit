@@ -17,6 +17,7 @@ int main(int argc, char** argv)
 {
   try {
 
+    MidiMessage::BitStreamList bitStreamList;
     BitStream bitStream;
     MidiMessage::usePDLFile("../src/midi.pdl");
 
@@ -24,7 +25,8 @@ int main(int argc, char** argv)
     IAmMessage iamMessage;
     iamMessage.setVersion(3,3);
     bitStream.setSize(0);
-    iamMessage.getBitStream(&bitStream);
+    iamMessage.getBitStream(&bitStreamList);
+    bitStream = bitStreamList.front();
     printBitStream(bitStream);
     
   }

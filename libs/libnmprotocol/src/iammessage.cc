@@ -49,7 +49,7 @@ void IAmMessage::setVersion(int high, int low)
   versionLow = low;
 }
 
-void IAmMessage::getBitStream(BitStream* bitStream)
+void IAmMessage::getBitStream(BitStreamList* bitStreamList)
 {
   IntStream intStream;
   intStream.append(cc);
@@ -57,7 +57,10 @@ void IAmMessage::getBitStream(BitStream* bitStream)
   intStream.append(sender);
   intStream.append(versionHigh);
   intStream.append(versionLow);
-  MidiMessage::getBitStream(&intStream, bitStream);
+
+  BitStream bitStream;
+  MidiMessage::getBitStream(intStream, &bitStream);
+  bitStreamList->push_back(bitStream);
 }
 
 void IAmMessage::notifyListener(NMProtocolListener* listener)

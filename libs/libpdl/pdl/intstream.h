@@ -35,6 +35,7 @@ class IntStream
   void append(int data);
 
   int getPosition();
+  int getSize();
 
   void setPosition(int position);
   void setSize(int size);
