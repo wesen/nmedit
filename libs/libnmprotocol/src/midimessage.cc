@@ -25,6 +25,8 @@
 #include "nmprotocol/patchmessage.h"
 #include "nmprotocol/ackmessage.h"
 #include "nmprotocol/patchlistmessage.h"
+#include "nmprotocol/newpatchinslotmessage.h"
+#include "nmprotocol/voicecountmessage.h"
 #include "nmprotocol/midiexception.h"
 #include "pdl/packetparser.h"
 #include "pdl/protocol.h"
@@ -91,6 +93,14 @@ MidiMessage* MidiMessage::create(BitStream* bitStream)
     case 0x14:
       if (checksumIsCorrect(*bitStream)) {
 	switch (packet.getPacket("data")->getVariable("sc")) {
+	  
+	case 0x05:
+	  return new VoiceCountMessage(&packet);
+	  break;
+	  
+	case 0x38:
+	  return new NewPatchInSlotMessage(&packet);
+	  break;
 	  
 	case 0x39:
 	  return new LightMessage(&packet);
@@ -214,6 +224,11 @@ bool MidiMessage::isReply()
 void MidiMessage::setSlot(int slot)
 {
   this->slot = slot;
+}
+
+int MidiMessage::getSlot()
+{
+  return slot;
 }
 
 string MidiMessage::getName(Packet* name)

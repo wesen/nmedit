@@ -17,32 +17,42 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef NMPROTOCOLLISTENER_H
-#define NMPROTOCOLLISTENER_H
-
-#include "nmprotocol/iammessage.h"
-#include "nmprotocol/lightmessage.h"
-#include "nmprotocol/patchmessage.h"
-#include "nmprotocol/ackmessage.h"
-#include "nmprotocol/patchlistmessage.h"
 #include "nmprotocol/newpatchinslotmessage.h"
-#include "nmprotocol/voicecountmessage.h"
+#include "nmprotocol/nmprotocollistener.h"
+#include "nmprotocol/midiexception.h"
+#include "pdl/packet.h"
 
-class NMProtocolListener
+NewPatchInSlotMessage::NewPatchInSlotMessage()
 {
- public:
+  cc = 0x14;
+  slot = 0;
+  pid = 0;
+}
 
-  NMProtocolListener();
-  virtual ~NMProtocolListener();
-
-  virtual void messageReceived(IAmMessage message);
-  virtual void messageReceived(LightMessage message);
-  virtual void messageReceived(PatchMessage message);
-  virtual void messageReceived(AckMessage message);
-  virtual void messageReceived(PatchListMessage message);
-  virtual void messageReceived(NewPatchInSlotMessage message);
-  virtual void messageReceived(VoiceCountMessage message);
+NewPatchInSlotMessage::NewPatchInSlotMessage(Packet* packet)
+{
+  cc = packet->getVariable("cc");
+  slot = packet->getVariable("slot");
+  pid = packet->getPacket("data")->getVariable("pid");
   
-};
+}
 
-#endif
+NewPatchInSlotMessage::~NewPatchInSlotMessage()
+{
+}
+
+void NewPatchInSlotMessage::getBitStream(BitStreamList* bitStreamList)
+{
+  throw
+    MidiException("NewPatchInSlotMessage::getBitStream not implemented.", 0);
+}
+
+void NewPatchInSlotMessage::notifyListener(NMProtocolListener* listener)
+{
+  listener->messageReceived(*this);
+}
+
+int NewPatchInSlotMessage::getPid()
+{
+  return pid;
+}

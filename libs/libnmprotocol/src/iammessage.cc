@@ -40,6 +40,9 @@ IAmMessage::IAmMessage(Packet* packet)
   sender = Sender(packet->getPacket("data")->getVariable("sender"));
   versionHigh = packet->getPacket("data")->getVariable("versionHigh");
   versionLow = packet->getPacket("data")->getVariable("versionLow");
+
+  expectsreply = true;
+  isreply = true;
 }
 
 IAmMessage::~IAmMessage()

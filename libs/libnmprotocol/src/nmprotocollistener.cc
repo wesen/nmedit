@@ -47,3 +47,11 @@ void NMProtocolListener::messageReceived(PatchListMessage message)
 {
 }
 
+void NMProtocolListener::messageReceived(NewPatchInSlotMessage message)
+{
+}
+
+void NMProtocolListener::messageReceived(VoiceCountMessage message)
+{
+}
+

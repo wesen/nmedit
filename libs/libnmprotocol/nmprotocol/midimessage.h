@@ -58,6 +58,7 @@ class MidiMessage
   virtual bool isReply();
 
   void setSlot(int slot);
+  int getSlot();
 
  protected:
 

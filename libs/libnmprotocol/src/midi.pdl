@@ -47,7 +47,7 @@ NMInfo % 1 :=
 	#sc=0x05 => VoiceCount$data
 	#sc=0x07 => SlotSelectionChanged$data
 	#sc=0x09 => SlotSelectButtonPressed$data
-	#sc=0x38 => PatchSelect$data
+	#sc=0x38 => NewPatchInSlot$data
 	#sc=0x39 => Lights$data
 	#sc=0x40 => VUMeters$data
 	#sc=0x41 => KnobChange$data
@@ -55,17 +55,19 @@ NMInfo % 1 :=
 	;
 
 VoiceCount % 1 :=
-	0:1 c1:7 0:1 c2:7 0:1 c3:7 0:1 c4:7
+	0:1 c0:7 0:1 c1:7 0:1 c2:7 0:1 c3:7
 	;
 
 SlotSelectionChanged % 1 :=
+	0:1 unknown:7
 	;
 
 SlotSelectButtonPressed % 1 :=
+	0:1 unknown:7
 	;
 
-PatchSelect % 1 :=
-	0:1 unknown:7 0:1 pid:7
+NewPatchInSlot % 1 :=
+	0:1 slot:7 0:1 pid:7
 	;
 
 Lights % 1 :=

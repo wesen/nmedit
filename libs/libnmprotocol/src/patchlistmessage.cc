@@ -19,6 +19,7 @@
 
 #include "nmprotocol/patchlistmessage.h"
 #include "nmprotocol/nmprotocollistener.h"
+#include "nmprotocol/midiexception.h"
 #include "pdl/packet.h"
 
 const int PatchListMessage::END_OF_SECTION = 3;
@@ -72,11 +73,7 @@ PatchListMessage::~PatchListMessage()
 
 void PatchListMessage::getBitStream(BitStreamList* bitStreamList)
 {
-  IntStream intStream;
-  
-  BitStream bitStream;
-  MidiMessage::getBitStream(intStream, &bitStream);
-  bitStreamList->push_back(bitStream);
+  throw MidiException("PatchListMessage::getBitStream not implemented.", 0);
 }
 
 void PatchListMessage::notifyListener(NMProtocolListener* listener)

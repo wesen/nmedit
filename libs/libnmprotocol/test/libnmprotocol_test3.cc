@@ -32,6 +32,19 @@ public:
     }
     printf("\n");
   }
+
+  void messageReceived(NewPatchInSlotMessage message) {
+    printf("New patch in slot %d, pid: %d\n",
+	   message.getSlot(), message.getPid());
+  }
+
+  void messageReceived(VoiceCountMessage message) {
+    printf("VoiceCountMessage: %d %d %d %d\n",
+	   message.getVoiceCount(0),
+	   message.getVoiceCount(1),
+	   message.getVoiceCount(2),
+	   message.getVoiceCount(3));
+  }
 };
 
 int main(int argc, char** argv)
