@@ -24,12 +24,24 @@
 #include <iostream>
 #include <stdio.h>
 
-#define YYSTYPE std::string
+using namespace std;
+
+#if ! defined(YYSTYPE)
+#define YYSTYPE string
+#endif
 
 #if ! defined(yyFlexLexer)
 #define yyFlexLexer pdlFlexLexer
 #include <FlexLexer.h>
 #endif
+
+#if ! defined(yywrap)
+#define yywrap pdlwrap
+#endif
+
+extern "C" {
+  int pdlwrap(void);
+}
 
 class PDLLexer : public pdlFlexLexer {
 public:

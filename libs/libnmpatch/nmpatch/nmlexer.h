@@ -23,12 +23,24 @@
 #include <string>
 #include <iostream>
 
-#define YYSTYPE std::string
+using namespace std;
+
+#if ! defined(YYSTYPE)
+#define YYSTYPE string
+#endif
 
 #if ! defined(yyFlexLexer)
 #define yyFlexLexer nmFlexLexer
 #include <FlexLexer.h>
 #endif
+
+#if ! defined(yywrap)
+#define yywrap nmwrap
+#endif
+
+extern "C" {
+  int nmwrap(void);
+}
 
 class NMLexer : public nmFlexLexer {
 public:
