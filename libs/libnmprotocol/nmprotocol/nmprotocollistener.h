@@ -31,6 +31,7 @@
 #include "nmprotocol/slotsselectedmessage.h"
 #include "nmprotocol/slotactivatedmessage.h"
 #include "nmprotocol/requestpatchmessage.h"
+#include "nmprotocol/parametermessage.h"
 
 class NMProtocolListener
 {
@@ -50,6 +51,7 @@ class NMProtocolListener
   virtual void messageReceived(SlotsSelectedMessage message) {}
   virtual void messageReceived(SlotActivatedMessage message) {}
   virtual void messageReceived(RequestPatchMessage message) {}
+  virtual void messageReceived(ParameterMessage message) {}
   
 };
 

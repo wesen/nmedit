@@ -59,6 +59,16 @@ public:
     printf("SlotActivatedMessage: %d\n",
 	   message.getActiveSlot());
   }
+
+  void messageReceived(ParameterMessage message)
+  {
+    printf("ParameterMessage: pid: %d section: %d module: %d parameter: %d value: %d\n",
+	   message.getPid(),
+	   message.getSection(),
+	   message.getModule(),
+	   message.getParameter(),
+	   message.getValue());
+  }
 };
 
 int main(int argc, char** argv)

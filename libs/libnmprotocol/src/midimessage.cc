@@ -29,6 +29,7 @@
 #include "nmprotocol/voicecountmessage.h"
 #include "nmprotocol/slotsselectedmessage.h"
 #include "nmprotocol/slotactivatedmessage.h"
+#include "nmprotocol/parametermessage.h"
 #include "nmprotocol/midiexception.h"
 #include "pdl/packetparser.h"
 #include "pdl/protocol.h"
@@ -103,6 +104,9 @@ MidiMessage* MidiMessage::create(BitStream* bitStream)
       }
       if (packet.contains("Lights")) {
 	return new LightMessage(&packet);
+      }
+      if (packet.contains("KnobChange")) {
+	return new ParameterMessage(&packet);
       }
 
       if (packet.contains("PatchListResponse")) {

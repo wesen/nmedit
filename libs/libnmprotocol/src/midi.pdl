@@ -24,7 +24,7 @@ IAmUnknown % 1 :=
 	;
 
 Parameter % 1 :=
-	0:1 sc:7
+	0:1 pid:7 0:1 sc:7
 	#sc=0x2f => ParameterSelect$data
 	#sc=0x40 => ParameterChange$data
 	#sc=0x43 => MorphRangeChange$data
@@ -49,8 +49,8 @@ NMInfo % 1 :=
 	#sc=0x09 => SlotActivated$data
 	#sc=0x38 => NewPatchInSlot$data
 	#sc=0x39 => Lights$data
-	#sc=0x40 => VUMeters$data
-	#sc=0x41 => KnobChange$data
+	#sc=0x40 => KnobChange$data
+	#sc=0x41 => VUMeters$data
 	0:1 checksum:7
 	;
 
