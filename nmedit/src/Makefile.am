@@ -18,5 +18,5 @@ LDFLAGS = \
 
 bin_PROGRAMS = nmedit
 
-nmedit_SOURCES = main.cc synth.cc
+nmedit_SOURCES = main.cc synth.cc mainwindow.cc synthview.cc sectionview.cc moduleview.cc
 nmedit_LDADD =-lpdl -lnmprotocol -lnmpatch -lppf -ltcl8.4
