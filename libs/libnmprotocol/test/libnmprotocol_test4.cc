@@ -6,9 +6,19 @@
 #include "nmprotocol/midiexception.h"
 #include "nmprotocol/iammessage.h"
 #include "pdl/pdlexception.h"
+#include "pdl/tracer.h"
 #include "nmprotocol/nmprotocollistener.h"
 #include "nmprotocol/nmprotocol.h"
 #include "nmpatch/patch.h"
+
+class TestTracer : public virtual Tracer
+{
+public:
+  void trace(string message)
+  {
+    printf("TRACE: %s\n", message.c_str());
+  }
+};
 
 class Listener : public virtual NMProtocolListener
 {
@@ -29,8 +39,8 @@ int main(int argc, char** argv)
 {
   try {
     
-    MidiMessage::usePDLFile("../src/midi.pdl");
-    PatchMessage::usePDLFile("../src/patch.pdl");
+    MidiMessage::usePDLFile("../src/midi.pdl", new TestTracer());
+    PatchMessage::usePDLFile("../src/patch.pdl", new TestTracer());
 
     printf("\nLoad patch\n\n");
     Patch* patch = new Patch(argv[1]);

@@ -27,12 +27,13 @@ using namespace std;
 
 class Patch;
 class Protocol;
+class Tracer;
 
 class PatchMessage : public virtual MidiMessage
 {
  public:
 
-  static void usePDLFile(string filename);
+  static void usePDLFile(string filename, Tracer* tracer);
 
   PatchMessage(Patch* patch);
   PatchMessage();

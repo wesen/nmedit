@@ -32,6 +32,7 @@ class PacketParser;
 class Protocol;
 class NMProtocolListener;
 class PatchMessage;
+class Tracer;
 
 class MidiMessage
 {
@@ -39,7 +40,7 @@ class MidiMessage
 
   typedef list<BitStream> BitStreamList;
 
-  static void usePDLFile(string filename);
+  static void usePDLFile(string filename, Tracer* tracer);
 
   static int calculateChecksum(BitStream bitStream);
   static bool checksumIsCorrect(BitStream bitStream);

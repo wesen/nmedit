@@ -36,22 +36,13 @@ string PatchMessage::patchPdlFile = string(LIBPATH) + "/patch.pdl";
 Protocol* PatchMessage::patchProtocol = 0;
 PacketParser* PatchMessage::patchParser = 0;
 
-class TestTracer : public virtual Tracer
-{
-public:
-  void trace(string message)
-  {
-    printf("TRACE: %s\n", message.c_str());
-  }
-};
-
-void PatchMessage::usePDLFile(string filename)
+void PatchMessage::usePDLFile(string filename, Tracer* tracer)
 {
   patchPdlFile = filename;
-  //delete patchProtocol;
+  delete patchProtocol;
   patchProtocol = new Protocol(patchPdlFile);
   patchParser = patchProtocol->getPacketParser("Patch");
-  patchProtocol->useTracer(new TestTracer());
+  patchProtocol->useTracer(tracer);
 }
 
 void PatchMessage::init()
@@ -60,6 +51,11 @@ void PatchMessage::init()
   cc = 0x1c;
   slot = 0;
   pid = 0;
+
+  if (patchProtocol == 0) {
+    patchProtocol = new Protocol(patchPdlFile);
+    patchParser = patchProtocol->getPacketParser("Patch");
+  }
 }
 
 PatchMessage::PatchMessage(Patch* patch)

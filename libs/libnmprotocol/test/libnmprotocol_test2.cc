@@ -19,7 +19,7 @@ int main(int argc, char** argv)
 
     MidiMessage::BitStreamList bitStreamList;
     BitStream bitStream;
-    MidiMessage::usePDLFile("../src/midi.pdl");
+    MidiMessage::usePDLFile("../src/midi.pdl", 0);
 
     printf("IAmMessage\n");
     IAmMessage iamMessage;

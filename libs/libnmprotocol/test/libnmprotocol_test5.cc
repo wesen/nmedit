@@ -39,8 +39,8 @@ int main(int argc, char** argv)
 {
   try {
     
-    MidiMessage::usePDLFile("../src/midi.pdl");
-    PatchMessage::usePDLFile("../src/patch.pdl");
+    MidiMessage::usePDLFile("../src/midi.pdl", 0);
+    PatchMessage::usePDLFile("../src/patch.pdl", 0);
 
     printf("\nLoad patch\n\n");
     Patch* patch = new Patch(argv[1]);

@@ -39,27 +39,23 @@ PacketParser* MidiMessage::packetParser = 0;
 
 PatchMessage* MidiMessage::patchMessage = 0;
 
-class TestTracer : public virtual Tracer
-{
-public:
-  void trace(string message)
-  {
-    printf("TRACE: %s\n", message.c_str());
-  }
-};
-
-void MidiMessage::usePDLFile(string filename)
+void MidiMessage::usePDLFile(string filename, Tracer* tracer)
 {
   pdlFile = filename;
-  //delete protocol;
+  delete protocol;
   protocol = new Protocol(pdlFile);
   packetParser = protocol->getPacketParser("Sysex");
-  //protocol->useTracer(new TestTracer());
+  protocol->useTracer(tracer);
 }
 
 MidiMessage::MidiMessage()
 {
   patchMessage = 0;
+
+  if (protocol == 0) {
+    protocol = new Protocol(pdlFile);
+    packetParser = protocol->getPacketParser("Sysex");
+  }
 }
 
 MidiMessage::~MidiMessage()

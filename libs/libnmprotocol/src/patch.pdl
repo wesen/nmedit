@@ -516,7 +516,7 @@ Param95 % 1 :=
 	;
 	
 Param96 % 1 :=
-	pitch:7 pitchFine:7 kbt:1 mute:1 timbre:7 pitchMod1:7 pitchMod2:7
+	pitch:7 pitchFine:7 kbt:7 mute:1 timbre:7 pitchMod1:7 pitchMod2:7
 	;
 	
 Param97 % 1 :=
@@ -566,7 +566,7 @@ Param106 % 1 :=
 	
 Param107 % 1 :=
 	freqCoarse:7 freqFine:7 spectralShape:7 partials:1 pitchMod1:7
-	pitchMod2:7 fma:7 spectralShapeMod:7 kbt:1 mute:1
+	pitchMod2:7 fma:7 spectralShapeMod:7 kbt:7 mute:1
 	;
 	
 Param108 % 1 :=

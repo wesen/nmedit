@@ -38,7 +38,7 @@ int main(int argc, char** argv)
 {
   try {
     
-    MidiMessage::usePDLFile("../src/midi.pdl");
+    MidiMessage::usePDLFile("../src/midi.pdl", 0);
 
     MidiDriver* driver =
       MidiDriver::createDriver(*MidiDriver::getDrivers().begin());
