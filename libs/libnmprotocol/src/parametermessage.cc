@@ -87,9 +87,9 @@ void ParameterMessage::notifyListener(NMProtocolListener* listener)
   listener->messageReceived(*this);
 }
 
-int ParameterMessage::getSection()
+ModuleSection::Type ParameterMessage::getSection()
 {
-  return section;
+  return (ModuleSection::Type)section;
 }
 
 int ParameterMessage::getModule()
@@ -97,9 +97,9 @@ int ParameterMessage::getModule()
   return module;
 }
 
-int ParameterMessage::getParameter()
+ModuleType::Parameter ParameterMessage::getParameter()
 {
-  return parameter;
+  return (ModuleType::Parameter)parameter;
 }
 
 int ParameterMessage::getValue()

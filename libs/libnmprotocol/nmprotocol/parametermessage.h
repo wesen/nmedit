@@ -21,6 +21,8 @@
 #define PARAMETERMESSAGE_H
 
 #include "nmprotocol/midimessage.h"
+#include "nmpatch/modulesection.h"
+#include "nmpatch/moduletype.h"
 
 class Packet;
 
@@ -37,9 +39,9 @@ class ParameterMessage : public virtual MidiMessage
 
   virtual void notifyListener(NMProtocolListener* listener);
     
-  int getSection();
+  ModuleSection::Type getSection();
   int getModule();
-  int getParameter();
+  ModuleType::Parameter getParameter();
   int getValue();
   int getPid();
 

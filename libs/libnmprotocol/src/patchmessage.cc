@@ -17,8 +17,6 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include <stdio.h>
-
 #include "nmprotocol/patchmessage.h"
 #include "nmprotocol/nmprotocollistener.h"
 #include "nmprotocol/midiexception.h"
@@ -555,7 +553,6 @@ void PatchMessage::getPatch(Patch* patch)
 		 p != parameters.end(); p++, n++) {
 	      module->setParameter((ModuleType::Parameter)n, (*p));
 	    }
-	    printf("\n");
 	  }
 	}
 	break;
