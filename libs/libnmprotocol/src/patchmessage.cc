@@ -21,31 +21,67 @@
 
 #include "nmprotocol/patchmessage.h"
 #include "nmprotocol/nmprotocollistener.h"
+#include "nmprotocol/midiexception.h"
 #include "pdl/protocol.h"
 #include "pdl/packetparser.h"
 #include "nmpatch/patch.h"
 #include "nmpatch/modulesection.h"
 
-Protocol* PatchMessage::patchProtocol;
-PacketParser* PatchMessage::patchParser;
+#ifndef LIBPATH
+#define LIBPATH ""
+#endif
+
+string PatchMessage::patchPdlFile = string(LIBPATH) + "/patch.pdl";
+Protocol* PatchMessage::patchProtocol = 0;
+PacketParser* PatchMessage::patchParser = 0;
 
 void PatchMessage::usePDLFile(string filename)
 {
-  patchProtocol = new Protocol(filename);
-  patchParser = patchProtocol->getPacketParser("Patch");
+  patchPdlFile = filename;
+  if (patchProtocol != 0) {
+    delete patchProtocol;
+    patchProtocol = 0;
+  }
+}
+
+void PatchMessage::init()
+{
+  patch = 0;
+  cc = 0x1c;
+  slot = 0;
+  pid = 0;
+
+  if (patchProtocol == 0) {
+    patchProtocol = new Protocol(patchPdlFile);
+    patchParser = patchProtocol->getPacketParser("Patch");
+  }
 }
 
 PatchMessage::PatchMessage(Patch* patch)
 {
+  init();
   this->patch = patch;
-  cc = 0x1c;
-  slot = 0;
-  pid = 0;
 }
 
-PatchMessage::PatchMessage(Packet* packet)
+PatchMessage::PatchMessage()
 {
-  patch = 0;
+  init();
+}
+
+void PatchMessage::append(Packet* packet)
+{
+  slot = packet->getVariable("slot");
+  pid = packet->getPacket("data")->getVariable("pid");
+  
+  packet = packet->getPacket("data")->getPacket("next");
+  while (packet != 0) {
+    patchStream.append(packet->getVariable("data"), 7);
+    packet = packet->getPacket("next");
+  }
+  // Remove checksum
+  patchStream.setSize(patchStream.getSize()-7);
+  // Remove padding
+  patchStream.setSize((patchStream.getSize()/8)*8);
 }
 
 PatchMessage::~PatchMessage()
@@ -57,9 +93,12 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
   IntStream intStream;
 
   // Create patch bitstream
+
+  // Name section
   intStream.append(55);
   appendName(patch->getName(), intStream);
   
+  // Header section
   intStream.append(33);
   intStream.append(patch->getKeyboardRange(Patch::MIN));
   intStream.append(patch->getKeyboardRange(Patch::MAX));
@@ -87,6 +126,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
   intStream.append(0xf);
   intStream.append(0);
 
+  // Module section
   for (int s = ModuleSection::POLY; s >= ModuleSection::COMMON; s--) {
     intStream.append(74);
     
@@ -107,6 +147,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     }
   }
 
+  // Note section
   intStream.append(105);
   Patch::NoteList midiNotes = patch->getMIDINotes();
   Patch::NoteList::iterator nl = midiNotes.begin();
@@ -121,6 +162,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     intStream.append((*nl)->getReleaseVelocity());
   }
   
+  // Cable section
   for (int s = ModuleSection::POLY; s >= ModuleSection::COMMON; s--) {
     intStream.append(82);
     
@@ -143,6 +185,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     }
   }
 
+  // Parameter section
   for (int s = ModuleSection::POLY; s >= ModuleSection::COMMON; s--) {
     intStream.append(77);
     
@@ -174,6 +217,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     }
   }  
 
+  // Morph section
   intStream.append(101);
   int nknobs = 0;
   for (int i = Morph::MORPH1; i <= Morph::MORPH4; i++) {
@@ -199,6 +243,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     }
   }
 
+  // Knob section
   intStream.append(98);
   for (int i = 0; i <= 22; i++) {
     bool found = false;
@@ -224,6 +269,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     }
   }
 
+  // Control section
   intStream.append(96);
   Patch::CtrlMapList ctrlMaps = patch->getCtrlMaps();
   intStream.append(ctrlMaps.size());
@@ -241,6 +287,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     intStream.append((*k)->getParameter());
   }
 
+  // Custom section
   for (int s = ModuleSection::POLY; s >= ModuleSection::COMMON; s--) {
     intStream.append(91);
 
@@ -272,6 +319,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     }
   }
 
+  // Module name section
   for (int s = ModuleSection::POLY; s >= ModuleSection::COMMON; s--) {
     intStream.append(90);
 
@@ -347,9 +395,109 @@ void PatchMessage::notifyListener(NMProtocolListener* listener)
   listener->messageReceived(*this);
 }
 
-Patch* PatchMessage::getPatch()
+void PatchMessage::getPatch(Patch* patch)
 {
-  return patch;
+  Packet* packet = new Packet();
+  if (patchParser->parse(&patchStream, packet)) {
+    while (packet != 0) {
+      Packet* section = packet->getPacket("section");
+      Packet* sectionData = section->getPacket("data");
+      switch (section->getVariable("type")) {
+
+      case 55:
+	patch->setName(getName(sectionData->getPacket("name")));
+	break;
+
+      case 33:
+	patch->setKeyboardRange(Patch::MIN,
+				sectionData->getVariable("krangemin"));
+	patch->setKeyboardRange(Patch::MAX,
+				sectionData->getVariable("krangemax"));
+	patch->setVelocityRange(Patch::MIN,
+				sectionData->getVariable("vrangemin"));
+	patch->setVelocityRange(Patch::MAX,
+				sectionData->getVariable("vrangemax"));
+	patch->setBendRange(sectionData->getVariable("brange"));
+	patch->setPortamentoTime(sectionData->getVariable("ptime"));
+	patch->setPortamento((Patch::Portamento)
+			     sectionData->getVariable("portamento"));
+	patch->setRequestedVoices(sectionData->getVariable("voices"));
+	patch->setSectionSeparationPosition(sectionData->getVariable("sspos"));
+	patch->setOctaveShift(sectionData->getVariable("octave"));
+	patch->setCableVisibility(Cable::RED,
+				  (Patch::CableVisibility)
+				  sectionData->getVariable("red"));
+	patch->setCableVisibility(Cable::BLUE,
+				  (Patch::CableVisibility)
+				  sectionData->getVariable("blue"));
+	patch->setCableVisibility(Cable::YELLOW,
+				  (Patch::CableVisibility)
+				  sectionData->getVariable("yellow"));
+	patch->setCableVisibility(Cable::GRAY,
+				  (Patch::CableVisibility)
+				  sectionData->getVariable("gray"));
+	patch->setCableVisibility(Cable::GREEN,
+				  (Patch::CableVisibility)
+				  sectionData->getVariable("green"));
+	patch->setCableVisibility(Cable::PURPLE,
+				  (Patch::CableVisibility)
+				  sectionData->getVariable("purple"));
+	patch->setCableVisibility(Cable::WHITE,
+				  (Patch::CableVisibility)
+				  sectionData->getVariable("white"));
+	patch->getModuleSection(ModuleSection::COMMON)->
+	  setVoiceRetrigger((ModuleSection::VoiceRetrigger)
+			    sectionData->getVariable("cretrigger"));
+	patch->getModuleSection(ModuleSection::POLY)->
+	  setVoiceRetrigger((ModuleSection::VoiceRetrigger)
+			    sectionData->getVariable("pretrigger"));
+	break;
+
+      case 74:
+	{
+	  ModuleSection* moduleSection =
+	    patch->getModuleSection((ModuleSection::Type)
+				    sectionData->getVariable("section"));
+	  Packet::PacketList modules = sectionData->getPacketList("modules");
+	  for (Packet::PacketList::iterator i = modules.begin();
+	       i != modules.end(); i++) {
+	    Module* module =
+	      moduleSection->newModule((Module::Type)(*i)->getVariable("type"),
+				       (*i)->getVariable("index"));
+	    module->setPosition((*i)->getVariable("xpos"),
+				(*i)->getVariable("ypos"));
+	  }
+	}
+	break;
+	
+      case 82:
+	{
+	  ModuleSection* moduleSection =
+	    patch->getModuleSection((ModuleSection::Type)
+				    sectionData->getVariable("section"));
+	  Packet::PacketList cables = sectionData->getPacketList("cables");
+	  for (Packet::PacketList::iterator i = cables.begin();
+	       i != cables.end(); i++) {
+	    moduleSection->newCable
+	      ((Cable::Color)(*i)->getVariable("color"),
+	       (*i)->getVariable("destination"),
+	       (Module::Port)(*i)->getVariable("input"),
+	       Cable::INPUT,
+	       (*i)->getVariable("source"),
+	       (Module::Port)(*i)->getVariable("inputOutput"),
+	       (Cable::ConnectorType)(*i)->getVariable("type"));
+	  }
+	}
+	break;
+      }
+      packet = packet->getPacket("next");
+    }
+  }
+  else {
+    delete packet;
+    throw MidiException("Illegal patch format.", 0);
+  }
+  delete packet;
 }
 
 int PatchMessage::getPid()
@@ -372,4 +520,15 @@ void PatchMessage::appendName(string name, IntStream& intStream)
   if (i < 16) {
     intStream.append(0);
   }
+}
+
+string PatchMessage::getName(Packet* name)
+{
+  string result;
+  Packet::VariableList chars = name->getVariableList("chars");
+  for (Packet::VariableList::iterator i = chars.begin();
+       i != chars.end(); i++) {
+    result += (char)*i;
+  }
+  return result;
 }

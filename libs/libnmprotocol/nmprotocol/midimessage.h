@@ -31,6 +31,7 @@ using namespace std;
 class PacketParser;
 class Protocol;
 class NMProtocolListener;
+class PatchMessage;
 
 class MidiMessage
 {
@@ -61,9 +62,12 @@ class MidiMessage
   int slot;
 
  private:
-  
+
+  static string pdlFile;
   static Protocol* protocol;
   static PacketParser* packetParser;
+
+  static PatchMessage* patchMessage;
 
 };
 

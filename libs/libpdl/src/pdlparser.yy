@@ -129,7 +129,7 @@ bool init_pdl_parser(const char* filename, Protocol* p)
   istream pdlin(pdlinstream.rdbuf());
 
   pdllexer = new PDLLexer(&pdlin);
-  return pdllexer;
+  return pdlinstream.good();
 }
 
 int pdlstoi(string param)

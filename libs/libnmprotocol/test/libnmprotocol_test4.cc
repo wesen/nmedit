@@ -5,8 +5,7 @@
 #include "nmprotocol/mididriver.h"
 #include "nmprotocol/midiexception.h"
 #include "nmprotocol/iammessage.h"
-#include "pdl/protocol.h"
-#include "pdl/tracer.h"
+#include "pdl/pdlexception.h"
 #include "nmprotocol/nmprotocollistener.h"
 #include "nmprotocol/nmprotocol.h"
 #include "nmpatch/patch.h"
@@ -19,8 +18,10 @@ public:
   virtual ~Listener() {}
 
   void messageReceived(PatchMessage message) {
-    Patch* patch = message.getPatch();
-    printf("%s", patch->write().c_str());    
+    Patch patch;
+    message.getPatch(&patch);
+    printf("Name: %s\n", patch.getName().c_str());
+    printf("%s", patch.write().c_str());    
   }
 };
 
@@ -37,27 +38,32 @@ int main(int argc, char** argv)
     PatchMessage patchMessage(patch);
     patchMessage.setPid(0x42);
     MidiMessage::BitStreamList bitStreamList;
-    BitStream bitStream;
     patchMessage.getBitStream(&bitStreamList);
 
+    printf("\nParse patch\n\n");
     for (MidiMessage::BitStreamList::iterator i = bitStreamList.begin();
 	 i != bitStreamList.end(); i++) {
-      bitStream = (*i);
+      BitStream bitStream = (*i);
       while (bitStream.isAvailable(8)) {
 	printf("%X ", bitStream.getInt(8));
       }
       printf("\n");
-    }
 
-    printf("\nParse patch\n\n");
-    MidiMessage* midiMessage = MidiMessage::create(&bitStream);
-    if (midiMessage != 0) {
-      midiMessage->notifyListener(new Listener());
-      delete midiMessage;
+      bitStream.setPosition(0);
+      MidiMessage* midiMessage = MidiMessage::create(&bitStream);
+      if (midiMessage != 0) {
+	midiMessage->notifyListener(new Listener());
+	delete midiMessage;
+      }
     }
   }
   catch (MidiException& exception) {
-    printf("Exception: %s %d\n",
+    printf("MidiException: %s %d\n",
+	   exception.getMessage().c_str(),
+	   exception.getError());
+  }
+  catch (PDLException& exception) {
+    printf("PDLException: %s %d\n",
 	   exception.getMessage().c_str(),
 	   exception.getError());
   }

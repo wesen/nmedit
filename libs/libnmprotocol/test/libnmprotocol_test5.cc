@@ -5,8 +5,7 @@
 #include "nmprotocol/mididriver.h"
 #include "nmprotocol/midiexception.h"
 #include "nmprotocol/iammessage.h"
-#include "pdl/protocol.h"
-#include "pdl/tracer.h"
+#include "pdl/pdlexception.h"
 #include "nmprotocol/nmprotocollistener.h"
 #include "nmprotocol/nmprotocol.h"
 #include "nmpatch/patch.h"
@@ -74,14 +73,19 @@ int main(int argc, char** argv)
 
     while(1) {
       nmProtocol.heartbeat();
-      sleep(3);
+      sleep(1);
     }
 
     nmProtocol.useMidiDriver(0);
     driver->disconnect();
   }
   catch (MidiException& exception) {
-    printf("Exception: %s %d\n",
+    printf("MidiException: %s %d\n",
+	   exception.getMessage().c_str(),
+	   exception.getError());
+  }
+  catch (PDLException& exception) {
+    printf("PDLException: %s %d\n",
 	   exception.getMessage().c_str(),
 	   exception.getError());
   }

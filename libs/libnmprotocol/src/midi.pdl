@@ -185,7 +185,7 @@ UploadActiveSlot % 1 :=
 	;
 
 PatchPacket % 1 :=
-	0:1 pp:7 ?PatchData$next
+	0:1 pid:7 ?PatchData$next
 	;
 
 PatchData % 1 :=

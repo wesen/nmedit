@@ -20,6 +20,7 @@
 #include "nmprotocol/nmprotocol.h"
 #include "nmprotocol/mididriver.h"
 #include "nmprotocol/midimessage.h"
+#include "nmprotocol/patchmessage.h"
 
 NMProtocol::NMProtocol()
 {

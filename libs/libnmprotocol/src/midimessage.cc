@@ -22,22 +22,50 @@
 #include "nmprotocol/midimessage.h"
 #include "nmprotocol/iammessage.h"
 #include "nmprotocol/lightmessage.h"
+#include "nmprotocol/patchmessage.h"
 #include "nmprotocol/midiexception.h"
 #include "pdl/packetparser.h"
 #include "pdl/protocol.h"
 #include "pdl/packet.h"
+#include "pdl/tracer.h"
 
-Protocol* MidiMessage::protocol;
-PacketParser* MidiMessage::packetParser;
+#ifndef LIBPATH
+#define LIBPATH ""
+#endif
+
+string MidiMessage::pdlFile = string(LIBPATH) + "/midi.pdl";
+Protocol* MidiMessage::protocol = 0;
+PacketParser* MidiMessage::packetParser = 0;
+
+PatchMessage* MidiMessage::patchMessage = 0;
+
+class TestTracer : public virtual Tracer
+{
+public:
+  void trace(string message)
+  {
+    printf("TRACE: %s\n", message.c_str());
+  }
+};
 
 void MidiMessage::usePDLFile(string filename)
 {
-  protocol = new Protocol(filename);
-  packetParser = protocol->getPacketParser("Sysex");
+  pdlFile = filename;
+  if (protocol != 0) {
+    delete protocol;
+    protocol = 0;
+  }
 }
 
 MidiMessage::MidiMessage()
 {
+  patchMessage = 0;
+
+  if (protocol == 0) {
+    protocol = new Protocol(pdlFile);
+    packetParser = protocol->getPacketParser("Sysex");
+    //protocol->useTracer(new TestTracer());
+  }
 }
 
 MidiMessage::~MidiMessage()
@@ -49,7 +77,7 @@ void MidiMessage::getBitStream(IntStream intStream, BitStream* bitStream)
   bool success = packetParser->generate(&intStream, bitStream);
 
   if (!success || intStream.isAvailable(1)) {
-    throw MidiException("Information mismatch in generate.", 0);
+    throw MidiException("Information mismatch in generate.", success);
   }
 }
 
@@ -57,6 +85,7 @@ MidiMessage* MidiMessage::create(BitStream* bitStream)
 {
   Packet packet;
   bool success = packetParser->parse(bitStream, &packet);
+  bitStream->setPosition(0);
   
   if (success) {
     switch (packet.getVariable("cc")) {
@@ -66,7 +95,6 @@ MidiMessage* MidiMessage::create(BitStream* bitStream)
       break;
 
     case 0x14:
-      bitStream->setPosition(0);
       if (checksumIsCorrect(*bitStream)) {
 	switch (packet.getPacket("data")->getVariable("sc")) {
 	  
@@ -78,6 +106,28 @@ MidiMessage* MidiMessage::create(BitStream* bitStream)
 	  break;
 	}
       }
+      
+    case 0x1d:
+	patchMessage = new PatchMessage();
+    case 0x1c:
+      if (checksumIsCorrect(*bitStream)) {
+	patchMessage->append(&packet);
+	return 0;
+      }
+      break;
+
+    case 0x1e:
+      if (checksumIsCorrect(*bitStream)) {
+	if (patchMessage == 0) {
+	  patchMessage = new PatchMessage();
+	}
+	patchMessage->append(&packet);
+	
+	PatchMessage* returnValue = patchMessage;
+	patchMessage = 0;
+	return returnValue;
+      }
+      break;
 
     default:
       printf("unsupported packet: ");
@@ -88,7 +138,6 @@ MidiMessage* MidiMessage::create(BitStream* bitStream)
     printf("parse failed: ");
   }
 
-  bitStream->setPosition(0);
   while (bitStream->isAvailable(8)) {
     printf("%X ", bitStream->getInt(8));
   }

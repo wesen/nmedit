@@ -20,6 +20,7 @@
 #include "pdl/protocol.h"
 #include "pdl/packetparser.h"
 #include "pdl/tracer.h"
+#include "pdl/pdlexception.h"
 
 extern int init_pdl_parser(const char* filename, Protocol* protocol);
 extern void pdlparse();
@@ -30,6 +31,9 @@ Protocol::Protocol(string filename)
 
   if (init_pdl_parser(filename.c_str(), this)) {
     pdlparse();
+  }
+  else {
+    throw PDLException(string("File not found: ") + filename, 0);
   }
 }
 
