@@ -20,6 +20,8 @@
 #ifndef SYNTHLISTENER_H
 #define SYNTHLISTENER_H
 
+class Patch;
+
 class SynthListener
 {
  public:
@@ -28,8 +30,10 @@ class SynthListener
   
   virtual ~SynthListener();
 
-  virtual void newPatchInSlot(int, Patch*) {};
-  virtual void patchListModified() {};
+  virtual void newPatchInSlot(int slot, Patch* patch) {};
+  virtual void patchListChanged() {};
+  virtual void slotStateChanged(int slot, boolean active,
+				boolean selected, int voices) {};
   
 };
 

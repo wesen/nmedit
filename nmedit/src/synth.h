@@ -20,11 +20,16 @@
 #ifndef SYNTH_H
 #define SYNTH_H
 
-#include "nmprotocol/nmprotocol.h"
+#include "nmprotocol/nmprotocollistener.h"
+
+#include <map>
+#include <list>
 
 class SynthListener;
+class NMProtocol;
+class Patch;
 
-class Synth
+class Synth : public NMProtocolListener
 {
  public:
   
@@ -33,19 +38,48 @@ class Synth
   virtual ~SynthListener();
 
   Patch *getPatch(int);
-  void setPatch(Patch*);
+  void setPatch(int, Patch*);
 
   void load(int, int);
   void store(int, int);
 
+  boolean isSlotActive(int);
+  void setSlotActive(int, boolean);
+
+  boolean isSlotSelected(int);
+  void setSlotSelected(int, boolean);
+
+  int getSlotVoices(int);
+
   void addListener(SynthListener*);
   void removeListener(SynthListener*);
+
+  void notifyListeners(int slot, Patch* patch);
+  void notifyListeners();
+  void notifyListeners(int slot):
+
+  virtual void messageReceived(IAmMessage message);
+  virtual void messageReceived(LightMessage message);
+  virtual void messageReceived(PatchMessage message);
+  virtual void messageReceived(AckMessage message);
+  virtual void messageReceived(PatchListMessage message);
+  virtual void messageReceived(NewPatchInSlotMessage message);
+  virtual void messageReceived(VoiceCountMessage message);
+  virtual void messageReceived(GetPatchMessage message);
+  virtual void messageReceived(SlotsSelectedMessage message);
+  virtual void messageReceived(SlotActivatedMessage message);
 
  private:
   
   typedef list<SynthListener*> SynthListenerList;
+  typedef map<int, Patch*> PatchMap;
 
-  static SynthListenerList listeners;
+  NMProtocol* protocol;
+  SynthListenerList listeners;
+  PatchMap patches;
+  boolean slotActive[4];
+  boolean slotSelected[4];
+  int slotVoices[4];
 };
 
 #endif
