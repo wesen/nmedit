@@ -39,14 +39,10 @@ SlotsSelectedMessage::SlotsSelectedMessage()
 SlotsSelectedMessage::SlotsSelectedMessage(Packet* packet)
 {
   slot = packet->getVariable("slot");
-  selected[0] =
-    packet->getPacket("data")->getPacket("data")->getVariable("slot0");
-  selected[1] =
-    packet->getPacket("data")->getPacket("data")->getVariable("slot1");
-  selected[2] =
-    packet->getPacket("data")->getPacket("data")->getVariable("slot2");
-  selected[3] =
-    packet->getPacket("data")->getPacket("data")->getVariable("slot3");
+  selected[0] = packet->getVariable("data:data:slot0");
+  selected[1] = packet->getVariable("data:data:slot1");
+  selected[2] = packet->getVariable("data:data:slot2");
+  selected[3] = packet->getVariable("data:data:slot3");
 }
 
 SlotsSelectedMessage::~SlotsSelectedMessage()
@@ -64,7 +60,7 @@ void SlotsSelectedMessage::getBitStream(BitStreamList* bitStreamList)
   intStream.append(selected[1]);
   intStream.append(selected[2]);
   intStream.append(selected[3]);
-  addChecksum(&intStream);
+  appendChecksum(&intStream);
 
   BitStream bitStream;
   MidiMessage::getBitStream(intStream, &bitStream);

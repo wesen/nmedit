@@ -34,8 +34,7 @@ SlotActivatedMessage::SlotActivatedMessage()
 SlotActivatedMessage::SlotActivatedMessage(Packet* packet)
 {
   slot = packet->getVariable("slot");
-  activeSlot =
-    packet->getPacket("data")->getPacket("data")->getVariable("slot");
+  activeSlot = packet->getVariable("data:data:slot");
 }
 
 SlotActivatedMessage::~SlotActivatedMessage()
@@ -50,7 +49,7 @@ void SlotActivatedMessage::getBitStream(BitStreamList* bitStreamList)
   intStream.append(0x41);
   intStream.append(sc);
   intStream.append(activeSlot);
-  addChecksum(&intStream);
+  appendChecksum(&intStream);
 
   BitStream bitStream;
   MidiMessage::getBitStream(intStream, &bitStream);

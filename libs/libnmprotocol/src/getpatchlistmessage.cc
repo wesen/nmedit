@@ -53,7 +53,7 @@ void GetPatchListMessage::getBitStream(BitStreamList* bitStreamList)
   intStream.append(ssc);
   intStream.append(section);
   intStream.append(position);
-  MidiMessage::addChecksum(&intStream);
+  appendChecksum(&intStream);
   
   BitStream bitStream;
   MidiMessage::getBitStream(intStream, &bitStream);

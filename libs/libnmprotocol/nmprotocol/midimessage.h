@@ -66,9 +66,9 @@ class MidiMessage
   
   void getBitStream(IntStream intStream, BitStream* bitStream);
 
-  void addChecksum(IntStream* intStream);
+  void appendChecksum(IntStream* intStream);
 
-  string getName(Packet* name);
+  string extractName(Packet* name);
 
   int cc;
   int slot;

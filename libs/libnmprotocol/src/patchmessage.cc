@@ -75,9 +75,9 @@ PatchMessage::PatchMessage()
 void PatchMessage::append(Packet* packet)
 {
   slot = packet->getVariable("slot");
-  pid = packet->getPacket("data")->getVariable("pid");
+  pid = packet->getVariable("data:pid");
   
-  packet = packet->getPacket("data")->getPacket("next");
+  packet = packet->getPacket("data:next");
   while (packet != 0) {
     patchStream.append(packet->getVariable("data"), 7);
     packet = packet->getPacket("next");
@@ -400,7 +400,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     while (partialPatchStream.isAvailable(7)) {
       intStream.append(partialPatchStream.getInt(7));
     }
-    addChecksum(&intStream);
+    appendChecksum(&intStream);
 
     // Generate sysex bitstream
     BitStream bitStream;
@@ -426,7 +426,7 @@ void PatchMessage::getPatch(Patch* patch)
 	// Name section
       case 55:
       case 39:
-	patch->setName(getName(sectionData->getPacket("name")));
+	patch->setName(extractName(sectionData->getPacket("name")));
 	break;
 
 	// Header section
@@ -679,7 +679,7 @@ void PatchMessage::getPatch(Patch* patch)
 	       i != modules.end(); i++) {
 	    Module* module = getModule(patch, section,
 				       (*i)->getVariable("index"), "name");
-	    module->setName(getName((*i)->getPacket("name")));
+	    module->setName(extractName((*i)->getPacket("name")));
 	  }
 	}
 	break;

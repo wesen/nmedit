@@ -36,10 +36,10 @@ VoiceCountMessage::VoiceCountMessage(Packet* packet)
 {
   cc = packet->getVariable("cc");
   slot = packet->getVariable("slot");
-  voices[0] = packet->getPacket("data")->getPacket("data")->getVariable("c0");
-  voices[1] = packet->getPacket("data")->getPacket("data")->getVariable("c1");
-  voices[2] = packet->getPacket("data")->getPacket("data")->getVariable("c2");
-  voices[3] = packet->getPacket("data")->getPacket("data")->getVariable("c3");
+  voices[0] = packet->getVariable("data:data:c0");
+  voices[1] = packet->getVariable("data:data:c1");
+  voices[2] = packet->getVariable("data:data:c2");
+  voices[3] = packet->getVariable("data:data:c3");
 }
 
 VoiceCountMessage::~VoiceCountMessage()

@@ -33,8 +33,7 @@ NewPatchInSlotMessage::NewPatchInSlotMessage(Packet* packet)
 {
   cc = packet->getVariable("cc");
   slot = packet->getVariable("slot");
-  pid = packet->getPacket("data")->getVariable("pid");
-  
+  pid = packet->getVariable("data:pid");
 }
 
 NewPatchInSlotMessage::~NewPatchInSlotMessage()

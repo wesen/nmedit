@@ -50,7 +50,7 @@ void GetPatchMessage::getBitStream(BitStreamList* bitStreamList)
   intStream.append(pid);
   intStream.append(0x20);
   intStream.append(0x28);
-  MidiMessage::addChecksum(&intStream);
+  appendChecksum(&intStream);
   MidiMessage::getBitStream(intStream, &bitStream);
   bitStreamList->push_back(bitStream);  
 
@@ -58,7 +58,7 @@ void GetPatchMessage::getBitStream(BitStreamList* bitStreamList)
   bitStream.setSize(0);
   intStream.append(0x4b);
   intStream.append(0x01);
-  MidiMessage::addChecksum(&intStream);
+  appendChecksum(&intStream);
   MidiMessage::getBitStream(intStream, &bitStream);
   bitStreamList->push_back(bitStream);  
 
@@ -66,7 +66,7 @@ void GetPatchMessage::getBitStream(BitStreamList* bitStreamList)
   bitStream.setSize(0);
   intStream.append(0x4b);
   intStream.append(0x00);
-  MidiMessage::addChecksum(&intStream);
+  appendChecksum(&intStream);
   MidiMessage::getBitStream(intStream, &bitStream);
   bitStreamList->push_back(bitStream);  
 
@@ -74,7 +74,7 @@ void GetPatchMessage::getBitStream(BitStreamList* bitStreamList)
   bitStream.setSize(0);
   intStream.append(0x53);
   intStream.append(0x01);
-  MidiMessage::addChecksum(&intStream);
+  appendChecksum(&intStream);
   MidiMessage::getBitStream(intStream, &bitStream);
   bitStreamList->push_back(bitStream);  
 
@@ -82,7 +82,7 @@ void GetPatchMessage::getBitStream(BitStreamList* bitStreamList)
   bitStream.setSize(0);
   intStream.append(0x53);
   intStream.append(0x00);
-  MidiMessage::addChecksum(&intStream);
+  appendChecksum(&intStream);
   MidiMessage::getBitStream(intStream, &bitStream);
   bitStreamList->push_back(bitStream);  
 
@@ -90,7 +90,7 @@ void GetPatchMessage::getBitStream(BitStreamList* bitStreamList)
   bitStream.setSize(0);
   intStream.append(0x4c);
   intStream.append(0x01);
-  MidiMessage::addChecksum(&intStream);
+  appendChecksum(&intStream);
   MidiMessage::getBitStream(intStream, &bitStream);
   bitStreamList->push_back(bitStream);  
 
@@ -98,28 +98,28 @@ void GetPatchMessage::getBitStream(BitStreamList* bitStreamList)
   bitStream.setSize(0);
   intStream.append(0x4c);
   intStream.append(0x00);
-  MidiMessage::addChecksum(&intStream);
+  appendChecksum(&intStream);
   MidiMessage::getBitStream(intStream, &bitStream);
   bitStreamList->push_back(bitStream);  
 
   intStream.setSize(3);
   bitStream.setSize(0);
   intStream.append(0x66);
-  MidiMessage::addChecksum(&intStream);
+  appendChecksum(&intStream);
   MidiMessage::getBitStream(intStream, &bitStream);
   bitStreamList->push_back(bitStream);  
 
   intStream.setSize(3);
   bitStream.setSize(0);
   intStream.append(0x63);
-  MidiMessage::addChecksum(&intStream);
+  appendChecksum(&intStream);
   MidiMessage::getBitStream(intStream, &bitStream);
   bitStreamList->push_back(bitStream);  
 
   intStream.setSize(3);
   bitStream.setSize(0);
   intStream.append(0x61);
-  MidiMessage::addChecksum(&intStream);
+  appendChecksum(&intStream);
   MidiMessage::getBitStream(intStream, &bitStream);
   bitStreamList->push_back(bitStream);  
 
@@ -127,7 +127,7 @@ void GetPatchMessage::getBitStream(BitStreamList* bitStreamList)
   bitStream.setSize(0);
   intStream.append(0x4e);
   intStream.append(0x01);
-  MidiMessage::addChecksum(&intStream);
+  appendChecksum(&intStream);
   MidiMessage::getBitStream(intStream, &bitStream);
   bitStreamList->push_back(bitStream);  
 
@@ -135,14 +135,14 @@ void GetPatchMessage::getBitStream(BitStreamList* bitStreamList)
   bitStream.setSize(0);
   intStream.append(0x4e);
   intStream.append(0x00);
-  MidiMessage::addChecksum(&intStream);
+  appendChecksum(&intStream);
   MidiMessage::getBitStream(intStream, &bitStream);
   bitStreamList->push_back(bitStream);  
 
   intStream.setSize(3);
   bitStream.setSize(0);
   intStream.append(0x68);
-  MidiMessage::addChecksum(&intStream);
+  appendChecksum(&intStream);
   MidiMessage::getBitStream(intStream, &bitStream);
   bitStreamList->push_back(bitStream);  
 }

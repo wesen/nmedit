@@ -36,9 +36,9 @@ AckMessage::AckMessage(Packet* packet)
 {
   cc = packet->getVariable("cc");
   slot = packet->getVariable("slot");
-  pid1 = packet->getPacket("data")->getVariable("pid1");
-  type = packet->getPacket("data")->getVariable("type");
-  pid2 = packet->getPacket("data")->getVariable("pid2");
+  pid1 = packet->getVariable("data:pid1");
+  type = packet->getVariable("data:type");
+  pid2 = packet->getVariable("data:pid2");
 
   isreply = true;
 }
@@ -66,7 +66,7 @@ void AckMessage::getBitStream(BitStreamList* bitStreamList)
   intStream.append(type);
   intStream.append(pid2);
   if (type == 0x36) {
-    addChecksum(&intStream);
+    appendChecksum(&intStream);
   }
 
   BitStream bitStream;

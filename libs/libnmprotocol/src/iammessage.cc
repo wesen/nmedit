@@ -37,9 +37,9 @@ IAmMessage::IAmMessage(Packet* packet)
 {
   cc = packet->getVariable("cc");
   slot = packet->getVariable("slot");
-  sender = Sender(packet->getPacket("data")->getVariable("sender"));
-  versionHigh = packet->getPacket("data")->getVariable("versionHigh");
-  versionLow = packet->getPacket("data")->getVariable("versionLow");
+  sender = Sender(packet->getVariable("data:sender"));
+  versionHigh = packet->getVariable("data:versionHigh");
+  versionLow = packet->getVariable("data:versionLow");
 
   expectsreply = true;
   isreply = true;

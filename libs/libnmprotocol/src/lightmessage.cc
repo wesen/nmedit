@@ -19,6 +19,7 @@
 
 #include "nmprotocol/lightmessage.h"
 #include "nmprotocol/nmprotocollistener.h"
+#include "nmprotocol/midiexception.h"
 #include "pdl/packet.h"
 
 LightMessage::LightMessage()
@@ -26,7 +27,6 @@ LightMessage::LightMessage()
   cc = 0x14;
   slot = 0;
   pid = 0;
-  sc = 0x39;
   startIndex = 0;
 }
 
@@ -34,53 +34,28 @@ LightMessage::LightMessage(Packet* packet)
 {
   cc = packet->getVariable("cc");
   slot = packet->getVariable("slot");
-  pid = packet->getPacket("data")->getVariable("pid");
-  sc = packet->getPacket("data")->getVariable("sc");
-  startIndex =
-    packet->getPacket("data")->getPacket("data")->getVariable("startIndex");
-
-  lights[0] =
-    packet->getPacket("data")->getPacket("data")->getVariable("l0");
-  lights[1] =
-    packet->getPacket("data")->getPacket("data")->getVariable("l1");
-  lights[2] =
-    packet->getPacket("data")->getPacket("data")->getVariable("l2");
-  lights[3] =
-    packet->getPacket("data")->getPacket("data")->getVariable("l3");
-  lights[4] =
-    packet->getPacket("data")->getPacket("data")->getVariable("l4");
-  lights[5] =
-    packet->getPacket("data")->getPacket("data")->getVariable("l5");
-  lights[6] =
-    packet->getPacket("data")->getPacket("data")->getVariable("l6");
-  lights[7] =
-    packet->getPacket("data")->getPacket("data")->getVariable("l7");
-  lights[8] =
-    packet->getPacket("data")->getPacket("data")->getVariable("l8");
-  lights[9] =
-    packet->getPacket("data")->getPacket("data")->getVariable("l9");
-  lights[10] =
-    packet->getPacket("data")->getPacket("data")->getVariable("l10");
-  lights[11] =
-    packet->getPacket("data")->getPacket("data")->getVariable("l11");
-  lights[12] =
-    packet->getPacket("data")->getPacket("data")->getVariable("l12");
-  lights[13] =
-    packet->getPacket("data")->getPacket("data")->getVariable("l13");
-  lights[14] =
-    packet->getPacket("data")->getPacket("data")->getVariable("l14");
-  lights[15] =
-    packet->getPacket("data")->getPacket("data")->getVariable("l15");
-  lights[16] =
-    packet->getPacket("data")->getPacket("data")->getVariable("l16");
-  lights[17] =
-    packet->getPacket("data")->getPacket("data")->getVariable("l17");
-  lights[18] =
-    packet->getPacket("data")->getPacket("data")->getVariable("l18");
-  lights[19] =
-    packet->getPacket("data")->getPacket("data")->getVariable("l19");
-
-  checksum = packet->getPacket("data")->getVariable("checksum");
+  pid = packet->getVariable("data:pid");
+  startIndex = packet->getVariable("data:data:startIndex");
+  lights[0] = packet->getVariable("data:data:l0");
+  lights[1] = packet->getVariable("data:data:l1");
+  lights[2] = packet->getVariable("data:data:l2");
+  lights[3] = packet->getVariable("data:data:l3");
+  lights[4] = packet->getVariable("data:data:l4");
+  lights[5] = packet->getVariable("data:data:l5");
+  lights[6] = packet->getVariable("data:data:l6");
+  lights[7] = packet->getVariable("data:data:l7");
+  lights[8] = packet->getVariable("data:data:l8");
+  lights[9] = packet->getVariable("data:data:l9");
+  lights[10] = packet->getVariable("data:data:l10");
+  lights[11] = packet->getVariable("data:data:l11");
+  lights[12] = packet->getVariable("data:data:l12");
+  lights[13] = packet->getVariable("data:data:l13");
+  lights[14] = packet->getVariable("data:data:l14");
+  lights[15] = packet->getVariable("data:data:l15");
+  lights[16] = packet->getVariable("data:data:l16");
+  lights[17] = packet->getVariable("data:data:l17");
+  lights[18] = packet->getVariable("data:data:l18");
+  lights[19] = packet->getVariable("data:data:l19");
 }
 
 LightMessage::~LightMessage()
@@ -89,20 +64,7 @@ LightMessage::~LightMessage()
 
 void LightMessage::getBitStream(BitStreamList* bitStreamList)
 {
-  IntStream intStream;
-  intStream.append(cc);
-  intStream.append(slot);
-  intStream.append(pid);
-  intStream.append(sc);
-  intStream.append(startIndex);
-  for (int i = 0; i < 20; i++) {
-    intStream.append(lights[i]);
-  }
-  intStream.append(checksum);
-
-  BitStream bitStream;
-  MidiMessage::getBitStream(intStream, &bitStream);
-  bitStreamList->push_back(bitStream);
+  throw MidiException("LightMessage::getBitStream not implemented.", 0);
 }
 
 void LightMessage::notifyListener(NMProtocolListener* listener)

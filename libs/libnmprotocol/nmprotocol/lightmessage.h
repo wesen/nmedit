@@ -43,10 +43,8 @@ class LightMessage : public virtual MidiMessage
  private:
   
   int pid;
-  int sc;
   int startIndex;
   int lights[20];
-  int checksum;
 };
 
 #endif

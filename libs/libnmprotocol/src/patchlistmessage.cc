@@ -39,8 +39,7 @@ PatchListMessage::PatchListMessage(int section, int position)
 PatchListMessage::PatchListMessage(Packet* packet)
 {
   slot = packet->getVariable("slot");
-  Packet* patchList =
-    packet->getPacket("data")->getPacket("patchList")->getPacket("data");
+  Packet* patchList = packet->getPacket("data:patchList:data");
 
   if (patchList != 0) {
     section = patchList->getVariable("section");
@@ -51,7 +50,7 @@ PatchListMessage::PatchListMessage(Packet* packet)
       string name;
       name += list->getVariable("first");
       if (name[0] != 0x02) {
-	name += getName(list->getPacket("name"));
+	name += extractName(list->getPacket("name"));
       }
       names.push_back(name);
       list = list->getPacket("next");

@@ -160,7 +160,7 @@ int MidiMessage::calculateChecksum(BitStream bitStream)
   return checksum;
 }
 
-void MidiMessage::addChecksum(IntStream* intStream)
+void MidiMessage::appendChecksum(IntStream* intStream)
 {
   int checksum = 0;
   intStream->append(checksum);
@@ -194,7 +194,7 @@ int MidiMessage::getSlot()
   return slot;
 }
 
-string MidiMessage::getName(Packet* name)
+string MidiMessage::extractName(Packet* name)
 {
   string result;
   Packet::VariableList chars = name->getVariableList("chars");

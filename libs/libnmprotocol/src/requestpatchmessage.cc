@@ -49,7 +49,7 @@ void RequestPatchMessage::getBitStream(BitStreamList* bitStreamList)
   intStream.append(slot);
   intStream.append(pp);
   intStream.append(ssc);
-  MidiMessage::addChecksum(&intStream);
+  appendChecksum(&intStream);
   
   BitStream bitStream;
   MidiMessage::getBitStream(intStream, &bitStream);
