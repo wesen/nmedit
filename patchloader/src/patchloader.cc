@@ -38,8 +38,8 @@ extern int optind;
 int main(int argc, char** argv)
 {
   printf("Patchloader version %s, Copyright (C) 2003 Marcus Andersson\n"
-	 "Patchloader comes with ABSOLUTELY NO WARRANTY. This is free\n"
-	 "software, and you are welcome to redistribute it under certain\n"
+	 "Patchloader comes with ABSOLUTELY NO WARRANTY. This is free "
+	 "software,\nand you are welcome to redistribute it under certain "
 	 "conditions.\n", VERSION);
 
   try {
