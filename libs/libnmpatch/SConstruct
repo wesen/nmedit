@@ -1,0 +1,40 @@
+
+src = 'patchlexer.ll patchparser.yy nmlexer.cc cable.cc ctrlmap.cc knobmap.cc module.cc modulesection.cc morph.cc morphmap.cc note.cc patch.cc moduletype.cc'
+
+inc = 'cable.h ctrlmap.h knobmap.h module.h modulesection.h morph.h morphmap.h note.h patch.h nmlexer.h moduletype.h modulelistener.h modulesectionlistener.h'
+
+pkg = 'module.ppf'
+
+srcfiles = [('src/' + x)     for x in Split(src)]
+incfiles = [('nmpatch/' + x) for x in Split(inc)]
+pkgfiles = [('src/' + x)     for x in Split(pkg)]
+
+nmpatch = Environment(YACCFLAGS = '-d -pnm',
+                      LEXFLAGS = '-+ -olex.yy.c -Pnm',
+                      CPPPATH = ['.', '../libppf'])
+
+opts = Options('nmpatch.conf')
+opts.Add(PathOption('PREFIX',
+                    'Install dir (Defult: /usr/local)',
+                    '/usr/local')) 
+opts.Update(nmpatch) 
+opts.Save('nmpatch.conf', nmpatch)
+
+idir_prefix = '$PREFIX'
+idir_lib    = '$PREFIX/lib'
+idir_pkg    = '$PREFIX/lib/nmpatch'
+idir_inc    = '$PREFIX/include/nmpatch'
+
+conf = Configure(nmpatch)
+
+conf.env.Append(CPPFLAGS='-DLIBPATH=\'"' + idir_pkg + '"\'')
+
+nmpatch = conf.Finish()
+
+lib = nmpatch.Library('nmpatch', srcfiles)
+
+nmpatch.Install(idir_lib, lib)
+nmpatch.Install(idir_inc, incfiles)
+nmpatch.Install(idir_pkg, pkgfiles)
+nmpatch.Alias('install', idir_prefix)
+

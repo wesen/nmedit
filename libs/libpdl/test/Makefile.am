@@ -1,10 +1,10 @@
 
 INCLUDES = -I.. 
-LDFLAGS = -L../src
+AM_LDFLAGS = -L../src
 
 LDADD = -lpdl
 
-bin_PROGRAMS = libpdl_test1 
+check_PROGRAMS = libpdl_test1 
 
 libpdl_test1_SOURCES = libpdl_test1.cc
 

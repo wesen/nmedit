@@ -1,0 +1,32 @@
+
+src = 'pdllex.ll pdlparser.yy pdllexer.cc bitstream.cc condition.cc constantmatcher.cc intstream.cc matcher.cc packet.cc packetmatcher.cc packetparser.cc protocol.cc tracer.cc variablematcher.cc'
+
+inc = 'bitstream.h condition.h constantmatcher.h intstream.h matcher.h packet.h packetmatcher.h packetparser.h parser.h protocol.h tracer.h variablematcher.h'
+
+srcfiles = [('src/' + x) for x in Split(src)]
+incfiles = [('pdl/' + x) for x in Split(inc)]
+
+pdl = Environment(YACCFLAGS = '-d -ppdl',
+                  LEXFLAGS = '-+ -olex.yy.c -Ppdl',
+                  CPPPATH = ['.'])
+
+opts = Options('pdl.conf')
+opts.Add(PathOption('PREFIX',
+                    'Install dir (Defult: /usr/local)',
+                    '/usr/local')) 
+opts.Update(pdl) 
+opts.Save('pdl.conf', pdl)
+
+conf = Configure(pdl)
+
+pdl = conf.Finish()
+
+idir_prefix = '$PREFIX' 
+idir_lib    = '$PREFIX/lib' 
+idir_inc    = '$PREFIX/include/pdl'
+
+lib = pdl.Library('pdl', srcfiles)
+
+pdl.Install(idir_lib, lib)
+pdl.Install(idir_inc, incfiles)
+pdl.Alias('install', idir_prefix)

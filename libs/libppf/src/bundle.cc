@@ -20,6 +20,8 @@
 #include "ppf/bundle.h"
 #include "ppf/ppfexception.h"
 
+#include TCL_H
+
 using namespace ppf;
 
 Bundle::Bundle(Tcl_Interp* interp)

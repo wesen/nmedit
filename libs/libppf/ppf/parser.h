@@ -25,7 +25,7 @@
 #include <string>
 #include <list>
 
-#include <tcl8.4/tcl.h>
+struct Tcl_Interp;
 
 using namespace std;
 

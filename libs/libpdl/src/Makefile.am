@@ -7,8 +7,8 @@ libpdl_la_SOURCES = pdlparser.yy pdllex.ll pdllexer.cc bitstream.cc condition.cc
 
 libpdl_la_LDFLAGS = -release 1 -no-undefined -static
 
-YFLAGS = -d -ppdl
-LFLAGS = -+ -olex.yy.c -Ppdl
+AM_YFLAGS = -d -ppdl
+AM_LFLAGS = -+ -olex.yy.c -Ppdl
 
 clean:
 	rm -f pdllex.cc pdlparser.cc pdlparser.h

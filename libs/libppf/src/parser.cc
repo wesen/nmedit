@@ -21,6 +21,8 @@
 #include "ppf/bundle.h"
 #include "ppf/ppfexception.h"
 
+#include TCL_H
+
 #include <fstream>
 
 using namespace ppf;

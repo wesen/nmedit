@@ -1,0 +1,44 @@
+
+src = 'ackmessage.cc activepidlistener.cc alsadriver.cc getpatchlistmessage.cc getpatchmessage.cc iammessage.cc lightmessage.cc mididriver.cc midimessage.cc netmididriver.cc newpatchinslotmessage.cc nmprotocol.cc parametermessage.cc patchlistmessage.cc patchmessage.cc requestpatchmessage.cc slotactivatedmessage.cc slotsselectedmessage.cc voicecountmessage.cc'
+
+inc = 'ackmessage.h activepidlistener.h alsadriver.h enqueuedpacket.h getpatchlistmessage.h getpatchmessage.h iammessage.h lightmessage.h mididriver.h midiexception.h midimessage.h netmididriver.h newpatchinslotmessage.h nmprotocol.h nmprotocollistener.h parametermessage.h patchlistmessage.h patchmessage.h requestpatchmessage.h slotactivatedmessage.h slotsselectedmessage.h voicecountmessage.h'
+
+pkg = 'midi.pdl patch.pdl'
+
+srcfiles = [('src/' + x)        for x in Split(src)]
+incfiles = [('nmprotocol/' + x) for x in Split(inc)]
+pkgfiles = [('src/' + x)        for x in Split(pkg)]
+
+nmprotocol = Environment(CPPPATH = ['.', '../libpdl', '../libnmpatch'])
+
+opts = Options('nmprotocol.conf')
+opts.Add(PathOption('PREFIX',
+                    'Install dir (Defult: /usr/local)',
+                    '/usr/local')) 
+opts.Update(nmprotocol)
+opts.Save('nmprotocol.conf', nmprotocol)
+
+idir_prefix = '$PREFIX'
+idir_lib    = '$PREFIX/lib'
+idir_pkg    = '$PREFIX/lib/nmprotocol'
+idir_inc    = '$PREFIX/include/nmprotocol'
+
+conf = Configure(nmprotocol)
+
+conf.env.Append(CPPFLAGS='-DLIBPATH=\'"' + idir_pkg + '"\'')
+
+if conf.CheckLib('asound'):
+   conf.env.Append(CPPFLAGS=' -DALSA')
+
+if conf.CheckFunc('socket'):
+   conf.env.Append(CPPFLAGS=' -DNETMIDI')
+
+nmprotocol = conf.Finish()
+
+lib = nmprotocol.Library('nmprotocol', srcfiles)
+
+nmprotocol.Install(idir_lib, lib)
+nmprotocol.Install(idir_inc, incfiles)
+nmprotocol.Install(idir_pkg, pkgfiles)
+nmprotocol.Alias('install', idir_prefix)
+

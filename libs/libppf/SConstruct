@@ -1,0 +1,43 @@
+
+src = 'parser.cc bundle.cc boundbundle.cc'
+inc = 'boundbundle.h bundle.h parser.h ppfexception.h'
+
+srcfiles = [('src/' + x) for x in Split(src)]
+incfiles = [('ppf/' + x) for x in Split(inc)]
+
+ppf = Environment(CPPPATH = ['.'])
+
+opts = Options('ppf.conf')
+opts.Add(PathOption('PREFIX',
+                    'Install dir (Defult: /usr/local)',
+                    '/usr/local')) 
+opts.Update(ppf) 
+opts.Save('ppf.conf', ppf)
+
+conf = Configure(ppf)
+
+tcllist = [(x + 'tcl.h') for x in ['', 'tcl8.5/', 'tcl8.4/', 'tcl8.3/', 'tcl8.2/', 'tcl8.1/', 'tcl8.0/']]
+
+tclfound = False
+for tcl in tcllist:
+   if conf.CheckCHeader(tcl):
+      print 'Using ' + tcl 
+      tclfound = True
+      conf.env.Append(CPPFLAGS=('-DTCL_H=\'<' + tcl + '>\''))
+      break
+
+if not tclfound:
+   print 'tcl.h not found!'
+   Exit(1);
+
+ppf = conf.Finish()
+
+idir_prefix = '$PREFIX'
+idir_lib    = '$PREFIX/lib'
+idir_inc    = '$PREFIX/include/ppf'
+
+lib = ppf.Library('ppf', srcfiles)
+
+ppf.Install(idir_lib, lib)
+ppf.Install(idir_inc, incfiles)
+ppf.Alias('install', idir_prefix)

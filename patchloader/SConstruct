@@ -1,0 +1,45 @@
+
+src = 'patchloader.cc'
+
+srcfiles = [('src/' + x) for x in Split(src)]
+
+pl = Environment(CPPPATH = ['../libs/libppf', '../libs/libpdl',
+                            '../libs/libnmpatch', '../libs/libnmprotocol'],
+                 LIBPATH = ['/lib', '/usr/lib', '/usr/local/lib',
+                            '../libs/libppf', '../libs/libpdl',
+                            '../libs/libnmpatch', '../libs/libnmprotocol'],
+                 LIBS = ['nmprotocol', 'nmpatch', 'pdl', 'ppf'])
+
+opts = Options('patchloader.conf')
+opts.Add(PathOption('PREFIX',
+                    'Install dir (Defult: /usr/local)',
+                    '/usr/local')) 
+opts.Update(pl) 
+opts.Save('patchloader.conf', pl)
+
+tcllibs = Split('tcl tcl8.5 tcl8.4 tcl8.3 tcl8.2 tcl8.1 tcl8.0')
+
+conf = Configure(pl)
+
+conf.env.Append(CPPFLAGS='-DVERSION=\'"0.1"\'')
+
+tclfound = False
+for tcllib in tcllibs:
+   if conf.CheckLib(tcllib):
+      conf.env.Append(LIBS=[tcllib])
+      tclfound = True
+      break
+if not tclfound:
+   print 'libtcl missing!'
+   Exit(1);
+
+pl = conf.Finish()
+
+idir_prefix = '$PREFIX'
+idir_bin    = '$PREFIX/bin'
+
+prog = pl.Program('patchloader', srcfiles)
+
+pl.Install(idir_bin, prog)
+pl.Alias('install', idir_prefix)
+

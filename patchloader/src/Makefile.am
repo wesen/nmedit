@@ -6,7 +6,7 @@ INCLUDES = \
 	-I../../libs/libnmpatch \
 	-I../../libs/libnmprotocol
 
-LDFLAGS = \
+AM_LDFLAGS = \
 	-L../../libs/libpdl/src \
 	-L../../libs/libppf/src \
 	-L../../libs/libnmpatch/src \

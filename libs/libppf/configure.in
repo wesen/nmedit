@@ -24,7 +24,7 @@ AC_C_CONST
 dnl Checks for library functions.
 
 
-AM_INIT_AUTOMAKE(libppf, 0.1)
+AM_INIT_AUTOMAKE(ppf, 0.1)
 
 dnl Checks for libraries.
 
