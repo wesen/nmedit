@@ -35,41 +35,29 @@ ALSADriver::~ALSADriver()
 
 ALSADriver::StringList ALSADriver::getMidiInputPorts()
 {
-  StringList ports;
-  glob_t globdata;
-  
-  glob("/dev/snd/midi*", 0, 0, &globdata);
-  if (globdata.gl_pathc > 0) {
-    int n = 0;
-    char* path;
-    while ((path = globdata.gl_pathv[n]) != 0) {
-      fd_in = open(path, O_RDONLY | O_NONBLOCK);
-      if (fd_in >= 0) {
-	ports.push_back(path);
-	close(fd_in);
-      }
-      n++;
-    }
-  }
-  globfree(&globdata);
-
-  return ports;
+  return getMidiPorts(O_RDONLY | O_NONBLOCK);
 }
 
 ALSADriver::StringList ALSADriver::getMidiOutputPorts()
 {
+  return getMidiPorts(O_WRONLY | O_NONBLOCK);
+}
+
+ALSADriver::StringList ALSADriver::getMidiPorts(int flags)
+{
   StringList ports;
   glob_t globdata;
-  
+  int fd;
+
   glob("/dev/snd/midi*", 0, 0, &globdata);
   if (globdata.gl_pathc > 0) {
     int n = 0;
     char* path;
     while ((path = globdata.gl_pathv[n]) != 0) {
-      fd_out = open(path, O_WRONLY | O_NONBLOCK);
-      if (fd_out >= 0) {
+      fd = open(path, flags);
+      if (fd >= 0) {
 	ports.push_back(path);
-	close(fd_out);
+	close(fd);
       }
       n++;
     }

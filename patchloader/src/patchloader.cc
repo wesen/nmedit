@@ -87,8 +87,9 @@ int main(int argc, char** argv)
     }
     
     if (error || optind >= argc) {
-      printf("usage: %s -n patchname -s {0,1,2,3} -d mididriver\n"
-	     "                   -i midiinput -o midioutput patchfile\n\n",
+      printf("usage: %s \\\n"
+	     "        -n patchname -s {0,1,2,3} -d mididriver \\\n"
+	     "        -i midiinput -o midioutput patchfile\n\n",
 	     argv[0]);
 
       printf("Available midi drivers:\n");

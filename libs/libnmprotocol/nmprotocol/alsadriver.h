@@ -46,6 +46,7 @@ class ALSADriver : public virtual MidiDriver
   int fd_in;
   int fd_out;
 
+  StringList getMidiPorts(int flags);
 };
 
 #endif
