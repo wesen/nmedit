@@ -23,8 +23,7 @@
 #include <string>
 #include <iostream>
 
-#define YYSTYPE string
-#define YYSTYPE_IS_TRIVIAL 1
+#define YYSTYPE std::string
 
 #if ! defined(yyFlexLexer)
 #define yyFlexLexer nmFlexLexer

@@ -24,8 +24,7 @@
 #include <iostream>
 #include <stdio.h>
 
-#define YYSTYPE string
-#define YYSTYPE_IS_TRIVIAL 1
+#define YYSTYPE std::string
 
 #if ! defined(yyFlexLexer)
 #define yyFlexLexer pdlFlexLexer

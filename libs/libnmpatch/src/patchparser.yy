@@ -46,6 +46,11 @@
   	return nmlexer->nmlex();
   }
 
+// Work around a bug in the relation between bison and GCC 3.x:
+#if defined (__GNUC__) && 3 <= __GNUC__
+#define __attribute__(arglist)
+#endif
+
 %}
 
 %token PARAM

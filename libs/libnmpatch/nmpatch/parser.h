@@ -22,7 +22,6 @@
 
 #include <string>
 
-#define YYSTYPE string
-#define YYSTYPE_IS_TRIVIAL 1
+#define YYSTYPE std::string
 
 #endif
