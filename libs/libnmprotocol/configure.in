@@ -25,7 +25,7 @@ AC_C_CONST
 dnl Checks for library functions.
 
 
-AM_INIT_AUTOMAKE(libnmprotocol, 1.0)
+AM_INIT_AUTOMAKE(nmprotocol, 0.1)
 
 dnl Checks for libraries.
 dnl Replace `main' with a function in -lfl:
