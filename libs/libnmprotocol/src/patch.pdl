@@ -373,7 +373,7 @@ Param51 % 1 :=
 	;
 	
 Param52 % 1 :=
-	level1:7 level2:7 level:3 level:4 time1:7 time2:7 time3:7 time4:7
+	level1:7 level2:7 level3:7 level4:7 time1:7 time2:7 time3:7 time4:7
 	time5:7 sustain:3 curve:2
 	;
 	
@@ -516,7 +516,7 @@ Param95 % 1 :=
 	;
 	
 Param96 % 1 :=
-	pitch:7 pitchFine:7 kbt:7 mute:1 timbre:7 pitchMod1:7 pitchMod2:7
+	pitch:7 pitchFine:7 kbt:1 mute:1 timbre:7 pitchMod1:7 pitchMod2:7
 	;
 	
 Param97 % 1 :=
@@ -566,7 +566,7 @@ Param106 % 1 :=
 	
 Param107 % 1 :=
 	freqCoarse:7 freqFine:7 spectralShape:7 partials:1 pitchMod1:7
-	pitchMod2:7 fma:7 spectralShapeMod:7 kbt:7 mute:1
+	pitchMod2:7 fma:7 spectralShapeMod:7 kbt:1 mute:1
 	;
 	
 Param108 % 1 :=

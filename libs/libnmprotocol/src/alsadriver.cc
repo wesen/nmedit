@@ -66,7 +66,7 @@ void ALSADriver::disconnect()
   close(fd_out);
 }
 
-void ALSADriver::send(Bytes& bytes)
+void ALSADriver::send(Bytes bytes)
 {
   unsigned char buffer[bytes.size()];
   int n;

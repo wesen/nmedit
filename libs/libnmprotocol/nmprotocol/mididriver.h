@@ -61,7 +61,7 @@ class MidiDriver
      Send bytes to the outputPort given in connect(). The call blocks
      until all bytes are sent.
   */
-  virtual void send(Bytes& bytes) = 0;
+  virtual void send(Bytes bytes) = 0;
 
   /**
      Receive bytes from the inputPort given in connect(). The call is

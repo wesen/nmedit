@@ -37,6 +37,11 @@ extern int optind;
 
 int main(int argc, char** argv)
 {
+  printf("Patchloader version %s, Copyright (C) 2003 Marcus Andersson\n"
+	 "Patchloader comes with ABSOLUTELY NO WARRANTY. This is free\n"
+	 "software, and you are welcome to redistribute it under certain\n"
+	 "conditions.\n", VERSION);
+
   try {
     MidiMessage::usePDLFile("/usr/local/lib/nmprotocol/midi.pdl", 0);
     PatchMessage::usePDLFile("/usr/local/lib/nmprotocol/patch.pdl", 0);
@@ -82,8 +87,9 @@ int main(int argc, char** argv)
     }
     
     if (error || optind >= argc) {
-      printf("usage: %s -n patchname -s {0,1,2,3} -d mididriver -i midiinput "
-	     "-o midioutput patchfile\n\n", argv[0]);
+      printf("usage: %s -n patchname -s {0,1,2,3} -d mididriver\n"
+	     "                   -i midiinput -o midioutput patchfile\n\n",
+	     argv[0]);
 
       printf("Available midi drivers:\n");
       MidiDriver::StringList drivers = MidiDriver::getDrivers();
@@ -148,6 +154,7 @@ void load(string filename, string patchname, int slot,
   
   while(!nmProtocol.sendQueueIsEmpty()) {
     nmProtocol.heartbeat();
+    usleep(10000);
   }
   
   nmProtocol.useMidiDriver(0);

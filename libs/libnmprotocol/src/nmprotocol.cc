@@ -23,6 +23,7 @@
 #include "nmprotocol/patchmessage.h"
 #include "nmprotocol/midiexception.h"
 #include "nmprotocol/acklistener.h"
+#include "nmprotocol/enqueuedpacket.h"
 
 int NMProtocol::TIMEOUT_INTERVAL = 3; /* seconds */
 
@@ -70,10 +71,10 @@ void NMProtocol::heartbeat()
   }
 
   if (sendQueue.size() > 0 && timeout == 0) {
-    midiDriver->send(sendQueue.front().first);
+    midiDriver->send(sendQueue.front().getContent());
 
     // Set up timer for expected ack response
-    if (sendQueue.front().second) {
+    if (sendQueue.front().expectsAck()) {
       timeout = time(0) + TIMEOUT_INTERVAL;
     }
     else {
@@ -113,7 +114,7 @@ void NMProtocol::send(MidiMessage* midiMessage)
     while(bitStream.isAvailable(8)) {
       sendBytes.push_back((unsigned char)bitStream.getInt(8));
     }
-    sendQueue.push_back(SendTuple(sendBytes, midiMessage->expectsAck()));
+    sendQueue.push_back(EnqueuedPacket(sendBytes, midiMessage->expectsAck()));
   }
 }
 

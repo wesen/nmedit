@@ -26,6 +26,7 @@
   #include "pdl/packetparser.h"
   #include "pdl/condition.h"
   #include "pdl/pdllexer.h"
+  #include "pdl/pdlexception.h"
 
   int pdllex(void);
   void pdlerror(char*);
@@ -118,7 +119,9 @@ matcherType:
 %%
 
 void pdlerror(char* s) {
-    printf("%s at line %d\n", s, pdlline);
+    char buf[200];
+    snprintf(buf, 200, "%s at line %d\n", s, pdlline);
+    throw PDLException(string(buf), 0);
 }
 
 bool init_pdl_parser(const char* filename, Protocol* p)

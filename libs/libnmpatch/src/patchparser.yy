@@ -24,7 +24,7 @@
   #include "nmpatch/patch.h"
   #include "nmpatch/modulesection.h"
   #include "nmpatch/nmlexer.h" 
-
+  #include "nmpatch/patchexception.h"
 
   int nmlex(YYSTYPE *);
   void yyerror(char*);
@@ -93,7 +93,8 @@ patch_part:
 	knob_map_dump |
 	ctrl_map_dump |
 	name_dump |
-	notes
+	notes |
+	'\n'
         ;
 
 header:
@@ -386,7 +387,9 @@ notes:
 %%
 
 void yyerror(char* s) {
-    printf("%s at line %d\n", s, pchline);
+    char buf[200];
+    snprintf(buf, 200, "%s at line %d.", s, pchline);
+    throw PatchException(string(buf), 0);
 }
 
 bool init_parser(const char* filename, Patch* p)

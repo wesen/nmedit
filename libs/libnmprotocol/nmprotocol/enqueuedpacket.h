@@ -17,34 +17,35 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef ALSADRIVER_H
-#define ALSADRIVER_H
+#ifndef ENQUEUEDPACKET_H
+#define ENQUEUEDPACKET_H
 
 #include "nmprotocol/mididriver.h"
 
-using namespace std;
-
-class ALSADriver : public virtual MidiDriver
+class EnqueuedPacket
 {
  public:
 
-  ALSADriver();
-  virtual ~ALSADriver();
+  EnqueuedPacket(MidiDriver::Bytes content, bool expectsAck) {
+    this->wantsAck = expectsAck;
+    this->content = content;
+  }
 
-  virtual StringList getMidiInputPorts();
-  virtual StringList getMidiOutputPorts();
+  virtual ~EnqueuedPacket() {
+  }
+  
+  MidiDriver::Bytes getContent() {
+    return content;
+  }
 
-  virtual void connect(string midiInputPort, string midiOutputPort);
-  virtual void disconnect();
-
-  virtual void send(Bytes bytes);
-  virtual void receive(Bytes& bytes);
+  int expectsAck() {
+    return wantsAck;
+  }
 
  private:
-
-  Bytes inputBuffer;
-  int fd_in;
-  int fd_out;
+  
+  MidiDriver::Bytes content;
+  bool wantsAck;
 
 };
 

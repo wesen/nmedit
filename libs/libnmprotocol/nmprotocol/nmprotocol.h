@@ -25,6 +25,7 @@
 #include <time.h>
 
 #include "nmprotocol/mididriver.h"
+#include "nmprotocol/enqueuedpacket.h"
 
 class MidiDriver;
 class NMProtocolListener;
@@ -34,8 +35,7 @@ class NMProtocol
 {
  public:
 
-  typedef pair<MidiDriver::Bytes, bool> SendTuple;
-  typedef list<SendTuple> MessageList;
+  typedef list<EnqueuedPacket> MessageList;
 
   NMProtocol();
   virtual ~NMProtocol();

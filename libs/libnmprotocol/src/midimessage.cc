@@ -95,6 +95,7 @@ MidiMessage* MidiMessage::create(BitStream* bitStream)
 	  break;
 	  
 	default:
+	  printf("unsupported packet: ");
 	  break;
 	}
       }
