@@ -1,1 +1,1 @@
-SUBDIRS=libs
+SUBDIRS=libs patchloader

@@ -46,4 +46,4 @@ AC_C_CONST
 
 dnl Checks for library functions.
 
-AC_OUTPUT(Makefile libs/Makefile libs/libnmpatch/Makefile libs/libnmpatch/src/Makefile libs/libnmpatch/nmpatch/Makefile libs/libnmpatch/test/Makefile libs/libpdl/Makefile libs/libpdl/src/Makefile libs/libpdl/pdl/Makefile libs/libpdl/test/Makefile libs/libpdl/doc/Makefile libs/libnmprotocol/Makefile libs/libnmprotocol/src/Makefile libs/libnmprotocol/nmprotocol/Makefile libs/libnmprotocol/test/Makefile libs/libnmprotocol/doc/Makefile)
+AC_OUTPUT(Makefile libs/Makefile libs/libnmpatch/Makefile libs/libnmpatch/src/Makefile libs/libnmpatch/nmpatch/Makefile libs/libnmpatch/test/Makefile libs/libpdl/Makefile libs/libpdl/src/Makefile libs/libpdl/pdl/Makefile libs/libpdl/test/Makefile libs/libpdl/doc/Makefile libs/libnmprotocol/Makefile libs/libnmprotocol/src/Makefile libs/libnmprotocol/nmprotocol/Makefile libs/libnmprotocol/test/Makefile libs/libnmprotocol/doc/Makefile patchloader/Makefile patchloader/src/Makefile)
