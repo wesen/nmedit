@@ -1,8 +1,11 @@
 #!/bin/sh
 
+# Script will convert a patch303.txt file from Jan Punter into PPF format.
+
 while true; do
 
 read module name id
+[ -z "$name" ] && exit 0;
 echo "module.$module.name=$name"
 
 read remarks remark
