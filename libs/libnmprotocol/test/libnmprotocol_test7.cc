@@ -12,6 +12,7 @@
 #include "nmprotocol/nmprotocollistener.h"
 #include "nmprotocol/nmprotocol.h"
 #include "nmpatch/patch.h"
+#include "nmpatch/modulesection.h"
 
 class Listener : public virtual NMProtocolListener
 {
@@ -64,6 +65,7 @@ int main(int argc, char** argv)
     
     MidiMessage::usePDLFile("../src/midi.pdl", 0);
     PatchMessage::usePDLFile("../src/patch.pdl", 0);
+    ModuleSection::usePPFFile("../../libnmpatch/src/module.ppf");
 
     printf("\nRequest patch\n\n");
     MidiDriver* driver =

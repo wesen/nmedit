@@ -30,6 +30,7 @@
 #include "nmprotocol/getpatchmessage.h"
 #include "nmprotocol/slotsselectedmessage.h"
 #include "nmprotocol/slotactivatedmessage.h"
+#include "nmprotocol/requestpatchmessage.h"
 
 class NMProtocolListener
 {
@@ -48,6 +49,7 @@ class NMProtocolListener
   virtual void messageReceived(GetPatchMessage message) {}
   virtual void messageReceived(SlotsSelectedMessage message) {}
   virtual void messageReceived(SlotActivatedMessage message) {}
+  virtual void messageReceived(RequestPatchMessage message) {}
   
 };
 

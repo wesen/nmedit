@@ -32,6 +32,7 @@ class ActivePidListener : public NMProtocolListener
   virtual ~ActivePidListener();
 
   virtual void messageReceived(AckMessage message);
+  virtual void messageReceived(NewPatchInSlotMessage message);
 
   int getActivePid(int slot);
 

@@ -32,6 +32,11 @@ void ActivePidListener::messageReceived(AckMessage message)
   activePidMap[message.getSlot()] = message.getPid1();
 }
 
+void ActivePidListener::messageReceived(NewPatchInSlotMessage message)
+{
+  activePidMap[message.getSlot()] = message.getPid();
+}
+
 int ActivePidListener::getActivePid(int slot)
 {
   return activePidMap[slot];
