@@ -1,4 +1,4 @@
-CXXFLAGS = -DALSA -DNETMIDI
+AM_CXXFLAGS = -DALSA -DNETMIDI
 INCLUDES = -I.. -I../../libpdl -I../../libnmpatch
 
 EXTRA_DIST = patch.pdl midi.pdl

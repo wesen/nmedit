@@ -1,2 +1,2 @@
 includedir = $(prefix)/include/nmprotocol
-include_HEADERS = alsadriver.h iammessage.h lightmessage.h mididriver.h midiexception.h midimessage.h nmprotocol.h nmprotocollistener.h patchmessage.h
+include_HEADERS = ackmessage.h activepidlistener.h alsadriver.h enqueuedpacket.h getpatchlistmessage.h getpatchmessage.h iammessage.h lightmessage.h mididriver.h midiexception.h midimessage.h netmididriver.h newpatchinslotmessage.h nmprotocol.h nmprotocollistener.h parametermessage.h patchlistmessage.h patchmessage.h requestpatchmessage.h slotactivatedmessage.h slotsselectedmessage.h voicecountmessage.h
