@@ -17,21 +17,21 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef ALSADRIVER_H
-#define ALSADRIVER_H
+#ifndef NETMIDIDRIVER_H
+#define NETMIDIDRIVER_H
 
-#ifdef ALSA
+#ifdef NETMIDI
 
 #include "nmprotocol/mididriver.h"
 
 using namespace std;
 
-class ALSADriver : public virtual MidiDriver
+class NetMidiDriver : public virtual MidiDriver
 {
  public:
 
-  ALSADriver();
-  virtual ~ALSADriver();
+  NetMidiDriver();
+  virtual ~NetMidiDriver();
 
   virtual StringList getMidiInputPorts();
   virtual StringList getMidiOutputPorts();
@@ -45,12 +45,9 @@ class ALSADriver : public virtual MidiDriver
  private:
 
   Bytes inputBuffer;
-  int fd_in;
-  int fd_out;
-
-  StringList getMidiPorts(int flags);
+  int sockfd;
 };
 
-#endif // ALSA
+#endif // NETMIDI
 
 #endif

@@ -24,6 +24,10 @@
 #include "nmprotocol/alsadriver.h"
 #endif
 
+#ifdef NETMIDI
+#include "nmprotocol/netmididriver.h"
+#endif
+
 const unsigned char MidiDriver::SYSEX_END = 0xf7;
 
 MidiDriver::MidiDriver()
@@ -42,6 +46,10 @@ MidiDriver::StringList MidiDriver::getDrivers()
   drivers.push_back("ALSA");
 #endif
 
+#ifdef NETMIDI
+  drivers.push_back("NETMIDI");
+#endif
+
   return drivers;
 }
 
@@ -50,6 +58,12 @@ MidiDriver* MidiDriver::createDriver(string driverName)
   #ifdef ALSA
   if (driverName == "ALSA") {
     return new ALSADriver();
+  }
+  #endif
+
+  #ifdef NETMIDI
+  if (driverName == "NETMIDI") {
+    return new NetMidiDriver();
   }
   #endif
 

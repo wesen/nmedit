@@ -17,6 +17,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#ifdef ALSA
+
 #include <unistd.h>
 #include <glob.h>
 #include <alsa/asoundlib.h>
@@ -122,3 +124,5 @@ void ALSADriver::receive(Bytes& bytes)
     throw MidiException("Failed to read from midi input port.", errno);
   }
 }
+
+#endif // ALSA
