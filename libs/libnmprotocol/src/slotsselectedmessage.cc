@@ -22,6 +22,8 @@
 #include "nmprotocol/midiexception.h"
 #include "pdl/packet.h"
 
+#include <stdio.h>
+
 SlotsSelectedMessage::SlotsSelectedMessage()
 {
   slot = 0;
@@ -30,6 +32,8 @@ SlotsSelectedMessage::SlotsSelectedMessage()
   selected[1] = false;
   selected[2] = false;
   selected[3] = false;
+
+  expectsreply = true;
 }
 
 SlotsSelectedMessage::SlotsSelectedMessage(Packet* packet)

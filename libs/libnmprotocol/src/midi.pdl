@@ -121,10 +121,12 @@ PatchManagerCommand % 1 :=
 	;
 
 SelectSlots % 1 :=
-	0:4 slot0:1 slot1:1 slot2:0 slot3:0;
+	0:4 slot0:1 slot1:1 slot2:1 slot3:1
+	;
 
 ActivateSlot % 1 :=
-	0:1 slot:7;
+	0:1 slot:7
+	;
 
 RequestPatch % 1 :=
 	;

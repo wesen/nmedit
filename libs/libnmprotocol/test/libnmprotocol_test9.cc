@@ -22,6 +22,10 @@ public:
     printf("VersionLow: %d \n", message.getVersionLow());
   }
 
+  void messageReceived(AckMessage message) {
+    printf("AckMessage\n");
+  }
+
   void messageReceived(NewPatchInSlotMessage message) {
     printf("New patch in slot %d, pid: %d\n",
 	   message.getSlot(), message.getPid());
@@ -65,14 +69,14 @@ int main(int argc, char** argv)
     printf("Send SlotsSelectedMessage\n");
     SlotsSelectedMessage slotsSelectedMessage;
     slotsSelectedMessage.setSelected(0, false);
-    slotsSelectedMessage.setSelected(0, true);
-    slotsSelectedMessage.setSelected(0, false);
-    slotsSelectedMessage.setSelected(0, true);
+    slotsSelectedMessage.setSelected(1, true);
+    slotsSelectedMessage.setSelected(2, false);
+    slotsSelectedMessage.setSelected(3, true);
     nmProtocol.send(&slotsSelectedMessage);
 
     printf("Send SlotActivatedMessage\n");
     SlotActivatedMessage slotActivatedMessage;
-    slotActivatedMessage.setActiveSlot(2);
+    slotActivatedMessage.setActiveSlot(3);
     nmProtocol.send(&slotActivatedMessage);
 
     while(1) {
