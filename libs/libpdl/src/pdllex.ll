@@ -112,6 +112,18 @@
 
 \n pdlline++;
 
+"//".*$ {
+  // // comment (to end of line)
+};
+
+"{"((.*)\n)*"}" {
+  // { Comment }
+};
+
+"/*"((.*)\n)*"*/" {
+  // /* Comment */
+};
+
 %%
 
 int pdlwrap(void) {
