@@ -70,6 +70,7 @@ string Module::getName()
 void Module::setParameter(ModuleType::Parameter param, int value)
 {
   parameters[param] = value;
+  notifyListeners(param, value);
 }
 
 int Module::getParameter(ModuleType::Parameter param)

@@ -32,6 +32,8 @@ namespace ppf {
 
 using namespace std;
 
+class ModuleSectionListener;
+
 class ModuleSection
 {
  public:
@@ -70,8 +72,15 @@ class ModuleSection
   CableList getCables() const;
   void removeCable(Cable*);
   
+  void addListener(ModuleSectionListener*);
+  void removeListener(ModuleSectionListener*);
+
+  void notifyListeners(Module*, int);
+
  private:
   
+  typedef list<ModuleSectionListener*> ModuleSectionListenerList;
+
   static string ppfFile;
   static ppf::Parser* parser;
   static ppf::BoundBundle* moduleProperties;
@@ -80,6 +89,7 @@ class ModuleSection
   ModuleList modules;
   CableList cables;
   int nextIndex;
+  ModuleSectionListenerList listeners;
 };
 
 #endif

@@ -18,6 +18,7 @@
 */
 
 #include "nmpatch/modulesection.h"
+#include "nmpatch/modulesectionlistener.h"
 #include "ppf/parser.h"
 #include "ppf/boundbundle.h"
 
@@ -86,6 +87,7 @@ Module* ModuleSection::newModule(ModuleType::TypeId type, int index )
     moduleProperties->getBoundBundle("moduletype").getBoundBundle(type);
   *maps =  moduleProperties->getBoundBundle("map");
   modules.push_back(new Module(new ModuleType(type, parameters, maps), index));
+  notifyListeners(modules.back(), index);
   return modules.back();
 }
 
@@ -135,3 +137,22 @@ void ModuleSection::removeCable(Cable* cable)
   cables.remove(cable);
   delete cable;
 }
+
+void ModuleSection::addListener(ModuleSectionListener* listener)
+{
+  listeners.push_back(listener);
+}
+
+void ModuleSection::removeListener(ModuleSectionListener* listener)
+{
+  listeners.remove(listener);
+}
+
+void ModuleSection::notifyListeners(Module* module, int index)
+{
+  for (ModuleSectionListenerList::iterator i = listeners.begin();
+       i != listeners.end(); i++) {
+    (*i)->newModule(module, index);
+  }
+}
+
