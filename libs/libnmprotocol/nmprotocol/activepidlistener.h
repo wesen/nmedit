@@ -17,53 +17,29 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef NMPROTOCOL_H
-#define NMPROTOCOL_H
+#ifndef ACTIVEPIDLISTENER_H
+#define ACTIVEPIDLISTENER_H
 
-#include <list>
-#include <utility>
-#include <time.h>
+#include "nmprotocol/nmprotocollistener.h"
 
-#include "nmprotocol/mididriver.h"
-#include "nmprotocol/enqueuedpacket.h"
-#include "nmprotocol/activepidlistener.h"
+#include <map>
 
-class MidiDriver;
-class NMProtocolListener;
-class MidiMessage;
-
-class NMProtocol
+class ActivePidListener : public NMProtocolListener
 {
  public:
 
-  typedef list<EnqueuedPacket> MessageList;
+  ActivePidListener();
+  virtual ~ActivePidListener();
 
-  NMProtocol(MidiDriver* midiDriver);
-  virtual ~NMProtocol();
-  
-  void addListener(NMProtocolListener* listener);
-  void removeListener(NMProtocolListener* listener);
+  virtual void messageReceived(AckMessage message);
 
-  void heartbeat();
-
-  void send(MidiMessage* midiMessage);
-  bool sendQueueIsEmpty();
   int getActivePid(int slot);
 
  private:
-  
-  typedef list<NMProtocolListener*> ListenerList;
 
-  void notifyListeners(MidiMessage* midiMessage);
+  typedef map<int, int> ActivePidMap;
 
-  MidiDriver* midiDriver;
-  ListenerList listeners;
-  MessageList sendQueue;
-
-  time_t timeout;
-  static int TIMEOUT_INTERVAL;
-
-  ActivePidListener activePidListener;
+  ActivePidMap activePidMap;
 };
 
 #endif

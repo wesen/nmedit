@@ -34,6 +34,8 @@ NMProtocol::NMProtocol(MidiDriver* midiDriver)
 
   timeout = 0;
   this->midiDriver = midiDriver;
+
+  addListener(&activePidListener);
 }
 
 NMProtocol::~NMProtocol()
@@ -138,3 +140,7 @@ bool NMProtocol::sendQueueIsEmpty()
   return sendQueue.size() == 0;
 }
  
+int NMProtocol::getActivePid(int slot)
+{
+  return activePidListener.getActivePid(slot);
+}
