@@ -36,13 +36,13 @@ class BoundBundle
 {
  public:
   
-  BoundBundle(Bundle*, string);
+  BoundBundle(Bundle*, int, string);
 
   BoundBundle getBoundBundle(string);
 
   string getProperty(string);
 
-  virtual void ~BoundBundle();
+  virtual ~BoundBundle();
 
  private:
   

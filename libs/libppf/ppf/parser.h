@@ -33,7 +33,7 @@ class Parser
 
   BoundBundle* parse(string);
   
-  virtual void ~Parser();
+  virtual ~Parser();
 
  private:
   

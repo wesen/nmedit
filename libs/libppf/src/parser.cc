@@ -19,18 +19,19 @@
 
 #include "ppf/parser.h"
 
+using namespace ppf;
 
 Parser::Parser()
 {
   
 }
 
-Bundle* Parser::parse(string filename)
+BoundBundle* Parser::parse(string filename)
 {
   
 }
 
-void ~Parser()
+Parser::~Parser()
 {
   
 }

@@ -20,15 +20,16 @@
 #include "ppf/bundle.h"
 #include "ppf/programmablepropertyexception.h"
 
+using namespace ppf;
 
-Bundle::Bundle(Tcl_interp* interp)
+Bundle::Bundle(Tcl_Interp* interp)
 {
   this->interp = interp;
 }
 
 Bundle* Bundle::newBundle(string regexp)
 {
-  Bundle* bundle = new Bundle(level + 1, interp);
+  Bundle* bundle = new Bundle(interp);
   bundles[regexp] = bundle;
 }
 
@@ -36,7 +37,7 @@ Bundle* Bundle::getBundle(string name, string bindings)
 {
   for (BundleMap::iterator n = bundles.begin(); n != bundles.end(); n++) {
     Tcl_Eval(interp,
-	     (bindings + " regexp " + (*n).first + " " + name).c_str());
+	     (char*)(bindings + " regexp " + (*n).first + " " + name).c_str());
     if (string("1") == interp->result) {
       return (*n).second;
     }
@@ -55,11 +56,13 @@ string Bundle::getProperty(string name, int level, string bindings)
   for (PropertyMap::iterator n = properties.begin();
        n != properties.end(); n++) {
     Tcl_Eval(interp,
-	     (bindings + " regexp " + (*n).first + " " + name).c_str());
+	     (char*)(bindings + " regexp " + (*n).first + " " + name).c_str());
     if (string("1") == interp->result) {
+      char slevel[11];
+      snprintf(slevel, 10, "%d", level);
       Tcl_Eval(interp,
-	       (bindings + " set $" + level + " " + name + ";" +
-		" return " + (*n).second ";").c_str());
+	       (char*)(bindings + " set $" + slevel + " " + name + ";" +
+		" return " + (*n).second + ";").c_str());
       return string(interp->result);
     }
   }
@@ -67,7 +70,7 @@ string Bundle::getProperty(string name, int level, string bindings)
   return "";
 }
 
-void Bundle::~Bundle()
+Bundle::~Bundle()
 {
   for (BundleMap::iterator n = bundles.begin(); n != bundles.end(); n++) {
     delete (*n).second;

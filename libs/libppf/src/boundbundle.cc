@@ -17,8 +17,9 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "ppf/boundbundle.cc"
+#include "ppf/boundbundle.h"
 
+using namespace ppf;
 
 BoundBundle::BoundBundle(Bundle* bundle, int level, string bindings)
 {
@@ -29,9 +30,11 @@ BoundBundle::BoundBundle(Bundle* bundle, int level, string bindings)
 
 BoundBundle BoundBundle::getBoundBundle(string name)
 {
+  char slevel[11];
+  snprintf(slevel, 10, "%d", level);
   return BoundBundle(bundle->getBundle(name, bindings),
 		     level + 1,
-		     bindings + " set $" + level + " " + name + ";");
+		     bindings + " set $" + slevel + " " + name + ";");
 }
 
 string BoundBundle::getProperty(string name)
@@ -39,6 +42,6 @@ string BoundBundle::getProperty(string name)
   return bundle->getProperty(name, level + 1, bindings);
 }
 
-void BoundBundle::~BoundBundle()
+BoundBundle::~BoundBundle()
 {
 }

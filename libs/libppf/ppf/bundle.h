@@ -34,15 +34,15 @@ class Bundle
 {
  public:
   
-  Bundle(Tcl_interp*);
+  Bundle(Tcl_Interp*);
 
   Bundle* newBundle(string);
   Bundle* getBundle(string, string);
 
   void newProperty(string, string);
-  string getProperty(string, string);
+  string getProperty(string, int, string);
 
-  virtual void ~Bundle();
+  virtual ~Bundle();
 
  private:
   
@@ -51,7 +51,7 @@ class Bundle
 
   BundleMap bundles;
   PropertyMap properties;
-  Tcl_interp* interp;
+  Tcl_Interp* interp;
 
 };
 
