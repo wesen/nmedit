@@ -20,6 +20,8 @@
 #ifndef SYNTHVIEW_H
 #define SYNTHVIEW_H
 
+class Fl_Box;
+
 class SynthView
 {
  public:
@@ -30,6 +32,7 @@ class SynthView
 
  private:
 
+  Fl_Box *box;
 };
 
 #endif

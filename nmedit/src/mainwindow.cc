@@ -19,12 +19,21 @@
 
 #include "mainwindow.h"
 
-MainWindow::MainWindow()
+#include "synthview.h"
+
+#include <FL/Fl.H>
+#include <FL/Fl_Window.H>
+
+MainWindow::MainWindow(int argc, char** argv)
 {
-  
+  window = new Fl_Window(300,180);
+  synthView = new SynthView();
+  window->end();
+  window->show(argc, argv);
 }
 
 MainWindow::~MainWindow()
 {
-  
+  delete window;
+  delete synthView;
 }

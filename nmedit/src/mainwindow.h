@@ -20,16 +20,21 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+class Fl_Window;
+class SynthView;
+
 class MainWindow
 {
  public:
   
-  MainWindow();
+  MainWindow(int argc, char** argv);
   
   virtual ~MainWindow();
 
  private:
 
+  Fl_Window* window;
+  SynthView* synthView;
 };
 
 #endif
