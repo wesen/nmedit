@@ -74,6 +74,12 @@
   return NOTES;
 }
 
+"[NOTES]"(.*(\r\n|\n))*"[/NOTES]" { 
+  yytext[strlen(yytext)-9] = '\0';
+  nmlval = &yytext[yytext[8] != '\n' ? 8 : 9];
+  return NOTES;
+}
+
 "[/NOTES]"(\r\n|\n)*"[Notes]"(.*(\r\n|\n))* { 
   nmlval = yytext;
   return NOTES;
