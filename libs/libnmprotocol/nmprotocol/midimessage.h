@@ -54,7 +54,8 @@ class MidiMessage
 
   virtual void notifyListener(NMProtocolListener* listener) = 0;
 
-  virtual bool expectsAck();
+  virtual bool expectsReply();
+  virtual bool isReply();
 
   void setSlot(int slot);
 
@@ -70,7 +71,8 @@ class MidiMessage
 
   int cc;
   int slot;
-  int wantAck;
+  bool isreply;
+  bool expectsreply;
 
  private:
 

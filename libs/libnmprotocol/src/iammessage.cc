@@ -28,6 +28,9 @@ IAmMessage::IAmMessage()
   sender = PC;
   versionHigh = 0;
   versionLow = 0;
+
+  expectsreply = true;
+  isreply = true;
 }
 
 IAmMessage::IAmMessage(Packet* packet)

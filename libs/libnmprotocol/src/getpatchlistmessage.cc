@@ -29,7 +29,8 @@ GetPatchListMessage::GetPatchListMessage(int section, int position)
   ssc = 0x14;
   this->section = section;
   this->position = position;
-  wantAck = false;
+
+  expectsreply = true;
 }
 
 GetPatchListMessage::GetPatchListMessage(Packet* packet)

@@ -22,7 +22,6 @@
 #include "nmprotocol/midimessage.h"
 #include "nmprotocol/patchmessage.h"
 #include "nmprotocol/midiexception.h"
-#include "nmprotocol/acklistener.h"
 #include "nmprotocol/enqueuedpacket.h"
 
 int NMProtocol::TIMEOUT_INTERVAL = 3; /* seconds */
@@ -34,7 +33,6 @@ NMProtocol::NMProtocol(MidiDriver* midiDriver)
   }
 
   timeout = 0;
-  addListener(new AckListener(&sendQueue, &timeout));
   this->midiDriver = midiDriver;
 }
 
@@ -74,8 +72,8 @@ void NMProtocol::heartbeat()
   if (sendQueue.size() > 0 && timeout == 0) {
     midiDriver->send(sendQueue.front().getContent());
 
-    // Set up timer for expected ack response
-    if (sendQueue.front().expectsAck()) {
+    // Set up timer for expected reply message
+    if (sendQueue.front().expectsReply()) {
       timeout = time(0) + TIMEOUT_INTERVAL;
     }
     else {
@@ -93,6 +91,16 @@ void NMProtocol::heartbeat()
     }
     MidiMessage* midiMessage = MidiMessage::create(&bitStream);
     if (midiMessage != 0) {
+      // Check if message is a reply
+      if (midiMessage->isReply()) {
+	if (sendQueue.size() > 0 && timeout != 0) {
+	  sendQueue.pop_front();
+	  timeout = 0;
+	}
+	else {
+	  throw MidiException("Unexpected reply message received.", 0);
+	}
+      }
       notifyListeners(midiMessage);
       delete midiMessage;
     }
@@ -115,7 +123,8 @@ void NMProtocol::send(MidiMessage* midiMessage)
     while(bitStream.isAvailable(8)) {
       sendBytes.push_back((unsigned char)bitStream.getInt(8));
     }
-    sendQueue.push_back(EnqueuedPacket(sendBytes, midiMessage->expectsAck()));
+    sendQueue.push_back(EnqueuedPacket(sendBytes,
+				       midiMessage->expectsReply()));
   }
 }
 

@@ -28,6 +28,8 @@ AckMessage::AckMessage()
   pid1 = 0;
   type = 0x7f;
   pid2 = 0;
+  
+  isreply = true;
 }
 
 AckMessage::AckMessage(Packet* packet)
@@ -37,6 +39,8 @@ AckMessage::AckMessage(Packet* packet)
   pid1 = packet->getPacket("data")->getVariable("pid1");
   type = packet->getPacket("data")->getVariable("type");
   pid2 = packet->getPacket("data")->getVariable("pid2");
+
+  isreply = true;
 }
 
 AckMessage::~AckMessage()

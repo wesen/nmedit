@@ -51,7 +51,9 @@ void PatchMessage::init()
   cc = 0x1c;
   slot = 0;
   pid = 0;
-  wantAck = true;
+
+  expectsreply = true;
+  isreply = true;
 
   if (patchProtocol == 0) {
     patchProtocol = new Protocol(patchPdlFile);

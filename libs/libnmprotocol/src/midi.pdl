@@ -92,7 +92,7 @@ ACK % 1 :=
 	0:1 pid1:7 0:1 type:7 0:1 pid2:7
 	#type=0x7f => 0:0
 	#type=0x36 => ACKChecksum$checksum
-	#type=0x13 => PatchList$patchList
+	#type=0x13 => PatchListResponse$patchList
 	;
 
 ACKChecksum % 1 :=
@@ -232,6 +232,10 @@ ModuleInsertion % 1 :=
 SEQZoom % 1 :=
 	;
 
+PatchListResponse % 1 :=
+	?PatchList$data ?FinalPatchList$data ?PatchListEnd$end
+	;
+	
 PatchList % 1 :=
 	0x05:8 0x16:8 0x01:8 0x03:8
 	0:1 section:7 0:1 position:7
@@ -240,11 +244,26 @@ PatchList % 1 :=
 	0:1 checksum:7
 	;
 
+FinalPatchList % 1 :=
+	0x05:8 0x16:8 0x01:8 0x03:8
+	0:1 section:7 0:1 position:7
+	?StringList$names
+	0x04:8
+	0:1 checksum:7
+	;
+
+PatchListEnd % 1 :=
+	0x05:8 0x16:8 0x01:8 0x04:8
+	0:1 checksum:7
+	;
+
 StringList % 1 :=
-	String$name
+	0:1 first:7
+	#first=0x02 => 0:0
+	#first!0x02 => ShortString$name
 	?StringList$next
 	;
 
-String % 1 :=
-	16*chars:8/0
+ShortString % 1 :=
+	15*chars:8/0
 	;

@@ -26,8 +26,8 @@ class EnqueuedPacket
 {
  public:
 
-  EnqueuedPacket(MidiDriver::Bytes content, bool expectsAck) {
-    this->wantsAck = expectsAck;
+  EnqueuedPacket(MidiDriver::Bytes content, bool expectsreply) {
+    this->expectsreply = expectsreply;
     this->content = content;
   }
 
@@ -38,14 +38,14 @@ class EnqueuedPacket
     return content;
   }
 
-  int expectsAck() {
-    return wantsAck;
+  int expectsReply() {
+    return expectsreply;
   }
 
  private:
   
   MidiDriver::Bytes content;
-  bool wantsAck;
+  bool expectsreply;
 
 };
 

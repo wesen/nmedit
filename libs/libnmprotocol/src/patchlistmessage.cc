@@ -21,29 +21,49 @@
 #include "nmprotocol/nmprotocollistener.h"
 #include "pdl/packet.h"
 
+const int PatchListMessage::END_OF_SECTION = 3;
+const int PatchListMessage::EMPTY_POSITION = 2;
+
 PatchListMessage::PatchListMessage(int section, int position)
 {
   cc = 0x17;
   slot = 0;
   this->section = section;
   this->position = position;
-  wantAck = false;
+  endoflist = false;
+
+  isreply = true;
 }
 
 PatchListMessage::PatchListMessage(Packet* packet)
 {
   slot = packet->getVariable("slot");
-  section =
-    packet->getPacket("data")->getPacket("patchList")->getVariable("section");
-  section =
-    packet->getPacket("data")->getPacket("patchList")->getVariable("position");
+  Packet* patchList =
+    packet->getPacket("data")->getPacket("patchList")->getPacket("data");
 
-  Packet* list =
-    packet->getPacket("data")->getPacket("patchList")->getPacket("names");
-  while (list != 0) {
-    names.push_back(getName(list->getPacket("name")));
-    list = list->getPacket("next");
+  if (patchList != 0) {
+    section = patchList->getVariable("section");
+    position = patchList->getVariable("position");
+
+    Packet* list = patchList->getPacket("names");
+    while (list != 0) {
+      string name;
+      name += list->getVariable("first");
+      if (name[0] != 0x02) {
+	name += getName(list->getPacket("name"));
+      }
+      names.push_back(name);
+      list = list->getPacket("next");
+    }
+    endoflist = false;
   }
+  else {
+    section = 0;
+    position = 0;
+    endoflist = true;
+  }
+
+  isreply = true;
 }
 
 PatchListMessage::~PatchListMessage()
@@ -72,6 +92,21 @@ int PatchListMessage::getSection()
 int PatchListMessage::getPosition()
 {
   return position;
+}
+
+bool PatchListMessage::endOfList()
+{
+  return endoflist;
+}
+
+bool PatchListMessage::endOfSection(string name)
+{
+  return name[0] == END_OF_SECTION;
+}
+
+bool PatchListMessage::emptyPosition(string name)
+{
+  return name[0] == EMPTY_POSITION;
 }
 
 PatchListMessage::StringList PatchListMessage::getNames()

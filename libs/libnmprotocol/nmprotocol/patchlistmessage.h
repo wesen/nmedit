@@ -41,11 +41,18 @@ class PatchListMessage : public virtual MidiMessage
   int getSection();
   int getPosition();
   StringList getNames();
+  bool endOfList();
+  bool endOfSection(string name);
+  bool emptyPosition(string name);
 
  private:
   
+  static const int END_OF_SECTION;
+  static const int EMPTY_POSITION;
+
   int section;
   int position;
+  int endoflist;
   StringList names;
 };
 

@@ -14,37 +14,51 @@ class Listener : public virtual NMProtocolListener
 {
 public:
   
-  Listener() {}
+  Listener(NMProtocol* nmProtocol)
+  {
+    this->nmProtocol = nmProtocol;
+  }
+
   virtual ~Listener() {}
 
-  void messageReceived(IAmMessage message) {
-    printf("IAmMessage: ");
-    printf("Sender: %d ", message.getSender());
-    printf("VersionHigh: %d ", message.getVersionHigh());
-    printf("VersionLow: %d \n", message.getVersionLow());
-  }
-
-  void messageReceived(LightMessage message) {
-    printf("LightMessage: ");
-    printf("pid: %d ", message.getPid());
-    printf("StartIndex: %d ", message.getStartIndex());
-    for (int i = 0; i < 20; i++) {
-      printf("%d ", message.getLightStatus(i));
-    }
-    printf("\n");
-  }
-
   void messageReceived(PatchListMessage message) {
-    printf("PatchListMessage: ");
-    printf("Section: %d ", message.getSection());
-    printf("Position: %d\n", message.getPosition());
 
-    PatchListMessage::StringList names = message.getNames();
-    for (PatchListMessage::StringList::iterator i = names.begin();
-	 i != names.end(); i++) {
-      printf("   %s\n", (*i).c_str());
+    printf("PatchListMessage:\n");
+
+    if (message.endOfList()) {
+      printf("   END\n");
+    }
+    else {
+      int section = message.getSection();
+      int position = message.getPosition();
+      
+      PatchListMessage::StringList names = message.getNames();
+      for (PatchListMessage::StringList::iterator i = names.begin();
+	   i != names.end(); i++, position++) {
+	if (message.endOfSection(*i)) {
+	  section++;
+	  position = -1;
+	}
+	else if (message.emptyPosition(*i)) {
+	  printf("   %d %d *EMPTY*\n", section, position);
+	}
+	else {
+	  printf("   %d%02d %d %s\n", section+1, position+1, (*i)[0], (*i).c_str());
+	}
+      }
+      
+      section += position / 99;
+      position = position % 99;
+      if (section < 9) {
+	GetPatchListMessage getPatchListMessage(section, position);
+	nmProtocol->send(&getPatchListMessage);      
+      }
     }
   }
+
+private:
+
+  NMProtocol* nmProtocol;
 
 };
 
@@ -68,7 +82,7 @@ int main(int argc, char** argv)
     driver->connect("/dev/snd/midiC1D0", "/dev/snd/midiC1D0");
 
     NMProtocol nmProtocol(driver);
-    nmProtocol.addListener(new Listener());
+    nmProtocol.addListener(new Listener(&nmProtocol));
 
     printf("Send GetPatchListMessage\n");
     BitStream bitStream;
@@ -76,7 +90,7 @@ int main(int argc, char** argv)
 
     nmProtocol.send(&getPatchListMessage);
 
-    while(1) {
+    while(!nmProtocol.sendQueueIsEmpty()) {
       nmProtocol.heartbeat();
     }
 

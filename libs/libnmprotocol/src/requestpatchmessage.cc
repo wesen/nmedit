@@ -27,7 +27,8 @@ RequestPatchMessage::RequestPatchMessage()
   slot = 0;
   pp = 0x41;
   ssc = 0x35;
-  wantAck = true;
+
+  expectsreply = true;
 }
 
 RequestPatchMessage::RequestPatchMessage(Packet* packet)
