@@ -2,7 +2,7 @@
 # Generated automatically by configure.
 # Run this file to recreate the current configuration.
 # This directory was configured as follows,
-# on host juno.stations.mtl.turbulent.ca:
+# on host modular.mtl.turbulent.ca:
 #
 # ./configure 
 #
@@ -26,9 +26,9 @@ do
 done
 
 ac_given_srcdir=.
-ac_given_INSTALL="/bin/install -c"
+ac_given_INSTALL="/usr/bin/install -c"
 
-trap 'rm -fr Makefile src/Makefile test/Makefile conftest*; exit 1' 1 2 15
+trap 'rm -fr Makefile src/Makefile nmpatch/Makefile test/Makefile conftest*; exit 1' 1 2 15
 
 # Protect against being on the right side of a sed subst in config.status.
 sed 's/%@/@@/; s/@%/@@/; s/%g$/@g/; /@g$/s/[\\&%]/\\&/g;
@@ -74,7 +74,7 @@ s%@build_cpu@%i686%g
 s%@build_vendor@%pc%g
 s%@build_os@%linux-gnu%g
 s%@CC@%gcc%g
-s%@CXX@%g++%g
+s%@CXX@%c++%g
 s%@AWK@%gawk%g
 s%@LEX@%flex%g
 s%@LEXLIB@%-lfl%g
@@ -134,7 +134,7 @@ if test -z "$ac_sed_cmds"; then
   ac_sed_cmds=cat
 fi
 
-CONFIG_FILES=${CONFIG_FILES-"Makefile src/Makefile test/Makefile"}
+CONFIG_FILES=${CONFIG_FILES-"Makefile src/Makefile nmpatch/Makefile test/Makefile"}
 for ac_file in .. $CONFIG_FILES; do if test "x$ac_file" != x..; then
   # Support "outfile[:infile[:infile...]]", defaulting infile="outfile.in".
   case "$ac_file" in
