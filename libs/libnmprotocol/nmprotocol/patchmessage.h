@@ -51,6 +51,8 @@ class PatchMessage : public virtual MidiMessage
 
  private:
 
+  typedef list<int> PositionList;
+
   Patch* patch;
   BitStream patchStream;
   int pid;
@@ -62,6 +64,7 @@ class PatchMessage : public virtual MidiMessage
 
   void init();
   void appendName(string name, IntStream& patchStream);
+  void storeEndPosition(IntStream intStream, PositionList* endPositions);
   string getName(Packet* name);
 };
 

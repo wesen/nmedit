@@ -52,12 +52,14 @@ class Packet
 
   Packet* getPacket(string name);
   int getVariable(string name);
+  VariableList getAllVariables();
   PacketList getPacketList(string name);
   VariableList getVariableList(string name);
 
  private:
 
   VariableMap variables;
+  VariableList allVariables;
   PacketMap packets;
   PacketListMap packetLists;
   VariableListMap intLists;

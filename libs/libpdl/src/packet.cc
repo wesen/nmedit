@@ -46,6 +46,7 @@ void Packet::bind(Packet* packet, string name)
 void Packet::bind(int number, string name)
 {
   variables[name] = number;
+  allVariables.push_back(number);
 }
 
 void Packet::bind(PacketList list, string name)
@@ -66,6 +67,11 @@ Packet* Packet::getPacket(string name)
 int Packet::getVariable(string name)
 {
   return variables.find(name) != variables.end() ? variables[name] : -1;
+}
+
+Packet::VariableList Packet::getAllVariables()
+{
+  return allVariables;
 }
 
 Packet::PacketList Packet::getPacketList(string name)

@@ -24,6 +24,7 @@
 #include "nmprotocol/midiexception.h"
 #include "pdl/protocol.h"
 #include "pdl/packetparser.h"
+#include "pdl/tracer.h"
 #include "nmpatch/patch.h"
 #include "nmpatch/modulesection.h"
 
@@ -35,13 +36,22 @@ string PatchMessage::patchPdlFile = string(LIBPATH) + "/patch.pdl";
 Protocol* PatchMessage::patchProtocol = 0;
 PacketParser* PatchMessage::patchParser = 0;
 
+class TestTracer : public virtual Tracer
+{
+public:
+  void trace(string message)
+  {
+    printf("TRACE: %s\n", message.c_str());
+  }
+};
+
 void PatchMessage::usePDLFile(string filename)
 {
   patchPdlFile = filename;
-  if (patchProtocol != 0) {
-    delete patchProtocol;
-    patchProtocol = 0;
-  }
+  //delete patchProtocol;
+  patchProtocol = new Protocol(patchPdlFile);
+  patchParser = patchProtocol->getPacketParser("Patch");
+  patchProtocol->useTracer(new TestTracer());
 }
 
 void PatchMessage::init()
@@ -50,11 +60,6 @@ void PatchMessage::init()
   cc = 0x1c;
   slot = 0;
   pid = 0;
-
-  if (patchProtocol == 0) {
-    patchProtocol = new Protocol(patchPdlFile);
-    patchParser = patchProtocol->getPacketParser("Patch");
-  }
 }
 
 PatchMessage::PatchMessage(Patch* patch)
@@ -91,12 +96,14 @@ PatchMessage::~PatchMessage()
 void PatchMessage::getBitStream(BitStreamList* bitStreamList)
 {
   IntStream intStream;
+  PositionList sectionEndPositions;
 
   // Create patch bitstream
 
   // Name section
   intStream.append(55);
   appendName(patch->getName(), intStream);
+  storeEndPosition(intStream, &sectionEndPositions);
   
   // Header section
   intStream.append(33);
@@ -125,6 +132,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     (patch->getModuleSection(ModuleSection::POLY)->getVoiceRetrigger());
   intStream.append(0xf);
   intStream.append(0);
+  storeEndPosition(intStream, &sectionEndPositions);
 
   // Module section
   for (int s = ModuleSection::POLY; s >= ModuleSection::COMMON; s--) {
@@ -145,6 +153,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
       intStream.append((*m)->getXPosition());
       intStream.append((*m)->getYPosition());
     }
+    storeEndPosition(intStream, &sectionEndPositions);
   }
 
   // Note section
@@ -161,6 +170,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     intStream.append((*nl)->getAttackVelocity());
     intStream.append((*nl)->getReleaseVelocity());
   }
+  storeEndPosition(intStream, &sectionEndPositions);
   
   // Cable section
   for (int s = ModuleSection::POLY; s >= ModuleSection::COMMON; s--) {
@@ -183,6 +193,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
       intStream.append((*c)->getDestinationModule()->getIndex());
       intStream.append((*c)->getDestinationConnector());
     }
+    storeEndPosition(intStream, &sectionEndPositions);
   }
 
   // Parameter section
@@ -215,6 +226,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
 	}
       }
     }
+    storeEndPosition(intStream, &sectionEndPositions);
   }  
 
   // Morph section
@@ -242,6 +254,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
       intStream.append((*m)->getRange());
     }
   }
+  storeEndPosition(intStream, &sectionEndPositions);
 
   // Knob section
   intStream.append(98);
@@ -268,6 +281,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
       intStream.append(0);
     }
   }
+  storeEndPosition(intStream, &sectionEndPositions);
 
   // Control section
   intStream.append(96);
@@ -286,6 +300,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     }      
     intStream.append((*k)->getParameter());
   }
+  storeEndPosition(intStream, &sectionEndPositions);
 
   // Custom section
   for (int s = ModuleSection::POLY; s >= ModuleSection::COMMON; s--) {
@@ -317,6 +332,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
 	}
       }
     }
+    storeEndPosition(intStream, &sectionEndPositions);
   }
 
   // Module name section
@@ -336,6 +352,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
       intStream.append((*m)->getIndex());
       appendName((*m)->getName(), intStream);
     }
+    storeEndPosition(intStream, &sectionEndPositions);
   }
 
   BitStream patchStream;
@@ -345,15 +362,23 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
   // Create sysex messages
   int first = 1;
   int last = 0;
+  int messageNumber = 0;
   while (patchStream.isAvailable(8)) {
 
     // Get data for one sysex packet
     BitStream partialPatchStream;
+    int sectionsEnded = 0;
     int n = 0;
     while (patchStream.isAvailable(8) && n < 166) {
       partialPatchStream.append(patchStream.getInt(8), 8);
+      if (n == (sectionEndPositions.front() - 166*messageNumber)) {
+	sectionsEnded++;
+	sectionEndPositions.pop_front();
+      }
       n++;
     }
+    messageNumber++;
+
     if (!patchStream.isAvailable(8)) {
       last = 1;
       first = 0;
@@ -367,7 +392,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     intStream.append(cc + first + 2*last);
     first = 0;
     intStream.append(slot);
-    intStream.append(pid);
+    intStream.append(0x40 + sectionsEnded);
     while (partialPatchStream.isAvailable(7)) {
       intStream.append(partialPatchStream.getInt(7));
     }
@@ -489,6 +514,33 @@ void PatchMessage::getPatch(Patch* patch)
 	  }
 	}
 	break;
+
+      case 77:
+	{
+	  ModuleSection* moduleSection =
+	    patch->getModuleSection((ModuleSection::Type)
+				    sectionData->getVariable("section"));
+	  Packet::PacketList modules =
+	    sectionData->getPacketList("parameters");
+	  for (Packet::PacketList::iterator i = modules.begin();
+	       i != modules.end(); i++) {
+	    Module* module =
+	      moduleSection->getModule((*i)->getVariable("index"));
+	    printf("%d %d ", (*i)->getVariable("index"),
+		   (*i)->getVariable("type"));
+	    Packet::VariableList parameters =
+	      (*i)->getPacket("parameters")->getAllVariables();
+	    int n = 0;
+	    for (Packet::VariableList::iterator p = parameters.begin();
+		 p != parameters.end(); p++, n++) {
+	      printf("%d ", (*p));
+	      //module->setParameter((Module::Parameter)n, (*p));
+	    }
+	    printf("\n");
+	  }
+	}
+	break;
+
       }
       packet = packet->getPacket("next");
     }
@@ -520,6 +572,14 @@ void PatchMessage::appendName(string name, IntStream& intStream)
   if (i < 16) {
     intStream.append(0);
   }
+}
+
+void PatchMessage::storeEndPosition(IntStream intStream,
+				    PositionList* sectionEndPositions)
+{
+  BitStream patchStream;
+  patchParser->generate(&intStream, &patchStream);
+  sectionEndPositions->push_back(patchStream.getSize()/8-1);
 }
 
 string PatchMessage::getName(Packet* name)

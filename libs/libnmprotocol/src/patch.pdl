@@ -520,7 +520,7 @@ Param96 % 1 :=
 	;
 	
 Param97 % 1 :=
-	pitch:7 pitchFine:7 kbt:1 pitchMod1:7 pitchMod2:1
+	pitch:7 pitchFine:7 kbt:7 pitchMod1:7 pitchMod2:7
 	;
 	
 Param98 % 1 :=

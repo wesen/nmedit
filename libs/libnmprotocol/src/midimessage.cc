@@ -51,21 +51,15 @@ public:
 void MidiMessage::usePDLFile(string filename)
 {
   pdlFile = filename;
-  if (protocol != 0) {
-    delete protocol;
-    protocol = 0;
-  }
+  //delete protocol;
+  protocol = new Protocol(pdlFile);
+  packetParser = protocol->getPacketParser("Sysex");
+  //protocol->useTracer(new TestTracer());
 }
 
 MidiMessage::MidiMessage()
 {
   patchMessage = 0;
-
-  if (protocol == 0) {
-    protocol = new Protocol(pdlFile);
-    packetParser = protocol->getPacketParser("Sysex");
-    //protocol->useTracer(new TestTracer());
-  }
 }
 
 MidiMessage::~MidiMessage()
