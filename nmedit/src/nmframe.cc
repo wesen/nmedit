@@ -28,7 +28,30 @@ NMFrame::NMFrame(const wxChar *title,
 	    wxPoint(xpos, ypos),
 	    wxSize(width, height))
 {
+  menuBar = 0;
+  fileMenu = 0;
+  helpMenu = 0;
 
+  fileMenu = new wxMenu;
+  fileMenu->Append(NM_OPEN, "Open...");
+  fileMenu->Append(NM_SAVE, "Save");
+  fileMenu->Append(NM_SAVEAS, "Save As...");
+  fileMenu->Append(NM_CLOSE, "Close");
+  fileMenu->AppendSeparator();
+  fileMenu->Append(NM_LOAD, "Load...");
+  fileMenu->Append(NM_STORE, "Store...");
+  fileMenu->AppendSeparator();
+  fileMenu->Append(NM_EXIT, "Exit");
+  
+  helpMenu = new wxMenu;
+  helpMenu->Append(NM_ABOUT, "About...");
+
+  menuBar = new wxMenuBar;
+  menuBar->Append(fileMenu, "File");
+  menuBar->Append(helpMenu, "Help");
+  SetMenuBar(menuBar);
+  
+  CreateStatusBar(1);
 }
 
 NMFrame::~NMFrame()
