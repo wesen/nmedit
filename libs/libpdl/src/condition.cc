@@ -22,10 +22,11 @@
 #include "pdl/condition.h"
 #include "pdl/packet.h"
 
-Condition::Condition(string variable, int value)
+Condition::Condition(string variable, int value, bool not)
 {
   this->variable = variable;
   this->value = value;
+  this->not = not;
 }
 
 Condition::~Condition()
@@ -34,5 +35,5 @@ Condition::~Condition()
 
 bool Condition::eval(Packet* packet)
 {
-  return packet->getVariable(variable) == value;
+  return not ^ (packet->getVariable(variable) == value);
 }

@@ -58,6 +58,7 @@
 %token STOP
 %token OPTIONAL
 %token COMPARE
+%token NOT_COMPARE
 %token BIND
 %token SIZE
 %token END
@@ -87,7 +88,11 @@ matcher:
 
 matcherOption:
 	CONDITIONAL IDENTIFIER COMPARE NUMBER CHOOSE
-        { condition = new Condition($2, pdlstoi($4));
+        { condition = new Condition($2, pdlstoi($4), false);
+	  optional = false; } |
+
+	CONDITIONAL IDENTIFIER NOT_COMPARE NUMBER CHOOSE
+        { condition = new Condition($2, pdlstoi($4), true);
 	  optional = false; } |
 
 	OPTIONAL

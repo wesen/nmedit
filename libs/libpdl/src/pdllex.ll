@@ -96,6 +96,8 @@
 
 = return COMPARE;
 
+! return NOT_COMPARE;
+
 \$ return BIND;
 
 : return SIZE;
