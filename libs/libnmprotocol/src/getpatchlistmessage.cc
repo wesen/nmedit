@@ -19,6 +19,7 @@
 
 #include "nmprotocol/getpatchlistmessage.h"
 #include "nmprotocol/nmprotocollistener.h"
+#include "nmprotocol/midiexception.h"
 #include "pdl/packet.h"
 
 GetPatchListMessage::GetPatchListMessage(int section, int position)
@@ -35,7 +36,8 @@ GetPatchListMessage::GetPatchListMessage(int section, int position)
 
 GetPatchListMessage::GetPatchListMessage(Packet* packet)
 {
-  slot = packet->getVariable("slot");
+  throw MidiException
+    ("GetPatchListMessage(Packet* packet) not implemented", 0);
 }
 
 GetPatchListMessage::~GetPatchListMessage()
@@ -60,5 +62,6 @@ void GetPatchListMessage::getBitStream(BitStreamList* bitStreamList)
 
 void GetPatchListMessage::notifyListener(NMProtocolListener* listener)
 {
-  // Message is not sent by the synth
+  throw MidiException
+    ("GetPatchListMessage::notifyListener() not implemented", 0);
 }

@@ -19,6 +19,7 @@
 
 #include "nmprotocol/requestpatchmessage.h"
 #include "nmprotocol/nmprotocollistener.h"
+#include "nmprotocol/midiexception.h"
 #include "pdl/packet.h"
 
 RequestPatchMessage::RequestPatchMessage()
@@ -33,7 +34,8 @@ RequestPatchMessage::RequestPatchMessage()
 
 RequestPatchMessage::RequestPatchMessage(Packet* packet)
 {
-  slot = packet->getVariable("slot");
+  throw MidiException
+    ("RequestPatchMessage(Packet* packet) not implemented", 0);
 }
 
 RequestPatchMessage::~RequestPatchMessage()
@@ -56,5 +58,6 @@ void RequestPatchMessage::getBitStream(BitStreamList* bitStreamList)
 
 void RequestPatchMessage::notifyListener(NMProtocolListener* listener)
 {
-  // Message is not sent by the synt
+  throw MidiException
+    ("RequestPatchMessage::notifyListener() not implemented", 0);
 }
