@@ -134,6 +134,17 @@ GetPatchList % 1 :=
 
 PatchModification % 1 :=
 	0:1 pid:7 0:1 sc:7
+
+	#sc=0x20 => GetPatchPartExtra$data
+	#sc=0x4b => GetPatchPartExtra$data
+	#sc=0x4c => GetPatchPartExtra$data
+	#sc=0x4e => GetPatchPartExtra$data
+	#sc=0x53 => GetPatchPartExtra$data
+	#sc=0x61 => GetPatchPart$data
+	#sc=0x63 => GetPatchPart$data
+	#sc=0x66 => GetPatchPart$data
+	#sc=0x68 => GetPatchPart$data
+
 	#sc=0x25 => KnobAssignment$data
 	#sc=0x26 => KnobAssignmentChange$data
 	#sc=0x32 => ModuleDeletion$data
@@ -144,8 +155,14 @@ PatchModification % 1 :=
 	#sc=0x55 => SendControllerSnapshot$data
 	#sc=0x56 => Note$data
 	#sc=0x58 => GetCurrentNotes$data
-	#sc=0x70 => UploadActiveSlot$data
 	0:1 checksum:7
+	;
+
+GetPatchPartExtra % 1 :=
+	0:1 payload:7
+	;
+
+GetPatchPart % 1 :=
 	;
 
 KnobAssignment % 1 :=
@@ -188,9 +205,6 @@ Note % 1 :=
 	;
 
 GetCurrentNotes % 1 :=
-	;
-
-UploadActiveSlot % 1 :=
 	;
 
 PatchPacket % 1 :=

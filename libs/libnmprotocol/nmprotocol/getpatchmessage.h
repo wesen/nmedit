@@ -17,41 +17,28 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "nmprotocol/nmprotocollistener.h"
+#ifndef GETPATCHMESSAGE_H
+#define GETPATCHMESSAGE_H
 
-NMProtocolListener::NMProtocolListener()
+#include "nmprotocol/midimessage.h"
+
+class Packet;
+
+class GetPatchMessage : public virtual MidiMessage
 {
-}
+ public:
 
-NMProtocolListener::~NMProtocolListener()
-{
-}
+  GetPatchMessage(int slot, int pid);
+  GetPatchMessage(Packet* packet);
+  virtual ~GetPatchMessage();
 
-void NMProtocolListener::messageReceived(IAmMessage message)
-{
-}
+  virtual void getBitStream(BitStreamList* bitStreamList);
 
-void NMProtocolListener::messageReceived(LightMessage message)
-{
-}
+  virtual void notifyListener(NMProtocolListener* listener);
+    
+ private:
+  
+  int pid;
+};
 
-void NMProtocolListener::messageReceived(PatchMessage message)
-{
-}
-
-void NMProtocolListener::messageReceived(AckMessage message)
-{
-}
-
-void NMProtocolListener::messageReceived(PatchListMessage message)
-{
-}
-
-void NMProtocolListener::messageReceived(NewPatchInSlotMessage message)
-{
-}
-
-void NMProtocolListener::messageReceived(VoiceCountMessage message)
-{
-}
-
+#endif

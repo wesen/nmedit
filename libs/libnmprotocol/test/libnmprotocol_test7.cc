@@ -17,13 +17,21 @@ class Listener : public virtual NMProtocolListener
 {
 public:
   
-  Listener() {}
+  NMProtocol* p;
+  Patch* patch;
+
+  Listener(NMProtocol* p) { this->p = p;}
   virtual ~Listener() {}
 
   void messageReceived(AckMessage message) {
     printf("AckMessage: ");
-    printf("pid1: %d ", message.getPid2());
-    printf("pid2: %d \n", message.getPid1());
+    printf("pid1: %d ", message.getPid1());
+    printf("pid2: %d \n", message.getPid2());
+
+    printf("Send GetPatchMessage.\n");
+    patch = new Patch();
+    GetPatchMessage getPatchMessage(message.getSlot(), message.getPid1());
+    p->send(&getPatchMessage);
   }
 
   void messageReceived(IAmMessage message) {
@@ -44,10 +52,9 @@ public:
   }
 
   void messageReceived(PatchMessage message) {
-    Patch patch;
-    message.getPatch(&patch);
-    printf("Name: %s\n", patch.getName().c_str());
-    printf("%s", patch.write().c_str());    
+    message.getPatch(patch);
+    printf("Name: %s\n", patch->getName().c_str());
+    printf("%s", patch->write().c_str());    
   }
 };
 
@@ -64,12 +71,12 @@ int main(int argc, char** argv)
     driver->connect("/dev/snd/midiC1D0", "/dev/snd/midiC1D0");
 
     NMProtocol nmProtocol(driver);
-    nmProtocol.addListener(new Listener());
+    nmProtocol.addListener(new Listener(&nmProtocol));
 
     RequestPatchMessage requestPatchMessage;
     nmProtocol.send(&requestPatchMessage);
 
-    while(1) {
+    while(!nmProtocol.sendQueueIsEmpty()) {
       nmProtocol.heartbeat();
     }
 

@@ -27,21 +27,23 @@
 #include "nmprotocol/patchlistmessage.h"
 #include "nmprotocol/newpatchinslotmessage.h"
 #include "nmprotocol/voicecountmessage.h"
+#include "nmprotocol/getpatchmessage.h"
 
 class NMProtocolListener
 {
  public:
 
-  NMProtocolListener();
-  virtual ~NMProtocolListener();
+  NMProtocolListener() {}
+  virtual ~NMProtocolListener() {}
 
-  virtual void messageReceived(IAmMessage message);
-  virtual void messageReceived(LightMessage message);
-  virtual void messageReceived(PatchMessage message);
-  virtual void messageReceived(AckMessage message);
-  virtual void messageReceived(PatchListMessage message);
-  virtual void messageReceived(NewPatchInSlotMessage message);
-  virtual void messageReceived(VoiceCountMessage message);
+  virtual void messageReceived(IAmMessage message) {}
+  virtual void messageReceived(LightMessage message) {}
+  virtual void messageReceived(PatchMessage message) {}
+  virtual void messageReceived(AckMessage message) {}
+  virtual void messageReceived(PatchListMessage message) {}
+  virtual void messageReceived(NewPatchInSlotMessage message) {}
+  virtual void messageReceived(VoiceCountMessage message) {}
+  virtual void messageReceived(GetPatchMessage message) {}
   
 };
 

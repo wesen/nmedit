@@ -6,6 +6,7 @@ Patch % 1 :=
 Section % 8 :=
 	type:8
 	#type=55 => PatchName$data
+	#type=39 => PatchName2$data
 	#type=33 => Header$data
 	#type=74 => ModuleDump$data
 	#type=105 => NoteDump$data
@@ -20,6 +21,10 @@ Section % 8 :=
 
 PatchName % 1 :=
 	0:8 0:8 0:8 String$name
+	;
+
+PatchName2 % 1 :=
+	String$name
 	;
 
 Header % 1 :=

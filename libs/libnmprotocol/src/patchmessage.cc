@@ -425,6 +425,7 @@ void PatchMessage::getPatch(Patch* patch)
 
 	// Name section
       case 55:
+      case 39:
 	patch->setName(getName(sectionData->getPacket("name")));
 	break;
 
