@@ -74,6 +74,11 @@
   return NOTES;
 }
 
+"[/NOTES]"(\r\n|\n)*"[Notes]"(.*(\r\n|\n))* { 
+  nmlval = yytext;
+  return NOTES;
+}
+
 (\r\n|\n) {
   pchline++;
   return '\n';

@@ -150,6 +150,15 @@ module_dump:
 	}
 	module_list
 	MODULE_DUMP_END '\n'
+	|
+	MODULE_DUMP '\n'
+	PARAM
+        {
+	  section = patch->getModuleSection((ModuleSection::Type)pchstoi($3));
+	}
+	module_list
+	MODULE_DUMP_END '\n'
+
 	;
 
 module_list:
@@ -179,6 +188,14 @@ note_list:
 cable_dump:
 	CABLE_DUMP '\n'
 	PARAM '\n'
+        {
+	  section = patch->getModuleSection((ModuleSection::Type)pchstoi($3));
+	}
+	cable_list
+	CABLE_DUMP_END '\n'
+	|
+	CABLE_DUMP '\n'
+	PARAM
         {
 	  section = patch->getModuleSection((ModuleSection::Type)pchstoi($3));
 	}
@@ -387,7 +404,7 @@ name:
 	;
 
 notes:
-	NOTES '\n' { patch->setNotes($1); }
+	NOTES { patch->setNotes($1); }
 	;
 
 %%
