@@ -116,6 +116,9 @@ PatchManagerCommand % 1 :=
 	0:1 ssc:7
 	#ssc=0x07 => SelectSlots$data
 	#ssc=0x09 => ActivateSlot$data
+	#ssc=0x0a => LoadPatch$data
+	#ssc=0x0b => StorePatch$data
+	#ssc=0x0c => DeletePatch$data
 	#ssc=0x35 => RequestPatch$data
 	#ssc=0x14 => GetPatchList$data
 	;
@@ -128,11 +131,24 @@ ActivateSlot % 1 :=
 	0:1 slot:7
 	;
 
+LoadPatch % 1 :=
+	0:1 slot:7 0:1 section:7 0:1 position:7
+	;
+
+StorePatch % 1 :=
+	0:1 slot:7 0:1 section:7 0:1 position:7
+	;
+
+DeletePatch % 1 :=
+	0:1 section:7 0:1 position:7 0:8
+	;
+
 RequestPatch % 1 :=
 	;
 
 GetPatchList % 1 :=
-	0:1 section:7 0:1 position:7;
+	0:1 section:7 0:1 position:7
+	;
 
 PatchModification % 1 :=
 	0:1 pid:7 0:1 sc:7
