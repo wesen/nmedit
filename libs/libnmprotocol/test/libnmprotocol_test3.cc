@@ -6,6 +6,7 @@
 #include "nmprotocol/midiexception.h"
 #include "nmprotocol/iammessage.h"
 #include "pdl/protocol.h"
+#include "pdl/pdlexception.h"
 #include "nmprotocol/nmprotocollistener.h"
 #include "nmprotocol/nmprotocol.h"
 
@@ -87,6 +88,11 @@ int main(int argc, char** argv)
     driver->disconnect();
   }
   catch (MidiException& exception) {
+    printf("Exception: %s %d\n",
+	   exception.getMessage().c_str(),
+	   exception.getError());
+  }
+  catch (PDLException& exception) {
     printf("Exception: %s %d\n",
 	   exception.getMessage().c_str(),
 	   exception.getError());
