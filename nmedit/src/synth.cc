@@ -1,6 +1,6 @@
 /*
     nmEdit
-    Copyright (C) 2004 Marcus Andersson
+    Copyright (C) 2004-2005 Marcus Andersson
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,8 +22,69 @@
 
 #include "nmprotocol/nmprotocol.h"
 #include "nmpatch/patch.h"
+#include "nmpatch/modulelistener.h"
+#include "nmpatch/modulesectionlistener.h"
+#include "pdl/tracer.h"
+#include "pdl/protocol.h"
 
 #include <stdio.h>
+
+class TestTracer : public virtual Tracer
+{
+public:
+  void trace(string message)
+  {
+    printf("TRACE: %s\n", message.c_str());
+  }
+};
+
+class SynthModuleListener : public ModuleListener
+{
+  NMProtocol* protocol;
+  ParameterMessage parameterMessage;
+
+public:
+
+  SynthModuleListener(NMProtocol* protocol,
+		      int pid, int slot, int section, int module)
+  {
+    this->protocol = protocol;
+    parameterMessage = ParameterMessage(pid, section, module, 0, 0);
+    parameterMessage.setSlot(slot);
+  }
+
+  void parameterChanged(ModuleType::Parameter param, int value)
+  {
+    parameterMessage.setParameter(param);
+    parameterMessage.setValue(value);
+    protocol->send(&parameterMessage);
+  }
+};
+
+class SynthSectionListener : public ModuleSectionListener
+{
+  NMProtocol* protocol;
+  int pid;
+  int slot;
+  int section;
+
+public:
+
+  SynthSectionListener(NMProtocol* protocol, int pid, int slot, int section)
+  {
+    this->protocol = protocol;
+    this->pid = pid;
+    this->slot = slot;
+    this->section = section;
+  }
+
+  void newModule(Module* module, int index)
+  {
+    module->
+      addListener(new SynthModuleListener(protocol, pid, slot,
+					  section, index));
+  }
+};
 
 Synth::Synth(NMProtocol* protocol)
 {
@@ -160,10 +221,8 @@ void Synth::messageReceived(LightMessage message)
 
 void Synth::messageReceived(PatchMessage message)
 {
-  printf("Patch\n");
   int slot = message.getSlot();
   message.getPatch(patches[slot]);
-  notifyListeners(slot, patches[slot]);
 }
 
 void Synth::messageReceived(AckMessage message)
@@ -177,6 +236,9 @@ void Synth::messageReceived(AckMessage message)
     GetPatchMessage getPatchMessage(slot, pids[slot]);
     protocol->send(&getPatchMessage);
     notifyListeners(slot, patches[slot]);
+    patches[slot]->getModuleSection(ModuleSection::POLY)->
+      addListener(new SynthSectionListener(protocol, pid, slot,
+					   ModuleSection::POLY));
   }
 }
 
@@ -226,3 +288,12 @@ void Synth::messageReceived(SlotActivatedMessage message)
   notifyListeners(oldActiveSlot);
   notifyListeners(activeSlot);
 }
+
+void Synth::messageReceived(ParameterMessage message)
+{
+  patches[message.getSlot()]->
+    getModuleSection(message.getSection())->
+    getModule(message.getModule())->
+    setParameter(message.getParameter(), message.getValue());
+}
+

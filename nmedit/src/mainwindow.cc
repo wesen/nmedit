@@ -19,21 +19,34 @@
 
 #include "mainwindow.h"
 
-#include "synthview.h"
+#include "sectionview.h"
+
+#include "nmpatch/patch.h"
 
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
+#include <FL/Fl_Tabs.H>
 
-MainWindow::MainWindow(int argc, char** argv)
+MainWindow::MainWindow()
 {
-  window = new Fl_Window(300,180);
-  synthView = new SynthView();
-  window->end();
-  window->show(argc, argv);
+  window = new Fl_Window(1024, 768);
+  window->size_range(0, 0, 2000, 2000);
+  window->show();
+  sectionView = 0;
 }
 
 MainWindow::~MainWindow()
 {
+  delete sectionView;
   delete window;
-  delete synthView;
+}
+
+void MainWindow::newPatch(Patch* patch)
+{
+  if (sectionView == 0) {
+    window->begin();
+    sectionView =
+      new SectionView(patch->getModuleSection(ModuleSection::POLY), window);
+    window->end();
+  }
 }

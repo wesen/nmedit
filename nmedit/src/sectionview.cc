@@ -19,12 +19,36 @@
 
 #include "sectionview.h"
 
-SectionView::SectionView()
+#include "moduleview.h"
+
+#include "nmpatch/modulesection.h"
+
+#include "FL/Fl.H"
+#include "FL/Fl_Group.H"
+
+SectionView::SectionView(ModuleSection* section, Fl_Group* parent)
 {
+  this->section = section;
+  this->parent = parent;
+  section->addListener(this);
+
+  //group = new Fl_Group(0, 0, 1024, 768, 0);
   
+  ModuleSection::ModuleList moduleList = section->getModules();
+  for (ModuleSection::ModuleList::iterator i = moduleList.begin();
+       i != moduleList.end(); i++) {
+    ModuleView* moduleView = new ModuleView(*i, parent);
+  }
+  
+  //group->end();
 }
 
 SectionView::~SectionView()
 {
-  
+  delete group;
+}
+
+void SectionView::newModule(Module* module, int index)
+{
+  ModuleView* moduleView = new ModuleView(module, parent);
 }

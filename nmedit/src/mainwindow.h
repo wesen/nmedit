@@ -21,20 +21,25 @@
 #define MAINWINDOW_H
 
 class Fl_Window;
-class SynthView;
+class Fl_Tabs;
+class SectionView;
+class Patch;
 
 class MainWindow
 {
  public:
   
-  MainWindow(int argc, char** argv);
+  MainWindow();
   
   virtual ~MainWindow();
+
+  void newPatch(Patch* patch);
 
  private:
 
   Fl_Window* window;
-  SynthView* synthView;
+  Fl_Tabs* tabs;
+  SectionView* sectionView;
 };
 
 #endif

@@ -20,15 +20,26 @@
 #ifndef SECTIONVIEW_H
 #define SECTIONVIEW_H
 
-class SectionView
+#include "nmpatch/modulesectionlistener.h"
+
+class ModuleSection;
+class Fl_Group;
+
+class SectionView : public ModuleSectionListener
 {
  public:
   
-  SectionView();
+  SectionView(ModuleSection* section, Fl_Group* parent);
   
   virtual ~SectionView();
 
+  virtual void newModule(Module*, int);
+
  private:
+
+  ModuleSection* section;
+  Fl_Group* group;
+  Fl_Group* parent;
 
 };
 

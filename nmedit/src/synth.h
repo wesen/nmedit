@@ -67,6 +67,7 @@ class Synth : public NMProtocolListener
   virtual void messageReceived(VoiceCountMessage message);
   virtual void messageReceived(SlotsSelectedMessage message);
   virtual void messageReceived(SlotActivatedMessage message);
+  virtual void messageReceived(ParameterMessage message);
 
  private:
   

@@ -20,15 +20,36 @@
 #ifndef MODULEVIEW_H
 #define MODULEVIEW_H
 
-class ModuleView
+#include "nmpatch/moduletype.h"
+#include "nmpatch/modulelistener.h"
+
+class Module;
+class Fl_Widget;
+class Fl_Group;
+class Fl_Output;
+class Fl_Input;
+class Fl_Slider;
+
+class ModuleView : public ModuleListener
 {
  public:
   
-  ModuleView();
+  ModuleView(Module* module, Fl_Group* parent);
   
   virtual ~ModuleView();
 
+  virtual void parameterChanged(ModuleType::Parameter, int);
+  virtual void positionChanged(int, int);
+
  private:
+
+  Module* module;
+  ModuleType* type;
+  Fl_Group* group;
+  Fl_Group* parent;
+  Fl_Output* output;
+  Fl_Input* input;
+  Fl_Slider** sliders;
 
 };
 

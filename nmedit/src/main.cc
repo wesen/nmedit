@@ -46,14 +46,16 @@ class DebugSynthListener : public SynthListener
 {
  public:
   
-  DebugSynthListener() {}
+  DebugSynthListener()
+  {
+    window = new MainWindow();
+  }
   
   virtual ~DebugSynthListener() {}
 
   virtual void newPatchInSlot(int slot, Patch* patch)
   {
-    printf("Slot %d:\n", slot);
-    printf("%s\n", patch->write().c_str());
+    window->newPatch(patch);
   }
 
   virtual void patchListChanged()
@@ -65,6 +67,11 @@ class DebugSynthListener : public SynthListener
   {
     printf("Slot %d: %d %d %d\n", slot, active, selected, voices);
   }
+  
+ private:
+  
+  MainWindow* window; 
+
 };
 
 int main(int argc, char** argv)
@@ -145,8 +152,6 @@ int main(int argc, char** argv)
     DebugSynthListener dsl;
     synth.addListener(&dsl);
 
-    MainWindow mainWindow(argc, argv);
-    
     while(1) {
       Fl::check();
       nmProtocol.heartbeat();
