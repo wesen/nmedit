@@ -18,6 +18,7 @@
 */
 
 #include <unistd.h>
+#include <glob.h>
 #include <alsa/asoundlib.h>
 
 #include "nmprotocol/midiexception.h"
@@ -35,14 +36,46 @@ ALSADriver::~ALSADriver()
 ALSADriver::StringList ALSADriver::getMidiInputPorts()
 {
   StringList ports;
-  ports.push_back("/dev/snd/midiC1D0");
+  glob_t globdata;
+  
+  glob("/dev/snd/midi*", 0, 0, &globdata);
+  if (globdata.gl_pathc > 0) {
+    int n = 0;
+    char* path;
+    while ((path = globdata.gl_pathv[n]) != 0) {
+      fd_in = open(path, O_RDONLY | O_NONBLOCK);
+      if (fd_in >= 0) {
+	ports.push_back(path);
+	close(fd_in);
+      }
+      n++;
+    }
+  }
+  globfree(&globdata);
+
   return ports;
 }
 
 ALSADriver::StringList ALSADriver::getMidiOutputPorts()
 {
   StringList ports;
-  ports.push_back("/dev/snd/midiC1D0");
+  glob_t globdata;
+  
+  glob("/dev/snd/midi*", 0, 0, &globdata);
+  if (globdata.gl_pathc > 0) {
+    int n = 0;
+    char* path;
+    while ((path = globdata.gl_pathv[n]) != 0) {
+      fd_out = open(path, O_WRONLY | O_NONBLOCK);
+      if (fd_out >= 0) {
+	ports.push_back(path);
+	close(fd_out);
+      }
+      n++;
+    }
+  }
+  globfree(&globdata);
+
   return ports;
 }
 

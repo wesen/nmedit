@@ -42,8 +42,7 @@ int main(int argc, char** argv)
 
     MidiDriver* driver =
       MidiDriver::createDriver(*MidiDriver::getDrivers().begin());
-    driver->connect(*driver->getMidiInputPorts().begin(),
-		    *driver->getMidiOutputPorts().begin());
+    driver->connect("/dev/snd/midiC1D0", "/dev/snd/midiC1D0");
 
     NMProtocol nmProtocol(driver);
     nmProtocol.addListener(new Listener());
