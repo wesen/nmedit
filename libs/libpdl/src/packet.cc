@@ -61,11 +61,19 @@ void Packet::bind(VariableList list, string name)
 
 Packet* Packet::getPacket(string name)
 {
+  int pos = name.find_first_of(':');
+  if (pos >= 0) {
+    return packets[name.substr(0, pos)]->getPacket(name.substr(pos+1));
+  }
   return packets[name];
 }
 
 int Packet::getVariable(string name)
 {
+  int pos = name.find_first_of(':');
+  if (pos >= 0) {
+    return packets[name.substr(0, pos)]->getVariable(name.substr(pos+1));
+  }
   return variables.find(name) != variables.end() ? variables[name] : -1;
 }
 
@@ -76,11 +84,19 @@ Packet::VariableList Packet::getAllVariables()
 
 Packet::PacketList Packet::getPacketList(string name)
 {
+  int pos = name.find_first_of(':');
+  if (pos >= 0) {
+    return packets[name.substr(0, pos)]->getPacketList(name.substr(pos+1));
+  }
   return packetLists[name];
 }
 
 Packet::VariableList Packet::getVariableList(string name)
 {
+  int pos = name.find_first_of(':');
+  if (pos >= 0) {
+    return packets[name.substr(0, pos)]->getVariableList(name.substr(pos+1));
+  }
   return intLists[name];
 }
 
