@@ -22,10 +22,13 @@
 
 #include <string>
 #include <map>
+#include <list>
 
 using namespace std;
 
 #include "nmpatch/moduletype.h"
+
+class ModuleListener;
 
 class Module
 {
@@ -56,8 +59,15 @@ class Module
   int getCustomValue(ModuleType::CustomValue);
   string getMappedCustomValue(ModuleType::CustomValue);
 
+  void addListener(ModuleListener*);
+  void removeListener(ModuleListener*);
+
+  void notifyListeners(ModuleType::Parameter, int);
+
  private:
   
+  typedef list<ModuleListener*> ModuleListenerList;
+
   ModuleType* type;
   int index;
   int xpos;
@@ -65,6 +75,8 @@ class Module
   string name;
   ParameterMap parameters;
   CustomValueMap customValues;
+  ModuleListenerList listeners;
+  
 };
     
 #endif

@@ -18,6 +18,7 @@
 */
 
 #include "nmpatch/module.h"
+#include "nmpatch/modulelistener.h"
 
 Module::Module(ModuleType* type, int index)
 {
@@ -95,3 +96,22 @@ string Module::getMappedCustomValue(ModuleType::CustomValue param)
 {
   return type->mapCustomValue(param, customValues[param]);
 }
+
+void Module::addListener(ModuleListener* listener)
+{
+  listeners.push_back(listener);
+}
+
+void Module::removeListener(ModuleListener* listener)
+{
+  listeners.remove(listener);
+}
+
+void Module::notifyListeners(ModuleType::Parameter parameter, int value)
+{
+  for (ModuleListenerList::iterator i = listeners.begin();
+       i != listeners.end(); i++) {
+    (*i)->parameterChanged(parameter, value);
+  }
+}
+
