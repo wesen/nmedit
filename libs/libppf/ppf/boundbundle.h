@@ -17,26 +17,39 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef BOUNDBUNDLE_H
+#define BOUNDBUNDLE_H
 
-#include "ppf/boundbundle.h"
+#include <string>
+#include <map>
+
+#include <tcl.h>
+
+#include "ppf/bundle.h"
+
+using namespace std;
 
 namespace ppf
 {
   
-class Parser
+class BoundBundle
 {
  public:
   
-  Parser();
+  BoundBundle(Bundle*, string);
 
-  BoundBundle* parse(string);
-  
-  virtual void ~Parser();
+  BoundBundle getBoundBundle(string);
+
+  string getProperty(string);
+
+  virtual void ~BoundBundle();
 
  private:
   
+  Bundle* bundle;
+  int level;
+  string bindings;
+
 };
 
 }    

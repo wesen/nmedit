@@ -34,23 +34,23 @@ class Bundle
 {
  public:
   
-  typedef map<string, Bundle*> BundleMap;
-  typedef map<string, string> PropertyMap;
+  Bundle(Tcl_interp*);
 
-  Bundle();
-
-  Bundle* newBundle(string, int, Tcl_interp*);
-  Bundle* getBundle(string);
+  Bundle* newBundle(string);
+  Bundle* getBundle(string, string);
 
   void newProperty(string, string);
-  string getProperty(string);
+  string getProperty(string, string);
 
   virtual void ~Bundle();
 
  private:
   
-  BundleMap bundleMap;
-  PropertyMap propertyMap;
+  typedef map<string, Bundle*> BundleMap;
+  typedef map<string, string> PropertyMap;
+
+  BundleMap bundles;
+  PropertyMap properties;
   Tcl_interp* interp;
 
 };

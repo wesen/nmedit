@@ -17,27 +17,28 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef PARSER_H
-#define PARSER_H
+#include "ppf/boundbundle.cc"
 
-#include "ppf/boundbundle.h"
 
-namespace ppf
+BoundBundle::BoundBundle(Bundle* bundle, int level, string bindings)
 {
-  
-class Parser
+  this->bundle = bundle;
+  this->level = level;
+  this->bindings = bindings;
+}
+
+BoundBundle BoundBundle::getBoundBundle(string name)
 {
- public:
-  
-  Parser();
+  return BoundBundle(bundle->getBundle(name, bindings),
+		     level + 1,
+		     bindings + " set $" + level + " " + name + ";");
+}
 
-  BoundBundle* parse(string);
-  
-  virtual void ~Parser();
+string BoundBundle::getProperty(string name)
+{
+  return bundle->getProperty(name, level + 1, bindings);
+}
 
- private:
-  
-};
-
-}    
-#endif
+void BoundBundle::~BoundBundle()
+{
+}

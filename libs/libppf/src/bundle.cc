@@ -17,35 +17,59 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "ppf/parser.h"
+#include "ppf/bundle.h"
+#include "ppf/programmablepropertyexception.h"
 
 
-Budle::Bundle()
+Bundle::Bundle(Tcl_interp* interp)
 {
-
+  this->interp = interp;
 }
 
-Bundle* Bundle::newBundle(string regexp, int level, Tcl_interp* interp)
+Bundle* Bundle::newBundle(string regexp)
 {
-  
+  Bundle* bundle = new Bundle(level + 1, interp);
+  bundles[regexp] = bundle;
 }
 
-Bundle* Bundle::getBundle(string name)
+Bundle* Bundle::getBundle(string name, string bindings)
 {
-  
+  for (BundleMap::iterator n = bundles.begin(); n != bundles.end(); n++) {
+    Tcl_Eval(interp,
+	     (bindings + " regexp " + (*n).first + " " + name).c_str());
+    if (string("1") == interp->result) {
+      return (*n).second;
+    }
+  }
+  throw ProgrammablePropertyException(string("Missing bundle: ") + name, 0);
+  return 0;
 }
 
 void Bundle::newProperty(string regexp, string expr)
 {
-  
+  properties[regexp] = expr;
 }
 
-string Bundle::getProperty(string name)
+string Bundle::getProperty(string name, int level, string bindings)
 {
-
+  for (PropertyMap::iterator n = properties.begin();
+       n != properties.end(); n++) {
+    Tcl_Eval(interp,
+	     (bindings + " regexp " + (*n).first + " " + name).c_str());
+    if (string("1") == interp->result) {
+      Tcl_Eval(interp,
+	       (bindings + " set $" + level + " " + name + ";" +
+		" return " + (*n).second ";").c_str());
+      return string(interp->result);
+    }
+  }
+  throw ProgrammablePropertyException(string("Missing property: ") + name, 1);
+  return "";
 }
 
 void Bundle::~Bundle()
 {
-
+  for (BundleMap::iterator n = bundles.begin(); n != bundles.end(); n++) {
+    delete (*n).second;
+  }
 }
