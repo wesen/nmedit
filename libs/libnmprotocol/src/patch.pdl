@@ -498,8 +498,8 @@ Param90 % 1 :=
 	;
 	
 Param91 % 1 :=
-	ctrl1:1 ctrl2:1 ctrl3:1 ctrl4:1 ctrl5:1 ctrl6:1 ctrl7:1 ctrl8:1 
-	ctrl9:1 ctrl10:1 ctrl11:1 ctrl12:1 ctrl13:1 ctrl14:1 ctrl15:1 ctrl16:1 
+	ctrl1:7 ctrl2:7 ctrl3:7 ctrl4:7 ctrl5:7 ctrl6:7 ctrl7:7 ctrl8:7 
+	ctrl9:7 ctrl10:7 ctrl11:7 ctrl12:7 ctrl13:7 ctrl14:7 ctrl15:7 ctrl16:7 
 	step:7 uni:1 loop:1
 	;
 	
