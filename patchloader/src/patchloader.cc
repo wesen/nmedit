@@ -46,10 +46,6 @@ int main(int argc, char** argv)
 	 "conditions.\n", VERSION);
 
   try {
-    MidiMessage::usePDLFile("/usr/local/lib/nmprotocol/midi.pdl", 0);
-    PatchMessage::usePDLFile("/usr/local/lib/nmprotocol/patch.pdl", 0);
-    ModuleSection::usePPFFile("/usr/local/lib/nmpatch/module.ppf");
-
     string patchname, drivername, input, output;
     bool error = false;
     int slot = 0;
