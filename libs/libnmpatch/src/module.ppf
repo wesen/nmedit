@@ -133,41 +133,62 @@ map.velscalain.1?[0-9]?[0-9]=[expr $3 * 48 / 127 - 24]dB
 map.quantbits.[0-9]|10|11=[expr $3 + 1]
 map.quantbits.12=off
 
-map.sustain.0 ~ off, 4 ~ level 4
+map.sustain.0=off
+map.sustain.[1-4]="level $3"
 
-map.envcurve.0 ~ bipolar, 1 ~ uni/exp, 2 ~ uni/lin
+map.envcurve.0=bipolar
+map.envcurve.1=uni/exp
+map.envcurve.2=uni/lin
 
-map.shiftmode.0 ~ bipolar, 1 ~ uni/neg, 2 ~ uni/pos
+map.shiftmode.0=bipolar
+map.shiftmode.1=uni/neg
+map.shiftmode.2=uni/pos
 
-map.logictype.0 ~ and, 1 ~ or, 2 ~ xor
+map.logictype.0=and
+map.logictype.1=or
+map.logictype.2=xor
 
-map.quantnotes.0 ~ off
+map.quantnotes.0=off
+map.quantnotes.1?[0-9]?[0-9]=$3
 
-map.delaytime.0 ~ 0 ms, 127 ~ 2.65 ms
+map.delaytime.0=0 ms, 127=2.65 ms
 
-map.diodemode.0 ~ off, 1 ~ half wave, 2 ~ full wave
+map.diodemode.0=off
+map.diodemode.1="half wave"
+map.diodemode.2="full wave"
 
-map.shapermode.0 ~ log2, 1 ~ log1, 2 ~ lin, 3 ~ exp1, 4 ~ exp2
+map.shapermode.0=log2
+map.shapermode.1=log1
+map.shapermode.2=lin
+map.shapermode.3=exp1
+map.shapermode.4=exp2
 
-map.switchin.0 ~ out1, 3 ~ out4
+map.switchin.[0-3]=out[expr $3 + 1]
 
-map.percpitch.0 ~ 8.18 Hz, 127 ~ 12.54 kHz
+map.percpitch.0=8.18 Hz, 127=12.54 kHz
 
-map.phaserrate.0 ~ 62.9 s, 127 ~ 24.4 hHz
+map.phaserrate.0=62.9 s, 127=24.4 hHz
 
-map.phasercenterfreq.0 ~ 100 Hz, 127 ~ 16 kHz
+map.phasercenterfreq.0=100 Hz, 127=16 kHz
 
-map.phaserpeaks.0 ~ 1 peak, 5 ~ 6 peaks
+map.phaserpeaks.0=1 peak
+map.phaserpeaks.[1-5]="[expr $3 + 1] peaks"
 
-map.eqbandwidth.0 ~ 2 oct, 64 ~ 1 oct, 127 ~ 0.02 oct
+map.eqbandwidth.0=2 oct, 64=1 oct, 127=0.02 oct
 
-map.eqmod.0 ~ low, 1 ~ high
+map.eqmod.0=low
+map.eqmod.1=high
 
-map.spectralpartials.0 ~ odd, 1 ~ all
+map.spectralpartials.0=odd
+map.spectralpartials.1=all
 
-map.ringmoddepth.0 ~ 0, 64 ~ AM, 127 ~ RM
+map.ringmoddepth.0=0, 64=AM, 127=RM
 
-map.digisamplerate.0 ~ 34.65 Hz, 127 ~ 50.18 kHz
+map.digisamplerate.0=34.65 Hz, 127=50.18 kHz
+
+map.mixermode.0=lin
+map.mixermode.1=exp
+
 
 module.1.name=Keyboard
 module.1.cardinality=1
@@ -1215,6 +1236,7 @@ module.24.parameter.0.name="rate"
 module.24.parameter.0.min=0
 module.24.parameter.0.max=127
 module.24.parameter.0.map=lforate
+module.24.parameter.0.mapparam=1
 module.24.parameter.1.name="range"
 module.24.parameter.1.min=0
 module.24.parameter.1.max=2
@@ -1266,6 +1288,7 @@ module.25.parameter.0.name="rate"
 module.25.parameter.0.min=0
 module.25.parameter.0.max=127
 module.25.parameter.0.map=lforate
+module.25.parameter.0.mapparam=1
 module.25.parameter.1.name="range"
 module.25.parameter.1.min=0
 module.25.parameter.1.max=2
@@ -1319,6 +1342,7 @@ module.26.parameter.0.name="rate"
 module.26.parameter.0.min=0
 module.26.parameter.0.max=127
 module.26.parameter.0.map=lforate
+module.26.parameter.0.mapparam=1
 module.26.parameter.1.name="range"
 module.26.parameter.1.min=0
 module.26.parameter.1.max=2
@@ -2435,7 +2459,7 @@ module.66.parameter.3.map=
 module.66.parameter.4.name="mode"
 module.66.parameter.4.min=0
 module.66.parameter.4.max=1
-module.66.parameter.4.map=0 ~ lin, 1 ~ exp
+module.66.parameter.4.map=mixermode
 module.66.input.0.name="in1"
 module.66.input.0.type=control
 module.66.input.1.name="in2"
