@@ -17,31 +17,31 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "ppf/boundbundle.h"
+#include "ppf/parser.h"
+#include "ppf/programmablepropertyexception.h"
 
 using namespace ppf;
 
-BoundBundle::BoundBundle(Bundle* bundle, int level, string bindings)
+int main(int argc, char** argv)
 {
-  this->bundle = bundle;
-  this->level = level;
-  this->bindings = bindings;
-}
+  if (argc < 3) {
+    printf("usage: %s ppf_file {bundle*} property\n", argv[0]);
+    exit(1);
+  }
 
-BoundBundle BoundBundle::getBoundBundle(string name)
-{
-  char slevel[11];
-  snprintf(slevel, 10, "%d", level);
-  return BoundBundle(bundle->getBundle(name, bindings),
-		     level + 1,
-		     bindings + " set " + slevel + " " + name + ";");
-}
-
-string BoundBundle::getProperty(string name)
-{
-  return bundle->getProperty(name, level + 1, bindings);
-}
-
-BoundBundle::~BoundBundle()
-{
+  try {
+    Parser parser;
+    BoundBundle bb = parser.parse(argv[1]);
+    int n = 0;
+    while (argc > (3+n)) {
+      bb = bb.getBoundBundle(argv[2+n]);
+      n++;
+    }
+    printf("\"%s\"\n", bb.getProperty(argv[2+n]).c_str());
+  }
+  catch(ProgrammablePropertyException& exception) {
+    printf("ProgrammablePropertyException: %s (%d)\n",
+	   exception.getMessage().c_str(),
+	   exception.getError());
+  }
 }

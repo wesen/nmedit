@@ -42,10 +42,16 @@ BoundBundle Parser::parse(string filename)
   string expression;
   Bundle* currentBundle;
   
+  if (file.fail()) {
+    throw
+      ProgrammablePropertyException(string("Failed to open file: ") + filename,
+				    5);
+  }
+
   while (!file.eof()) {
     getline(file, line);
     line = trim(line);
-    if (line.length() != 0 && line[0] != '#') {
+    if (line.length() > 0 && line[0] != '#') {
       parse(line, &bundles, &property, &expression);
       currentBundle = rootBundle;
       for (StringList::iterator name = bundles.begin();
@@ -66,10 +72,10 @@ Parser::~Parser()
 
 string Parser::trim(string line)
 {
-  while (line[0] == ' ' || line[0] == '\t') {
+  while (line.length() > 0 && (line[0] == ' ' || line[0] == '\t')) {
     line = line.substr(1);
   }
-  return line;
+  return line.substr(0, line.length() - 1);
 }
 
 void Parser::parse(string line,
@@ -91,8 +97,12 @@ void Parser::parse(string line,
 
 void Parser::split(string line, StringList* atoms)
 {
-  while (line.length() > 0) {
+  while (line.find(" ") < line.length()) {
     atoms->push_back(line.substr(0, line.find(" ")));
     line = line.substr(line.find(" ") + 1);
+    if (atoms->back() == "=") {
+      break;
+    }
   }
+  atoms->push_back(line);
 }

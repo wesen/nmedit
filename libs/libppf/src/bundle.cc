@@ -44,7 +44,7 @@ Bundle* Bundle::getBundle(string name, string bindings)
 {
   for (BundleMap::iterator n = bundles.begin(); n != bundles.end(); n++) {
     Tcl_Eval(interp,
-	     (char*)(bindings + " regexp " + (*n).first + " " + name).c_str());
+	     (char*)(bindings + " regexp ^" + (*n).first + "$ " + name).c_str());
     if (string("1") == interp->result) {
       return (*n).second;
     }
@@ -63,12 +63,13 @@ string Bundle::getProperty(string name, int level, string bindings)
   for (PropertyMap::iterator n = properties.begin();
        n != properties.end(); n++) {
     Tcl_Eval(interp,
-	     (char*)(bindings + " regexp " + (*n).first + " " + name).c_str());
+	     (char*)(bindings + " regexp ^" + (*n).first + "$ " + name).c_str());
+    printf("%s %s '%s' %s\n", (*n).first.c_str(), name.c_str(), bindings.c_str(), interp->result);
     if (string("1") == interp->result) {
       char slevel[11];
       snprintf(slevel, 10, "%d", level);
       Tcl_Eval(interp,
-	       (char*)(bindings + " set $" + slevel + " " + name + ";" +
+	       (char*)(bindings + " set " + slevel + " " + name + ";" +
 		" return " + (*n).second + ";").c_str());
       return string(interp->result);
     }
