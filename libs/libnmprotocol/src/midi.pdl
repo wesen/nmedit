@@ -163,6 +163,7 @@ PatchModification % 1 :=
 	#sc=0x66 => GetPatchPart$data
 	#sc=0x68 => GetPatchPart$data
 
+	#sc=0x18 => ModuleAdd$data
 	#sc=0x25 => KnobAssignment$data
 	#sc=0x26 => KnobAssignmentChange$data
 	#sc=0x32 => ModuleDeletion$data
@@ -181,6 +182,10 @@ GetPatchPartExtra % 1 :=
 	;
 
 GetPatchPart % 1 :=
+	;
+
+ModuleAdd % 1 :=
+	PatchData:data
 	;
 
 KnobAssignment % 1 :=

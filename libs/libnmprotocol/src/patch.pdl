@@ -17,6 +17,7 @@ Section % 8 :=
 	#type=96 => ControlMapDump$data
 	#type=91 => CustomDump$data
 	#type=90 => NameDump$data
+	#type=48 => SingleModule$data
 	;
 
 PatchName % 1 :=
@@ -696,4 +697,8 @@ ModuleName % 1 :=
 
 String % 1 :=
 	16*chars:8/0
+	;
+
+SingleModule % 1 :=
+	type:8 section:8 index:8 xpos:8 ypos:8 String$name
 	;
