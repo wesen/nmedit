@@ -48,6 +48,8 @@ class Parser
 
   void parse(string, StringList*, string*, string*);
   
+  void replace(string*, string, string);
+  
   Tcl_Interp* interp;
   Bundle* rootBundle;
 };

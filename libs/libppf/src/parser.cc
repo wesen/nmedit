@@ -84,6 +84,8 @@ void Parser::parse(string line,
   string token;
   while (line.find(" ") < line.length()) {
     token = line.substr(0, line.find(" "));
+    replace(&token, "[", "\\[");
+    replace(&token, "]", "\\]");
     line = line.substr(line.find(" ") + 1);
     if (token == "=") {
       break;
@@ -97,4 +99,13 @@ void Parser::parse(string line,
   *expression = line;
   *property = bundles->back();
   bundles->pop_back();
+}
+
+void Parser::replace(string* token, string match, string replacement)
+{
+  string::size_type pos = token->find(match);
+  while(pos < token->length()) {
+    *token = token->replace(pos, match.length(), replacement);
+    pos = token->find(match, pos + replacement.length());
+  }
 }
