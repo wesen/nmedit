@@ -17,26 +17,36 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef NMPROTOCOLLISTENER_H
-#define NMPROTOCOLLISTENER_H
+#ifndef ACKMESSAGE_H
+#define ACKMESSAGE_H
 
-#include "nmprotocol/iammessage.h"
-#include "nmprotocol/lightmessage.h"
-#include "nmprotocol/patchmessage.h"
-#include "nmprotocol/ackmessage.h"
+#include "nmprotocol/midimessage.h"
 
-class NMProtocolListener
+class Packet;
+
+class AckMessage : public virtual MidiMessage
 {
  public:
 
-  NMProtocolListener();
-  virtual ~NMProtocolListener();
+  AckMessage();
+  AckMessage(Packet* packet);
+  virtual ~AckMessage();
 
-  virtual void messageReceived(IAmMessage message);
-  virtual void messageReceived(LightMessage message);
-  virtual void messageReceived(PatchMessage message);
-  virtual void messageReceived(AckMessage message);
+  void setPid1(int pid);
+  void setPid2(int pid);
+
+  virtual void getBitStream(BitStreamList* bitStreamList);
+
+  virtual void notifyListener(NMProtocolListener* listener);
+    
+  int getPid1();
+  int getPid2();
+
+ private:
   
+  int pid1;
+  int pid2;
+  int type;
 };
 
 #endif

@@ -89,7 +89,13 @@ KnobChange % 1 :=
 	;
 
 ACK % 1 :=
-	0:1 pid1:7 0:1 0x7f:7 0:1 pid2:7 0:1 checksum:7
+	0:1 pid1:7 0:1 type:7 0:1 pid2:7
+	#type=0x7f => 0:0
+	#type=0x36 => ACKChecksum$checksum
+	;
+
+ACKChecksum % 1 :=
+	0:1 checksum:7
 	;
 
 PatchHandling % 1 :=

@@ -39,3 +39,7 @@ void NMProtocolListener::messageReceived(PatchMessage message)
 {
 }
 
+void NMProtocolListener::messageReceived(AckMessage message)
+{
+}
+

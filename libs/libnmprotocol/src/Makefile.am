@@ -4,7 +4,7 @@ INCLUDES = -I.. -I../../libpdl -I../../libnmpatch
 
 lib_LTLIBRARIES = libnmprotocol.la
 
-libnmprotocol_la_SOURCES = alsadriver.cc iammessage.cc lightmessage.cc mididriver.cc midimessage.cc nmprotocol.cc nmprotocollistener.cc patchmessage.cc
+libnmprotocol_la_SOURCES = alsadriver.cc iammessage.cc lightmessage.cc mididriver.cc midimessage.cc nmprotocol.cc nmprotocollistener.cc patchmessage.cc ackmessage.cc
 
 libnmprotocol_la_LIBADD = -L../../libpdl/src -lpdl
 libnmprotocol_la_LDFLAGS = -release 1 -no-undefined -static

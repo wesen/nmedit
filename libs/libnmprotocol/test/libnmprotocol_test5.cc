@@ -5,6 +5,7 @@
 #include "nmprotocol/mididriver.h"
 #include "nmprotocol/midiexception.h"
 #include "nmprotocol/iammessage.h"
+#include "nmprotocol/ackmessage.h"
 #include "pdl/pdlexception.h"
 #include "nmprotocol/nmprotocollistener.h"
 #include "nmprotocol/nmprotocol.h"
@@ -16,6 +17,12 @@ public:
   
   Listener() {}
   virtual ~Listener() {}
+
+  void messageReceived(AckMessage message) {
+    printf("AckMessage: ");
+    printf("pid1: %d ", message.getPid2());
+    printf("pid2: %d \n", message.getPid1());
+  }
 
   void messageReceived(IAmMessage message) {
     printf("IAmMessage: ");

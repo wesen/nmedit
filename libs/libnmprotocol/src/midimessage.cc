@@ -23,6 +23,7 @@
 #include "nmprotocol/iammessage.h"
 #include "nmprotocol/lightmessage.h"
 #include "nmprotocol/patchmessage.h"
+#include "nmprotocol/ackmessage.h"
 #include "nmprotocol/midiexception.h"
 #include "pdl/packetparser.h"
 #include "pdl/protocol.h"
@@ -96,6 +97,13 @@ MidiMessage* MidiMessage::create(BitStream* bitStream)
 	  break;
 	}
       }
+      break;
+
+    case 0x16:
+      if (checksumIsCorrect(*bitStream)) {
+	  return new AckMessage(&packet);
+      }
+      break;
       
     case 0x1d:
 	patchMessage = new PatchMessage();
