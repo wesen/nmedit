@@ -30,7 +30,7 @@ class Condition
 {
  public:
   
-  Condition(string variable, int value, bool not);
+  Condition(string variable, int value, bool negative);
   virtual ~Condition();
 
   bool eval(Packet* packet);
@@ -39,7 +39,7 @@ class Condition
 
   string variable;
   int value;
-  bool not;
+  bool negative;
 };
 
 #endif
