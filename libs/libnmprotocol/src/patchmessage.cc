@@ -385,7 +385,6 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
 
     if (!patchStream.isAvailable(8)) {
       last = 1;
-      first = 0;
     }
 
     // Pad. Extra bits are ignored later.

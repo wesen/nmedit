@@ -24,6 +24,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/ioctl.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <errno.h>
@@ -65,7 +66,7 @@ void NetMidiDriver::connect(string midiInputPort, string midiOutputPort)
   if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
     throw MidiException("Failed to create socket.", errno);
   }
-     
+
   if((host = gethostbyname(hostname.c_str())) == 0) {
     throw MidiException("Failed to get host ip address.", h_errno);
   }
@@ -79,6 +80,11 @@ void NetMidiDriver::connect(string midiInputPort, string midiOutputPort)
   if(::connect(sockfd,
                (struct sockaddr *)&dest_addr, sizeof(struct sockaddr))) {
     throw MidiException("Failed to connect to socket.", errno);
+  }
+
+  int flag = 1;
+  if(ioctl(sockfd, FIONBIO, &flag) < 0) {
+     throw MidiException("Failed to set non-blocking socket.", errno);
   }
 }
 
@@ -118,7 +124,7 @@ void NetMidiDriver::receive(Bytes& bytes)
     }
   }
   
-  if (n < 0 && errno != EAGAIN) {
+  if (n < 0 && errno != EWOULDBLOCK) {
     throw MidiException("Failed to read from midi input port.", errno);
   }
 }

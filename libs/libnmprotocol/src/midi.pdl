@@ -240,7 +240,7 @@ SettingsHandling % 1 :=
 SettingsCommand % 1 :=
 	0:1 pp:7
 	#pp=0x41 => SetSynthSettings$command
-	#pp=0x50 => NewPatch$command
+	#pp=0x50 => PatchData$next
 	0:1 checksum:7
 	;
 
