@@ -10,6 +10,7 @@
 #include "pdl/pdlexception.h"
 
 #include "nmpatch/patch.h"
+#include "nmpatch/patchexception.h"
 
 void load(string, string, int, string, string, string);
 
@@ -95,12 +96,17 @@ int main(int argc, char** argv)
 
   }
   catch (MidiException& exception) {
-    printf("MidiException: %s %d\n",
+    printf("MidiException: %s (%d)\n",
 	   exception.getMessage().c_str(),
 	   exception.getError());
   }
   catch (PDLException& exception) {
-    printf("PDLException: %s %d\n",
+    printf("PDLException: %s (%d)\n",
+	   exception.getMessage().c_str(),
+	   exception.getError());
+  }
+  catch (PatchException& exception) {
+    printf("PatchException: %s (%d)\n",
 	   exception.getMessage().c_str(),
 	   exception.getError());
   }

@@ -19,6 +19,7 @@
 
 #include "nmpatch/patch.h"
 #include "nmpatch/modulesection.h"
+#include "nmpatch/patchexception.h"
 #include <stdio.h>
 
 extern bool init_parser(const char* filename, Patch* patch);
@@ -47,6 +48,9 @@ Patch::Patch(string filename)
 
   if (init_parser(filename.c_str(), this)) {
     nmparse();
+  }
+  else {
+    throw PatchException(string("File not found: ") + filename, 0);
   }
 }
 

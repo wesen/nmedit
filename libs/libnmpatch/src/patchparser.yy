@@ -392,15 +392,12 @@ void yyerror(char* s) {
 bool init_parser(const char* filename, Patch* p)
 {
   patch = p;
+  yyinstream.close();
   yyinstream.open(filename);
-/*  if(yyinstream.fail())
-  	return 0;
-*/
-
   istream yyin(yyinstream.rdbuf());
 
   nmlexer = new NMLexer(&yyin);
-  return nmlexer;
+  return yyinstream.good();
 }
 
 int pchstoi(string param)
