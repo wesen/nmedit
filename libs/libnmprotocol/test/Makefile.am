@@ -2,7 +2,7 @@
 INCLUDES = -I.. -I../../libpdl -I../../libnmpatch
 LDFLAGS = -L../src -L../../libpdl/src -L../../libnmpatch/src
 
-LDADD = -lpdl -lnmpatch -lnmprotocol
+LDADD = -lpdl -lnmprotocol -lnmpatch
 
 bin_PROGRAMS = libnmprotocol_test1 libnmprotocol_test2 libnmprotocol_test3 libnmprotocol_test4
 

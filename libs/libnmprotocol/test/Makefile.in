@@ -85,7 +85,7 @@ YACC = @YACC@
 INCLUDES = -I.. -I../../libpdl -I../../libnmpatch
 LDFLAGS = -L../src -L../../libpdl/src -L../../libnmpatch/src
 
-LDADD = -lpdl -lnmpatch -lnmprotocol
+LDADD = -lpdl -lnmprotocol -lnmpatch
 
 bin_PROGRAMS = libnmprotocol_test1 libnmprotocol_test2 libnmprotocol_test3 libnmprotocol_test4
 
@@ -130,7 +130,7 @@ DIST_COMMON =  Makefile.am Makefile.in
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
-TAR = tar
+TAR = gtar
 GZIP_ENV = --best
 DEP_FILES =  .deps/libnmprotocol_test1.P .deps/libnmprotocol_test2.P \
 .deps/libnmprotocol_test3.P .deps/libnmprotocol_test4.P
