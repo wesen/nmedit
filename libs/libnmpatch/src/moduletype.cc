@@ -19,7 +19,7 @@
 
 #include "nmpatch/moduletype.h"
 #include "nmpatch/module.h"
-#include "ppf/programmablepropertyexception.h"
+#include "ppf/ppfexception.h"
 #include "ppf/boundbundle.h"
 
 #include <stdlib.h>
@@ -120,7 +120,7 @@ string ModuleType::mapParameter(Parameter param, int value,
       mapParameter(mapparam, module->getParameter(mapparam), module);
     map = map.getBoundBundle(mapparamvalue);
   }
-  catch (ppf::ProgrammablePropertyException& exception) {
+  catch (ppf::PPFException& exception) {
     // No mapparam for this one.
   }
   return map.getProperty(value);
@@ -197,7 +197,7 @@ int ModuleType::countItems(string item)
       parameters.getBoundBundle(i);
     }
   }
-  catch (ppf::ProgrammablePropertyException& exception) {
+  catch (ppf::PPFException& exception) {
     // We have reached the end of items.
   }
   return i;

@@ -19,7 +19,7 @@
 
 #include "ppf/parser.h"
 #include "ppf/bundle.h"
-#include "ppf/programmablepropertyexception.h"
+#include "ppf/ppfexception.h"
 
 #include <fstream>
 
@@ -29,7 +29,7 @@ Parser::Parser()
 {
   interp = Tcl_CreateInterp();
   if (Tcl_Init(interp) == TCL_ERROR) {
-    throw ProgrammablePropertyException("Failed to init TCL interpreter.", 3);
+    throw PPFException("Failed to init TCL interpreter.", 3);
   }
   rootBundle = new Bundle(interp);  
 }
@@ -42,7 +42,7 @@ BoundBundle Parser::parse(string filename)
   
   if (file.fail()) {
     throw
-      ProgrammablePropertyException(string("Failed to open file: ") + filename,
+      PPFException(string("Failed to open file: ") + filename,
 				    5);
   }
 
@@ -95,7 +95,7 @@ void Parser::parse(string line,
   }
   if (token != "=") {
     throw
-      ProgrammablePropertyException(string("Missing '=' sign: ") + line, 2);
+      PPFException(string("Missing '=' sign: ") + line, 2);
   }
   *expression = line;
   *property = bundles->back();

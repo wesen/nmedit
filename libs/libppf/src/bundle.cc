@@ -18,7 +18,7 @@
 */
 
 #include "ppf/bundle.h"
-#include "ppf/programmablepropertyexception.h"
+#include "ppf/ppfexception.h"
 
 using namespace ppf;
 
@@ -49,8 +49,7 @@ Bundle* Bundle::getBundle(string name, string bindings)
       return (*n).second;
     }
   }
-  throw ProgrammablePropertyException(string("Missing bundle: ") +
-				      bindings + " " + name, 0);
+  throw PPFException(string("Missing bundle: ") + bindings + " " + name, 0);
   return 0;
 }
 
@@ -74,8 +73,7 @@ string Bundle::getProperty(string name, int level, string bindings)
       return string(interp->result);
     }
   }
-  throw ProgrammablePropertyException(string("Missing property: ") +
-				      bindings + " " + name, 1);
+  throw PPFException(string("Missing property: ") + bindings + " " + name, 1);
   return "";
 }
 

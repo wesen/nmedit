@@ -18,7 +18,7 @@
 */
 
 #include "ppf/parser.h"
-#include "ppf/programmablepropertyexception.h"
+#include "ppf/ppfexception.h"
 
 using namespace ppf;
 
@@ -39,8 +39,8 @@ int main(int argc, char** argv)
     }
     printf("\"%s\"\n", bb.getProperty(argv[2+n]).c_str());
   }
-  catch(ProgrammablePropertyException& exception) {
-    printf("ProgrammablePropertyException: %s (%d)\n",
+  catch(PPFException& exception) {
+    printf("PPFException: %s (%d)\n",
 	   exception.getMessage().c_str(),
 	   exception.getError());
   }

@@ -17,8 +17,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef PROGRAMMABLEPROPERTYEXCEPTION_H
-#define PROGRAMMABLEPROPERTYEXCEPTION_H
+#ifndef PPFEXCEPTION_H
+#define PPFEXCEPTION_H
 
 #include <string>
 
@@ -27,16 +27,16 @@ using namespace std;
 namespace ppf
 {
 
-class ProgrammablePropertyException
+class PPFException
 {
  public:
 
-  ProgrammablePropertyException(string message, int error) {
+  PPFException(string message, int error) {
     this->message = message;
     this->error = error;
   }
 
-  virtual ~ProgrammablePropertyException() {
+  virtual ~PPFException() {
   }
   
   string getMessage() {

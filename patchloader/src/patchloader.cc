@@ -27,7 +27,7 @@
 
 #include "pdl/pdlexception.h"
 
-#include "ppf/programmablepropertyexception.h"
+#include "ppf/ppfexception.h"
 
 #include "nmpatch/patch.h"
 #include "nmpatch/modulesection.h"
@@ -147,7 +147,7 @@ int main(int argc, char** argv)
 	   exception.getMessage().c_str(),
 	   exception.getError());
   }
-  catch (ppf::ProgrammablePropertyException& exception) {
+  catch (ppf::PPFException& exception) {
     printf("PPFException: %s (%d)\n",
 	   exception.getMessage().c_str(),
 	   exception.getError());
