@@ -23,18 +23,18 @@
 #include <string>
 #include <map>
 
-#include <tcl.h>
-
-#include "ppf/bundle.h"
-
 using namespace std;
 
 namespace ppf
 {
+
+class Bundle;
   
 class BoundBundle
 {
  public:
+
+  BoundBundle();
   
   BoundBundle(Bundle*, int, string);
 

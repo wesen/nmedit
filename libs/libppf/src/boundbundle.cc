@@ -18,8 +18,13 @@
 */
 
 #include "ppf/boundbundle.h"
+#include "ppf/bundle.h"
 
 using namespace ppf;
+
+BoundBundle::BoundBundle()
+{
+}
 
 BoundBundle::BoundBundle(Bundle* bundle, int level, string bindings)
 {

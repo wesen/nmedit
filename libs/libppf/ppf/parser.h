@@ -25,6 +25,8 @@
 #include <string>
 #include <list>
 
+#include <tcl8.4/tcl.h>
+
 using namespace std;
 
 namespace ppf

@@ -18,6 +18,7 @@
 */
 
 #include "ppf/parser.h"
+#include "ppf/bundle.h"
 #include "ppf/programmablepropertyexception.h"
 
 #include <fstream>

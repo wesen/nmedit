@@ -23,7 +23,7 @@
 #include <string>
 #include <map>
 
-#include <tcl.h>
+#include <tcl8.4/tcl.h>
 
 using namespace std;
 
