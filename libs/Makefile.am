@@ -1,0 +1,1 @@
+SUBDIRS=libnmpatch libpdl libnmprotocol

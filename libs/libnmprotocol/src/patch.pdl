@@ -1,0 +1,693 @@
+
+Patch % 1 :=
+	Section$section	?Patch$next
+	;
+
+Section % 8 :=
+	type:8
+	#type=55 => PatchName$data
+	#type=33 => Header$data
+	#type=74 => ModuleDump$data
+	#type=105 => NoteDump$data
+	#type=82 => CableDump$data
+	#type=77 => ParameterDump$data
+	#type=101 => MorphMap$data
+	#type=98 => KnobMapDump$data
+	#type=96 => ControlMapDump$data
+	#type=91 => CustomDump$data
+	#type=90 => NameDump$data
+	;
+
+PatchName % 1 :=
+	0:8 0:8 0:8 String$name
+	;
+
+Header % 1 :=
+	krangemin:7 krangemax:7 vrangemin:7 vrangemax:7
+	brange:5 ptime:7 portamento:1 unknown1:1 voices:5
+	unknown2:2 sspos:12 octave:3
+	red:1 blue:1 yellow:1 gray:1 green:1 purple:1 white:1
+	cretrigger:1 pretrigger:1 unknown3:4 unknown4:3
+	;
+
+ModuleDump % 1 :=
+	section:1 nmodules:7
+	nmodules*Module$modules
+	;
+
+Module % 1 :=
+	type:7 index:7 xpos:7 ypos:7
+	;
+
+NoteDump % 8 :=
+	105:8
+	Note$note1
+	nmorenotes:5
+	Note$note2
+	nmorenotes*Note$notes
+	;
+
+Note % 1 :=
+	value:7 attack:7 release:7
+	;
+
+CableDump % 1 :=
+	section:1 ncables:15
+	ncables*Cable$cables
+	;
+
+Cable % 1 :=
+	color:3 source:7 inputOutput:6 type:1 destination:7 input:6
+	;
+
+ParameterDump % 1 :=
+	section:1 nmodules:7
+	nmodules*Parameter$parameters
+	;
+
+Parameter % 1 :=
+	index:7 type:7
+	#type=3 => Param3$parameters
+	#type=4 => Param4$parameters
+	#type=5 => Param5$parameters
+	#type=7 => Param7$parameters
+	#type=8 => Param8$parameters
+	#type=9 => Param9$parameters
+	#type=10 => Param10$parameters
+	#type=11 => Param11$parameters
+	#type=12 => Param12$parameters
+	#type=13 => Param13$parameters
+	#type=14 => Param14$parameters
+	#type=15 => Param15$parameters
+	#type=16 => Param16$parameters
+	#type=17 => Param17$parameters
+	#type=18 => Param18$parameters
+	#type=19 => Param19$parameters
+	#type=20 => Param20$parameters
+	#type=21 => Param21$parameters
+	#type=22 => Param22$parameters
+	#type=23 => Param23$parameters
+	#type=24 => Param24$parameters
+	#type=25 => Param25$parameters
+	#type=26 => Param26$parameters
+	#type=27 => Param27$parameters
+	#type=28 => Param28$parameters
+	#type=29 => Param29$parameters
+	#type=30 => Param30$parameters
+	#type=31 => Param31$parameters
+	#type=32 => Param32$parameters
+	#type=33 => Param33$parameters
+	#type=34 => Param34$parameters
+	#type=35 => Param35$parameters
+	#type=36 => Param36$parameters
+	#type=37 => Param37$parameters
+	#type=38 => Param38$parameters
+	#type=39 => Param39$parameters
+	#type=40 => Param40$parameters
+	#type=43 => Param43$parameters
+	#type=44 => Param44$parameters
+	#type=45 => Param45$parameters
+	#type=46 => Param46$parameters
+	#type=47 => Param47$parameters
+	#type=48 => Param48$parameters
+	#type=49 => Param49$parameters
+	#type=50 => Param50$parameters
+	#type=51 => Param51$parameters
+	#type=52 => Param52$parameters
+	#type=54 => Param54$parameters
+	#type=57 => Param57$parameters
+	#type=58 => Param58$parameters
+	#type=59 => Param59$parameters
+	#type=60 => Param60$parameters
+	#type=61 => Param61$parameters
+	#type=62 => Param62$parameters
+	#type=64 => Param64$parameters
+	#type=66 => Param66$parameters
+	#type=67 => Param67$parameters
+	#type=68 => Param68$parameters
+	#type=69 => Param69$parameters
+	#type=71 => Param71$parameters
+	#type=72 => Param72$parameters
+	#type=73 => Param73$parameters
+	#type=74 => Param74$parameters
+	#type=75 => Param75$parameters
+	#type=76 => Param76$parameters
+	#type=78 => Param78$parameters
+	#type=79 => Param79$parameters
+	#type=80 => Param80$parameters
+	#type=81 => Param81$parameters
+	#type=82 => Param82$parameters
+	#type=83 => Param83$parameters
+	#type=84 => Param84$parameters
+	#type=85 => Param85$parameters
+	#type=86 => Param86$parameters
+	#type=87 => Param87$parameters
+	#type=88 => Param88$parameters
+	#type=90 => Param90$parameters
+	#type=91 => Param91$parameters
+	#type=92 => Param92$parameters
+	#type=94 => Param94$parameters
+	#type=95 => Param95$parameters
+	#type=96 => Param96$parameters
+	#type=97 => Param97$parameters
+	#type=98 => Param98$parameters
+	#type=99 => Param99$parameters
+	#type=100 => Param100$parameters
+	#type=102 => Param102$parameters
+	#type=103 => Param103$parameters
+	#type=104 => Param104$parameters
+	#type=105 => Param105$parameters
+	#type=106 => Param106$parameters
+	#type=107 => Param107$parameters
+	#type=108 => Param108$parameters
+	#type=110 => Param110$parameters
+	#type=111 => Param111$parameters
+	#type=112 => Param112$parameters
+	#type=113 => Param113$parameters
+	#type=114 => Param114$parameters
+	#type=115 => Param115$parameters
+	#type=117 => Param117$parameters
+	#type=118 => Param118$parameters
+	#type=127 => Param127$parameters
+	;
+
+Param3 % 1 :=
+	level:7
+	;
+
+Param4 % 1 :=
+	level:7 destination:2 mute:1
+	;
+
+Param5 % 1 :=
+	level:7 destination:2 mute:1
+	;
+
+Param7 % 1 :=
+	freqCoarse:7 freqFine:7 freqKbt:7 pulseWidth:7 waveform:2
+	pitchMod1:7 pitchMod2:7 fmaMod:7 pwMod:7 mute:1
+	;
+
+Param8 % 1 :=
+	freqCoarse:7 freqFine:7 freqKbt:7 waveform:2
+	pitchMod1:7 pitchMod2:7 fmaMod:7 pulseWidth:7 Mute:1
+	;
+
+Param9 % 1 :=
+	pitchCoarse:7 pitchFine:7 pitchKbt:1 pitchModAmount:7 fma:7 mute:1
+	;
+
+Param10 % 1 :=
+	detuneCoarse:7 detuneFine:7 pulseWidth:7 pwMod:7 mute:1
+	;
+
+Param11 % 1 :=
+	detuneCoarse:7 detuneFine:7 fmaMod:7 mute:1
+	;
+
+Param12 % 1 :=
+	detuneCoarse:7 detuneFine:7 fmaMod:7 mute:1
+	;
+
+Param13 % 1 :=
+	detuneCoarse:7 detuneFine:7 fmaMod:7 mute:1
+	;
+
+Param14 % 1 :=
+	detuneCoarse:7 detuneFine:7 shape:2 fmaMod:7 mute:1
+	;
+
+Param15 % 1 :=
+	step1:7 step2:7 step3:7 step4:7 step5:7 step6:7 step7:7 step8:7
+	step9:7 step10:7 step11:7 step12:7 step13:7 step14:7 step15:7 step16:7
+	stepCount:7 editPosition:5 record:1 pause:1 active:1
+	;
+
+Param16 % 1 :=
+	time:7
+	;
+
+Param17 % 1 :=
+	stepcount:7 active:1 gate1:1 gate2:1
+	seq1step1:1 seq1step2:1 seq1step3:1 seq1step4:1 seq1step5:1
+	seq1step6:1 seq1step7:1 seq1step8:1 seq1step9:1 seq1step10:1
+	seq1step11:1 seq1step12:1 seq1step13:1 seq1step14:1 seq1step15:1
+	seq1step16:1
+	seq2step1:1 seq2step2:1 seq2step3:1 seq2step4:1 seq2step5:1
+	seq2step6:1 seq2step7:1 seq2step8:1 seq2step9:1 seq2step10:1
+	seq2step11:1 seq2step12:1 seq2step13:1 seq2step14:1 seq2step15:1
+	seq2step16:1
+	;
+
+Param18 % 1 :=
+	modulation:7 crossfade:7
+	;
+
+Param19 % 1 :=
+	inSense1:7 inSense2:7 inSense3:7
+	;
+
+Param20 % 1 :=
+	attackShape:2 attack:7 decay:7 sustain:7 release:7 invert:1
+	;
+
+Param21 % 1 :=
+	attack:7 release:7 threshold:6 ratio:7 refLevel:6 limiter:5 act:1
+	mon:1 bypass:1
+	;
+
+Param22 % 1 :=
+	range:7
+	;
+
+Param23 % 1 :=
+	attack:7 decay:7 sustain:7 release:7 attackMod:7 decayMod:7
+	sustainMod:7 releaseMod:7 invert:1
+	;
+
+Param24 % 1 :=
+	rate:7 range:2 waveform:3 rateMod:7 mono:1 rateKbt:7 phase:7 mute:1
+	;
+
+Param25 % 1 :=
+	rate:7 range:2 phase:7 rateMod:7 mono:1 rateKbt:7 pwMod:7 pulseWidth:7
+	;
+	
+Param26 % 1 :=
+	rate:7 range:2 waveform:3 rateMod:7 mono:1 mute:1
+	;
+
+Param27 % 1 :=
+	rate:7
+	;
+
+Param28 % 1 :=
+	rate:7
+	;
+
+Param29 % 1 :=
+	rate:7
+	;
+
+Param30 % 1 :=
+	rate:7
+	;
+
+Param31 % 1 :=
+	color:7
+	;
+
+Param32 % 1 :=
+	f50:7 f75:7 f110:7 f170:7 f250:7 f380:7 f570:7 f850:7
+	f1300:7 f1900:7 f2900:7 f4200:7 f6400:7 f8300:7 bypass:1
+	;
+
+Param33 % 1 :=
+	mono:1 col:1
+	;
+
+Param34 % 1 :=
+	rate:7
+	;
+
+Param35 % 1 :=
+	density:7
+	;
+
+Param36 % 1 :=
+	time:7
+	;
+
+Param37 % 1 :=
+	time:7
+	;
+
+Param38 % 1 :=
+	time:7
+	;
+
+Param39 % 1 :=
+	time:7
+	;
+
+Param40 % 1 :=
+	inSense1:7 inSense1:7 inSense1:7 inSense1:7 inSense1:7 inSense1:7 
+	inSense1:7 inSense1:7 attenuate:1
+	;
+
+Param43 % 1 :=
+	value:7 unipolar:1
+	;
+
+Param44 % 1 :=
+	shift:1
+	;
+
+Param45 % 1 :=
+	leftVowel:4 middleVowel:4 rightVowel:4 inAmplification:7
+	vowelSelect:7 vowelSelectMod:7 frequency:7 frequencyMod:7 resonance:7
+	;
+
+Param46 % 1 :=
+	a:7 h:7 d:7 aMod:7 hMod:7 dMod:7
+	;
+
+Param47 % 1 :=
+	panMod:7 pan:7
+	;
+
+Param48 % 1 :=
+	time:7
+	;
+
+Param49 % 1 :=
+	freq:7 kbt:7 resonance:7 freqMod:7
+	;
+
+Param50 % 1 :=
+	freq:7 resonance:7 gainControl:1
+	;
+	
+Param51 % 1 :=
+	filterType:2 gainControl:1 frequencyMod:7 frequency:7 kbt:7
+	resonanceMod:7 resonance:7 slope:1 frequencyMod2:7 bypass:1
+	;
+	
+Param52 % 1 :=
+	level1:7 level2:7 level:3 level:4 time1:7 time2:7 time3:7 time4:7
+	time5:7 sustain:3 curve:2
+	;
+	
+Param54 % 1 :=
+	bits:4
+	;
+	
+Param57 % 1 :=
+	mode:2 inv:1
+	;
+	
+Param58 % 1 :=
+	mTune:7 sTune:7 mDecay:7 sDecay:7 mLevel:7 sLevel:7 filterFreq:7
+	filterRes:7 filterSweep:7 filterDecay:7 filterMode:2 amount:7
+	decay:7 click:7 noise:7 mute:1
+	;
+	
+Param59 % 1 :=
+	level:7
+	;
+	
+Param61 % 1 :=
+	clipMod:7 clip:7 sym:1
+	;
+	
+Param62 % 1 :=
+	overdriveMod:7 overdrive:7
+	;
+	
+Param64 % 1 :=
+	time:7
+	;
+	
+Param66 % 1 :=
+	inv1:1 level1:7 inv2:1 level2:7 mode:1
+	;
+	
+Param67 % 1 :=
+	note:7
+	;
+	
+Param68 % 1 :=
+	rate:7 onOff:1
+	;
+	
+Param69 % 1 :=
+	divider:7
+	;
+	
+Param71 % 1 :=
+	attack:7 release:7
+	;
+	
+Param72 % 1 :=
+	transpose:7
+	;
+	
+Param73 % 1 :=
+	mode:2
+	;
+	
+Param74 % 1 :=
+	wrapMod:7 wrap:7
+	;
+	
+Param75 % 1 :=
+	range:7 notes:7
+	;
+	
+Param76 % 1 :=
+	OnOff:1
+	;
+	
+Param78 % 1 :=
+	modulatioin:7 time:7
+	;
+	
+Param79 % 1 :=
+	in:2 level1:7 level2:7 level3:7 level4:7 mute:1
+	;
+	
+Param80 % 1 :=
+	rate:7 phase:7 waveform:3 mono:1 mute:1
+	;
+	
+Param81 % 1 :=
+	gain:7
+	;
+	
+Param82 % 1 :=
+	mode:2
+	;
+	
+Param83 % 1 :=
+	mode:3
+	;
+	
+Param84 % 1 :=
+	attack:7 decay:7 gate:1
+	;
+	
+Param85 % 1 :=
+	detune:7 fine:7 transpose3oct:1 fmb:7 mute:1
+	;
+	
+Param86 % 1 :=
+	frequency:7
+	;
+	
+Param87 % 1 :=
+	frequency:7
+	;
+	
+Param88 % 1 :=
+	in:2 level:7 mute:1
+	;
+	
+Param90 % 1 :=
+	note1:7 note2:7 note3:7 note4:7 note5:7 note6:7 note7:7 note8:7 
+	note9:7 note10:7 note11:7 note12:7 note13:7 note14:7 note15:7 note16:7 
+	step:7 currentstep:5 record:1 play:1 loop:1
+	;
+	
+Param91 % 1 :=
+	ctrl1:1 ctrl2:1 ctrl3:1 ctrl4:1 ctrl5:1 ctrl6:1 ctrl7:1 ctrl8:1 
+	ctrl9:1 ctrl10:1 ctrl11:1 ctrl12:1 ctrl13:1 ctrl14:1 ctrl15:1 ctrl16:1 
+	step:7 uni:1 loop:1
+	;
+	
+Param92 % 1 :=
+	frequency:7 kbt:7 resonance:7 freqMod1:7 freqMod2:7 slope:2 bypass:1
+	;
+	
+Param94 % 1 :=
+	detune:7 amount:7 bypass:1
+	;
+	
+Param95 % 1 :=
+	pitch:7 click:7 decay:7 punch:1 pitchmod:7 pitchfine:7 mute:1
+	;
+	
+Param96 % 1 :=
+	pitch:7 pitchFine:7 kbt:1 mute:1 timbre:7 pitchMod1:7 pitchMod2:7
+	;
+	
+Param97 % 1 :=
+	pitch:7 pitchFine:7 kbt:1 pitchMod1:7 pitchMod2:1
+	;
+	
+Param98 % 1 :=
+	range:7 cont:1 e:1 f:1 fiss:1 g:1 giss:1 a:1 bess:1 b:1 c:1 ciss:1
+	d:1 diss:1
+	;
+	
+Param99 % 1 :=
+	pattern:7 bank:7 lowDelta:1 step:7 mono:1
+	;
+	
+Param100 % 1 :=
+	lower:7 upper:7
+	;
+	
+Param102 % 1 :=
+	rate:7 lgo:1 centerFreqMod:7 centerFreq:7 spreadMod:7 feedback:7
+	peaks:3 spread:7 bypass:1 depth:7 inLevel:7
+	;
+	
+Param103 % 1 :=
+	freq:7 gain:7 bandwidth:7 bypass:1 inLevel:7
+	;
+	
+Param104 % 1 :=
+	freq:7 gain:7 mode:1 bypass:1 inLevel:7
+	;
+	
+Param105 % 1 :=
+	attack:7 release:7 treshold:7 ratio:7 gate:7 hold:7
+	sidechainActivation:1 sidechainMonitor:1 bypass:1
+	;
+	
+Param106 % 1 :=
+	osc1coarse:7 osc1fine:7 osc1level:7
+	osc2coarse:7 osc2fine:7 osc2level:7
+	osc3coarse:7 osc3fine:7 osc3level:7
+	osc4coarse:7 osc4fine:7 osc4level:7
+	osc5coarse:7 osc5fine:7 osc5level:7
+	osc6coarse:7 osc6fine:7 osc6level:7
+	osc1mute:1 osc2mute:1 osc3mute:1 osc4mute:1 osc5mute:1 osc6mute:1 
+	;
+	
+Param107 % 1 :=
+	freqCoarse:7 freqFine:7 spectralShape:7 partials:1 pitchMod1:7
+	pitchMod2:7 fma:7 spectralShapeMod:7 kbt:1 mute:1
+	;
+	
+Param108 % 1 :=
+	band1:5 band2:5 band3:5 band4:5 band5:5 band6:5 band7:5 band8:5
+	band9:5 band10:5 band11:5 band12:5 band13:5 band14:5 band15:5 band16:5
+	outgain:7 highFreqEmphasis:1 monitor:1
+	;
+	
+Param110 % 1 :=
+	rate:7
+	;
+	
+Param111 % 1 :=
+	multiplier:7 unipolar:1
+	;
+	
+Param112 % 1 :=
+	offset:7 unipolar:1
+	;
+	
+Param113 % 1 :=
+	fade:7
+	;
+	
+Param114 % 1 :=
+	fade:7
+	;
+	
+Param115 % 1 :=
+	velocitySensitivity:7 leftGain:6 breakpoint:7 rightGain:6
+	;
+	
+Param117 % 1 :=
+	ringmodDepthMod:7 ringmodDepth:7
+	;
+	
+Param118 % 1 :=
+	quantBits:4 sampleRate:7 sampleRateMod:7 quantOff:1 samplingOff:1
+	;
+	
+Param127 % 1 :=
+	amplify:1
+	;
+
+MorphMap % 1 :=
+	morph1:7 morph2:7 morph3:7 morph4:7 nknobs:13
+	nknob*Morph$morphs
+	;
+
+Morph % 1 :=
+	section:1 module:7 parameter:7 morph:2 range:8
+	;
+
+KnobMapDump % 1 :=
+	Knob$knob0
+	Knob$knob1
+	Knob$knob2
+	Knob$knob3
+	Knob$knob4
+	Knob$knob5
+	Knob$knob6
+	Knob$knob7
+	Knob$knob8
+	Knob$knob9
+	Knob$knob10
+	Knob$knob11
+	Knob$knob12
+	Knob$knob13
+	Knob$knob14
+	Knob$knob15
+	Knob$knob16
+	Knob$knob17
+	Knob$knob18
+	Knob$knob19
+	Knob$knob20
+	Knob$knob21
+	Knob$knob22
+	;
+
+Knob % 1 :=
+	assigned:1
+	assigned*KnobAssignment$knobAssignments
+	;
+
+KnobAssignment % 1 :=
+	section:2 module:7 parameter:7
+	;
+
+ControlMapDump % 1 :=
+	ncontrols:7
+	ncontrols*Control$controls
+	;
+
+Control % 1 :=
+	control:7 section:2 module:7 parameter:7
+	;
+
+CustomDump % 1 :=
+	section:1 nmodules:7
+	nmodules*CustomModule$customModules
+	;
+
+CustomModule % 1 :=
+	index:7 nparams:8
+	nparams*CustomValue$customValues
+	;
+	
+CustomValue % 1 :=
+	value:8
+	;
+
+NameDump % 1 :=
+	section:1 nmodules:7
+	nmodules*ModuleName$moduleNames
+	;
+
+ModuleName % 1 :=
+	index:8 String$name
+	;
+
+String % 1 :=
+	16*chars:8/0
+	;

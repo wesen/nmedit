@@ -1,0 +1,9 @@
+#!/bin/sh
+
+p=`find $1 -name "*.pch"`
+
+for i in $p
+do
+	echo $i;
+	./test1 $i >/dev/null
+done

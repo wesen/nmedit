@@ -1,0 +1,58 @@
+<!-- NMEdit Module definitions DTD Version 1.0 -->
+<!-- LICENSED as the NMEdit project itself. -->
+<!-- Copyrights (C) 2003  Benoit Beausejour <bbeausej@pobox.com> -->
+<!-- This DTD defines the document format for the NMEdit modules definitions -->
+
+<!--
+Version Control Information:
+Author: $Author: bbeausej $
+Id: $Id: module_definitions.dtd,v 1.1 2003/07/02 17:52:04 bbeausej Exp $
+Revision: $Revision: 1.1 $
+Date: $Date: 2003/07/02 17:52:04 $
+-->
+
+<!-- The main document type -->
+<!ELEMENT ModuleDefinitions (header, module*)>
+
+
+<!-- The Header format -->
+<!ELEMENT header (version, synopsis?, description?)>
+<!ELEMENT version (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT synopsis (#PCDATA)>
+
+<!-- The module itself -->
+<!ELEMENT module (module_type_id,module_name, remarks?,cycles,progmem,xmem,ymem,zeropage,dynmem,height,parameters?,inputs?,outputs?,custom?)>
+
+<!-- Main module elements -->
+<!ELEMENT module_type_id (#PCDATA)>
+<!ELEMENT module_name (#PCDATA)>
+<!ELEMENT remarks (#PCDATA)>
+<!ELEMENT cycles (#PCDATA)>
+<!ELEMENT progmem (#PCDATA)>
+<!ELEMENT xmem (#PCDATA)>
+<!ELEMENT ymem (#PCDATA)>
+<!ELEMENT zeropage (#PCDATA)>
+<!ELEMENT dynmem (#PCDATA)>
+<!ELEMENT height (#PCDATA)>
+
+<!-- Nested module elements -->
+<!ELEMENT parameters (parameter*)>
+<!ELEMENT inputs (connector*)>
+<!ELEMENT outputs (connector*)>
+<!ELEMENT custom (parameter*)>
+
+<!-- The parameter element -->
+<!ELEMENT parameter (parameter_id, identifier, label, value_range, bit_count?, remarks?)>
+
+<!-- The connector element -->
+<!ELEMENT connector (connector_id, identifier, label, connector_type)>
+
+<!-- elements defined in nested elements -->
+<!ELEMENT identifier (#PCDATA)>
+<!ELEMENT parameter_id (#PCDATA)>
+<!ELEMENT label (#PCDATA)>
+<!ELEMENT value_range (#PCDATA)>
+<!ELEMENT bit_count (#PCDATA)>
+<!ELEMENT connector_id (#PCDATA)>
+<!ELEMENT connector_type (#PCDATA)>

@@ -1,0 +1,123 @@
+<!-- NMEdit Patch object DTD Version 1.0 -->
+<!-- LICENSED as the NMEdit project itself. -->
+<!-- Copyrights (C) 2003  Benoit Beausejour <bbeausej@pobox.com> -->
+<!-- This DTD defines the document format for the NMEdit patches -->
+
+<!--
+Version Control Information:
+Author: $Author: bbeausej $
+Id: $Id: patch_format.dtd,v 1.1 2003/07/02 17:52:04 bbeausej Exp $
+Revision: $Revision: 1.1 $
+Date: $Date: 2003/07/02 17:52:04 $
+-->
+
+<!-- The patch format itself -->
+<!ELEMENT Patch (
+	PatchName,
+	Version,
+	Notes?,
+	RequestedVoices,
+	SectionSeperatorPosition,
+	OctaveShift,
+	BendRange,
+	Portamento,
+	PortamentoTime,
+	VoiceRetriggerPoly,
+	VoiceRetriggerCommon,
+	KeyboardRangeLow,
+	KeyboardRangeMax,
+	VelocityRangeLow,
+	VelocityRangeMax,
+	CableVisibilityRed,
+	CableVisibilityGreen,
+	CableVisibilityBlue,
+	CableVisibilityWhite,
+	CableVisibilityYellow,
+	CableVisibilityPurple,
+	CableVisibilityGray
+	Cables?,
+	CommonModules?,
+	PolyModules?
+	KnobMaps?)>
+
+<!-- The Patch elements -->
+<!ELEMENT PatchName (#PCDATA)>
+<!ELEMENT Version (#PCDATA)>
+<!ELEMENT Notes (#PCDATA)>
+<!ELEMENT RequestedVoices (#PCDATA)>
+<!ELEMENT SectionSeperatorPosition (#PCDATA)>
+<!ELEMENT OctaveShift (#PCDATA)>
+<!ELEMENT BendRange (#PCDATA)>
+<!ELEMENT Portamento (#PCDATA)>
+<!ELEMENT PortamentoTime (#PCDATA)>
+<!ELEMENT VoiceRetriggerPoly (#PCDATA)>
+<!ELEMENT VoiceRetriggerCommon (#PCDATA)>
+<!ELEMENT KeyboardRangeLow (#PCDATA)>
+<!ELEMENT KeyboardRangeMax (#PCDATA)>
+<!ELEMENT VelocityRangeLow (#PCDATA)>
+<!ELEMENT VelocityRangeMax (#PCDATA)>
+<!ELEMENT CableVisibilityRed (#PCDATA)>
+<!ELEMENT CableVisibilityGreen (#PCDATA)>
+<!ELEMENT CableVisibilityBlue (#PCDATA)>
+<!ELEMENT CableVisibilityWhite (#PCDATA)>
+<!ELEMENT CableVisibilityYellow (#PCDATA)>
+<!ELEMENT CableVisibilityPurple (#PCDATA)>
+<!ELEMENT CableVisibilityGray (#PCDATA)>
+
+<!-- Patch nested elements -->
+<!ELEMENT Cables (cable*)>
+<!ELEMENT CommonModules (module*)>
+<!ELEMENT PolyModules (module*)>
+
+<!-- A cable --->
+<!ELEMENT cable (
+	connector_type,
+	cable_color,
+	source_id,
+	source_connector_id,
+	destination_id,
+	destination_connector_id)>
+
+<!-- Cable elements -->
+
+<!ELEMENT connector_type (#PCDATA)>
+<!ELEMENT cable_color (#PCDATA)>
+<!ELEMENT source_id (#PCDATA)>
+<!ELEMENT source_connector_id (#PCDATA)>
+<!ELEMENT destination_id (#PCDATA)>
+<!ELEMENT destination_connector_id (#PCDATA)>
+
+<!-- A Module -->
+<!ELEMENT module (
+	module_id,
+	name,
+	module_type_id,
+	xpos,
+	ypos,
+	parameters?,
+	custom_parameters?)>
+
+<!-- The Module elements -->
+<!ELEMENT module_id (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT module_type_id (#PCDATA)>
+<!ELEMENT xpos (#PCDATA)>
+<!ELEMENT ypos (#PCDATA)>
+
+<!-- Module nested elements -->
+<!ELEMENT parameters (parameter*)>
+<!ELEMENT custom_parameters (parameter*)>
+
+<!-- Module parameter -->
+<!ELEMENT parameter EMPTY>
+<!ATTLIST parameter parameter_id CDATA>
+<!ATTLIST value parameter_id CDATA>
+
+<!-- Knob mapping -->
+<!ELEMENT KnobMaps (knobmap*)>
+
+<!ELEMENT knobmap (parameter_id, morphgroup_id?, section_id, module_id?)>
+
+<!ELEMENT parameter_id (#PCDATA)>
+<!ELEMENT morphgroup_id (#PCDATA)>
+<!ELEMENT section_id (#PCDATA)>

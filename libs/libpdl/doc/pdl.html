@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="content-type"
+ content="text/html; charset=ISO-8859-1">
+  <title>PDL</title>
+</head>
+<body style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);"
+ link="#000099" vlink="#990099" alink="#000099">
+<h1>Protocol Definition Language</h1>
+<p>The Protocol Definition Language (PDL) and its implementation,
+libPDL, is used to decode and encode messages to and from any
+communication protocol that can be defined in PDL. The library was
+initially written to handle the MIDI protocol used by the synthesizer
+Clavia Nord Modular, for the implementation of an open source patch
+editor.<br>
+</p>
+<p>The implementation libPDL reads a protocol definition from file at
+instantiation and configures its internal parse structure following the
+rules found in the definition file. It then has two modes of operation.
+It can either parse a bit stream into a parse tree of hiearchical
+packages and bound variables, or it can generate a bit stream from a
+list of integers that replaces variables in the definition.<br>
+</p>
+<h2>PDL description</h2>
+The vocabulary in PDL can be modeled like this:<br>
+<p><img src="pdl.png" title="" alt="PDL Vocabulary"><br>
+</p>
+<p>A Protocol consists of a number of Packets, each defined with a
+sequence of Matchers. There are five types of Matchers, Variable
+Matcher, Constant Matcher, Iterative Packet Matcher, Iterative Variable
+Matcher and Packet Matcher. The application of each Matcher is
+controlled by an Option, which can be either Conditional, Unconditional
+or Optional.<br>
+</p>
+PDL is implemented using Flex, Yacc and C++. The PDL notation can be
+described with BNF as follows.<br>
+<pre>protocol:<br>	packet protocol |<br>	;<br></pre>
+A protocol consists of several packet definitions.<br>
+<br>
+<pre>packet:<br>	PACKET '%' PAD ':=' matchers ';'<br>	;<br></pre>
+A packet has an name, a bit padding and a sequence of matchers. It is
+terminated with a semicolon. The packet is padded at the end with zeroes
+up to the next even multiplier of PAD. If B is the number of bits in the
+packet, then the remainder of B/PAD must be zero.<br>
+<br>
+<pre>matchers:<br>	matcher matchers |<br>	;<br></pre>
+<pre>matcher:<br>	matcherOption matcherType<br>	;<br></pre>
+A matcher consists of one option and one matcher type.<br>
+<br>
+<pre>matcherOption:<br>	'#' VARIABLE '=' NUMBER '=&gt;' |<br>	'?' |<br>	;<br></pre>
+A matcher option can be one of three things.<br>
+<p>First, it can be a conditional match, depending on the value of a
+variable bound earlier in the packet. At least one conditional match
+defined in a packet must be satisfied for the entire packet to be
+satisfied<br>
+</p>
+<p>Second, it can be an optional match that can be left unsatisfied and
+still yield a correct match.<br>
+</p>
+<p>Third, it can be an unconditional match that always needs to be
+satisfied.<br>
+<br>
+</p>
+<pre>matcherType:<br>	PACKET '$' IDENTIFIER |<br>	VARIABLE '*' PACKET '$' IDENTIFIER |<br>	VARIABLE ':' SIZE |<br>	COUNT '*' VARIABLE ':' SIZE '/' TERMINAL |<br>	CONSTANT ':' SIZE<br>	;<br></pre>
+There are five types of matchers.<br>
+<p>The first matcher, the Packet Matcher, tries to match an entire sub
+packet and bind it to a sub packet identifier in the packet.<br>
+</p>
+<p>The second matcher, the Iterative Packet Matcher, tries to match a
+number of sub packets, depending on a variable bound earlier in the
+packet. All packets need to be matched for the matcher to be satisfied.
+The list of sub packets are bound to a sub packet list identifier in the
+packet.<br>
+</p>
+<p>The third matcher, the Variable Matcher, tries to match a variable
+value with a specified bit size. The matched value is bound to a
+variable in the packet.<br>
+</p>
+<p>The fourth matcher, the Iterative Variable Matcher, tries to match
+up to a constant number of variables. The matcher is satisfied either if
+the terminal value is matched, or if the maximum number of values are
+reached. The resulting list is bound to a variable in the packet.<br>
+</p>
+<p>The fifth matcher, the Constant Matcher, tries to match a constant
+value with a specified bit size. The matcher is satisfied only if the
+constant value is found.<br>
+</p>
+<h2>libPDL Protocol Control language description</h2>
+The C++ implementation libPDL is controlled through a generic control
+language euqal for all protocol definitions. This language is used to
+access the parser, the generator and the parse trees.<br>
+<p>The control language has the following vocabulary.<br>
+</p>
+<p><img src="libpdl.png" title="" alt="libPDL Control Language"></p>
+<p>A Protocol contains a number of Packet Parsers. A Packet Parser can
+parse a Bit Stream to generate a parse tree consisting of Packets. A
+Packet Parser can also generate a Bit Stream from an Int Stream.<br>
+</p>
+<h2>Packet parser</h2>
+To invoke the packet parser, a Protocol needs to be instantiated with a
+definition file and then given a BitStream.<br>
+<pre>#include "pdl/protocol.h"<br>#include "pdl/packetparser.h"<br>#include "pdl/bitstream.h"<br>#include "pdl/packet.h"<br></pre>
+<pre>Protocol* protocol = new Protocol("protocol_definition_file.pdl");<br>BitStream bitStream;<br>Packet packet;<br></pre>
+<pre>bool success = protocol-&gt;getPacketParser("packet_name")-&gt;parse(&amp;bitStream, &amp;packet);<br></pre>
+<pre>delete protocol;<br></pre>
+The protocol will try to match the bit stream to a specific packet
+definition found in the definition file, yielding a packet hiearchy with
+bound sub packets and variables.<br>
+<p>To access the sub packets and variables, a number of access methods
+are defined in the Packet class.<br>
+</p>
+<pre>#include &lt;string&gt;<br>#include &lt;list&gt;<br>#include &lt;map&gt;<br><br>class Packet<br>{<br>public:<br>	typedef list&lt;Packet*&gt; PacketList;<br>	typedef list&lt;int&gt; VariableList;<br>	typedef map&lt;string, int&gt; VariableMap;<br>	typedef map&lt;string, Packet*&gt; PacketMap;<br>	typedef map&lt;string, PacketList&gt; PacketListMap;<br>	typedef map&lt;string, VariableList&gt; VariableListMap;<br><br>	Packet* getPacket(string name);            // Bound by Packet Matcher<br>	PacketList getPacketList(string name);     // Bound by Iterative Packet Matcher<br>	int getVariable(string name);              // Bound by Variable Matcher<br>	VariableList getVariableList(string name); // Bound by Iterative Variable Matcher<br>};<br></pre>
+<h2>Bit stream generator</h2>
+To generate a bit stream corresponding to a packet with bound
+variables, a Protocol needs to be instantiated with a definition file
+and then given a list of integers to be bound to variables found in the
+packet.<br>
+<pre>#include "pdl/protocol.h"<br>#include "pdl/packetparser.h"<br>#include "pdl/bitstream.h"<br>#include "pdl/intstream.h"<br></pre>
+<pre>Protocol* protocol = new Protocol("protocol_definition_file.pdl");<br>BitStream bitStream;<br>IntStream intStream;<br></pre>
+<pre>bool success = protocol-&gt;getPacketParser("packet_name")-&gt;generate(&amp;intStream, &amp;bitStream);<br></pre>
+<pre>delete protocol;<br></pre>
+<h2>Example</h2>
+This small example defines a packet corresponding to the ACK packet
+found in the Clavia Nord Modular protocol and uses it to parse a bit
+stream and to generate a bit stream.<br>
+<p>test1.pdl definition file:<br>
+</p>
+<pre>Sysex % 1 :=<br>	0xf0:8 0x33:8 0:1 cc:5 slot:2 0x06:8<br>	#cc=0x16 =&gt; ACK$data<br>	0xf7:8<br>	;<br><br>ACK % 1 :=<br>	0:1 pid1:7 0:1 0x7f:7 0:1 pid2:7 0:1 checksum:7<br>	;<br></pre>
+main.cc source code:<br>
+<pre>#include &lt;stdio.h&gt;<br><br>#include "pdl/protocol.h"<br>#include "pdl/bitstream.h"<br>#include "pdl/intstream.h"<br>#include "pdl/packet.h"<br>#include "pdl/packetparser.h"<br>#include "pdl/tracer.h"<br><br>class TestTracer : public virtual Tracer<br>{<br>public:<br>  void trace(string message)<br>  {<br>    printf("TRACE: %s\n", message.c_str());<br>  }<br>};<br><br>int main(int argc, char** argv)<br>{<br>  Protocol* p = new Protocol("test1.pdl");<br><br>  TestTracer tracer;<br>  p-&gt;useTracer(&amp;tracer);<br><br>  BitStream stream;<br>  Packet packet;<br><br>  stream.append(0xf0, 8);<br>  stream.append(0x33, 8);<br>  stream.append(   0, 1);<br>  stream.append(0x16, 5);<br>  stream.append(   0, 2);<br>  stream.append(0x06, 8);<br>  stream.append(   0, 1);<br>  stream.append(  15, 7);<br>  stream.append(   0, 1);<br>  stream.append(0x7f, 7);<br>  stream.append(   0, 1);<br>  stream.append(  16, 7);<br>  stream.append(   0, 1);  <br>  stream.append( 127, 7);<br>  stream.append(0xf7, 8);<br><br>  printf("!\n");<br>  p-&gt;getPacketParser("Sysex")-&gt;parse(&amp;stream, &amp;packet);<br>  printf("!\n");<br>  <br>  printf("%d \n", packet.getVariable("cc"));<br>  printf("%d \n", packet.getVariable("slot"));<br>  printf("%s \n", packet.getPacket("data")-&gt;getName().c_str());<br>  printf("%d \n", packet.getPacket("data")-&gt;getVariable("pid1"));<br>  printf("%d \n", packet.getPacket("data")-&gt;getVariable("pid2"));<br>  printf("%d \n", packet.getPacket("data")-&gt;getVariable("checksum"));<br><br>  <br>  IntStream data;<br>  data.append(22);<br>  data.append(0);<br>  data.append(16);<br>  data.append(17);<br>  data.append(127);<br>  stream.setSize(0);<br><br>  printf("!\n");<br>  p-&gt;getPacketParser("Sysex")-&gt;generate(&amp;data, &amp;stream);<br>  printf("!\n");<br><br>  while(stream.isAvailable(8)) {<br>    printf("%X\n", stream.getInt(8));<br>  }<br><br>  p-&gt;useTracer(0);<br>}<br></pre>
+<h2>libPDL Architecture</h2>
+The architecture of libPDL is described using a language and notation
+found at <a
+ href="http://www.fyrplus.se/users/Marcus.Andersson/lisa/lisa.php">http://www.fyrplus.se/users/Marcus.Andersson/lisa/lisa.php</a>.<br>
+<p><img src="architecture.png" title="" alt="Architecture"><br>
+</p>
+<p>The libPDL component is configured with the Protocol Definition
+Language and controlled with the Protocol Control language. It usees
+Flex, Yacc and C++ for the implementation of PDL and Protocol Control.<br>
+</p>
+<p><img src="example.png" title="" alt="Example Usage Architecture"><br>
+</p>
+<p>Together with a PDL definition file (midi.pdl), a new language (NM
+MIDI Protocol) is implemented.<br>
+</p>
+<hr style="width: 100%; height: 2px;"><span style="font-style: italic;">
+$Id: pdl.html,v 1.1 2003/07/02 17:52:03 bbeausej Exp $</span><br
+ style="font-style: italic;">
+<span style="font-style: italic;">Copyright &copy; 2003 Marcus Andersson</span><br>
+</body>
+</html>

@@ -1,0 +1,227 @@
+
+Sysex % 1 :=
+	0xf0:8 0x33:8 0:1 cc:5 slot:2 0x06:8
+	#cc=0x00 => IAm$data
+	#cc=0x13 => Parameter$data
+	#cc=0x14 => NMInfo$data
+	#cc=0x16 => ACK$data
+	#cc=0x17 => PatchHandling$data
+	#cc=0x1c => PatchPacket$data
+	#cc=0x1d => PatchPacket$data
+	#cc=0x1e => PatchPacket$data
+	#cc=0x1f => SettingsHandling$data
+	0xf7:8
+	;
+
+IAm % 1 :=
+	0:1 sender:7 0:1 versionHigh:7 0:1 versionLow:7
+	#sender=0 => 0:0
+	#sender=1 => IAmUnknown$unknown
+	;
+
+IAmUnknown % 1 :=
+	0:1 unknown1:7 0:1 unknown2:7 0:1 unknown3:7 0:1 unknown4:7
+	;
+
+Parameter % 1 :=
+	0:1 sc:7
+	#sc=0x2f => ParameterSelect$data
+	#sc=0x40 => ParameterChange$data
+	#sc=0x43 => MorphRangeChange$data
+	;
+
+ParameterSelect % 1 :=
+	0:1 unknown1:7 0:1 section:7 0:1 module:7 0:1 parameter:7
+	;
+
+ParameterChange % 1 :=
+	0:1 section:7 0:1 module:7 0:1 parameter:7 0:1 value:7
+	;
+
+MorphRangeChange % 1 :=
+	0:1 section:7 0:1 module:7 0:1 parameter:7 0:1 span:7 0:1 direction:7
+	;
+
+NMInfo % 1 :=
+	0:1 pid:7 0:1 sc:7
+	#sc=0x05 => VoiceCount$data
+	#sc=0x07 => SlotSelectionChanged$data
+	#sc=0x09 => SlotSelectButtonPressed$data
+	#sc=0x38 => PatchSelect$data
+	#sc=0x39 => Lights$data
+	#sc=0x40 => VUMeters$data
+	#sc=0x41 => KnobChange$data
+	0:1 checksum:7
+	;
+
+VoiceCount % 1 :=
+	0:1 c1:7 0:1 c2:7 0:1 c3:7 0:1 c4:7
+	;
+
+SlotSelectionChanged % 1 :=
+	;
+
+SlotSelectButtonPressed % 1 :=
+	;
+
+PatchSelect % 1 :=
+	0:1 unknown:7 0:1 pid:7
+	;
+
+Lights % 1 :=
+	0:1 startIndex:7
+	0:2 l2:2 l1:2 l0:2
+	0:2 l5:2 l4:2 l3:2
+	0:2 l8:2 l7:2 l6:2
+	0:2 l11:2 l10:2 l9:2
+	0:2 l14:2 l13:2 l12:2
+	0:2 l17:2 l16:2 l15:2
+	0:4 l19:2 l18:2
+	;
+
+VUMeters % 1 :=
+	0:1 vui:7 0:1 u0r:7 0:1 vu0l:7 0:1 vu1r:7 0:1 vu1l:7 0:1
+	vu2r:7 0:1 vu2l:7 0:1 vu3r:7 0:1 vu3l:7 0:1 vu4r:7 0:1 vu4l:7
+	;
+
+KnobChange % 1 :=
+	0:1 section:7 0:1 module:7 0:1 parameter:7 0:1 value:7
+	;
+
+ACK % 1 :=
+	0:1 pid1:7 0:1 0x7f:7 0:1 pid2:7 0:1 checksum:7
+	;
+
+PatchHandling % 1 :=
+	?PatchCommand$data ?PatchModification$data
+	;
+
+PatchCommand % 1 :=
+	0:1 pp:7
+	#pp=0x41 => PatchManagerCommand$command
+	#pp=0x44 => GetSynthSettings$command
+	0:1 checksum:7
+	;
+
+PatchManagerCommand % 1 :=
+	0:1 ssc:7
+	#ssc=0x07 => SlotChange$data
+	#ssc=0x09 => SetActiveSlot$data
+	#ssc=0x0a => RequestPatch$data
+	#ssc=0x14 => GetPatchList$data
+	;
+
+SlotChange % 1 :=
+	;
+
+SetActiveSlot % 1 :=
+	;
+
+RequestPatch % 1 :=
+	;
+
+GetPatchList % 1 :=
+	;
+
+PatchModification % 1 :=
+	0:1 pid:7 0:1 sc:7
+	#sc=0x25 => KnobAssignment$data
+	#sc=0x26 => KnobAssignmentChange$data
+	#sc=0x32 => ModuleDeletion$data
+	#sc=0x34 => ModuleMove$data
+	#sc=0x50 => CableInsertion$data
+	#sc=0x51 => CableDeletion$data
+	#sc=0x54 => CableMove$data
+	#sc=0x55 => SendControllerSnapshot$data
+	#sc=0x56 => Note$data
+	#sc=0x58 => GetCurrentNotes$data
+	#sc=0x70 => UploadActiveSlot$data
+	0:1 checksum:7
+	;
+
+KnobAssignment % 1 :=
+	0:1 unknown1:7 0:1 unknown2:7 0:1 knob:7
+	;
+
+KnobAssignmentChange % 1 :=
+	0:1 knob:7
+	;
+
+ModuleDeletion % 1 :=
+	0:1 section:7 0:1 module:7
+	?NextModuleDeletion$next
+	;
+
+NextModuleDeletion % 1 :=
+	0:1 0x32:7 ModuleDeletion$data
+	;
+
+ModuleMove % 1 :=
+	0:1 section:7 0:1 module:7 0:1 xpos:7 0:1 ypos:7
+	?NextModuleMove$next
+	;
+
+NextModuleMove % 1 :=
+	0:1 0x32:7 ModuleDeletion$data
+	;
+
+CableInsertion % 1 :=
+	;
+
+CableMove % 1 :=
+	;
+
+SendControllerSnapshot % 1 :=
+	;
+
+Note % 1 :=
+	0:1 onOff:7 0:1 note:7
+	;
+
+GetCurrentNotes % 1 :=
+	;
+
+UploadActiveSlot % 1 :=
+	;
+
+PatchPacket % 1 :=
+	0:1 pp:7 ?PatchData$next
+	;
+
+PatchData % 1 :=
+	0:1 data:7 ?PatchData$next
+	;
+
+SettingsHandling % 1 :=
+	?SettingsCommand$data ?PatchSettings$data
+	;
+
+SettingsCommand % 1 :=
+	0:1 pp:7
+	#pp=0x41 => SetSynthSettings$command
+	#pp=0x50 => NewPatch$command
+	0:1 checksum:7
+	;
+
+SetSynthSettings % 1 :=
+	;
+
+PatchSettings % 1 :=
+	0:1 pid:7 0:1 sc:7
+	#sc=0x10 => SetPatchSettings$data
+	#sc=0x18 => ModuleInsertion$data
+	#sc=0x21 => SEQZoom$data
+	0:1 checksum:7
+	;
+
+SetPatchSettings % 1 :=
+	0:1 b0:7 0:1 b1:7 0:1 b2:7 0:1 b3:7 0:1 b4:7 0:1 b5:7 0:1 b6:7
+	0:1 b7:7 0:1 b8:7 0:1 b9:7 0:1 b10:7 0:1 b11:7 0:1 b12:7  
+	;
+
+ModuleInsertion % 1 :=
+	;
+
+SEQZoom % 1 :=
+	;
+
