@@ -37,14 +37,11 @@ class NMProtocol
 
   typedef list<EnqueuedPacket> MessageList;
 
-  NMProtocol();
+  NMProtocol(MidiDriver* midiDriver);
   virtual ~NMProtocol();
   
-  void useMidiDriver(MidiDriver* midiDriver);
-
   void addListener(NMProtocolListener* listener);
   void removeListener(NMProtocolListener* listener);
-  void notifyListeners(MidiMessage* midiMessage);
 
   void heartbeat();
 
@@ -54,6 +51,8 @@ class NMProtocol
  private:
   
   typedef list<NMProtocolListener*> ListenerList;
+
+  void notifyListeners(MidiMessage* midiMessage);
 
   MidiDriver* midiDriver;
   ListenerList listeners;

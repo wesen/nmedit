@@ -45,9 +45,8 @@ int main(int argc, char** argv)
     driver->connect(*driver->getMidiInputPorts().begin(),
 		    *driver->getMidiOutputPorts().begin());
 
-    NMProtocol nmProtocol;
+    NMProtocol nmProtocol(driver);
     nmProtocol.addListener(new Listener());
-    nmProtocol.useMidiDriver(driver);
 
     printf("Send IAmMessage\n");
     BitStream bitStream;
@@ -60,7 +59,6 @@ int main(int argc, char** argv)
       nmProtocol.heartbeat();
     }
 
-    nmProtocol.useMidiDriver(0);
     driver->disconnect();
   }
   catch (MidiException& exception) {

@@ -24,6 +24,7 @@
 #include "nmprotocol/lightmessage.h"
 #include "nmprotocol/patchmessage.h"
 #include "nmprotocol/ackmessage.h"
+#include "nmprotocol/requestpatchmessage.h"
 
 class NMProtocolListener
 {
@@ -36,6 +37,7 @@ class NMProtocolListener
   virtual void messageReceived(LightMessage message);
   virtual void messageReceived(PatchMessage message);
   virtual void messageReceived(AckMessage message);
+  virtual void messageReceived(RequestPatchMessage message);
   
 };
 

@@ -27,19 +27,19 @@
 
 int NMProtocol::TIMEOUT_INTERVAL = 3; /* seconds */
 
-NMProtocol::NMProtocol()
+NMProtocol::NMProtocol(MidiDriver* midiDriver)
 {
+  if (midiDriver == 0) {
+    throw MidiException("Null MidiDriver not allowed.", 0);
+  }
+
   timeout = 0;
   addListener(new AckListener(&sendQueue, &timeout));
+  this->midiDriver = midiDriver;
 }
 
 NMProtocol::~NMProtocol()
 {
-}
-
-void NMProtocol::useMidiDriver(MidiDriver* midiDriver)
-{
-  this->midiDriver = midiDriver;
 }
 
 void NMProtocol::addListener(NMProtocolListener* listener)
@@ -68,6 +68,7 @@ void NMProtocol::heartbeat()
   if (timeout != 0 && time(0) > timeout) {
     sendQueue.clear();
     throw MidiException("Communication timed out.", timeout);
+    timeout = 0;
   }
 
   if (sendQueue.size() > 0 && timeout == 0) {

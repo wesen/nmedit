@@ -17,38 +17,43 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef ACKLISTENER_H
-#define ACKLISTENER_H
-
-#include "nmprotocol/nmprotocol.h"
+#include "nmprotocol/requestpatchmessage.h"
 #include "nmprotocol/nmprotocollistener.h"
+#include "pdl/packet.h"
 
-class AckListener : public NMProtocolListener
+RequestPatchMessage::RequestPatchMessage()
 {
- public:
+  cc = 0x17;
+  slot = 0;
+  pp = 0x41;
+  ssc = 0x35;
+  wantAck = true;
+}
 
-  AckListener(NMProtocol::MessageList* sendQueue, time_t* timeout) {
-    this->sendQueue = sendQueue;
-    this->timeout = timeout;
-  }
+RequestPatchMessage::RequestPatchMessage(Packet* packet)
+{
+  slot = packet->getVariable("slot");
+}
 
-  virtual ~AckListener() {
-  }
+RequestPatchMessage::~RequestPatchMessage()
+{
+}
+
+void RequestPatchMessage::getBitStream(BitStreamList* bitStreamList)
+{
+  IntStream intStream;
+  intStream.append(cc);
+  intStream.append(slot);
+  intStream.append(pp);
+  intStream.append(ssc);
+  MidiMessage::addChecksum(&intStream);
   
-  void messageReceived(AckMessage message) {
-    if (sendQueue->size() > 0 && *timeout != 0) {
-      sendQueue->pop_front();
-      *timeout = 0;
-    }
-    else {
-      throw MidiException("Unexpected ACK received.", 0);
-    }
-  }
+  BitStream bitStream;
+  MidiMessage::getBitStream(intStream, &bitStream);
+  bitStreamList->push_back(bitStream);
+}
 
- private:
-  
-  NMProtocol::MessageList* sendQueue;
-  time_t* timeout;
-};
-
-#endif
+void RequestPatchMessage::notifyListener(NMProtocolListener* listener)
+{
+  listener->messageReceived(*this);
+}

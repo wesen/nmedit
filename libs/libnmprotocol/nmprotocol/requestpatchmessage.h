@@ -17,38 +17,29 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef ACKLISTENER_H
-#define ACKLISTENER_H
+#ifndef REQUESTPATCHMESSAGE_H
+#define REQUESTPATCHMESSAGE_H
 
-#include "nmprotocol/nmprotocol.h"
-#include "nmprotocol/nmprotocollistener.h"
+#include "nmprotocol/midimessage.h"
 
-class AckListener : public NMProtocolListener
+class Packet;
+
+class RequestPatchMessage : public virtual MidiMessage
 {
  public:
 
-  AckListener(NMProtocol::MessageList* sendQueue, time_t* timeout) {
-    this->sendQueue = sendQueue;
-    this->timeout = timeout;
-  }
+  RequestPatchMessage();
+  RequestPatchMessage(Packet* packet);
+  virtual ~RequestPatchMessage();
 
-  virtual ~AckListener() {
-  }
-  
-  void messageReceived(AckMessage message) {
-    if (sendQueue->size() > 0 && *timeout != 0) {
-      sendQueue->pop_front();
-      *timeout = 0;
-    }
-    else {
-      throw MidiException("Unexpected ACK received.", 0);
-    }
-  }
+  virtual void getBitStream(BitStreamList* bitStreamList);
 
+  virtual void notifyListener(NMProtocolListener* listener);
+    
  private:
   
-  NMProtocol::MessageList* sendQueue;
-  time_t* timeout;
+  int pp;
+  int ssc;
 };
 
 #endif

@@ -192,3 +192,8 @@ bool MidiMessage::expectsAck()
 {
   return wantAck;
 }
+
+void MidiMessage::setSlot(int slot)
+{
+  this->slot = slot;
+}

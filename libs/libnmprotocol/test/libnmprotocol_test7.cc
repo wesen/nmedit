@@ -6,6 +6,8 @@
 #include "nmprotocol/midiexception.h"
 #include "nmprotocol/iammessage.h"
 #include "nmprotocol/ackmessage.h"
+#include "nmprotocol/requestpatchmessage.h"
+#include "nmprotocol/patchmessage.h"
 #include "pdl/pdlexception.h"
 #include "nmprotocol/nmprotocollistener.h"
 #include "nmprotocol/nmprotocol.h"
@@ -40,6 +42,13 @@ public:
     }
     printf("\n");
   }
+
+  void messageReceived(PatchMessage message) {
+    Patch patch;
+    message.getPatch(&patch);
+    printf("Name: %s\n", patch.getName().c_str());
+    printf("%s", patch.write().c_str());    
+  }
 };
 
 int main(int argc, char** argv)
@@ -49,23 +58,7 @@ int main(int argc, char** argv)
     MidiMessage::usePDLFile("../src/midi.pdl", 0);
     PatchMessage::usePDLFile("../src/patch.pdl", 0);
 
-    printf("\nLoad patch\n\n");
-    Patch* patch = new Patch(argv[1]);
-    patch->setName("Big_Phaser_Pad");
-    PatchMessage patchMessage(patch);
-    MidiMessage::BitStreamList bitStreamList;
-    BitStream bitStream;
-    patchMessage.getBitStream(&bitStreamList);
-
-    for (MidiMessage::BitStreamList::iterator i = bitStreamList.begin();
-	 i != bitStreamList.end(); i++) {
-      bitStream = (*i);
-      while (bitStream.isAvailable(8)) {
-	printf("%X ", bitStream.getInt(8));
-      }
-      printf("\n");
-    }
-
+    printf("\nRequest patch\n\n");
     MidiDriver* driver =
       MidiDriver::createDriver(*MidiDriver::getDrivers().begin());
     driver->connect(*driver->getMidiInputPorts().begin(),
@@ -74,7 +67,8 @@ int main(int argc, char** argv)
     NMProtocol nmProtocol(driver);
     nmProtocol.addListener(new Listener());
 
-    nmProtocol.send(&patchMessage);
+    RequestPatchMessage requestPatchMessage;
+    nmProtocol.send(&requestPatchMessage);
 
     while(1) {
       nmProtocol.heartbeat();

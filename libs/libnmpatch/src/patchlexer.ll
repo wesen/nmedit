@@ -60,7 +60,7 @@
 "[/NameDump]" { return NAME_DUMP_END; }
 
 "Version=Nord Modular patch 3.0" {
-  return VERSION;
+  return NMVERSION;
 }
 
 [^\r\n ]*[ \t]* {

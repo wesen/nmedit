@@ -113,7 +113,7 @@ PatchManagerCommand % 1 :=
 	0:1 ssc:7
 	#ssc=0x07 => SlotChange$data
 	#ssc=0x09 => SetActiveSlot$data
-	#ssc=0x0a => RequestPatch$data
+	#ssc=0x35 => RequestPatch$data
 	#ssc=0x14 => GetPatchList$data
 	;
 

@@ -90,11 +90,6 @@ PatchMessage::~PatchMessage()
 {
 }
 
-void PatchMessage::setSlot(int slot)
-{
-  this->slot = slot;
-}
-
 void PatchMessage::getBitStream(BitStreamList* bitStreamList)
 {
   IntStream intStream;

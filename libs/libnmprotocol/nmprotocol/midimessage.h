@@ -55,6 +55,8 @@ class MidiMessage
 
   virtual bool expectsAck();
 
+  void setSlot(int slot);
+
  protected:
 
   MidiMessage();

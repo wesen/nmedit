@@ -155,8 +155,7 @@ void load(string filename, string patchname, int slot,
   MidiDriver* driver = MidiDriver::createDriver(drivername);
   driver->connect(input, output);
   
-  NMProtocol nmProtocol;
-  nmProtocol.useMidiDriver(driver);
+  NMProtocol nmProtocol(driver);
   
   nmProtocol.send(&patchMessage);
   
@@ -165,6 +164,5 @@ void load(string filename, string patchname, int slot,
     usleep(10000);
   }
   
-  nmProtocol.useMidiDriver(0);
   driver->disconnect();
 }
