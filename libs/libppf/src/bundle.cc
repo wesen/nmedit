@@ -64,7 +64,6 @@ string Bundle::getProperty(string name, int level, string bindings)
        n != properties.end(); n++) {
     Tcl_Eval(interp,
 	     (char*)(bindings + " regexp ^" + (*n).first + "$ " + name).c_str());
-    printf("%s %s '%s' %s\n", (*n).first.c_str(), name.c_str(), bindings.c_str(), interp->result);
     if (string("1") == interp->result) {
       char slevel[11];
       snprintf(slevel, 10, "%d", level);

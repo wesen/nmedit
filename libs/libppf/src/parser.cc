@@ -37,9 +37,6 @@ BoundBundle Parser::parse(string filename)
 {
   string line;
   ifstream file(filename.c_str());
-  StringList bundles;
-  string property;
-  string expression;
   Bundle* currentBundle;
   
   if (file.fail()) {
@@ -52,6 +49,9 @@ BoundBundle Parser::parse(string filename)
     getline(file, line);
     line = trim(line);
     if (line.length() > 0 && line[0] != '#') {
+      StringList bundles;
+      string property;
+      string expression;
       parse(line, &bundles, &property, &expression);
       currentBundle = rootBundle;
       for (StringList::iterator name = bundles.begin();
@@ -81,28 +81,20 @@ string Parser::trim(string line)
 void Parser::parse(string line,
 		   StringList* bundles, string* property, string* expression)
 {
-  StringList atoms;
-  split(line, &atoms);
-  *expression = atoms.back();
-  atoms.pop_back();
-  if (atoms.back() != "=") {
+  string token;
+  while (line.find(" ") < line.length()) {
+    token = line.substr(0, line.find(" "));
+    line = line.substr(line.find(" ") + 1);
+    if (token == "=") {
+      break;
+    }
+    bundles->push_back(token);
+  }
+  if (token != "=") {
     throw
       ProgrammablePropertyException(string("Missing '=' sign: ") + line, 2);
   }
-  atoms.pop_back();
-  *property = atoms.back();
-  atoms.pop_back();
-  *bundles = atoms;
-}
-
-void Parser::split(string line, StringList* atoms)
-{
-  while (line.find(" ") < line.length()) {
-    atoms->push_back(line.substr(0, line.find(" ")));
-    line = line.substr(line.find(" ") + 1);
-    if (atoms->back() == "=") {
-      break;
-    }
-  }
-  atoms->push_back(line);
+  *expression = line;
+  *property = bundles->back();
+  bundles->pop_back();
 }
