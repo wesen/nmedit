@@ -90,8 +90,10 @@ patch:
 patch_part:
         header |
 	module_dump |
+	module_dump_300 |
 	current_note_dump |
 	cable_dump |
+	cable_dump_300 |
 	parameter_dump |
 	custom_dump |
 	morph_map_dump |
@@ -109,7 +111,7 @@ header:
 	PARAM PARAM PARAM PARAM PARAM PARAM PARAM PARAM
 	PARAM PARAM PARAM PARAM PARAM PARAM PARAM PARAM
 	PARAM PARAM PARAM PARAM PARAM PARAM PARAM '\n'
-	HEADER_END '\n'
+	HEADER_END
         {
 	  patch->setKeyboardRange(Patch::MIN, pchstoi($5));
 	  patch->setKeyboardRange(Patch::MAX, pchstoi($6));
@@ -149,16 +151,17 @@ module_dump:
 	  section = patch->getModuleSection((ModuleSection::Type)pchstoi($3));
 	}
 	module_list
-	MODULE_DUMP_END '\n'
-	|
+	MODULE_DUMP_END
+	;
+
+module_dump_300:
 	MODULE_DUMP '\n'
 	PARAM
         {
 	  section = patch->getModuleSection((ModuleSection::Type)pchstoi($3));
 	}
 	module_list
-	MODULE_DUMP_END '\n'
-
+	MODULE_DUMP_END
 	;
 
 module_list:
@@ -174,7 +177,7 @@ module_list:
 current_note_dump:
 	CURRENT_NOTE_DUMP '\n'
 	note_list '\n'
-	CURRENT_NOTE_DUMP_END '\n'
+	CURRENT_NOTE_DUMP_END
 	;
 
 note_list:
@@ -192,15 +195,17 @@ cable_dump:
 	  section = patch->getModuleSection((ModuleSection::Type)pchstoi($3));
 	}
 	cable_list
-	CABLE_DUMP_END '\n'
-	|
+	CABLE_DUMP_END
+	;
+
+cable_dump_300:
 	CABLE_DUMP '\n'
 	PARAM
         {
 	  section = patch->getModuleSection((ModuleSection::Type)pchstoi($3));
 	}
 	cable_list
-	CABLE_DUMP_END '\n'
+	CABLE_DUMP_END
 	;
 
 cable_list:
@@ -225,7 +230,7 @@ parameter_dump:
 	  section = patch->getModuleSection((ModuleSection::Type)pchstoi($3));
 	}
 	module_parameter_list
-	PARAMETER_DUMP_END '\n'
+	PARAMETER_DUMP_END
 	;
 
 module_parameter_list:
@@ -254,7 +259,7 @@ custom_dump:
 	  section = patch->getModuleSection((ModuleSection::Type)pchstoi($3));
 	}
 	module_custom_list
-	CUSTOM_DUMP_END '\n'
+	CUSTOM_DUMP_END
 	;
 
 module_custom_list:
@@ -287,7 +292,7 @@ morph_map_dump:
 	  patch->getMorph(Morph::MORPH4)->setValue(pchstoi($6));
 	}
 	morph_map_list '\n'
-	MORPH_MAP_DUMP_END '\n'
+	MORPH_MAP_DUMP_END
 	;
 
 morph_map_list:
@@ -318,13 +323,13 @@ keyboard_assignment:
 	  patch->getMorph(Morph::MORPH4)->
 	    setKeyboardAssignment((Morph::KeyboardAssignment)pchstoi($6));
 	}
-	KEYBOARD_ASSIGNMENT_END '\n'
+	KEYBOARD_ASSIGNMENT_END
 	;
 
 knob_map_dump:
 	KNOB_MAP_DUMP '\n'
 	knob_map_list
-	KNOB_MAP_DUMP_END '\n'
+	KNOB_MAP_DUMP_END
 	;
 
 knob_map_list:
@@ -350,7 +355,7 @@ knob_map_list:
 ctrl_map_dump:
 	CTRL_MAP_DUMP '\n'
 	ctrl_map_list
-	CTRL_MAP_DUMP_END '\n'
+	CTRL_MAP_DUMP_END
 	;
 	
 ctrl_map_list:
@@ -380,7 +385,7 @@ name_dump:
 	  section = patch->getModuleSection((ModuleSection::Type)pchstoi($3));
 	}
 	name_list
-	NAME_DUMP_END '\n'
+	NAME_DUMP_END
 	;
 
 name_list:

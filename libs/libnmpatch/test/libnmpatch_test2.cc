@@ -25,7 +25,6 @@ int main(int argc, char** argv)
 {
   try {
     Patch* patch = new Patch(argv[1]);
-    printf("%s", patch->write().c_str());
     delete patch;
   }
   catch (PatchException& exception) {

@@ -5,5 +5,5 @@ p=`find $1 -name "*.pch"`
 for i in $p
 do
 	echo $i;
-	./test1 $i >/dev/null
+	./libnmpatch_test2 "$i"
 done
