@@ -114,8 +114,16 @@ int main(int argc, char** argv)
       exit(1);
     }
 
+    string filename = argv[optind];
+
+    if (patchname == "") {
+      int start = filename.find_last_of("/\\", filename.size()) + 1;
+      int end = filename.find_first_of(".", start);
+      patchname = filename.substr(start, end-start);
+    }
+
     printf("Loading patch...\n");
-    load(argv[optind], patchname, slot, drivername, input, output);
+    load(filename, patchname, slot, drivername, input, output);
     printf("Done.\n");
 
   }
