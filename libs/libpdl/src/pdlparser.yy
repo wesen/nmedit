@@ -32,7 +32,8 @@
   void pdlerror(char*);
   int pdlstoi(string);
 
-  std::ifstream pdlinstream;
+  ifstream* pdlinstream = 0;
+  istream* pdlin = 0;
   PDLLexer* pdllexer;
 
   int pdlline = 1;
@@ -137,12 +138,18 @@ void pdlerror(char* s) {
 bool init_pdl_parser(const char* filename, Protocol* p)
 {
   protocol = p;
-  pdlinstream.close();
-  pdlinstream.open(filename);
-  istream pdlin(pdlinstream.rdbuf());
+  
+  if (pdlinstream) {
+    pdlinstream->close();
+    delete pdlinstream;
+    delete pdlin;
+  }
+  pdlinstream = new ifstream();
+  pdlinstream->open(filename);
+  pdlin = new istream(pdlinstream->rdbuf());
 
-  pdllexer = new PDLLexer(&pdlin);
-  return pdlinstream.good();
+  pdllexer = new PDLLexer(pdlin);
+  return pdlinstream->good();
 }
 
 int pdlstoi(string param)

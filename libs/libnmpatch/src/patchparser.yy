@@ -30,7 +30,8 @@
   void yyerror(char*);
   int pchstoi(string);
 
-  ifstream yyinstream;
+  ifstream* yyinstream = 0;
+  istream* yyin = 0;
 
   int pchline = 1;
   Patch* patch;
@@ -400,12 +401,18 @@ void yyerror(char* s) {
 bool init_parser(const char* filename, Patch* p)
 {
   patch = p;
-  yyinstream.close();
-  yyinstream.open(filename);
-  istream yyin(yyinstream.rdbuf());
 
-  nmlexer = new NMLexer(&yyin);
-  return yyinstream.good();
+  if (yyinstream) {
+    yyinstream->close();
+    delete yyinstream;
+    delete yyin;
+  }
+  yyinstream = new ifstream();
+  yyinstream->open(filename);
+  yyin = new istream(yyinstream->rdbuf());
+
+  nmlexer = new NMLexer(yyin);
+  return yyinstream->good();
 }
 
 int pchstoi(string param)
