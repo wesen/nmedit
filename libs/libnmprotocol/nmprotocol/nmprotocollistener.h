@@ -28,6 +28,8 @@
 #include "nmprotocol/newpatchinslotmessage.h"
 #include "nmprotocol/voicecountmessage.h"
 #include "nmprotocol/getpatchmessage.h"
+#include "nmprotocol/slotsselectedmessage.h"
+#include "nmprotocol/slotactivatedmessage.h"
 
 class NMProtocolListener
 {
@@ -44,6 +46,8 @@ class NMProtocolListener
   virtual void messageReceived(NewPatchInSlotMessage message) {}
   virtual void messageReceived(VoiceCountMessage message) {}
   virtual void messageReceived(GetPatchMessage message) {}
+  virtual void messageReceived(SlotsSelectedMessage message) {}
+  virtual void messageReceived(SlotActivatedMessage message) {}
   
 };
 

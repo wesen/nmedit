@@ -4,7 +4,6 @@
 
 #include "nmprotocol/mididriver.h"
 #include "nmprotocol/midiexception.h"
-#include "nmprotocol/iammessage.h"
 #include "pdl/protocol.h"
 #include "nmprotocol/nmprotocollistener.h"
 #include "nmprotocol/nmprotocol.h"
@@ -21,16 +20,6 @@ public:
     printf("Sender: %d ", message.getSender());
     printf("VersionHigh: %d ", message.getVersionHigh());
     printf("VersionLow: %d \n", message.getVersionLow());
-  }
-
-  void messageReceived(LightMessage message) {
-    printf("LightMessage: ");
-    printf("pid: %d ", message.getPid());
-    printf("StartIndex: %d ", message.getStartIndex());
-    for (int i = 0; i < 20; i++) {
-      printf("%d ", message.getLightStatus(i));
-    }
-    printf("\n");
   }
 
   void messageReceived(NewPatchInSlotMessage message) {
@@ -73,12 +62,18 @@ int main(int argc, char** argv)
     NMProtocol nmProtocol(driver);
     nmProtocol.addListener(new Listener());
 
-    printf("Send IAmMessage\n");
-    BitStream bitStream;
-    IAmMessage iAmMessage;
-    iAmMessage.setVersion(3,3);
+    printf("Send SlotsSelectedMessage\n");
+    SlotsSelectedMessage slotsSelectedMessage;
+    slotsSelectedMessage.setSelected(0, false);
+    slotsSelectedMessage.setSelected(0, true);
+    slotsSelectedMessage.setSelected(0, false);
+    slotsSelectedMessage.setSelected(0, true);
+    nmProtocol.send(&slotsSelectedMessage);
 
-    nmProtocol.send(&iAmMessage);
+    printf("Send SlotActivatedMessage\n");
+    SlotActivatedMessage slotActivatedMessage;
+    slotActivatedMessage.setActiveSlot(2);
+    nmProtocol.send(&slotActivatedMessage);
 
     while(1) {
       nmProtocol.heartbeat();

@@ -45,8 +45,8 @@ MorphRangeChange % 1 :=
 NMInfo % 1 :=
 	0:1 pid:7 0:1 sc:7
 	#sc=0x05 => VoiceCount$data
-	#sc=0x07 => SlotSelectionChanged$data
-	#sc=0x09 => SlotSelectButtonPressed$data
+	#sc=0x07 => SlotsSelected$data
+	#sc=0x09 => SlotActivated$data
 	#sc=0x38 => NewPatchInSlot$data
 	#sc=0x39 => Lights$data
 	#sc=0x40 => VUMeters$data
@@ -58,12 +58,12 @@ VoiceCount % 1 :=
 	0:1 c0:7 0:1 c1:7 0:1 c2:7 0:1 c3:7
 	;
 
-SlotSelectionChanged % 1 :=
-	0:1 unknown:7
+SlotsSelected % 1 :=
+	0:4 slot0:1 slot1:1 slot2:1 slot3:1
 	;
 
-SlotSelectButtonPressed % 1 :=
-	0:1 unknown:7
+SlotActivated % 1 :=
+	0:1 slot:7
 	;
 
 NewPatchInSlot % 1 :=
@@ -114,17 +114,17 @@ PatchCommand % 1 :=
 
 PatchManagerCommand % 1 :=
 	0:1 ssc:7
-	#ssc=0x07 => SlotChange$data
-	#ssc=0x09 => SetActiveSlot$data
+	#ssc=0x07 => SelectSlots$data
+	#ssc=0x09 => ActivateSlot$data
 	#ssc=0x35 => RequestPatch$data
 	#ssc=0x14 => GetPatchList$data
 	;
 
-SlotChange % 1 :=
-	;
+SelectSlots % 1 :=
+	0:4 slot0:1 slot1:1 slot2:0 slot3:0;
 
-SetActiveSlot % 1 :=
-	;
+ActivateSlot % 1 :=
+	0:1 slot:7;
 
 RequestPatch % 1 :=
 	;

@@ -27,6 +27,8 @@
 #include "nmprotocol/patchlistmessage.h"
 #include "nmprotocol/newpatchinslotmessage.h"
 #include "nmprotocol/voicecountmessage.h"
+#include "nmprotocol/slotsselectedmessage.h"
+#include "nmprotocol/slotactivatedmessage.h"
 #include "nmprotocol/midiexception.h"
 #include "pdl/packetparser.h"
 #include "pdl/protocol.h"
@@ -96,6 +98,14 @@ MidiMessage* MidiMessage::create(BitStream* bitStream)
 	  
 	case 0x05:
 	  return new VoiceCountMessage(&packet);
+	  break;
+	  
+	case 0x07:
+	  return new SlotsSelectedMessage(&packet);
+	  break;
+	  
+	case 0x09:
+	  return new SlotActivatedMessage(&packet);
 	  break;
 	  
 	case 0x38:
