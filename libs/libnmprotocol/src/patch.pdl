@@ -179,7 +179,7 @@ Param4 % 1 :=
 	;
 
 Param5 % 1 :=
-	level:7 destination:2 mute:1
+	level:7 destination:3 mute:1
 	;
 
 Param7 % 1 :=
