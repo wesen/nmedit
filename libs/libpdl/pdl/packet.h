@@ -44,6 +44,7 @@ class Packet
 
   void setName(string name);
   string getName();
+  bool contains(string packetName);
 
   void bind(Packet* packet, string name);
   void bind(int number, string name);

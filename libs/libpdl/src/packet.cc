@@ -101,3 +101,27 @@ void Packet::setName(string name)
 {
   this->name = name;
 }
+
+bool Packet::contains(string packetName)
+{
+  if (getName() == packetName) {
+    return true;
+  }
+  else {
+    for (PacketMap::iterator i = packets.begin(); i != packets.end(); i++) {
+      if ((*i).second->contains(packetName)) {
+	return true;
+      }
+    }
+    for (PacketListMap::iterator m = packetLists.begin();
+	 m != packetLists.end(); m++) {
+      for (PacketList::iterator n = (*m).second.begin();
+	   n != (*m).second.end(); n++) {
+	if ((*n)->contains(packetName)) {
+	  return true;
+	}
+      }
+    }
+  }
+  return false;
+}

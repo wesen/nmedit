@@ -43,8 +43,6 @@ string MidiMessage::pdlFile = string(LIBPATH) + "/midi.pdl";
 Protocol* MidiMessage::protocol = 0;
 PacketParser* MidiMessage::packetParser = 0;
 
-PatchMessage* MidiMessage::patchMessage = 0;
-
 void MidiMessage::usePDLFile(string filename, Tracer* tracer)
 {
   pdlFile = filename;
@@ -56,7 +54,6 @@ void MidiMessage::usePDLFile(string filename, Tracer* tracer)
 
 MidiMessage::MidiMessage()
 {
-  patchMessage = 0;
   expectsreply = false;
   isreply = false;
 
@@ -86,86 +83,42 @@ MidiMessage* MidiMessage::create(BitStream* bitStream)
   bitStream->setPosition(0);
   
   if (success) {
-    switch (packet.getVariable("cc")) {
-
-    case 0x00:
+    if (packet.contains("IAm")) { 
       return new IAmMessage(&packet);
-      break;
-
-    case 0x14:
-      if (checksumIsCorrect(*bitStream)) {
-	switch (packet.getPacket("data")->getVariable("sc")) {
-	  
-	case 0x05:
-	  return new VoiceCountMessage(&packet);
-	  break;
-	  
-	case 0x07:
-	  return new SlotsSelectedMessage(&packet);
-	  break;
-	  
-	case 0x09:
-	  return new SlotActivatedMessage(&packet);
-	  break;
-	  
-	case 0x38:
-	  return new NewPatchInSlotMessage(&packet);
-	  break;
-	  
-	case 0x39:
-	  return new LightMessage(&packet);
-	  break;
-	  
-	default:
-	  printf("unsupported packet: ");
-	  break;
-	}
-      }
-      break;
-
-    case 0x16:
-      if (checksumIsCorrect(*bitStream)) {
-	if (packet.getPacket("data")->getVariable("type") == 0x13) {
-	  return new PatchListMessage(&packet);
-	}
-	else {
-	  return new AckMessage(&packet);
-	}
-      }
-      break;
-      
-    case 0x1d:
-	patchMessage = new PatchMessage();
-    case 0x1c:
-      if (checksumIsCorrect(*bitStream)) {
-	patchMessage->append(&packet);
-	return 0;
-      }
-      break;
-
-    case 0x1e:
-      if (checksumIsCorrect(*bitStream)) {
-	if (patchMessage == 0) {
-	  patchMessage = new PatchMessage();
-	}
-	patchMessage->append(&packet);
-	
-	PatchMessage* returnValue = patchMessage;
-	patchMessage = 0;
-	return returnValue;
-      }
-      break;
-
-    case 0x22:
-      if (checksumIsCorrect(*bitStream)) {
-	  return new PatchListMessage(&packet);
-      }
-      break;
-
-    default:
-      printf("unsupported packet: ");
-      break;
     }
+
+    if (checksumIsCorrect(*bitStream)) {
+
+      if (packet.contains("VoiceCount")) {
+	return new VoiceCountMessage(&packet);
+      }
+      if (packet.contains("SlotsSelected")) {
+	return new SlotsSelectedMessage(&packet);
+      }
+      if (packet.contains("SlotActivated")) {
+	return new SlotActivatedMessage(&packet);
+      }
+      if (packet.contains("NewPatchInSlot")) {
+	return new NewPatchInSlotMessage(&packet);
+      }
+      if (packet.contains("Lights")) {
+	return new LightMessage(&packet);
+      }
+
+      if (packet.contains("PatchListResponse")) {
+	return new PatchListMessage(&packet);
+      }
+      else if(packet.contains("ACK")) {
+	return new AckMessage(&packet);
+      }
+      
+      if (packet.contains("PatchPacket")) {
+	PatchMessage* patchMessage = new PatchMessage();
+	patchMessage->append(&packet);
+	return patchMessage;
+      }	  
+    }
+    printf("unsupported packet: ");
   }
   else {
     printf("parse failed: ");

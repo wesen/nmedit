@@ -80,9 +80,6 @@ class MidiMessage
   static string pdlFile;
   static Protocol* protocol;
   static PacketParser* packetParser;
-
-  static PatchMessage* patchMessage;
-
 };
 
 #endif
