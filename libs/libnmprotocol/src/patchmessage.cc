@@ -395,7 +395,8 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     intStream.append(cc + first + 2*last);
     first = 0;
     intStream.append(slot);
-    intStream.append(0x40 + sectionsEnded);
+    intStream.append(0x01);
+    intStream.append(sectionsEnded);
     while (partialPatchStream.isAvailable(7)) {
       intStream.append(partialPatchStream.getInt(7));
     }

@@ -226,7 +226,7 @@ GetCurrentNotes % 1 :=
 	;
 
 PatchPacket % 1 :=
-	0:1 pid:7 ?PatchData$next
+	0:1 command:1 pid:6 ?PatchData$next
 	;
 
 PatchData % 1 :=
@@ -234,21 +234,23 @@ PatchData % 1 :=
 	;
 
 SettingsHandling % 1 :=
-	?SettingsCommand$data ?PatchSettings$data
+	0:1 command:1
+	#command=0x00 => PatchSettings$data
+	#command=0x01 => SettingsCommand$data
 	;
 
 SettingsCommand % 1 :=
-	0:1 pp:7
-	#pp=0x41 => SetSynthSettings$command
-	#pp=0x50 => PatchData$next
-	0:1 checksum:7
+	pp:6
+	#pp=0x01 => SetSynthSettings$command
+	#pp!0x01 => PatchData$next
 	;
 
 SetSynthSettings % 1 :=
+	0:1 checksum:7
 	;
 
 PatchSettings % 1 :=
-	0:1 pid:7 0:1 sc:7
+	pp:6 0:1 sc:7
 	#sc=0x10 => SetPatchSettings$data
 	#sc=0x18 => ModuleInsertion$data
 	#sc=0x21 => SEQZoom$data
