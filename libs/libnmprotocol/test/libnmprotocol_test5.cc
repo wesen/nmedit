@@ -74,6 +74,7 @@ int main(int argc, char** argv)
 
     while(1) {
       nmProtocol.heartbeat();
+      sleep(3);
     }
 
     nmProtocol.useMidiDriver(0);

@@ -71,7 +71,9 @@ bool PacketParser::parse(BitStream* data, Packet* result)
   }
 
   if (!conditional || (conditional && conditionalMatch)) {
-    data->getInt((data->getPosition()-dataPos) % padding);
+    data->getInt(((data->getPosition()-dataPos) % padding) == 0 ?
+		 0 :
+		 padding - ((data->getPosition()-dataPos) % padding));
     protocol->trace(string("MATCHED ") + name);
     return true;
   }
@@ -114,7 +116,10 @@ bool PacketParser::generate(IntStream *data, BitStream* result)
   }
 
   if (!conditional || (conditional && conditionalMatch)) {
-    result->append(0, (result->getSize()-resultSize) % padding);
+    result->append(0,
+		   ((result->getSize()-resultSize) % padding) == 0 ?
+		   0 :
+		   padding - ((result->getSize()-resultSize) % padding));
     protocol->trace(string("MATCHED ") + name);
     return true;
   }

@@ -68,8 +68,8 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
   intStream.append(patch->getBendRange());
   intStream.append(patch->getPortamentoTime());
   intStream.append(patch->getPortamento());
-  intStream.append(0);
-  intStream.append(patch->getRequestedVoices());
+  intStream.append(1);
+  intStream.append(patch->getRequestedVoices() - 1);
   intStream.append(0);
   intStream.append(patch->getSectionSeparationPosition());
   intStream.append(patch->getOctaveShift());
@@ -84,7 +84,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     (patch->getModuleSection(ModuleSection::COMMON)->getVoiceRetrigger());
   intStream.append
     (patch->getModuleSection(ModuleSection::POLY)->getVoiceRetrigger());
-  intStream.append(0);
+  intStream.append(0xf);
   intStream.append(0);
 
   for (int s = ModuleSection::POLY; s >= ModuleSection::COMMON; s--) {
