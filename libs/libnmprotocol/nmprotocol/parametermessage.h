@@ -45,6 +45,9 @@ class ParameterMessage : public virtual MidiMessage
   int getValue();
   int getPid();
 
+  void setParameter(ModuleType::Parameter param);
+  void setValue(int value);
+
  private:
   
   int sc;

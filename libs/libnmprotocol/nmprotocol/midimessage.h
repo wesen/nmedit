@@ -60,6 +60,8 @@ class MidiMessage
   void setSlot(int slot);
   int getSlot();
 
+  static Protocol* protocol;
+
  protected:
 
   MidiMessage();
@@ -78,7 +80,6 @@ class MidiMessage
  private:
 
   static string pdlFile;
-  static Protocol* protocol;
   static PacketParser* packetParser;
 };
 

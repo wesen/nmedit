@@ -38,8 +38,8 @@ ParameterMessage::ParameterMessage()
 
 ParameterMessage::ParameterMessage(Packet* packet)
 {
-  ParameterMessage();
-
+  cc = 0x13;
+  sc = 0x40;
   slot = packet->getVariable("slot");
   pid = packet->getVariable("data:pid");
   section = packet->getVariable("data:data:section");
@@ -51,8 +51,8 @@ ParameterMessage::ParameterMessage(Packet* packet)
 ParameterMessage::ParameterMessage(int pid, int section, int module,
 				   int parameter, int value)
 {
-  ParameterMessage();
-
+  cc = 0x13;
+  sc = 0x40;
   this->pid = pid;
   this->section = section;
   this->module = module;
@@ -111,3 +111,14 @@ int ParameterMessage::getPid()
 {
   return pid;
 }
+
+void ParameterMessage::setParameter(ModuleType::Parameter parameter)
+{
+  this->parameter = parameter;
+}
+
+void ParameterMessage::setValue(int value)
+{
+  this->value = value;
+}
+

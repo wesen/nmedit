@@ -28,6 +28,7 @@ Parameter % 1 :=
 	#sc=0x2f => ParameterSelect$data
 	#sc=0x40 => ParameterChange$data
 	#sc=0x43 => MorphRangeChange$data
+	0:1 checksum:7
 	;
 
 ParameterSelect % 1 :=
