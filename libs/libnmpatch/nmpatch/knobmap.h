@@ -51,11 +51,11 @@ class KnobMap
     SWITCH = 22
   };
 
-  KnobMap(ModuleSection::Type, Module*, Module::Parameter);
+  KnobMap(ModuleSection::Type, Module*, ModuleType::Parameter);
 
   ModuleSection::Type getModuleSectionType();
   Module* getModule();
-  Module::Parameter getParameter();
+  ModuleType::Parameter getParameter();
 
   void setKnob(Knob);
   Knob getKnob();
@@ -64,7 +64,7 @@ class KnobMap
 
   ModuleSection::Type section;
   Module* module;
-  Module::Parameter parameter;
+  ModuleType::Parameter parameter;
   Knob knob;
 };
 

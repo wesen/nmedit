@@ -19,10 +19,15 @@
 
 #include "nmpatch/module.h"
 
-Module::Module(Type type, int index)
+Module::Module(ModuleType* type, int index)
 {
   this->index = index;
   this->type = type;
+}
+
+Module::~Module()
+{
+  delete type;
 }
 
 int Module::getIndex()
@@ -30,7 +35,7 @@ int Module::getIndex()
   return index;
 }
 
-Module::Type Module::getType()
+ModuleType* Module::getType()
 {
   return type;
 }
@@ -61,32 +66,32 @@ string Module::getName()
   return name;
 }
 
-void Module::setParameter(Module::Parameter param, int value)
+void Module::setParameter(ModuleType::Parameter param, int value)
 {
   parameters[param] = value;
 }
 
-int Module::getParameter(Module::Parameter param)
+int Module::getParameter(ModuleType::Parameter param)
 {
   return parameters[param];
 }
 
-int Module::numberOfParameters() const
+string Module::getMappedParameter(ModuleType::Parameter param)
 {
-  return parameters.size();
+  return type->mapParameter(param, parameters[param], this);
 }
 
-void Module::setCustomValue(Module::CustomValue param, int value)
+void Module::setCustomValue(ModuleType::CustomValue param, int value)
 {
   customValues[param] = value;
 }
 
-int Module::getCustomValue(Module::CustomValue param)
+int Module::getCustomValue(ModuleType::CustomValue param)
 {
   return customValues[param];
 }
 
-int Module::numberOfCustomValues() const
+string Module::getMappedCustomValue(ModuleType::CustomValue param)
 {
-  return customValues.size();
+  return type->mapCustomValue(param, customValues[param]);
 }

@@ -20,7 +20,7 @@
 #include "nmpatch/morphmap.h"
 
 MorphMap::MorphMap(ModuleSection::Type section, Module* module,
-		   Module::Parameter parameter)
+		   ModuleType::Parameter parameter)
 {
   this->section = section;
   this->module = module;
@@ -37,7 +37,7 @@ Module* MorphMap::getModule()
   return module;
 }
 
-Module::Parameter MorphMap::getParameter()
+ModuleType::Parameter MorphMap::getParameter()
 {
   return parameter;
 }

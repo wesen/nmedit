@@ -25,6 +25,11 @@
 #include "nmpatch/module.h"
 #include "nmpatch/cable.h"
 
+namespace ppf {
+  class Parser;
+  class BoundBundle;
+}
+
 using namespace std;
 
 class ModuleSection
@@ -45,6 +50,8 @@ class ModuleSection
   typedef list<Module*> ModuleList;
   typedef list<Cable*> CableList;
 
+  static void usePPFFile(string filename);
+
   ModuleSection();
   
   virtual ~ModuleSection();
@@ -52,18 +59,23 @@ class ModuleSection
   void setVoiceRetrigger(VoiceRetrigger);
   VoiceRetrigger getVoiceRetrigger();
 
-  Module* newModule(Module::Type, int = 0);
+  Module* newModule(ModuleType::TypeId, int = 0);
   ModuleList getModules() const;
   Module* getModule(int);
   void removeModule(Module*);
   
-  Cable* newCable(Cable::Color, int, Module::Port, Cable::ConnectorType,
-		  int, Module::Port, Cable::ConnectorType);
+  Cable* newCable(Cable::Color,
+		  int, ModuleType::Port, ModuleType::ConnectorType,
+		  int, ModuleType::Port, ModuleType::ConnectorType);
   CableList getCables() const;
   void removeCable(Cable*);
   
  private:
   
+  static string ppfFile;
+  static ppf::Parser* parser;
+  static ppf::BoundBundle* moduleProperties;
+
   VoiceRetrigger voiceRetrigger;
   ModuleList modules;
   CableList cables;

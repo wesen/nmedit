@@ -102,11 +102,11 @@ public:
 
   Morph* getMorph(Morph::Type);
 
-  KnobMap* newKnobMap(ModuleSection::Type, Module*, Module::Parameter);
+  KnobMap* newKnobMap(ModuleSection::Type, Module*, ModuleType::Parameter);
   KnobMapList getKnobMaps() const;
   void removeKnobMap(KnobMap*);
 
-  CtrlMap* newCtrlMap(ModuleSection::Type, Module*, Module::Parameter);
+  CtrlMap* newCtrlMap(ModuleSection::Type, Module*, ModuleType::Parameter);
   CtrlMapList getCtrlMaps() const;
   void removeCtrlMap(CtrlMap*);
 

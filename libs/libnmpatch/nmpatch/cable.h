@@ -20,7 +20,9 @@
 #ifndef CABLE_H
 #define CABLE_H
 
-#include "nmpatch/module.h"
+#include "nmpatch/moduletype.h"
+
+class Module;
 
 class Cable
 {
@@ -36,31 +38,26 @@ class Cable
     WHITE
   };
 
-  enum ConnectorType {
-    INPUT = 0,
-    OUTPUT
-  };
-
-  Cable(Color, Module*, Module::Port, ConnectorType,
-	Module*, Module::Port, ConnectorType);
+  Cable(Color, Module*, ModuleType::Port, ModuleType::ConnectorType,
+	Module*, ModuleType::Port, ModuleType::ConnectorType);
 
   Color getColor();
   Module* getDestinationModule();
-  Module::Port getDestinationConnector();
-  ConnectorType getDestinationConnectorType();
+  ModuleType::Port getDestinationConnector();
+  ModuleType::ConnectorType getDestinationConnectorType();
   Module* getSourceModule();
-  Module::Port getSourceConnector();
-  ConnectorType getSourceConnectorType();
+  ModuleType::Port getSourceConnector();
+  ModuleType::ConnectorType getSourceConnectorType();
 
  private:
   
   Color color;
   Module* destinationModule;
-  Module::Port destinationConnector;
-  ConnectorType destinationConnectorType;
+  ModuleType::Port destinationConnector;
+  ModuleType::ConnectorType destinationConnectorType;
   Module* sourceModule;
-  Module::Port sourceConnector;
-  ConnectorType sourceConnectorType;
+  ModuleType::Port sourceConnector;
+  ModuleType::ConnectorType sourceConnectorType;
 };
 
 #endif

@@ -27,11 +27,11 @@ class MorphMap
 {
  public:
 
-  MorphMap(ModuleSection::Type, Module*, Module::Parameter);
+  MorphMap(ModuleSection::Type, Module*, ModuleType::Parameter);
 
   ModuleSection::Type getModuleSectionType();
   Module* getModule();
-  Module::Parameter getParameter();
+  ModuleType::Parameter getParameter();
 
   void setRange(int);
   int getRange();
@@ -40,7 +40,7 @@ class MorphMap
 
   ModuleSection::Type section;
   Module* module;
-  Module::Parameter parameter;
+  ModuleType::Parameter parameter;
   int range;
 };
 

@@ -27,7 +27,10 @@
 
 #include "pdl/pdlexception.h"
 
+#include "ppf/programmablepropertyexception.h"
+
 #include "nmpatch/patch.h"
+#include "nmpatch/modulesection.h"
 #include "nmpatch/patchexception.h"
 
 void load(string, string, int, string, string, string);
@@ -45,6 +48,7 @@ int main(int argc, char** argv)
   try {
     MidiMessage::usePDLFile("/usr/local/lib/nmprotocol/midi.pdl", 0);
     PatchMessage::usePDLFile("/usr/local/lib/nmprotocol/patch.pdl", 0);
+    ModuleSection::usePPFFile("/usr/local/lib/nmpatch/module.ppf");
 
     string patchname, drivername, input, output;
     bool error = false;
@@ -140,6 +144,11 @@ int main(int argc, char** argv)
   }
   catch (PatchException& exception) {
     printf("PatchException: %s (%d)\n",
+	   exception.getMessage().c_str(),
+	   exception.getError());
+  }
+  catch (ppf::ProgrammablePropertyException& exception) {
+    printf("PPFException: %s (%d)\n",
 	   exception.getMessage().c_str(),
 	   exception.getError());
   }

@@ -18,17 +18,25 @@
 */
 
 #include "nmpatch/patch.h"
+#include "nmpatch/modulesection.h"
 #include "nmpatch/patchexception.h"
+#include "ppf/programmablepropertyexception.h"
 #include <stdio.h>
 
 int main(int argc, char** argv)
 {
   try {
+    ModuleSection::usePPFFile("../src/module.ppf");
     Patch* patch = new Patch(argv[1]);
     delete patch;
   }
   catch (PatchException& exception) {
     printf("PatchException: %s (%d)\n",
+	   exception.getMessage().c_str(),
+	   exception.getError());
+  }
+  catch (ppf::ProgrammablePropertyException& exception) {
+    printf("PPFException: %s (%d)\n",
 	   exception.getMessage().c_str(),
 	   exception.getError());
   }

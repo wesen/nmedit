@@ -20,7 +20,7 @@
 #include "nmpatch/knobmap.h"
 
 KnobMap::KnobMap(ModuleSection::Type section, Module* module,
-		   Module::Parameter parameter)
+		 ModuleType::Parameter parameter)
 {
   this->section = section;
   this->module = module;
@@ -37,7 +37,7 @@ Module* KnobMap::getModule()
   return module;
 }
 
-Module::Parameter KnobMap::getParameter()
+ModuleType::Parameter KnobMap::getParameter()
 {
   return parameter;
 }

@@ -39,8 +39,10 @@ class BoundBundle
   BoundBundle(Bundle*, int, string);
 
   BoundBundle getBoundBundle(string);
+  BoundBundle getBoundBundle(int);
 
   string getProperty(string);
+  string getProperty(int);
 
   virtual ~BoundBundle();
 
@@ -50,6 +52,7 @@ class BoundBundle
   int level;
   string bindings;
 
+  string itos(int data);
 };
 
 }    

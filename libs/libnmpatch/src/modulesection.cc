@@ -18,10 +18,36 @@
 */
 
 #include "nmpatch/modulesection.h"
+#include "ppf/parser.h"
+#include "ppf/boundbundle.h"
+
+#ifndef LIBPATH
+#define LIBPATH ""
+#endif
+
+string ModuleSection::ppfFile = string(LIBPATH) + "/module.ppf";
+ppf::Parser* ModuleSection::parser = 0;
+ppf::BoundBundle* ModuleSection::moduleProperties = 0;
+
+void ModuleSection::usePPFFile(string filename)
+{
+  ppfFile = filename;
+  delete parser;
+  delete moduleProperties;
+  parser = new ppf::Parser();
+  moduleProperties = new ppf::BoundBundle;
+  *moduleProperties = parser->parse(ppfFile);
+}
 
 ModuleSection::ModuleSection()
 {
   nextIndex = 1;
+
+  if (parser == 0) {
+    parser = new ppf::Parser();
+    moduleProperties = new ppf::BoundBundle;
+    *moduleProperties = parser->parse(ppfFile);
+  }
 }
 
 ModuleSection::~ModuleSection()
@@ -45,7 +71,7 @@ ModuleSection::VoiceRetrigger ModuleSection::getVoiceRetrigger()
   return voiceRetrigger;
 }
 
-Module* ModuleSection::newModule(Module::Type type, int index )
+Module* ModuleSection::newModule(ModuleType::TypeId type, int index )
 {
   if (index == 0) {
     index = nextIndex++;
@@ -53,8 +79,13 @@ Module* ModuleSection::newModule(Module::Type type, int index )
   else {
     nextIndex = nextIndex > index+1 ? nextIndex : index+1;
   }
-
-  modules.push_back(new Module(type, index));
+  
+  ppf::BoundBundle* parameters = new ppf::BoundBundle();
+  ppf::BoundBundle* maps = new ppf::BoundBundle();
+  *parameters =
+    moduleProperties->getBoundBundle("moduletype").getBoundBundle(type);
+  *maps =  moduleProperties->getBoundBundle("map");
+  modules.push_back(new Module(new ModuleType(type, parameters, maps), index));
   return modules.back();
 }
 
@@ -81,11 +112,11 @@ void ModuleSection::removeModule(Module* module)
 
 Cable* ModuleSection::newCable(Cable::Color color,
 			       int destinationModuleIndex,
-			       Module::Port destinationConnector,
-			       Cable::ConnectorType destinationConnectorType,
+			       ModuleType::Port destinationConnector,
+			       ModuleType::ConnectorType destinationConnectorType,
 			       int sourceModuleIndex,
-			       Module::Port sourceConnector,
-			       Cable::ConnectorType sourceConnectorType)
+			       ModuleType::Port sourceConnector,
+			       ModuleType::ConnectorType sourceConnectorType)
 {
   cables.push_back(new Cable(color, getModule(destinationModuleIndex),
 			     destinationConnector, destinationConnectorType,

@@ -27,11 +27,11 @@ class CtrlMap
 {
  public:
 
-  CtrlMap(ModuleSection::Type, Module*, Module::Parameter);
+  CtrlMap(ModuleSection::Type, Module*, ModuleType::Parameter);
 
   ModuleSection::Type getModuleSectionType();
   Module* getModule();
-  Module::Parameter getParameter();
+  ModuleType::Parameter getParameter();
 
   void setCC(int);
   int getCC();
@@ -40,7 +40,7 @@ class CtrlMap
 
   ModuleSection::Type section;
   Module* module;
-  Module::Parameter parameter;
+  ModuleType::Parameter parameter;
   int CC;
 };
 

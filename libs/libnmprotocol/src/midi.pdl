@@ -185,7 +185,7 @@ GetPatchPart % 1 :=
 	;
 
 ModuleAdd % 1 :=
-	PatchData:data
+	PatchData$data
 	;
 
 KnobAssignment % 1 :=

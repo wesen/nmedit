@@ -220,7 +220,7 @@ Morph* Patch::getMorph(Morph::Type type)
 
 KnobMap* Patch::newKnobMap(ModuleSection::Type section,
 			   Module* module,
-			   Module::Parameter parameter)
+			   ModuleType::Parameter parameter)
 {
   knobMaps.push_back(new KnobMap(section, module, parameter));
   return knobMaps.back();
@@ -239,7 +239,7 @@ void Patch::removeKnobMap(KnobMap* knobMap)
 
 CtrlMap* Patch::newCtrlMap(ModuleSection::Type section,
 			   Module* module,
-			   Module::Parameter parameter)
+			   ModuleType::Parameter parameter)
 {
   ctrlMaps.push_back(new CtrlMap(section, module, parameter));
   return ctrlMaps.back();
@@ -304,7 +304,7 @@ string Patch::write()
 	 m != modules.end();
 	 m++) {
       writeParameter(result, (*m)->getIndex());
-      writeParameter(result, (*m)->getType());
+      writeParameter(result, (*m)->getType()->getId());
       writeParameter(result, (*m)->getXPosition());
       writeParameter(result, (*m)->getYPosition());
       result += "\n";
@@ -351,12 +351,12 @@ string Patch::write()
     for (ModuleSection::ModuleList::iterator m = modules.begin();
 	 m != modules.end();
 	 m++) {
-      if ((*m)->numberOfParameters() > 0) {
+      if ((*m)->getType()->numberOfParameters() > 0) {
 	writeParameter(result, (*m)->getIndex());
-	writeParameter(result, (*m)->getType());
-	writeParameter(result, (*m)->numberOfParameters());
-	for (int p = 0; p < (*m)->numberOfParameters(); p++) {
-	  writeParameter(result, (*m)->getParameter((Module::Parameter)p));
+	writeParameter(result, (*m)->getType()->getId());
+	writeParameter(result, (*m)->getType()->numberOfParameters());
+	for (int p = 0; p < (*m)->getType()->numberOfParameters(); p++) {
+	  writeParameter(result, (*m)->getParameter((ModuleType::Parameter)p));
 	}
 	result += "\n";  
       }
@@ -407,11 +407,12 @@ string Patch::write()
     for (ModuleSection::ModuleList::iterator m = modules.begin();
 	 m != modules.end();
 	 m++) {
-      if ((*m)->numberOfCustomValues() > 0) {
+      if ((*m)->getType()->numberOfCustomValues() > 0) {
 	writeParameter(result, (*m)->getIndex());
-	writeParameter(result, (*m)->numberOfCustomValues());
-	for (int p = 0; p < (*m)->numberOfCustomValues(); p++) {
-	  writeParameter(result, (*m)->getCustomValue((Module::CustomValue)p));
+	writeParameter(result, (*m)->getType()->numberOfCustomValues());
+	for (int p = 0; p < (*m)->getType()->numberOfCustomValues(); p++) {
+	  writeParameter(result,
+			 (*m)->getCustomValue((ModuleType::CustomValue)p));
 	}
 	result += "\n";  
       }

@@ -167,7 +167,8 @@ module_dump_300:
 module_list:
 	module_list PARAM PARAM PARAM PARAM '\n'
         {
-	  module = section->newModule((Module::Type)pchstoi($3), pchstoi($2));
+	  module = section->newModule((ModuleType::TypeId)pchstoi($3),
+	                              pchstoi($2));
 	  module->setPosition(pchstoi($4), pchstoi($5));
 	}
 	| '\n'
@@ -213,11 +214,11 @@ cable_list:
         {
 	  section->newCable((Cable::Color)pchstoi($2),
 			    pchstoi($3),
-			    (Module::Port)pchstoi($4),
-			    (Cable::ConnectorType)pchstoi($5),
+			    (ModuleType::Port)pchstoi($4),
+			    (ModuleType::ConnectorType)pchstoi($5),
 			    pchstoi($6),
-			    (Module::Port)pchstoi($7),
-			    (Cable::ConnectorType)pchstoi($8));
+			    (ModuleType::Port)pchstoi($7),
+			    (ModuleType::ConnectorType)pchstoi($8));
 	}
 	| '\n'
 	|
@@ -247,7 +248,8 @@ module_parameter_list:
 parameter_list:
 	parameter_list PARAM
         {
-	  module->setParameter((Module::Parameter)parameterIndex++, pchstoi($2));
+	  module->setParameter((ModuleType::Parameter)parameterIndex++,
+                               pchstoi($2));
 	}
 	|
 	;
@@ -276,7 +278,7 @@ module_custom_list:
 custom_list:
 	custom_list PARAM
         {
-	  module->setCustomValue((Module::CustomValue)customValueIndex++,
+	  module->setCustomValue((ModuleType::CustomValue)customValueIndex++,
 				 pchstoi($2));
 	}
 	|
@@ -307,7 +309,7 @@ morph_map_list:
 	  MorphMap* morphMap =
 	    morph->newMorphMap((ModuleSection::Type)pchstoi($2),
 			       module,
-			       (Module::Parameter)pchstoi($4));
+			       (ModuleType::Parameter)pchstoi($4));
 	  morphMap->setRange(pchstoi($6));
 	}
 	|
@@ -348,7 +350,7 @@ knob_map_list:
 	  KnobMap* knobMap =
 	    patch->newKnobMap((ModuleSection::Type)pchstoi($2),
 			      module,
-			      (Module::Parameter)pchstoi($4));
+			      (ModuleType::Parameter)pchstoi($4));
 	  knobMap->setKnob((KnobMap::Knob)pchstoi($5));
 	}
 	| '\n'
@@ -374,7 +376,7 @@ ctrl_map_list:
 	  CtrlMap* ctrlMap =
 	    patch->newCtrlMap((ModuleSection::Type)pchstoi($2),
 			      module,
-			      (Module::Parameter)pchstoi($4));
+			      (ModuleType::Parameter)pchstoi($4));
 	  ctrlMap->setCC(pchstoi($5));
 	}
 	| '\n'

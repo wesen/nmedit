@@ -1,8 +1,8 @@
 
-INCLUDES = -I.. 
-LDFLAGS = -L../src
+INCLUDES = -I.. -I../../libppf
+LDFLAGS = -L../src -L../../libppf/src
 
-LDADD = -lnmpatch
+LDADD = -lnmpatch -lppf -ltcl8.4
 
 bin_PROGRAMS = libnmpatch_test1 libnmpatch_test2
 

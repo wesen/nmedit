@@ -44,12 +44,14 @@ class Morph
 
   typedef list<MorphMap*> MorphMapList;
 
+  Morph();
+
   virtual ~Morph();
 
   void setValue(int);
   int getValue();
 
-  MorphMap* newMorphMap(ModuleSection::Type, Module*, Module::Parameter);
+  MorphMap* newMorphMap(ModuleSection::Type, Module*, ModuleType::Parameter);
   MorphMapList getMorphMaps() const;
   void removeMorphMap(MorphMap*);
 

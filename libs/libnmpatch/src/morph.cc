@@ -19,6 +19,11 @@
 
 #include "nmpatch/morph.h"
 
+Morph::Morph()
+{
+  keyboardAssignment = NONE;
+}
+
 Morph::~Morph()
 {
   for (MorphMapList::iterator m = morphMaps.begin();
@@ -39,7 +44,7 @@ int Morph::getValue()
 }
 
 MorphMap* Morph::newMorphMap(ModuleSection::Type section, Module* module,
-			     Module::Parameter parameter)
+			     ModuleType::Parameter parameter)
 {
   morphMaps.push_back(new MorphMap(section, module, parameter));
   return morphMaps.back();

@@ -21,11 +21,11 @@
 
 Cable::Cable(Cable::Color color,
 	     Module* destinationModule,
-	     Module::Port destinationConnector,
-	     Cable::ConnectorType destinationConnectorType,
+	     ModuleType::Port destinationConnector,
+	     ModuleType::ConnectorType destinationConnectorType,
 	     Module* sourceModule,
-	     Module::Port sourceConnector,
-	     Cable::ConnectorType sourceConnectorType)
+	     ModuleType::Port sourceConnector,
+	     ModuleType::ConnectorType sourceConnectorType)
 {
   this->color = color;
   this->destinationModule = destinationModule;
@@ -46,12 +46,12 @@ Module* Cable::getDestinationModule()
   return destinationModule;
 }
 
-Module::Port Cable::getDestinationConnector()
+ModuleType::Port Cable::getDestinationConnector()
 {
   return destinationConnector;
 }
 
-Cable::ConnectorType Cable::getDestinationConnectorType()
+ModuleType::ConnectorType Cable::getDestinationConnectorType()
 {
   return destinationConnectorType;
 }
@@ -61,12 +61,12 @@ Module* Cable::getSourceModule()
   return sourceModule;
 }
 
-Module::Port Cable::getSourceConnector()
+ModuleType::Port Cable::getSourceConnector()
 {
   return sourceConnector;
 }
 
-Cable::ConnectorType Cable::getSourceConnectorType()
+ModuleType::ConnectorType Cable::getSourceConnectorType()
 {
   return sourceConnectorType;
 }

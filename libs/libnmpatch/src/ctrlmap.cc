@@ -20,7 +20,7 @@
 #include "nmpatch/ctrlmap.h"
 
 CtrlMap::CtrlMap(ModuleSection::Type section, Module* module,
-		   Module::Parameter parameter)
+		 ModuleType::Parameter parameter)
 {
   this->section = section;
   this->module = module;
@@ -37,7 +37,7 @@ Module* CtrlMap::getModule()
   return module;
 }
 
-Module::Parameter CtrlMap::getParameter()
+ModuleType::Parameter CtrlMap::getParameter()
 {
   return parameter;
 }

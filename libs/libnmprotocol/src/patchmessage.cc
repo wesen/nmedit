@@ -147,7 +147,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     for (ModuleSection::ModuleList::iterator m = modules.begin();
 	 m != modules.end();
 	 m++) {
-      intStream.append((*m)->getType());
+      intStream.append((*m)->getType()->getId());
       intStream.append((*m)->getIndex());
       intStream.append((*m)->getXPosition());
       intStream.append((*m)->getYPosition());
@@ -208,7 +208,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     for (ModuleSection::ModuleList::iterator m = modules.begin();
 	 m != modules.end();
 	 m++) {
-      if ((*m)->numberOfParameters() > 0) {
+      if ((*m)->getType()->numberOfParameters() > 0) {
 	nmodules++;
       }
     }
@@ -217,11 +217,11 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     for (ModuleSection::ModuleList::iterator m = modules.begin();
 	 m != modules.end();
 	 m++) {
-      if ((*m)->numberOfParameters() > 0) {
+      if ((*m)->getType()->numberOfParameters() > 0) {
 	intStream.append((*m)->getIndex());
-	intStream.append((*m)->getType());
-	for (int p = 0; p < (*m)->numberOfParameters(); p++) {
-	  intStream.append((*m)->getParameter((Module::Parameter)p));
+	intStream.append((*m)->getType()->getId());
+	for (int p = 0; p < (*m)->getType()->numberOfParameters(); p++) {
+	  intStream.append((*m)->getParameter((ModuleType::Parameter)p));
 	}
       }
     }
@@ -319,7 +319,7 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     for (ModuleSection::ModuleList::iterator m = modules.begin();
 	 m != modules.end();
 	 m++) {
-      if ((*m)->numberOfCustomValues() > 0) {
+      if ((*m)->getType()->numberOfCustomValues() > 0) {
 	nmodules++;
       }
     }
@@ -328,11 +328,11 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     for (ModuleSection::ModuleList::iterator m = modules.begin();
 	 m != modules.end();
 	 m++) {
-      if ((*m)->numberOfCustomValues() > 0) {
+      if ((*m)->getType()->numberOfCustomValues() > 0) {
 	intStream.append((*m)->getIndex());
-	intStream.append((*m)->numberOfCustomValues());
-	for (int p = 0; p < (*m)->numberOfCustomValues(); p++) {
-	  intStream.append((*m)->getCustomValue((Module::CustomValue)p));
+	intStream.append((*m)->getType()->numberOfCustomValues());
+	for (int p = 0; p < (*m)->getType()->numberOfCustomValues(); p++) {
+	  intStream.append((*m)->getCustomValue((ModuleType::CustomValue)p));
 	}
       }
     }
@@ -485,7 +485,8 @@ void PatchMessage::getPatch(Patch* patch)
 	  for (Packet::PacketList::iterator i = modules.begin();
 	       i != modules.end(); i++) {
 	    Module* module =
-	      moduleSection->newModule((Module::Type)(*i)->getVariable("type"),
+	      moduleSection->newModule((ModuleType::TypeId)
+				       (*i)->getVariable("type"),
 				       (*i)->getVariable("index"));
 	    module->setPosition((*i)->getVariable("xpos"),
 				(*i)->getVariable("ypos"));
@@ -526,11 +527,11 @@ void PatchMessage::getPatch(Patch* patch)
 	    moduleSection->newCable
 	      ((Cable::Color)(*i)->getVariable("color"),
 	       (*i)->getVariable("destination"),
-	       (Module::Port)(*i)->getVariable("input"),
-	       Cable::INPUT,
+	       (ModuleType::Port)(*i)->getVariable("input"),
+	       ModuleType::INPUT,
 	       (*i)->getVariable("source"),
-	       (Module::Port)(*i)->getVariable("inputOutput"),
-	       (Cable::ConnectorType)(*i)->getVariable("type"));
+	       (ModuleType::Port)(*i)->getVariable("inputOutput"),
+	       (ModuleType::ConnectorType)(*i)->getVariable("type"));
 	  }
 	}
 	break;
@@ -552,7 +553,7 @@ void PatchMessage::getPatch(Patch* patch)
 	    int n = 0;
 	    for (Packet::VariableList::iterator p = parameters.begin();
 		 p != parameters.end(); p++, n++) {
-	      module->setParameter((Module::Parameter)n, (*p));
+	      module->setParameter((ModuleType::Parameter)n, (*p));
 	    }
 	    printf("\n");
 	  }
@@ -594,7 +595,7 @@ void PatchMessage::getPatch(Patch* patch)
 	    MorphMap* morphMap = morph->newMorphMap
 	      ((ModuleSection::Type)(*i)->getVariable("section"),
 	       module,
-	       (Module::Parameter)(*i)->getVariable("parameter"));
+	       (ModuleType::Parameter)(*i)->getVariable("parameter"));
 	    int range = (*i)->getVariable("range");
 	    morphMap->setRange(range - (range > 127 ? 256 : 0));
 	  }
@@ -620,7 +621,7 @@ void PatchMessage::getPatch(Patch* patch)
 		patch->newKnobMap
 		(section,
 		 module,
-		 (Module::Parameter)assignment->getVariable("parameter"));
+		 (ModuleType::Parameter)assignment->getVariable("parameter"));
 	      knobMap->setKnob((KnobMap::Knob)i);
 	    }
 	  }
@@ -640,7 +641,7 @@ void PatchMessage::getPatch(Patch* patch)
 	    CtrlMap* ctrlMap = patch->newCtrlMap
 	      (section,
 	       module,
-	       (Module::Parameter)(*i)->getVariable("parameter"));
+	       (ModuleType::Parameter)(*i)->getVariable("parameter"));
 	    ctrlMap->setCC((*i)->getVariable("control"));
 	  }	  
 	}
@@ -661,7 +662,7 @@ void PatchMessage::getPatch(Patch* patch)
 	    int n = 0;
 	    for (Packet::PacketList::iterator v = values.begin();
 		 v != values.end(); v++, n++) {
-	      module->setCustomValue((Module::CustomValue)n,
+	      module->setCustomValue((ModuleType::CustomValue)n,
 				     (*v)->getVariable("value"));
 	    }
 	  }

@@ -42,11 +42,28 @@ BoundBundle BoundBundle::getBoundBundle(string name)
 		     bindings + " set " + slevel + " " + name + ";");
 }
 
+BoundBundle BoundBundle::getBoundBundle(int name)
+{
+  return getBoundBundle(itos(name));
+}
+
 string BoundBundle::getProperty(string name)
 {
   return bundle->getProperty(name, level + 1, bindings);
 }
 
+string BoundBundle::getProperty(int name)
+{
+  return getProperty(itos(name));
+}
+
 BoundBundle::~BoundBundle()
 {
+}
+
+string BoundBundle::itos(int data)
+{
+  char buffer[11];
+  snprintf(buffer, 10, "%d", data);
+  return buffer;
 }
