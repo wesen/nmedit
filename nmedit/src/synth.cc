@@ -32,7 +32,7 @@ Synth::Synth(NMProtocol* protocol)
 
   activeSlot = 0;
   for (int slot = 0; slot < 4; slot++) {
-    pids[slot] = 0;
+    pids[slot] = -1;
   }
 
   IAmMessage iAmMessage;

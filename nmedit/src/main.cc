@@ -36,6 +36,10 @@
 #include "synth.h"
 #include "synthlistener.h"
 
+#include <FL/Fl.H>
+#include <FL/Fl_Window.H>
+#include <FL/Fl_Box.H>
+
 extern char *optarg;
 extern int optind;
 
@@ -142,7 +146,17 @@ int main(int argc, char** argv)
     DebugSynthListener dsl;
     synth.addListener(&dsl);
     
+    Fl_Window *window = new Fl_Window(300,180);
+    Fl_Box *box = new Fl_Box(20,40,260,100,"Hello, World!");
+    box->box(FL_UP_BOX);
+    box->labelsize(36);
+    box->labelfont(FL_BOLD+FL_ITALIC);
+    box->labeltype(FL_SHADOW_LABEL);
+    window->end();
+    window->show(argc, argv);
+
     while(1) {
+      Fl::check();
       nmProtocol.heartbeat();
       usleep(10000);
     }
