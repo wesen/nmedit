@@ -18,21 +18,29 @@
 */
 
 #include "synth.h"
-#include "nmlistener.h"
+#include "synthlistener.h"
+
 #include "nmprotocol/nmprotocol.h"
 #include "nmpatch/patch.h"
+
+#include <stdio.h>
 
 Synth::Synth(NMProtocol* protocol)
 {
   this->protocol = protocol;
   protocol->addListener(this);
 
+  activeSlot = 0;
+  for (int slot = 0; slot < 4; slot++) {
+    pids[slot] = 0;
+  }
+
   IAmMessage iAmMessage;
   iAmMessage.setVersion(3,3);
   protocol->send(&iAmMessage);
 }
 
-virtual Synth::~Synth()
+Synth::~Synth()
 {
   protocol->removeListener(this);
 }
@@ -45,9 +53,11 @@ Patch* Synth::getPatch(int slot)
 void Synth::setPatch(int slot, Patch* patch)
 {
   patches[slot] = patch;
+
   PatchMessage patchMessage(patch);
   patchMessage.setSlot(slot);
   protocol->send(&patchMessage);
+
   notifyListeners(slot, patch);
 }
 
@@ -59,26 +69,39 @@ void Synth::store(int slot, int mempos)
 {
 }
 
-boolean Synth::isSlotActive(int slot)
+int Synth::getActiveSlot()
 {
-  return slotActive[slot];
+  return activeSlot;
 }
 
-void Synth::setSlotActive(int slot, boolean active)
+void Synth::setActiveSlot(int slot)
 {
-  slotActive[slot] = active;
+  int oldActiveSlot = activeSlot;
+  activeSlot = slot;
+
+  SlotActivatedMessage message;
+  message.setActiveSlot(slot);
+  protocol->send(&message);
+
+  notifyListeners(oldActiveSlot);
   notifyListeners(slot);
 }
 
-boolean Synth::isSlotSelected(int slot)
+bool Synth::isSlotSelected(int slot)
 {
   return slotSelected[slot];
 }
 
-void Synth::setSlotSelected(int slot, boolean active)
+void Synth::setSlotSelected(int slot, bool active)
 {
   slotSelected[slot] = active;
   notifyListeners(slot);
+
+  SlotsSelectedMessage message;
+  for (int slot = 0; slot < 4; slot++) {
+    message.setSelected(slot, slotSelected[slot]);
+  }
+  protocol->send(&message);
 }
 
 int Synth::getSlotVoices(int slot)
@@ -98,7 +121,7 @@ void Synth::removeListener(SynthListener* listener)
 
 void Synth::notifyListeners(int slot, Patch* patch)
 {
-  for (ListenerList::iterator i = listeners.begin();
+  for (SynthListenerList::iterator i = listeners.begin();
        i != listeners.end(); i++) {
     (*i)->newPatchInSlot(slot, patch);
   }
@@ -106,27 +129,27 @@ void Synth::notifyListeners(int slot, Patch* patch)
 
 void Synth::notifyListeners()
 {
-  for (ListenerList::iterator i = listeners.begin();
+  for (SynthListenerList::iterator i = listeners.begin();
        i != listeners.end(); i++) {
     (*i)->patchListChanged();
   }
 }
 
-void Synth::notifyListeners(int slot, boolean active,
-			    boolean selected, int voices)
+void Synth::notifyListeners(int slot)
 {
-  for (ListenerList::iterator i = listeners.begin();
+  for (SynthListenerList::iterator i = listeners.begin();
        i != listeners.end(); i++) {
-    (*i)->slotStateChanged(slot, slotActive[slot],
+    (*i)->slotStateChanged(slot, activeSlot == slot,
 			   slotSelected[slot], slotVoices[slot]);
   }
 }
 
 void Synth::messageReceived(IAmMessage message)
 {
+  printf("IAM\n");
   RequestPatchMessage requestPatchMessage;
-  for (int i = 0; i < 4; i++) {
-    requestPatchMessage.setSlot(i);
+  for (int slot = 0; slot < 4; slot++) {
+    requestPatchMessage.setSlot(slot);
     protocol->send(&requestPatchMessage);
   }
 }
@@ -137,12 +160,24 @@ void Synth::messageReceived(LightMessage message)
 
 void Synth::messageReceived(PatchMessage message)
 {
-  message.getPatch(patches[message.getSlot()]);
-  notifyListeners(message.getSlot(), patches[message.getSlot()]);
+  printf("Patch\n");
+  int slot = message.getSlot();
+  message.getPatch(patches[slot]);
+  notifyListeners(slot, patches[slot]);
 }
 
 void Synth::messageReceived(AckMessage message)
 {
+  printf("ACK\n");
+  int slot = message.getSlot();
+  int pid = message.getPid1();
+  if (pid != pids[slot]) {
+    pids[slot] = pid;
+    patches[slot] = new Patch();
+    GetPatchMessage getPatchMessage(slot, pids[slot]);
+    protocol->send(&getPatchMessage);
+    notifyListeners(slot, patches[slot]);
+  }
 }
 
 void Synth::messageReceived(PatchListMessage message)
@@ -151,29 +186,43 @@ void Synth::messageReceived(PatchListMessage message)
 
 void Synth::messageReceived(NewPatchInSlotMessage message)
 {
-  RequestPatchMessage requestPatchMessage;
-  requestPatchMessage.setSlot(message.getSlot());
-  nmProtocol.send(&requestPatchMessage);
+  int slot = message.getSlot();
+  printf("New patch %d\n", slot);
+  pids[slot] = message.getPid();
+  patches[slot] = new Patch();
+  GetPatchMessage getPatchMessage(slot, pids[slot]);
+  protocol->send(&getPatchMessage);
+  notifyListeners(slot, patches[slot]);
 }
 
 void Synth::messageReceived(VoiceCountMessage message)
 {
-  for (int i = 0; i < 4; i++) {
-    if (voiceCount[i] != message.getVoiceCount(i)) {
-      voiceCount[i] = message.getVoiceCount(i);
-      notifyListeners(i);
+  printf("Voice\n");
+  for (int slot = 0; slot < 4; slot++) {
+    if (slotVoices[slot] != message.getVoiceCount(slot)) {
+      slotVoices[slot] = message.getVoiceCount(slot);
+      notifyListeners(slot);
     }
   }
 }
 
-void Synth::messageReceived(GetPatchMessage message)
-{
-}
-
 void Synth::messageReceived(SlotsSelectedMessage message)
 {
+  printf("Select\n");
+  for (int slot = 0; slot < 4; slot++) {
+    if (slotSelected[slot] != message.isSelected(slot)) {
+      slotSelected[slot] = message.isSelected(slot);
+      notifyListeners(slot);
+    }
+  }
 }
 
 void Synth::messageReceived(SlotActivatedMessage message)
 {
+  printf("Active\n");
+  int oldActiveSlot = activeSlot;
+  activeSlot = message.getActiveSlot();
+
+  notifyListeners(oldActiveSlot);
+  notifyListeners(activeSlot);
 }

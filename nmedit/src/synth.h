@@ -33,9 +33,9 @@ class Synth : public NMProtocolListener
 {
  public:
   
-  SynthListener(NMProtocol*);
+  Synth(NMProtocol*);
   
-  virtual ~SynthListener();
+  virtual ~Synth();
 
   Patch *getPatch(int);
   void setPatch(int, Patch*);
@@ -43,11 +43,11 @@ class Synth : public NMProtocolListener
   void load(int, int);
   void store(int, int);
 
-  boolean isSlotActive(int);
-  void setSlotActive(int, boolean);
+  int getActiveSlot();
+  void setActiveSlot(int);
 
-  boolean isSlotSelected(int);
-  void setSlotSelected(int, boolean);
+  bool isSlotSelected(int);
+  void setSlotSelected(int, bool);
 
   int getSlotVoices(int);
 
@@ -56,7 +56,7 @@ class Synth : public NMProtocolListener
 
   void notifyListeners(int slot, Patch* patch);
   void notifyListeners();
-  void notifyListeners(int slot):
+  void notifyListeners(int slot);
 
   virtual void messageReceived(IAmMessage message);
   virtual void messageReceived(LightMessage message);
@@ -65,7 +65,6 @@ class Synth : public NMProtocolListener
   virtual void messageReceived(PatchListMessage message);
   virtual void messageReceived(NewPatchInSlotMessage message);
   virtual void messageReceived(VoiceCountMessage message);
-  virtual void messageReceived(GetPatchMessage message);
   virtual void messageReceived(SlotsSelectedMessage message);
   virtual void messageReceived(SlotActivatedMessage message);
 
@@ -73,13 +72,17 @@ class Synth : public NMProtocolListener
   
   typedef list<SynthListener*> SynthListenerList;
   typedef map<int, Patch*> PatchMap;
+  typedef map<int, bool> SelectedMap;
+  typedef map<int, int> VoiceMap;
+  typedef map<int, int> PidMap;
 
   NMProtocol* protocol;
   SynthListenerList listeners;
   PatchMap patches;
-  boolean slotActive[4];
-  boolean slotSelected[4];
-  int slotVoices[4];
+  PidMap pids;
+  int activeSlot;
+  SelectedMap slotSelected;
+  VoiceMap slotVoices;
 };
 
 #endif

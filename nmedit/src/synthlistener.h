@@ -26,15 +26,13 @@ class SynthListener
 {
  public:
   
-  SynthListener();
-  
-  virtual ~SynthListener();
+  SynthListener() {}
+  virtual ~SynthListener() {}
 
-  virtual void newPatchInSlot(int slot, Patch* patch) {};
-  virtual void patchListChanged() {};
-  virtual void slotStateChanged(int slot, boolean active,
-				boolean selected, int voices) {};
-  
+  virtual void newPatchInSlot(int slot, Patch* patch) {}
+  virtual void patchListChanged() {}
+  virtual void slotStateChanged(int slot, bool active,
+				bool selected, int voices) {}
 };
 
 #endif
