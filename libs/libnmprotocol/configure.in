@@ -50,4 +50,4 @@ AC_C_CONST
 
 dnl Checks for library functions.
 
-AC_OUTPUT(Makefile src/Makefile test/Makefile doc/Makefile)
+AC_OUTPUT(Makefile src/Makefile nmprotocol/Makefile test/Makefile doc/Makefile)
