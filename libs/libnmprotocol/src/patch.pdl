@@ -612,7 +612,9 @@ Param127 % 1 :=
 	;
 
 MorphMap % 1 :=
-	morph1:7 morph2:7 morph3:7 morph4:7 nknobs:13
+	morph1:7 morph2:7 morph3:7 morph4:7
+	keyboard1:2 keyboard2:2 keyboard3:2 keyboard4:2
+	nknobs:5
 	nknobs*Morph$morphs
 	;
 
@@ -648,7 +650,7 @@ KnobMapDump % 1 :=
 
 Knob % 1 :=
 	assigned:1
-	assigned*KnobAssignment$knobAssignments
+	assigned*KnobAssignment$assignment
 	;
 
 KnobAssignment % 1 :=

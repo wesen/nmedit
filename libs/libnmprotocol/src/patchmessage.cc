@@ -235,6 +235,11 @@ void PatchMessage::getBitStream(BitStreamList* bitStreamList)
     Morph::MorphMapList morphMaps = morph->getMorphMaps();
     nknobs += morphMaps.size();
   }
+  for (int i = Morph::MORPH1; i <= Morph::MORPH4; i++) {
+    Morph* morph = patch->getMorph((Morph::Type)i);
+    intStream.append(morph->getKeyboardAssignment());
+  }
+
   intStream.append(nknobs);
 
   for (int i = Morph::MORPH1; i <= Morph::MORPH4; i++) {
@@ -425,10 +430,12 @@ void PatchMessage::getPatch(Patch* patch)
       Packet* sectionData = section->getPacket("data");
       switch (section->getVariable("type")) {
 
+	// Name section
       case 55:
 	patch->setName(getName(sectionData->getPacket("name")));
 	break;
 
+	// Header section
       case 33:
 	patch->setKeyboardRange(Patch::MIN,
 				sectionData->getVariable("krangemin"));
@@ -474,6 +481,7 @@ void PatchMessage::getPatch(Patch* patch)
 			    sectionData->getVariable("pretrigger"));
 	break;
 
+	// Module section
       case 74:
 	{
 	  ModuleSection* moduleSection =
@@ -490,7 +498,29 @@ void PatchMessage::getPatch(Patch* patch)
 	  }
 	}
 	break;
+
+	// Note section
+      case 105:
+	{
+	  Packet* note = sectionData->getPacket("note1");
+	  patch->newMIDINote(note->getVariable("value"),
+			     note->getVariable("attack"),
+			     note->getVariable("release"));
+	  note = sectionData->getPacket("note2");
+	  patch->newMIDINote(note->getVariable("value"),
+			     note->getVariable("attack"),
+			     note->getVariable("release"));
+	  Packet::PacketList notes = sectionData->getPacketList("notes");
+	  for (Packet::PacketList::iterator i = notes.begin();
+	       i != notes.end(); i++) {
+	    patch->newMIDINote((*i)->getVariable("value"),
+			       (*i)->getVariable("attack"),
+			       (*i)->getVariable("release"));
+	  }
+	}
+	break;
 	
+	// Cable section
       case 82:
 	{
 	  ModuleSection* moduleSection =
@@ -511,28 +541,151 @@ void PatchMessage::getPatch(Patch* patch)
 	}
 	break;
 
+	// Parameter section
       case 77:
 	{
-	  ModuleSection* moduleSection =
-	    patch->getModuleSection((ModuleSection::Type)
-				    sectionData->getVariable("section"));
+	  ModuleSection::Type section =
+	    (ModuleSection::Type)sectionData->getVariable("section");
 	  Packet::PacketList modules =
 	    sectionData->getPacketList("parameters");
 	  for (Packet::PacketList::iterator i = modules.begin();
 	       i != modules.end(); i++) {
 	    Module* module =
-	      moduleSection->getModule((*i)->getVariable("index"));
-	    printf("%d %d ", (*i)->getVariable("index"),
-		   (*i)->getVariable("type"));
+	      getModule(patch, section,
+			(*i)->getVariable("index"), "parameter");
 	    Packet::VariableList parameters =
 	      (*i)->getPacket("parameters")->getAllVariables();
 	    int n = 0;
 	    for (Packet::VariableList::iterator p = parameters.begin();
 		 p != parameters.end(); p++, n++) {
-	      printf("%d ", (*p));
-	      //module->setParameter((Module::Parameter)n, (*p));
+	      module->setParameter((Module::Parameter)n, (*p));
 	    }
 	    printf("\n");
+	  }
+	}
+	break;
+
+	// Morphmap section
+      case 101:
+	{
+	  patch->getMorph(Morph::MORPH1)->setValue
+	    (sectionData->getVariable("morph1"));
+	  patch->getMorph(Morph::MORPH2)->setValue
+	    (sectionData->getVariable("morph2"));
+	  patch->getMorph(Morph::MORPH3)->setValue
+	    (sectionData->getVariable("morph3"));
+	  patch->getMorph(Morph::MORPH4)->setValue
+	    (sectionData->getVariable("morph4"));
+
+	  patch->getMorph(Morph::MORPH1)->setKeyboardAssignment
+	    ((Morph::KeyboardAssignment)sectionData->getVariable("keyboard1"));
+	  patch->getMorph(Morph::MORPH2)->setKeyboardAssignment
+	    ((Morph::KeyboardAssignment)sectionData->getVariable("keyboard2"));
+	  patch->getMorph(Morph::MORPH3)->setKeyboardAssignment
+	    ((Morph::KeyboardAssignment)sectionData->getVariable("keyboard3"));
+	  patch->getMorph(Morph::MORPH4)->setKeyboardAssignment
+	    ((Morph::KeyboardAssignment)sectionData->getVariable("keyboard4"));
+
+	  Packet::PacketList morphs =
+	    sectionData->getPacketList("morphs");
+	  for (Packet::PacketList::iterator i = morphs.begin();
+	       i != morphs.end(); i++) {
+	    Morph* morph =
+	      patch->getMorph((Morph::Type)(*i)->getVariable("morph"));
+	    Module* module =
+	      getModule(patch,
+			(ModuleSection::Type)(*i)->getVariable("section"),
+			(*i)->getVariable("module"),
+			"morph");
+	    MorphMap* morphMap = morph->newMorphMap
+	      ((ModuleSection::Type)(*i)->getVariable("section"),
+	       module,
+	       (Module::Parameter)(*i)->getVariable("parameter"));
+	    int range = (*i)->getVariable("range");
+	    morphMap->setRange(range - (range > 127 ? 256 : 0));
+	  }
+	}
+	break;
+
+	// Knobmap section
+      case 98:
+	{
+	  for (int i = 0; i < 23; i++) {
+	    char buffer[7];
+	    snprintf(buffer, 7, "knob%d", i);
+	    Packet* knob = sectionData->getPacket(string(buffer));
+ 	    bool assigned = knob->getVariable("assigned");
+	    if (assigned) {
+	      Packet* assignment = knob->getPacketList("assignment").front();
+	      ModuleSection::Type section =
+		(ModuleSection::Type)assignment->getVariable("section");
+	      Module* module =
+		getModule(patch, section,
+			  assignment->getVariable("module"), "knob");
+	      KnobMap* knobMap =
+		patch->newKnobMap
+		(section,
+		 module,
+		 (Module::Parameter)assignment->getVariable("parameter"));
+	      knobMap->setKnob((KnobMap::Knob)i);
+	    }
+	  }
+	}
+	break;
+
+	// Controlmap section
+      case 96:
+	{
+	  Packet::PacketList controls = sectionData->getPacketList("controls");
+	  for (Packet::PacketList::iterator i = controls.begin();
+	       i != controls.end(); i++) {
+	    ModuleSection::Type section =
+	      (ModuleSection::Type)(*i)->getVariable("section");
+	    Module* module = getModule(patch, section,
+				       (*i)->getVariable("module"), "control");
+	    CtrlMap* ctrlMap = patch->newCtrlMap
+	      (section,
+	       module,
+	       (Module::Parameter)(*i)->getVariable("parameter"));
+	    ctrlMap->setCC((*i)->getVariable("control"));
+	  }	  
+	}
+	break;
+
+	// Custom section
+      case 91:
+	{
+	  ModuleSection::Type section =
+	    (ModuleSection::Type)sectionData->getVariable("section");
+	  Packet::PacketList modules =
+	    sectionData->getPacketList("customModules");
+	  for (Packet::PacketList::iterator m = modules.begin();
+	       m != modules.end(); m++) {
+	    Module* module = getModule(patch, section,
+				       (*m)->getVariable("index"), "custom");
+	    Packet::PacketList values = (*m)->getPacketList("customValues");
+	    int n = 0;
+	    for (Packet::PacketList::iterator v = values.begin();
+		 v != values.end(); v++, n++) {
+	      module->setCustomValue((Module::CustomValue)n,
+				     (*v)->getVariable("value"));
+	    }
+	  }
+	}
+	break;
+
+	// Namedump section
+      case 90:
+	{
+	  ModuleSection::Type section =
+	    (ModuleSection::Type)sectionData->getVariable("section");
+	  Packet::PacketList modules =
+	    sectionData->getPacketList("moduleNames");
+	  for (Packet::PacketList::iterator i = modules.begin();
+	       i != modules.end(); i++) {
+	    Module* module = getModule(patch, section,
+				       (*i)->getVariable("index"), "name");
+	    module->setName(getName((*i)->getPacket("name")));
 	  }
 	}
 	break;
@@ -584,7 +737,27 @@ string PatchMessage::getName(Packet* name)
   Packet::VariableList chars = name->getVariableList("chars");
   for (Packet::VariableList::iterator i = chars.begin();
        i != chars.end(); i++) {
-    result += (char)*i;
+    if (*i != 0) {
+      result += (char)*i;
+    }
   }
   return result;
+}
+
+Module* PatchMessage::getModule(Patch* patch, ModuleSection::Type section,
+				int index, string context)
+{
+  Module* module;
+  if (section == ModuleSection::MORPH) {
+    module = 0;
+  }
+  else {
+    module = patch->getModuleSection(section)->getModule(index);
+    if (module == 0) {
+      throw MidiException(string("Can not find module for ") +
+			  string(context) + ".",
+			  index);
+    }
+  }
+  return module;
 }

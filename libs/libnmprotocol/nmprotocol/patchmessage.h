@@ -22,6 +22,7 @@
 
 #include "nmprotocol/midimessage.h"
 #include "pdl/packet.h"
+#include "nmpatch/modulesection.h"
 
 using namespace std;
 
@@ -67,6 +68,7 @@ class PatchMessage : public virtual MidiMessage
   void appendName(string name, IntStream& patchStream);
   void storeEndPosition(IntStream intStream, PositionList* endPositions);
   string getName(Packet* name);
-};
+  Module* getModule(Patch* patch, ModuleSection::Type section,
+		    int index, string context);};
 
 #endif

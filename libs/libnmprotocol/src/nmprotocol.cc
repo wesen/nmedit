@@ -65,7 +65,7 @@ void NMProtocol::heartbeat()
 
   midiDriver->receive(receiveBytes);
 
-  if (receiveBytes.size() > 0) {
+  while (receiveBytes.size() > 0) {
     for (MidiDriver::Bytes::iterator i = receiveBytes.begin();
 	 i != receiveBytes.end(); i++) {
       bitStream.append(*i, 8);
@@ -75,6 +75,10 @@ void NMProtocol::heartbeat()
       notifyListeners(midiMessage);
       delete midiMessage;
     }
+
+    receiveBytes.clear();
+    bitStream.setSize(0);
+    midiDriver->receive(receiveBytes);
   }
 }
 
