@@ -298,6 +298,9 @@ morph_map_dump:
 morph_map_list:
 	morph_map_list PARAM PARAM PARAM PARAM PARAM
         {
+	  if (pchstoi($5) < 0 || pchstoi($5) > 3) {
+	    throw PatchException("Illegal morph group.", pchstoi($5));
+          }
 	  section = patch->getModuleSection((ModuleSection::Type)pchstoi($2));
 	  module = section->getModule(pchstoi($3));
 	  Morph* morph = patch->getMorph((Morph::Type)pchstoi($5));
