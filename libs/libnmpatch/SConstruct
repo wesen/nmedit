@@ -1,5 +1,5 @@
 
-src = 'patchlexer.ll patchparser.yy nmlexer.cc cable.cc ctrlmap.cc knobmap.cc module.cc modulesection.cc morph.cc morphmap.cc note.cc patch.cc moduletype.cc'
+src = 'patchparser.yy patchlexer.ll nmlexer.cc cable.cc ctrlmap.cc knobmap.cc module.cc modulesection.cc morph.cc morphmap.cc note.cc patch.cc moduletype.cc'
 
 inc = 'cable.h ctrlmap.h knobmap.h module.h modulesection.h morph.h morphmap.h note.h patch.h nmlexer.h moduletype.h modulelistener.h modulesectionlistener.h'
 

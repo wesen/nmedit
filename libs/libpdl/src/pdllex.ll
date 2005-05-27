@@ -19,7 +19,7 @@
 
 %{
   #include "pdl/pdllexer.h"
-  #include "pdlparser.h"
+  #include "pdlparser.hh"
 
   extern int pdlline;
 

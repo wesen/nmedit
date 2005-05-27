@@ -1,5 +1,5 @@
 
-src = 'pdllex.ll pdlparser.yy pdllexer.cc bitstream.cc condition.cc constantmatcher.cc intstream.cc matcher.cc packet.cc packetmatcher.cc packetparser.cc protocol.cc tracer.cc variablematcher.cc'
+src = 'pdlparser.yy pdllex.ll pdllexer.cc bitstream.cc condition.cc constantmatcher.cc intstream.cc matcher.cc packet.cc packetmatcher.cc packetparser.cc protocol.cc tracer.cc variablematcher.cc'
 
 inc = 'bitstream.h condition.h constantmatcher.h intstream.h matcher.h packet.h packetmatcher.h packetparser.h parser.h protocol.h tracer.h variablematcher.h'
 

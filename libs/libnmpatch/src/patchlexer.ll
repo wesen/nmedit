@@ -19,7 +19,7 @@
 
 %{
   #include "nmpatch/nmlexer.h"
-  #include "patchparser.h"
+  #include "patchparser.hh"
 
   extern int pchline;
 %}
