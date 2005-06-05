@@ -38,7 +38,7 @@ class Parser
   
   Parser();
 
-  ppf::BoundBundle parse(string);
+  BoundBundle parse(string);
 
   string cppstring(char* str) { return string(str); }
   const char* charstring(string str) { return str.c_str(); }  
@@ -59,5 +59,5 @@ class Parser
   Bundle* rootBundle;
 };
 
-}    
+}   
 #endif
