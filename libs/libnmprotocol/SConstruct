@@ -35,7 +35,7 @@ if conf.CheckFunc('socket'):
 
 nmprotocol = conf.Finish()
 
-lib = nmprotocol.Library('nmprotocol', srcfiles)
+lib = nmprotocol.SharedLibrary('nmprotocol', srcfiles)
 
 nmprotocol.Install(idir_lib, lib)
 nmprotocol.Install(idir_inc, incfiles)

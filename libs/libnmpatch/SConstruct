@@ -31,7 +31,7 @@ conf.env.Append(CPPFLAGS='-DLIBPATH=\'"' + idir_pkg + '"\'')
 
 nmpatch = conf.Finish()
 
-lib = nmpatch.Library('nmpatch', srcfiles)
+lib = nmpatch.SharedLibrary('nmpatch', srcfiles)
 
 nmpatch.Install(idir_lib, lib)
 nmpatch.Install(idir_inc, incfiles)

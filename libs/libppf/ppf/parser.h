@@ -38,8 +38,11 @@ class Parser
   
   Parser();
 
-  BoundBundle parse(string);
-  
+  ppf::BoundBundle parse(string);
+
+  string cppstring(char* str) { return string(str); }
+  const char* charstring(string str) { return str.c_str(); }  
+
   virtual ~Parser();
 
  private:

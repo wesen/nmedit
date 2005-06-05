@@ -36,7 +36,7 @@ Parser::Parser()
   rootBundle = new Bundle(interp);  
 }
 
-BoundBundle Parser::parse(string filename)
+ppf::BoundBundle Parser::parse(string filename)
 {
   string line;
   ifstream file(filename.c_str());
@@ -65,7 +65,7 @@ BoundBundle Parser::parse(string filename)
     }
   }
   file.close();
-  return BoundBundle(rootBundle, 0, "");
+  return ppf::BoundBundle(rootBundle, 0, "");
 }
 
 Parser::~Parser()

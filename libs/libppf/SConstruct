@@ -1,11 +1,12 @@
 
-src = 'parser.cc bundle.cc boundbundle.cc'
+src = 'ppf.i parser.cc bundle.cc boundbundle.cc'
 inc = 'boundbundle.h bundle.h parser.h ppfexception.h'
 
 srcfiles = [('src/' + x) for x in Split(src)]
 incfiles = [('ppf/' + x) for x in Split(inc)]
 
-ppf = Environment(CPPPATH = ['.'])
+ppf = Environment(SWIGFLAGS = '-java -c++',
+                  CPPPATH = ['.'])
 
 opts = Options('ppf.conf')
 opts.Add(PathOption('PREFIX',
@@ -30,13 +31,25 @@ if not tclfound:
    print 'tcl.h not found!'
    Exit(1);
 
+tcllibs = Split('tcl tcl8.5 tcl8.4 tcl8.3 tcl8.2 tcl8.1 tcl8.0')
+
+tclfound = False
+for tcllib in tcllibs:
+   if conf.CheckLib(tcllib):
+      conf.env.Append(LIBS=[tcllib])
+      tclfound = True
+      break
+if not tclfound:
+   print 'libtcl missing!'
+   Exit(1);
+
 ppf = conf.Finish()
 
 idir_prefix = '$PREFIX'
 idir_lib    = '$PREFIX/lib'
 idir_inc    = '$PREFIX/include/ppf'
 
-lib = ppf.Library('ppf', srcfiles)
+lib = ppf.SharedLibrary('ppf', srcfiles)
 
 ppf.Install(idir_lib, lib)
 ppf.Install(idir_inc, incfiles)

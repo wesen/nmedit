@@ -25,7 +25,7 @@ idir_prefix = '$PREFIX'
 idir_lib    = '$PREFIX/lib' 
 idir_inc    = '$PREFIX/include/pdl'
 
-lib = pdl.Library('pdl', srcfiles)
+lib = pdl.SharedLibrary('pdl', srcfiles)
 
 pdl.Install(idir_lib, lib)
 pdl.Install(idir_inc, incfiles)

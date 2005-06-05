@@ -17,20 +17,24 @@ opts.Add(PathOption('PREFIX',
 opts.Update(pl) 
 opts.Save('patchloader.conf', pl)
 
-tcllibs = Split('tcl tcl8.5 tcl8.4 tcl8.3 tcl8.2 tcl8.1 tcl8.0')
-
 conf = Configure(pl)
 
 conf.env.Append(CPPFLAGS='-DVERSION=\'"0.1"\'')
 
-tclfound = False
-for tcllib in tcllibs:
-   if conf.CheckLib(tcllib):
-      conf.env.Append(LIBS=[tcllib])
-      tclfound = True
-      break
-if not tclfound:
-   print 'libtcl missing!'
+if not conf.CheckLib('ppf'):
+   print "libppf missing!"
+   Exit(1);
+
+if not conf.CheckLib('pdl'):
+   print "libpdl missing!"
+   Exit(1);
+
+if not conf.CheckLib('nmpatch'):
+   print "libnmpatch missing!"
+   Exit(1);
+
+if not conf.CheckLib('nmprotocol'):
+   print "libnmprotocol missing!"
    Exit(1);
 
 pl = conf.Finish()
