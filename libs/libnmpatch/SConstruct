@@ -1,7 +1,7 @@
 
-src = 'patchparser.yy patchlexer.ll nmlexer.cc cable.cc ctrlmap.cc knobmap.cc module.cc modulesection.cc morph.cc morphmap.cc note.cc patch.cc moduletype.cc'
+src = 'nmpatch.i patchparser.yy patchlexer.ll nmlexer.cc cable.cc ctrlmap.cc knobmap.cc module.cc modulesection.cc morph.cc morphmap.cc note.cc patch.cc moduletype.cc'
 
-inc = 'cable.h ctrlmap.h knobmap.h module.h modulesection.h morph.h morphmap.h note.h patch.h nmlexer.h moduletype.h modulelistener.h modulesectionlistener.h'
+inc = 'cable.h ctrlmap.h knobmap.h module.h modulesection.h morph.h morphmap.h note.h patch.h moduletype.h modulelistener.h modulesectionlistener.h'
 
 pkg = 'module.ppf'
 
@@ -9,7 +9,8 @@ srcfiles = [('src/' + x)     for x in Split(src)]
 incfiles = [('nmpatch/' + x) for x in Split(inc)]
 pkgfiles = [('src/' + x)     for x in Split(pkg)]
 
-nmpatch = Environment(YACCFLAGS = '-d -pnm',
+nmpatch = Environment(SWIGFLAGS = '-java -c++',
+                      YACCFLAGS = '-d -pnm',
                       LEXFLAGS = '-+ -olex.yy.c -Pnm',
                       CPPPATH = ['.', '../libppf'])
 
