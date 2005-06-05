@@ -1,7 +1,7 @@
 
-src = 'nmprotocol.i ackmessage.cc activepidlistener.cc alsadriver.cc getpatchlistmessage.cc getpatchmessage.cc iammessage.cc lightmessage.cc mididriver.cc midimessage.cc netmididriver.cc newpatchinslotmessage.cc nmprotocol.cc parametermessage.cc patchlistmessage.cc patchmessage.cc requestpatchmessage.cc slotactivatedmessage.cc slotsselectedmessage.cc voicecountmessage.cc'
+src = 'nmprotocol.i ackmessage.cc activepidlistener.cc alsadriver.cc getpatchlistmessage.cc getpatchmessage.cc iammessage.cc lightmessage.cc mididriver.cc midimessage.cc netmididriver.cc newpatchinslotmessage.cc nmprotocol.cc parametermessage.cc patchlistmessage.cc patchmessage.cc requestpatchmessage.cc slotactivatedmessage.cc slotsselectedmessage.cc synth.cc voicecountmessage.cc'
 
-inc = 'ackmessage.h activepidlistener.h getpatchlistmessage.h getpatchmessage.h iammessage.h lightmessage.h midiexception.h midimessage.h newpatchinslotmessage.h nmprotocol.h nmprotocollistener.h parametermessage.h patchlistmessage.h patchmessage.h requestpatchmessage.h slotactivatedmessage.h slotsselectedmessage.h voicecountmessage.h'
+inc = 'ackmessage.h activepidlistener.h getpatchlistmessage.h getpatchmessage.h iammessage.h lightmessage.h midiexception.h midimessage.h newpatchinslotmessage.h nmprotocol.h nmprotocollistener.h parametermessage.h patchlistmessage.h patchmessage.h requestpatchmessage.h slotactivatedmessage.h slotsselectedmessage.h synth.h synthlistener.h voicecountmessage.h'
 
 pkg = 'midi.pdl patch.pdl'
 

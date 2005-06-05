@@ -1,5 +1,5 @@
 /*
-    nmEdit
+    libnmProtocol
     Copyright (C) 2004-2005 Marcus Andersson
 
     This program is free software; you can redistribute it and/or modify
@@ -17,9 +17,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "synth.h"
-#include "synthlistener.h"
-
+#include "nmprotocol/synth.h"
+#include "nmprotocol/synthlistener.h"
 #include "nmprotocol/nmprotocol.h"
 #include "nmpatch/patch.h"
 #include "nmpatch/modulelistener.h"
@@ -28,15 +27,6 @@
 #include "pdl/protocol.h"
 
 #include <stdio.h>
-
-class TestTracer : public virtual Tracer
-{
-public:
-  void trace(string message)
-  {
-    printf("TRACE: %s\n", message.c_str());
-  }
-};
 
 class SynthModuleListener : public ModuleListener
 {

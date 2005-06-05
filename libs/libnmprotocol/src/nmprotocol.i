@@ -17,6 +17,8 @@
 #include "nmprotocol/requestpatchmessage.h"
 #include "nmprotocol/slotactivatedmessage.h"
 #include "nmprotocol/slotsselectedmessage.h"
+#include "nmprotocol/synth.h"
+#include "nmprotocol/synthlistener.h"
 #include "nmprotocol/voicecountmessage.h"
 %}
 
@@ -36,4 +38,6 @@
 %include "nmprotocol/requestpatchmessage.h"
 %include "nmprotocol/slotactivatedmessage.h"
 %include "nmprotocol/slotsselectedmessage.h"
+%include "nmprotocol/synth.h"
+%include "nmprotocol/synthlistener.h"
 %include "nmprotocol/voicecountmessage.h"

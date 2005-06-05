@@ -33,8 +33,8 @@
 #include "nmpatch/modulesection.h"
 #include "nmpatch/patchexception.h"
 
-#include "synth.h"
-#include "synthlistener.h"
+#include "nmprotocol/synth.h"
+#include "nmprotocol/synthlistener.h"
 #include "mainwindow.h"
 
 #include <FL/Fl.H>

@@ -1,6 +1,6 @@
 /*
-    nmEdit
-    Copyright (C) 2004 Marcus Andersson
+    libnmProtocol
+    Copyright (C) 2004-2005 Marcus Andersson
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

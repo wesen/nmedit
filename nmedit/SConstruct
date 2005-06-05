@@ -1,5 +1,5 @@
 
-src = 'main.cc synth.cc mainwindow.cc synthview.cc patchview.cc sectionview.cc moduleview.cc'
+src = 'main.cc mainwindow.cc synthview.cc patchview.cc sectionview.cc moduleview.cc'
 
 srcfiles = [('src/' + x) for x in Split(src)]
 
