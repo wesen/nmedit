@@ -1,12 +1,13 @@
 
-src = 'pdlparser.yy pdllex.ll pdllexer.cc bitstream.cc condition.cc constantmatcher.cc intstream.cc matcher.cc packet.cc packetmatcher.cc packetparser.cc protocol.cc tracer.cc variablematcher.cc'
+src = 'pdl.i pdlparser.yy pdllex.ll pdllexer.cc bitstream.cc condition.cc constantmatcher.cc intstream.cc matcher.cc packet.cc packetmatcher.cc packetparser.cc protocol.cc tracer.cc variablematcher.cc'
 
 inc = 'bitstream.h condition.h constantmatcher.h intstream.h matcher.h packet.h packetmatcher.h packetparser.h parser.h protocol.h tracer.h variablematcher.h'
 
 srcfiles = [('src/' + x) for x in Split(src)]
 incfiles = [('pdl/' + x) for x in Split(inc)]
 
-pdl = Environment(YACCFLAGS = '-d -ppdl',
+pdl = Environment(SWIGFLAGS = '-java -c++',
+                  YACCFLAGS = '-d -ppdl',
                   LEXFLAGS = '-+ -olex.yy.c -Ppdl',
                   CPPPATH = ['.'])
 
