@@ -1,0 +1,67 @@
+Version Information jMod
+
+Current release: v0.5 beta r2
+
+Bugs
+----
+- When removing a cable from (out)connection, the other cables from that connection will not be 'selectable'
+	-> [occured only once]
+- After moving a cable and double clicking an empty conection, the last moved cable will light up and can be moved
+	-> The temporary cable will be used. Not cleared after dragging.
+	
+Feature features
+----------------
+- Assgning a 'hardware'knob to a 'software' knob
+- Using morph groups
+- Control more than one modular
+- Misc program questions like:
+	- "Patch has changed! Are you sure to close/quit?"
+	- "Overwrite saved file?"
+- Selecting Midi ports
+
+v0.5
+----
++ Design the modules
++ Modifying paramaters.
+- Custom display of paramater values instead of 0..127 -> Hz, kHz, sec, ms etc...
+- Module objects
+	+ Wheel
+	+ Knob on/off
+	+ Knobs 'a-la' radiobutton
+	- Sliders
+	- Up/down button
+	+ Displays
+	- Lights for incomming data?
+
+v0.4
+----
++ Adding lables via modules.properties (text and images, images support only .gif (.png?))
++ Moving outputs via modules.properties
++ Show complete chain (Alt+click connection)
++ 'Clearing' code a bit
+- When deleting a module, all chains must me checked for 'loose' color
+
+v0.3
+----
++ Create empty patch.
++ Adding modules
++ Removing modules (with cables))
++ Correct cable color (cable gets color of output in chain)
++ Reject more than one output in a chain
++ Reject a 'looped' chain
+
+v0.2
+----
++ Create new cables by 'drag-and-drop' connection to connection
++ Moving cables from one connection to the other (hold Ctrl+click or double click and drag connection)
++ Removing cables (move/drag cable to 'nowhere', the highlighted cable will be moved)
+
+v0.1
+----
++ Reading and writing .pch files completely to/from memory
++ Using a tabbed interface
++ Displaying poly/common modules
++ Moving modules (and arranging)
++ Displaying connections
++ Displaying cables
++ Update cables when modules are moved

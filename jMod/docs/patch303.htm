@@ -1,0 +1,952 @@
+<!DOCTYPE HTML PUBLIC "-//SoftQuad Software//DTD HoTMetaL PRO 5.0::19981217::extensions to HTML 4.0//EN" "hmpro5.dtd"><html><head><title>Nord modular patch file format v3.03</title>
+
+<link href="patch303_files/paratext.css" rel="STYLESHEET"> 
+<link href="patch303_files/section.css" rel="STYLESHEET"></head>
+ 
+
+ 
+<body>
+<basefont face="Verdana" size="2"> <p><a href="./index.htm">back to the NORD</a> 
+</p>
+<h4>Nord modular patch file format for v3.03</h4>
+<p>2003-01-11, added bit count field for parameters. Based upon data files
+version 12</p>
+<p>2001-06-21, Urs had some things to nag about :again -) Some minor
+adjustments for the<a href="#%5BCableDump1%5D"> cable dump</a> section. Modiule
+type 74 (WaveWrap) added, module type 68 (ClkGen) did not have it's input
+listed. Thanks Urs.</p>
+<p>2001-01-12, some minor modifications (some material was still describing the
+301 and 302 editor versions instead of 303) Urs' had some data updates as well,
+expect some more fine tuning on resource usage in the near future (types 1-14
+are double checked now). </p>
+<p>2001-01-06, Thanks to Urs Liska again for supplying a lot of more detailed
+data. Most resource usage percentages are much more accurate now (within 1/32
+or about 0.3 % of their individual values). Some modules could not be measured
+that precisely, this holds for all the module types for which only one is
+allowed in each patch. Such nodules are marked in the remarks section as
+<b>only 1</b>.</p>
+<p>2001-01-03, some bug fixes and additions, thanks to Urs Liska for reporting
+these.</p>
+<p>2001-01-02, thanks to Nicolas the whole thing is complete now, with module
+heights as well (new). Thanks to the text to html translator updates are
+efficient now :-). Can't believe it to be finished - please find some errors
+for me ?</p>
+<p>2001-01-01, rearranged things a bit, the module definitions are placed into
+a separate file now, generated from the text definition files
+<a href="./patch303.txt">patch303.txt</a> and <a href="./s303.txt">s303.txt</a>.
+Some errors &amp; typos fixed as well.</p>
+<p>2000-12-31, on the treshold of the 3rd millenium. A hell of a job it has
+been, but thanks to <font color="#ff0000" size="+1">Nicolas Fournel</font> (who
+supplied module info for the types 50 to 124) a big step forward was made - all
+modules are present now ! Finally finished now !</p>
+<p>2000-11-15 - included some additional knob map dump info supplied by Urs
+Liska</p>
+<p>2000-03-05 : modules 115 to 118 added (thanks to Christer Lindström),
+module details added upto module 49. Modifications made to the CurrentNoteDump
+section (thanks to Wout Blommers for the research)</p>
+<table border="1" cellpadding="1" cellspacing="1" frame="border" width="0">
+<tbody>
+<tr>
+<td><a href="./p303.htm#Module%20table">Module table</a></td>
+<td> <a href="#%5BHeader%5D">header</a></td>
+<td><a href="#%5BModuleDump1%5D">module dump</a></td>
+<td><a href="#%5BCurrentNoteDump%5D">current note dump</a></td>
+<td><a href="#%5BCableDump1%5D">cable dump</a></td>
+<td><a href="#%5BParameterDump1%5D">parameter dump</a></td>
+<td><a href="#%5BCustomDump1%5D">custom dump</a></td>
+<td><a href="#%5BKeyboardAssignment%5D">keyboard assignment</a></td>
+<td><a href="#%5BKnobMapDump%5D">knob map dump</a></td>
+<td><a href="#%5BMorphMapDump%5D">morph map dump</a></td>
+<td><a href="#%5BCtrlMapDump%5D">control map dump</a></td>
+<td><a href="#%5BNotes%5D">notes</a></td>
+</tr>
+</tbody>
+</table>
+<p class="ParaText">A patch file is built from sections. Sections are marked by
+a section header that look like [Header], they end with a section trailer that
+looks like [/Header]. The section header and trailer state the section's name.
+Between header and trailer section specific parameters are listed. </p>
+<p class="ParaText">The next part shows the general layout for a v3.01 patch,
+click the links for detailed information. </p>
+<p class="Section"><a href="#%5BHeader%5D">[Header]</a> <br>
+Version=Nord Modular patch 3.0 <br>
+0 127 0 127 2 0 0 8 151 2 1 1 1 1 1 1 1 1 1 1 1 1 1 <br>
+[/Header] </p>
+<p class="Section"><a href="#%5BModuleDump1%5D">[ModuleDump]</a> <br>
+1<br>
+1 17 0 3 <br>
+4 45 1 2 <br>
+[/ModuleDump] </p>
+<p class="Section"><a href="#%5BModuleDump0%5D">[ModuleDump]</a> <br>
+0<br>
+1 127 0 0 <br>
+2 4 2 2 <br>
+[/ModuleDump] </p>
+<p class="Section"><a href="#%5BCurrentNoteDump%5D">[CurrentNoteDump]</a> <br>
+64 64 64 64 0 0 <br>
+[/CurrentNoteDump] </p>
+<p class="Section"><a href="#%5BCableDump1%5D">[CableDump]</a> <br>
+1<br>
+0 6 0 0 4 0 1 <br>
+0 5 2 0 4 0 1 <br>
+[/CableDump] </p>
+<p class="Section"><a href="#%5BCableDump0%5D">[CableDump]</a> <br>
+0<br>
+0 5 2 0 3 0 1 <br>
+0 9 0 0 3 0 1 <br>
+[/CableDump] </p>
+<p class="Section"><a href="#%5BParameterDump1%5D">[ParameterDump]</a> <br>
+1 <br>
+1 17 36 15 1 1 1 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 0 0 0 1 0 1 0 1 0 0 0 1 0 0 1
+1 <br>
+[/ParameterDump] </p>
+<p class="Section"><a href="#%5BParameterDump0%5D">[ParameterDump]</a> <br>
+0 <br>
+1 127 1 0 <br>
+[/ParameterDump] </p>
+<p class="Section"><a href="#%5BCustomDump1%5D">[CustomDump]</a> <br>
+1 <br>
+7 1 0 <br>
+[/CustomDump] </p>
+<p class="Section"><a href="#%5BCustomDump0%5D">[CustomDump]</a> <br>
+0 <br>
+7 1 0 <br>
+[/CustomDump] </p>
+<p class="Section"><a href="#%5BMorphMapDump%5D">[MorphMapDump]</a> <br>
+10 2 0 0 <br>
+0 2 0 0 -73 <br>
+[/MorphMapDump] </p>
+<p class="Section"><a href="#%5BKeyboardAssignment%5D">[KeyboardAssignment]</a><br>
+2 0 0 0 <br>
+[/KeyboardAssignment] </p>
+<p class="Section"><a href="#%5BKnobMapDump%5D">[KnobMapDump]</a> <br>
+2 1 0 0 <br>
+[/KnobMapDump] </p>
+<p class="Section"><a href="#%5BCtrlMapDump%5D">[CtrlMapDump]</a><br>
+1 3 0 14 <br>
+[/CtrlMapDump] </p>
+<p class="Section"><a href="#%5BNameDump1%5D">[NameDump]</a> <br>
+1 <br>
+1 EventSeq1 <br>
+[/NameDump] </p>
+<p class="Section"><a href="#%5BNameDump0%5D">[NameDump]</a> <br>
+0 <br>
+1 PolyAreaIn1 <br>
+[/NameDump] </p>
+<p class="Section"><a href="#%5BNotes%5D">[Notes]</a> <br>
+Insert patch notes here. <br>
+[/Notes] <br>
+</p>
+<hr>
+<h5 class="Section"><a name="[Header]"></a>[Header] - global section<br>
+Version=Nord Modular patch 3.0<br>
+0 127 0 127 2 127 0 1 600 2 1 1 1 1 1 1 0 1 1 1 1 1 1<br>
+[/Header]</h5>
+<p class="ParaText">The header section contains the version number and a list
+of patch related parameters.</p>
+<p>There seems to be a bug in the editor, the patch settings dialog has a pedal
+mode selection, the value of this parameter does not seem to be saved in the
+patch.</p>
+<p>Numbered left to right from 1 to 23 we have : </p>
+<table border="1" cellpadding="1" cellspacing="1" frame="border" width="0">
+<tbody>
+<tr>
+<td>#</td>
+<td>name</td>
+<td>value</td>
+<td>bit count</td>
+<td>remarks</td>
+</tr>
+<tr>
+<td>1</td>
+<td>keyboard range, min value</td>
+<td>0..maxvalue</td>
+<td>7</td>
+<td>  </td>
+</tr>
+<tr>
+<td>2</td>
+<td>keyboard range, max value</td>
+<td>minvalue..127</td>
+<td>7</td>
+<td> </td>
+</tr>
+<tr>
+<td>3</td>
+<td>velocity range, min value</td>
+<td>0..maxvalue</td>
+<td>7</td>
+<td> </td>
+</tr>
+<tr>
+<td>4</td>
+<td>velocity range. max value</td>
+<td>minvalue..127</td>
+<td>7</td>
+<td> </td>
+</tr>
+<tr>
+<td>5</td>
+<td>bend range</td>
+<td> 0..24</td>
+<td>5</td>
+<td>semitones</td>
+</tr>
+<tr>
+<td>6</td>
+<td>portamento time</td>
+<td> 0..127</td>
+<td>7</td>
+<td> </td>
+</tr>
+<tr>
+<td>7</td>
+<td>portamento</td>
+<td> 0..1</td>
+<td>1</td>
+<td>0 ~ normal, 1 ~ auto</td>
+</tr>
+<tr>
+<td>8</td>
+<td>requested voices</td>
+<td>1..32</td>
+<td>5</td>
+<td></td>
+</tr>
+<tr>
+<td>9</td>
+<td>section separator position</td>
+<td>0..4000</td>
+<td> </td>
+<td>0 ~ topmost, 4000 ~ bottommost</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Octave shift</td>
+<td> 0..4</td>
+<td>3</td>
+<td>0 ~ -2, .., 4 ~ +2 octaves</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Voice retrigger poly section</td>
+<td>0..1</td>
+<td>1</td>
+<td>0 ~ inactive, 1 ~ active</td>
+</tr>
+<tr>
+<td>12</td>
+<td>voice retrigger common section</td>
+<td>0..1</td>
+<td>1</td>
+<td>0 ~ inactive, 1 ~ active</td>
+</tr>
+<tr>
+<td>13</td>
+<td>[1] ?</td>
+<td>  </td>
+<td> </td>
+<td>I see no way to change these values, for routing ??</td>
+</tr>
+<tr>
+<td>14</td>
+<td>[1] ?</td>
+<td>  </td>
+<td> </td>
+<td>I see no way to change these values, for routing ??</td>
+</tr>
+<tr>
+<td>15</td>
+<td>[1] ?</td>
+<td>  </td>
+<td> </td>
+<td>I see no way to change these values, for routing ??</td>
+</tr>
+<tr>
+<td>16</td>
+<td>[1] ?</td>
+<td>  </td>
+<td> </td>
+<td>I see no way to change these values, for routing ??</td>
+</tr>
+<tr>
+<td>17</td>
+<td>cable visibility red</td>
+<td>0..1</td>
+<td>1</td>
+<td>0 ~ not visible, 1 ~ visible</td>
+</tr>
+<tr>
+<td>18</td>
+<td>cable visibility blue</td>
+<td>0..1</td>
+<td>1</td>
+<td>0 ~ not visible, 1 ~ visible</td>
+</tr>
+<tr>
+<td>19</td>
+<td>cable visibility yellow</td>
+<td>0..1</td>
+<td>1</td>
+<td>0 ~ not visible, 1 ~ visible</td>
+</tr>
+<tr>
+<td>20</td>
+<td>cable visibility gray</td>
+<td>0..1</td>
+<td>1</td>
+<td>0 ~ not visible, 1 ~ visible</td>
+</tr>
+<tr>
+<td>21</td>
+<td>cable visibility green</td>
+<td>0..1</td>
+<td>1</td>
+<td>0 ~ not visible, 1 ~ visible</td>
+</tr>
+<tr>
+<td>22</td>
+<td>cable visibility purple</td>
+<td>0..1</td>
+<td>1</td>
+<td>0 ~ not visible, 1 ~ visible</td>
+</tr>
+<tr>
+<td>23</td>
+<td>cable visibility white</td>
+<td>0..1</td>
+<td>1</td>
+<td>0 ~ not visible, 1 ~ visible</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h5 class="Section"><a name="[ModuleDump1]"></a>[ModuleDump] - poly section 
+<br>
+1<br>
+1 17 0 3<br>
+4 45 1 2<br>
+[/ModuleDump]</h5>
+<p class="ParaText">The ModuleDump section lists all modules used in a certain
+section.</p>
+<p class="ParaText">For the first line : the poly section starts with a 1 - the
+common section starts with a 0. </p>
+<p class="ParaText">For all following lines : numbering left to right, from 1
+to 4, the parameters have the following meaning: </p>
+<table border="1" cellpadding="1" cellspacing="1" frame="border" width="0">
+<tbody>
+<tr>
+<td>#</td>
+<td>name</td>
+<td>value</td>
+<td>bit count</td>
+<td>remarks</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Module index number</td>
+<td>1..</td>
+<td>7</td>
+<td>module index number, also see <a href="#%5BNameDump1%5D">NameDump</a> and
+<a href="#%5BParameterDump1%5D">ParameterDump</a> sections</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Module type number</td>
+<td>1..127</td>
+<td>7</td>
+<td>see the <a href="./p303.htm#Module%20table">Module table</a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>X position (column) on the editor screen</td>
+<td>0.. </td>
+<td> </td>
+<td>0 ~ leftmost</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Y position (row) on the editor screen</td>
+<td>0.. </td>
+<td> </td>
+<td>0 ~ topmost</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h5 class="Section"><a name="[ModuleDump0]"></a>[ModuleDump] - common section 
+<br>
+0<br>
+1 127 0 0<br>
+2 4 2 2<br>
+[/ModuleDump]</h5>
+<p class="ParaText">See <a href="#%5BModuleDump1%5D">moduleDump - poly section</a>.
+The difference is that the common section starts with a leading 0. </p>
+<hr>
+<h5 class="Section"><a name="[CurrentNoteDump]"></a>[CurrentNoteDump] - global
+section<br>
+64 64 64 64 0 0<br>
+[/CurrentNoteDump]</h5>
+<p class="ParaText">This section contains information on the keys that were
+pressed when the save current notes function was applied from the editor. The
+section has n entries of 3 items; in each entry the the first item is the note
+number, the 2nd item is the attack velocity and the 3d item is the release
+velocity. </p>
+<table border="1" cellpadding="1" cellspacing="1" frame="border" width="0">
+<tbody>
+<tr>
+<td>#</td>
+<td>name</td>
+<td>value</td>
+<td>bit count</td>
+<td>remarks</td>
+</tr>
+<tr>
+<td>1</td>
+<td>note</td>
+<td> 0..127</td>
+<td>7</td>
+<td> midi note number: 64 ~ middle E</td>
+</tr>
+<tr>
+<td>2</td>
+<td>attack velocity</td>
+<td> 0..127</td>
+<td>7</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>release velocity</td>
+<td> 0..127</td>
+<td>7</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p class="PAraText">There seems to be bug, there is always one set of 3
+elements more than expected from the number of requested voices. When 1 voice
+is requested this section will have 6 numbers in it. So which note is the one
+that is not played, the last one ?</p>
+<hr>
+<h5 class="Section"><a name="[CableDump1]"></a>[CableDump] - poly section<br>
+1<br>
+0 6 0 0 4 0 1<br>
+0 5 2 0 4 0 1<br>
+[/CableDump]</h5>
+<p class="ParaText">The CableDump section lists all connections used in a
+certain section.</p>
+<p class="ParaText">For the first line : the poly section starts with a 1 - the
+common section starts with a 0. </p>
+<p class="ParaText">For following lines : numbering left to right, from 1 to 7,
+the parameters have the following meaning: </p>
+<table border="1" cellpadding="1" cellspacing="1" frame="border" width="0">
+<tbody>
+<tr>
+<td>#</td>
+<td>name</td>
+<td>value</td>
+<td>bit count</td>
+<td>remarks</td>
+</tr>
+<tr>
+<td>1</td>
+<td>cable color</td>
+<td> 0..6</td>
+<td>3</td>
+<td>0 ~red/audio, 1 ~ blue/control, 2 ~yellow/logic, 3 ~ gray/slave, 4 ~
+green/user1, 5 ~ purple/user2, 6 ~ white/loose wire</td>
+</tr>
+<tr>
+<td>2</td>
+<td>destination module index number</td>
+<td>1..</td>
+<td>7</td>
+<td>module index number, also see <a href="#%5BNameDump1%5D">NameDump</a> and
+<a href="#%5BParameterDump1%5D">ParameterDump</a> sections<br>
+For pre 3.03 patches this can be a source module index number as well, see NOTE
+1.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>input index number</td>
+<td>0..</td>
+<td> </td>
+<td>indexes into the input list of the destination
+<a href="./p303.htm#Module%20table">module</a><br>
+For pre 3.03 patches this can be an output index number as well. </td>
+</tr>
+<tr>
+<td>4</td>
+<td>?<br>
+Pre 3.03 : connector type</td>
+<td>?</td>
+<td> </td>
+<td>seems to be 0 always, and this might indicate that only input connectors
+can appear here<br>
+Pre 3.03 file formats can have a 1 here, indicating this can be an output
+connector specification as well.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>source module index number</td>
+<td>1..</td>
+<td>7</td>
+<td>module index number, also see <a href="#%5BNameDump1%5D">NameDump</a> and
+<a href="#%5BParameterDump1%5D">ParameterDump</a> sections</td>
+</tr>
+<tr>
+<td>6</td>
+<td>connector index number</td>
+<td>0..</td>
+<td> </td>
+<td>inexes into the input list or the output list of the source
+<a href="./p303.htm#Module%20table">module</a>, this depends upon the value of
+field 7</td>
+</tr>
+<tr>
+<td>7</td>
+<td>connector type</td>
+<td> 0, 1</td>
+<td>1</td>
+<td>0 ~ input, 1 ~ output</td>
+</tr>
+</tbody>
+</table>
+<p>NOTE 1: see the data as (cable-color)(connector1-spec)(connector2-spec),
+where a connector-spec = (module-index,connector-index,connector-type)) Some of
+the original Clavia factory presets for version 3.0x use the first connector
+descriptor for output connectors as well, the version 3.03 editor will save
+such patches according to a stricter format where the first tripplet will
+always describe an input connector.</p>
+<hr>
+<h5 class="Section"><a name="[CableDump0]"></a>[CableDump] - common section 
+<br>
+0<br>
+0 5 2 0 3 0 1<br>
+0 9 0 0 3 0 1<br>
+[/CableDump]</h5>
+<p class="ParaText">See <a href="#%5BCableDump1%5D">CableDump - poly section</a>.
+The difference is that the common section starts with a 0. </p>
+<hr>
+<h5 class="Section"><a name="[ParameterDump1]"></a>[ParameterDump] - poly
+section<br>
+1<br>
+1 17 36 15 1 1 1 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 0 0 0 1 0 1 0 1 0 0 0 1 0 0 1
+1<br>
+2 68 2 84 1<br>
+[/ParameterDump]</h5>
+<p class="ParaText">The ParameterDump section lists most parameters for all
+modules used.</p>
+<p class="ParaText">For the first line : the poly section starts with a 1 - the
+common section starts with a 0. </p>
+<p class="ParaText">Each line (but the first) in the parameter dump represents
+a list of control (knobs etc) values for a certain module. For every module
+type the list of control values is different, but the first entry in the line
+always is the module index number, the second entry is the module type number
+and the third entry is the number of parameters that will follow. So there is
+some redundancy here.</p>
+<table border="1" cellpadding="1" cellspacing="1" frame="border" width="0">
+<tbody>
+<tr>
+<td>#</td>
+<td>name</td>
+<td>value</td>
+<td>bit count</td>
+<td>remarks</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Module index number</td>
+<td>1..</td>
+<td>7</td>
+<td>see <a href="#%5BModuleDump1%5D">ModuleDump</a> and <a href="#%5BNameDump1%5D">NameDump</a> sections</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Module type number</td>
+<td>1..127</td>
+<td>7</td>
+<td>see the <a href="./p303.htm#Module%20table">Module table</a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Parameter count</td>
+<td>1..</td>
+<td> </td>
+<td>The number of parameter values that will follw</td>
+</tr>
+<tr>
+<td>x</td>
+<td>parameter</td>
+<td> any</td>
+<td> </td>
+<td>a module dependent list of parameters, see the
+<a href="./p303.htm#Module%20table">Module table</a></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h5 class="Section"><br>
+<a name="[ParameterDump0]"></a>[ParameterDump] - common section<br>
+0<br>
+1 127 1 0<br>
+2 4 3 117 0 0<br>
+[/ParameterDump]</h5>
+<p class="ParaText">See <a href="#%5BParameterDump1%5D">ParameterDump - poly
+section</a>, the difference is that the common section starts with a 0. </p>
+<hr>
+<h5 class="Section"><a name="[CustomDump1]"></a>[CustomDump] - poly section 
+<br>
+1<br>
+7 1 0<br>
+8 1 0<br>
+[/CustomDump]</h5>
+<p class="ParaText">The CustomDump section lists some customization parameters
+for about half of the module types.</p>
+<p class="ParaText">For the first line : the poly section starts with a 1 - the
+common section starts with a 0.</p>
+<p class="ParaText">The other lines list the parameter values, as these depend
+upon the module type they will be listed with the other module specifications
+(see<a href="./p303.htm#Module%20table"> Module table</a>)</p>
+<table width="0" border="1" cellpadding="1" cellspacing="1">
+<tbody><tr>
+<td>#</td>
+<td>name</td>
+<td>value</td>
+<td>bit count</td>
+<td>remarks</td>
+</tr>
+<tr>
+<td>1</td>
+<td>module index number</td>
+<td>1..127</td>
+<td>7</td>
+<td>see <a href="#%5BModuleDump1%5D">ModuleDump</a> and <a href="#%5BNameDump1%5D">NameDump</a> sections</td>
+</tr>
+<tr>
+<td>2</td>
+<td>parameter count</td>
+<td>1..</td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td>3..</td>
+<td>parameter 1..</td>
+<td> any</td>
+<td> </td>
+<td>depends upon module type</td>
+</tr>
+</tbody></table>
+<hr>
+<h5 class="Section"><a name="[CustomDump0]"></a>[CustomDump] - common section 
+<br>
+0<br>
+7 1 0<br>
+11 1 0<br>
+[/CustomDump]</h5>
+<p class="ParaText">See <a href="#%5BCustomDump1%5D">CustomDump - poly section</a>,
+the difference is that the common section starts with a 0. </p>
+<hr>
+<h5 class="Section"><a name="[MorphMapDump]"></a>[MorphMapDump]<br>
+10 2 0 0<br>
+0 2 0 0 -73<br>
+[/MorphMapDump]</h5>
+<p class="ParaText">The MorphMap dump gives settings for the morph knobs. When
+no morphs are assigned in a patch this section is not present.</p>
+<p class="ParaText">The first line shows the settings for the four knobs</p>
+<table width="0" border="1" cellpadding="1" cellspacing="1">
+<tbody><tr>
+<td>#</td>
+<td>name</td>
+<td>value</td>
+<td>bit count</td>
+</tr>
+<tr>
+<td>1</td>
+<td>morph 1</td>
+<td> 0..127</td>
+<td>7</td>
+</tr>
+<tr>
+<td>2</td>
+<td>morph 2</td>
+<td> 0..127</td>
+<td>7</td>
+</tr>
+<tr>
+<td>3</td>
+<td>morph 3</td>
+<td> 0..127</td>
+<td>7</td>
+</tr>
+<tr>
+<td>4</td>
+<td>morp 4</td>
+<td> 0..127</td>
+<td>7</td>
+</tr>
+</tbody></table>
+<p class="ParaText">The other line describes the coupling between the morph and
+the knobs it affects.The line must be considered to be a repeated set of five
+parameters, where every set describes the morph settings for one knob. </p>
+<table width="0%" border="1" cellpadding="1" cellspacing="1">
+<tbody><tr>
+<td>#</td>
+<td>name</td>
+<td>value</td>
+<td>bit count</td>
+<td>remarks</td>
+</tr>
+<tr>
+<td>1</td>
+<td>section index</td>
+<td> 0..1</td>
+<td>1</td>
+<td>0 ~ common section, 1~ poly section</td>
+</tr>
+<tr>
+<td>2</td>
+<td>module index</td>
+<td> 1..</td>
+<td>7</td>
+<td>module index number, also see <a href="#%5BModuleDump1%5D">ModuleDump</a> and
+<a href="#%5BNameDump1%5D">NameDump</a> sections</td>
+</tr>
+<tr>
+<td>3</td>
+<td>parameter index</td>
+<td> 0..</td>
+<td> </td>
+<td>depends upon the module index, see <a href="./p303.htm#Module%20table">Module
+table</a></td>
+</tr>
+<tr>
+<td>4</td>
+<td>morph index</td>
+<td> 0..3</td>
+<td>2</td>
+<td>0 ~ morph 1, 1 ~ morph 2, 2 ~ morph 3, 3 ~ morph 4</td>
+</tr>
+<tr>
+<td>5</td>
+<td>morph range</td>
+<td> -127..127</td>
+<td> </td>
+<td>a morph setting is described by it's start value and it's range. The start
+value is the current knob position and the range is given here.</td>
+</tr>
+</tbody></table>
+<p class="ParaText">Please note that for certain knobs it is not possible to
+assign a morph to it without also assigning the same morph to another knob.
+I've seen this only with frequency control knobs for oscillators, where the
+morph that is assigned to the coarse control is also automaticly assigned to to
+the fine control. </p>
+<p class="ParaText">Also for some other knobs it's not possible to assigne a
+morph at all.</p>
+<p class="ParaText">The layout for the MorphMapDump section does not show these
+anomalies however, and I did no experiments as to see what happens when I go
+and fuzz it a bit.</p>
+<hr>
+<h5 class="Section"><a name="[KeyboardAssignment]"></a>[KeyboardAssignment]<br>
+2 0 0 0 <br>
+[/KeyboardAssignment] </h5>
+<p class="ParaText">The KeyboardAssigment section describes the assignments
+from keyboard related parameters to morphs. This section contains a single line
+with four parameters.</p>
+<p class="ParaText">Keyboard assigments are possible only for morphs, and the
+only possible assignments are none, note or velocity.</p>
+<table width="0%" border="1" cellpadding="1" cellspacing="1">
+<tbody><tr>
+<td>#</td>
+<td>name</td>
+<td>value</td>
+<td>bit count</td>
+<td>remarks</td>
+</tr>
+<tr>
+<td>1</td>
+<td>morph 1</td>
+<td> 0..2</td>
+<td>2</td>
+<td>0 ~ none, 1 ~ velocity, 2 ~ note</td>
+</tr>
+<tr>
+<td>2</td>
+<td>morph 2</td>
+<td> 0..2</td>
+<td>2</td>
+<td>0 ~ none, 1 ~ velocity, 2 ~ note</td>
+</tr>
+<tr>
+<td>3</td>
+<td>morph 3</td>
+<td> 0..2</td>
+<td>2</td>
+<td>0 ~ none, 1 ~ velocity, 2 ~ note</td>
+</tr>
+<tr>
+<td>4</td>
+<td>morph 4</td>
+<td> 0..2</td>
+<td>2</td>
+<td>0 ~ none, 1 ~ velocity, 2 ~ note</td>
+</tr>
+</tbody></table>
+<hr>
+<h5 class="Section"><a name="[KnobMapDump]"></a>[KnobMapDump]<br>
+2 1 0 0<br>
+[/KnobMapDump]</h5>
+<p class="ParaText">The KnobMapDump section describes the assignments from
+knobs to parameters. This section contains a single line for each knob
+assignment, each line lists four parameters.</p>
+<table width="0%" border="1" cellpadding="1" cellspacing="1">
+<tbody><tr>
+<td>#</td>
+<td>name</td>
+<td>value</td>
+<td>bit count</td>
+<td>remarks</td>
+</tr>
+<tr>
+<td>1</td>
+<td>section index</td>
+<td> 0..2</td>
+<td> </td>
+<td>0 ~ common section, 1 ~ poly section, 2 ~ morph section (the morph has
+module index 1, section index 2)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>module index</td>
+<td> 1..</td>
+<td>7</td>
+<td>module index number, also see <a href="#%5BModuleDump1%5D">ModuleDump</a> and
+<a href="#%5BNameDump1%5D">NameDump</a> sections</td>
+</tr>
+<tr>
+<td>3</td>
+<td>parameter index</td>
+<td> 1..</td>
+<td> </td>
+<td>depends upon the module index, see <a href="./p303.htm#Module%20table">Module
+table</a></td>
+</tr>
+<tr>
+<td>4</td>
+<td>knob index</td>
+<td> 0..17, 19, 20, 22</td>
+<td> </td>
+<td>0 ~ knob 1, ..., 17 ~ knob 18, 19 ~ Pedal, 20 ~ Aftertouch, 22 ~ On/Off
+switch</td>
+</tr>
+</tbody></table>
+<hr>
+<h5 class="Section"><a name="[CtrlMapDump]"></a>[CtrlMapDump]<br>
+1 3 0 14 <br>
+[/CtrlMapDump] </h5>
+<p class="ParaText">The CtrlMapDump section describes MIDI continues controller
+(CC) assignments to module parameters. This section contains a single line for
+each controller assignment, each line list four parameters.</p>
+<table width="0%" border="1" cellpadding="1" cellspacing="1">
+<tbody><tr>
+<td>#</td>
+<td>name</td>
+<td>value</td>
+<td>bit count</td>
+<td>remarks</td>
+</tr>
+<tr>
+<td>1</td>
+<td>section index</td>
+<td> 0..2</td>
+<td> </td>
+<td>0 ~ common section, 1 ~ poly section, 2 ~ morph section (the morph has
+module index 1, section index 2)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>module index</td>
+<td> 1..</td>
+<td>7</td>
+<td>module index number, also see <a href="#%5BModuleDump1%5D">ModuleDump</a> and
+<a href="#%5BNameDump1%5D">NameDump</a> sections</td>
+</tr>
+<tr>
+<td>3</td>
+<td>parameter index</td>
+<td> 1..</td>
+<td> </td>
+<td>depends upon the module index, see <a href="./p303.htm#Module%20table">Module
+table</a></td>
+</tr>
+<tr>
+<td>4</td>
+<td>CC number</td>
+<td> 0..31, 33..120</td>
+<td>7</td>
+<td>controller 32 is reserved for bank selection &lt;would like to refer to a
+cc list here&gt;</td>
+</tr>
+</tbody></table>
+<hr>
+<h5 class="Section"><a name="[NameDump1]"></a>[NameDump] - poly section<br>
+1<br>
+1 EventSeq1<br>
+2 ClkGen1<br>
+[/NameDump]</h5>
+<p class="ParaText">The first line indicates that this is a poly section. The
+other lines tie a module index to a module name. The module name is the name
+that can be changed by the user, it is not the module type. Modules are typed
+through their module type number (see <a href="#%5BParameterDump1%5D">ParameterDump</a> and <a href="#%5BModuleDump1%5D">ModuleDump</a>) </p>
+<table border="1" cellpadding="1" cellspacing="1" frame="border" width="0">
+<tbody>
+<tr>
+<td>#</td>
+<td>name</td>
+<td>value</td>
+<td>bit count</td>
+<td>remarks</td>
+</tr>
+<tr>
+<td>1</td>
+<td>module index number</td>
+<td>1..</td>
+<td>7</td>
+<td>module index number, also see <a href="#%5BModuleDump1%5D">ModuleDump</a> and
+<a href="#%5BParameterDump1%5D">ParameterDump</a> sections</td>
+</tr>
+<tr>
+<td>2</td>
+<td>module name</td>
+<td> string[16]</td>
+<td> </td>
+<td>a string of up to 16 characters</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h5 class="Section"><a name="[NameDump0]"></a>[NameDump] - common section<br>
+0<br>
+1 PolyAreaIn1<br>
+[/NameDump]</h5>
+<p class="ParaText">See <a href="#%5BNameDump1%5D">Name - poly section</a>, the
+difference is that the common section starts with a 0. </p>
+<hr>
+<h5 class="Section"><a name="[Notes]"></a>[Notes] - global section<br>
+<a class="Section" href="mailto:J.Punter@iaf.nl">J.Punter@iaf.nl</a> <br>
+<a class="Section" href="http://www.iaf.nl/Users/BlueHell/">http://www.iaf.nl/Users/BlueHell/</a> 
+<br>
+[/Notes]</h5>
+<p class="ParaText">The notes section seems to be a free format text - although
+very large text's seem to be a problem. When the word [/notes] is included the
+patch will be saved with this, upon reload of the patch however it will be
+stripped out and the text that was typed after [/notes] will not be lost.</p>
+<p class="ParaText">The 302 beta had a bug, it deleted empty lines from the
+notes section, 301 did not have this bug. Version 303 still has this bug.</p>
+<p class="ParaText">Version 301 (302 ?) used a slightly different patch format,
+certain dumps existing for both the Poly and the Common section started with a
+line containing the section index directly followed by the first value set on
+the same line. Version 303 uses a separate line for the section index.</p>
+</body></html>
