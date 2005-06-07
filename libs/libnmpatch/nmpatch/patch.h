@@ -30,6 +30,10 @@
 #include "nmpatch/knobmap.h"
 #include "nmpatch/ctrlmap.h"
 
+/**
+ * This is the top class in the patch data structure. It represents a 
+ * Nord Modular patch. It can read and write the PCH file format.
+ */
 class Patch
 {
 public:
