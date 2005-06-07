@@ -2,6 +2,8 @@ Version Information jMod
 
 Current release: v0.5 beta r2
 
+Project added to cvs.
+
 Bugs
 ----
 - When removing a cable from (out)connection, the other cables from that connection will not be 'selectable'
