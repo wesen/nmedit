@@ -6,7 +6,7 @@ inc = 'bitstream.h condition.h constantmatcher.h intstream.h matcher.h packet.h 
 srcfiles = [('src/' + x) for x in Split(src)]
 incfiles = [('pdl/' + x) for x in Split(inc)]
 
-pdl = Environment(SWIGFLAGS = '-java -c++',
+pdl = Environment(SWIGFLAGS = '-c++ -java -package nmcom.swig.pdl -outdir ../../java-nmcom/src/nmcom/swig/pdl',
                   YACCFLAGS = '-d -ppdl',
                   LEXFLAGS = '-+ -olex.yy.c -Ppdl',
                   CPPPATH = ['.'])
@@ -14,16 +14,16 @@ pdl = Environment(SWIGFLAGS = '-java -c++',
 opts = Options('pdl.conf')
 opts.Add(PathOption('PREFIX',
                     'Install dir (Defult: /usr/local)',
-                    '/usr/local')) 
-opts.Update(pdl) 
+                    '/usr/local'))
+opts.Update(pdl)
 opts.Save('pdl.conf', pdl)
 
 conf = Configure(pdl)
 
 pdl = conf.Finish()
 
-idir_prefix = '$PREFIX' 
-idir_lib    = '$PREFIX/lib' 
+idir_prefix = '$PREFIX'
+idir_lib    = '$PREFIX/lib'
 idir_inc    = '$PREFIX/include/pdl'
 
 lib = pdl.SharedLibrary('pdl', srcfiles)

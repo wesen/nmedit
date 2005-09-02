@@ -5,14 +5,14 @@ inc = 'boundbundle.h bundle.h parser.h ppfexception.h'
 srcfiles = [('src/' + x) for x in Split(src)]
 incfiles = [('ppf/' + x) for x in Split(inc)]
 
-ppf = Environment(SWIGFLAGS = '-java -c++',
+ppf = Environment(SWIGFLAGS = '-c++ -java -package nmcom.swig.ppf -outdir ../../java-nmcom/src/nmcom/swig/ppf',
                   CPPPATH = ['.'])
 
 opts = Options('ppf.conf')
 opts.Add(PathOption('PREFIX',
                     'Install dir (Defult: /usr/local)',
-                    '/usr/local')) 
-opts.Update(ppf) 
+                    '/usr/local'))
+opts.Update(ppf)
 opts.Save('ppf.conf', ppf)
 
 conf = Configure(ppf)
@@ -22,7 +22,7 @@ tcllist = [(x + 'tcl.h') for x in ['', 'tcl8.5/', 'tcl8.4/', 'tcl8.3/', 'tcl8.2/
 tclfound = False
 for tcl in tcllist:
    if conf.CheckCHeader(tcl):
-      print 'Using ' + tcl 
+      print 'Using ' + tcl
       tclfound = True
       conf.env.Append(CPPFLAGS=('-DTCL_H=\'<' + tcl + '>\''))
       break

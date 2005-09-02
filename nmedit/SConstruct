@@ -13,13 +13,19 @@ nmedit = Environment(CPPPATH = ['../libs/libppf', '../libs/libpdl',
 opts = Options('nmedit.conf')
 opts.Add(PathOption('PREFIX',
                     'Install dir (Defult: /usr/local)',
-                    '/usr/local')) 
-opts.Update(nmedit) 
+                    '/usr/local'))
+opts.Update(nmedit)
 opts.Save('nmedit.conf', nmedit)
 
 conf = Configure(nmedit)
 
 conf.env.Append(CPPFLAGS='-DVERSION=\'"0.1"\'')
+
+if conf.CheckLib('asound'):
+   conf.env.Append(CPPFLAGS=' -DALSA')
+
+if conf.CheckFunc('socket'):
+   conf.env.Append(CPPFLAGS=' -DNETMIDI')
 
 if not conf.CheckLib('ppf'):
    print "libppf missing!"

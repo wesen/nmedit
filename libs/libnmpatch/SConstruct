@@ -9,7 +9,7 @@ srcfiles = [('src/' + x)     for x in Split(src)]
 incfiles = [('nmpatch/' + x) for x in Split(inc)]
 pkgfiles = [('src/' + x)     for x in Split(pkg)]
 
-nmpatch = Environment(SWIGFLAGS = '-java -c++',
+nmpatch = Environment(SWIGFLAGS = '-c++ -java -package nmcom.swig.nmpatch -outdir ../../java-nmcom/src/nmcom/swig/nmpatch',
                       YACCFLAGS = '-d -pnm',
                       LEXFLAGS = '-+ -olex.yy.c -Pnm',
                       CPPPATH = ['.', '../libppf'])
@@ -17,8 +17,8 @@ nmpatch = Environment(SWIGFLAGS = '-java -c++',
 opts = Options('nmpatch.conf')
 opts.Add(PathOption('PREFIX',
                     'Install dir (Defult: /usr/local)',
-                    '/usr/local')) 
-opts.Update(nmpatch) 
+                    '/usr/local'))
+opts.Update(nmpatch)
 opts.Save('nmpatch.conf', nmpatch)
 
 idir_prefix = '$PREFIX'

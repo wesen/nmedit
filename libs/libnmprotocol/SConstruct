@@ -9,13 +9,13 @@ srcfiles = [('src/' + x)        for x in Split(src)]
 incfiles = [('nmprotocol/' + x) for x in Split(inc)]
 pkgfiles = [('src/' + x)        for x in Split(pkg)]
 
-nmprotocol = Environment(SWIGFLAGS = '-java -c++',
+nmprotocol = Environment(SWIGFLAGS = '-c++ -java -package nmcom.swig.nmprotocol -outdir ../../java-nmcom/src/nmcom/swig/nmprotocol',
                          CPPPATH = ['.', '../libpdl', '../libnmpatch'])
 
 opts = Options('nmprotocol.conf')
 opts.Add(PathOption('PREFIX',
                     'Install dir (Defult: /usr/local)',
-                    '/usr/local')) 
+                    '/usr/local'))
 opts.Update(nmprotocol)
 opts.Save('nmprotocol.conf', nmprotocol)
 
@@ -33,6 +33,18 @@ if conf.CheckLib('asound'):
 
 if conf.CheckFunc('socket'):
    conf.env.Append(CPPFLAGS=' -DNETMIDI')
+
+if not conf.CheckLib('pdl'):
+   print "libpdl missing!"
+   Exit(1);
+
+if not conf.CheckLib('ppf'):
+   print "libnmpatch missing!"
+   Exit(1);
+
+if not conf.CheckLib('nmpatch'):
+   print "libnmpatch missing!"
+   Exit(1);
 
 nmprotocol = conf.Finish()
 
