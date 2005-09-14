@@ -1,0 +1,21 @@
+Jnmedit is an example how to use the swig wrappers to communicate
+with Nord Modular synthesizer.
+
+Compile the example
+-------------------
+You need to set the classpath to the current directory ('.') and
+to the above director ('..').
+
+example call:
+javac -classpath .:.. Jnmedit.java
+
+Run the example
+---------------
+
+The application expects three arguments.
+1. Midi Driver        (i.e. ALSA or NETMIDI)");
+2. Midi Input Device  (i.e. /dev/snd/midiC1D0)");
+3. Midi Output Device (i.e. /dev/snd/midiC1D0)");
+
+example call:
+java Jnmedit ALSA /dev/snd/midiC1D0 /dev/snd/midiC1D0
