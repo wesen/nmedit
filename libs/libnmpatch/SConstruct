@@ -30,6 +30,10 @@ conf = Configure(nmpatch)
 
 conf.env.Append(CPPFLAGS='-DLIBPATH=\'"' + idir_pkg + '"\'')
 
+if not conf.CheckLib('ppf'):
+   print "libppf missing!"
+   Exit(1);
+
 nmpatch = conf.Finish()
 
 lib = nmpatch.SharedLibrary('nmpatch', srcfiles)

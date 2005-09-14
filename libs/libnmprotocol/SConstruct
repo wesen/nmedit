@@ -24,6 +24,7 @@ idir_lib    = '$PREFIX/lib'
 idir_pkg    = '$PREFIX/lib/nmprotocol'
 idir_inc    = '$PREFIX/include/nmprotocol'
 
+
 conf = Configure(nmprotocol)
 
 conf.env.Append(CPPFLAGS='-DLIBPATH=\'"' + idir_pkg + '"\'')

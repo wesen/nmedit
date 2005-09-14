@@ -18,4 +18,4 @@ The application expects three arguments.
 3. Midi Output Device (i.e. /dev/snd/midiC1D0)");
 
 example call:
-java Jnmedit ALSA /dev/snd/midiC1D0 /dev/snd/midiC1D0
+java -classpath .:.. Jnmedit ALSA /dev/snd/midiC1D0 /dev/snd/midiC1D0
