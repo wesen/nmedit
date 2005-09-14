@@ -1,5 +1,6 @@
 
-%module nmprotocol
+%module(directors="1") nmprotocol
+
 %{
 #include "nmprotocol/midimessage.h"
 #include "nmprotocol/ackmessage.h"
@@ -20,7 +21,21 @@
 #include "nmprotocol/synth.h"
 #include "nmprotocol/synthlistener.h"
 #include "nmprotocol/voicecountmessage.h"
+#include "nmprotocol/mididriver.h"
+#include "nmprotocol/activepidlistener.h"
+#include "../libpdl/pdl/pdlexception.h"
 %}
+
+%include "../../java-nmcom/swig-i/nmprotocol-config.i"
+
+%import  "../libpdl/pdl/bitstream.h"
+%import  "../libpdl/pdl/packet.h"
+%import  "../libpdl/pdl/tracer.h"
+%import  "../libpdl/pdl/protocol.h"
+%import  "../libpdl/pdl/pdlexception.h"
+%import  "../libnmpatch/nmpatch/modulesection.h"
+%import  "../libnmpatch/nmpatch/moduletype.h"
+%import  "../libnmpatch/nmpatch/patch.h"
 
 %include "nmprotocol/midimessage.h"
 %include "nmprotocol/ackmessage.h"
@@ -41,3 +56,5 @@
 %include "nmprotocol/synth.h"
 %include "nmprotocol/synthlistener.h"
 %include "nmprotocol/voicecountmessage.h"
+%include "nmprotocol/mididriver.h"
+%include "nmprotocol/activepidlistener.h"

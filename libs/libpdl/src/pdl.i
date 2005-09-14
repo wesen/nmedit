@@ -13,7 +13,10 @@
 #include "pdl/protocol.h"
 #include "pdl/tracer.h"
 #include "pdl/variablematcher.h"
+#include "pdl/pdlexception.h"
 %}
+
+%include "../../java-nmcom/swig-i/pdl-config.i"
 
 %include "pdl/bitstream.h"
 %include "pdl/condition.h"
@@ -27,3 +30,4 @@
 %include "pdl/protocol.h"
 %include "pdl/tracer.h"
 %include "pdl/variablematcher.h"
+%include "pdl/pdlexception.h"
