@@ -1,5 +1,33 @@
 History for Java Interface
 
+2005-09-14
+----------
+- Swig wrappers are now fully working and usable
+  - Wrappers for listener classes are receiving messages from the libraries
+  - c++ standard library templates are wrappers are working (std::vector<T>,
+    std::list<T>)
+  - Exceptions defined in the libraries are translated to Java Exceptions
+  - Exception classes are derived from java.lang.Exception
+
+- example application
+  - The example is a java implementation of the c++ nmedit project.
+    It is not possible to control parameters. But the application
+    is able to receive events.
+
+- changes
+  - I had to place the file 'director.swg' in directories of
+  libnmprotocol and libnmpatch as workaround for a bug in swig.
+  The bug is already fixed in CVS version of swig.
+  - Most of the definitions in nmpatch.i, nmprotocol.i, pdl.i, ppf.i are
+  rolled out to 'nmpatch-config.i', 'nmprotocol-config.i', 'pdl-config.i',
+  'ppf-config.i' (in directory java-nmcom/swig.i/) because they require
+  several other swig-interface files. I wanted to seperate them from
+  the c++ source code.
+
+- note
+  The java-wrappers are successfully generated with swig 1.3.25 .
+  swig 1.3.24 should work too.
+
 2005-09-01
 ----------
 - New Project Directory 'java-nmcom'
