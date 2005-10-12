@@ -1,0 +1,1358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module-description SYSTEM "modules.dtd">
+<module-description>
+  <structure>
+    <group name="In/Out">
+      <section>
+        <insert module-id="1" />
+        <insert module-id="63" />
+        <insert module-id="65" />
+      </section>
+      <section>
+        <insert module-id="2" />
+        <insert module-id="127" />
+      </section>
+      <section>
+        <insert module-id="5" />
+        <insert module-id="4" />
+        <insert module-id="3" />
+      </section>
+      <section>
+        <insert module-id="67" />
+        <insert module-id="100" />
+      </section>
+    </group>
+    <group short-name="Osc" name="Oscillator">
+      <section>
+        <insert module-id="97" />
+        <insert module-id="7" />
+        <insert module-id="8" />
+        <insert module-id="9" />
+        <insert module-id="107" />
+        <insert module-id="96" />
+      </section>
+      <section>
+        <insert module-id="14" />
+        <insert module-id="10" />
+        <insert module-id="11" />
+        <insert module-id="12" />
+        <insert module-id="13" />
+        <insert module-id="106" />
+        <insert module-id="85" />
+      </section>
+      <section>
+        <insert module-id="31" />
+      </section>
+      <section>
+        <insert module-id="95" />
+        <insert module-id="58" />
+      </section>
+    </group>
+    <group name="LFO">
+      <section>
+        <insert module-id="24" />
+        <insert module-id="25" />
+        <insert module-id="26" />
+      </section>
+      <section>
+        <insert module-id="80" />
+        <insert module-id="27" />
+        <insert module-id="28" />
+        <insert module-id="29" />
+        <insert module-id="30" />
+      </section>
+      <section>
+        <insert module-id="68" />
+      </section>
+      <section>
+        <insert module-id="33" />
+        <insert module-id="34" />
+        <insert module-id="110" />
+        <insert module-id="35" />
+        <insert module-id="99" />
+      </section>
+    </group>
+    <group short-name="Env" name="Envelope">
+      <section>
+        <insert module-id="20" />
+        <insert module-id="84" />
+        <insert module-id="23" />
+        <insert module-id="46" />
+        <insert module-id="52" />
+      </section>
+      <section>
+        <insert module-id="71" />
+      </section>
+    </group>
+    <group name="Filter">
+      <section>
+        <insert module-id="86" />
+        <insert module-id="87" />
+        <insert module-id="50" />
+      </section>
+      <section>
+        <insert module-id="49" />
+        <insert module-id="51" />
+        <insert module-id="92" />
+      </section>
+      <section>
+        <insert module-id="45" />
+        <insert module-id="108" />
+        <insert module-id="32" />
+      </section>
+      <section>
+        <insert module-id="103" />
+        <insert module-id="104" />
+      </section>
+    </group>
+    <group name="Mixer">
+      <section>
+        <insert module-id="19" />
+        <insert module-id="40" />
+      </section>
+      <section>
+        <insert module-id="44" />
+      </section>
+      <section>
+        <insert module-id="18" />
+        <insert module-id="47" />
+      </section>
+      <section>
+        <insert module-id="113" />
+        <insert module-id="114" />
+        <insert module-id="111" />
+        <insert module-id="112" />
+        <insert module-id="76" />
+      </section>
+      <section>
+        <insert module-id="79" />
+        <insert module-id="88" />
+      </section>
+      <section>
+        <insert module-id="81" />
+      </section>
+    </group>
+    <group name="Audio">
+      <section>
+        <insert module-id="61" />
+        <insert module-id="62" />
+        <insert module-id="74" />
+      </section>
+      <section>
+        <insert module-id="54" />
+        <insert module-id="78" />
+        <insert module-id="53" />
+        <insert module-id="82" />
+        <insert module-id="94" />
+        <insert module-id="102" />
+      </section>
+      <section>
+        <insert module-id="57" />
+      </section>
+      <section>
+        <insert module-id="83" />
+      </section>
+      <section>
+        <insert module-id="21" />
+        <insert module-id="105" />
+        <insert module-id="117" />
+        <insert module-id="118" />
+      </section>
+    </group>
+    <group short-name="Ctrl" name="Control">
+      <section>
+        <insert module-id="43" />
+      </section>
+      <section>
+        <insert module-id="39" />
+        <insert module-id="48" />
+        <insert module-id="16" />
+      </section>
+      <section>
+        <insert module-id="72" />
+        <insert module-id="75" />
+        <insert module-id="98" />
+        <insert module-id="22" />
+      </section>
+      <section>
+        <insert module-id="66" />
+        <insert module-id="115" />
+      </section>
+    </group>
+    <group name="Logic">
+      <section>
+        <insert module-id="36" />
+        <insert module-id="64" />
+        <insert module-id="38" />
+        <insert module-id="37" />
+        <insert module-id="70" />
+      </section>
+      <section>
+        <insert module-id="73" />
+      </section>
+      <section>
+        <insert module-id="59" />
+        <insert module-id="89" />
+      </section>
+      <section>
+        <insert module-id="69" />
+        <insert module-id="77" />
+      </section>
+    </group>
+    <group short-name="Seq" name="Sequencer">
+      <section>
+        <insert module-id="17" />
+      </section>
+      <section>
+        <insert module-id="91" />
+      </section>
+      <section>
+        <insert module-id="15" />
+        <insert module-id="90" />
+      </section>
+    </group>
+  </structure>
+  <modules>
+    <module id="1" short-name="Keyboard" limit="1" cycles="0.0" prog-mem="0.0" x-mem="0.0" y-mem="0.0" zero-page="3.0" dyn-mem="1.0" height="2" >
+      <output id="0" name="Note" type="control" />
+      <output id="1" name="gate" type="logic" />
+      <output id="2" name="velocity on" type="control" />
+      <output id="3" name="velocity off" type="control" />
+    </module>
+    <module id="2" short-name="AudioIn" cycles="2.2" prog-mem="1.0" x-mem="1.0" y-mem="1.0" zero-page="2.0" dyn-mem="1.0" height="2" >
+      <output id="0" name="left" type="audio" />
+      <output id="1" name="right" type="audio" />
+    </module>
+    <module id="3" short-name="4Output" cycles="2.0625" prog-mem="0.46875" x-mem="0.09375" y-mem="0.0" zero-page="0.0" dyn-mem="0.28125" height="3" >
+      <input id="0" name="out 1" type="audio" />
+      <input id="1" name="out 2" type="audio" />
+      <input id="2" name="out 3" type="audio" />
+      <input id="3" name="out 4" type="audio" />
+      <parameter id="0" name="level" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="4" short-name="2Output" cycles="1.40625" prog-mem="0.34375" x-mem="0.09375" y-mem="0.09375" zero-page="0.0" dyn-mem="0.375" height="3" >
+      <input id="0" name="out left" type="audio" />
+      <input id="1" name="out right" type="audio" />
+      <parameter id="0" name="level" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="destination" min="0" max="2" bit-count="2" use-substitution="channel-select-out2" />
+      <parameter id="2" name="mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="5" short-name="1Output" cycles="1.28125" prog-mem="0.3125" x-mem="0.09375" y-mem="0.09375" zero-page="0.0" dyn-mem="0.375" height="3" >
+      <input id="0" name="out" type="audio" />
+      <parameter id="0" name="level" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="dest" min="0" max="5" bit-count="3" use-substitution="channel-select-out1" />
+      <parameter id="2" name="mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="7" short-name="OscA" cycles="10.8125" prog-mem="6.5625" x-mem="0.84375" y-mem="0.34375" zero-page="1.75" dyn-mem="0.375" height="6" >
+      <input id="0" name="sync" type="audio" />
+      <input id="1" name="FMA" type="audio" />
+      <input id="2" name="pitch 1" type="audio" />
+      <input id="3" name="pitch 2" type="audio" />
+      <input id="4" name="pulse width mod" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <output id="1" name="slv" type="slave" />
+      <custom id="0" name="freq display units" min="0" max="1" />
+      <parameter id="0" name="freq coarse" min="0" max="127" bit-count="7" default="64" use-substitution="note" />
+      <parameter id="1" name="freq fine" min="0" max="127" bit-count="7" default="64" use-substitution="offset-64" />
+      <parameter id="2" name="freq KBT" min="0" max="127" bit-count="7" default="64" use-substitution="freq-kbt" />
+      <parameter id="3" name="Pulse width" min="0" max="127" bit-count="7" default="64" use-substitution="transform-pulse-width" />
+      <parameter id="4" name="waveform" min="0" max="3" bit-count="2" use-substitution="oscillator-wave" />
+      <parameter id="5" name="pitch mod 1" min="0" max="127" bit-count="7" />
+      <parameter id="6" name="pitch mod 2" min="0" max="127" bit-count="7" />
+      <parameter id="7" name="fma mod" min="0" max="127" bit-count="7" />
+      <parameter id="8" name="PW mod" min="0" max="127" bit-count="7" />
+      <parameter id="9" name="Mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="8" short-name="OscB" cycles="8.28125" prog-mem="6.25" x-mem="0.6875" y-mem="0.5" zero-page="1.75" dyn-mem="0.6875" height="6" >
+      <input id="0" name="FMA" type="audio" />
+      <input id="1" name="pitch 1" type="control" />
+      <input id="2" name="pitch 2" type="control" />
+      <input id="3" name="PW mod" type="control" />
+      <output id="0" name="out" type="audio" />
+      <output id="1" name="slv" type="slave" />
+      <custom id="0" name="freq display units" min="0" max="1" />
+      <parameter id="0" name="Freq coarse" min="0" max="127" bit-count="7" default="64" use-substitution="note" />
+      <parameter id="1" name="Freq fine" min="0" max="127" bit-count="7" default="64" use-substitution="offset-64" />
+      <parameter id="2" name="Freq KBT" min="0" max="127" bit-count="7" default="64" use-substitution="freq-kbt" />
+      <parameter id="3" name="waveform" min="0" max="3" bit-count="2" use-substitution="oscillator-wave" />
+      <parameter id="4" name="pitch mod 1" min="0" max="127" bit-count="7" />
+      <parameter id="5" name="pitch mod 2" min="0" max="127" bit-count="7" />
+      <parameter id="6" name="fma mod" min="0" max="127" bit-count="7" />
+      <parameter id="7" name="PWidth" min="0" max="127" bit-count="7" />
+      <parameter id="8" name="mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="9" short-name="OscC" cycles="4.96875" prog-mem="1.09375" x-mem="0.5625" y-mem="0.09375" zero-page="1.75" dyn-mem="0.53125" height="4" >
+      <input id="0" name="FMA" type="audio" />
+      <input id="1" name="pitch" type="audio" />
+      <input id="2" name="AM" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <output id="1" name="slv" type="slave" />
+      <custom id="0" name="freq display units" min="0" max="1" />
+      <parameter id="0" name="pitch coarse" min="0" max="127" bit-count="7" default="64" use-substitution="note" />
+      <parameter id="1" name="pitch fine" min="0" max="127" bit-count="7" default="64" use-substitution="offset-64" />
+      <parameter id="2" name="pitch KBT" min="0" max="1" bit-count="1" default="1" use-substitution="off-on" />
+      <parameter id="3" name="pitch mod amount" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="FMA" min="0" max="127" bit-count="7" />
+      <parameter id="5" name="mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="10" short-name="OscSlvB" cycles="7.125" prog-mem="2.15625" x-mem="0.21875" y-mem="0.34375" zero-page="0.875" dyn-mem="0.5" height="3" >
+      <input id="0" name="mst" type="slave" />
+      <input id="1" name="PWmod" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <custom id="0" name="freq display units" min="0" max="2" />
+      <parameter id="0" name="detune coarse" min="0" max="127" bit-count="7" default="64" />
+      <parameter id="1" name="detune fine" min="0" max="127" bit-count="7" default="64" use-substitution="offset-64" />
+      <parameter id="2" name="PW" min="0" max="127" bit-count="7" use-substitution="transform-pulse-width" />
+      <parameter id="3" name="PW mod" min="0" max="127" bit-count="7"  default="64" />
+      <parameter id="4" name="mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="11" short-name="OscSlvC" cycles="6.0" prog-mem="1.75" x-mem="0.15625" y-mem="0.21875" zero-page="0.875" dyn-mem="0.5" height="3" >
+      <input id="0" name="mst" type="slave" />
+      <input id="1" name="FMA" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <custom id="0" name="freq display units" min="0" max="2" />
+      <parameter id="0" name="detune coarse" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="1" name="detune fine" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="2" name="FMA mod" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="12" short-name="OscSlvD" cycles="5.875" prog-mem="1.3125" x-mem="0.15625" y-mem="0.21875" zero-page="0.875" dyn-mem="0.4375" height="3" >
+      <input id="0" name="mst" type="slave" />
+      <input id="1" name="FMA" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <custom id="0" name="freq display units" min="0" max="2" />
+      <parameter id="0" name="detune coarse" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="1" name="detune fine" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="2" name="FMA mod" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="13" short-name="OscSlvE" cycles="3.0625" prog-mem="0.6875" x-mem="0.34375" y-mem="0.15625" zero-page="0.875" dyn-mem="0.4375" height="3" >
+      <input id="0" name="mst" type="slave" />
+      <input id="1" name="FMA" type="audio" />
+      <input id="2" name="AM" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <custom id="0" name="freq display units" min="0" max="2" />
+      <parameter id="0" name="detune coarse" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="1" name="detune fine" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="2" name="FMA mod" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="14" short-name="OscSlvA" cycles="7.625" prog-mem="5.875" x-mem="0.4375" y-mem="0.28125" zero-page="0.875" dyn-mem="0.5" height="4" >
+      <input id="0" name="mst" type="slave" />
+      <input id="1" name="FMA" type="audio" />
+      <input id="2" name="sync" type="audio" />
+      <input id="3" name="AM" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <custom id="0" name="freq display units" min="0" max="2" />
+      <parameter id="0" name="detune coarse" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="1" name="detune fine" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="2" name="shape" min="0" max="3" bit-count="2" />
+      <parameter id="3" name="FMA mod" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="15" short-name="NoteSeqA" cycles="1.4375" prog-mem="1.15625" x-mem="0.5625" y-mem="1.4375" zero-page="3.5" dyn-mem="1.25" height="7" >
+      <input id="0" name="sync" type="logic" />
+      <input id="1" name="reset" type="logic" />
+      <output id="0" name="out" type="control" />
+      <output id="1" name="sync" type="logic" />
+      <output id="2" name="link" type="logic" />
+      <output id="3" name="gclk" type="logic" />
+      <parameter id="0" name="step 1" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="1" name="step 2" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="2" name="step 3" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="3" name="step 4" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="4" name="step 5" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="5" name="step 6" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="6" name="step 7" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="7" name="step 8" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="8" name="step 9" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="9" name="step 10" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="10" name="step 11" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="11" name="step 12" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="12" name="step 13" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="13" name="step 14" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="14" name="step 15" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="15" name="step 16" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="16" name="step count" min="0" max="127" bit-count="7" />
+      <parameter id="17" name="edit position" min="0" max="16" bit-count="5" />
+      <parameter id="18" name="record" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="19" name="pause" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="20" name="active" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="16" short-name="PortamentoB" cycles="0.53125" prog-mem="0.46875" x-mem="0.15625" y-mem="0.21875" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="in" type="control" />
+      <input id="1" name="jmp" type="logic" />
+      <output id="0" name="out" type="control" />
+      <parameter id="0" name="time" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="17" short-name="EventSeq" cycles="1.65625" prog-mem="1.34375" x-mem="0.625" y-mem="1.4375" zero-page="3.5" dyn-mem="2.0" height="5" >
+      <input id="0" name="clock" type="logic" />
+      <input id="1" name="reset" type="logic" />
+      <output id="0" name="out1" type="logic" />
+      <output id="1" name="out2" type="logic" />
+      <output id="2" name="sync" type="logic" />
+      <output id="3" name="link" type="logic" />
+      <parameter id="0" name="stepcount" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="active" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="2" name="gate1" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="3" name="gate2" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="4" name="seq 1, step 1" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="5" name="seq 1, step 2" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="6" name="seq 1, step 3" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="7" name="seq 1, step 4" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="8" name="seq 1, step 5" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="9" name="seq 1, step 6" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="10" name="seq 1, step 7" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="11" name="seq 1, step 8" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="12" name="seq 1, step 9" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="13" name="seq 1, step 10" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="14" name="seq 1, step 11" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="15" name="seq 1, step 12" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="16" name="seq 1, step 13" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="17" name="seq 1, step 14" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="18" name="seq 1, step 15" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="19" name="seq 1, step 16" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="20" name="seq 2, step 1" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="21" name="seq 2, step 2" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="22" name="seq 2, step 3" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="23" name="seq 2, step 4" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="24" name="seq 2, step 5" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="25" name="seq 2, step 6" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="26" name="seq 2, step 7" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="27" name="seq 2, step 8" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="28" name="seq 2, step 9" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="29" name="seq 2, step 10" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="30" name="seq 2, step 11" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="31" name="seq 2, step 12" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="32" name="seq 2, step 13" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="33" name="seq 2, step 14" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="34" name="seq 2, step 15" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="35" name="seq 2, step 16" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="18" short-name="X" cycles="1.65625" prog-mem="0.40625" x-mem="0.09375" y-mem="0.15625" zero-page="0.875" dyn-mem="0.34375" height="3" >
+      <input id="0" name="in1" type="audio" />
+      <input id="1" name="in2" type="audio" />
+      <input id="2" name="modulation" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="modulation" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="crossfade" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+    </module>
+    <module id="19" short-name="Mixer" cycles="0.90625" prog-mem="0.21875" x-mem="0.15625" y-mem="0.09375" zero-page="0.875" dyn-mem="0.375" height="2" >
+      <input id="0" name="in1" type="audio" />
+      <input id="1" name="in2" type="audio" />
+      <input id="2" name="in3" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="in sense 1" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="in sense 2" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="in sense 3" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="20" short-name="ADSR" cycles="1.625" prog-mem="1.0625" x-mem="1.03125" y-mem="0.21875" zero-page="1.75" dyn-mem="0.53125" height="5" >
+      <input id="0" name="in" type="audio" />
+      <input id="1" name="gate" type="logic" />
+      <input id="2" name="retrig" type="logic" />
+      <input id="3" name="amp" type="control" />
+      <output id="0" name="env" type="control" />
+      <output id="1" name="out" type="audio" />
+      <parameter id="0" name="attack shape" min="0" max="2" bit-count="2" />
+      <parameter id="1" name="attack" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="decay" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="sustain" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="release" min="0" max="127" bit-count="7" />
+      <parameter id="5" name="invert" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="21" short-name="Compressor" cycles="8.28125" prog-mem="1.8125" x-mem="0.5625" y-mem="0.5625" zero-page="1.75" dyn-mem="0.6875" height="7" >
+      <input id="0" name="left" type="audio" />
+      <input id="1" name="right" type="audio" />
+      <input id="2" name="side" type="audio" />
+      <output id="0" name="left" type="audio" />
+      <output id="1" name="right" type="audio" />
+      <parameter id="0" name="attack" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="release" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="treshold" min="0" max="42" bit-count="6" />
+      <parameter id="3" name="ratio" min="0" max="66" bit-count="7" />
+      <parameter id="4" name="ref level" min="0" max="42" bit-count="6" />
+      <parameter id="5" name="limiter" min="0" max="24" bit-count="5" />
+      <parameter id="6" name="act" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="7" name="mon" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="8" name="bypass" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="22" short-name="PartialGen" cycles="0.59375" prog-mem="0.53125" x-mem="0.28125" y-mem="2.1875" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="in" type="control" />
+      <output id="0" name="out" type="control" />
+      <parameter id="0" name="range" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+    </module>
+    <module id="23" short-name="Mod" cycles="3.34375" prog-mem="2.53125" x-mem="2.59375" y-mem="0.15625" zero-page="1.75" dyn-mem="0.6875" height="6" >
+      <input id="0" name="gate" type="logic" />
+      <input id="1" name="retrig" type="logic" />
+      <input id="2" name="attack mod" type="control" />
+      <input id="3" name="decay mod" type="control" />
+      <input id="4" name="sustain mod" type="control" />
+      <input id="5" name="release mod" type="control" />
+      <input id="6" name="in" type="audio" />
+      <input id="7" name="amp" type="control" />
+      <output id="0" name="env" type="control" />
+      <output id="1" name="out" type="audio" />
+      <parameter id="0" name="attack" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="decay" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="sustain" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="release" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="attack mod" min="0" max="127" bit-count="7" />
+      <parameter id="5" name="decay mod" min="0" max="127" bit-count="7" />
+      <parameter id="6" name="sustain mod" min="0" max="127" bit-count="7" />
+      <parameter id="7" name="release mod" min="0" max="127" bit-count="7" />
+      <parameter id="8" name="invert" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="24" short-name="LFOA" cycles="1.78125" prog-mem="2.375" x-mem="0.5625" y-mem="0.21875" zero-page="1.75" dyn-mem="0.625" height="5" >
+      <input id="0" name="rate" type="control" />
+      <input id="1" name="reset" type="logic" />
+      <output id="0" name="slv" type="slave" />
+      <output id="1" name="out" type="control" />
+      <parameter id="0" name="rate" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="range" min="0" max="2" bit-count="2" />
+      <parameter id="2" name="waveform" min="0" max="4" bit-count="3" />
+      <parameter id="3" name="rate mod" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="mono" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="5" name="rate kbt" min="0" max="127" bit-count="7" />
+      <parameter id="6" name="phase" min="0" max="127" bit-count="7" />
+      <parameter id="7" name="mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="25" short-name="LFOB" cycles="1.1875" prog-mem="1.0625" x-mem="0.5" y-mem="0.28125" zero-page="1.75" dyn-mem="0.625" height="5" >
+      <input id="0" name="rate" type="control" />
+      <input id="1" name="rst" type="logic" />
+      <input id="2" name="PWmod" type="control" />
+      <output id="0" name="out" type="control" />
+      <output id="1" name="slv" type="slave" />
+      <parameter id="0" name="rate" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="range" min="0" max="2" bit-count="2" />
+      <parameter id="2" name="phase" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="rate mod" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="mono" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="5" name="rate kbt" min="0" max="127" bit-count="7" />
+      <parameter id="6" name="PW mod" min="0" max="127" bit-count="7" />
+      <parameter id="7" name="PW" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="26" short-name="LFOC" cycles="1.46875" prog-mem="1.0625" x-mem="0.5" y-mem="0.15625" zero-page="1.75" dyn-mem="0.5" height="4" >
+      <input id="0" name="rate" type="control" />
+      <output id="0" name="out" type="control" />
+      <output id="1" name="slv" type="slave" />
+      <parameter id="0" name="rate" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="range" min="0" max="2" bit-count="2" />
+      <parameter id="2" name="waveform" min="0" max="4" bit-count="3" />
+      <parameter id="3" name="rate mod" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="mono" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="5" name="mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="27" short-name="LFOSlvB" cycles="0.375" prog-mem="0.34375" x-mem="0.09375" y-mem="0.15625" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="mst" type="slave" />
+      <output id="0" name="out" type="control" />
+      <custom id="0" name="freq display units" min="0" max="1" />
+      <parameter id="0" name="rate" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="28" short-name="LFOSlvC" cycles="0.78125" prog-mem="0.6875" x-mem="0.34375" y-mem="0.15625" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="mst" type="slave" />
+      <output id="0" name="out" type="control" />
+      <custom id="0" name="freq display units" min="0" max="1" />
+      <parameter id="0" name="rate" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="29" short-name="LFOSlvD" cycles="0.375" prog-mem="0.34375" x-mem="0.15625" y-mem="0.15625" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="mst" type="slave" />
+      <output id="0" name="out" type="control" />
+      <custom id="0" name="freq display units" min="0" max="1" />
+      <parameter id="0" name="rate" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="30" short-name="LFOSlvE" cycles="0.34375" prog-mem="0.3125" x-mem="0.15625" y-mem="0.15625" zero-page="0.90625" dyn-mem="0.28125" height="2" >
+      <input id="0" name="mst" type="slave" />
+      <output id="0" name="out" type="control" />
+      <custom id="0" name="freq display units" min="0" max="1" />
+      <parameter id="0" name="rate" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="31" short-name="Noise" cycles="1.65625" prog-mem="0.40625" x-mem="0.28125" y-mem="0.15625" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="color" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="32" short-name="FilterBank" cycles="17.9375" prog-mem="9.0" x-mem="5.59375" y-mem="10.21875" zero-page="0.90625" dyn-mem="0.96875" height="7" >
+      <input id="0" name="in" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="50" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="75" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="110" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="170" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="250" min="0" max="127" bit-count="7" />
+      <parameter id="5" name="380" min="0" max="127" bit-count="7" />
+      <parameter id="6" name="570" min="0" max="127" bit-count="7" />
+      <parameter id="7" name="850" min="0" max="127" bit-count="7" />
+      <parameter id="8" name="1.3" min="0" max="127" bit-count="7" />
+      <parameter id="9" name="1.9" min="0" max="127" bit-count="7" />
+      <parameter id="10" name="2.9" min="0" max="127" bit-count="7" />
+      <parameter id="11" name="4.2" min="0" max="127" bit-count="7" />
+      <parameter id="12" name="6.4" min="0" max="127" bit-count="7" />
+      <parameter id="13" name="8.3" min="0" max="127" bit-count="7" />
+      <parameter id="14" name="bypass" min="0" max="1" bit-count="1" />
+    </module>
+    <module id="33" short-name="ClkRndGen" cycles="0.625" prog-mem="0.625" x-mem="0.21875" y-mem="0.21875" zero-page="0.875" dyn-mem="0.34375" height="2" >
+      <input id="0" name="clk" type="logic" />
+      <output id="0" name="out" type="control" />
+      <parameter id="0" name="mono" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="1" name="col" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="34" short-name="RndStepGen" cycles="0.625" prog-mem="0.65625" x-mem="0.21875" y-mem="0.34375" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="mst" type="slave" />
+      <output id="0" name="out" type="control" />
+      <custom id="0" name="freq display units" min="0" max="1" />
+      <parameter id="0" name="rate" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="35" short-name="RndPulsGen" cycles="0.34375" prog-mem="0.3125" x-mem="0.21875" y-mem="0.15625" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <output id="0" name="out" type="logic" />
+      <parameter id="0" name="density" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="36" short-name="PosEdgeDelay" cycles="0.28125" prog-mem="0.25" x-mem="0.15625" y-mem="0.15625" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="in" type="logic" />
+      <output id="0" name="out" type="logic" />
+      <parameter id="0" name="time" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="37" short-name="LogicDelay" cycles="0.625" prog-mem="0.5625" x-mem="0.15625" y-mem="0.28125" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="in" type="logic" />
+      <output id="0" name="out" type="logic" />
+      <parameter id="0" name="time" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="38" short-name="Pulse" cycles="0.34375" prog-mem="0.3125" x-mem="0.21875" y-mem="0.15625" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="in" type="logic" />
+      <output id="0" name="out" type="logic" />
+      <parameter id="0" name="time" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="39" short-name="Smooth" cycles="0.25" prog-mem="0.21875" x-mem="0.09375" y-mem="0.09375" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="in" type="control" />
+      <output id="0" name="out" type="control" />
+      <parameter id="0" name="time" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="40" short-name="Mixer" cycles="2.1875" prog-mem="0.5" x-mem="0.28125" y-mem="0.34375" zero-page="0.90625" dyn-mem="0.6875" height="4" >
+      <input id="0" name="in 1" type="audio" />
+      <input id="1" name="in 2" type="audio" />
+      <input id="2" name="in 3" type="audio" />
+      <input id="3" name="in 3" type="audio" />
+      <input id="4" name="in 4" type="audio" />
+      <input id="5" name="in 5" type="audio" />
+      <input id="6" name="in 6" type="audio" />
+      <input id="7" name="in 7" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="in sense 1" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="in sense 2" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="in sense 3" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="in sense 4" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="in sense 5" min="0" max="127" bit-count="7" />
+      <parameter id="5" name="in sense 6" min="0" max="127" bit-count="7" />
+      <parameter id="6" name="in sense 7" min="0" max="127" bit-count="7" />
+      <parameter id="7" name="in sense 8" min="0" max="127" bit-count="7" />
+      <parameter id="8" name="-6dB" min="0" max="1" bit-count="1" />
+    </module>
+    <module id="43" short-name="Constant" cycles="0.0" prog-mem="0.0" x-mem="0.0" y-mem="0.0" zero-page="0.875" dyn-mem="0.34375" height="2" >
+      <output id="0" name="out" type="control" />
+      <parameter id="0" name="value" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="unipolar" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="44" short-name="GainControl" cycles="0.78125" prog-mem="0.21875" x-mem="0.09375" y-mem="0.0" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="control" type="audio" />
+      <input id="1" name="in" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="shift" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="45" short-name="VocalFilter" cycles="7.59375" prog-mem="3.0625" x-mem="1.78125" y-mem="2.0625" zero-page="0.875" dyn-mem="0.6875" height="5" >
+      <input id="0" name="in" type="audio" />
+      <input id="1" name="vowel select mod" type="control" />
+      <input id="2" name="frequency mod" type="control" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="left vowel" min="0" max="8" bit-count="4" />
+      <parameter id="1" name="middle vowel" min="0" max="8" bit-count="4" />
+      <parameter id="2" name="right vowel" min="0" max="8" bit-count="4" />
+      <parameter id="3" name="in amplification" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="vowel select" min="0" max="127" bit-count="7" />
+      <parameter id="5" name="vowel select mod" min="0" max="127" bit-count="7" />
+      <parameter id="6" name="frequency" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="7" name="frequency mod" min="0" max="127" bit-count="7" />
+      <parameter id="8" name="resonance" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="46" short-name="AHD" cycles="2.46875" prog-mem="1.75" x-mem="1.3125" y-mem="0.21875" zero-page="1.75" dyn-mem="0.53125" height="5" >
+      <input id="0" name="trig" type="logic" />
+      <input id="1" name="A mod" type="control" />
+      <input id="2" name="H mod" type="control" />
+      <input id="3" name="D mod" type="control" />
+      <input id="4" name="in" type="audio" />
+      <input id="5" name="amp" type="control" />
+      <output id="0" name="env" type="control" />
+      <output id="1" name="out" type="audio" />
+      <parameter id="0" name="A" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="H" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="D" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="A mod" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="H mod" min="0" max="127" bit-count="7" />
+      <parameter id="5" name="D mod" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="47" short-name="Pan" cycles="1.65625" prog-mem="0.40625" x-mem="0.09375" y-mem="0.09375" zero-page="1.75" dyn-mem="0.34375" height="3" >
+      <input id="0" name="in" type="audio" />
+      <input id="1" name="panmod" type="audio" />
+      <output id="0" name="outL" type="audio" />
+      <output id="1" name="outR" type="audio" />
+      <parameter id="0" name="pan mod" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="pan" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+    </module>
+    <module id="48" short-name="PortamentoA" cycles="0.46875" prog-mem="0.4375" x-mem="0.09375" y-mem="0.21875" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="in" type="control" />
+      <input id="1" name="on" type="logic" />
+      <output id="0" name="out" type="control" />
+      <parameter id="0" name="time" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="49" short-name="FilterD" cycles="4.03125" prog-mem="1.53125" x-mem="0.5625" y-mem="0.4375" zero-page="2.625" dyn-mem="0.4375" height="5" >
+      <input id="0" name="freq mod" type="control" />
+      <input id="1" name="in" type="audio" />
+      <output id="0" name="hp" type="audio" />
+      <output id="1" name="bp" type="audio" />
+      <output id="2" name="lp" type="audio" />
+      <custom id="0" name="freq display units" min="0" max="1" />
+      <parameter id="0" name="freq" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="kbt" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="resonance" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="freqmod" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="50" short-name="FilterC" cycles="1.78125" prog-mem="0.4375" x-mem="0.21875" y-mem="0.15625" zero-page="2.625" dyn-mem="0.40625" height="4" >
+      <input id="0" name="in" type="audio" />
+      <output id="0" name="LP" type="audio" />
+      <output id="1" name="BP" type="audio" />
+      <output id="2" name="HP" type="audio" />
+      <custom id="0" name="freq display units" min="0" max="1" />
+      <parameter id="0" name="freq" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="resonance" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="gain control" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="51" short-name="FilterE" cycles="6.625" prog-mem="1.46875" x-mem="0.5625" y-mem="0.625" zero-page="0.875" dyn-mem="0.75" height="6" >
+      <input id="0" name="freq mod 1" type="audio" />
+      <input id="1" name="res mod" type="audio" />
+      <input id="2" name="in" type="audio" />
+      <input id="3" name="freq mod 2" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <custom id="0" name="freq display units" min="0" max="1" />
+      <parameter id="0" name="filter type" min="0" max="3" bit-count="2" />
+      <parameter id="1" name="gain control" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="2" name="frequency mod 1" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="frequency" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="kbt" min="0" max="127" bit-count="7" />
+      <parameter id="5" name="resonance mod" min="0" max="127" bit-count="7" />
+      <parameter id="6" name="resonance" min="0" max="127" bit-count="7" />
+      <parameter id="7" name="slope" min="0" max="1" bit-count="1" />
+      <parameter id="8" name="frequency mod 2" min="0" max="127" bit-count="7" />
+      <parameter id="9" name="bypass" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="52" short-name="Multi" cycles="1.96875" prog-mem="1.40625" x-mem="2.53125" y-mem="0.4375" zero-page="1.75" dyn-mem="0.78125" height="7" >
+      <input id="0" name="gate" type="logic" />
+      <input id="1" name="in" type="audio" />
+      <input id="2" name="amp" type="control" />
+      <output id="0" name="env" type="control" />
+      <output id="1" name="out" type="audio" />
+      <parameter id="0" name="level 1" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="level 2" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="level 3" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="level 4" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="time 1" min="0" max="127" bit-count="7" />
+      <parameter id="5" name="time 2" min="0" max="127" bit-count="7" />
+      <parameter id="6" name="time 3" min="0" max="127" bit-count="7" />
+      <parameter id="7" name="time 4" min="0" max="127" bit-count="7" />
+      <parameter id="8" name="time 5" min="0" max="127" bit-count="7" />
+      <parameter id="9" name="sustain" min="0" max="4" bit-count="3" />
+      <parameter id="10" name="curve" min="0" max="2" bit-count="2" />
+    </module>
+    <module id="53" short-name="Sample&amp;Hold" cycles="1.03125" prog-mem="0.25" x-mem="0.0" y-mem="0.09375" zero-page="0.875" dyn-mem="0.25" height="2" >
+      <input id="0" name="trig" type="logic" />
+      <input id="1" name="in" type="audio" />
+      <output id="0" name="out" type="audio" />
+    </module>
+    <module id="54" short-name="Quantizer" cycles="0.53125" prog-mem="0.15625" x-mem="0.09375" y-mem="0.0" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="in" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="bits" min="0" max="12" bit-count="4" />
+    </module>
+    <module id="57" short-name="InvLevShift" cycles="0.53125" prog-mem="0.15625" x-mem="0.09375" y-mem="0.09375" zero-page="0.875" dyn-mem="0.34375" height="2" >
+      <input id="0" name="in" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="mode" min="0" max="2" bit-count="2" />
+      <parameter id="1" name="inv" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="58" short-name="DrumSynth" remarks="preset info is not saved into the patch" cycles="12.21875" prog-mem="4.71875" x-mem="2.1875" y-mem="1.8125" zero-page="0.875" dyn-mem="1.03125" height="9" >
+      <input id="0" name="trig" type="logic" />
+      <input id="1" name="vel" type="control" />
+      <input id="2" name="pitch" type="control" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="MTune" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="STune" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="MDecay" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="SDecay" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="MLevel" min="0" max="127" bit-count="7" />
+      <parameter id="5" name="SLevel" min="0" max="127" bit-count="7" />
+      <parameter id="6" name="Filter freq" min="0" max="127" bit-count="7" />
+      <parameter id="7" name="Filter res" min="0" max="127" bit-count="7" />
+      <parameter id="8" name="Filter sweep" min="0" max="127" bit-count="7" />
+      <parameter id="9" name="Filter decay" min="0" max="127" bit-count="7" />
+      <parameter id="10" name="Filter mode" min="0" max="2" bit-count="2" />
+      <parameter id="11" name="Amount" min="0" max="127" bit-count="7" />
+      <parameter id="12" name="Decay" min="0" max="127" bit-count="7" />
+      <parameter id="13" name="Click" min="0" max="127" bit-count="7" />
+      <parameter id="14" name="Noise" min="0" max="127" bit-count="7" />
+      <parameter id="15" name="Mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="59" short-name="CompareLev" cycles="0.1875" prog-mem="0.1875" x-mem="0.09375" y-mem="0.09375" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="in" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="level" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+    </module>
+    <module id="61" short-name="Clip" cycles="1.53125" prog-mem="0.375" x-mem="0.09375" y-mem="0.15625" zero-page="0.875" dyn-mem="0.375" height="3" >
+      <input id="0" name="in" type="audio" />
+      <input id="1" name="clip" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="clip mod" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="clip" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="sym" min="0" max="1" bit-count="1" />
+    </module>
+    <module id="62" short-name="Overdrive" cycles="4.0" prog-mem="1.65625" x-mem="0.28125" y-mem="0.34375" zero-page="0.875" dyn-mem="0.34375" height="3" >
+      <input id="0" name="overdrive mod" type="control" />
+      <input id="1" name="in" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="overdrive mod" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="overdrive" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="63" short-name="KeyboardPatch" limit="1" cycles="0.0" prog-mem="0.0" x-mem="0.0" y-mem="0.0" zero-page="4.0" dyn-mem="1.0" height="3" >
+      <output id="0" name="latest note" type="control" />
+      <output id="1" name="patch gate" type="logic" />
+      <output id="2" name="latest vel on" type="control" />
+      <output id="3" name="latest rel vel" type="control" />
+    </module>
+    <module id="64" short-name="NegEdgeDelay" cycles="0.28125" prog-mem="0.25" x-mem="0.15625" y-mem="0.15625" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="in" type="logic" />
+      <output id="0" name="out" type="logic" />
+      <parameter id="0" name="time" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="65" short-name="MIDIGlobal" limit="1" cycles="0.13" prog-mem="1.0" x-mem="1.0" y-mem="0.0" zero-page="1.0" dyn-mem="1.0" height="2" >
+      <output id="0" name="clock" type="logic" />
+      <output id="1" name="sync" type="logic" />
+      <output id="2" name="active" type="logic" />
+    </module>
+    <module id="66" short-name="ControlMixer" cycles="0.1875" prog-mem="0.1875" x-mem="0.09375" y-mem="0.09375" zero-page="0.875" dyn-mem="0.46875" height="2" >
+      <input id="0" name="in1" type="control" />
+      <input id="1" name="in2" type="control" />
+      <output id="0" name="out" type="control" />
+      <parameter id="0" name="inv 1" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="1" name="level 1" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="inv 2" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="3" name="level 2" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="mode" min="0" max="1" bit-count="1" />
+    </module>
+    <module id="67" short-name="NoteDetect" cycles="0.0" prog-mem="0.0" x-mem="0.0" y-mem="0.0" zero-page="2.65625" dyn-mem="0.28125" height="2" >
+      <output id="0" name="gate" type="logic" />
+      <output id="1" name="velocity" type="control" />
+      <output id="2" name="releasevelocity" type="control" />
+      <parameter id="0" name="note" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="68" short-name="ClkGen" cycles="1.0" prog-mem="0.78125" x-mem="0.4375" y-mem="0.28125" zero-page="3.53125" dyn-mem="0.34375" height="3" >
+      <input id="0" name="reset" type="logic" />
+      <output id="0" name="24 pulses / beat" type="logic" />
+      <output id="1" name="4 pulses / beat" type="logic" />
+      <output id="2" name="slv" type="slave" />
+      <output id="3" name="sync" type="logic" />
+      <parameter id="0" name="rate" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="on/off" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="69" short-name="ClkDiv" cycles="0.625" prog-mem="0.5625" x-mem="0.5" y-mem="0.09375" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="clock" type="logic" />
+      <input id="1" name="reset" type="logic" />
+      <output id="0" name="out" type="logic" />
+      <parameter id="0" name="divider" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="70" short-name="LogicInv" cycles="0.1875" prog-mem="0.1875" x-mem="0.09375" y-mem="0.0" zero-page="0.875" dyn-mem="0.25" height="2" >
+      <input id="0" name="in" type="logic" />
+      <output id="0" name="out" type="logic" />
+    </module>
+    <module id="71" short-name="EnvFollower" cycles="2.3125" prog-mem="0.5" x-mem="0.21875" y-mem="0.15625" zero-page="0.875" dyn-mem="0.34375" height="3" >
+      <input id="0" name="in" type="audio" />
+      <output id="0" name="out" type="control" />
+      <parameter id="0" name="attack" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="release" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="72" short-name="NoteScaler" cycles="0.15625" prog-mem="0.15625" x-mem="0.09375" y-mem="0.09375" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="in" type="control" />
+      <output id="0" name="out" type="control" />
+      <parameter id="0" name="transpose" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="73" short-name="LogicProc" cycles="0.28125" prog-mem="0.25" x-mem="0.09375" y-mem="0.0" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="in1" type="logic" />
+      <input id="1" name="in2" type="logic" />
+      <output id="0" name="out" type="logic" />
+      <parameter id="0" name="mode" min="0" max="2" bit-count="2" />
+    </module>
+    <module id="74" short-name="WaveWrap" cycles="2.6875" prog-mem="0.625" x-mem="0.09375" y-mem="0.15625" zero-page="0.875" dyn-mem="0.34275" height="3" >
+      <input id="0" name="in" type="audio" />
+      <input id="1" name="wrap mod" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="wrap mod" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="wrap" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="75" short-name="NoteQuant" cycles="0.4375" prog-mem="0.40625" x-mem="0.15625" y-mem="0.09375" zero-page="0.875" dyn-mem="0.34375" height="2" >
+      <input id="0" name="in" type="control" />
+      <output id="0" name="out" type="control" />
+      <parameter id="0" name="range" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="1" name="notes" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="76" short-name="OnOff" cycles="0.40625" prog-mem="0.125" x-mem="0.0" y-mem="0.0" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="in" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="on/off" min="0" max="1" bit-count="1" />
+    </module>
+    <module id="77" short-name="ClkDivFix" cycles="0.84375" prog-mem="0.75" x-mem="0.4375" y-mem="0.09375" zero-page="2.625" dyn-mem="0.25" height="2" >
+      <input id="0" name="reset" type="logic" />
+      <input id="1" name="midiclock" type="logic" />
+      <output id="0" name="16" type="logic" />
+      <output id="1" name="T8" type="logic" />
+      <output id="2" name="8" type="logic" />
+    </module>
+    <module id="78" short-name="Delay" cycles="8.0" prog-mem="1.84375" x-mem="9.25" y-mem="9.25" zero-page="1.75" dyn-mem="0.34375" height="3" >
+      <input id="0" name="in" type="audio" />
+      <input id="1" name="modulation" type="control" />
+      <output id="0" name="2.65 ms fixed delay" type="audio" />
+      <output id="1" name="variable delay out" type="audio" />
+      <parameter id="0" name="modulation" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="time" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="79" short-name="4" cycles="1.03125" prog-mem="0.21875" x-mem="0.28125" y-mem="0.15625" zero-page="0.875" dyn-mem="0.53125" height="3" >
+      <input id="0" name="in 1" type="audio" />
+      <input id="1" name="in 2" type="audio" />
+      <input id="2" name="in 3" type="audio" />
+      <input id="3" name="in 4" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="in" min="0" max="3" bit-count="2" />
+      <parameter id="1" name="level 1" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="level 2" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="level 3" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="level 4" min="0" max="127" bit-count="7" />
+      <parameter id="5" name="mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="80" short-name="LFOSlvA" cycles="1.21875" prog-mem="1.90625" x-mem="0.4375" y-mem="0.21875" zero-page="0.875" dyn-mem="0.5" height="4" >
+      <input id="0" name="master" type="slave" />
+      <input id="1" name="reset" type="logic" />
+      <output id="0" name="out" type="control" />
+      <custom id="0" name="freq display units" min="0" max="1" />
+      <parameter id="0" name="rate" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="phase" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="waveform" min="0" max="4" bit-count="3" />
+      <parameter id="3" name="mono" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="4" name="mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="81" short-name="Amplifier" cycles="0.65625" prog-mem="0.1875" x-mem="0.09375" y-mem="0.0" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="in" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="gain" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="82" short-name="Diode" cycles="0.65625" prog-mem="0.1875" x-mem="0.0" y-mem="0.0" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="in" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="mode" min="0" max="2" bit-count="2" />
+    </module>
+    <module id="83" short-name="Shaper" cycles="1.90625" prog-mem="0.46875" x-mem="0.21875" y-mem="0.09375" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="in" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="mode" min="0" max="4" bit-count="3" />
+    </module>
+    <module id="84" short-name="AD" cycles="1.4375" prog-mem="0.875" x-mem="0.75" y-mem="0.21875" zero-page="1.75" dyn-mem="0.375" height="3" >
+      <input id="0" name="trigger" type="logic" />
+      <input id="1" name="in" type="audio" />
+      <input id="2" name="amp" type="control" />
+      <output id="0" name="envelope" type="control" />
+      <output id="1" name="out" type="audio" />
+      <parameter id="0" name="attack" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="decay" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="gate" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="85" short-name="OscSlvFM" cycles="3.1875" prog-mem="0.71875" x-mem="0.4375" y-mem="0.28125" zero-page="0.875" dyn-mem="0.5" height="3" >
+      <input id="0" name="master" type="slave" />
+      <input id="1" name="fmb" type="audio" />
+      <input id="2" name="sync" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <custom id="0" name="freq display units" min="0" max="1" />
+      <parameter id="0" name="detune" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="fine" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="2" name="-3oct" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="3" name="fmb" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="86" short-name="FilterA" cycles="0.65625" prog-mem="0.1875" x-mem="0.09375" y-mem="0.09375" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="in" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="frequency" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="87" short-name="FilterB" cycles="1.03125" prog-mem="0.25" x-mem="0.09375" y-mem="0.15625" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="in" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="frequency" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="88" short-name="1" cycles="0.90625" prog-mem="0.21875" x-mem="0.09375" y-mem="0.0" zero-page="3.5" dyn-mem="0.375" height="3" >
+      <input id="0" name="in" type="audio" />
+      <output id="0" name="out 1" type="audio" />
+      <output id="1" name="out 2" type="audio" />
+      <output id="2" name="out 3" type="audio" />
+      <output id="3" name="out 4" type="audio" />
+      <parameter id="0" name="in" min="0" max="3" bit-count="2" />
+      <parameter id="1" name="level" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="89" short-name="CompareAB" cycles="0.1875" prog-mem="0.1875" x-mem="0.0" y-mem="0.0" zero-page="0.875" dyn-mem="0.25" height="2" >
+      <input id="0" name="A" type="control" />
+      <input id="1" name="B" type="control" />
+      <output id="0" name="A&gt;=B" type="logic" />
+    </module>
+    <module id="90" short-name="NoteSeqB" cycles="1.4375" prog-mem="1.15625" x-mem="0.5625" y-mem="1.4375" zero-page="3.5" dyn-mem="1.28125" height="9" >
+      <input id="0" name="clock" type="logic" />
+      <input id="1" name="reset" type="logic" />
+      <output id="0" name="out" type="control" />
+      <output id="1" name="sync" type="logic" />
+      <output id="2" name="link" type="logic" />
+      <output id="3" name="gclk" type="logic" />
+      <custom id="0" name="zoomfactor" min="1" max="6" />
+      <custom id="1" name="sliderposition" min="6" max="117" />
+      <parameter id="0" name="note 1" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="note 2" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="note 3" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="note 4" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="note 5" min="0" max="127" bit-count="7" />
+      <parameter id="5" name="note 6" min="0" max="127" bit-count="7" />
+      <parameter id="6" name="note 7" min="0" max="127" bit-count="7" />
+      <parameter id="7" name="note 8" min="0" max="127" bit-count="7" />
+      <parameter id="8" name="note 9" min="0" max="127" bit-count="7" />
+      <parameter id="9" name="note 10" min="0" max="127" bit-count="7" />
+      <parameter id="10" name="note 11" min="0" max="127" bit-count="7" />
+      <parameter id="11" name="note 12" min="0" max="127" bit-count="7" />
+      <parameter id="12" name="note 13" min="0" max="127" bit-count="7" />
+      <parameter id="13" name="note 14" min="0" max="127" bit-count="7" />
+      <parameter id="14" name="note 15" min="0" max="127" bit-count="7" />
+      <parameter id="15" name="note 16" min="0" max="127" bit-count="7" />
+      <parameter id="16" name="step" min="0" max="127" bit-count="7" />
+      <parameter id="17" name="currentstep" min="0" max="16" bit-count="5" />
+      <parameter id="18" name="record" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="19" name="play" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="20" name="loop" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="91" short-name="CtrlSeq" cycles="1.4375" prog-mem="1.15625" x-mem="0.5625" y-mem="1.5" zero-page="2.625" dyn-mem="1.15625" height="7" >
+      <input id="0" name="clock" type="logic" />
+      <input id="1" name="reset" type="logic" />
+      <output id="0" name="out" type="control" />
+      <output id="1" name="sync" type="logic" />
+      <output id="2" name="link" type="logic" />
+      <parameter id="0" name="ctrl 1" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="ctrl 2" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="ctrl 3" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="ctrl 4" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="ctrl 5" min="0" max="127" bit-count="7" />
+      <parameter id="5" name="ctrl 6" min="0" max="127" bit-count="7" />
+      <parameter id="6" name="ctrl 7" min="0" max="127" bit-count="7" />
+      <parameter id="7" name="ctrl 8" min="0" max="127" bit-count="7" />
+      <parameter id="8" name="ctrl 9" min="0" max="127" bit-count="7" />
+      <parameter id="9" name="ctrl 10" min="0" max="127" bit-count="7" />
+      <parameter id="10" name="ctrl 11" min="0" max="127" bit-count="7" />
+      <parameter id="11" name="ctrl 12" min="0" max="127" bit-count="7" />
+      <parameter id="12" name="ctrl 13" min="0" max="127" bit-count="7" />
+      <parameter id="13" name="ctrl 14" min="0" max="127" bit-count="7" />
+      <parameter id="14" name="ctrl 15" min="0" max="127" bit-count="7" />
+      <parameter id="15" name="ctrl 16" min="0" max="127" bit-count="7" />
+      <parameter id="16" name="step" min="0" max="127" bit-count="7" />
+      <parameter id="17" name="uni" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="18" name="loop" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="92" short-name="FilterF" cycles="5.53125" prog-mem="2.0" x-mem="0.6875" y-mem="0.6875" zero-page="0.875" dyn-mem="0.59375" height="6" >
+      <input id="0" name="freq mod 1" type="control" />
+      <input id="1" name="freq mod 2" type="control" />
+      <input id="2" name="in" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <custom id="0" name="freq display units" min="0" max="1" />
+      <parameter id="0" name="frequency" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="kbt" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="resonance" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="freq mod 1" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="freq mod 2" min="0" max="127" bit-count="7" />
+      <parameter id="5" name="slope" min="0" max="2" bit-count="2" />
+      <parameter id="6" name="bypass" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="94" short-name="StereoChorus" cycles="9.125" prog-mem="3.0" x-mem="18.09375" y-mem="10.6875" zero-page="1.75" dyn-mem="0.375" height="3" >
+      <input id="0" name="in" type="audio" />
+      <output id="0" name="outleft" type="audio" />
+      <output id="1" name="outright" type="audio" />
+      <parameter id="0" name="detune" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="amount" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="bypass" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="95" short-name="PercOsc" cycles="4.875" prog-mem="1.53125" x-mem="0.5" y-mem="0.5" zero-page="0.875" dyn-mem="0.59375" height="4" >
+      <input id="0" name="trig" type="audio" />
+      <input id="1" name="amp" type="audio" />
+      <input id="2" name="pitchmod" type="control" />
+      <output id="0" name="out" type="audio" />
+      <custom id="0" name="freq display units" min="0" max="1" />
+      <parameter id="0" name="pitch" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="click" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="decay" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="punch" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="4" name="pitchmod" min="0" max="127" bit-count="7" />
+      <parameter id="5" name="pitchfine" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="6" name="mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="96" short-name="FormantOsc" cycles="9.0625" prog-mem="2.53125" x-mem="0.5625" y-mem="0.5" zero-page="1.75" dyn-mem="0.59375" height="4" >
+      <input id="0" name="pitch mod 1" type="control" />
+      <input id="1" name="pitch mod 2" type="control" />
+      <input id="2" name="timbre" type="control" />
+      <output id="0" name="out" type="audio" />
+      <output id="1" name="slave" type="slave" />
+      <custom id="0" name="freq display units" min="0" max="1" />
+      <parameter id="0" name="pitch" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="pitch fine" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="2" name="kbt" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="3" name="mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="4" name="timbre" min="0" max="127" bit-count="7" />
+      <parameter id="5" name="pitch mod 1" min="0" max="127" bit-count="7" />
+      <parameter id="6" name="pitch mod 2" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="97" short-name="MasterOsc" cycles="0.78125" prog-mem="0.6875" x-mem="0.21875" y-mem="0.15625" zero-page="0.875" dyn-mem="0.5" height="3" >
+      <input id="0" name="pitch mod 1" type="control" />
+      <input id="1" name="pitch mod 2" type="control" />
+      <output id="0" name="slave" type="slave" />
+      <custom id="0" name="freq display units" min="0" max="1" />
+      <parameter id="0" name="pitch" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="pitch fine" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="2" name="kbt" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="3" name="pitch mod 1" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="pitch mod 2" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="98" short-name="KeyQuant" cycles="1.34375" prog-mem="1.1875" x-mem="1.03125" y-mem="1.03125" zero-page="0.875" dyn-mem="0.90625" height="4" >
+      <input id="0" name="in" type="control" />
+      <output id="0" name="out" type="control" />
+      <parameter id="0" name="range" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="1" name="cont" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="2" name="E" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="3" name="F" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="4" name="F#" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="5" name="G" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="6" name="G#" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="7" name="A" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="8" name="Bb" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="9" name="B" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="10" name="C" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="11" name="C#" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="12" name="D" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="13" name="D#" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="99" short-name="PatternGen" cycles="2.34375" prog-mem="1.53125" x-mem="0.5" y-mem="0.34375" zero-page="0.875" dyn-mem="0.46875" height="4" >
+      <input id="0" name="clock" type="logic" />
+      <input id="1" name="reset" type="logic" />
+      <input id="2" name="pattern &amp; bank" type="control" />
+      <output id="0" name="out" type="control" />
+      <parameter id="0" name="pattern" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="bank" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="low delta" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="3" name="step" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="mono" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="100" short-name="KeybSplit" cycles="0.79" prog-mem="1.0" x-mem="1.0" y-mem="1.0" zero-page="3.0" dyn-mem="1.0" height="3" >
+      <input id="0" name="note" type="control" />
+      <input id="1" name="gate" type="logic" />
+      <input id="2" name="vel" type="control" />
+      <output id="0" name="note" type="control" />
+      <output id="1" name="gate" type="logic" />
+      <output id="2" name="vel" type="control" />
+      <parameter id="0" name="lower" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="upper" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="102" short-name="Phaser" cycles="12.5625" prog-mem="3.40625" x-mem="1.15625" y-mem="1.09375" zero-page="0.875" dyn-mem="0.78125" height="7" >
+      <input id="0" name="in" type="audio" />
+      <input id="1" name="center freq mod" type="control" />
+      <input id="2" name="spread mod" type="control" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="rate" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="lfo" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="2" name="center freq mod" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="center freq" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="spread mod" min="0" max="127" bit-count="7" />
+      <parameter id="5" name="feedback" min="0" max="127" bit-count="7" />
+      <parameter id="6" name="peaks" min="0" max="5" bit-count="3" />
+      <parameter id="7" name="spread" min="0" max="127" bit-count="7" />
+      <parameter id="8" name="bypass" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="9" name="depth" min="0" max="127" bit-count="7" />
+      <parameter id="10" name="inlevel" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="103" short-name="EqMid" cycles="3.34375" prog-mem="1.0625" x-mem="0.34375" y-mem="0.5625" zero-page="0.875" dyn-mem="0.46875" height="4" >
+      <input id="0" name="in" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="freq" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="gain" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="bandwidth" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="bypass" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="4" name="in level" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="104" short-name="EqShelving" cycles="2.4375" prog-mem="0.5625" x-mem="0.21875" y-mem="0.15625" zero-page="0.875" dyn-mem="0.46875" height="4" >
+      <input id="0" name="in" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="freq" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="gain" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="mode" min="0" max="1" bit-count="1" />
+      <parameter id="3" name="bypass" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="4" name="in level" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="105" short-name="Expander" cycles="8.28125" prog-mem="1.8125" x-mem="0.6875" y-mem="0.625" zero-page="1.75" dyn-mem="0.6875" height="7" >
+      <input id="0" name="in left" type="audio" />
+      <input id="1" name="in right" type="audio" />
+      <input id="2" name="sidechain" type="audio" />
+      <output id="0" name="out left" type="audio" />
+      <output id="1" name="out right" type="audio" />
+      <parameter id="0" name="attack" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="release" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="treshold" min="0" max="84" bit-count="7" />
+      <parameter id="3" name="ratio" min="0" max="66" bit-count="7" />
+      <parameter id="4" name="gate" min="0" max="72" bit-count="7" />
+      <parameter id="5" name="hold" min="0" max="127" bit-count="7" />
+      <parameter id="6" name="sidechain activation" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="7" name="sidechain monitor" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="8" name="bypass" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="106" short-name="OscSineBank" cycles="16.78125" prog-mem="3.5625" x-mem="0.84375" y-mem="2.25" zero-page="0.875" dyn-mem="1.40625" height="10" >
+      <input id="0" name="master" type="slave" />
+      <input id="1" name="mixin" type="audio" />
+      <input id="2" name="sync" type="audio" />
+      <input id="3" name="osc1 am" type="audio" />
+      <input id="4" name="osc2 am" type="audio" />
+      <input id="5" name="osc3 am" type="audio" />
+      <input id="6" name="osc4 am" type="audio" />
+      <input id="7" name="osc5 am" type="audio" />
+      <input id="8" name="osc6 am" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="osc1 coarse" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="osc1 fine" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="2" name="osc1 level" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="osc2 coarse" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="osc2 fine" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="5" name="osc2 level" min="0" max="127" bit-count="7" />
+      <parameter id="6" name="osc3 coarse" min="0" max="127" bit-count="7" />
+      <parameter id="7" name="osc3 fine" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="8" name="osc3 level" min="0" max="127" bit-count="7" />
+      <parameter id="9" name="osc4 coarse" min="0" max="127" bit-count="7" />
+      <parameter id="10" name="osc4 fine" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="11" name="osc4 level" min="0" max="127" bit-count="7" />
+      <parameter id="12" name="osc5 coarse" min="0" max="127" bit-count="7" />
+      <parameter id="13" name="osc5 fine" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="14" name="osc5 level" min="0" max="127" bit-count="7" />
+      <parameter id="15" name="osc6 coarse" min="0" max="127" bit-count="7" />
+      <parameter id="16" name="osc6 fine" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="17" name="osc6 level" min="0" max="127" bit-count="7" />
+      <parameter id="18" name="osc1 mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="19" name="osc2 mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="20" name="osc3 mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="21" name="osc4 mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="22" name="osc5 mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="23" name="osc6 mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="107" short-name="SpectralOsc" cycles="7.90625" prog-mem="2.40625" x-mem="0.5" y-mem="0.75" zero-page="1.75" dyn-mem="0.75" height="5" >
+      <input id="0" name="fma" type="audio" />
+      <input id="1" name="pitch mod 1" type="control" />
+      <input id="2" name="pitch mod 2" type="control" />
+      <input id="3" name="spectral shape mod" type="control" />
+      <output id="0" name="out" type="audio" />
+      <output id="1" name="slave" type="slave" />
+      <custom id="0" name="freq display units" min="0" max="1" />
+      <parameter id="0" name="freq coarse" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="freq fine" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+      <parameter id="2" name="spectral shape" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="partials" min="0" max="1" bit-count="1" />
+      <parameter id="4" name="pitch mod 1" min="0" max="127" bit-count="7" />
+      <parameter id="5" name="pitch mod 2" min="0" max="127" bit-count="7" />
+      <parameter id="6" name="fma" min="0" max="127" bit-count="7" />
+      <parameter id="7" name="spectral shape mod" min="0" max="127" bit-count="7" />
+      <parameter id="8" name="kbt" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="9" name="mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="108" short-name="Vocoder" cycles="48.9375" prog-mem="34.21875" x-mem="23.78125" y-mem="26.71875" zero-page="0.875" dyn-mem="15.0" height="8" >
+      <input id="0" name="control" type="audio" />
+      <input id="1" name="in" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="band 1" min="0" max="16" bit-count="5" />
+      <parameter id="1" name="band 2" min="0" max="16" bit-count="5" />
+      <parameter id="2" name="band 3" min="0" max="16" bit-count="5" />
+      <parameter id="3" name="band 4" min="0" max="16" bit-count="5" />
+      <parameter id="4" name="band 5" min="0" max="16" bit-count="5" />
+      <parameter id="5" name="band 6" min="0" max="16" bit-count="5" />
+      <parameter id="6" name="band 7" min="0" max="16" bit-count="5" />
+      <parameter id="7" name="band 8" min="0" max="16" bit-count="5" />
+      <parameter id="8" name="band 9" min="0" max="16" bit-count="5" />
+      <parameter id="9" name="band 10" min="0" max="16" bit-count="5" />
+      <parameter id="10" name="band 11" min="0" max="16" bit-count="5" />
+      <parameter id="11" name="band 12" min="0" max="16" bit-count="5" />
+      <parameter id="12" name="band 13" min="0" max="16" bit-count="5" />
+      <parameter id="13" name="band 14" min="0" max="16" bit-count="5" />
+      <parameter id="14" name="band 15" min="0" max="16" bit-count="5" />
+      <parameter id="15" name="band 16" min="0" max="16" bit-count="5" />
+      <parameter id="16" name="outgain" min="0" max="127" bit-count="7" />
+      <parameter id="17" name="high freq emphasis" min="0" max="1" bit-count="1" />
+      <parameter id="18" name="monitor" min="0" max="1" bit-count="1" />
+    </module>
+    <module id="110" short-name="RandomGen" cycles="1.4375" prog-mem="1.1875" x-mem="0.5" y-mem="0.34375" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="master" type="slave" />
+      <output id="0" name="out" type="control" />
+      <custom id="0" name="freq display units" min="0" max="1" />
+      <parameter id="0" name="rate" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="111" short-name="LevMult" cycles="0.53125" prog-mem="0.15625" x-mem="0.09375" y-mem="0.0" zero-page="0.875" dyn-mem="0.34375" height="2" >
+      <input id="0" name="in" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="multiplier" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="unipolar" min="0" max="1" bit-count="1" />
+    </module>
+    <module id="112" short-name="LevAdd" cycles="0.53125" prog-mem="0.15625" x-mem="0.09375" y-mem="0.0" zero-page="0.875" dyn-mem="0.34375" height="2" >
+      <input id="0" name="in" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="offset" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="unipolar" min="0" max="1" bit-count="1" />
+    </module>
+    <module id="113" short-name="1to2Fade" cycles="0.78125" prog-mem="0.21875" x-mem="0.09375" y-mem="0.09375" zero-page="1.75" dyn-mem="0.28125" height="2" >
+      <input id="0" name="in" type="audio" />
+      <output id="0" name="out 1" type="audio" />
+      <output id="1" name="out 2" type="audio" />
+      <parameter id="0" name="fade" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+    </module>
+    <module id="114" short-name="2to1Fade" cycles="0.78125" prog-mem="0.21875" x-mem="0.09375" y-mem="0.0" zero-page="0.875" dyn-mem="0.28125" height="2" >
+      <input id="0" name="in 1" type="audio" />
+      <input id="1" name="in 2" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="fade" min="0" max="127" bit-count="7" use-substitution="offset-64" />
+    </module>
+    <module id="115" short-name="NoteVelScal" cycles="0.875" prog-mem="0.78125" x-mem="0.34375" y-mem="0.34375" zero-page="0.875" dyn-mem="0.4375" height="4" >
+      <input id="0" name="velocity" type="control" />
+      <input id="1" name="note" type="control" />
+      <output id="0" name="out" type="control" />
+      <parameter id="0" name="velocity sensitivity" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="left gain" min="0" max="48" bit-count="6" />
+      <parameter id="2" name="breakpoint" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="right gain" min="0" max="48" bit-count="6" />
+    </module>
+    <module id="117" short-name="RingMod" cycles="1.90625" prog-mem="0.4375" x-mem="0.09375" y-mem="0.15625" zero-page="0.875" dyn-mem="0.34375" height="3" >
+      <input id="0" name="in" type="audio" />
+      <input id="1" name="modulation" type="audio" />
+      <input id="2" name="modulationdepth" type="audio" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="ringmod depth mod" min="0" max="127" bit-count="7" />
+      <parameter id="1" name="ringmod depth" min="0" max="127" bit-count="7" />
+    </module>
+    <module id="118" short-name="Digitizer" cycles="3.4375" prog-mem="0.78125" x-mem="0.28125" y-mem="0.21875" zero-page="0.4375" dyn-mem="0.46875" height="3" >
+      <input id="0" name="in" type="audio" />
+      <input id="1" name="sample rate mod" type="control" />
+      <output id="0" name="out" type="audio" />
+      <parameter id="0" name="quant bits" min="0" max="11" bit-count="4" />
+      <parameter id="1" name="sample rate" min="0" max="127" bit-count="7" />
+      <parameter id="2" name="sample rate mod" min="0" max="127" bit-count="7" />
+      <parameter id="3" name="quant off" min="0" max="1" bit-count="1" use-substitution="off-on" />
+      <parameter id="4" name="sampling off" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+    <module id="127" short-name="PolyAreaIn" limit="1" cva-only="true" cycles="2.2" prog-mem="1.0" x-mem="1.0" y-mem="1.0" zero-page="2.0" dyn-mem="1.0" height="2" >
+      <output id="0" name="Left" type="audio" />
+      <output id="1" name="Right" type="audio" />
+      <parameter id="0" name="+6db" min="0" max="1" bit-count="1" use-substitution="off-on" />
+    </module>
+  </modules>
+</module-description>

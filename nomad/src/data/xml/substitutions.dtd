@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated from substitutions.xml by XMLBuddy -->
+<!ELEMENT if EMPTY>
+<!ATTLIST if
+	replace-with CDATA #REQUIRED
+	value-is NMTOKEN #REQUIRED
+>
+<!ELEMENT item (#PCDATA)>
+<!ELEMENT list (item+)>
+<!ATTLIST list id ID #REQUIRED>
+<!ELEMENT substitutions (transform+,use-implementation+,list+)>
+<!ELEMENT transform (if?)>
+<!ATTLIST transform
+	factor NMTOKEN #IMPLIED
+	id ID #REQUIRED
+	offset NMTOKEN #IMPLIED
+	praefix CDATA #IMPLIED
+	suffix CDATA #IMPLIED
+>
+<!ELEMENT use-implementation EMPTY>
+<!ATTLIST use-implementation
+	class ID #REQUIRED
+	id NMTOKEN #REQUIRED
+>

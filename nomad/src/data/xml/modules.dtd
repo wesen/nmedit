@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated from modules.xml by XMLBuddy -->
+<!ELEMENT custom EMPTY>
+<!ATTLIST custom
+	id NMTOKEN #REQUIRED
+	max NMTOKEN #REQUIRED
+	min NMTOKEN #REQUIRED
+	name CDATA #REQUIRED
+>
+<!ELEMENT group (section+)>
+<!ATTLIST group
+	name CDATA #REQUIRED
+	short-name CDATA #IMPLIED
+>
+<!ELEMENT input EMPTY>
+<!ATTLIST input
+	id NMTOKEN #REQUIRED
+	name CDATA #REQUIRED
+	type (audio|control|logic|slave) #REQUIRED
+>
+<!ELEMENT insert EMPTY>
+<!ATTLIST insert module-id NMTOKEN #REQUIRED>
+<!ELEMENT module (custom|input|output|parameter)*>
+<!ATTLIST module
+	cva-only NMTOKEN #IMPLIED
+	cycles NMTOKEN #REQUIRED
+	dyn-mem NMTOKEN #REQUIRED
+	height NMTOKEN #REQUIRED
+	id NMTOKEN #REQUIRED
+	limit NMTOKEN #IMPLIED
+	prog-mem NMTOKEN #REQUIRED
+	remarks CDATA #IMPLIED
+	short-name CDATA #REQUIRED
+	x-mem NMTOKEN #REQUIRED
+	y-mem NMTOKEN #REQUIRED
+	zero-page NMTOKEN #REQUIRED
+>
+<!ELEMENT module-description (structure,modules)>
+<!ELEMENT modules (module+)>
+<!ELEMENT output EMPTY>
+<!ATTLIST output
+	id NMTOKEN #REQUIRED
+	name CDATA #REQUIRED
+	type (audio|control|logic|slave) #REQUIRED
+>
+<!ELEMENT parameter EMPTY>
+<!ATTLIST parameter
+	bit-count NMTOKEN #REQUIRED
+	id NMTOKEN #REQUIRED
+	max NMTOKEN #REQUIRED
+	min NMTOKEN #REQUIRED
+	name CDATA #REQUIRED
+	default NMTOKEN #IMPLIED
+	use-substitution CDATA #IMPLIED
+>
+<!ELEMENT section (insert+)>
+<!ELEMENT structure (group+)>
