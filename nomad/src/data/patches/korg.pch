@@ -1,0 +1,145 @@
+[Header]
+Version=Nord Modular patch 3.0
+0 127 0 127 2 0 0 32 403 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+[/Header]
+[ModuleDump]
+1 
+1 5 2 23 
+2 11 0 0 
+3 57 1 6 
+4 19 1 19 
+5 82 0 13 
+6 82 1 13 
+7 57 0 11 
+8 57 1 11 
+9 57 0 15 
+10 7 1 0 
+11 49 2 0 
+12 20 1 21 
+13 1 0 19 
+14 49 2 5 
+[/ModuleDump]
+[ModuleDump]
+0 
+1 127 0 0 
+2 19 1 0 
+3 50 1 2 
+4 19 1 6 
+6 4 2 6 
+5 94 2 3 
+[/ModuleDump]
+[CurrentNoteDump]
+60 84 28 60 84 28 
+[/CurrentNoteDump]
+[CableDump]
+1 
+2 12 1 0 13 1 1 
+0 8 0 0 10 0 1 
+0 12 0 0 4 0 1 
+0 4 1 0 6 0 1 
+0 4 0 0 9 0 1 
+0 7 0 0 2 0 1 
+0 3 0 0 2 0 1 
+0 5 0 0 7 0 1 
+0 9 0 0 5 0 1 
+3 2 0 0 10 1 1 
+0 10 0 0 3 0 1 
+0 14 1 0 11 0 1 
+1 14 0 0 12 0 1 
+0 11 1 0 12 1 1 
+0 1 0 0 14 2 1 
+0 6 0 0 8 0 1 
+[/CableDump]
+[CableDump]
+0 
+0 2 0 0 1 0 1 
+0 3 0 0 2 0 1 
+0 4 0 0 3 0 1 
+0 4 2 0 3 2 1 
+0 2 2 0 4 0 1 
+0 5 0 0 4 0 1 
+0 6 0 0 5 0 1 
+0 6 1 0 5 1 1 
+[/CableDump]
+[ParameterDump]
+1 
+1 5 3 115 4 0 
+2 11 4 53 64 0 0 
+3 57 2 0 1 
+4 19 3 127 127 127 
+5 82 1 1 
+6 82 1 1 
+7 57 2 0 1 
+8 57 2 0 1 
+9 57 2 0 1 
+10 7 10 86 64 64 64 2 0 0 0 0 0 
+11 49 4 90 64 31 0 
+12 20 6 0 44 77 127 56 0 
+14 49 4 38 64 26 50 
+[/ParameterDump]
+[ParameterDump]
+0 
+1 127 1 0 
+2 19 3 127 127 115 
+3 50 3 81 50 1 
+4 19 3 127 127 95 
+5 94 3 64 64 0 
+6 4 3 127 0 0 
+[/ParameterDump]
+[MorphMapDump]
+127 0 0 0 
+1 1 0 1 -38 1 2 0 2 39 1 2 1 2 0 1 14 2 0 84 
+[/MorphMapDump]
+[KeyboardAssignment]
+0 1 2 0 
+[/KeyboardAssignment]
+[KnobMapDump]
+1 11 0 2 
+2 1 0 1 
+[/KnobMapDump]
+[CtrlMapDump]
+1 10 0 107 
+1 14 0 1 
+[/CtrlMapDump]
+[CustomDump]
+1 
+2 1 0 
+10 1 0 
+11 1 0 
+14 1 0 
+[/CustomDump]
+[CustomDump]
+0 
+3 1 0 
+[/CustomDump]
+[NameDump]
+1 
+1 1 output1
+2 Oscilator 1
+3 InvLevShift4
+4 Korg MS Square
+5 Diode1
+6 Diode2
+7 InvLevShift1
+8 InvLevShift2
+9 InvLevShift3
+10 Oscilator 2
+11 MS20 HP
+12 ADSR-Env1
+13 Keyboard1
+14 MS20 LP
+[/NameDump]
+[NameDump]
+0 
+1 PolyAreaIn1
+2 Mixer2
+3 HP Filter
+4 Mixer3
+5 StChorus1
+6 2 output1
+[/NameDump]
+[Notes]
+Hoi,
+Dit is een mooie Korg patch!
+Vindt je ook niet?
+[/Notes]
