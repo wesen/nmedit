@@ -49,6 +49,7 @@ specialize_std_list(Note*);
 %typemap(javabase) PatchException "java.lang.Exception"
 
 PATCHEXCEPTION(Patch::Patch);
+PPFEXCEPTION(ModuleSection::usePPFFile);
 
 /* Directors ----------------------------------------------------- */
 
