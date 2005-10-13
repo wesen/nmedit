@@ -104,18 +104,27 @@ public class Nomad extends JFrame {
 	}
 	
 	public Nomad() {
-
+		// load substitutions
 		String loadfile = "src/data/xml/substitutions.xml"; 
 		Run.statusMessage(loadfile);
 		XMLSubstitutionReader subsReader = new XMLSubstitutionReader(loadfile);
-		loadfile = "src/data/xml/modules.xml"; 
+		
+		// load module descriptors
+		loadfile = "src/data/xml/modules.xml";
 		Run.statusMessage(loadfile);
-		ModuleDescriptions moduleDescriptions = new ModuleDescriptions(loadfile, subsReader);
-		loadfile = "slice:toolbar-icons.gif"; 
-		Run.statusMessage(loadfile);
-		moduleDescriptions.loadIconsFromSlice("src/data/images/toolbar-icons.gif");
+		ModuleDescriptions.init(loadfile, subsReader);
+
+		// load connector icons
+		Run.statusMessage("slice:io-icons.gif");
+		ModuleDescriptions.model.loadConnectorIconsFromSlice("src/data/images/io-icons.gif");
+		
+		// load toolbar icons
+		Run.statusMessage("slice:toolbar-icons.gif");
+		ModuleDescriptions.model.loadModuleIconsFromSlice("src/data/images/toolbar-icons.gif");
+		
+		// build toolbar
 		Run.statusMessage("building toolbar");
-		ModuleToolbar moduleToolbar = new ModuleToolbar(moduleDescriptions); 
+		ModuleToolbar moduleToolbar = new ModuleToolbar();
 		
         ToolTipManager.sharedInstance().setInitialDelay(0);
         

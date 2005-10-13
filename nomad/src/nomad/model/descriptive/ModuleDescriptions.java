@@ -22,7 +22,13 @@ public class ModuleDescriptions {
 	private HashMap dmodules = new HashMap();
 	private Vector dgroups = new Vector();
 	
-	public void loadIconsFromSlice(String slice) {
+	public static ModuleDescriptions model = null;
+	
+	public static void init(String xmlfile, XMLSubstitutionReader subs) {
+		model = new ModuleDescriptions(xmlfile, subs);
+	}
+	
+	public void loadModuleIconsFromSlice(String slice) {
 		SliceImage simage = SliceImage.createSliceImage(slice);
 		if (simage!=null) {
 			for (Iterator iter=simage.getKeys();iter.hasNext();) {
@@ -30,6 +36,10 @@ public class ModuleDescriptions {
 				this.getModuleByKey(key).setIcon(simage.getSlice(key));
 			}
 		}
+	}
+	
+	public void loadConnectorIconsFromSlice(String slice) {
+		DConnector.loadSlice(slice);
 	}
 
 	public DModule getModuleByKey(String key) {
@@ -130,10 +140,12 @@ public class ModuleDescriptions {
 		String moduleId;
 		String moduleName;
 		String shortname;
+		int height=0;
 
 		try {
 			moduleId = att.getAttribute("id");
 			shortname = att.getAttribute("short-name");
+			height = att.getIntegerAttribute("height");
 		} catch (XMLAttributeValidationException e) {
 			e.printStackTrace();
 			return;
@@ -142,6 +154,7 @@ public class ModuleDescriptions {
 
 		DModule module = new DModule(null, moduleName);
 		module.setModuleID(moduleId);
+		module.setHeight(height);
 
 		// load not required attributes
 		module.setShortName(shortname);

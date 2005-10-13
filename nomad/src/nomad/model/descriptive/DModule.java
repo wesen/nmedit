@@ -20,6 +20,7 @@ public class DModule {
 	private double mdProgMem=0;
 	private double mdDynMem=0;
 	private double mdZeroPage=0;
+	private int mdHeight=1;
 
 	public DModule(DSection parent, String name) {
 		this.parent = parent;
@@ -110,6 +111,14 @@ public class DModule {
 
 	void setProgMem(double mdProgMem) {
 		this.mdProgMem = mdProgMem;
+	}
+
+	public int getHeight() {
+		return mdHeight;
+	}
+
+	void setHeight(int height) {
+		this.mdHeight = height;
 	}
 
 	public double getXmem() {

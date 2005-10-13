@@ -18,6 +18,10 @@ public class ModuleToolbar extends JTabbedPane
   private JPanel[] paneGroups;
   private Vector buttons;
 
+  public ModuleToolbar() {
+	  this(ModuleDescriptions.model);
+  }
+
   public ModuleToolbar(ModuleDescriptions moduleDescriptions)
   {
     super(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
