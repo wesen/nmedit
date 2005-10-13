@@ -13,7 +13,7 @@ public class DModule {
 	private String name=null;
 	private String shortname=null;
 
-	private String mdID=null;
+	private int mdID=0;
 	private double mdCycles=0;
 	private double mdXmem=0;
 	private double mdYmem=0;
@@ -97,11 +97,11 @@ public class DModule {
 		this.mdDynMem = mdDynMem;
 	}
 
-	public String getModuleID() {
+	public int getModuleID() {
 		return mdID;
 	}
 
-	public void setModuleID(String id) {
+	public void setModuleID(int id) {
 		mdID=id;
 	}
 
@@ -143,6 +143,14 @@ public class DModule {
 
 	void setZeroPage(double mdZeroPage) {
 		this.mdZeroPage = mdZeroPage;
+	}
+
+	public String getKey() {
+		return DModule.getKeyFromId(mdID);
+	}
+	
+	public static String getKeyFromId(int id) {
+		return Integer.toString(id);
 	}
 	
 }

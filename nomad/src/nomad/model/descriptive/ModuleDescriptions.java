@@ -45,9 +45,9 @@ public class ModuleDescriptions {
 	public DModule getModuleByKey(String key) {
 		return (DModule) dmodules.get(key);
 	}
-	
+
 	public DModule getModuleById(int id) {
-		return getModuleByKey(Integer.toString(id));
+		return getModuleByKey(DModule.getKeyFromId(id));
 	}
 	
 	public DGroup getGroup(int index) {
@@ -137,13 +137,13 @@ public class ModuleDescriptions {
 	private void loadModule(Node moduleNode, XMLSubstitutionReader subs) {
 		XMLAttributeReader att = new XMLAttributeReader(moduleNode);
 
-		String moduleId;
+		int moduleId;
 		String moduleName;
 		String shortname;
 		int height=0;
 
 		try {
-			moduleId = att.getAttribute("id");
+			moduleId = att.getIntegerAttribute("id");
 			shortname = att.getAttribute("short-name");
 			height = att.getIntegerAttribute("height");
 		} catch (XMLAttributeValidationException e) {
@@ -178,17 +178,17 @@ public class ModuleDescriptions {
 		}
 		
 		// finally store module
-		dmodules.put(moduleId, module);
+		dmodules.put(module.getKey(), module);
 	}
 
 	private void loadConnectionElement(DModule module, Node element, int connection_type) {
 		XMLAttributeReader att = new XMLAttributeReader(element);
 
-		String connectionId;
+		int connectionId;
 		String connectionType;
 		String connectionName;
 		try {
-			connectionId = att.getAttribute("id");
+			connectionId = att.getIntegerAttribute("id");
 			connectionType = att.getNamedAttribute("type", new String[]{"audio","control","logic","slave"});
 			connectionName = att.getAttribute("name");
 		} catch (XMLAttributeValidationException e) {
@@ -211,13 +211,13 @@ public class ModuleDescriptions {
 		XMLAttributeReader att = new XMLAttributeReader(elem);
 
 		// required
-		String pmId;
+		int pmId;
 		String pmName;
 		int pmMin;
 		int pmMax;
 
 		try {
-			pmId = att.getAttribute("id");
+			pmId = att.getIntegerAttribute("id");
 			pmName = att.getAttribute("name");
 			pmMin = att.getIntegerAttribute("min");
 			pmMax = att.getIntegerAttribute("max");

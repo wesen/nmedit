@@ -8,20 +8,20 @@ public class DParameter {
 	
 	private Substitution pmSubstitution;
 	private int pmDefaultValue=0;
-	private String pmId;
+	private int pmId;
 	private String pmName;
 	private int pmMinValue=0;
 	private int pmMaxValue=2;
 	private int pmBitCount=-1;
 	
 	public DParameter(DModule parent,
-		int minValue, int maxValue, String id, String name) {
+		int minValue, int maxValue, int id, String name) {
 		this(parent,Substitution.DEFAULT_SUBSTITUTION, minValue, maxValue, -1, id, name);
 	}
 
 	public DParameter(DModule parent,
 		Substitution substitution, int minValue, int maxValue, int bitCount,
-		String id, String name) {
+		int id, String name) {
 		if (parent==null)
 			throw new NullPointerException("'parent' must not be null");
 		this.parent = parent;
@@ -62,7 +62,7 @@ public class DParameter {
 		this.pmDefaultValue = pmDefaultValue;
 	}
 
-	public String getId() {
+	public int getId() {
 		return pmId;
 	}
 

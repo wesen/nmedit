@@ -22,7 +22,7 @@ public class DConnector {
 	private int cnType;
 	private int cnSignal;
 	private String cnName;
-	private String cnId;
+	private int cnId;
 	
 	private static Image[][][] images = null;
 	
@@ -51,7 +51,7 @@ public class DConnector {
 	}
 	
 	public DConnector(DModule parent,
-			String connectionId, int connectionType, 
+			int connectionId, int connectionType, 
 			int connectionSignal, String name) {
 		this.parent = parent;
 		if (parent==null) 
@@ -127,7 +127,7 @@ public class DConnector {
 		+",signal:"+getSignalName()+"]";
 	}
 
-	public String getId() {
+	public int getId() {
 		return cnId;
 	}
 	
