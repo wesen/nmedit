@@ -2,6 +2,9 @@ package nomad.application;
 
 import java.awt.Point;
 
+/**
+ * @author Christian Schneider
+ */
 public class Run
 {
   /**
@@ -16,6 +19,10 @@ public class Run
     SplashWindow.disposeSplash();
   }
   
+  /**
+   * Sets the statusMessage property of the splash window object.
+   * @param message the status message 
+   */
   public static void statusMessage(String message) {
 	  SplashWindow.statusMessage(message);
   }

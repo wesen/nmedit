@@ -20,6 +20,9 @@ import java.lang.Runtime;
 import java.net.URL;
 import java.lang.InternalError;
 
+/**
+ * @author Christian Schneider
+ */
 public class SplashWindow extends Window
 {
   /**
@@ -115,6 +118,12 @@ public class SplashWindow extends Window
       bufferGraphics=buffer.getGraphics();
   }
   
+  /**
+   * Sets the statusMessage property of the splash screen instance.
+   * If the splash screen instance is null the message is written
+   * to System.out
+   * @param message the status message
+   */
   public static void statusMessage(String message) {
 	  if (instance == null)
 		  System.out.println(message);
@@ -175,11 +184,9 @@ public class SplashWindow extends Window
     }
   }
   
-  public void paintBuffer(Graphics g) {
-
+  protected void paintBuffer(Graphics g) {
       g.drawImage(image,0,0,this);
       this.drawStatus(g);
-      
   }
   
   private void updateStatus() {
@@ -198,6 +205,7 @@ public class SplashWindow extends Window
   /**
    * Open's a splash window using the specified image.
    * @param image The splash image.
+   * @param statusPosition the position of the status message
    */
   public static void splash(Image image, Point statusPosition)
   {
@@ -230,7 +238,7 @@ public class SplashWindow extends Window
   /**
    * Open's a splash window using the specified image.
    * @param imageURL The url of the splash image.
- * @param point 
+   * @param statusPosition 
    */
   public static void splash(URL imageURL, Point statusPosition)
   {
@@ -252,6 +260,7 @@ public class SplashWindow extends Window
 
   /**
    * Invokes the main method of the provided class name.
+   * @param className The class name 
    * @param args the command line arguments
    */
   public static void invokeMain(String className, String[] args)

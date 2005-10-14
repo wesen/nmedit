@@ -6,6 +6,9 @@ import javax.swing.ImageIcon;
 import nomad.model.descriptive.DModule;
 import nomad.util.MathRound;
 
+/**
+ * @author Christian Schneider
+ */
 class ModuleToolbarButton extends JButton
 {
   private DModule module;

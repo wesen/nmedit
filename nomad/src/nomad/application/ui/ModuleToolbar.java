@@ -13,15 +13,26 @@ import nomad.model.descriptive.DGroup;
 import nomad.model.descriptive.DSection;
 import nomad.model.descriptive.ModuleDescriptions;
 
+/**
+ * @author Christian Schneider
+ */
 public class ModuleToolbar extends JTabbedPane
 {
   private JPanel[] paneGroups;
   private Vector buttons;
 
+  /**
+   * Creates the ModuleToolbar using ModuleDescriptions.model
+   * @see ModuleDescriptions#model
+   */
   public ModuleToolbar() {
 	  this(ModuleDescriptions.model);
   }
 
+  /**
+   * Creates the toolbar using the specifed module descriptions.
+   * @param moduleDescriptions the descriptions
+   */
   public ModuleToolbar(ModuleDescriptions moduleDescriptions)
   {
     super(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);

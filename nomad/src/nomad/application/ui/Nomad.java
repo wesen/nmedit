@@ -22,21 +22,29 @@ import javax.swing.JTabbedPane;
 import javax.swing.ToolTipManager;
 
 import nomad.application.Run;
+import nomad.com.Synth;
+import nomad.com.SynthConnectionStateListener;
+import nomad.com.SynthException;
 import nomad.model.descriptive.ModuleDescriptions;
 import nomad.model.descriptive.substitution.XMLSubstitutionReader;
 import nomad.patch.Patch;
 
-public class Nomad extends JFrame {
+public class Nomad extends JFrame implements SynthConnectionStateListener {
     public static String creatorProgram = "nomad";
     public static String creatorVersion = "v0.1";
     public static String creatorRelease = "";
-	
+    
+    Synth synth = new Synth();
+
 	JFileChooser fileChooser = new JFileChooser("./data/patches/");
 	
 	JMenuBar menuBar = null;
 	JMenu menuFile = null;
 	JMenuItem menuExitItem,	menuNewItem, menuOpenItem, menuCloseItem, menuCloseAllItem = null;
 	JMenuItem menuSaveItem, menuSaveAsItem, menuSaveAllItem = null;
+	JMenu menuSynth = null;
+	JMenuItem menuSynthSetup = null;
+	JMenuItem menuSynthConnectionMenuItem = null;
 
 	JPanel toolPanel = null;
 	JTabbedPane tabbedPane = null;
@@ -88,6 +96,25 @@ public class Nomad extends JFrame {
 					e1.printStackTrace();
 				}
 			}
+		}
+	}
+
+	class SynthConnectionMenuItemListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			try {
+				if (!synth.isConnected())
+					synth.connect();
+				else
+					synth.disconnect();
+			} catch (SynthException cause) {
+				cause.printStackTrace();
+			}
+		}
+	}
+	
+	class SetupSynthListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			ComPortSettingsDialog.invokeDialog(synth.getCompPort());
 		}
 	}
 
@@ -156,6 +183,9 @@ public class Nomad extends JFrame {
 //        tabbedPane.add("new" + (tabbedPane.getTabCount()+1),patch.createPatch(""));
 //        tabbedPane.setSelectedComponent(patch);
 //        tabbedPane.getSelectedComponent().setName(tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
+		
+		// subscribe for connection events
+		synth.addSynthConnectionStateListener(this);
     }
 
 	public JMenuBar createMenu() {
@@ -174,12 +204,21 @@ public class Nomad extends JFrame {
 			menuExitItem = menuFile.add("Exit");
 
 		menuBar.add(menuFile);
-
+		
         menuNewItem.addActionListener(new NewListener());
         menuExitItem.addActionListener(new ExitListener());
 		menuOpenItem.addActionListener(new FileLoadListener());
 		menuSaveAsItem.addActionListener(new FileSaveAsListener());
 		menuCloseItem.addActionListener(new FileCloseListener());
+
+
+		menuSynth = new JMenu("Synth");
+			menuSynthSetup = menuSynth.add("Setup");
+			menuSynthConnectionMenuItem = menuSynth.add("Connect");
+		
+		menuBar.add(menuSynth);
+		menuSynthSetup.addActionListener(new SetupSynthListener());
+		menuSynthConnectionMenuItem.addActionListener(new SynthConnectionMenuItemListener());
 		
 		return menuBar; 
 	}
@@ -196,5 +235,11 @@ public class Nomad extends JFrame {
 		System.setProperty("swing.metalTheme", "steel");
 
 		new Nomad();
+	}
+
+	public void synthConnectionStateChanged(Synth synth) {
+		this.menuSynthConnectionMenuItem.setText(
+			synth.getCompPort().isPortOpen()?"Disconnect":"Connect"
+		);
 	}
 }
