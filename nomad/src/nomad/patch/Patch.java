@@ -11,13 +11,16 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
+import nomad.application.Run;
 import nomad.application.ui.Nomad;
-import nomad.gui.NomadModuleSection;
-import nomad.gui.NomadModuleSection.ModulesSectionType;
+import nomad.gui.ModuleSectionGUI;
+import nomad.model.descriptive.ModuleDescriptions;
+import nomad.model.descriptive.substitution.XMLSubstitutionReader;
 
 public class Patch {
     private Header header;
-    private Modules modules;
+    private ModuleSection modulesPoly;
+    private ModuleSection modulesCommon;
     private Cables cables;
     private KeyboardAssignment keyboardAssignment;
     private KnobAssignMap knobAssignMap;
@@ -32,15 +35,16 @@ public class Patch {
 	private JSplitPane splitPane;
 	private JScrollPane scrollPanePoly;
 	private JScrollPane scrollPaneCommon;
-    private NomadModuleSection desktopPanePoly;
-    private NomadModuleSection desktopPaneCommon;
+    private ModuleSectionGUI desktopPanePoly;
+    private ModuleSectionGUI desktopPaneCommon;
 
 	public Patch() {
 		patchPanel = new JPanel();
 		patchPanel.setLayout(new BorderLayout());
 
         header = new Header();
-        modules = new Modules(this);
+        modulesPoly = new ModuleSection(this, ModuleSection.ModulesSectionType.POLY);
+        modulesCommon = new ModuleSection(this, ModuleSection.ModulesSectionType.POLY);
         cables = new Cables();
         keyboardAssignment = new KeyboardAssignment();
         knobAssignMap = new KnobAssignMap();
@@ -50,8 +54,12 @@ public class Patch {
         morphMap = new MorphMap();
 	}
 	
-    public Modules getModules() {
-        return modules;
+    public ModuleSection getModulesPoly() {
+        return modulesPoly;
+    }
+    
+    public ModuleSection getModulesCommon() {
+        return modulesPoly;
     }
 
     public Cables getCables() {
@@ -62,14 +70,14 @@ public class Patch {
 
 	    loadPatch(patchFile);
 
-	    desktopPanePoly = new NomadModuleSection(ModulesSectionType.POLY);
-        desktopPaneCommon = new NomadModuleSection(ModulesSectionType.COMMON);
+	    desktopPanePoly = modulesPoly.getModuleSectionGUI();
+        desktopPaneCommon = modulesCommon.getModuleSectionGUI();
 
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         splitPane.setDividerLocation(header.getSeperator() + 1);
 
-        desktopPanePoly.setPreferredSize(new Dimension(modules.getMaxWidth(ModulesSectionType.POLY), modules.getMaxHeight(ModulesSectionType.POLY)));
-        desktopPaneCommon.setPreferredSize(new Dimension(modules.getMaxWidth(ModulesSectionType.COMMON), modules.getMaxHeight(ModulesSectionType.COMMON)));
+        desktopPanePoly.setPreferredSize(new Dimension(modulesPoly.getMaxPixWidth(), modulesPoly.getMaxPixHeight()));
+        desktopPaneCommon.setPreferredSize(new Dimension(modulesCommon.getMaxPixWidth(), modulesCommon.getMaxPixHeight()));
 
 		scrollPanePoly = new JScrollPane(desktopPanePoly); 
 		scrollPaneCommon = new JScrollPane(desktopPaneCommon);
@@ -87,21 +95,28 @@ public class Patch {
     public void addModules() {
         int i = 0;
 
-        for (Enumeration e = modules.getPoly().keys(); e.hasMoreElements();) { 
+        for (Enumeration e = modulesPoly.getModules().keys(); e.hasMoreElements();) { 
             i = ((Integer) e.nextElement()).intValue();
-            desktopPanePoly.add(modules.getModule(ModulesSectionType.POLY, i).getModuleGUI(), JLayeredPane.DEFAULT_LAYER.intValue());
+            desktopPanePoly.add(modulesPoly.getModule(i).getModuleGUI(), JLayeredPane.DEFAULT_LAYER.intValue());
         }
 
-        for (Enumeration e = modules.getCommon().keys(); e.hasMoreElements();) {
+        for (Enumeration e = modulesCommon.getModules().keys(); e.hasMoreElements();) {
             i = ((Integer) e.nextElement()).intValue();
-            desktopPaneCommon.add(modules.getModule(ModulesSectionType.COMMON, i).getModuleGUI(), JLayeredPane.DEFAULT_LAYER.intValue());
+            desktopPaneCommon.add(modulesCommon.getModule(i).getModuleGUI(), JLayeredPane.DEFAULT_LAYER.intValue());
         }
     }
 
     public void loadPatch(String fileName) {
         BufferedReader pchFile;
         String tag = new String();
-        
+
+		String loadfile = "src/data/xml/substitutions.xml"; 
+		Run.statusMessage(loadfile);
+		XMLSubstitutionReader subsReader = new XMLSubstitutionReader(loadfile);
+		loadfile = "src/data/xml/modules.xml"; 
+		Run.statusMessage(loadfile);
+		ModuleDescriptions moduleDescriptions = new ModuleDescriptions(loadfile, subsReader);
+
         patchFileName = fileName;
 
         if (!fileName.equals("")) {
@@ -112,7 +127,10 @@ public class Patch {
                         header.readHeader(pchFile);
                     else
                     if (tag.compareToIgnoreCase("[ModuleDump]") == 0)
-                        modules.readModuleDump(pchFile);
+            			if (pchFile.readLine().trim().compareTo("1") == 0)
+            				modulesPoly.readModuleDump(pchFile, moduleDescriptions);
+            			else
+            				modulesCommon.readModuleDump(pchFile, moduleDescriptions);
                     else
                     if (tag.compareToIgnoreCase("[CurrentNoteDump]") == 0)
                         currentNotes.readCurrentNoteDump(pchFile);
@@ -121,10 +139,16 @@ public class Patch {
                         cables.readCableDump(pchFile);
                     else
                     if (tag.compareToIgnoreCase("[ParameterDump]") == 0)
-                        modules.readParameterDump(pchFile);
+            			if (pchFile.readLine().trim().compareTo("1") == 0)
+            				modulesPoly.readParameterDump(pchFile);
+            			else
+            				modulesCommon.readParameterDump(pchFile);
                     else
                     if (tag.compareToIgnoreCase("[CustomDump]") == 0)
-                        modules.readCustomDump(pchFile);
+            			if (pchFile.readLine().trim().compareTo("1") == 0)
+            				modulesPoly.readCustomDump(pchFile);
+            			else
+            				modulesCommon.readCustomDump(pchFile);
                     else
                     if (tag.compareToIgnoreCase("[MorphMapDump]") == 0)
                         morphMap.readMorphMapDump(pchFile);
@@ -139,7 +163,10 @@ public class Patch {
                         controlMap.readCtrlMapDump(pchFile);
                     else
                     if (tag.compareToIgnoreCase("[NameDump]") == 0)
-                        modules.readNameDump(pchFile);
+            			if (pchFile.readLine().trim().compareTo("1") == 0)
+            				modulesPoly.readNameDump(pchFile);
+            			else
+            				modulesCommon.readNameDump(pchFile);
                     else
                     if (tag.compareToIgnoreCase("[Notes]") == 0)
                         patchNotes.readPatchNotes(pchFile);
@@ -160,16 +187,20 @@ public class Patch {
         result.append("[/Info]\r\n");
 
         result = header.createHeader(result, splitPane);
-        result = modules.createModuleDump(result);
+        result = modulesPoly.createModuleDump(result);
+        result = modulesCommon.createModuleDump(result);
         result = currentNotes.createCurrentNoteDump(result);
         result = cables.createCableDump(result);
-        result = modules.createParameterDump(result);
-        result = modules.createCustomDump(result);
+        result = modulesPoly.createParameterDump(result);
+        result = modulesCommon.createParameterDump(result);
+        result = modulesPoly.createCustomDump(result);
+        result = modulesCommon.createCustomDump(result);
         result = morphMap.createMorphMapDump(result);
         result = keyboardAssignment.createKeyboardAssignment(result);
         result = knobAssignMap.createKnobMapDump(result);
         result = controlMap.createControlMapDump(result);
-        result = modules.createNameDump(result);
+        result = modulesPoly.createNameDump(result);
+        result = modulesCommon.createNameDump(result);
         result = patchNotes.createNotes(result);
 
         return result;
