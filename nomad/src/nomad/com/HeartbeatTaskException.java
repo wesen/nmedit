@@ -5,6 +5,7 @@ package nomad.com;
  * thrown by the HeartbeatTask implementations.
  * 
  * @author Christian Schneider
+ * @hidden
  */
 public class HeartbeatTaskException extends Exception {
 

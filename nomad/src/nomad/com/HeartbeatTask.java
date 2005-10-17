@@ -124,6 +124,9 @@ public class HeartbeatTask
 		timer=null;
 	}
 	
+	/**
+	 * @hidden
+	 */
 	class TimerEventAdapter implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			try {

@@ -1,11 +1,16 @@
 package nomad.com;
 
+import nomad.com.message.MidiMessage;
+
 /**
  * The Synth manages the connection to the Nord Modular through the
  * ComPort interface.
  * 
  * @author Christian Schneider
  * @see nomad.com.ComPort
+ * @composed 1 - 1 nomad.com.ComPort
+ * @composed 0 - 1 nomad.com.HeartbeatTask
+ * @has 1 - n nomad.com.SynthListenerSubscriberList
  */
 public class Synth implements ComPortListener, HeartbeatErrorHandler {
 
@@ -144,4 +149,32 @@ public class Synth implements ComPortListener, HeartbeatErrorHandler {
 		}
 	}
 
+/** ------------------------------------------------------------------------ */	
+/*
+	  public Patch getPatch(int arg0) 
+	  public void setPatch(int arg0, Patch arg1) 
+	  public void load(int arg0, int arg1) 
+	  public void store(int arg0, int arg1)
+	  public int getActiveSlot()
+	  public void setActiveSlot(int arg0)
+	  public boolean isSlotSelected(int arg0)
+	  public void setSlotSelected(int arg0, boolean arg1) 
+	  public int getSlotVoices(int arg0)
+	  public void addListener(SynthListener arg0)
+	  public void removeListener(SynthListener arg0)
+	  public void notifyListeners(int slot, Patch patch)
+	  public void notifyListeners()
+	  public void notifyListeners(int slot)
+	  public void messageReceived(IAmMessage message)
+	  public void messageReceived(LightMessage message) 
+	  public void messageReceived(PatchMessage message)
+	  public void messageReceived(AckMessage message)
+	  public void messageReceived(PatchListMessage message)
+	  public void messageReceived(NewPatchInSlotMessage message)
+	  public void messageReceived(VoiceCountMessage message)
+	  public void messageReceived(SlotsSelectedMessage message)
+	  public void messageReceived(SlotActivatedMessage message)
+	  public void messageReceived(ParameterMessage message)
+*/
+	
 }

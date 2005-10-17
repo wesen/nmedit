@@ -6,6 +6,7 @@ import java.util.Vector;
  * List of MidiDriver objects
  * @author Christian Schneider
  * @see nomad.com.MidiDriver
+ * @has 1 - * nomad.com.MidiDriver
  */
 public class MidiDriverList {
 	

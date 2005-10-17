@@ -5,6 +5,7 @@ package nomad.com;
  * 
  * @author Christian Schneider
  * @see nomad.com.HeartbeatTask
+ * @hidden
  */
 public interface HeartbeatErrorHandler {
 

@@ -1,5 +1,7 @@
 package nomad.com;
 
+import nomad.com.message.MidiMessage;
+
 /**
  * The NullComPort is an implementation of the ComPort interface that
  * does ignore any messages and actions and logs them to System.out.
@@ -47,7 +49,7 @@ public class NullComPort extends ComPort {
 	public boolean getVerbose() {
 		return verbose;
 	}
-	
+
 	/**
 	 * Prints message to System.out if verbose is enabled.
 	 * @param message
@@ -58,18 +60,10 @@ public class NullComPort extends ComPort {
 			System.out.println("** NullComPort:"+message);
 	}
 
-	/**
-	 * The heartbeat() message implementation.
-	 * @see ComPort#heartbeat()
-	 */
 	public void heartbeat() {
 		statusMessage("heartbeat()");
 	}
 
-	/**
-	 * The openPort() message implementation.
-	 * @see ComPort#openPort()
-	 */
 	public void openPort() throws ComPortException {
 		if (portActive)
 			throw new ComPortException("Port is already open");
@@ -78,10 +72,6 @@ public class NullComPort extends ComPort {
 		statusMessage("openPort()");
 	}
 
-	/**
-	 * The closePort() message implementation.
-	 * @see ComPort#closePort()
-	 */
 	public void closePort() throws ComPortException {
 		if (!portActive)
 			throw new ComPortException("Port is not open");
@@ -90,10 +80,6 @@ public class NullComPort extends ComPort {
 		statusMessage("closePort()");
 	}
 	
-	/**
-	 * The isPortOpen() message implementation.
-	 * @see ComPort#isPortOpen()
-	 */
 	public boolean isPortOpen() {
 		return portActive;
 	}

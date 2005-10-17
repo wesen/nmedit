@@ -1,5 +1,7 @@
 package nomad.com;
 
+import nomad.com.message.MidiMessage;
+
 /**
  * 
  * @author Christian Schneider

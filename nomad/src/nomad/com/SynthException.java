@@ -6,6 +6,7 @@ package nomad.com;
  * 
  * @author Christian Schneider
  * @see nomad.com.Synth
+ * @hidden
  */
 public class SynthException extends Exception {
 

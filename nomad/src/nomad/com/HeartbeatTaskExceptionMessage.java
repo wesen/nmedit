@@ -7,6 +7,7 @@ package nomad.com;
  * the HeartbeatTask class that send this message.
  * @see nomad.com.HeartbeatErrorHandler
  * @see nomad.com.HeartbeatTask
+ * @hidden
  */
 public class HeartbeatTaskExceptionMessage {
 	

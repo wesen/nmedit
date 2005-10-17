@@ -5,6 +5,7 @@ package nomad.com;
  * thrown by the ComPort implementations.
  * 
  * @author Christian Schneider
+ * @hidden
  */
 public class ComPortException extends Exception {
 

@@ -5,6 +5,8 @@ import java.util.Vector;
 /**
  * List of AbstractSynthListeners
  * @author Christian Schneider
+ * @stereotype container
+ * @has 1 has * nomad.com.AbstractSynthListener
  */
 public class SynthListenerSubscriberList {
 	

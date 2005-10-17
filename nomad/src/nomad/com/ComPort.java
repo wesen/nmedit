@@ -1,8 +1,12 @@
 package nomad.com;
 
+import nomad.com.message.MidiMessage;
+
 /**
  * ComPort is the interface to the underlying Nord Modular
  * protocol implementation.
+ * @composed 1 - 1 nomad.com.MidiDriverList
+ * @stereotype Interface
  *    
  * @author Christian Schneider
  */

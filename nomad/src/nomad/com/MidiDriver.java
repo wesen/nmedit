@@ -5,6 +5,7 @@ import java.util.Vector;
 /**
  * Interface for the midi driver
  * @author Christian Schneider
+ * @has 1 - * nomad.com.MidiPort
  */
 public abstract class MidiDriver {
 	
