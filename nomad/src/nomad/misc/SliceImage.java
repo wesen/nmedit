@@ -155,6 +155,9 @@ public class SliceImage
 
   /**
    * Returns true if a slice at given coordinates exists.
+   * @param x x position
+   * @param y y position
+   * @return true if slice at x,y exists 
    */
   private boolean checkCoordinates(int x, int y)
   { return (0<=x && x<sliceCountHrz && 0<=y && y<=sliceCountVrt); }
@@ -238,16 +241,12 @@ public class SliceImage
 	  try {
 		return SliceImage.createFromPropertyFile(name, slice);
 	  } catch (FileNotFoundException e) {
-		  // TODO Auto-generated catch block
 		  e.printStackTrace();
 	  } catch (SecurityException e) {
-		  // TODO Auto-generated catch block
 		  e.printStackTrace();
 	  } catch (IOException e) {
-		  // TODO Auto-generated catch block
 		  e.printStackTrace();
 	  } catch (MalformedPropertyfileException e) {
-		  // TODO Auto-generated catch block
 		  e.printStackTrace();
 	  }
 	  return null;
