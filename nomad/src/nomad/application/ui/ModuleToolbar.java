@@ -9,8 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
-import nomad.model.descriptive.DGroup;
-import nomad.model.descriptive.DSection;
+import nomad.model.descriptive.DToolbarGroup;
+import nomad.model.descriptive.DToolbarSection;
 import nomad.model.descriptive.ModuleDescriptions;
 
 /**
@@ -40,7 +40,7 @@ public class ModuleToolbar extends JTabbedPane
     buttons = new Vector();
     
     for (int gi=0;gi<moduleDescriptions.getGroupCount();gi++) {
-    	DGroup group = moduleDescriptions.getGroup(gi);
+    	DToolbarGroup group = moduleDescriptions.getGroup(gi);
     	
     	JPanel pane = new JPanel();
         pane.setLayout(new GridLayout(1,1));
@@ -55,7 +55,7 @@ public class ModuleToolbar extends JTabbedPane
         pane.add(toolbar);
         
         for (int si=0;si<group.getSectionCount();si++) {
-        	DSection section = group.getSection(si);
+        	DToolbarSection section = group.getSection(si);
         	
         	for (int mi=0;mi<section.getModuleCount();mi++) {
                 JButton btn = new ModuleToolbarButton(section.getModule(mi));
@@ -72,10 +72,10 @@ public class ModuleToolbar extends JTabbedPane
     //setupDragModule();
 
   }
-
+  /*
   public Vector getButtons()
   { return buttons; }
-/*
+
   private void setupDragModule()
   {
     private
