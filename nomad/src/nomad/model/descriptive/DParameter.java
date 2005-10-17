@@ -1,7 +1,10 @@
 package nomad.model.descriptive;
 
 import nomad.model.descriptive.substitution.Substitution;
-
+/**
+ * @author Christian Schneider
+ * @composed 1 - 1 nomad.model.descriptive.substitution.Substitution
+ */
 public class DParameter {
 	
 	private DModule parent = null;

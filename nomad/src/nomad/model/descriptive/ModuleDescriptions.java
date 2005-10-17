@@ -17,6 +17,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * @author Christian Schneider
+ * @composed 1 - n nomad.model.descriptive.DGroup
+ */
 public class ModuleDescriptions {
 
 	private HashMap dmodules = new HashMap();

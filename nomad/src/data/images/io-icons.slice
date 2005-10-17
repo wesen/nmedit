@@ -25,6 +25,6 @@ control.out.used  3 2
 
 # yellow
 logic.in.free     0 3
-logic.in.closed   1 3
+logic.in.used     1 3
 logic.out.free    2 3
 logic.out.used    3 3

@@ -7,6 +7,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+/**
+ * XMLErrorHandler implementation
+ * @author Christian Schneider
+ */
 public class DefaultXMLErrorHandler implements XMLErrorHandler {
 
 	public void fatalError(ParserConfigurationException pce) {

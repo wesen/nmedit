@@ -1,5 +1,9 @@
 package nomad.model.descriptive.substitution;
 
+/**
+ * @author Christian Schneider
+ * @hidden
+ */
 public class BPM extends Substitution {
 
 	public BPM() {

@@ -2,6 +2,10 @@ package nomad.model.descriptive.substitution;
 
 import nomad.util.MathRound;
 
+/**
+ * @author Christian Schneider
+ * @hidden
+ */
 public class DrumHz extends Substitution {
 
 	public DrumHz() {

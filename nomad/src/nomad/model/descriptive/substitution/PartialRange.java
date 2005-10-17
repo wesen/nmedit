@@ -2,6 +2,10 @@ package nomad.model.descriptive.substitution;
 
 import nomad.util.MathRound;
 
+/**
+ * @author Christian Schneider
+ * @hidden
+ */
 public class PartialRange extends Substitution {
 
 	public PartialRange() {

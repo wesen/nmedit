@@ -2,6 +2,10 @@ package nomad.model.descriptive;
 
 import java.util.Vector;
 
+/**
+ * @author Christian Schneider
+ * @composed 1 - n nomad.model.descriptive.DModule
+ */
 public class DSection {
 
 	private Vector dmodules = new Vector();

@@ -2,6 +2,10 @@ package nomad.model.descriptive.substitution;
 
 import nomad.util.MathRound;
 
+/**
+ * @author Christian Schneider
+ * @hidden
+ */
 public class LFOHz extends Substitution {
 
 	public LFOHz() {

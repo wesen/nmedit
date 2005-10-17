@@ -1,6 +1,5 @@
 package nomad.model.descriptive.substitution;
 
-
 public class ListSubstitution extends Substitution {
 	private String[] set;
 

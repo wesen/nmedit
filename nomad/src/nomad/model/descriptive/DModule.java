@@ -3,6 +3,12 @@ package nomad.model.descriptive;
 import java.awt.Image;
 import java.util.Vector;
 
+/**
+ * @author Christian Schneider
+ * @composed 1 - n nomad.model.descriptive.DParameter
+ * @composed 1 - n nomad.model.descriptive.DConnector
+ *
+ */
 public class DModule {
 	
 	private Image icon;

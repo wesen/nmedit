@@ -1,5 +1,9 @@
 package nomad.model.descriptive.substitution;
 
+/**
+ * @author Christian Schneider
+ * @hidden
+ */
 public class Note extends Substitution {
 	
 	private final static String[] NOTES = 

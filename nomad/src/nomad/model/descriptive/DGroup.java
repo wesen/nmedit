@@ -1,7 +1,10 @@
 package nomad.model.descriptive;
 
 import java.util.Vector;
-
+/**
+ * @author Christian Schneider
+ * @composed 1 - n nomad.model.descriptive.DSection
+ */
 public class DGroup {
 
 	private Vector dsections = new Vector();
