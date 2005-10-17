@@ -5,32 +5,32 @@ import java.util.Vector;
  * @author Christian Schneider
  * @composed 1 - n nomad.model.descriptive.DSection
  */
-public class DGroup {
+public class DToolbarGroup {
 
 	private Vector dsections = new Vector();
 	private String name = null;
 	private String shortname = null;
 	
-	public DGroup(String name) {
+	public DToolbarGroup(String name) {
 		this(name, null);
 	}
 	
-	public DGroup(String name, String shortname) {
+	public DToolbarGroup(String name, String shortname) {
 		this.name = name;
 		if (name==null)
 			throw new NullPointerException("'name' must not be null");
 		this.shortname = shortname;
 	}
 	
-	public DSection getSection(int index) {
-		return (DSection) dsections.get(index);
+	public DToolbarSection getSection(int index) {
+		return (DToolbarSection) dsections.get(index);
 	}
 	
 	public int getSectionCount() {
 		return dsections.size();
 	}
 	
-	void addSection(DSection s) {
+	void addSection(DToolbarSection s) {
 		dsections.add(s);
 	}
 	

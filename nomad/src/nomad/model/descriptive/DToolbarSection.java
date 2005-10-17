@@ -6,12 +6,12 @@ import java.util.Vector;
  * @author Christian Schneider
  * @composed 1 - n nomad.model.descriptive.DModule
  */
-public class DSection {
+public class DToolbarSection {
 
 	private Vector dmodules = new Vector();
-	private DGroup parent = null;
+	private DToolbarGroup parent = null;
 	
-	public DSection(DGroup parent) {
+	public DToolbarSection(DToolbarGroup parent) {
 		this.parent = parent;
 		if (parent==null)
 			throw new NullPointerException("'parent' must not be null");
@@ -25,7 +25,7 @@ public class DSection {
 		return (DModule) dmodules.get(index);
 	}
 	
-	public DGroup getParent() {
+	public DToolbarGroup getParent() {
 		return parent;
 	}
 

@@ -14,7 +14,7 @@ public class DModule {
 	private Image icon;
 	private Vector dparameters = new Vector();
 	private Vector dconnectors = new Vector();
-	private DSection parent = null;
+	private DToolbarSection parent = null;
 	
 	private String name=null;
 	private String shortname=null;
@@ -28,7 +28,7 @@ public class DModule {
 	private double mdZeroPage=0;
 	private int mdHeight=1;
 
-	public DModule(DSection parent, String name) {
+	public DModule(DToolbarSection parent, String name) {
 		this.parent = parent;
 		this.name = name;
 		if (name==null)
@@ -43,7 +43,7 @@ public class DModule {
 		return icon;
 	}
 	
-	void setParent(DSection parent) {
+	void setParent(DToolbarSection parent) {
 		this.parent = parent;
 	}
 
@@ -71,7 +71,7 @@ public class DModule {
 		dconnectors.add(c);
 	}
 	
-	public DSection getParent() {
+	public DToolbarSection getParent() {
 		return parent;
 	}
 	

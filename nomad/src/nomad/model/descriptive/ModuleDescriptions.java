@@ -54,8 +54,8 @@ public class ModuleDescriptions {
 		return getModuleByKey(DModule.getKeyFromId(id));
 	}
 	
-	public DGroup getGroup(int index) {
-		return (DGroup) dgroups.get(index);
+	public DToolbarGroup getGroup(int index) {
+		return (DToolbarGroup) dgroups.get(index);
 	}
 	
 	public int getGroupCount() {
@@ -104,7 +104,7 @@ public class ModuleDescriptions {
 			e.printStackTrace();
 		}
 		
-		DGroup group = new DGroup(groupName);
+		DToolbarGroup group = new DToolbarGroup(groupName);
 		dgroups.add(group);
 		
 		NodeList sections = groupNode.getChildNodes();
@@ -112,7 +112,7 @@ public class ModuleDescriptions {
 		for (int i=0;i<sections.getLength();i++) {
 			Node n = sections.item(i);
 			if (n.getNodeName().equals("section")) {
-				DSection section = new DSection(group);
+				DToolbarSection section = new DToolbarSection(group);
 				group.addSection(section);
 				
 				NodeList modules = sections.item(i).getChildNodes();
