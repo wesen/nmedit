@@ -4,9 +4,9 @@ package nomad.patch;
 
 import javax.swing.ImageIcon;
 
-import nomad.gui.NomadConnection;
-import nomad.gui.NomadModule;
-import nomad.gui.helpers.NomadModuleFactory;
+import nomad.gui.ConnectorGUI;
+import nomad.gui.ModuleGUI;
+import nomad.gui.helpers.ModuleGUIFactory;
 
 public class Connection {
 
@@ -26,7 +26,7 @@ public class Connection {
 
     Cables cables = null;
     
-    NomadConnection moduleConnection = null; 
+    ConnectorGUI moduleConnection = null; 
 	
 	public Connection(Module newModule, boolean bInput, int newIndex, String newName, int newType, int newX, int newY) {
 		index = newIndex;
@@ -37,7 +37,7 @@ public class Connection {
 		conY = newY;
 		module = newModule;
 		
-		moduleConnection = new NomadConnection(name);
+		moduleConnection = new ConnectorGUI(name);
 		moduleConnection.setLocation(conX, conY);
 	}
 
@@ -81,7 +81,7 @@ public class Connection {
         return (input?"input ":"output ") + index + " " + getConnectionTypeName() + "(" + type + ") " + name;
     }
     
-    public NomadConnection getConnectionGUI() {
+    public ConnectorGUI getConnectionGUI() {
         return moduleConnection;
     }
 }

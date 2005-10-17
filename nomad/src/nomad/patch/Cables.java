@@ -3,7 +3,7 @@ package nomad.patch;
 import java.io.BufferedReader;
 import java.util.Vector;
 
-import nomad.gui.NomadModuleSection.ModulesSectionType;
+import nomad.patch.ModuleSection.ModulesSectionType;
 
 public class Cables {
 	private Vector poly, common = null;
