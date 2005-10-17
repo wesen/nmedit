@@ -109,14 +109,8 @@ public class Patch {
     public void loadPatch(String fileName) {
         BufferedReader pchFile;
         String tag = new String();
-
-		String loadfile = "src/data/xml/substitutions.xml"; 
-		Run.statusMessage(loadfile);
-		XMLSubstitutionReader subsReader = new XMLSubstitutionReader(loadfile);
-		loadfile = "src/data/xml/modules.xml"; 
-		Run.statusMessage(loadfile);
-		ModuleDescriptions moduleDescriptions = new ModuleDescriptions(loadfile, subsReader);
-
+        ModuleDescriptions moduleDescriptions = ModuleDescriptions.model; 
+        
         patchFileName = fileName;
 
         if (!fileName.equals("")) {
