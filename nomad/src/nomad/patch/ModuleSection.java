@@ -2,14 +2,16 @@ package nomad.patch;
 
 import java.awt.Dimension;
 import java.io.BufferedReader;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.JLayeredPane;
 
-import nomad.gui.ModuleGUI;
 import nomad.gui.ModuleSectionGUI;
+import nomad.model.descriptive.DModule;
 import nomad.model.descriptive.ModuleDescriptions;
 
 public class ModuleSection {
@@ -41,7 +43,7 @@ public class ModuleSection {
 	ModuleSection(Patch patch, int moduleSection) {
 		modules = new Hashtable();
 
-		moduleSectionGUI = new ModuleSectionGUI();
+		moduleSectionGUI = new ModuleSectionGUI(this);
 		this.moduleSection = moduleSection;
         this.patch = patch;
 	}
@@ -54,6 +56,31 @@ public class ModuleSection {
         return maxGridY * ModulePixDimension.PIXHEIGHT;
     }
 
+    public Module addModuleAfterDrop(DModule dModule, int x, int y) {
+    	Integer pchIndex = new Integer(modules.size() + 1);
+    	
+        Module mod = new Module(pchIndex, 0, 0, this, dModule);
+
+//        mod.setNewPixLocation(x, y);
+        // Use a slightly other algorithm
+		mod.setPixLocationX(x / ModulePixDimension.PIXWIDTH);
+		mod.setPixLocationY(y / ModulePixDimension.PIXHEIGHT);
+
+    	modules.put(pchIndex, mod);
+        if (mod.getGridX() + mod.getGridWidth() > maxGridX)
+            maxGridX = mod.getGridX() + mod.getGridWidth();
+        if (mod.getGridY() + mod.getGridHeight() > maxGridY)
+            maxGridY = mod.getGridY() + mod.getGridHeight();
+
+        mod.createModuleGUI(moduleSectionGUI);
+        
+        rearangeModules(mod);
+
+        moduleSectionGUI.add(mod.getModuleGUI(), JLayeredPane.DEFAULT_LAYER.intValue());
+        
+    	return mod;
+    }
+    
 	public Module addModule(String params, ModuleDescriptions moduleDescriptions) {
 		String[] paramArray = new String[4];
 		paramArray = params.split(" ");
@@ -63,16 +90,16 @@ public class ModuleSection {
 		int gridX = Integer.parseInt(paramArray[2]);
 		int gridY = Integer.parseInt(paramArray[3]);
 		
-        Module mod = new Module(pchIndex, type, gridX, gridY, this, moduleDescriptions);
-        mod.createModuleGUI(moduleSectionGUI);
+        Module mod = new Module(pchIndex, gridX, gridY, this, moduleDescriptions.getModuleById(type));
+//        mod.createModuleGUI(moduleSectionGUI);
 
-        if (moduleSection == ModulesSectionType.POLY) {
+//        if (moduleSection == ModulesSectionType.POLY) {
         	modules.put(pchIndex, mod);
             if (gridX + mod.getGridWidth() > maxGridX)
                 maxGridX = gridX + mod.getGridWidth();
             if (gridY + mod.getGridHeight() > maxGridY)
                 maxGridY = gridY + mod.getGridHeight();
-        }
+//        }
         
 		return mod;
 	}
@@ -83,10 +110,10 @@ public class ModuleSection {
 	    	modules.remove(modIndex);
     }
     
-	public void addModuleName(String params) {
+	public void addModuleTitle(String params) {
 		String[] sa = new String[2];
 		sa = params.split(" ", 2);
-		getModule(Integer.parseInt(sa[0])).setModuleName(sa[1]);
+		getModule(Integer.parseInt(sa[0])).setModuleTitle(sa[1]);
 	}
 	
 	public void addParameter(String params) {
@@ -137,45 +164,83 @@ public class ModuleSection {
             if (tempMod.getGridY() + tempMod.getGridHeight() > maxGridY)
                 maxGridY = tempMod.getGridY() + tempMod.getGridHeight();
         }
+        
+		getModuleSectionGUI().setPreferredSize(new Dimension(getMaxPixWidth(), getMaxPixHeight()));
+		getModuleSectionGUI().revalidate();
 	}
 
-	public void rearangeModules(Module module) { 
-//		Module tempMod, tempMod2 = null;
-		ModuleGUI tempModGUI, tempModGUI2 = null;
-		Vector modVector = new Vector();
+	public void rearangeModules(Module module) {
+		Module tempMod, tempMod2 = null;
 
-//		Nu alleen voor 1 geplaatste module
-		for (int i=0;i<moduleSectionGUI.getComponentCountInLayer(JLayeredPane.DEFAULT_LAYER.intValue());i++) {
+		// The size of the temp modList won't exceed maxGrid 
+		int size = Math.max(module.getGridY(), maxGridY) + 1;
+		List modList = new ArrayList(size);
+		
+		// We need to fill the list, the initial capacity does not force a fill, just 'speed'.
+		for (int i=0;i<size;i++)
+			modList.add(null);
 
-			// Seek all modules in the same column
-			tempModGUI = ((ModuleGUI)moduleSectionGUI.getComponentsInLayer(JLayeredPane.DEFAULT_LAYER.intValue())[i]);
-			if (module.getGridX() == tempModGUI.getModule().getGridX()) {
-				// aanvullen tijdelijke moduleVector met null voor iedere moduleVoogte
+		//	Walk through all modules 
+		for (int i=0;i<modules.size() + 1;i++) {
+			
+			// Seek all modules in the same column (gridX)
+			tempMod = getModule(i);
+			if (tempMod != null && module.getGridX() == tempMod.getGridX()) {
+
+				/**
+				 * We build a list with every position is a 'row'
+				 * Then we fill the list with the modules on the gridY position
+				 * 
+				 * modList[0] = module1 (y = 0, height = 3) 
+				 * modList[1] = null
+				 * modList[2] = module4 (y = 2, height = 2) (new placed module)
+				 * modList[3] = module2 (y = 3, height = 2)
+				 * modList[4] = null
+				 * modList[5] = null
+				 * modList[6] = null
+				 * modList[7] = module3 (y = 7, height = 3)
+				 * modList[n] = ...
+				 */
 				
-				while (modVector.size() <= tempModGUI.getModule().getGridY())
-					modVector.add(null);
-
-				if (modVector.get(tempModGUI.getModule().getGridY()) == null)
-					modVector.set(tempModGUI.getModule().getGridY(), tempModGUI);
+				if (modList.get(tempMod.getGridY()) == null)
+					modList.set(tempMod.getGridY(), tempMod);
 				else
-					modVector.insertElementAt(tempModGUI, tempModGUI.getModule().getGridY());
+					modList.add(tempMod.getGridY(), tempMod);
 			}
 		}
-		
-		while (modVector.remove(null));
-		
-		for (int j=0;j<modVector.size()-1;j++) {
-			tempModGUI = (ModuleGUI) modVector.get(j);
-			tempModGUI2 = (ModuleGUI) modVector.get(j+1);
-			if (tempModGUI2.getModule().getGridY() < (tempModGUI.getModule().getGridY() + tempModGUI.getModule().getGridHeight())) {
-				tempModGUI2.getModule().setNewPixLocation(tempModGUI.getModule().getPixLocationX(), tempModGUI.getModule().getPixLocationY() + tempModGUI.getModule().getPixHeight());
+
+		/**
+		 * Clear the nulls
+		 * 
+		 * modList[0] = module1 (y = 0, height = 3) 
+		 * modList[1] = module4 (y = 2, height = 2) (new placed module)
+		 * modList[2] = module2 (y = 3, height = 2)
+		 * modList[3] = module3 (y = 7, height = 3)
+		 */
+
+		Collection c = new ArrayList(1);
+		c.add(null);
+		modList.removeAll(c);
+
+		/**
+		 * Update the Y positions
+		 * 
+		 * modList[0] = module1 (y = 0, height = 3) 
+		 * modList[1] = module4 (y = 3, height = 2) 
+		 * modList[2] = module2 (y = 5, height = 2)
+		 * modList[3] = module3 (y = 7, height = 3)
+		 */
+
+		for (int j=0;j<modList.size()-1;j++) {
+			tempMod = (Module) modList.get(j);
+			tempMod2 = (Module) modList.get(j+1);
+			if (tempMod2.getGridY() < (tempMod.getGridY() + tempMod.getGridHeight())) {
+				tempMod2.setNewPixLocation(tempMod.getPixLocationX(), tempMod.getPixLocationY() + tempMod.getPixHeight());
 			}
 		}
 
 		// Update the size of the moduleSection 
 		recalcMaxGridXY();
-		getModuleSectionGUI().setPreferredSize(new Dimension(module.getModuleSection().getMaxPixWidth(), module.getModuleSection().getMaxPixHeight()));
-		getModuleSectionGUI().revalidate();
 
 //		getCables().redrawCables(this, bPoly);
 	}
@@ -202,14 +267,9 @@ public class ModuleSection {
 		String dummy = "";
 //        int moduleSection;
 		try {
-            if (pchFile.readLine().trim().compareTo("1") == 0)
-                moduleSection = ModulesSectionType.POLY;
-            else
-                moduleSection = ModulesSectionType.COMMON;
-				
 			while ((dummy = pchFile.readLine()) != null) {
 				if (dummy.compareToIgnoreCase("[/NameDump]") != 0)
-					addModuleName(dummy);
+					addModuleTitle(dummy);
 				else
 					return;
 			}
