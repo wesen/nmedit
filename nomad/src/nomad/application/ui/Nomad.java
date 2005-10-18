@@ -64,7 +64,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 
     class ExitListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            System.exit(0);
+        	Nomad.this.processEvent(new WindowEvent(Nomad.this, WindowEvent.WINDOW_CLOSING));
         }
     }
 
@@ -126,6 +126,14 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 
 	class ExitWindowListener extends WindowAdapter {
 		public void windowClosing(WindowEvent e) {
+			if (synth.isConnected())
+				try {
+					System.out.println("Closing midi connection.");
+					synth.disconnect();
+				} catch (SynthException e1) {
+					System.out.println("Synth exception while exit:"+e1);
+					e1.printStackTrace();
+				}
 			System.exit(0);
 		}
 	}
@@ -186,6 +194,8 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		
 		// subscribe for connection events
 		synth.addSynthConnectionStateListener(this);
+		
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
 	public JMenuBar createMenu() {
