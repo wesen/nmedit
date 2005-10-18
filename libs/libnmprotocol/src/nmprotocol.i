@@ -24,6 +24,7 @@
 #include "nmprotocol/mididriver.h"
 #include "nmprotocol/activepidlistener.h"
 #include "../libpdl/pdl/pdlexception.h"
+#include "../libpdl/pdl/bitstream.h"
 %}
 
 %include "../../java-nmcom/swig-i/nmprotocol-config.i"
