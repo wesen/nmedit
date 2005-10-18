@@ -19,9 +19,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import nomad.model.descriptive.DConnector;
-import nomad.model.descriptive.DGroup;
 import nomad.model.descriptive.DModule;
 import nomad.model.descriptive.DParameter;
+import nomad.model.descriptive.DToolbarGroup;
 import nomad.model.descriptive.ModuleDescriptions;
 import nomad.model.descriptive.substitution.XMLSubstitutionReader;
 
@@ -60,7 +60,7 @@ public class ModuleFormTest extends JFrame implements ItemListener {
 	}
 
 	private void addModule(DModule module) {
-		DGroup group = module.getParent().getParent();
+		DToolbarGroup group = module.getParent().getParent();
 		JPanel modPane = new TextPanel(group.getName()+":"+module.getName());
 		cbModules.addItem(modPane);
 

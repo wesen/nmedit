@@ -94,15 +94,20 @@ public class Patch {
 
     public void addModules() {
         int i = 0;
+        Module tempMod = null;
 
         for (Enumeration e = modulesPoly.getModules().keys(); e.hasMoreElements();) { 
             i = ((Integer) e.nextElement()).intValue();
-            desktopPanePoly.add(modulesPoly.getModule(i).getModuleGUI(), JLayeredPane.DEFAULT_LAYER.intValue());
+            tempMod = modulesPoly.getModule(i);
+            tempMod.createModuleGUI(desktopPanePoly);
+            desktopPanePoly.add(tempMod.getModuleGUI(), JLayeredPane.DEFAULT_LAYER.intValue());
         }
 
         for (Enumeration e = modulesCommon.getModules().keys(); e.hasMoreElements();) {
             i = ((Integer) e.nextElement()).intValue();
-            desktopPaneCommon.add(modulesCommon.getModule(i).getModuleGUI(), JLayeredPane.DEFAULT_LAYER.intValue());
+            tempMod = modulesCommon.getModule(i);
+            tempMod.createModuleGUI(desktopPaneCommon);
+            desktopPaneCommon.add(tempMod.getModuleGUI(), JLayeredPane.DEFAULT_LAYER.intValue());
         }
     }
 

@@ -6,6 +6,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -39,6 +40,10 @@ public class ModuleGUI extends JPanel implements MouseListener, MouseMotionListe
         nameLabel.setLocation(3,0);
         nameLabel.setFont(new Font("Dialog", Font.PLAIN, 10));
         add(nameLabel);
+
+        // TODO ?Why is the icon empty here?
+        if (module.getDModule().getIcon() != null)
+        	add(new JLabel(new ImageIcon(module.getDModule().getIcon())));
     }
     
     public void setNameLabel(String name, int width) {
