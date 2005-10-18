@@ -27,6 +27,7 @@ public class ModuleToolbarButton extends JButton implements DragGestureListener,
 
 	private DragSource dragSource = null;
 	private int dragAction = DnDConstants.ACTION_COPY;
+	private boolean allowDragging = true;
 	
 	public static final DataFlavor ModuleToolbarButtonFlavor = new DataFlavor("nomad/ModuleToolbarButtonFlavor", "Nomad ModuleToolbarButton");
 
@@ -42,9 +43,18 @@ public class ModuleToolbarButton extends JButton implements DragGestureListener,
 	public DModule getModuleDescription() {
 		return module;
 	}
+	
+	public void setAllowDragging(boolean enabled) {
+		this.allowDragging = enabled;
+	}
+	
+	public boolean getAllowDragging() {
+		return allowDragging;
+	}
 
 	public void dragGestureRecognized(DragGestureEvent dge) {
-        dge.startDrag(DragSource.DefaultCopyDrop, this, this);
+		if (allowDragging)
+			dge.startDrag(DragSource.DefaultCopyDrop, this, this);
 	}
 
 	public void dragEnter(DragSourceDragEvent dsde) {
