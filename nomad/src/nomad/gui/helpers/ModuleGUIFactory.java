@@ -22,7 +22,7 @@ public class ModuleGUIFactory {
 		modulePanel = new ModuleGUI(module, moduleSectionGUI);
     	modulePanel.setLocation(module.getPixLocationX(), module.getPixLocationY());
     	modulePanel.setSize(module.getPixWidth(), module.getPixHeight());
-    	modulePanel.setNameLabel(module.getModuleName(), module.getPixWidth());
+    	modulePanel.setNameLabel(module.getModuleTitle(), module.getPixWidth());
     	modulePanel.setVisible(true);
 		return modulePanel;
 	}
