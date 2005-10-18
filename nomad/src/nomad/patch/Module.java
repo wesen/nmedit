@@ -5,6 +5,7 @@ import java.util.Vector;
 import nomad.gui.ModuleGUI;
 import nomad.gui.ModuleSectionGUI;
 import nomad.gui.helpers.ModuleGUIFactory;
+import nomad.model.descriptive.DModule;
 import nomad.model.descriptive.ModuleDescriptions;
 import nomad.patch.ModuleSection.ModulePixDimension;
 
@@ -19,27 +20,25 @@ public class Module {
 
     private String title = "";
 
-    private int modType = 0;
     private Integer modIndex = null;
     
     // where am I on grid?
     private int gridX, gridY;
 
-    private ModuleDescriptions moduleDescriptions = null;
+    private DModule dModule = null;
     private ModuleGUI moduleGUI = null; 
     private ModuleSection moduleSection = null;
 
 	private Vector parametersVector = null;
     private Vector customsVector = null;
 
-	public Module(Integer newIndex, int newType, int newGridX, int newGridY, ModuleSection moduleSection, ModuleDescriptions moduleDescriptions) {
-		this.moduleDescriptions = moduleDescriptions;
+	public Module(Integer newIndex, int newGridX, int newGridY, ModuleSection moduleSection, DModule dModule) {
+		this.dModule = dModule;
 		this.moduleSection = moduleSection;
 		
-		title = new String();
+		title = dModule.getName();
 
         modIndex = newIndex;
-        modType = newType;
         gridX = newGridX;
         gridY = newGridY;
 
@@ -47,20 +46,24 @@ public class Module {
 		customsVector = new Vector();
 	}
     
+	public DModule getDModule() {
+		return dModule;
+	}
+	
     public int getModIndex() {
         return modIndex.intValue();
     }
     
     public int getModType() {
-        return modType;
+        return dModule.getModuleID();
     }
 
     public String getModuleName() {
-        return moduleDescriptions.getModuleById(modType).getName();
+        return dModule.getName();
     }
     
     public int getGridHeight() {
-        return moduleDescriptions.getModuleById(modType).getHeight();
+        return dModule.getHeight();
     }
 
     public int getGridWidth() {
@@ -100,11 +103,11 @@ public class Module {
     }
 
     public int getPixHeight() {
-    	return moduleDescriptions.getModuleById(modType).getHeight() * ModulePixDimension.PIXHEIGHT;
+    	return dModule.getHeight() * ModulePixDimension.PIXHEIGHT;
     }
 
-    public void setModuleName(String newName) {
-    	title = newName;
+    public void setModuleTitle(String newTitle) {
+    	title = newTitle;
     }
     
     public String getModuleTitle() {
@@ -130,7 +133,8 @@ public class Module {
 		setPixLocationY((newPixLocationY + ModulePixDimension.PIXHEIGHTDIV2) / ModulePixDimension.PIXHEIGHT);
 
 		// Update GUI to 'snap' coordinates
-		getModuleGUI().setLocation(getPixLocationX(), getPixLocationY());
+		if (getModuleGUI() != null)
+			getModuleGUI().setLocation(getPixLocationX(), getPixLocationY());
 	}
 
 }
