@@ -14,7 +14,7 @@ public class Run
    */
   public static void main(String[] args)
   {
-    SplashWindow.splash(Run.class.getResource("/data/images/splash.gif"), new Point(76,272));
+    SplashWindow.splash(Run.class.getResource("/data/images/splash.jpg"), new Point(76,272));
     SplashWindow.invokeMain("nomad.application.AppRunner", args);
     SplashWindow.disposeSplash();
   }
