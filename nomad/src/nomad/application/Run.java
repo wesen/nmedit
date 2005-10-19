@@ -14,9 +14,13 @@ public class Run
    */
   public static void main(String[] args)
   {
-    SplashWindow.splash(Run.class.getResource("/data/images/splash.jpg"), new Point(76,272));
-    SplashWindow.invokeMain("nomad.application.AppRunner", args);
-    SplashWindow.disposeSplash();
+	  runMainIn("nomad.application.AppRunner", args);
+  }
+  
+  public static void runMainIn(String classname, String[] args) {
+	  SplashWindow.splash(Run.class.getResource("/data/images/splash.jpg"), new Point(76,272));
+	  SplashWindow.invokeMain(classname, args);
+	  SplashWindow.disposeSplash();
   }
   
   /**
