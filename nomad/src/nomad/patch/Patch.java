@@ -3,7 +3,11 @@ package nomad.patch;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Enumeration;
 
 import javax.swing.JLayeredPane;
@@ -11,11 +15,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
-import nomad.application.Run;
 import nomad.application.ui.Nomad;
 import nomad.gui.ModuleSectionGUI;
 import nomad.model.descriptive.ModuleDescriptions;
-import nomad.model.descriptive.substitution.XMLSubstitutionReader;
 
 public class Patch {
     private Header header;
@@ -66,9 +68,27 @@ public class Patch {
         return cables;
     }
 
+	public JPanel createPatch(InputStream in) {
+	    loadPatch(new InputStreamReader(in));
+		return createPatchUI();
+	}
+    
 	public JPanel createPatch(String patchFile) {
+		try {
+			if (!patchFile.equals("")) {
+				loadPatch(new FileReader(patchFile));
+				patchFileName = patchFile;
+				return createPatchUI();
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public JPanel createPatchUI() {
 
-	    loadPatch(patchFile);
+//	    loadPatch(reader);
 
 	    desktopPanePoly = modulesPoly.getModuleSectionGUI();
         desktopPaneCommon = modulesCommon.getModuleSectionGUI();
@@ -111,70 +131,80 @@ public class Patch {
         }
     }
 
-    public void loadPatch(String fileName) {
+//    public void loadPatch(String fileName) {
+//    	try {
+//            if (!fileName.equals("")) {
+//            	loadPatch(new FileReader(fileName));
+//                patchFileName = fileName;
+//            }
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//    }
+//    
+//    public void loadPatch(InputStream in) {
+//    	loadPatch(new InputStreamReader(in));
+//    }
+    
+    public void loadPatch(Reader reader) {
         BufferedReader pchFile;
         String tag = new String();
-        ModuleDescriptions moduleDescriptions = ModuleDescriptions.model; 
-        
-        patchFileName = fileName;
 
-        if (!fileName.equals("")) {
-            try {
-                pchFile = new BufferedReader(new FileReader(fileName));
-                while ((tag = pchFile.readLine()) != null) {
-                    if (tag.compareToIgnoreCase("[Header]") == 0)
-                        header.readHeader(pchFile);
-                    else
-                    if (tag.compareToIgnoreCase("[ModuleDump]") == 0)
-            			if (pchFile.readLine().trim().compareTo("1") == 0)
-            				modulesPoly.readModuleDump(pchFile, moduleDescriptions);
-            			else
-            				modulesCommon.readModuleDump(pchFile, moduleDescriptions);
-                    else
-                    if (tag.compareToIgnoreCase("[CurrentNoteDump]") == 0)
-                        currentNotes.readCurrentNoteDump(pchFile);
-                    else
-                    if (tag.compareToIgnoreCase("[CableDump]") == 0)
-                        cables.readCableDump(pchFile);
-                    else
-                    if (tag.compareToIgnoreCase("[ParameterDump]") == 0)
-            			if (pchFile.readLine().trim().compareTo("1") == 0)
-            				modulesPoly.readParameterDump(pchFile);
-            			else
-            				modulesCommon.readParameterDump(pchFile);
-                    else
-                    if (tag.compareToIgnoreCase("[CustomDump]") == 0)
-            			if (pchFile.readLine().trim().compareTo("1") == 0)
-            				modulesPoly.readCustomDump(pchFile);
-            			else
-            				modulesCommon.readCustomDump(pchFile);
-                    else
-                    if (tag.compareToIgnoreCase("[MorphMapDump]") == 0)
-                        morphMap.readMorphMapDump(pchFile);
-                    else
-                    if (tag.compareToIgnoreCase("[KeyboardAssignment]") == 0)
-                        keyboardAssignment.readKeyboardAssignment(pchFile);
-                    else
-                    if (tag.compareToIgnoreCase("[KnobMapDump]") == 0)
-                        knobAssignMap.readKnobMapDump(pchFile);
-                    else
-                    if (tag.compareToIgnoreCase("[CtrlMapDump]") == 0)
-                        controlMap.readCtrlMapDump(pchFile);
-                    else
-                    if (tag.compareToIgnoreCase("[NameDump]") == 0)
-            			if (pchFile.readLine().trim().compareTo("1") == 0)
-            				modulesPoly.readNameDump(pchFile);
-            			else
-            				modulesCommon.readNameDump(pchFile);
-                    else
-                    if (tag.compareToIgnoreCase("[Notes]") == 0)
-                        patchNotes.readPatchNotes(pchFile);
-                }
-                pchFile.close();
+        try {
+            pchFile = new BufferedReader(reader);
+            while ((tag = pchFile.readLine()) != null) {
+                if (tag.compareToIgnoreCase("[Header]") == 0)
+                    header.readHeader(pchFile);
+                else
+                if (tag.compareToIgnoreCase("[ModuleDump]") == 0)
+        			if (pchFile.readLine().trim().compareTo("1") == 0)
+        				modulesPoly.readModuleDump(pchFile);
+        			else
+        				modulesCommon.readModuleDump(pchFile);
+                else
+                if (tag.compareToIgnoreCase("[CurrentNoteDump]") == 0)
+                    currentNotes.readCurrentNoteDump(pchFile);
+                else
+                if (tag.compareToIgnoreCase("[CableDump]") == 0)
+                    cables.readCableDump(pchFile);
+                else
+                if (tag.compareToIgnoreCase("[ParameterDump]") == 0)
+        			if (pchFile.readLine().trim().compareTo("1") == 0)
+        				modulesPoly.readParameterDump(pchFile);
+        			else
+        				modulesCommon.readParameterDump(pchFile);
+                else
+                if (tag.compareToIgnoreCase("[CustomDump]") == 0)
+        			if (pchFile.readLine().trim().compareTo("1") == 0)
+        				modulesPoly.readCustomDump(pchFile);
+        			else
+        				modulesCommon.readCustomDump(pchFile);
+                else
+                if (tag.compareToIgnoreCase("[MorphMapDump]") == 0)
+                    morphMap.readMorphMapDump(pchFile);
+                else
+                if (tag.compareToIgnoreCase("[KeyboardAssignment]") == 0)
+                    keyboardAssignment.readKeyboardAssignment(pchFile);
+                else
+                if (tag.compareToIgnoreCase("[KnobMapDump]") == 0)
+                    knobAssignMap.readKnobMapDump(pchFile);
+                else
+                if (tag.compareToIgnoreCase("[CtrlMapDump]") == 0)
+                    controlMap.readCtrlMapDump(pchFile);
+                else
+                if (tag.compareToIgnoreCase("[NameDump]") == 0)
+        			if (pchFile.readLine().trim().compareTo("1") == 0)
+        				modulesPoly.readNameDump(pchFile);
+        			else
+        				modulesCommon.readNameDump(pchFile);
+                else
+                if (tag.compareToIgnoreCase("[Notes]") == 0)
+                    patchNotes.readPatchNotes(pchFile);
             }
-            catch(Exception e) {
-                System.out.println(e + " in loadPatch");
-            }
+            pchFile.close();
+        }
+        catch(Exception e) {
+            System.out.println(e + " in loadPatch");
         }
     }
     

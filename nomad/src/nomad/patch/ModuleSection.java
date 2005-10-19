@@ -81,7 +81,7 @@ public class ModuleSection {
     	return mod;
     }
     
-	public Module addModule(String params, ModuleDescriptions moduleDescriptions) {
+	public Module addModule(String params) {
 		String[] paramArray = new String[4];
 		paramArray = params.split(" ");
 		
@@ -90,7 +90,7 @@ public class ModuleSection {
 		int gridX = Integer.parseInt(paramArray[2]);
 		int gridY = Integer.parseInt(paramArray[3]);
 		
-        Module mod = new Module(pchIndex, gridX, gridY, this, moduleDescriptions.getModuleById(type));
+        Module mod = new Module(pchIndex, gridX, gridY, this, ModuleDescriptions.model.getModuleById(type));
 //        mod.createModuleGUI(moduleSectionGUI);
 
 //        if (moduleSection == ModulesSectionType.POLY) {
@@ -247,12 +247,12 @@ public class ModuleSection {
 	
 // Read .pch sections
 
-	public void readModuleDump(BufferedReader pchFile, ModuleDescriptions moduleDescriptions) {
+	public void readModuleDump(BufferedReader pchFile) {
 		String dummy = "";
 		try {
 			while ((dummy = pchFile.readLine()) != null) {
 				if (dummy.compareToIgnoreCase("[/ModuleDump]") != 0)
-					addModule(dummy, moduleDescriptions);
+					addModule(dummy);
 				else
 					return;
 			}
