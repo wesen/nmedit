@@ -47,6 +47,7 @@ public class UIEditor extends JFrame {
 	JMenuItem menuSaveItem, menuSaveAsItem = null;
 	
 	WorkBenchPane workBench = null;
+	OptionsTablePane optionsPane = null;
 	
 	public UIEditor() {
 		super("Nomad UI Editor");
@@ -77,8 +78,10 @@ public class UIEditor extends JFrame {
 		moduleToolbar.addModuleButtonClickListener(new ModuleButtonClickListener());
 		
 		this.add(BorderLayout.NORTH, moduleToolbar);
-		
-		workBench = new WorkBenchPane();
+
+		optionsPane = new OptionsTablePane();
+		workBench = new WorkBenchPane(optionsPane);
+		this.add(BorderLayout.EAST, optionsPane);
 		this.add(BorderLayout.CENTER, workBench);
 		
 		// menu
