@@ -57,7 +57,7 @@ public class ModuleSection {
     }
 
     public Module addModuleAfterDrop(DModule dModule, int x, int y) {
-    	Integer pchIndex = new Integer(modules.size() + 1);
+    	Integer pchIndex = new Integer(getModulesMaxIndex() + 1);
     	
         Module mod = new Module(pchIndex, 0, 0, this, dModule);
 
@@ -138,9 +138,32 @@ public class ModuleSection {
 		return modules.size();
 	}
 
-	public Module getModule(int index) {
+	public int getModulesMaxIndex() {
+		Enumeration e = modules.keys();
+		int i = 0;
+		while (e.hasMoreElements()) {
+			i = Math.max(((Integer)e.nextElement()).intValue(), i);
+		}
+		return i;
+	}
+	
+	public int getModulesMaxIndexInRow(int row) {
+		// get the max moduleIndex from the given grid row (y) 
+		Enumeration e = modules.keys();
+		int i = 0;
+		Integer t = null;
+		while (e.hasMoreElements()) {
+			t = (Integer)e.nextElement();
+			if (((Module)modules.get(t)).getGridY() == row);
+				i = Math.max((t).intValue(), i);
+		}
+		return i;
+	}
+
+	public Module getModule(int moduleIndex) {
+		// moduleIndex is the ID of the module in the .pch file, not the 'index' in the Hashtable!!!
 		Module returnMod;
-		returnMod = (Module) modules.get(new Integer(index));
+		returnMod = (Module) modules.get(new Integer(moduleIndex));
 		return returnMod;
 	}
 
@@ -169,11 +192,26 @@ public class ModuleSection {
 		getModuleSectionGUI().revalidate();
 	}
 
+	private void printList(List modList) {
+		// for debugging
+		System.out.println();
+		for(int i=0;i<modList.size();i++) {
+			if (modList.get(i) != null) {
+				Module mod = (Module)modList.get(i);
+				System.out.println(mod.getModuleTitle() + ":" + mod.getGridY() + ":" + (mod.getGridHeight()+mod.getGridY()));
+			}
+			else {
+				System.out.println(i + ":Leeg");
+			}
+		}
+	}
+	
 	public void rearangeModules(Module module) {
 		Module tempMod, tempMod2 = null;
 
 		// The size of the temp modList won't exceed maxGrid 
 		int size = Math.max(module.getGridY(), maxGridY) + 1;
+		
 		List modList = new ArrayList(size);
 		
 		// We need to fill the list, the initial capacity does not force a fill, just 'speed'.
@@ -181,7 +219,7 @@ public class ModuleSection {
 			modList.add(null);
 
 		//	Walk through all modules 
-		for (int i=0;i<modules.size() + 1;i++) {
+		for (int i=0;i<getModulesMaxIndexInRow(module.getGridY()) + 1;i++) {
 			
 			// Seek all modules in the same column (gridX)
 			tempMod = getModule(i);
