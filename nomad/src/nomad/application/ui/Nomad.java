@@ -183,7 +183,6 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		this.addWindowListener(new ExitWindowListener());
 
 		this.setSize(1024, 768);
-        
 		Patch patch = new Patch();
         JPanel tab = Patch.createPatch("src/data/patches/all.pch", patch);
         tabbedPane.add("all.pch", tab);
