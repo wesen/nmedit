@@ -76,13 +76,12 @@ public class Patch {
 		try {
 			if (!patchFile.equals("")) {
                 Patch.loadPatch(new FileReader(patchFile), patch);
-                patch.patchFileName = patchFile;
-				return Patch.createPatchUI(patch);
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		return null;
+        patch.patchFileName = patchFile;
+        return Patch.createPatchUI(patch);
 	}
 	
 	public static JPanel createPatchUI(Patch patch) {
