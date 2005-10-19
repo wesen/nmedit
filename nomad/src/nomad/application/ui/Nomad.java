@@ -36,7 +36,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
     
     Synth synth = new Synth();
 
-	JFileChooser fileChooser = new JFileChooser("./data/patches/");
+	JFileChooser fileChooser = new JFileChooser("./src/data/patches/");
 	
 	JMenuBar menuBar = null;
 	JMenu menuFile = null;
