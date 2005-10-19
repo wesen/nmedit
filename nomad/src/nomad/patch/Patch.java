@@ -17,7 +17,6 @@ import javax.swing.JSplitPane;
 
 import nomad.application.ui.Nomad;
 import nomad.gui.ModuleSectionGUI;
-import nomad.model.descriptive.ModuleDescriptions;
 
 public class Patch {
     private Header header;
@@ -68,17 +67,17 @@ public class Patch {
         return cables;
     }
 
-	public JPanel createPatch(InputStream in) {
-	    loadPatch(new InputStreamReader(in));
-		return createPatchUI();
+	public static JPanel createPatch(InputStream in, Patch patch) {
+        Patch.loadPatch(new InputStreamReader(in), patch);
+		return Patch.createPatchUI(patch);
 	}
     
-	public JPanel createPatch(String patchFile) {
+	public static JPanel createPatch(String patchFile, Patch patch) {
 		try {
 			if (!patchFile.equals("")) {
-				loadPatch(new FileReader(patchFile));
-				patchFileName = patchFile;
-				return createPatchUI();
+                Patch.loadPatch(new FileReader(patchFile), patch);
+                patch.patchFileName = patchFile;
+				return Patch.createPatchUI(patch);
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -86,30 +85,30 @@ public class Patch {
 		return null;
 	}
 	
-	public JPanel createPatchUI() {
+	public static JPanel createPatchUI(Patch patch) {
 
 //	    loadPatch(reader);
 
-	    desktopPanePoly = modulesPoly.getModuleSectionGUI();
-        desktopPaneCommon = modulesCommon.getModuleSectionGUI();
+	    patch.desktopPanePoly = patch.modulesPoly.getModuleSectionGUI();
+        patch.desktopPaneCommon = patch.modulesCommon.getModuleSectionGUI();
 
-		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-        splitPane.setDividerLocation(header.getSeperator() + 1);
+		patch.splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        patch.splitPane.setDividerLocation(patch.header.getSeperator() + 1);
 
-        desktopPanePoly.setPreferredSize(new Dimension(modulesPoly.getMaxPixWidth(), modulesPoly.getMaxPixHeight()));
-        desktopPaneCommon.setPreferredSize(new Dimension(modulesCommon.getMaxPixWidth(), modulesCommon.getMaxPixHeight()));
+        patch.desktopPanePoly.setPreferredSize(new Dimension(patch.modulesPoly.getMaxPixWidth(), patch.modulesPoly.getMaxPixHeight()));
+        patch.desktopPaneCommon.setPreferredSize(new Dimension(patch.modulesCommon.getMaxPixWidth(), patch.modulesCommon.getMaxPixHeight()));
 
-		scrollPanePoly = new JScrollPane(desktopPanePoly); 
-		scrollPaneCommon = new JScrollPane(desktopPaneCommon);
+        patch.scrollPanePoly = new JScrollPane(patch.desktopPanePoly); 
+        patch.scrollPaneCommon = new JScrollPane(patch.desktopPaneCommon);
 
-		splitPane.add(scrollPanePoly, JSplitPane.TOP);
-		splitPane.add(scrollPaneCommon, JSplitPane.BOTTOM);
+        patch.splitPane.add(patch.scrollPanePoly, JSplitPane.TOP);
+        patch.splitPane.add(patch.scrollPaneCommon, JSplitPane.BOTTOM);
 
-        addModules();
+        patch.addModules();
 
-        patchPanel.add(splitPane, BorderLayout.CENTER);
+        patch.patchPanel.add(patch.splitPane, BorderLayout.CENTER);
 
-		return patchPanel;
+		return patch.patchPanel;
 	}
 
     public void addModules() {
@@ -146,7 +145,7 @@ public class Patch {
 //    	loadPatch(new InputStreamReader(in));
 //    }
     
-    public void loadPatch(Reader reader) {
+    public static void loadPatch(Reader reader, Patch patch) {
         BufferedReader pchFile;
         String tag = new String();
 
@@ -154,52 +153,52 @@ public class Patch {
             pchFile = new BufferedReader(reader);
             while ((tag = pchFile.readLine()) != null) {
                 if (tag.compareToIgnoreCase("[Header]") == 0)
-                    header.readHeader(pchFile);
+                    patch.header.readHeader(pchFile);
                 else
                 if (tag.compareToIgnoreCase("[ModuleDump]") == 0)
         			if (pchFile.readLine().trim().compareTo("1") == 0)
-        				modulesPoly.readModuleDump(pchFile);
+                        patch.modulesPoly.readModuleDump(pchFile);
         			else
-        				modulesCommon.readModuleDump(pchFile);
+                        patch.modulesCommon.readModuleDump(pchFile);
                 else
                 if (tag.compareToIgnoreCase("[CurrentNoteDump]") == 0)
-                    currentNotes.readCurrentNoteDump(pchFile);
+                    patch.currentNotes.readCurrentNoteDump(pchFile);
                 else
                 if (tag.compareToIgnoreCase("[CableDump]") == 0)
-                    cables.readCableDump(pchFile);
+                    patch.cables.readCableDump(pchFile);
                 else
                 if (tag.compareToIgnoreCase("[ParameterDump]") == 0)
         			if (pchFile.readLine().trim().compareTo("1") == 0)
-        				modulesPoly.readParameterDump(pchFile);
+                        patch.modulesPoly.readParameterDump(pchFile);
         			else
-        				modulesCommon.readParameterDump(pchFile);
+                        patch.modulesCommon.readParameterDump(pchFile);
                 else
                 if (tag.compareToIgnoreCase("[CustomDump]") == 0)
         			if (pchFile.readLine().trim().compareTo("1") == 0)
-        				modulesPoly.readCustomDump(pchFile);
+                        patch.modulesPoly.readCustomDump(pchFile);
         			else
-        				modulesCommon.readCustomDump(pchFile);
+                        patch.modulesCommon.readCustomDump(pchFile);
                 else
                 if (tag.compareToIgnoreCase("[MorphMapDump]") == 0)
-                    morphMap.readMorphMapDump(pchFile);
+                    patch.morphMap.readMorphMapDump(pchFile);
                 else
                 if (tag.compareToIgnoreCase("[KeyboardAssignment]") == 0)
-                    keyboardAssignment.readKeyboardAssignment(pchFile);
+                    patch.keyboardAssignment.readKeyboardAssignment(pchFile);
                 else
                 if (tag.compareToIgnoreCase("[KnobMapDump]") == 0)
-                    knobAssignMap.readKnobMapDump(pchFile);
+                    patch.knobAssignMap.readKnobMapDump(pchFile);
                 else
                 if (tag.compareToIgnoreCase("[CtrlMapDump]") == 0)
-                    controlMap.readCtrlMapDump(pchFile);
+                    patch.controlMap.readCtrlMapDump(pchFile);
                 else
                 if (tag.compareToIgnoreCase("[NameDump]") == 0)
         			if (pchFile.readLine().trim().compareTo("1") == 0)
-        				modulesPoly.readNameDump(pchFile);
+                        patch.modulesPoly.readNameDump(pchFile);
         			else
-        				modulesCommon.readNameDump(pchFile);
+                        patch.modulesCommon.readNameDump(pchFile);
                 else
                 if (tag.compareToIgnoreCase("[Notes]") == 0)
-                    patchNotes.readPatchNotes(pchFile);
+                    patch.patchNotes.readPatchNotes(pchFile);
             }
             pchFile.close();
         }

@@ -55,7 +55,8 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 
     class NewListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            JPanel tab = new Patch().createPatch("");
+            Patch patch = new Patch();
+            JPanel tab = Patch.createPatch("", patch);
             tabbedPane.add("new" + (tabbedPane.getTabCount()+1), tab);
             tabbedPane.setSelectedComponent(tab);
 			tabbedPane.getSelectedComponent().setName(tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
@@ -73,7 +74,8 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 			if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				String name = fileChooser.getSelectedFile().getName();
 				name = name.substring(0,name.indexOf(".pch"));
-	            JPanel tab = new Patch().createPatch(fileChooser.getSelectedFile().getPath());
+                Patch patch = new Patch();
+	            JPanel tab = Patch.createPatch(fileChooser.getSelectedFile().getPath(), patch);
 				tabbedPane.add(name,tab);
 				tabbedPane.setSelectedComponent(tab);
 				tabbedPane.getSelectedComponent().setName(tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
@@ -182,7 +184,8 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 
 		this.setSize(1024, 768);
 		
-        JPanel tab = new Patch().createPatch("src/data/patches/all.pch");
+        Patch patch = new Patch();
+        JPanel tab = Patch.createPatch("src/data/patches/all.pch", patch);
         tabbedPane.add("all.pch", tab);
 		tabbedPane.setSelectedComponent(tab);
 		tabbedPane.getSelectedComponent().setName(tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
