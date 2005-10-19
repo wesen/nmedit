@@ -23,8 +23,8 @@ public class ModuleSection {
     }
 
     public final static class ModulePixDimension {
-        final public static int PIXWIDTH = 256;
-        final public static int PIXHEIGHT = 16;
+        final public static int PIXWIDTH = 255; // keep the same size as in Clavia's editor
+        final public static int PIXHEIGHT = 15; // keep the same size as in Clavia's editor
         final public static int PIXWIDTHDIV2 = 128;
         final public static int PIXHEIGHTDIV2 = 8;
     }
@@ -134,9 +134,9 @@ public class ModuleSection {
 		return modules;
 	}
 
-	public int getModulesSize() {
-		return modules.size();
-	}
+//	public int getModulesSize() {
+//		return modules.size();
+//	}
 
 	public int getModulesMaxIndex() {
 		Enumeration e = modules.keys();
@@ -147,19 +147,6 @@ public class ModuleSection {
 		return i;
 	}
 	
-	public int getModulesMaxIndexInRow(int row) {
-		// get the max moduleIndex from the given grid row (y) 
-		Enumeration e = modules.keys();
-		int i = 0;
-		Integer t = null;
-		while (e.hasMoreElements()) {
-			t = (Integer)e.nextElement();
-			if (((Module)modules.get(t)).getGridY() == row);
-				i = Math.max((t).intValue(), i);
-		}
-		return i;
-	}
-
 	public Module getModule(int moduleIndex) {
 		// moduleIndex is the ID of the module in the .pch file, not the 'index' in the Hashtable!!!
 		Module returnMod;
@@ -201,7 +188,7 @@ public class ModuleSection {
 				System.out.println(mod.getModuleTitle() + ":" + mod.getGridY() + ":" + (mod.getGridHeight()+mod.getGridY()));
 			}
 			else {
-				System.out.println(i + ":Leeg");
+				System.out.println(i + ":Empty");
 			}
 		}
 	}
@@ -209,7 +196,8 @@ public class ModuleSection {
 	public void rearangeModules(Module module) {
 		Module tempMod, tempMod2 = null;
 
-		// The size of the temp modList won't exceed maxGrid 
+		// The size of the temp modList won't exceed maxGrid
+        // or the new placed module is 'outside' the maxGridY
 		int size = Math.max(module.getGridY(), maxGridY) + 1;
 		
 		List modList = new ArrayList(size);
@@ -219,33 +207,39 @@ public class ModuleSection {
 			modList.add(null);
 
 		//	Walk through all modules 
-		for (int i=0;i<getModulesMaxIndexInRow(module.getGridY()) + 1;i++) {
-			
-			// Seek all modules in the same column (gridX)
-			tempMod = getModule(i);
-			if (tempMod != null && module.getGridX() == tempMod.getGridX()) {
+        Enumeration e = modules.keys();
+        while (e.hasMoreElements()) {
+            tempMod = ((Module)modules.get((Integer)e.nextElement()));
+            
+            if (tempMod != null && module.getGridX() == tempMod.getGridX()) {
 
-				/**
-				 * We build a list with every position is a 'row'
-				 * Then we fill the list with the modules on the gridY position
-				 * 
-				 * modList[0] = module1 (y = 0, height = 3) 
-				 * modList[1] = null
-				 * modList[2] = module4 (y = 2, height = 2) (new placed module)
-				 * modList[3] = module2 (y = 3, height = 2)
-				 * modList[4] = null
-				 * modList[5] = null
-				 * modList[6] = null
-				 * modList[7] = module3 (y = 7, height = 3)
-				 * modList[n] = ...
-				 */
-				
-				if (modList.get(tempMod.getGridY()) == null)
-					modList.set(tempMod.getGridY(), tempMod);
-				else
-					modList.add(tempMod.getGridY(), tempMod);
-			}
-		}
+                /**
+                 * We build a list with every position is a 'row'
+                 * Then we fill the list with the modules on the gridY position
+                 * 
+                 * modList[0] = module1 (y = 0, height = 3) 
+                 * modList[1] = null
+                 * modList[2] = module4 (y = 2, height = 2) (new placed module)
+                 * modList[3] = module2 (y = 3, height = 2)
+                 * modList[4] = null
+                 * modList[5] = null
+                 * modList[6] = null
+                 * modList[7] = module3 (y = 7, height = 3)
+                 * modList[n] = ...
+                 */
+                
+                if (modList.get(tempMod.getGridY()) == null)
+                    modList.set(tempMod.getGridY(), tempMod);
+                else
+                    modList.add(tempMod.getGridY(), tempMod);
+            }
+        }
+
+//		for (int i=0;i<getModulesMaxIndexInRow(module.getGridY()) + 1;i++) {
+//			
+//			// Seek all modules in the same column (gridX)
+//			tempMod = getModule(i);
+//		}
 
 		/**
 		 * Clear the nulls
