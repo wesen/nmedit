@@ -50,6 +50,10 @@ public class DConnector {
 		images[SIGNAL_SLAVE][CONNECTOR_TYPE_OUTPUT][CONNECTOR_IN_USE] 	= simage.getSlice("slave.out.used");
 	}
 	
+	public Image getIcon(boolean free) {
+		return images[cnSignal][cnType][free?CONNECTOR_FREE:CONNECTOR_IN_USE];
+	}
+	
 	public DConnector(DModule parent,
 			int connectionId, int connectionType, 
 			int connectionSignal, String name) {
