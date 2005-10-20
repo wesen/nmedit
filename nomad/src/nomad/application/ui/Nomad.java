@@ -25,6 +25,7 @@ import nomad.application.Run;
 import nomad.com.Synth;
 import nomad.com.SynthConnectionStateListener;
 import nomad.com.SynthException;
+import nomad.gui.PatchGUI;
 import nomad.model.descriptive.ModuleDescriptions;
 import nomad.model.descriptive.substitution.XMLSubstitutionReader;
 import nomad.patch.Patch;
@@ -32,7 +33,7 @@ import nomad.patch.Patch;
 public class Nomad extends JFrame implements SynthConnectionStateListener {
     public static String creatorProgram = "nomad";
     public static String creatorVersion = "v0.1";
-    public static String creatorRelease = "";
+    public static String creatorRelease = "development build";
     
     Synth synth = new Synth();
 
@@ -90,7 +91,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 				OutputStream stream;
 				try {
 					stream = new FileOutputStream(fileChooser.getSelectedFile());
-//					stream.write(((Patch)tabbedPane.getSelectedComponent()).savePatch().toString().getBytes());
+					stream.write(((PatchGUI)tabbedPane.getSelectedComponent()).getPatch().savePatch().toString().getBytes());
 					stream.flush();
 					stream.close();
 				}
@@ -183,6 +184,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		this.addWindowListener(new ExitWindowListener());
 
 		this.setSize(1024, 768);
+        
 		Patch patch = new Patch();
         JPanel tab = Patch.createPatch("src/data/patches/all.pch", patch);
         tabbedPane.add("all.pch", tab);

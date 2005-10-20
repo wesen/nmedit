@@ -41,7 +41,7 @@ class PatchNotes {
 		if (patchNotes.length() > 0) {
 			result.append("[Notes]\r\n");
 			result.append(patchNotes);
-			result.append("[/Notes]\r\n");
+			result.append("[/Notes]\r\n\r\n");
 		}
 		return result;
 	}

@@ -77,7 +77,7 @@ class MorphMap {
 				morph = getMorphParam(i);
 				result.append("" + morph.getSectionIndex() + " " + morph.getModuleIndex() + " " + morph.getParamIndex() + " " + morph.getMorphIndex() + " " + morph.getMorphRange() + " ");
 			}
-			result.append("\r\n[/MorphMapDump]\r\n");
+			result.append("\r\n[/MorphMapDump]\r\n\r\n");
 		}
 		return result;
 	}

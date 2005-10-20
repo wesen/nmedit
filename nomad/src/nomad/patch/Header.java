@@ -117,7 +117,7 @@ class Header {
 						greenvisible + ' ' + 
 						purplevisible + ' ' + 
 						whitevisible + "\r\n");
-		result.append("[/Header]\r\n");
+		result.append("[/Header]\r\n\r\n");
 		return result;
 	}
 }

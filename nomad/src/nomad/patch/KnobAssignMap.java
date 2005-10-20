@@ -79,7 +79,7 @@ class KnobAssignMap {
 				knob = getKnob(i);
 				result.append("" + knob.getSection() + " " + knob.getModule() + " " + knob.getParameter() + " " + knob.getKnob() + "\r\n");
 			}
-			result.append("[/KnobMapDump]\r\n");
+			result.append("[/KnobMapDump]\r\n\r\n");
 		}
 		return result;
 	}

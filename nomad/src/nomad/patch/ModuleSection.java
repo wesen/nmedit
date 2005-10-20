@@ -29,7 +29,7 @@ public class ModuleSection {
         final public static int PIXHEIGHTDIV2 = 8;
     }
 
-    private int moduleSection = ModulesSectionType.POLY;
+    private int moduleSection = -1;
     private ModuleSectionGUI moduleSectionGUI = null;
     
     private int maxGridX = 0;
@@ -37,22 +37,24 @@ public class ModuleSection {
 
     // Using Hashtables, we will search for modules on module number
 	private Hashtable modules = null;
+	private Cables cables = null;
     
     Patch patch = null;
 	
 	ModuleSection(Patch patch, int moduleSection) {
 		modules = new Hashtable();
+		cables = new Cables();
 
 		moduleSectionGUI = new ModuleSectionGUI(this);
 		this.moduleSection = moduleSection;
         this.patch = patch;
 	}
 	
-    public int getMaxPixWidth() {
+    public int getMaxGridPixWidth() {
         return maxGridX * ModulePixDimension.PIXWIDTH;
     }
 
-    public int getMaxPixHeight() {
+    public int getMaxGridPixHeight() {
         return maxGridY * ModulePixDimension.PIXHEIGHT;
     }
 
@@ -64,7 +66,7 @@ public class ModuleSection {
 //        mod.setNewPixLocation(x, y);
         // Use a slightly other algorithm
 		mod.setPixLocationX(x / ModulePixDimension.PIXWIDTH);
-		mod.setPixLocationY(y / ModulePixDimension.PIXHEIGHT);
+		mod.setPixLocationY((y - ModulePixDimension.PIXHEIGHT) / ModulePixDimension.PIXHEIGHT);
 
     	modules.put(pchIndex, mod);
         if (mod.getGridX() + mod.getGridWidth() > maxGridX)
@@ -91,23 +93,19 @@ public class ModuleSection {
 		int gridY = Integer.parseInt(paramArray[3]);
 		
         Module mod = new Module(pchIndex, gridX, gridY, this, ModuleDescriptions.model.getModuleById(type));
-//        mod.createModuleGUI(moduleSectionGUI);
 
-//        if (moduleSection == ModulesSectionType.POLY) {
-        	modules.put(pchIndex, mod);
-            if (gridX + mod.getGridWidth() > maxGridX)
-                maxGridX = gridX + mod.getGridWidth();
-            if (gridY + mod.getGridHeight() > maxGridY)
-                maxGridY = gridY + mod.getGridHeight();
-//        }
-        
+    	modules.put(pchIndex, mod);
+        if (gridX + mod.getGridWidth() > maxGridX)
+            maxGridX = gridX + mod.getGridWidth();
+        if (gridY + mod.getGridHeight() > maxGridY)
+            maxGridY = gridY + mod.getGridHeight();
+
 		return mod;
 	}
 
 	public void removeModule(Integer modIndex) {
-	    patch.getCables().removeCablesFromModule(modIndex.intValue(), moduleSection);
-	    if (moduleSection == ModulesSectionType.POLY)
-	    	modules.remove(modIndex);
+	    patch.getCables().removeCablesFromModule(modIndex.intValue());
+    	modules.remove(modIndex);
     }
     
 	public void addModuleTitle(String params) {
@@ -175,7 +173,7 @@ public class ModuleSection {
                 maxGridY = tempMod.getGridY() + tempMod.getGridHeight();
         }
         
-		getModuleSectionGUI().setPreferredSize(new Dimension(getMaxPixWidth(), getMaxPixHeight()));
+		getModuleSectionGUI().setPreferredSize(new Dimension(getMaxGridPixWidth(), getMaxGridPixHeight()));
 		getModuleSectionGUI().revalidate();
 	}
 
@@ -235,12 +233,6 @@ public class ModuleSection {
             }
         }
 
-//		for (int i=0;i<getModulesMaxIndexInRow(module.getGridY()) + 1;i++) {
-//			
-//			// Seek all modules in the same column (gridX)
-//			tempMod = getModule(i);
-//		}
-
 		/**
 		 * Clear the nulls
 		 * 
@@ -254,6 +246,17 @@ public class ModuleSection {
 		c.add(null);
 		modList.removeAll(c);
 
+		// When the dragged module has gridY = 0, we want this to be at the top.
+		// Dragging to '-1' is not possible, because we don't accept negative values.
+		// When the 'top' module in the temp list is not the module that has been dragged, swap it.
+		
+		if (module.getGridY() == 0 && modList.size() > 1) {
+			if (modList.get(1).equals(module)) {	// When dragged module is second module
+				modList.set(1, modList.get(0));		// move modList[0] to modList[1]
+				modList.set(0, module);				// place dragged module to modList[0]
+			}
+		}
+		
 		/**
 		 * Update the Y positions
 		 * 
@@ -262,7 +265,7 @@ public class ModuleSection {
 		 * modList[2] = module2 (y = 5, height = 2)
 		 * modList[3] = module3 (y = 7, height = 3)
 		 */
-
+		
 		for (int j=0;j<modList.size()-1;j++) {
 			tempMod = (Module) modList.get(j);
 			tempMod2 = (Module) modList.get(j+1);
@@ -344,6 +347,22 @@ public class ModuleSection {
 		}
 	}
 
+	public void readCableDump(BufferedReader pchFile) {
+		String dummy = "";
+		try {
+			while ((dummy = pchFile.readLine()) != null) {
+				if (dummy.compareToIgnoreCase("[/CableDump]") != 0)
+					cables.addCable(dummy);
+				else
+					return;
+			}
+			return; // Einde file?
+		}
+		catch(Exception e) {
+			System.out.println(e + " in readCableDump");
+		}
+	}
+
 // Creation of .pch
 
 	public StringBuffer createModuleDump(StringBuffer result) {
@@ -351,21 +370,21 @@ public class ModuleSection {
 		Module mod = null;
 
 		result.append("[ModuleDump]\r\n");
-		result.append("" + moduleSection + "1\r\n");
+		result.append("" + moduleSection + "\r\n");
 		Enumeration e = getModules().keys();
 		while (e.hasMoreElements()) {
 			i = ((Integer) e.nextElement()).intValue();
 			mod = getModule(i);
 			result.append("" + mod.getModIndex() + " " + mod.getModType() + " " + mod.getGridX() + " " + mod.getGridY() + "\r\n");
 		}
-		result.append("[/ModuleDump]\r\n");
+		result.append("[/ModuleDump]\r\n\r\n");
 
 		return result;
 	}
 
 	public StringBuffer createParameterDump(StringBuffer result) {
 		int i, j = 0;
-		Enumeration e;
+		Enumeration e = null;
 		Module mod = null;
 
 		result.append("[ParameterDump]\r\n");
@@ -382,18 +401,18 @@ public class ModuleSection {
 //				result.append("\r\n");
 //			}
 		}
-		result.append("[/ParameterDump]\r\n");
+		result.append("[/ParameterDump]\r\n\r\n");
 
 		return result;
 	}
 
 	public StringBuffer createCustomDump(StringBuffer result) {
 		int i, j = 0;
-		Enumeration e;
+		Enumeration e = null;
 		Module mod = null;
 
 		result.append("[CustomDump]\r\n");
-		result.append("" + moduleSection + "1\r\n");
+		result.append("" + moduleSection + "\r\n");
 		e = getModules().keys();
 		while (e.hasMoreElements()) {
 			i = ((Integer) e.nextElement()).intValue();
@@ -406,26 +425,42 @@ public class ModuleSection {
 //				result.append("\r\n");
 //			}
 		}
-		result.append("[/CustomDump]\r\n");
+		result.append("[/CustomDump]\r\n\r\n");
 
 		return result;
 	}
 
 	public StringBuffer createNameDump(StringBuffer result) {
 		int i = 0;
-		Enumeration e;
-		Module mod;
+		Enumeration e = null;
+		Module mod = null;
 		
 		result.append("[NameDump]\r\n");
-		result.append("" + moduleSection + "1\r\n");
+		result.append("" + moduleSection + "\r\n");
 		e = getModules().keys();
 		while (e.hasMoreElements()) {
 			i = ((Integer) e.nextElement()).intValue();
 			mod = getModule(i);
-			result.append("" + mod.getModIndex() + " " + mod.getModuleName() + "\r\n");
+			result.append("" + mod.getModIndex() + " " + mod.getModuleTitle() + "\r\n");
 		}
-		result.append("[/NameDump]\r\n");
+		result.append("[/NameDump]\r\n\r\n");
 	
+		return result;
+	}
+	
+	public StringBuffer createCableDump(StringBuffer result) {
+		int i = 0;
+		Cable cab = null;
+		result.append("[CableDump]\r\n");
+		result.append("" + moduleSection + "\r\n");
+		if (cables.getCablesSize() > 0) {
+			for (i=0; i < cables.getCablesSize(); i++) {
+				cab = cables.getCable(i);
+				result.append("" + cab.getColor() + " " + cab.getBeginModule() + " " + cab.getBeginConnector() + " 0 " + cab.getEndModule() + " " + cab.getEndConnector() + " " + cab.getEndConnectorType() + "\r\n");
+			}
+		}
+		result.append("[/CableDump]\r\n\r\n");
+		
 		return result;
 	}
 }

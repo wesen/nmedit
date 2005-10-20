@@ -72,7 +72,7 @@ class CurrentNotes {
 // We herhalen de eerste... of moeten we de laatste herhalen om consistent te zijn met de CurrentNoteDump bug?
 			note = getNote(0);
 			result.append("" + note.getNote() + ' ' + note.getAttack() + ' ' + note.getRelease() + ' ');
-			result.append("\r\n[/CurrentNoteDump]\r\n");
+			result.append("\r\n[/CurrentNoteDump]\r\n\r\n");
 //		}
 		return result;
 	}

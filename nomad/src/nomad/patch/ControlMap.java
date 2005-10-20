@@ -76,7 +76,7 @@ class ControlMap {
 				con = getController(i);
 				result.append("" + con.getSection() + " " + con.getModule() + " " + con.getParameter() + " " + con.getCCNumber() + "\r\n");
 			}
-			result.append("[/ControlMapDump]\r\n");
+			result.append("[/ControlMapDump]\r\n\r\n");
 		}
 		return result;
 	}

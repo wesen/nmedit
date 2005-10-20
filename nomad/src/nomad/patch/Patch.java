@@ -17,6 +17,7 @@ import javax.swing.JSplitPane;
 
 import nomad.application.ui.Nomad;
 import nomad.gui.ModuleSectionGUI;
+import nomad.gui.PatchGUI;
 
 public class Patch {
     private Header header;
@@ -32,7 +33,7 @@ public class Patch {
 	
     String patchFileName = "";
     
-    private JPanel patchPanel;
+    private PatchGUI patchPanel;
 	private JSplitPane splitPane;
 	private JScrollPane scrollPanePoly;
 	private JScrollPane scrollPaneCommon;
@@ -40,13 +41,13 @@ public class Patch {
     private ModuleSectionGUI desktopPaneCommon;
 
 	public Patch() {
-		patchPanel = new JPanel();
+		patchPanel = new PatchGUI(this);
 		patchPanel.setLayout(new BorderLayout());
 
         header = new Header();
         modulesPoly = new ModuleSection(this, ModuleSection.ModulesSectionType.POLY);
-        modulesCommon = new ModuleSection(this, ModuleSection.ModulesSectionType.POLY);
-        cables = new Cables();
+        modulesCommon = new ModuleSection(this, ModuleSection.ModulesSectionType.COMMON);
+//        cables = new Cables();
         keyboardAssignment = new KeyboardAssignment();
         knobAssignMap = new KnobAssignMap();
         currentNotes = new CurrentNotes();
@@ -94,8 +95,8 @@ public class Patch {
 		patch.splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         patch.splitPane.setDividerLocation(patch.header.getSeperator() + 1);
 
-        patch.desktopPanePoly.setPreferredSize(new Dimension(patch.modulesPoly.getMaxPixWidth(), patch.modulesPoly.getMaxPixHeight()));
-        patch.desktopPaneCommon.setPreferredSize(new Dimension(patch.modulesCommon.getMaxPixWidth(), patch.modulesCommon.getMaxPixHeight()));
+        patch.desktopPanePoly.setPreferredSize(new Dimension(patch.modulesPoly.getMaxGridPixWidth(), patch.modulesPoly.getMaxGridPixHeight()));
+        patch.desktopPaneCommon.setPreferredSize(new Dimension(patch.modulesCommon.getMaxGridPixWidth(), patch.modulesCommon.getMaxGridPixHeight()));
 
         patch.scrollPanePoly = new JScrollPane(patch.desktopPanePoly); 
         patch.scrollPaneCommon = new JScrollPane(patch.desktopPaneCommon);
@@ -164,7 +165,11 @@ public class Patch {
                     patch.currentNotes.readCurrentNoteDump(pchFile);
                 else
                 if (tag.compareToIgnoreCase("[CableDump]") == 0)
-                    patch.cables.readCableDump(pchFile);
+        			if (pchFile.readLine().trim().compareTo("1") == 0)
+                        patch.modulesPoly.readCableDump(pchFile);
+        			else
+                        patch.modulesCommon.readCableDump(pchFile);
+//                    patch.cables.readCableDump(pchFile);
                 else
                 if (tag.compareToIgnoreCase("[ParameterDump]") == 0)
         			if (pchFile.readLine().trim().compareTo("1") == 0)
@@ -211,23 +216,35 @@ public class Patch {
 
         result.append("[Info]\r\n");
         result.append("Creator=" + Nomad.creatorProgram + ", version " + Nomad.creatorVersion + ", release " + Nomad.creatorRelease + "\r\n");
-        result.append("[/Info]\r\n");
+        result.append("[/Info]\r\n\r\n");
 
         result = header.createHeader(result, splitPane);
+        
         result = modulesPoly.createModuleDump(result);
         result = modulesCommon.createModuleDump(result);
+        
         result = currentNotes.createCurrentNoteDump(result);
-        result = cables.createCableDump(result);
+        
+        result = modulesPoly.createCableDump(result);
+        result = modulesCommon.createCableDump(result);
+        
         result = modulesPoly.createParameterDump(result);
         result = modulesCommon.createParameterDump(result);
+        
         result = modulesPoly.createCustomDump(result);
         result = modulesCommon.createCustomDump(result);
+        
         result = morphMap.createMorphMapDump(result);
+        
         result = keyboardAssignment.createKeyboardAssignment(result);
+        
         result = knobAssignMap.createKnobMapDump(result);
+        
         result = controlMap.createControlMapDump(result);
+        
         result = modulesPoly.createNameDump(result);
         result = modulesCommon.createNameDump(result);
+        
         result = patchNotes.createNotes(result);
 
         return result;

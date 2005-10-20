@@ -37,7 +37,7 @@ class KeyboardAssignment {
 			result.append("[KeyboardAssignment]\r\n");
 // Geen gebruik van getKeyboardAssignment[] ipv keyboardAssignment[], want dat levert alleen maar meer stack op...
 			result.append("" + keyboardAssignment[0] + " " + keyboardAssignment[1] + " " + keyboardAssignment[2] + " " + keyboardAssignment[3] + "\r\n");
-			result.append("[/KeyboardAssignment]\r\n");
+			result.append("[/KeyboardAssignment]\r\n\r\n");
 		}
 		return result;
 	}

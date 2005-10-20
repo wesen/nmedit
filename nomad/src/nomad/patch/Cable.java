@@ -9,7 +9,7 @@ public class Cable extends JPanel {
 	 * 0 6 0 0 4 0 1 = colour, module, connector, in (0), module, connector, in (0) or uit (1).
      * v3.0: first connector must be an input
 	 */
-	
+
     // .pch info
 	private int colour;
 	private int beginArray[], endArray[];
