@@ -1,6 +1,8 @@
 package nomad.gui;
 
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -9,7 +11,9 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
 import nomad.patch.Module;
 
@@ -24,12 +28,18 @@ public class ModuleGUI extends JPanel implements MouseListener, MouseMotionListe
     int oldModuleDragX = 0;
     int oldModuleDragY = 0;
 
+    JPopupMenu menu = new JPopupMenu();
+    JMenuItem removeItem = new JMenuItem("Remove");
+    
     public ModuleGUI(Module module, ModuleSectionGUI moduleSectionGUI) {
     	super();
     	
     	addMouseListener(this);
     	addMouseMotionListener(this);
-    	
+
+	    removeItem.addActionListener(new RemoveModule());
+	    menu.add(removeItem);
+	    
     	parent = moduleSectionGUI;
     	this.module = module;
     	
@@ -65,7 +75,10 @@ public class ModuleGUI extends JPanel implements MouseListener, MouseMotionListe
 	}
 
 	public void mousePressed(MouseEvent e) {
-	    if (!e.isPopupTrigger()) {
+		// Sadly enough, e.isPopupTrigger() does always return false
+//		System.out.println(e.isPopupTrigger()?"Popup":"Normal");		
+//		System.out.println(e.getButton());
+	    if ((e.getButton() & MouseEvent.BUTTON1) == MouseEvent.BUTTON1) {
 	        dragX = e.getX();
 	        dragY = e.getY();
 	        oldModuleDragX = dragX;
@@ -75,23 +88,40 @@ public class ModuleGUI extends JPanel implements MouseListener, MouseMotionListe
 	}
 
 	public void mouseReleased(MouseEvent e) {
-	    if (!e.isPopupTrigger()) { 
+		if (!e.isPopupTrigger()) { 
 	    	parent.setLayer(this, JLayeredPane.DEFAULT_LAYER.intValue());
 	        module.setNewPixLocation(getLocation().x, getLocation().y);
 			module.getModuleSection().rearangeModules(module);
 	    }
 
-//	    if (e.isPopupTrigger()) {
-//            menu.show(e.getComponent(), e.getX(), e.getY());
-//        }
+	    if (e.isPopupTrigger()) {
+            menu.show(e.getComponent(), e.getX(), e.getY());
+        }
 	}
 
 	public void mouseDragged(MouseEvent e) {
-        if (!e.isPopupTrigger()) { // TODO +BUG??? e.getButton() always 0 ???!
+		// Sadly enough, e.isPopupTrigger() or e.getButton() always return false or 0
+//		System.out.println(e.isPopupTrigger()?"Popup":"Normal");		
+//		System.out.println(e.getButton());
+        if ((e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) == MouseEvent.BUTTON1_DOWN_MASK) {
             setLocation(getLocation().x + (e.getX() - dragX), getLocation().y + (e.getY() - dragY));
         }
 	}
 
 	public void mouseMoved(MouseEvent e) {
 	}
+	
+    class RemoveModule implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+        	module.remove();
+        	
+//            modules.removeModule(_this.moduleData.getModIndexInteger(), _this.moduleData.getPoly());
+//            desktopPane.remove(_this);
+//            desktopPane.repaint();
+//
+//            modules.recalcGridXY(_this.getModuleData().getPoly());
+//            desktopPane.setPreferredSize(new Dimension(modules.getMaxWidth(_this.getModuleData().getPoly()), modules.getMaxHeight(_this.getModuleData().getPoly())));
+//            desktopPane.revalidate();
+        }
+    }
 }

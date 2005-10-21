@@ -127,6 +127,10 @@ public class Module {
         return moduleSection;
     }
     
+    public void remove() {
+    	moduleSection.removeModule(this);
+    }
+    
 	public void setNewPixLocation(int newPixLocationX, int newPixLocationY) {
 		// Coordinates are in pixels, we like to 'snap' to the grid coordinates
 		setPixLocationX((newPixLocationX + ModulePixDimension.PIXWIDTHDIV2) / ModulePixDimension.PIXWIDTH);

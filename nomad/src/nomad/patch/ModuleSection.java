@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.swing.JLayeredPane;
 
+import nomad.gui.ModuleGUI;
 import nomad.gui.ModuleSectionGUI;
 import nomad.model.descriptive.DModule;
 import nomad.model.descriptive.ModuleDescriptions;
@@ -103,9 +104,11 @@ public class ModuleSection {
 		return mod;
 	}
 
-	public void removeModule(Integer modIndex) {
-	    patch.getCables().removeCablesFromModule(modIndex.intValue());
-    	modules.remove(modIndex);
+	public void removeModule(Module module) {
+//	    patch.getCables().removeCablesFromModule(modIndex.intValue());
+    	modules.remove(new Integer(module.getModIndex()));
+    	moduleSectionGUI.remove(module.getModuleGUI());
+    	moduleSectionGUI.repaint();
     }
     
 	public void addModuleTitle(String params) {
