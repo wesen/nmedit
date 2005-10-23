@@ -5,8 +5,6 @@ import java.awt.Point;
 
 public class PointProperty extends Property {
 
-	private final static Point defaultValue = new Point(0,0);
-
 	public PointProperty() {
 		super();
 	}
@@ -33,33 +31,40 @@ public class PointProperty extends Property {
 			}
 		}
 		else if (value instanceof Point)
-			return value;
+			return new PointWrap((Point)value);
 
 		throw new InvalidValueException("Unrecognized value '"+value+"'.");
 	}
 
 	public Object getDefaultValue() {
-		return defaultValue;
+		return new PointWrap(0,0);
 	}
 
 	public Point getPoint() {
 		return (Point) getValue();
 	}
-	
+
 	public void setValue(Point p, Object sender) {
 		try {
-			super.setValue(p, sender);
+			super.setValue(new PointWrap(p), sender);
 		} catch (InvalidValueException e) {
 			e.printStackTrace(); // should never occure
 		}
 	}
 	
 	public void setValue(int x, int y, Object sender) {
-		setValue(new Point(x, y), sender);
+		setValue(new PointWrap(x, y), sender);
 	}
 
-	public String getStringRepresentation() {
-		Point p = getPoint();
-		return p.x+","+p.y;
+	final class PointWrap extends Point {
+		public PointWrap(Point point) {
+			super(point);
+		}
+		public PointWrap(int x, int y) {
+			super(x, y);
+		}
+		public String toString() {
+			return x+","+y;
+		}
 	}
 }

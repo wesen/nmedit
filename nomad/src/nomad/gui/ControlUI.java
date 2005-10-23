@@ -9,7 +9,7 @@ public abstract class ControlUI extends DisplayUI {
 	
 	public ControlUI() {
 		super();
-		getProperties().putProperty("parameter(D)", pDefaultParam);
+		getProperties().putProperty("port.0", pDefaultParam);
 	}
 
 	public void setDefaultPort(DParameter param) {

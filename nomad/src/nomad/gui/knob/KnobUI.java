@@ -18,7 +18,7 @@ public class KnobUI extends ControlUI {
 		psize = new BoolProperty();
 		psize.addChangeListener(new KnobSizeChangeListener());
 		getProperties().putProperty("size:large", psize);
-		
+
 		pIndicatorButton = new BoolProperty();
 		pIndicatorButton.addChangeListener(new IndicatorButtonChangeListener());
 		getProperties().putProperty("indicator", pIndicatorButton);
@@ -53,7 +53,7 @@ public class KnobUI extends ControlUI {
 	}
 	
 	private class IndicatorButtonChangeListener implements ChangeListener {
-		public void stateChanged(ChangeEvent arg0) {
+		public void stateChanged(ChangeEvent event) {
 			knob.indicator = pIndicatorButton.getBooleanValue();
 			knob.updateUI();
 			knob.repaint();

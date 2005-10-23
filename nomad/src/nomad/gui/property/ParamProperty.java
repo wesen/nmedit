@@ -6,8 +6,7 @@ import nomad.model.descriptive.DParameter;
 public class ParamProperty extends Property {
 
 	private DModule info = null;
-	private DParameter[] options = new DParameter[] {};
-	private String[] names = new String[] {"null"};
+	private ParamOption[] options = new ParamOption[] {new ParamOption(null)};
 	
 	public void setModule(DModule info) {
 		this.info = info;
@@ -15,45 +14,62 @@ public class ParamProperty extends Property {
 	}
 	
 	private void updateOptions() {
-		options = new DParameter[info.getParameterCount()];
-		names = new String[info.getParameterCount()+1];
-		for (int i=0;i<info.getParameterCount();i++) {
-			DParameter param = info.getParameter(i);
-			options[i] = param;
-			names[i] = paramToString(param);
-		}
-		names[names.length-1] = "null";
+		options = new ParamOption[info.getParameterCount()+1];
+		for (int i=0;i<info.getParameterCount();i++) 
+			options[i] = new ParamOption(info.getParameter(i));
+		options[options.length-1] = new ParamOption(null);
 	}
 	
 	public Object[] getOptions() {
-		return names;
+		return options;
 	}
 	
 	public DParameter getSelectedParameter() {
-		String value = (String) this.getValue();
-		if (value!=null && !value.equals("null")) {
-			for (int i=0;i<names.length;i++)
-				if (names[i].equals(value))
-					return options[i];
-		}
-		return null;
+		return ((ParamOption) getValue()).param;
 	}
-	
-	private String paramToString(DParameter param) {
-		return param.getId()+"#"+param.getName();
+
+	protected Object checkAndNormalizeValue(Object value) throws InvalidValueException {
+		if (value instanceof ParamOption) {
+			for (int i=0;i<options.length;i++) {
+				if (value==options[i]) {
+					return value;
+				}
+			}
+		}
+		else if (value instanceof DParameter) { 
+			for (int i=0;i<options.length;i++) {
+				if (value==options[i].param) {
+					return options[i];
+				}
+			}
+		}
+
+		throw new InvalidValueException("Unreconized type '"+value+"'.");
 	}
 	
 	public void setParameter(DParameter param) {
-		for (int i=0;i<options.length;i++)
-			if (options[i]==param) {
-				try {
-					setValue(paramToString(param));
-				} catch (InvalidValueException e) {
-					// should never occure
-					e.printStackTrace();
-				}
-				break;
-			}
+		try {
+			setValue(param);
+		} catch (InvalidValueException e) {
+			// should never occure
+			e.printStackTrace();
+		}
+	}
+
+
+	private class ParamOption {
+		DParameter param = null;
+		
+		public ParamOption(DParameter param) {
+			this.param = param;
+		}
+		
+		public String toString() {
+			if (param==null)
+				return "null";
+			else
+				return param.getId()+"#"+param.getName();
+		}
 	}
 	
 }

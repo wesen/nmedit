@@ -36,10 +36,10 @@ public class Property {
 	/**
 	 * Returns a string representation of the current value.
 	 * @return a string representation of the current value.
-	 */
+	 *
 	public String getStringRepresentation() {
 		return ""+value;
-	}
+	}*/
 	
 	/**
 	 * Sets the current value to value. (And notifies all listeners)
