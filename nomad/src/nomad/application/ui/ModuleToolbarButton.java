@@ -16,8 +16,8 @@ import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 
+import nomad.misc.MathRound;
 import nomad.model.descriptive.DModule;
-import nomad.util.MathRound;
 
 /**
  * @author Christian Schneider
