@@ -1,29 +1,17 @@
 package nomad.com.message;
 
-import nomad.com.BitInputStream;
+import nomad.com.ComPortListener;
 
 /**
  * @author Christian Schneider
  * @hidden
  */
-public class LightMessage extends MidiMessage {
+public abstract class LightMessage extends MidiMessage {
+	public abstract int getStartIndex();
+	public abstract int getLightStatus(int lightNo); 
+	public abstract int getPid();
 
-	public LightMessage() {
-		super();
-		// TODO Auto-generated constructor stub
+	public void notifyListener(ComPortListener listener) {
+		listener.messageReceived(this);
 	}
-
-	protected BitInputStream getRawData() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-/*
-	  public LightMessage()
-	  public LightMessage(Packet packet)
-	  public void getBitStream(BitStreamList bitStreamList) 
-	  public void notifyListener(NMProtocolListener listener) 
-	  public int getStartIndex() 
-	  public int getLightStatus(int lightNo) 
-	  public int getPid() 
-*/
 }

@@ -1,6 +1,20 @@
 package nomad.com;
 
+import nomad.com.message.AckMessage;
+import nomad.com.message.GetPatchMessage;
+import nomad.com.message.IAmMessage;
+import nomad.com.message.LightMessage;
+import nomad.com.message.MessageBuilder;
 import nomad.com.message.MidiMessage;
+import nomad.com.message.NewPatchInSlotMessage;
+import nomad.com.message.ParameterMessage;
+import nomad.com.message.PatchListMessage;
+import nomad.com.message.PatchMessage;
+import nomad.com.message.RequestPatchMessage;
+import nomad.com.message.SlotActivatedMessage;
+import nomad.com.message.SlotsSelectedMessage;
+import nomad.com.message.VoiceCountMessage;
+import nomad.patch.Patch;
 
 /**
  * The NullComPort is an implementation of the ComPort interface that
@@ -19,13 +33,12 @@ public class NullComPort extends ComPort {
 	 * True if messages should be logged to System.out
 	 */
 	private boolean verbose = true;
-	
+
 	/**
 	 * Creates the NullComPort implementation
-	 * @param listener the ComPortListener
 	 */
-	public NullComPort(ComPortListener listener) {
-		super(listener); 
+	public NullComPort() {
+		super(new NullMessageBuilder()); 
 		this.getDrivers().registerDriver(new NullMidiDriver());
 	}
 
@@ -87,7 +100,8 @@ public class NullComPort extends ComPort {
 	private class NullMidiDriver extends MidiDriver {
 		NullMidiDriver() {
 			super("NullMidiDriver");
-			this.registerPort(new NullMidiPort());
+			this.registerPortIn(new NullMidiPort());
+			this.registerPortOut(new NullMidiPort());
 		}
 	}
 
@@ -97,4 +111,119 @@ public class NullComPort extends ComPort {
 		}
 	}
 	
+	void sendMessage(MidiMessage message) {
+		System.out.println("Sending message requested for:"+message);
+	}
+}
+
+class NullMessageBuilder implements MessageBuilder {
+	public AckMessage newAckMessage() {
+		return new NullAckMessage();
+	}
+	public GetPatchMessage newGetPatchMessage(int slot, int pid) {
+		return new NullGetPatchMessage();
+	}
+	public IAmMessage newIAmMessage() {
+		return new NullIAmMessage();
+	}
+	public LightMessage newLightMessage() {
+		return null;
+	}
+	public NewPatchInSlotMessage newNewPatchInSlotMessage() {
+		return null;
+	}
+	public ParameterMessage newParameterMessage(int pid, int section, int module, int parameter, int value) {
+		return new NullParameterMessage(pid,section,module,parameter,value);
+	}
+	public PatchListMessage newPatchListMessage(int section, int position) {
+		return null;
+	}
+	public PatchMessage newPatchMessage(Patch patch) {
+		return new NullPatchMessage(patch);
+	}
+	public RequestPatchMessage newRequestPatchMessage() {
+		return null;
+	}
+	public SlotActivatedMessage newSlotActivatedMessage() {
+		return null;
+	}
+	public SlotsSelectedMessage newSlotsSelectedMessage() {
+		return null;
+	}
+	public VoiceCountMessage newVoiceCountMessage() {
+		return null;
+	}
+}
+
+class NullAckMessage extends AckMessage {
+	public void setPid1(int pid) { }
+	public void setPid2(int pid) { }
+	public int getPid1() {return 0;}
+	public int getPid2() {return 0;}
+	public boolean expectsReply() {return false;}
+	public boolean isReply() {return false;}
+	public void setSlot(int slot) {}
+	public int getSlot() {return 0;}
+	public String toString() {return this.getClass().getName();}
+}
+
+class NullGetPatchMessage extends GetPatchMessage {
+	public boolean expectsReply() {return false;}
+	public boolean isReply() {return false;}
+	public void setSlot(int slot) {}
+	public int getSlot() {return 0;}
+	public String toString() {return this.getClass().getName();}
+}
+
+class NullIAmMessage extends IAmMessage {
+	public void setVersion(int high, int low) {}
+	public boolean isSenderModular() {return false;}
+	public int getVersionHigh() {return 3;}
+	public int getVersionLow() {return 3;}
+	public boolean expectsReply() {return false;}
+	public boolean isReply() {return false;}
+	public void setSlot(int slot) {}
+	public int getSlot() {return 0;}
+	public String toString() {return this.getClass().getName();}
+}
+
+class NullPatchMessage extends PatchMessage {
+	private Patch patch;
+	public NullPatchMessage(Patch patch) {
+		this.patch=patch;
+	}
+	public Patch getPatch() {return patch;}
+	public int getPid() {return 0;}
+	public boolean expectsReply() {return false;}
+	public boolean isReply() {return false;}
+	public void setSlot(int slot) {}
+	public int getSlot() {return 0;}
+	public String toString() {return this.getClass().getName();}
+}
+class NullParameterMessage extends ParameterMessage {
+	private int pid;
+	private int section;
+	private int module;
+	private int parameter;
+	private int value;
+	public NullParameterMessage(int pid, int section, int module, int parameter, int value) {
+		this.pid=pid; 
+		this.section=section;
+		this.module=module;
+		this.parameter=parameter;
+		this.value=value;
+	}
+
+	public int getSection() {return section;}
+	public int getModule() {return module;}
+	public int getParameter() {return parameter;}
+	public int getValue() {return value;}
+	public int getPid() {return pid;}
+	public void setParameter(int param) {}
+	public void setValue(int value) {}
+	public boolean expectsReply() {return false;}
+	public boolean isReply() {return false;}
+	public void setSlot(int slot) {}
+	public int getSlot() {return 0;}
+	public String toString() {return this.getClass().getName();}
 }

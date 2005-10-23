@@ -1,30 +1,17 @@
 package nomad.com.message;
 
-import nomad.com.BitInputStream;
+import nomad.com.ComPortListener;
+import nomad.patch.Patch;
 
 /**
  * @author Christian Schneider
  * @hidden
  */
-public class PatchMessage extends MidiMessage {
-
-	public PatchMessage() {
-		super();
-		// TODO Auto-generated constructor stub
+public abstract class PatchMessage extends MidiMessage {
+	public abstract Patch getPatch(); 
+	public abstract int getPid();
+	
+	public void notifyListener(ComPortListener listener) {
+		listener.messageReceived(this);
 	}
-
-	protected BitInputStream getRawData() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-/*
-	  public static void usePDLFile(String filename, Tracer tracer) 
-	  public PatchMessage(Patch patch) 
-	  public PatchMessage()
-	  public void getBitStream(BitStreamList bitStreamList)
-	  public void notifyListener(NMProtocolListener listener) 
-	  public void append(Packet packet) 
-	  public void getPatch(Patch patch) 
-	  public int getPid() 
-*/
 }

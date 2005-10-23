@@ -7,14 +7,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.HashMap;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+
+import plugin.classictheme.ClassicThemeFactory;
 
 import nomad.application.Run;
 import nomad.application.ui.ModuleToolbar;
+import nomad.gui.BasicUI;
+import nomad.gui.UIFactory;
 import nomad.model.descriptive.DModule;
 import nomad.model.descriptive.ModuleDescriptions;
 import nomad.model.descriptive.substitution.XMLSubstitutionReader;
@@ -47,7 +53,11 @@ public class UIEditor extends JFrame {
 	JMenuItem menuSaveItem, menuSaveAsItem = null;
 	
 	WorkBenchPane workBench = null;
-	OptionsTablePane optionsPane = null;
+	ValueTablePane valuePane = null;
+	PropertyTablePane propertyPane = null;
+	JPanel livePane = null;
+	ClassPane classPane = null;
+	UIFactory theUIFactory = new ClassicThemeFactory();
 	
 	public UIEditor() {
 		super("Nomad UI Editor");
@@ -79,9 +89,20 @@ public class UIEditor extends JFrame {
 		
 		this.add(BorderLayout.NORTH, moduleToolbar);
 
-		optionsPane = new OptionsTablePane();
-		workBench = new WorkBenchPane(optionsPane);
-		this.add(BorderLayout.EAST, optionsPane);
+		valuePane = new ValueTablePane();
+		propertyPane = new PropertyTablePane();
+		workBench = new WorkBenchPane(theUIFactory, valuePane, propertyPane);
+		
+		livePane = new JPanel();
+		livePane.setLayout(new BorderLayout());
+		livePane.add(BorderLayout.SOUTH, valuePane);
+		livePane.add(BorderLayout.CENTER, propertyPane);
+
+		classPane = new ClassPane(theUIFactory);
+		classPane.addCreateUIElementListener(workBench);
+		
+		this.add(BorderLayout.EAST, livePane);
+		this.add(BorderLayout.WEST, classPane);
 		this.add(BorderLayout.CENTER, workBench);
 		
 		// menu
@@ -118,11 +139,9 @@ public class UIEditor extends JFrame {
     }
 
 	private class ModuleButtonClickListener implements nomad.application.ui.ModuleToolbarEventListener {
-
 		public void toolbarModuleSelected(DModule module) {
 			workBench.setModule(module);
 		}
-		
 	}
 
 }

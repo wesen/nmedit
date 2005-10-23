@@ -1,10 +1,9 @@
 package nomad.com;
 
 /**
- * @author Christian Schneider
- *
  * The message informs about a ComPortException and allows to control
  * the HeartbeatTask class that send this message.
+ * @author Christian Schneider
  * @see nomad.com.HeartbeatErrorHandler
  * @see nomad.com.HeartbeatTask
  * @hidden

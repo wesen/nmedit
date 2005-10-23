@@ -1,29 +1,18 @@
 package nomad.com.message;
 
-import nomad.com.BitInputStream;
+import nomad.com.ComPortListener;
 
 /**
  * @author Christian Schneider
  * @hidden
  */
-public class AckMessage extends MidiMessage {
+public abstract class AckMessage extends MidiMessage {
+	public abstract void setPid1(int pid);
+	public abstract void setPid2(int pid);
+	public abstract int getPid1();
+	public abstract int getPid2();
 
-	public AckMessage() {
-		super();
-		// TODO Auto-generated constructor stub
+	public void notifyListener(ComPortListener listener) {
+		listener.messageReceived(this);
 	}
-/*
-	  public AckMessage(Packet packet)
-	  public void setPid1(int pid) 
-	  public void setPid2(int pid) 
-	  public void getBitStream(BitStreamList bitStreamList)
-	  public void notifyListener(NMProtocolListener listener)
-	  public int getPid1()
-	  public int getPid2()
-*/
-
-	protected BitInputStream getRawData() {
-		// TODO Auto-generated method stub
-		return null;
-	} 
 }

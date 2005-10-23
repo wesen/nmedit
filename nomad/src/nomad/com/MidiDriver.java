@@ -7,7 +7,7 @@ import java.util.Vector;
  * @author Christian Schneider
  * @has 1 - * nomad.com.MidiPort
  */
-public abstract class MidiDriver {
+public class MidiDriver {
 	
 	/**
 	 * Name of the driver
@@ -17,18 +17,20 @@ public abstract class MidiDriver {
 	/**
 	 * List containing the ports that can be used
 	 */
-	private Vector midiPortList = new Vector();
+	private Vector midiInPortList = new Vector();
+	private Vector midiOutPortList = new Vector();
 	
 	/**
 	 * index of the selected port
 	 */
-	private int defaultPortIndex = -1;
+	private int defaultPortInIndex = -1;
+	private int defaultPortOutIndex = -1;
 
 	/**
 	 * Creates a new MidiDriver object.
 	 * @param name
 	 */
-	MidiDriver(String name) {
+	protected MidiDriver(String name) {
 		this.name = name;
 	}
 
@@ -37,19 +39,39 @@ public abstract class MidiDriver {
 	 * @param port the port
 	 * @see MidiPort
 	 */
-	void registerPort(MidiPort port) {
-		midiPortList.add(port);
-		if (midiPortList.size()==1)
-			setDefaultPort(0);
+	protected void registerPortIn(MidiPort port) {
+		midiInPortList.add(port);
+		if (midiInPortList.size()==1)
+			setDefaultPortIn(0);
 	}
 
 	/**
-	 * Returns the number of available ports.
-	 * @return the number of available ports.
+	 * Adds port to the list of supported ports
+	 * @param port the port
 	 * @see MidiPort
 	 */
-	public int getPortCount() {
-		return midiPortList.size();
+	protected void registerPortOut(MidiPort port) {
+		midiOutPortList.add(port);
+		if (midiOutPortList.size()==1)
+			setDefaultPortOut(0);
+	}
+
+	/**
+	 * Returns the number of available input ports.
+	 * @return the number of available input ports.
+	 * @see MidiPort
+	 */
+	public int getPortCountIn() {
+		return midiInPortList.size();
+	}
+
+	/**
+	 * Returns the number of available output ports.
+	 * @return the number of available output ports.
+	 * @see MidiPort
+	 */
+	public int getPortCountOut() {
+		return midiOutPortList.size();
 	}
 
 	/**
@@ -58,8 +80,18 @@ public abstract class MidiDriver {
 	 * @return the port at the specified index
 	 * @see MidiPort
 	 */
-	public MidiPort getPort(int index) {
-		return (MidiPort) midiPortList.get(index);
+	public MidiPort getPortIn(int index) {
+		return (MidiPort) midiInPortList.get(index);
+	}
+
+	/**
+	 * Returns the port at the specified index
+	 * @param index the index
+	 * @return the port at the specified index
+	 * @see MidiPort
+	 */
+	public MidiPort getPortOut(int index) {
+		return (MidiPort) midiOutPortList.get(index);
 	}
 
 	/**
@@ -77,14 +109,23 @@ public abstract class MidiDriver {
 	public String toString() {
 		return getName();
 	}
-	
+
 	/**
 	 * Specifies the default port
 	 * @param index
 	 * @see MidiPort 
 	 */
-	public void setDefaultPort(int index) {
-		this.defaultPortIndex = index;
+	public void setDefaultPortIn(int index) {
+		this.defaultPortInIndex = index;
+	}
+
+	/**
+	 * Specifies the default port
+	 * @param index
+	 * @see MidiPort 
+	 */
+	public void setDefaultPortOut(int index) {
+		this.defaultPortOutIndex = index;
 	}
 	
 	/**
@@ -92,8 +133,17 @@ public abstract class MidiDriver {
 	 * @return the index of the default port
 	 * @see MidiPort
 	 */
-	int getDefaultPortIndex() {
-		return this.defaultPortIndex;
+	int getDefaultPortInIndex() {
+		return this.defaultPortInIndex;
+	}
+	
+	/**
+	 * Returns the index of the default port
+	 * @return the index of the default port
+	 * @see MidiPort
+	 */
+	int getDefaultPortOutIndex() {
+		return this.defaultPortOutIndex;
 	}
 
 	/**
@@ -101,8 +151,17 @@ public abstract class MidiDriver {
 	 * @return the default port
 	 * @see MidiPort
 	 */
-	public MidiPort getDefaultPort() {
-		return getPort(defaultPortIndex);
+	public MidiPort getDefaultPortIn() {
+		return getPortIn(defaultPortInIndex);
+	}
+
+	/**
+	 * Returns the default port.
+	 * @return the default port
+	 * @see MidiPort
+	 */
+	public MidiPort getDefaultPortOut() {
+		return getPortOut(defaultPortOutIndex);
 	}
 
 }

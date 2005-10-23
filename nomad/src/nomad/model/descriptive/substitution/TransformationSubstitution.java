@@ -1,6 +1,6 @@
 package nomad.model.descriptive.substitution;
 
-import nomad.util.MathRound;
+import nomad.misc.MathRound;
 
 public class TransformationSubstitution extends Substitution {
 	

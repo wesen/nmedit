@@ -5,39 +5,32 @@ import java.awt.Dimension;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSlider;
 import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 
+import nomad.gui.DisplayUI;
+import nomad.gui.knob.JModKnob;
+import nomad.gui.knob.ParameterClass;
 import nomad.model.descriptive.DModule;
 import nomad.model.descriptive.DParameter;
 
-public class OptionsTablePane extends JPanel {
+public class ValueTablePane extends JPanel {
 
 	private JTable table = null;
 	private JScrollPane scrollpane = null;
 	private ModulePane modulePane = null;
 	private OptionsTableModel dataModel = null;
 	
-	public OptionsTablePane() {
+	public ValueTablePane() {
 		this.setLayout(new BorderLayout());
-		this.setPreferredSize(new Dimension(200, 300));
+		this.setPreferredSize(new Dimension(200, 200));
 		dataModel = new OptionsTableModel();
 		table = new JTable(dataModel);
 	    table.getColumnModel().getColumn(0).setHeaderValue("Property");
 	    table.getColumnModel().getColumn(1).setHeaderValue("Value");
 	    
-	    table.setEditingColumn(1);
-		/*
-		model.addColumn("Col1");
-	    model.addColumn("Col2");
-	    */
-	    // Change name of first visible column
-	    
-		
 	    scrollpane = new JScrollPane(table);
 	    scrollpane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 	    scrollpane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -68,7 +61,7 @@ public class OptionsTablePane extends JPanel {
 				this.module=modulePane.getModule();
 				for (int i=0;i<module.getParameterCount();i++) {
 					DParameter param = module.getParameter(i);
-					JSlider slider = mpane.getParamControl(param);
+					JModKnob slider = ((JModKnob)((DisplayUI) mpane.getParamControl(param)).getComponent());
 					slider.addChangeListener(new ParamChangeListener(i));
 				}
 			}
@@ -100,8 +93,9 @@ public class OptionsTablePane extends JPanel {
 					}
 				} else if (column==1) {
 					if (row<module.getParameterCount()) {
+
 						DParameter param = module.getParameter(row);
-						JSlider slider = mpane.getParamControl(param);
+						JModKnob slider = ((JModKnob)((DisplayUI) mpane.getParamControl(param)).getComponent());
 						return param.getFormattedValue(slider.getValue());
 					}
 				} else

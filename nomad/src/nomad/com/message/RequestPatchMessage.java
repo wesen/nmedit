@@ -1,26 +1,14 @@
 package nomad.com.message;
 
-import nomad.com.BitInputStream;
+import nomad.com.ComPortListener;
 
 /**
  * @author Christian Schneider
  * @hidden
  */
-public class RequestPatchMessage extends MidiMessage {
+public abstract class RequestPatchMessage extends MidiMessage {
 
-	public RequestPatchMessage() {
-		super();
-		// TODO Auto-generated constructor stub
+	public void notifyListener(ComPortListener listener) {
+		listener.messageReceived(this);
 	}
-
-	protected BitInputStream getRawData() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-/*
-	  public RequestPatchMessage() 
-	  public RequestPatchMessage(Packet packet)
-	  public void getBitStream(BitStreamList bitStreamList)
-	  public void notifyListener(NMProtocolListener listener) 
-*/
 }

@@ -57,8 +57,10 @@ public abstract class BitInputStream {
 	 * @return next bit in stream
 	 * @throws IndexOutOfBoundsException no more bit is available
 	 */	
-	public abstract int readBit() 
-		throws IndexOutOfBoundsException;
+	public int readBit() 
+		throws IndexOutOfBoundsException {
+		return read(1);
+	}
 	
 	/**
 	 * Reads 1 bit and sets the stream position to the next available bit.
@@ -68,8 +70,10 @@ public abstract class BitInputStream {
 	 * @throws IndexOutOfBoundsException no more bit is available
 	 * @return next bit in stream, true if bit is 1, false if bit is 0
 	 */	
-	public abstract boolean readBitB()
-		throws IndexOutOfBoundsException;
+	public boolean readBitB()
+		throws IndexOutOfBoundsException {
+		return readBit()!=0;
+	}
 	
 	/**
 	 * Reads 4 bit and sets the stream position to the next available bit.

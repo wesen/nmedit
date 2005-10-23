@@ -1,27 +1,15 @@
 package nomad.com.message;
 
-import nomad.com.BitInputStream;
+import nomad.com.ComPortListener;
 
 /**
  * @author Christian Schneider
  * @hidden
  */
-public class VoiceCountMessage extends MidiMessage {
+public abstract class VoiceCountMessage extends MidiMessage {
+	public abstract int getVoiceCount(int slot);
 
-	public VoiceCountMessage() {
-		super();
-		// TODO Auto-generated constructor stub
+	public void notifyListener(ComPortListener listener) {
+		listener.messageReceived(this);
 	}
-
-	protected BitInputStream getRawData() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-/*
-	  public VoiceCountMessage()
-	  public VoiceCountMessage(Packet packet)
-	  public void getBitStream(BitStreamList bitStreamList)
-	  public void notifyListener(NMProtocolListener listener)
-	  public int getVoiceCount(int slot)
-*/
 }

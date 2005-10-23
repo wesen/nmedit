@@ -208,12 +208,4 @@ public class BitBuffer extends BitInputStream {
 		return result;
 	}
 
-	public int readBit() {
-		return read(BITS_BIT);
-	}
-	
-	public boolean readBitB() {
-		return readBit()!=0;
-	}
-	
 }

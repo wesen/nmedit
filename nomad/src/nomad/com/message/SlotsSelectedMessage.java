@@ -1,29 +1,16 @@
 package nomad.com.message;
 
-import nomad.com.BitInputStream;
+import nomad.com.ComPortListener;
 
 /**
  * @author Christian Schneider
  * @hidden
  */
-public class SlotsSelectedMessage extends MidiMessage {
+public abstract class SlotsSelectedMessage extends MidiMessage {
+	public abstract boolean isSelected(int slot);
+	public abstract void setSelected(int slot, boolean state);
 
-	public SlotsSelectedMessage() {
-		super();
-		// TODO Auto-generated constructor stub
+	public void notifyListener(ComPortListener listener) {
+		listener.messageReceived(this);
 	}
-
-	protected BitInputStream getRawData() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-/*
-	  public SlotsSelectedMessage() 
-	  public SlotsSelectedMessage(Packet packet)
-	  public void getBitStream(BitStreamList bitStreamList)
-	  public void notifyListener(NMProtocolListener listener) 
-	  public boolean isSelected(int slot) 
-	  public void setSelected(int slot, boolean state) 
-*/
-
 }

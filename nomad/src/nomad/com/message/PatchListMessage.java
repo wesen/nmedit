@@ -1,32 +1,20 @@
 package nomad.com.message;
 
-import nomad.com.BitInputStream;
+import nomad.com.ComPortListener;
 
 /**
  * @author Christian Schneider
  * @hidden
  */
-public class PatchListMessage extends MidiMessage {
-
-	public PatchListMessage() {
-		super();
-		// TODO Auto-generated constructor stub
+public abstract class PatchListMessage extends MidiMessage {
+	public abstract int getSection();
+	public abstract int getPosition();
+	public abstract StringList getNames(); 
+	public abstract boolean endOfList();
+	public abstract boolean endOfSection(String name);
+	public abstract boolean emptyPosition(String name);
+	
+	public void notifyListener(ComPortListener listener) {
+		listener.messageReceived(this);
 	}
-
-	protected BitInputStream getRawData() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-/*
-	  public PatchListMessage(int section, int position)
-	  public PatchListMessage(Packet packet)
-	  public void getBitStream(BitStreamList bitStreamList) 
-	  public void notifyListener(NMProtocolListener listener)
-	  public int getSection()
-	  public int getPosition() 
-	  public StringList getNames() 
-	  public boolean endOfList() 
-	  public boolean endOfSection(String name)
-	  public boolean emptyPosition(String name) 
-*/
 }

@@ -4,7 +4,7 @@ package nomad.com;
  * Interface for the MidiPort
  * @author Christian Schneider
  */
-public abstract class MidiPort {
+public class MidiPort {
 	
 	/**
 	 * Name of the port
@@ -15,7 +15,7 @@ public abstract class MidiPort {
 	 * Creates a new MidiPort with the specified name
 	 * @param name name of the MidiPort
 	 */
-	MidiPort(String name) {
+	public MidiPort(String name) {
 		this.name = name;
 	}
 

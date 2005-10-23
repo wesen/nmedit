@@ -1,5 +1,6 @@
 package nomad.com;
 
+import nomad.com.message.MessageBuilder;
 import nomad.com.message.MidiMessage;
 
 /**
@@ -12,10 +13,13 @@ import nomad.com.message.MidiMessage;
  */
 public abstract class ComPort {
 	
+	private MessageBuilder messageBuilder = null;
+
 	/**
-	 * listening object 
+	 * listening objects 
 	 */
-	private ComPortListener listener = null;
+	private SynthListenerSubscriberList listeners = 
+		new SynthListenerSubscriberList();
 
 	/**
 	 * List of supported drivers.
@@ -27,12 +31,12 @@ public abstract class ComPort {
 	 */
 	private MidiDriver driver = null;
 
-	ComPort(ComPortListener listener) {
-		if (listener==null)
+	protected ComPort(MessageBuilder messageBuilder) {
+		/*if (messageBuilder==null)
 			throw new NullPointerException(
-				"'MidiEventListener' must not be null"
-			);
-		this.listener = listener;
+				"'MessageBuilder' must not be null"
+			);*/
+		this.messageBuilder=messageBuilder;
 	}
 	
 	/**
@@ -41,6 +45,22 @@ public abstract class ComPort {
 	 */
 	public MidiDriverList getDrivers() {
 		return driverList; 
+	}
+	
+	protected void registerDriver(MidiDriver driver) {
+		driverList.registerDriver(driver);
+	}
+	
+	public MessageBuilder getMessageBuilder() {
+		return messageBuilder;
+	}
+	
+	protected void setMessageBuilder(MessageBuilder builder) {
+		
+	}
+
+	public nomad.patch.Patch getPatchFromActiveSlot() {
+		return null;
 	}
 	
 	/**
@@ -95,22 +115,29 @@ public abstract class ComPort {
 	public MidiDriver getDriver() {
 		return driver;
 	}
-	
+
 	/**
 	 * Broadcasts the received MidiMessage message to the listener.
 	 * @param message the received MidiMessage message
 	 */
 	protected void received(MidiMessage message) {
-		listener.comportMessageReceived(message);
+		for (int i=0;i<listeners.getSubscriberCount();i++)
+			message.notifyListener((ComPortListener)listeners.getSubscriber(i));
 	}
 
 	/**
 	 * Creates a instance of the ComPort implementation.
-	 * @param listener The object that wants to listen the ComPort instance.
 	 * @return instance of the ComPort implementation. 
 	 */
-	public static ComPort getDefaultComPortInstance(ComPortListener listener) { 
-		return new NullComPort(listener);
+	public static ComPort getDefaultComPortInstance() {
+		return new NullComPort();
 	}
-	
+
+	public void addComportListener(ComPortListener listener) {
+		listeners.subscribeListener(listener);
+	}
+
+	public void removeComportListener(ComPortListener listener) {
+		listeners.unsubscribeListener(listener);
+	}	
 }

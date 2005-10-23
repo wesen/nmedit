@@ -1,6 +1,17 @@
 package nomad.com;
 
-import nomad.com.message.MidiMessage;
+import nomad.com.message.AckMessage;
+import nomad.com.message.GetPatchMessage;
+import nomad.com.message.IAmMessage;
+import nomad.com.message.LightMessage;
+import nomad.com.message.NewPatchInSlotMessage;
+import nomad.com.message.ParameterMessage;
+import nomad.com.message.PatchListMessage;
+import nomad.com.message.PatchMessage;
+import nomad.com.message.RequestPatchMessage;
+import nomad.com.message.SlotActivatedMessage;
+import nomad.com.message.SlotsSelectedMessage;
+import nomad.com.message.VoiceCountMessage;
 
 /**
  * The Synth manages the connection to the Nord Modular through the
@@ -12,12 +23,12 @@ import nomad.com.message.MidiMessage;
  * @composed 0 - 1 nomad.com.HeartbeatTask
  * @has 1 - n nomad.com.SynthListenerSubscriberList
  */
-public class Synth implements ComPortListener, HeartbeatErrorHandler {
+public class Synth {
 
 	/**
 	 * The used ComPort implementation.
 	 */
-	private ComPort comPort = ComPort.getDefaultComPortInstance(this);
+	private ComPort comPort = null;
 	
 	/**
 	 * Timer for sending frequentyl heartbeat() messages. 
@@ -32,9 +43,14 @@ public class Synth implements ComPortListener, HeartbeatErrorHandler {
 	
 	/**
 	 * Creates a new Synth object.
+	 * @param comPort The Comport that will be used
 	 */
-	public Synth() {
+	public Synth(ComPort comPort) {
 		super();
+		if (comPort==null)
+			throw new NullPointerException("ComPort must not be 'null'.");
+		this.comPort = comPort;
+		comPort.addComportListener(new ComPortMessageHandler());
 	}
 
 	/**
@@ -72,14 +88,6 @@ public class Synth implements ComPortListener, HeartbeatErrorHandler {
 	}
 
 	/**
-	 * Invoked by ComPort if an message is received
-	 * @see ComPort
-	 */
-	public void comportMessageReceived(MidiMessage message) {
-		//
-	}
-
-	/**
 	 * Connects to the synth using the current ComPort implementation.
 	 * @throws SynthException if either an connection is active or
 	 * an exception occured while opening the connection throught ComPort. 
@@ -94,7 +102,7 @@ public class Synth implements ComPortListener, HeartbeatErrorHandler {
 			throw new SynthException(e);
 		}
 		
-		heart = new HeartbeatTask(comPort, this);
+		heart = new HeartbeatTask(comPort, new HBHandler());
 		try {
 			heart.start();
 		} catch (HeartbeatTaskException cause) {
@@ -137,18 +145,26 @@ public class Synth implements ComPortListener, HeartbeatErrorHandler {
 		return comPort.isPortOpen();
 	}
 
-	public void exceptionOccured(HeartbeatTaskExceptionMessage e) {
-		System.out.println("** Exception while sending heartbeat(): forced disconnect");
-		e.getCause().printStackTrace();
-		e.emergencyStop();
-		heart = null;
-		try {
-			disconnect();
-		} catch (SynthException e1) {
-			e1.printStackTrace();
+	private class HBHandler implements HeartbeatErrorHandler {
+		public void exceptionOccured(HeartbeatTaskExceptionMessage e) {
+			ComPortException ex = e.getCause();
+			if (ex.getCause()!=null) {
+				System.out.println("caught in heartbeat(): "+ex.getCause());
+				return ;
+			}
+
+			System.out.println("** Exception while sending heartbeat(): forced disconnect");
+			e.getCause().printStackTrace();
+			e.emergencyStop();
+			heart = null;
+			try {
+				disconnect();
+			} catch (SynthException e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
-
+		
 /** ------------------------------------------------------------------------ */	
 /*
 	  public Patch getPatch(int arg0) 
@@ -165,16 +181,73 @@ public class Synth implements ComPortListener, HeartbeatErrorHandler {
 	  public void notifyListeners(int slot, Patch patch)
 	  public void notifyListeners()
 	  public void notifyListeners(int slot)
-	  public void messageReceived(IAmMessage message)
-	  public void messageReceived(LightMessage message) 
-	  public void messageReceived(PatchMessage message)
-	  public void messageReceived(AckMessage message)
-	  public void messageReceived(PatchListMessage message)
-	  public void messageReceived(NewPatchInSlotMessage message)
-	  public void messageReceived(VoiceCountMessage message)
-	  public void messageReceived(SlotsSelectedMessage message)
-	  public void messageReceived(SlotActivatedMessage message)
-	  public void messageReceived(ParameterMessage message)
 */
+
+	/**
+	 * Invoked by ComPort if an message is received
+	 * @see ComPort
+	 */
+	private class ComPortMessageHandler implements ComPortListener {
 	
+		public void messageReceived(IAmMessage message) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void messageReceived(LightMessage message) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void messageReceived(PatchMessage message) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void messageReceived(AckMessage message) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void messageReceived(PatchListMessage message) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void messageReceived(NewPatchInSlotMessage message) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void messageReceived(VoiceCountMessage message) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void messageReceived(GetPatchMessage message) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void messageReceived(SlotsSelectedMessage message) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void messageReceived(SlotActivatedMessage message) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void messageReceived(RequestPatchMessage message) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void messageReceived(ParameterMessage message) {
+			// TODO Auto-generated method stub
+			
+		}
+	
+	}
 }

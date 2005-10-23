@@ -1,24 +1,16 @@
 package nomad.com.message;
 
-import nomad.com.BitInputStream;
+import nomad.com.ComPortListener;
 
 /**
- * Parent class for all midi messages
+ * Parent interface for all midi messages
  * @author Christian Schneider
- * @composed 1 - 1 nomad.com.BitInputStream
+ * //@composed 1 - 1 nomad.com.BitInputStream
  */
 public abstract class MidiMessage {
-
-	/**
-	 * Creates a new MidiMessage 
-	 */
-	protected MidiMessage() {
-		super();
-	}
-	protected MidiMessage(BitInputStream data) {
-		super();
-	}
-	
-	protected abstract BitInputStream getRawData();
-
+	public abstract boolean expectsReply();
+	public abstract boolean isReply();
+	public abstract void setSlot(int slot);
+	public abstract int getSlot();
+	public abstract void notifyListener(ComPortListener listener);
 }

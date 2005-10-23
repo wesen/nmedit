@@ -42,7 +42,7 @@ public class HeartbeatTask
 	private HeartbeatErrorHandler errorHandler = null;
 
 	/**
-	 * Default interval for sending heartbeat() message is 1 second.
+	 * Default interval for sending heartbeat() message is 1/10 second.
 	 */
 	public final static int DEFAULT_HEARTBEAT_INTERVAL=1000;
 
@@ -127,11 +127,20 @@ public class HeartbeatTask
 	/**
 	 * @hidden
 	 */
-	class TimerEventAdapter implements ActionListener {
+	class TimerEventAdapter implements ActionListener {		
+		
+		//private boolean returnedFromHeartbeat=true;
+		
 		public void actionPerformed(ActionEvent event) {
 			try {
-				comPort.heartbeat();
+				/*System.out.println("hb()");
+				if (returnedFromHeartbeat) {
+					returnedFromHeartbeat = false;*/
+					comPort.heartbeat();
+					/*returnedFromHeartbeat = true;
+				} else System.out.println("******* aiaiaiai");*/
 			} catch (ComPortException cause) {
+				//returnedFromHeartbeat = true;
 				if (errorHandler==null) {
 					try {
 						stop();
