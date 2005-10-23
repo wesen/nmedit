@@ -22,11 +22,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
 
 import nomad.application.Run;
 import nomad.com.ComPort;
 import nomad.com.ComPortFactory;
+import nomad.com.NullComPort;
 import nomad.com.Synth;
 import nomad.com.SynthConnectionStateListener;
 import nomad.com.SynthException;
@@ -57,6 +60,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		JMenu menuSelectComport = null;
 		
 	JMenu menuHelp = null;
+		JMenu menuHelpLookAndFeel = null;
 		JMenuItem menuHelpPluginsList = null;
 		JMenuItem menuHelpAbout = null;
 
@@ -259,7 +263,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 				try {
 					synth.disconnect();
 				} catch (SynthException e) {
-					// TODO Auto-generated catch block
+					// should never reach this line
 					e.printStackTrace();
 				}
 			
@@ -313,12 +317,44 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 
 		
 		menuHelp = new JMenu("Help");
+			menuHelpLookAndFeel = new JMenu("Look and Feel");
+			menuHelp.add(menuHelpLookAndFeel);
+			menuHelp.addSeparator();
 			menuHelpPluginsList = menuHelp.add("Plugins");
 			menuHelpAbout = menuHelp.add("About");
+
+		// build look and feel menu
+		ButtonGroup lookAndFeelGroup = new ButtonGroup();
+		String current = UIManager.getLookAndFeel().getName();
+		UIManager.LookAndFeelInfo[] lookAndFeelInfo = UIManager.getInstalledLookAndFeels();
+		for (int i=0;i<lookAndFeelInfo.length;i++) {
+			JRadioButtonMenuItem item = new JRadioButtonMenuItem(lookAndFeelInfo[i].getName());
+		    item.addActionListener(new LookAndFeelChanger(lookAndFeelInfo[i]));
+		    menuHelpLookAndFeel.add(item);
+		    lookAndFeelGroup.add(item);
+		    item.setSelected(lookAndFeelInfo[i].getName().equals(current));
+		} // end build look and feel menu
+			
 		menuBar.add(menuHelp);
 		menuHelpPluginsList.addActionListener(new MenuShowPluginListListener());
 		menuHelpAbout.addActionListener(new MenuShowAboutDialogListener());
 		return menuBar; 
+	}
+
+	private class LookAndFeelChanger implements ActionListener {
+	    UIManager.LookAndFeelInfo info;
+	    LookAndFeelChanger(UIManager.LookAndFeelInfo info) {
+	      this.info = info;
+	    }
+
+	    public void actionPerformed(ActionEvent actionEvent) {
+	      try {
+	        UIManager.setLookAndFeel(info.getClassName());
+	        SwingUtilities.updateComponentTreeUI(Nomad.this);
+	      } catch (Exception e) {
+	        e.printStackTrace();
+	      }
+	    }
 	}
 	
 	private void createComPortMenuItems(JMenu menuSelectComport) {
@@ -330,6 +366,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 				group.add(mItem);
 				mItem.setToolTipText(plugin.getDescription());
 				mItem.addActionListener(new ComPortSelectorListener(mItem, plugin));
+				mItem.setSelected(NullComPort.class.getName().endsWith(plugin.getName()));
 				menuSelectComport.add(mItem);
 			}
 		}
@@ -364,6 +401,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		}
 	}
 
+	/*
 	public static void main(String[] args) {
 		try {
 //			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
@@ -372,11 +410,11 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		catch (Exception e) {
 		}
 
-		/* Default theme */
+		/* Default theme *
 		System.setProperty("swing.metalTheme", "steel");
 
 		new Nomad();
-	}
+	}*/
 
 	public void synthConnectionStateChanged(Synth synth) {
 		this.menuSynthConnectionMenuItem.setText(
