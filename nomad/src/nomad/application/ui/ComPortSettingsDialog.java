@@ -33,7 +33,8 @@ public class ComPortSettingsDialog extends JDialog {
 
 	private ComPort comPort=null;
 	private JComboBox cbDrivers = new JComboBox();
-	private JComboBox cbPorts   = new JComboBox();
+	private JComboBox cbPortsIn   = new JComboBox();
+	private JComboBox cbPortsOut   = new JComboBox();
 	private JPanel titlePanel    = new JPanel();
 	private JPanel userPanel    = new JPanel(); 
 	private JPanel buttonPanel  = new JPanel();
@@ -54,12 +55,6 @@ public class ComPortSettingsDialog extends JDialog {
 
 		this.comPort = comPort;
 		
-		MidiDriverList driverList = comPort.getDrivers();
-		for (int i=0;i<driverList.getDriverCount();i++)
-			cbDrivers.addItem(driverList.getDriver(i));
-		cbDrivers.setSelectedIndex(0);
-		cbDrivers.setEnabled(cbDrivers.getItemCount()>1);
-		
 		titlePanel.setBackground(Color.WHITE);
 		titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
 		titlePanel.add(new JLabel(this.getName()));
@@ -78,7 +73,7 @@ public class ComPortSettingsDialog extends JDialog {
 		upConstraints.insets = new Insets(10,10,10,10);
 		upConstraints.gridwidth = GridBagConstraints.HORIZONTAL;
 		upConstraints .gridwidth=2;
-		upConstraints.gridheight=2;
+		upConstraints.gridheight=3;
 		upConstraints.fill = GridBagConstraints.BOTH;
 		Component c;
 
@@ -94,11 +89,23 @@ public class ComPortSettingsDialog extends JDialog {
 		upConstraints.weightx=1.0;
 		upConstraints.fill = GridBagConstraints.BOTH;
 		upConstraints.gridwidth = GridBagConstraints.HORIZONTAL;
-		userPanel.add(c=new JLabel("Port"));
+		userPanel.add(c=new JLabel("Input Port"));
 		upLayout.setConstraints(c, upConstraints);
 
 		upConstraints.weightx=4.0;
-		userPanel.add(c=cbPorts);
+		upConstraints.gridwidth = GridBagConstraints.REMAINDER;		
+		userPanel.add(c=cbPortsIn);
+		upLayout.setConstraints(c, upConstraints);
+		userPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+
+		upConstraints.weightx=1.0;
+		upConstraints.fill = GridBagConstraints.BOTH;
+		upConstraints.gridwidth = GridBagConstraints.HORIZONTAL;
+		userPanel.add(c=new JLabel("Output Port"));
+		upLayout.setConstraints(c, upConstraints);
+
+		upConstraints.weightx=4.0;
+		userPanel.add(c=cbPortsOut);
 		upLayout.setConstraints(c, upConstraints);
 		userPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		
@@ -108,35 +115,54 @@ public class ComPortSettingsDialog extends JDialog {
 		
 		this.setModal(true);
 		
-		btnConfirm.setEnabled(false);
+		//btnConfirm.setEnabled(false);
 
+		MidiDriverList driverList = comPort.getDrivers();
+		for (int i=0;i<driverList.getDriverCount();i++)
+			cbDrivers.addItem(driverList.getDriver(i));
+
+		cbDrivers.setSelectedIndex(0);
+		cbDrivers.setEnabled(cbDrivers.getItemCount()>1);
+		
+		updatePortList();
+		
 		cbDrivers.addActionListener(new DriverListActionAdapter());
-		cbPorts.addActionListener(new PortListActionAdapter());
+		//cbPortsIn.addActionListener(new PortListActionAdapter());
+		//cbPortsOut.addActionListener(new PortListActionAdapter());
 		btnConfirm.addActionListener(new ConfirmButtonActionAdapter());
 		btnCancel.addActionListener(new CancelButtonActionAdapter());
 
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		this.setSize(300, 200);
+		this.setSize(300, 240);
 		this.validate();
+	}
+	
+	private void updatePortList() {
+		cbPortsIn.removeAllItems();
+		MidiDriver driver = (MidiDriver) cbDrivers.getSelectedItem();
+		for (int i=0;i<driver.getPortCountIn();i++)
+			cbPortsIn.addItem(driver.getPortIn(i));
+		cbPortsIn.setEnabled(cbPortsIn.getItemCount()>1);
+
+		cbPortsOut.removeAllItems();
+		for (int i=0;i<driver.getPortCountOut();i++)
+			cbPortsOut.addItem(driver.getPortOut(i));
+		cbPortsOut.setEnabled(cbPortsOut.getItemCount()>1);
 	}
 	
 	class DriverListActionAdapter implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
-			cbPorts.removeAllItems();
-			MidiDriver driver = (MidiDriver) cbDrivers.getSelectedItem();
-			for (int i=0;i<driver.getPortCount();i++)
-				cbPorts.addItem(driver.getPort(i));
-			
-			cbPorts.setEnabled(cbPorts.getItemCount()>1);
-			btnConfirm.setEnabled(true);
+			updatePortList();
+			//btnConfirm.setEnabled(true);
 		}
 	}
 	
+	/*
 	class PortListActionAdapter implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
-			btnConfirm.setEnabled(true);
+			btnConfirm.setEnabled(cbPortsIn.getItemCount()>1);
 		}
-	}
+	}*/
 	
 	class ConfirmButtonActionAdapter implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
@@ -153,7 +179,8 @@ public class ComPortSettingsDialog extends JDialog {
 
 	private void storeSettings() {
 		MidiDriver driver = (MidiDriver) cbDrivers.getSelectedItem();
-		driver.setDefaultPort(cbPorts.getSelectedIndex());
+		driver.setDefaultPortIn(cbPortsIn.getSelectedIndex());
+		driver.setDefaultPortOut(cbPortsOut.getSelectedIndex());
 		comPort.setDriver(driver);
 	}
 
