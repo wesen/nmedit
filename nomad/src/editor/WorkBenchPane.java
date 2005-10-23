@@ -28,15 +28,14 @@ public class WorkBenchPane extends JPanel implements CreateUIElementListener {
 	
 	public void setModule(ModulePane modulePane) {
 		this.module=null;
-
-		if (this.modulePane!=null) {
+		if (this.modulePane!=null) 
 			this.remove(this.modulePane);
-			this.module = modulePane.getModule();
-		}
 		this.modulePane = modulePane;
-		
-		this.add(BorderLayout.CENTER, modulePane);
-		this.updateUI();
+		if (modulePane!=null) {
+			this.module = modulePane.getModule();
+			this.add(BorderLayout.CENTER, modulePane);
+			this.updateUI();
+		}
 		
 		valueTable.setModulePane(modulePane);
 		propertyTable.setModulePane(modulePane);

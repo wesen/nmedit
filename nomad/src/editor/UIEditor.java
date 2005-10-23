@@ -136,12 +136,11 @@ public class UIEditor extends JFrame {
 		
 		// create all modules
 		Collection moduleCollection = ModuleDescriptions.model.getModules();
-		DModule info = null;
-		for (Iterator iter = moduleCollection.iterator(); iter.hasNext(); info = (DModule) iter.next()) {
-			if (info!=null) {
-				Run.statusMessage("module:"+info.getName());
-				modules.put(info, ModuleUIBuilder.buildModuleUI(theUIFactory, info));
-			}
+		Iterator iter = moduleCollection.iterator();
+		while (iter.hasNext()) {
+			DModule info = (DModule) iter.next();
+			Run.statusMessage("module:"+info.getName());
+			modules.put(info, ModuleUIBuilder.buildModuleUI(theUIFactory, info));
 		}
 	}
 	
