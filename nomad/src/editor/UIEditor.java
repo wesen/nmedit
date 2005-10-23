@@ -7,23 +7,28 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileNotFoundException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
-import plugin.classictheme.ClassicThemeFactory;
 
 import nomad.application.Run;
 import nomad.application.ui.ModuleToolbar;
 import nomad.gui.BasicUI;
 import nomad.gui.UIFactory;
+import nomad.gui.property.Property;
+import nomad.gui.property.PropertyMap;
 import nomad.model.descriptive.DModule;
 import nomad.model.descriptive.ModuleDescriptions;
 import nomad.model.descriptive.substitution.XMLSubstitutionReader;
+import plugin.classictheme.ClassicThemeFactory;
 
 public class UIEditor extends JFrame {
 
@@ -46,6 +51,8 @@ public class UIEditor extends JFrame {
 	    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	    frame.setVisible(true);
 	}
+	
+	private HashMap modules = new HashMap();
 
 	JMenuBar menuBar = null;
 	JMenu menuFile = null;
@@ -91,7 +98,7 @@ public class UIEditor extends JFrame {
 
 		valuePane = new ValueTablePane();
 		propertyPane = new PropertyTablePane();
-		workBench = new WorkBenchPane(theUIFactory, valuePane, propertyPane);
+		workBench = new WorkBenchPane(valuePane, propertyPane);
 		
 		livePane = new JPanel();
 		livePane.setLayout(new BorderLayout());
@@ -110,20 +117,89 @@ public class UIEditor extends JFrame {
 		menuBar = new JMenuBar();
 
 		menuFile = new JMenu("File");
-			menuNewItem = menuFile.add("New");
-			menuOpenItem = menuFile.add("Open...");
-			menuCloseItem = menuFile.add("Close");
-			menuFile.addSeparator();
+			//menuNewItem = menuFile.add("New");
+			//menuOpenItem = menuFile.add("Open...");
+			//menuCloseItem = menuFile.add("Close");
+			//menuFile.addSeparator();
 			menuSaveItem = menuFile.add("Save");
-			menuSaveAsItem = menuFile.add("Save As...");
+			//menuSaveAsItem = menuFile.add("Save As...");
 			menuFile.addSeparator();
 			menuExitItem = menuFile.add("Exit");
+			
+			menuSaveItem.addActionListener(new SaveItemListener());
 
 		menuBar.add(menuFile);
 		this.setJMenuBar(menuBar);
 
         menuExitItem.addActionListener(new ExitListener());
 		this.addWindowListener(new ExitWindowListener());
+		
+		// create all modules
+		Collection moduleCollection = ModuleDescriptions.model.getModules();
+		DModule info = null;
+		for (Iterator iter = moduleCollection.iterator(); iter.hasNext(); info = (DModule) iter.next()) {
+			if (info!=null) {
+				Run.statusMessage("module:"+info.getName());
+				modules.put(info, ModuleUIBuilder.buildModuleUI(theUIFactory, info));
+			}
+		}
+	}
+	
+	class SaveItemListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			String filename = "./src/plugin/classictheme/ui.xml";
+
+			if (JOptionPane.showConfirmDialog(UIEditor.this,
+				    "The file '"+filename+"' will be written.\nShall I go on ?",
+				    "Warning",
+				    JOptionPane.YES_NO_OPTION) // info message
+		       != JOptionPane.YES_OPTION
+		    )
+				return;
+			
+			
+			UIXMLFileWriter xml = null;
+			try {
+				xml = new UIXMLFileWriter(filename);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if (xml!=null) {
+				Collection moduleCollection = ModuleDescriptions.model.getModules();
+				DModule info = null;
+				for (Iterator iter = moduleCollection.iterator(); iter.hasNext(); info = (DModule) iter.next()) {
+					if (info!=null) {
+						xml.beginTagStart("module");
+						xml.addAttribute("id", ""+info.getModuleID());
+						xml.beginTagFinish(true);
+						ModulePane mpane = (ModulePane) modules.get(info);
+						for (int i=0;i<mpane.getUIComponentCount();i++) {
+							BasicUI uicomponent = mpane.getUIComponent(i);
+							PropertyMap pmap = uicomponent.getProperties();
+							xml.beginTagStart("component");
+							xml.addAttribute("id", ""+uicomponent.getName());
+							xml.beginTagFinish(true);
+							
+							String[] names = pmap.getPropertyNames();
+							for (int j=0;j<names.length;j++) {
+								Property p = pmap.getProperty(names[j]);
+								xml.beginTagStart("property");
+								xml.addAttribute("name", ""+names[j]);
+								xml.addAttribute("value", ""+p.getValue());
+								xml.beginTagFinish(false);
+							}
+							
+							xml.endTag();
+						}
+						xml.endTag();
+					}
+				}
+
+				
+				xml.close();						
+			}
+		}
 	}
 	
 	class ExitWindowListener extends WindowAdapter {
@@ -140,7 +216,7 @@ public class UIEditor extends JFrame {
 
 	private class ModuleButtonClickListener implements nomad.application.ui.ModuleToolbarEventListener {
 		public void toolbarModuleSelected(DModule module) {
-			workBench.setModule(module);
+			workBench.setModule((ModulePane)modules.get(module));
 		}
 	}
 
