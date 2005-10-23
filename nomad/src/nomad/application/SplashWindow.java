@@ -91,6 +91,7 @@ public class SplashWindow extends Window
             SplashWindow.this.paintCalled = true;
             SplashWindow.this.notifyAll();
           }
+          SplashWindow.instance = null;
           dispose();
         }
       };
