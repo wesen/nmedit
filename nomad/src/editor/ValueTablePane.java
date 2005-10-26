@@ -13,7 +13,6 @@ import nomad.gui.model.PortValueEvent;
 import nomad.gui.model.PortValueListener;
 import nomad.gui.model.component.AbstractUIControl;
 import nomad.model.descriptive.DModule;
-import nomad.model.descriptive.DParameter;
 
 public class ValueTablePane extends JPanel {
 

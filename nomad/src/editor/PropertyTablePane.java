@@ -14,7 +14,6 @@ import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 
 import nomad.gui.model.component.AbstractUIComponent;
-import nomad.model.descriptive.DModule;
 
 public class PropertyTablePane extends JPanel {
 
