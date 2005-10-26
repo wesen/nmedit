@@ -16,13 +16,16 @@ public class XMLAttributeReader {
 	private String locateElement() {
 		Node pos = node;		
 		String element = pos.getNodeName();
+
+		String location = element;
+		
+		if (pos.getAttributes()==null)
+			return location;
 		
 		// element id if exists
 		Node idNode = pos.getAttributes().getNamedItem("id");
 		if (idNode!=null && idNode.getNodeValue()!=null && idNode.getNodeValue().length()>0)
 			element+="[id:"+idNode.getNodeValue()+"]";
-
-		String location = element;
 		
 		while (null!=(pos=pos.getParentNode())) {
 			if (pos.getNodeType()==Node.DOCUMENT_NODE) {
@@ -57,6 +60,9 @@ public class XMLAttributeReader {
 	}
 
 	public String getAttribute(String name, String defaultValue) {
+		if (attributes==null)
+			return defaultValue;
+		
 		Node node = attributes.getNamedItem(name);
 		if (node==null) {
 			return defaultValue;
