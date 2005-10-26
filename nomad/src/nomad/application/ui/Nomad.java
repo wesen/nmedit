@@ -34,6 +34,10 @@ import nomad.com.Synth;
 import nomad.com.SynthConnectionStateListener;
 import nomad.com.SynthException;
 import nomad.gui.PatchGUI;
+import nomad.gui.model.ModuleGUIBuilder;
+import nomad.gui.model.UIFactory;
+import nomad.misc.ImageTracker;
+import nomad.misc.SliceImage;
 import nomad.model.descriptive.ModuleDescriptions;
 import nomad.model.descriptive.substitution.XMLSubstitutionReader;
 import nomad.patch.Patch;
@@ -70,6 +74,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 	JButton button = null;
 
 	JPanel panelMain = null;
+	ImageTracker theImageTracker = new ImageTracker();
 
     class NewListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -201,7 +206,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		loadfile = "src/data/xml/modules.xml";
 		Run.statusMessage(loadfile);
 		ModuleDescriptions.init(loadfile, subsReader);
-
+		
 		// load connector icons
 		Run.statusMessage("slice:io-icons.gif");
 		ModuleDescriptions.model.loadConnectorIconsFromSlice("src/data/images/io-icons.gif");
@@ -213,11 +218,23 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		// build toolbar
 		Run.statusMessage("building toolbar");
 		ModuleToolbar moduleToolbar = new ModuleToolbar();
-		
+
 		// load plugin names
 		Run.statusMessage("Loading Plugin Manager");
 		PluginManager.init();
+
+		// load image tracker
+		Run.statusMessage("loading images");
+		SliceImage.createSliceImage("src/data/images/toolbar-icons.gif").feedImageTracker(theImageTracker);
+		SliceImage.createSliceImage("src/data/images/io-icons.gif").feedImageTracker(theImageTracker);
+		SliceImage.createSliceImage("src/data/images/button-icons.gif").feedImageTracker(theImageTracker);
+		UIFactory theUIFactory = PluginManager.getDefaultUIFactory();
+		theUIFactory.getImageTracker().addFrom(theImageTracker);
 		
+		// create gui builder
+		Run.statusMessage("GUIBuilder");	
+		ModuleGUIBuilder.createGUIBuilder(theUIFactory);
+
         ToolTipManager.sharedInstance().setInitialDelay(0);
         
         this.setTitle(creatorProgram + " " + creatorVersion + " " + creatorRelease);
