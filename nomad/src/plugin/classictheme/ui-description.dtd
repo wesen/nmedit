@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated from ui.xml by XMLBuddy -->
+<!ELEMENT control (property+)>
+<!ATTLIST control class NMTOKEN #REQUIRED>
+<!ELEMENT module (control+)>
+<!ATTLIST module id NMTOKEN #REQUIRED>
+<!ELEMENT property EMPTY>
+<!ATTLIST property
+	id NMTOKEN #REQUIRED
+	value CDATA #REQUIRED
+>
+<!ELEMENT ui-description (module+)>

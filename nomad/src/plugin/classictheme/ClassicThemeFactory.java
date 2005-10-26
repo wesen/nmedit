@@ -1,17 +1,27 @@
 package plugin.classictheme;
 
-import nomad.gui.ConnectorUI;
-import nomad.gui.LabelUI;
-import nomad.gui.UIFactory;
-import nomad.gui.knob.KnobUI;
+import nomad.gui.model.UIFactory;
+import nomad.gui.model.component.builtin.ButtonGroupUI;
+import nomad.gui.model.component.builtin.DefaultConnectorUI;
+import nomad.gui.model.component.builtin.DefaultControlUI;
+import nomad.gui.model.component.builtin.DefaultLabelUI;
 
 public class ClassicThemeFactory extends UIFactory {
 	public ClassicThemeFactory() {
-		installUIClass(LabelUI.class);
-		installUIClass(KnobUI.class);
-		installUIClass(ConnectorUI.class);
-		installDefaultControl(KnobUI.class);
-		installDefaultLabel(LabelUI.class);
-		installDefaultConnector(ConnectorUI.class);
+		DefaultLabelUI.theImageTracker = this.getImageTracker();
+		ButtonGroupUI.theImageTracker = this.getImageTracker();
+		
+		installUIClass(DefaultLabelUI.class);
+		installUIClass(DefaultControlUI.class);
+		installUIClass(DefaultConnectorUI.class);
+		installUIClass(ButtonGroupUI.class);
+		installDefaultControl(DefaultControlUI.class);
+		installDefaultOptionControl(ButtonGroupUI.class);
+		installDefaultLabel(DefaultLabelUI.class);
+		installDefaultConnector(DefaultConnectorUI.class);
+	}
+
+	public String getUIDescriptionFileName() {
+		return "src/plugin/classictheme/ui.xml";
 	}
 }
