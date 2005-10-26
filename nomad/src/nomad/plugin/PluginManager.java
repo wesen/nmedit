@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.Vector;
 
 import nomad.com.NullComPortPlugin;
+import nomad.gui.model.UIFactory;
 
 public class PluginManager {
 	
@@ -48,6 +49,15 @@ public class PluginManager {
 	
 	public static NomadPlugin getPlugin(int index) {
 		return (NomadPlugin) plugins.get(index);
+	}
+	
+	public static UIFactory getDefaultUIFactory() {
+		for (int i=0;i<getPluginCount();i++) {
+			NomadPlugin plugin = getPlugin(i);
+			if (plugin.getFactoryType()==NomadPlugin.NOMAD_FACTORY_TYPE_UI)
+				return (UIFactory) plugin.getFactoryInstance();
+		}
+		return null;
 	}
 	
 }
