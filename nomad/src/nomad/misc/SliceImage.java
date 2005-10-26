@@ -227,6 +227,14 @@ public class SliceImage
 	  return directors.keySet().iterator();
   }
   
+  public void feedImageTracker(ImageTracker itracker) {
+	  Iterator keyIterator = getKeys();
+	  while (keyIterator.hasNext()) {
+		  String key = (String) keyIterator.next();
+		  itracker.putImage(key, getSlice(key)); 
+	  }
+  }
+
   // -----------------------------------------------------
   
   public static SliceImage createSliceImage(String slice) {
