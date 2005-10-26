@@ -1,6 +1,7 @@
 package nomad.model.descriptive;
 
 import java.awt.Image;
+import java.util.ArrayList;
 import java.util.Vector;
 
 /**
@@ -12,8 +13,8 @@ import java.util.Vector;
 public class DModule {
 	
 	private Image icon;
-	private Vector dparameters = new Vector();
-	private Vector dconnectors = new Vector();
+	private ArrayList dparameters = new ArrayList();
+	private ArrayList dconnectors = new ArrayList();
 	private DToolbarSection parent = null;
 	
 	private String name=null;
@@ -157,6 +158,28 @@ public class DModule {
 	
 	public static String getKeyFromId(int id) {
 		return Integer.toString(id);
+	}
+	
+	public DParameter getParameterById(int paramID) {
+		for (int i=0;i<getParameterCount();i++) {
+			DParameter p = getParameter(i);
+			if (p.getId()==paramID)
+				return p;
+		}
+		return null;
+	}
+	
+	public DConnector getConnectorById(int connectorID, boolean isInput) {
+		for (int i=0;i<getConnectorCount();i++) {
+			DConnector c = getConnector(i);
+			if (c.getId()==connectorID) {
+				if (isInput && c.getType()==DConnector.CONNECTOR_TYPE_INPUT)
+					return c;
+				else if (!isInput && c.getType()==DConnector.CONNECTOR_TYPE_OUTPUT)
+					return c;
+			}
+		}
+		return null;
 	}
 	
 }

@@ -74,10 +74,13 @@ public class DParameter {
 	}
 
 	public String toString() {
+		/*
 		return super.toString()+"[id:"+pmId
 		   	+",name:"+pmName
 		   	+",unit:"+pmSubstitution
 			+",states:"+getNumStates()
 			+",default:"+pmDefaultValue+"]";
+		*/
+		return "parameter."+getId();
 	}
 }

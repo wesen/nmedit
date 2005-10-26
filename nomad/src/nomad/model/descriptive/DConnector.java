@@ -127,8 +127,11 @@ public class DConnector {
 	}
 	
 	public String toString() {
+		/*
 		return super.toString()+"[type:"+getConnectionTypeName()
 		+",signal:"+getSignalName()+"]";
+		*/
+		return "connector."+getId()+"."+getConnectionTypeName();
 	}
 
 	public int getId() {
