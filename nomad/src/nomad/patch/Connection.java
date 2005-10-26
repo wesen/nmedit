@@ -6,7 +6,7 @@ import javax.swing.ImageIcon;
 
 import nomad.gui.ConnectorGUI;
 import nomad.gui.ModuleGUI;
-import nomad.gui.helpers.ModuleGUIFactory;
+import nomad.gui.model.ModuleGUIBuilder;
 
 public class Connection {
 

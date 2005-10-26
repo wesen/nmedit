@@ -4,7 +4,7 @@ import java.util.Vector;
 
 import nomad.gui.ModuleGUI;
 import nomad.gui.ModuleSectionGUI;
-import nomad.gui.helpers.ModuleGUIFactory;
+import nomad.gui.model.ModuleGUIBuilder;
 import nomad.model.descriptive.DModule;
 import nomad.model.descriptive.ModuleDescriptions;
 import nomad.patch.ModuleSection.ModulePixDimension;
@@ -115,7 +115,7 @@ public class Module {
     }
 
     public ModuleGUI createModuleGUI(ModuleSectionGUI moduleSectionGUI) {
-    	moduleGUI = ModuleGUIFactory.createGUI(this, moduleSectionGUI); 
+    	moduleGUI = ModuleGUIBuilder.createGUI(this, moduleSectionGUI); 
         return moduleGUI;
     }
     
