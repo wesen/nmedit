@@ -21,16 +21,19 @@ import javax.swing.JPanel;
 
 import nomad.application.Run;
 import nomad.application.ui.ModuleToolbar;
-import nomad.gui.BasicUI;
-import nomad.gui.UIFactory;
-import nomad.gui.property.Property;
-import nomad.gui.property.PropertyMap;
+import nomad.gui.model.ModuleGUIBuilder;
+import nomad.gui.model.UIFactory;
+import nomad.gui.model.component.AbstractUIComponent;
+import nomad.misc.SliceImage;
 import nomad.model.descriptive.DModule;
 import nomad.model.descriptive.ModuleDescriptions;
 import nomad.model.descriptive.substitution.XMLSubstitutionReader;
+import nomad.plugin.PluginManager;
 import plugin.classictheme.ClassicThemeFactory;
 
 public class UIEditor extends JFrame {
+	
+//	public ImageTracker defaultImageTracker = new ImageTracker();
 
 	public static void main(String[] args) {
 		UIEditor frame = new UIEditor();
@@ -67,6 +70,7 @@ public class UIEditor extends JFrame {
 	UIFactory theUIFactory = new ClassicThemeFactory();
 	
 	public UIEditor() {
+		
 		super("Nomad UI Editor");
 		this.setSize(640, 480);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -88,17 +92,34 @@ public class UIEditor extends JFrame {
 		// load toolbar icons
 		Run.statusMessage("slice:toolbar-icons.gif");
 		ModuleDescriptions.model.loadModuleIconsFromSlice("src/data/images/toolbar-icons.gif");
+
+		// load plugin names
+		Run.statusMessage("Loading Plugin Manager");
+		PluginManager.init();
 		
+		theUIFactory = PluginManager.getDefaultUIFactory(); 
+
+		// image tracker
+		Run.statusMessage("loading imagetracker");
+		SliceImage.createSliceImage("src/data/images/toolbar-icons.gif").feedImageTracker(theUIFactory.getImageTracker());
+		SliceImage.createSliceImage("src/data/images/io-icons.gif").feedImageTracker(theUIFactory.getImageTracker());
+		SliceImage.createSliceImage("src/data/images/button-icons.gif").feedImageTracker(theUIFactory.getImageTracker());
+
+		// create gui builder
+		Run.statusMessage("GUIBuilder");	
+		ModuleGUIBuilder.createGUIBuilder(theUIFactory);
+
 		// build toolbar
 		Run.statusMessage("building toolbar");
 		ModuleToolbar moduleToolbar = new ModuleToolbar(false);
 		moduleToolbar.addModuleButtonClickListener(new ModuleButtonClickListener());
-		
+
 		this.add(BorderLayout.NORTH, moduleToolbar);
 
 		valuePane = new ValueTablePane();
 		propertyPane = new PropertyTablePane();
 		workBench = new WorkBenchPane(valuePane, propertyPane);
+		propertyPane.setWorkBench(workBench);
 		
 		livePane = new JPanel();
 		livePane.setLayout(new BorderLayout());
@@ -118,7 +139,7 @@ public class UIEditor extends JFrame {
 
 		menuFile = new JMenu("File");
 			//menuNewItem = menuFile.add("New");
-			//menuOpenItem = menuFile.add("Open...");
+			menuOpenItem = menuFile.add("Open...");
 			//menuCloseItem = menuFile.add("Close");
 			//menuFile.addSeparator();
 			menuSaveItem = menuFile.add("Save");
@@ -127,6 +148,7 @@ public class UIEditor extends JFrame {
 			menuExitItem = menuFile.add("Exit");
 			
 			menuSaveItem.addActionListener(new SaveItemListener());
+			menuOpenItem.addActionListener(new LoadItemListener());
 
 		menuBar.add(menuFile);
 		this.setJMenuBar(menuBar);
@@ -145,7 +167,7 @@ public class UIEditor extends JFrame {
 	}
 	
 	class SaveItemListener implements ActionListener {
-		public void actionPerformed(ActionEvent arg0) {
+		public void actionPerformed(ActionEvent event) {
 			String filename = "./src/plugin/classictheme/ui.xml";
 
 			if (JOptionPane.showConfirmDialog(UIEditor.this,
@@ -160,44 +182,83 @@ public class UIEditor extends JFrame {
 			UIXMLFileWriter xml = null;
 			try {
 				xml = new UIXMLFileWriter(filename);
+
+				Collection moduleCollection = ModuleDescriptions.model.getModules();
+				Iterator iter = moduleCollection.iterator();
+				while (iter.hasNext()) {
+					DModule module = (DModule) iter.next();
+					xml.beginModuleElement(module); // begin module element
+					// get module pane
+					ModulePane mpane = (ModulePane) modules.get(module);
+					Iterator iterc = mpane.getModuleComponents().getAllComponents();
+					while (iterc.hasNext()) {
+						xml.writeComponent((AbstractUIComponent)iterc.next());	
+					}
+					
+					xml.endTag(); // finish module element
+				}
+			
+				xml.close();
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if (xml!=null) {
-				Collection moduleCollection = ModuleDescriptions.model.getModules();
-				DModule info = null;
-				for (Iterator iter = moduleCollection.iterator(); iter.hasNext(); info = (DModule) iter.next()) {
-					if (info!=null) {
-						xml.beginTagStart("module");
-						xml.addAttribute("id", ""+info.getModuleID());
-						xml.beginTagFinish(true);
-						ModulePane mpane = (ModulePane) modules.get(info);
-						for (int i=0;i<mpane.getUIComponentCount();i++) {
-							BasicUI uicomponent = mpane.getUIComponent(i);
-							PropertyMap pmap = uicomponent.getProperties();
-							xml.beginTagStart("component");
-							xml.addAttribute("id", ""+uicomponent.getName());
-							xml.beginTagFinish(true);
+		}
+	}
+	
+	class LoadItemListener implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			/*
+			String filename = "./src/plugin/classictheme/ui.xml";
+
+			Document doc = XMLReader.readDocument(filename, false/*false=no validating*);
+
+			if (doc!=null) {
+				try {
+					
+				NodeList nlist = doc.getElementsByTagName("module");
+				for (int i=0;i<nlist.getLength();i++) {
+					// for each element 'module'
+					Node node = nlist.item(i);
+					String moduleid = (new XMLAttributeReader(node)).getAttribute("id");
+					DModule moduleinfo = ModuleDescriptions.model.getModuleByKey(moduleid);
+					
+					ModulePane mpane = (ModulePane) modules.get(moduleinfo);
+					
+					NodeList nlist2 = node.getChildNodes();
+					
+					for (int j=0;j<nlist2.getLength();j++){
+						Node componentnode = nlist2.item(j);				
+						if (componentnode!=null && componentnode.getNodeType()==Node.ELEMENT_NODE) {
+							// for each component
+							String componentid = (new XMLAttributeReader(componentnode)).getAttribute("id");
+							AbstractUIComponent componentui = mpane.getUIComponent(componentid);
 							
-							String[] names = pmap.getPropertyNames();
-							for (int j=0;j<names.length;j++) {
-								Property p = pmap.getProperty(names[j]);
-								xml.beginTagStart("property");
-								xml.addAttribute("name", ""+names[j]);
-								xml.addAttribute("value", ""+p.getValue());
-								xml.beginTagFinish(false);
+							NodeList nlist3 = componentnode.getChildNodes();
+							for (int k=0;k<nlist3.getLength();k++) {
+								Node propertynode = nlist3.item(k);
+								if (propertynode!=null && propertynode.getNodeType()==Node.ELEMENT_NODE) {
+									String propertyname = (new XMLAttributeReader(propertynode)).getAttribute("name");
+									String propertyvalue = (new XMLAttributeReader(propertynode)).getAttribute("value");
+									// 	for each property
+									try {
+										componentui.getPropertyByName(propertyname).setValue(propertyvalue);
+									} catch (InvalidValueException e) {
+										System.out.println("Invalid pair ("+propertyname+","+propertyvalue+")");
+									} catch (Exception e) {
+										System.out.println("Property not found: '"+propertyname+"'");
+									}
+								}
 							}
-							
-							xml.endTag();
 						}
-						xml.endTag();
 					}
 				}
-
 				
-				xml.close();						
-			}
+				} catch (XMLAttributeValidationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}*/
 		}
 	}
 	

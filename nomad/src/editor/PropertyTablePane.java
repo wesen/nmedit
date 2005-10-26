@@ -4,14 +4,17 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 
-import nomad.gui.BasicUI;
+import nomad.gui.model.component.AbstractUIComponent;
+import nomad.model.descriptive.DModule;
 
 public class PropertyTablePane extends JPanel {
 
@@ -20,6 +23,10 @@ public class PropertyTablePane extends JPanel {
 	private ModulePane modulePane = null;
 	private PropertyTableModel dataModel = null;
 	private JComboBox cbUIelements = null;
+	
+	private JButton btnRemove = new JButton("Remove");
+	private WorkBenchPane wbp = null;
+	private JPanel actionPane = new JPanel();
 	
 	public PropertyTablePane() {
 		this.setLayout(new BorderLayout());
@@ -35,6 +42,11 @@ public class PropertyTablePane extends JPanel {
 
 	    this.add(scrollpane, BorderLayout.CENTER);
 
+	    btnRemove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				AbstractUIComponent component = (AbstractUIComponent)cbUIelements.getSelectedItem();
+				doRemove(component);
+			}});
 	    
 	    TableColumn col = table.getColumnModel().getColumn(1);
 	    //col.setCellEditor(dataModel);
@@ -47,14 +59,41 @@ public class PropertyTablePane extends JPanel {
 	    cbUIelements = new JComboBox();
 	    cbUIelements.addActionListener(new SelectUIElementListener());
 	    reloadComboBox();
-	    this.add(cbUIelements, BorderLayout.NORTH);
+	    actionPane.setLayout( new BorderLayout());
+	    actionPane.add(btnRemove, BorderLayout.NORTH);
+	    actionPane.add(cbUIelements, BorderLayout.CENTER);
+	    this.add(actionPane, BorderLayout.NORTH);
+	}
+	
+	private void doRemove(AbstractUIComponent uiComponent) {
+		//
+		if (modulePane!=null && uiComponent !=null)
+		{
+			modulePane.remove(uiComponent.getComponent());
+			Iterator iter = modulePane.getModuleComponents().getAllComponents();
+			while (iter.hasNext()) {
+				if (iter.next()==uiComponent) {
+					iter.remove();
+					//System.out.println("removed");
+					break;
+				}
+			}
+
+			ModulePane tmp = modulePane;
+			
+			// update
+			wbp.setModule(null); // remove all listeners
+			wbp.setModule(tmp);
+		}
 	}
 	
 	private void reloadComboBox() {
 		cbUIelements.removeAllItems();
-		if (modulePane!=null)
-			for (int i=0;i<modulePane.getUIComponentCount();i++)
-				cbUIelements.addItem(modulePane.getUIComponent(i));
+		if (modulePane!=null) {
+			Iterator iter = modulePane.getModuleComponents().getAllComponents();
+			while (iter.hasNext()) 
+				cbUIelements.addItem(iter.next());
+		}
 	}
 
 	public void setModulePane(ModulePane modulePane) {
@@ -65,12 +104,16 @@ public class PropertyTablePane extends JPanel {
 	
 	private class SelectUIElementListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
-			dataModel.setUIElement((BasicUI)cbUIelements.getSelectedItem());
+			dataModel.setUIElement((AbstractUIComponent)cbUIelements.getSelectedItem());
 		}
 	}
 	
 	private void updateEditor() {
 		//
+	}
+
+	public void setWorkBench(WorkBenchPane workBench) {
+		this.wbp = workBench;
 	}
 	
 }

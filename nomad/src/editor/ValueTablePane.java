@@ -6,13 +6,12 @@ import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 
-import nomad.gui.DisplayUI;
-import nomad.gui.knob.JModKnob;
-import nomad.gui.knob.ParameterClass;
+import nomad.gui.ModuleGUIComponents;
+import nomad.gui.model.PortValueEvent;
+import nomad.gui.model.PortValueListener;
+import nomad.gui.model.component.AbstractUIControl;
 import nomad.model.descriptive.DModule;
 import nomad.model.descriptive.DParameter;
 
@@ -20,7 +19,7 @@ public class ValueTablePane extends JPanel {
 
 	private JTable table = null;
 	private JScrollPane scrollpane = null;
-	private ModulePane modulePane = null;
+	//private ModulePane modulePane = null;
 	private OptionsTableModel dataModel = null;
 	
 	public ValueTablePane() {
@@ -39,7 +38,7 @@ public class ValueTablePane extends JPanel {
 	}
 
 	public void setModulePane(ModulePane modulePane) {
-		this.modulePane=modulePane;
+		//this.modulePane=modulePane;
 		dataModel.setModule(modulePane);
 		updateEditor();
 	}
@@ -52,29 +51,45 @@ public class ValueTablePane extends JPanel {
 		
 		private DModule module=null;
 		private ModulePane mpane = null;
+		private ParamChangeListener[] changeListeners = new ParamChangeListener[]{};
 		
 		public void setModule(ModulePane modulePane) {
+			if (module!=null) {
+				ModuleGUIComponents comps = mpane.getModuleComponents();
+				for (int i=0;i<Math.min(changeListeners.length,comps.getControlCount());i++) {
+					AbstractUIControl control = comps.getControl(i);
+					changeListeners[i] = new ParamChangeListener(i);
+					control.getControlPort(0).removeValueListener(changeListeners[i]);
+				}
+				
+				changeListeners = new ParamChangeListener[]{};
+			}
+			
 			this.module= null;
 			this.mpane = modulePane;
 			
 			if (modulePane!=null) {
 				this.module=modulePane.getModule();
-				for (int i=0;i<module.getParameterCount();i++) {
-					DParameter param = module.getParameter(i);
-					JModKnob slider = ((JModKnob)((DisplayUI) mpane.getParamControl(param)).getComponent());
-					slider.addChangeListener(new ParamChangeListener(i));
+				
+				ModuleGUIComponents comps = mpane.getModuleComponents();
+				changeListeners = new ParamChangeListener[comps.getControlCount()];
+				
+				for (int i=0;i<comps.getControlCount();i++) {
+					AbstractUIControl control = comps.getControl(i);
+					changeListeners[i] = new ParamChangeListener(i);
+					control.getControlPort(0).addValueListener(changeListeners[i]);
 				}
 			}
 			this.fireTableDataChanged();
 		}
 		
-		class ParamChangeListener implements ChangeListener {
+		class ParamChangeListener implements PortValueListener {
 			private int index=0;
 			public ParamChangeListener(int index) {
 				this.index=index;
 			}
-			public void stateChanged(ChangeEvent arg0) {
-				OptionsTableModel.this.fireTableCellUpdated(index,1);
+			public void portValueChanged(PortValueEvent event) {
+				OptionsTableModel.this.fireTableCellUpdated(index,1);				
 			}
 		}
 
@@ -93,10 +108,11 @@ public class ValueTablePane extends JPanel {
 					}
 				} else if (column==1) {
 					if (row<module.getParameterCount()) {
-
-						DParameter param = module.getParameter(row);
-						JModKnob slider = ((JModKnob)((DisplayUI) mpane.getParamControl(param)).getComponent());
-						return param.getFormattedValue(slider.getValue());
+						if (mpane.getModuleComponents().getControlCount()<=row)
+							return "null";
+						
+						AbstractUIControl control = mpane.getModuleComponents().getControl(row);
+						return control.getControlPort(0).getFormattedParameterValue();
 					}
 				} else
 					return "0";

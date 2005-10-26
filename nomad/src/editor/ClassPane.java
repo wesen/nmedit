@@ -10,8 +10,8 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import nomad.gui.BasicUI;
-import nomad.gui.UIFactory;
+import nomad.gui.model.UIFactory;
+import nomad.gui.model.component.AbstractUIComponent;
 
 public class ClassPane extends JPanel {
 
@@ -25,9 +25,8 @@ public class ClassPane extends JPanel {
 		uiComboBox = new JComboBox();
 		
 		String[] names = factory.getUIClassNames();
-		for (int i=0;i<names.length;i++) {
-			uiComboBox.addItem(names[i]);
-		}
+		for (int i=0;i<names.length;i++) 
+			uiComboBox.addItem(new ClassInfo(names[i]));
 		
 		createAction = new JButton("Create");
 		createAction.addActionListener(new CreateActionListener());
@@ -49,17 +48,34 @@ public class ClassPane extends JPanel {
 			createListener.remove(listener);
 	}
 	
-	private void createRequested(BasicUI uiElement) {
+	private void createRequested(AbstractUIComponent uiElement) {
 		for (int i=0;i<createListener.size();i++)
 			((CreateUIElementListener)createListener.get(i)).newUIElement(uiElement);
 	}
 	
 	private class CreateActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			String name = (String) uiComboBox.getSelectedItem();
-			BasicUI uiElement = factory.newUIInstance(name);
+			ClassInfo cinfo = (ClassInfo) uiComboBox.getSelectedItem();
+			AbstractUIComponent uiElement = factory.newUIInstance(cinfo.className);
 			if (uiElement!=null)
 				createRequested(uiElement);
 		}
 	}
+	
+	private class ClassInfo {
+		public String className;
+		public String shortName;
+		
+		public ClassInfo(String className) {
+			this.className = className;
+			String[] splitted = className.split("\\.");
+			shortName = splitted[splitted.length-1];
+		}
+		
+		public String toString() {
+			return shortName;
+		}
+		
+	}
+	
 }

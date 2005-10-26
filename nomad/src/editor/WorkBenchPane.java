@@ -7,7 +7,8 @@ import java.awt.Dimension;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import nomad.gui.BasicUI;
+import nomad.gui.model.component.AbstractUIComponent;
+import nomad.gui.model.component.AbstractUIControl;
 import nomad.model.descriptive.DModule;
 import nomad.patch.ModuleSection.ModulePixDimension;
 
@@ -41,18 +42,25 @@ public class WorkBenchPane extends JPanel implements CreateUIElementListener {
 		propertyTable.setModulePane(modulePane);
 	}
 
-	public void newUIElement(BasicUI element) {
+	public void newUIElement(AbstractUIComponent element) {
 		if (modulePane!=null) {
+			
+			if (element instanceof AbstractUIControl) {
+				AbstractUIControl control = ((AbstractUIControl)element);
+				for (int i=0;i<control.getControlPortCount();i++) {
+					if (modulePane.getModule().getParameterCount()>0)
+						control.getControlPort(i).setParameterInfoAdapter(modulePane.getModule().getParameter(0));
+				}
+			}
+
 			modulePane.addUIComponent(element);
 			modulePane.add(element.getComponent());
 			modulePane.validate();
 			modulePane.updateUI();
-			// install dragging support
-			new Draggable(element.getComponent());
 
 			// update
 			valueTable.setModulePane(this.modulePane);
-			propertyTable.setModulePane(this.modulePane);
+			propertyTable.setModulePane(this.modulePane);			
 		}
 	}
 }

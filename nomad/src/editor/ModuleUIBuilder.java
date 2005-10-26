@@ -2,23 +2,19 @@ package editor;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 
-import nomad.gui.ConnectorUI;
-import nomad.gui.ControlUI;
-import nomad.gui.UIFactory;
+import nomad.gui.model.ModuleGUIBuilder;
+import nomad.gui.model.UIFactory;
 import nomad.model.descriptive.DModule;
-import nomad.model.descriptive.DParameter;
 import nomad.patch.ModuleSection.ModulePixDimension;
 
 public class ModuleUIBuilder {
 
 	public static ModulePane buildModuleUI(UIFactory factory, DModule moduleInfo) {
 		ModulePane modulePane = new ModulePane(moduleInfo);
+		
 		modulePane.setForeground(Color.GRAY);
 		modulePane.setSize(new Dimension(ModulePixDimension.PIXWIDTH, 
 				moduleInfo.getHeight()*ModulePixDimension.PIXHEIGHT));
@@ -26,11 +22,16 @@ public class ModuleUIBuilder {
 				moduleInfo.getHeight()*ModulePixDimension.PIXHEIGHT));
 		modulePane.setBorder(BorderFactory.createRaisedBevelBorder());
 		
-		addUIComponents(factory, modulePane, moduleInfo);
+
+		ModuleGUIBuilder.createGUIComponents(modulePane, null, moduleInfo);
+		modulePane.initHack();
+		
+		//addUIComponents(factory, modulePane, moduleInfo);
 		
 		return modulePane;
 	}
 
+	/*
 	private static void addUIComponents(UIFactory factory, ModulePane modulePane, DModule moduleInfo) {
 
 		int pad=5;
@@ -57,8 +58,11 @@ public class ModuleUIBuilder {
 			
 			int offset= 20*(i%4);
 
-			ControlUI control =  factory.newDefaultControlInstance();
-			control.setDefaultPort(info);
+			AbstractUIControl control = info.getNumStates()<6 // option
+				? factory.newDefaultOptionControlInstance()
+			    : factory.newDefaultControlInstance();
+			
+			control.getControlPort(0).setParameterInfoAdapter(info);
 			control.getComponent().setLocation(pad+offset,pad+line*lineHeight);
 			new Draggable(control.getComponent());
 			
@@ -69,8 +73,8 @@ public class ModuleUIBuilder {
 			if (i%4==3)
 				line++;
 		}
-		if ((moduleInfo.getParameterCount()-1)%4!=3)
-			line++;
+	//	if ((moduleInfo.getParameterCount()-1)%4!=3)
+	//		line++;*
 		
 		if (moduleInfo.getConnectorCount()>0) {
 			ConnectorRow.addRow(factory, moduleInfo, modulePane, pad, line, lineHeight);
@@ -79,15 +83,14 @@ public class ModuleUIBuilder {
 		modulePane.validate();
 		modulePane.updateUI();
 	}
-	
+*/	
 }
-
+/*
 class ConnectorRow {
 	public static void addRow(UIFactory theUIFactory, DModule module, ModulePane target, int pad, int line, int lineHeight)  {
 		for (int i=0;i<module.getConnectorCount();i++) {
-			ConnectorUI cui = theUIFactory.newDefaultConnectorInstance();
-			cui.getConnectorProperty().setModule(module);
-			cui.getConnectorProperty().setConnector(module.getConnector(i));
+			AbstractConnectorUI cui = theUIFactory.newDefaultConnectorInstance();
+			cui.setConnectorInfoAdapter(module.getConnector(i));
 			cui.getComponent().setLocation(pad+i*18,pad+line*lineHeight);
 			new Draggable(cui.getComponent());
 			target.add(cui.getComponent());
@@ -95,3 +98,4 @@ class ConnectorRow {
 		}
 	}
 }
+*/

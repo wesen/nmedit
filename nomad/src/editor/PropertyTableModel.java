@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.EventObject;
-import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.JComboBox;
@@ -16,14 +15,12 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 
-import nomad.gui.BasicUI;
-import nomad.gui.property.InvalidValueException;
-import nomad.gui.property.Property;
+import nomad.gui.model.component.AbstractUIComponent;
+import nomad.gui.model.property.Property;
 
 public class PropertyTableModel extends AbstractTableModel implements ChangeListener, TableCellEditor {
 
-	private BasicUI uicomponent = null;
-	private Vector properties = null;
+	private AbstractUIComponent uicomponent = null;
 	
 	public PropertyTableModel() {
 		;
@@ -35,12 +32,11 @@ public class PropertyTableModel extends AbstractTableModel implements ChangeList
 	 */
 	private void setListener(boolean add) {
 		if (uicomponent!=null) {
-			Iterator iter = uicomponent.getProperties().getPropertyIterator();
-			while (iter.hasNext()) 
+			for (int i=0;i<uicomponent.getPropertyCount();i++) 
 				if (add)
-					((Property)iter.next()).addChangeListener(PropertyTableModel.this);
+					uicomponent.getProperty(i).addChangeListener(PropertyTableModel.this);
 				else
-					((Property)iter.next()).removeChangeListener(PropertyTableModel.this);
+					uicomponent.getProperty(i).removeChangeListener(PropertyTableModel.this);
 		}
 	}
 
@@ -48,7 +44,7 @@ public class PropertyTableModel extends AbstractTableModel implements ChangeList
 	 * Sets the editable ui component
 	 * @param uicomponent -
 	 */
-	public void setUIElement(BasicUI uicomponent) {
+	public void setUIElement(AbstractUIComponent uicomponent) {
 		install(uicomponent);
 	}
 	
@@ -57,21 +53,15 @@ public class PropertyTableModel extends AbstractTableModel implements ChangeList
 		setListener(false); 	// remove listener		
 	}
 	
-	public void install(BasicUI uicomponent) {
+	public void install(AbstractUIComponent uicomponent) {
 		uninstall();
 		this.uicomponent = uicomponent; // store component 
-		properties = new Vector(); // new Vector will be filled with the properties
-		if (uicomponent!=null) {// load properties
-			Iterator iter = uicomponent.getProperties().getPropertyIterator();
-			while (iter.hasNext())
-				properties.add(iter.next());
-		}
 		setListener(true); // add listener
 		this.fireTableDataChanged(); // update
 	}
 	
 	public int getRowCount() {
-		return (uicomponent==null)?0:uicomponent.getProperties().getCount();
+		return (uicomponent==null)?0:uicomponent.getPropertyCount();
 	}
 
 	public int getColumnCount() {
@@ -84,9 +74,8 @@ public class PropertyTableModel extends AbstractTableModel implements ChangeList
 
 	public Object getValueAt(int row, int column) {
 		if (uicomponent!=null) {
-			return column==0
-				? uicomponent.getProperties().getPropertyNames()[row]
-				: ((Property) properties.get(row)).getValue();
+			Property p = uicomponent.getProperty(row);
+			return column==0 ? p.getDisplayName() : p.getValue();
 		}
 		return null;
 	}
@@ -152,8 +141,8 @@ public class PropertyTableModel extends AbstractTableModel implements ChangeList
 
 	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, final int row, int column) {
 		cellEditorValue = value;
-		Property property = (Property) properties.get(row);
-		return property.hasOptions()
+		Property property = uicomponent.getProperty(row);
+		return property.getAllValues()!=null
 			? (Component) newComboBoxCellEditor(value, property)
 			: (Component) newTextFieldCellEditor(value, property);
 	}
@@ -163,13 +152,9 @@ public class PropertyTableModel extends AbstractTableModel implements ChangeList
 		textField.addActionListener(
 			new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
-					//cellEditorValue = textField.getText();
-					try {
-						property.setValue(textField.getText(), PropertyTableModel.this);
-						stopCellEditing();
-					} catch (InvalidValueException e) {
-						e.printStackTrace();
-					}
+					//cellEditorValue = textField.getText()
+					property.setValue(textField.getText()/*, PropertyTableModel.this*/);
+					stopCellEditing();
 				}
 			}
 		);
@@ -178,7 +163,7 @@ public class PropertyTableModel extends AbstractTableModel implements ChangeList
 	}
 
 	private JComboBox newComboBoxCellEditor(Object value, final Property property) {
-		Object[] options = property.getOptions();
+		Object[] options = property.getAllValues();
 		final JComboBox cbox = new JComboBox();
 		int selectIndex = 0;
 		for (int i=0;i<options.length;i++) {
@@ -191,12 +176,8 @@ public class PropertyTableModel extends AbstractTableModel implements ChangeList
 			new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					cellEditorValue = cbox.getSelectedItem();
-					try {
-						property.setValue(cellEditorValue, PropertyTableModel.this);
-						stopCellEditing();
-					} catch (InvalidValueException e) {
-						e.printStackTrace();
-					}
+					property.setValue(cellEditorValue/*, PropertyTableModel.this*/);
+					stopCellEditing();
 				}
 			}
 		);

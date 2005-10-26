@@ -1,58 +1,45 @@
 package editor;
 
-import java.util.HashMap;
-import java.util.Vector;
-import javax.swing.JPanel;
-import nomad.gui.BasicUI;
-import nomad.gui.ControlUI;
-import nomad.gui.DisplayUI;
-import nomad.gui.knob.ParameterClass;
-import nomad.gui.property.ParamProperty;
-import nomad.gui.property.Property;
-import nomad.gui.property.PropertyMap;
-import nomad.model.descriptive.DModule;
-import nomad.model.descriptive.DParameter;
+import java.util.Iterator;
 
-public class ModulePane extends JPanel {
+import javax.swing.JLabel;
+
+import nomad.gui.AbstractModuleGUI;
+import nomad.gui.model.component.AbstractUIComponent;
+import nomad.misc.FontInfo;
+import nomad.model.descriptive.DModule;
+
+public class ModulePane extends AbstractModuleGUI {
 	private DModule module ;
-	private HashMap parameters = new HashMap();
-	private Vector uicomponents = new Vector();
 	public ModulePane(DModule module) {
+		this.setLayout(null);
 		this.module = module;
+		JLabel title = new JLabel(module.getName());
+		
+		title.setSize(FontInfo.getTextRect(title.getText(), title.getFont(), title));
+		title.setLocation(0,0);
+		this.add(title);
 	}
 
 	public DModule getModule() {
 		return module;
 	}
 	
-	public void addUIComponent(BasicUI component) {
-		if (component!=null) {
-			// install info
-			PropertyMap pmap = component.getProperties();
-			String[] names = pmap.getPropertyNames();
-			for (int i=0;i<names.length;i++) {
-				Property p = pmap.getProperty(names[i]);
-				if (p instanceof ParamProperty)
-					((ParamProperty)p).setModule(module);
-			}
+	public void initHack() {
+		Iterator iter = getModuleComponents().getAllComponents();
+		while (iter.hasNext()) {
+			addExistingUIComponent((AbstractUIComponent)iter.next());
 		}
-		uicomponents.add(component);
 	}
 
-	public int getUIComponentCount() {
-		return uicomponents.size();
+
+	private void addExistingUIComponent(AbstractUIComponent component) {
+		new Draggable(component.getComponent());
 	}
 	
-	public BasicUI getUIComponent(int index) {
-		return (BasicUI) uicomponents.get(index);
+	public void addUIComponent(AbstractUIComponent component) {
+		getModuleComponents().addComponent(component);
+		addExistingUIComponent(component);
 	}
 
-	public void setParamControl(DParameter param, DisplayUI display) {
-		parameters.put(param, display);
-		addUIComponent(display);
-	}
-	
-	public ControlUI getParamControl(DParameter param) {
-		return (ControlUI) parameters.get(param);
-	}
 }

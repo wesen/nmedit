@@ -1,9 +1,9 @@
 package editor;
 
-import nomad.gui.BasicUI;
+import nomad.gui.model.component.AbstractUIComponent;
 
 public interface CreateUIElementListener {
 
-	public void newUIElement(BasicUI element);
+	public void newUIElement(AbstractUIComponent element);
 	
 }
