@@ -17,7 +17,7 @@ import javax.swing.JPopupMenu;
 
 import nomad.patch.Module;
 
-public class ModuleGUI extends JPanel implements MouseListener, MouseMotionListener {
+public class ModuleGUI extends AbstractModuleGUI implements MouseListener, MouseMotionListener {
 
 	private JLabel nameLabel = null;
 	private ModuleSectionGUI parent = null;

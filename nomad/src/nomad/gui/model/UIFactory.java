@@ -1,7 +1,11 @@
-package nomad.gui;
+package nomad.gui.model;
 
 import java.util.HashMap;
 
+import nomad.gui.model.component.AbstractConnectorUI;
+import nomad.gui.model.component.AbstractUIComponent;
+import nomad.gui.model.component.AbstractUIControl;
+import nomad.misc.ImageTracker;
 import nomad.plugin.NomadFactory;
 
 public abstract class UIFactory extends NomadFactory {
@@ -10,31 +14,39 @@ public abstract class UIFactory extends NomadFactory {
 	private String[] names = new String[] {};
 	private Class DefaultLabel = null;
 	private Class DefaultControl = null;
+	private Class DefaultOptionControl = null;
 	private Class DefaultConnector = null;
+	private ImageTracker imageTracker = new ImageTracker();
 	
 	public void installUIClass(Class uiclass) {
-		if (!BasicUI.class.isAssignableFrom(uiclass))
+		if (!AbstractUIComponent.class.isAssignableFrom(uiclass))
 			throw new ClassCastException("Cannot install class "+uiclass+".");
 		componentClasses.put(uiclass.getName(), uiclass);
 		updateNameList();
 	}
 	
 	public void installDefaultLabel(Class uiclass) {
-		if (!BasicUI.class.isAssignableFrom(uiclass))
+		if (!AbstractUIComponent.class.isAssignableFrom(uiclass))
 			throw new ClassCastException("Cannot install class "+uiclass+".");
 		DefaultLabel = uiclass;
 	}
 	
 	public void installDefaultConnector(Class uiclass) {
-		if (!ConnectorUI.class.isAssignableFrom(uiclass))
+		if (!AbstractConnectorUI.class.isAssignableFrom(uiclass))
 			throw new ClassCastException("Cannot install class "+uiclass+".");
 		DefaultConnector = uiclass;
 	}
 	
 	public void installDefaultControl(Class uiclass) {
-		if (!ControlUI.class.isAssignableFrom(uiclass))
+		if (!AbstractUIControl.class.isAssignableFrom(uiclass))
 			throw new ClassCastException("Cannot install class "+uiclass+".");
 		DefaultControl = uiclass;
+	}
+	
+	public void installDefaultOptionControl(Class uiclass) {
+		if (!AbstractUIControl.class.isAssignableFrom(uiclass))
+			throw new ClassCastException("Cannot install class "+uiclass+".");
+		DefaultOptionControl = uiclass;
 	}
 	
 	private void updateNameList() {
@@ -48,11 +60,11 @@ public abstract class UIFactory extends NomadFactory {
 		return names;
 	}
 	
-	public BasicUI newUIInstance(String uiClassName) {
+	public AbstractUIComponent newUIInstance(String uiClassName) {
 		Class uiclass = (Class) componentClasses.get(uiClassName);
 		if (uiclass != null)
 			try {
-				return (BasicUI) uiclass.newInstance();
+				return (AbstractUIComponent) uiclass.newInstance();
 			} catch (InstantiationException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
@@ -61,11 +73,27 @@ public abstract class UIFactory extends NomadFactory {
 		return null;
 	}
 	
-	public ControlUI newDefaultControlInstance() {
+	public AbstractUIControl newDefaultControlInstance() {
 		Class uiclass = DefaultControl;
 		if (uiclass != null)
 			try {
-				return (ControlUI) uiclass.newInstance();
+				return (AbstractUIControl) uiclass.newInstance();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		return null;
+	}
+
+	public AbstractUIControl newDefaultOptionControlInstance() {
+		if (DefaultOptionControl==null)
+			return newDefaultControlInstance();
+		
+		Class uiclass = DefaultOptionControl;
+		if (uiclass != null)
+			try {
+				return (AbstractUIControl) uiclass.newInstance();
 			} catch (InstantiationException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
@@ -74,11 +102,11 @@ public abstract class UIFactory extends NomadFactory {
 		return null;
 	}
 	
-	public ConnectorUI newDefaultConnectorInstance() {
+	public AbstractConnectorUI newDefaultConnectorInstance() {
 		Class uiclass = DefaultConnector;
 		if (uiclass != null)
 			try {
-				return (ConnectorUI) uiclass.newInstance();
+				return (AbstractConnectorUI) uiclass.newInstance();
 			} catch (InstantiationException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
@@ -87,11 +115,11 @@ public abstract class UIFactory extends NomadFactory {
 		return null;
 	}
 	
-	public BasicUI newDefaultLabelInstance() {
+	public AbstractUIComponent newDefaultLabelInstance() {
 		Class uiclass = DefaultLabel;
 		if (uiclass != null)
 			try {
-				return (BasicUI) uiclass.newInstance();
+				return (AbstractUIComponent) uiclass.newInstance();
 			} catch (InstantiationException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
@@ -99,4 +127,11 @@ public abstract class UIFactory extends NomadFactory {
 			}
 		return null;
 	}
+	
+	public ImageTracker getImageTracker() {
+		return imageTracker;
+	}
+	
+	public abstract String getUIDescriptionFileName();
+	
 }
