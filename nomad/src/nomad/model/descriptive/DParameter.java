@@ -81,6 +81,6 @@ public class DParameter {
 			+",states:"+getNumStates()
 			+",default:"+pmDefaultValue+"]";
 		*/
-		return "parameter."+getId();
+		return getName();
 	}
 }
