@@ -5,6 +5,7 @@ import nomad.gui.model.component.builtin.ButtonGroupUI;
 import nomad.gui.model.component.builtin.DefaultConnectorUI;
 import nomad.gui.model.component.builtin.DefaultControlUI;
 import nomad.gui.model.component.builtin.DefaultLabelUI;
+import nomad.gui.model.component.builtin.VocoderUI;
 
 public class ClassicThemeFactory extends UIFactory {
 	public ClassicThemeFactory() {
@@ -15,6 +16,7 @@ public class ClassicThemeFactory extends UIFactory {
 		installUIClass(DefaultControlUI.class);
 		installUIClass(DefaultConnectorUI.class);
 		installUIClass(ButtonGroupUI.class);
+		installUIClass(VocoderUI.class);
 		installDefaultControl(DefaultControlUI.class);
 		installDefaultOptionControl(ButtonGroupUI.class);
 		installDefaultLabel(DefaultLabelUI.class);
