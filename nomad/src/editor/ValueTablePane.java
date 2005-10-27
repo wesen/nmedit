@@ -2,6 +2,7 @@ package editor;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -11,6 +12,7 @@ import javax.swing.table.AbstractTableModel;
 import nomad.gui.ModuleGUIComponents;
 import nomad.gui.model.PortValueEvent;
 import nomad.gui.model.PortValueListener;
+import nomad.gui.model.component.AbstractControlPort;
 import nomad.gui.model.component.AbstractUIControl;
 import nomad.model.descriptive.DModule;
 
@@ -50,18 +52,21 @@ public class ValueTablePane extends JPanel {
 		
 		private DModule module=null;
 		private ModulePane mpane = null;
-		private ParamChangeListener[] changeListeners = new ParamChangeListener[]{};
+		private ArrayList changeListeners = new ArrayList();
 		
 		public void setModule(ModulePane modulePane) {
 			if (module!=null) {
 				ModuleGUIComponents comps = mpane.getModuleComponents();
-				for (int i=0;i<Math.min(changeListeners.length,comps.getControlCount());i++) {
+				for (int i=0;i<comps.getControlCount();i++) {
 					AbstractUIControl control = comps.getControl(i);
-					changeListeners[i] = new ParamChangeListener(i);
-					control.getControlPort(0).removeValueListener(changeListeners[i]);
+					for (int j=0;j<control.getControlPortCount();j++) {
+						AbstractControlPort port = control.getControlPort(j);
+						for (int k=0;k<changeListeners.size();k++)
+							port.removeValueListener((ParamChangeListener)changeListeners.get(k));
+					}
 				}
 				
-				changeListeners = new ParamChangeListener[]{};
+				changeListeners = new ArrayList();
 			}
 			
 			this.module= null;
@@ -71,24 +76,22 @@ public class ValueTablePane extends JPanel {
 				this.module=modulePane.getModule();
 				
 				ModuleGUIComponents comps = mpane.getModuleComponents();
-				changeListeners = new ParamChangeListener[comps.getControlCount()];
-				
 				for (int i=0;i<comps.getControlCount();i++) {
 					AbstractUIControl control = comps.getControl(i);
-					changeListeners[i] = new ParamChangeListener(i);
-					control.getControlPort(0).addValueListener(changeListeners[i]);
+					for (int j=0;j<control.getControlPortCount();j++) {
+						AbstractControlPort port = control.getControlPort(j);
+						ParamChangeListener listener = new ParamChangeListener();
+						changeListeners.add(listener);
+						port.addValueListener(listener);
+					}
 				}
 			}
 			this.fireTableDataChanged();
 		}
 		
 		class ParamChangeListener implements PortValueListener {
-			private int index=0;
-			public ParamChangeListener(int index) {
-				this.index=index;
-			}
 			public void portValueChanged(PortValueEvent event) {
-				OptionsTableModel.this.fireTableCellUpdated(index,1);				
+				OptionsTableModel.this.fireTableDataChanged();				
 			}
 		}
 
@@ -107,14 +110,21 @@ public class ValueTablePane extends JPanel {
 					}
 				} else if (column==1) {
 					if (row<module.getParameterCount()) {
-						if (mpane.getModuleComponents().getControlCount()<=row)
-							return "null";
+						ModuleGUIComponents comps = mpane.getModuleComponents();
+						for (int i=0;i<comps.getControlCount();i++) {
+							AbstractUIControl control = comps.getControl(i);
+							for (int j=0;j<control.getControlPortCount();j++) {
+								AbstractControlPort port = control.getControlPort(j);
+								if (port.getParameterInfoAdapter()==module.getParameter(row)) {
+									return control.getControlPort(j).getFormattedParameterValue();
+								}
+							}
+						}
 						
-						AbstractUIControl control = mpane.getModuleComponents().getControl(row);
-						return control.getControlPort(0).getFormattedParameterValue();
+						return "?";
 					}
 				} else
-					return "0";
+					return "";
 			}
 			
 			return "null";

@@ -17,6 +17,7 @@ import javax.swing.table.TableCellEditor;
 
 import nomad.gui.model.component.AbstractUIComponent;
 import nomad.gui.model.property.Property;
+import nomad.model.descriptive.DParameter;
 
 public class PropertyTableModel extends AbstractTableModel implements ChangeListener, TableCellEditor {
 
