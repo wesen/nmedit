@@ -25,6 +25,7 @@ public class ComponentSizeProperty extends PointProperty {
 
 	protected void setInternalValue(Object value) {
 		getComponent().setSize(getDimensionFromPoint((Point)value));
+		getComponent().validate();
 	}
 
 	public Dimension getSize() {

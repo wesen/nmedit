@@ -37,6 +37,7 @@ public abstract class AbstractUIControl extends AbstractUIComponent {
 	
 	protected void registerControlPort(AbstractControlPort controlPort) {
 		portList.add(controlPort);
+		controlPort.setPortIndex(portList.size()-1);
 	}
 	
 }

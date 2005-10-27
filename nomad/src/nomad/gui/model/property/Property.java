@@ -48,7 +48,7 @@ public abstract class Property {
 	 * @return the display name of the component
 	 */
 	public String getDisplayName() {
-		return displayName;
+		return displayName!=null?displayName:getId();
 	}
 	
 	/**
@@ -169,9 +169,13 @@ public abstract class Property {
 		if (defaultValue==null || !defaultValue.equals(value)) {
 			out.beginTagStart("property"); // new element
 			out.addAttribute("id", ""+this.getId());
-			out.addAttribute("value", value.toString());
+			out.addAttribute("value", getAsXMLValue(value));
 			out.beginTagFinish(false); // finish element
 		}
+	}
+	
+	protected String getAsXMLValue(Object value) {
+		return value.toString();
 	}
 	
 	public Object getDefaultValue() {

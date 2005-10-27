@@ -12,7 +12,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 import nomad.patch.Module;
@@ -74,7 +73,8 @@ public class ModuleGUI extends AbstractModuleGUI implements MouseListener, Mouse
 	public void mouseExited(MouseEvent e) {
 	}
 
-	public void mousePressed(MouseEvent e) {
+	public void mousePressed(final MouseEvent e) {
+		
 		// Sadly enough, e.isPopupTrigger() does always return false
 //		System.out.println(e.isPopupTrigger()?"Popup":"Normal");		
 //		System.out.println(e.getButton());

@@ -10,8 +10,8 @@ import nomad.model.descriptive.DParameter;
  */
 public abstract class ParamPortProperty extends AbstractModuleProperty {
 
-	public ParamPortProperty(String portId, AbstractUIComponent uicomponent) {
-		super("port."+portId, uicomponent);
+	public ParamPortProperty(String displayName, AbstractUIComponent uicomponent) {
+		super(displayName, uicomponent);
 	}
 
 	public Object[] getAllValues() {
@@ -37,4 +37,8 @@ public abstract class ParamPortProperty extends AbstractModuleProperty {
 		return getParameter().getParent();
 	}
 
+	protected String getAsXMLValue(Object value) {
+		DParameter param = (DParameter) value;
+		return "parameter."+param.getId();
+	}
 }

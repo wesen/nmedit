@@ -9,13 +9,22 @@ import nomad.model.descriptive.DParameter;
 
 public abstract class AbstractControlPort {
 
-	private ParamPortProperty paramPortProperty = null;
+	private MyParamPortProperty paramPortProperty = null;
 	private AbstractUIControl uicontrol = null;
 	private ArrayList portvalueListeners = new ArrayList();
+	private int portIndex = 0;
 	
 	public AbstractControlPort(AbstractUIControl uicontrol) {
 		paramPortProperty = new MyParamPortProperty();
 		this.uicontrol = uicontrol;
+	}
+	
+	public void setPortIndex(int index) {
+		portIndex = index;
+	}
+	
+	public int getPortIndex() {
+		return portIndex;
 	}
 	
 	public abstract DParameter getParameterInfoAdapter();
@@ -63,7 +72,7 @@ public abstract class AbstractControlPort {
 	
 	private class MyParamPortProperty extends ParamPortProperty {
 		public MyParamPortProperty() {
-			super("0", AbstractControlPort.this.uicontrol);
+			super(null, AbstractControlPort.this.uicontrol);
 		}
 
 		protected Object getInternalValue() {
@@ -75,7 +84,7 @@ public abstract class AbstractControlPort {
 		}
 
 		public String getId() {
-			return "port.0";
+			return "port."+portIndex;
 		}
 	}
 
