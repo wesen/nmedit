@@ -12,15 +12,15 @@ import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import nomad.misc.JPaintPanel;
 import nomad.model.descriptive.DParameter;
 
-public class ButtonGroup extends JPanel {
+public class ButtonGroup extends JPaintPanel {
 	private ArrayList buttons = new ArrayList();
 	private boolean horizontal = true;
 	private javax.swing.ButtonGroup btngroup = new 

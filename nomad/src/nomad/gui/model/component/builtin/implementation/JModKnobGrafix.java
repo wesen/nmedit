@@ -12,6 +12,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -22,6 +23,16 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Rectangle2D;
+
+import javax.swing.JLayeredPane;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import com.sun.java.swing.plaf.motif.MotifBorders.ToggleButtonBorder;
+import com.sun.media.sound.Toolkit;
+
+import nomad.gui.ModuleGUI;
 
 
 
@@ -85,7 +96,7 @@ public class JModKnobGrafix extends JModParameterObject
     	
     	setPreferredSize(PREF_SIZE);
     	hitArc.setAngleStart(235); // Degrees ??? Radians???
-        
+
     	addMouseListener(new MouseAdapter() {
        		public void mousePressed(MouseEvent me) {
        		    dragpos = me.getX() + me.getY();
@@ -199,9 +210,9 @@ public class JModKnobGrafix extends JModParameterObject
     public void updateKnob() {
         repaint();
     }
-    
+
     // Paint the DKnob
-    public void paint(Graphics g) {
+    protected void paintBuffer(Graphics g) {
         calcMisc(true); // TODO ?It wil only calculate if it's in the paint method?
 
         int x = 0;

@@ -32,7 +32,7 @@ public class JModKnob extends JModKnobGrafix /*implements ChangeListener*/ {
     public void setType(int type) {
     	switch (type) {
         	case LARGE: {
-        		setSize(35, 35);
+        		setSize(30, 30);
         		this.type = type;
         		break;
         	}
