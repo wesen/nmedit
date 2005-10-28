@@ -1,7 +1,9 @@
 package nomad.misc;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Transparency;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
@@ -38,8 +40,18 @@ public class JPaintComponent extends JComponent {
     		bufferh = getHeight();
     		buffer = null;
     		if (bufferw>0 && bufferh>0) {
-    			buffer = createImage(bufferw, bufferh);
-    			paintBuffer(buffer.getGraphics());
+    			if (g instanceof Graphics2D) {
+    				buffer = ((Graphics2D)g).getDeviceConfiguration()
+    					.createCompatibleImage(bufferw, bufferh,
+    						Transparency.TRANSLUCENT // Create an image that supports arbitrary levels of transparency
+    						//Transparency.BITMASK 	// Create an image that supports transparent pixels
+    				);
+    			} else {
+    				buffer = createImage(bufferw, bufferh);
+    			}
+    	        
+    	        if (buffer!=null)
+    	        	paintBuffer(buffer.getGraphics());
     		}
     	}
     	if (buffer!=null)
