@@ -21,7 +21,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
@@ -63,26 +62,32 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 	JMenuItem menuSynthUploadPatchFromCurrentSlot = null;
 		JMenu menuSelectComport = null;
 		
+	JMenu menuAppearance = null;
+		JMenu documentViewMode = null;
+			JRadioButtonMenuItem menuDocumentViewTabbed = null;
+			JRadioButtonMenuItem menuDocumentViewMDI = null;
+		
 	JMenu menuHelp = null;
 		JMenu menuHelpLookAndFeel = null;
 		JMenuItem menuHelpPluginsList = null;
 		JMenuItem menuHelpAbout = null;
 
 	JPanel toolPanel = null;
-	JTabbedPane tabbedPane = null;
 
 	JButton button = null;
 
 	JPanel panelMain = null;
 	ImageTracker theImageTracker = null;
+	
+	private DocumentManager viewManager = null;
 
     class NewListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	Patch patch = new Patch();
             JPanel tab = Patch.createPatch("", patch);
-            tabbedPane.add("new" + (tabbedPane.getTabCount()+1), tab);
-            tabbedPane.setSelectedComponent(tab);
-			tabbedPane.getSelectedComponent().setName(tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
+            viewManager.addDocument("new" + (viewManager.getDocumentCount()+1), tab);
+            viewManager.setSelectedDocument(tab);
+            viewManager.getSelectedDocument().setName(viewManager.getTitleAt(viewManager.getSelectedDocumentIndex()));
         }
     }
 
@@ -102,12 +107,21 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
         	}
         	
             JPanel tab = Patch.createPatchUI(p);
-			tabbedPane.add("<uploaded>",tab);
-			tabbedPane.setSelectedComponent(tab);
-			tabbedPane.getSelectedComponent().setName(tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
+            viewManager.addDocument("<uploaded>",tab);
+            viewManager.setSelectedDocument(tab);
+            viewManager.getSelectedDocument().setName(viewManager.getTitleAt(viewManager.getSelectedDocumentIndex()));
         	
         	//System.out.println(p);
         }
+    }
+    
+    class SwitchDocumentViewAction implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			if (event.getSource()==menuDocumentViewMDI)
+				((SelectableDocumentManager)viewManager).switchDocumentManager(false);
+			else if (event.getSource()==menuDocumentViewTabbed)
+				((SelectableDocumentManager)viewManager).switchDocumentManager(true);
+		}
     }
 
 	class FileLoadListener implements ActionListener {
@@ -118,21 +132,25 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 					name = name.substring(0,name.indexOf(".pch"));
 					Patch patch = new Patch();
 			        JPanel tab = Patch.createPatch(fileChooser.getSelectedFile().getPath(), patch);
-					tabbedPane.add(name,tab);
-					tabbedPane.setSelectedComponent(tab);
-					tabbedPane.getSelectedComponent().setName(tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
+			        viewManager.addDocument(name, tab);
+			        viewManager.setSelectedDocument(tab);
+			        viewManager.getSelectedDocument().setName(
+			        		viewManager.getTitleAt(viewManager.getSelectedDocumentIndex())
+			        );
 			}
 		}
 	}
 
 	class FileSaveAsListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			fileChooser.setSelectedFile(new File(tabbedPane.getSelectedComponent().getName() + "_new.pch"));
+			fileChooser.setSelectedFile(new File(viewManager.getSelectedDocument().getName() + "_new.pch"));
 			if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 				OutputStream stream;
 				try {
 					stream = new FileOutputStream(fileChooser.getSelectedFile());
-					stream.write(((PatchGUI)tabbedPane.getSelectedComponent()).getPatch().savePatch().toString().getBytes());
+					PatchGUI patchGUI = (PatchGUI) viewManager.getSelectedDocument();
+					
+					stream.write(patchGUI.getPatch().savePatch().toString().getBytes());
 					stream.flush();
 					stream.close();
 				}
@@ -164,7 +182,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 
 	class FileCloseListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			tabbedPane.remove(tabbedPane.getSelectedComponent());
+			viewManager.removeDocumentAt(viewManager.getSelectedDocumentIndex());
 		}
 	}
 
@@ -243,10 +261,6 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		panelMain = new JPanel();
 		panelMain.setLayout(new BorderLayout());
 
-// TabbedPane
-		tabbedPane = new JTabbedPane();
-		panelMain.add(tabbedPane, BorderLayout.CENTER);
-
 		this.getContentPane().add(panelMain,BorderLayout.CENTER);
 		this.getContentPane().add(moduleToolbar, BorderLayout.NORTH);
 
@@ -259,14 +273,17 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		newSynth(ComPort.getDefaultComPortInstance());
 
 		Run.statusMessage("Patch 'all.pch'");
+
+		viewManager = new SelectableDocumentManager(panelMain);
 		
 		// now do loading
 		Patch patch = new Patch();				
         JPanel tab = Patch.createPatch("src/data/patches/all.pch", patch);
-
-        tabbedPane.add("all.pch", tab);
-		tabbedPane.setSelectedComponent(tab);
-		tabbedPane.getSelectedComponent().setName(tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
+        
+        viewManager.addDocument("all.pch", tab);
+        viewManager.setSelectedDocument(tab);
+        
+		//tabbedPane.getSelectedComponent().setName(tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
 
 //        Patch patch = new Patch();
 //        tabbedPane.add("new" + (tabbedPane.getTabCount()+1),patch.createPatch(""));
@@ -335,7 +352,24 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		menuSynthConnectionMenuItem.addActionListener(new SynthConnectionMenuItemListener());
 		menuSynthUploadPatchFromCurrentSlot.addActionListener(new UploadPatchFromCurrentSlotListener());
 
+		JMenu menuAppearance = new JMenu("Appearance");
+			JMenu documentViewMode = new JMenu("Document View");
+			menuDocumentViewTabbed = new JRadioButtonMenuItem("Tabbed");
+			menuDocumentViewTabbed.setSelected(true);
+			menuDocumentViewMDI = new JRadioButtonMenuItem("MDI");
+			documentViewMode.add(menuDocumentViewTabbed);
+			documentViewMode.add(menuDocumentViewMDI);
+			menuDocumentViewTabbed.addActionListener(new SwitchDocumentViewAction());
+			menuDocumentViewMDI.addActionListener(new SwitchDocumentViewAction());
+			
+			ButtonGroup docViewGroup = new ButtonGroup();
+			docViewGroup.add(menuDocumentViewTabbed);
+			docViewGroup.add(menuDocumentViewMDI);
+			
+			menuAppearance.add(documentViewMode);
 		
+		menuBar.add(menuAppearance);
+			
 		menuHelp = new JMenu("Help");
 			menuHelpLookAndFeel = new JMenu("Look and Feel");
 			menuHelp.add(menuHelpLookAndFeel);
