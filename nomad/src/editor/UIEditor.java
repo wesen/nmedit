@@ -24,11 +24,13 @@ import nomad.application.ui.ModuleToolbar;
 import nomad.gui.model.ModuleGUIBuilder;
 import nomad.gui.model.UIFactory;
 import nomad.gui.model.component.AbstractUIComponent;
+import nomad.misc.ImageTracker;
 import nomad.misc.SliceImage;
 import nomad.model.descriptive.DModule;
 import nomad.model.descriptive.ModuleDescriptions;
 import nomad.model.descriptive.substitution.XMLSubstitutionReader;
 import nomad.plugin.PluginManager;
+import nomad.plugin.cache.XMLUICacheWriter;
 import plugin.classictheme.ClassicThemeFactory;
 
 public class UIEditor extends JFrame {
@@ -69,11 +71,55 @@ public class UIEditor extends JFrame {
 	ClassPane classPane = null;
 	UIFactory theUIFactory = new ClassicThemeFactory();
 	
+	ImageTracker theImageTracker = null;
+	
 	public UIEditor() {
 		
 		super("Nomad UI Editor");
 		this.setSize(640, 480);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
+		// load plugin names
+		Run.statusMessage("Plugin Manager");
+		PluginManager.init();
+
+		// load substitutions
+		Run.statusMessage("parameter substitutions");
+		XMLSubstitutionReader subsReader = 
+			new XMLSubstitutionReader("src/data/xml/substitutions.xml");
+		
+		// load module descriptors
+		Run.statusMessage("module description");
+		ModuleDescriptions.init("src/data/xml/modules.xml", subsReader);
+
+		// feed image tracker
+		Run.statusMessage("images");
+		theImageTracker = new ImageTracker();
+		SliceImage.createSliceImage("src/data/images/toolbar-icons.gif").feedImageTracker(theImageTracker);
+		SliceImage.createSliceImage("src/data/images/io-icons.gif").feedImageTracker(theImageTracker);
+		SliceImage.createSliceImage("src/data/images/button-icons.gif").feedImageTracker(theImageTracker);
+
+		theUIFactory = PluginManager.getDefaultUIFactory();
+		theUIFactory.getImageTracker().addFrom(theImageTracker);
+
+		// load module/connector icons
+		ModuleDescriptions.model.loadImages(theImageTracker);
+
+		// build toolbar
+		Run.statusMessage("building toolbar");
+		ModuleToolbar moduleToolbar = new ModuleToolbar(false);
+		moduleToolbar.addModuleButtonClickListener(new ModuleButtonClickListener());
+
+		// create gui builder
+		Run.statusMessage("ui builder");	
+		ModuleGUIBuilder.createGUIBuilder(theUIFactory);
+
+		
+		
+		
+		
+		/*
 		
 		// load substitutions
 		String loadfile = "src/data/xml/substitutions.xml"; 
@@ -95,8 +141,8 @@ public class UIEditor extends JFrame {
 
 		// load plugin names
 		Run.statusMessage("Loading Plugin Manager");
-		PluginManager.init();
-		
+		PluginManager.init();*/
+	/*	
 		theUIFactory = PluginManager.getDefaultUIFactory(); 
 
 		// image tracker
@@ -112,8 +158,7 @@ public class UIEditor extends JFrame {
 		// build toolbar
 		Run.statusMessage("building toolbar");
 		ModuleToolbar moduleToolbar = new ModuleToolbar(false);
-		moduleToolbar.addModuleButtonClickListener(new ModuleButtonClickListener());
-
+*/
 		this.add(BorderLayout.NORTH, moduleToolbar);
 
 		valuePane = new ValueTablePane();
@@ -199,6 +244,12 @@ public class UIEditor extends JFrame {
 				}
 			
 				xml.close();
+				
+				//TODO let nomad handle cache itself
+				// done - now build cache
+				
+				XMLUICacheWriter.writeCache(filename, filename.replaceAll("xml","cache"));
+				
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

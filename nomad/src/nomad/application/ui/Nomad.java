@@ -74,7 +74,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 	JButton button = null;
 
 	JPanel panelMain = null;
-	ImageTracker theImageTracker = new ImageTracker();
+	ImageTracker theImageTracker = null;
 
     class NewListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -113,13 +113,14 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 	class FileLoadListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-				String name = fileChooser.getSelectedFile().getName();
-				name = name.substring(0,name.indexOf(".pch"));
-				Patch patch = new Patch();
-	            JPanel tab = Patch.createPatch(fileChooser.getSelectedFile().getPath(), patch);
-				tabbedPane.add(name,tab);
-				tabbedPane.setSelectedComponent(tab);
-				tabbedPane.getSelectedComponent().setName(tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
+					String name = fileChooser.getSelectedFile().getName();
+
+					name = name.substring(0,name.indexOf(".pch"));
+					Patch patch = new Patch();
+			        JPanel tab = Patch.createPatch(fileChooser.getSelectedFile().getPath(), patch);
+					tabbedPane.add(name,tab);
+					tabbedPane.setSelectedComponent(tab);
+					tabbedPane.getSelectedComponent().setName(tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
 			}
 		}
 	}
@@ -197,42 +198,39 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 	}
 	
 	public Nomad() {
+
+		// load plugin names
+		Run.statusMessage("Plugin Manager");
+		PluginManager.init();
+
 		// load substitutions
-		String loadfile = "src/data/xml/substitutions.xml"; 
-		Run.statusMessage(loadfile);
-		XMLSubstitutionReader subsReader = new XMLSubstitutionReader(loadfile);
+		Run.statusMessage("parameter substitutions");
+		XMLSubstitutionReader subsReader = 
+			new XMLSubstitutionReader("src/data/xml/substitutions.xml");
 		
 		// load module descriptors
-		loadfile = "src/data/xml/modules.xml";
-		Run.statusMessage(loadfile);
-		ModuleDescriptions.init(loadfile, subsReader);
-		
-		// load connector icons
-		Run.statusMessage("slice:io-icons.gif");
-		ModuleDescriptions.model.loadConnectorIconsFromSlice("src/data/images/io-icons.gif");
-		
-		// load toolbar icons
-		Run.statusMessage("slice:toolbar-icons.gif");
-		ModuleDescriptions.model.loadModuleIconsFromSlice("src/data/images/toolbar-icons.gif");
-		
+		Run.statusMessage("module description");
+		ModuleDescriptions.init("src/data/xml/modules.xml", subsReader);
+
+		// feed image tracker
+		Run.statusMessage("images");
+		theImageTracker = new ImageTracker();
+		SliceImage.createSliceImage("src/data/images/toolbar-icons.gif").feedImageTracker(theImageTracker);
+		SliceImage.createSliceImage("src/data/images/io-icons.gif").feedImageTracker(theImageTracker);
+		SliceImage.createSliceImage("src/data/images/button-icons.gif").feedImageTracker(theImageTracker);
+
+		UIFactory theUIFactory = PluginManager.getDefaultUIFactory();
+		theUIFactory.getImageTracker().addFrom(theImageTracker);
+
+		// load module/connector icons
+		ModuleDescriptions.model.loadImages(theImageTracker);
+
 		// build toolbar
 		Run.statusMessage("building toolbar");
 		ModuleToolbar moduleToolbar = new ModuleToolbar();
 
-		// load plugin names
-		Run.statusMessage("Loading Plugin Manager");
-		PluginManager.init();
-
-		// load image tracker
-		Run.statusMessage("loading images");
-		SliceImage.createSliceImage("src/data/images/toolbar-icons.gif").feedImageTracker(theImageTracker);
-		SliceImage.createSliceImage("src/data/images/io-icons.gif").feedImageTracker(theImageTracker);
-		SliceImage.createSliceImage("src/data/images/button-icons.gif").feedImageTracker(theImageTracker);
-		UIFactory theUIFactory = PluginManager.getDefaultUIFactory();
-		theUIFactory.getImageTracker().addFrom(theImageTracker);
-		
 		// create gui builder
-		Run.statusMessage("GUIBuilder");	
+		Run.statusMessage("ui builder");	
 		ModuleGUIBuilder.createGUIBuilder(theUIFactory);
 
         ToolTipManager.sharedInstance().setInitialDelay(0);
@@ -255,9 +253,17 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		this.addWindowListener(new ExitWindowListener());
 
 		this.setSize(1024, 768);
-        
-		Patch patch = new Patch();
+		
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		newSynth(ComPort.getDefaultComPortInstance());
+
+		Run.statusMessage("Patch 'all.pch'");
+		
+		// now do loading
+		Patch patch = new Patch();				
         JPanel tab = Patch.createPatch("src/data/patches/all.pch", patch);
+
         tabbedPane.add("all.pch", tab);
 		tabbedPane.setSelectedComponent(tab);
 		tabbedPane.getSelectedComponent().setName(tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
@@ -268,10 +274,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 //        tabbedPane.getSelectedComponent().setName(tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
 		
 		// subscribe for connection events;
-		
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		newSynth(ComPort.getDefaultComPortInstance());
+
     }
 	
 	private void newSynth(ComPort comPort) {

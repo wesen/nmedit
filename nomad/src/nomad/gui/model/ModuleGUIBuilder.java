@@ -1,7 +1,12 @@
 package nomad.gui.model;
 
+import java.awt.Component;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 
+import javax.swing.JPanel;
+
+import nomad.application.Run;
 import nomad.gui.AbstractModuleGUI;
 import nomad.gui.ModuleGUI;
 import nomad.gui.ModuleSectionGUI;
@@ -15,6 +20,9 @@ import nomad.model.descriptive.DModule;
 import nomad.model.descriptive.DParameter;
 import nomad.model.descriptive.ModuleDescriptions;
 import nomad.patch.Module;
+import nomad.plugin.cache.ModulePropertyCallback;
+import nomad.plugin.cache.UICache;
+import nomad.plugin.cache.UICacheException;
 import nomad.xml.XMLAttributeReader;
 import nomad.xml.XMLAttributeValidationException;
 import nomad.xml.XMLReader;
@@ -42,15 +50,26 @@ public class ModuleGUIBuilder {
 	}
 	
 	public static ModuleGUI createGUI(Module module, ModuleSectionGUI moduleSectionGUI) {
-		return instance.buildModule(module, moduleSectionGUI, module.getDModule());
+		return (instance.cache!=null)
+			?	instance.buildModuleWithCache(module, moduleSectionGUI, module.getDModule())
+			:	instance.buildModule(module, moduleSectionGUI, module.getDModule());
+	}
+
+	public static void createGUIComponents(AbstractModuleGUI target, Module module, DModule info) {
+		if (instance.cache!=null) { 			
+			if (instance.cache.loadModule(info.getModuleID(), instance.getBuilder(target, info))) ;
+		} else {
+		
+			Node moduleNode = (Node) instance.xmlModuleNodes.get(new Integer(info.getModuleID()));
+			if (moduleNode!=null) 
+				instance.buildModulePanel(target, module, info, moduleNode);
+			else
+				instance.buildModulePanelAndGuessLook(target, module, info);
+		}
 	}
 	
-	public static void createGUIComponents(AbstractModuleGUI target, Module module, DModule info) {
-		Node moduleNode = (Node) instance.xmlModuleNodes.get(new Integer(info.getModuleID()));
-		if (moduleNode!=null)
-			instance.buildModulePanel(target, module, info, moduleNode);
-		else
-			instance.buildModulePanelAndGuessLook(target, module, info);
+	public ModuleBuilder getBuilder(AbstractModuleGUI target, DModule info) {
+		return new ModuleBuilder(target, info);
 	}
 	
 	private void buildModulePanelAndGuessLook(AbstractModuleGUI target, Module module, DModule moduleInfo) {
@@ -115,9 +134,28 @@ public class ModuleGUIBuilder {
 	 */
 	private HashMap xmlModuleNodes = new HashMap();
 	private UIFactory factory = null;
+	private UICache cache = null;
+	
+	private void initCache(String xmlFile) {
+		Run.statusMessage("Caching...");
+		try {
+			cache = new UICache(xmlFile.replaceAll("xml","cache"));
+		} catch (FileNotFoundException e) {
+			Run.statusMessage("Caching...failed");
+			cache = null;
+			e.printStackTrace();
+			return ;
+		}
+		Run.statusMessage("Caching...done");
+	}
 	
 	public ModuleGUIBuilder(UIFactory factory, String xmlFile) {
 		this.factory = factory;
+		initCache(xmlFile);
+		
+		if (cache!=null) {
+			return ; // nothing more to do
+		}
 		
 		Document doc = XMLReader.readDocument(xmlFile, false /*validating*/);
 		
@@ -157,6 +195,76 @@ public class ModuleGUIBuilder {
 	protected ModuleGUI buildModule(Module module, ModuleSectionGUI moduleSectionGUI,DModule info, Node moduleNode) {
 		return (ModuleGUI) buildModulePanel(createModulePaneGUI(module, moduleSectionGUI),
 				module, info, moduleNode);
+	}
+	
+	private ModuleGUI buildModuleWithCache(Module module, ModuleSectionGUI moduleSectionGUI, DModule moduleInfo) {
+		ModuleGUI modulegui = createModulePaneGUI(module, moduleSectionGUI);
+		
+		ModuleBuilder builder = new ModuleBuilder(modulegui, module.getDModule());
+		if (cache.loadModule(moduleInfo.getModuleID(), builder))
+			return modulegui;
+		else
+			return null;
+	}
+	
+	private class ModuleBuilder implements ModulePropertyCallback {
+
+		private AbstractModuleGUI modulegui = null;
+		private AbstractUIComponent component = null;
+		private DModule info = null;
+		
+		public ModuleBuilder(AbstractModuleGUI modulegui, DModule info) {
+			this.modulegui = modulegui;
+			this.info = info;
+		}
+		
+		public void readComponent(String className) throws UICacheException {
+			// create the component
+			component = instance.factory.newUIInstance(className);
+			if (component==null)
+				throw new UICacheException("Class not found '"+className+"'.");
+			modulegui.add(component.getComponent());
+			modulegui.getModuleComponents().addComponent(component);
+		}
+
+		public void readComponentProperty(String propertyId, String value) throws UICacheException {
+			if (component==null)
+				throw new UICacheException("No component");
+			
+			Property property = component.getPropertyById(propertyId);
+			if (property==null) {
+				// TODO throw exception 
+				System.err.println("** Ignored: Component '"+component+"' has no such property:'"+propertyId+"'.");
+			} else if (property instanceof ParamPortProperty) {
+				try {
+					String paramId = value.split("\\.")[1];
+					
+					((ParamPortProperty)property).setParameter(
+						info.getParameterById(Integer.parseInt(paramId))
+					);
+				} catch (Exception e) {
+					System.err.println("Current property:"+propertyId+","+value);
+					e.printStackTrace();
+				}
+			} else if (property instanceof ConnectorProperty) {
+				try {
+					String[] splitted = value.split("\\.");
+					String connectorId = splitted[1];
+					boolean isInput = /*splitted.length<=2 || */splitted[2].equals("input");
+					
+					((ConnectorProperty)property).setConnector(
+						info.getConnectorById(Integer.parseInt(connectorId),isInput )
+					);
+				} catch (Exception e) {
+					System.err.println("Current property:"+propertyId+","+value);
+					e.printStackTrace();
+				}
+			} else {
+				property.setValue(value);
+			}
+			
+		}
+		
 	}
 	
 	protected AbstractModuleGUI buildModulePanel(AbstractModuleGUI modulegui, Module module, DModule info, Node moduleNode) {
