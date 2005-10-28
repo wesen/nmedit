@@ -54,7 +54,15 @@ public class DefaultControlUI extends AbstractUIControl {
 				);
 			ip.setDefaultBooleanValue(true);
 			ksp.setDefaultBooleanValue(true);
-			//ksp.setValue(true);
+			knob.setType(booleanToKnobType(ksp.getDefaultBooleanValue()));
+		}
+		
+		private int booleanToKnobType (boolean small) {
+			return small ? JModKnob.SMALL : JModKnob.LARGE;
+		}
+		
+		private boolean knobTypeToBoolean(int type) {
+			return type==JModKnob.SMALL;
 		}
 		
 		public void registerAdditionalProperties(boolean install) {
@@ -125,14 +133,11 @@ public class DefaultControlUI extends AbstractUIControl {
 			}
 
 			protected Object getInternalValue() {
-				return new Boolean(knob.getType()==JModKnob.SMALL);
+				return new Boolean(knobTypeToBoolean(knob.getType()));
 			}
 
 			protected void setInternalValue(Object value) {
-				boolean setToSmall = ((Boolean) value).booleanValue();
-				//System.out.println(setToSmall+""+JModKnob.SMALL);
-				knob.setType(setToSmall?JModKnob.SMALL:JModKnob.LARGE);
-				//System.out.println("small?"+(knob.getType()==JModKnob.SMALL)+" "+knob.getType());
+				knob.setType(booleanToKnobType(((Boolean) value).booleanValue()));
 				updateKnobUI();
 			}
 

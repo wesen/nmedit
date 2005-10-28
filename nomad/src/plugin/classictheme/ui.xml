@@ -25,87 +25,70 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,17" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,17" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,17" />
       <property id="port.0" value="parameter.6" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,17" />
       <property id="port.0" value="parameter.7" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,29" />
       <property id="port.0" value="parameter.8" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,29" />
       <property id="port.0" value="parameter.9" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,29" />
       <property id="port.0" value="parameter.10" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,29" />
       <property id="port.0" value="parameter.11" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,41" />
       <property id="port.0" value="parameter.12" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,41" />
       <property id="port.0" value="parameter.13" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,41" />
       <property id="port.0" value="parameter.14" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,41" />
       <property id="port.0" value="parameter.15" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,53" />
       <property id="port.0" value="parameter.16" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -180,27 +163,22 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,17" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -229,17 +207,14 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -268,22 +243,18 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="127">
@@ -333,12 +304,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -370,7 +339,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="117,10" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -423,12 +391,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="67">
@@ -447,7 +413,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="124,3" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
       <property id="location" value="154,9" />
@@ -486,47 +451,38 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,17" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,17" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,17" />
       <property id="port.0" value="parameter.6" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,17" />
       <property id="port.0" value="parameter.7" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,29" />
       <property id="port.0" value="parameter.8" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -551,7 +507,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="160,2" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="20">
@@ -590,22 +545,18 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="64,47" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="97,47" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="131,47" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="166,47" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="24,12" />
@@ -658,7 +609,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="69">
@@ -677,7 +627,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="95">
@@ -700,17 +649,14 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -720,12 +666,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,17" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,17" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -757,12 +701,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -777,17 +719,14 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,17" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,17" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,17" />
       <property id="port.0" value="parameter.6" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="32">
@@ -802,72 +741,58 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="48,27" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="84,29" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="109,28" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="143,31" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="167,31" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="196,32" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="223,33" />
       <property id="port.0" value="parameter.6" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="59,56" />
       <property id="port.0" value="parameter.7" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="87,54" />
       <property id="port.0" value="parameter.8" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="115,53" />
       <property id="port.0" value="parameter.9" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="143,53" />
       <property id="port.0" value="parameter.10" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="171,54" />
       <property id="port.0" value="parameter.11" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="197,56" />
       <property id="port.0" value="parameter.12" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="229,57" />
       <property id="port.0" value="parameter.13" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="16,14" />
@@ -884,7 +809,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -919,7 +843,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="161,2" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="79">
@@ -951,22 +874,18 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,17" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -994,17 +913,14 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -1032,12 +948,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="44">
@@ -1083,12 +997,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -1098,12 +1010,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,17" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -1139,92 +1049,74 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,17" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,17" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,17" />
       <property id="port.0" value="parameter.6" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,17" />
       <property id="port.0" value="parameter.7" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,29" />
       <property id="port.0" value="parameter.8" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,29" />
       <property id="port.0" value="parameter.9" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,29" />
       <property id="port.0" value="parameter.10" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,29" />
       <property id="port.0" value="parameter.11" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,41" />
       <property id="port.0" value="parameter.12" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,41" />
       <property id="port.0" value="parameter.13" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,41" />
       <property id="port.0" value="parameter.14" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,41" />
       <property id="port.0" value="parameter.15" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,53" />
       <property id="port.0" value="parameter.16" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,53" />
       <property id="port.0" value="parameter.17" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -1271,7 +1163,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -1299,52 +1190,42 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="26,49" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="78,48" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="27,77" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="78,74" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="28,103" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="79,102" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="115,32" />
       <property id="port.0" value="parameter.6" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="141,32" />
       <property id="port.0" value="parameter.7" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="166,32" />
       <property id="port.0" value="parameter.8" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="191,32" />
       <property id="port.0" value="parameter.9" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -1355,22 +1236,18 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="117,74" />
       <property id="port.0" value="parameter.11" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="144,74" />
       <property id="port.0" value="parameter.12" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="181,72" />
       <property id="port.0" value="parameter.13" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="206,72" />
       <property id="port.0" value="parameter.14" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="16,14" />
@@ -1479,12 +1356,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -1494,7 +1369,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -1530,7 +1404,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -1720,7 +1593,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="59">
@@ -1735,7 +1607,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="5">
@@ -1792,7 +1663,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="37">
@@ -1807,7 +1677,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="33">
@@ -1864,92 +1733,74 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,17" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,17" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,17" />
       <property id="port.0" value="parameter.6" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,17" />
       <property id="port.0" value="parameter.7" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,29" />
       <property id="port.0" value="parameter.8" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,29" />
       <property id="port.0" value="parameter.9" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,29" />
       <property id="port.0" value="parameter.10" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,29" />
       <property id="port.0" value="parameter.11" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,41" />
       <property id="port.0" value="parameter.12" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,41" />
       <property id="port.0" value="parameter.13" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,41" />
       <property id="port.0" value="parameter.14" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,41" />
       <property id="port.0" value="parameter.15" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,53" />
       <property id="port.0" value="parameter.16" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,53" />
       <property id="port.0" value="parameter.17" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -1983,12 +1834,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="114">
@@ -2007,7 +1856,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="7">
@@ -2040,24 +1888,21 @@
       <property id="connector" value="connector.1.output" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
-      <property id="location" value="57,14" />
+      <property id="location" value="64,17" />
       <property id="port.0" value="parameter.0" />
       <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
-      <property id="location" value="100,21" />
+      <property id="location" value="102,21" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="133,21" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="177,17" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="30,14" />
@@ -2072,22 +1917,18 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="20,62" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="64,63" />
       <property id="port.0" value="parameter.6" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="107,61" />
       <property id="port.0" value="parameter.7" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="187,44" />
       <property id="port.0" value="parameter.8" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="14,12" />
@@ -2158,7 +1999,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="106">
@@ -2205,92 +2045,74 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,17" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,17" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,17" />
       <property id="port.0" value="parameter.6" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,17" />
       <property id="port.0" value="parameter.7" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,29" />
       <property id="port.0" value="parameter.8" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,29" />
       <property id="port.0" value="parameter.9" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,29" />
       <property id="port.0" value="parameter.10" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,29" />
       <property id="port.0" value="parameter.11" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,41" />
       <property id="port.0" value="parameter.12" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,41" />
       <property id="port.0" value="parameter.13" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,41" />
       <property id="port.0" value="parameter.14" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,41" />
       <property id="port.0" value="parameter.15" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,53" />
       <property id="port.0" value="parameter.16" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,53" />
       <property id="port.0" value="parameter.17" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -2361,7 +2183,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="48">
@@ -2380,7 +2201,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="107">
@@ -2411,17 +2231,14 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -2431,22 +2248,18 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,17" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,17" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,17" />
       <property id="port.0" value="parameter.6" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,17" />
       <property id="port.0" value="parameter.7" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -2471,7 +2284,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="184,1" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
       <property id="location" value="96,7" />
@@ -2511,12 +2323,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="98,24" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="129,23" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -2531,22 +2341,18 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="20,63" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="64,62" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="110,62" />
       <property id="port.0" value="parameter.6" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="187,24" />
       <property id="port.0" value="parameter.7" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="16,14" />
@@ -2608,7 +2414,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -2618,7 +2423,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -2638,7 +2442,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="193,2" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
       <property id="location" value="82,9" />
@@ -2669,7 +2472,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -2679,32 +2481,26 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,17" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,17" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,17" />
       <property id="port.0" value="parameter.6" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,17" />
       <property id="port.0" value="parameter.7" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -2714,12 +2510,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,29" />
       <property id="port.0" value="parameter.9" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,29" />
       <property id="port.0" value="parameter.10" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="49">
@@ -2746,22 +2540,18 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="39">
@@ -2776,7 +2566,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="82">
@@ -2806,7 +2595,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -2826,7 +2614,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="103">
@@ -2841,17 +2628,14 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -2861,7 +2645,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,17" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="24">
@@ -2884,7 +2667,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -2899,7 +2681,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -2909,12 +2690,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,17" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,17" />
       <property id="port.0" value="parameter.6" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -2953,12 +2732,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -3068,42 +2845,34 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="36,30" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="77,30" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="113,29" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="150,30" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="46,62" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="90,62" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="132,61" />
       <property id="port.0" value="parameter.6" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="175,61" />
       <property id="port.0" value="parameter.7" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -3140,7 +2909,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="34">
@@ -3155,7 +2923,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="179,2" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
       <property id="location" value="100,8" />
@@ -3178,12 +2945,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="30">
@@ -3198,7 +2963,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="190,3" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
       <property id="location" value="77,9" />
@@ -3229,12 +2993,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="111">
@@ -3249,7 +3011,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -3281,7 +3042,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -3291,12 +3051,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -3306,17 +3064,14 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,17" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,17" />
       <property id="port.0" value="parameter.6" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,17" />
       <property id="port.0" value="parameter.7" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="57">
@@ -3347,7 +3102,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="176,3" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
       <property id="location" value="138,10" />
@@ -3370,7 +3124,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -3385,7 +3138,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -3418,17 +3170,14 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="67,3" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="117,3" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="168,3" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="100">
@@ -3459,12 +3208,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="88,14" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="120,14" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
       <property id="location" value="87,2" />
@@ -3521,27 +3268,22 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,17" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,17" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,17" />
       <property id="port.0" value="parameter.6" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -3551,7 +3293,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,29" />
       <property id="port.0" value="parameter.8" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -3571,7 +3312,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="186,2" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
       <property id="location" value="78,10" />
@@ -3602,12 +3342,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -3617,7 +3355,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -3696,32 +3433,26 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,17" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,17" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -3751,7 +3482,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="183,2" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
       <property id="location" value="221,9" />
@@ -3826,12 +3556,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -3885,32 +3613,26 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="43,27" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="99,28" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="156,27" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="64,47" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="123,48" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="177,47" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="99">
@@ -3933,12 +3655,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="100,32" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="137,32" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -3949,7 +3669,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="181,12" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="32,14" />
@@ -4002,17 +3721,14 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -4032,12 +3748,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -4052,7 +3766,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,17" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="40">
@@ -4095,42 +3808,34 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="4,33" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="32,33" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="59,33" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="86,33" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="114,33" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="141,33" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="168,33" />
       <property id="port.0" value="parameter.6" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="195,33" />
       <property id="port.0" value="parameter.7" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -4262,12 +3967,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="104,18" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="156,18" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="26,13" />
@@ -4304,17 +4007,14 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -4356,47 +4056,38 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="118,18" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="147,13" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="179,17" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="177,48" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="145,43" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="118,48" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="44,19" />
       <property id="port.0" value="parameter.6" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="59,47" />
       <property id="port.0" value="parameter.7" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="3,34" />
       <property id="port.0" value="parameter.8" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
       <property id="location" value="7,23" />
@@ -4432,7 +4123,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="112,18" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="22,14" />
@@ -4442,12 +4132,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="166,18" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="206,18" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
       <property id="location" value="3,16" />
@@ -4482,7 +4170,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="2">
@@ -4523,7 +4210,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="75">
@@ -4538,12 +4224,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="47">
@@ -4566,12 +4250,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="108">
@@ -4622,7 +4304,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="224,49" />
       <property id="port.0" value="parameter.16" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
       <property id="location" value="221,24" />
@@ -4709,12 +4390,10 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="101,16" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="154,16" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
       <property id="location" value="83,22" />
@@ -4749,32 +4428,26 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,17" />
       <property id="port.0" value="parameter.4" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,17" />
       <property id="port.0" value="parameter.5" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -4808,22 +4481,18 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="25,5" />
       <property id="port.0" value="parameter.1" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="45,5" />
       <property id="port.0" value="parameter.2" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="65,5" />
       <property id="port.0" value="parameter.3" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />
@@ -4843,7 +4512,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
   </module>
   <module id="73">
@@ -4877,7 +4545,6 @@
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
       <property id="location" value="5,5" />
       <property id="port.0" value="parameter.0" />
-      <property id="knob.size" value="false" />
     </control>
     <control class="nomad.gui.model.component.builtin.ButtonGroupUI">
       <property id="btn.size" value="28,14" />

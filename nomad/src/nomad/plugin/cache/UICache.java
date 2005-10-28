@@ -124,7 +124,10 @@ public class UICache {
 					String value = line.substring(firstStarterline);
 					callback.readComponentProperty(propertyId.trim(), value.trim());
 				}
-				else throw new UICacheException("Unknown entry:'"+line+"'");
+				else {
+					System.err.println("Unknown entry:'"+line+"'");
+					//throw new UICacheException("Unknown entry:'"+line+"'");
+				}
 			}
 		} catch (IOException e) {
 			throw new UICacheException(e);
