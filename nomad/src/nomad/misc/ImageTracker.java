@@ -37,7 +37,7 @@ public class ImageTracker {
 	/**
 	 * Returns an iterator that iterates over strings that are
 	 * valid keys for the images
-	 * @return
+	 * @return iterator
 	 */
 	public Iterator getKeys() {
 		return images.keySet().iterator();

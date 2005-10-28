@@ -3,7 +3,6 @@ package nomad.model.descriptive;
 import java.awt.Image;
 
 import nomad.misc.ImageTracker;
-import nomad.misc.SliceImage;
 
 public class DConnector {
 

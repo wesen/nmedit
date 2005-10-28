@@ -1,7 +1,5 @@
 package nomad.gui.model.component.builtin.implementation;
 
-import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
@@ -11,7 +9,7 @@ import nomad.model.descriptive.DParameter;
 
 public abstract class JModParameterObject extends JPaintComponent {
     
-    private JLabel parLabel = null;
+    //private JLabel parLabel = null;
     
     public float internalValue;
     private float MIN_VAL = 0.0F;

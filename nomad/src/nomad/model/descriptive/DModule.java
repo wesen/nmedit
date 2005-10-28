@@ -2,7 +2,6 @@ package nomad.model.descriptive;
 
 import java.awt.Image;
 import java.util.ArrayList;
-import java.util.Vector;
 
 /**
  * @author Christian Schneider

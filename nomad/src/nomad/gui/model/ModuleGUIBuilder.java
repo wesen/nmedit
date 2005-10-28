@@ -1,10 +1,7 @@
 package nomad.gui.model;
 
-import java.awt.Component;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
-
-import javax.swing.JPanel;
 
 import nomad.application.Run;
 import nomad.gui.AbstractModuleGUI;

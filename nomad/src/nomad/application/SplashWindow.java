@@ -216,7 +216,7 @@ public class SplashWindow extends Window
       // Create the splash image
       instance = new SplashWindow(f, image, statusPosition);
       // Show the window.
-      instance.show();
+      instance.setVisible(true);
       // Note: To make sure the user gets a chance to see the
       // splash window we wait until its paint method has been
       // called at least once by the AWT event dispatcher thread.

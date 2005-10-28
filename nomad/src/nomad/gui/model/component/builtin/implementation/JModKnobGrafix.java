@@ -12,7 +12,6 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -23,18 +22,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Rectangle2D;
-
-import javax.swing.JLayeredPane;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import com.sun.java.swing.plaf.motif.MotifBorders.ToggleButtonBorder;
-import com.sun.media.sound.Toolkit;
-
-import nomad.gui.ModuleGUI;
-
-
 
 public class JModKnobGrafix extends JModParameterObject
 {
@@ -50,12 +37,12 @@ public class JModKnobGrafix extends JModParameterObject
     private final static Color MIDDLE_COLOR = new Color(0xD0D0D0);
     private final static Color TOP_COLOR = new Color(0x707070);
 
-    private int SHADOWX = 1;
-    private int SHADOWY = 1;
+    //private int SHADOWX = 1;
+    //private int SHADOWY = 1;
     
     private float DRAG_SPEED;
     private float CLICK_SPEED;
-    private float DRAG_RES;
+  //  private float DRAG_RES;
     
     private int size;
     private int middle;
@@ -78,7 +65,7 @@ public class JModKnobGrafix extends JModParameterObject
     private Arc2D hitArc = new Arc2D.Float(Arc2D.PIE);
     
     private float ang = (float) START_ANG;
-    private int dragpos = -1;
+    //private int dragpos = -1;
     private float startVal = 0;
     private Color focusColor = null;
     private double lastAng = 0;
@@ -89,7 +76,7 @@ public class JModKnobGrafix extends JModParameterObject
         super(min_val, max_val/*, newPar*/);
 
     	DRAG_SPEED = 1/getRange();
-        DRAG_RES = 1/getRange();
+        //DRAG_RES = 1/getRange();
     	CLICK_SPEED = 1/getRange();
         
     	focusColor = DEFAULT_FOCUS_COLOR;
@@ -99,7 +86,7 @@ public class JModKnobGrafix extends JModParameterObject
 
     	addMouseListener(new MouseAdapter() {
        		public void mousePressed(MouseEvent me) {
-       		    dragpos = me.getX() + me.getY();
+       		    //dragpos = me.getX() + me.getY();
        		    startVal = getInternalValue();
         
        		    // Fix last angle

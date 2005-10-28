@@ -5,6 +5,7 @@ import nomad.gui.model.component.builtin.ButtonGroupUI;
 import nomad.gui.model.component.builtin.DefaultConnectorUI;
 import nomad.gui.model.component.builtin.DefaultControlUI;
 import nomad.gui.model.component.builtin.DefaultLabelUI;
+import nomad.gui.model.component.builtin.DefaultTextDisplay;
 import nomad.gui.model.component.builtin.VocoderUI;
 
 public class ClassicThemeFactory extends UIFactory {
@@ -12,6 +13,7 @@ public class ClassicThemeFactory extends UIFactory {
 		DefaultLabelUI.theImageTracker = this.getImageTracker();
 		ButtonGroupUI.theImageTracker = this.getImageTracker();
 		
+		installUIClass(DefaultTextDisplay.class);
 		installUIClass(DefaultLabelUI.class);
 		installUIClass(DefaultControlUI.class);
 		installUIClass(DefaultConnectorUI.class);

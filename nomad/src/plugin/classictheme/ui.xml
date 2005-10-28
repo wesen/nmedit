@@ -1884,7 +1884,7 @@
       <property id="connector" value="connector.0.output" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultConnectorUI">
-      <property id="location" value="5,33" />
+      <property id="location" value="8,41" />
       <property id="connector" value="connector.1.output" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
@@ -1936,12 +1936,17 @@
       <property id="port.0" value="parameter.9" />
       <property id="btn.text.0" value="M" />
     </control>
-    <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
-      <property id="location" value="4,13" />
-      <property id="label.text" value="Frequency" />
+    <control class="nomad.gui.model.component.builtin.DefaultTextDisplay">
+      <property id="component.size" value="50,16" />
+      <property id="location" value="7,25" />
+      <property id="port.0" value="parameter.0" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
-      <property id="location" value="22,33" />
+      <property id="location" value="8,13" />
+      <property id="label.text" value="Freq" />
+    </control>
+    <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
+      <property id="location" value="24,41" />
       <property id="label.text" value="Slv" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
@@ -2296,7 +2301,7 @@
       <property id="connector" value="connector.0.input" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultConnectorUI">
-      <property id="location" value="5,66" />
+      <property id="location" value="5,67" />
       <property id="connector" value="connector.1.input" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultConnectorUI">
@@ -2312,7 +2317,7 @@
       <property id="connector" value="connector.0.output" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultConnectorUI">
-      <property id="location" value="6,33" />
+      <property id="location" value="7,42" />
       <property id="connector" value="connector.1.output" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultControlUI">
@@ -2360,12 +2365,17 @@
       <property id="port.0" value="parameter.8" />
       <property id="btn.text.0" value="M" />
     </control>
+    <control class="nomad.gui.model.component.builtin.DefaultTextDisplay">
+      <property id="component.size" value="50,16" />
+      <property id="location" value="6,25" />
+      <property id="port.0" value="parameter.0" />
+    </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
-      <property id="location" value="20,34" />
+      <property id="location" value="23,42" />
       <property id="label.text" value="Slv" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
-      <property id="location" value="3,52" />
+      <property id="location" value="2,55" />
       <property id="label.text" value="Pitch" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
@@ -4104,7 +4114,7 @@
   </module>
   <module id="97">
     <control class="nomad.gui.model.component.builtin.DefaultConnectorUI">
-      <property id="location" value="153,23" />
+      <property id="location" value="151,23" />
       <property id="connector" value="connector.0.input" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultConnectorUI">
@@ -4137,6 +4147,11 @@
       <property id="location" value="206,18" />
       <property id="port.0" value="parameter.4" />
     </control>
+    <control class="nomad.gui.model.component.builtin.DefaultTextDisplay">
+      <property id="component.size" value="50,16" />
+      <property id="location" value="23,20" />
+      <property id="port.0" value="parameter.0" />
+    </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
       <property id="location" value="3,16" />
       <property id="label.text" value="Slv" />
@@ -4150,7 +4165,7 @@
       <property id="label.text" value="Fine" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
-      <property id="location" value="147,9" />
+      <property id="location" value="146,9" />
       <property id="label.text" value="Pitch" />
     </control>
     <control class="nomad.gui.model.component.builtin.DefaultLabelUI">
