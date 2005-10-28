@@ -49,7 +49,8 @@ public class SelectableDocumentManager implements DocumentManager {
 		contentPane.add(newManager.getDocumentContainer(), BorderLayout.CENTER);
 		theManager = newManager;
 		newManager.getDocumentContainer().validate();
-		newManager.setSelectedDocument(selectedIndex);
+		if (selectedIndex>0)
+			newManager.setSelectedDocument(selectedIndex);
 	}
 
 	/**

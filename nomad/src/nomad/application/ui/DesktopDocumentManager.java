@@ -34,17 +34,6 @@ public class DesktopDocumentManager extends JDesktopPane implements
 		getFrameAt(index).setTitle(title);
 	}
 
-	public void addDocument(String title, JComponent component) {
-		JInternalFrame frame = new JInternalFrame(title, true, false, true, true);
-		frame.add(component, BorderLayout.CENTER);
-		frame.setSize(400, 300);
-		frame.setVisible(true);
-		add(frame);
-		
-		frames.add(frame);
-		components.add(component);
-	}
-
 	public JComponent getDocumentAt(int index) {
 		return (JComponent)components.get(index);
 	}
@@ -66,13 +55,24 @@ public class DesktopDocumentManager extends JDesktopPane implements
 		setSelectedDocument(components.indexOf(component));
 	}
 
+	public void addDocument(String title, JComponent component) {
+		JInternalFrame frame = new JInternalFrame(title, true, false, true, true);
+		frame.add(component, BorderLayout.CENTER);
+		
+		frames.add(frame);
+		components.add(component);
+		
+		frame.setSize(400, 300);
+		frame.setVisible(true);
+		add(frame);
+	}
+
 	public void removeDocumentAt(int index) {
 		JInternalFrame frame = getFrameAt(index);
 		JComponent component = (JComponent) components.get(index);
 		
 		frames.remove(index);
 		components.remove(index);
-		
 		frame.getContentPane().remove(component);
 		remove(frame);
 		updateUI();
@@ -87,7 +87,11 @@ public class DesktopDocumentManager extends JDesktopPane implements
 	}
 
 	public JComponent getSelectedDocument() {
-		return getDocumentAt(getSelectedDocumentIndex());
+		int index = getSelectedDocumentIndex();
+		if (index>=0)
+			return getDocumentAt(index);
+		else
+			return null;
 	}
 
 }

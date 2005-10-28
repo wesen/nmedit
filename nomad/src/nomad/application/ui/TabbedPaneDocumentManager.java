@@ -49,7 +49,11 @@ public class TabbedPaneDocumentManager extends JTabbedPane implements DocumentMa
 	}
 
 	public JComponent getSelectedDocument() {
-		return (JComponent) getSelectedComponent();
+		int index = getSelectedDocumentIndex();
+		if (index>=0)
+			return getDocumentAt(index);
+		else
+			return null;
 	}
 
 }

@@ -182,7 +182,8 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 
 	class FileCloseListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			viewManager.removeDocumentAt(viewManager.getSelectedDocumentIndex());
+			if (viewManager.getSelectedDocument()!=null)
+				viewManager.removeDocumentAt(viewManager.getSelectedDocumentIndex());
 		}
 	}
 
