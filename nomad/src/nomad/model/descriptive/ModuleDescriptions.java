@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
-import nomad.misc.SliceImage;
+import nomad.misc.ImageTracker;
 import nomad.model.descriptive.substitution.Substitution;
 import nomad.model.descriptive.substitution.XMLSubstitutionReader;
 import nomad.xml.XMLAttributeReader;
@@ -31,19 +31,15 @@ public class ModuleDescriptions {
 	public static void init(String xmlfile, XMLSubstitutionReader subs) {
 		model = new ModuleDescriptions(xmlfile, subs);
 	}
-	
-	public void loadModuleIconsFromSlice(String slice) {
-		SliceImage simage = SliceImage.createSliceImage(slice);
-		if (simage!=null) {
-			for (Iterator iter=simage.getKeys();iter.hasNext();) {
-				String key = (String) iter.next();
-				this.getModuleByKey(key).setIcon(simage.getSlice(key));
-			}
+
+	public void loadImages(ImageTracker imageTracker) {
+		DConnector.loadImages(imageTracker);
+
+		Iterator iter = dmodules.values().iterator();
+		while (iter.hasNext()) {
+			DModule module = (DModule) iter.next();
+			module.setIcon(imageTracker.getImage(Integer.toString(module.getModuleID())));
 		}
-	}
-	
-	public void loadConnectorIconsFromSlice(String slice) {
-		DConnector.loadSlice(slice);
 	}
 
 	public DModule getModuleByKey(String key) {

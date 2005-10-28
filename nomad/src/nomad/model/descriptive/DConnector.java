@@ -2,6 +2,7 @@ package nomad.model.descriptive;
 
 import java.awt.Image;
 
+import nomad.misc.ImageTracker;
 import nomad.misc.SliceImage;
 
 public class DConnector {
@@ -26,28 +27,27 @@ public class DConnector {
 	
 	private static Image[][][] images = null;
 	
-	public static void loadSlice(String slice) {
-		SliceImage simage = SliceImage.createSliceImage(slice);
+	public static void loadImages(ImageTracker imageTracker) {
 		images = new Image[4][2][2];
-		images[SIGNAL_AUDIO][CONNECTOR_TYPE_INPUT][CONNECTOR_FREE]		= simage.getSlice("audio.in.free");
-		images[SIGNAL_CONTROL][CONNECTOR_TYPE_INPUT][CONNECTOR_FREE] 	= simage.getSlice("control.in.free");
-		images[SIGNAL_LOGIC][CONNECTOR_TYPE_INPUT][CONNECTOR_FREE] 	= simage.getSlice("logic.in.free");
-		images[SIGNAL_SLAVE][CONNECTOR_TYPE_INPUT][CONNECTOR_FREE] 	= simage.getSlice("slave.in.free");
+		images[SIGNAL_AUDIO][CONNECTOR_TYPE_INPUT][CONNECTOR_FREE]		= imageTracker.getImage("audio.in.free");
+		images[SIGNAL_CONTROL][CONNECTOR_TYPE_INPUT][CONNECTOR_FREE] 	= imageTracker.getImage("control.in.free");
+		images[SIGNAL_LOGIC][CONNECTOR_TYPE_INPUT][CONNECTOR_FREE] 	= imageTracker.getImage("logic.in.free");
+		images[SIGNAL_SLAVE][CONNECTOR_TYPE_INPUT][CONNECTOR_FREE] 	= imageTracker.getImage("slave.in.free");
 
-		images[SIGNAL_AUDIO][CONNECTOR_TYPE_OUTPUT][CONNECTOR_FREE] 	= simage.getSlice("audio.out.free");
-		images[SIGNAL_CONTROL][CONNECTOR_TYPE_OUTPUT][CONNECTOR_FREE]	= simage.getSlice("control.out.free");
-		images[SIGNAL_LOGIC][CONNECTOR_TYPE_OUTPUT][CONNECTOR_FREE] 	= simage.getSlice("logic.out.free");
-		images[SIGNAL_SLAVE][CONNECTOR_TYPE_OUTPUT][CONNECTOR_FREE] 	= simage.getSlice("slave.out.free");
+		images[SIGNAL_AUDIO][CONNECTOR_TYPE_OUTPUT][CONNECTOR_FREE] 	= imageTracker.getImage("audio.out.free");
+		images[SIGNAL_CONTROL][CONNECTOR_TYPE_OUTPUT][CONNECTOR_FREE]	= imageTracker.getImage("control.out.free");
+		images[SIGNAL_LOGIC][CONNECTOR_TYPE_OUTPUT][CONNECTOR_FREE] 	= imageTracker.getImage("logic.out.free");
+		images[SIGNAL_SLAVE][CONNECTOR_TYPE_OUTPUT][CONNECTOR_FREE] 	= imageTracker.getImage("slave.out.free");
 
-		images[SIGNAL_AUDIO][CONNECTOR_TYPE_INPUT][CONNECTOR_IN_USE] 	= simage.getSlice("audio.in.used");
-		images[SIGNAL_CONTROL][CONNECTOR_TYPE_INPUT][CONNECTOR_IN_USE] = simage.getSlice("control.in.used");
-		images[SIGNAL_LOGIC][CONNECTOR_TYPE_INPUT][CONNECTOR_IN_USE] 	= simage.getSlice("logic.in.used");
-		images[SIGNAL_SLAVE][CONNECTOR_TYPE_INPUT][CONNECTOR_IN_USE] 	= simage.getSlice("slave.in.used");
+		images[SIGNAL_AUDIO][CONNECTOR_TYPE_INPUT][CONNECTOR_IN_USE] 	= imageTracker.getImage("audio.in.used");
+		images[SIGNAL_CONTROL][CONNECTOR_TYPE_INPUT][CONNECTOR_IN_USE] = imageTracker.getImage("control.in.used");
+		images[SIGNAL_LOGIC][CONNECTOR_TYPE_INPUT][CONNECTOR_IN_USE] 	= imageTracker.getImage("logic.in.used");
+		images[SIGNAL_SLAVE][CONNECTOR_TYPE_INPUT][CONNECTOR_IN_USE] 	= imageTracker.getImage("slave.in.used");
 
-		images[SIGNAL_AUDIO][CONNECTOR_TYPE_OUTPUT][CONNECTOR_IN_USE] 	= simage.getSlice("audio.out.used");
-		images[SIGNAL_CONTROL][CONNECTOR_TYPE_OUTPUT][CONNECTOR_IN_USE]= simage.getSlice("control.out.used");
-		images[SIGNAL_LOGIC][CONNECTOR_TYPE_OUTPUT][CONNECTOR_IN_USE] 	= simage.getSlice("logic.out.used");
-		images[SIGNAL_SLAVE][CONNECTOR_TYPE_OUTPUT][CONNECTOR_IN_USE] 	= simage.getSlice("slave.out.used");
+		images[SIGNAL_AUDIO][CONNECTOR_TYPE_OUTPUT][CONNECTOR_IN_USE] 	= imageTracker.getImage("audio.out.used");
+		images[SIGNAL_CONTROL][CONNECTOR_TYPE_OUTPUT][CONNECTOR_IN_USE]= imageTracker.getImage("control.out.used");
+		images[SIGNAL_LOGIC][CONNECTOR_TYPE_OUTPUT][CONNECTOR_IN_USE] 	= imageTracker.getImage("logic.out.used");
+		images[SIGNAL_SLAVE][CONNECTOR_TYPE_OUTPUT][CONNECTOR_IN_USE] 	= imageTracker.getImage("slave.out.used");
 	}
 	
 	public Image getIcon(boolean free) {
