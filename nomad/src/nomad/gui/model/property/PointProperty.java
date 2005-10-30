@@ -51,7 +51,7 @@ public abstract class PointProperty extends Property {
 		if (representation==null)
 			return null;
 		
-		if (!representation.matches("\\d+,\\d+"))
+		if (!representation.matches("[\\+,-]?\\d+,[\\+,-]?\\d+"))
 			return null;
 		
 		String[] splitted = representation.split(",");

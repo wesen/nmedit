@@ -97,6 +97,7 @@ public class UICache {
 			readModuleProperties(callback);
 		} catch (UICacheException e) {
 			// TODO throw exception
+			System.err.println("** Error in properties for module (id="+moduleId+")");
 			e.printStackTrace();
 			return false;
 		}
@@ -120,9 +121,19 @@ public class UICache {
 				else if (line.startsWith("property")) {
 					line = line.substring("property".length()).trim();
 					int firstStarterline = line.indexOf(" ");
-					String propertyId = line.substring(0,firstStarterline);
-					String value = line.substring(firstStarterline);
-					callback.readComponentProperty(propertyId.trim(), value.trim());
+					String propertyId;
+					String value;
+
+					if (firstStarterline>0) {
+						propertyId = line.substring(0,firstStarterline);
+						value = line.substring(firstStarterline);
+						propertyId = propertyId.trim();
+						value = value.trim();
+					} else {
+						propertyId = line;
+						value = " ";
+					} 
+					callback.readComponentProperty(propertyId, value);
 				}
 				else {
 					System.err.println("Unknown entry:'"+line+"'");
