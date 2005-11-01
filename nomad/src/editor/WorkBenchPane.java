@@ -27,6 +27,10 @@ public class WorkBenchPane extends JPanel implements CreateUIElementListener {
 		this.propertyTable = propertyTable;
 	}
 	
+	public ModulePane getModulePane() {
+		return modulePane;
+	}
+	
 	public void setModule(ModulePane modulePane) {
 		this.module=null;
 		if (this.modulePane!=null) 

@@ -1,5 +1,6 @@
 package nomad.gui.model.component.builtin;
 
+import nomad.gui.model.UIFactory;
 import nomad.gui.model.component.AbstractControlPort;
 import nomad.gui.model.component.AbstractUIControl;
 import nomad.gui.model.component.builtin.implementation.VocoderBandChangeEvent;
@@ -13,8 +14,12 @@ public class VocoderUI extends AbstractUIControl {
 	private VocoderControl vcontrol = null;
 	private VocoderBandProperty[] vbands = new VocoderBandProperty[VocoderBandDisplay.NUM_BANDS];
 	
-	public VocoderUI() {
-		vcontrol = new VocoderControl();
+	public VocoderUI(UIFactory factory) {
+		super(factory);
+		vcontrol = new VocoderControl(
+				factory.getImageTracker().getImage("btn.arrow.up"),
+				factory.getImageTracker().getImage("btn.arrow.down")
+		);
 		vcontrol.getVocoderBandDisplay().addBandChangeListener(new VocoderBandChangeListener(){
 
 			public void vocoderBandChanged(VocoderBandChangeEvent event) {

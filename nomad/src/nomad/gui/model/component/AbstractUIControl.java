@@ -2,12 +2,14 @@ package nomad.gui.model.component;
 
 import java.util.ArrayList;
 
+import nomad.gui.model.UIFactory;
+
 public abstract class AbstractUIControl extends AbstractUIComponent {
 
 	private ArrayList portList = new ArrayList();
 	
-	public AbstractUIControl() {
-		;
+	public AbstractUIControl(UIFactory factory) {
+		super(factory);
 	}
 	
 	protected void installProperties(boolean install) {

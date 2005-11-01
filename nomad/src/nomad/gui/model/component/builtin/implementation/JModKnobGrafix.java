@@ -286,9 +286,12 @@ public class JModKnobGrafix extends JModParameterObject
     
     private void drawCustomString(Graphics g) {
         g.setFont(f);
-        String s = String.valueOf(getValue());
+        String s = null;
         if (info!=null)
-        	s=info.getFormattedValue(getValue());
+        	s=info.getFormattedValue(getValue(), 4);
+        else
+        	String.valueOf(getValue());
+        
         FontMetrics fontMetrics=getFontMetrics(g.getFont());
         Rectangle2D r = fontMetrics.getStringBounds(s, g);
 

@@ -1,5 +1,9 @@
 package nomad.gui.model;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.HashMap;
 
 import nomad.gui.model.component.AbstractConnectorUI;
@@ -7,6 +11,7 @@ import nomad.gui.model.component.AbstractUIComponent;
 import nomad.gui.model.component.AbstractUIControl;
 import nomad.misc.ImageTracker;
 import nomad.plugin.NomadFactory;
+import nomad.plugin.cache.XMLUICacheWriter;
 
 public abstract class UIFactory extends NomadFactory {
 	
@@ -17,6 +22,35 @@ public abstract class UIFactory extends NomadFactory {
 	private Class DefaultOptionControl = null;
 	private Class DefaultConnector = null;
 	private ImageTracker imageTracker = new ImageTracker();
+	
+	public UIFactory() {
+		// create the ui cache file
+		createUICache();
+	}
+	
+	private void createUICache() {
+		String filename = getUIDescriptionFileName();
+		String cacheFile= filename;
+		try {
+			if (cacheFile.endsWith("xml")) {
+				cacheFile = cacheFile.substring(0, cacheFile.length()-3)+"cache";
+			}
+			
+			File cache = new File(cacheFile);
+			
+			if (cache.exists()) {
+				Date dxml  = new Date((new File(filename)).lastModified());
+				Date dcache= new Date(cache.lastModified());
+				if (dcache.after(dxml))
+					return ; // cache is newer, nothing to do
+			}
+			
+			// cache file does not exist or is out of date
+			XMLUICacheWriter.writeCache(filename, cacheFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public void installUIClass(Class uiclass) {
 		if (!AbstractUIComponent.class.isAssignableFrom(uiclass))
@@ -60,29 +94,35 @@ public abstract class UIFactory extends NomadFactory {
 		return names;
 	}
 	
+	private Object createUIInstanceFor(Class uiclass)  {
+		try {
+			return uiclass.getConstructors()[0].newInstance(new Object[]{this});
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.getTargetException().printStackTrace();
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public AbstractUIComponent newUIInstance(String uiClassName) {
 		Class uiclass = (Class) componentClasses.get(uiClassName);
 		if (uiclass != null)
-			try {
-				return (AbstractUIComponent) uiclass.newInstance();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
+			return (AbstractUIComponent) createUIInstanceFor(uiclass);
 		return null;
 	}
 	
 	public AbstractUIControl newDefaultControlInstance() {
 		Class uiclass = DefaultControl;
 		if (uiclass != null)
-			try {
-				return (AbstractUIControl) uiclass.newInstance();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
+			return (AbstractUIControl) createUIInstanceFor(uiclass);
 		return null;
 	}
 
@@ -92,39 +132,21 @@ public abstract class UIFactory extends NomadFactory {
 		
 		Class uiclass = DefaultOptionControl;
 		if (uiclass != null)
-			try {
-				return (AbstractUIControl) uiclass.newInstance();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
+			return (AbstractUIControl) createUIInstanceFor(uiclass);
 		return null;
 	}
 	
 	public AbstractConnectorUI newDefaultConnectorInstance() {
 		Class uiclass = DefaultConnector;
 		if (uiclass != null)
-			try {
-				return (AbstractConnectorUI) uiclass.newInstance();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
+			return (AbstractConnectorUI) createUIInstanceFor(uiclass);
 		return null;
 	}
 	
 	public AbstractUIComponent newDefaultLabelInstance() {
 		Class uiclass = DefaultLabel;
 		if (uiclass != null)
-			try {
-				return (AbstractUIComponent) uiclass.newInstance();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
+			return (AbstractUIComponent) createUIInstanceFor(uiclass);
 		return null;
 	}
 	

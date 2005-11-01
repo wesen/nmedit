@@ -1,0 +1,10 @@
+# slice image property file
+# format: key x y
+
+# 2x1 slices
+slice.hrz 2
+slice.vrt 1
+
+# slices
+decorator.rndgen 0 0
+decorator.rndgen.diskret 1 0

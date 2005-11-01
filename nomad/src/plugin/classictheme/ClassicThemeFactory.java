@@ -6,19 +6,19 @@ import nomad.gui.model.component.builtin.DefaultConnectorUI;
 import nomad.gui.model.component.builtin.DefaultControlUI;
 import nomad.gui.model.component.builtin.DefaultLabelUI;
 import nomad.gui.model.component.builtin.DefaultTextDisplay;
+import nomad.gui.model.component.builtin.SliderUI;
 import nomad.gui.model.component.builtin.VocoderUI;
 
 public class ClassicThemeFactory extends UIFactory {
 	public ClassicThemeFactory() {
-		DefaultLabelUI.theImageTracker = this.getImageTracker();
-		ButtonGroupUI.theImageTracker = this.getImageTracker();
-		
-		installUIClass(DefaultTextDisplay.class);
 		installUIClass(DefaultLabelUI.class);
+		installUIClass(DefaultTextDisplay.class);
 		installUIClass(DefaultControlUI.class);
 		installUIClass(DefaultConnectorUI.class);
 		installUIClass(ButtonGroupUI.class);
+		installUIClass(SliderUI.class);
 		installUIClass(VocoderUI.class);
+		
 		installDefaultControl(DefaultControlUI.class);
 		installDefaultOptionControl(ButtonGroupUI.class);
 		installDefaultLabel(DefaultLabelUI.class);

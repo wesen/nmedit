@@ -21,7 +21,7 @@ public class ModuleToolbar extends JTabbedPane
 {
   private JPanel[] paneGroups;
   private Vector buttons;
-  private boolean draggingSupport = true;
+  //private boolean draggingSupport = true;
   private Vector moduleButtonClickListeners = new Vector();
 
   /**
@@ -45,7 +45,7 @@ public class ModuleToolbar extends JTabbedPane
   public ModuleToolbar(ModuleDescriptions moduleDescriptions, boolean draggingSupport)
   {
     super(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
-    this.draggingSupport = draggingSupport;
+    //this.draggingSupport = draggingSupport;
     paneGroups = new JPanel[moduleDescriptions.getGroupCount()];
     buttons = new Vector();
     

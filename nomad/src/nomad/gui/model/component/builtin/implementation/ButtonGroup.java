@@ -9,11 +9,9 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
-import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -25,7 +23,7 @@ public class ButtonGroup extends JPaintPanel {
 	private boolean horizontal = true;
 	private javax.swing.ButtonGroup btngroup = new 
 		javax.swing.ButtonGroup();
-	private final static int PADDING = 2;
+	private final static int PADDING = 0;
 	private ButtonActionListener btnAction = new
 		ButtonActionListener();
 	private ArrayList changeListeners = new ArrayList();
@@ -39,7 +37,7 @@ public class ButtonGroup extends JPaintPanel {
 	public ButtonGroup() {
 		this.setLayout(null);
 		setButtonCount(1);
-		this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		//this.setBorder(BorderFactory.createEmptyBorder() /*BorderFactory.createEtchedBorder(EtchedBorder.LOWERED)*/);
 	}
 	
 	public void setButtonCount(int count) {
@@ -260,7 +258,7 @@ public class ButtonGroup extends JPaintPanel {
 }
 
 class SimpleButton extends JToggleButton {
-	public final static int BUTTON_SPACING = 1;
+	public final static int BUTTON_SPACING = 0;
 	private int index = 1;
 	private final static Font defaultFont = new Font("Dialog", Font.PLAIN, 9);
 	

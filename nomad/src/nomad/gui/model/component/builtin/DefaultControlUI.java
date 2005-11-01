@@ -3,6 +3,7 @@ package nomad.gui.model.component.builtin;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import nomad.gui.model.UIFactory;
 import nomad.gui.model.component.AbstractControlPort;
 import nomad.gui.model.component.AbstractUIControl;
 import nomad.gui.model.component.builtin.implementation.JModKnob;
@@ -13,7 +14,8 @@ public class DefaultControlUI extends AbstractUIControl {
 
 	KnobControlPort thePort = null;
 	
-	public DefaultControlUI() {
+	public DefaultControlUI(UIFactory factory) {
+		super(factory);
 		thePort = new KnobControlPort();
 		setComponent(thePort.knob);
 	}
@@ -49,6 +51,9 @@ public class DefaultControlUI extends AbstractUIControl {
 					new ChangeListener() {
 						public void stateChanged(ChangeEvent arg0) {
 							firePortValueUpdateEvent();
+
+							if (param!=null)
+								knob.setToolTipText(param.getName()+":"+getFormattedParameterValue());
 						}
 					}
 				);
@@ -86,6 +91,10 @@ public class DefaultControlUI extends AbstractUIControl {
 				knob.setMinValue(0);
 				knob.setMaxValue(param.getNumStates()-1);
 				knob.setValue(param.getDefaultValue());
+				knob.info = param;
+				
+				if (param!=null)
+					knob.setToolTipText(param.getName()+":"+getFormattedParameterValue());
 			}
 			
 			/* fire update event */

@@ -1,5 +1,6 @@
 package nomad.gui.model.component;
 
+import nomad.gui.model.UIFactory;
 import nomad.gui.model.property.ConnectorProperty;
 import nomad.model.descriptive.DConnector;
 
@@ -7,8 +8,8 @@ public abstract class AbstractConnectorUI extends AbstractUIComponent {
 
 	private ConnectorProperty cp = new MyConnectorProperty();
 	
-	public AbstractConnectorUI() {
-		
+	public AbstractConnectorUI(UIFactory factory) {
+		super(factory);
 	}
 
 	protected void installProperties(boolean install) {

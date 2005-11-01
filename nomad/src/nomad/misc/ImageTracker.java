@@ -1,6 +1,9 @@
 package nomad.misc;
 
 import java.awt.Image;
+import java.awt.Toolkit;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -54,6 +57,38 @@ public class ImageTracker {
 		while (keyIterator.hasNext()) {
 			String key = (String) keyIterator.next();
 			putImage(key, itracker.getImage(key));
+		}
+	}
+	
+	public void loadFromDirectory(String path) throws FileNotFoundException {
+		File dir = new File(path);
+		if (!dir.exists()) {
+			throw new FileNotFoundException("Directory '"+dir+"' not found.");
+		}
+		
+		File[] files = dir.listFiles();
+		for (int i=0;i<files.length;i++) {
+			File f = files[i];
+			if (!f.getName().endsWith("slice") && f.getName().indexOf(".")>=0) {
+				String sliceName = f.getName();
+				sliceName = sliceName.substring(0, sliceName.lastIndexOf("."))+".slice";
+				
+				File slice = new File(dir+File.separator+sliceName);
+				if (slice.exists()) {
+					// load slice
+					SliceImage.createSliceImage(dir+File.separator+f.getName()).feedImageTracker(this);
+				} else {
+					// load single image
+					Image image = Toolkit.getDefaultToolkit().getImage(dir+File.separator+f.getName());
+					String key = f.getName().substring(0,f.getName().lastIndexOf("."));
+					if (key.contains(File.separator))
+						key = key.substring(key.lastIndexOf(File.separator));
+					if (image!=null)
+						putImage(key, image);
+					else
+						System.err.println("Could not load image "+dir+File.separator+f.getName());
+				}
+			}
 		}
 	}
 	

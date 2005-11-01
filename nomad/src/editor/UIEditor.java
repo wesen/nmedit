@@ -1,6 +1,7 @@
 package editor;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -8,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,7 +27,6 @@ import nomad.gui.model.ModuleGUIBuilder;
 import nomad.gui.model.UIFactory;
 import nomad.gui.model.component.AbstractUIComponent;
 import nomad.misc.ImageTracker;
-import nomad.misc.SliceImage;
 import nomad.model.descriptive.DModule;
 import nomad.model.descriptive.ModuleDescriptions;
 import nomad.model.descriptive.substitution.XMLSubstitutionReader;
@@ -63,6 +64,7 @@ public class UIEditor extends JFrame {
 	JMenu menuFile = null;
 	JMenuItem menuExitItem,	menuNewItem, menuOpenItem, menuCloseItem = null;
 	JMenuItem menuSaveItem, menuSaveAsItem = null;
+	JMenu menuAlign = null;
 	
 	WorkBenchPane workBench = null;
 	ValueTablePane valuePane = null;
@@ -96,9 +98,12 @@ public class UIEditor extends JFrame {
 		// feed image tracker
 		Run.statusMessage("images");
 		theImageTracker = new ImageTracker();
-		SliceImage.createSliceImage("src/data/images/toolbar-icons.gif").feedImageTracker(theImageTracker);
-		SliceImage.createSliceImage("src/data/images/io-icons.gif").feedImageTracker(theImageTracker);
-		SliceImage.createSliceImage("src/data/images/button-icons.gif").feedImageTracker(theImageTracker);
+		try {
+			theImageTracker.loadFromDirectory("src/data/images/slice/");
+			theImageTracker.loadFromDirectory("src/data/images/single/");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 
 		theUIFactory = PluginManager.getDefaultUIFactory();
 		theUIFactory.getImageTracker().addFrom(theImageTracker);
@@ -115,50 +120,6 @@ public class UIEditor extends JFrame {
 		Run.statusMessage("ui builder");	
 		ModuleGUIBuilder.createGUIBuilder(theUIFactory);
 
-		
-		
-		
-		
-		/*
-		
-		// load substitutions
-		String loadfile = "src/data/xml/substitutions.xml"; 
-		Run.statusMessage(loadfile);
-		XMLSubstitutionReader subsReader = new XMLSubstitutionReader(loadfile);
-		
-		// load module descriptors
-		loadfile = "src/data/xml/modules.xml";
-		Run.statusMessage(loadfile);
-		ModuleDescriptions.init(loadfile, subsReader);
-
-		// load connector icons
-		Run.statusMessage("slice:io-icons.gif");
-		ModuleDescriptions.model.loadConnectorIconsFromSlice("src/data/images/io-icons.gif");
-		
-		// load toolbar icons
-		Run.statusMessage("slice:toolbar-icons.gif");
-		ModuleDescriptions.model.loadModuleIconsFromSlice("src/data/images/toolbar-icons.gif");
-
-		// load plugin names
-		Run.statusMessage("Loading Plugin Manager");
-		PluginManager.init();*/
-	/*	
-		theUIFactory = PluginManager.getDefaultUIFactory(); 
-
-		// image tracker
-		Run.statusMessage("loading imagetracker");
-		SliceImage.createSliceImage("src/data/images/toolbar-icons.gif").feedImageTracker(theUIFactory.getImageTracker());
-		SliceImage.createSliceImage("src/data/images/io-icons.gif").feedImageTracker(theUIFactory.getImageTracker());
-		SliceImage.createSliceImage("src/data/images/button-icons.gif").feedImageTracker(theUIFactory.getImageTracker());
-
-		// create gui builder
-		Run.statusMessage("GUIBuilder");	
-		ModuleGUIBuilder.createGUIBuilder(theUIFactory);
-
-		// build toolbar
-		Run.statusMessage("building toolbar");
-		ModuleToolbar moduleToolbar = new ModuleToolbar(false);
-*/
 		this.add(BorderLayout.NORTH, moduleToolbar);
 
 		valuePane = new ValueTablePane();
@@ -196,6 +157,152 @@ public class UIEditor extends JFrame {
 			menuOpenItem.addActionListener(new LoadItemListener());
 
 		menuBar.add(menuFile);
+		
+		menuAlign = new JMenu("Align");
+		
+			// centers all selected components vertically
+			menuAlign.add("Vertical (Center)").addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent event) {
+					ModulePane mpane = workBench.getModulePane();
+					ArrayList components = mpane.getSelectedComponents();
+					for (int i=0;i<components.size();i++) {
+						Component c = (Component) components.get(i);
+						c.setLocation(c.getX(),
+								(mpane.getHeight()-c.getHeight())/2
+						);
+					}
+				}});
+			
+			// aligns all selected components at highest component
+			menuAlign.add("Vertical (Highest)").addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent event) {
+					ModulePane mpane = workBench.getModulePane();
+					ArrayList components = mpane.getSelectedComponents();
+					int ymin = mpane.getHeight();
+					for (int i=0;i<components.size();i++) {
+						Component c = (Component) components.get(i);
+						if (c.getY()<ymin)
+							ymin=c.getY();
+					}
+
+					for (int i=0;i<components.size();i++) {
+						Component c = (Component) components.get(i);
+						c.setLocation(c.getX(), ymin);
+					}
+				}});
+			
+			// aligns all selected components at lowest component
+			menuAlign.add("Vertical (Lowest)").addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent event) {
+					ModulePane mpane = workBench.getModulePane();
+					ArrayList components = mpane.getSelectedComponents();
+					int ymax = 0;
+					for (int i=0;i<components.size();i++) {
+						Component c = (Component) components.get(i);
+						int bottom = c.getY()+c.getHeight();
+						if (bottom>ymax)
+							ymax=bottom;
+					}
+
+					for (int i=0;i<components.size();i++) {
+						Component c = (Component) components.get(i);
+						c.setLocation(c.getX(), ymax-c.getHeight());
+					}
+				}});
+			
+			// aligns all selected components at lowest component
+			menuAlign.add("Vertical (Median)").addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent event) {
+					ModulePane mpane = workBench.getModulePane();
+					ArrayList components = mpane.getSelectedComponents();
+					if (components.size()>1) {
+						int ymedian = 0;
+
+						for (int i=0;i<components.size();i++) {
+							Component c = (Component) components.get(i);
+							ymedian+=c.getY()+c.getHeight()/2;
+						}
+						
+						ymedian /=components.size();
+						
+						for (int i=0;i<components.size();i++) {
+							Component c = (Component) components.get(i);
+							int current = c.getY()+c.getHeight()/2;
+							c.setLocation(
+								c.getLocation().x,
+								c.getLocation().y+(ymedian-current)
+							);
+						}
+					}
+				}});
+			
+		menuAlign.addSeparator();
+
+		// aligns all selected components at highest component
+		menuAlign.add("Horizontal (Left)").addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				ModulePane mpane = workBench.getModulePane();
+				ArrayList components = mpane.getSelectedComponents();
+				int xmin = mpane.getWidth();
+				for (int i=0;i<components.size();i++) {
+					Component c = (Component) components.get(i);
+					if (c.getX()<xmin)
+						xmin=c.getX();
+				}
+
+				for (int i=0;i<components.size();i++) {
+					Component c = (Component) components.get(i);
+					c.setLocation(xmin, c.getY());
+				}
+			}});
+		
+		// aligns all selected components at lowest component
+		menuAlign.add("Horizontal (Right)").addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				ModulePane mpane = workBench.getModulePane();
+				ArrayList components = mpane.getSelectedComponents();
+				int xmax = 0;
+				for (int i=0;i<components.size();i++) {
+					Component c = (Component) components.get(i);
+					int right = c.getX()+c.getWidth();
+					if (right>xmax)
+						xmax=right;
+				}
+
+				for (int i=0;i<components.size();i++) {
+					Component c = (Component) components.get(i);
+					c.setLocation(xmax-c.getWidth(),c.getY());
+				}
+			}});
+		
+		// aligns all selected components at lowest component
+		menuAlign.add("Horizontal (Median)").addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				ModulePane mpane = workBench.getModulePane();
+				ArrayList components = mpane.getSelectedComponents();
+				if (components.size()>1) {
+					int xmedian = 0;
+
+					for (int i=0;i<components.size();i++) {
+						Component c = (Component) components.get(i);
+						xmedian+=c.getX()+c.getWidth()/2;
+					}
+					
+					xmedian /=components.size();
+					
+					for (int i=0;i<components.size();i++) {
+						Component c = (Component) components.get(i);
+						int current = c.getX()+c.getWidth()/2;
+						c.setLocation(
+							c.getLocation().x+(xmedian-current),
+							c.getLocation().y
+						);
+					}
+				}
+			}});
+		
+		menuBar.add(menuAlign);
+		
 		this.setJMenuBar(menuBar);
 
         menuExitItem.addActionListener(new ExitListener());

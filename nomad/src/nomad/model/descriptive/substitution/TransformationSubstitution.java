@@ -49,5 +49,18 @@ public class TransformationSubstitution extends Substitution {
 			+MathRound.doubleToStr(MathRound.round( ((double)value + offset) * factor, -4))
 			+suffix;
 	}
+// TODO handle max. digit number
+/* 
+	public String valueToString(int value, int maxDigits) {
+		if (replacement!=null && value==comparator)
+			return replacement;
 
+		maxDigits-=praefix.length();
+		maxDigits-=suffix.length();		
+		
+		return praefix
+			+MathRound.doubleToStr(MathRound.round( ((double)value + offset) * factor,-4))
+			+suffix;
+	}
+*/
 }

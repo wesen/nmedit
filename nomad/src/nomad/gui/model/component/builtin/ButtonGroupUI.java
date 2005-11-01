@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import nomad.gui.model.UIFactory;
 import nomad.gui.model.component.AbstractControlPort;
 import nomad.gui.model.component.AbstractUIControl;
 import nomad.gui.model.component.builtin.implementation.ButtonGroup;
@@ -19,10 +20,11 @@ import nomad.model.descriptive.DParameter;
 
 public class ButtonGroupUI extends AbstractUIControl {
 	
-	private ButtonGroupPort bgp =  new ButtonGroupPort();
-	public static ImageTracker theImageTracker = null;
+	private ButtonGroupPort bgp = null;
 
-	public ButtonGroupUI() {
+	public ButtonGroupUI(UIFactory factory) {
+		super(factory);
+		bgp = new ButtonGroupPort(factory.getImageTracker());
 		setComponent(bgp.btngroup);
 	}
 
@@ -61,9 +63,11 @@ public class ButtonGroupUI extends AbstractUIControl {
 		private ButtonSizeProperty btnsize = new ButtonSizeProperty();
 		private ArrayList imageTextProperties = new ArrayList();
 		private BoolProperty pOrientation = new OrientationProperty();
-		
-		public ButtonGroupPort() {
+		private ImageTracker imageTracker = null;
+
+		public ButtonGroupPort(ImageTracker imageTracker) {
 			super(ButtonGroupUI.this);
+			this.imageTracker = imageTracker;
 			pOrientation.setDefaultBooleanValue(true);
 			btngroup.addChangeListener(
 				new ChangeListener() {
@@ -146,7 +150,7 @@ public class ButtonGroupUI extends AbstractUIControl {
 			private String defaultText = "";
 			
 			public MyImageTextProperty(int index) {
-				super("text."+index, ButtonGroupUI.this, theImageTracker);
+				super("text."+index, ButtonGroupUI.this, imageTracker);
 				btnIndex = index;
 				setInternalValue("");
 				defaultText = text;

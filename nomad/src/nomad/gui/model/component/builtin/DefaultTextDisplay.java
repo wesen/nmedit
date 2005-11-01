@@ -9,6 +9,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
+import nomad.gui.model.UIFactory;
 import nomad.gui.model.component.AbstractControlPort;
 import nomad.gui.model.component.AbstractUIControl;
 import nomad.model.descriptive.DParameter;
@@ -21,8 +22,8 @@ public class DefaultTextDisplay extends AbstractUIControl {
 	private final Color defaultFGColor = Color.WHITE;
 	private final Color defaultBGColor = Color.decode("#392F7D");
 	
-	public DefaultTextDisplay() {
-		super();
+	public DefaultTextDisplay(UIFactory factory) {
+		super(factory);
 		displayPort = new DisplayPort();
 		displayLabel = new JLabel("text");
 		displayLabel.setFont(new Font("Arial", Font.PLAIN, 11));
@@ -50,6 +51,8 @@ public class DefaultTextDisplay extends AbstractUIControl {
 		return "TextDisplay";
 	}
 	
+	
+	
 	private class DisplayPort extends AbstractControlPort {
 
 		public DisplayPort() {
@@ -63,7 +66,9 @@ public class DefaultTextDisplay extends AbstractUIControl {
 		}
 
 		public void setParameterInfoAdapter(DParameter parameterInfo) {
-			param = parameterInfo;
+			if (param!=parameterInfo) {
+				param = parameterInfo;
+			}
 		}
 
 		public int getParameterValue() {

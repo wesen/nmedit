@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
@@ -36,7 +37,6 @@ import nomad.gui.PatchGUI;
 import nomad.gui.model.ModuleGUIBuilder;
 import nomad.gui.model.UIFactory;
 import nomad.misc.ImageTracker;
-import nomad.misc.SliceImage;
 import nomad.model.descriptive.ModuleDescriptions;
 import nomad.model.descriptive.substitution.XMLSubstitutionReader;
 import nomad.patch.Patch;
@@ -234,10 +234,13 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		// feed image tracker
 		Run.statusMessage("images");
 		theImageTracker = new ImageTracker();
-		SliceImage.createSliceImage("src/data/images/toolbar-icons.gif").feedImageTracker(theImageTracker);
-		SliceImage.createSliceImage("src/data/images/io-icons.gif").feedImageTracker(theImageTracker);
-		SliceImage.createSliceImage("src/data/images/button-icons.gif").feedImageTracker(theImageTracker);
-
+		try {
+			theImageTracker.loadFromDirectory("src/data/images/slice/");
+			theImageTracker.loadFromDirectory("src/data/images/single/");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
 		UIFactory theUIFactory = PluginManager.getDefaultUIFactory();
 		theUIFactory.getImageTracker().addFrom(theImageTracker);
 

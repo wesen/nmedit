@@ -2,6 +2,7 @@ package nomad.gui.model.component;
 
 import java.awt.Component;
 
+import nomad.gui.model.UIFactory;
 import nomad.gui.model.property.ComponentLocationProperty;
 import nomad.gui.model.property.ComponentSizeProperty;
 import nomad.gui.model.property.Property;
@@ -14,7 +15,7 @@ public abstract class AbstractUIComponent {
 	private ComponentLocationProperty clp = null;
 	private ComponentSizeProperty csp = null;
 
-	public AbstractUIComponent() {
+	public AbstractUIComponent(UIFactory factory) {
 		;
 	}
 	

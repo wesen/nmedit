@@ -5,6 +5,7 @@ import javax.swing.JLabel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import nomad.gui.model.UIFactory;
 import nomad.gui.model.component.AbstractConnectorUI;
 import nomad.misc.FontInfo;
 import nomad.model.descriptive.DConnector;
@@ -15,7 +16,8 @@ public class DefaultConnectorUI extends AbstractConnectorUI {
 	private ConnectorChangedListener ccl = new ConnectorChangedListener();
 	private JLabel theLabel = null;
 	
-	public DefaultConnectorUI() {
+	public DefaultConnectorUI(UIFactory factory) {
+		super(factory);
 		theLabel = new JLabel();
 		setComponent(theLabel);
 		getConnectorProperty().addChangeListener(ccl);
