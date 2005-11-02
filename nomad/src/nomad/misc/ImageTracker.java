@@ -81,7 +81,7 @@ public class ImageTracker {
 					// load single image
 					Image image = Toolkit.getDefaultToolkit().getImage(dir+File.separator+f.getName());
 					String key = f.getName().substring(0,f.getName().lastIndexOf("."));
-					if (key.contains(File.separator))
+					if (key.indexOf(File.separator)>0)
 						key = key.substring(key.lastIndexOf(File.separator));
 					if (image!=null)
 						putImage(key, image);
