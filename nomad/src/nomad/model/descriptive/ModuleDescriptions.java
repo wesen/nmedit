@@ -33,7 +33,8 @@ public class ModuleDescriptions {
 	}
 
 	public void loadImages(ImageTracker imageTracker) {
-		DConnector.loadImages(imageTracker);
+		DConnector.setImageTracker(imageTracker);
+		//DConnector.loadImages(imageTracker);
 
 		Iterator iter = dmodules.values().iterator();
 		while (iter.hasNext()) {

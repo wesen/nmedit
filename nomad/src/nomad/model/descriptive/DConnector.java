@@ -24,6 +24,8 @@ public class DConnector {
 	private String cnName;
 	private int cnId;
 	
+	private static ImageTracker imageTracker = null;
+	/*
 	private static Image[][][] images = null;
 	
 	public static void loadImages(ImageTracker imageTracker) {
@@ -47,10 +49,31 @@ public class DConnector {
 		images[SIGNAL_CONTROL][CONNECTOR_TYPE_OUTPUT][CONNECTOR_IN_USE]= imageTracker.getImage("control.out.used");
 		images[SIGNAL_LOGIC][CONNECTOR_TYPE_OUTPUT][CONNECTOR_IN_USE] 	= imageTracker.getImage("logic.out.used");
 		images[SIGNAL_SLAVE][CONNECTOR_TYPE_OUTPUT][CONNECTOR_IN_USE] 	= imageTracker.getImage("slave.out.used");
+	}*/
+
+	public Image getIcon(ImageTracker itracker, boolean free) {
+		String key = "";
+		switch (cnSignal) {
+			case SIGNAL_AUDIO: key+="audio."; break;
+			case SIGNAL_CONTROL: key+="control."; break;
+			case SIGNAL_LOGIC: key+="logic."; break;
+			case SIGNAL_SLAVE: key+="slave."; break;
+		}
+		switch (cnType) {
+			case CONNECTOR_TYPE_INPUT: key+="in."; break;
+			case CONNECTOR_TYPE_OUTPUT: key+="out."; break; 
+		}
+		key+=free?"free":"used";
+		return itracker.getImage(key);
+	}
+	
+	public static void setImageTracker(ImageTracker itracker) {
+		DConnector.imageTracker = itracker;
 	}
 	
 	public Image getIcon(boolean free) {
-		return images[cnSignal][cnType][free?CONNECTOR_FREE:CONNECTOR_IN_USE];
+		return imageTracker==null?null:getIcon(imageTracker, free);
+		//return images[cnSignal][cnType][free?CONNECTOR_FREE:CONNECTOR_IN_USE];
 	}
 	
 	public DConnector(DModule parent,
