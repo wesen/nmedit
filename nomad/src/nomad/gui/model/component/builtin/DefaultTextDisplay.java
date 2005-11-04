@@ -9,6 +9,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
+import nomad.graphics.BackgroundRenderer;
 import nomad.gui.model.UIFactory;
 import nomad.gui.model.component.AbstractControlPort;
 import nomad.gui.model.component.AbstractUIControl;
@@ -21,6 +22,7 @@ public class DefaultTextDisplay extends AbstractUIControl {
 	private JLabel displayLabel = null;
 	private final Color defaultFGColor = Color.WHITE;
 	private final Color defaultBGColor = Color.decode("#392F7D");
+	private BackgroundRenderer renderer = null;
 	
 	public DefaultTextDisplay(UIFactory factory) {
 		super(factory);
@@ -31,16 +33,45 @@ public class DefaultTextDisplay extends AbstractUIControl {
 
 		container = new JComponent() {
 			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				g.setColor(defaultBGColor);
-				g.fillRect(0, 0, getWidth(), getHeight());
+				//super.paintComponent(g);
+				if (renderer==null) {
+					g.setColor(getBackground());
+					g.fillRect(0, 0, getWidth(), getHeight());
+				} else {
+					renderer.drawTo(this, getSize(), g);
+				}
 			}
 		};
 		container.setLayout(new BorderLayout());
 		container.setBorder(BorderFactory.createLoweredBevelBorder());
-		container.add(BorderLayout.CENTER, displayLabel);
+		container.add(displayLabel, BorderLayout.CENTER);
+		container.setBackground(defaultBGColor);
 		container.setSize(50, 16);
+
+		/*container.addComponentListener(new ComponentAdapter() {
+			public void componentResized(ComponentEvent event) {
+				if (renderer!=null)
+				{
+					renderer.render(container, container.getSize());
+					container.repaint();
+				}
+			}
+		});*/
+		
 		setComponent(container);
+	}
+	
+	public JLabel getLabel() {
+		return displayLabel;
+	}
+	
+	public JComponent getContainer() {
+		return container;
+	}
+	
+	public void setBackgroundRenderer(BackgroundRenderer renderer) {
+		this.renderer = renderer;
+		container.repaint();
 	}
 	
 	protected void registerPorts() {
@@ -50,9 +81,7 @@ public class DefaultTextDisplay extends AbstractUIControl {
 	public String getName() {
 		return "TextDisplay";
 	}
-	
-	
-	
+
 	private class DisplayPort extends AbstractControlPort {
 
 		public DisplayPort() {

@@ -25,6 +25,7 @@ public class DefaultLabelUI extends AbstractUIComponent {
 		theLabel.setFont(new Font("Dialog", Font.PLAIN, 9));
 		litp = new MyImageTextProperty(factory.getImageTracker());
 		updateLabelUI();
+		setFixComponent(true); // does not change
 		setComponent(theLabel);
 	}
 	

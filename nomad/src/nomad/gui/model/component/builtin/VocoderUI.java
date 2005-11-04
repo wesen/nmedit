@@ -33,6 +33,10 @@ public class VocoderUI extends AbstractUIControl {
 		setComponent(vcontrol);
 	}
 	
+	public VocoderControl getVocoderControl() {
+		return vcontrol;
+	}
+	
 	protected void registerPorts() {
 		for (int i=0;i<VocoderBandDisplay.NUM_BANDS;i++) {
 			vbands[i] = new VocoderBandProperty(i);

@@ -6,7 +6,8 @@ import javax.swing.event.ChangeListener;
 import nomad.gui.model.UIFactory;
 import nomad.gui.model.component.AbstractControlPort;
 import nomad.gui.model.component.AbstractUIControl;
-import nomad.gui.model.component.builtin.implementation.JModKnob;
+import nomad.gui.model.component.builtin.implementation.NomadKnob;
+import nomad.gui.model.component.builtin.implementation.NomadKnobLook;
 import nomad.gui.model.property.BoolProperty;
 import nomad.model.descriptive.DParameter;
 
@@ -38,10 +39,29 @@ public class DefaultControlUI extends AbstractUIControl {
 			((KnobControlPort)port).registerAdditionalProperties(install);
 	}
 	
-	private class KnobControlPort extends AbstractControlPort {
+	public NomadKnob getKnob() {
+		return thePort.knob;
+	}
 
+	private static NomadKnobLook lookSmall = new NomadKnobLook(NomadKnob.SMALL);
+	private static NomadKnobLook lookLarge = new NomadKnobLook(NomadKnob.LARGE);
+
+	public static void resetKnobLook() {
+		lookSmall = new NomadKnobLook(NomadKnob.SMALL);
+		lookLarge = new NomadKnobLook(NomadKnob.LARGE);
+	}
+	
+	public static NomadKnobLook getKnobSmallLook() {
+		return lookSmall;
+	}
+	
+	public static NomadKnobLook getKnobLargeLook() {
+		return lookLarge;
+	}
+	
+	private class KnobControlPort extends AbstractControlPort {
 		private DParameter param = null;
-		private JModKnob knob = new JModKnob(JModKnob.SMALL, true, true, 0, 0, 0, 127);
+		private NomadKnob knob = new NomadKnob(lookSmall, NomadKnob.SMALL, true, true, 0, 0, 0, 127);
 		private IndicatorProperty ip = new IndicatorProperty();
 		private KnobSizeProperty ksp = new KnobSizeProperty();
 
@@ -63,11 +83,11 @@ public class DefaultControlUI extends AbstractUIControl {
 		}
 		
 		private int booleanToKnobType (boolean small) {
-			return small ? JModKnob.SMALL : JModKnob.LARGE;
+			return small ? NomadKnob.SMALL : NomadKnob.LARGE;
 		}
 		
 		private boolean knobTypeToBoolean(int type) {
-			return type==JModKnob.SMALL;
+			return type==NomadKnob.SMALL;
 		}
 		
 		public void registerAdditionalProperties(boolean install) {
@@ -146,7 +166,9 @@ public class DefaultControlUI extends AbstractUIControl {
 			}
 
 			protected void setInternalValue(Object value) {
-				knob.setType(booleanToKnobType(((Boolean) value).booleanValue()));
+				boolean toSmall = ((Boolean) value).booleanValue();
+				knob.setLook(toSmall?lookSmall:lookLarge);
+				knob.setType(booleanToKnobType(toSmall));				
 				updateKnobUI();
 			}
 
@@ -157,6 +179,7 @@ public class DefaultControlUI extends AbstractUIControl {
 		}
 		
 	}
+
 	
 	
 	

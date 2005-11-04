@@ -7,42 +7,43 @@ import nomad.gui.model.UIFactory;
 import nomad.gui.model.component.AbstractControlPort;
 import nomad.gui.model.component.AbstractUIControl;
 import nomad.gui.model.component.builtin.implementation.SimpleSlider;
+import nomad.gui.model.component.builtin.implementation.SliderArray;
 import nomad.model.descriptive.DParameter;
 
-public class SliderUI extends AbstractUIControl {
-
-	SliderControlPort thePort = null;
+public class SliderArrayUI extends AbstractUIControl {
 	
-	public SliderUI(UIFactory factory) {
+	private SliderArray sarray = new SliderArray();
+
+	public SliderArrayUI(UIFactory factory) {
 		super(factory);
-		thePort = new SliderControlPort();
-		setComponent(thePort.slider);
+		setComponent(sarray);
 	}
 	
 	protected void registerPorts() {
-		registerControlPort(thePort);
+		SimpleSlider[] sliders = sarray.getSliders();
+		
+		for (int i=0;i<sliders.length;i++) {
+			SliderControlPort port = new SliderControlPort(sliders[i]);
+			registerControlPort(port);
+		}
 	}
 
 	public String getName() {
-		return "Slider";
+		return "SliderArray";
 	}
 	
-	public SimpleSlider getSlider() {
-		return thePort.slider;
+	public SliderArray getSliderArray() {
+		return sarray;
 	}
 
-	/* no additional properties
-	protected void registerPortProperties(AbstractControlPort port, boolean install) {
-		super.registerPortProperties(port, install);
-	}*/
-	
 	private class SliderControlPort extends AbstractControlPort {
 
 		private DParameter param = null;
-		private SimpleSlider slider = new SimpleSlider();
+		private SimpleSlider slider = null;
 
-		public SliderControlPort() {
-			super(SliderUI.this);
+		public SliderControlPort(SimpleSlider slider) {
+			super(SliderArrayUI.this);
+			this.slider = slider;
 			slider.setSize(16, 100);
 			slider.setLocation(0,0);
 			
@@ -51,7 +52,7 @@ public class SliderUI extends AbstractUIControl {
 						public void stateChanged(ChangeEvent arg0) {
 							firePortValueUpdateEvent();
 							if (param!=null)
-								slider.setToolTipText(param.getName()+":"+getFormattedParameterValue());
+								SliderControlPort.this.slider.setToolTipText(param.getName()+":"+getFormattedParameterValue());
 						}
 					}
 				);
@@ -92,4 +93,5 @@ public class SliderUI extends AbstractUIControl {
 		}
 		
 	}
+	
 }
