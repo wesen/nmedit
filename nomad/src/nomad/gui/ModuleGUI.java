@@ -14,6 +14,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import nomad.gui.model.UIFactory;
 import nomad.patch.Module;
 
 public class ModuleGUI extends AbstractModuleGUI implements MouseListener, MouseMotionListener {
@@ -30,8 +31,8 @@ public class ModuleGUI extends AbstractModuleGUI implements MouseListener, Mouse
     JPopupMenu menu = new JPopupMenu();
     JMenuItem removeItem = new JMenuItem("Remove");
     
-    public ModuleGUI(Module module, ModuleSectionGUI moduleSectionGUI) {
-    	super();
+    public ModuleGUI(UIFactory factory, Module module, ModuleSectionGUI moduleSectionGUI) {
+    	super(factory);
     	
     	addMouseListener(this);
     	addMouseMotionListener(this);

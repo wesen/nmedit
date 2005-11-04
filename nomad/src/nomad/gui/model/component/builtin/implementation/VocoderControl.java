@@ -6,7 +6,6 @@ import java.awt.Image;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 
 import nomad.misc.GridButtonComponent;
 import nomad.misc.GridButtonModel;
@@ -34,19 +33,12 @@ public class VocoderControl extends JComponent {
 		controls.setGridButtonModel(vocoderGridButtonModel);
 		vocoderBandPresetControl = new VocoderBandPresetControl(this, true);
 		setLayout(new BorderLayout());
-		add(BorderLayout.CENTER, display);
-		
-		JPanel controlPane = new JPanel();
-		//JPanel centerPane = new JPanel();
-		//centerPane.setLayout(new BoxLayout(centerPane, BoxLayout.LINE_AXIS));
-		//centerPane.add(Box.createHorizontalGlue());
-		//centerPane.setLayout(new BorderLayout());
-		//centerPane.add(BorderLayout.CENTER,controls);
-		
-		controlPane.setLayout(new BorderLayout());
-		controlPane.add(BorderLayout.SOUTH, vocoderBandPresetControl);
-		controlPane.add(BorderLayout.CENTER, controls);//centerPane);
-		add(BorderLayout.SOUTH, controlPane);
+		add(display, BorderLayout.NORTH);
+		display.setSize(100, 100);
+
+		setOpaque(false);
+		add(controls, BorderLayout.CENTER);
+		add(vocoderBandPresetControl, BorderLayout.SOUTH);
 	}
 	
 	public VocoderBandDisplay getVocoderBandDisplay() {

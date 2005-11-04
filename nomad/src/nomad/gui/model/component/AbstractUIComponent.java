@@ -14,9 +14,18 @@ public abstract class AbstractUIComponent {
 	private Component component = null;
 	private ComponentLocationProperty clp = null;
 	private ComponentSizeProperty csp = null;
+	private boolean isFix = false;
 
 	public AbstractUIComponent(UIFactory factory) {
 		;
+	}
+
+	public boolean isFixComponent() {
+		return isFix;
+	}
+	
+	public void setFixComponent(boolean enable) {
+		isFix = enable;
 	}
 	
 	/**

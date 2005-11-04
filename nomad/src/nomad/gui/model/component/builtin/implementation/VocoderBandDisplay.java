@@ -1,6 +1,7 @@
 package nomad.gui.model.component.builtin.implementation;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -8,22 +9,36 @@ import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 
+import nomad.graphics.BackgroundRenderer;
 import nomad.misc.JPaintComponent;
 
 public class VocoderBandDisplay extends JPaintComponent {
 
 	public final static int NUM_BANDS = 16; // number of bands
-	private final Color defaultFGColor = Color.decode("#00FF00");
-	private final Color defaultBGColor = Color.decode("#008080");
+	public final Color defaultFGColor = Color.decode("#00FF00");
+	public final Color defaultBGColor = Color.decode("#008080");
 	private int[] vocoderBands = new int[NUM_BANDS];
 	private VocoderBandArrayGraphics gcalc = new VocoderBandArrayGraphics();
-	
+	private BackgroundRenderer renderer = null;
+	private int bgwidth = 0;
+	private int bgheight = 0;
+
 	private ArrayList bandChangeListeners = new ArrayList();
 	
 	public VocoderBandDisplay() {
 		super();
+		setBackground(defaultBGColor);
+		setForeground(defaultFGColor);
 		this.setBorder(BorderFactory.createLoweredBevelBorder());
 		setBands(0);
+		setPreferredSize(new Dimension(NUM_BANDS*11, 60));
+	}
+	
+	public void setBackgroundRenderer(BackgroundRenderer renderer) {
+		if (this.renderer!=renderer) {
+			this.renderer = renderer;
+			repaint();
+		}
 	}
 	
 	public void addBandChangeListener(VocoderBandChangeListener listener) {
@@ -95,10 +110,17 @@ public class VocoderBandDisplay extends JPaintComponent {
 	}
 	
 	protected void paintBuffer(Graphics g) {
-		super.paintBuffer(g);
 		// paint
 		int w = this.getWidth();
 		int h = this.getHeight();
+		
+		if (w<=0||h<=0)
+			return ;
+		
+		if (renderer!=null&&(w!=bgwidth||h!=bgheight)) {
+			bgwidth = w;
+			bgheight = h;
+		}
 		
 		if (g instanceof Graphics2D) {
 			Graphics2D g2d = (Graphics2D) g;
@@ -106,10 +128,16 @@ public class VocoderBandDisplay extends JPaintComponent {
 			g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		}
 
-		g.setColor(defaultBGColor);
-		g.fillRect(0, 0, w, h);
+		if (renderer!=null) {
+			// draw background
+			renderer.drawTo(this, this.getSize(), g);
+		}
+		else {
+			g.setColor(getBackground());
+			g.fillRect(0, 0, w, h);
+		}
 		
-		g.setColor(defaultFGColor);
+		g.setColor(getForeground());
 		gcalc.update(w, h); // recalculate if necessary
 		
 		for (int  i=0;i<NUM_BANDS;i++) {

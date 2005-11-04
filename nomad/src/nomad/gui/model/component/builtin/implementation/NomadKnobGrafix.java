@@ -23,20 +23,8 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Rectangle2D;
 
-public class JModKnobGrafix extends JModParameterObject
-{
-    private final static float START = 225;
-    private final static float LENGTH = 270;
-    private final static float PI = (float) Math.PI;
-    private final static float START_ANG = (START/360)*PI*2;
-    private final static float LENGTH_ANG = (LENGTH/360)*PI*2;
-    private final static float MULTIP = 180 / PI; 
-    private final static Color DEFAULT_FOCUS_COLOR = new Color(0x8080ff);
-    
-    private final static Color BOTTOM_COLOR = new Color(0xB0B0B0);
-    private final static Color MIDDLE_COLOR = new Color(0xD0D0D0);
-    private final static Color TOP_COLOR = new Color(0x707070);
-
+public class NomadKnobGrafix extends NomadParameterObject
+{    
     //private int SHADOWX = 1;
     //private int SHADOWY = 1;
     
@@ -64,22 +52,25 @@ public class JModKnobGrafix extends JModParameterObject
     
     private Arc2D hitArc = new Arc2D.Float(Arc2D.PIE);
     
-    private float ang = (float) START_ANG;
+    private float ang = (float) NomadKnobLook.START_ANG;
     //private int dragpos = -1;
     private float startVal = 0;
     private Color focusColor = null;
     private double lastAng = 0;
     
     Font f = new Font("Dialog", Font.PLAIN, 10);
-    
-    public JModKnobGrafix(int x, int y, int min_val, int max_val/*, Parameter newPar*/) {
+
+    private NomadKnobLook look = null;
+
+    public NomadKnobGrafix(NomadKnobLook look, int x, int y, int min_val, int max_val/*, Parameter newPar*/) {
         super(min_val, max_val/*, newPar*/);
+        this.look = look;
 
     	DRAG_SPEED = 1/getRange();
         //DRAG_RES = 1/getRange();
     	CLICK_SPEED = 1/getRange();
         
-    	focusColor = DEFAULT_FOCUS_COLOR;
+    	focusColor = NomadKnobLook.DEFAULT_FOCUS_COLOR;
     	
     	setPreferredSize(PREF_SIZE);
     	hitArc.setAngleStart(235); // Degrees ??? Radians???
@@ -99,9 +90,9 @@ public class JModKnobGrafix extends JModParameterObject
         		
        		public void mouseClicked(MouseEvent me) {
                 // TODO -Doesn't work well.
-       		    hitArc.setAngleExtent(-(LENGTH + 20));
+       		    hitArc.setAngleExtent(-(NomadKnobLook.LENGTH + 20));
        		    if  (hitArc.contains(me.getX(), me.getY())) {	   
-       		        hitArc.setAngleExtent(MULTIP * (ang-START_ANG)-10);
+       		        hitArc.setAngleExtent(NomadKnobLook.MULTIP * (ang-NomadKnobLook.START_ANG)-10);
        		        if  (hitArc.contains(me.getX(), me.getY())) {
        		            decValue();
        		        }
@@ -134,7 +125,7 @@ public class JModKnobGrafix extends JModParameterObject
                                 int ypos = middle - me.getY();
                                 double ang = Math.atan2(xpos, ypos);
                                 double diff = lastAng - ang;
-                                setInternalValue((float) (getValue() + (diff / LENGTH_ANG)), true);
+                                setInternalValue((float) (getValue() + (diff / NomadKnobLook.LENGTH_ANG)), true);
           
                                 lastAng = ang;
                             }
@@ -169,6 +160,10 @@ public class JModKnobGrafix extends JModParameterObject
         });
     }
 
+    public void setLook(NomadKnobLook look) {
+    	this.look = look;
+    }
+    
     public void setDragType(int type) {
         dragType = type;
     }
@@ -191,7 +186,7 @@ public class JModKnobGrafix extends JModParameterObject
 
     public void calcMisc(boolean custom) {
         // in this case we only want to calculate if there is going ot be repainted.
-        if (custom) ang = START_ANG - (float) LENGTH_ANG * getInternalValue();
+        if (custom) ang = NomadKnobLook.START_ANG - (float) NomadKnobLook.LENGTH_ANG * getInternalValue();
     }
     
     public void updateKnob() {
@@ -216,7 +211,6 @@ public class JModKnobGrafix extends JModParameterObject
     	    Graphics2D g2d = (Graphics2D) g;
     	    g2d.setBackground(getParent().getBackground());
     	    g2d.addRenderingHints(AALIAS);
-    	    
     	    // For the size of the "mouse click" area
             hitArc.setFrame(4, 4, size+12, size+12);
     	}
@@ -236,35 +230,17 @@ public class JModKnobGrafix extends JModParameterObject
         // Outside circle
         if (hasFocus())
             if (indicator && isHalfway())
-                g.setColor(Color.GREEN);
+                g.setColor(look.getOutsideCircle());
             else
                 g.setColor(focusColor);
         else
             if (indicator && isHalfway())
-                g.setColor(Color.GREEN.darker());
+                g.setColor(look.getOutsideCircle().darker());
             else
                 g.setColor(Color.gray);
         g.drawArc(offset, offset, size, size, 315, 270);
 
-        // Circle top..?
-        g.setColor(BOTTOM_COLOR);
-        g.drawOval(offset+2, offset+2, size-6, size-6);
-
-        // Min / Max markers
-        g.setColor(Color.black);
-        x = offset + size/2 + (int)((6+size/3) * Math.cos(START_ANG));
-        y = offset + size/2 - (int)((6+size/3) * Math.sin(START_ANG));
-        g.drawLine(offset + size/2, offset + size/2, x, y);
-        
-        x = offset + size/2 + (int)((6+size/3) * Math.cos(START_ANG - LENGTH_ANG));
-        y = offset + size/2 - (int)((6+size/3) * Math.sin(START_ANG - LENGTH_ANG));
-        g.drawLine(offset + size/2, offset + size/2, x, y);
-        
-        // Top
-        g.setColor(MIDDLE_COLOR);
-        g.fillOval(offset+3, offset+3, size-6, size-6);
-        g.setColor(TOP_COLOR);
-        g.fillOval(offset+4, offset+4, size-8, size-8);
+        look.paintTo(g, this);
         
         if (label && hasFocus()) {
             drawCustomString(g);
@@ -277,7 +253,7 @@ public class JModKnobGrafix extends JModParameterObject
     	g.drawLine(offset + size/2, offset + size/2, x, y);
         
         // Outside needle
-        g.setColor(Color.gray);
+        g.setColor(look.getOutsideNeedle());
     	int dx = (int)(2 * Math.sin(ang));
     	int dy = (int)(2 * Math.cos(ang));
     	g.drawLine(offset + dx + size/2, offset + dy + size/2, x, y);

@@ -1,5 +1,6 @@
 package nomad.gui.model.component.builtin.implementation;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
@@ -11,14 +12,14 @@ import java.util.ArrayList;
 import javax.swing.AbstractButton;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import nomad.misc.JPaintPanel;
 import nomad.model.descriptive.DParameter;
 
-public class ButtonGroup extends JPaintPanel {
+public class ButtonGroup extends JPanel {
 	private ArrayList buttons = new ArrayList();
 	private boolean horizontal = true;
 	private javax.swing.ButtonGroup btngroup = new 
@@ -33,11 +34,40 @@ public class ButtonGroup extends JPaintPanel {
 	private int btn_width = 28;
 	private int btn_height = 14;
 	private DParameter paramInfo = null;
+
+	private Color fgBtnColor = null;
+	private Color bgBtnColor = null;
 	
 	public ButtonGroup() {
 		this.setLayout(null);
 		setButtonCount(1);
+		if (buttons.size()>0) {
+			SimpleButton btn = (SimpleButton) buttons.get(0);
+			fgBtnColor = btn.getForeground();
+			bgBtnColor = btn.getBackground();
+		}
 		//this.setBorder(BorderFactory.createEmptyBorder() /*BorderFactory.createEtchedBorder(EtchedBorder.LOWERED)*/);
+	}
+	
+	public void setButtonForegound(Color color) {
+		fgBtnColor = color;
+		for (int i=0;i<buttons.size();i++) {
+			((SimpleButton) buttons.get(i))
+				.setForeground(fgBtnColor);
+		}
+	}
+	
+	public void setButtonBackgound(Color color) {
+		bgBtnColor = color;
+		for (int i=0;i<buttons.size();i++) {
+			((SimpleButton) buttons.get(i))
+				.setBackground(bgBtnColor);
+		}
+	}
+	
+	public void setButtonColors(Color foreground, Color background) {
+		setButtonForegound(foreground);
+		setButtonBackgound(background);
 	}
 	
 	public void setButtonCount(int count) {
@@ -64,6 +94,13 @@ public class ButtonGroup extends JPaintPanel {
 			while(count>buttons.size()) {
 				int index = buttons.size();
 				SimpleButton btn = new SimpleButton(index);
+				
+				if (fgBtnColor!=null)
+					btn.setForeground(fgBtnColor);
+				
+				if (bgBtnColor!=null)
+					btn.setBackground(bgBtnColor);
+				
 				btn.setSize(btn_width, btn_height);
 				btn.addActionListener(btnAction);
 				buttons.add(btn);

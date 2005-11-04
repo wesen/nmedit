@@ -89,8 +89,7 @@ public class ModuleGUIBuilder {
 			control.getComponent().setLocation(pad+offset,pad+line*lineHeight);
 			
 			//slider.setSize(100, 16);
-			target.add(control.getComponent());
-			target.getModuleComponents().addComponent(control);
+			target.add(control);
 			
 			for (int j=0;j<control.getControlPortCount();j++)
 				control.getControlPort(j).setParameterInfoAdapter(info);
@@ -106,8 +105,7 @@ public class ModuleGUIBuilder {
 				AbstractConnectorUI cui = factory.newDefaultConnectorInstance();
 				cui.setConnectorInfoAdapter(moduleInfo.getConnector(i));
 				cui.getComponent().setLocation(pad+i*18,pad+line*lineHeight);
-				target.add(cui.getComponent());
-				target.getModuleComponents().addComponent(cui);
+				target.add(cui);
 			}			
 			
 		}
@@ -118,7 +116,7 @@ public class ModuleGUIBuilder {
 
 	protected ModuleGUI createModulePaneGUI(Module module, ModuleSectionGUI moduleSectionGUI) {
 		ModuleGUI modulePanel = null;
-		modulePanel = new ModuleGUI(module, moduleSectionGUI);
+		modulePanel = factory.getModuleGUI(module, moduleSectionGUI);//new ModuleGUI(module, moduleSectionGUI);
     	modulePanel.setLocation(module.getPixLocationX(), module.getPixLocationY());
     	modulePanel.setSize(module.getPixWidth(), module.getPixHeight());
     	modulePanel.setNameLabel(module.getModuleTitle(), module.getPixWidth());
@@ -132,6 +130,10 @@ public class ModuleGUIBuilder {
 	private HashMap xmlModuleNodes = new HashMap();
 	private UIFactory factory = null;
 	private UICache cache = null;
+	
+	public void setUIFactory(UIFactory factory) {
+		this.factory = factory;
+	}
 	
 	private void initCache(String xmlFile) {
 		Run.statusMessage("Caching...");
@@ -198,9 +200,9 @@ public class ModuleGUIBuilder {
 		ModuleGUI modulegui = createModulePaneGUI(module, moduleSectionGUI);
 		
 		ModuleBuilder builder = new ModuleBuilder(modulegui, module.getDModule());
-		if (cache.loadModule(moduleInfo.getModuleID(), builder))
+		if (cache.loadModule(moduleInfo.getModuleID(), builder)) {
 			return modulegui;
-		else
+		} else
 			return null;
 	}
 	
@@ -220,8 +222,7 @@ public class ModuleGUIBuilder {
 			component = instance.factory.newUIInstance(className);
 			if (component==null)
 				throw new UICacheException("Class not found '"+className+"'.");
-			modulegui.add(component.getComponent());
-			modulegui.getModuleComponents().addComponent(component);
+			modulegui.add(component);
 		}
 
 		public void readComponentProperty(String propertyId, String value) throws UICacheException {
@@ -279,8 +280,7 @@ public class ModuleGUIBuilder {
 				}
 				// create the component
 				AbstractUIComponent component = factory.newUIInstance(componentClassName);
-				modulegui.add(component.getComponent());
-				modulegui.getModuleComponents().addComponent(component);
+				modulegui.add(component);
 				
 				// load properties
 				NodeList propertyNodeList = componentNode.getChildNodes();

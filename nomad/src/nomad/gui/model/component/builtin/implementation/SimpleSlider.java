@@ -47,6 +47,8 @@ public class SimpleSlider extends JPaintComponent {
 	private Color fgMorph = clRedDark;
 	private Color bgMorph = clRedLight;
 	private Border grabBorder = BorderFactory.createEtchedBorder(EtchedBorder.RAISED);
+	private boolean modern = false;
+	private Color barColor = Color.BLUE;
 	
 	public SimpleSlider() {
 		setBackground(bgDefault);
@@ -54,6 +56,15 @@ public class SimpleSlider extends JPaintComponent {
 		SliderMouseEventHandler hnd = new SliderMouseEventHandler();
 		addMouseListener(hnd);
 		addMouseMotionListener(hnd);
+	}
+	
+	public void useModernStyle(Color barColor) {
+		// TODO colors
+		modern = true;
+		this.barColor = barColor; 
+		setOpaque(false);
+		setBorder(null);
+		repaint();
 	}
 	
 	public int getInnerX() {
@@ -67,15 +78,21 @@ public class SimpleSlider extends JPaintComponent {
 	}
 	
 	public int getInnerW() {
-		Insets insets = getBorder().getBorderInsets(this);
 		Border border = getBorder();
-		return border==null?getWidth(): getWidth() - (insets.left+insets.right);
+		if (border!=null) {
+			Insets insets = getBorder().getBorderInsets(this);
+			return getWidth() - (insets.left+insets.right);
+		} else
+			return getWidth();
 	}
 
 	public int getInnerH() {
-		Insets insets = getBorder().getBorderInsets(this);
 		Border border = getBorder();
-		return border==null?getHeight(): getHeight() - (insets.top+insets.bottom);
+		if (border!=null) {
+			Insets insets = getBorder().getBorderInsets(this);
+			return getHeight() - (insets.top+insets.bottom);
+		} else
+			return getHeight();
 	}
 	
 	public void setMorhVisible(boolean visible) {
@@ -124,41 +141,74 @@ public class SimpleSlider extends JPaintComponent {
 		int h = getHeight();
 		
 		// background
-		if (!morphEnabled)
-			g.setColor(getBackground());
-		else
-			g.setColor(bgMorph);
-		
-		g.fillRect(0, 0, w, h);
+		if (isOpaque()) {
+			if (!morphEnabled) {			
+				g.setColor(getBackground());
+				g.fillRect(0, 0, w, h);
+			} else {
+				g.setColor(bgMorph);
+				g.fillRect(0, 0, w, h);
+			}
+		}
 
 		// slider - grabber
 		
 		int slY = getInnerY()+sliderY; 
 
-		// draw morph rect
-		if (morphEnabled) {
-			g.setColor(fgMorph);
-			if (morphVector!=0) {
-				int mh = getSliderY(morphVector);
-				g.fillRect(0, slY+(mh<0?mh:0), w, Math.abs(mh));
+		if (modern) {
+			// draw bars
+			final int barheight = 1;
+			int il = getInnerX();
+			int iw = getInnerW();
+			g.setColor(barColor);
+			if (morphEnabled) {
+				if (morphVector!=0) {
+					g.setColor(fgMorph);
+					int mh = getSliderY(morphVector);
+					if (mh<0) {
+						for (int i=slY+slY%4;i>=slY+mh;i-=barheight*2) {
+							g.fillRect(il+1,i, 4, barheight);
+						}
+					} else {
+						for (int i=slY+slY%4;i<=slY+mh;i+=barheight*2) {
+							g.fillRect(il+1,i, 4, barheight);
+						}
+					}
+				}
+				il+=4;
+				iw-=4;
 			}
+
+			g.setColor(getForeground());
+			for (int i=getHeight()-1-barheight;i>=slY;i-=barheight*2) {
+				g.fillRect(il+1,i, iw-2, barheight);
+			}
+		} else {
+			// draw morph rect
+			if (morphEnabled) {
+				g.setColor(fgMorph);
+				if (morphVector!=0) {
+					int mh = getSliderY(morphVector);
+					g.fillRect(0, slY+(mh<0?mh:0), w, Math.abs(mh));
+				}
+			}
+			
+			// draw grabber
+			g.setColor(getBackground());
+			grabBorder.paintBorder(this, g, getInnerX(), slY, getInnerW(), slHeight);
 		}
 
-		// draw grabber
-		g.setColor(getBackground());
-		grabBorder.paintBorder(this, g, getInnerX(), slY, getInnerW(), slHeight);
-		
 		if (paintBorder && getBorder()!=null)
 			getBorder().paintBorder(this, g, 0, 0, w, h);
 	}
 	
 	private int getSliderY(int value) {
-		return /*getInnerH()-*/( (value-minValue)*(getInnerH()-slHeight)/(maxValue-minValue+1) );
+		return getInnerH()-/*getInnerH()-*/( (value-minValue)*(getInnerH()-slHeight)/(maxValue-minValue+1) );
 	}
 	
 	private int getValueFromY(int y) {
 		//y-=getInnerY();
-		int val = minValue+(y*(maxValue-minValue+1)/(getInnerH()-slHeight));
+		int val = minValue+((getInnerH()-y)*(maxValue-minValue+1)/(getInnerH()-slHeight));
 		if (val<minValue)
 			return minValue;
 		if (val>maxValue)

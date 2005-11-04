@@ -1,46 +1,50 @@
 package nomad.gui.model.component.builtin.implementation;
 
+import java.awt.Dimension;
 
 
 
-public class JModKnob extends JModKnobGrafix /*implements ChangeListener*/ {
+
+public class NomadKnob extends NomadKnobGrafix /*implements ChangeListener*/ {
 
     public final static int LARGE = 1;
     public final static int SMALL = 2;
+    public final static Dimension SIZE_LARGE = new Dimension(30, 30);
+    public final static Dimension SIZE_SMALL = new Dimension(25, 25);
     private int type = LARGE;
     
 //    public JModKnob() {
 //        super();
 //    }
     
-    public JModKnob(int type, boolean ind, boolean lab, int x, int y, int min_val, int max_val/*, Parameter newPar*/) {
+    public NomadKnob(NomadKnobLook look, int type, boolean ind, boolean lab, int x, int y, int min_val, int max_val/*, Parameter newPar*/) {
         // TODO ?min/max getting the min/max values from the .properties?
-        super(x, y, min_val, max_val/*, newPar*/);
+        super(look, x, y, min_val, max_val/*, newPar*/);
         
         setLocation(x, y);
         
         indicator = ind;
         label = lab;
 
-        switch (type) {
-            case LARGE: setSize(35, 35); break;
-            case SMALL: setSize(25, 25); break;
-            default: setSize(35, 35); break;
-        }
+        setType(type);
     }
     
     public void setType(int type) {
     	switch (type) {
         	case LARGE: {
-        		setSize(30, 30);
+        		setSize(SIZE_LARGE);
         		this.type = type;
         		break;
         	}
         	case SMALL: {
-        		setSize(25, 25);
+        		setSize(SIZE_SMALL);
         		this.type = type; 
         		break;
         	}
+            default: {setSize(SIZE_SMALL); 
+    			this.type = SMALL;
+    			break;
+            }
     	}
     }
     

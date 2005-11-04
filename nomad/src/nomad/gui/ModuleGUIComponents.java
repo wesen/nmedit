@@ -50,13 +50,22 @@ public class ModuleGUIComponents {
 		return (AbstractUIComponent) other.get(index);
 	}
 	
-	public void addComponent(AbstractUIComponent component) {
+	public void add(AbstractUIComponent component) {
 		if (component instanceof AbstractConnectorUI)
 			addConnector((AbstractConnectorUI)component);
 		else if (component instanceof AbstractUIControl)
 			addControl((AbstractUIControl)component);
 		else
 			addOtherComponent(component);
+	}
+	
+	public void remove(AbstractUIComponent component) {
+		if (component instanceof AbstractConnectorUI)
+			connectors.remove(component);
+		else if (component instanceof AbstractUIControl)
+			controls.remove(component);
+		else
+			other.remove(component);
 	}
 	
 	public Iterator getAllComponents(){

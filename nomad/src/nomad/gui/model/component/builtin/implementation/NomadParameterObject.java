@@ -7,7 +7,7 @@ import javax.swing.event.EventListenerList;
 import nomad.misc.JPaintComponent;
 import nomad.model.descriptive.DParameter;
 
-public abstract class JModParameterObject extends JPaintComponent {
+public abstract class NomadParameterObject extends JPaintComponent {
     
     //private JLabel parLabel = null;
     
@@ -18,7 +18,8 @@ public abstract class JModParameterObject extends JPaintComponent {
     private ChangeEvent changeEvent = null;
     private EventListenerList listenerList = new EventListenerList();
 
-    public JModParameterObject(int min_val, int max_val/*, Parameter newPar*/) {
+    public NomadParameterObject(int min_val, int max_val/*, Parameter newPar*/) {
+    	setOpaque(false);
         setMinValue((float)min_val);
         setMaxValue((float)max_val);
         //setValue(par.getValue()+getMinValue());

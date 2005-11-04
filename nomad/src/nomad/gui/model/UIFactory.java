@@ -1,15 +1,20 @@
 package nomad.gui.model;
 
+import java.awt.Graphics;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.HashMap;
 
+import nomad.gui.ModuleGUI;
+import nomad.gui.ModuleSectionGUI;
 import nomad.gui.model.component.AbstractConnectorUI;
 import nomad.gui.model.component.AbstractUIComponent;
 import nomad.gui.model.component.AbstractUIControl;
 import nomad.misc.ImageTracker;
+import nomad.patch.Module;
+import nomad.patch.ModuleSection;
 import nomad.plugin.NomadFactory;
 import nomad.plugin.cache.XMLUICacheWriter;
 
@@ -21,11 +26,22 @@ public abstract class UIFactory extends NomadFactory {
 	private Class DefaultControl = null;
 	private Class DefaultOptionControl = null;
 	private Class DefaultConnector = null;
-	private ImageTracker imageTracker = new ImageTracker();
+	private ImageTracker imageTracker = 
+		new ImageTracker(ImageTracker.IMAGE_TRACKER_DISALLOW_REPLACE);
+	
+	private boolean inEditMode = false;
 	
 	public UIFactory() {
 		// create the ui cache file
 		createUICache();
+	}
+	
+	public void setEditing(boolean enable) {
+		this.inEditMode = enable;
+	}
+	
+	public boolean isEditing() {
+		return inEditMode;
 	}
 	
 	private void createUICache() {
@@ -155,5 +171,18 @@ public abstract class UIFactory extends NomadFactory {
 	}
 	
 	public abstract String getUIDescriptionFileName();
+
+	public ModuleGUI getModuleGUI(Module module, ModuleSectionGUI moduleSectionGUI) {
+		return new ModuleGUI(this, module, moduleSectionGUI) {
+			public void paintBuffer(Graphics g) {
+				super.paintBuffer(g);
+				drawOwnedComponents(g);
+			}
+		};
+	}
+	
+	public ModuleSectionGUI getModuleSectionGUI(ModuleSection moduleSection) {
+		return new ModuleSectionGUI(moduleSection);
+	}
 	
 }
