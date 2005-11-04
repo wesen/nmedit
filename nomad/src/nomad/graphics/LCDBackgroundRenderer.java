@@ -52,12 +52,6 @@ public class LCDBackgroundRenderer extends BackgroundRenderer {
 
 		// calculate the componenents size
 	    int size = dim.width * dim.height; 
-		
-	    // invalid size ?
-	    if (size<=0) 
-	    	
-	    	// yes
-	    	return null;
 
 	    // round (ceil) to pixel raster
 	    int cdistance = (int) Math.ceil(distance);

@@ -58,7 +58,7 @@ public abstract class BackgroundRenderer {
 	protected Image createImage(Component comp, Dimension dim, int [] pixels) {
 	    return comp.createImage(
 	      new MemoryImageSource(
-	        dim.width, dim.height, 
+	        dim.width, dim.height,
 	        ColorModel.getRGBdefault(),
 	        pixels, 0, dim.width
 	      )

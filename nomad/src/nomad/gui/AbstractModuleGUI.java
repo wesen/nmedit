@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
+import nomad.graphics.BackgroundRenderer;
 import nomad.gui.model.UIFactory;
 import nomad.gui.model.component.AbstractUIComponent;
 import nomad.misc.JPaintComponent;
@@ -13,11 +14,21 @@ public class AbstractModuleGUI extends JPaintComponent {
 	private ModuleGUIComponents components = new ModuleGUIComponents();
 	private ArrayList ownedComponents = new ArrayList();
 	private UIFactory factory = null;
+	private BackgroundRenderer renderer = null;
 	
 	public AbstractModuleGUI(UIFactory factory) {
 		this.factory = factory;
 		setOpaque(true);
 		setDoubleBuffered(false); // we have our own buffer
+	}
+	
+	public BackgroundRenderer getBackgroundRenderer() {
+		return renderer;
+	}
+	
+	public void setBackgroundRenderer(BackgroundRenderer renderer) {
+		this.renderer = renderer;
+		repaint();
 	}
 	
 	public void add(AbstractUIComponent component) {
@@ -53,6 +64,19 @@ public class AbstractModuleGUI extends JPaintComponent {
     		cgraphics.translate(c.getX(), c.getY());
     		c.paint(cgraphics);
     	}
+    }
+    
+    public void paintBorder(Graphics g) {}
+    
+    public void paintBuffer(Graphics g) {
+    	if (renderer!=null)
+    		renderer.drawTo(this, getSize(), g);
+    	else {
+    		g.setColor(getBackground());
+    		g.fillRect(0, 0, getWidth(), getHeight());
+    	}
+    	drawOwnedComponents(g);
+    	super.paintBorder(g);
     }
     
 }

@@ -33,15 +33,15 @@ public class DefaultTextDisplay extends AbstractUIControl {
 
 		container = new JComponent() {
 			protected void paintComponent(Graphics g) {
-				//super.paintComponent(g);
 				if (renderer==null) {
 					g.setColor(getBackground());
-					g.fillRect(0, 0, getWidth(), getHeight());
+					g.fillRect(0, 0, getWidth()-1, getHeight()-1);
 				} else {
 					renderer.drawTo(this, getSize(), g);
 				}
 			}
 		};
+		container.setOpaque(true);
 		container.setLayout(new BorderLayout());
 		container.setBorder(BorderFactory.createLoweredBevelBorder());
 		container.add(displayLabel, BorderLayout.CENTER);

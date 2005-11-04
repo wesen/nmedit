@@ -212,15 +212,8 @@ class ModernModuleGUI extends ModuleGUI {
 			renderer.setLight(0.5); // center light
 			renderer.setRadius(0.75);
 		}
+		
+		setBackgroundRenderer(renderer);
 	}
-	
-	public void paintBuffer(Graphics g) {
-		//if (renderer!=null) {
-			renderer.drawTo(this, getSize(), g);
 
-			drawOwnedComponents(g);
-		/*} else {
-			super.paintBuffer(g);
-		}*/
-	}
 }

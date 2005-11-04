@@ -4,6 +4,7 @@ package nomad.application.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -13,9 +14,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.StringBufferInputStream;
+import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -23,6 +27,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
@@ -38,6 +43,7 @@ import nomad.com.SynthException;
 import nomad.gui.PatchGUI;
 import nomad.gui.model.ModuleGUIBuilder;
 import nomad.gui.model.UIFactory;
+import nomad.misc.ActionQueueFeedback;
 import nomad.misc.ImageTracker;
 import nomad.model.descriptive.DConnector;
 import nomad.model.descriptive.ModuleDescriptions;
@@ -76,7 +82,8 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		JMenuItem menuHelpPluginsList = null;
 		JMenuItem menuHelpAbout = null;
 
-	JPanel toolPanel = null;
+//	JPanel toolPanel = null;
+	ModuleToolbar moduleToolbar = null;
 
 	JButton button = null;
 
@@ -259,7 +266,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 
 		// build toolbar
 		Run.statusMessage("building toolbar");
-		ModuleToolbar moduleToolbar = new ModuleToolbar();
+		moduleToolbar = new ModuleToolbar();
 
 		// create gui builder
 		Run.statusMessage("ui builder");	
@@ -441,50 +448,99 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		}
 		
 		public void actionPerformed(ActionEvent event) {
-			uifactory = (UIFactory) plugin.getFactoryInstance();
-			uifactory.setEditing(false);
-			uifactory.getImageTracker().addFrom(theImageTracker);
-			ModuleGUIBuilder.instance.setUIFactory(uifactory);
-			DConnector.setImageTracker(uifactory.getImageTracker());
-			
-			if (viewManager!=null) {
-
-				Nomad.this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-				viewManager.setEnabled(false);
-						
-				// migrate
-				int count = viewManager.getDocumentCount();
-						
-				int selectionIndex = viewManager.getSelectedDocumentIndex();
-						
-				int i=0;
-				while (i<count) {
-					String name = viewManager.getTitleAt(0);
-					PatchGUI patchGUI = (PatchGUI) viewManager.getDocumentAt(0);
-					viewManager.removeDocument(patchGUI);
-			
-					Patch patch = new Patch();
-					patchGUI = (PatchGUI) Patch.createPatch(
-						new StringBufferInputStream(
-							patchGUI.getPatch().savePatch().toString()
-						),patch
-					);
-							
-					if (patchGUI!=null)
-						viewManager.addDocument(name, patchGUI);
-					i++;
-				}
-
-				if (selectionIndex>=0)
-					viewManager.setSelectedDocument(selectionIndex);
-												
-				viewManager.setEnabled(true);
-
-				Nomad.this.setCursor(Cursor.getDefaultCursor());
-			}
+			changeSynthInterface(plugin);
 		}
 	}
-	
+
+	void changeSynthInterface(final NomadPlugin plugin) {
+		final JComponent holder = panelMain;
+		final ActionQueueFeedback performer = new ActionQueueFeedback("Changing Theme...");		
+		
+		performer.enque( // initial action
+			new Runnable()	{
+				public void run() {
+					Nomad.this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+					Nomad.this.menuBar.setEnabled(false);
+					Nomad.this.moduleToolbar.setEnabled(false);
+					// remove view manager and add dialog/progress feedback
+					holder.remove(viewManager.getDocumentContainer());
+					holder.add(performer, BorderLayout.CENTER);
+					holder.validate();
+				}
+				
+				public String toString() { return ""; }
+			}
+		);
+
+		performer.enque( // initial action
+			new Runnable()	{
+				public void run() {
+					uifactory = (UIFactory) plugin.getFactoryInstance();
+					uifactory.setEditing(false);
+					uifactory.getImageTracker().addFrom(theImageTracker);
+					ModuleGUIBuilder.instance.setUIFactory(uifactory);
+					DConnector.setImageTracker(uifactory.getImageTracker());
+				}
+				
+				public String toString() {
+					return "Loading Theme...";
+				}
+			}
+		);
+
+		// migrate
+		final int selectionIndex = viewManager.getSelectedDocumentIndex();
+		int count = viewManager.getDocumentCount();
+		for (int i=0;i<count;i++) {
+			performer.enque( // a migration step
+				new Runnable()	{
+					public void run() {
+						String name = viewManager.getTitleAt(0);
+						PatchGUI patchGUI = (PatchGUI) viewManager.getDocumentAt(0);
+						viewManager.removeDocument(patchGUI);
+						
+						Patch patch = new Patch();
+						patchGUI = (PatchGUI) Patch.createPatch(
+							new StringBufferInputStream(
+								patchGUI.getPatch().savePatch().toString()
+							),patch
+						);
+										
+						if (patchGUI!=null)
+							viewManager.addDocument(name, patchGUI);
+					}
+					public String toString() {
+						return "Patch '"+viewManager.getTitleAt(0)+"' ...";
+					}
+				}
+			);
+		}
+
+		performer.enque( // finalize action
+			new Runnable()	{
+				public void run() {
+					if (selectionIndex>=0)
+						viewManager.setSelectedDocument(selectionIndex);
+
+					holder.remove(performer);
+					holder.add(viewManager.getDocumentContainer(), BorderLayout.CENTER);
+
+					Nomad.this.setCursor(Cursor.getDefaultCursor());
+					Nomad.this.menuBar.setEnabled(true);
+					Nomad.this.moduleToolbar.setEnabled(true);
+					viewManager.getDocumentContainer().validate();
+					viewManager.getDocumentContainer().repaint();
+				}
+				
+				public String toString() {
+					return "Finishing...";
+				}
+			}
+		);
+
+		performer.run();
+	}
+
 	private class LookAndFeelChanger implements ActionListener {
 	    UIManager.LookAndFeelInfo info;
 	    LookAndFeelChanger(UIManager.LookAndFeelInfo info) {
