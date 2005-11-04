@@ -60,7 +60,7 @@ public class ImageTracker {
 	 * in this object and in the itracker object.
 	 * @param itracker the source image tracker
 	 */
-	public void addFrom(CopyOfImageTracker itracker) {
+	public void addFrom(ImageTracker itracker) {
 		Iterator keyIterator = itracker.getKeys();
 		while (keyIterator.hasNext()) {
 			String key = (String) keyIterator.next();

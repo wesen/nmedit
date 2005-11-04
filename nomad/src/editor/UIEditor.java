@@ -106,6 +106,7 @@ public class UIEditor extends JFrame {
 		}
 
 		theUIFactory = PluginManager.getDefaultUIFactory();
+		theUIFactory.setEditing(true);
 		theUIFactory.getImageTracker().addFrom(theImageTracker);
 
 		// load module/connector icons

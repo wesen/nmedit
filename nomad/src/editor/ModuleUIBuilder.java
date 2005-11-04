@@ -13,7 +13,7 @@ import nomad.patch.ModuleSection.ModulePixDimension;
 public class ModuleUIBuilder {
 
 	public static ModulePane buildModuleUI(UIFactory factory, DModule moduleInfo) {
-		ModulePane modulePane = new ModulePane(moduleInfo);
+		ModulePane modulePane = new ModulePane(factory, moduleInfo);
 		
 		modulePane.setForeground(Color.GRAY);
 		modulePane.setSize(new Dimension(ModulePixDimension.PIXWIDTH, 

@@ -54,7 +54,8 @@ public class PluginManager {
 	public static UIFactory getDefaultUIFactory() {
 		for (int i=0;i<getPluginCount();i++) {
 			NomadPlugin plugin = getPlugin(i);
-			if (plugin.getFactoryType()==NomadPlugin.NOMAD_FACTORY_TYPE_UI)
+			if (plugin.getFactoryType()==NomadPlugin.NOMAD_FACTORY_TYPE_UI
+				&&plugin.getName().equals("Classic Theme"))
 				return (UIFactory) plugin.getFactoryInstance();
 		}
 		return null;

@@ -3,6 +3,7 @@
 package nomad.application.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -11,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.io.StringBufferInputStream;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -37,6 +39,7 @@ import nomad.gui.PatchGUI;
 import nomad.gui.model.ModuleGUIBuilder;
 import nomad.gui.model.UIFactory;
 import nomad.misc.ImageTracker;
+import nomad.model.descriptive.DConnector;
 import nomad.model.descriptive.ModuleDescriptions;
 import nomad.model.descriptive.substitution.XMLSubstitutionReader;
 import nomad.patch.Patch;
@@ -63,9 +66,10 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		JMenu menuSelectComport = null;
 		
 	JMenu menuAppearance = null;
-		JMenu documentViewMode = null;
+		JMenu menuDocumentViewMode = null;
 			JRadioButtonMenuItem menuDocumentViewTabbed = null;
 			JRadioButtonMenuItem menuDocumentViewMDI = null;
+		JMenu menuPatchTheme = null;
 		
 	JMenu menuHelp = null;
 		JMenu menuHelpLookAndFeel = null;
@@ -80,7 +84,12 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 	ImageTracker theImageTracker = null;
 	
 	private DocumentManager viewManager = null;
+	private static UIFactory uifactory;
 
+	public static UIFactory getUIFactory() {
+		return uifactory;
+	}
+	
     class NewListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	Patch patch = new Patch();
@@ -218,6 +227,16 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 	
 	public Nomad() {
 
+		// feed image tracker
+		Run.statusMessage("images");
+		theImageTracker = new ImageTracker();
+		try {
+			theImageTracker.loadFromDirectory("src/data/images/slice/");
+			theImageTracker.loadFromDirectory("src/data/images/single/");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
 		// load plugin names
 		Run.statusMessage("Plugin Manager");
 		PluginManager.init();
@@ -231,18 +250,9 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		Run.statusMessage("module description");
 		ModuleDescriptions.init("src/data/xml/modules.xml", subsReader);
 
-		// feed image tracker
-		Run.statusMessage("images");
-		theImageTracker = new ImageTracker();
-		try {
-			theImageTracker.loadFromDirectory("src/data/images/slice/");
-			theImageTracker.loadFromDirectory("src/data/images/single/");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		UIFactory theUIFactory = PluginManager.getDefaultUIFactory();
-		theUIFactory.getImageTracker().addFrom(theImageTracker);
+		uifactory = PluginManager.getDefaultUIFactory();
+		uifactory.setEditing(false);
+		uifactory.getImageTracker().addFrom(theImageTracker);
 
 		// load module/connector icons
 		ModuleDescriptions.model.loadImages(theImageTracker);
@@ -253,7 +263,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 
 		// create gui builder
 		Run.statusMessage("ui builder");	
-		ModuleGUIBuilder.createGUIBuilder(theUIFactory);
+		ModuleGUIBuilder.createGUIBuilder(uifactory);
 
         ToolTipManager.sharedInstance().setInitialDelay(0);
         
@@ -356,21 +366,41 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		menuSynthConnectionMenuItem.addActionListener(new SynthConnectionMenuItemListener());
 		menuSynthUploadPatchFromCurrentSlot.addActionListener(new UploadPatchFromCurrentSlotListener());
 
-		JMenu menuAppearance = new JMenu("Appearance");
-			JMenu documentViewMode = new JMenu("Document View");
+		menuAppearance = new JMenu("Appearance");
+			menuDocumentViewMode = new JMenu("Document View");
 			menuDocumentViewTabbed = new JRadioButtonMenuItem("Tabbed");
 			menuDocumentViewTabbed.setSelected(true);
 			menuDocumentViewMDI = new JRadioButtonMenuItem("MDI");
-			documentViewMode.add(menuDocumentViewTabbed);
-			documentViewMode.add(menuDocumentViewMDI);
+			menuDocumentViewMode.add(menuDocumentViewTabbed);
+			menuDocumentViewMode.add(menuDocumentViewMDI);
 			menuDocumentViewTabbed.addActionListener(new SwitchDocumentViewAction());
 			menuDocumentViewMDI.addActionListener(new SwitchDocumentViewAction());
-			
+						
 			ButtonGroup docViewGroup = new ButtonGroup();
 			docViewGroup.add(menuDocumentViewTabbed);
 			docViewGroup.add(menuDocumentViewMDI);
-			
-			menuAppearance.add(documentViewMode);
+		
+
+			menuPatchTheme = new JMenu("Theme");
+			ButtonGroup themeGroup = new ButtonGroup();
+			for (int i=0;i<PluginManager.getPluginCount();i++) {
+				NomadPlugin plugin = PluginManager.getPlugin(i);
+				if (plugin.getFactoryType()==NomadPlugin.NOMAD_FACTORY_TYPE_UI) {
+					JRadioButtonMenuItem menuItem = new ThemeChanger(plugin);
+					menuPatchTheme.add(menuItem);
+					themeGroup.add(menuItem);
+					if (plugin.getName().equals("Classic Theme"))
+						menuItem.setSelected(true);
+					
+					// TODO remove - only for testing
+					/*else
+						menuItem.doClick();*/
+					// -- end --
+				}
+			}	
+
+			menuAppearance.add(menuDocumentViewMode);
+			menuAppearance.add(menuPatchTheme);
 		
 		menuBar.add(menuAppearance);
 			
@@ -399,6 +429,62 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		return menuBar; 
 	}
 
+	private class ThemeChanger extends JRadioButtonMenuItem
+		implements ActionListener {
+		private NomadPlugin plugin = null;
+		public ThemeChanger(NomadPlugin plugin) {
+			super(plugin.getName());
+			setToolTipText(plugin.getDescription());
+			this.plugin = plugin;
+
+			addActionListener(this);
+		}
+		
+		public void actionPerformed(ActionEvent event) {
+			uifactory = (UIFactory) plugin.getFactoryInstance();
+			uifactory.setEditing(false);
+			uifactory.getImageTracker().addFrom(theImageTracker);
+			ModuleGUIBuilder.instance.setUIFactory(uifactory);
+			DConnector.setImageTracker(uifactory.getImageTracker());
+			
+			if (viewManager!=null) {
+
+				Nomad.this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+				viewManager.setEnabled(false);
+						
+				// migrate
+				int count = viewManager.getDocumentCount();
+						
+				int selectionIndex = viewManager.getSelectedDocumentIndex();
+						
+				int i=0;
+				while (i<count) {
+					String name = viewManager.getTitleAt(0);
+					PatchGUI patchGUI = (PatchGUI) viewManager.getDocumentAt(0);
+					viewManager.removeDocument(patchGUI);
+			
+					Patch patch = new Patch();
+					patchGUI = (PatchGUI) Patch.createPatch(
+						new StringBufferInputStream(
+							patchGUI.getPatch().savePatch().toString()
+						),patch
+					);
+							
+					if (patchGUI!=null)
+						viewManager.addDocument(name, patchGUI);
+					i++;
+				}
+
+				if (selectionIndex>=0)
+					viewManager.setSelectedDocument(selectionIndex);
+												
+				viewManager.setEnabled(true);
+
+				Nomad.this.setCursor(Cursor.getDefaultCursor());
+			}
+		}
+	}
+	
 	private class LookAndFeelChanger implements ActionListener {
 	    UIManager.LookAndFeelInfo info;
 	    LookAndFeelChanger(UIManager.LookAndFeelInfo info) {

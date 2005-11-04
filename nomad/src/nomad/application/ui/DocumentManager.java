@@ -17,4 +17,7 @@ public interface DocumentManager {
 	public void removeDocument(JComponent component);
 	public int getSelectedDocumentIndex();
 	public JComponent getSelectedDocument();
+
+	public void setEnabled(boolean enable);
+	public boolean isEnabled();
 }

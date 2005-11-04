@@ -15,6 +15,14 @@ public class SelectableDocumentManager implements DocumentManager {
 		contentPane.add(theManager.getDocumentContainer(), BorderLayout.CENTER);
 	}
 	
+	public void setEnabled(boolean enable) {
+		theManager.setEnabled(enable);
+	}
+	
+	public boolean isEnabled() {
+		return theManager.isEnabled();
+	}
+	
 	public boolean usesTabbedDocumentManager() {
 		return theManager instanceof TabbedPaneDocumentManager;
 	}
@@ -45,6 +53,8 @@ public class SelectableDocumentManager implements DocumentManager {
 			newManager.addDocument(title, component);
 		}
 
+		newManager.setEnabled(theManager.isEnabled());
+		
 		// add new manager
 		contentPane.add(newManager.getDocumentContainer(), BorderLayout.CENTER);
 		theManager = newManager;

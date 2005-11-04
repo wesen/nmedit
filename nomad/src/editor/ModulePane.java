@@ -19,6 +19,7 @@ import java.util.Iterator;
 import javax.swing.JLabel;
 
 import nomad.gui.AbstractModuleGUI;
+import nomad.gui.model.UIFactory;
 import nomad.gui.model.component.AbstractUIComponent;
 import nomad.misc.FontInfo;
 import nomad.model.descriptive.DModule;
@@ -30,7 +31,8 @@ public class ModulePane extends AbstractModuleGUI {
 	private JLabel title = null;
 	private SelectionMotionHandler smh = null;
 	
-	public ModulePane(DModule module) {
+	public ModulePane(UIFactory factory, DModule module) {
+		super(factory);
 		this.setLayout(null);
 		this.module = module;
 		title = new JLabel(module.getName());
@@ -143,8 +145,7 @@ public class ModulePane extends AbstractModuleGUI {
 	}
 	
 	public void addUIComponent(AbstractUIComponent component) {
-		getModuleComponents().addComponent(component);
-		addExistingUIComponent(component);
+		add(component);
 	}
 	
 	public void paintComponent(Graphics g) {
