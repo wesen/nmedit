@@ -12,11 +12,18 @@ import java.util.Iterator;
  * @author Christian Schneider
  */
 public class ImageTracker {
-	
+
+	public final static int IMAGE_TRACKER_ALLOW_REPLACE = 0;
+	public final static int IMAGE_TRACKER_DISALLOW_REPLACE = 1;
 	HashMap images = new HashMap();
+	private int mode = -1;
 	
 	public ImageTracker() {
-		;
+		this(IMAGE_TRACKER_ALLOW_REPLACE);
+	}
+
+	public ImageTracker(int mode) {
+		this.mode = mode;
 	}
 	
 	/**
@@ -25,9 +32,10 @@ public class ImageTracker {
 	 * @param image the image
 	 */
 	public void putImage(String key, Image image) {
-		images.put(key, image);
+		if (mode==IMAGE_TRACKER_ALLOW_REPLACE||!images.containsKey(key))
+			images.put(key, image);
 	}
-	
+
 	/**
 	 * Returns the image with the given key
 	 * @param key the key
@@ -52,7 +60,7 @@ public class ImageTracker {
 	 * in this object and in the itracker object.
 	 * @param itracker the source image tracker
 	 */
-	public void addFrom(ImageTracker itracker) {
+	public void addFrom(CopyOfImageTracker itracker) {
 		Iterator keyIterator = itracker.getKeys();
 		while (keyIterator.hasNext()) {
 			String key = (String) keyIterator.next();
@@ -81,7 +89,7 @@ public class ImageTracker {
 					// load single image
 					Image image = Toolkit.getDefaultToolkit().getImage(dir+File.separator+f.getName());
 					String key = f.getName().substring(0,f.getName().lastIndexOf("."));
-					if (key.indexOf(File.separator)>0)
+					if (key.contains(File.separator))
 						key = key.substring(key.lastIndexOf(File.separator));
 					if (image!=null)
 						putImage(key, image);
