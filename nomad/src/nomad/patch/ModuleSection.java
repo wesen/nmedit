@@ -10,7 +10,7 @@ import java.util.List;
 
 import javax.swing.JLayeredPane;
 
-import nomad.gui.ModuleGUI;
+import nomad.application.ui.Nomad;
 import nomad.gui.ModuleSectionGUI;
 import nomad.model.descriptive.DModule;
 import nomad.model.descriptive.ModuleDescriptions;
@@ -46,7 +46,7 @@ public class ModuleSection {
 		modules = new Hashtable();
 		cables = new Cables();
 
-		moduleSectionGUI = new ModuleSectionGUI(this);
+		moduleSectionGUI = Nomad.getUIFactory().getModuleSectionGUI(this);
 		this.moduleSection = moduleSection;
         this.patch = patch;
 	}
