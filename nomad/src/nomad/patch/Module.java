@@ -1,12 +1,13 @@
 package nomad.patch;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
+import nomad.com.message.GetPatchMessage;
 import nomad.gui.ModuleGUI;
 import nomad.gui.ModuleSectionGUI;
 import nomad.gui.model.ModuleGUIBuilder;
 import nomad.model.descriptive.DModule;
-import nomad.model.descriptive.ModuleDescriptions;
 import nomad.patch.ModuleSection.ModulePixDimension;
 
 /**
@@ -29,8 +30,9 @@ public class Module {
     private ModuleGUI moduleGUI = null; 
     private ModuleSection moduleSection = null;
 
-	private Vector parametersVector = null;
-    private Vector customsVector = null;
+	private ArrayList parameters = null;
+    private ArrayList customs = null;
+    private ArrayList connectors = null;
 
 	public Module(Integer newIndex, int newGridX, int newGridY, ModuleSection moduleSection, DModule dModule) {
 		this.dModule = dModule;
@@ -42,8 +44,15 @@ public class Module {
         gridX = newGridX;
         gridY = newGridY;
 
-		parametersVector = new Vector();
-		customsVector = new Vector();
+		parameters = new ArrayList(dModule.getParameterCount());
+		customs = new ArrayList(); //TODO add customs
+		connectors = new ArrayList(dModule.getConnectorCount());
+		
+		for (int i = 0;i < dModule.getParameterCount();i++)
+			parameters.add(new Parameter(dModule.getParameter(i)));
+		
+		for (int i = 0;i < dModule.getConnectorCount();i++)
+			connectors.add(new Connector(dModule.getConnector(i), 0, 0));
 	}
     
 	public DModule getDModule() {
@@ -60,6 +69,10 @@ public class Module {
 
     public String getModuleName() {
         return dModule.getName();
+    }
+    
+    public Parameter getParameter(int index) {
+    	return (Parameter)parameters.get(index);
     }
     
     public int getGridHeight() {

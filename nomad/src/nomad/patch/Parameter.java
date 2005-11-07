@@ -1,38 +1,21 @@
 package nomad.patch;
 
-import javax.swing.JComponent;
+import nomad.model.descriptive.DParameter;
 
-
-class Parameter extends JComponent{
+class Parameter {
 	private int value;
-	private String name;
+	private DParameter dParameter = null;
 
-	Parameter(int newValue, String newName) {
-		value = newValue;
-		name = newName;
+	Parameter(DParameter dParameter) {
+		this.dParameter = dParameter;
+		value = dParameter.getDefaultValue();
 	}
-
-// Getters
 
 	public int getValue() {
 		return value;
 	}
 
-	public String getName() {
-		return name;
-	}
-	
-// Setters
-
     public void setValue(int newValue) {
         value = newValue;
     }   
-
-    public void setValueWithoutFireStarter(int newValue) {
-        value = newValue;
-    }
-
-	public void setName(String newName) {
-		name = newName;
-	}	
 }
