@@ -19,6 +19,10 @@ import javax.swing.event.ChangeListener;
 
 import nomad.model.descriptive.DParameter;
 
+/**
+ * @author Christian Schneider
+ * @hidden
+ */
 public class ButtonGroup extends JPanel {
 	private ArrayList buttons = new ArrayList();
 	private boolean horizontal = true;
@@ -294,6 +298,9 @@ public class ButtonGroup extends JPanel {
 	}
 }
 
+/**
+ * @hidden
+ */
 class SimpleButton extends JToggleButton {
 	public final static int BUTTON_SPACING = 0;
 	private int index = 1;

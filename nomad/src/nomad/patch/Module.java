@@ -7,6 +7,7 @@ import nomad.com.message.GetPatchMessage;
 import nomad.gui.ModuleGUI;
 import nomad.gui.ModuleSectionGUI;
 import nomad.gui.model.ModuleGUIBuilder;
+import nomad.model.descriptive.DConnector;
 import nomad.model.descriptive.DModule;
 import nomad.patch.ModuleSection.ModulePixDimension;
 
@@ -55,6 +56,16 @@ public class Module {
 			connectors.add(new Connector(dModule.getConnector(i), 0, 0));
 	}
     
+	public Connector findConnector(DConnector info) {
+		for (int i=0;i<connectors.size();i++) { 
+			Connector candidate = (Connector) connectors.get(i);
+			if (info.equals(candidate.getInfo()))
+				return candidate;
+		}
+		
+		return null; // not found
+	}
+	
 	public DModule getDModule() {
 		return dModule;
 	}

@@ -128,8 +128,12 @@ public abstract class UIFactory extends NomadFactory {
 		return null;
 	}
 	
+	private Class getUIClass(String uiClassName) {
+		return (Class) componentClasses.get(uiClassName);
+	}
+	
 	public AbstractUIComponent newUIInstance(String uiClassName) {
-		Class uiclass = (Class) componentClasses.get(uiClassName);
+		Class uiclass = getUIClass(uiClassName);
 		if (uiclass != null)
 			return (AbstractUIComponent) createUIInstanceFor(uiclass);
 		return null;

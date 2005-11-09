@@ -8,7 +8,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * XMLErrorHandler implementation
+ * A custom XMLErrorHandler that gives feedback by printing to system.err
  * @author Christian Schneider
  */
 public class DefaultXMLErrorHandler implements XMLErrorHandler {

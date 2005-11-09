@@ -17,6 +17,10 @@ import javax.swing.event.ChangeListener;
 
 import nomad.misc.JPaintComponent;
 
+/**
+ * @author Christian Schneider
+ * @hidden
+ */
 public class SimpleSlider extends JPaintComponent {
 
 	public final static Color bgDefault = Color.decode("#DCDCDC"); 

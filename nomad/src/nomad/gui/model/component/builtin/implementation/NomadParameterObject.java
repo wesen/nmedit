@@ -7,6 +7,10 @@ import javax.swing.event.EventListenerList;
 import nomad.misc.JPaintComponent;
 import nomad.model.descriptive.DParameter;
 
+/**
+ * @author Ian Hoogebom
+ * @hidden
+ */
 public abstract class NomadParameterObject extends JPaintComponent {
     
     //private JLabel parLabel = null;

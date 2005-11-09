@@ -9,6 +9,11 @@ import nomad.gui.model.component.builtin.implementation.VocoderBandDisplay;
 import nomad.gui.model.component.builtin.implementation.VocoderControl;
 import nomad.model.descriptive.DParameter;
 
+/**
+ * The user interface containing the vocoder display and the ports controlling each of the 16 bands.
+ * 
+ * @author Christian Schneider
+ */
 public class VocoderUI extends AbstractUIControl {
 
 	private VocoderControl vcontrol = null;
@@ -75,21 +80,4 @@ public class VocoderUI extends AbstractUIControl {
 		}
 		
 	}
-	
-	/*
-	private class VocoderBandProperty extends ParamPortProperty {
-
-		private int band = 0;
-		
-		public VocoderBandProperty(int band) {
-			super("vocoder.band."+band, VocoderUI.this);
-			this.band = band;
-		}
-
-		public String getId() {
-			return "vocoder.band."+band;
-		}
-		
-	}
-	*/
 }

@@ -1,5 +1,6 @@
 package nomad.gui;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class AbstractModuleGUI extends JPaintComponent {
 	
 	public AbstractModuleGUI(UIFactory factory) {
 		this.factory = factory;
+		setBackground(Color.WHITE);
 		setOpaque(true);
 		setDoubleBuffered(false); // we have our own buffer
 	}
@@ -33,7 +35,7 @@ public class AbstractModuleGUI extends JPaintComponent {
 	
 	public void add(AbstractUIComponent component) {
 		components.add(component);
-		if (component.isFixComponent()&&!factory.isEditing()) {
+		if (component.isDecoratingComponent()&&!factory.isEditing()) {
 			ownedComponents.add(component);
 		} else
 			add(component.getComponent());
@@ -41,7 +43,7 @@ public class AbstractModuleGUI extends JPaintComponent {
     
 	public void remove(AbstractUIComponent component) {
 		components.remove(component);
-		if (component.isFixComponent()&&!factory.isEditing())
+		if (component.isDecoratingComponent()&&!factory.isEditing())
 			ownedComponents.remove(component);
 		else
 			remove(component.getComponent());
@@ -70,7 +72,7 @@ public class AbstractModuleGUI extends JPaintComponent {
     
     public void paintBuffer(Graphics g) {
     	if (renderer!=null)
-    		renderer.drawTo(this, getSize(), g);
+    		renderer.drawTo(this, g);
     	else {
     		g.setColor(getBackground());
     		g.fillRect(0, 0, getWidth(), getHeight());

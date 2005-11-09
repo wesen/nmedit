@@ -32,6 +32,12 @@ import nomad.misc.ImageTracker;
 import nomad.patch.Module;
 import nomad.patch.ModuleSection;
 
+/**
+ * The modern theme plugin that is similar to {@link plugin.classictheme.NomadPlugin} (Classic theme)
+ * but has different appearance of it's components.
+ * 
+ * @author Christian Schneider
+ */
 public class ModernThemeFactory extends UIFactory {
 
 	public final Color dispBackgroundColor = Color.decode("#2721CE");
@@ -103,7 +109,7 @@ public class ModernThemeFactory extends UIFactory {
 			LCDBackgroundRenderer dispRender = new LCDBackgroundRenderer();
 			dispRender.setDisplayColor(txtBackG);
 			dispRender.setLightColor(txtLight);
-			dispRender.setDistance(4.0f);
+			dispRender.setBorderGlowSize(4.0f);
 			dispRender.randomizeBehaviour(new Dimension(50, 18));
 			getContainer().setBorder(
 				BorderFactory.createLineBorder(Color.GRAY)	

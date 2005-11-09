@@ -9,6 +9,10 @@ import nomad.gui.model.component.AbstractUIControl;
 import nomad.gui.model.component.builtin.implementation.SimpleSlider;
 import nomad.model.descriptive.DParameter;
 
+/**
+ * A simple slider user interface that can be used to control one parameter.
+ * @author Christian Schneider
+ */
 public class SliderUI extends AbstractUIControl {
 
 	SliderControlPort thePort = null;

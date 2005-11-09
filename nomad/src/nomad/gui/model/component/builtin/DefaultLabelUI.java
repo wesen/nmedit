@@ -12,6 +12,21 @@ import nomad.gui.model.component.AbstractUIComponent;
 import nomad.gui.model.property.ImageTextProperty;
 import nomad.misc.ImageTracker;
 
+/**
+ * A label user interface that supports text containing line breaks or displaying icons.
+ * Line breaks are insterted where the character sequency <code>'\n'</code> (without quotes) was found</li>.
+ * To display an icon the component uses the factories image tracker property to receive images from.
+ * You can select an icon using the syntax <code>'{' '@' image_key '}'</code> where <code>image_key</code>
+ * is the key that will be used to look up the icon from the image tracker. For example if you want to show the
+ * icon that is associated with the key <code>icon_smiley</code> the text property has to be set to
+ * <code>{<span>@</span>icon_smiley}</code>.
+ * 
+ * This class uses an {@link javax.swing.JLabel} as displaying component and has the isDecoratingComponent()
+ * property set to true. The size property is not installed because it depends on the text/icon that will be
+ * displayed. The size will be adjusted automatically when the text/icon property is set. 
+ * 
+ * @author Christian Schneider
+ */
 public class DefaultLabelUI extends AbstractUIComponent {
 
 	private JLabel theLabel = null;
@@ -25,7 +40,7 @@ public class DefaultLabelUI extends AbstractUIComponent {
 		theLabel.setFont(new Font("Dialog", Font.PLAIN, 9));
 		litp = new MyImageTextProperty(factory.getImageTracker());
 		updateLabelUI();
-		setFixComponent(true); // does not change
+		setAsDecoratingDocument(true); // does not change
 		setComponent(theLabel);
 	}
 	
@@ -72,7 +87,6 @@ public class DefaultLabelUI extends AbstractUIComponent {
 			} else {
 				theLabel.setText(textValue);
 			}
-			//theLabel.setSize(FontInfo.getTextRect(textValue, theLabel.getFont(), theLabel));
 			theLabel.setSize(theLabel.getPreferredSize());
 		}
 	}

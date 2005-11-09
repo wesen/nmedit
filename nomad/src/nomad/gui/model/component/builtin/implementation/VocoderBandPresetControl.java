@@ -4,6 +4,10 @@ import javax.swing.Icon;
 import nomad.misc.GridButtonComponent;
 import nomad.misc.GridButtonModel;
 
+/**
+ * @author Christian Schneider
+ * @hidden
+ */
 public class VocoderBandPresetControl extends GridButtonComponent {
 
 	private VocoderControl vcontrol = null;

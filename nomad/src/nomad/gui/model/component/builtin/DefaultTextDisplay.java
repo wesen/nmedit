@@ -37,7 +37,7 @@ public class DefaultTextDisplay extends AbstractUIControl {
 					g.setColor(getBackground());
 					g.fillRect(0, 0, getWidth()-1, getHeight()-1);
 				} else {
-					renderer.drawTo(this, getSize(), g);
+					renderer.drawTo(this, g);
 				}
 			}
 		};

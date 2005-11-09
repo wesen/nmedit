@@ -4,7 +4,6 @@ package nomad.application.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -13,13 +12,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.io.StringBufferInputStream;
-import java.util.ArrayList;
+import java.io.Reader;
+import java.io.StringReader;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -27,7 +25,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
@@ -56,7 +53,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
     public static String creatorProgram = "nomad";
     public static String creatorVersion = "v0.1";
     public static String creatorRelease = "development build";
-    
+  
     Synth synth = null;
 
 	JFileChooser fileChooser = new JFileChooser("./src/data/patches/");
@@ -498,14 +495,11 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 						String name = viewManager.getTitleAt(0);
 						PatchGUI patchGUI = (PatchGUI) viewManager.getDocumentAt(0);
 						viewManager.removeDocument(patchGUI);
-						
+
 						Patch patch = new Patch();
-						patchGUI = (PatchGUI) Patch.createPatch(
-							new StringBufferInputStream(
-								patchGUI.getPatch().savePatch().toString()
-							),patch
-						);
-										
+						Reader r = new StringReader(patchGUI.getPatch().savePatch().toString());
+						patchGUI = (PatchGUI) Patch.createPatch(r, patch);
+
 						if (patchGUI!=null)
 							viewManager.addDocument(name, patchGUI);
 					}

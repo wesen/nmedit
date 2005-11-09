@@ -12,6 +12,10 @@ import javax.swing.BorderFactory;
 import nomad.graphics.BackgroundRenderer;
 import nomad.misc.JPaintComponent;
 
+/**
+ * @author Christian Schneider
+ * @hidden
+ */
 public class VocoderBandDisplay extends JPaintComponent {
 
 	public final static int NUM_BANDS = 16; // number of bands
@@ -130,7 +134,7 @@ public class VocoderBandDisplay extends JPaintComponent {
 
 		if (renderer!=null) {
 			// draw background
-			renderer.drawTo(this, this.getSize(), g);
+			renderer.drawTo(this, g);
 		}
 		else {
 			g.setColor(getBackground());

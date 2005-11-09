@@ -68,9 +68,13 @@ public class Patch {
         return cables;
     }
 
-	public static JPanel createPatch(InputStream in, Patch patch) {
-        Patch.loadPatch(new InputStreamReader(in), patch);
+	public static JPanel createPatch(Reader in, Patch patch) {
+        Patch.loadPatch(in, patch);
 		return Patch.createPatchUI(patch);
+	}
+
+	public static JPanel createPatch(InputStream in, Patch patch) {
+		return createPatch(new InputStreamReader(in), patch);
 	}
     
 	public static JPanel createPatch(String patchFile, Patch patch) {

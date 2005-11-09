@@ -7,7 +7,6 @@ import javax.swing.event.ChangeListener;
 
 import nomad.gui.model.UIFactory;
 import nomad.gui.model.component.AbstractConnectorUI;
-import nomad.misc.FontInfo;
 import nomad.model.descriptive.DConnector;
 
 public class DefaultConnectorUI extends AbstractConnectorUI {
@@ -47,7 +46,7 @@ public class DefaultConnectorUI extends AbstractConnectorUI {
 		if (connector==null) {
 			theLabel.setIcon(null);
 			theLabel.setText("<<connector>>");
-			theLabel.setSize(FontInfo.getTextRect(theLabel.getText(),theLabel.getFont(),theLabel));
+			theLabel.setSize(theLabel.getPreferredSize());
 		} else {
 			ImageIcon icon = new ImageIcon(connector.getIcon(isConnectorFree()));
 			theLabel.setIcon(icon);

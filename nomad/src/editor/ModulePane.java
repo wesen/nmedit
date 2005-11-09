@@ -21,7 +21,6 @@ import javax.swing.JLabel;
 import nomad.gui.AbstractModuleGUI;
 import nomad.gui.model.UIFactory;
 import nomad.gui.model.component.AbstractUIComponent;
-import nomad.misc.FontInfo;
 import nomad.model.descriptive.DModule;
 
 public class ModulePane extends AbstractModuleGUI {
@@ -37,7 +36,7 @@ public class ModulePane extends AbstractModuleGUI {
 		this.module = module;
 		title = new JLabel(module.getName());
 		
-		title.setSize(FontInfo.getTextRect(title.getText(), title.getFont(), title));
+		title.setSize(title.getPreferredSize());
 		title.setLocation(0,0);
 		this.add(title);
 		
@@ -148,8 +147,8 @@ public class ModulePane extends AbstractModuleGUI {
 		add(component);
 	}
 	
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
+	public void paintBuffer(Graphics g) {
+		super.paintBuffer(g);
 				
 		if (csl.rect!=null) {
 			g.setColor(Color.LIGHT_GRAY);

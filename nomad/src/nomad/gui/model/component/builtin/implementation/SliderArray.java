@@ -8,6 +8,10 @@ import javax.swing.JComponent;
 
 import nomad.graphics.BackgroundRenderer;
 
+/**
+ * @author Christian Schneider
+ * @hidden
+ */
 public class SliderArray extends JComponent {
 
 	private SimpleSlider[] sliders = new SimpleSlider[] {};
@@ -36,7 +40,7 @@ public class SliderArray extends JComponent {
 	public void paintComponent(Graphics g) {
 		if (isOpaque()) {
 			if (renderer!=null) {
-				renderer.drawTo(this, this.getSize(), g);
+				renderer.drawTo(this, g);
 				return;
 			} 
 		}

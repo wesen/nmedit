@@ -23,6 +23,10 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Rectangle2D;
 
+/**
+ * @author Ian Hoogebom
+ * @hidden
+ */
 public class NomadKnobGrafix extends NomadParameterObject
 {    
     //private int SHADOWX = 1;

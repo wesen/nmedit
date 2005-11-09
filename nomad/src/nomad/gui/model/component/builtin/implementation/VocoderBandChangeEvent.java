@@ -1,6 +1,10 @@
 package nomad.gui.model.component.builtin.implementation;
 
 
+/**
+ * @author Christian Schneider
+ * @hidden
+ */
 public class VocoderBandChangeEvent {
 
 	private boolean allBandsChanged = false;

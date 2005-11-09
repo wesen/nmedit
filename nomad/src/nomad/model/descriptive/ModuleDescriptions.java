@@ -1,10 +1,10 @@
 package nomad.model.descriptive;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Vector;
 
 import nomad.misc.ImageTracker;
 import nomad.model.descriptive.substitution.Substitution;
@@ -18,20 +18,33 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
+ * A container for all module relevant information.
+ * 
  * @author Christian Schneider
  * @composed 1 - n nomad.model.descriptive.DGroup
  */
 public class ModuleDescriptions {
 
+	/** Hashmap containing the pairs (DModule.getKey(), DModule) */
 	private HashMap dmodules = new HashMap();
-	private Vector dgroups = new Vector();
-	
+	/** The groups */
+	private ArrayList dgroups = new ArrayList();
+	/** the static data */
 	public static ModuleDescriptions model = null;
 	
+	/**
+	 * Initializes the static model by loading all data from the xml file 
+	 * @param xmlfile the xml file
+	 * @param subs the substitution xml file reader
+	 */
 	public static void init(String xmlfile, XMLSubstitutionReader subs) {
 		model = new ModuleDescriptions(xmlfile, subs);
 	}
 
+	/**
+	 * Loads the module icons
+	 * @param imageTracker the image source
+	 */
 	public void loadImages(ImageTracker imageTracker) {
 		DConnector.setImageTracker(imageTracker);
 		//DConnector.loadImages(imageTracker);
@@ -43,22 +56,45 @@ public class ModuleDescriptions {
 		}
 	}
 
+	/**
+	 * Retuns a module by it's key
+	 * @param key the key
+	 * @return the module
+	 */
 	public DModule getModuleByKey(String key) {
 		return (DModule) dmodules.get(key);
 	}
 
+	/**
+	 * Returns a module by it's id
+	 * @param id the id
+	 * @return the module
+	 */
 	public DModule getModuleById(int id) {
 		return getModuleByKey(DModule.getKeyFromId(id));
 	}
 	
+	/**
+	 * Returns a toolbar group at given index
+	 * @param index the index
+	 * @return the group
+	 */
 	public DToolbarGroup getGroup(int index) {
 		return (DToolbarGroup) dgroups.get(index);
 	}
 	
+	/**
+	 * Returns the number of groups
+	 * @return the number of groups
+	 */
 	public int getGroupCount() {
 		return dgroups.size();
 	}
 	
+	/**
+	 * Returns a collection containing all DModule objects
+	 * @return a collection containing all DModule objects
+	 */
 	public Collection getModules() {
 		return dmodules.values();
 	}

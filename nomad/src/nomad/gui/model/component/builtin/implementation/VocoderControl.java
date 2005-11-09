@@ -10,6 +10,10 @@ import javax.swing.JComponent;
 import nomad.misc.GridButtonComponent;
 import nomad.misc.GridButtonModel;
 
+/**
+ * @author Christian Schneider
+ * @hidden
+ */
 public class VocoderControl extends JComponent {
 
 	private VocoderBandDisplay display = null;

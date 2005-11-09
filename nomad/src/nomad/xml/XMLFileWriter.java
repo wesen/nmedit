@@ -6,22 +6,40 @@ import java.io.PrintStream;
 import java.util.Vector;
 
 /**
- * The xml file writer class.
- * @author christian Schneider
- *
+ * A class that allows to write xml files.
+ * 
+ * @author Christian Schneider
  */
 public class XMLFileWriter extends PrintStream {
 
+	// line offset, or height of current node
 	private int offset = 0;
+	// if we are in a new line 
 	private boolean freshLine = true;
+	// stack containing the nodes from the current node to the top node
 	private Vector elementStack = new Vector();
 
+	// current tag is a closed tag
+	private boolean closed = false;
+	
+	/**
+	 * Creates a new xml file. xmlProlog will be inserted at the beginning of the file.
+	 * @param file the file name
+	 * @param xmlProlog the prolog
+	 * @param docType the doc type declaration
+	 * @throws FileNotFoundException
+	 */
 	public XMLFileWriter(String file, String xmlProlog, String docType) throws FileNotFoundException {
 		super(new FileOutputStream(file));
 		prolog(xmlProlog, docType);
 	}
-	
-	public void enteredSection(boolean enter) {
+
+	/**
+	 * Updates the offset. The offset is incremented if a new section has been entered,
+	 * otherwise it is decremented.
+	 * @param enter
+	 */
+	private void enteredSection(boolean enter) {
 		offset += enter?+1:-1;
 		if (offset<0) {
 			System.err.println("** Warning Negative offset in "+getClass().getName());
@@ -29,8 +47,10 @@ public class XMLFileWriter extends PrintStream {
 		}
 	}
 
-	private boolean closed = false;
-	
+	/**
+	 * Closes the file. This method must be called, otherwise the xml file
+	 * might not be valid or does not contain all information.
+	 */
 	public void close() {
 		if (!closed) {
 			epilog();
@@ -39,6 +59,10 @@ public class XMLFileWriter extends PrintStream {
 		super.close();
 	}
 	
+	/**
+	 * Pushes an element to the stack
+	 * @param element the element
+	 */
 	private void push(String element) {
 		elementStack.add(element);
 	}
@@ -51,6 +75,12 @@ public class XMLFileWriter extends PrintStream {
 			return (String) elementStack.lastElement();
 	}*/
 	
+	/**
+	 * Removes an element from the stack.
+	 * If the stack was empty null is returned, otherwise the name
+	 * of the element is returned
+	 * @return the element name
+	 */
 	private String pop() {
 		if (elementStack.size()==0)
 			return null;
@@ -61,15 +91,27 @@ public class XMLFileWriter extends PrintStream {
 		}
 	}
 
+	/**
+	 * Writes the prolog for the xml file.
+	 * @param xmlProlog
+	 * @param docType
+	 */
 	protected void prolog(String xmlProlog, String docType) {
 		println(xmlProlog);
 		println(docType);
 	}
 
+	/**
+	 * Writes the epilog for the xml file.
+	 */
 	protected void epilog() {
 		//
 	}
 
+	/**
+	 * If the current line is a new line spaces are
+	 * inserted according to the offset attribute.
+	 */
 	private void addLineOffset() {
 		if (freshLine) {
 			for (int i=0;i<offset;i++)
@@ -78,20 +120,39 @@ public class XMLFileWriter extends PrintStream {
 		}
 	}
 
+	/**
+	 * Writes a new tag. If hasChildren is true endTag must be called later.
+	 * @param elementName
+	 * @param hasChildren true if the node has children
+	 */
 	public void beginTag(String elementName, boolean hasChildren) {
 		beginTagStart(elementName);
 		beginTagFinish(hasChildren);
 	}
 	
+	/**
+	 * Writes a new tag, but does not finish it for now, so that attributes
+	 * can be written.
+	 * @param elementName
+	 */
 	public void beginTagStart(String elementName) {
 		print("<"+elementName);
 		push(elementName);
 	}
 
+	/**
+	 * Writes an attribute for the current element.
+	 * @param attributeName
+	 * @param value
+	 */
 	public void addAttribute(String attributeName, String value) {
 		print(" "+attributeName+"=\""+strToXMLstr(value)+"\"");
 	}
 
+	/**
+	 * Finishes the tag. If hasChildren is true endTag must be called later.
+	 * @param hasChildren
+	 */
 	public void beginTagFinish(boolean hasChildren) {
 		if (hasChildren) {
 			println(">");
@@ -102,11 +163,20 @@ public class XMLFileWriter extends PrintStream {
 		}
 	}
 
+	/**
+	 * Writes the end tag for the current element.
+	 */
 	public void endTag() {
 		enteredSection(false);
 		println("</"+pop()+">");
 	}
 	
+	/**
+	 * Removes illegal characters from string.
+	 * For now the '&' character is the only one replaced (by '&amp;amp;')
+	 * @param str the string
+	 * @return the xml conform string
+	 */
 	public String strToXMLstr(String str) {
 		return str.replaceAll("&","&amp;");
 	}

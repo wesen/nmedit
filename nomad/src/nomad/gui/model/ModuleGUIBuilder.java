@@ -13,9 +13,11 @@ import nomad.gui.model.component.AbstractUIControl;
 import nomad.gui.model.property.ConnectorProperty;
 import nomad.gui.model.property.ParamPortProperty;
 import nomad.gui.model.property.Property;
+import nomad.model.descriptive.DConnector;
 import nomad.model.descriptive.DModule;
 import nomad.model.descriptive.DParameter;
 import nomad.model.descriptive.ModuleDescriptions;
+import nomad.patch.Connector;
 import nomad.patch.Module;
 import nomad.plugin.cache.ModulePropertyCallback;
 import nomad.plugin.cache.UICache;
@@ -54,7 +56,7 @@ public class ModuleGUIBuilder {
 
 	public static void createGUIComponents(AbstractModuleGUI target, Module module, DModule info) {
 		if (instance.cache!=null) { 			
-			if (instance.cache.loadModule(info.getModuleID(), instance.getBuilder(target, info))) ;
+			if (instance.cache.loadModule(info.getModuleID(), instance.getBuilder(module, target, info))) ;
 		} else {
 		
 			Node moduleNode = (Node) instance.xmlModuleNodes.get(new Integer(info.getModuleID()));
@@ -65,8 +67,8 @@ public class ModuleGUIBuilder {
 		}
 	}
 	
-	public ModuleBuilder getBuilder(AbstractModuleGUI target, DModule info) {
-		return new ModuleBuilder(target, info);
+	public ModuleBuilder getBuilder(Module module, AbstractModuleGUI target, DModule info) {
+		return new ModuleBuilder(module, target, info);
 	}
 	
 	private void buildModulePanelAndGuessLook(AbstractModuleGUI target, Module module, DModule moduleInfo) {
@@ -106,6 +108,10 @@ public class ModuleGUIBuilder {
 				cui.setConnectorInfoAdapter(moduleInfo.getConnector(i));
 				cui.getComponent().setLocation(pad+i*18,pad+line*lineHeight);
 				target.add(cui);
+				
+				Connector c = module.findConnector(cui.getConnectorInfoAdapter());
+				if (c!=null)
+					c.setUI(cui);
 			}			
 			
 		}
@@ -199,7 +205,7 @@ public class ModuleGUIBuilder {
 	private ModuleGUI buildModuleWithCache(Module module, ModuleSectionGUI moduleSectionGUI, DModule moduleInfo) {
 		ModuleGUI modulegui = createModulePaneGUI(module, moduleSectionGUI);
 		
-		ModuleBuilder builder = new ModuleBuilder(modulegui, module.getDModule());
+		ModuleBuilder builder = new ModuleBuilder(module, modulegui, module.getDModule());
 		if (cache.loadModule(moduleInfo.getModuleID(), builder)) {
 			return modulegui;
 		} else
@@ -210,12 +216,15 @@ public class ModuleGUIBuilder {
 
 		private AbstractModuleGUI modulegui = null;
 		private AbstractUIComponent component = null;
+		private Module module = null;
 		private DModule info = null;
 		
-		public ModuleBuilder(AbstractModuleGUI modulegui, DModule info) {
+		public ModuleBuilder(Module module, AbstractModuleGUI modulegui, DModule info) {
 			this.modulegui = modulegui;
 			this.info = info;
+			this.module = module;
 		}
+		
 		
 		public void readComponent(String className) throws UICacheException {
 			// create the component
@@ -224,7 +233,7 @@ public class ModuleGUIBuilder {
 				throw new UICacheException("Class not found '"+className+"'.");
 			modulegui.add(component);
 		}
-
+		
 		public void readComponentProperty(String propertyId, String value) throws UICacheException {
 			if (component==null)
 				throw new UICacheException("No component");
@@ -250,9 +259,15 @@ public class ModuleGUIBuilder {
 					String connectorId = splitted[1];
 					boolean isInput = /*splitted.length<=2 || */splitted[2].equals("input");
 					
-					((ConnectorProperty)property).setConnector(
-						info.getConnectorById(Integer.parseInt(connectorId),isInput )
-					);
+					DConnector cinfo = info.getConnectorById(Integer.parseInt(connectorId),isInput);
+					
+					((ConnectorProperty)property).setConnector(cinfo);
+					
+					if (component instanceof AbstractConnectorUI) {
+						Connector c = module.findConnector(cinfo);
+						if (c!=null)
+							c.setUI((AbstractConnectorUI)component);
+					}
 				} catch (Exception e) {
 					System.err.println("Current property:"+propertyId+","+value);
 					e.printStackTrace();
@@ -319,9 +334,15 @@ public class ModuleGUIBuilder {
 								propertyValue = splitted[1];
 								boolean isInput = /*splitted.length<=2 || */splitted[2].equals("input");
 								
-								((ConnectorProperty)property).setConnector(
-									info.getConnectorById(Integer.parseInt(propertyValue),isInput )
-								);
+								DConnector cinfo = info.getConnectorById(Integer.parseInt(propertyValue),isInput);
+								((ConnectorProperty)property).setConnector(cinfo);
+								
+								if (component instanceof AbstractConnectorUI) {
+									Connector c = module.findConnector(cinfo);
+									if (c!=null)
+										c.setUI((AbstractConnectorUI)component);
+								}
+								
 							} catch (Exception e) {
 								System.err.println("Current property:"+propertyID+","+propertyValue);
 								e.printStackTrace();

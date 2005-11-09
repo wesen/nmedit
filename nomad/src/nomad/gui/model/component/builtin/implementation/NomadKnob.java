@@ -2,9 +2,10 @@ package nomad.gui.model.component.builtin.implementation;
 
 import java.awt.Dimension;
 
-
-
-
+/**
+ * @author Ian Hoogebom
+ * @hidden
+ */
 public class NomadKnob extends NomadKnobGrafix /*implements ChangeListener*/ {
 
     public final static int LARGE = 1;

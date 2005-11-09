@@ -8,24 +8,69 @@ import nomad.gui.model.property.ComponentSizeProperty;
 import nomad.gui.model.property.Property;
 import nomad.gui.model.property.PropertyList;
 
+/**
+ * A class for setting up a user interface component that will be placed on the module. 
+ * 
+ * <p>
+ * <ul>
+ * <li>For setting up a connector component use AbstractConnectorUI that is derived from this class.</li>
+ * <li>For setting up a parameter controlling or displaying component use AbstractUIControl that is derived from this class.</li>
+ * <li>For any other decorating component use this class as base.</li>
+ * </ul>
+ * </p>
+ * 
+ * This class uses {@link nomad.gui.model.property.Property} to provide access to the components
+ * properties by the module editor and finally to load and save their values to the
+ * xml file so that they can have individual values.
+ * 
+ * @author Christian Schneider
+ */
 public abstract class AbstractUIComponent {
 
+	/** The properties */
 	private PropertyList properties = new PropertyList();
+	/** The ui component */
 	private Component component = null;
+	/** The location property */
 	private ComponentLocationProperty clp = null;
+	/** The size property */
 	private ComponentSizeProperty csp = null;
-	private boolean isFix = false;
+	/** true if the component does change it's behaviour */
+	private boolean isDecorating = false;
+	/** the ui factory that has created this instance */
+	private UIFactory factory = null;
 
+	/**
+	 * Creates a new user interface component.
+	 * @param factory the factory that has created this component
+	 */
 	public AbstractUIComponent(UIFactory factory) {
-		;
+		this.factory = factory;
 	}
 
-	public boolean isFixComponent() {
-		return isFix;
+	/**
+	 * Returns the factory that has created this component
+	 * @return the factory that has created this component
+	 */
+	public UIFactory getFactory() {
+		return factory;
+	}
+
+	/**
+	 * Returns true if this component can change it's look anytime. 
+	 * @return true if this component can change it's look anytime.
+	 */
+	public boolean isDecoratingComponent() {
+		return isDecorating;
 	}
 	
-	public void setFixComponent(boolean enable) {
-		isFix = enable;
+	/**
+	 * Sets the decorating property
+	 * @param enable true if component is a decorating component and does not change it's behaviour
+	 * @see #isDecoratingComponent()
+	 */
+	public void setAsDecoratingDocument(boolean enable) {
+		isDecorating = enable;
 	}
 	
 	/**
@@ -153,7 +198,8 @@ public abstract class AbstractUIComponent {
 	}
 
 	/**
-	 * Returns the name of the ui component
+	 * Returns the name of the ui component.
+	 * If this component is a label the method could return 'label'
 	 * @return the name of the ui component
 	 */
 	public abstract String getName();

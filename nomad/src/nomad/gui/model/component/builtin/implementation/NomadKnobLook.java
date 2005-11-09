@@ -16,6 +16,10 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 
+/**
+ * @author Ian Hoogebom
+ * @hidden
+ */
 public class NomadKnobLook
 {
     public final static Color DEFAULT_FOCUS_COLOR = new Color(0x8080ff);

@@ -10,17 +10,20 @@ import nomad.gui.model.component.AbstractUIComponent;
 import nomad.xml.XMLFileWriter;
 
 /**
+ * A class used to access a components property either by it's real type
+ * or using a string representation of the value.
+ * 
  * @author Christian Schneider
  */
 public abstract class Property {
 	
-	// display name of the property
+	/** display name of the property */
 	private String displayName;
 	
-	// the affected component
+	/** the affected component */
 	private AbstractUIComponent uicomponent;
 	
-	// Change Listeners
+	/** Change Listeners that will be notified by changes */
 	private ArrayList listeners = new ArrayList();
 	
 	/**
@@ -33,6 +36,10 @@ public abstract class Property {
 		this.uicomponent = uicomponent;
 	}
 
+	/**
+	 * Returns the ui component this property belongs to
+	 * @return the ui component this property belongs to
+	 */
 	public AbstractUIComponent getComponentUI() {
 		return uicomponent;
 	}
@@ -88,7 +95,7 @@ public abstract class Property {
 	protected abstract void setInternalValue(Object value);
 
 	/**
-	 * Returns the internal value represented by str
+	 * Returns the internal value represented as string
 	 * @param representation the string representation
 	 * @return the object represented by str
 	 */
@@ -173,7 +180,7 @@ public abstract class Property {
 			out.beginTagFinish(false); // finish element
 		}
 	}
-	
+
 	protected String getAsXMLValue(Object value) {
 		return value.toString();
 	}

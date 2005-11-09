@@ -10,6 +10,11 @@ import nomad.gui.model.component.builtin.implementation.SimpleSlider;
 import nomad.gui.model.component.builtin.implementation.SliderArray;
 import nomad.model.descriptive.DParameter;
 
+/**
+ * A user interface containing 16 ports using the {@link nomad.gui.model.component.builtin.implementation.SimpleSlider}
+ * 
+ * @author Christian Schneider
+ */
 public class SliderArrayUI extends AbstractUIControl {
 	
 	private SliderArray sarray = new SliderArray();

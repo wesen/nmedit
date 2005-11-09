@@ -2,6 +2,11 @@ package plugin.classictheme;
 
 import nomad.plugin.NomadFactory;
 
+/**
+ * The classic theme plugin.
+ * 
+ * @author Christian Schneider
+ */
 public class NomadPlugin extends nomad.plugin.NomadPlugin {
 
 	private final
