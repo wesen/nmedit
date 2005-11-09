@@ -2,28 +2,40 @@ package nomad.plugin;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import nomad.com.NullComPortPlugin;
 import nomad.gui.model.UIFactory;
 
+/**
+ * The plugin manager.
+ * 
+ * @author Christian Schneider
+ */
 public class PluginManager {
 	
-	private static Vector plugins = new Vector();
+	// contains the NomadPlugin objects
+	private static ArrayList plugins = new ArrayList();
 	
+	/**
+	 * Loads all plugins contained int the 'plugin' directory.
+	 * A plugin is either a jar file or a directory containing
+	 * the NomadPlugin class.
+	 */
 	public static void init() {
-		plugins = new Vector();
-		
-		loadDefaultPlugins();
+		// reset plugin list
+		plugins = new ArrayList();
+
+		// load built in plugins
+		loadBuiltinPlugins();
 		
 		ClassLoader cloader = PluginManager.class.getClassLoader();
-
 		URL url = cloader.getResource("plugin");
 		if (url == null) {
 			System.err.println("PluginManager: Plugin Folder missing.");
 			return;
 		}
-		
+
 		File[] candidates = (new File(url.getFile())).listFiles();
 		for (int i=0;i<candidates.length;i++) {
 			String class_name = "plugin."+candidates[i].getName()+".NomadPlugin";
@@ -39,18 +51,34 @@ public class PluginManager {
 		}
 	}
 	
-	private static void loadDefaultPlugins() {
+	/**
+	 * loads built in plugins
+	 */
+	private static void loadBuiltinPlugins() {
 		plugins.add(new NullComPortPlugin());
 	}
 	
+	/**
+	 * Returns the number of available plugins
+	 * @return the number of available plugins
+	 */
 	public static int getPluginCount() {
 		return plugins.size();
 	}
 	
+	/**
+	 * Returns a plugin at the given index.
+	 * @param index the index
+	 * @return the plugin
+	 */
 	public static NomadPlugin getPlugin(int index) {
 		return (NomadPlugin) plugins.get(index);
 	}
 	
+	/**
+	 * Returns the default UIFactory instance.
+	 * @return the default UIFactory instance.
+	 */
 	public static UIFactory getDefaultUIFactory() {
 		for (int i=0;i<getPluginCount();i++) {
 			NomadPlugin plugin = getPlugin(i);

@@ -2,29 +2,41 @@ package nomad.plugin;
 
 import java.io.File;
 
+/**
+ * The plugin class.
+ * @author Christian Schneider
+ */
 public abstract class NomadPlugin { 
 
 	/**
-	 * Must be returned by getFactoryType() if
+	 * Must be returned by <code>getFactoryType()</code> if
 	 * the plugin implements the ComPort interface. 
 	 */
 	public final static int NOMAD_FACTORY_TYPE_COMPORT = 0;
 	
 	/**
-	 * Must be returned by getFactoryType() if
-	 * the plugin implements the UIBuilder interface. 
+	 * Must be returned by <code>getFactoryType()</code> if
+	 * the plugin implements the UIFactory interface. 
 	 */
 	public final static int NOMAD_FACTORY_TYPE_UI = 1;
 	
 	/**
-	 * @see NomadPlugin#getLocation()
+	 * @see #getLocation()
 	 */
 	private File location = null;
 	
+	/**
+	 * Creates an instance of the plugin.
+	 */
 	public NomadPlugin() {
 		//
 	}
 	
+	/**
+	 * Sets the location of the plugin.
+	 * @param f the location
+	 * @see #getLocation()
+	 */
 	void setLocation(File f) {
 		this.location = f;
 	}

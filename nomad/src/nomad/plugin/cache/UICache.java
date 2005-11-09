@@ -1,64 +1,57 @@
 package nomad.plugin.cache;
 
 import java.awt.Point;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+/**
+ * A class to read the ui cache file.
+ * 
+ * @author Christian Schneider
+ */
 public class UICache {
 
-	RandomAccessFile raf = null;
-	private long[] linestarters = new long[]{};
+	private ArrayList lines = new ArrayList();
+	
+	// array that translates a module-id (array-index) to the index in the linestarters array
+	// that contains the file position of the module
 	private int[] moduleToLineStarters = new int[]{};
 	
+	/**
+	 * Creates the cache accessor object. 
+	 * @param file the cache file name
+	 * @throws FileNotFoundException
+	 */
 	public UICache(String file) throws FileNotFoundException {
-		raf = new RandomAccessFile(file, "r" /*only for reading*/);
-		
-		createIndex();
+		try {
+			createIndex(new BufferedReader(new InputStreamReader(new FileInputStream(file))));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
+	// resets the arrays
 	private void reset() {
-		linestarters = new long[]{};
 		moduleToLineStarters = new int[]{};
 	}
 	
-	private void createIndex() {
+	// builds the index for the arrays
+	private void createIndex(BufferedReader in) throws IOException {
+		reset();
 		String line = null;
-		long pos = 0;
-		ArrayList tmpLineIndex = new ArrayList();
 		ArrayList tmpModuleLineIndex = new ArrayList();
-		
-		try {
-			raf.seek(0);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			reset(); // reset arrays
-			return ;
-		}
-		
-		try {
-			while (raf.getFilePointer()<raf.length()) {
-				line=raf.readLine();
-				if (line.startsWith("module")) 
-					// remember pair (module id, lineStarters.index)
-					tmpModuleLineIndex.add(new Point(Integer.parseInt(line.split(" ")[1]), tmpLineIndex.size()));
+		while ((line=in.readLine())!=null) {
+			if (line.startsWith("module")) {
+				// remember pair (module id, lineStarters.index)
+				tmpModuleLineIndex.add(new Point(Integer.parseInt(line.split(" ")[1]), lines.size()));
+			}	
+			lines.add(line);
+		};
 
-				tmpLineIndex.add(new Long(pos)); // remember line start position
-				// remeber position for next line
-				pos = raf.getFilePointer();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-			reset(); // reset arrays
-			return ;
-		}
-
-		// store line positions
-		linestarters = new long[tmpLineIndex.size()];
-		for (int i=0;i<tmpLineIndex.size();i++)
-			linestarters[i]=((Long)tmpLineIndex.get(i)).longValue();
-		
 		// fill array with invalid indices
 		moduleToLineStarters = new int[128];
 		for (int i=0;i<moduleToLineStarters.length;i++) 
@@ -69,32 +62,31 @@ public class UICache {
 			Point p = (Point) tmpModuleLineIndex.get(i);
 			moduleToLineStarters[p.x/*module-id*/] = p.y/*array index*/;
 		}
+		
 	}
 	
+	// returns the array index of module with given id, or -1 if the id does not exist
 	private int getArrayIndexForModule(int moduleId) {
 		return (moduleId>=0&&moduleId<moduleToLineStarters.length)
 			? moduleToLineStarters[moduleId]
 			: -1;
 	}
 	
+	/**
+	 * Loads the module with given moduleId by triggering the callback object.
+	 * @param moduleId the searched module
+	 * @param callback 
+	 * @return false if the module does not exist, or an error has occured.
+	 */
 	public boolean loadModule(int moduleId, ModulePropertyCallback callback) {
 		int moduleStartIndex = getArrayIndexForModule(moduleId);
 		if (moduleStartIndex<0)
 			// module not found
 			return false;
-	
-		try {
-			// go to position in file
-			raf.seek(linestarters[moduleStartIndex]);
-		} catch (IOException e) {
-			//TODO throw exception
-			e.printStackTrace();
-			return false;
-		}
-		
+
 		// read module section
 		try {
-			readModuleProperties(callback);
+			readModuleProperties(callback, moduleStartIndex);
 		} catch (UICacheException e) {
 			// TODO throw exception
 			System.err.println("** Error in properties for module (id="+moduleId+")");
@@ -105,43 +97,48 @@ public class UICache {
 		return true;
 	}
 	
-	private void readModuleProperties(ModulePropertyCallback callback)
+	/**
+	 * Reads the module section. The file position must moved to the begin
+	 * of such a section before. All properties are passed through the
+	 * callback object
+	 * 
+	 * @param callback the callback object
+	 * @param moduleStartIndex 
+	 * @throws UICacheException
+	 */
+	private void readModuleProperties(ModulePropertyCallback callback, int moduleStartIndex)
 		throws UICacheException {
-		try {
-			raf.readLine(); // read line 'module ...'
-			while (raf.getFilePointer()<raf.length()) {
-				String line = raf.readLine();
-				if (line.startsWith("module"))
-					// finished
-					return;
-				else if (line.startsWith("component")) {
-					line = line.substring("component".length()).trim();
-					callback.readComponent(line);
-				}
-				else if (line.startsWith("property")) {
-					line = line.substring("property".length()).trim();
-					int firstStarterline = line.indexOf(" ");
-					String propertyId;
-					String value;
-
-					if (firstStarterline>0) {
-						propertyId = line.substring(0,firstStarterline);
-						value = line.substring(firstStarterline);
-						propertyId = propertyId.trim();
-						value = value.trim();
-					} else {
-						propertyId = line;
-						value = " ";
-					} 
-					callback.readComponentProperty(propertyId, value);
-				}
-				else {
-					System.err.println("Unknown entry:'"+line+"'");
-					//throw new UICacheException("Unknown entry:'"+line+"'");
-				}
+		moduleStartIndex++; // read line 'module ...'
+		while (moduleStartIndex<lines.size()) {
+			String line = (String) lines.get(moduleStartIndex);
+			if (line.startsWith("module"))
+				// finished
+				return;
+			else if (line.startsWith("component")) {
+				callback.readComponent(line.substring("component".length()).trim());
 			}
-		} catch (IOException e) {
-			throw new UICacheException(e);
+			else if (line.startsWith("property")) {
+				line = line.substring("property".length()).trim();
+				int firstStarterline = line.indexOf(" ");
+				String propertyId;
+				String value;
+
+				if (firstStarterline>0) {
+					propertyId = line.substring(0,firstStarterline);
+					value = line.substring(firstStarterline);
+					propertyId = propertyId.trim();
+					value = value.trim();
+				} else {
+					propertyId = line;
+					value = " ";
+				} 
+				callback.readComponentProperty(propertyId, value);
+			}
+			else {
+				System.err.println("Unknown entry:'"+line+"'");
+				//throw new UICacheException("Unknown entry:'"+line+"'");
+			}
+			moduleStartIndex++;
 		}
 	}
 	

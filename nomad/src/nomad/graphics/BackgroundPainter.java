@@ -8,13 +8,28 @@ import java.awt.Rectangle;
 
 import javax.swing.ImageIcon;
 
+/**
+ * A class that fills an area with an image. 
+ * 
+ * @author Christian Schneider
+ */
 public class BackgroundPainter {
 
+	// the component that ownes the background painter
 	private Component comp = null;
+	
+	// the fill
 	private Image tile = null;
+	
+	// image size
 	private int iw = 0;
 	private int ih = 0;
-	
+
+	/**
+	 * Creates a BackgroundPainter object for a Component
+	 * @param comp the component that should be filled 
+	 * @param tile the image used to fill the background
+	 */
 	public BackgroundPainter(Component comp, Image tile) {
 		this.comp = comp;
 		this.tile = tile;
@@ -29,14 +44,39 @@ public class BackgroundPainter {
 		}
 	}
 	
+	/**
+	 * Returns the fill image
+	 * @return the fill image
+	 */
 	public Image getTile() {
 		return tile;
 	}
 
+	/**
+	 * Fills the background with the image. If the image is null
+	 * the background will be painted using the components background
+	 * color.
+	 * 
+	 * The clip bounds of the graphics object are checked so that
+	 * only the necessary parts are filled.
+	 * 
+	 * @param g the graphics context
+	 */
 	public void paintBackground(Graphics g) {
 		paintBackground(g, comp.getBackground());
 	}
 
+	/**
+	 * Fills the background with the image. If the image is null
+	 * the background will be painted using the alternativeBackground
+	 * color.
+	 * 
+	 * The clip bounds of the graphics object are checked so that
+	 * only the necessary parts are filled.
+	 * 
+	 * @param g the graphics context
+	 * @param alternativeBackground alternative fill color
+	 */
 	public void paintBackground(Graphics g, Color alternativeBackground) {
 		int tw = comp.getWidth();
 		int th = comp.getHeight();

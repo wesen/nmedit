@@ -8,36 +8,80 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /** 
- * Simple container for storing images and associating them with a key
+ * A container for storing images and associating them with a key.
+ * 
  * @author Christian Schneider
  */
 public class ImageTracker {
 
+	/**
+	 * If a new image should be added and has the same key as an existing
+	 * image it will be replace the old image. 
+	 */
 	public final static int IMAGE_TRACKER_ALLOW_REPLACE = 0;
-	public final static int IMAGE_TRACKER_DISALLOW_REPLACE = 1;
-	HashMap images = new HashMap();
-	private int mode = -1;
 	
+	/**
+	 * If a new image should be added and has the same key as an existing
+	 * image it will be ignored. 
+	 */
+	public final static int IMAGE_TRACKER_DISALLOW_REPLACE = 1;
+	
+	// Pairs (String, Image)
+	HashMap images = new HashMap();
+	
+	// one of IMAGE_TRACKER_ALLOW_REPLACE or IMAGE_TRACKER_DISALLOW_REPLACE
+	private int policy = IMAGE_TRACKER_ALLOW_REPLACE;
+	
+	/**
+	 * Creates a ImageTracker instance using IMAGE_TRACKER_ALLOW_REPLACE as
+	 * policy.
+	 * 
+	 * @see #IMAGE_TRACKER_ALLOW_REPLACE
+	 */
 	public ImageTracker() {
 		this(IMAGE_TRACKER_ALLOW_REPLACE);
 	}
 
-	public ImageTracker(int mode) {
-		this.mode = mode;
+	/**
+	 * Creates a ImageTracker instance using custom policy. 
+	 * 
+	 * @param policy one of IMAGE_TRACKER_ALLOW_REPLACE or IMAGE_TRACKER_DISALLOW_REPLACE
+	 *  If police is none one of these the default policy, IMAGE_TRACKER_ALLOW_REPLACE
+	 *  is used.  
+	 * @see #IMAGE_TRACKER_ALLOW_REPLACE
+	 * @see #IMAGE_TRACKER_DISALLOW_REPLACE
+	 */
+	public ImageTracker(int policy) {
+		switch (policy) {
+			case IMAGE_TRACKER_ALLOW_REPLACE:
+			case IMAGE_TRACKER_DISALLOW_REPLACE:
+				this.policy = policy;
+				break;
+			default:
+				this.policy = IMAGE_TRACKER_ALLOW_REPLACE;
+				break;
+		}
 	}
 	
 	/**
-	 * Puts an image to the hashmap
-	 * @param key key for the image
+	 * Puts an image to the tracker according to the 
+	 * policy.
+	 * 
+	 * @param key the key for the image
 	 * @param image the image
+	 * 
+	 * @see #IMAGE_TRACKER_ALLOW_REPLACE
+	 * @see #IMAGE_TRACKER_DISALLOW_REPLACE
 	 */
 	public void putImage(String key, Image image) {
-		if (mode==IMAGE_TRACKER_ALLOW_REPLACE||!images.containsKey(key))
+		if (policy==IMAGE_TRACKER_ALLOW_REPLACE||!images.containsKey(key))
 			images.put(key, image);
 	}
 
 	/**
-	 * Returns the image with the given key
+	 * Returns the image with the given key or null if
+	 * no image is associated with the key.
+	 * 
 	 * @param key the key
 	 * @return the image
 	 */
@@ -46,9 +90,10 @@ public class ImageTracker {
 	}
 
 	/**
-	 * Returns an iterator that iterates over strings that are
-	 * valid keys for the images
-	 * @return iterator
+	 * Returns an iterator that iterates over the 
+	 * String objects that represent all valid keys,
+	 * 
+	 * @return iterator key-iterator
 	 */
 	public Iterator getKeys() {
 		return images.keySet().iterator();
@@ -56,8 +101,7 @@ public class ImageTracker {
 
 	/**
 	 * Adds all images contained in the given itracker parameter.
-	 * Note that an image will be replaced if the same key exists
-	 * in this object and in the itracker object.
+	 * The images are added according to the policy.
 	 * @param itracker the source image tracker
 	 */
 	public void addFrom(ImageTracker itracker) {
@@ -68,6 +112,18 @@ public class ImageTracker {
 		}
 	}
 	
+	/**
+	 * Loads all files that are either an image or a slice from the given directory.
+	 * If a file is an image, the name of the file without it's extension is used
+	 * as key. If the image is a slice then the keys are loaded from the slice property
+	 * file.
+	 * 
+	 * Images and slices are added according to the policy.
+	 * 
+	 * @param path the path where images are located
+	 * @throws FileNotFoundException the path does not exists
+	 * @see SliceImage
+	 */
 	public void loadFromDirectory(String path) throws FileNotFoundException {
 		File dir = new File(path);
 		if (!dir.exists()) {

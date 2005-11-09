@@ -3,16 +3,21 @@ package nomad.misc;
 import java.util.Iterator;
 
 /**
+ * An iterator that links two iterators.
+ *
  * @author Christian Schneider
  */
 public class SequenceIterator implements Iterator {
 
 	private Iterator ia = null;
 	private Iterator ib = null;
+	
+	// the previously called iterator
 	private Iterator lastCalled = null;
 	
 	/**
-	 * Creates an iterator that links two iterators
+	 * An iterator that links two iterators
+	 * 
 	 * @param a first iterator
 	 * @param b second iterator
 	 */
@@ -25,9 +30,9 @@ public class SequenceIterator implements Iterator {
 		return getCurrent().hasNext();
 	}
 	
+	// returns the current iterator
 	private Iterator getCurrent() {
-		lastCalled = ia.hasNext()?ia:ib;
-		return lastCalled;
+		return lastCalled = ia.hasNext()?ia:ib;
 	}
 
 	public Object next() {

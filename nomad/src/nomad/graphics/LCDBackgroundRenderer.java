@@ -5,51 +5,95 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
 
+/**
+ * Background render implementation that creates a LCD like background.
+ * 
+ * @author Christian Schneider
+ */
 public class LCDBackgroundRenderer extends BackgroundRenderer {
 
-	private Color clDisplayColor = null; 
+	// display color
+	private Color clDisplayColor = null;
+	
+	// light color
 	private Color clDisplayLight = null;
-	private double distance = 10.0f; // pixel 
-	private double distancePoint = 30.0f; // pixel
+	
+	// distance in pixel
+	private double distance = 10.0; 
+	
+	// distance in pixel
+	private double distancePoint = 30.0; 
+	
+	// direct light position
 	private int dAdditionalLightX = 20;
 	private int dAdditionalLightY = 20;
 
+	// used for fixed point arithmetics
 	private final static int FACTOR = 10000; 
 	private final static double FACTOR4D = 4*FACTOR; 
 	private final static double FACTOR6D = 6*FACTOR; 
+
+	public final static Color DEFAULT_DISPLAY_COLOR =  Color.decode("#2721CE");
+	public final static Color DEFAULT_LIGHT_COLOR =  Color.decode("#367AF9");
 	
+	/**
+	 * A LCD like background renderer.
+	 */
 	public LCDBackgroundRenderer() {
 		setDefaultColors();
 	}
-	
-	// variable setup
 
+	/**
+	 * Creates random settings. 
+	 * @param dim the size of the area
+	 */
 	public void randomizeBehaviour(Dimension dim) {
 		distancePoint = (Math.min(dim.width,dim.height)-5)*Math.random()+5.0;
 		dAdditionalLightX = (int)(dim.width*Math.random());
 		dAdditionalLightY = (int)(dim.height*Math.random());
 	}
 
+	/**
+	 * Resets the display color and light color to their defaults.
+	 */
 	public void setDefaultColors() {
-		setDisplayColor(Color.decode("#2721CE"));
-		setLightColor(Color.decode("#367AF9"));
+		setDisplayColor(DEFAULT_DISPLAY_COLOR);
+		setLightColor(DEFAULT_LIGHT_COLOR);
 	}
 	
+	/**
+	 * Sets the display color property
+	 * @param c the new color
+	 */
 	public void setDisplayColor(Color c) {
 		clDisplayColor = c;
+		update();
 	}
 	
+	/**
+	 * Sets the light color property
+	 * @param c the new color
+	 */
 	public void setLightColor(Color c) {
 		clDisplayLight = c;
+		update();
 	}
 	
-	public void setDistance(float d) {
+	/**
+	 * Sets the distance for the border glow in pixel.
+	 * @param d the distance
+	 */
+	public void setBorderGlowSize(float d) {
 		distance = d;
+		update();
 	}
 
-	protected Image renderImage(Component comp, Dimension dim) {
-		// we don't use the super-implementation
-
+	/**
+	 * Renders the lcd background.
+	 */
+	protected Image renderImage(Component comp) {
+		Dimension dim = comp.getSize();
+		
 		// calculate the componenents size
 	    int size = dim.width * dim.height; 
 
@@ -57,29 +101,33 @@ public class LCDBackgroundRenderer extends BackgroundRenderer {
 	    int cdistance = (int) Math.ceil(distance);
 	    
 	    // *** factors
-	    int[] xtable = new int[dim.width];
-	    for (int i=0;i<xtable.length-cdistance;i++)
+	    int[] xtableBorder = new int[dim.width];
+	    for (int i=0;i<xtableBorder.length-cdistance;i++) {
 	    	
 	    	if (i<cdistance) {
 	    		// linear
-	    		xtable[i] = (int)(((double)(cdistance-i)/(double)cdistance)*FACTOR);
-	    		xtable[xtable.length-1-i] = xtable[i];
+	    		xtableBorder[i] = (int)(((double)(cdistance-i)/(double)cdistance)*FACTOR);
+	    		xtableBorder[xtableBorder.length-1-i] = xtableBorder[i];
 	    	} else {
 	    		// nothing
-	    		xtable[i] = 0;
+	    		xtableBorder[i] = 0;
 	    	}
+	
+	    }
 	    
-	    int[] ytable = new int[dim.height];
-	    for (int i=0;i<ytable.length-cdistance;i++)
+	    int[] ytableBorder = new int[dim.height];
+	    for (int i=0;i<ytableBorder.length-cdistance;i++) {
 	    	
 	    	if (i<cdistance) {
 	    		// linear
-	    		ytable[i] = (int)(((float)(cdistance-i)/(float)cdistance)*FACTOR);
-	    		ytable[ytable.length-1-i] = ytable[i];
+	    		ytableBorder[i] = (int)(((float)(cdistance-i)/(float)cdistance)*FACTOR);
+	    		ytableBorder[ytableBorder.length-1-i] = ytableBorder[i];
 	    	} else {
 	    		// nothing
-	    		ytable[i] = 0;
+	    		ytableBorder[i] = 0;
 	    	}
+
+	    }
 	    
 	    // display
 	    int cdr = clDisplayColor.getRed();
@@ -114,7 +162,8 @@ public class LCDBackgroundRenderer extends BackgroundRenderer {
 	    {
 	    	for (int x=0;x<dim.width;x++)
 	    	{
-	    		factorInt = xtable[x] + ytable[y];
+	    		factorInt = xtableBorder[x] + ytableBorder[y];
+
 	    		factorInt+=
 	    			Math.min(FACTOR4D,
 	    				FACTOR*(

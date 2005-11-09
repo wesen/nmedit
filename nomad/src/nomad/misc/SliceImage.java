@@ -27,6 +27,8 @@ import javax.swing.ImageIcon;
  *slice.vrt &lt;value&gt; - <i>number of images in vertical direction</i></pre>
  * Keys are associated with coordinates by
  * <pre>&lt;key&gt; &lt;x&gt; &lt;y&gt;</pre>.
+ * 
+ * @author Christian Schneider
  */
 
 public class SliceImage
@@ -223,10 +225,19 @@ public class SliceImage
                          [(int) sliceSelector.getY()];
   }
   
+  /**
+   * Returns an iterator that iterates over String objects containing
+   * all keys.
+   * @return key iterator
+   */
   public Iterator getKeys() {
 	  return directors.keySet().iterator();
   }
   
+  /**
+   * Adds all images that are associated with a key to the image tracker.
+   * @param itracker the image tracker
+   */
   public void feedImageTracker(ImageTracker itracker) {
 	  Iterator keyIterator = getKeys();
 	  while (keyIterator.hasNext()) {

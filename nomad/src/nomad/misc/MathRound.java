@@ -1,9 +1,14 @@
 package nomad.misc;
 
+/**
+ * A helper class for advanced round operations. 
+ * 
+ * @author Christian Schneider
+ */
 public final class MathRound {
 
 	/**
-	 * rounds d until digit '-to'. For example d=123, to=2 returns 120.
+	 * Rounds d until digit '-to'. For example d=123, to=2 returns 120.
 	 * If d=123.456 and to=-2 then 123.45 is returned.
 	 * 
 	 * @param d Value to round
@@ -17,7 +22,7 @@ public final class MathRound {
 		double norm = Math.pow(10.0, -to);
 		return Math.round(d*norm) / norm;
 	}
-	
+
 	/**
 	 * Returns the value of d as a String. If d is a natural number,
 	 * it is returned without decimal point.

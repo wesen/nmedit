@@ -13,13 +13,30 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * A class that writes the cache file for the user interface xml file.  
+ * 
+ * @author Christian Schneider
+ * @see nomad.plugin.cache.UICache
+ */
 public class XMLUICacheWriter {
 
+	/**
+	 * Writes the cache file for uixmlfile to out file
+	 * @param uixmlFile Source file
+	 * @param outfile Target file
+	 * @throws FileNotFoundException
+	 */
 	public static void writeCache(String uixmlFile, String outfile)
 		throws FileNotFoundException {
 		writeCache(uixmlFile, new FileOutputStream(outfile));
 	}
 
+	/**
+	 * Writes the cache file for uixmlfile to the outputstream
+	 * @param uixmlFile Source file
+	 * @param ostream Target stream
+	 */
 	public static void writeCache(String uixmlFile, OutputStream ostream) {
 		Document doc = XMLReader.readDocument(uixmlFile, false);
 		PrintStream out = new PrintStream(ostream);
