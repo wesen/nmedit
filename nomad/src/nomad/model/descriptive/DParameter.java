@@ -173,4 +173,17 @@ public class DParameter {
 		*/
 		return getName();
 	}
+	
+	public boolean equals(Object obj) {
+		if (obj instanceof DParameter) {
+			DParameter comp = (DParameter) obj;
+			return 
+			    // same module
+				(comp.getParent().getModuleID() == getParent().getModuleID())
+				// same id
+			  &&(comp.getId()==getId())
+			;
+		} else
+			return super.equals(obj);
+	}
 }
