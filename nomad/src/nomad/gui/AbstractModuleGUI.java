@@ -1,9 +1,10 @@
 package nomad.gui;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.util.ArrayList;
+
+import javax.swing.UIManager;
 
 import nomad.graphics.BackgroundRenderer;
 import nomad.gui.model.UIFactory;
@@ -19,7 +20,7 @@ public class AbstractModuleGUI extends JPaintComponent {
 	
 	public AbstractModuleGUI(UIFactory factory) {
 		this.factory = factory;
-		setBackground(Color.WHITE);
+		setBackground(UIManager.getColor("Button.background"));
 		setOpaque(true);
 		setDoubleBuffered(false); // we have our own buffer
 	}
