@@ -62,7 +62,6 @@ public class Cables {
 
 	public Cable getCable(int index) {
 		Cable returnCab;
-		returnCab = (Cable) null;
 		returnCab = (Cable) cables.get(index);
 		return returnCab;
 	}
