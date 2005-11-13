@@ -3,7 +3,7 @@ src = 'nmpatch.i patchparser.yy patchlexer.ll nmlexer.cc cable.cc ctrlmap.cc kno
 
 inc = 'cable.h ctrlmap.h knobmap.h module.h modulesection.h morph.h morphmap.h note.h patch.h moduletype.h modulelistener.h modulesectionlistener.h'
 
-pkg = 'module.ppf'
+pkg = 'module.ppf patch.pdl'
 
 srcfiles = [('src/' + x)     for x in Split(src)]
 incfiles = [('nmpatch/' + x) for x in Split(inc)]
@@ -12,7 +12,7 @@ pkgfiles = [('src/' + x)     for x in Split(pkg)]
 nmpatch = Environment(SWIGFLAGS = '-c++ -java -package nmcom.swig.nmpatch -outdir ../../java-nmcom/src/nmcom/swig/nmpatch',
                       YACCFLAGS = '-d -pnm',
                       LEXFLAGS = '-+ -olex.yy.c -Pnm',
-                      CPPPATH = ['.', '../libppf'])
+                      CPPPATH = ['.', '../libpdl', '../libppf'])
 
 opts = Options('nmpatch.conf')
 opts.Add(PathOption('PREFIX',
@@ -32,6 +32,10 @@ conf.env.Append(CPPFLAGS='-DLIBPATH=\'"' + idir_pkg + '"\'')
 
 if not conf.CheckLib('ppf'):
    print "libppf missing!"
+   Exit(1);
+
+if not conf.CheckLib('pdl'):
+   print "libpdl missing!"
    Exit(1);
 
 nmpatch = conf.Finish()

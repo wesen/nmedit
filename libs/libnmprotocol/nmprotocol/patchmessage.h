@@ -21,22 +21,16 @@
 #define PATCHMESSAGE_H
 
 #include "nmprotocol/midimessage.h"
-#include "pdl/packet.h"
-#include "nmpatch/modulesection.h"
 
 using namespace std;
-
-class Patch;
-class Protocol;
-class Tracer;
 
 class PatchMessage : public virtual MidiMessage
 {
  public:
 
-  static void usePDLFile(string filename, Tracer* tracer);
+  typedef list<int> PositionList;
 
-  PatchMessage(Patch* patch);
+  PatchMessage(BitStream patchStream, PositionList sectionEndPositions);
   PatchMessage();
   virtual ~PatchMessage();
 
@@ -46,27 +40,19 @@ class PatchMessage : public virtual MidiMessage
     
   void append(Packet* packet);
 
-  void getPatch(Patch* patch);
+  BitStream getPatchStream();
 
   int getPid();
 
  private:
 
-  typedef list<int> PositionList;
-
-  Patch* patch;
+  BitStreamList bitStreamList;
   BitStream patchStream;
   int pid;
   int checksum;
 
-  static string patchPdlFile;
-  static Protocol* patchProtocol;
-  static PacketParser* patchParser;
-
   void init();
-  void appendName(string name, IntStream& patchStream);
-  void storeEndPosition(IntStream intStream, PositionList* endPositions);
-  Module* getModule(Patch* patch, ModuleSection::Type section,
-		    int index, string context);};
+
+};
 
 #endif

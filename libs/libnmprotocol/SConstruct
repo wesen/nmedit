@@ -3,7 +3,7 @@ src = 'nmprotocol.i ackmessage.cc activepidlistener.cc alsadriver.cc getpatchlis
 
 inc = 'ackmessage.h activepidlistener.h getpatchlistmessage.h getpatchmessage.h iammessage.h lightmessage.h midiexception.h midimessage.h newpatchinslotmessage.h nmprotocol.h nmprotocollistener.h parametermessage.h patchlistmessage.h patchmessage.h requestpatchmessage.h slotactivatedmessage.h slotsselectedmessage.h synth.h synthlistener.h voicecountmessage.h'
 
-pkg = 'midi.pdl patch.pdl'
+pkg = 'midi.pdl'
 
 srcfiles = [('src/' + x)        for x in Split(src)]
 incfiles = [('nmprotocol/' + x) for x in Split(inc)]

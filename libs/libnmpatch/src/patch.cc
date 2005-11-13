@@ -20,10 +20,30 @@
 #include "nmpatch/patch.h"
 #include "nmpatch/modulesection.h"
 #include "nmpatch/patchexception.h"
+#include "pdl/protocol.h"
+#include "pdl/packetparser.h"
+#include "pdl/tracer.h"
 #include <stdio.h>
+
+#ifndef LIBPATH
+#define LIBPATH ""
+#endif
+
+string Patch::patchPdlFile = string(LIBPATH) + "/patch.pdl";
+Protocol* Patch::patchProtocol = 0;
+PacketParser* Patch::patchParser = 0;
 
 extern bool init_parser(const char* filename, Patch* patch);
 extern void nmparse();
+
+void Patch::usePDLFile(string filename, Tracer* tracer)
+{
+  patchPdlFile = filename;
+  delete patchProtocol;
+  patchProtocol = new Protocol(patchPdlFile);
+  patchParser = patchProtocol->getPacketParser("Patch");
+  patchProtocol->useTracer(tracer);
+}
 
 Patch::Patch()
 {
@@ -34,6 +54,11 @@ Patch::Patch()
   morph[Morph::MORPH2] = new Morph();
   morph[Morph::MORPH3] = new Morph();
   morph[Morph::MORPH4] = new Morph();
+
+  if (patchProtocol == 0) {
+    patchProtocol = new Protocol(patchPdlFile);
+    patchParser = patchProtocol->getPacketParser("Patch");
+  }
 }
 
 Patch::Patch(string filename)
@@ -51,6 +76,11 @@ Patch::Patch(string filename)
   }
   else {
     throw PatchException(string("File not found: ") + filename, 0);
+  }
+
+  if (patchProtocol == 0) {
+    patchProtocol = new Protocol(patchPdlFile);
+    patchParser = patchProtocol->getPacketParser("Patch");
   }
 }
 
@@ -485,5 +515,610 @@ string Patch::write()
     result += "[/Notes]\n";
   }
 
+  return result;
+}
+
+
+BitStream Patch::serialize(PositionList* sectionEndPositions)
+{
+  IntStream intStream;
+
+  // Create patch bitstream
+
+  // Name section
+  intStream.append(55);
+  appendName(this->getName(), intStream);
+  storeEndPosition(intStream, sectionEndPositions);
+  
+  // Header section
+  intStream.append(33);
+  intStream.append(this->getKeyboardRange(Patch::MIN));
+  intStream.append(this->getKeyboardRange(Patch::MAX));
+  intStream.append(this->getVelocityRange(Patch::MIN));
+  intStream.append(this->getVelocityRange(Patch::MAX));
+  intStream.append(this->getBendRange());
+  intStream.append(this->getPortamentoTime());
+  intStream.append(this->getPortamento());
+  intStream.append(1);
+  intStream.append(this->getRequestedVoices() - 1);
+  intStream.append(0);
+  intStream.append(this->getSectionSeparationPosition());
+  intStream.append(this->getOctaveShift());
+  intStream.append(this->getCableVisibility(Cable::RED));
+  intStream.append(this->getCableVisibility(Cable::BLUE));
+  intStream.append(this->getCableVisibility(Cable::YELLOW));
+  intStream.append(this->getCableVisibility(Cable::GRAY));
+  intStream.append(this->getCableVisibility(Cable::GREEN));
+  intStream.append(this->getCableVisibility(Cable::PURPLE));
+  intStream.append(this->getCableVisibility(Cable::WHITE));
+  intStream.append
+    (this->getModuleSection(ModuleSection::COMMON)->getVoiceRetrigger());
+  intStream.append
+    (this->getModuleSection(ModuleSection::POLY)->getVoiceRetrigger());
+  intStream.append(0xf);
+  intStream.append(0);
+  storeEndPosition(intStream, sectionEndPositions);
+
+  // Module section
+  for (int s = ModuleSection::POLY; s >= ModuleSection::COMMON; s--) {
+    intStream.append(74);
+    
+    intStream.append(s);
+
+    ModuleSection::ModuleList modules =
+      this->getModuleSection((ModuleSection::Type)s)->getModules();
+
+    intStream.append(modules.size());
+
+    for (ModuleSection::ModuleList::iterator m = modules.begin();
+	 m != modules.end();
+	 m++) {
+      intStream.append((*m)->getType()->getId());
+      intStream.append((*m)->getIndex());
+      intStream.append((*m)->getXPosition());
+      intStream.append((*m)->getYPosition());
+    }
+    storeEndPosition(intStream, sectionEndPositions);
+  }
+
+  // Note section
+  intStream.append(105);
+  Patch::NoteList midiNotes = this->getMIDINotes();
+  Patch::NoteList::iterator nl = midiNotes.begin();
+  intStream.append((*nl)->getNoteNumber());
+  intStream.append((*nl)->getAttackVelocity());
+  intStream.append((*nl)->getReleaseVelocity());
+  nl++;
+  intStream.append(midiNotes.size()-2);
+  for (; nl != midiNotes.end(); nl++) {
+    intStream.append((*nl)->getNoteNumber());
+    intStream.append((*nl)->getAttackVelocity());
+    intStream.append((*nl)->getReleaseVelocity());
+  }
+  storeEndPosition(intStream, sectionEndPositions);
+  
+  // Cable section
+  for (int s = ModuleSection::POLY; s >= ModuleSection::COMMON; s--) {
+    intStream.append(82);
+    
+    intStream.append(s);
+
+    ModuleSection::CableList cables =
+      this->getModuleSection((ModuleSection::Type)s)->getCables();
+
+    intStream.append(cables.size());
+
+    for (ModuleSection::CableList::iterator c = cables.begin();
+	 c != cables.end();
+	 c++) {
+      intStream.append((*c)->getColor());
+      intStream.append((*c)->getSourceModule()->getIndex());
+      intStream.append((*c)->getSourceConnector());
+      intStream.append((*c)->getSourceConnectorType());
+      intStream.append((*c)->getDestinationModule()->getIndex());
+      intStream.append((*c)->getDestinationConnector());
+    }
+    storeEndPosition(intStream, sectionEndPositions);
+  }
+
+  // Parameter section
+  for (int s = ModuleSection::POLY; s >= ModuleSection::COMMON; s--) {
+    intStream.append(77);
+    
+    intStream.append(s);
+
+    ModuleSection::ModuleList modules =
+      this->getModuleSection((ModuleSection::Type)s)->getModules();
+    
+    int nmodules = 0;
+    for (ModuleSection::ModuleList::iterator m = modules.begin();
+	 m != modules.end();
+	 m++) {
+      if ((*m)->getType()->numberOfParameters() > 0) {
+	nmodules++;
+      }
+    }
+    intStream.append(nmodules);
+    
+    for (ModuleSection::ModuleList::iterator m = modules.begin();
+	 m != modules.end();
+	 m++) {
+      if ((*m)->getType()->numberOfParameters() > 0) {
+	intStream.append((*m)->getIndex());
+	intStream.append((*m)->getType()->getId());
+	for (int p = 0; p < (*m)->getType()->numberOfParameters(); p++) {
+	  intStream.append((*m)->getParameter((ModuleType::Parameter)p));
+	}
+      }
+    }
+    storeEndPosition(intStream, sectionEndPositions);
+  }  
+
+  // Morph section
+  intStream.append(101);
+  int nknobs = 0;
+  for (int i = Morph::MORPH1; i <= Morph::MORPH4; i++) {
+    Morph* morph = this->getMorph((Morph::Type)i);
+    intStream.append(morph->getValue());
+
+    Morph::MorphMapList morphMaps = morph->getMorphMaps();
+    nknobs += morphMaps.size();
+  }
+  for (int i = Morph::MORPH1; i <= Morph::MORPH4; i++) {
+    Morph* morph = this->getMorph((Morph::Type)i);
+    intStream.append(morph->getKeyboardAssignment());
+  }
+
+  intStream.append(nknobs);
+
+  for (int i = Morph::MORPH1; i <= Morph::MORPH4; i++) {
+    Morph* morph = this->getMorph((Morph::Type)i);
+    Morph::MorphMapList morphMaps = morph->getMorphMaps();
+    for (Morph::MorphMapList::iterator m = morphMaps.begin();
+	 m != morphMaps.end();
+	 m++) {
+      intStream.append((*m)->getModuleSectionType());
+      intStream.append((*m)->getModule()->getIndex());
+      intStream.append((*m)->getParameter());
+      intStream.append(i);
+      intStream.append((*m)->getRange());
+    }
+  }
+  storeEndPosition(intStream, sectionEndPositions);
+
+  // Knob section
+  intStream.append(98);
+  for (int i = 0; i <= 22; i++) {
+    bool found = false;
+    Patch::KnobMapList knobMaps = this->getKnobMaps();
+    for (Patch::KnobMapList::iterator k = knobMaps.begin();
+	 k != knobMaps.end();
+	 k++) {
+      if ((*k)->getKnob() == i) {
+	found = true;
+	intStream.append(1);
+	intStream.append((*k)->getModuleSectionType());
+	if ((*k)->getModuleSectionType() == ModuleSection::MORPH) {
+	  intStream.append(1);
+	}
+	else {
+	  intStream.append((*k)->getModule()->getIndex());
+	}      
+	intStream.append((*k)->getParameter());
+      }
+    }
+    if (!found) {
+      intStream.append(0);
+    }
+  }
+  storeEndPosition(intStream, sectionEndPositions);
+
+  // Control section
+  intStream.append(96);
+  Patch::CtrlMapList ctrlMaps = this->getCtrlMaps();
+  intStream.append(ctrlMaps.size());
+  for (Patch::CtrlMapList::iterator k = ctrlMaps.begin();
+       k != ctrlMaps.end();
+       k++) {
+    intStream.append((*k)->getCC());
+    intStream.append((*k)->getModuleSectionType());
+    if ((*k)->getModuleSectionType() == ModuleSection::MORPH) {
+      intStream.append(1);
+    }
+    else {
+      intStream.append((*k)->getModule()->getIndex());
+    }      
+    intStream.append((*k)->getParameter());
+  }
+  storeEndPosition(intStream, sectionEndPositions);
+
+  // Custom section
+  for (int s = ModuleSection::POLY; s >= ModuleSection::COMMON; s--) {
+    intStream.append(91);
+
+    intStream.append((ModuleSection::Type)s);
+
+    ModuleSection::ModuleList modules =
+      this->getModuleSection((ModuleSection::Type)s)->getModules();
+
+    int nmodules = 0;
+    for (ModuleSection::ModuleList::iterator m = modules.begin();
+	 m != modules.end();
+	 m++) {
+      if ((*m)->getType()->numberOfCustomValues() > 0) {
+	nmodules++;
+      }
+    }
+    intStream.append(nmodules);
+
+    for (ModuleSection::ModuleList::iterator m = modules.begin();
+	 m != modules.end();
+	 m++) {
+      if ((*m)->getType()->numberOfCustomValues() > 0) {
+	intStream.append((*m)->getIndex());
+	intStream.append((*m)->getType()->numberOfCustomValues());
+	for (int p = 0; p < (*m)->getType()->numberOfCustomValues(); p++) {
+	  intStream.append((*m)->getCustomValue((ModuleType::CustomValue)p));
+	}
+      }
+    }
+    storeEndPosition(intStream, sectionEndPositions);
+  }
+
+  // Module name section
+  for (int s = ModuleSection::POLY; s >= ModuleSection::COMMON; s--) {
+    intStream.append(90);
+
+    intStream.append((ModuleSection::Type)s);
+
+    ModuleSection::ModuleList modules =
+      this->getModuleSection((ModuleSection::Type)s)->getModules();
+    
+    intStream.append(modules.size());
+
+    for (ModuleSection::ModuleList::iterator m = modules.begin();
+	 m != modules.end();
+	 m++) {
+      intStream.append((*m)->getIndex());
+      appendName((*m)->getName(), intStream);
+    }
+    storeEndPosition(intStream, sectionEndPositions);
+  }
+
+  BitStream patchStream;
+  patchParser->generate(&intStream, &patchStream);
+
+  return patchStream;
+}
+
+void Patch::update(BitStream patchStream)
+{
+  Packet* packet = new Packet();
+  if (patchParser->parse(&patchStream, packet)) {
+    while (packet != 0) {
+      Packet* section = packet->getPacket("section");
+      Packet* sectionData = section->getPacket("data");
+      switch (section->getVariable("type")) {
+
+	// Name section
+      case 55:
+      case 39:
+	this->setName(extractName(sectionData->getPacket("name")));
+	break;
+
+	// Header section
+      case 33:
+	this->setKeyboardRange(Patch::MIN,
+				sectionData->getVariable("krangemin"));
+	this->setKeyboardRange(Patch::MAX,
+				sectionData->getVariable("krangemax"));
+	this->setVelocityRange(Patch::MIN,
+				sectionData->getVariable("vrangemin"));
+	this->setVelocityRange(Patch::MAX,
+				sectionData->getVariable("vrangemax"));
+	this->setBendRange(sectionData->getVariable("brange"));
+	this->setPortamentoTime(sectionData->getVariable("ptime"));
+	this->setPortamento((Patch::Portamento)
+			     sectionData->getVariable("portamento"));
+	this->setRequestedVoices(sectionData->getVariable("voices"));
+	this->setSectionSeparationPosition(sectionData->getVariable("sspos"));
+	this->setOctaveShift(sectionData->getVariable("octave"));
+	this->setCableVisibility(Cable::RED,
+				  (Patch::CableVisibility)
+				  sectionData->getVariable("red"));
+	this->setCableVisibility(Cable::BLUE,
+				  (Patch::CableVisibility)
+				  sectionData->getVariable("blue"));
+	this->setCableVisibility(Cable::YELLOW,
+				  (Patch::CableVisibility)
+				  sectionData->getVariable("yellow"));
+	this->setCableVisibility(Cable::GRAY,
+				  (Patch::CableVisibility)
+				  sectionData->getVariable("gray"));
+	this->setCableVisibility(Cable::GREEN,
+				  (Patch::CableVisibility)
+				  sectionData->getVariable("green"));
+	this->setCableVisibility(Cable::PURPLE,
+				  (Patch::CableVisibility)
+				  sectionData->getVariable("purple"));
+	this->setCableVisibility(Cable::WHITE,
+				  (Patch::CableVisibility)
+				  sectionData->getVariable("white"));
+	this->getModuleSection(ModuleSection::COMMON)->
+	  setVoiceRetrigger((ModuleSection::VoiceRetrigger)
+			    sectionData->getVariable("cretrigger"));
+	this->getModuleSection(ModuleSection::POLY)->
+	  setVoiceRetrigger((ModuleSection::VoiceRetrigger)
+			    sectionData->getVariable("pretrigger"));
+	break;
+
+	// Module section
+      case 74:
+	{
+	  ModuleSection* moduleSection =
+	    this->getModuleSection((ModuleSection::Type)
+				    sectionData->getVariable("section"));
+	  Packet::PacketList modules = sectionData->getPacketList("modules");
+	  for (Packet::PacketList::iterator i = modules.begin();
+	       i != modules.end(); i++) {
+	    Module* module =
+	      moduleSection->newModule((ModuleType::TypeId)
+				       (*i)->getVariable("type"),
+				       (*i)->getVariable("index"));
+	    module->setPosition((*i)->getVariable("xpos"),
+				(*i)->getVariable("ypos"));
+	  }
+	}
+	break;
+
+	// Note section
+      case 105:
+	{
+	  Packet* note = sectionData->getPacket("note1");
+	  this->newMIDINote(note->getVariable("value"),
+			     note->getVariable("attack"),
+			     note->getVariable("release"));
+	  note = sectionData->getPacket("note2");
+	  this->newMIDINote(note->getVariable("value"),
+			     note->getVariable("attack"),
+			     note->getVariable("release"));
+	  Packet::PacketList notes = sectionData->getPacketList("notes");
+	  for (Packet::PacketList::iterator i = notes.begin();
+	       i != notes.end(); i++) {
+	    this->newMIDINote((*i)->getVariable("value"),
+			       (*i)->getVariable("attack"),
+			       (*i)->getVariable("release"));
+	  }
+	}
+	break;
+	
+	// Cable section
+      case 82:
+	{
+	  ModuleSection* moduleSection =
+	    this->getModuleSection((ModuleSection::Type)
+				    sectionData->getVariable("section"));
+	  Packet::PacketList cables = sectionData->getPacketList("cables");
+	  for (Packet::PacketList::iterator i = cables.begin();
+	       i != cables.end(); i++) {
+	    moduleSection->newCable
+	      ((Cable::Color)(*i)->getVariable("color"),
+	       (*i)->getVariable("destination"),
+	       (ModuleType::Port)(*i)->getVariable("input"),
+	       ModuleType::INPUT,
+	       (*i)->getVariable("source"),
+	       (ModuleType::Port)(*i)->getVariable("inputOutput"),
+	       (ModuleType::ConnectorType)(*i)->getVariable("type"));
+	  }
+	}
+	break;
+
+	// Parameter section
+      case 77:
+	{
+	  ModuleSection::Type section =
+	    (ModuleSection::Type)sectionData->getVariable("section");
+	  Packet::PacketList modules =
+	    sectionData->getPacketList("parameters");
+	  for (Packet::PacketList::iterator i = modules.begin();
+	       i != modules.end(); i++) {
+	    Module* module =
+	      getModule(this, section,
+			(*i)->getVariable("index"), "parameter");
+	    Packet::VariableList parameters =
+	      (*i)->getPacket("parameters")->getAllVariables();
+	    int n = 0;
+	    for (Packet::VariableList::iterator p = parameters.begin();
+		 p != parameters.end(); p++, n++) {
+	      module->setParameter((ModuleType::Parameter)n, (*p));
+	    }
+	  }
+	}
+	break;
+
+	// Morphmap section
+      case 101:
+	{
+	  this->getMorph(Morph::MORPH1)->setValue
+	    (sectionData->getVariable("morph1"));
+	  this->getMorph(Morph::MORPH2)->setValue
+	    (sectionData->getVariable("morph2"));
+	  this->getMorph(Morph::MORPH3)->setValue
+	    (sectionData->getVariable("morph3"));
+	  this->getMorph(Morph::MORPH4)->setValue
+	    (sectionData->getVariable("morph4"));
+
+	  this->getMorph(Morph::MORPH1)->setKeyboardAssignment
+	    ((Morph::KeyboardAssignment)sectionData->getVariable("keyboard1"));
+	  this->getMorph(Morph::MORPH2)->setKeyboardAssignment
+	    ((Morph::KeyboardAssignment)sectionData->getVariable("keyboard2"));
+	  this->getMorph(Morph::MORPH3)->setKeyboardAssignment
+	    ((Morph::KeyboardAssignment)sectionData->getVariable("keyboard3"));
+	  this->getMorph(Morph::MORPH4)->setKeyboardAssignment
+	    ((Morph::KeyboardAssignment)sectionData->getVariable("keyboard4"));
+
+	  Packet::PacketList morphs =
+	    sectionData->getPacketList("morphs");
+	  for (Packet::PacketList::iterator i = morphs.begin();
+	       i != morphs.end(); i++) {
+	    Morph* morph =
+	      this->getMorph((Morph::Type)(*i)->getVariable("morph"));
+	    Module* module =
+	      getModule(this,
+			(ModuleSection::Type)(*i)->getVariable("section"),
+			(*i)->getVariable("module"),
+			"morph");
+	    MorphMap* morphMap = morph->newMorphMap
+	      ((ModuleSection::Type)(*i)->getVariable("section"),
+	       module,
+	       (ModuleType::Parameter)(*i)->getVariable("parameter"));
+	    int range = (*i)->getVariable("range");
+	    morphMap->setRange(range - (range > 127 ? 256 : 0));
+	  }
+	}
+	break;
+
+	// Knobmap section
+      case 98:
+	{
+	  for (int i = 0; i < 23; i++) {
+	    char buffer[7];
+	    snprintf(buffer, 7, "knob%d", i);
+	    Packet* knob = sectionData->getPacket(string(buffer));
+ 	    bool assigned = knob->getVariable("assigned");
+	    if (assigned) {
+	      Packet* assignment = knob->getPacketList("assignment").front();
+	      ModuleSection::Type section =
+		(ModuleSection::Type)assignment->getVariable("section");
+	      Module* module =
+		getModule(this, section,
+			  assignment->getVariable("module"), "knob");
+	      KnobMap* knobMap =
+		this->newKnobMap
+		(section,
+		 module,
+		 (ModuleType::Parameter)assignment->getVariable("parameter"));
+	      knobMap->setKnob((KnobMap::Knob)i);
+	    }
+	  }
+	}
+	break;
+
+	// Controlmap section
+      case 96:
+	{
+	  Packet::PacketList controls = sectionData->getPacketList("controls");
+	  for (Packet::PacketList::iterator i = controls.begin();
+	       i != controls.end(); i++) {
+	    ModuleSection::Type section =
+	      (ModuleSection::Type)(*i)->getVariable("section");
+	    Module* module = getModule(this, section,
+				       (*i)->getVariable("module"), "control");
+	    CtrlMap* ctrlMap = this->newCtrlMap
+	      (section,
+	       module,
+	       (ModuleType::Parameter)(*i)->getVariable("parameter"));
+	    ctrlMap->setCC((*i)->getVariable("control"));
+	  }	  
+	}
+	break;
+
+	// Custom section
+      case 91:
+	{
+	  ModuleSection::Type section =
+	    (ModuleSection::Type)sectionData->getVariable("section");
+	  Packet::PacketList modules =
+	    sectionData->getPacketList("customModules");
+	  for (Packet::PacketList::iterator m = modules.begin();
+	       m != modules.end(); m++) {
+	    Module* module = getModule(this, section,
+				       (*m)->getVariable("index"), "custom");
+	    Packet::PacketList values = (*m)->getPacketList("customValues");
+	    int n = 0;
+	    for (Packet::PacketList::iterator v = values.begin();
+		 v != values.end(); v++, n++) {
+	      module->setCustomValue((ModuleType::CustomValue)n,
+				     (*v)->getVariable("value"));
+	    }
+	  }
+	}
+	break;
+
+	// Namedump section
+      case 90:
+	{
+	  ModuleSection::Type section =
+	    (ModuleSection::Type)sectionData->getVariable("section");
+	  Packet::PacketList modules =
+	    sectionData->getPacketList("moduleNames");
+	  for (Packet::PacketList::iterator i = modules.begin();
+	       i != modules.end(); i++) {
+	    Module* module = getModule(this, section,
+				       (*i)->getVariable("index"), "name");
+	    module->setName(extractName((*i)->getPacket("name")));
+	  }
+	}
+	break;
+
+      }
+      packet = packet->getPacket("next");
+    }
+  }
+  else {
+    delete packet;
+    throw PatchException("Illegal patch format.", 0);
+  }
+  delete packet;
+}
+
+void Patch::appendName(string name, IntStream& intStream)
+{
+  int i;
+
+  for (i = 0; i < 16 && i < name.length(); i++) {
+    intStream.append(name[i]);
+  }
+  if (i < 16) {
+    intStream.append(0);
+  }
+}
+
+void Patch::storeEndPosition(IntStream intStream,
+			     PositionList* sectionEndPositions)
+{
+  BitStream patchStream;
+  patchParser->generate(&intStream, &patchStream);
+  sectionEndPositions->push_back(patchStream.getSize()/8-1);
+}
+
+Module* Patch::getModule(Patch* patch, ModuleSection::Type section,
+			 int index, string context)
+{
+  Module* module;
+  if (section == ModuleSection::MORPH) {
+    module = 0;
+  }
+  else {
+    module = patch->getModuleSection(section)->getModule(index);
+    if (module == 0) {
+      throw PatchException(string("Can not find module for ") +
+			   string(context) + ".",
+			   index);
+    }
+  }
+  return module;
+}
+
+string Patch::extractName(Packet* name)
+{
+  string result;
+  Packet::VariableList chars = name->getVariableList("chars");
+  for (Packet::VariableList::iterator i = chars.begin();
+       i != chars.end(); i++) {
+    if (*i != 0) {
+      result += (char)*i;
+    }
+  }
   return result;
 }

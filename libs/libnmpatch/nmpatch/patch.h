@@ -30,6 +30,14 @@
 #include "nmpatch/knobmap.h"
 #include "nmpatch/ctrlmap.h"
 
+#include "pdl/bitstream.h"
+#include "pdl/intstream.h"
+#include "pdl/packet.h"
+
+class PacketParser;
+class Protocol;
+class Tracer;
+
 /**
  * This is the top class in the patch data structure. It represents a 
  * Nord Modular patch. It can read and write the PCH file format.
@@ -56,6 +64,9 @@ public:
   typedef list<Note*> NoteList;
   typedef list<KnobMap*> KnobMapList;
   typedef list<CtrlMap*> CtrlMapList;
+  typedef list<int> PositionList;
+
+  static void usePDLFile(string filename, Tracer* tracer);
 
   Patch();
   Patch(string);
@@ -64,6 +75,8 @@ public:
   
   string write();
   void writeParameter(string&, int);
+  void update(BitStream patchStream);
+  BitStream serialize(PositionList* sectionEndPositions);
 
   void setName(string name);
   string getName();
@@ -132,6 +145,16 @@ private:
   map<Morph::Type, Morph*> morph;
   KnobMapList knobMaps;
   CtrlMapList ctrlMaps;
+
+  string extractName(Packet* name);
+  void appendName(string name, IntStream& patchStream);
+  void storeEndPosition(IntStream intStream, PositionList* endPositions);
+  Module* getModule(Patch* patch, ModuleSection::Type section,
+		    int index, string context);
+
+  static string patchPdlFile;
+  static Protocol* patchProtocol;
+  static PacketParser* patchParser;
 };
 
 #endif

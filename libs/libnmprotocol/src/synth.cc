@@ -104,8 +104,11 @@ Patch* Synth::getPatch(int slot)
 void Synth::setPatch(int slot, Patch* patch)
 {
   patches[slot] = patch;
+  
+  Patch::PositionList sectionEndPositions;
+  BitStream patchStream = patch->serialize(&sectionEndPositions);
 
-  PatchMessage patchMessage(patch);
+  PatchMessage patchMessage(patchStream, sectionEndPositions);
   patchMessage.setSlot(slot);
   protocol->send(&patchMessage);
 
@@ -212,7 +215,8 @@ void Synth::messageReceived(LightMessage message)
 void Synth::messageReceived(PatchMessage message)
 {
   int slot = message.getSlot();
-  message.getPatch(patches[slot]);
+  BitStream patchStream = message.getPatchStream();
+  patches[slot]->update(patchStream);
 }
 
 void Synth::messageReceived(AckMessage message)
