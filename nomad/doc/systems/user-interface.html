@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Nomad Documentation</title>
+  <meta content="application/xhtml+xml; charset=ISO-8859-1" http-equiv="content-type" />
+  <link media="all" rel="stylesheet" charset="UTF-8" type="text/css" href="./css-styles.css" />
+<style type="text/css">
+/* <![CDATA[ */
+
+/* document specific css definitions */
+
+/* ]]> */
+</style>
+</head>
+<body>
+<div style="padding:10px;">
+
+<div class="dvGoBackToIndex">
+<a href="index.html">&lArr; Index</a>
+</div>
+
+<h1>User Interface</h1>
+
+<h1><a name="design-and-impl">1. Design and Implementation</a></h1>
+
+<h2>Why you should read this</h2>
+<p>
+If you are going to write your own controls or theme for the modules
+you should read this document. Apart from technical things you should
+find some useful information that will help you to improve the quality
+of your theme.
+</p>
+
+<h2>Ideas behind</h2>
+<p>
+When we thought about how to realize the user interface of the modules, the main
+argument that had lead to the current design, was just the amount of modules.
+</p>
+
+<p>
+There are about 120 Modules available. Each of them containing different types
+of controls, displays, in- and outputs and decorating elements like labels or images.
+If you count for each module about 10 such components. And for each component have,
+say 4 custom properties that must be defined. Then there are about 4800
+properties to define in total. Although the definition of these properties can not
+be avoided, one can make this task much more easy and more efficient.
+</p>
+
+<p>We decided to build a system that generates the user interface for the modules
+using configuration files containing all information needed for this task.
+This way allowed us to write an editor for placing the components and setting their
+properties. The generated configuration file is used by a factory to generate
+the modules and link their controls, displays, in- and outputs with the
+current patch.
+</p>
+
+<h2>Further problems</h2>
+
+<p>
+When we had created the classic theme, we found that the large number of components
+required to visualize a patch made the user interface slow and less responsive.
+
+We were able to trace this back to
+<ul>
+<li>the number of components</li>
+<li>the swing double buffering mechanism</li>
+</ul>
+
+</p>
+
+<h3>Reducing the number of components</h3>
+<p>
+  There are two kinds of components on a module. One that can change
+  their appearance any time, like controls, displays or connectors.
+  And the others that do not change, like text-labels or images.
+  Although we can not abandon the latter, we can help Java out by not using them.
+  This is done by not adding them to the modules component list, but
+  to let the module render them into its background buffer itself.
+</p>
+<p style="text-align:center;">
+  <img src="./res/user-interface/module-component-layers.png" width="569" height="248"
+       style="border:solid #7484CD 1px;" title="figure:layer rendering" /> <br />
+  <span style="font-size:smaller;color:#3A4267;">figure:layer rendering</span>
+</p>
+<p>
+  This is only more efficient because we use double buffering and
+  especially we use our own double buffering mechanism instead of the
+  mechanism built into the swing components. (More on this you find in the next
+  section of this document)
+</p>
+<p>
+  To realize this, we have to decide whether a component can change
+  it's appearance or not. This is simply done by the property defined
+  in <span class="cd">AbstractUIComponent</span> <span class="missinglink">(Javadoc)</span>
+
+<pre><code>    /**
+     * Sets the decorating property. If this property is set to true, then
+     * the component is not added to the module itself, but rendered directly
+     * to the module's background.
+     *
+     * This property should be set to <code>true</code> if the component can not change it's look anytime.
+     *
+     * @param enable true if component is a decorating component and does not change it's behaviour
+     */
+    public void setAsDecoratingComponent(boolean enable) {
+        isDecorating = enable;
+    }</code></pre>
+</p>
+
+<h3>Double Buffering</h3>
+
+<div class="reference">
+<ul>
+  <li>See: <a href="http://java.sun.com/j2se/1.4/pdf/VolatileImage.pdf">
+      http://java.sun.com/j2se/1.4/pdf/VolatileImage.pdf </a></li>
+</ul>
+</div>
+
+<p>
+  Although swing components have built in double buffering support we have
+  to use our own double buffering because the built in mechanism does
+  not fullfill our requirements.
+</p>
+
+<p>
+  Swing components use <span class="cd">VolatileImage</span> (<a href="http://java.sun.com/j2se/1.4.2/docs/api/java/awt/image/VolatileImage.html">Javadoc</a>)
+  for double buffering.
+
+  This is because <span class="cd">VolatileImage</span> is designed
+  to have hardware accelleration support and to be as efficient (speed)
+  as possible for on-screen rendering.
+
+  Due to the limited memory of a graphic card and because a volatile
+  image is stored in this memory, it can loss it's pixel-data anytime.
+  (on the windows platform a VolatileImage can for example be a DirectX surface)
+
+  The pixel-data can even get lost while the image is rendered. So
+  a worst-case could be that a component must repaint itself several times
+  before it is flipped on the screen.
+</p>
+
+<p>
+  Because the modules and their controls should look really pretty, they
+  use many features like antialiasing, may have calculation expensive
+  shapes (for example a round knob) or have gradient backgrounds.
+  So loosing the pixel-data is also a loss in cpu time (remember, that there may be hundreds of such components).
+</p>
+
+<p>
+  Using our own double buffering allows us to use a different image
+  type for double buffering. One that will not loose it's pixel-data.
+
+  So we can save the repaint of a component in the cases the buffer was lost.
+  This might sound a bit exaggerated, but really helped to improve the
+  responsiveness of the user interface.
+</p>
+
+<p>
+  The Nomad sources contain the <span class="cd">JPaintComponent</span>
+  (<span class="missinglink">Javadoc</span>) class which implements
+  our custom double buffering. (Use it for components that are not rendered
+  to the module background directly.)
+
+  It uses <span class="cd">BufferedImage</span>
+  (<a href="http://java.sun.com/j2se/1.4.2/docs/api/java/awt/image/BufferedImage.html">Javadoc</a>)
+  as buffer, which also is hardware accellerated (but less then VolatileImage)
+  and is fast for on-screen rendering, too.
+
+  Instead of
+  <pre><code>public void paintComponent(Graphics g)</code></pre>
+  you must implement the method
+  <pre><code>public void paintBuffer(Graphics g)</code></pre>
+  to draw a component. More information you can find in the
+  <span class="missinglink">Javadoc</span> documentation of the class.
+
+  The swing double buffering is disabled by default. It should
+  not be enabled because it is unecessary and even slower than
+  using only the swing double buffering mechanism.
+</p>
+
+<h1><a name="meta">2. The user interface meta model</a></h1>
+<p style="text-align:center;">
+  <img src="./res/user-interface/meta-model.png" width="611" height="218"
+       style="border:solid #7484CD 1px;" title="figure:meta model" /> <br />
+  <span style="font-size:smaller;color:#3A4267;">figure:meta model</span>
+</p>
+
+<p>
+The ModuleBuilder class uses the XML configuration file to set up the user interface of a module.
+This file contains the class-names of the components that the factory has to create
+and and custom property settings for each component.
+</p>
+
+<p>
+Any component placed on the <span class="cd">AbstractModuleGUI</span>
+is (has to be) wrapped by <span class="cd">AbstractUIComponent</span>
+(the swing component is returned by <span class="cd">getComponent():JComponent</span>).
+
+The <span class="cd">AbstractUIComponent</span> class has several
+<span class="cd">Property</span> objects that provide access to
+attributes of the component like it's size or location either
+by the real type (for example Dimension or Point) or by a string representation
+for the attribute. The latter is neccessary because we must be able
+to write the attributes to the XML file and to read it back.
+</p>
+
+<h1><a name="xml-file-format">3. The xml file format</a></h1>
+
+<p>
+
+The xml file format is very simple. It contains
+
+<ul>
+<li>a list of <span class="cd">module</span>-elements
+having an <span class="cd">id</span> attribute to identify a module</li>
+<li>... each of them contains a list of <span class="cd">control</span>-elements
+(<i>"ups, this should be renamed to 'component'"</i>)
+<br />
+having an <span class="cd">class</span> attribute to identify the component class
+</li>
+<li>... each of them contains a list of <span class="cd">property</span>-elements <br />
+having a <span class="cd">id</span> attribute to identify the components property <br />
+and a <span class="cd">value</span> attribute containing the text representation <br />
+of the property's value
+</li>
+</ul>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE ui-description SYSTEM "ui-description.dtd"&gt;
+&lt;ui-description&gt;
+  ...
+  &lt;module id="12"&gt;
+    &lt;control class="nomad.gui.model.component.builtin.DefaultConnectorUI"&gt;
+      &lt;property id="location" value="4,26" /&gt;
+      &lt;property id="connector" value="connector.0.input" /&gt;
+    &lt;/control&gt;
+    &lt;control class="nomad.gui.model.component.builtin.DefaultControlUI"&gt;
+      &lt;property id="location" value="73,15" /&gt;
+      &lt;property id="port.0" value="parameter.0" /&gt;
+      &lt;property id="knob.size" value="false" /&gt;
+    &lt;/control&gt;
+    &lt;control class="nomad.gui.model.component.builtin.DefaultLabelUI"&gt;
+      &lt;property id="location" value="238,2" /&gt;
+      &lt;property id="label.text" value="{@wf.tri}" /&gt;
+    &lt;/control&gt;
+    ...
+  &lt;/module&gt;
+  ...
+&lt;/ui-description&gt;</code></pre>
+
+<div style="text-align:center;color:#3A4267;">extract of the ui xml file</div>
+
+</p>
+
+<h1><a name="changelog">Changelog</a></h1>
+
+<p>
+<pre class="changelog"><code>2005-11-14 (<a href="mailto:christianschneider@fastmail.fm">Christian</a>) - Initial Document</code></pre>
+</p>
+
+</div>
+</body>
+</html>
+
