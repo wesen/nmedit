@@ -1,0 +1,296 @@
+<!--
+	This file is part of Nomad.
+
+    Nomad is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Nomad is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Nomad; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+-->
+<!-- ==========================================================================
+
+PURPOSE:
+	This DTD was developed to define the modules of the Nord Modular
+	synthesizer and to represent their hierarchie.
+
+FIXME:
+	(1.0) - The substitutions have to be better integrated. For example on the
+			oscillator the frequency value (and with that it's substitution)
+			depends on the states of the frequency-display, coarse and fine.
+			In this version of the DTD supports no substitutions that
+    		have more than one variable.
+	(1.0) - All possible substitution-names should be defined in this DTD
+	(1.0) - Language-independend substitutions for the values of a parameter
+			should be defined in this DTD (for example simple string-
+			substitutions like (0='Off',1='On'))
+	(1.0) - Substitutions now threaded as language-depended, as they must
+			be calculated (for example the Oscillator's frequency) might be
+			represented in the xml file as well.
+
+			Perhaps such a definition could look like:
+			<substitution name="example-transformation">
+				<transform
+					offset = "0"				# 0  	should be default
+					factor = "1.0"				# 1.0	should be default
+					praefix-string	= "x"		# ""	should be default
+					suffix-string   = "[UNIT]"	# ""	should be default
+				/>
+			</substitution>
+
+			and represent the transformation 
+	
+					t_ 			:(value:int) -> string	
+					  o,f,p,s
+
+			defined as
+
+					string := 
+						concatenate(
+							praefix-string			,
+							(value+offset)*factor	,
+							suffix-string	
+						)
+	(1.0) - There could be an 'optional'-element containing optional information
+			about a module.
+
+			For example it could contain layout related definitions such as
+			how elements should be grouped. For example
+				- coarse - fine - frequency-display belong together
+	            - in- or outputs often belong to an additional level-knob
+
+			This would definately increase the development time required to
+			generate custom themes. Simply because
+				- grouped elements can automatically be positioned together
+				- more user interface components can be generated automatically
+				  for example grouped elements could be put into a groupbox.
+				  Also text/icon-labels (where it is reasonable).
+
+CHANGE HISTORY:
+[Version 1.0]
+	2005-11-16 Initial Version.
+	
+=========================================================================== -->
+
+
+
+
+<!-- ====================================================================== -->
+<!-- Useful entities for increased DTD readability -->
+<!-- ====================================================================== -->
+
+<!-- Used to define the type of either an 'input' or an 'output' connector. -->
+<!ENTITY % connector-type
+	"type		(audio|control|logic|slave)	#REQUIRED">
+
+
+
+
+<!-- 
+		the core attributes of a 'parameter' (also the 'custom' element)
+		'min': 			The smallest possible value.
+		       			If the attribute is missing it implies a zero value.
+
+		'max': 			The largest possible value.
+
+		'default':		The default value.
+						If the attribute is missing it implies a zero value.
+
+		-'bitcount':	Number of bits reserved for the value.
+						(expected by the protocol)
+-->
+<!ENTITY % value.att
+   "min			NMTOKEN		#IMPLIED
+	max			NMTOKEN		#REQUIRED
+	default		NMTOKEN		#IMPLIED">
+
+
+
+
+<!-- boolean values -->
+<!ENTITY % boolean
+	"true|false">
+
+
+
+
+<!--
+		The id for 'module', 'parameter', 'custom', 'input', 'output'.
+		The id's value is equivalent to the index of an element defined
+		in the protocol.
+
+		For example two inputs with indices 0 and 1 must have an id with
+		the same values 0 and 1.
+-->
+<!ENTITY % index-id
+	"id 		NMTOKEN 	#REQUIRED">
+
+
+
+
+<!-- ====================================================================== -->
+<!-- top level element -->
+<!-- ====================================================================== -->
+
+<!ELEMENT modules-definition (structure, modules)>
+
+
+
+
+<!-- ====================================================================== -->
+<!-- elements for structuring the modules
+
+		The elements order is equivalent to their order in the xml file.
+-->
+<!-- ====================================================================== -->
+
+<!-- defines the hierarchie of the modules -->
+<!ELEMENT structure (group+)>
+
+
+
+
+<!-- Corresponds to the tabs of the tab-bar (like I/O, Osc, LFO, ...). -->
+<!ELEMENT group 	(section+)>
+<!--	
+		'name':			The full name of a tab-bar.
+		'short-name':	The name displayed in a tab-bar.
+						If the attribute is missing it's value is implied
+						by the value of attribute 'name'.
+-->
+<!ATTLIST group
+	name 		CDATA		#REQUIRED
+	short-name 	CDATA		#IMPLIED
+>
+
+
+
+
+<!-- Corresponds to the grouping of the modules inside a tab-bar. -->
+<!ELEMENT section (insert+)>
+
+
+
+
+<!-- Inserts a module into a specific section of a group. -->
+<!ELEMENT insert EMPTY>
+<!--
+		'module-id':	The id of a module.
+						A module with the same id must be defined inside the
+						'modules'-element.
+-->
+<!ATTLIST insert 
+	module-id	NMTOKEN		#REQUIRED>
+
+
+
+
+<!-- ====================================================================== -->
+<!-- elements for defining the properties of a module -->
+<!-- ====================================================================== -->
+
+<!-- Flat list containing the definitions for each module. -->
+<!ELEMENT modules (module+)>
+
+
+
+
+<!-- defines a module -->
+<!ELEMENT module (custom|input|output|parameter)*>
+<!--
+		'id' (%index-id;):
+						A number that corresponds to a module.
+	
+		'cva-only':		This attribute is only used in the PolyAreaIn module.
+						Its value is false by default.
+						The attribute has only to be specified if it should
+						have 'true' as value.
+	
+		'limit'			Defines a limit of how many times a module is
+						available in one patch. Not specifying this attribute
+						means that the number of this module is not limited.
+-->
+<!ATTLIST module
+	%index-id;
+	short-name 	CDATA		#REQUIRED
+	cva-only 	(%boolean;) "false"
+	limit 		NMTOKEN		#IMPLIED
+	cycles 		NMTOKEN		#REQUIRED
+	dyn-mem 	NMTOKEN		#REQUIRED
+	height 		NMTOKEN		#REQUIRED
+	prog-mem 	NMTOKEN		#REQUIRED
+	x-mem 		NMTOKEN		#REQUIRED
+	y-mem 		NMTOKEN		#REQUIRED
+	zero-page 	NMTOKEN		#REQUIRED
+>
+
+
+
+
+<!-- input connector -->
+<!ELEMENT input EMPTY>
+<!ATTLIST input
+	%index-id;
+	name 		CDATA 		#REQUIRED
+	%connector-type;
+>
+
+
+
+
+<!-- output connector -->
+<!ELEMENT output EMPTY>
+<!ATTLIST output
+	%index-id;
+	name 		CDATA 		#REQUIRED
+	%connector-type;
+>
+
+
+
+
+<!-- parameter
+
+	'use-substitution':	Contains an identifier for the substitution that
+						should be used to give the formatted representation
+						of the parameter's raw value.
+	
+						A missing 'use-substitution' attribute implies that
+						the value itself is equal to it's substitution.
+						This simply means that for example the number 5
+						is substituted by the string "5"
+
+-->
+<!ELEMENT parameter EMPTY>
+<!ATTLIST parameter
+	%index-id;
+	name 		CDATA 		#REQUIRED
+	%value.att;
+	bit-count 	NMTOKEN		#REQUIRED
+	use-substitution CDATA	#IMPLIED
+>
+
+
+
+
+<!-- custom-parameter -->
+<!ELEMENT custom EMPTY>
+<!ATTLIST custom
+	%index-id;
+	name 		CDATA 		#REQUIRED
+	%value.att;
+>
+
+
+
+
+<!-- ====================================================================== -->
+<!-- End of DTD -->
+<!-- ====================================================================== -->
