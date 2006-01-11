@@ -5,10 +5,10 @@ srcfiles = [('src/' + x) for x in Split(src)]
 
 nmedit = Environment(CPPPATH = ['../libs/libppf', '../libs/libpdl',
                                 '../libs/libnmpatch', '../libs/libnmprotocol'],
-                     LIBPATH = ['/lib', '/usr/lib', '/usr/local/lib',
-                                '../libs/libppf', '../libs/libpdl',
-                                '../libs/libnmpatch', '../libs/libnmprotocol'],
-                     LIBS = ['nmprotocol', 'nmpatch', 'pdl', 'ppf'])
+                     LIBPATH = ['../libs/libppf', '../libs/libpdl', 
+                                '../libs/libnmpatch', '../libs/libnmprotocol', 
+                                '/lib', '/usr/lib/', '/usr/local/lib'])
+                    #LIBS = ['nmprotocol', 'nmpatch', 'pdl', 'ppf']
 
 opts = Options('nmedit.conf')
 opts.Add(PathOption('PREFIX',
@@ -46,6 +46,7 @@ if not conf.CheckLib('nmprotocol'):
 if not conf.CheckLib('fltk'):
    print 'libfltk missing!'
    Exit(1);
+
 conf.env.ParseConfig('fltk-config --cxxflags --ldflags')
 
 nmedit = conf.Finish()

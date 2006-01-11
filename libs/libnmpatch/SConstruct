@@ -1,7 +1,10 @@
 
-src = 'nmpatch.i patchparser.yy patchlexer.ll nmlexer.cc cable.cc ctrlmap.cc knobmap.cc module.cc modulesection.cc morph.cc morphmap.cc note.cc patch.cc moduletype.cc'
+src = 'patchparser.yy patchlexer.ll nmlexer.cc cable.cc ctrlmap.cc knobmap.cc module.cc modulesection.cc morph.cc morphmap.cc note.cc patch.cc moduletype.cc'
 
 inc = 'cable.h ctrlmap.h knobmap.h module.h modulesection.h morph.h morphmap.h note.h patch.h moduletype.h modulelistener.h modulesectionlistener.h'
+
+if 'nomad' in COMMAND_LINE_TARGETS:
+  src='nmpatch.i '+src
 
 pkg = 'module.ppf patch.pdl'
 
@@ -12,6 +15,7 @@ pkgfiles = [('src/' + x)     for x in Split(pkg)]
 nmpatch = Environment(SWIGFLAGS = '-c++ -java -package nmcom.swig.nmpatch -outdir ../../java-nmcom/src/nmcom/swig/nmpatch',
                       YACCFLAGS = '-d -pnm',
                       LEXFLAGS = '-+ -olex.yy.c -Pnm',
+                     LIBPATH = ['../libppf', '../libpdl','/lib', '/usr/lib', '/usr/local/lib'],
                       CPPPATH = ['.', '../libpdl', '../libppf'])
 
 opts = Options('nmpatch.conf')

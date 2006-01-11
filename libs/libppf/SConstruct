@@ -1,6 +1,9 @@
 
-src = 'ppf.i parser.cc bundle.cc boundbundle.cc'
+src = 'parser.cc bundle.cc boundbundle.cc'
 inc = 'boundbundle.h bundle.h parser.h ppfexception.h'
+
+if 'nomad' in COMMAND_LINE_TARGETS:
+  src='ppf.i '+src
 
 srcfiles = [('src/' + x) for x in Split(src)]
 incfiles = [('ppf/' + x) for x in Split(inc)]
