@@ -3,8 +3,12 @@ src = 'patchparser.yy patchlexer.ll nmlexer.cc cable.cc ctrlmap.cc knobmap.cc mo
 
 inc = 'cable.h ctrlmap.h knobmap.h module.h modulesection.h morph.h morphmap.h note.h patch.h moduletype.h modulelistener.h modulesectionlistener.h'
 
-if 'nomad' in COMMAND_LINE_TARGETS:
-  src='nmpatch.i '+src
+import os
+java_home = os.environ['JAVA_HOME']
+withJava = int(ARGUMENTS.get('JAVA', 0))==1;
+if withJava:
+  print 'Compiling with java support (JAVA_HOME='+java_home+')'
+  src = 'nmpatch.i '+src
 
 pkg = 'module.ppf patch.pdl'
 
@@ -16,12 +20,13 @@ nmpatch = Environment(SWIGFLAGS = '-c++ -java -package nmcom.swig.nmpatch -outdi
                       YACCFLAGS = '-d -pnm',
                       LEXFLAGS = '-+ -olex.yy.c -Pnm',
                      LIBPATH = ['../libppf', '../libpdl','/lib', '/usr/lib', '/usr/local/lib'],
-                      CPPPATH = ['.', '../libpdl', '../libppf'])
+                      CPPPATH = ['.', '../libpdl', '../libppf',java_home+'/include/'])
 
 opts = Options('nmpatch.conf')
 opts.Add(PathOption('PREFIX',
                     'Install dir (Defult: /usr/local)',
                     '/usr/local'))
+opts.Add(BoolOption('JAVA', 'Set to 1 to compile with java support', 0))
 opts.Update(nmpatch)
 opts.Save('nmpatch.conf', nmpatch)
 
@@ -34,13 +39,32 @@ conf = Configure(nmpatch)
 
 conf.env.Append(CPPFLAGS='-DLIBPATH=\'"' + idir_pkg + '"\'')
 
+if withJava:
+  # java include path
+  java_include=java_home+'/include'
+  nmpatch.Append(CPPPATH=[java_include])
+  
+  # check for 'jni_md.h'
+  for subdirInclude in os.listdir(java_include):
+    mdfile=subdirInclude+'/jni_md.h'
+    if os.path.isfile(java_include+'/'+mdfile):
+      if conf.CheckCHeader(mdfile):
+        mdpath=java_include+'/'+subdirInclude
+        nmpatch.Append(CPPPATH=[mdpath])
+        break
+
+  # if 'jni_md.h' is not on the path, this will fail
+  if not conf.CheckCHeader('jni.h'):
+    print 'jni.h not found!'
+    Exit(1)
+
 if not conf.CheckLib('ppf'):
    print "libppf missing!"
-   Exit(1);
+   Exit(1)
 
 if not conf.CheckLib('pdl'):
    print "libpdl missing!"
-   Exit(1);
+   Exit(1)
 
 nmpatch = conf.Finish()
 
