@@ -12,6 +12,32 @@ import nmcom.swig.pdl.*;
 import nmcom.swig.ppf.*;
 %}
 
+// makes NMProtocolJNI synchronized
+//%javamethodmodifiers NMProtocol::heartbeat "public synchronized";
+
+/*
+#ifdef NOMAD
+// other class hirarchie
+%typemap(javabase) MidiMessage "nomad.com.message.MidiMessage";
+/*
+%typemap(javabase) AckMessage "nomad.com.message.AckMessage";
+%typemap(javabase) GetPatchMessage "nomad.com.message.GetPatchMessage";
+%typemap(javabase) IAmMessage "nomad.com.message.IAmMessage";
+%typemap(javabase) LightMessage "nomad.com.message.LightMessage";
+%typemap(javabase) NewPatchInSlotMessage "nomad.com.message.NewPatchInSlotMessage";
+%typemap(javabase) ParameterMessage "nomad.com.message.ParameterMessage";
+%typemap(javabase) PatchListMessage "nomad.com.message.PatchListMessage";
+%typemap(javabase) PatchMessage "nomad.com.message.PatchMessage";
+%typemap(javabase) RequestPatchMessage "nomad.com.message.RequestPatchMessage";
+%typemap(javabase) SlotActivatedMessage "nomad.com.message.SlotActivatedMessage";
+%typemap(javabase) SlotsSelectedMessage "nomad.com.message.SlotsSelectedMessage";
+%typemap(javabase) VoiceCountMessage "nomad.com.message.VoiceCountMessage";
+
+%typemap(javabase) NMProtocol "ComPort";
+%include "protocol-comport.i"
+#endif
+*/
+
 %include "stl.i"           // includes std_string.i, std_vector.i, ...
 %include "cjstring.i"      // std::string& -> stringbuffer
 %include "make_public.i"
@@ -24,6 +50,9 @@ namespace std {
 
 // std::vector<unsigned char>
 %template(UnsignedCharVector) vector<unsigned char>;
+
+// std::list<int>;
+%template(IntList) list<int>;
 
 // std::list<string>
 %template(StringList) list<std::string>;

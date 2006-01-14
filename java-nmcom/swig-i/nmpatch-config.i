@@ -2,9 +2,11 @@
 
 %typemap(javaimports) SWIGTYPE %{
 import nmcom.swig.ppf.*;
+import nmcom.swig.pdl.*;
 %}
 %pragma(java) jniclassimports=%{
 import nmcom.swig.ppf.*;
+import nmcom.swig.pdl.*;
 %}
 
 %include "stl.i" // includes std_string.i, std_vector.i, ...
@@ -16,6 +18,13 @@ import nmcom.swig.ppf.*;
 /* Templates ----------------------------------------------------- */
 
 namespace std {
+
+// std::list<int>;
+%template(IntList) list<int>;
+
+// std::list<BitStream>;
+specialize_std_list(BitStream);
+%template(BitStreamList) list<BitStream>;
 
 // std::list<Cable*>;
 specialize_std_list(Cable*);
