@@ -1,6 +1,6 @@
 /*
     Protocol Definition Language
-    Copyright (C) 2003 Marcus Andersson
+    Copyright (C) 2003-2006 Marcus Andersson
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ protocol:
 packet:
 	IDENTIFIER PAD NUMBER ASSIGN
         {
-	  packetParser = protocol.newPacketParser($1, $3);
+	  packetParser = protocol.newPacketParser($1.sval, $3.ival);
 	}
 	matchers END
 	;
@@ -56,11 +56,11 @@ matcher:
 
 matcherOption:
 	CONDITIONAL IDENTIFIER COMPARE NUMBER CHOOSE
-        { condition = new Condition($2, $4, false);
+        { condition = new Condition($2.sval, $4.ival, false);
 	  optional = false; } |
 
 	CONDITIONAL IDENTIFIER NOT_COMPARE NUMBER CHOOSE
-        { condition = new Condition($2, $4, true);
+        { condition = new Condition($2.sval, $4.ival, true);
 	  optional = false; } |
 
 	OPTIONAL
@@ -71,21 +71,24 @@ matcherOption:
 
 matcherType:
 	IDENTIFIER BIND IDENTIFIER
-        { packetParser.addPacketMatcher("", $1, $3, condition, optional); } |
+        { packetParser.addPacketMatcher("", $1.sval, $3.sval,
+                                        condition, optional); } |
 
 	IDENTIFIER TIMES IDENTIFIER BIND IDENTIFIER
-        { packetParser.addPacketMatcher($1, $3, $5, condition, optional); } |
+        { packetParser.addPacketMatcher($1.sval, $3.sval, $5.sval,
+                                        condition, optional); } |
 
 	IDENTIFIER SIZE NUMBER
-        { packetParser.addVariableMatcher(1, $1, $3, 0,
+        { packetParser.addVariableMatcher(1, $1.sval, $3.ival, 0,
 					  condition, optional); } |
 
 	NUMBER TIMES IDENTIFIER SIZE NUMBER STOP NUMBER
-        { packetParser.addVariableMatcher($1, $3, $5, $7,
+        { packetParser.addVariableMatcher($1.ival, $3.sval, $5.ival, $7.ival,
 					  condition, optional); } |
 
 	NUMBER SIZE NUMBER
-        { packetParser.addConstantMatcher($1, $3, condition, optional); }
+        { packetParser.addConstantMatcher($1.ival, $3.ival,
+                                          condition, optional); }
 	;
 
 %%
@@ -101,14 +104,22 @@ private PdlLex yylex;
 
 private int yylex()
 {
-  return yylex.yylex();
+  try {
+    return yylex.yylex();
+  }
+  catch(java.io.IOException e) {
+    yyerror(e.toString());
+  }
+  return 0;
 }
 
-void yyerror(String s) {
-    throw PDLException(s + " at line " + pdlline, 0);
+public void yyerror(String s)
+{
+  System.out.println(s + " at line " + pdlline);
 }
 
-boolean init(String filename, Protocol p)
+public void init(String filename, Protocol p)
+  throws Exception
 {
   protocol = p;
   
@@ -117,6 +128,4 @@ boolean init(String filename, Protocol p)
   }
   reader = new java.io.FileReader(filename);
   yylex = new PdlLex(reader, this);
-
-  return true;
 }

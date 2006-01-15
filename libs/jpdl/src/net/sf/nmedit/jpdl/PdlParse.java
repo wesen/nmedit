@@ -258,7 +258,7 @@ final static String yyrule[] = {
 "matcherType : NUMBER SIZE NUMBER",
 };
 
-//#line 92 "pdlparse.yy"
+//#line 95 "pdlparse.yy"
 
 public int pdlline = 1;
 
@@ -271,14 +271,22 @@ private PdlLex yylex;
 
 private int yylex()
 {
-  return yylex.yylex();
+  try {
+    return yylex.yylex();
+  }
+  catch(java.io.IOException e) {
+    yyerror(e.toString());
+  }
+  return 0;
 }
 
-void yyerror(String s) {
-    throw PDLException(s + " at line " + pdlline, 0);
+public void yyerror(String s)
+{
+  System.out.println(s + " at line " + pdlline);
 }
 
-boolean init(String filename, Protocol p)
+public void init(String filename, Protocol p)
+  throws Exception
 {
   protocol = p;
   
@@ -287,10 +295,8 @@ boolean init(String filename, Protocol p)
   }
   reader = new java.io.FileReader(filename);
   yylex = new PdlLex(reader, this);
-
-  return true;
 }
-//#line 230 "PdlParse.java"
+//#line 236 "PdlParse.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -435,17 +441,17 @@ boolean doaction;
 case 3:
 //#line 43 "pdlparse.yy"
 {
-	  packetParser = protocol.newPacketParser(val_peek(3), val_peek(1));
+	  packetParser = protocol.newPacketParser(val_peek(3).sval, val_peek(1).ival);
 	}
 break;
 case 8:
 //#line 59 "pdlparse.yy"
-{ condition = new Condition(val_peek(3), val_peek(1), false);
+{ condition = new Condition(val_peek(3).sval, val_peek(1).ival, false);
 	  optional = false; }
 break;
 case 9:
 //#line 63 "pdlparse.yy"
-{ condition = new Condition(val_peek(3), val_peek(1), true);
+{ condition = new Condition(val_peek(3).sval, val_peek(1).ival, true);
 	  optional = false; }
 break;
 case 10:
@@ -458,27 +464,30 @@ case 11:
 break;
 case 12:
 //#line 74 "pdlparse.yy"
-{ packetParser.addPacketMatcher("", val_peek(2), val_peek(0), condition, optional); }
+{ packetParser.addPacketMatcher("", val_peek(2).sval, val_peek(0).sval,
+                                        condition, optional); }
 break;
 case 13:
-//#line 77 "pdlparse.yy"
-{ packetParser.addPacketMatcher(val_peek(4), val_peek(2), val_peek(0), condition, optional); }
+//#line 78 "pdlparse.yy"
+{ packetParser.addPacketMatcher(val_peek(4).sval, val_peek(2).sval, val_peek(0).sval,
+                                        condition, optional); }
 break;
 case 14:
-//#line 80 "pdlparse.yy"
-{ packetParser.addVariableMatcher(1, val_peek(2), val_peek(0), 0,
+//#line 82 "pdlparse.yy"
+{ packetParser.addVariableMatcher(1, val_peek(2).sval, val_peek(0).ival, 0,
 					  condition, optional); }
 break;
 case 15:
-//#line 84 "pdlparse.yy"
-{ packetParser.addVariableMatcher(val_peek(6), val_peek(4), val_peek(2), val_peek(0),
+//#line 86 "pdlparse.yy"
+{ packetParser.addVariableMatcher(val_peek(6).ival, val_peek(4).sval, val_peek(2).ival, val_peek(0).ival,
 					  condition, optional); }
 break;
 case 16:
-//#line 88 "pdlparse.yy"
-{ packetParser.addConstantMatcher(val_peek(2), val_peek(0), condition, optional); }
+//#line 90 "pdlparse.yy"
+{ packetParser.addConstantMatcher(val_peek(2).ival, val_peek(0).ival,
+                                          condition, optional); }
 break;
-//#line 413 "PdlParse.java"
+//#line 422 "PdlParse.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
