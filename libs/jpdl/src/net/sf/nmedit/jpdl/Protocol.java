@@ -24,6 +24,7 @@ import java.util.*;
 public class Protocol
 {
     public Protocol(String filename)
+	throws Exception
     {
 	tracer = null;
 	
