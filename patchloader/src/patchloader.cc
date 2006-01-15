@@ -155,7 +155,9 @@ void load(string filename, string patchname, int slot,
 {
   Patch* patch = new Patch(filename);
   patch->setName(patchname);
-  PatchMessage patchMessage(patch);
+  Patch::PositionList sectionEndPositions;
+  BitStream patchStream = patch->serialize(&sectionEndPositions);
+  PatchMessage patchMessage(patchStream, sectionEndPositions);
   patchMessage.setSlot(slot);
   
   MidiDriver* driver = MidiDriver::createDriver(drivername);
