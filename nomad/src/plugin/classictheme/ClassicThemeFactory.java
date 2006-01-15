@@ -1,44 +1,45 @@
 package plugin.classictheme;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
-import nomad.graphics.BackgroundPainter;
-import nomad.gui.ModuleSectionGUI;
-import nomad.gui.model.UIFactory;
-import nomad.gui.model.component.builtin.ButtonGroupUI;
-import nomad.gui.model.component.builtin.DefaultConnectorUI;
-import nomad.gui.model.component.builtin.DefaultControlUI;
-import nomad.gui.model.component.builtin.DefaultLabelUI;
-import nomad.gui.model.component.builtin.DefaultTextDisplay;
-import nomad.gui.model.component.builtin.SliderArrayUI;
-import nomad.gui.model.component.builtin.SliderArrayUI14;
-import nomad.gui.model.component.builtin.SliderUI;
-import nomad.gui.model.component.builtin.VocoderUI;
-import nomad.misc.ImageTracker;
-import nomad.patch.ModuleSection;
+
+import org.nomad.patch.Module;
+import org.nomad.patch.ModuleSection;
+import org.nomad.theme.ModuleGUI;
+import org.nomad.theme.ModuleSectionGUI;
+import org.nomad.theme.UIFactory;
+import org.nomad.theme.component.NomadActiveLabel;
+import org.nomad.theme.component.NomadButtonArray;
+import org.nomad.theme.component.NomadClassicConnector;
+import org.nomad.theme.component.NomadClassicKnob;
+import org.nomad.theme.component.NomadImageView;
+import org.nomad.theme.component.NomadLabel;
+import org.nomad.theme.component.NomadResetButton;
+import org.nomad.theme.component.VocoderBandDisplay;
+import org.nomad.util.graphics.BackgroundPainter;
+import org.nomad.util.misc.ImageTracker;
 
 public class ClassicThemeFactory extends UIFactory {
 	public ClassicThemeFactory() {
-		installUIClass(DefaultLabelUI.class);
-		installUIClass(DefaultTextDisplay.class);
-		installUIClass(DefaultControlUI.class);
-		installUIClass(DefaultConnectorUI.class);
-		installUIClass(ButtonGroupUI.class);
-		installUIClass(SliderUI.class);
-		installUIClass(VocoderUI.class);
-		installUIClass(SliderArrayUI.class);
-		installUIClass(SliderArrayUI14.class);
-		
-		DefaultControlUI.resetKnobLook();
-		
-		installDefaultControl(DefaultControlUI.class);
-		installDefaultOptionControl(ButtonGroupUI.class);
-		installDefaultLabel(DefaultLabelUI.class);
-		installDefaultConnector(DefaultConnectorUI.class);
+		installClass(NomadActiveLabel.class,"display.text");
+		installClass(NomadButtonArray.class,"button");
+		installClass(NomadClassicConnector.class,"connector");
+		installClass(NomadClassicKnob.class,"knob");
+		installClass(NomadImageView.class,"image");
+		installClass(NomadLabel.class,"label");
+		installClass(NomadResetButton.class,"knob.reset");
+		installClass(VocoderBandDisplay.class,"display.vocoder");
 	}
 
 	public String getUIDescriptionFileName() {
 		return "src/plugin/classictheme/ui.xml";
+	}
+
+	public ModuleGUI getModuleGUI(Module module, ModuleSectionGUI moduleSectionGUI) {
+		ModuleGUI gui = super.getModuleGUI(module, moduleSectionGUI);
+		gui.setBackground(Color.decode("#BFBFBF"));
+		return gui;
 	}
 
 	public ModuleSectionGUI getModuleSectionGUI(ModuleSection moduleSection) {

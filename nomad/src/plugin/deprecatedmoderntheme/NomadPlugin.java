@@ -1,20 +1,15 @@
-package plugin.classictheme; 
+package plugin.deprecatedmoderntheme; 
 
-import org.nomad.plugin.NomadFactory;
+import nomad.plugin.NomadFactory;
 
-/**
- * The classic theme plugin.
- * 
- * @author Christian Schneider
- */
-public class NomadPlugin extends org.nomad.plugin.NomadPlugin {
+public class NomadPlugin extends nomad.plugin.NomadPlugin {
 
 	private final
 	String[] author_list = 
 		new String[]{"Ian Hoogeboom", "Christian Schneider"};
 	
 	public String getName() {
-		return "Classic Theme";
+		return "Modern Theme";
 	}
 
 	public String[] getAuthors() {
@@ -22,15 +17,15 @@ public class NomadPlugin extends org.nomad.plugin.NomadPlugin {
 	}
 
 	public String getDescription() {
-		return "Theme of the official editor.";
+		return "Modern Theme.";
 	}
 
 	public int getFactoryType() {
-		return org.nomad.plugin.NomadPlugin.NOMAD_FACTORY_TYPE_UI;
+		return nomad.plugin.NomadPlugin.NOMAD_FACTORY_TYPE_UI;
 	}
 
 	public NomadFactory getFactoryInstance() {
-		return new ClassicThemeFactory();
+		return new ModernThemeFactory();
 	}
 
 	public boolean supportsCurrentPlatform() {

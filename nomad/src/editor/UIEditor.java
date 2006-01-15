@@ -21,6 +21,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import plugin.deprecatedclassictheme.ClassicThemeFactory;
+
 import nomad.application.Run;
 import nomad.application.ui.ModuleToolbar;
 import nomad.gui.model.ModuleGUIBuilder;
@@ -32,7 +34,6 @@ import nomad.model.descriptive.ModuleDescriptions;
 import nomad.model.descriptive.substitution.XMLSubstitutionReader;
 import nomad.plugin.PluginManager;
 import nomad.plugin.cache.XMLUICacheWriter;
-import plugin.classictheme.ClassicThemeFactory;
 
 public class UIEditor extends JFrame {
 	

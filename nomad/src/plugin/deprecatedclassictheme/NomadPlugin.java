@@ -1,13 +1,13 @@
-package plugin.classictheme; 
+package plugin.deprecatedclassictheme; 
 
-import org.nomad.plugin.NomadFactory;
+import nomad.plugin.NomadFactory;
 
 /**
  * The classic theme plugin.
  * 
  * @author Christian Schneider
  */
-public class NomadPlugin extends org.nomad.plugin.NomadPlugin {
+public class NomadPlugin extends nomad.plugin.NomadPlugin {
 
 	private final
 	String[] author_list = 
@@ -26,7 +26,7 @@ public class NomadPlugin extends org.nomad.plugin.NomadPlugin {
 	}
 
 	public int getFactoryType() {
-		return org.nomad.plugin.NomadPlugin.NOMAD_FACTORY_TYPE_UI;
+		return nomad.plugin.NomadPlugin.NOMAD_FACTORY_TYPE_UI;
 	}
 
 	public NomadFactory getFactoryInstance() {

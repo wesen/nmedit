@@ -1,0 +1,4894 @@
+module 91
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 6,33
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 6,60
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,89
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 6,89
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,40
+property connector connector.2.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 192,-1
+property port.0 parameter.16
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 22,14
+property location 229,57
+property port.0 parameter.17
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 106,4
+property port.0 parameter.18
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 161,3
+property port.0 parameter.16
+component nomad.gui.model.component.builtin.SliderArrayUI
+property component.size 198,64
+property location 25,35
+property port.0 parameter.0
+property port.1 parameter.1
+property port.2 parameter.2
+property port.3 parameter.3
+property port.4 parameter.4
+property port.5 parameter.5
+property port.6 parameter.6
+property port.7 parameter.7
+property port.8 parameter.8
+property port.9 parameter.9
+property port.10 parameter.10
+property port.11 parameter.11
+property port.12 parameter.12
+property port.13 parameter.13
+property port.14 parameter.14
+property port.15 parameter.15
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 5,21
+property label.text Clk
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 5,48
+property label.text Rst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 2,76
+property label.text Sync
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 139,6
+property label.text Step
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 217,41
+property label.text Link
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 235,76
+property label.text Out
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 27,21
+property label.text 1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 38,21
+property label.text 2
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 50,21
+property label.text 3
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 63,21
+property label.text 4
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 74,21
+property label.text 5
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 86,21
+property label.text 6
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 98,21
+property label.text 7
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 110,21
+property label.text 8
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 122,21
+property label.text 9
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 132,21
+property label.text 10
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 145,21
+property label.text 11
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 156,21
+property label.text 12
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 169,21
+property label.text 13
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 181,21
+property label.text 14
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 192,21
+property label.text 15
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 204,21
+property label.text 16
+module 63
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 41,27
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 100,27
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 166,27
+property connector connector.2.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 227,27
+property connector connector.3.output
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 22,15
+property label.text Latest note
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 85,15
+property label.text Patch gate
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 158,4
+property label.text Latest\nvel on
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 219,4
+property label.text Latest\nrel vel
+module 92
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 5,31
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 5,60
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 184,71
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,71
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 58,50
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 99,48
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 136,50
+property port.0 parameter.2
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 24,25
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 24,55
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 22,14
+property location 184,49
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 18,14
+property location 217,70
+property port.0 parameter.6
+property btn.text.0 B
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 40,16
+property location 53,28
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 135,28
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 89,1
+property label.text Classic LP filter
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 60,16
+property label.text Freq
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 102,36
+property label.text KBT
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 141,17
+property label.text Res
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 199,36
+property label.text dB/Oct
+module 118
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 197,27
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 113,27
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,27
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 37,21
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 161,17
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 130,21
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 5,26
+property port.0 parameter.3
+property btn.text.0 Off
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 72,21
+property port.0 parameter.4
+property btn.text.0 Off
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 107,3
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 6,11
+property label.text Quant
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 42,11
+property label.text Bits
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 70,6
+property label.text Sample
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 163,5
+property label.text Rate
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 210,28
+property label.text {@decoration-6}
+module 115
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 7,41
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 30,41
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,42
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 59,33
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 102,33
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 136,33
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 171,33
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 99,16
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 133,16
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 167,16
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 6,26
+property label.text Vel
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 26,26
+property label.text Note
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 53,21
+property label.text Vel Sens
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 100,4
+property label.text L Gain
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 132,4
+property label.text Brk Pnt
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 167,4
+property label.text R Gain
+module 127
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 221,13
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,13
+property connector connector.1.output
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 31,11
+property location 181,12
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 73,2
+property label.text L
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 73,15
+property label.text R
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 223,1
+property label.text L
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 239,1
+property label.text R
+module 94
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 194,16
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 233,3
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 233,29
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 99,14
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 137,14
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 18,14
+property location 211,15
+property port.0 parameter.2
+property btn.text.0 B
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 95,1
+property label.text Detune
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 132,1
+property label.text Amount
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 221,3
+property label.text L
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 222,31
+property label.text R
+module 68
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 6,15
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,1
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,15
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 6,29
+property connector connector.2.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,29
+property connector connector.3.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 117,10
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 146,14
+property port.0 parameter.1
+property btn.text.0 On
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 21,16
+property label.text Reset
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 21,30
+property label.text Slv
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 76,11
+property label.text Rate
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 180,2
+property label.text 24 pulses/b
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 186,14
+property label.text 4 pulses/b
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 214,28
+property label.text Sync
+module 78
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 197,27
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 39,24
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,4
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,27
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 58,18
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 157,10
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 97,14
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 109,2
+property label.text Time
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 210,15
+property label.text {@decoration-5}
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 196,4
+property label.text 2.65 ms
+module 67
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 180,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 210,8
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,8
+property connector connector.2.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 124,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 154,9
+property label.text Gate
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 198,9
+property label.text V
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 226,9
+property label.text R
+module 52
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 5,28
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 196,86
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 5,82
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,63
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,86
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 34,36
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 69,36
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 102,36
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 135,36
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 34,79
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 69,79
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 102,79
+property port.0 parameter.6
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 135,79
+property port.0 parameter.7
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 168,79
+property port.0 parameter.8
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 18,14
+property location 160,35
+property port.0 parameter.9
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 22,14
+property location 92,2
+property port.0 parameter.10
+property btn.text.0 {@env.multi.bipolar}
+property btn.text.1 {@env.multi.uni-exp}
+property btn.text.2 {@env.multi.uni-lin}
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 26,19
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 60,19
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 94,19
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 128,19
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 26,62
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 60,62
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 94,62
+property port.0 parameter.6
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 128,62
+property port.0 parameter.7
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 162,62
+property port.0 parameter.8
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 3,15
+property label.text Gate
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 3,68
+property label.text Amp
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 26,36
+property label.text L1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 58,36
+property label.text L2
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 93,36
+property label.text L3
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 127,37
+property label.text L4
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 25,78
+property label.text T1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 57,78
+property label.text T2
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 92,78
+property label.text T3
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 126,78
+property label.text T4
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 157,78
+property label.text T5
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 187,24
+property label.text Sustain
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 213,63
+property label.text Env
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 209,79
+property label.text {@decoration-15}
+module 86
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 200,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 160,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 219,9
+property label.text {@ds-2-8}
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 217,2
+property label.text 6dB
+module 20
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 196,57
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 4,21
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 4,38
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 4,56
+property connector connector.3.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,38
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,57
+property connector connector.1.output
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 24,12
+property location 58,4
+property port.0 parameter.0
+property btn.text.0 {@env.log}
+property btn.text.1 {@env.lin}
+property btn.text.2 {@env.exp}
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 64,47
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 97,47
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 131,47
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 166,47
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 24,12
+property location 155,4
+property port.0 parameter.5
+property btn.text.0 Inv
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 21,22
+property label.text Gate
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 21,39
+property label.text Retrig
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 21,57
+property label.text Amp
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 51,54
+property label.text A
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 89,54
+property label.text D
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 123,54
+property label.text S
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 159,54
+property label.text R
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 216,39
+property label.text Env
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 209,50
+property label.text {@decoration-15}
+module 64
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 198,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 140,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 90,7
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 216,7
+property label.text {@ds-2-3}
+module 69
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 84,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 122,8
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 186,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 150,12
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 56,9
+property label.text Clock
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 105,9
+property label.text Rst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 150,0
+property label.text Divider
+module 95
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 4,42
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 4,21
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 104,38
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 239,41
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 152,16
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 41,22
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 70,22
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 34,14
+property location 217,17
+property port.0 parameter.3
+property btn.text.0 Punch
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 123,32
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 183,21
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 214,40
+property port.0 parameter.6
+property btn.text.0 M
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 99,18
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 2,9
+property label.text Amp
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 19,43
+property label.text Trig
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 41,10
+property label.text Click
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 74,10
+property label.text Dcy
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 154,4
+property label.text Pitch
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 183,4
+property label.text Fine
+module 96
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 3,40
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 43,40
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 150,14
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,42
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 151,42
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 82,31
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 114,36
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 24,14
+property location 167,41
+property port.0 parameter.2
+property btn.text.0 KBT
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 216,41
+property port.0 parameter.3
+property btn.text.0 M
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 201,6
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 17,36
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 56,36
+property port.0 parameter.6
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 24,16
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 169,15
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 2,20
+property label.text Freq
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 81,19
+property label.text Coarse
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 117,19
+property label.text Fine
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 150,29
+property label.text Slv
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 169,1
+property label.text Timbre
+module 32
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 194,87
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,87
+property connector connector.0.output
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 216,86
+property port.0 parameter.14
+property btn.text.0 B
+component nomad.gui.model.component.builtin.SliderArrayUI14
+property component.size 234,58
+property location 8,23
+property port.0 parameter.0
+property port.1 parameter.1
+property port.2 parameter.2
+property port.3 parameter.3
+property port.4 parameter.4
+property port.5 parameter.5
+property port.6 parameter.6
+property port.7 parameter.7
+property port.8 parameter.8
+property port.9 parameter.9
+property port.10 parameter.10
+property port.11 parameter.11
+property port.12 parameter.12
+property port.13 parameter.13
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 9,10
+property label.text 50
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 26,10
+property label.text 75
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 40,10
+property label.text 110
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 75,10
+property label.text 250
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 92,10
+property label.text 380
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 109,10
+property label.text 570
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 127,10
+property label.text 850
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 144,10
+property label.text 1.3
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 162,10
+property label.text 1.9
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 178,10
+property label.text 2.9
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 196,10
+property label.text 4.2
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 212,10
+property label.text 6.4
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 230,10
+property label.text 8.3
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 58,10
+property label.text 170
+module 43
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 191,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 81,7
+property port.0 parameter.1
+property btn.text.0 Uni
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 119,7
+property port.0 parameter.0
+module 76
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 195,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 157,7
+property port.0 parameter.0
+property btn.text.0 On
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 167,4
+property label.text {@decoration-14}
+module 87
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 200,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 160,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 218,9
+property label.text {@ds-2-7}
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 217,2
+property label.text 6dB
+module 79
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 34,25
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 83,25
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 132,25
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 182,25
+property connector connector.3.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,25
+property connector connector.0.output
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 18,14
+property location 177,3
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 8,19
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 57,19
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 106,19
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 156,19
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 217,24
+property port.0 parameter.5
+property btn.text.0 M
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 49,26
+property label.text 1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 98,26
+property label.text 2
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 147,26
+property label.text 3
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 198,26
+property label.text 4
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 150,5
+property label.text Input
+module 13
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 2,28
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 141,15
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 189,15
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,26
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 73,16
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 107,20
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 157,9
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 216,25
+property port.0 parameter.3
+property btn.text.0 M
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 23,14
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 237,5
+property label.text {@wf.sine}
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 2,15
+property label.text Mst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 72,4
+property label.text Detune
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 109,4
+property label.text Fine
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 136,3
+property label.text FMA
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 188,3
+property label.text AM
+module 117
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 197,27
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 217,4
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 75,22
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,27
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 98,16
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 144,12
+property port.0 parameter.1
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 73,4
+property label.text Mod depth
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 135,29
+property label.text 0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 152,1
+property label.text AM
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 175,29
+property label.text RM
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 194,4
+property label.text Mod
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 211,17
+property label.text {@decoration-3}
+module 44
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 127,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 193,10
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 231,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 148,7
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 85,9
+property label.text Control
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 140,4
+property label.text {@decoration-2}
+module 9
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 163,36
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 34,37
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 163,8
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,40
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 3,42
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 73,30
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 104,35
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 219,3
+property port.0 parameter.2
+property btn.text.0 KBT
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 48,35
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 178,35
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 215,39
+property port.0 parameter.5
+property btn.text.0 M
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 22,15
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 1,17
+property label.text Freq
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 18,42
+property label.text Slv
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 72,17
+property label.text Coarse
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 106,17
+property label.text Fine
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 145,8
+property label.text AM
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 140,37
+property label.text FMA
+module 90
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 5,65
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 23,65
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 41,65
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 59,65
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 77,65
+property connector connector.2.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 95,65
+property connector connector.3.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 5,5
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 25,5
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 45,5
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 65,5
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 5,17
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 25,17
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 45,17
+property port.0 parameter.6
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 65,17
+property port.0 parameter.7
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 5,29
+property port.0 parameter.8
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 25,29
+property port.0 parameter.9
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 45,29
+property port.0 parameter.10
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 65,29
+property port.0 parameter.11
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 5,41
+property port.0 parameter.12
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 25,41
+property port.0 parameter.13
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 45,41
+property port.0 parameter.14
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 65,41
+property port.0 parameter.15
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 5,53
+property port.0 parameter.16
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 25,53
+property port.0 parameter.17
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 45,53
+property port.0 parameter.18
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 65,53
+property port.0 parameter.19
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 5,65
+property port.0 parameter.20
+module 88
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 124,22
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 177,22
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 196,22
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 215,22
+property connector connector.2.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 233,22
+property connector connector.3.output
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 18,14
+property location 174,4
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 89,16
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 158,21
+property port.0 parameter.2
+property btn.text.0 M
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 137,5
+property label.text Output
+module 58
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 4,34
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 5,70
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 5,116
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,116
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 29,48
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 77,48
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 29,74
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 77,74
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 29,102
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 77,102
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 115,32
+property port.0 parameter.6
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 141,32
+property port.0 parameter.7
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 166,32
+property port.0 parameter.8
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 191,32
+property port.0 parameter.9
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 219,4
+property bg.orientation false
+property port.0 parameter.10
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 117,74
+property port.0 parameter.11
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 144,74
+property port.0 parameter.12
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 181,74
+property port.0 parameter.13
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 206,74
+property port.0 parameter.14
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 215,115
+property port.0 parameter.15
+property btn.text.0 M
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 1,21
+property label.text Trig
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 4,58
+property label.text Vel
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 1,104
+property label.text Pitch
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 55,11
+property label.text OSC
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 26,21
+property label.text Master
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 78,21
+property label.text Slave
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 53,55
+property label.text Tune
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 56,81
+property label.text Dcy
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 57,109
+property label.text Lev
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 141,11
+property label.text Noise Filter
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 118,21
+property label.text Freq
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 145,21
+property label.text Res
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 167,21
+property label.text Swp
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 195,21
+property label.text Dcy
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 129,55
+property label.text Bend
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 118,64
+property label.text Amt
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 146,64
+property label.text Dcy
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 180,64
+property label.text Click
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 206,64
+property label.text Noise
+module 14
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 3,43
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 142,43
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 9,21
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 219,23
+property connector connector.3.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,43
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 79,12
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 109,17
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 20,14
+property location 165,2
+property port.0 parameter.2
+property btn.text.0 {@wf.sine}
+property btn.text.1 {@wf.tri}
+property btn.text.2 {@wf.saw}
+property btn.text.3 {@wf.square}
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 159,33
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 217,41
+property port.0 parameter.4
+property btn.text.0 M
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 29,19
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 5,10
+property label.text Sync
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 20,44
+property label.text Mst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 76,1
+property label.text Detune
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 111,5
+property label.text Fine
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 138,31
+property label.text FMA
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 203,23
+property label.text AM
+module 17
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 2,19
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 2,41
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,33
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,53
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 2,58
+property connector connector.2.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,3
+property connector connector.3.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 129,-1
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 89,1
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 14,14
+property location 219,32
+property port.0 parameter.2
+property btn.text.0 G
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 13,14
+property location 219,52
+property port.0 parameter.3
+property btn.text.0 G
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 53,32
+property port.0 parameter.4
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 63,32
+property port.0 parameter.5
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 73,32
+property port.0 parameter.6
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 83,32
+property port.0 parameter.7
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 93,32
+property port.0 parameter.8
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 103,32
+property port.0 parameter.9
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 113,32
+property port.0 parameter.10
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 123,32
+property port.0 parameter.11
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 133,32
+property port.0 parameter.12
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 143,32
+property port.0 parameter.13
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 153,32
+property port.0 parameter.14
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 163,32
+property port.0 parameter.15
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 173,32
+property port.0 parameter.16
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 183,32
+property port.0 parameter.17
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 193,32
+property port.0 parameter.18
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 203,32
+property port.0 parameter.19
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 53,52
+property port.0 parameter.20
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 63,52
+property port.0 parameter.21
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 73,52
+property port.0 parameter.22
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 83,52
+property port.0 parameter.23
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 93,52
+property port.0 parameter.24
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 103,52
+property port.0 parameter.25
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 113,52
+property port.0 parameter.26
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 123,52
+property port.0 parameter.27
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 133,52
+property port.0 parameter.28
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 143,52
+property port.0 parameter.29
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 153,52
+property port.0 parameter.30
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 163,52
+property port.0 parameter.31
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 173,52
+property port.0 parameter.32
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 183,52
+property port.0 parameter.33
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 193,52
+property port.0 parameter.34
+property btn.text.0  
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 9,14
+property location 203,52
+property port.0 parameter.35
+property btn.text.0  
+module 36
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 198,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 140,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 90,7
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 215,7
+property label.text {@ds-2-1}
+module 59
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 190,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 140,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 90,7
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 179,9
+property label.text A
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 208,9
+property label.text A>=C
+module 5
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 193,24
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 216,12
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 165,22
+property port.0 parameter.2
+property btn.text.0 M
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 20,14
+property location 34,22
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 8,25
+property label.text Dest
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 125,10
+property label.text -CVA-
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 190,10
+property label.text Mix
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 219,1
+property label.text Level
+module 16
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 197,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 174,8
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 124,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 99,9
+property label.text Time
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 156,9
+property label.text Jmp
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 210,9
+property label.text {@decoration-6}
+module 37
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 198,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 140,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 90,7
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 215,7
+property label.text {@ds-2-2}
+module 33
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 200,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 32,14
+property location 95,7
+property port.0 parameter.0
+property btn.text.0 Mono
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 32,14
+property location 132,7
+property port.0 parameter.1
+property btn.text.0 Col
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 179,9
+property label.text Clk
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 217,9
+property label.text {@decorator.rndgen.diskret}
+module 15
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 6,33
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 6,60
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,89
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 6,89
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,59
+property connector connector.2.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,74
+property connector connector.3.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 191,-1
+property port.0 parameter.16
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 227,34
+property port.0 parameter.17
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 221,0
+property port.0 parameter.18
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 221,17
+property port.0 parameter.19
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 107,4
+property port.0 parameter.20
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 161,3
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.SliderArrayUI
+property component.size 198,60
+property location 26,36
+property port.0 parameter.0
+property port.1 parameter.1
+property port.2 parameter.2
+property port.3 parameter.3
+property port.4 parameter.4
+property port.5 parameter.5
+property port.6 parameter.6
+property port.7 parameter.7
+property port.8 parameter.8
+property port.9 parameter.9
+property port.10 parameter.10
+property port.11 parameter.11
+property port.12 parameter.12
+property port.13 parameter.13
+property port.14 parameter.14
+property port.15 parameter.15
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 5,21
+property label.text Clk
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 5,47
+property label.text Rst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 2,76
+property label.text Sync
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 217,60
+property label.text Link
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 217,75
+property label.text Gclk
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 217,90
+property label.text Out
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 28,21
+property label.text 1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 39,21
+property label.text 2
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 52,21
+property label.text 3
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 63,21
+property label.text 4
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 74,21
+property label.text 5
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 87,21
+property label.text 6
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 98,21
+property label.text 7
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 109,21
+property label.text 8
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 121,21
+property label.text 9
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 132,21
+property label.text 10
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 145,21
+property label.text 11
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 158,21
+property label.text 12
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 169,21
+property label.text 13
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 181,21
+property label.text 14
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 193,21
+property label.text 15
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 205,21
+property label.text 16
+module 62
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 78,22
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 198,25
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,25
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 92,16
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 121,12
+property port.0 parameter.1
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 114,0
+property label.text Overdrive
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 211,26
+property label.text {@decoration-6}
+module 114
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 159,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 194,8
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 234,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 88,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 74,14
+property label.text 1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 121,14
+property label.text 2
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 148,9
+property label.text 1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 185,9
+property label.text 2
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 83,7
+property label.text {@decoration-7}
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 172,3
+property label.text {@decoration-9}
+module 7
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 140,70
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 91,70
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 4,70
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 49,70
+property connector connector.3.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 171,52
+property connector connector.4.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,70
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 8,41
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 64,17
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 102,22
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 133,22
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 177,22
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 30,14
+property location 216,3
+property bg.orientation false
+property port.0 parameter.4
+property btn.text.0 {@wf.sine}
+property btn.text.1 {@wf.tri}
+property btn.text.2 {@wf.saw}
+property btn.text.3 {@wf.square}
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 20,63
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 64,63
+property port.0 parameter.6
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 108,63
+property port.0 parameter.7
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 187,47
+property port.0 parameter.8
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 215,69
+property port.0 parameter.9
+property btn.text.0 M
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 7,25
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 8,13
+property label.text Freq
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 24,41
+property label.text Slv
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 1,57
+property label.text Pitch
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 45,57
+property label.text Pitch
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 88,57
+property label.text FMA
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 137,57
+property label.text Sync
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 63,1
+property label.text Coarse
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 104,10
+property label.text Fine
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 137,10
+property label.text KBT
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 174,10
+property label.text PWidth
+module 53
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 161,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 197,8
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 167,3
+property label.text {@decoration-1}
+module 31
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 100,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 70,16
+property label.text White
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 130,16
+property label.text Colored
+module 106
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 59,132
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 149,132
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 105,132
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 2,111
+property connector connector.3.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 43,111
+property connector connector.4.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 84,111
+property connector connector.5.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 127,111
+property connector connector.6.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 171,111
+property connector connector.7.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 210,111
+property connector connector.8.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,132
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 11,51
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 18,74
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 15,105
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 51,51
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 59,74
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 56,105
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 92,51
+property port.0 parameter.6
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 100,74
+property port.0 parameter.7
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 97,105
+property port.0 parameter.8
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 135,51
+property port.0 parameter.9
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 143,74
+property port.0 parameter.10
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 141,105
+property port.0 parameter.11
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 177,51
+property port.0 parameter.12
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 185,74
+property port.0 parameter.13
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 184,105
+property port.0 parameter.14
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 216,51
+property port.0 parameter.15
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 227,74
+property port.0 parameter.16
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 225,105
+property port.0 parameter.17
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 14,14
+property location 1,79
+property port.0 parameter.18
+property btn.text.0 M
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 14,14
+property location 42,79
+property port.0 parameter.19
+property btn.text.0 M
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 14,14
+property location 83,79
+property port.0 parameter.20
+property btn.text.0 M
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 14,14
+property location 126,79
+property port.0 parameter.21
+property btn.text.0 M
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 14,14
+property location 168,79
+property port.0 parameter.22
+property btn.text.0 M
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 14,14
+property location 210,79
+property port.0 parameter.23
+property btn.text.0 M
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 3,23
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 42,23
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 84,23
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 128,23
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 170,23
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 209,23
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 105,1
+property label.text Sine slave oscillator bank
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 3,11
+property label.text Osc1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 42,11
+property label.text Osc2
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 83,11
+property label.text Osc3
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 127,11
+property label.text Osc4
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 169,11
+property label.text Osc5
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 210,11
+property label.text Osc6
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 3,40
+property label.text Tune
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 42,40
+property label.text Tune
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 83,40
+property label.text Tune
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 129,40
+property label.text Tune
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 170,40
+property label.text Tune
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 210,40
+property label.text Tune
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 75,133
+property label.text Mst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 120,133
+property label.text Sync
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 165,133
+property label.text Mix in
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 1,98
+property label.text am
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 43,98
+property label.text am
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 84,98
+property label.text am
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 127,98
+property label.text am
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 171,98
+property label.text am
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 211,98
+property label.text am
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 18,98
+property label.text level
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 57,98
+property label.text level
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 102,98
+property label.text level
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 144,98
+property label.text level
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 188,98
+property label.text level
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 227,98
+property label.text level
+module 65
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 109,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 168,8
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 234,8
+property connector connector.2.output
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 78,9
+property label.text Clock
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 142,9
+property label.text Sync
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 197,9
+property label.text Active
+module 54
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 197,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 158,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 125,7
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 210,9
+property label.text {@decoration-6}
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 104,9
+property label.text Bits
+module 48
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 197,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 174,8
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 124,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 99,9
+property label.text Time
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 158,9
+property label.text On
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 210,9
+property label.text {@decoration-6}
+module 107
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 92,55
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 5,55
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 47,55
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 165,55
+property connector connector.3.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,56
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 5,26
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 77,18
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 109,23
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 168,23
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 42,13
+property location 205,25
+property port.0 parameter.3
+property btn.text.0 Partials
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 19,50
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 61,50
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 106,50
+property port.0 parameter.6
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 180,50
+property port.0 parameter.7
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 24,14
+property location 135,52
+property port.0 parameter.8
+property btn.text.0 KBT
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 217,55
+property port.0 parameter.9
+property btn.text.0 M
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 24,25
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 4,15
+property label.text Slv
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 25,15
+property label.text Freq
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 78,7
+property label.text Coarse
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 113,7
+property label.text Fine
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 162,1
+property label.text Spectral\nShape
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 211,7
+property label.text Partials
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 1,44
+property label.text Pitch
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 43,45
+property label.text Pitch
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 89,45
+property label.text FMA
+module 110
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 118,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 184,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 96,9
+property label.text Mst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 212,9
+property label.text {@decorator.rndgen}
+module 8
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 95,69
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 7,68
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 49,68
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 169,28
+property connector connector.3.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,71
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 7,41
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 61,20
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 98,25
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 129,25
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 219,3
+property bg.orientation false
+property port.0 parameter.3
+property btn.text.0 {@wf.sine}
+property btn.text.1 {@wf.tri}
+property btn.text.2 {@wf.saw}
+property btn.text.3 {@wf.square}
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 22,65
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 66,65
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 112,65
+property port.0 parameter.6
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 187,25
+property port.0 parameter.7
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 218,70
+property port.0 parameter.8
+property btn.text.0 M
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 7,24
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 23,42
+property label.text Slv
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 3,56
+property label.text Pitch
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 45,57
+property label.text Pitch
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 91,57
+property label.text FMA
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 60,6
+property label.text Coarse
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 102,11
+property label.text Fine
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 132,11
+property label.text KBT
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 183,11
+property label.text PWidth
+module 66
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 113,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 191,8
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 234,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 81,7
+property port.0 parameter.0
+property btn.text.0 Inv
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 128,2
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 159,7
+property port.0 parameter.2
+property btn.text.0 Inv
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 206,2
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 43,7
+property port.0 parameter.4
+property btn.text.0 Lin
+module 29
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 100,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 180,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 80,9
+property label.text Mst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 220,10
+property label.text {@wf.square}
+module 102
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 197,82
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 91,82
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 211,44
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,82
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 10,58
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 53,81
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 107,76
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 96,44
+property port.0 parameter.3
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 227,38
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 139,22
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 139,76
+property port.0 parameter.6
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 176,35
+property port.0 parameter.7
+property knob.size false
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 18,14
+property location 216,81
+property port.0 parameter.8
+property btn.text.0 B
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 54,34
+property port.0 parameter.9
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 167,76
+property port.0 parameter.10
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 40,16
+property location 6,39
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 40,16
+property location 91,24
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 14,21
+property label.text Rate
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 52,21
+property label.text Depth
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 84,9
+property label.text Center Freq
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 136,9
+property label.text FeedBk
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 139,63
+property label.text Peaks
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 174,22
+property label.text Spread
+module 49
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 21,50
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 200,39
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,24
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,40
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,56
+property connector connector.2.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 72,34
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 109,30
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 146,46
+property port.0 parameter.2
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 43,44
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 40,16
+property location 9,28
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 147,28
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 16,17
+property label.text Freq
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 114,17
+property label.text KBT
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 138,17
+property label.text Resonance
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 107,3
+property label.text 12dB multimode filter
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 221,25
+property label.text HP
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 221,41
+property label.text BP
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 221,57
+property label.text LP
+module 39
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 199,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 233,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 166,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 109,7
+property port.0 parameter.0
+module 82
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 198,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 24,14
+property location 101,7
+property port.0 parameter.0
+property btn.text.0 {@diode.off}
+property btn.text.1 {@diode.half}
+property btn.text.2 {@diode.full}
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 211,9
+property label.text {@decoration-6}
+module 112
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 195,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 126,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 93,7
+property port.0 parameter.1
+property btn.text.0 Uni
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 157,7
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 171,4
+property label.text {@decoration-11}
+module 72
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 197,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 150,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 91,7
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 210,9
+property label.text {@decoration-6}
+module 103
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 189,42
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,42
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 3,23
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 87,32
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 126,32
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 18,14
+property location 215,41
+property port.0 parameter.3
+property btn.text.0 B
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 161,35
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 40,16
+property location 36,26
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 84,14
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 124,14
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 46,13
+property label.text Freq
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 88,3
+property label.text Gain
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 133,3
+property label.text BW
+module 24
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 29,56
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 8,29
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 8,57
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,57
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 74,42
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 26,14
+property location 110,27
+property bg.orientation false
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 18,14
+property location 160,27
+property port.0 parameter.2
+property btn.text.0 {@wf.sine}
+property btn.text.1 {@wf.tri}
+property btn.text.2 {@wf.saw}
+property btn.text.3 {@wf.saw.inv}
+property btn.text.4 {@wf.square}
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 44,47
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 32,14
+property location 107,8
+property port.0 parameter.4
+property btn.text.0 Mono
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 137,45
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 173,1
+property port.0 parameter.6
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 219,56
+property port.0 parameter.7
+property btn.text.0 M
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 51,15
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 143,10
+property port.0 parameter.6
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 7,15
+property label.text Rst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 8,46
+property label.text Slv
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 27,16
+property label.text Rate
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 26,43
+property label.text Rate
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 143,0
+property label.text Phase
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 141,34
+property label.text KBT
+module 83
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 197,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 24,14
+property location 58,7
+property port.0 parameter.0
+property btn.text.0 {@shaper.log2}
+property btn.text.1 {@shaper.log1}
+property btn.text.2 {@shaper.lin}
+property btn.text.3 {@shaper.exp1}
+property btn.text.4 {@shaper.exp2}
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 210,9
+property label.text {@decoration-6}
+module 61
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 198,25
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 78,22
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,25
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 92,16
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 121,12
+property port.0 parameter.1
+property knob.size false
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 46,21
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 126,0
+property label.text Clip
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 211,26
+property label.text {@decoration-6}
+module 50
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 189,28
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,43
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,28
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,13
+property connector connector.2.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 60,28
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 150,27
+property port.0 parameter.1
+property knob.size false
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 22,14
+property location 118,37
+property port.0 parameter.2
+property btn.text.0 GC
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 22,20
+property label.text Freq
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 105,14
+property label.text Resonance
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 70,2
+property label.text 12db static multimode filter
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 221,16
+property label.text HP
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 223,30
+property label.text BP
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 223,44
+property label.text LP
+module 23
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 7,22
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 7,73
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 32,67
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 75,67
+property connector connector.3.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 118,67
+property connector connector.4.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 160,67
+property connector connector.5.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 198,74
+property connector connector.6.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 7,47
+property connector connector.7.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,55
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,74
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 36,29
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 77,29
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 113,29
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 150,29
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 46,61
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 90,61
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 132,61
+property port.0 parameter.6
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 174,61
+property port.0 parameter.7
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 190,34
+property port.0 parameter.8
+property btn.text.0 Inv
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 3,11
+property label.text Amp
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 3,36
+property label.text Gate
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 0,61
+property label.text Retrig
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 211,67
+property label.text {@decoration-15}
+module 113
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 159,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 194,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 234,8
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 88,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 83,7
+property label.text {@decoration-7}
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 165,4
+property label.text {@decoration-8}
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 185,9
+property label.text 1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 226,9
+property label.text 2
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 74,14
+property label.text 1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 121,14
+property label.text 2
+module 34
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 120,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 179,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 100,9
+property label.text Mst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 210,9
+property label.text {@decorator.rndgen.diskret}
+module 74
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 198,25
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 78,22
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,25
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 92,16
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 121,12
+property port.0 parameter.1
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 126,0
+property label.text Wrap
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 211,26
+property label.text {@decoration-6}
+module 30
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 100,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 180,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 80,9
+property label.text Mst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 220,10
+property label.text {@wf.tri}
+module 18
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 198,6
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 198,25
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 54,16
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,16
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 74,10
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 124,10
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 47,2
+property label.text X-fade
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 117,26
+property label.text 1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 152,27
+property label.text 2
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 188,6
+property label.text 1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 188,26
+property label.text 2
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 211,13
+property label.text {@decoration-13}
+module 111
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 195,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 126,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 93,7
+property port.0 parameter.1
+property btn.text.0 Uni
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 157,7
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 171,4
+property label.text {@decoration-12}
+module 25
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 26,57
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 5,26
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 157,40
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,57
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 5,58
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 70,43
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 24,14
+property location 103,20
+property bg.orientation false
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 180,1
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 45,48
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 32,14
+property location 99,3
+property port.0 parameter.4
+property btn.text.0 Mono
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 132,48
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 173,34
+property port.0 parameter.6
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 197,34
+property port.0 parameter.7
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 45,18
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 149,10
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 4,13
+property label.text Rst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 5,42
+property label.text Slv
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 23,19
+property label.text Rate
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 23,42
+property label.text Rate
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 136,34
+property label.text KBT
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 150,0
+property label.text Phase
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 157,27
+property label.text PW
+module 57
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 197,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 106,7
+property port.0 parameter.0
+property btn.text.0 {@lev.shift.noshift}
+property btn.text.1 {@lev.shift.down}
+property btn.text.2 {@lev.shift.up}
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 74,7
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 210,9
+property label.text {@decoration-6}
+module 35
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 176,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 138,9
+property label.text Density
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 211,9
+property label.text {@decorator.rndgen.logic}
+module 26
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 44,39
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,42
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 3,41
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 91,18
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 24,14
+property location 128,9
+property bg.orientation false
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 18,14
+property location 161,4
+property port.0 parameter.2
+property btn.text.0 {@wf.sine}
+property btn.text.1 {@wf.tri}
+property btn.text.2 {@wf.saw}
+property btn.text.3 {@wf.saw.inv}
+property btn.text.4 {@wf.square}
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 61,33
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 32,14
+property location 161,27
+property port.0 parameter.4
+property btn.text.0 Mono
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 220,41
+property port.0 parameter.5
+property btn.text.0 M
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 41,13
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 3,23
+property label.text Slv
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 41,28
+property label.text Rate
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 97,6
+property label.text Rate
+module 19
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 53,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 103,8
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 154,8
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 234,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 67,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 117,2
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 168,2
+property port.0 parameter.2
+module 100
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 192,1
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 192,15
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 192,29
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,1
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,15
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,29
+property connector connector.2.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 88,14
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 121,14
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 87,2
+property label.text Lower
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 120,2
+property label.text Upper
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 209,3
+property label.text Note
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 209,17
+property label.text Gate
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 210,31
+property label.text Vel
+module 51
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 5,45
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 144,70
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 195,70
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 5,70
+property connector connector.3.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,70
+property connector connector.0.output
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 107,23
+property bg.orientation false
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 24,14
+property location 138,10
+property port.0 parameter.1
+property btn.text.0 GC
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 22,39
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 49,36
+property port.0 parameter.3
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 77,64
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 159,64
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 147,36
+property port.0 parameter.6
+property knob.size false
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 193,46
+property port.0 parameter.7
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 22,64
+property port.0 parameter.8
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 18,14
+property location 217,69
+property port.0 parameter.9
+property btn.text.0 B
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 40,16
+property location 43,9
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 171,9
+property port.0 parameter.0
+module 28
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 100,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 180,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 80,9
+property label.text Mst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 220,10
+property label.text {@wf.sine}
+module 85
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 2,28
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 173,10
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 141,10
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,27
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 68,16
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 100,19
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 32,14
+property location 135,26
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 188,3
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 216,26
+property port.0 parameter.4
+property btn.text.0 M
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 20,14
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 1,15
+property label.text Mst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 70,5
+property label.text Detune
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 104,5
+property label.text Fine
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 137,-1
+property label.text Sync
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 170,-1
+property label.text FMB
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 238,2
+property label.text {@wf.sine}
+module 3
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 83,24
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 118,24
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 153,24
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 187,24
+property connector connector.3.input
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 218,12
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 29,26
+property label.text Mix Bus
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 86,10
+property label.text 1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 122,10
+property label.text 2
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 155,10
+property label.text 3
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 190,10
+property label.text 4
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 221,0
+property label.text Level
+module 105
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 5,17
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 5,34
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 30,17
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,66
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,85
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 7,78
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 44,78
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 79,78
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 117,78
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 152,78
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 189,78
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 26,14
+property location 31,35
+property port.0 parameter.6
+property btn.text.0 Act
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 26,14
+property location 64,35
+property port.0 parameter.7
+property btn.text.0 Mon
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 18,14
+property location 233,48
+property port.0 parameter.8
+property btn.text.0 B
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 4,62
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 40,62
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 76,62
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 113,62
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 148,62
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 185,62
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 19,18
+property label.text L
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 19,35
+property label.text R
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 44,18
+property label.text Side chain
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 162,5
+property label.text Gain reduction dB
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 180,27
+property label.text Gate active
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 5,52
+property label.text Attack
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 38,52
+property label.text Release
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 77,52
+property label.text Tresh.
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 116,52
+property label.text Ratio
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 152,52
+property label.text Gate
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 188,52
+property label.text Hold
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 227,67
+property label.text L
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 227,86
+property label.text R
+module 27
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 100,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 180,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 220,10
+property label.text {@wf.saw}
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 80,9
+property label.text Mst
+module 70
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 198,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 176,7
+property label.text {@ds-2-6}
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 215,7
+property label.text {@ds-2-5}
+module 1
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 93,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 142,8
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 185,8
+property connector connector.2.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 232,8
+property connector connector.3.output
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 64,9
+property label.text Note
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 111,9
+property label.text Gate
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 162,9
+property label.text Vel
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 212,4
+property label.text Rel\nvel
+module 80
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 10,18
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 10,39
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,41
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 93,23
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 168,1
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 18,14
+property location 124,40
+property port.0 parameter.2
+property btn.text.0 {@wf.sine}
+property btn.text.1 {@wf.tri}
+property btn.text.2 {@wf.saw}
+property btn.text.3 {@wf.saw.inv}
+property btn.text.4 {@wf.square}
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 32,14
+property location 53,38
+property port.0 parameter.3
+property btn.text.0 Mono
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 218,40
+property port.0 parameter.4
+property btn.text.0 M
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 44,18
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 134,10
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 26,19
+property label.text Mst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 26,40
+property label.text Rst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 99,10
+property label.text Rate
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 134,0
+property label.text Phase
+module 46
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 4,28
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 48,53
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 106,53
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 154,54
+property connector connector.3.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 198,59
+property connector connector.4.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 4,55
+property connector connector.5.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,39
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,59
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 43,27
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 99,27
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 151,28
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 64,47
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 123,47
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 169,48
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 211,53
+property label.text {@decoration-15}
+module 99
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 8,41
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 31,41
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 75,20
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,45
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 98,32
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 136,32
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 221,16
+property port.0 parameter.2
+property btn.text.0 Low
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 180,12
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 32,14
+property location 176,38
+property port.0 parameter.4
+property btn.text.0 Mono
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 7,27
+property label.text Clk
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 30,27
+property label.text Rst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 95,3
+property label.text Pattern
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 138,3
+property label.text Bank
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 183,3
+property label.text Step
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 226,3
+property label.text Delta
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 233,34
+property label.text Out
+module 11
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 3,27
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 155,15
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,26
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 75,15
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 108,19
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 169,9
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 216,25
+property port.0 parameter.3
+property btn.text.0 M
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 22,12
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 2,14
+property label.text Mst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 74,3
+property label.text Detune
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 110,3
+property label.text Fine
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 150,2
+property label.text FMA
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 238,3
+property label.text {@wf.saw}
+module 104
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 189,42
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,42
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 3,23
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 87,32
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 176,8
+property bg.orientation false
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 18,14
+property location 215,41
+property port.0 parameter.3
+property btn.text.0 B
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 161,35
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 40,16
+property location 36,26
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 84,14
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 46,13
+property label.text Freq
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 88,3
+property label.text Gain
+module 40
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 9,13
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 38,13
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 63,13
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 90,13
+property connector connector.3.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 118,13
+property connector connector.4.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 146,13
+property connector connector.5.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 173,13
+property connector connector.6.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 201,13
+property connector connector.7.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 234,42
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 4,33
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 32,33
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 59,33
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 86,33
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 114,33
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 141,33
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 168,33
+property port.0 parameter.6
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 195,33
+property port.0 parameter.7
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 219,12
+property port.0 parameter.8
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 2,14
+property label.text 1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 30,14
+property label.text 2
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 57,14
+property label.text 3
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 83,14
+property label.text 4
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 109,14
+property label.text 5
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 137,14
+property label.text 6
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 164,14
+property label.text 7
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 193,14
+property label.text 8
+module 4
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 177,26
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 200,26
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 219,13
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 55,22
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 147,22
+property port.0 parameter.2
+property btn.text.0 M
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 2,26
+property label.text Destination
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 175,11
+property label.text Mix Bus
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 170,25
+property label.text L
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 192,25
+property label.text R
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 222,1
+property label.text Level
+module 77
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 122,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 84,8
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 198,8
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 160,8
+property connector connector.2.output
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 62,9
+property label.text Midi cl
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 105,9
+property label.text Rst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 152,9
+property label.text 8
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 184,9
+property label.text T8
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 222,9
+property label.text 16
+module 84
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 2,28
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 198,28
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 39,28
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,13
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,28
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 104,17
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 156,17
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 26,13
+property location 2,12
+property port.0 parameter.2
+property btn.text.0 Gate
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 36,13
+property label.text Amp
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 72,24
+property label.text Attack
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 135,24
+property label.text Dcy
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 211,22
+property label.text {@decoration-15}
+module 12
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 4,26
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 152,14
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,26
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 73,15
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 105,19
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 169,9
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 215,25
+property port.0 parameter.3
+property btn.text.0 M
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 22,14
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 2,15
+property label.text Mst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 72,5
+property label.text Detune
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 107,5
+property label.text Fine
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 149,2
+property label.text FMA
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 238,2
+property label.text {@wf.tri}
+module 89
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 152,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 190,8
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 139,9
+property label.text A
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 179,9
+property label.text B
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 208,9
+property label.text A>=B
+module 45
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 205,58
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 102,57
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 43,57
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 237,58
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 118,18
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 147,13
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 179,17
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 177,48
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 145,43
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 118,48
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 44,19
+property port.0 parameter.6
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 59,47
+property port.0 parameter.7
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 3,34
+property port.0 parameter.8
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 7,23
+property label.text Res
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 48,8
+property label.text Freq
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 123,2
+property label.text Vowel navigator
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 217,58
+property label.text {@decoration-6}
+module 97
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 151,23
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 192,23
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 3,27
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 76,13
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 112,18
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 22,14
+property location 225,2
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 166,18
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 206,18
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 23,20
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 3,16
+property label.text Slv
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 76,2
+property label.text Coarse
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 114,7
+property label.text Fine
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 146,7
+property label.text Pitch
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 186,7
+property label.text Pitch
+module 38
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 198,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 140,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 90,7
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 216,7
+property label.text {@ds-2-4}
+module 2
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 219,13
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,13
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 61,2
+property label.text Left
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 61,15
+property label.text Right
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 220,2
+property label.text L
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 239,2
+property label.text R
+module 81
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 195,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 126,2
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 157,7
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 171,4
+property label.text {@decoration-12}
+module 75
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 197,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 125,3
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 161,6
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 91,11
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 210,9
+property label.text {@decoration-6}
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 92,-1
+property label.text Range
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 161,-1
+property label.text Notes
+module 47
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 194,16
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 70,16
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,7
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,24
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 89,10
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 149,10
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 207,13
+property label.text {@decoration-18}
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 69,2
+property label.text Pan
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 145,31
+property label.text L
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 172,31
+property label.text R
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 226,7
+property label.text L
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 226,26
+property label.text R
+module 108
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 10,19
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 223,104
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 239,104
+property connector connector.0.output
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 26,14
+property location 1,35
+property port.0 parameter.17
+property btn.text.0 {@vocoder.emp}
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 26,14
+property location 1,54
+property port.0 parameter.18
+property btn.text.0 Mon
+component nomad.gui.model.component.builtin.VocoderUI
+property component.size 190,100
+property location 32,18
+property port.0 parameter.0
+property port.1 parameter.1
+property port.2 parameter.2
+property port.3 parameter.3
+property port.4 parameter.4
+property port.5 parameter.5
+property port.6 parameter.6
+property port.7 parameter.7
+property port.8 parameter.8
+property port.9 parameter.9
+property port.10 parameter.10
+property port.11 parameter.11
+property port.12 parameter.12
+property port.13 parameter.13
+property port.14 parameter.14
+property port.15 parameter.15
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 224,49
+property port.0 parameter.16
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 221,24
+property label.text Output
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 226,37
+property label.text Gain
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 39,8
+property label.text 1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 49,8
+property label.text 2
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 59,8
+property label.text 3
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 70,8
+property label.text 4
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 80,8
+property label.text 5
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 91,8
+property label.text 6
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 103,8
+property label.text 7
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 115,8
+property label.text 8
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 125,8
+property label.text 9
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 132,8
+property label.text 10
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 145,8
+property label.text 11
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 157,8
+property label.text 12
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 169,8
+property label.text 13
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 181,8
+property label.text 14
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 193,8
+property label.text 15
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 205,8
+property label.text 16
+module 71
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 198,26
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,26
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 101,15
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 154,15
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 83,22
+property label.text Atk
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 136,22
+property label.text Rel
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 211,27
+property label.text {@decoration-6}
+module 21
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 5,17
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 5,34
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 30,17
+property connector connector.2.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,66
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,85
+property connector connector.1.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 7,78
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 44,78
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 79,78
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 117,78
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 152,78
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 189,78
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 26,14
+property location 31,35
+property port.0 parameter.6
+property btn.text.0 Act
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 26,14
+property location 64,35
+property port.0 parameter.7
+property btn.text.0 Mon
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 18,14
+property location 233,48
+property port.0 parameter.8
+property btn.text.0 B
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 4,62
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 40,62
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 76,62
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 113,62
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 148,62
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 185,62
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 19,18
+property label.text L
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 19,35
+property label.text R
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 44,18
+property label.text Side chain
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 162,5
+property label.text Gain reduction dB
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 183,27
+property label.text Lim active
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 5,52
+property label.text Attack
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 38,52
+property label.text Release
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 77,52
+property label.text Tresh.
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 116,52
+property label.text Ratio
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 148,52
+property label.text Ref Lvl
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 184,52
+property label.text Limiter
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 227,67
+property label.text L
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 227,86
+property label.text R
+module 10
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 2,27
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 147,24
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 238,28
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 75,16
+property port.0 parameter.0
+property knob.size false
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 105,19
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 185,19
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 161,19
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 16,14
+property location 216,24
+property port.0 parameter.4
+property btn.text.0 M
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 50,16
+property location 21,12
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 1,14
+property label.text Mst
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 72,6
+property label.text Detune
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 107,6
+property label.text Fine
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 146,7
+property label.text PW
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 239,4
+property label.text {@wf.square}
+module 22
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 197,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 5,5
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 210,9
+property label.text {@decoration-6}
+module 73
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 178,8
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 198,8
+property connector connector.1.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 236,8
+property connector connector.0.output
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 34,14
+property location 60,7
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 184,5
+property label.text {@decoration-10}
+module 98
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 197,41
+property connector connector.0.input
+component nomad.gui.model.component.builtin.DefaultConnectorUI
+property location 235,41
+property connector connector.0.output
+component nomad.gui.model.component.builtin.DefaultControlUI
+property location 226,4
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 28,14
+property location 194,25
+property port.0 parameter.1
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 20,14
+property location 48,40
+property port.0 parameter.2
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 20,14
+property location 70,40
+property port.0 parameter.3
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 20,14
+property location 82,24
+property port.0 parameter.4
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 20,14
+property location 92,40
+property port.0 parameter.5
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 20,14
+property location 104,24
+property port.0 parameter.6
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 20,14
+property location 114,40
+property port.0 parameter.7
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 20,14
+property location 126,24
+property port.0 parameter.8
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 20,14
+property location 136,40
+property port.0 parameter.9
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 20,14
+property location 4,40
+property port.0 parameter.10
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 20,14
+property location 16,24
+property port.0 parameter.11
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 20,14
+property location 26,40
+property port.0 parameter.12
+component nomad.gui.model.component.builtin.ButtonGroupUI
+property btn.size 20,14
+property location 38,24
+property port.0 parameter.13
+component nomad.gui.model.component.builtin.DefaultTextDisplay
+property component.size 30,16
+property location 194,7
+property port.0 parameter.0
+component nomad.gui.model.component.builtin.DefaultLabelUI
+property location 210,42
+property label.text {@decoration-6}

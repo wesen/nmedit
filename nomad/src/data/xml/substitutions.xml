@@ -57,24 +57,24 @@
     </transform>
     <transform id="transform-pulse-width" offset="1" factor="0.77165354330708658" suffix="%" />
 
-    <use-implementation id="amp-gain" class="nomad.model.descriptive.substitution.AmpGain" />
-    <use-implementation id="bpm" class="nomad.model.descriptive.substitution.BPM" />
-    <use-implementation id="digitizer-hz" class="nomad.model.descriptive.substitution.DigitizerHz" />
-    <use-implementation id="drum-hz" class="nomad.model.descriptive.substitution.DrumHz" />
-    <use-implementation id="drumpartials" class="nomad.model.descriptive.substitution.DrumPartials" />
-    <use-implementation id="eq-hz" class="nomad.model.descriptive.substitution.EqHz" />
-    <use-implementation id="filter-hz-1" class="nomad.model.descriptive.substitution.FilterHz1" />
-    <use-implementation id="filter-hz-2" class="nomad.model.descriptive.substitution.FilterHz2" />
-    <use-implementation id="lfo-hz" class="nomad.model.descriptive.substitution.LFOHz" />
-    <use-implementation id="logic-delay" class="nomad.model.descriptive.substitution.LogicDelay" />
-    <use-implementation id="note" class="nomad.model.descriptive.substitution.Note" />
-    <use-implementation id="note-scale" class="nomad.model.descriptive.substitution.NoteScale" />
-    <use-implementation id="osc-hz" class="nomad.model.descriptive.substitution.OscHz" />
-    <use-implementation id="partial-range" class="nomad.model.descriptive.substitution.PartialRange" />
-    <use-implementation id="partials" class="nomad.model.descriptive.substitution.Partials" />
-    <use-implementation id="phase" class="nomad.model.descriptive.substitution.Phase" />
-    <use-implementation id="semitones" class="nomad.model.descriptive.substitution.Semitones" />
-    <use-implementation id="smooth-time" class="nomad.model.descriptive.substitution.SmoothTime" />
+    <use-implementation id="amp-gain" class="org.nomad.xml.dom.substitution.AmpGain" />
+    <use-implementation id="bpm" class="org.nomad.xml.dom.substitution.BPM" />
+    <use-implementation id="digitizer-hz" class="org.nomad.xml.dom.substitution.DigitizerHz" />
+    <use-implementation id="drum-hz" class="org.nomad.xml.dom.substitution.DrumHz" />
+    <use-implementation id="drumpartials" class="org.nomad.xml.dom.substitution.DrumPartials" />
+    <use-implementation id="eq-hz" class="org.nomad.xml.dom.substitution.EqHz" />
+    <use-implementation id="filter-hz-1" class="org.nomad.xml.dom.substitution.FilterHz1" />
+    <use-implementation id="filter-hz-2" class="org.nomad.xml.dom.substitution.FilterHz2" />
+    <use-implementation id="lfo-hz" class="org.nomad.xml.dom.substitution.LFOHz" />
+    <use-implementation id="logic-delay" class="org.nomad.xml.dom.substitution.LogicDelay" />
+    <use-implementation id="note" class="org.nomad.xml.dom.substitution.Note" />
+    <use-implementation id="note-scale" class="org.nomad.xml.dom.substitution.NoteScale" />
+    <use-implementation id="osc-hz" class="org.nomad.xml.dom.substitution.OscHz" />
+    <use-implementation id="partial-range" class="org.nomad.xml.dom.substitution.PartialRange" />
+    <use-implementation id="partials" class="org.nomad.xml.dom.substitution.Partials" />
+    <use-implementation id="phase" class="org.nomad.xml.dom.substitution.Phase" />
+    <use-implementation id="semitones" class="org.nomad.xml.dom.substitution.Semitones" />
+    <use-implementation id="smooth-time" class="org.nomad.xml.dom.substitution.SmoothTime" />
 
   <list id="channel-select-out1">
     <item>1</item>
