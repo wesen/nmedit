@@ -1,0 +1,41 @@
+<project name="jpdl" default="dist" basedir=".">
+
+  <property name="src" location="src"/>
+  <property name="build" location="build"/>
+  <property name="dist" location="dist"/>
+  <property name="byaccj" location="/usr/local/bin/byaccj"/>
+  <property name="jflex" location="/usr/local/lib/jflex-1.4.1/lib/JFlex.jar"/>
+
+
+  <target name="init">
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="generate"
+          description="generate lexer and parser">
+    <java jar="${jflex}" fork="true" dir="${src}/net/sf/nmedit/jpdl">
+      <arg line="pdllex.ll"/>
+    </java>
+    <exec executable="${byaccj}" dir="${src}/net/sf/nmedit/jpdl">
+      <arg line="-Jclass=PdlParse -Jpackage=net.sf.nmedit.jpdl pdlparse.yy"/>
+    </exec>
+  </target>
+
+  <target name="compile" depends="init"
+          description="compile the source">
+    <javac srcdir="${src}" destdir="${build}"/>
+  </target>
+
+  <target name="dist" depends="compile"
+          description="generate the distribution">
+    <mkdir dir="${dist}/lib"/>
+    <jar jarfile="${dist}/lib/jpdl.jar" basedir="${build}"/>
+  </target>
+
+  <target name="clean"
+          description="clean up">
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+</project>
+
