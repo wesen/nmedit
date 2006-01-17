@@ -38,8 +38,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.TransferHandler;
 
-
-import org.nomad.editor.views.visual.NomadVisualEditor;
+import org.nomad.editor.views.visual.VisualEditor;
 import org.nomad.theme.UIFactory;
 import org.nomad.theme.component.NomadComponent;
 
@@ -114,7 +113,7 @@ public class NomadClassesView extends JPanel {
 		
 	}
 	
-	public void setComponentDisplayEditor(NomadVisualEditor editor) {
+	public void setComponentDisplayEditor(VisualEditor editor) {
 		//classPreviewList.setDropTarget(editor.getEditorDropTarget());
 	}
 	
@@ -176,7 +175,7 @@ public class NomadClassesView extends JPanel {
 		
 	}
 
-	private UIFactory factory = null;
+//	private UIFactory factory = null;
 	
 	/**
 	 * TODO uninstall factory + update table
@@ -186,7 +185,7 @@ public class NomadClassesView extends JPanel {
 		
 		if (theUIFactory==null) return;
 		
-		this.factory = theUIFactory;		
+		//this.factory = theUIFactory;		
 		Class[] classList = theUIFactory.getInstalledClasses();
 		for (int i=0;i<classList.length;i++)
 			registerNomadComponentClass(classList[i]);
