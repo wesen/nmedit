@@ -151,35 +151,67 @@
   <module id="63">
     <component name="connector">
       <property name="x,y" value="41,27" />
-      <property name="connector#0" value="63.0.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="false" />
+      <property name="type" value="control" />
+      <property name="connector#0" value="63.0.out.latest note" />
     </component>
     <component name="connector">
       <property name="x,y" value="100,27" />
-      <property name="connector#0" value="63.1.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="false" />
+      <property name="type" value="logic" />
+      <property name="connector#0" value="63.1.out.patch gate" />
     </component>
     <component name="connector">
       <property name="x,y" value="166,27" />
-      <property name="connector#0" value="63.2.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="false" />
+      <property name="type" value="control" />
+      <property name="connector#0" value="63.2.out.latest vel on" />
     </component>
     <component name="connector">
       <property name="x,y" value="227,27" />
-      <property name="connector#0" value="63.3.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="false" />
+      <property name="type" value="control" />
+      <property name="connector#0" value="63.3.out.latest rel vel" />
     </component>
     <component name="label">
       <property name="x,y" value="22,15" />
+      <property name="size" value="49,11" />
       <property name="text" value="Latest note" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="85,15" />
+      <property name="size" value="46,11" />
       <property name="text" value="Patch gate" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
-      <property name="x,y" value="158,4" />
+      <property name="x,y" value="145,5" />
+      <property name="size" value="65,11" />
       <property name="text" value="Latest\nvel on" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
-      <property name="x,y" value="219,4" />
+      <property name="x,y" value="180,4" />
+      <property name="size" value="65,11" />
       <property name="text" value="Latest\nrel vel" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
   </module>
   <module id="92">
@@ -394,31 +426,59 @@
   <module id="127">
     <component name="connector">
       <property name="x,y" value="221,13" />
-      <property name="connector#0" value="127.0.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="false" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="127.0.out.Left" />
     </component>
     <component name="connector">
       <property name="x,y" value="237,13" />
-      <property name="connector#0" value="127.1.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="false" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="127.1.out.Right" />
     </component>
     <component name="button">
-      <property name="x,y" value="181,12" />
-      <property name="parameter#0" value="127.0.p.noname" />
+      <property name="x,y" value="175,5" />
+      <property name="size" value="34,19" />
+      <property name="parameter#0" value="127.0.p.+6db" />
+      <property name="landscape" value="false" />
+      <property name="cyclic" value="true" />
+      <property name="btn#0" value="btn#0" />
     </component>
     <component name="label">
       <property name="x,y" value="73,2" />
+      <property name="size" value="5,11" />
       <property name="text" value="L" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="73,15" />
+      <property name="size" value="6,11" />
       <property name="text" value="R" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="223,1" />
+      <property name="size" value="5,11" />
       <property name="text" value="L" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="239,1" />
+      <property name="size" value="6,11" />
       <property name="text" value="R" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
   </module>
   <module id="94">
@@ -565,31 +625,56 @@
   <module id="67">
     <component name="connector">
       <property name="x,y" value="180,8" />
-      <property name="connector#0" value="67.0.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="false" />
+      <property name="type" value="logic" />
+      <property name="connector#0" value="67.0.out.gate" />
     </component>
     <component name="connector">
       <property name="x,y" value="210,8" />
-      <property name="connector#0" value="67.1.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="false" />
+      <property name="type" value="control" />
+      <property name="connector#0" value="67.1.out.velocity" />
     </component>
     <component name="connector">
       <property name="x,y" value="236,8" />
-      <property name="connector#0" value="67.2.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="false" />
+      <property name="type" value="control" />
+      <property name="connector#0" value="67.2.out.releasevelocity" />
     </component>
     <component name="knob">
       <property name="x,y" value="124,2" />
-      <property name="parameter#0" value="67.0.p.noname" />
+      <property name="size" value="24,24" />
+      <property name="parameter#0" value="67.0.p.note" />
     </component>
     <component name="label">
       <property name="x,y" value="154,9" />
+      <property name="size" value="20,11" />
       <property name="text" value="Gate" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="198,9" />
+      <property name="size" value="6,11" />
       <property name="text" value="V" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="226,9" />
+      <property name="size" value="6,11" />
       <property name="text" value="R" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
   </module>
   <module id="52">
@@ -1096,90 +1181,139 @@
   <module id="32">
     <component name="connector">
       <property name="x,y" value="194,87" />
-      <property name="connector#0" value="32.0.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="32.0.in.in" />
     </component>
     <component name="connector">
       <property name="x,y" value="238,87" />
-      <property name="connector#0" value="32.0.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="32.0.in.in" />
     </component>
     <component name="button">
       <property name="x,y" value="216,86" />
-      <property name="parameter#0" value="32.14.p.noname" />
+      <property name="size" value="34,19" />
+      <property name="parameter#0" value="32.14.p.bypass" />
+      <property name="landscape" value="false" />
+      <property name="cyclic" value="true" />
       <property name="btn#0" value="B" />
-    </component>
-    <component name="slider14">
-      <property name="size" value="234,58" />
-      <property name="x,y" value="8,23" />
-      <property name="parameter#0" value="32.0.p.noname" />
-      <property name="parameter#1" value="32.1.p.noname" />
-      <property name="parameter#2" value="32.2.p.noname" />
-      <property name="parameter#3" value="32.3.p.noname" />
-      <property name="parameter#4" value="32.4.p.noname" />
-      <property name="parameter#5" value="32.5.p.noname" />
-      <property name="parameter#6" value="32.6.p.noname" />
-      <property name="parameter#7" value="32.7.p.noname" />
-      <property name="parameter#8" value="32.8.p.noname" />
-      <property name="parameter#9" value="32.9.p.noname" />
-      <property name="parameter#10" value="32.10.p.noname" />
-      <property name="parameter#11" value="32.11.p.noname" />
-      <property name="parameter#12" value="32.12.p.noname" />
-      <property name="parameter#13" value="32.13.p.noname" />
     </component>
     <component name="label">
       <property name="x,y" value="9,10" />
+      <property name="size" value="12,11" />
       <property name="text" value="50" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="26,10" />
+      <property name="size" value="12,11" />
       <property name="text" value="75" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="40,10" />
+      <property name="size" value="18,11" />
       <property name="text" value="110" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="75,10" />
+      <property name="size" value="18,11" />
       <property name="text" value="250" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="92,10" />
+      <property name="size" value="18,11" />
       <property name="text" value="380" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="109,10" />
+      <property name="size" value="18,11" />
       <property name="text" value="570" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="127,10" />
+      <property name="size" value="18,11" />
       <property name="text" value="850" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="144,10" />
+      <property name="size" value="15,11" />
       <property name="text" value="1.3" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="162,10" />
+      <property name="size" value="15,11" />
       <property name="text" value="1.9" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="178,10" />
+      <property name="size" value="15,11" />
       <property name="text" value="2.9" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="196,10" />
+      <property name="size" value="15,11" />
       <property name="text" value="4.2" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="212,10" />
+      <property name="size" value="15,11" />
       <property name="text" value="6.4" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="230,10" />
+      <property name="size" value="15,11" />
       <property name="text" value="8.3" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="58,10" />
+      <property name="size" value="18,11" />
       <property name="text" value="170" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
   </module>
   <module id="43">
@@ -1455,79 +1589,137 @@
   <module id="9">
     <component name="connector">
       <property name="x,y" value="163,36" />
-      <property name="connector#0" value="9.0.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="9.0.in.FMA" />
     </component>
     <component name="connector">
       <property name="x,y" value="34,37" />
-      <property name="connector#0" value="9.1.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="9.1.in.pitch" />
     </component>
     <component name="connector">
       <property name="x,y" value="163,8" />
-      <property name="connector#0" value="9.2.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="9.2.in.AM" />
     </component>
     <component name="connector">
       <property name="x,y" value="236,40" />
-      <property name="connector#0" value="9.0.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="9.0.in.FMA" />
     </component>
     <component name="connector">
       <property name="x,y" value="3,42" />
-      <property name="connector#0" value="9.1.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="9.1.in.pitch" />
     </component>
     <component name="knob">
       <property name="x,y" value="73,30" />
-      <property name="parameter#0" value="9.0.p.noname" />
       <property name="size" value="30,30" />
+      <property name="parameter#0" value="9.0.p.pitch coarse" />
     </component>
     <component name="knob">
       <property name="x,y" value="104,35" />
-      <property name="parameter#0" value="9.1.p.noname" />
+      <property name="size" value="24,24" />
+      <property name="parameter#0" value="9.1.p.pitch fine" />
     </component>
     <component name="button">
       <property name="x,y" value="219,3" />
-      <property name="parameter#0" value="9.2.p.noname" />
+      <property name="size" value="34,19" />
+      <property name="parameter#0" value="9.2.p.pitch KBT" />
+      <property name="landscape" value="false" />
+      <property name="cyclic" value="true" />
       <property name="btn#0" value="KBT" />
     </component>
     <component name="knob">
       <property name="x,y" value="48,35" />
-      <property name="parameter#0" value="9.3.p.noname" />
+      <property name="size" value="24,24" />
+      <property name="parameter#0" value="9.3.p.pitch mod amount" />
     </component>
     <component name="knob">
       <property name="x,y" value="178,35" />
-      <property name="parameter#0" value="9.4.p.noname" />
+      <property name="size" value="24,24" />
+      <property name="parameter#0" value="9.4.p.FMA" />
     </component>
     <component name="button">
       <property name="x,y" value="215,39" />
-      <property name="parameter#0" value="9.5.p.noname" />
+      <property name="size" value="15,15" />
+      <property name="parameter#0" value="9.5.p.mute" />
+      <property name="landscape" value="false" />
+      <property name="cyclic" value="true" />
       <property name="btn#0" value="M" />
     </component>
     <component name="display.text">
-      <property name="size" value="50,16" />
       <property name="x,y" value="22,15" />
-      <property name="parameter#0" value="9.0.p.noname" />
+      <property name="size" value="50,16" />
+      <property name="text" value="pitch coarse" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
+      <property name="padding" value="2" />
+      <property name="parameter#0" value="9.0.p.pitch coarse" />
     </component>
     <component name="label">
       <property name="x,y" value="1,17" />
+      <property name="size" value="20,11" />
       <property name="text" value="Freq" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="18,42" />
+      <property name="size" value="13,11" />
       <property name="text" value="Slv" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="72,17" />
+      <property name="size" value="31,11" />
       <property name="text" value="Coarse" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="106,17" />
+      <property name="size" value="19,11" />
       <property name="text" value="Fine" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="145,8" />
+      <property name="size" value="14,11" />
       <property name="text" value="AM" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="140,37" />
+      <property name="size" value="19,11" />
       <property name="text" value="FMA" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
   </module>
   <module id="90">
@@ -1842,36 +2034,60 @@
   <module id="14">
     <component name="connector">
       <property name="x,y" value="3,43" />
-      <property name="connector#0" value="14.0.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="slave" />
+      <property name="connector#0" value="14.0.in.mst" />
     </component>
     <component name="connector">
       <property name="x,y" value="142,43" />
-      <property name="connector#0" value="14.1.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="14.1.in.FMA" />
     </component>
     <component name="connector">
       <property name="x,y" value="9,21" />
-      <property name="connector#0" value="14.2.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="14.2.in.sync" />
     </component>
     <component name="connector">
       <property name="x,y" value="219,23" />
-      <property name="connector#0" value="14.3.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="14.3.in.AM" />
     </component>
     <component name="connector">
       <property name="x,y" value="238,43" />
-      <property name="connector#0" value="14.0.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="slave" />
+      <property name="connector#0" value="14.0.in.mst" />
     </component>
     <component name="knob">
       <property name="x,y" value="79,12" />
-      <property name="parameter#0" value="14.0.p.noname" />
       <property name="size" value="30,30" />
+      <property name="parameter#0" value="14.0.p.detune coarse" />
     </component>
     <component name="knob">
       <property name="x,y" value="109,17" />
-      <property name="parameter#0" value="14.1.p.noname" />
+      <property name="size" value="24,24" />
+      <property name="parameter#0" value="14.1.p.detune fine" />
     </component>
     <component name="button">
-      <property name="x,y" value="165,2" />
-      <property name="parameter#0" value="14.2.p.noname" />
+      <property name="x,y" value="165,5" />
+      <property name="size" value="85,15" />
+      <property name="parameter#0" value="14.2.p.shape" />
+      <property name="landscape" value="true" />
+      <property name="cyclic" value="false" />
       <property name="btn#0" value="{@wf.sine}" />
       <property name="btn#1" value="{@wf.tri}" />
       <property name="btn#2" value="{@wf.saw}" />
@@ -1879,41 +2095,74 @@
     </component>
     <component name="knob">
       <property name="x,y" value="159,33" />
-      <property name="parameter#0" value="14.3.p.noname" />
+      <property name="size" value="24,24" />
+      <property name="parameter#0" value="14.3.p.FMA mod" />
     </component>
     <component name="button">
       <property name="x,y" value="217,41" />
-      <property name="parameter#0" value="14.4.p.noname" />
+      <property name="size" value="34,19" />
+      <property name="parameter#0" value="14.4.p.mute" />
+      <property name="landscape" value="false" />
+      <property name="cyclic" value="true" />
       <property name="btn#0" value="M" />
     </component>
     <component name="display.text">
-      <property name="size" value="50,16" />
       <property name="x,y" value="29,19" />
-      <property name="parameter#0" value="14.0.p.noname" />
+      <property name="size" value="50,16" />
+      <property name="text" value="detune coarse" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
+      <property name="padding" value="2" />
+      <property name="parameter#0" value="14.0.p.detune coarse" />
     </component>
     <component name="label">
       <property name="x,y" value="5,10" />
+      <property name="size" value="21,11" />
       <property name="text" value="Sync" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="20,44" />
+      <property name="size" value="16,11" />
       <property name="text" value="Mst" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="76,1" />
+      <property name="size" value="32,11" />
       <property name="text" value="Detune" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="111,5" />
+      <property name="size" value="19,11" />
       <property name="text" value="Fine" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="138,31" />
+      <property name="size" value="19,11" />
       <property name="text" value="FMA" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="203,23" />
+      <property name="size" value="14,11" />
       <property name="text" value="AM" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
   </module>
   <module id="17">
@@ -2173,37 +2422,68 @@
   <module id="5">
     <component name="connector">
       <property name="x,y" value="193,24" />
-      <property name="connector#0" value="5.0.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="5.0.in.out" />
     </component>
     <component name="knob">
       <property name="x,y" value="216,12" />
-      <property name="parameter#0" value="5.0.p.noname" />
       <property name="size" value="30,30" />
+      <property name="parameter#0" value="5.0.p.level" />
     </component>
     <component name="button">
-      <property name="x,y" value="165,22" />
-      <property name="parameter#0" value="5.2.p.noname" />
+      <property name="x,y" value="165,25" />
+      <property name="size" value="20,15" />
+      <property name="parameter#0" value="5.2.p.mute" />
+      <property name="landscape" value="false" />
+      <property name="cyclic" value="true" />
       <property name="btn#0" value="M" />
     </component>
     <component name="button">
-      <property name="x,y" value="34,22" />
-      <property name="parameter#0" value="5.1.p.noname" />
+      <property name="x,y" value="35,25" />
+      <property name="size" value="110,15" />
+      <property name="parameter#0" value="5.1.p.dest" />
+      <property name="landscape" value="true" />
+      <property name="cyclic" value="false" />
+      <property name="btn#1" value="3" />
+      <property name="btn#2" value="4" />
+      <property name="btn#3" value="L" />
+      <property name="btn#4" value="R" />
+      <property name="btn#0" value="2" />
     </component>
     <component name="label">
       <property name="x,y" value="8,25" />
+      <property name="size" value="20,11" />
       <property name="text" value="Dest" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="125,10" />
+      <property name="size" value="28,11" />
       <property name="text" value="-CVA-" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="190,10" />
+      <property name="size" value="17,11" />
       <property name="text" value="Mix" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="219,1" />
+      <property name="size" value="23,11" />
       <property name="text" value="Level" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
   </module>
   <module id="16">
@@ -2597,15 +2877,15 @@
       <property name="parameter#0" value="7.3.p.Pulse width" />
     </component>
     <component name="button">
-      <property name="x,y" value="216,3" />
-      <property name="size" value="34,19" />
+      <property name="x,y" value="220,5" />
+      <property name="size" value="25,60" />
       <property name="parameter#0" value="7.4.p.waveform" />
       <property name="landscape" value="false" />
-      <property name="cyclic" value="true" />
-      <property name="btn#0" value="wf.sine" />
-      <property name="btn#1" value="wf.tri" />
-      <property name="btn#2" value="wf.saw" />
-      <property name="btn#3" value="wf.square" />
+      <property name="cyclic" value="false" />
+      <property name="btn#0" value="{@wf.sine}" />
+      <property name="btn#1" value="{@wf.tri}" />
+      <property name="btn#2" value="{@wf.saw}" />
+      <property name="btn#3" value="{@wf.square}" />
     </component>
     <component name="knob">
       <property name="x,y" value="20,63" />
@@ -2629,7 +2909,7 @@
     </component>
     <component name="button">
       <property name="x,y" value="215,69" />
-      <property name="size" value="34,19" />
+      <property name="size" value="15,15" />
       <property name="parameter#0" value="7.9.p.Mute" />
       <property name="landscape" value="false" />
       <property name="cyclic" value="true" />
@@ -3056,27 +3336,51 @@
   <module id="65">
     <component name="connector">
       <property name="x,y" value="109,8" />
-      <property name="connector#0" value="65.0.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="false" />
+      <property name="type" value="logic" />
+      <property name="connector#0" value="65.0.out.clock" />
     </component>
     <component name="connector">
       <property name="x,y" value="168,8" />
-      <property name="connector#0" value="65.1.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="false" />
+      <property name="type" value="logic" />
+      <property name="connector#0" value="65.1.out.sync" />
     </component>
     <component name="connector">
       <property name="x,y" value="234,8" />
-      <property name="connector#0" value="65.2.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="false" />
+      <property name="type" value="logic" />
+      <property name="connector#0" value="65.2.out.active" />
     </component>
     <component name="label">
       <property name="x,y" value="78,9" />
+      <property name="size" value="25,11" />
       <property name="text" value="Clock" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="142,9" />
+      <property name="size" value="21,11" />
       <property name="text" value="Sync" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="197,9" />
+      <property name="size" value="27,11" />
       <property name="text" value="Active" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
   </module>
   <module id="54">
@@ -3139,112 +3443,192 @@
   <module id="107">
     <component name="connector">
       <property name="x,y" value="92,55" />
-      <property name="connector#0" value="107.0.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="107.0.in.fma" />
     </component>
     <component name="connector">
       <property name="x,y" value="5,55" />
-      <property name="connector#0" value="107.1.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="control" />
+      <property name="connector#0" value="107.1.in.pitch mod 1" />
     </component>
     <component name="connector">
       <property name="x,y" value="47,55" />
-      <property name="connector#0" value="107.2.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="control" />
+      <property name="connector#0" value="107.2.in.pitch mod 2" />
     </component>
     <component name="connector">
       <property name="x,y" value="165,55" />
-      <property name="connector#0" value="107.3.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="control" />
+      <property name="connector#0" value="107.3.in.spectral shape mod" />
     </component>
     <component name="connector">
       <property name="x,y" value="238,56" />
-      <property name="connector#0" value="107.0.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="107.0.in.fma" />
     </component>
     <component name="connector">
       <property name="x,y" value="5,26" />
-      <property name="connector#0" value="107.1.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="control" />
+      <property name="connector#0" value="107.1.in.pitch mod 1" />
     </component>
     <component name="knob">
       <property name="x,y" value="77,18" />
-      <property name="parameter#0" value="107.0.p.noname" />
       <property name="size" value="30,30" />
+      <property name="parameter#0" value="107.0.p.freq coarse" />
     </component>
     <component name="knob">
       <property name="x,y" value="109,23" />
-      <property name="parameter#0" value="107.1.p.noname" />
+      <property name="size" value="24,24" />
+      <property name="parameter#0" value="107.1.p.freq fine" />
     </component>
     <component name="knob">
       <property name="x,y" value="168,23" />
-      <property name="parameter#0" value="107.2.p.noname" />
+      <property name="size" value="24,24" />
+      <property name="parameter#0" value="107.2.p.spectral shape" />
     </component>
     <component name="button">
       <property name="x,y" value="205,25" />
-      <property name="parameter#0" value="107.3.p.noname" />
+      <property name="size" value="34,19" />
+      <property name="parameter#0" value="107.3.p.partials" />
+      <property name="landscape" value="false" />
+      <property name="cyclic" value="true" />
       <property name="btn#0" value="Partials" />
     </component>
     <component name="knob">
       <property name="x,y" value="19,50" />
-      <property name="parameter#0" value="107.4.p.noname" />
+      <property name="size" value="24,24" />
+      <property name="parameter#0" value="107.4.p.pitch mod 1" />
     </component>
     <component name="knob">
       <property name="x,y" value="61,50" />
-      <property name="parameter#0" value="107.5.p.noname" />
+      <property name="size" value="24,24" />
+      <property name="parameter#0" value="107.5.p.pitch mod 2" />
     </component>
     <component name="knob">
       <property name="x,y" value="106,50" />
-      <property name="parameter#0" value="107.6.p.noname" />
+      <property name="size" value="24,24" />
+      <property name="parameter#0" value="107.6.p.fma" />
     </component>
     <component name="knob">
       <property name="x,y" value="180,50" />
-      <property name="parameter#0" value="107.7.p.noname" />
+      <property name="size" value="24,24" />
+      <property name="parameter#0" value="107.7.p.spectral shape mod" />
     </component>
     <component name="button">
       <property name="x,y" value="135,52" />
-      <property name="parameter#0" value="107.8.p.noname" />
+      <property name="size" value="34,19" />
+      <property name="parameter#0" value="107.8.p.kbt" />
+      <property name="landscape" value="false" />
+      <property name="cyclic" value="true" />
       <property name="btn#0" value="KBT" />
     </component>
     <component name="button">
       <property name="x,y" value="217,55" />
-      <property name="parameter#0" value="107.9.p.noname" />
+      <property name="size" value="34,19" />
+      <property name="parameter#0" value="107.9.p.mute" />
+      <property name="landscape" value="false" />
+      <property name="cyclic" value="true" />
       <property name="btn#0" value="M" />
     </component>
     <component name="display.text">
-      <property name="size" value="50,16" />
       <property name="x,y" value="24,25" />
-      <property name="parameter#0" value="107.0.p.noname" />
+      <property name="size" value="50,16" />
+      <property name="text" value="freq coarse" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
+      <property name="padding" value="2" />
+      <property name="parameter#0" value="107.0.p.freq coarse" />
     </component>
     <component name="label">
       <property name="x,y" value="4,15" />
+      <property name="size" value="13,11" />
       <property name="text" value="Slv" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="25,15" />
+      <property name="size" value="20,11" />
       <property name="text" value="Freq" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="78,7" />
+      <property name="size" value="31,11" />
       <property name="text" value="Coarse" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="113,7" />
+      <property name="size" value="19,11" />
       <property name="text" value="Fine" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="162,1" />
+      <property name="size" value="74,11" />
       <property name="text" value="Spectral\nShape" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="211,7" />
+      <property name="size" value="33,11" />
       <property name="text" value="Partials" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="1,44" />
+      <property name="size" value="22,11" />
       <property name="text" value="Pitch" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="43,45" />
+      <property name="size" value="22,11" />
       <property name="text" value="Pitch" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="89,45" />
+      <property name="size" value="19,11" />
       <property name="text" value="FMA" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
   </module>
   <module id="110">
@@ -4572,55 +4956,101 @@
   <module id="100">
     <component name="connector">
       <property name="x,y" value="192,1" />
-      <property name="connector#0" value="100.0.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="control" />
+      <property name="connector#0" value="100.0.in.note" />
     </component>
     <component name="connector">
       <property name="x,y" value="192,15" />
-      <property name="connector#0" value="100.1.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="logic" />
+      <property name="connector#0" value="100.1.in.gate" />
     </component>
     <component name="connector">
       <property name="x,y" value="192,29" />
-      <property name="connector#0" value="100.2.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="control" />
+      <property name="connector#0" value="100.2.in.vel" />
     </component>
     <component name="connector">
       <property name="x,y" value="237,1" />
-      <property name="connector#0" value="100.0.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="control" />
+      <property name="connector#0" value="100.0.in.note" />
     </component>
     <component name="connector">
       <property name="x,y" value="237,15" />
-      <property name="connector#0" value="100.1.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="logic" />
+      <property name="connector#0" value="100.1.in.gate" />
     </component>
     <component name="connector">
       <property name="x,y" value="237,29" />
-      <property name="connector#0" value="100.2.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="control" />
+      <property name="connector#0" value="100.2.in.vel" />
     </component>
     <component name="knob">
       <property name="x,y" value="88,14" />
-      <property name="parameter#0" value="100.0.p.noname" />
+      <property name="size" value="24,24" />
+      <property name="parameter#0" value="100.0.p.lower" />
     </component>
     <component name="knob">
       <property name="x,y" value="121,14" />
-      <property name="parameter#0" value="100.1.p.noname" />
+      <property name="size" value="24,24" />
+      <property name="parameter#0" value="100.1.p.upper" />
     </component>
     <component name="label">
       <property name="x,y" value="87,2" />
+      <property name="size" value="27,11" />
       <property name="text" value="Lower" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="120,2" />
+      <property name="size" value="27,11" />
       <property name="text" value="Upper" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="209,3" />
+      <property name="size" value="21,11" />
       <property name="text" value="Note" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="209,17" />
+      <property name="size" value="20,11" />
       <property name="text" value="Gate" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="210,31" />
+      <property name="size" value="14,11" />
       <property name="text" value="Vel" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
   </module>
   <module id="51">
@@ -4794,48 +5224,88 @@
   <module id="3">
     <component name="connector">
       <property name="x,y" value="83,24" />
-      <property name="connector#0" value="3.0.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="3.0.in.out 1" />
     </component>
     <component name="connector">
       <property name="x,y" value="118,24" />
-      <property name="connector#0" value="3.1.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="3.1.in.out 2" />
     </component>
     <component name="connector">
       <property name="x,y" value="153,24" />
-      <property name="connector#0" value="3.2.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="3.2.in.out 3" />
     </component>
     <component name="connector">
       <property name="x,y" value="187,24" />
-      <property name="connector#0" value="3.3.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="3.3.in.out 4" />
     </component>
     <component name="knob">
       <property name="x,y" value="218,12" />
-      <property name="parameter#0" value="3.0.p.noname" />
       <property name="size" value="30,30" />
+      <property name="parameter#0" value="3.0.p.level" />
     </component>
     <component name="label">
       <property name="x,y" value="29,26" />
+      <property name="size" value="36,11" />
       <property name="text" value="Mix Bus" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="86,10" />
+      <property name="size" value="6,11" />
       <property name="text" value="1" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="122,10" />
+      <property name="size" value="6,11" />
       <property name="text" value="2" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="155,10" />
+      <property name="size" value="6,11" />
       <property name="text" value="3" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="190,10" />
+      <property name="size" value="6,11" />
       <property name="text" value="4" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="221,0" />
+      <property name="size" value="23,11" />
       <property name="text" value="Level" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
   </module>
   <module id="105">
@@ -5024,35 +5494,67 @@
   <module id="1">
     <component name="connector">
       <property name="x,y" value="93,8" />
-      <property name="connector#0" value="1.0.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="false" />
+      <property name="type" value="control" />
+      <property name="connector#0" value="1.0.out.Note" />
     </component>
     <component name="connector">
       <property name="x,y" value="142,8" />
-      <property name="connector#0" value="1.1.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="false" />
+      <property name="type" value="logic" />
+      <property name="connector#0" value="1.1.out.gate" />
     </component>
     <component name="connector">
       <property name="x,y" value="185,8" />
-      <property name="connector#0" value="1.2.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="false" />
+      <property name="type" value="control" />
+      <property name="connector#0" value="1.2.out.velocity on" />
     </component>
     <component name="connector">
       <property name="x,y" value="232,8" />
-      <property name="connector#0" value="1.3.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="false" />
+      <property name="type" value="control" />
+      <property name="connector#0" value="1.3.out.velocity off" />
     </component>
     <component name="label">
       <property name="x,y" value="64,9" />
+      <property name="size" value="21,11" />
       <property name="text" value="Note" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="111,9" />
+      <property name="size" value="20,11" />
       <property name="text" value="Gate" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="162,9" />
+      <property name="size" value="14,11" />
       <property name="text" value="Vel" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="212,4" />
+      <property name="size" value="38,11" />
       <property name="text" value="Rel\nvel" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
   </module>
   <module id="80">
@@ -5470,45 +5972,81 @@
   <module id="4">
     <component name="connector">
       <property name="x,y" value="177,26" />
-      <property name="connector#0" value="4.0.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="4.0.in.out left" />
     </component>
     <component name="connector">
       <property name="x,y" value="200,26" />
-      <property name="connector#0" value="4.1.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="4.1.in.out right" />
     </component>
     <component name="knob">
       <property name="x,y" value="219,13" />
-      <property name="parameter#0" value="4.0.p.noname" />
       <property name="size" value="30,30" />
+      <property name="parameter#0" value="4.0.p.level" />
     </component>
     <component name="button">
       <property name="x,y" value="55,22" />
-      <property name="parameter#0" value="4.1.p.noname" />
+      <property name="size" value="34,19" />
+      <property name="parameter#0" value="4.1.p.destination" />
+      <property name="landscape" value="false" />
+      <property name="cyclic" value="true" />
+      <property name="btn#0" value="btn#0" />
+      <property name="btn#1" value="CVA" />
     </component>
     <component name="button">
-      <property name="x,y" value="147,22" />
-      <property name="parameter#0" value="4.2.p.noname" />
+      <property name="x,y" value="135,20" />
+      <property name="size" value="25,15" />
+      <property name="parameter#0" value="4.2.p.mute" />
+      <property name="landscape" value="false" />
+      <property name="cyclic" value="true" />
       <property name="btn#0" value="M" />
     </component>
     <component name="label">
       <property name="x,y" value="2,26" />
+      <property name="size" value="52,11" />
       <property name="text" value="Destination" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="175,11" />
+      <property name="size" value="36,11" />
       <property name="text" value="Mix Bus" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="170,25" />
+      <property name="size" value="5,11" />
       <property name="text" value="L" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="192,25" />
+      <property name="size" value="6,11" />
       <property name="text" value="R" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="222,1" />
+      <property name="size" value="23,11" />
       <property name="text" value="Level" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
   </module>
   <module id="77">
@@ -5760,61 +6298,105 @@
   <module id="97">
     <component name="connector">
       <property name="x,y" value="151,23" />
-      <property name="connector#0" value="97.0.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="control" />
+      <property name="connector#0" value="97.0.in.pitch mod 1" />
     </component>
     <component name="connector">
       <property name="x,y" value="192,23" />
-      <property name="connector#0" value="97.1.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="control" />
+      <property name="connector#0" value="97.1.in.pitch mod 2" />
     </component>
     <component name="connector">
       <property name="x,y" value="3,27" />
-      <property name="connector#0" value="97.0.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="control" />
+      <property name="connector#0" value="97.0.in.pitch mod 1" />
     </component>
     <component name="knob">
       <property name="x,y" value="76,13" />
-      <property name="parameter#0" value="97.0.p.noname" />
       <property name="size" value="30,30" />
+      <property name="parameter#0" value="97.0.p.pitch" />
     </component>
     <component name="knob">
       <property name="x,y" value="112,18" />
-      <property name="parameter#0" value="97.1.p.noname" />
+      <property name="size" value="24,24" />
+      <property name="parameter#0" value="97.1.p.pitch fine" />
     </component>
     <component name="button">
-      <property name="x,y" value="225,2" />
-      <property name="parameter#0" value="97.2.p.noname" />
+      <property name="x,y" value="211,2" />
+      <property name="size" value="34,19" />
+      <property name="parameter#0" value="97.2.p.kbt" />
+      <property name="landscape" value="false" />
+      <property name="cyclic" value="true" />
+      <property name="btn#0" value="btn#0" />
     </component>
     <component name="knob">
       <property name="x,y" value="166,18" />
-      <property name="parameter#0" value="97.3.p.noname" />
+      <property name="size" value="24,24" />
+      <property name="parameter#0" value="97.3.p.pitch mod 1" />
     </component>
     <component name="knob">
       <property name="x,y" value="206,18" />
-      <property name="parameter#0" value="97.4.p.noname" />
+      <property name="size" value="24,24" />
+      <property name="parameter#0" value="97.4.p.pitch mod 2" />
     </component>
     <component name="display.text">
-      <property name="size" value="50,16" />
       <property name="x,y" value="23,20" />
-      <property name="parameter#0" value="97.0.p.noname" />
+      <property name="size" value="50,16" />
+      <property name="text" value="pitch" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
+      <property name="padding" value="2" />
+      <property name="parameter#0" value="97.0.p.pitch" />
     </component>
     <component name="label">
       <property name="x,y" value="3,16" />
+      <property name="size" value="13,11" />
       <property name="text" value="Slv" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="76,2" />
+      <property name="size" value="31,11" />
       <property name="text" value="Coarse" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="114,7" />
+      <property name="size" value="19,11" />
       <property name="text" value="Fine" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="146,7" />
+      <property name="size" value="22,11" />
       <property name="text" value="Pitch" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="186,7" />
+      <property name="size" value="22,11" />
       <property name="text" value="Pitch" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
   </module>
   <module id="38">
@@ -5843,27 +6425,51 @@
   <module id="2">
     <component name="connector">
       <property name="x,y" value="219,13" />
-      <property name="connector#0" value="2.0.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="false" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="2.0.out.left" />
     </component>
     <component name="connector">
       <property name="x,y" value="236,13" />
-      <property name="connector#0" value="2.1.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="false" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="2.1.out.right" />
     </component>
     <component name="label">
       <property name="x,y" value="61,2" />
+      <property name="size" value="16,11" />
       <property name="text" value="Left" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="61,15" />
+      <property name="size" value="24,11" />
       <property name="text" value="Right" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="220,2" />
+      <property name="size" value="5,11" />
       <property name="text" value="L" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="239,2" />
+      <property name="size" value="6,11" />
       <property name="text" value="R" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
   </module>
   <module id="81">
@@ -5977,121 +6583,212 @@
   <module id="108">
     <component name="connector">
       <property name="x,y" value="10,19" />
-      <property name="connector#0" value="108.0.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="108.0.in.control" />
     </component>
     <component name="connector">
       <property name="x,y" value="223,104" />
-      <property name="connector#0" value="108.1.in.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="108.1.in.in" />
     </component>
     <component name="connector">
       <property name="x,y" value="239,104" />
-      <property name="connector#0" value="108.0.out.noname" />
+      <property name="size" value="13,13" />
+      <property name="isConnected" value="false" />
+      <property name="isInput" value="true" />
+      <property name="type" value="audio" />
+      <property name="connector#0" value="108.0.in.control" />
     </component>
     <component name="button">
-      <property name="x,y" value="1,35" />
-      <property name="parameter#0" value="108.17.p.noname" />
+      <property name="x,y" value="5,35" />
+      <property name="size" value="25,15" />
+      <property name="parameter#0" value="108.17.p.high freq emphasis" />
+      <property name="landscape" value="false" />
+      <property name="cyclic" value="true" />
       <property name="btn#0" value="{@vocoder.emp}" />
     </component>
     <component name="button">
-      <property name="x,y" value="1,54" />
-      <property name="parameter#0" value="108.18.p.noname" />
+      <property name="x,y" value="5,55" />
+      <property name="size" value="25,15" />
+      <property name="parameter#0" value="108.18.p.monitor" />
+      <property name="landscape" value="false" />
+      <property name="cyclic" value="true" />
       <property name="btn#0" value="Mon" />
     </component>
     <component name="display.vocoder">
-      <property name="size" value="190,100" />
       <property name="x,y" value="32,18" />
-      <property name="parameter#0" value="108.0.p.noname" />
-      <property name="parameter#1" value="108.1.p.noname" />
-      <property name="parameter#2" value="108.2.p.noname" />
-      <property name="parameter#3" value="108.3.p.noname" />
-      <property name="parameter#4" value="108.4.p.noname" />
-      <property name="parameter#5" value="108.5.p.noname" />
-      <property name="parameter#6" value="108.6.p.noname" />
-      <property name="parameter#7" value="108.7.p.noname" />
-      <property name="parameter#8" value="108.8.p.noname" />
-      <property name="parameter#9" value="108.9.p.noname" />
-      <property name="parameter#10" value="108.10.p.noname" />
-      <property name="parameter#11" value="108.11.p.noname" />
-      <property name="parameter#12" value="108.12.p.noname" />
-      <property name="parameter#13" value="108.13.p.noname" />
-      <property name="parameter#14" value="108.14.p.noname" />
-      <property name="parameter#15" value="108.15.p.noname" />
+      <property name="size" value="190,70" />
+      <property name="parameter#0" value="108.0.p.band 1" />
+      <property name="parameter#1" value="108.1.p.band 2" />
+      <property name="parameter#2" value="108.2.p.band 3" />
+      <property name="parameter#3" value="108.3.p.band 4" />
+      <property name="parameter#4" value="108.4.p.band 5" />
+      <property name="parameter#5" value="108.5.p.band 6" />
+      <property name="parameter#6" value="108.6.p.band 7" />
+      <property name="parameter#7" value="108.7.p.band 8" />
+      <property name="parameter#8" value="108.8.p.band 9" />
+      <property name="parameter#9" value="108.9.p.band 10" />
+      <property name="parameter#10" value="108.10.p.band 11" />
+      <property name="parameter#11" value="108.11.p.band 12" />
+      <property name="parameter#12" value="108.12.p.band 13" />
+      <property name="parameter#13" value="108.13.p.band 14" />
+      <property name="parameter#14" value="108.14.p.band 15" />
+      <property name="parameter#15" value="108.15.p.band 16" />
     </component>
     <component name="knob">
       <property name="x,y" value="224,49" />
-      <property name="parameter#0" value="108.16.p.noname" />
+      <property name="size" value="24,24" />
+      <property name="parameter#0" value="108.16.p.outgain" />
     </component>
     <component name="label">
       <property name="x,y" value="221,24" />
+      <property name="size" value="31,11" />
       <property name="text" value="Output" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="226,37" />
+      <property name="size" value="21,11" />
       <property name="text" value="Gain" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="39,8" />
+      <property name="size" value="6,11" />
       <property name="text" value="1" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="49,8" />
+      <property name="size" value="6,11" />
       <property name="text" value="2" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="59,8" />
+      <property name="size" value="6,11" />
       <property name="text" value="3" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="70,8" />
+      <property name="size" value="6,11" />
       <property name="text" value="4" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="80,8" />
+      <property name="size" value="6,11" />
       <property name="text" value="5" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="91,8" />
+      <property name="size" value="6,11" />
       <property name="text" value="6" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="103,8" />
+      <property name="size" value="6,11" />
       <property name="text" value="7" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="115,8" />
+      <property name="size" value="6,11" />
       <property name="text" value="8" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="125,8" />
+      <property name="size" value="6,11" />
       <property name="text" value="9" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="132,8" />
+      <property name="size" value="12,11" />
       <property name="text" value="10" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="145,8" />
+      <property name="size" value="12,11" />
       <property name="text" value="11" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="157,8" />
+      <property name="size" value="12,11" />
       <property name="text" value="12" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="169,8" />
+      <property name="size" value="12,11" />
       <property name="text" value="13" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="181,8" />
+      <property name="size" value="12,11" />
       <property name="text" value="14" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="193,8" />
+      <property name="size" value="12,11" />
       <property name="text" value="15" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
     <component name="label">
       <property name="x,y" value="205,8" />
+      <property name="size" value="12,11" />
       <property name="text" value="16" />
+      <property name="vertical" value="false" />
+      <property name="font" value="9,SansSerif" />
+      <property name="antialiasing" value="false" />
     </component>
   </module>
   <module id="71">

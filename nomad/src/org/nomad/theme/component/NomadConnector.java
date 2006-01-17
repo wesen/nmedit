@@ -117,6 +117,7 @@ public class NomadConnector extends NomadComponent {
 				case DConnector.SIGNAL_LOGIC: setBackground(NomadClassicColors.MORPH_YELLOW); break;
 				case DConnector.SIGNAL_SLAVE: setBackground(NomadClassicColors.MORPH_GRAY); break;
 			}
+			deleteOnScreenBuffer();
 			repaint();
 		}
 		

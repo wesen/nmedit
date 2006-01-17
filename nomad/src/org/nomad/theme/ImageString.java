@@ -36,6 +36,7 @@ public class ImageString {
 	private Image image = null;
 	private boolean isImageString = false;
 	private final static Pattern pattern = Pattern.compile("\\{@(.+)\\}");
+	private int lineCount = 1;
 	
 	public ImageString() {
 		super();
@@ -56,10 +57,13 @@ public class ImageString {
 			this.string=string;
 			isImageString=false;
 		}
+		lineCount=1;
+		for (int i=string.indexOf("\\\\n");i>=0;i=string.indexOf("\\\\n",i+1)) 
+			lineCount++;
 	}
-
-	public String getString() {
-		return isImageString ? "{@"+string+"}" : string;
+	
+	public int getLineCount() {
+		return lineCount;
 	}
 	
 	public Image getImage() {
@@ -97,9 +101,13 @@ public class ImageString {
 		if (!m.matches()) return null;
 		return m.group(1);
 	}
+
+	public String getString() {
+		return isImageString ? "{@"+string+"}" : string;
+	}
 	
 	public String toString() {
-		return string==null ? "" : string;
+		return getString();
 	}
 	
 }
