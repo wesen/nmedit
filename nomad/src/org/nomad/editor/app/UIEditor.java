@@ -22,9 +22,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.nomad.editor.ComponentAlignmentToolbar;
 import org.nomad.editor.views.classes.NomadClassesView;
 import org.nomad.editor.views.property.NomadPropertyEditor;
-import org.nomad.editor.views.visual.NomadVisualEditor;
+import org.nomad.editor.views.visual.VisualEditor;
 import org.nomad.main.ModuleToolbar;
 import org.nomad.main.run.Run;
 import org.nomad.patch.ModuleSection;
@@ -49,8 +50,10 @@ public class UIEditor extends JFrame {
 		frame.validate();
 	    // center window
 	    Dimension screensz  = Toolkit.getDefaultToolkit().getScreenSize();
+		frame.setSize(screensz.width/2,screensz.height/2);
 	    Dimension framesz   = frame.getSize();
-	
+		
+		
 	    framesz.height = Math.min(framesz.height, screensz.height);
 	    framesz.width  = Math.min(framesz.width,  screensz.width);
 	
@@ -98,7 +101,8 @@ public class UIEditor extends JFrame {
 	
 	NomadClassesView classesView = new NomadClassesView();
 	NomadPropertyEditor propertyEditor = new NomadPropertyEditor(this);
-	NomadVisualEditor visualEditor = null;
+	VisualEditor visualEditor = null;
+	ComponentAlignmentToolbar tbComponents = new ComponentAlignmentToolbar();
 	
 	UIFactory theUIFactory = new ClassicThemeFactory();
 	
@@ -109,7 +113,6 @@ public class UIEditor extends JFrame {
 	public UIEditor() {
 		
 		super("Nomad UI Editor");
-		this.setSize(640, 480);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
@@ -159,11 +162,17 @@ public class UIEditor extends JFrame {
 		
 		propertyEditor.setPreferredSize(new Dimension(200, 400));
 				
-		this.add(BorderLayout.EAST, propertyEditor);
-		this.add(BorderLayout.WEST, classesView);
-		this.add(BorderLayout.CENTER, workspace);
+		
+		JPanel workspaceCascade = new JPanel();
+		workspaceCascade.setLayout(new BorderLayout());
+		workspaceCascade.add(workspace, BorderLayout.CENTER);
+		workspaceCascade.add(BorderLayout.SOUTH,tbComponents);
 		workspace.setLayout(null);
 		workspace.setSize(new Dimension(400,400));
+		
+		this.add(BorderLayout.EAST, propertyEditor);
+		this.add(BorderLayout.WEST, classesView);
+		this.add(BorderLayout.CENTER, workspaceCascade);
 		
 		// menu
 
@@ -185,148 +194,7 @@ public class UIEditor extends JFrame {
 		menuBar.add(menuFile);
 		
 		menuAlign = new JMenu("Align");
-		/*
-			// centers all selected components vertically
-			menuAlign.add("Vertical (Center)").addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent event) {
-					ModulePane mpane = workBench.getModulePane();
-					ArrayList components = mpane.getSelectedComponents();
-					for (int i=0;i<components.size();i++) {
-						Component c = (Component) components.get(i);
-						c.setLocation(c.getX(),
-								(mpane.getHeight()-c.getHeight())/2
-						);
-					}
-				}});
-			
-			// aligns all selected components at highest component
-			menuAlign.add("Vertical (Highest)").addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent event) {
-					ModulePane mpane = workBench.getModulePane();
-					ArrayList components = mpane.getSelectedComponents();
-					int ymin = mpane.getHeight();
-					for (int i=0;i<components.size();i++) {
-						Component c = (Component) components.get(i);
-						if (c.getY()<ymin)
-							ymin=c.getY();
-					}
-
-					for (int i=0;i<components.size();i++) {
-						Component c = (Component) components.get(i);
-						c.setLocation(c.getX(), ymin);
-					}
-				}});
-			
-			// aligns all selected components at lowest component
-			menuAlign.add("Vertical (Lowest)").addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent event) {
-					ModulePane mpane = workBench.getModulePane();
-					ArrayList components = mpane.getSelectedComponents();
-					int ymax = 0;
-					for (int i=0;i<components.size();i++) {
-						Component c = (Component) components.get(i);
-						int bottom = c.getY()+c.getHeight();
-						if (bottom>ymax)
-							ymax=bottom;
-					}
-
-					for (int i=0;i<components.size();i++) {
-						Component c = (Component) components.get(i);
-						c.setLocation(c.getX(), ymax-c.getHeight());
-					}
-				}});
-			
-			// aligns all selected components at lowest component
-			menuAlign.add("Vertical (Median)").addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent event) {
-					ModulePane mpane = workBench.getModulePane();
-					ArrayList components = mpane.getSelectedComponents();
-					if (components.size()>1) {
-						int ymedian = 0;
-
-						for (int i=0;i<components.size();i++) {
-							Component c = (Component) components.get(i);
-							ymedian+=c.getY()+c.getHeight()/2;
-						}
-						
-						ymedian /=components.size();
-						
-						for (int i=0;i<components.size();i++) {
-							Component c = (Component) components.get(i);
-							int current = c.getY()+c.getHeight()/2;
-							c.setLocation(
-								c.getLocation().x,
-								c.getLocation().y+(ymedian-current)
-							);
-						}
-					}
-				}});
-			
-		menuAlign.addSeparator();
-
-		// aligns all selected components at highest component
-		menuAlign.add("Horizontal (Left)").addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent event) {
-				ModulePane mpane = workBench.getModulePane();
-				ArrayList components = mpane.getSelectedComponents();
-				int xmin = mpane.getWidth();
-				for (int i=0;i<components.size();i++) {
-					Component c = (Component) components.get(i);
-					if (c.getX()<xmin)
-						xmin=c.getX();
-				}
-
-				for (int i=0;i<components.size();i++) {
-					Component c = (Component) components.get(i);
-					c.setLocation(xmin, c.getY());
-				}
-			}});
 		
-		// aligns all selected components at lowest component
-		menuAlign.add("Horizontal (Right)").addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent event) {
-				ModulePane mpane = workBench.getModulePane();
-				ArrayList components = mpane.getSelectedComponents();
-				int xmax = 0;
-				for (int i=0;i<components.size();i++) {
-					Component c = (Component) components.get(i);
-					int right = c.getX()+c.getWidth();
-					if (right>xmax)
-						xmax=right;
-				}
-
-				for (int i=0;i<components.size();i++) {
-					Component c = (Component) components.get(i);
-					c.setLocation(xmax-c.getWidth(),c.getY());
-				}
-			}});
-		
-		// aligns all selected components at lowest component
-		menuAlign.add("Horizontal (Median)").addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent event) {
-				ModulePane mpane = workBench.getModulePane();
-				ArrayList components = mpane.getSelectedComponents();
-				if (components.size()>1) {
-					int xmedian = 0;
-
-					for (int i=0;i<components.size();i++) {
-						Component c = (Component) components.get(i);
-						xmedian+=c.getX()+c.getWidth()/2;
-					}
-					
-					xmedian /=components.size();
-					
-					for (int i=0;i<components.size();i++) {
-						Component c = (Component) components.get(i);
-						int current = c.getX()+c.getWidth()/2;
-						c.setLocation(
-							c.getLocation().x+(xmedian-current),
-							c.getLocation().y
-						);
-					}
-				}
-			}});
-		*/
 		menuBar.add(menuAlign);
 		
 		this.setJMenuBar(menuBar);
@@ -336,7 +204,6 @@ public class UIEditor extends JFrame {
 		
 		pack();
 	}
-	
 	
 	class SaveItemListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
@@ -414,12 +281,12 @@ public class UIEditor extends JFrame {
 			if (visualEditor!=null) {
 				// write back
 				ModuleGUIBuilder.rewriteDOM(visualEditor, visualEditor.getModuleInfo());
-				
 				visualEditor.setComponentPropertyEditor(null);
 				workspace.remove(visualEditor);
+				visualEditor.setAlignmentToolbar(null);
 			}
 
-			visualEditor = new NomadVisualEditor(module);
+			visualEditor = new VisualEditor(module);
 			visualEditor.setComponentPropertyEditor(propertyEditor);
 			visualEditor.setBackground(NomadClassicColors.MODULE_BACKGROUND);
 
@@ -429,6 +296,8 @@ public class UIEditor extends JFrame {
 			visualEditor.setSize(ModuleSection.ModulePixDimension.PIXWIDTH,ModuleSection.ModulePixDimension.PIXHEIGHT*module.getHeight());
 			//visualEditor.setNameLabel(module.getName());
 			visualEditor.setVisible(true);
+			visualEditor.setAlignmentToolbar(tbComponents);
+			tbComponents.setEnabled(false);
 			
 			workspace.add(visualEditor); 
 			
