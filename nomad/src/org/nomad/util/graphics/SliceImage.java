@@ -1,4 +1,4 @@
-package org.nomad.util.misc;
+package org.nomad.util.graphics;
 
 import java.awt.Dimension;
 import java.awt.Image;
@@ -16,6 +16,9 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import javax.swing.ImageIcon;
+
+import org.nomad.util.misc.MalformedPropertyfileException;
+import org.nomad.util.misc.PropertyFactory;
 
 /**
  * Slices an image into smaller parts.

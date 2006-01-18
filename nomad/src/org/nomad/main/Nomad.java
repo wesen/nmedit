@@ -44,7 +44,7 @@ import org.nomad.port.SynthException;
 import org.nomad.theme.ModuleGUIBuilder;
 import org.nomad.theme.PatchGUI;
 import org.nomad.theme.UIFactory;
-import org.nomad.util.misc.ImageTracker;
+import org.nomad.util.graphics.ImageTracker;
 import org.nomad.xml.dom.module.DConnector;
 import org.nomad.xml.dom.module.ModuleDescriptions;
 import org.nomad.xml.dom.substitution.Substitutions;
@@ -407,7 +407,6 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 			docViewGroup.add(menuDocumentViewTabbed);
 			docViewGroup.add(menuDocumentViewMDI);
 		
-
 			menuPatchTheme = new JMenu("Theme");
 			ButtonGroup themeGroup = new ButtonGroup();
 			for (int i=0;i<PluginManager.getPluginCount();i++) {

@@ -36,9 +36,9 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-import org.nomad.image.ImageToolkit;
 import org.nomad.theme.component.KnobToolkit;
 import org.nomad.theme.component.NomadControl;
+import org.nomad.util.graphics.ImageToolkit;
 
 public class NomadClassicKnobGraphics {
 

@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.nomad.util.misc.ImageTracker;
+import org.nomad.util.graphics.ImageTracker;
 import org.nomad.xml.dom.substitution.Substitutions;
 import org.nomad.xml.pull.ModuleDescriptionParser;
 import org.xmlpull.v1.XmlPullParserException;

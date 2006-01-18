@@ -20,6 +20,6 @@ public class BPM extends Substitution {
 		else
 			value = 2*value -40;
 	    
-		return Integer.toString(value);
+		return Integer.toString(value)+" bpm";
 	}
 }

@@ -35,14 +35,14 @@ import java.util.NoSuchElementException;
 import javax.swing.JComponent;
 import javax.swing.border.Border;
 
-import org.nomad.image.ImageBuffer;
-import org.nomad.image.ImageToolkit;
 import org.nomad.patch.Module;
 import org.nomad.theme.ModuleGUI;
 import org.nomad.theme.UIFactory;
 import org.nomad.theme.property.ComponentLocationProperty;
 import org.nomad.theme.property.ComponentSizeProperty;
 import org.nomad.theme.property.PropertySet;
+import org.nomad.util.graphics.ImageBuffer;
+import org.nomad.util.graphics.ImageToolkit;
 
 /**
  * @author Christian Schneider

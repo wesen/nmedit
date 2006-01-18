@@ -28,7 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.nomad.theme.component.NomadComponent;
-import org.nomad.util.misc.ImageTracker;
+import org.nomad.util.graphics.ImageTracker;
 
 public class ImageString {
 

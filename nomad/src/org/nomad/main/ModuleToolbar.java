@@ -71,7 +71,7 @@ public class ModuleToolbar extends JTabbedPane
         	DToolbarSection section = group.getSection(si);
         	
         	for (int mi=0;mi<section.getModuleCount();mi++) {
-                ModuleToolbarButton btn = new ModuleToolbarButton(section.getModule(mi));
+                ModuleToolbarButton btn = new ModuleToolbarButton(this, section.getModule(mi));
                 if (!draggingSupport)
                 	btn.addActionListener(buttonClickListener);
                 	
@@ -124,6 +124,6 @@ public class ModuleToolbar extends JTabbedPane
       btn.addActionListener();
     }
   }*/
-
+	
 }
 

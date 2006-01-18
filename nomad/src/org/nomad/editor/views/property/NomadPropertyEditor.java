@@ -119,11 +119,15 @@ public class NomadPropertyEditor extends JPanel {
 					properties.add(iter.next());
 				}
 			}
-			table.setPreferredSize(new Dimension(240, table.getRowHeight()*table.getRowCount()));
-			model.fireTableDataChanged();
+			tableUpdate();
 		}
 	}
 
+	protected void tableUpdate() {
+		table.setPreferredSize(new Dimension(240, table.getRowHeight()*table.getRowCount()));
+		model.fireTableDataChanged();
+	}
+	
 	private class CPETableModel extends AbstractTableModel implements PropertySetListener {
 		
 	    public String getColumnName(int col) { return col==0?"Property":"Value"; }    
@@ -155,26 +159,26 @@ public class NomadPropertyEditor extends JPanel {
 		public void propertySetEvent(PropertySetEvent event) {
 			switch (event.getEventId()) {
 			case PropertySetEvent.PROPERTY_ADDED: {
-				System.out.println("** added");
+				System.out.println("** property added");
 				
-				properties.add(event.getProperty());				
-				fireTableStructureChanged();
-				fireTableDataChanged();
+				properties.add(event.getProperty());
+				model.fireTableDataChanged();
+				tableUpdate();
 				break;
 			}
 			case PropertySetEvent.PROPERTY_REMOVED: {
-				System.out.println("** removed");
+				System.out.println("** property removed");
 				
 				properties.remove(event.getProperty());				
-				fireTableStructureChanged();
-				fireTableDataChanged();
+				tableUpdate();
 				//event.getProperty().removeChangeListener(this);
 				break;}
 				
 			case PropertySetEvent.PROPERTY_CHANGED: {
-				Property property = event.getProperty();
-				int row = properties.indexOf(property);
-				fireTableCellUpdated(row, 1);
+				//Property property = event.getProperty();
+				tableUpdate();
+				/*int row = properties.indexOf(property);
+				fireTableCellUpdated(row, 1);*/
 				} break;
 			}
 		}

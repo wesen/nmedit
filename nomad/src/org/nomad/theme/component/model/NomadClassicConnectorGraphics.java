@@ -34,11 +34,11 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-import org.nomad.image.ImageToolkit;
 import org.nomad.theme.NomadClassicColors;
 import org.nomad.theme.RoundGradientPaint;
 import org.nomad.theme.component.NomadClassicConnector;
 import org.nomad.theme.component.NomadConnector;
+import org.nomad.util.graphics.ImageToolkit;
 
 public final class NomadClassicConnectorGraphics {
 

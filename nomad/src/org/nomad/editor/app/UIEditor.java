@@ -33,7 +33,7 @@ import org.nomad.plugin.PluginManager;
 import org.nomad.theme.ModuleGUIBuilder;
 import org.nomad.theme.NomadClassicColors;
 import org.nomad.theme.UIFactory;
-import org.nomad.util.misc.ImageTracker;
+import org.nomad.util.graphics.ImageTracker;
 import org.nomad.xml.XMLFileWriter;
 import org.nomad.xml.dom.module.DModule;
 import org.nomad.xml.dom.module.ModuleDescriptions;

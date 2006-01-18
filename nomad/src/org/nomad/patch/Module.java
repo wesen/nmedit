@@ -132,11 +132,15 @@ public class Module {
         return gridY * ModulePixDimension.PIXHEIGHT;
     }
 
-    public int getPixWidth() {
-        return ModulePixDimension.PIXWIDTH;
-    }
-
     public int getPixHeight() {
+    	return getPixHeight(dModule);
+    }
+    
+    public static int getPixWidth() {
+    	return ModulePixDimension.PIXWIDTH;
+    }
+    
+    public static int getPixHeight(DModule dModule) {
     	return dModule.getHeight() * ModulePixDimension.PIXHEIGHT;
     }
 

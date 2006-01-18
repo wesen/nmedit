@@ -20,11 +20,12 @@
 /*
  * Created on Jan 3, 2006
  */
-package org.nomad.image;
+package org.nomad.util.graphics;
 
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+
 
 /**
  * A class that hosts an image until dispose() is called.

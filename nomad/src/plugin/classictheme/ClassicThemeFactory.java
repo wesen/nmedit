@@ -17,7 +17,8 @@ import org.nomad.theme.component.NomadLabel;
 import org.nomad.theme.component.NomadResetButton;
 import org.nomad.theme.component.VocoderBandDisplay;
 import org.nomad.util.graphics.BackgroundPainter;
-import org.nomad.util.misc.ImageTracker;
+import org.nomad.util.graphics.ImageTracker;
+import org.nomad.xml.dom.module.DModule;
 
 public class ClassicThemeFactory extends UIFactory {
 	public ClassicThemeFactory() {
@@ -35,8 +36,8 @@ public class ClassicThemeFactory extends UIFactory {
 		return "src/plugin/classictheme/ui.xml";
 	}
 
-	public ModuleGUI getModuleGUI(Module module, ModuleSectionGUI moduleSectionGUI) {
-		ModuleGUI gui = super.getModuleGUI(module, moduleSectionGUI);
+	public ModuleGUI getModuleGUI(DModule info, Module module, ModuleSectionGUI moduleSectionGUI) {
+		ModuleGUI gui = super.getModuleGUI(info, module, moduleSectionGUI);
 		gui.setBackground(Color.decode("#BFBFBF"));
 		return gui;
 	}

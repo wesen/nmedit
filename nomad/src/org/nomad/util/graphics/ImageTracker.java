@@ -1,4 +1,4 @@
-package org.nomad.util.misc;
+package org.nomad.util.graphics;
 
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Iterator;
+
 
 /** 
  * A container for storing images and associating them with a key.
@@ -27,7 +28,7 @@ public class ImageTracker {
 	public final static int IMAGE_TRACKER_DISALLOW_REPLACE = 1;
 	
 	// Pairs (String, Image)
-	HashMap images = new HashMap();
+	protected HashMap images = new HashMap();
 	
 	// one of IMAGE_TRACKER_ALLOW_REPLACE or IMAGE_TRACKER_DISALLOW_REPLACE
 	private int policy = IMAGE_TRACKER_ALLOW_REPLACE;

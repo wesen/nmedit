@@ -70,6 +70,9 @@ public class NomadButtonArrayBehaviour {
 	public void calculateMetrics() {
 		Dimension size = model.getSize();
 		
+		if (model.getButtonCount()==0)
+			return;
+		
 		if (model.isLandscape()) {
 			cell_width = size.width / model.getButtonCount();
 			cell_height= size.height;

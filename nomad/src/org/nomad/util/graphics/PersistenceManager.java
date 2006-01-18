@@ -20,17 +20,18 @@
 /*
  * Created on Jan 3, 2006
  */
-package org.nomad.image;
+package org.nomad.util.graphics;
 
 import java.awt.Image;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+
 /**
  * A class that manages ImageBuffer instances that share their image with others.
  * 
- * @see org.nomad.image.ImageBuffer 
+ * @see org.nomad.util.graphics.ImageBuffer 
  * @author Christian Schneider
  */
 public class PersistenceManager {

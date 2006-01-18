@@ -2,57 +2,81 @@ package org.nomad.util.misc;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JWindow;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 
 public class PermanentToolTip extends JWindow {
 
 	private JComponent component = null;
-	private static PermanentToolTip singletone = null;
-	private GridLayout gridLayout = new GridLayout();
+	private static PermanentToolTip instance = null;
+	private GridBagLayout layout = new GridBagLayout();
+	private GridBagConstraints constraints = new GridBagConstraints();
+	private static Timer timer = null;
 	
 	public PermanentToolTip(JComponent component) {
-		if (singletone!=null) {
-			singletone.removeTip();
+		if (instance!=null) {
+			instance.removeThisTip();
 		}
-		singletone = this;
+		instance = this;
 		this.component = component;
 		setAlwaysOnTop(true);
 		setSize(100,100);
-		gridLayout.setColumns(2);
-		gridLayout.setRows(0);
-		gridLayout.setHgap(0);
-		gridLayout.setVgap(0);
-		
+		constraints.gridy=1;
+		constraints.anchor = GridBagConstraints.LINE_START;
+		constraints.insets = new Insets(5,5,5,5);
 		JComponent pane = (JComponent) getContentPane();
-		pane.setLayout(gridLayout);
+		pane.setLayout(layout);
 		Color clTipBackground = UIManager.getColor("info");
 		pane.setBackground(clTipBackground);
 		pane.setBorder(BorderFactory.createLineBorder(clTipBackground.darker()));
 	}
 	
-	public void removeTip() {
-		singletone = null;
+	public void removeThisTip() {
+		
+		if (timer!=null) {
+			timer.stop();
+			timer = null;
+		}
+		
+		instance = null;
+		while (getContentPane().getComponentCount()>0)
+			getContentPane().remove(0);
+		
 		setVisible(false);
 		dispose();
 	}
 	
-	private JLabel createLabel(String text) {
+	public static void removeTip() {
+		if (timer!=null) {
+			timer.stop();
+			timer = null;
+		}
+		
+		if (instance!=null) {
+			instance.removeThisTip();
+		}
+	}
+	
+	protected JLabel createLabel(String text) {
 		JLabel label = new JLabel(text);
 		label.setFont(new Font("Arial", Font.BOLD, 11));
 		label.setForeground(Color.BLACK);
 		return label;
 	}
 	
-	private JLabel createValueLabel(String text) {
+	protected JLabel createValueLabel(String text) {
 		JLabel label = new JLabel(text);
 		label.setFont(new Font("Arial", Font.PLAIN, 11));
 		label.setForeground(Color.BLUE);
@@ -62,18 +86,27 @@ public class PermanentToolTip extends JWindow {
 	private JComponent emptyBox() {
 		return new JLabel("");
 	}
+	
+	public void addOneLine(JComponent display) {
+		constraints.gridx=1;constraints.gridy++;
+		constraints.gridheight=1;constraints.gridwidth = 2;
+		getContentPane().add(display, constraints);
+	}
 
+	public void addOneLine(JComponent left, JComponent right) {
+		constraints.gridx=1;constraints.gridy++;
+		constraints.gridheight=1;constraints.gridwidth = 1;
+		getContentPane().add(left, constraints);
+		constraints.gridx=2;//constraints.gridy++;
+		constraints.gridheight=1;constraints.gridwidth = 1;
+		getContentPane().add(right, constraints);
+	}
+	
 	public void addProperty(String label, JComponent display) {
-		if (label==null) {
-			getContentPane().add(emptyBox());
-		} else {
-			getContentPane().add(createLabel(label));
-		}
-		if (display==null) {
-			getContentPane().add(emptyBox());
-		} else {
-			getContentPane().add(display);
-		}
+
+		addOneLine(label==null?emptyBox():createLabel(label),
+				display==null?emptyBox():display
+		);
 	}
 
 	public JLabel addProperty(String label, String value) {
@@ -82,9 +115,30 @@ public class PermanentToolTip extends JWindow {
 		return lblComponent;
 	}
 	
-	public void showTip() {
+	public void showTip(final int delay) {
+
+		if (timer!=null) {
+			timer.stop();
+			timer = null;
+		}
 		
-		setSize(gridLayout.preferredLayoutSize(this));
+		timer = new Timer(delay,
+				new ActionListener() {
+					public void actionPerformed(ActionEvent event) {
+						showTip();
+					}}
+		);
+		timer.setRepeats(false);
+		timer.start();
+	}
+	
+	public void showTip() {
+		if (timer!=null) {
+			timer.stop();
+			timer = null;
+		}
+		
+		setSize(layout.preferredLayoutSize(this));
 		
 		final int space = 10; // space from component in pixel
 		

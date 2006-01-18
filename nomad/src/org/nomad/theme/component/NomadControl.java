@@ -25,6 +25,8 @@ package org.nomad.theme.component;
 import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.event.ChangeEvent;
@@ -33,6 +35,7 @@ import javax.swing.event.ChangeListener;
 import org.nomad.patch.Module;
 import org.nomad.patch.Parameter;
 import org.nomad.theme.property.ParameterProperty;
+import org.nomad.util.misc.ParameterToolTip;
 import org.nomad.xml.dom.module.DParameter;
 
 
@@ -74,12 +77,32 @@ public abstract class NomadControl extends NomadComponent {
 				repaint();
 			}});
 
+		addMouseListener(new MouseListener(){
+			
+			public void mouseClicked(MouseEvent event) { }
+
+			public void mousePressed(MouseEvent event) {
+				ParameterToolTip.removeTip();
+			}
+
+			public void mouseReleased(MouseEvent event) { }
+
+			public void mouseEntered(MouseEvent event) {
+				if (parameterInfo!=null) {
+					ParameterToolTip tip = new ParameterToolTip(NomadControl.this, parameterInfo, getValue());
+					tip.showTip(500);
+				}
+			}
+
+			public void mouseExited(MouseEvent event) {
+				ParameterToolTip.removeTip();
+			}}); 
+		
 		getAccessibleProperties().add(new ParameterProperty(this));
 	}
 	
 	public void setParameterInfo(DParameter parameterInfo) {
 		this.parameterInfo = parameterInfo;
-		
 		if (parameterInfo!=null) {
 			setMinValue(parameterInfo.getMinValue());
 			setMaxValue(parameterInfo.getMaxValue());
@@ -275,8 +298,8 @@ public abstract class NomadControl extends NomadComponent {
 			parameter = module.findParameter(getParameterInfo());
 			if (parameter!=null) {
 				plistener = new ParameterChangeListener();
-				parameter.addChangeListener(plistener);
 				setValue(parameter.getValue());
+				parameter.addChangeListener(plistener);
 				ParameterBroadcast broadCast = new ParameterBroadcast();
 				addValueChangeListener(broadCast);
 			}

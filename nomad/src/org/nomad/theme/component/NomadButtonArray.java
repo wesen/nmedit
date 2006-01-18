@@ -59,6 +59,8 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 	private boolean flagLandscape = false;
 	private int lastW = 0;
 	private int lastH = 0;
+	private int buttonsAreObsolete = 0;
+	private boolean allowTextPropertyExport = true;
 	
 	public NomadButtonArray() {
 		setBackground(NomadClassicColors.MODULE_BACKGROUND);
@@ -88,10 +90,13 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 			.addChangeListener(new ChangeListener(){
 			public void stateChanged(ChangeEvent event) {
 				DParameter param = getParameterInfo();
+				
+				labelList.clear();
+				allowTextPropertyExport = false;
+				
 				if (param!=null) {
 					for (int i=getMinValue();i<=getMaxValue();i++) {
-						if (i-getMinValue()>labelList.size())
-							addButton(param.getFormattedValue(i));
+						addButton(param.getFormattedValue(i));
 					}
 				}
 			}});
@@ -106,19 +111,26 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		addButton(encodeButtonName(labelList.size()));
 		//addButton(createPropertyName(labelList.size()));
 		autoResize(false);
+		Dimension d = new Dimension(30,10);
+		setMinimumSize(d);
+		setMaximumSize(d);
+		setPreferredSize(d);
+		setSize(d);
+		
+		buttonsAreObsolete = labelList.size();
 	}
 
 	public void autoResize(boolean force) {
-		if (force||(lastW!=getWidth())||(lastH!=getHeight())) {
-			behaviour.calculateMetrics();
+		/*if (force||(lastW!=getWidth())||(lastH!=getHeight())) {
+/*			behaviour.calculateMetrics();
 			Dimension d = behaviour.getPreferredSize();
 			setMinimumSize(d);
 			setMaximumSize(d);
 			setPreferredSize(d);
 			setSize(d);
 			lastW = getWidth();
-			lastH = getHeight();
-		}
+			lastH = getHeight(); 
+		}*/
 	}
 
 	public int getButtonCount() {
@@ -144,8 +156,9 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		}
 		return d;
 	}
-	
+
 	public Dimension getPreferredCellSize(int index) {
+		
 		if (flagIsCylicDisplay) {
 			return getMaxLabelSize();
 		} else {
@@ -176,6 +189,11 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 	}
 
 	public void addButton(String label) {
+		while (buttonsAreObsolete>0) {
+			buttonsAreObsolete--;
+			removeButton(0);
+		}
+		
 		int index = labelList.size();
 		labelList.add(newLabel(label));
 		deleteOnScreenBuffer();
@@ -184,6 +202,11 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 	}
 	
 	public void setButton(int index, String label) {
+		while (buttonsAreObsolete>0) {
+			buttonsAreObsolete--;
+			removeButton(0);
+		}
+		
 		if (index<labelList.size()) {
 			getAccessibleProperties().remove(getAccessibleProperties().byName(encodeButtonName(index)));
 			labelList.set(index, newLabel(label));
@@ -335,17 +358,23 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		public void setValueFromString(String value) {
 			if (index>=0 && index<labelList.size()) {
 				setButton(index, value);
-			}
+			} else 
+				addButton(value);
+			allowTextPropertyExport = true;
 		}
+		
+		public boolean isExportable() {
+			return allowTextPropertyExport;
+		}
+		
 	}
-
 
 	private class NewButtonProperty extends Property {
 
 		public NewButtonProperty(NomadComponent component) {
 			super(component);
 			setValidatingName(false);
-			setName(":action");
+			setName(":add");
 			setExportable(false);
 		}
 
@@ -363,7 +392,7 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		public RemoveButtonProperty(NomadComponent component) {
 			super(component);
 			setValidatingName(false);
-			setName(":action");
+			setName(":remove");
 			setExportable(false);
 		}
 

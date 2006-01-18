@@ -9,7 +9,8 @@ import org.nomad.patch.Module;
 import org.nomad.patch.ModuleSection;
 import org.nomad.plugin.NomadFactory;
 import org.nomad.theme.component.NomadComponent;
-import org.nomad.util.misc.ImageTracker;
+import org.nomad.util.graphics.ImageTracker;
+import org.nomad.xml.dom.module.DModule;
 
 public abstract class UIFactory extends NomadFactory {
 	
@@ -105,8 +106,8 @@ public abstract class UIFactory extends NomadFactory {
 	
 	public abstract String getUIDescriptionFileName();
 
-	public ModuleGUI getModuleGUI(Module module, ModuleSectionGUI moduleSectionGUI) {
-		return new ModuleGUI(this, module, moduleSectionGUI);
+	public ModuleGUI getModuleGUI(DModule info, Module module, ModuleSectionGUI moduleSectionGUI) {
+		return new ModuleGUI(this, info, module, moduleSectionGUI);
 	}
 	
 	public ModuleSectionGUI getModuleSectionGUI(ModuleSection moduleSection) {

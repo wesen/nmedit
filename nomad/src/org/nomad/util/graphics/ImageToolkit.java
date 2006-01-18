@@ -20,7 +20,7 @@
 /*
  * Created on Jan 1, 2006
  */
-package org.nomad.image;
+package org.nomad.util.graphics;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;

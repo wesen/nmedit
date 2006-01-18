@@ -2,7 +2,7 @@ package org.nomad.xml.dom.module;
 
 import java.awt.Image;
 
-import org.nomad.util.misc.ImageTracker;
+import org.nomad.util.graphics.ImageTracker;
 
 
 /**

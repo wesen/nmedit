@@ -31,7 +31,7 @@ import java.awt.Image;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 
-import org.nomad.image.ImageToolkit;
+import org.nomad.util.graphics.ImageToolkit;
 
 /**
  * @author Christian Schneider

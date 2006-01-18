@@ -22,7 +22,7 @@
  */
 package org.nomad.theme;
 
-import org.nomad.util.misc.ImageTracker;
+import org.nomad.util.graphics.ImageTracker;
 
 public class ThemeEnvironment {
 

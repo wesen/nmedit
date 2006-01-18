@@ -26,8 +26,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -189,20 +187,21 @@ public abstract class PropertyEditor {
 		private Object[] items = null;
 
 		public ComboBoxEditor(Property p, Object[] items, Object selected) {
-			this(p,items);
-			comboBox.setSelectedItem(selected);
-		}
-		
-		public ComboBoxEditor(Property p, Object[] items) {
 			super(p);
 			this.items = items;
 			comboBox = new JComboBox(items);
 			comboBox.setFont(new Font("SansSerif",Font.PLAIN, 11));
 			comboBox.setForeground(Color.BLUE);
-			comboBox.setSelectedItem(p.getValue());
+			comboBox.setSelectedItem(selected);/*
 			comboBox.addItemListener(new ItemListener(){
 				public void itemStateChanged(ItemEvent event) {
 					fireEditingStopped();
+				}});*/
+			comboBox.addActionListener(new ActionListener(){
+
+				public void actionPerformed(ActionEvent arg0) {
+					fireEditingStopped();
+					
 				}});
 			comboBox.addKeyListener(new KeyAdapter(){
 				public void keyTyped(KeyEvent event) {
@@ -216,7 +215,10 @@ public abstract class PropertyEditor {
 					}
 				}
 			});
-
+		}
+		
+		public ComboBoxEditor(Property p, Object[] items) {
+			this(p,items, p.getValue());
 		}
 		public Object getEditorValue() { return items[comboBox.getSelectedIndex()]; }		
 		public JComponent getEditorComponent() { return comboBox; }	

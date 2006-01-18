@@ -29,7 +29,11 @@ import java.awt.Insets;
 import java.awt.Rectangle;
 
 import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
+import org.nomad.patch.Module;
+import org.nomad.patch.Parameter;
 import org.nomad.theme.property.IntegerProperty;
 import org.nomad.theme.property.ParameterProperty;
 import org.nomad.xml.dom.module.DParameter;
@@ -43,7 +47,7 @@ public class NomadActiveLabel extends NomadLabel {
 	Border b = NomadBorderFactory.createNordEditor311Border();
 	Insets nomadInsets = b.getBorderInsets(this);
 	private boolean isInitialized = false;
-	private DParameter param = null;
+	private DParameter parameterInfo = null;
 	
 	public NomadActiveLabel() {
 		super();
@@ -59,20 +63,24 @@ public class NomadActiveLabel extends NomadLabel {
 		getAccessibleProperties().add(new ParameterProperty(this) {
 
 			public void setDParameter(DParameter p) {
-				param = p;
+				parameterInfo = p;
 				
-				if (param!=null) {
-					setText(param.getName());
+				if (parameterInfo!=null) {
+					setText(parameterInfo.getName());
 				}
 				
 			}
 			
 			public DParameter getDParameter() {
-				return ((NomadActiveLabel)getComponent()).param;
+				return ((NomadActiveLabel)getComponent()).getParameterInfo();
 			}
 
 		});
 
+	}
+	
+	public DParameter getParameterInfo() {
+		return parameterInfo;
 	}
 	
 	public Dimension getFittingSize() {
@@ -138,4 +146,37 @@ public class NomadActiveLabel extends NomadLabel {
 		public int getIntegerValue() { return ((NomadActiveLabel)getComponent()).getPadding(); }
 	}
 		
+	public void link() {
+		Module module = getModule();
+		if (module!=null) {
+			parameter = module.findParameter(getParameterInfo());
+			if (parameter!=null) {
+				plistener = new ParameterChangeListener();
+				parameter.addChangeListener(plistener);
+				updateParamText();
+			}
+		}
+	}
+
+	public void unlink() {
+		//TODO revert link()
+	}
+	private Parameter parameter = null;
+	
+	
+	private ParameterChangeListener plistener = null;
+	
+	private void updateParamText() {
+		if (parameter!=null) {
+			setText(parameter.getInfo().getFormattedValue(parameter.getValue())) ;
+		}
+	}
+	
+	private class ParameterChangeListener implements ChangeListener {
+		public void stateChanged(ChangeEvent event) {
+			updateParamText();
+			repaint();
+		}
+	}
+	
 }

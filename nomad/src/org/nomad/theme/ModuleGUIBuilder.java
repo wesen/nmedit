@@ -26,12 +26,12 @@ package org.nomad.theme;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.nomad.image.ImageBuffer;
-import org.nomad.image.PersistenceManager;
 import org.nomad.patch.Module;
 import org.nomad.theme.component.NomadComponent;
 import org.nomad.theme.property.Property;
 import org.nomad.theme.property.PropertySet;
+import org.nomad.util.graphics.ImageBuffer;
+import org.nomad.util.graphics.PersistenceManager;
 import org.nomad.xml.XMLFileWriter;
 import org.nomad.xml.dom.module.DModule;
 import org.nomad.xml.dom.theme.NomadDOM;
@@ -126,8 +126,14 @@ public class ModuleGUIBuilder {
 	
 	public ModuleGUI _createGUI(Module module, ModuleSectionGUI moduleSectionGUI) {
 		//ModuleGUI moduleGUI = new ModuleGUI(uifactory, module, moduleSectionGUI);
-		ModuleGUI moduleGUI = uifactory.getModuleGUI(module, moduleSectionGUI);
+		ModuleGUI moduleGUI = uifactory.getModuleGUI(module.getDModule(), module, moduleSectionGUI);
 		_createGUIComponents(moduleGUI, null, module.getDModule(), true);
+		return moduleGUI;
+	}
+	
+	public ModuleGUI _createGUI(DModule moduleInfo, ModuleSectionGUI moduleSectionGUI) {
+		ModuleGUI moduleGUI = uifactory.getModuleGUI(moduleInfo, null,moduleSectionGUI);
+		_createGUIComponents(moduleGUI, null, moduleInfo, true);
 		return moduleGUI;
 	}
 
@@ -162,6 +168,7 @@ public class ModuleGUIBuilder {
 			if ( createDecoration || notAsDecorationRegistered) {
 				
 				NomadComponent comp = uifactory.newComponentInstanceByClass(compClass);
+				comp.setSize(comp.getPreferredSize());
 				
 				if (comp==null) {
 
@@ -194,6 +201,7 @@ public class ModuleGUIBuilder {
 					}
 
 					modulePane.add(comp);
+					comp.deleteOnScreenBuffer();
 					comp.link();
 				}
 			}

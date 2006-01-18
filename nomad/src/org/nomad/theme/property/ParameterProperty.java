@@ -65,6 +65,7 @@ public class ParameterProperty extends Property {
 
 	public void setValueFromString(String value) {
 		setDParameter(decode(value));
+		fireChangeEvent();
 	}
 	
 	private final static Pattern pattern = Pattern.compile("(\\d+)\\.(\\d+)\\.([cp])\\..*");

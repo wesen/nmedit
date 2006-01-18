@@ -38,12 +38,12 @@ public class ModuleGUI extends NomadComponent implements MouseListener, MouseMot
     JPopupMenu menu = new JPopupMenu();
     JMenuItem removeItem = new JMenuItem("Remove");
 
-    public ModuleGUI(UIFactory factory, Module module, ModuleSectionGUI moduleSectionGUI) {
-    	this(module, moduleSectionGUI);
+    public ModuleGUI(UIFactory factory, DModule info, Module module, ModuleSectionGUI moduleSectionGUI) {
+    	this(info, module, moduleSectionGUI);
     	setEnvironment(factory);
     }
     
-    public ModuleGUI( Module module, ModuleSectionGUI moduleSectionGUI) {
+    public ModuleGUI(DModule info, Module module, ModuleSectionGUI moduleSectionGUI) {
 		setBackground(UIManager.getColor("Button.background"));
 		setOpaque(true);
     	addMouseListener(this);
@@ -61,11 +61,12 @@ public class ModuleGUI extends NomadComponent implements MouseListener, MouseMot
     	nameLabel.setDynamicOverlay(true);
         nameLabel.setLocation(3,0);
         nameLabel.setFont(new Font("Dialog", Font.PLAIN, 10));
-        nameLabel.setText(module.getModuleTitle());
+        nameLabel.setText(info.getName());
         add(nameLabel);
         
-		setLocation(module.getPixLocationX(), module.getPixLocationY());
-		setSize(module.getPixWidth(), module.getPixHeight());
+		setSize(Module.getPixWidth(), Module.getPixHeight(info));
+		if (module!=null)
+			setLocation( module.getPixLocationX(), module.getPixLocationY());
 		
         // TODO ?Why is the icon empty here?
         /*if (module.getDModule().getIcon() != null) {
