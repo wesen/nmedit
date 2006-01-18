@@ -30,8 +30,10 @@ public class Parameter {
     }
 
     public void setValue(Object sender, int newValue) {
-    	value = newValue;
-    	fireChangeEvent(sender);
+    	if (value!=newValue) {
+    		value = newValue;
+    		fireChangeEvent(sender);
+    	}
     }
     
     public DParameter getInfo() {

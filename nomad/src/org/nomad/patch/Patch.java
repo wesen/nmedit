@@ -56,7 +56,7 @@ public class Patch {
         patchNotes = new PatchNotes();
         morphMap = new MorphMap();
 	}
-	
+
     public ModuleSection getModulesPoly() {
         return modulesPoly;
     }
@@ -109,7 +109,10 @@ public class Patch {
         patch.splitPane.add(patch.scrollPanePoly, JSplitPane.TOP);
         patch.splitPane.add(patch.scrollPaneCommon, JSplitPane.BOTTOM);
 
+		// long time = System.currentTimeMillis(); // too slow ...
         patch.addModules();
+		// System.out.println("** time: "+((System.currentTimeMillis()-time)/1000.0d)+"s");
+		
 
         patch.patchPanel.add(patch.splitPane, BorderLayout.CENTER);
 

@@ -14,7 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * @author Christian Schneider
  */
-public class AppRunner
+public class AppRunner implements Runnable 
 {
 	/**
 	 * @param args The command line arguments
@@ -22,7 +22,7 @@ public class AppRunner
 	public static void main(String[] args)
 	{
 		try {
-			SwingUtilities.invokeAndWait(new App());
+			SwingUtilities.invokeAndWait(new AppRunner());
 		}
 		catch (InterruptedException e) {
 			// Ignore: If this exception occurs, we return too early, which
@@ -38,43 +38,42 @@ public class AppRunner
 		}
 	}
 
-    final static class App implements Runnable {
-	    public void run()
-	    {
-		    try { 
-		    	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); 
-		    } catch (Exception e) { 
-		    	e.printStackTrace();
-		    }
-		
-		    Nomad frame = null;
-		
-		    try {
-		        frame = new Nomad();
-		    }
-		    catch (Exception e){
-		    	e.printStackTrace();
-		        System.exit(1);
-		    }
-		    frame.validate();
-		
-		    // center window
-		    Dimension screensz  = Toolkit.getDefaultToolkit().getScreenSize();
-		    Dimension framesz   = frame.getSize();
-		
-		    framesz.height = Math.min(framesz.height, screensz.height);
-		    framesz.width  = Math.min(framesz.width,  screensz.width);
-		
-		    frame.setLocation(
-		      (screensz.width-framesz.width)/2,
-		      (screensz.height-framesz.height)/2
-		    );
-		
-		    // set close operation, then show window
-		    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		    frame.setVisible(true);
-		    frame.toFront();
+    public void run()
+    {
+	    try { 
+	    	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); 
+	    } catch (Exception e) { 
+	    	e.printStackTrace();
 	    }
-      }
+	
+	    Nomad nomad = null;
+	
+	    try {
+	        nomad = new Nomad();
+	    }
+	    catch (Exception e){
+	    	e.printStackTrace();
+	        System.exit(1);
+	    }
+        nomad.validate();
+	
+	    // center window
+	    Dimension screensz  = Toolkit.getDefaultToolkit().getScreenSize();
+	    Dimension framesz   = nomad.getSize();
+	
+	    framesz.height = Math.min(framesz.height, screensz.height);
+	    framesz.width  = Math.min(framesz.width,  screensz.width);
+	
+	    nomad.setLocation(
+	      (screensz.width-framesz.width)/2,
+	      (screensz.height-framesz.height)/2
+	    );
+	
+	    // set close operation, then show window
+	    nomad.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	    nomad.setVisible(true);
+	    //nomad.toFront();
+	    nomad.initialLoading();
+    }
   
 }

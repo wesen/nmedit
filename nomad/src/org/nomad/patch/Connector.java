@@ -2,14 +2,12 @@
 
 package org.nomad.patch;
 
-import org.nomad.theme.component.NomadConnector;
 import org.nomad.xml.dom.module.DConnector;
 
 
 public class Connector {
 
 	private DConnector dConnector = null;
-	private NomadConnector connectorUI = null;
 	
 	private int conX, conY;
 
@@ -20,7 +18,7 @@ public class Connector {
 	}
 
 	public String getConnectionName() {
-		return "unknown name";
+		return dConnector.getName();
 	}
 
 	public int getConnectionType() {
@@ -41,20 +39,6 @@ public class Connector {
 	 */
 	public DConnector getInfo() {
 		return dConnector;
-	}
-
-	/**
-	 * Sets ui component for this connector.
-	 * @param connectorUI the connector ui
-	 */
-	public void setUI(NomadConnector connectorUI) {
-		if (this.connectorUI!=null) {
-			// uninstall from previous ui component
-		}
-		this.connectorUI = connectorUI;
-		if (this.connectorUI!=null) {
-			// install to new ui component
-		}
 	}
 	
 }

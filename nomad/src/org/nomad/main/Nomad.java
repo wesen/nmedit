@@ -17,7 +17,6 @@ import java.io.StringReader;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -30,7 +29,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 
-
+import org.nomad.dialog.JTaskDialog;
+import org.nomad.dialog.TaskModel;
 import org.nomad.main.run.Run;
 import org.nomad.patch.Patch;
 import org.nomad.plugin.NomadPlugin;
@@ -44,11 +44,10 @@ import org.nomad.port.SynthException;
 import org.nomad.theme.ModuleGUIBuilder;
 import org.nomad.theme.PatchGUI;
 import org.nomad.theme.UIFactory;
-import org.nomad.util.misc.ActionQueueFeedback;
 import org.nomad.util.misc.ImageTracker;
 import org.nomad.xml.dom.module.DConnector;
 import org.nomad.xml.dom.module.ModuleDescriptions;
-import org.nomad.xml.dom.substitution.XMLSubstitutionReader;
+import org.nomad.xml.dom.substitution.Substitutions;
 
 
 public class Nomad extends JFrame implements SynthConnectionStateListener {
@@ -141,18 +140,12 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 
 	class FileLoadListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					String name = fileChooser.getSelectedFile().getName();
-
-					name = name.substring(0,name.indexOf(".pch"));
-					Patch patch = new Patch();
-			        JPanel tab = Patch.createPatch(fileChooser.getSelectedFile().getPath(), patch);
-			        viewManager.addDocument(name, tab);
-			        viewManager.setSelectedDocument(tab);
-			        viewManager.getSelectedDocument().setName(
-			        		viewManager.getTitleAt(viewManager.getSelectedDocumentIndex())
-			        );
+			fileChooser.setMultiSelectionEnabled(true);
+			if (fileChooser.showOpenDialog(Nomad.this) == JFileChooser.APPROVE_OPTION) {
+				File[] files = fileChooser.getSelectedFiles();
+				loader.loadPatch(files);
 			}
+			fileChooser.setMultiSelectionEnabled(false);
 		}
 	}
 
@@ -197,11 +190,11 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 
 	class FileCloseListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if (viewManager.getSelectedDocument()!=null)
+			if (viewManager.getSelectedDocument()!=null) {
 				viewManager.removeDocumentAt(viewManager.getSelectedDocumentIndex());
+			}
 		}
 	}
-
 	class MenuShowPluginListListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			PluginDialog.invokeDialog();
@@ -231,6 +224,50 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		}
 	}
 	
+	class PatchLoader {
+		public PatchLoader() { }
+		public void loadPatch(String file) {
+			loadPatch(new String[]{file});
+		}
+
+		public void loadPatch(File[] files) {
+			String[] sfiles = new String[files.length];
+			for (int i=files.length-1;i>=0;i--)
+				sfiles[i]=files[i].getAbsolutePath();
+			
+			loadPatch(sfiles);
+		}
+
+		public void loadPatch(final String[] files) {
+			JTaskDialog.processTasks(Nomad.this, new TaskModel(){
+				public String getDescription() {
+					return "Loading Nord Modular patch...";
+				}
+
+				public int getTaskCount() {
+					return files.length;
+				}
+
+				public String getTaskName(int taskIndex) {
+					String name = files[taskIndex];
+					return name.substring(name.lastIndexOf('/')+1);
+				}
+
+				public void run(int taskIndex) {
+					String file = files[taskIndex];
+					
+					Patch patch = new Patch();				
+			        JPanel tab = Patch.createPatch(file, patch);
+					String name = file.substring(0,file.lastIndexOf(".pch"));
+					name = name.substring(name.lastIndexOf('/')+1);
+			        viewManager.addDocument(name, tab);
+			        viewManager.setSelectedDocument(tab);
+				}});
+		}
+	}
+	
+	PatchLoader loader = new PatchLoader();
+	
 	public Nomad() {
 
 		// feed image tracker
@@ -249,12 +286,11 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 
 		// load substitutions
 		Run.statusMessage("parameter substitutions");
-		XMLSubstitutionReader subsReader = 
-			new XMLSubstitutionReader("src/data/xml/substitutions.xml");
+		Substitutions subs = new Substitutions("src/data/xml/substitutions.xml");
 		
 		// load module descriptors
 		Run.statusMessage("module description");
-		ModuleDescriptions.init("src/data/xml/modules.xml", subsReader);
+		ModuleDescriptions.init("src/data/xml/modules.xml", subs);
 
 		uifactory = PluginManager.getDefaultUIFactory();
 		uifactory.setEditing(false);
@@ -292,28 +328,12 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		
 		newSynth(ComPort.getDefaultComPortInstance());
 
-		Run.statusMessage("Patch 'all.pch'");
-
 		viewManager = new SelectableDocumentManager(panelMain);
-		
-		// now do loading
-		
-		Patch patch = new Patch();				
-        JPanel tab = Patch.createPatch("src/data/patches/all.pch", patch);
-        
-        viewManager.addDocument("all.pch", tab);
-        viewManager.setSelectedDocument(tab);
-        
-		//tabbedPane.getSelectedComponent().setName(tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
-
-//        Patch patch = new Patch();
-//        tabbedPane.add("new" + (tabbedPane.getTabCount()+1),patch.createPatch(""));
-//        tabbedPane.setSelectedComponent(patch);
-//        tabbedPane.getSelectedComponent().setName(tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
-		
-		// subscribe for connection events;
-
     }
+	
+	public void initialLoading() {
+		loader.loadPatch("src/data/patches/all.pch");
+	}
 	
 	private void newSynth(ComPort comPort) {
 		if (synth != null) {
@@ -458,89 +478,82 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 	}
 
 	void changeSynthInterface(final NomadPlugin plugin) {
-		final JComponent holder = panelMain;
-		final ActionQueueFeedback performer = new ActionQueueFeedback("Changing Theme...");		
 		
-		performer.enque( // initial action
-			new Runnable()	{
-				public void run() {
-					Nomad.this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-					Nomad.this.menuBar.setEnabled(false);
-					Nomad.this.moduleToolbar.setEnabled(false);
-					// remove view manager and add dialog/progress feedback
-					holder.remove(viewManager.getDocumentContainer());
-					holder.add(performer, BorderLayout.CENTER);
-					holder.validate();
-				}
-				
-				public String toString() { return ""; }
+		JTaskDialog.processTasks(Nomad.this, new TaskModel(){
+
+			final int selectionIndex = viewManager.getSelectedDocumentIndex();
+			final int documentCount = viewManager.getDocumentCount();
+			
+			public String getDescription() {
+				return "Switching theme plugin";
 			}
-		);
 
-		performer.enque( // initial action
-			new Runnable()	{
-				public void run() {
-					uifactory = (UIFactory) plugin.getFactoryInstance();
-					uifactory.setEditing(false);
-					uifactory.getImageTracker().addFrom(theImageTracker);
-					ModuleGUIBuilder.instance.setUIFactory(uifactory);
-					DConnector.setImageTracker(uifactory.getImageTracker());
-				}
-				
-				public String toString() {
-					return "Loading Theme...";
-				}
+			public int getTaskCount() {
+				return documentCount+3;
 			}
-		);
 
-		// migrate
-		final int selectionIndex = viewManager.getSelectedDocumentIndex();
-		int count = viewManager.getDocumentCount();
-		for (int i=0;i<count;i++) {
-			performer.enque( // a migration step
-				new Runnable()	{
-					public void run() {
-						String name = viewManager.getTitleAt(0);
-						PatchGUI patchGUI = (PatchGUI) viewManager.getDocumentAt(0);
-						viewManager.removeDocument(patchGUI);
-
-						Patch patch = new Patch();
-						Reader r = new StringReader(patchGUI.getPatch().savePatch().toString());
-						patchGUI = (PatchGUI) Patch.createPatch(r, patch);
-
-						if (patchGUI!=null)
-							viewManager.addDocument(name, patchGUI);
-					}
-					public String toString() {
-						return "Patch '"+viewManager.getTitleAt(0)+"' ...";
+			public String getTaskName(int taskIndex) {
+				switch (taskIndex) {
+					case 0: return "Preparing...";
+					case 1: return "Loading factory...";
+					default: {
+						if (taskIndex-2>=documentCount) return "Finishing...";
+						else return "Patch:" +viewManager.getTitleAt(0);
 					}
 				}
-			);
-		}
+			}
 
-		performer.enque( // finalize action
-			new Runnable()	{
-				public void run() {
-					if (selectionIndex>=0)
-						viewManager.setSelectedDocument(selectionIndex);
-
-					holder.remove(performer);
-					holder.add(viewManager.getDocumentContainer(), BorderLayout.CENTER);
-
-					Nomad.this.setCursor(Cursor.getDefaultCursor());
-					Nomad.this.menuBar.setEnabled(true);
-					Nomad.this.moduleToolbar.setEnabled(true);
-					viewManager.getDocumentContainer().validate();
-					viewManager.getDocumentContainer().repaint();
-				}
-				
-				public String toString() {
-					return "Finishing...";
+			public void run(int taskIndex) {
+				switch (taskIndex) {
+					case 0: init(); break;
+					case 1: init2(); break;
+					default: {
+						if (taskIndex==documentCount+2) finish();
+						else migrate();
+					}
 				}
 			}
-		);
 
-		performer.run();
+			public void init() {
+				Nomad.this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+				Nomad.this.menuBar.setEnabled(false);
+				Nomad.this.moduleToolbar.setEnabled(false);
+			}
+			
+			public void init2() {
+				uifactory = (UIFactory) plugin.getFactoryInstance();
+				uifactory.setEditing(false);
+				uifactory.getImageTracker().addFrom(theImageTracker);
+				ModuleGUIBuilder.instance.setUIFactory(uifactory);
+				DConnector.setImageTracker(uifactory.getImageTracker());
+			}
+			
+			public void finish() {
+				if (selectionIndex>=0)
+					viewManager.setSelectedDocument(selectionIndex);
+
+				Nomad.this.setCursor(Cursor.getDefaultCursor());
+				Nomad.this.menuBar.setEnabled(true);
+				Nomad.this.moduleToolbar.setEnabled(true);
+				viewManager.getDocumentContainer().validate();
+				viewManager.getDocumentContainer().repaint();
+			}
+			
+			public void migrate() {
+				String name = viewManager.getTitleAt(0);
+				PatchGUI oldPatchGUI = (PatchGUI) viewManager.getDocumentAt(0);
+				viewManager.removeDocument(oldPatchGUI);
+
+				Patch patch = new Patch();
+				Reader r = new StringReader(oldPatchGUI.getPatch().savePatch().toString());
+				PatchGUI newPatchGUI = (PatchGUI) Patch.createPatch(r, patch);
+
+				if (newPatchGUI!=null)
+					viewManager.addDocument(name, newPatchGUI);
+			}
+			
+		});
+
 	}
 
 	private class LookAndFeelChanger implements ActionListener {
