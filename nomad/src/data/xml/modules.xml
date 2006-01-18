@@ -1,217 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE modules-definition SYSTEM "modules-definition-v10.dtd">
 <modules-definition>
-  <structure>
-    <group name="In/Out">
-      <section>
-        <insert module-id="1" />
-        <insert module-id="63" />
-        <insert module-id="65" />
-      </section>
-      <section>
-        <insert module-id="2" />
-        <insert module-id="127" />
-      </section>
-      <section>
-        <insert module-id="5" />
-        <insert module-id="4" />
-        <insert module-id="3" />
-      </section>
-      <section>
-        <insert module-id="67" />
-        <insert module-id="100" />
-      </section>
-    </group>
-    <group short-name="Osc" name="Oscillator">
-      <section>
-        <insert module-id="97" />
-        <insert module-id="7" />
-        <insert module-id="8" />
-        <insert module-id="9" />
-        <insert module-id="107" />
-        <insert module-id="96" />
-      </section>
-      <section>
-        <insert module-id="14" />
-        <insert module-id="10" />
-        <insert module-id="11" />
-        <insert module-id="12" />
-        <insert module-id="13" />
-        <insert module-id="106" />
-        <insert module-id="85" />
-      </section>
-      <section>
-        <insert module-id="31" />
-      </section>
-      <section>
-        <insert module-id="95" />
-        <insert module-id="58" />
-      </section>
-    </group>
-    <group name="LFO">
-      <section>
-        <insert module-id="24" />
-        <insert module-id="25" />
-        <insert module-id="26" />
-      </section>
-      <section>
-        <insert module-id="80" />
-        <insert module-id="27" />
-        <insert module-id="28" />
-        <insert module-id="29" />
-        <insert module-id="30" />
-      </section>
-      <section>
-        <insert module-id="68" />
-      </section>
-      <section>
-        <insert module-id="33" />
-        <insert module-id="34" />
-        <insert module-id="110" />
-        <insert module-id="35" />
-        <insert module-id="99" />
-      </section>
-    </group>
-    <group short-name="Env" name="Envelope">
-      <section>
-        <insert module-id="20" />
-        <insert module-id="84" />
-        <insert module-id="23" />
-        <insert module-id="46" />
-        <insert module-id="52" />
-      </section>
-      <section>
-        <insert module-id="71" />
-      </section>
-    </group>
-    <group name="Filter">
-      <section>
-        <insert module-id="86" />
-        <insert module-id="87" />
-        <insert module-id="50" />
-      </section>
-      <section>
-        <insert module-id="49" />
-        <insert module-id="51" />
-        <insert module-id="92" />
-      </section>
-      <section>
-        <insert module-id="45" />
-        <insert module-id="108" />
-        <insert module-id="32" />
-      </section>
-      <section>
-        <insert module-id="103" />
-        <insert module-id="104" />
-      </section>
-    </group>
-    <group name="Mixer">
-      <section>
-        <insert module-id="19" />
-        <insert module-id="40" />
-      </section>
-      <section>
-        <insert module-id="44" />
-      </section>
-      <section>
-        <insert module-id="18" />
-        <insert module-id="47" />
-      </section>
-      <section>
-        <insert module-id="113" />
-        <insert module-id="114" />
-        <insert module-id="111" />
-        <insert module-id="112" />
-        <insert module-id="76" />
-      </section>
-      <section>
-        <insert module-id="79" />
-        <insert module-id="88" />
-      </section>
-      <section>
-        <insert module-id="81" />
-      </section>
-    </group>
-    <group name="Audio">
-      <section>
-        <insert module-id="61" />
-        <insert module-id="62" />
-        <insert module-id="74" />
-      </section>
-      <section>
-        <insert module-id="54" />
-        <insert module-id="78" />
-        <insert module-id="53" />
-        <insert module-id="82" />
-        <insert module-id="94" />
-        <insert module-id="102" />
-      </section>
-      <section>
-        <insert module-id="57" />
-      </section>
-      <section>
-        <insert module-id="83" />
-      </section>
-      <section>
-        <insert module-id="21" />
-        <insert module-id="105" />
-        <insert module-id="117" />
-        <insert module-id="118" />
-      </section>
-    </group>
-    <group short-name="Ctrl" name="Control">
-      <section>
-        <insert module-id="43" />
-      </section>
-      <section>
-        <insert module-id="39" />
-        <insert module-id="48" />
-        <insert module-id="16" />
-      </section>
-      <section>
-        <insert module-id="72" />
-        <insert module-id="75" />
-        <insert module-id="98" />
-        <insert module-id="22" />
-      </section>
-      <section>
-        <insert module-id="66" />
-        <insert module-id="115" />
-      </section>
-    </group>
-    <group name="Logic">
-      <section>
-        <insert module-id="36" />
-        <insert module-id="64" />
-        <insert module-id="38" />
-        <insert module-id="37" />
-        <insert module-id="70" />
-      </section>
-      <section>
-        <insert module-id="73" />
-      </section>
-      <section>
-        <insert module-id="59" />
-        <insert module-id="89" />
-      </section>
-      <section>
-        <insert module-id="69" />
-        <insert module-id="77" />
-      </section>
-    </group>
-    <group short-name="Seq" name="Sequencer">
-      <section>
-        <insert module-id="17" />
-      </section>
-      <section>
-        <insert module-id="91" />
-      </section>
-      <section>
-        <insert module-id="15" />
-        <insert module-id="90" />
-      </section>
-    </group>
-  </structure>
   <modules>
     <module id="1" short-name="Keyboard" limit="1" cycles="0.0" prog-mem="0.0" x-mem="0.0" y-mem="0.0" zero-page="3.0" dyn-mem="1.0" height="2" >
       <output id="0" name="Note" type="control" />
@@ -1355,4 +1144,215 @@
       <parameter id="0" name="+6db" min="0" max="1" bit-count="1" use-substitution="off-on" />
     </module>
   </modules>
+  <structure>
+    <group name="In/Out">
+      <section>
+        <insert module-id="1" />
+        <insert module-id="63" />
+        <insert module-id="65" />
+      </section>
+      <section>
+        <insert module-id="2" />
+        <insert module-id="127" />
+      </section>
+      <section>
+        <insert module-id="5" />
+        <insert module-id="4" />
+        <insert module-id="3" />
+      </section>
+      <section>
+        <insert module-id="67" />
+        <insert module-id="100" />
+      </section>
+    </group>
+    <group short-name="Osc" name="Oscillator">
+      <section>
+        <insert module-id="97" />
+        <insert module-id="7" />
+        <insert module-id="8" />
+        <insert module-id="9" />
+        <insert module-id="107" />
+        <insert module-id="96" />
+      </section>
+      <section>
+        <insert module-id="14" />
+        <insert module-id="10" />
+        <insert module-id="11" />
+        <insert module-id="12" />
+        <insert module-id="13" />
+        <insert module-id="106" />
+        <insert module-id="85" />
+      </section>
+      <section>
+        <insert module-id="31" />
+      </section>
+      <section>
+        <insert module-id="95" />
+        <insert module-id="58" />
+      </section>
+    </group>
+    <group name="LFO">
+      <section>
+        <insert module-id="24" />
+        <insert module-id="25" />
+        <insert module-id="26" />
+      </section>
+      <section>
+        <insert module-id="80" />
+        <insert module-id="27" />
+        <insert module-id="28" />
+        <insert module-id="29" />
+        <insert module-id="30" />
+      </section>
+      <section>
+        <insert module-id="68" />
+      </section>
+      <section>
+        <insert module-id="33" />
+        <insert module-id="34" />
+        <insert module-id="110" />
+        <insert module-id="35" />
+        <insert module-id="99" />
+      </section>
+    </group>
+    <group short-name="Env" name="Envelope">
+      <section>
+        <insert module-id="20" />
+        <insert module-id="84" />
+        <insert module-id="23" />
+        <insert module-id="46" />
+        <insert module-id="52" />
+      </section>
+      <section>
+        <insert module-id="71" />
+      </section>
+    </group>
+    <group name="Filter">
+      <section>
+        <insert module-id="86" />
+        <insert module-id="87" />
+        <insert module-id="50" />
+      </section>
+      <section>
+        <insert module-id="49" />
+        <insert module-id="51" />
+        <insert module-id="92" />
+      </section>
+      <section>
+        <insert module-id="45" />
+        <insert module-id="108" />
+        <insert module-id="32" />
+      </section>
+      <section>
+        <insert module-id="103" />
+        <insert module-id="104" />
+      </section>
+    </group>
+    <group name="Mixer">
+      <section>
+        <insert module-id="19" />
+        <insert module-id="40" />
+      </section>
+      <section>
+        <insert module-id="44" />
+      </section>
+      <section>
+        <insert module-id="18" />
+        <insert module-id="47" />
+      </section>
+      <section>
+        <insert module-id="113" />
+        <insert module-id="114" />
+        <insert module-id="111" />
+        <insert module-id="112" />
+        <insert module-id="76" />
+      </section>
+      <section>
+        <insert module-id="79" />
+        <insert module-id="88" />
+      </section>
+      <section>
+        <insert module-id="81" />
+      </section>
+    </group>
+    <group name="Audio">
+      <section>
+        <insert module-id="61" />
+        <insert module-id="62" />
+        <insert module-id="74" />
+      </section>
+      <section>
+        <insert module-id="54" />
+        <insert module-id="78" />
+        <insert module-id="53" />
+        <insert module-id="82" />
+        <insert module-id="94" />
+        <insert module-id="102" />
+      </section>
+      <section>
+        <insert module-id="57" />
+      </section>
+      <section>
+        <insert module-id="83" />
+      </section>
+      <section>
+        <insert module-id="21" />
+        <insert module-id="105" />
+        <insert module-id="117" />
+        <insert module-id="118" />
+      </section>
+    </group>
+    <group short-name="Ctrl" name="Control">
+      <section>
+        <insert module-id="43" />
+      </section>
+      <section>
+        <insert module-id="39" />
+        <insert module-id="48" />
+        <insert module-id="16" />
+      </section>
+      <section>
+        <insert module-id="72" />
+        <insert module-id="75" />
+        <insert module-id="98" />
+        <insert module-id="22" />
+      </section>
+      <section>
+        <insert module-id="66" />
+        <insert module-id="115" />
+      </section>
+    </group>
+    <group name="Logic">
+      <section>
+        <insert module-id="36" />
+        <insert module-id="64" />
+        <insert module-id="38" />
+        <insert module-id="37" />
+        <insert module-id="70" />
+      </section>
+      <section>
+        <insert module-id="73" />
+      </section>
+      <section>
+        <insert module-id="59" />
+        <insert module-id="89" />
+      </section>
+      <section>
+        <insert module-id="69" />
+        <insert module-id="77" />
+      </section>
+    </group>
+    <group short-name="Seq" name="Sequencer">
+      <section>
+        <insert module-id="17" />
+      </section>
+      <section>
+        <insert module-id="91" />
+      </section>
+      <section>
+        <insert module-id="15" />
+        <insert module-id="90" />
+      </section>
+    </group>
+  </structure>
 </modules-definition>

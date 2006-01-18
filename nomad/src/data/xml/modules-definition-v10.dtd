@@ -136,10 +136,16 @@ CHANGE HISTORY:
 
 
 <!-- ====================================================================== -->
-<!-- top level element -->
+<!-- top level element 
+
+	Note: The order of these elements is important.
+	1. modules
+	2. structure
+
+-->
 <!-- ====================================================================== -->
 
-<!ELEMENT modules-definition (structure, modules)>
+<!ELEMENT modules-definition (modules, structure)>
 
 
 
