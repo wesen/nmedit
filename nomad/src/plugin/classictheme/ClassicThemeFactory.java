@@ -3,7 +3,6 @@ package plugin.classictheme;
 import java.awt.Color;
 import java.awt.Graphics;
 
-
 import org.nomad.patch.Module;
 import org.nomad.patch.ModuleSection;
 import org.nomad.theme.ModuleGUI;
@@ -53,7 +52,7 @@ class ClassicModuleSectionGUI extends ModuleSectionGUI {
 	
 	public ClassicModuleSectionGUI(ModuleSection moduleSection, ImageTracker itracker) {
 		super(moduleSection) ;
-		
+        setDoubleBuffered(false);
 		if (bgpainter==null) {
 			bgpainter = new BackgroundPainter(
 					this, itracker.getImage("classic-patch-background")
