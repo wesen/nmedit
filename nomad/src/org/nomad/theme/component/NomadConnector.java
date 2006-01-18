@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.nomad.patch.Connector;
+import org.nomad.patch.Module;
 import org.nomad.theme.NomadClassicColors;
 import org.nomad.theme.property.BooleanProperty;
 import org.nomad.theme.property.ConnectorProperty;
@@ -38,29 +40,21 @@ import org.nomad.xml.dom.module.DConnector;
 
 public class NomadConnector extends NomadComponent {
 
-	private ArrayList connectorChangeListenerList = new ArrayList();
+	private ArrayList connectorChangeListenerList = null;
 	private boolean flagConnected = false;
 	private boolean flagIsInput = false;
 	private DConnector connectorInfo = null;
 	private ConnectorColorProperty colorProperty = null;
-	
+	private Connector connector = null;
+
 	public NomadConnector() {
 		super();
-		
-		addConnectorChangeListener(
-				new ChangeListener() {
-					public void stateChanged(ChangeEvent event) 
-					{	deleteOnScreenBuffer();
-						repaint(); }
-				}
-		);
-		
 		setDynamicOverlay(true);
-
-		setPreferredSize(new Dimension(13,13));
-		setMinimumSize(new Dimension(13,13));
-		setMaximumSize(new Dimension(13,13));
-		setSize(new Dimension(13,13));
+		Dimension d = new Dimension(13,13);
+		setPreferredSize(d);
+		setMinimumSize(d);
+		setMaximumSize(d);
+		setSize(d);
 		
 		getAccessibleProperties().add(new ConnectedStateProperty(this));
 		getAccessibleProperties().add(new ConnectorTypeProperty(this));
@@ -71,9 +65,9 @@ public class NomadConnector extends NomadComponent {
 	public void setConnectorInfo(DConnector connectorInfo) {
 		this.connectorInfo = connectorInfo;
 		if (connectorInfo!=null) {
-			setConnectorType(connectorInfo.isInput());
+			setConnectorType(connectorInfo.isInput(), false);
 			colorProperty.setValueFromSignal(connectorInfo.getSignal());
-			deleteOnScreenBuffer();
+			fireConnectorChangeEvent();
 		}
 	}
 	
@@ -117,8 +111,6 @@ public class NomadConnector extends NomadComponent {
 				case DConnector.SIGNAL_LOGIC: setBackground(NomadClassicColors.MORPH_YELLOW); break;
 				case DConnector.SIGNAL_SLAVE: setBackground(NomadClassicColors.MORPH_GRAY); break;
 			}
-			deleteOnScreenBuffer();
-			repaint();
 		}
 		
 		public void setValueFromString(String value) {
@@ -163,29 +155,49 @@ public class NomadConnector extends NomadComponent {
 			super(component);
 			setName("isConnected");
 		}
-		public void setBooleanValue(boolean value) { setConnectedState(value); }
-		public boolean getBoolean() { return isConnected(); }
+		public void setBooleanValue(boolean value) { 
+			setConnectedState(value); 
+		}
+		public boolean getBoolean() { return ((NomadConnector)getComponent()).isConnected(); }
+		public boolean isExportable() {
+			// we only export this property if no connector info is present
+			return connectorInfo==null;
+		}
 	}
 	
 	private class ConnectorTypeProperty extends BooleanProperty {
 		public ConnectorTypeProperty(NomadComponent component) {
 			super(component); setName("isInput");
 		}
-		public void setBooleanValue(boolean value) { setConnectorType(value); }
-		public boolean getBoolean() { return isInputConnector(); }
+		public void setBooleanValue(boolean value) { 
+			setConnectorType(value); 
+		}
+		public boolean getBoolean() { return ((NomadConnector)getComponent()).isInputConnector(); }
+		public boolean isExportable() {
+			// we only export this property if no connector info is present
+			return connectorInfo==null;
+		}
 	}
 	
 	public void setConnectedState(boolean isConnected) {
+		setConnectedState(isConnected, true);
+	}
+	
+	public void setConnectedState(boolean isConnected, boolean fireEvent) {
 		if (flagConnected!=isConnected) {
 			flagConnected=isConnected;
-			fireConnectorChangeEvent();
+			if (fireEvent) fireConnectorChangeEvent();
 		}
 	}
 	
 	public void setConnectorType(boolean isInput) {
+		setConnectorType(isInput, true);
+	}
+	
+	public void setConnectorType(boolean isInput, boolean fireEvent) {
 		if (flagIsInput!=isInput) {
 			flagIsInput=isInput;
-			fireConnectorChangeEvent();
+			if (fireEvent) fireConnectorChangeEvent();
 		}
 	}
 	
@@ -198,15 +210,22 @@ public class NomadConnector extends NomadComponent {
 	}
 
 	public void addConnectorChangeListener(ChangeListener l) {
+		if (connectorChangeListenerList==null)
+			connectorChangeListenerList = new ArrayList();
+		
 		if (!connectorChangeListenerList.contains(l))
 			connectorChangeListenerList.add(l);
 	}
 	
 	public void removeConnectorChangeListener(ChangeListener l) {
-		connectorChangeListenerList.remove(l);
+		if (connectorChangeListenerList.remove(l))
+			if (connectorChangeListenerList.size()==0)
+				connectorChangeListenerList=null;
 	}
 	
 	public void fireConnectorChangeEvent(ChangeEvent event) {
+		if (connectorChangeListenerList==null) return;
+		
 		for (int i=connectorChangeListenerList.size()-1;i>=0;i--) {
 			((ChangeListener)connectorChangeListenerList.get(i)).stateChanged(event);
 		}
@@ -215,5 +234,15 @@ public class NomadConnector extends NomadComponent {
 	public void fireConnectorChangeEvent() {
 		fireConnectorChangeEvent(new ChangeEvent(this));
 	}
-	
+
+	public void link() {
+		Module module = getModule();
+		if (module!=null) {
+			connector = module.findConnector(getConnectorInfo());
+			if (connector!=null) {
+				// TODO link connector <-> ui
+			}
+		}
+	}
+
 }

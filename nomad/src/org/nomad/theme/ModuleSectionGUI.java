@@ -81,4 +81,5 @@ public class ModuleSectionGUI extends JDesktopPane implements DropTargetListener
 
 	public void dragExit(DropTargetEvent dte) {
 	}
+
 }

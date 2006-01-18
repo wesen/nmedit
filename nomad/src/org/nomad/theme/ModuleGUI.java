@@ -61,8 +61,12 @@ public class ModuleGUI extends NomadComponent implements MouseListener, MouseMot
     	nameLabel.setDynamicOverlay(true);
         nameLabel.setLocation(3,0);
         nameLabel.setFont(new Font("Dialog", Font.PLAIN, 10));
+        nameLabel.setText(module.getModuleTitle());
         add(nameLabel);
-
+        
+		setLocation(module.getPixLocationX(), module.getPixLocationY());
+		setSize(module.getPixWidth(), module.getPixHeight());
+		
         // TODO ?Why is the icon empty here?
         /*if (module.getDModule().getIcon() != null) {
         	NomadImageView imageView = new NomadImageView();
@@ -72,9 +76,7 @@ public class ModuleGUI extends NomadComponent implements MouseListener, MouseMot
         	add(imageView);
         }*/
     }
-    
 
-	
 	public Iterator getExportableNomadComponents() {
 		return new Iterator() {
 			int index = 0;
@@ -176,4 +178,5 @@ public class ModuleGUI extends NomadComponent implements MouseListener, MouseMot
 	public DModule getModuleInfo() {
 		return module.getDModule();
 	}
+
 }

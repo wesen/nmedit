@@ -25,6 +25,7 @@ package org.nomad.theme.property;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -40,13 +41,11 @@ public class PropertySet {
 
 	private Property fallBack = null;
 	private ArrayList propertySetListenerList = null;
-	private HashMap propertyMap = new HashMap();
-	
-	private ArrayList propertyList = new ArrayList();
+	private HashMap propertyMap = null;
+
 	private ChangeListener broadCast = new ChangeListener() {
 		public void stateChanged(ChangeEvent event) {
-			firePropertySetEvent(PropertySetEvent.createPropertyChangedEvent(PropertySet.this,
-					(Property) event.getSource(), event));
+			firePropertyChangedEvent((Property) event.getSource(), event);
 		}};
 
 	public PropertySet() {
@@ -64,47 +63,64 @@ public class PropertySet {
 		if (propertySetListenerList!=null)
 			propertySetListenerList.remove(l);
 	}
+
+	public void firePropertyAddedEvent(Property p) {
+		if (propertySetListenerList!=null) {
+			firePropertySetEventNoCheck(PropertySetEvent.createPropertyAddedEvent(this,p));
+		}
+	}
+	
+	public void firePropertyRemovedEvent(Property p) {
+		if (propertySetListenerList!=null) {
+			firePropertySetEventNoCheck(PropertySetEvent.createPropertyRemovedEvent(this,p));
+		}
+	}
+	
+	public void firePropertyChangedEvent(Property p, ChangeEvent event) {
+		if (propertySetListenerList!=null) {
+			firePropertySetEventNoCheck(PropertySetEvent.createPropertyChangedEvent(this,p,event));
+		}
+	}
 	
 	public void firePropertySetEvent(PropertySetEvent event) {
 		if (propertySetListenerList!=null) {
-			for (int i=propertySetListenerList.size()-1;i>=0;i--)
-				((PropertySetListener)propertySetListenerList.get(i)).propertySetEvent(event);
+			firePropertySetEventNoCheck(event);
 		}
+	}
+	
+	protected void firePropertySetEventNoCheck(PropertySetEvent event) {
+		for (int i=propertySetListenerList.size()-1;i>=0;i--)
+			((PropertySetListener)propertySetListenerList.get(i)).propertySetEvent(event);
 	}
 	
 	public void add(Property p) {
-		if (!propertyList.contains(p)) {
-			propertyList.add(p);
+		if (propertyMap==null) {
+			propertyMap = new HashMap(4);
+		}
+		
+		if (!propertyMap.containsKey(p.getName())) {
 			propertyMap.put(p.getName(),p);
 			p.addChangeListener(broadCast);
-			firePropertySetEvent(PropertySetEvent.createPropertyAddedEvent(this, p));
+			firePropertyAddedEvent(p);
 		}
 	}
-	
-	public Property get(int index) {
-		return (Property) propertyList.get(index);
-	}
-	
+
 	public void remove(Property p) {
-		if (propertyList.remove(p)) {
+		if ((propertyMap!=null) && (propertyMap.remove(p.getName())!=null)) {
 			propertyMap.remove(p.getName());
 			p.removeChangeListener(broadCast);
-			firePropertySetEvent(PropertySetEvent.createPropertyRemovedEvent(this, p));
+			firePropertyRemovedEvent(p);
+			
+			if (propertyMap.isEmpty()) {
+				propertyMap = null;
+			}
 		}
 	}
 	
-	public Property remove(int index) {
-		Property p = (Property) propertyList.remove(index);
-		if (p!=null) {
-			propertyMap.remove(p.getName());
-			p.removeChangeListener(broadCast);
-			firePropertySetEvent(PropertySetEvent.createPropertyRemovedEvent(this, p));
+	public void rewriteDefaults() {
+		for (Iterator iter=iterator();iter.hasNext();) {
+			((Property)iter.next()).rewriteDefault();
 		}
-		return p;
-	}
-	
-	public int size() {
-		return propertyList.size();
 	}
 
 	/**
@@ -112,7 +128,7 @@ public class PropertySet {
 	 * @return
 	 */
 	public Property byName(String name) {
-		if (name==null) return null;
+		if ((name==null) || (propertyMap == null)) return null;
 		Property p = (Property) propertyMap.get(name);
 		if (p==null && fallBack!=null) {
 			p=fallBack;
@@ -124,22 +140,22 @@ public class PropertySet {
 	public void setFallbackProperty(Property p) {
 		fallBack = p;
 	}
-	
-	/**
-	 * @param property
-	 */
-	public int indexOf(Property property) {
-		return propertyList.indexOf(property);
-	}
-	
+
 	public Iterator iterator() {
-		return propertyList.iterator();
+		if(propertyMap == null) {
+			return new Iterator() {
+				public boolean hasNext() { return false; }
+				public Object next() { throw new NoSuchElementException(); }
+				public void remove() { throw new UnsupportedOperationException(); } } ;
+		} else {
+			return propertyMap.values().iterator();
+		}
 	}
 
 	public void exportToDOM(NomadDOMComponent node) {
 		for (Iterator iter=iterator();iter.hasNext();) {
 			Property p = (Property) iter.next();
-			if (p.isExportable())
+			if (p.isExportable() && (!p.isInDefaultState()))
 				node.createPropertyNode(p.getName()).setValue(p.getValueString());
 		}
 	}
@@ -153,6 +169,13 @@ public class PropertySet {
 		}
 		
 		xml.endTag();
+	}
+
+	public void clear() {
+		ArrayList items = new ArrayList(propertyMap.values());
+		for (Iterator iter=items.iterator();iter.hasNext();) {
+			propertyMap.remove(((Property)iter.next()).getName());
+		}
 	}
 	
 }

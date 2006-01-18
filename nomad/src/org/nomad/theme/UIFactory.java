@@ -90,14 +90,11 @@ public abstract class UIFactory extends NomadFactory {
 	}
 	
 	public NomadComponent newComponentInstanceByClass(Class componentClass) {
-		
-		if (componentClass==null)
-			return null;
-		
 		try {
 			return (NomadComponent) componentClass.newInstance();
 		} catch (Throwable e) {
-			e.printStackTrace();
+			if (componentClass!=null)
+				e.printStackTrace();
 		}
 		return null;
 	}

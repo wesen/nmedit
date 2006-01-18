@@ -68,10 +68,11 @@ public class NomadActiveLabel extends NomadLabel {
 			}
 			
 			public DParameter getDParameter() {
-				return param;
+				return ((NomadActiveLabel)getComponent()).param;
 			}
 
 		});
+
 	}
 	
 	public Dimension getFittingSize() {
@@ -134,7 +135,7 @@ public class NomadActiveLabel extends NomadLabel {
 			setName("padding");
 		}
 		public void setIntegerValue(int integer) { if (integer>=0) setPadding(integer); }
-		public int getIntegerValue() { return getPadding(); }
+		public int getIntegerValue() { return ((NomadActiveLabel)getComponent()).getPadding(); }
 	}
 		
 }

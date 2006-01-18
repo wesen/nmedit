@@ -22,18 +22,12 @@
  */
 package org.nomad.theme.component;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Transparency;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
 import java.awt.image.BufferedImage;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -43,6 +37,8 @@ import javax.swing.border.Border;
 
 import org.nomad.image.ImageBuffer;
 import org.nomad.image.ImageToolkit;
+import org.nomad.patch.Module;
+import org.nomad.theme.ModuleGUI;
 import org.nomad.theme.UIFactory;
 import org.nomad.theme.property.ComponentLocationProperty;
 import org.nomad.theme.property.ComponentSizeProperty;
@@ -61,31 +57,15 @@ public class NomadComponent extends JComponent {
 	private boolean flagHasDynamicOverlay = false;
 	private boolean doPaintDecoration = true;
 	private UIFactory uiFactory = null;
+	private Module module = null;
 
 	public NomadComponent() {
 		setDoubleBuffered(false); // disable default double buffer
 		setOpaque(false);
-		setBorder(null); // no border
-		addContainerListener(new ComponentAddPolicy()); // validate child components
-		addComponentListener(new ComponentUpdater());
-		setPreferredSize(new Dimension(10, 10));
-		setSize(getPreferredSize());
-		
-		addComponentListener(new ComponentAdapter(){
-
-			public void componentResized(ComponentEvent event) {
-				deleteOnScreenBuffer();
-			}});
-/*
-		accessibleProperties.addPropertySetListener(new PropertySetListener(){
-			public void propertySetEvent(PropertySetEvent event) {
-				screenBuffer.dispose();
-				repaint();
-			}});*/
 		accessibleProperties.add(new ComponentLocationProperty(this));
 		accessibleProperties.add(new ComponentSizeProperty(this));
 	}
-	
+
 	public void setEnvironment(UIFactory factory) {
 		this.uiFactory = factory;
 	}
@@ -95,7 +75,7 @@ public class NomadComponent extends JComponent {
 	}
 	
 	public void setBorder(Border border) {
-		super.setBorder(null);
+		// super.setBorder(null);
 	}
 	
 	protected void finalize() throws Throwable {
@@ -131,7 +111,7 @@ public class NomadComponent extends JComponent {
 
 	public void deleteAlternativeBackground() {
 		alternativeBackground.dispose();
-		repaint();
+		//repaint();
 	}
 	
 	public NomadComponent getNomadComponent(int i) {
@@ -148,7 +128,6 @@ public class NomadComponent extends JComponent {
 
 		for (int i=getComponentCount()-1;i>=0;i--) {
 			NomadComponent c = getNomadComponent(i);
-			
 			Graphics2D g2 = img.createGraphics();
 			g2.translate(c.getX(), c.getY());
 			g2.setClip(0,0,c.getWidth(),c.getHeight());
@@ -187,7 +166,6 @@ public class NomadComponent extends JComponent {
 			NomadComponent c = getNomadComponent(i);
 			c.setAlternativeBackground(background, c.getLocation(), c.getSize(), false);
 			c.setOpaque(setOpacity);
-//			c.repaint();
 		}
 
 		//deleteOnScreenBuffer();
@@ -215,6 +193,9 @@ public class NomadComponent extends JComponent {
 	}
 
 	public void paintComponent(Graphics g) {
+		if (getWidth()<=0 || getHeight() <=0)
+			return;
+
 		if (!screenBuffer.isValid() || 
 				screenBuffer.getImage().getWidth(null)!=getWidth() || screenBuffer.getImage().getHeight(null)!=getHeight()) {
 			BufferedImage img = null;
@@ -279,15 +260,11 @@ public class NomadComponent extends JComponent {
 			}};
 	}
 	
-	/*public void revalidate() {
-		deleteOnScreenBuffer();
-		setSize(getPreferredSize());
-		super.revalidate();
-	}*/
-	
+	/*
 	private class ComponentAddPolicy implements ContainerListener {
 		private boolean isIncompatible(Component c) {
-			return (!(c instanceof NomadComponent))||(getParent() instanceof NomadComponent);
+			return (!(c instanceof NomadComponent))
+			||     (getParent() instanceof NomadComponent);
 		}
 
 		public void componentAdded(ContainerEvent event) {
@@ -298,28 +275,28 @@ public class NomadComponent extends JComponent {
 		}
 
 		public void componentRemoved(ContainerEvent event) { }
-	}
-	
-	private class ComponentUpdater implements ComponentListener {
-
-		public void componentResized(ComponentEvent event) { 
-			deleteOnScreenBuffer(); // update buffer
-		}
-		public void componentHidden(ComponentEvent event) {
-			deleteOnScreenBuffer(); // free unused memory
-		}
-		public void componentMoved(ComponentEvent event) { }
-		public void componentShown(ComponentEvent event) { }
-	}
+	}*/
 
 	private String nameAlias = getClass().getName();
 	
 	public String getNameAlias() {
 		return nameAlias;
 	}
-	
+
 	public void setNameAlias(String alias) {
 		nameAlias = alias;
+	}
+
+	public Module getModule() {
+		if ((module == null) && (getParent() instanceof ModuleGUI)) {
+			module = ((ModuleGUI)getParent()).getModule();
+		}
+
+		return module;
+	}
+	
+	public void link() {
+		//
 	}
 	
 }

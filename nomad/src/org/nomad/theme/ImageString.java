@@ -62,6 +62,10 @@ public class ImageString {
 			lineCount++;
 	}
 	
+	public boolean matchedImageString() {
+		return isImageString;
+	}
+	
 	public int getLineCount() {
 		return lineCount;
 	}

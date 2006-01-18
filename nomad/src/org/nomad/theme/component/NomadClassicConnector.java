@@ -22,111 +22,46 @@
  */
 package org.nomad.theme.component;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.GradientPaint;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.Stroke;
-import java.awt.geom.Ellipse2D;
 
-import org.nomad.theme.NomadClassicColors;
-import org.nomad.theme.RoundGradientPaint;
+import org.nomad.theme.component.model.NomadClassicConnectorGraphics;
+import org.nomad.theme.component.model.NomadClassicConnectorGraphics.ConnectorCachedGraphics;
 
 public class NomadClassicConnector extends NomadConnector {
 
+	private ConnectorCachedGraphics connectorGraphics = null;
+	
 	public NomadClassicConnector() {
 		super();
 		setConnectorType(false);
 		setConnectedState(false);
 		//setBackground(NomadClassicColors.MORPH_YELLOW);
-	}
-	
-	public void enableQualityRendering(Graphics2D g2) {
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		getAccessibleProperties().rewriteDefaults();
 	}
 
-	private class Ellipsed {
-		int r, b, pad;
-		double dpad;
-		double dr;
-		double db;
-		Ellipse2D ellipse = null;
-		
-		public Ellipsed(double pad) {
-			this.dpad=pad;
-			dr=NomadClassicConnector.this.getWidth()-dpad;
-			db=NomadClassicConnector.this.getHeight()-dpad;
-			ellipse = new Ellipse2D.Double(dpad,dpad,dr-dpad,db-dpad);
-
-			this.pad=(int)Math.round(pad);
-			this.r=(int)Math.round(dr);
-			this.b=(int)Math.round(db);
-		}	
+	public void paintComponent(Graphics g) {
+		/* We have our custom double buffer and need no background buffer,
+		 * so we override paintComponent.
+		 */
+		connectorGraphics = NomadClassicConnectorGraphics
+			.obtainGraphicsCache(this, connectorGraphics);
+		connectorGraphics.paint(this, (Graphics2D) g);
 	}
 
+	/*
 	public void paintDecoration(Graphics2D g2) {
-		enableQualityRendering(g2);
-
-		Color color = getBackground();
-		
-		Ellipsed ell = null;
-		Ellipsed frame = null;
-		g2.setColor(color);
-
-		if (isInputConnector()) {
-			ell = frame = new Ellipsed(0.6);
-			g2.fill(ell.ellipse);
-		} else {
-			g2.fillRect(0, 0, getWidth(), getHeight());
-			
-			ell = new Ellipsed(1);
-			g2.setPaint(new GradientPaint(
-				ell.pad, ell.pad, NomadClassicColors.alpha(Color.WHITE, 0),
-				ell.r,ell.b, NomadClassicColors.alpha(Color.WHITE, 160)
-			));
-			Stroke tmp = g2.getStroke();
-			g2.setStroke(new BasicStroke(3f));
-			g2.draw(ell.ellipse);
-			g2.setStroke(tmp);
-		}
-
-		//g2.fill(ell.ellipse);
-		ell = new Ellipsed(3); // inside black hole
-		g2.setPaint(new RoundGradientPaint(ell.ellipse,
-			NomadClassicColors.alpha(Color.BLACK, 150),
-			NomadClassicColors.alpha(Color.BLACK, 0)
-		));
-		g2.fill(ell.ellipse);
-		
-
-		//g2.setColor(); // outline
-		if (isInputConnector()) {
-			g2.setColor(NomadClassicColors.alpha(color.brighter(), 120)); // outline
-			g2.draw(frame.ellipse);
-		} else {
-			g2.setColor(NomadClassicColors.alpha(color.darker(), 120)); // outline
-			g2.drawRect(0, 0, getWidth()-1, getHeight()-1);
-		}
+		// nothing to do here
 	}
 	
 	public void paintDynamicOverlay(Graphics2D g2) {
-
-		if (isConnected()) {
-			enableQualityRendering(g2);
-			
-			Color color = getBackground();
-
-			Ellipsed ell = new Ellipsed(2); // black hole
-			g2.setPaint(new RoundGradientPaint(ell.ellipse,
-				NomadClassicColors.alpha(color.brighter(), 200),
-				NomadClassicColors.alpha(color, 60)
-			));
-			g2.fill(ell.ellipse);
-			
-			
-		}
-		
+		// nothing to do here
+	} */
+	
+	protected void finalize() throws Throwable {
+		if (connectorGraphics!=null)
+			connectorGraphics.dispose();
+		super.finalize();
 	}
 	
 }

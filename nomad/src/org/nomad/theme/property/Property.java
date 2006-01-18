@@ -130,7 +130,7 @@ public abstract class Property extends PropertyContainer {
 	 */
 	private String name = null;
 	
-	private boolean flagValidateName = true;
+	private boolean flagValidateName = false;
 	
 	/**
 	 * Returns the name of this property.
@@ -149,6 +149,8 @@ public abstract class Property extends PropertyContainer {
 		flagValidateName = validate;
 	}
 
+	private Object defaultValue = null;
+	
 	/**
 	 * Sets the name of the property
 	 * The name must match the regular expression <code>[:a-zA-Z][,a-zA-Z0-9\.\-:]*</code>
@@ -164,10 +166,18 @@ public abstract class Property extends PropertyContainer {
 		if (flagValidateName && !Property.isValidName(name))
 			throw new IllegalArgumentException("Illegal property name.");
 
-		if (this.name==null||!this.name.equals(name)) {
+		//if (this.name==null||!this.name.equals(name)) {
 			this.name = name;
-			fireChangeEvent();
-		}
+			// fireChangeEvent();
+		//}
+	}
+	
+	public boolean isInDefaultState() {
+		Object currentState = getValue();
+		if (currentState==null)
+			return currentState == defaultValue;
+		else
+			return currentState.equals(defaultValue);
 	}
 	
 	/**
@@ -180,6 +190,9 @@ public abstract class Property extends PropertyContainer {
 		return name==null?false:validateNamePattern.matcher(name).matches();
 	}
 	
+	public void rewriteDefault() {
+		defaultValue = getValue();
+	}
 	
 	// ---- Editor ------------------------------------------
 
@@ -283,11 +296,10 @@ public abstract class Property extends PropertyContainer {
 	 * @return the handler for the given value
 	 */
 	public PropertyValueHandler findHandler(Object value) {
-		PropertyValueHandler handle = (PropertyValueHandler) handlerMap.get(value==null?null:value.getClass());
-		if (handle==null && value!=null) // if no handler has been found, try the default handler
-			handle = (PropertyValueHandler) handlerMap.get(null);
-
-		return handle;
+		if (value!=null && handlerMap.containsKey(value.getClass()))
+			return (PropertyValueHandler) handlerMap.get(value.getClass());
+		else
+			return (PropertyValueHandler) handlerMap.get(null);
 	}
 
 	// ---- read/write the value ----------------------------------------
@@ -322,12 +334,16 @@ public abstract class Property extends PropertyContainer {
 	 * @see #findHandler(Object)
 	 */
 	public void setValue(Object value) {
-		PropertyValueHandler handle = findHandler(value);
-		if (handle==null) {
-			throw new IllegalArgumentException("Property '"+this+"' does not handle: "+value);
+		if (value instanceof String) {
+			setValueFromString((String)value);
 		} else {
-			handle.writeValue(value);
-			fireChangeEvent();
+			PropertyValueHandler handle = findHandler(value);
+			if (handle==null) {
+				throw new IllegalArgumentException("Property '"+this+"' does not handle: "+value);
+			} else {
+				handle.writeValue(value);
+				fireChangeEvent();
+			}
 		}
 	}
 	
@@ -346,12 +362,8 @@ public abstract class Property extends PropertyContainer {
 		super();
 		this.ncomponent = component;
 		setName("property");
-		setHandler(String.class, new PropertyValueHandler(){
-			public void writeValue(Object value) {
-				setValueFromString((String)value);
-			}
-			
-		});
+		
+		rewriteDefault();
 	}
 
 	/**

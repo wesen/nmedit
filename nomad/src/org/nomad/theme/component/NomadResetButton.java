@@ -60,7 +60,7 @@ public class NomadResetButton extends NomadControl {
 		setDefaultValue(new Integer(30));
 		
 		ChangeListener updater = new ChangeListener(){
-			public void stateChanged(ChangeEvent arg0) {
+			public void stateChanged(ChangeEvent event) {
 				testIfStateChanged();
 			}};
 

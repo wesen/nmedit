@@ -22,17 +22,18 @@
  */
 package org.nomad.theme.component;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GradientPaint;
 import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.RenderingHints;
-import java.awt.geom.Arc2D;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
-import org.nomad.theme.component.model.NomadClassicKnobBehaviour;
-import org.nomad.theme.component.model.NomadClassicKnobBehaviour.Metrics;
+import javax.swing.SwingUtilities;
+
+import org.nomad.theme.component.model.NomadClassicKnobGraphics;
+import org.nomad.theme.component.model.NomadClassicKnobGraphics.ControlCachedGraphics;
 
 
 /**
@@ -43,102 +44,93 @@ public class NomadClassicKnob extends NomadControl {
 	//private final Color clDefaultKnobFill = Color.decode("#9B9B9B");
 	//private final Color clDefaultKnobOutline = Color.BLACK;
 
-	private final Color clFillDark = Color.decode("#969696");
-	private final Color clFillLight = Color.decode("#9D9D9D");
-	
-	private final Color clHighlight = new Color(245, 245, 220, 180);
-
-	private NomadClassicKnobBehaviour behaviour = null;
+	private ControlCachedGraphics controlGraphics = null;
+	private final static ClassicKeyListener classicKeyListener
+	  = new ClassicKeyListener();
+	private final static ClassicMouseListener classicMouseListener
+	  = new ClassicMouseListener();
+	private final static ClassicMouseMotionListener classicMouseMotionListener
+	  = new ClassicMouseMotionListener();
 	
 	public NomadClassicKnob() {
-		behaviour = new NomadClassicKnobBehaviour(this);
+		addMouseListener(classicMouseListener);
+		addKeyListener(classicKeyListener);
+		addMouseMotionListener(classicMouseMotionListener);
+
 		setOpaque(false);
 		setFocusable(true);
 		setDynamicOverlay(true);
-		setPreferredSize(new Dimension(24,24));
-		setSize(24,24);
-		setMinimumSize(new Dimension(24,24));
-		setMaximumSize(new Dimension(24,24));
-		deleteOnScreenBuffer();
+		Dimension d = new Dimension(24,24);
+		setPreferredSize(d);
+		setSize(d);
+		setMinimumSize(d);
+		setMaximumSize(d);
+		//deleteOnScreenBuffer();
+		
+		getAccessibleProperties().rewriteDefaults();
 	}
 	
 	boolean morphEnabled = true;
 
-	protected void configureGraphics(Graphics2D g2) {
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-	}
-	
 	public void paintDecoration(Graphics2D g2) {
-		configureGraphics(g2);
-
-		behaviour.metrics.update();
-		Metrics m = behaviour.metrics;
-		
-		g2.setColor(Color.BLACK);
-		// mid - left bottom corner
-		g2.drawLine(Math.round((float)m.cx), Math.round((float)m.cy), m.lBar.x, m.lBar.y);
-		// mid - right bottom corner
-		g2.drawLine(Math.round((float)m.cx), Math.round((float)m.cy), m.rBar.x, m.rBar.y);
-
-		// fill
-		g2.setPaint(new GradientPaint(
-			m.pointTL1, clFillLight,
-			m.pointBR1, clFillDark, true
-			//m.pointTL1, Color.LIGHT_GRAY, --- looks better
-			//m.pointBR1, Color.GRAY, true
-		));
-		g2.fill(m.ellipse);
-
-		// inner outline
-		g2.setPaint(new GradientPaint(
-			m.pointTL1, Color.WHITE,
-			m.pointBR1, Color.BLACK, true
-		));
-		g2.setStroke(new BasicStroke(1.5f));
-		g2.draw(m.ellipseSmall);
-
-		// outer outline
-		g2.setPaint(new GradientPaint(
-			m.pointTL1, Color.LIGHT_GRAY,
-			m.pointBR1, Color.BLACK, true
-		));
-		g2.setStroke(new BasicStroke(1.0f));
-		g2.draw(m.ellipse);
-			
+		controlGraphics = NomadClassicKnobGraphics.obtainGraphicsCache(this, controlGraphics);
+		controlGraphics.paintDecorationCache(this, g2);
 	}
 	
 	public void paintDynamicOverlay(Graphics2D g2) {
-		configureGraphics(g2);
-		Metrics m = behaviour.metrics;
-
-		if (hasFocus()) {
-			// we highlight the button
-			g2.setColor(clHighlight);
-			// outer outline
-			g2.setPaint(new GradientPaint(
-					m.pointTL1, clFillLight,
-					m.pointBR1, clHighlight, true
-				));
-				g2.fill(m.ellipseSmall);
-			
-		}
-		
-		Arc2D morph = m.getMorphArc();
-		if (morph!=null) {
-			// draw morph color overlay
-			g2.setPaint(getMorphBackground());
-			g2.fill(m.ellipse);
-
-			// draw morph arc overlay
-			g2.setPaint(getMorphForeground());
-			g2.fill(morph);	
-		}
-
-		// draw marker
-		Point p = m.calcPosition(getValuePercentage());
-		g2.setColor(Color.BLACK);
-		g2.drawLine(Math.round((float)m.cx), Math.round((float)m.cy), p.x, p.y);
+		controlGraphics = NomadClassicKnobGraphics.obtainGraphicsCache(this, controlGraphics);
+		controlGraphics.paintDynamicOverlay(this, g2);
 	}
 	
+	protected void finalize() throws Throwable {
+		if (controlGraphics!=null) {
+			controlGraphics.dispose();
+		}
+		super.finalize();
+	}
+	
+	private static class ClassicKeyListener extends KeyAdapter {
+		public void keyPressed(KeyEvent event) {
+			
+			if (event.getSource() instanceof NomadControl) {
+				NomadControl control = (NomadControl) event.getSource();
+				
+				boolean ctrl_pressed = (event.getModifiers() & (KeyEvent.CTRL_DOWN_MASK|KeyEvent.CTRL_MASK))!=0;
+				switch(event.getKeyCode()) {
+					case KeyEvent.VK_UP: 
+						if (ctrl_pressed) control.incMorph(); else control.incValue(); break;
+					case KeyEvent.VK_DOWN:
+						if (ctrl_pressed) control.decMorph(); else control.decValue(); break;
+					case KeyEvent.VK_DELETE:
+						if (ctrl_pressed) control.setMorphValue(null); break;
+				}
+			}
+		}
+	}
+
+	private static class ClassicMouseListener extends MouseAdapter {
+		public void mousePressed(MouseEvent event) {
+			if (event.getSource() instanceof NomadControl) {
+				((NomadControl)event.getSource()).requestFocus();
+			}
+		}
+	}
+
+	private static class ClassicMouseMotionListener extends MouseMotionAdapter {
+		public void mouseDragged(MouseEvent event) {
+			if (event.getSource() instanceof NomadClassicKnob) {
+				NomadClassicKnob control = (NomadClassicKnob) event.getSource();
+				
+				if (SwingUtilities.isLeftMouseButton(event)) {
+					control.controlGraphics = NomadClassicKnobGraphics
+						.obtainGraphicsCache(control, control.controlGraphics);
+					control.setValue(	
+						control.getMinValue()
+						+ (int) (control.controlGraphics.getMetrics().calcRangeFactor(event.getPoint())
+						* control.getRange())	
+					);
+				}				
+			}
+		}
+	}
 }

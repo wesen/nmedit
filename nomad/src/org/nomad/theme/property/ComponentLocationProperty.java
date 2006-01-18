@@ -45,7 +45,7 @@ public class ComponentLocationProperty extends PointProperty {
 	public void setXY(int x, int y) {
 		getComponent().setLocation(x, y);
 	}
-	public int getX() { return getComponent().getLocation().x; }
-	public int getY() { return getComponent().getLocation().y; }
+	public int getX() { return getComponent().getX(); }
+	public int getY() { return getComponent().getY(); }
 
 }

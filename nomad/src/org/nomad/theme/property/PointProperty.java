@@ -81,11 +81,13 @@ public abstract class PointProperty extends Property {
 
 	public void setValueFromString(String value) {
 		try {
-			int[] xy = PointProperty.parseXYString((String)value);
-			if (xy==null) throw new IllegalArgumentException("Illegal argument in '"+PointProperty.this+"': "+value);
-			setXY(xy[0],xy[1]);
-		} catch (ClassCastException e) {
-			throw new IllegalArgumentException(e);
+			Matcher m = xypattern.matcher(value);
+			if (!m.matches())
+				throw new IllegalArgumentException("Illegal argument in '"+PointProperty.this+"': "+value);  
+			setXY(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)));
+		} catch (Throwable t) {
+			if (!(t instanceof IllegalArgumentException))
+				throw new IllegalArgumentException("An error occured in '"+PointProperty.this+"': "+value, t);
 		}
 	}
 	

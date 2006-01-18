@@ -52,7 +52,7 @@ public class VocoderBandDisplay extends NomadComponent {
 			this.band = band;
 		}
 		public void setDParameter(DParameter p) { bandsInfo[band] = p; }
-		public DParameter getDParameter() { return bandsInfo[band]; }
+		public DParameter getDParameter() { return ((VocoderBandDisplay)getComponent()).bandsInfo[band]; }
 	}
 	
 	public void setBackgroundRenderer(BackgroundRenderer renderer) {
@@ -91,7 +91,7 @@ public class VocoderBandDisplay extends NomadComponent {
 	}
 	
 	public void setBand(int band, int value) {
-		if (isValidBandIndex(band)) {
+		if (isValidBandIndex(band) && (vocoderBands[band]!=value)) {
 			value = value % (NUM_BANDS+1);
 			if (value<0)
 				value = (NUM_BANDS-1)-value;
@@ -142,8 +142,7 @@ public class VocoderBandDisplay extends NomadComponent {
 			bgwidth = w;
 			bgheight = h;
 		}
-		
-		
+
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 

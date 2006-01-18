@@ -60,7 +60,6 @@ public class NomadLabel extends NomadComponent {
 		getAccessibleProperties().add(new LabelFontProperty(this));
 		getAccessibleProperties().add(new AntialiasTextProperty(this));
 		autoResize();
-		setPreferredSize(getSize());
 	}
 	
 	public static Rectangle getStringBounds(JComponent component, String string) {
@@ -129,7 +128,6 @@ public class NomadLabel extends NomadComponent {
 			if (getEnvironment()!=null)
 				imageString.loadImage(getEnvironment().getImageTracker());
 			fireTextUpdateEvent();
-			autoResize();
 		}
 	}
 	
@@ -140,19 +138,38 @@ public class NomadLabel extends NomadComponent {
 	public boolean isImageString() {
 		return imageString.getImage()!=null;
 	}
+	
+	private String lastString = "";
+	private boolean lastNoImage=true;
 
 	protected void autoResize() {
-		if (flagAutoResize) { 
-			Dimension d;
+		if (flagAutoResize) {
 			
-			if (imageString.getImage()!=null)
-				d =imageString.getImageBounds(this).getSize();
-			else
-				d = getTextDimensions();
-			setMinimumSize(d);
-			setMaximumSize(d);
-			setPreferredSize(d);
-			setSize(d);
+			boolean hasNoImage = imageString.getImage()==null;
+			
+			if (	(lastNoImage!=hasNoImage)
+				||  (lastString!=imageString.getString()) )
+			{
+				/**
+				 * Comparing strings by reference is ok, since
+				 * we have never another source
+				 */
+
+				lastNoImage=hasNoImage;
+				lastString=imageString.getString();				
+				Dimension d;
+				
+				if (hasNoImage) {
+					d = getTextDimensions();
+				} else {
+					d =imageString.getImageBounds(this).getSize();
+				}
+				setMinimumSize(d);
+				setMaximumSize(d);
+				setPreferredSize(d);
+				setSize(d);
+
+			}
 		}
 	}
 	
@@ -163,7 +180,8 @@ public class NomadLabel extends NomadComponent {
 	public void setAutoResize(boolean enabled) {
 		if (flagAutoResize!=enabled) {
 			flagAutoResize=enabled;
-			fireTextUpdateEvent();
+			if (flagAutoResize)
+				fireTextUpdateEvent();
 		}
 	}
 	
@@ -171,13 +189,9 @@ public class NomadLabel extends NomadComponent {
 	 * TODO replace with property event integration
 	 */
 	protected void fireTextUpdateEvent() {
-		if (flagAutoResize) {
-			autoResize();
-		}
-		
+		autoResize();
 		deleteOnScreenBuffer();
-		//revalidate();
-		repaint();
+		/*repaint();*/
 	}
 
 	public void paintDecoration(Graphics2D g2) {
@@ -216,7 +230,7 @@ public class NomadLabel extends NomadComponent {
 		}
 
 		public boolean getBoolean() {
-			return isTextAntialiased();
+			return ((NomadLabel)getComponent()).isTextAntialiased();
 		}
 		
 	}
@@ -229,7 +243,7 @@ public class NomadLabel extends NomadComponent {
 		}
 
 		public Object getValue() {
-			return getText();
+			return ((NomadLabel)getComponent()).getText();
 		}
 
 		public void setValueFromString(String value) {
@@ -247,7 +261,7 @@ public class NomadLabel extends NomadComponent {
 		}
 
 		public boolean getBoolean() {
-			return isVertical();
+			return ((NomadLabel)getComponent()).isVertical();
 		}
 	}
 	

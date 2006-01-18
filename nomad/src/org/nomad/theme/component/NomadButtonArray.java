@@ -57,7 +57,8 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 	private ArrayList labelList = new ArrayList();
 	private boolean flagIsCylicDisplay = true;
 	private boolean flagLandscape = false;
-	private boolean noAutoResize = false;
+	private int lastW = 0;
+	private int lastH = 0;
 	
 	public NomadButtonArray() {
 		setBackground(NomadClassicColors.MODULE_BACKGROUND);
@@ -94,7 +95,6 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 					}
 				}
 			}});
-		
 
 		getAccessibleProperties().setFallbackProperty(new Fallback(this));
 		
@@ -105,10 +105,22 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 
 		addButton(encodeButtonName(labelList.size()));
 		//addButton(createPropertyName(labelList.size()));
-		autoResize();
-		noAutoResize = true;
+		autoResize(false);
 	}
-	
+
+	public void autoResize(boolean force) {
+		if (force||(lastW!=getWidth())||(lastH!=getHeight())) {
+			behaviour.calculateMetrics();
+			Dimension d = behaviour.getPreferredSize();
+			setMinimumSize(d);
+			setMaximumSize(d);
+			setPreferredSize(d);
+			setSize(d);
+			lastW = getWidth();
+			lastH = getHeight();
+		}
+	}
+
 	public int getButtonCount() {
 		return flagIsCylicDisplay ? 1 : labelList.size();
 	}
@@ -162,11 +174,12 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 			istring.loadImage(getEnvironment().getImageTracker());
 		return istring;
 	}
-	
+
 	public void addButton(String label) {
 		int index = labelList.size();
 		labelList.add(newLabel(label));
-		autoResize();
+		deleteOnScreenBuffer();
+		autoResize(true);
 		getAccessibleProperties().add(new BtnTextProperty(this, index));
 	}
 	
@@ -175,34 +188,24 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 			getAccessibleProperties().remove(getAccessibleProperties().byName(encodeButtonName(index)));
 			labelList.set(index, newLabel(label));
 			getAccessibleProperties().add(new BtnTextProperty(this, index));
-			
+			deleteOnScreenBuffer();
 		} else {
 			while (index+1<labelList.size())
 				addButton(encodeButtonName(labelList.size()));
-		
+
 			addButton(label);
 		}
 	}
 	
 	public void removeButton(int index) {
-		labelList.remove(index);
 		if (0<=index && index<labelList.size()) {
+			getAccessibleProperties().remove(getAccessibleProperties().byName(encodeButtonName(index)));
 			labelList.remove(index);
 		}
-		autoResize();
+		deleteOnScreenBuffer();
+		autoResize(true);
 	}
 	
-	public void autoResize() {
-		if (!noAutoResize) {
-			behaviour.calculateMetrics();
-			Dimension d = behaviour.getPreferredSize();
-			setMinimumSize(d);
-			setMaximumSize(d);
-			setPreferredSize(d);
-			setSize(d);
-		}
-	}
-
 
 	public boolean isLandscape() {
 		return flagLandscape;
@@ -211,7 +214,7 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 	public void setLandscape(boolean landscape) {
 		if (this.flagLandscape!=landscape) {
 			this.flagLandscape = landscape;
-			autoResize();
+			autoResize(true);
 		}
 	}
 
@@ -228,9 +231,6 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		Border bselection = NomadBorderFactory.createNordEditor311LoweredBorder(2);
 		Border b = bbutton;
 
-		int stop = getButtonCount()-1;
-		int start= 0;
-		
 		if (flagIsCylicDisplay) {
 			int i = getValue();
 			if (getValue()==0)
@@ -272,22 +272,22 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 				g2.drawString(istr.getString(), cell.x+bounds.x, cell.y+bounds.y);
 			}
 		}	else {	
-			
-			for (int i=stop;i>=start;i--) {
+
+			for (int i=getButtonCount()-1;i>=0;i--) {
 				ImageString istr;
-				if (0<=i && i<labelList.size())
+				if (0<=i && i<labelList.size()) {
 					istr = (ImageString) labelList.get(i);
-				else
+				} else
 					istr = new ImageString("");
-					
+
 				Rectangle bounds;
-				
+
 				if (istr.getImage()!=null)
 					bounds = istr.getImageBounds(this);
 				else
 					bounds = NomadLabel.getStringBounds(this, istr.getString());
 				Point cell = behaviour.getCell(i);
-				
+
 				g2.setColor(getBackground());
 				g2.fillRect(cell.x, cell.y, behaviour.getCellWidth()-2, behaviour.getCellHeight()-2);
 				
@@ -302,10 +302,10 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 				
 				bounds.x += (behaviour.getCellWidth()-bounds.width)/2;
 				bounds.y += (behaviour.getCellHeight()-bounds.height)/2;
-	
+
 				if (istr.getImage()!=null) {
 					
-					g2.drawImage(istr.getImage(), bounds.x, bounds.y, this);
+					g2.drawImage(istr.getImage(), cell.x+bounds.x, cell.y+bounds.y, this);
 					
 				} else {
 					g2.setColor(Color.BLACK);
@@ -325,6 +325,7 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		}
 
 		public Object getValue() {			
+			ArrayList labelList = ((NomadButtonArray)getComponent()).labelList;
 			if (index>=0 && index<labelList.size())
 				return labelList.get(index);
 			else
@@ -384,8 +385,9 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 
 						public void actionPerformed(ActionEvent event) {
 							int index = NomadButtonArray.this.getValue();
-							fireEditingCanceled();
+							NomadButtonArray.this.decValue();
 							removeButton(index);
+							fireEditingCanceled();
 						}});
 				}
 				
@@ -415,7 +417,7 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		}
 
 		public boolean getBoolean() {
-			return isLandscape();
+			return ((NomadButtonArray)getComponent()).isLandscape();
 		}
 		
 	}
@@ -432,7 +434,7 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		}
 
 		public boolean getBoolean() {
-			return isCylicDisplay();
+			return ((NomadButtonArray)getComponent()).isCylicDisplay();
 		}
 		
 	}
