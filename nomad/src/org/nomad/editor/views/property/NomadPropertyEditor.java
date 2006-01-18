@@ -29,7 +29,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.EventObject;
+import java.util.Iterator;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -58,6 +60,7 @@ public class NomadPropertyEditor extends JPanel {
 	private JFrame ownerFrame = null;
 	private PropertyEditWindowAction pwea = new PropertyEditWindowAction();
 	private PropertySet thePropertySet = null;
+	private ArrayList properties = new ArrayList();
 	
 	public NomadPropertyEditor(JFrame ownerFrame) {
 		super();
@@ -87,7 +90,7 @@ public class NomadPropertyEditor extends JPanel {
 			int row = table.rowAtPoint(me.getPoint());
 			
 			if ((column==1)&&(0<=row)&&(row<table.getRowCount())) {
-				Property property = thePropertySet.get(row);
+				Property property = (Property) properties.get(row);
 				if (!property.isInlineEditor()) { // we show the dialog window
 					
 					EditWindowDialog ewd = new EditWindowDialog(getOwnerFrame(), NomadPropertyEditor.this, property);
@@ -107,9 +110,15 @@ public class NomadPropertyEditor extends JPanel {
 
 	public void setEditingPropertySet(PropertySet thePropertySet) {
 		if (this.thePropertySet!=thePropertySet) {
+			properties.clear();
 			if (thePropertySet!=null) thePropertySet.removePropertySetListener(model);
 			this.thePropertySet=thePropertySet;
-			if (thePropertySet!=null) thePropertySet.addPropertySetListener(model);
+			if (thePropertySet!=null) {
+				thePropertySet.addPropertySetListener(model);
+				for (Iterator iter=thePropertySet.iterator();iter.hasNext();) {
+					properties.add(iter.next());
+				}
+			}
 			table.setPreferredSize(new Dimension(240, table.getRowHeight()*table.getRowCount()));
 			model.fireTableDataChanged();
 		}
@@ -119,11 +128,11 @@ public class NomadPropertyEditor extends JPanel {
 		
 	    public String getColumnName(int col) { return col==0?"Property":"Value"; }    
 	    public int getColumnCount() { return 2; }
-		public int getRowCount()	{ return thePropertySet==null?0:thePropertySet.size(); }
+		public int getRowCount()	{ return properties.size(); }
 		public boolean isCellEditable(int row, int col) {
 			if (col==0) return false;
 			else {
-				Property property = thePropertySet.get(row);
+				Property property = (Property) properties.get(row);
 				return property.isInlineEditor();
 			} 
 		}
@@ -131,14 +140,14 @@ public class NomadPropertyEditor extends JPanel {
 			if (thePropertySet==null) {
 				return null;
 			} else {
-				Property property = thePropertySet.get(row);
+				Property property = (Property) properties.get(row);
 				return col == 0 ? property.getName() : property.getValueString();
 			}
 		}
 		
 		public void setValueAt(Object value, int row, int col) {
 			if (thePropertySet!=null) {
-				Property property = thePropertySet.get(row);
+				Property property = (Property) properties.get(row);
 				property.setValue(value);
 			}
 		}
@@ -146,13 +155,17 @@ public class NomadPropertyEditor extends JPanel {
 		public void propertySetEvent(PropertySetEvent event) {
 			switch (event.getEventId()) {
 			case PropertySetEvent.PROPERTY_ADDED: {
+				System.out.println("** added");
 				
+				properties.add(event.getProperty());				
 				fireTableStructureChanged();
 				fireTableDataChanged();
 				break;
 			}
 			case PropertySetEvent.PROPERTY_REMOVED: {
+				System.out.println("** removed");
 				
+				properties.remove(event.getProperty());				
 				fireTableStructureChanged();
 				fireTableDataChanged();
 				//event.getProperty().removeChangeListener(this);
@@ -160,7 +173,7 @@ public class NomadPropertyEditor extends JPanel {
 				
 			case PropertySetEvent.PROPERTY_CHANGED: {
 				Property property = event.getProperty();
-				int row = event.getPropertySet().indexOf(property);
+				int row = properties.indexOf(property);
 				fireTableCellUpdated(row, 1);
 				} break;
 			}
@@ -174,7 +187,7 @@ public class NomadPropertyEditor extends JPanel {
 		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column)  {
 			pe = null;
 			if (column==1 && thePropertySet!=null) {
-				Property property = thePropertySet.get(row);
+				Property property = (Property) properties.get(row);
 				if (property.isInlineEditor()) {
 					pe = property.getEditor();
 					return pe.getEditorComponent();

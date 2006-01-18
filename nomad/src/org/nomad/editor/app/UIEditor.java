@@ -37,7 +37,7 @@ import org.nomad.util.misc.ImageTracker;
 import org.nomad.xml.XMLFileWriter;
 import org.nomad.xml.dom.module.DModule;
 import org.nomad.xml.dom.module.ModuleDescriptions;
-import org.nomad.xml.dom.substitution.XMLSubstitutionReader;
+import org.nomad.xml.dom.substitution.Substitutions;
 
 import plugin.classictheme.ClassicThemeFactory;
 
@@ -122,12 +122,11 @@ public class UIEditor extends JFrame {
 
 		// load substitutions
 		Run.statusMessage("parameter substitutions");
-		XMLSubstitutionReader subsReader = 
-			new XMLSubstitutionReader("src/data/xml/substitutions.xml");
+		Substitutions subs = new Substitutions("src/data/xml/substitutions.xml");
 		
 		// load module descriptors
 		Run.statusMessage("module description");
-		ModuleDescriptions.init("src/data/xml/modules.xml", subsReader);
+		ModuleDescriptions.init("src/data/xml/modules.xml", subs);
 
 		// feed image tracker
 		Run.statusMessage("images");
@@ -253,9 +252,7 @@ public class UIEditor extends JFrame {
 			    ) {
 					return;
 				} else {
-					if (!ModuleGUIBuilder.instance.load(fileName)) {
-						System.err.println("Failed!!!");
-					}
+					ModuleGUIBuilder.instance.load(fileName);
 				}
 			}
 		}

@@ -57,8 +57,7 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 		mouseHandler = new VEMouseEventHandler(this);
 		
 		// remove unwanted properties
-		while (getAccessibleProperties().size()>0)
-			getAccessibleProperties().remove(0);
+		getAccessibleProperties().clear();
 	}
 	
 	public PropertySetListener getPropertySetListener() {
