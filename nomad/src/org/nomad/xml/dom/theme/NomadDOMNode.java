@@ -22,6 +22,9 @@
  */
 package org.nomad.xml.dom.theme;
 
+import java.util.Iterator;
+
 public interface NomadDOMNode {
 	public int getNodeCount();
+	public Iterator iterator();
 }

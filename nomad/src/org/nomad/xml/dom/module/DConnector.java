@@ -149,7 +149,7 @@ public class DConnector {
 	public String getSignalName() {
 		return getSignalName(cnSignal);
 	}
-	
+
 	public final static String getSignalName(int cnSignal) {
 		switch (cnSignal) {
 			case DConnector.SIGNAL_AUDIO: return "audio";
@@ -158,6 +158,18 @@ public class DConnector {
 			case DConnector.SIGNAL_SLAVE: return "slave"; 
 			default: return "invalid";
 		}
+	}
+
+	public final static int getSignalId(String name) {
+		if ("audio".equals(name))
+			return DConnector.SIGNAL_AUDIO;
+		else if ("control".equals(name))
+			return DConnector.SIGNAL_CONTROL;
+		else if ("logic".equals(name))
+			return DConnector.SIGNAL_LOGIC;
+		else if ("slave".equals(name))
+			return DConnector.SIGNAL_SLAVE;
+		else return -1;
 	}
 	
 	/**

@@ -23,6 +23,7 @@
 package org.nomad.xml.dom.theme;
 
 
+
 public interface NomadDOMComponent extends NomadDOMNode {
 
 	public String getName();

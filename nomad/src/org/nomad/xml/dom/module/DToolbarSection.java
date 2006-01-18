@@ -55,7 +55,7 @@ public class DToolbarSection {
 	 * Adds a module to this section
 	 * @param module the module
 	 */
-	void addModule(DModule module) {
+	public void addModule(DModule module) {
 		dmodules.add(module);
 	}
 

@@ -59,7 +59,7 @@ public class DToolbarGroup {
 	 * Adds a new section to this toolbar group
 	 * @param s the section
 	 */
-	void addSection(DToolbarSection s) {
+	public void addSection(DToolbarSection s) {
 		dsections.add(s);
 	}
 	

@@ -16,11 +16,11 @@ public class DModule {
 	/** An icon representation for this module */
 	private Image icon;
 	/** A list containing DParameter objects describing the parameters this module has */
-	private ArrayList dparameters = new ArrayList();
+	private ArrayList dparameters = null;
 	/** A list containing DCustom objects */
-	private ArrayList dcustoms = new ArrayList();
+	private ArrayList dcustoms = null;
 	/** A list containing DConnector objects describing the connectors this module has */
-	private ArrayList dconnectors = new ArrayList();
+	private ArrayList dconnectors = null;
 	/** The parent toolbar section this module belongs to */
 	private DToolbarSection parent = null;
 	/** The name of this module */
@@ -43,6 +43,10 @@ public class DModule {
 	private double mdZeroPage=0;
 	/** Module properties */
 	private int mdHeight=1;
+	/** Module properties */
+	private boolean cvaOnly=false;
+	/** Module properties */
+	private int limit=0;
 
 	/**
 	 * Creates a new module descriptor that belongs to the given toolbar section
@@ -51,7 +55,16 @@ public class DModule {
 	 * @param name name of this module
 	 */
 	public DModule(DToolbarSection parent, String name) {
+		this(parent);
+		this.name = name;
+		setName(name);
+	}
+	
+	public DModule(DToolbarSection parent) {
 		this.parent = parent;
+	}
+	
+	public void setName(String name) {
 		this.name = name;
 		if (name==null)
 			throw new NullPointerException("'name' must not be null");
@@ -77,7 +90,7 @@ public class DModule {
 	 * Sets the parent toolbar section this module belongs to
 	 * @param parent the parent toolbar section this module belongs to
 	 */
-	void setParent(DToolbarSection parent) {
+	public void setParent(DToolbarSection parent) {
 		this.parent = parent;
 	}
 
@@ -86,7 +99,7 @@ public class DModule {
 	 * @return the number of parameters this module has.
 	 */
 	public int getParameterCount() {
-		return dparameters.size();
+		return dparameters == null ? 0 : dparameters.size();
 	}
 	
 	/**
@@ -94,7 +107,7 @@ public class DModule {
 	 * @return the number of 'custom' parameters this module has.
 	 */
 	public int getCustomParamCount() {
-		return dcustoms.size();
+		return dcustoms == null ? 0 : dcustoms.size();
 	}
 	
 	/**
@@ -103,6 +116,7 @@ public class DModule {
 	 * @return the parameter
 	 */
 	public DParameter getParameter(int index) {
+		if (dparameters == null) return null;
 		return (DParameter) dparameters.get(index);
 	}
 	
@@ -112,6 +126,7 @@ public class DModule {
 	 * @return the parameter
 	 */
 	public DCustom getCustomParam(int index) {
+		if (dcustoms == null) return null;
 		return (DCustom) dcustoms.get(index);
 	}
 
@@ -119,7 +134,8 @@ public class DModule {
 	 * Adds a new 'custom' parameter object to this module.
 	 * @param d a parameter
 	 */
-	void addCustomParam(DCustom d) {
+	public void addCustomParam(DCustom d) {
+		if (dcustoms == null) dcustoms = new ArrayList();
 		dcustoms.add(d);
 	}
 	
@@ -127,7 +143,8 @@ public class DModule {
 	 * Adds a new parameter object to this module.
 	 * @param d a parameter
 	 */
-	void addParameter(DParameter d) {
+	public void addParameter(DParameter d) {
+		if (dparameters == null) dparameters = new ArrayList();
 		dparameters.add(d);
 	}
 	
@@ -136,7 +153,7 @@ public class DModule {
 	 * @return the number of connectors this module has
 	 */
 	public int getConnectorCount() {
-		return dconnectors.size();
+		return dconnectors == null ? 0 : dconnectors.size();
 	}
 
 	/**
@@ -145,6 +162,7 @@ public class DModule {
 	 * @return the connector
 	 */
 	public DConnector getConnector(int index) {
+		if (dconnectors == null) return null;
 		return (DConnector) dconnectors.get(index);
 	}
 	
@@ -152,7 +170,8 @@ public class DModule {
 	 * Adds a new connector object to this module.
 	 * @param c a connector
 	 */
-	void addConnector(DConnector c) {
+	public void addConnector(DConnector c) {
+		if (dconnectors == null) dconnectors = new ArrayList();
 		dconnectors.add(c);
 	}
 	
@@ -187,7 +206,7 @@ public class DModule {
 	 * a shorter version of it's name
 	 * @param shortname
 	 */
-	void setShortName(String shortname) {
+	public void setShortName(String shortname) {
 		this.shortname = shortname;
 	}
 
@@ -199,7 +218,7 @@ public class DModule {
 	}
 
 	
-	void setCycles(double mdCycles) {
+	public void setCycles(double mdCycles) {
 		this.mdCycles = mdCycles;
 	}
 
@@ -210,7 +229,7 @@ public class DModule {
 		return mdDynMem;
 	}
 
-	void setDynMem(double mdDynMem) {
+	public void setDynMem(double mdDynMem) {
 		this.mdDynMem = mdDynMem;
 	}
 
@@ -232,7 +251,7 @@ public class DModule {
 		return mdProgMem;
 	}
 
-	void setProgMem(double mdProgMem) {
+	public void setProgMem(double mdProgMem) {
 		this.mdProgMem = mdProgMem;
 	}
 
@@ -243,7 +262,7 @@ public class DModule {
 		return mdHeight;
 	}
 
-	void setHeight(int height) {
+	public void setHeight(int height) {
 		this.mdHeight = height;
 	}
 
@@ -254,7 +273,7 @@ public class DModule {
 		return mdXmem;
 	}
 
-	void setXmem(double mdXmem) {
+	public void setXmem(double mdXmem) {
 		this.mdXmem = mdXmem;
 	}
 
@@ -265,7 +284,7 @@ public class DModule {
 		return mdYmem;
 	}
 
-	void setYmem(double mdYmem) {
+	public void setYmem(double mdYmem) {
 		this.mdYmem = mdYmem;
 	}
 
@@ -276,7 +295,7 @@ public class DModule {
 		return mdZeroPage;
 	}
 
-	void setZeroPage(double mdZeroPage) {
+	public void setZeroPage(double mdZeroPage) {
 		this.mdZeroPage = mdZeroPage;
 	}
 
@@ -302,6 +321,8 @@ public class DModule {
 	 * @return the parameter or null if the parameter does not exist 
 	 */
 	public DParameter getParameterById(int paramID) {
+		if (dparameters==null) return null;
+		
 		DParameter p = null;
 		
 		// look if id and index are the same. This should be true in most cases
@@ -325,6 +346,7 @@ public class DModule {
 	 * @return the parameter or null if the parameter does not exist 
 	 */
 	public DCustom getCustomParamById(int paramID) {
+		if (dcustoms==null) return null;
 		DCustom p = null;
 		
 		// look if id and index are the same. This should be true in most cases
@@ -351,6 +373,7 @@ public class DModule {
 	 * @return the connector or null if the connector does not exist
 	 */
 	public DConnector getConnectorById(int connectorID, boolean isInput) {
+		if (dconnectors==null) return null;
 		DConnector c = null;
 		
 		// look if id and index are the same. This should be true in most cases
@@ -370,6 +393,26 @@ public class DModule {
 		}
 		
 		return null; // bad luck, not found
+	}
+
+	public boolean isCvaOnly() {
+		return cvaOnly;
+	}
+
+	public void setCvaOnly(boolean cvaOnly) {
+		this.cvaOnly = cvaOnly;
+	}
+
+	public boolean isLimited() {
+		return getLimit()>0;
+	}
+	
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
 	}
 	
 }

@@ -10,12 +10,15 @@ public class TransformationSubstitution extends Substitution {
 	private double factor = 1;
 	private String praefix= "";
 	private String suffix = "";
+	
+	public TransformationSubstitution() {
+	}
 
 	public TransformationSubstitution(double offset, double factor) {
 		this.offset = offset;
 		this.factor = factor;
 	}
-	
+
 	public void setOffset(double offset) {
 		this.offset = offset;
 	}
