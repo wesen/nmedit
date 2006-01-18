@@ -22,9 +22,8 @@
  */
 package org.nomad.image;
 
-import java.util.ArrayList;
+import java.awt.Image;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -42,17 +41,14 @@ public class PersistenceManager {
 	 */
 	private HashMap map = new HashMap();
 	
-	/**
-	 * @param key Key to identify the list.
-	 * @return a list containing ImageBuffer instances which were registered with the given key 
-	 */
-	ArrayList getList(Object key) {
-		if (map.containsKey(key))
-			return (ArrayList) map.get(key);
-		else
-			return null;
+	protected ReferencedImage get(Object key) {
+		return (ReferencedImage) map.get(key);
 	}
-
+	
+	Image getUnmanaged(Object key) {
+		return get(key).image;
+	}
+	
 	/**
 	 * Registers the ImageBuffer instance using its key property.
 	 * @param buffer the ImageBuffer to register.
@@ -65,16 +61,11 @@ public class PersistenceManager {
 		if (theKey==null)
 			throw new NullPointerException("Cannot register:"+theKey+" is not a valid key");
 
-		ArrayList subscriberList = getList(theKey);
-		if (subscriberList==null) {
-			subscriberList = new ArrayList();
-			subscriberList.add(buffer);
-			map.put(theKey, subscriberList);
-		} else if(!subscriberList.contains(buffer)) {
-			subscriberList.add(buffer);
-		} else {
-			throw new IllegalStateException("Element already registered.");
-		}
+		ReferencedImage ref = get(theKey);
+		if (ref!=null)
+			ref.referenceCount++;
+		else
+			map.put(theKey, new ReferencedImage(buffer.getImage()));
 	}
 	
 	/**
@@ -87,14 +78,14 @@ public class PersistenceManager {
 		Object theKey = buffer.getKey();
 		if (theKey==null)
 			throw new NullPointerException("Cannot unregister:"+theKey+" is not a valid key");
-		
-		ArrayList subscriberList = getList(theKey);
-		if ((subscriberList!=null) && (subscriberList.contains(buffer))) {
-			subscriberList.remove(buffer);
-			if (subscriberList.size()==0)
+
+		ReferencedImage ref = get(theKey);
+		if (ref!=null) {
+			ref.referenceCount--;
+			if (ref.referenceCount<=0) {
 				map.remove(theKey);
-		} else {
-			throw new NoSuchElementException();
+				ref.image=null;
+			}
 		}
 	}
 	
@@ -111,29 +102,10 @@ public class PersistenceManager {
 	 * @return the first ImageBuffer instance that is registered with given key
 	 * 	or null of no instance is registered
 	 */
-	public ImageBuffer get(Object key) {
+	/*public ImageBuffer get(Object key) {
 		ArrayList subscriberList = getList(key);
 		return (subscriberList==null) ? null : (ImageBuffer) subscriberList.get(0);
-	}
-
-	/**
-	 * Note the returned iterators remove() method will not remove any registered ImageBuffer.
-	 * You have to use the ImageBuffer's setInvalid() method to remove it from the manager. 
-	 * @param key Identifier
-	 * @return iterator that iterates over all ImageBuffer instances that are
-	 * registered with the given key.
-	 */
-	public Iterator getSubscribers(Object key) {
-		// we use a copy of the list
-		ArrayList subscriberList = new ArrayList(getList(key));
-		if (subscriberList==null) {
-			return new Iterator() {
-				public boolean hasNext(){	return false; }
-				public Object next()	{	throw new NoSuchElementException(); }
-				public void remove()	{	throw new UnsupportedOperationException(); }
-			};
-		} else return subscriberList.iterator();
-	}
+	}*/
 
 	/**
 	 * @return set containing all registered keys. For each key at least on ImageBuffer is registered.
@@ -147,15 +119,32 @@ public class PersistenceManager {
 	 * This implies, that each of them will be removed from the manager. 
 	 * @param key Identifier
 	 */
-	public void setAllInvalid(Object key) {
-		for (Iterator iter = getSubscribers(key); iter.hasNext(); ((ImageBuffer) iter.next()).dispose());
+	public void clear(Object key) {
+		map.remove(key);
 	}
 	
 	/**
 	 * Sets all ImageBuffer instances invalid flag. This implies, that each of them will be removed from the manager.
 	 */
-	public void setAllInvalid() {
-		for (Iterator iter = getKeys().iterator();iter.hasNext(); setAllInvalid(iter.next()));
+	public void clear() {
+		map.clear();
+	}
+
+	private class ReferencedImage {
+		int referenceCount=0;
+		Image image;
+		public ReferencedImage(Image image) {
+			this.image=image;
+			referenceCount++;
+		}		
+	}
+	
+	public int getReferenceCount(Object key) {
+		ReferencedImage ref = get(key);
+		if (ref==null)
+			return 0;
+		else
+			return ref.referenceCount;
 	}
 	
 }

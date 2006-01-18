@@ -86,7 +86,12 @@ public class ImageBuffer {
 	 * @see #ImageBuffer(ImageBuffer)
 	 */
 	public ImageBuffer(PersistenceManager manager, Object key) {
-		this(manager.get(key));
+		if (manager.containsKey(key)) {
+			this.image = manager.getUnmanaged(key);
+			this.key = key;
+			this.manager = manager;
+			manager.register(this);
+		}
 	}
 
 	/**
@@ -111,7 +116,6 @@ public class ImageBuffer {
 		this.manager = manager;
 		this.key = key;
 		this.image = image;
-
 		manager.register(this);
 	}
 	
@@ -121,7 +125,7 @@ public class ImageBuffer {
 	 *  of the image that lays inside the rectangle. 
 	 */
 	public void setRegion(Rectangle region) {
-		this.region=region;
+		this.region=region==null?null:new Rectangle(region);
 	}
 	
 	/**
