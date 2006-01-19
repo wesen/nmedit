@@ -168,7 +168,7 @@ public class NomadActiveLabel extends NomadLabel {
 	
 	private void updateParamText() {
 		if (parameter!=null) {
-			setText(parameter.getInfo().getFormattedValue(parameter.getValue())) ;
+			setText(parameter.getInfo().getFormattedValue(parameter.getValue()));
 		}
 	}
 	

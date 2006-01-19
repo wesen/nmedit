@@ -161,7 +161,6 @@ public class ModuleGUIBuilder {
 	public void _createGUIComponents(NomadComponent modulePane, Object object, DModule moduleInfo, boolean useCache) {
 		
 		if (useCache) {
-			
 			boolean keyNotFound = false;
 			boolean isRendering = false ;
 			
@@ -217,9 +216,8 @@ public class ModuleGUIBuilder {
 								//t.printStackTrace();
 							}
 						}
-						comp.deleteOnScreenBuffer();
-						comp.link();
 						modulePane.add(comp);
+						comp.link();
 					}
 				}
 			}
@@ -229,7 +227,7 @@ public class ModuleGUIBuilder {
 			//NomadContainerCacher.disable();
 			
 		} else {
-
+			
 			// no caching
 
 			// get module ui information
@@ -270,7 +268,6 @@ public class ModuleGUIBuilder {
 					}
 
 					modulePane.add(comp);
-					comp.deleteOnScreenBuffer();
 					comp.link();
 				}
 			}

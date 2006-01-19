@@ -889,7 +889,7 @@
     <module id="96" short-name="FormantOsc" cycles="9.0625" prog-mem="2.53125" x-mem="0.5625" y-mem="0.5" zero-page="1.75" dyn-mem="0.59375" height="4" >
       <input id="0" name="pitch mod 1" type="control" />
       <input id="1" name="pitch mod 2" type="control" />
-      <input id="2" name="timbre" type="control" use-substitution="timbre" />
+      <input id="2" name="timbre" type="control" />
       <output id="0" name="out" type="audio" />
       <output id="1" name="slave" type="slave" />
       <custom id="0" name="freq display units" min="0" max="1" />
@@ -897,7 +897,7 @@
       <parameter id="1" name="pitch fine" min="0" max="127" bit-count="7" use-substitution="offset-64" />
       <parameter id="2" name="kbt" min="0" max="1" bit-count="1" use-substitution="off-on" />
       <parameter id="3" name="mute" min="0" max="1" bit-count="1" use-substitution="off-on" />
-      <parameter id="4" name="timbre" min="0" max="127" bit-count="7" />
+      <parameter id="4" name="timbre" min="0" max="127" bit-count="7" use-substitution="timbre" />
       <parameter id="5" name="pitch mod 1" min="0" max="127" bit-count="7" />
       <parameter id="6" name="pitch mod 2" min="0" max="127" bit-count="7" />
     </module>

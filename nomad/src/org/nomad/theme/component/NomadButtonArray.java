@@ -57,8 +57,6 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 	private ArrayList labelList = new ArrayList();
 	private boolean flagIsCylicDisplay = true;
 	private boolean flagLandscape = false;
-	private int lastW = 0;
-	private int lastH = 0;
 	private int buttonsAreObsolete = 0;
 	private boolean allowTextPropertyExport = true;
 	
@@ -196,7 +194,6 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		
 		int index = labelList.size();
 		labelList.add(newLabel(label));
-		deleteOnScreenBuffer();
 		autoResize(true);
 		getAccessibleProperties().add(new BtnTextProperty(this, index));
 	}
@@ -211,7 +208,7 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 			getAccessibleProperties().remove(getAccessibleProperties().byName(encodeButtonName(index)));
 			labelList.set(index, newLabel(label));
 			getAccessibleProperties().add(new BtnTextProperty(this, index));
-			deleteOnScreenBuffer();
+			repaint();
 		} else {
 			while (index+1<labelList.size())
 				addButton(encodeButtonName(labelList.size()));
@@ -225,8 +222,8 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 			getAccessibleProperties().remove(getAccessibleProperties().byName(encodeButtonName(index)));
 			labelList.remove(index);
 		}
-		deleteOnScreenBuffer();
 		autoResize(true);
+		repaint();
 	}
 	
 

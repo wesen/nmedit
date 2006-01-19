@@ -56,26 +56,24 @@ public abstract class NomadControl extends NomadComponent {
 	private DParameter parameterInfo = null;
 	private Parameter parameter = null;
 	
+	private final static Repainter repainter = new Repainter();
+	
+	private static class Repainter implements ChangeListener, FocusListener {
+
+		public void stateChanged(ChangeEvent event) { repaint(event.getSource()); }		
+		public void focusGained(FocusEvent event) { repaint(event.getSource()); }
+		public void focusLost(FocusEvent event) { repaint(event.getSource()); }
+		void repaint(Object source) {
+			if (source instanceof NomadControl) ((NomadControl)source).repaint();
+		}
+		
+	}
+	
 	public NomadControl() {
-		super();	
-		ChangeListener l =new ChangeListener(){
-			public void stateChanged(ChangeEvent event) {
-				deleteOnScreenBuffer();
-				repaint();
-			}}; 
-		addValueChangeListener(l);
-		addValueOptionChangeListener(l);
-
-		addFocusListener(new FocusListener(){
-			public void focusGained(FocusEvent event) {
-				deleteOnScreenBuffer();
-				repaint();
-			}
-
-			public void focusLost(FocusEvent event) {
-				deleteOnScreenBuffer();
-				repaint();
-			}});
+		super();	 
+		addValueChangeListener(repainter);
+		addValueOptionChangeListener(repainter);
+		addFocusListener(repainter);
 
 		addMouseListener(new MouseListener(){
 			

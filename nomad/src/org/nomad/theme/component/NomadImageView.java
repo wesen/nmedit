@@ -92,7 +92,6 @@ public class NomadImageView extends NomadComponent {
 	
 	private void fireImageUpdateEvent() {
 		setOpaque(!ImageToolkit.hasAlpha(image));
-		deleteOnScreenBuffer();
 		repaint();
 	}
 

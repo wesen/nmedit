@@ -190,8 +190,7 @@ public class NomadLabel extends NomadComponent {
 	 */
 	protected void fireTextUpdateEvent() {
 		autoResize();
-		deleteOnScreenBuffer();
-		/*repaint();*/
+		repaint();
 	}
 
 	public void paintDecoration(Graphics2D g2) {

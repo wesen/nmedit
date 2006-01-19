@@ -41,7 +41,6 @@ import org.nomad.theme.property.ComponentLocationProperty;
 import org.nomad.theme.property.ComponentSizeProperty;
 import org.nomad.theme.property.PropertySet;
 import org.nomad.util.graphics.ImageBuffer;
-import org.nomad.util.graphics.ImageToolkit;
 
 /**
  * @author Christian Schneider
@@ -50,19 +49,18 @@ import org.nomad.util.graphics.ImageToolkit;
  */
 public class NomadComponent extends JComponent {
 
-	private ImageBuffer screenBuffer = new ImageBuffer(); // initially invalid, never null 
 	private ImageBuffer alternativeBackground = new ImageBuffer();
 	private PropertySet accessibleProperties = new PropertySet();
 	private boolean flagHasDynamicOverlay = false;
-	private boolean doPaintDecoration = true;
 	private UIFactory uiFactory = null;
 	private Module module = null;
 
 	public NomadComponent() {
-		setDoubleBuffered(false); // disable default double buffer
+		setDoubleBuffered(true); // disable default double buffer
 		setOpaque(false);
 		accessibleProperties.add(new ComponentLocationProperty(this));
 		accessibleProperties.add(new ComponentSizeProperty(this));
+		//RepaintManager.currentManager(this).setDoubleBufferingEnabled(false);
 	}
 
 	public void setEnvironment(UIFactory factory) {
@@ -78,7 +76,6 @@ public class NomadComponent extends JComponent {
 	}
 	
 	protected void finalize() throws Throwable {
-		screenBuffer.dispose();
 		alternativeBackground.dispose();
 		super.finalize();
 	}
@@ -120,64 +117,62 @@ public class NomadComponent extends JComponent {
 	public void setAlternativeBackground(ImageBuffer background) {
 		alternativeBackground.dispose();
 		alternativeBackground = new ImageBuffer(background);
-		deleteOnScreenBuffer();
+		setOpaque(true);
+		repaint();
 	}
 
 	public void setAlternativeBackground(Image image, Rectangle bounds) {
 		alternativeBackground.dispose();
 		alternativeBackground = new ImageBuffer(image);
 		alternativeBackground.setRegion(bounds);
-		deleteOnScreenBuffer();
+		setOpaque(true);
+		repaint();
+	}
+	
+	BufferedImage screen = null;
+	private int sw = 0;
+	private int sh = 0;
+	
+	public void repaint() {
+		screen = null;
+		super.repaint();
+	}
+	
+	private Graphics2D getOffscreenBufferGraphics() {
+		int w = getWidth(); 
+		int h = getHeight();
+		
+		if ((screen==null)||(sw!=w)||(sh!=h)/*||(screen.contentsLost())*/) {
+			sw=w; sh=h; screen = getGraphicsConfiguration().createCompatibleImage(sw,sh,
+				alternativeBackground.isValid() ? Transparency.OPAQUE : Transparency.TRANSLUCENT);
+			//sw=w; sh=h; screen = getGraphicsConfiguration().createCompatibleVolatileImage(sw,sh,Transparency.BITMASK);
+			return screen.createGraphics();
+		} else {
+			return null;
+		}
+	}
+	
+	private void paintContents(Graphics2D g2) {
+		if (alternativeBackground.isValid()) {
+			alternativeBackground.paint(g2);
+		} else {
+			paintDecoration(g2);
+		}
+
+		if (hasDynamicOverlay()) {
+			paintDynamicOverlay(g2);
+		}
 	}
 	
 	public void paintComponent(Graphics g) {
-		if (getWidth()<=0 || getHeight() <=0)
-			return;
-
-		if (!screenBuffer.isValid() || 
-				screenBuffer.getImage().getWidth(null)!=getWidth() || screenBuffer.getImage().getHeight(null)!=getHeight()) {
-			//VolatileImage img = null;
-			BufferedImage img = null;
-			
-			if (doPaintDecoration) {
-				
-				if (alternativeBackground.isValid()) { 
-					  img = ImageToolkit.createCompatibleBuffer(this,
-						ImageToolkit.hasAlpha(alternativeBackground.getImage())
-						? Transparency.TRANSLUCENT
-						: Transparency.OPAQUE );
-	//img=createVolatileImage(getWidth(),getHeight());
-					Graphics2D g2 = img.createGraphics();
-					alternativeBackground.paint(g2);
-					g2.dispose();
-				} else {
-					img = ImageToolkit.createCompatibleBuffer(this, 
-							isOpaque() ? Transparency.OPAQUE : Transparency.TRANSLUCENT );
-	//img=createVolatileImage(getWidth(),getHeight());
-					Graphics2D g2 = img.createGraphics();
-					paintDecoration(g2);
-					g2.dispose();
-				}
-				
-			} else {//img=createVolatileImage(getWidth(),getHeight());
-				img = ImageToolkit.createCompatibleBuffer(this, Transparency.TRANSLUCENT );
-			}
-
-			if (hasDynamicOverlay()) {
-				Graphics2D g2 = img.createGraphics();
-				paintDynamicOverlay(g2);
-				g2.dispose();	
-			}
-
-			screenBuffer = new ImageBuffer(img); // create new buffer
-		} // end invalid buffer
-
-		// flip buffer to screen
-		screenBuffer.paint(g);
-	}
-	
-	public void deleteOnScreenBuffer() {
-		screenBuffer.dispose();
+		// if (getWidth()<=0 || getHeight() <=0) return;
+		
+		Graphics2D g2;
+		if ((g2=getOffscreenBufferGraphics())!=null) {
+			paintContents(g2);
+			g2.dispose();
+		}
+		g.drawImage(screen, 0, 0, this);
 	}
 	
 	public Iterator getExportableNomadComponents() {
@@ -198,23 +193,6 @@ public class NomadComponent extends JComponent {
 				throw new UnsupportedOperationException();
 			}};
 	}
-	
-	/*
-	private class ComponentAddPolicy implements ContainerListener {
-		private boolean isIncompatible(Component c) {
-			return (!(c instanceof NomadComponent))
-			||     (getParent() instanceof NomadComponent);
-		}
-
-		public void componentAdded(ContainerEvent event) {
-			if (isIncompatible(event.getChild())) {
-				remove(event.getChild()); // undo component add
-				throw new IllegalStateException("Incompatible component added: "+event.getChild());
-			}
-		}
-
-		public void componentRemoved(ContainerEvent event) { }
-	}*/
 
 	private String nameAlias = getClass().getName();
 	
