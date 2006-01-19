@@ -22,10 +22,9 @@
  */
 package org.nomad.theme.component;
 
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
@@ -118,109 +117,49 @@ public class NomadComponent extends JComponent {
 		return (NomadComponent) getComponent(i);
 	}
 
-	public BufferedImage renderBackground() {
-		BufferedImage img = ImageToolkit.createCompatibleBuffer(this, Transparency.OPAQUE);
-		{	// for this component
-			Graphics2D g2 = img.createGraphics();
-			paintDecoration(g2);
-			g2.dispose();
-		}
-
-		for (int i=getComponentCount()-1;i>=0;i--) {
-			NomadComponent c = getNomadComponent(i);
-			Graphics2D g2 = img.createGraphics();
-			g2.translate(c.getX(), c.getY());
-			g2.setClip(0,0,c.getWidth(),c.getHeight());
-			c.paintDecoration(g2);
-			g2.dispose();
-		}
-
-		return img;
-	}
-	
-	public void removeDecoration() {
-		for (int i=getComponentCount()-1;i>=0;i--) {
-			if (!getNomadComponent(i).hasDynamicOverlay())
-				remove(i);
-		}
-		deleteOnScreenBuffer();
-		//repaint();
-	}
-
-	public void broadcastBackground(ImageBuffer background) {
-		boolean setOpacity = !ImageToolkit.hasAlpha(background.getImage());
-		setAlternativeBackground(background, true);
-		setOpaque(setOpacity);
-		
-/*
-		for (int i=getComponentCount()-1;i>=0;i--) {
-			NomadComponent c = getNomadComponent(i);
-			//c.setAlternativeBackground(background, c.getLocation(), c.getSize(), false);
-			c.setOpaque(false);
-			c.doPaintDecoration = false;
-//			c.repaint();
-		}
-		*/
-		
-		for (int i=getComponentCount()-1;i>=0;i--) {
-			NomadComponent c = getNomadComponent(i);
-			c.setAlternativeBackground(background, c.getLocation(), c.getSize(), false);
-			c.setOpaque(setOpacity);
-		}
-
-		//deleteOnScreenBuffer();
-		//repaint();
-	}
-
-	public void setAlternativeBackground(ImageBuffer background, boolean shared) {
+	public void setAlternativeBackground(ImageBuffer background) {
 		alternativeBackground.dispose();
-		if (shared)
-			alternativeBackground = new ImageBuffer(background);
-		else {
-			alternativeBackground = new ImageBuffer(background.getImage());
-			alternativeBackground.setRegion(background.getRegion());
-		}
+		alternativeBackground = new ImageBuffer(background);
+		deleteOnScreenBuffer();
+	}
+
+	public void setAlternativeBackground(Image image, Rectangle bounds) {
+		alternativeBackground.dispose();
+		alternativeBackground = new ImageBuffer(image);
+		alternativeBackground.setRegion(bounds);
 		deleteOnScreenBuffer();
 	}
 	
-	public void setAlternativeBackground(ImageBuffer background, int x, int y, int w, int h, boolean shared) {
-		setAlternativeBackground(background, shared);
-		alternativeBackground.setRegion(new Rectangle(x, y, w, h));
-	}
-	
-	public void setAlternativeBackground(ImageBuffer background, Point offset, Dimension size, boolean shared) {
-		setAlternativeBackground(background, offset.x, offset.y, size.width, size.height, shared);
-	}
-
 	public void paintComponent(Graphics g) {
 		if (getWidth()<=0 || getHeight() <=0)
 			return;
 
 		if (!screenBuffer.isValid() || 
 				screenBuffer.getImage().getWidth(null)!=getWidth() || screenBuffer.getImage().getHeight(null)!=getHeight()) {
+			//VolatileImage img = null;
 			BufferedImage img = null;
 			
 			if (doPaintDecoration) {
 				
 				if (alternativeBackground.isValid()) { 
-					img = ImageToolkit.createCompatibleBuffer(this,
+					  img = ImageToolkit.createCompatibleBuffer(this,
 						ImageToolkit.hasAlpha(alternativeBackground.getImage())
 						? Transparency.TRANSLUCENT
 						: Transparency.OPAQUE );
-	
+	//img=createVolatileImage(getWidth(),getHeight());
 					Graphics2D g2 = img.createGraphics();
 					alternativeBackground.paint(g2);
 					g2.dispose();
 				} else {
 					img = ImageToolkit.createCompatibleBuffer(this, 
 							isOpaque() ? Transparency.OPAQUE : Transparency.TRANSLUCENT );
-	
+	//img=createVolatileImage(getWidth(),getHeight());
 					Graphics2D g2 = img.createGraphics();
 					paintDecoration(g2);
 					g2.dispose();
 				}
 				
-			} else {
+			} else {//img=createVolatileImage(getWidth(),getHeight());
 				img = ImageToolkit.createCompatibleBuffer(this, Transparency.TRANSLUCENT );
 			}
 

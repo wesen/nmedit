@@ -4,6 +4,7 @@ package org.nomad.main;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
+import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -14,9 +15,11 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -224,7 +227,11 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		}
 	}
 	
-	class PatchLoader {
+	class PatchLoader implements Runnable {
+
+		private ArrayList panelList = new ArrayList();
+		private ArrayList nameList = new ArrayList();
+		
 		public PatchLoader() { }
 		public void loadPatch(String file) {
 			loadPatch(new String[]{file});
@@ -260,10 +267,27 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 			        JPanel tab = Patch.createPatch(file, patch);
 					String name = file.substring(0,file.lastIndexOf(".pch"));
 					name = name.substring(name.lastIndexOf('/')+1);
-			        viewManager.addDocument(name, tab);
-			        viewManager.setSelectedDocument(tab);
+					panelList.add(tab);
+					nameList.add(name);
+					
+			        if (taskIndex==getTaskCount()-1)
+			        	SwingUtilities.invokeLater(PatchLoader.this);
 				}});
 		}
+		
+		public void run() {
+
+			JComponent tab = null;
+
+			while (panelList.size()>0) {
+				viewManager.addDocument((String)nameList.remove(0), tab = (JComponent) panelList.remove(0));
+			}
+
+			if (tab!=null)
+				viewManager.setSelectedDocument(tab);
+	        
+		}
+		
 	}
 	
 	PatchLoader loader = new PatchLoader();
@@ -439,6 +463,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 			menuHelp.add("Call gc()").addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent event) {
 					System.gc();
+					ModuleGUIBuilder.info();
 				}});
 			menuHelpAbout = menuHelp.add("About");
 

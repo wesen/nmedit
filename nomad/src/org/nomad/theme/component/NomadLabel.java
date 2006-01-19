@@ -47,7 +47,7 @@ public class NomadLabel extends NomadComponent {
 	private int sy = 0;
 	private boolean flagVertText = false;
 	private boolean flagAutoResize = true;
-	private boolean flagTextAntialiasing = false;
+	private boolean flagTextAntialiasing = true;
 	
 	public NomadLabel() {
 		super();
