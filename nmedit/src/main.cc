@@ -85,7 +85,7 @@ int main(int argc, char** argv)
 
   try {
     MidiMessage::usePDLFile("/usr/local/lib/nmprotocol/midi.pdl", 0);
-    PatchMessage::usePDLFile("/usr/local/lib/nmprotocol/patch.pdl", 0);
+    Patch::usePDLFile("/usr/local/lib/nmpatch/patch.pdl", 0);
     ModuleSection::usePPFFile("/usr/local/lib/nmpatch/module.ppf");
 
     string drivername, input, output;
