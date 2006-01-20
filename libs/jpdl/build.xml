@@ -1,6 +1,7 @@
 <project name="jpdl" default="dist" basedir=".">
 
   <property name="src" location="src"/>
+  <property name="test" location="test"/>
   <property name="build" location="build"/>
   <property name="dist" location="dist"/>
   <property name="byaccj" location="/usr/local/bin/byaccj"/>
@@ -30,6 +31,21 @@
           description="generate the distribution">
     <mkdir dir="${dist}/lib"/>
     <jar jarfile="${dist}/lib/jpdl.jar" basedir="${build}"/>
+  </target>
+
+  <target name="compile-test" depends="init"
+          description="compile the test source">
+    <javac srcdir="${test}" destdir="${build}"/>
+  </target>
+
+  <target name="test" depends="compile, compile-test"
+          description="run unit tests">
+    <junit showoutput="true" printsummary="on">
+      <classpath>
+        <pathelement path="${build}"/>
+      </classpath>
+      <test name="net.sf.nmedit.jpdl.PdlTester"/>
+    </junit>
   </target>
 
   <target name="clean"
