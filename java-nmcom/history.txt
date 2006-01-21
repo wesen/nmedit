@@ -1,5 +1,13 @@
 History for Java Interface
 
+2006-01-18
+----------
+- Libraries and example can now be built with ant:
+  After compiling the swig wrappers:
+  
+  call  'ant' to build libraries and example
+  call  'ant clean' to remove content
+
 2005-09-14
 ----------
 - Swig wrappers are now fully working and usable
