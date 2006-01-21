@@ -1,3 +1,5 @@
+package example;
+
 import nmcom.swig.nmpatch.*;
 import nmcom.swig.nmprotocol.*;
 import nmcom.swig.pdl.*;
@@ -85,6 +87,10 @@ public class Jnmedit implements ShutDownEventListener
     {
       e.printStackTrace();
       return;
+    }catch (PPFException e)
+    {
+      e.printStackTrace();
+      return;
     }
 
     try // create mididriver and connect to midi ports
@@ -152,7 +158,10 @@ public class Jnmedit implements ShutDownEventListener
   {
     state_run=false;
     if (mdriver!=null) // disconnect midiport
+      try{
       mdriver.disconnect();
+      } catch (Exception e)
+      {}
     System.out.println("exit.");
   }
 
