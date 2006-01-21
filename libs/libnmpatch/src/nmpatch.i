@@ -14,6 +14,8 @@
 #include "nmpatch/moduletype.h"
 #include "nmpatch/modulelistener.h"
 #include "nmpatch/modulesectionlistener.h"
+#include  "../libppf/ppf/boundbundle.h"
+#include  "../libppf/ppf/ppfexception.h"
 %}
 
 %include "../../java-nmcom/swig-i/nmpatch-config.i"
@@ -33,3 +35,6 @@
 %include "nmpatch/modulesectionlistener.h"
 
 %import  "../libppf/ppf/boundbundle.h"
+%import  "../libppf/ppf/ppfexception.h"
+%import  "../libpdl/pdl/bitstream.h"
+%import  "../libpdl/pdl/tracer.h"
