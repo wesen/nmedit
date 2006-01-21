@@ -81,7 +81,7 @@ public class Jnmedit implements ShutDownEventListener
     try // initializing
     {
       MidiMessage.usePDLFile("/usr/local/lib/nmprotocol/midi.pdl", null);
-      PatchMessage.usePDLFile("/usr/local/lib/nmprotocol/patch.pdl", null);
+      PatchMessage.usePDLFile("/usr/local/lib/nmpatch/patch.pdl", null);
       ModuleSection.usePPFFile("/usr/local/lib/nmpatch/module.ppf");
     } catch (PDLException e)
     {

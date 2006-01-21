@@ -56,13 +56,14 @@
     <!-- Create the distribution directory -->
     <mkdir dir="${dist}/lib"/>
     <!-- Put everything in ${build} into the nmcom-${DSTAMP}.jar file -->
-    <jar jarfile="${dist}/lib/nmcom-${DSTAMP}.jar" basedir="${nmcom.build}"/>
+    <jar jarfile="${dist}/lib/nmcom-${DSTAMP}.jar" basedir="${nmcom.build}" />
     <copy file="${dist}/lib/nmcom-${DSTAMP}.jar" tofile="nmcom.jar" />
     <!-- Put everything in ${build} into the example-${DSTAMP}.jar file -->
     <jar jarfile="${dist}/lib/example-${DSTAMP}.jar" basedir="${example.build}">
       <manifest>
         <!-- java -jar example.jar -->
         <attribute name="Main-class" value="example.Jnmedit"/>
+        <attribute name="Class-Path" value="nmcom.jar"/>
       </manifest>
     </jar>
     <copy file="${dist}/lib/example-${DSTAMP}.jar" tofile="example.jar" />
@@ -80,4 +81,8 @@
     <delete file="example.jar"/>
   </target>
 
+  <target name="run" description="run example">
+    <java jar="example.jar" fork="true" />
+  </target>
+  
 </project>

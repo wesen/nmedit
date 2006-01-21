@@ -4,9 +4,23 @@ History for Java Interface
 ----------
 - Libraries and example can now be built with ant:
   After compiling the swig wrappers:
-  
+
   call  'ant' to build libraries and example
   call  'ant clean' to remove content
+
+  There is no easy way to use ant to start the program at the moment.
+  To start the example type:
+
+    java -Djava.library.path=$1 -classpath .:nmcom.jar -jar example.jar $2 $3 $4
+
+  where you substitute 
+    $1 with the path to the *.so libraries
+    $2 with the driver (ALSA,NETMIDI)
+    $3 with the midi input device
+    $4 with the midi output device
+
+  for example this can look like
+    java -Djava.library.path=/usr/local/lib/ -classpath .:nmcom.jar -jar example.jar ALSA /dev/snd/midiC1D0 /dev/snd/midiC1D0
 
 2005-09-14
 ----------
