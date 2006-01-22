@@ -1,0 +1,229 @@
+<project name="nmcom" default="dist" basedir=".">
+
+	<!-- ************************************************** -->
+	<!-- commands:                                          -->
+	<!--   1. ant        - build project                    -->
+	<!--   2. ant nomad  - run nomad                        -->
+	<!--   3. ant editor - run editor                       -->
+	<!--   x. ant clean  - clean built files                -->
+	<!-- ************************************************** -->
+	
+	<description>
+		Nomad Ant-script
+	</description>
+	
+	<!-- ************************************************** -->
+	<!-- set global properties for this build               -->
+	<!-- ************************************************** -->
+
+	<!-- folder containing source-package org.nomad.* -->
+	<property name="source.nomad" location="src/org/nomad" />
+	<property name="source.editor" location="${source.nomad}/editor" />
+	<!-- folder containing external libraries (i.e. xml parser) -->
+	<property name="source.libraries" location="lib" />
+	<!-- folder containing data loaded at runtime, like images, xml configuration -->
+	<property name="source.data" location="src/data" />
+	<!-- folder containing plugins -->
+	<property name="source.plugin" location="src/plugin" />
+	
+	<!-- temporary build directories -->
+	<property name="ant.build" location="ant.build" />
+	<property name="build.nomad" location="${ant.build}/nomad" />
+	<property name="build.editor" location="${ant.build}/editor" />
+	<property name="build.plugin" location="${ant.build}/plugin" />
+	
+	<!-- distribution directory -->
+	<property name="ant.dist" location="ant.dist" />
+	<!-- current build directory -->
+	<property name="dist.current" location="${ant.dist}" />
+
+	<property name="dist.nomad" location="${dist.current}/nomad" />
+	<property name="dist.plugin" location="${dist.nomad}/plugin" />
+	<property name="dist.libraries" location="${dist.nomad}/lib" />
+	<property name="dist.data" location="${dist.nomad}/data" />
+
+	<!-- ************************************************** -->
+	<!-- initial setup                                      -->
+	<!-- ************************************************** -->
+
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build.nomad}"/>
+		<mkdir dir="${build.editor}"/>
+		<mkdir dir="${build.plugin}"/>
+	</target>
+
+	<!-- ************************************************** -->
+	<!-- compilation                                        -->
+	<!-- ************************************************** -->
+	
+	<target name="install.resources" depends="init" description="Install resource files">
+		<!-- copy data -->
+		<copy todir="${dist.data}" taskname="Copying resources">
+			<fileset dir="${source.data}"  casesensitive="yes">
+			</fileset>
+		</copy>
+		<!-- copy libraries -->
+		<copy todir="${dist.libraries}" taskname="Copying libraries">
+			<fileset dir="${source.libraries}"  casesensitive="yes">
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="compile.nomad" depends="install.resources" description="Compiling nomad">
+		<javac srcdir="${source.nomad}" destdir="${build.nomad}">
+				<compilerarg value="-Xlint:all,-serial" />
+			<exclude name="editor/**"/>
+			<classpath>
+				<pathelement path="${java.class.path}"/>
+				<!-- we need the libraries on the classpath -->
+			    <fileset dir="${dist.libraries}">
+			    	<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="compile.editor" depends="compile.nomad" description="Compiling editor">
+		<javac srcdir="${source.editor}" destdir="${build.editor}">
+			<compilerarg value="-Xlint:all,-serial" />
+			<classpath>
+				<pathelement path="${java.class.path}" />
+				<!-- we need the libraries on the classpath -->
+				<pathelement location="${build.nomad}" />
+			    <fileset dir="${dist.libraries}">
+			    	<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+	<macrodef name="compile-extension">
+		<attribute name="name" />
+		<sequential>
+			<echo message="Building extension: @{name}" />
+			<mkdir dir="${build.plugin}/@{name}"/>
+			<javac srcdir="${source.plugin}/@{name}" destdir="${build.plugin}/@{name}">
+				<compilerarg value="-Xlint:all,-serial" />
+				<classpath>
+					<pathelement path="${java.class.path}" />
+					<!-- we need the libraries on the classpath -->
+					<pathelement location="${build.nomad}" />
+				    <fileset dir="${dist.libraries}">
+				    	<include name="**/*.jar"/>
+					</fileset>
+				</classpath>
+			</javac>
+			<copy todir="${build.plugin}/@{name}/plugin/@{name}" >
+				<fileset dir="${source.plugin}/@{name}" includes="**/*.xml" />
+			</copy>			
+		</sequential>
+	</macrodef>
+
+	<target name="compile.plugin" depends="install.resources,compile.nomad" description="Compiling plugins">
+		<compile-extension name="classictheme" />
+	</target>
+
+	<!-- ************************************************** -->
+	<!-- generate jar files                                 -->
+	<!-- ************************************************** -->
+
+	<target name="dist.nomad" depends="compile.nomad" description="Building jar for Nomad">
+		<jar jarfile="${dist.nomad}/org.nomad.jar" basedir="${build.nomad}">
+	      <manifest> <!-- java -jar example.jar -->
+	        <attribute name="Main-class" value="org.nomad.main.run.Run"/>
+	        <attribute name="Class-Path" value="../../lib/xpp3-1.1.3.4.H.jar ../../lib/xpp3_min-1.1.3.4.H.jar ../../lib/xpp3_xpath-1.1.3.4.H.jar ../../plugin/classictheme.jar"/>
+	      </manifest>
+		</jar> 
+	</target>
+
+	<target name="dist.editor" depends="compile.editor" description="Building jar for editor">
+		<jar jarfile="${dist.nomad}/org.nomad.editor.jar" basedir="${build.editor}">
+	      <manifest> <!-- java -jar example.jar -->
+	        <attribute name="Main-class" value="org.nomad.editor.app.RunUIEditor" />
+	        <attribute name="Class-Path" value="org.nomad.jar ../../lib/xpp3-1.1.3.4.H.jar ../../lib/xpp3_min-1.1.3.4.H.jar ../../lib/xpp3_xpath-1.1.3.4.H.jar ../../plugin/classictheme.jar"/>
+	      </manifest>
+	    </jar>
+	</target>
+
+	<macrodef name="release-extension">
+		<attribute name="name" />
+		<sequential>
+			<jar jarfile="${dist.plugin}/@{name}.jar" 
+				basedir="${build.plugin}/@{name}"
+				>
+		      <manifest> <!-- java -jar example.jar -->
+		        <attribute name="Main-class" value="plugin.@{name}.NomadPlugin" />
+		      </manifest>
+		    </jar>
+		</sequential>
+	</macrodef>
+
+	<target name="dist.plugin" depends="compile.plugin" description="Building jar(s) for plugins">
+		<mkdir dir="${dist.plugin}"/>
+		<echo message="Classic Theme" />
+		<release-extension name="classictheme" />
+	</target>
+
+
+	<macrodef name="release-extension-dirty">
+		<attribute name="name" />
+		<sequential>
+			<copy todir="${dist.plugin}">
+				<fileset dir="${build.plugin}/@{name}/plugin" />
+			</copy>
+		</sequential>
+	</macrodef>
+
+	<target name="dist.plugin.dirty" depends="compile.plugin" description="Building jar(s) for plugins">
+		<mkdir dir="${dist.plugin}"/>
+		<echo message="Classic Theme" />
+		<release-extension-dirty name="classictheme" />
+	</target>
+	
+	<!-- ************************************************** -->
+	<!-- default target (dist)                              -->
+	<!-- ************************************************** -->
+
+	<target name="dist" >
+		<antcall target="dist.nomad" />
+		<antcall target="dist.editor" />
+
+		<!-- support for jar-plugins is not ready yet
+			<antcall target="dist.plugin" /> 
+		-->
+		<antcall target="dist.plugin.dirty" /> 
+	</target>
+
+	<!-- ************************************************** -->
+	<!-- clean up                                           -->
+	<!-- ************************************************** -->
+
+	<target name="clean" description="Clean up">
+		<delete dir="${ant.build}" />
+		<delete dir="${ant.dist}" />
+	</target>
+
+	<!-- ************************************************** -->
+	<!-- run nomad                                          -->
+	<!-- ************************************************** -->
+	
+	<target name="nomad" >
+		<java jar="${dist.nomad}/org.nomad.jar" fork="true" dir="${dist.nomad}" />
+	</target>
+
+	<target name="run" depends="nomad">
+		
+	</target>
+	
+	<!-- ************************************************** -->
+	<!-- run nomad                                          -->
+	<!-- ************************************************** -->
+	
+	<target name="editor" >
+		<java jar="${dist.nomad}/org.nomad.editor.jar" fork="true" dir="${dist.nomad}" />
+	</target>
+
+</project>
