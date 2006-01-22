@@ -39,7 +39,7 @@ public class RefactorXML {
 	}
 
 	private void refactor() throws IOException {
-		String path_prefix = "./src/plugin/classictheme";
+		String path_prefix = "plugin/classictheme";
 		String fileIn = path_prefix+"/old-ui.xml";
 		String fileOut = path_prefix+"/ui.xml";
 		

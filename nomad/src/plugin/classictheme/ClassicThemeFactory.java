@@ -1,13 +1,15 @@
 package plugin.classictheme;
 
-import java.awt.Color;
 import java.awt.Graphics;
 
 import org.nomad.patch.Module;
 import org.nomad.patch.ModuleSection;
 import org.nomad.theme.ModuleGUI;
 import org.nomad.theme.ModuleSectionGUI;
+import org.nomad.theme.NomadClassicColors;
 import org.nomad.theme.UIFactory;
+import org.nomad.theme.component.AudioLevelDisplay;
+import org.nomad.theme.component.GroupDecoration;
 import org.nomad.theme.component.NomadActiveLabel;
 import org.nomad.theme.component.NomadButtonArray;
 import org.nomad.theme.component.NomadClassicConnector;
@@ -15,6 +17,7 @@ import org.nomad.theme.component.NomadClassicKnob;
 import org.nomad.theme.component.NomadImageView;
 import org.nomad.theme.component.NomadLabel;
 import org.nomad.theme.component.NomadResetButton;
+import org.nomad.theme.component.NomadVocoderController;
 import org.nomad.theme.component.VocoderBandDisplay;
 import org.nomad.util.graphics.BackgroundPainter;
 import org.nomad.util.graphics.ImageTracker;
@@ -30,15 +33,18 @@ public class ClassicThemeFactory extends UIFactory {
 		installClass(NomadLabel.class,"label");
 		installClass(NomadResetButton.class,"knob.reset");
 		installClass(VocoderBandDisplay.class,"display.vocoder");
+		installClass(NomadVocoderController.class,"display.vocoder.controller");
+		installClass(AudioLevelDisplay.class,"display.audio.level");
+		installClass(GroupDecoration.class,"border.groupbox");
 	}
 
 	public String getUIDescriptionFileName() {
-		return "src/plugin/classictheme/ui.xml";
+		return "plugin/classictheme/ui.xml";
 	}
 
 	public ModuleGUI getModuleGUI(DModule info, Module module, ModuleSectionGUI moduleSectionGUI) {
 		ModuleGUI gui = super.getModuleGUI(info, module, moduleSectionGUI);
-		gui.setBackground(Color.decode("#BFBFBF"));
+		gui.setBackground(NomadClassicColors.MODULE_BACKGROUND);
 		return gui;
 	}
 
