@@ -149,8 +149,6 @@ public abstract class Property extends PropertyContainer {
 		flagValidateName = validate;
 	}
 
-	private Object defaultValue = null;
-	
 	/**
 	 * Sets the name of the property
 	 * The name must match the regular expression <code>[:a-zA-Z][,a-zA-Z0-9\.\-:]*</code>
@@ -173,11 +171,7 @@ public abstract class Property extends PropertyContainer {
 	}
 	
 	public boolean isInDefaultState() {
-		Object currentState = getValue();
-		if (currentState==null)
-			return currentState == defaultValue;
-		else
-			return currentState.equals(defaultValue);
+		return false;
 	}
 	
 	/**
@@ -188,10 +182,6 @@ public abstract class Property extends PropertyContainer {
 	 */
 	public static boolean isValidName(String name) {
 		return name==null?false:validateNamePattern.matcher(name).matches();
-	}
-	
-	public void rewriteDefault() {
-		defaultValue = getValue();
 	}
 	
 	// ---- Editor ------------------------------------------
@@ -336,13 +326,16 @@ public abstract class Property extends PropertyContainer {
 	public void setValue(Object value) {
 		if (value instanceof String) {
 			setValueFromString((String)value);
+			if (isEventhandlingInstalled)
+				fireChangeEvent();
 		} else {
 			PropertyValueHandler handle = findHandler(value);
 			if (handle==null) {
 				throw new IllegalArgumentException("Property '"+this+"' does not handle: "+value);
 			} else {
 				handle.writeValue(value);
-				fireChangeEvent();
+				if (isEventhandlingInstalled)
+					fireChangeEvent();
 			}
 		}
 	}
@@ -362,8 +355,6 @@ public abstract class Property extends PropertyContainer {
 		super();
 		this.ncomponent = component;
 		setName("property");
-		
-		rewriteDefault();
 	}
 
 	/**
@@ -404,12 +395,23 @@ public abstract class Property extends PropertyContainer {
 	
 	private boolean flagExportable = true;
 
+	private boolean isEventhandlingInstalled;
+
 	public boolean isExportable() {
 		return flagExportable;
 	}
 
 	public void setExportable(boolean exportable) {
 		this.flagExportable = exportable;
+	}
+
+	/**
+	 * only if this is called
+	 * - listeners should be installed
+	 * - handlers should be installed
+	 */
+	public void setupForEditing() {
+		this.isEventhandlingInstalled = true;
 	}
 
 }

@@ -34,6 +34,7 @@ import org.nomad.theme.NomadClassicColors;
 import org.nomad.theme.property.BooleanProperty;
 import org.nomad.theme.property.ConnectorProperty;
 import org.nomad.theme.property.Property;
+import org.nomad.theme.property.PropertySet;
 import org.nomad.theme.property.PropertyValueHandler;
 import org.nomad.theme.property.editor.PropertyEditor;
 import org.nomad.xml.dom.module.DConnector;
@@ -44,7 +45,6 @@ public class NomadConnector extends NomadComponent {
 	private boolean flagConnected = false;
 	private boolean flagIsInput = false;
 	private DConnector connectorInfo = null;
-	private ConnectorColorProperty colorProperty = null;
 	private Connector connector = null;
 
 	public NomadConnector() {
@@ -55,18 +55,23 @@ public class NomadConnector extends NomadComponent {
 		setMinimumSize(d);
 		setMaximumSize(d);
 		setSize(d);
+	}
+
+	protected void createProperties(PropertySet set) {
+		super.createProperties(set);
 		
-		getAccessibleProperties().add(new ConnectedStateProperty(this));
-		getAccessibleProperties().add(new ConnectorTypeProperty(this));
-		getAccessibleProperties().add(colorProperty=new ConnectorColorProperty(this));
-		getAccessibleProperties().add(new ConnectorProperty(this));
+		set.add(new ConnectedStateProperty(this));
+		set.add(new ConnectorTypeProperty(this));
+		set.add(new ConnectorColorProperty(this));
+		set.add(new ConnectorProperty(this));
+		//getAccessibleProperties().rewriteDefaults();
 	}
 	
 	public void setConnectorInfo(DConnector connectorInfo) {
 		this.connectorInfo = connectorInfo;
 		if (connectorInfo!=null) {
 			setConnectorType(connectorInfo.isInput(), false);
-			colorProperty.setValueFromSignal(connectorInfo.getSignal());
+			setColorFromSignal(connectorInfo.getSignal());
 			fireConnectorChangeEvent();
 		}
 	}
@@ -75,23 +80,22 @@ public class NomadConnector extends NomadComponent {
 		return connectorInfo;
 	}
 	
+	protected void setColorFromSignal(int signal) {
+		switch (signal) {
+			case DConnector.SIGNAL_AUDIO: setBackground(NomadClassicColors.MORPH_RED); break;
+			case DConnector.SIGNAL_CONTROL: setBackground(NomadClassicColors.MORPH_BLUE); break;
+			case DConnector.SIGNAL_LOGIC: setBackground(NomadClassicColors.MORPH_YELLOW); break;
+			case DConnector.SIGNAL_SLAVE: setBackground(NomadClassicColors.MORPH_GRAY); break;
+		}
+		repaint();
+	}
+	
 	private class ConnectorColorProperty extends Property {
 		public SignalType type = null;
 		public ConnectorColorProperty(NomadComponent component) {
 			super(component);
 			setValueFromSignal(new SignalType(DConnector.SIGNAL_AUDIO));
 			setName("type");
-			
-			setHandler(null, new PropertyValueHandler() {
-
-				public void writeValue(Object value) throws IllegalArgumentException {
-					if (value!=null)
-						throw new IllegalArgumentException("Property "+this+" does not handle "+value);
-				}});
-			setHandler(SignalType.class, new PropertyValueHandler(){
-				public void writeValue(Object value) throws IllegalArgumentException {
-					setValueFromSignal((SignalType)value);
-				}});
 		}
 
 		public Object getValue() {
@@ -104,20 +108,49 @@ public class NomadConnector extends NomadComponent {
 
 		public void setValueFromSignal(SignalType type) {
 			this.type = type;
-			
-			switch (type.sig) {
-				case DConnector.SIGNAL_AUDIO: setBackground(NomadClassicColors.MORPH_RED); break;
-				case DConnector.SIGNAL_CONTROL: setBackground(NomadClassicColors.MORPH_BLUE); break;
-				case DConnector.SIGNAL_LOGIC: setBackground(NomadClassicColors.MORPH_YELLOW); break;
-				case DConnector.SIGNAL_SLAVE: setBackground(NomadClassicColors.MORPH_GRAY); break;
-			}
+			setColorFromSignal(type.sig);
 		}
 		
 		public void setValueFromString(String value) {
-			if (value.equals(DConnector.getSignalName(DConnector.SIGNAL_LOGIC))) setValueFromSignal(new SignalType(DConnector.SIGNAL_LOGIC));
-			else if (value.equals(DConnector.getSignalName(DConnector.SIGNAL_AUDIO))) setValueFromSignal(new SignalType(DConnector.SIGNAL_AUDIO));
-			else if (value.equals(DConnector.getSignalName(DConnector.SIGNAL_SLAVE))) setValueFromSignal(new SignalType(DConnector.SIGNAL_SLAVE));
-			else if (value.equals(DConnector.getSignalName(DConnector.SIGNAL_CONTROL))) setValueFromSignal(new SignalType(DConnector.SIGNAL_CONTROL));
+			/**
+			 * We check the strings ourselves.
+			 * 
+			 * logic
+			 * audio
+			 * slave
+			 * control
+			 * 
+			 */
+			
+			if (value.length()>0) {
+				switch (value.charAt(0)) {
+					case 'l': if (value.equals(DConnector.getSignalName(DConnector.SIGNAL_LOGIC))) {
+						setValueFromSignal(new SignalType(DConnector.SIGNAL_LOGIC));
+					} break;	
+					case 'a': if (value.equals(DConnector.getSignalName(DConnector.SIGNAL_AUDIO))) {
+						setValueFromSignal(new SignalType(DConnector.SIGNAL_AUDIO));
+					} break;
+					case 's':if (value.equals(DConnector.getSignalName(DConnector.SIGNAL_SLAVE))) {
+						setValueFromSignal(new SignalType(DConnector.SIGNAL_SLAVE));
+					} break;
+					case 'c':if (value.equals(DConnector.getSignalName(DConnector.SIGNAL_CONTROL))) {
+						setValueFromSignal(new SignalType(DConnector.SIGNAL_CONTROL));
+					} break;
+				}
+			}
+		}
+		
+		public void setupForEditing() {
+			super.setupForEditing();
+			setHandler(null, new PropertyValueHandler() {
+				public void writeValue(Object value) throws IllegalArgumentException {
+					if (value!=null)
+						throw new IllegalArgumentException("Property "+this+" does not handle "+value);
+				}});
+			setHandler(SignalType.class, new PropertyValueHandler(){
+				public void writeValue(Object value) throws IllegalArgumentException {
+					setValueFromSignal((SignalType)value);
+				}});
 		}
 
 		public PropertyEditor getEditor() {

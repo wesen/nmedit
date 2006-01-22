@@ -34,8 +34,10 @@ import javax.swing.event.ChangeListener;
 
 import org.nomad.patch.Module;
 import org.nomad.patch.Parameter;
+import org.nomad.theme.NomadClassicColors;
 import org.nomad.theme.property.IntegerProperty;
 import org.nomad.theme.property.ParameterProperty;
+import org.nomad.theme.property.PropertySet;
 import org.nomad.xml.dom.module.DParameter;
 
 /**
@@ -48,20 +50,22 @@ public class NomadActiveLabel extends NomadLabel {
 	Insets nomadInsets = b.getBorderInsets(this);
 	private boolean isInitialized = false;
 	private DParameter parameterInfo = null;
-	
+
 	public NomadActiveLabel() {
 		super();
 		isInitialized = true;
-		getAccessibleProperties().add(new PaddingProperty(this));
 		setDynamicOverlay(true);
-		setBackground(Color.decode("#372C7B"));
+		setBackground(NomadClassicColors.TEXT_DISPLAY_BACKGROUND);
 		setForeground(Color.WHITE);
 		autoResize();
 		setPreferredSize(getSize());
 		setAutoResize(false);
-		
-		getAccessibleProperties().add(new ParameterProperty(this) {
-
+	}
+	
+	protected void createProperties(PropertySet set) {
+		super.createProperties(set);
+		set.add(new PaddingProperty(this));
+		set.add(new ParameterProperty(this) {
 			public void setDParameter(DParameter p) {
 				parameterInfo = p;
 				
@@ -70,13 +74,10 @@ public class NomadActiveLabel extends NomadLabel {
 				}
 				
 			}
-			
 			public DParameter getDParameter() {
 				return ((NomadActiveLabel)getComponent()).getParameterInfo();
 			}
-
 		});
-
 	}
 	
 	public DParameter getParameterInfo() {

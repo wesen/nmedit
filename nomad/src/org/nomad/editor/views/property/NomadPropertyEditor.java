@@ -114,6 +114,7 @@ public class NomadPropertyEditor extends JPanel {
 			if (thePropertySet!=null) thePropertySet.removePropertySetListener(model);
 			this.thePropertySet=thePropertySet;
 			if (thePropertySet!=null) {
+				thePropertySet.setupForEditing();
 				thePropertySet.addPropertySetListener(model);
 				for (Iterator iter=thePropertySet.iterator();iter.hasNext();) {
 					properties.add(iter.next());

@@ -1,7 +1,5 @@
 package org.nomad.plugin;
 
-import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 
 import org.nomad.port.NullComPortPlugin;
@@ -17,41 +15,55 @@ public class PluginManager {
 	
 	// contains the NomadPlugin objects
 	private static ArrayList plugins = new ArrayList();
-	
+	private static String[] pluginResources = new String[0];
+	private static PluginClassLoader loader = new PluginClassLoader();
+	/*
+	static {
+		// init ();
+	}
+	*/
 	/**
 	 * Loads all plugins contained int the 'plugin' directory.
 	 * A plugin is either a jar file or a directory containing
 	 * the NomadPlugin class.
 	 */
 	public static void init() {
-		// reset plugin list
-		plugins = new ArrayList();
 
-		// load built in plugins
 		loadBuiltinPlugins();
 		
-		ClassLoader cloader = PluginManager.class.getClassLoader();
-		URL url = cloader.getResource("plugin");
-		if (url == null) {
-			System.err.println("PluginManager: Plugin Folder missing.");
-			return;
-		}
+		plugins.clear();
+		pluginResources = loader.listPossiblePlugins();
+		
+		for (int i=0;i<pluginResources.length;i++) {
 
-		File[] candidates = (new File(url.getFile())).listFiles();
-		for (int i=0;i<candidates.length;i++) {
-			String class_name = "plugin."+candidates[i].getName()+".NomadPlugin";
+			Class pluginClass = null;
+			
 			try {
-				Class plugin_class = cloader.loadClass(class_name);
-				NomadPlugin plugin = (NomadPlugin) plugin_class.newInstance();
-				plugin.setLocation(new File("plugin"+File.separator+candidates[i].getName()));
-				plugins.add(plugin);
-			} catch (Throwable e) {
-				System.err.println("** PluginManager: Failed loading class '"+class_name+"'.");
-				System.err.println("   "+e);
+				pluginClass = loader.loadClass(pluginResources[i]);
+			} catch (ClassNotFoundException e) {
+				System.err.println("** PluginManager: Not a valid plugin: '"+pluginResources[i]+"'. Ignored.");
+			}
+			
+			if (pluginClass != null) {
+				
+				NomadPlugin nomadPlugin = null;
+				
+				try {
+					nomadPlugin = (NomadPlugin) pluginClass.newInstance();
+				} catch (ClassCastException e) {
+					System.err.println("** PluginManager: Incompatible plugin: '"+pluginClass.getName()+"'. Ignored.");
+				} catch (Throwable e) {
+					System.err.println("** PluginManager: Failed loading class '"+pluginClass.getName()+"'.");
+				}
+				
+				if (nomadPlugin!=null) {
+					plugins.add( nomadPlugin );
+					System.out.println("** PluginManager: Plugin loaded: '"+pluginClass.getName()+"'.");
+				}
 			}
 		}
 	}
-	
+
 	/**
 	 * loads built in plugins
 	 */

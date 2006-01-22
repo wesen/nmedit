@@ -32,7 +32,11 @@ public abstract class BooleanProperty extends Property {
 
 	public BooleanProperty(NomadComponent component) {
 		super(component);
-		
+	}
+	
+	public void setupForEditing() {
+		super.setupForEditing();
+
 		setHandler(Boolean.class, new PropertyValueHandler(){
 			public void writeValue(Object value) throws IllegalArgumentException {
 				try {
@@ -48,11 +52,16 @@ public abstract class BooleanProperty extends Property {
 			throw new IllegalArgumentException("Incompatible value "+value);
 	}*/
 
+	private final static String STR_TRUE = "true";
+	private final static String STR_FALSE = "false";
+	
 	public static Boolean fromString(String b) {
-		b = b.trim().toLowerCase();
-		if (b.equals("true")) return Boolean.TRUE;
-		else if (b.equals("false")) return Boolean.FALSE;
-		else return null;
+		if (b.length()<4) return null;
+		switch (b.charAt(0)) {
+			case't':return b.equals(STR_TRUE) ? Boolean.TRUE : null;
+			case'f':return b.equals(STR_FALSE)? Boolean.FALSE: null;
+			default:return null;
+		}
 	}
 
 	public Object getValue() {

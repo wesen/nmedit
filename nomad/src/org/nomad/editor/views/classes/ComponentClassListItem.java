@@ -22,7 +22,6 @@
  */
 package org.nomad.editor.views.classes;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -45,7 +44,7 @@ import javax.swing.UIManager;
 class ComponentClassListItem extends JPanel {
 
 	private JComponent component = null;
-	private final int PADDING = 4; // px
+	public final static int PADDING = 4; // px
 	private boolean flagItemIsSelected = false;
 	private boolean flagItemHasFocus = false;
 	private Color bgColor = Color.WHITE;
@@ -90,7 +89,7 @@ class ComponentClassListItem extends JPanel {
 		lblCompName.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		// bottom dash line
-		DashPane dash = new DashPane();
+		DashPane dash = new DashPane(this);
 		dash.setAlignmentX(Component.CENTER_ALIGNMENT); // not necessary
 		
 		add(createSpace());
@@ -151,28 +150,6 @@ class ComponentClassListItem extends JPanel {
 			return name;
 		else
 			return name.substring(index+1);
-	}
-	
-	private class DashPane extends JPanel {
-		public DashPane() {
-			setOpaque(false);
-			setBackground(Color.GRAY);
-		}
-		public void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			Graphics2D g2 = (Graphics2D) g.create();
-			g2.setColor(getBackground());
-			g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			g2.setStroke(new BasicStroke( 1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[]{ 1, 2 }, 0 ));
-			g2.drawLine(0, getHeight()-1, getWidth(), getHeight()-1); // draw at the bottom
-			g2.dispose();
-		}
-		public Dimension getPreferredSize() {
-			if (getParent()!=null)
-				return new Dimension(getParent().getWidth(), PADDING);
-			else
-				return new Dimension(100, PADDING);
-		}
 	}
 	
 	/*

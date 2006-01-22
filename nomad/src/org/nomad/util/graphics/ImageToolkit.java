@@ -23,9 +23,11 @@
 package org.nomad.util.graphics;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.ImageObserver;
@@ -146,4 +148,46 @@ public class ImageToolkit {
     public static boolean hasAlpha(Image image) {
     	return hasAlpha(image, true);
     }
+
+    public static void paintRegion(Graphics g, Image image, Rectangle srcReg, int dx, int dy) {
+		Rectangle clip = g.getClipBounds(); // use clip bounds if necessary
+		if (clip==null) {
+			if (srcReg!=null) {
+				g.drawImage(image, dx, dy, dx+srcReg.width, dy+srcReg.height,
+					srcReg.x, srcReg.y,srcReg.x+srcReg.width,srcReg.y+ srcReg.height, null);
+			} else {
+				g.drawImage(image, dx, dy, null);
+			}
+		} else { // clip!=null
+			if (srcReg!=null) {	
+				Rectangle target = new Rectangle(0, 0, srcReg.width, srcReg.height); // move region to 0,0
+				Rectangle ri = clip.intersection(target); // intersect region and component
+				if (ri.isEmpty()) {
+					// no painting necessary
+				} else {
+					
+					int ix = srcReg.x+ri.x;
+					int iy = srcReg.y+ri.y;
+					
+					g.drawImage(image,
+						dx+ri.x, dy+ri.y, dx+ri.x+ri.width, dy+ri.y+ri.height,
+						ix, iy, ix+ri.width, iy+ri.height, null);
+				}
+			} else {
+				// intersect clip with image bounds
+				Rectangle ri = clip.intersection(new Rectangle(0, 0, image.getWidth(null), image.getHeight(null)));
+				if (ri.isEmpty()){
+					// no painting necessary
+				} else {
+					// paint intersection of clip and image
+					int r = ri.x+ri.width;
+					int b = ri.y+ri.height;
+					g.drawImage(image,
+							dx+ri.x, dy+ri.y, dx+r, dy+b,
+							ri.x, ri.y, r, b, null);
+				}
+			}
+		}
+	}
+
 }

@@ -32,6 +32,9 @@ public abstract class IntegerProperty extends Property {
 	public IntegerProperty(NomadComponent component) {
 		super(component);
 		setName("integer");
+	}
+	public void setupForEditing() {
+		super.setupForEditing();
 		setHandler(Integer.class, new PropertyValueHandler(){
 			public void writeValue(Object value) throws IllegalArgumentException {
 				setInteger((Integer)value); 

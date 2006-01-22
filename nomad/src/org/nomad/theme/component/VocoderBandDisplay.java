@@ -11,7 +11,9 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
 import org.nomad.theme.property.ParameterProperty;
+import org.nomad.theme.property.PropertySet;
 import org.nomad.util.graphics.BackgroundRenderer;
+import org.nomad.util.graphics.LCDBackgroundRenderer;
 import org.nomad.xml.dom.module.DParameter;
 
 /**
@@ -32,16 +34,36 @@ public class VocoderBandDisplay extends NomadComponent {
 	
 	private ArrayList bandChangeListeners = new ArrayList();
 	private DParameter[] bandsInfo = new DParameter[NUM_BANDS];
+	private VocoderParameterLink paramLink = null;
 	
 	public VocoderBandDisplay() {
 		super();
+		setDynamicOverlay(true);
+		setOpaque(true);
 		setBackground(defaultBGColor);
 		setForeground(defaultFGColor);
 		setBands(0);
-		setPreferredSize(new Dimension(NUM_BANDS*11, 60));
-	
+		Dimension d = new Dimension(NUM_BANDS*11, 60);
+		setPreferredSize(d);
+		setMinimumSize(d);
+		setMaximumSize(d);
+		setSize(d);
+
+		LCDBackgroundRenderer lcd = new LCDBackgroundRenderer();
+		lcd.randomizeBehaviour(d);
+		setBackgroundRenderer(lcd);
+		
+		paramLink = new VocoderParameterLink(this);
+	}
+
+	protected void createProperties(PropertySet set) {
+		super.createProperties(set);
 		for (int i=0;i<NUM_BANDS;i++)
-			getAccessibleProperties().add(new ParamBandProperty(this,i));
+			set.add(new ParamBandProperty(this,i));
+	}
+	
+	public DParameter getInfo(int band) {
+		return bandsInfo[band];
 	}
 	
 	private class ParamBandProperty extends ParameterProperty {
@@ -131,6 +153,9 @@ public class VocoderBandDisplay extends NomadComponent {
 	}
 	
 	public void paintDecoration(Graphics2D g) {
+	}
+	
+	public void paintDynamicOverlay(Graphics2D g) {
 		// paint
 		int w = this.getWidth();
 		int h = this.getHeight();
@@ -155,9 +180,13 @@ public class VocoderBandDisplay extends NomadComponent {
 			g.fillRect(0, 0, w, h);
 		}
 		
-		g.setColor(getForeground());
+		g.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+
 		gcalc.update(w, h); // recalculate if necessary
 		
+		g.setColor(Color.WHITE); // should be different
+		g.setColor(getBackground().brighter().brighter());
 		for (int  i=0;i<NUM_BANDS;i++) {
 			// check if band is enabled
 			if (vocoderBands[i]>0) {
@@ -168,7 +197,6 @@ public class VocoderBandDisplay extends NomadComponent {
 		}
 		
 		border.paintBorder(this, g, 0, 0, w, h);
-		
 	}
 
 	
@@ -194,9 +222,10 @@ public class VocoderBandDisplay extends NomadComponent {
 			this.w = w;
 			this.h = h;
 
-			double step = (double)w / (double)(NUM_BANDS+1);
-			for (int i=0;i<NUM_BANDS;i++) 
-				lx[i] = (int)(step*(double)(i+1));
+			double step = (double)w / (double)(NUM_BANDS);
+			for (int i=0;i<NUM_BANDS;i++) {
+				lx[i] = (int)((step*(double)(i+1))-(step/2.0));
+			}
 		}
 		
 		public void drawLine(Graphics g, int sourceBand, int targetBand) {
@@ -206,4 +235,12 @@ public class VocoderBandDisplay extends NomadComponent {
 		
 	}
 
+	public void link() {
+		paramLink.link();
+	}
+
+	public void unlink() {
+		paramLink.unlink();
+	}
+	
 }

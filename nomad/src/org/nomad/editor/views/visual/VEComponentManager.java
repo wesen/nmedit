@@ -37,13 +37,13 @@ public class VEComponentManager extends VEManager implements ContainerListener {
 	public void componentAdded(ContainerEvent event) {
 		NomadComponent c = (NomadComponent) event.getChild();
 		getEditor().getHotSpotManager().add(new VEComponentHotSpot(getEditor().getHotSpotManager(), c));
-		c.getAccessibleProperties().addPropertySetListener(getEditor().getPropertySetListener());
+		c.createAccessibleProperties(true).addPropertySetListener(getEditor().getPropertySetListener());
 		c.setVisible(false);
 		getEditor().repaint();
 	}
 
 	public void componentRemoved(ContainerEvent event) {
-		((NomadComponent)event.getChild()).getAccessibleProperties()
+		((NomadComponent)event.getChild()).createAccessibleProperties(true)
 			.removePropertySetListener(getEditor().getPropertySetListener());
 		event.getChild().setVisible(true);
 		getEditor().repaint();

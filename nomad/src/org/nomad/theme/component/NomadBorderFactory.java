@@ -31,6 +31,8 @@ import java.awt.Insets;
 
 import javax.swing.border.Border;
 
+import org.nomad.theme.NomadClassicColors;
+
 /**
  * @author Christian Schneider
  */
@@ -58,6 +60,10 @@ public class NomadBorderFactory {
 
 	public static Border createNordEditor311Border(boolean raised, int size) {
 		return new NordEditor311Border(raised,size);
+	}
+
+	public static Border createNordEditor311GroupBoxBorder(){
+		return new NordEditor311GroupboxBorder();
 	}
 	
 	private static class NordEditor311Border implements Border {
@@ -104,6 +110,125 @@ public class NomadBorderFactory {
 			return false;
 		}
 		
+	}
+
+	private static class NordEditor311ButtonBorder implements Border {
+
+		public final static Color clTop1Up = Color.decode("#C3C3C1"); //"#A3A3A3"
+		public final static Color clTop2Up = Color.decode("#DBDBDB");
+		public final static Color clTop3Up = Color.decode("#C1C1C3");
+		public final static Color clBot1Up = Color.decode("#757575");
+		public final static Color clBot2Up = Color.decode("#424242");
+		public final static Color clBot3Up = Color.decode("#8D8D8B");
+		
+		public Color clTop1; 
+		public Color clTop2;
+		public Color clTop3;
+		public Color clBot1;
+		public Color clBot2;
+		public Color clBot3;
+		
+		public Color clupper;
+		public Color cllower;
+		public int size=3;
+		
+		public NordEditor311ButtonBorder(boolean raised) {
+			if (raised) {
+				clTop1=clTop1Up;
+				clTop2=clTop2Up;
+				clTop3=clTop3Up;
+
+				clBot1=clBot1Up;
+				clBot2=clBot2Up;
+				clBot3=clBot3Up;
+			} else {
+				clBot1=clBot3Up;
+				clBot2=clTop3Up;
+				clBot3=NomadClassicColors.BUTTON_BACKGROUND;
+
+				clTop1=clTop1Up;
+				clTop2=clBot2Up;
+				clTop3=clBot1Up;
+			}
+		}
+		
+		public void paintBorder(Component comp, Graphics g, int x, int y, int w, int h) {
+			Graphics2D g2 = (Graphics2D) g.create();
+			
+			int tmpw = w; int tmph=h; int tmpx=x; int tmpy=y;
+			
+			w--;h--;
+			g2.setColor(clTop1);
+			g2.drawLine(x+1,y,x+w,y); // hrz
+			g2.drawLine(x,y+1,x,y+h); // vrt
+			g2.setColor(clTop2);
+			x++; y++;w-=2;h-=2;
+			g2.drawLine(x,y,x+w,y); // hrz
+			g2.drawLine(x,y,x,y+h); // vrt
+			g2.setColor(clTop3);
+			x++; y++;w-=2;h-=2;
+			g2.drawLine(x,y,x+w,y); // hrz
+			g2.drawLine(x,y,x,y+h); // vrt
+			
+			
+			w=tmpw;h=tmph;x=tmpx;y=tmpy;
+			w--;h--;
+			g2.setColor(clBot1);
+			g2.drawLine(x+1,y+h,x+w,y+h); // hrz
+			g2.drawLine(x+w,y,x+w,y+h); // vrt
+			g2.setColor(clBot2);
+			x++; y++;w-=2;h-=2;
+			g2.drawLine(x,y+h,x+w,y+h); // hrz
+			g2.drawLine(x+w,y,x+w,y+h); // vrt
+			g2.setColor(clBot3);
+			x++; y++;w-=2;h-=2;
+			g2.drawLine(x,y+h,x+w,y+h); // hrz
+			g2.drawLine(x+w,y,x+w,y+h); // vrt
+			g2.dispose();
+		}
+
+		public Insets getBorderInsets(Component component) {
+			return new Insets(3,3,3,3);
+		}
+
+		public boolean isBorderOpaque() {
+			return false;
+		}
+		
+	}
+	
+	private static class NordEditor311GroupboxBorder implements Border {
+
+		public void paintBorder(Component comp, Graphics g, int x, int y, int w, int h) {
+			g.setColor(NomadClassicColors.GROUPBOX_BORDER);
+			g.drawLine(x,y+2,x+2,y); // corner top,left
+			g.drawLine(x+w-1-2,y,x+w-1,y+2); // corner top,right
+			g.drawLine(x,y+h-1-2,x+2,y+h-1); // corner bottom,left
+			g.drawLine(x+w-1-2,y+h-1,x+w-1,y+h-1-2); // corner bottom,right
+
+			g.drawLine(x,y+2,x,y+h-1-2);//left
+			g.drawLine(x+w-1,y+2,x+w-1,y+h-1-2);//right
+			g.drawLine(x+2,y,x+w-1-2,y);//top
+			g.drawLine(x+2,y+h-1,x+w-1-2,y+h-1);//bottom
+		}
+
+		public Insets getBorderInsets(Component comp) {
+			return new Insets(3,3,3,3);
+		}
+
+		public boolean isBorderOpaque() {
+			return false;
+		}
+		
+	}
+
+
+	public static Border createNordEditor311RaisedButtonBorder() {
+		return new NordEditor311ButtonBorder(true);
+	}
+
+	public static Border createNordEditor311LoweredButtonBorder() {
+		return new NordEditor311ButtonBorder(false);
 	}
 	
 }

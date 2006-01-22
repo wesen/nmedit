@@ -37,6 +37,9 @@ public class ConnectorProperty extends Property {
 	public ConnectorProperty(NomadComponent component) {
 		super(component);
 		setName("connector#0");
+	}
+	public void setupForEditing() {
+		super.setupForEditing();
 		setHandler(null, new PropertyValueHandler(){
 			public void writeValue(Object value) throws IllegalArgumentException {
 				// we accept null values
@@ -75,12 +78,13 @@ public class ConnectorProperty extends Property {
 		String inout = m.group(3);
 
 		boolean isOut = inout.equals("out");
-		
+
 		DModule module = ModuleDescriptions.model.getModuleById(moduleId);
 		if (module==null) {
 			System.err.println("In ConnectorProperty.decode(): Module [id="+moduleId+"] not found");
 			return null;
 		}
+
 		return module.getConnectorById(connectorId, !isOut);
 	}
 

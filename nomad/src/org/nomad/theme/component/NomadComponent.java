@@ -50,16 +50,14 @@ import org.nomad.util.graphics.ImageBuffer;
 public class NomadComponent extends JComponent {
 
 	private ImageBuffer alternativeBackground = new ImageBuffer();
-	private PropertySet accessibleProperties = new PropertySet();
 	private boolean flagHasDynamicOverlay = false;
 	private UIFactory uiFactory = null;
 	private Module module = null;
+	private PropertySet accessibleProperties = null;
 
 	public NomadComponent() {
 		setDoubleBuffered(true); // disable default double buffer
 		setOpaque(false);
-		accessibleProperties.add(new ComponentLocationProperty(this));
-		accessibleProperties.add(new ComponentSizeProperty(this));
 		//RepaintManager.currentManager(this).setDoubleBufferingEnabled(false);
 	}
 
@@ -80,10 +78,25 @@ public class NomadComponent extends JComponent {
 		super.finalize();
 	}
 	
-	public PropertySet getAccessibleProperties() {
-		return accessibleProperties;
+	public final PropertySet createAccessibleProperties(boolean permanent) {
+		
+		if (accessibleProperties!=null)
+			return accessibleProperties;
+		else {
+			PropertySet set = new PropertySet();
+			createProperties(set);
+			if (permanent) {
+				accessibleProperties = set;
+			}
+			return set;
+		}
 	}
 
+	protected void createProperties(PropertySet set) {
+		set.add(new ComponentLocationProperty(this));
+		set.add(new ComponentSizeProperty(this));
+	}
+	
 	public void paintDecoration(Graphics2D g2) {
 		if (isOpaque() && getBackground()!=null) {
 			g2.setColor(getBackground());
@@ -129,7 +142,7 @@ public class NomadComponent extends JComponent {
 		repaint();
 	}
 	
-	BufferedImage screen = null;
+	private BufferedImage screen = null;
 	private int sw = 0;
 	private int sh = 0;
 	
@@ -137,7 +150,7 @@ public class NomadComponent extends JComponent {
 		screen = null;
 		super.repaint();
 	}
-	
+
 	private Graphics2D getOffscreenBufferGraphics() {
 		int w = getWidth(); 
 		int h = getHeight();
@@ -151,7 +164,7 @@ public class NomadComponent extends JComponent {
 			return null;
 		}
 	}
-	
+
 	private void paintContents(Graphics2D g2) {
 		if (alternativeBackground.isValid()) {
 			alternativeBackground.paint(g2);
@@ -165,7 +178,7 @@ public class NomadComponent extends JComponent {
 	}
 	
 	public void paintComponent(Graphics g) {
-		// if (getWidth()<=0 || getHeight() <=0) return;
+		if (getWidth()<=0 || getHeight() <=0) return;
 		
 		Graphics2D g2;
 		if ((g2=getOffscreenBufferGraphics())!=null) {

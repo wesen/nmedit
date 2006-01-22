@@ -25,7 +25,6 @@ package org.nomad.theme.property;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 import org.nomad.theme.component.NomadComponent;
 import org.nomad.theme.component.NomadControl;
 import org.nomad.theme.property.editor.PropertyEditor;
@@ -39,6 +38,9 @@ public class ParameterProperty extends Property {
 	public ParameterProperty(NomadComponent component) {
 		super(component);
 		setName("parameter#0");
+	}
+	public void setupForEditing() {
+		super.setupForEditing();
 		setHandler(null, new PropertyValueHandler(){
 			public void writeValue(Object value) throws IllegalArgumentException {
 				// we accept null values
@@ -73,7 +75,7 @@ public class ParameterProperty extends Property {
 	public static DParameter decode(String value) {
 		Matcher m = pattern.matcher(value);
 		if (!m.matches()) {			
-			System.err.println("Parameter pattern not matched by "+value);
+			System.err.println("Parameter pattern not matched by '"+value+"'.");
 			return null;
 		}
 		String[] pieces = value.split("\\.");		

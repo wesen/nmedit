@@ -25,12 +25,20 @@ package org.nomad.editor.views.visual;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 import org.nomad.editor.ComponentAlignmentToolbar;
 import org.nomad.editor.views.property.NomadPropertyEditor;
 import org.nomad.theme.ModuleComponent;
 import org.nomad.theme.component.NomadComponent;
+import org.nomad.theme.property.PropertySet;
 import org.nomad.theme.property.PropertySetListener;
 import org.nomad.xml.dom.module.DModule;
 
@@ -45,6 +53,7 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 	private NomadPropertyEditor propertyEditor = null;
 	private Rectangle selectionRect = new Rectangle(0,0,0,0);
 	private ComponentAlignmentToolbar tbAlignment = null;
+	private JPopupMenu popup = null;
 	
 	public VisualEditor(DModule info) {
 		setLayout(null);
@@ -55,9 +64,33 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 		painter = new VEPainter();
 		propertySetListener = new VEPropertySetChangeHandler(this);
 		mouseHandler = new VEMouseEventHandler(this);
+
+		JMenuItem imageImage = new JMenuItem("Add images...");
+		imageImage.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				ImageBrowserDialog.showDialog(VisualEditor.this);
+			}});
+
+		popup = new JPopupMenu();
+		popup.add(imageImage);
 		
-		// remove unwanted properties
-		getAccessibleProperties().clear();
+		addMouseListener(new MouseAdapter(){
+	        public void mousePressed(MouseEvent evt) {
+	            if (evt.isPopupTrigger()) {
+	            	popup.show(evt.getComponent(), evt.getX(), evt.getY());
+	            }
+	        }
+	        public void mouseReleased(MouseEvent evt) {
+	            if (evt.isPopupTrigger()) {
+	            	popup.show(evt.getComponent(), evt.getX(), evt.getY());
+	            }
+	        }	
+		
+		});
+	}
+
+	protected void createProperties(PropertySet set) {
+		// we do not call super() because we don't want to create any properties
 	}
 	
 	public PropertySetListener getPropertySetListener() {
@@ -138,7 +171,7 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 		}
 
 		selection.clear();
-		getPropertyEditor().setEditingPropertySet(getAccessibleProperties());
+		getPropertyEditor().setEditingPropertySet(null);
 	}
 	
 	public NomadComponent getFirstSelection() {
@@ -151,7 +184,7 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 		if (selection.size()!=1 || getFirstSelection()!=component) {
 			clearSelection();
 			if (component!=null) {
-				getPropertyEditor().setEditingPropertySet(component.getAccessibleProperties());
+				getPropertyEditor().setEditingPropertySet(component.createAccessibleProperties(true));
 				selection.add(component);
 				component.setVisible(true);
 			}

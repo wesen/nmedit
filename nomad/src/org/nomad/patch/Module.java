@@ -1,13 +1,11 @@
 package org.nomad.patch;
 
-import java.util.ArrayList;
-
-
 import org.nomad.patch.ModuleSection.ModulePixDimension;
 import org.nomad.theme.ModuleGUI;
 import org.nomad.theme.ModuleGUIBuilder;
 import org.nomad.theme.ModuleSectionGUI;
 import org.nomad.xml.dom.module.DConnector;
+import org.nomad.xml.dom.module.DCustom;
 import org.nomad.xml.dom.module.DModule;
 import org.nomad.xml.dom.module.DParameter;
 
@@ -31,9 +29,9 @@ public class Module {
     private ModuleGUI moduleGUI = null; 
     private ModuleSection moduleSection = null;
 
-	private ArrayList parameters = null;
-    private ArrayList customs = null;
-    private ArrayList connectors = null;
+    private Parameter[] parameters = null;
+    private Custom[] customs = new Custom[0];
+    private Connector[] connectors = null;
 
 	public Module(Integer newIndex, int newGridX, int newGridY, ModuleSection moduleSection, DModule dModule) {
 		this.dModule = dModule;
@@ -45,35 +43,25 @@ public class Module {
         gridX = newGridX;
         gridY = newGridY;
 
-		parameters = new ArrayList(dModule.getParameterCount());
-		customs = new ArrayList(); //TODO add customs
-		connectors = new ArrayList(dModule.getConnectorCount());
+        parameters = new Parameter[dModule.getParameterCount()];
+        //customs = new Custom[dModule.getCustomParamCount()];
+        connectors = new Connector[dModule.getConnectorCount()];
 		
-		for (int i = 0;i < dModule.getParameterCount();i++)
-			parameters.add(new Parameter(dModule.getParameter(i)));
+		for (int i = dModule.getParameterCount()-1;i>=0;i--)
+			parameters[i]=new Parameter(dModule.getParameter(i));
 		
-		for (int i = 0;i < dModule.getConnectorCount();i++)
-			connectors.add(new Connector(dModule.getConnector(i), 0, 0));
+		for (int i = dModule.getConnectorCount()-1;i>=0;i--)
+			connectors[i]=new Connector(dModule.getConnector(i), 0, 0);
 	}
     
 	public Connector findConnector(DConnector info) {
-		for (int i=0;i<connectors.size();i++) { 
-			Connector candidate = (Connector) connectors.get(i);
-			if (info.equals(candidate.getInfo()))
-				return candidate;
-		}
-		
-		return null; // not found
+		return connectors[info.getContextId()];
 	}
     
 	public Parameter findParameter(DParameter info) {
-		for (int i=0;i<parameters.size();i++) { 
-			Parameter candidate = (Parameter) parameters.get(i);
-			if (info.equals(candidate.getInfo()))
-				return candidate;
-		}
-		
-		return null; // not found
+		if (info instanceof DCustom) 
+			return null; // fix for the moment
+		return parameters[info.getContextId()];
 	}
 	
 	public DModule getDModule() {
@@ -93,7 +81,7 @@ public class Module {
     }
     
     public Parameter getParameter(int index) {
-    	return (Parameter)parameters.get(index);
+    	return parameters[index];
     }
     
     public int getGridHeight() {

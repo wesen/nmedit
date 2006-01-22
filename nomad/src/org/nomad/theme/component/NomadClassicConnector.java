@@ -37,8 +37,12 @@ public class NomadClassicConnector extends NomadConnector {
 		setConnectorType(false);
 		setConnectedState(false);
 		//setBackground(NomadClassicColors.MORPH_YELLOW);
-		getAccessibleProperties().rewriteDefaults();
 	}
+/*
+	protected void createProperties(PropertySet set) {
+		super.createProperties(set);
+		//getAccessibleProperties().rewriteDefaults();
+	}*/
 
 	public void paintComponent(Graphics g) {
 		/* We have our custom double buffer and need no background buffer,

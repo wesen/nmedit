@@ -195,9 +195,11 @@ public class SplashWindow extends Window
 		//this.update(this.getGraphics());
   }
   
+  private Font statusFont = new Font("Tahoma", Font.PLAIN , 10);
+  
   private void drawStatus(Graphics g) {
 	  if (statusPosition!=null && statusMessage!=null) {
-		  g.setFont(new Font("Tahoma", Font.PLAIN , 10));
+		  g.setFont(statusFont);
 		  g.setColor(Color.BLACK);
 		  g.drawString(statusMessage, statusPosition.x, statusPosition.y);
 	  }

@@ -13,8 +13,9 @@ import org.nomad.util.graphics.ImageTracker;
 import org.nomad.xml.dom.module.DModule;
 
 public abstract class UIFactory extends NomadFactory {
-	
+
 	private HashMap componentClasses = new HashMap();
+	private HashMap aliases = new HashMap();
 	private String[] names = new String[] {};
 	private ImageTracker imageTracker = 
 		new ImageTracker(ImageTracker.IMAGE_TRACKER_DISALLOW_REPLACE);
@@ -37,6 +38,7 @@ public abstract class UIFactory extends NomadFactory {
 			throw new ClassCastException("Install Class: Incompatible class "+uiClass+".");
 		
 		componentClasses.put(key, uiClass);
+		aliases.put(uiClass, key);
 		
 		if (!componentClasses.containsKey(uiClass))
 			componentClasses.put(uiClass, uiClass);
@@ -85,14 +87,14 @@ public abstract class UIFactory extends NomadFactory {
 	}
 
 	public NomadComponent newComponentInstance(String componentNameString) {
-		NomadComponent c = newComponentInstanceByClass((Class)componentClasses.get(componentNameString));
-		c.setNameAlias(componentNameString);
-		return c;
+		return newComponentInstanceByClass((Class)componentClasses.get(componentNameString));
 	}
 	
 	public NomadComponent newComponentInstanceByClass(Class componentClass) {
 		try {
-			return (NomadComponent) componentClass.newInstance();
+			NomadComponent c = (NomadComponent) componentClass.newInstance();
+			c.setNameAlias((String)aliases.get(componentClass));
+			return c;
 		} catch (Throwable e) {
 			if (componentClass!=null)
 				e.printStackTrace();

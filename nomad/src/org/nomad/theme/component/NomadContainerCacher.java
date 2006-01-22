@@ -75,7 +75,7 @@ public class NomadContainerCacher {
 		brl.configure(this.ib);
 		component.setAlternativeBackground(ib);
 	}
-	
+
 	public void listen(NomadComponent component, PersistenceManager manager, Object sharedKey) {
 		this.component=component;
 		component.addContainerListener(cel = rel);

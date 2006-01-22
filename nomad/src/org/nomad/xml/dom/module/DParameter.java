@@ -8,10 +8,8 @@ import org.nomad.xml.dom.substitution.Substitution;
  * @author Christian Schneider
  * @composed 1 - 1 nomad.model.descriptive.substitution.Substitution
  */
-public class DParameter {
+public class DParameter extends DModulePart {
 	
-	/** The module this parameter belongs to */
-	private DModule parent = null;
 	/** The substitutin object that is used to get a string representation of the parameters raw value */
 	private Substitution pmSubstitution;
 	/** The default value */
@@ -54,23 +52,13 @@ public class DParameter {
 	public DParameter(DModule parent,
 		Substitution substitution, int minValue, int maxValue, int bitCount,
 		int id, String name) {
-		if (parent==null)
-			throw new NullPointerException("'parent' must not be null");
-		this.parent = parent;
+		super(parent);
 		this.pmSubstitution = (substitution==null)?Substitution.DEFAULT_SUBSTITUTION:substitution;
 		this.pmMinValue=minValue;
 		this.pmBitCount=bitCount;
 		this.pmMaxValue=maxValue;
 		this.pmId = id;
 		this.pmName = name;
-	}
-			
-	/**
-	 * Returns the module this parameter belongs to
-	 * @return the module this parameter belongs to
-	 */
-	public DModule getParent() {
-		return parent;
 	}
 
 	/**

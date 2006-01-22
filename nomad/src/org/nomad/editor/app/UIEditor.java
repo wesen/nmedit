@@ -39,8 +39,6 @@ import org.nomad.xml.dom.module.DModule;
 import org.nomad.xml.dom.module.ModuleDescriptions;
 import org.nomad.xml.dom.substitution.Substitutions;
 
-import plugin.classictheme.ClassicThemeFactory;
-
 public class UIEditor extends JFrame {
 	
 //	public ImageTracker defaultImageTracker = new ImageTracker();
@@ -104,7 +102,7 @@ public class UIEditor extends JFrame {
 	VisualEditor visualEditor = null;
 	ComponentAlignmentToolbar tbComponents = new ComponentAlignmentToolbar();
 	
-	UIFactory theUIFactory = new ClassicThemeFactory();
+	UIFactory theUIFactory = PluginManager.getDefaultUIFactory();
 	
 	ImageTracker theImageTracker = null;
 
@@ -122,18 +120,18 @@ public class UIEditor extends JFrame {
 
 		// load substitutions
 		Run.statusMessage("parameter substitutions");
-		Substitutions subs = new Substitutions("src/data/xml/substitutions.xml");
+		Substitutions subs = new Substitutions("data/xml/substitutions.xml");
 		
 		// load module descriptors
 		Run.statusMessage("module description");
-		ModuleDescriptions.init("src/data/xml/modules.xml", subs);
+		ModuleDescriptions.init("data/xml/modules.xml", subs);
 
 		// feed image tracker
 		Run.statusMessage("images");
 		theImageTracker = new ImageTracker();
 		try {
-			theImageTracker.loadFromDirectory("src/data/images/slice/");
-			theImageTracker.loadFromDirectory("src/data/images/single/");
+			theImageTracker.loadFromDirectory("data/images/slice/");
+			theImageTracker.loadFromDirectory("data/images/single/");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -294,6 +292,7 @@ public class UIEditor extends JFrame {
 			//visualEditor.setNameLabel(module.getName());
 			visualEditor.setVisible(true);
 			visualEditor.setAlignmentToolbar(tbComponents);
+			visualEditor.setEnvironment(theUIFactory);
 			tbComponents.setEnabled(false);
 			
 			workspace.add(visualEditor); 

@@ -123,7 +123,7 @@ public class ModuleToolbarButton extends JButton implements MouseListener, DragG
 			tip.addProperty("Name:", module.getName());
 			tip.addProperty("Category:", module.getParent().getParent().getName());
 			tip.addProperty("Cycles:", MathRound.round(module.getCycles(), -2) + "%");
-			tip.showTip();
+			tip.showTip(500);
 		}
 	}
 

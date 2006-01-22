@@ -66,9 +66,12 @@ public class NomadClassicKnob extends NomadControl {
 		setMinimumSize(d);
 		setMaximumSize(d);
 		//deleteOnScreenBuffer();
-		
-		getAccessibleProperties().rewriteDefaults();
 	}
+
+	/*protected void createProperties(PropertySet set) {
+		super.createProperties(set);
+		//getAccessibleProperties().rewriteDefaults();
+	}*/
 	
 	boolean morphEnabled = true;
 

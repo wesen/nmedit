@@ -25,7 +25,6 @@ package org.nomad.theme.property;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -41,12 +40,10 @@ public class PropertySet {
 
 	private Property fallBack = null;
 	private ArrayList propertySetListenerList = null;
-	private HashMap propertyMap = null;
+	private HashMap propertyMap = new HashMap(4);
+	private boolean flagUseEventListening = false;
 
-	private ChangeListener broadCast = new ChangeListener() {
-		public void stateChanged(ChangeEvent event) {
-			firePropertyChangedEvent((Property) event.getSource(), event);
-		}};
+	private ChangeListener broadCast = null;
 
 	public PropertySet() {
 		super();
@@ -94,41 +91,28 @@ public class PropertySet {
 	}
 	
 	public void add(Property p) {
-		if (propertyMap==null) {
-			propertyMap = new HashMap(4);
-		}
-		
-		if (!propertyMap.containsKey(p.getName())) {
-			propertyMap.put(p.getName(),p);
-			p.addChangeListener(broadCast);
+		// this will override properties with same name
+		propertyMap.put(p.getName(),p);
+		if (flagUseEventListening)
 			firePropertyAddedEvent(p);
-		}
 	}
 
 	public void remove(Property p) {
-		if ((propertyMap!=null) && (propertyMap.remove(p.getName())!=null)) {
+		if ((propertyMap.remove(p.getName())!=null)) {
 			propertyMap.remove(p.getName());
-			p.removeChangeListener(broadCast);
-			firePropertyRemovedEvent(p);
-			
-			if (propertyMap.isEmpty()) {
-				propertyMap = null;
-			}
+			/*p.addChangeListener(broadCast);
+			p.removeChangeListener(broadCast);*/
+			if (flagUseEventListening)
+				firePropertyRemovedEvent(p);
 		}
 	}
 	
-	public void rewriteDefaults() {
-		for (Iterator iter=iterator();iter.hasNext();) {
-			((Property)iter.next()).rewriteDefault();
-		}
-	}
-
 	/**
 	 * @param string
 	 * @return
 	 */
 	public Property byName(String name) {
-		if ((name==null) || (propertyMap == null)) return null;
+		//if ((name==null)) return null;
 		Property p = (Property) propertyMap.get(name);
 		if (p==null && fallBack!=null) {
 			p=fallBack;
@@ -142,14 +126,7 @@ public class PropertySet {
 	}
 
 	public Iterator iterator() {
-		if(propertyMap == null) {
-			return new Iterator() {
-				public boolean hasNext() { return false; }
-				public Object next() { throw new NoSuchElementException(); }
-				public void remove() { throw new UnsupportedOperationException(); } } ;
-		} else {
-			return propertyMap.values().iterator();
-		}
+		return propertyMap.values().iterator();
 	}
 
 	public void exportToDOM(NomadDOMComponent node) {
@@ -174,8 +151,26 @@ public class PropertySet {
 	public void clear() {
 		ArrayList items = new ArrayList(propertyMap.values());
 		for (Iterator iter=items.iterator();iter.hasNext();) {
-			propertyMap.remove(((Property)iter.next()).getName());
+			Property p = ((Property)iter.next());
+			p.removeChangeListener(broadCast);
+			propertyMap.remove(p.getName());
 		}
 	}
 	
+	public void setupForEditing() {
+		flagUseEventListening = true;
+		
+		broadCast = new ChangeListener() {
+			public void stateChanged(ChangeEvent event) {
+				if (flagUseEventListening)
+					firePropertyChangedEvent((Property) event.getSource(), event);
+			}};
+		
+		for (Iterator iter=iterator();iter.hasNext();) {
+			Property p = ((Property)iter.next());
+			p.setupForEditing();
+			p.addChangeListener(broadCast);			
+		}
+	}
+
 }

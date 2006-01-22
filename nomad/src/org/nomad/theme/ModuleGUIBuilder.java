@@ -68,7 +68,7 @@ public class ModuleGUIBuilder {
     		NomadComponent comp = (NomadComponent) iter.next();
     		
     		NomadDOMComponent compNode = node.createComponentNode(comp.getNameAlias());
-    		comp.getAccessibleProperties().exportToDOM(compNode);
+    		comp.createAccessibleProperties(false).exportToDOM(compNode); 
     	}
     }
     
@@ -189,11 +189,11 @@ public class ModuleGUIBuilder {
 				if(isRendering || keyNotFound) {
 					
 					NomadComponent comp = uifactory.newComponentInstanceByClass(compClass);
-					comp.setSize(comp.getPreferredSize());
-						
+
 					if (comp==null) {
 						System.err.println("Cannot create componenent with name '"+compName+"'.");
 					} else {
+						comp.setSize(comp.getPreferredSize());
 						
 						if (keyNotFound && !comp.hasDynamicOverlay()) {
 							String key = new String(compName);
@@ -202,8 +202,7 @@ public class ModuleGUIBuilder {
 						
 						// setup component
 						comp.setEnvironment(uifactory);
-						comp.setNameAlias(compName);
-						PropertySet properties = comp.getAccessibleProperties();
+						PropertySet properties = comp.createAccessibleProperties(false);
 						for (Iterator itProp=compNode.iterator();itProp.hasNext();) {
 							NomadDOMProperty propNode = (NomadDOMProperty) itProp.next();
 							Property compProperty = properties.byName(propNode.getName());
@@ -213,6 +212,7 @@ public class ModuleGUIBuilder {
 							} catch (Throwable t) {
 								System.err.println("** In component "+comp.getClass().getName()+": error setting property '"+propNode.getName()+"'.");
 								System.err.println("** "+t);
+								t.printStackTrace();
 								//t.printStackTrace();
 							}
 						}
@@ -240,19 +240,17 @@ public class ModuleGUIBuilder {
 				Class compClass = uifactory.getNomadComponentClass(compName);
 
 				NomadComponent comp = uifactory.newComponentInstanceByClass(compClass);
-				comp.setSize(comp.getPreferredSize());
-				
+
 				if (comp==null) {
 
 					System.err.println("Cannot create componenent with name '"+compName+"'.");
 
 				} else {
-					
+					comp.setSize(comp.getPreferredSize());
+								
 					// setup component
 					comp.setEnvironment(uifactory);
-					comp.setNameAlias(compName);
-
-					PropertySet properties = comp.getAccessibleProperties();
+					PropertySet properties = comp.createAccessibleProperties(false);
 
 					for (Iterator itProp=compNode.iterator();itProp.hasNext();) {
 						NomadDOMProperty propNode = (NomadDOMProperty) itProp.next();
@@ -272,88 +270,6 @@ public class ModuleGUIBuilder {
 				}
 			}
 		}
-		
-		
-		
-		
-		
-		/*
-		
-		boolean createDecoration = true;
-		
-		ImageBuffer bgCache = null;
-		Object cacheKey = null;
-		
-		if (useCache) {
-			cacheKey = getCacheKey(moduleInfo);
-			bgCache = new ImageBuffer(backgroundManager, cacheKey);
-			createDecoration = !bgCache.isValid();
-		}
-		
-		// get module ui information
-		NomadDOMModule domModule = nomadDom.getModuleNodeById(moduleInfo.getModuleID());
-		
-		for (Iterator itComp=domModule.iterator();itComp.hasNext();) {
-			NomadDOMComponent compNode = (NomadDOMComponent) itComp.next();
-
-			String compName = compNode.getName();
-			Class compClass = uifactory.getNomadComponentClass(compName);
-
-			boolean notAsDecorationRegistered = !decorationOnlyComponents.containsKey(compName);
-					
-			if ( createDecoration || notAsDecorationRegistered) {
-				
-				NomadComponent comp = uifactory.newComponentInstanceByClass(compClass);
-				comp.setSize(comp.getPreferredSize());
-				
-				if (comp==null) {
-
-					System.err.println("Cannot create componenent with name '"+compName+"'.");
-
-				} else {
-					
-					if (notAsDecorationRegistered && (!comp.hasDynamicOverlay()) ) {
-						decorationOnlyComponents.put(compName, compName);
-					}
-					// setup component
-					comp.setEnvironment(uifactory);
-					comp.setNameAlias(compName);
-
-					PropertySet properties = comp.getAccessibleProperties();
-
-					for (Iterator itProp=compNode.iterator();itProp.hasNext();) {
-						NomadDOMProperty propNode = (NomadDOMProperty) itProp.next();
-						Property compProperty = properties.byName(propNode.getName());
-						if (compProperty==null) {
-							System.err.println("Component '"+comp.getClass().getName()+"' has no property "+propNode+".");
-						} else {
-							try {
-								compProperty.setValueFromString(propNode.getValue());
-							} catch (Throwable t) {
-								System.err.println("In component "+comp.getClass().getName()+": error setting property "+t+".");
-								t.printStackTrace();
-							}
-						}
-					}
-
-					modulePane.add(comp);
-					comp.deleteOnScreenBuffer();
-					comp.link();
-				}
-			}
-		}
-
-		if (useCache) {
-
-			if (bgCache==null || !bgCache.isValid()) {
-				bgCache = new ImageBuffer(backgroundManager, cacheKey, modulePane.renderBackground());
-				modulePane.removeDecoration();
-			}
-			// broadcast
-			modulePane.broadcastBackground(bgCache);
-			bgCache.dispose();
-		}
-	*/	
 	}
 	
 	

@@ -10,7 +10,7 @@ import org.nomad.util.graphics.ImageTracker;
  * 
  * @author Christian Schneider
  */
-public class DConnector {
+public class DConnector extends DModulePart {
 
 	/** The connector is an input. */
 	public final static int CONNECTOR_TYPE_INPUT = 0;
@@ -27,8 +27,6 @@ public class DConnector {
 	/** The connector has an slave signal as input/output */
 	public final static int SIGNAL_SLAVE = 3;
 
-	/** the module this connector belongs to */
-	private DModule parent;
 	/** the connector type, either CONNECTOR_TYPE_INPUT or CONNECTOR_TYPE_OUTPUT */
 	private int cnType;
 	/** the connector signal, one of SIGNAL_* values */
@@ -51,22 +49,11 @@ public class DConnector {
 	public DConnector(DModule parent,
 			int connectionId, int connectionType, 
 			int connectionSignal, String name) {
-		this.parent = parent;
-		if (parent==null) 
-			throw new NullPointerException("'parent' must not be null");
-
+		super(parent);
 		this.cnId = connectionId;
 		this.cnType=connectionType;
 		this.cnSignal=connectionSignal;
 		this.cnName = name;
-	}
-
-	/**
-	 * Returns the parent module.
-	 * @return the parent module
-	 */
-	public DModule getParent() {
-		return parent;
 	}
 
 	/**

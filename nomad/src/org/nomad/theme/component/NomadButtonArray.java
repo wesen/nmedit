@@ -29,18 +29,11 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.border.Border;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.nomad.theme.ImageString;
 import org.nomad.theme.NomadClassicColors;
@@ -48,65 +41,62 @@ import org.nomad.theme.component.model.NomadButtonArrayBehaviour;
 import org.nomad.theme.component.model.NomadButtonArrayModel;
 import org.nomad.theme.property.BooleanProperty;
 import org.nomad.theme.property.Property;
-import org.nomad.theme.property.editor.PropertyEditor;
-import org.nomad.xml.dom.module.DParameter;
+import org.nomad.theme.property.PropertySet;
 
 public class NomadButtonArray extends NomadControl implements NomadButtonArrayModel {
 
 	private NomadButtonArrayBehaviour behaviour = new NomadButtonArrayBehaviour(this);
-	private ArrayList labelList = new ArrayList();
 	private boolean flagIsCylicDisplay = true;
 	private boolean flagLandscape = false;
-	private int buttonsAreObsolete = 0;
-	private boolean allowTextPropertyExport = true;
+	private ImageString[] labelList = new ImageString[6];
 	
+	private static MouseAdapter buttonArrayMouseListener = new MouseAdapter(){
+		public void mouseClicked(MouseEvent event) {
+			if (event.getSource() instanceof NomadButtonArray) {
+				NomadButtonArray nba = (NomadButtonArray) event.getSource();
+				nba.requestFocus();
+				nba.behaviour.calculateMetrics();
+				
+				if (nba.flagIsCylicDisplay) { 
+					int v = nba.getValue()+1;
+					if (v>nba.getMaxValue()) v = nba.getMinValue();
+					nba.setValue(v);
+				} else {
+					nba.setValue(nba.behaviour.getButtonIndexAt(event.getPoint()));
+				}
+				//repaint();
+			}
+		}
+	};
+	
+	/*
+	private final static FocusListener buttonArrayFocusListener = new FocusListener(){
+
+		public void focusGained(FocusEvent event) {
+		//	repaint();
+		}
+
+		public void focusLost(FocusEvent event) {
+	//		repaint();
+		}
+	};*/
+		
 	public NomadButtonArray() {
-		setBackground(NomadClassicColors.MODULE_BACKGROUND);
+		setBackground(NomadClassicColors.BUTTON_BACKGROUND);
+		//setForeground(NomadClassicColors.BUTTON_FOREGROUND);
 		setOpaque(false);
 		setFont(new Font("SansSerif", Font.PLAIN, 10));
 		setDynamicOverlay(true);
+		setFocusable(true);
+
+		for (int i=labelList.length-1;i>=0;i--) {
+			labelList[i] = null;
+		}
 		
-		addMouseListener(new MouseAdapter(){
-			public void mouseClicked(MouseEvent event) {
-				behaviour.calculateMetrics();
-				
-				if (flagIsCylicDisplay) { 
-					int v = getValue()+1;
-					if (v>getMaxValue()) v = getMinValue();
-					setValue(v);
-				} else {
-					int index = behaviour.getButtonIndexAt(event.getPoint());
-					if (0<=index && index<labelList.size()) {
-						setValue(index);
-					}
-				}
-				repaint();
-			}
-		});	
+		addMouseListener(buttonArrayMouseListener);
+		//addFocusListener(buttonArrayFocusListener);
 
-		getAccessibleProperties().byName("parameter#0")
-			.addChangeListener(new ChangeListener(){
-			public void stateChanged(ChangeEvent event) {
-				DParameter param = getParameterInfo();
-				
-				labelList.clear();
-				allowTextPropertyExport = false;
-				
-				if (param!=null) {
-					for (int i=getMinValue();i<=getMaxValue();i++) {
-						addButton(param.getFormattedValue(i));
-					}
-				}
-			}});
-
-		getAccessibleProperties().setFallbackProperty(new Fallback(this));
-		
-		getAccessibleProperties().add(new NewButtonProperty(this));
-		getAccessibleProperties().add(new RemoveButtonProperty(this));
-		getAccessibleProperties().add(new OrientationProperty(this));
-		getAccessibleProperties().add(new CyclicProperty(this));
-
-		addButton(encodeButtonName(labelList.size()));
+		//addButton(encodeButtonName(labelList.length));
 		//addButton(createPropertyName(labelList.size()));
 		autoResize(false);
 		Dimension d = new Dimension(30,10);
@@ -114,8 +104,15 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		setMaximumSize(d);
 		setPreferredSize(d);
 		setSize(d);
-		
-		buttonsAreObsolete = labelList.size();
+	}
+
+	protected void createProperties(PropertySet set) {
+		super.createProperties(set);
+		for (int i=labelList.length-1;i>=0;i--) {
+			set.add(new BtnTextProperty(this,i));
+		}
+		set.add(new OrientationProperty(this));
+		set.add(new CyclicProperty(this));
 	}
 
 	public void autoResize(boolean force) {
@@ -132,11 +129,14 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 	}
 
 	public int getButtonCount() {
-		return flagIsCylicDisplay ? 1 : labelList.size();
+		return flagIsCylicDisplay ? 1 : getRange()+1;
 	}
 
 	private Dimension getLabelSize(int index) {
-		ImageString istr = (ImageString) labelList.get(index);
+		ImageString istr = labelList[index];
+		if (istr==null)
+			return new Dimension(0,0);
+		
 		if (istr.getImage()!=null) {
 			Image i = istr.getImage();
 			return new Dimension(i.getWidth(null),i.getHeight(null));
@@ -147,7 +147,7 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 	
 	private Dimension getMaxLabelSize() {
 		Dimension d = new Dimension(6,6);
-		for (int i=0;i<labelList.size();i++) {
+		for (int i=0;i<labelList.length;i++) {
 			Dimension c = getLabelSize(i);
 			d.width=Math.max(d.width,c.width);
 			d.height=Math.max(d.height,c.height);
@@ -186,46 +186,22 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		return istring;
 	}
 
-	public void addButton(String label) {
-		while (buttonsAreObsolete>0) {
-			buttonsAreObsolete--;
-			removeButton(0);
-		}
-		
-		int index = labelList.size();
-		labelList.add(newLabel(label));
-		autoResize(true);
-		getAccessibleProperties().add(new BtnTextProperty(this, index));
-	}
-	
 	public void setButton(int index, String label) {
-		while (buttonsAreObsolete>0) {
-			buttonsAreObsolete--;
-			removeButton(0);
-		}
-		
-		if (index<labelList.size()) {
-			getAccessibleProperties().remove(getAccessibleProperties().byName(encodeButtonName(index)));
-			labelList.set(index, newLabel(label));
-			getAccessibleProperties().add(new BtnTextProperty(this, index));
+		if (0<=index && index<labelList.length) {
+			if ("".equals(label))
+				labelList[index] = null;
+			else
+				labelList[index] = newLabel(label);
 			repaint();
-		} else {
-			while (index+1<labelList.size())
-				addButton(encodeButtonName(labelList.size()));
+		}
+	}
 
-			addButton(label);
-		}
-	}
-	
 	public void removeButton(int index) {
-		if (0<=index && index<labelList.size()) {
-			getAccessibleProperties().remove(getAccessibleProperties().byName(encodeButtonName(index)));
-			labelList.remove(index);
+		if (0<=index && index<labelList.length) {
+			labelList[index] = null;
+			repaint();
 		}
-		autoResize(true);
-		repaint();
 	}
-	
 
 	public boolean isLandscape() {
 		return flagLandscape;
@@ -241,26 +217,24 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 	
 	public void paintDecoration(Graphics2D g2) {
 	}
+
+	private final static Border defBorder = NomadBorderFactory.createNordEditor311RaisedButtonBorder();
+	private final static Border selBorder = NomadBorderFactory.createNordEditor311LoweredButtonBorder();
 	
 	public void paintDynamicOverlay(Graphics2D g2) {
 		behaviour.calculateMetrics();
 
 		g2.setFont(getFont());
-
-		Border bbutton = NomadBorderFactory.createNordEditor311RaisedBorder(2);
-		Border bselection = NomadBorderFactory.createNordEditor311LoweredBorder(2);
-		Border b = bbutton;
+		Border b = defBorder;
 
 		if (flagIsCylicDisplay) {
 			int i = getValue();
-			if (getValue()==0)
-				b=bselection;
+			if (getValue()!=0)
+				b=selBorder;
 			
 			ImageString istr;
-			if (0<=i && i<labelList.size())
-				istr = (ImageString) labelList.get(i);
-			else if (labelList.size()>0)
-				istr = (ImageString) labelList.get(labelList.size()-1);
+			if (0<=i && i<labelList.length && labelList[i]!=null)
+				istr = labelList[i];
 			else
 				istr = new ImageString("");
 				
@@ -272,7 +246,7 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 				bounds = NomadLabel.getStringBounds(this, istr.getString());
 			Point cell = behaviour.getCell(0);
 			
-			g2.setColor(getBackground());
+			g2.setColor(hasFocus() ? NomadClassicColors.BUTTON_FOCUSED_BACKGROUND : getBackground());
 			g2.fillRect(cell.x, cell.y, behaviour.getCellWidth()-2, behaviour.getCellHeight()-2);
 			
 			g2.setColor(Color.WHITE);
@@ -281,7 +255,7 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 			//g2.fillRect(cell.x, cell.y, behaviour.getCellWidth(), behaviour.getCellHeight());
 			
 			bounds.x += (behaviour.getCellWidth()-bounds.width)/2;
-			bounds.y += (behaviour.getCellHeight()-bounds.height)/2;
+			bounds.y += (behaviour.getCellHeight()-bounds.height)/2 ;
 
 			if (istr.getImage()!=null) {
 				
@@ -289,14 +263,14 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 				
 			} else {
 				g2.setColor(Color.BLACK);
-				g2.drawString(istr.getString(), cell.x+bounds.x, cell.y+bounds.y);
+				g2.drawString(istr.getString(), cell.x+bounds.x, cell.y+bounds.y+1);
 			}
 		}	else {	
 
 			for (int i=getButtonCount()-1;i>=0;i--) {
 				ImageString istr;
-				if (0<=i && i<labelList.size()) {
-					istr = (ImageString) labelList.get(i);
+				if (0<=i && i<labelList.length && labelList[i]!=null) {
+					istr = labelList[i];
 				} else
 					istr = new ImageString("");
 
@@ -308,28 +282,33 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 					bounds = NomadLabel.getStringBounds(this, istr.getString());
 				Point cell = behaviour.getCell(i);
 
-				g2.setColor(getBackground());
+				if (hasFocus())
+					g2.setColor(NomadClassicColors.BUTTON_FOCUSED_BACKGROUND);
+				else if (getValue()==i)
+					g2.setColor(NomadClassicColors.BUTTON_SELECTED_BACKGROUND);
+				else
+					g2.setColor(getBackground());
 				g2.fillRect(cell.x, cell.y, behaviour.getCellWidth()-2, behaviour.getCellHeight()-2);
 				
 				g2.setColor(Color.WHITE);
 				if (i==getValue()) {
-					b=bselection;
+					b=selBorder;
 				} else {
-					b=bbutton;
+					b=defBorder;
 				}
 				b.paintBorder(this, g2, cell.x, cell.y, behaviour.getCellWidth(), behaviour.getCellHeight());
 				//g2.fillRect(cell.x, cell.y, behaviour.getCellWidth(), behaviour.getCellHeight());
 				
-				bounds.x += (behaviour.getCellWidth()-bounds.width)/2;
-				bounds.y += (behaviour.getCellHeight()-bounds.height)/2;
-
+				bounds.x += (behaviour.getCellWidth()-bounds.width)/2 ;
+				bounds.y += (behaviour.getCellHeight()-bounds.height)/2 ;
+				
 				if (istr.getImage()!=null) {
 					
 					g2.drawImage(istr.getImage(), cell.x+bounds.x, cell.y+bounds.y, this);
 					
 				} else {
 					g2.setColor(Color.BLACK);
-					g2.drawString(istr.getString(), cell.x+bounds.x, cell.y+bounds.y);
+					g2.drawString(istr.getString(), cell.x+bounds.x, cell.y+bounds.y+1);
 				}
 			}
 			
@@ -344,93 +323,22 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 			setName(encodeButtonName(index));
 		}
 
-		public Object getValue() {			
-			ArrayList labelList = ((NomadButtonArray)getComponent()).labelList;
-			if (index>=0 && index<labelList.size())
-				return labelList.get(index);
-			else
-				return null;
+		public Object getValue() {
+			return ((NomadButtonArray)getComponent()).labelList[index];
 		}
 
 		public void setValueFromString(String value) {
-			if (index>=0 && index<labelList.size()) {
+			if (0<=index && index<labelList.length) {
 				setButton(index, value);
-			} else 
-				addButton(value);
-			allowTextPropertyExport = true;
+			}
 		}
-		
+
 		public boolean isExportable() {
-			return allowTextPropertyExport;
+			return labelList[index]!=null;
 		}
 		
 	}
 
-	private class NewButtonProperty extends Property {
-
-		public NewButtonProperty(NomadComponent component) {
-			super(component);
-			setValidatingName(false);
-			setName(":add");
-			setExportable(false);
-		}
-
-		public Object getValue() {
-			return "<add>";
-		}
-
-		public void setValueFromString(String value) {
-			addButton(value);
-		}
-		
-	}
-	private class RemoveButtonProperty extends Property {
-
-		public RemoveButtonProperty(NomadComponent component) {
-			super(component);
-			setValidatingName(false);
-			setName(":remove");
-			setExportable(false);
-		}
-
-		public Object getValue() {
-			return "<remove>";
-		}
-
-		public void setValueFromString(String value) {
-			// ignore
-		}
-
-		public PropertyEditor getEditor() {
-			return new PropertyEditor(this) {
-
-				private JButton btn = new JButton("action");
-				
-				 {
-					 btn.addActionListener(new ActionListener(){
-
-						public void actionPerformed(ActionEvent event) {
-							int index = NomadButtonArray.this.getValue();
-							NomadButtonArray.this.decValue();
-							removeButton(index);
-							fireEditingCanceled();
-						}});
-				}
-				
-				public Object getEditorValue() {
-					return "";
-				}
-
-				public JComponent getEditorComponent() {
-					return btn;
-				}
-
-				
-			};
-		}
-		
-	}
-	
 	private class OrientationProperty extends BooleanProperty {
 
 		public OrientationProperty(NomadComponent component) {
@@ -461,31 +369,6 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 
 		public boolean getBoolean() {
 			return ((NomadButtonArray)getComponent()).isCylicDisplay();
-		}
-		
-	}
-	
-	private class Fallback extends Property {
-
-		public Fallback(NomadComponent component) {
-			super(component);
-			setValidatingName(false);
-		}
-
-		public Object getValue() {
-			return "<fallback>";
-		}
-		
-		private Pattern p = Pattern.compile("btn#(\\d+)");
-
-		public void setValueFromString(String value) {
-			if (p.matcher(getName()).matches()) {
-				String[] btn = getName().split("#");
-				int index = Integer.parseInt(btn[1]);
-				setName(null);			
-				setButton(index, value);
-			} else 
-				throw new IllegalArgumentException("Property "+this+" does not handle value "+value+".");
 		}
 		
 	}

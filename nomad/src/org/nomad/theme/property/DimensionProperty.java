@@ -34,6 +34,10 @@ public abstract class DimensionProperty extends PointProperty {
 	public DimensionProperty(NomadComponent component) {
 		super(component);
 		setName("size");
+	}
+	
+	public void setupForEditing() {
+		super.setupForEditing();
 		setHandler(Dimension.class, new PropertyValueHandler(){
 			public void writeValue(Object value) throws IllegalArgumentException {
 				Dimension d = (Dimension) value;

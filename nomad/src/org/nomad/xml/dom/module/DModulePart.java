@@ -18,37 +18,35 @@
  */
 
 /*
- * Created on Jan 6, 2006
+ * Created on Jan 20, 2006
  */
-package org.nomad.theme.property;
+package org.nomad.xml.dom.module;
 
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+public class DModulePart {
 
-import org.nomad.theme.component.NomadComponent;
+	private int contextId = -1; // index in the modules array, for internal use only
 
-/**
- * @author Christian Schneider
- */
-public class ComponentLocationProperty extends PointProperty {
+	/** The module this parameter belongs to */
+	private DModule parent = null;
+	
+	public DModulePart(DModule parent) {
+		this.parent = parent;
+	}
 
+	public int getContextId() {
+		return contextId;
+	}
+	
+	void setContextId(int index) {
+		this.contextId = index;
+	}
+	
 	/**
-	 * @param component
+	 * Returns the module this parameter belongs to
+	 * @return the module this parameter belongs to
 	 */
-	public ComponentLocationProperty(NomadComponent component) {
-		super(component);
+	public DModule getParent() {
+		return parent;
 	}
 
-	public void setXY(int x, int y) {
-		getComponent().setLocation(x, y);
-	}
-	public int getX() { return getComponent().getX(); }
-	public int getY() { return getComponent().getY(); }
-
-	public void setupForEditing() {
-		getComponent().addComponentListener(new ComponentAdapter(){
-			public void componentMoved(ComponentEvent event) {
-				fireChangeEvent();
-			}});
-	}
 }

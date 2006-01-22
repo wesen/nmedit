@@ -50,7 +50,7 @@ public final class AppIcons extends ImageTracker {
 
 	public AppIcons() {
 		try {
-			loadFromDirectory("src/data/images/icons/app");
+			loadFromDirectory("data/images/icons/app");
 			formatKeys();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

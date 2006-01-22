@@ -25,8 +25,8 @@ package org.nomad.theme.component;
 import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.event.ChangeEvent;
@@ -35,6 +35,7 @@ import javax.swing.event.ChangeListener;
 import org.nomad.patch.Module;
 import org.nomad.patch.Parameter;
 import org.nomad.theme.property.ParameterProperty;
+import org.nomad.theme.property.PropertySet;
 import org.nomad.util.misc.ParameterToolTip;
 import org.nomad.xml.dom.module.DParameter;
 
@@ -75,16 +76,11 @@ public abstract class NomadControl extends NomadComponent {
 		addValueOptionChangeListener(repainter);
 		addFocusListener(repainter);
 
-		addMouseListener(new MouseListener(){
-			
-			public void mouseClicked(MouseEvent event) { }
+		addMouseListener(new MouseAdapter(){
 
 			public void mousePressed(MouseEvent event) {
 				ParameterToolTip.removeTip();
 			}
-
-			public void mouseReleased(MouseEvent event) { }
-
 			public void mouseEntered(MouseEvent event) {
 				if (parameterInfo!=null) {
 					ParameterToolTip tip = new ParameterToolTip(NomadControl.this, parameterInfo, getValue());
@@ -94,9 +90,12 @@ public abstract class NomadControl extends NomadComponent {
 
 			public void mouseExited(MouseEvent event) {
 				ParameterToolTip.removeTip();
-			}}); 
-		
-		getAccessibleProperties().add(new ParameterProperty(this));
+			}});
+	}
+
+	protected void createProperties(PropertySet set) {
+		super.createProperties(set);
+		set.add(new ParameterProperty(this));
 	}
 	
 	public void setParameterInfo(DParameter parameterInfo) {
@@ -312,7 +311,7 @@ public abstract class NomadControl extends NomadComponent {
 	
 	private class ParameterChangeListener implements ChangeListener {
 		public void stateChanged(ChangeEvent event) {
-			setValue(parameter.getValue(), event.getSource());
+			setValue(parameter.getValue());
 		}
 	}
 	

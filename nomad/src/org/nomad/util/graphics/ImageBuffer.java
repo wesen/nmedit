@@ -224,52 +224,12 @@ public class ImageBuffer {
 	 * @see #isValid()
 	 */
 	public void paint(Graphics g) {
-		if (!isValid()) 
-			throw new IllegalStateException("ImageBuffer is not valid.");
-
-		Rectangle clip = g.getClipBounds(); // use clip bounds if necessary
-		if (clip==null) {
-			if (isRegionSet()) {
-				g.drawImage(image, 0, 0, region.width, region.height,
-					region.x, region.y,region.x+region.width,region.y+ region.height, null);
-			} else {
-				g.drawImage(image, 0, 0, null);
-			}
-		} else { // clip!=null
-			if (isRegionSet()) {	
-				Rectangle target = new Rectangle(0, 0, region.width, region.height); // move region to 0,0
-				Rectangle ri = clip.intersection(target); // intersect region and component
-				if (ri.isEmpty()) {
-					// no painting necessary
-				} else {
-					
-					int ix = region.x+ri.x;
-					int iy = region.y+ri.y;
-					
-					g.drawImage(image,
-						ri.x, ri.y, ri.x+ri.width, ri.y+ri.height,
-						ix, iy, ix+ri.width, iy+ri.height, null);
-				}
-			} else {
-				// intersect clip with image bounds
-				Rectangle ri = clip.intersection(new Rectangle(0, 0, image.getWidth(null), image.getHeight(null)));
-				if (ri.isEmpty()){
-					// no painting necessary
-				} else {
-					// paint intersection of clip and image
-					int r = ri.x+ri.width;
-					int b = ri.y+ri.height;
-					g.drawImage(image,
-							ri.x, ri.y, r, b,
-							ri.x, ri.y, r, b, null);
-				}
-			}
-		}
+		ImageToolkit.paintRegion(g, image, region, 0, 0);
 	}
 	
 	protected void finalize() throws Throwable {
-		unsubscribe();
+		dispose();
 		super.finalize();
 	}
-	
+
 }

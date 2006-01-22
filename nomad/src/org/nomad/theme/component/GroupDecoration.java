@@ -18,37 +18,33 @@
  */
 
 /*
- * Created on Jan 6, 2006
+ * Created on Jan 20, 2006
  */
-package org.nomad.theme.property;
+package org.nomad.theme.component;
 
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
 
-import org.nomad.theme.component.NomadComponent;
+import javax.swing.border.Border;
 
-/**
- * @author Christian Schneider
- */
-public class ComponentLocationProperty extends PointProperty {
-
-	/**
-	 * @param component
-	 */
-	public ComponentLocationProperty(NomadComponent component) {
-		super(component);
+public class GroupDecoration extends NomadComponent {
+	
+	private final static Dimension defaultSize = new Dimension(80,40);
+	private final static Border border = NomadBorderFactory.createNordEditor311GroupBoxBorder();
+	
+	public GroupDecoration() {
+		super();
+		setOpaque(false);
+		setDynamicOverlay(false);
+		setPreferredSize(defaultSize);
+		setMinimumSize(defaultSize);
+		setMaximumSize(defaultSize);
+		setSize(defaultSize);
 	}
 
-	public void setXY(int x, int y) {
-		getComponent().setLocation(x, y);
+	public void paintDecoration(Graphics2D g2) { 
+		border.paintBorder(this, g2, 0, 0, getWidth(), getHeight());
+//		BorderFactory.createLineBorder()
 	}
-	public int getX() { return getComponent().getX(); }
-	public int getY() { return getComponent().getY(); }
-
-	public void setupForEditing() {
-		getComponent().addComponentListener(new ComponentAdapter(){
-			public void componentMoved(ComponentEvent event) {
-				fireChangeEvent();
-			}});
-	}
+		
 }

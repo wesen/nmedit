@@ -41,6 +41,9 @@ public abstract class PointProperty extends Property {
 	public PointProperty(NomadComponent component) {
 		super(component);
 		setName("x,y");
+	}
+	public void setupForEditing() {
+		super.setupForEditing();
 		setHandler(Point.class, new PropertyValueHandler(){
 			public void writeValue(Object value) throws IllegalArgumentException {
 				try {
@@ -80,6 +83,49 @@ public abstract class PointProperty extends Property {
 	}
 
 	public void setValueFromString(String value) {
+		//63ms
+		int x=0;int y=0;int i=0;int end = value.length()-1;
+		boolean xset = false;
+		boolean yset = false;
+		boolean signx= false;
+		boolean signy= false;
+		char c;
+		for (;i<=end;i++) {
+			c = value.charAt(i);
+			if ('0'<=c && c<='9') { 
+				x=(x*10) + (c-'0');
+				xset = true;
+			} else if (c==',') {
+				i++; break; // x, finished
+			} else if (c=='-') {
+				if (xset) throw new IllegalArgumentException("Illegal argument in '"+PointProperty.this+"': "+value);
+				else signx=true;
+			} else {
+				throw new IllegalArgumentException("Illegal argument in '"+PointProperty.this+"': "+value);
+			}
+		}
+		for (;i<=end;i++) {
+			c = value.charAt(i);
+			if ('0'<=c && c<='9') {
+				y=(y*10) + (c-'0');
+				yset=true;
+			} else if (c=='-') {
+				if (yset) throw new IllegalArgumentException("Illegal argument in '"+PointProperty.this+"': "+value);
+				else signy=true;
+			} else
+				throw new IllegalArgumentException("Illegal argument in '"+PointProperty.this+"': "+value);
+		}
+		if (xset&&yset) {
+			if (signx) x=-x;
+			if (signy) y=-y;
+			setXY(x,y);
+		} else
+			throw new IllegalArgumentException("Illegal argument in '"+PointProperty.this+"': "+value);
+		/*s
+		
+		System.out.println(value+"  ---- x,y="+x+","+y);
+		setXY(x,y);
+		/*
 		try {
 			Matcher m = xypattern.matcher(value);
 			if (!m.matches())
@@ -88,7 +134,7 @@ public abstract class PointProperty extends Property {
 		} catch (Throwable t) {
 			if (!(t instanceof IllegalArgumentException))
 				throw new IllegalArgumentException("An error occured in '"+PointProperty.this+"': "+value, t);
-		}
+		}*/
 	}
 	
 }

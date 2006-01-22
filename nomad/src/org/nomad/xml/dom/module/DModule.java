@@ -1,7 +1,6 @@
 package org.nomad.xml.dom.module;
 
 import java.awt.Image;
-import java.util.ArrayList;
 
 
 /**
@@ -12,15 +11,15 @@ import java.util.ArrayList;
  * @composed 1 - n nomad.model.descriptive.DConnector
  */
 public class DModule {
-	
+
 	/** An icon representation for this module */
 	private Image icon;
 	/** A list containing DParameter objects describing the parameters this module has */
-	private ArrayList dparameters = null;
+	private DParameter[] dparameters = new DParameter[0];
 	/** A list containing DCustom objects */
-	private ArrayList dcustoms = null;
+	private DCustom[] dcustoms = new DCustom[0];
 	/** A list containing DConnector objects describing the connectors this module has */
-	private ArrayList dconnectors = null;
+	private DConnector[] dconnectors = new DConnector[0];
 	/** The parent toolbar section this module belongs to */
 	private DToolbarSection parent = null;
 	/** The name of this module */
@@ -99,7 +98,7 @@ public class DModule {
 	 * @return the number of parameters this module has.
 	 */
 	public int getParameterCount() {
-		return dparameters == null ? 0 : dparameters.size();
+		return dparameters.length;
 	}
 	
 	/**
@@ -107,7 +106,7 @@ public class DModule {
 	 * @return the number of 'custom' parameters this module has.
 	 */
 	public int getCustomParamCount() {
-		return dcustoms == null ? 0 : dcustoms.size();
+		return dcustoms.length;
 	}
 	
 	/**
@@ -116,8 +115,7 @@ public class DModule {
 	 * @return the parameter
 	 */
 	public DParameter getParameter(int index) {
-		if (dparameters == null) return null;
-		return (DParameter) dparameters.get(index);
+		return dparameters[index];
 	}
 	
 	/**
@@ -126,17 +124,21 @@ public class DModule {
 	 * @return the parameter
 	 */
 	public DCustom getCustomParam(int index) {
-		if (dcustoms == null) return null;
-		return (DCustom) dcustoms.get(index);
+		return dcustoms[index];
 	}
-
+	
 	/**
 	 * Adds a new 'custom' parameter object to this module.
 	 * @param d a parameter
 	 */
 	public void addCustomParam(DCustom d) {
-		if (dcustoms == null) dcustoms = new ArrayList();
-		dcustoms.add(d);
+		DCustom[] tmp = new DCustom[dcustoms.length+1];
+		for (int i=0;i<dcustoms.length;i++)
+			tmp[i]=dcustoms[i];
+		int context = tmp.length-1;
+		tmp[context] = d;
+		d.setContextId(context);
+		dcustoms = tmp;
 	}
 	
 	/**
@@ -144,8 +146,13 @@ public class DModule {
 	 * @param d a parameter
 	 */
 	public void addParameter(DParameter d) {
-		if (dparameters == null) dparameters = new ArrayList();
-		dparameters.add(d);
+		DParameter[] tmp = new DParameter[dparameters.length+1];
+		for (int i=0;i<dparameters.length;i++)
+			tmp[i]=dparameters[i];
+		int context = tmp.length-1;
+		tmp[context] = d;
+		d.setContextId(context);
+		dparameters = tmp;
 	}
 	
 	/**
@@ -153,7 +160,7 @@ public class DModule {
 	 * @return the number of connectors this module has
 	 */
 	public int getConnectorCount() {
-		return dconnectors == null ? 0 : dconnectors.size();
+		return dconnectors.length;
 	}
 
 	/**
@@ -162,8 +169,7 @@ public class DModule {
 	 * @return the connector
 	 */
 	public DConnector getConnector(int index) {
-		if (dconnectors == null) return null;
-		return (DConnector) dconnectors.get(index);
+		return dconnectors[index];
 	}
 	
 	/**
@@ -171,8 +177,13 @@ public class DModule {
 	 * @param c a connector
 	 */
 	public void addConnector(DConnector c) {
-		if (dconnectors == null) dconnectors = new ArrayList();
-		dconnectors.add(c);
+		DConnector[] tmp = new DConnector[dconnectors.length+1];
+		for (int i=0;i<dconnectors.length;i++)
+			tmp[i]=dconnectors[i];
+		int context = tmp.length-1;
+		tmp[context] = c;
+		c.setContextId(context);
+		dconnectors = tmp;
 	}
 	
 	/**
@@ -373,25 +384,15 @@ public class DModule {
 	 * @return the connector or null if the connector does not exist
 	 */
 	public DConnector getConnectorById(int connectorID, boolean isInput) {
-		if (dconnectors==null) return null;
-		DConnector c = null;
-		
-		// look if id and index are the same. This should be true in most cases
-		if ( 	(connectorID>=0)
-			&&	(connectorID<getConnectorCount())
-			&& (c = (DConnector) getConnector(connectorID)).getId()==connectorID)
-			return c;
-
-		// not found then we have to check all candidates
 		for (int i=0;i<getConnectorCount();i++) {
-			if ((c = getConnector(i)).getId()==connectorID) {
+			DConnector c = getConnector(i);
+			if (c.getId()==connectorID) {
 				if (isInput && c.getType()==DConnector.CONNECTOR_TYPE_INPUT)
 					return c;
 				else if (!isInput && c.getType()==DConnector.CONNECTOR_TYPE_OUTPUT)
 					return c;
 			}
 		}
-		
 		return null; // bad luck, not found
 	}
 
@@ -413,6 +414,18 @@ public class DModule {
 
 	public void setLimit(int limit) {
 		this.limit = limit;
+	}
+	
+	public DParameter[] getParameterList() {
+		return dparameters;
+	}
+	
+	public DCustom[] getCustomList() {
+	return dcustoms;
+	}
+	
+	public DConnector[] getConnectorList() {
+		return dconnectors;
 	}
 	
 }

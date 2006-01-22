@@ -34,14 +34,15 @@ public class ComponentSizeProperty extends DimensionProperty {
 
 	public ComponentSizeProperty(NomadComponent component) {
 		super(component);
-		component.addComponentListener(new ComponentAdapter(){
-			public void componentResized(ComponentEvent event) {
-				fireChangeEvent();
-			}});
 	}
 
 	public void setXY(int x, int y) { getComponent().setSize(x, y); }
 	public int getX() { return getComponent().getWidth(); }
 	public int getY() { return getComponent().getHeight(); }
-
+	public void setupForEditing() {
+		getComponent().addComponentListener(new ComponentAdapter(){
+			public void componentResized(ComponentEvent event) {
+				fireChangeEvent();
+			}});
+	}
 }

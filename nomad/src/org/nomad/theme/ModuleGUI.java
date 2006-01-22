@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -18,6 +19,7 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 
 import org.nomad.patch.Module;
+import org.nomad.theme.component.ModuleGuiTitleLabel;
 import org.nomad.theme.component.NomadComponent;
 import org.nomad.theme.component.NomadLabel;
 import org.nomad.xml.dom.module.DModule;
@@ -57,12 +59,17 @@ public class ModuleGUI extends NomadComponent implements MouseListener, MouseMot
     	
         setLayout(null);
     	
-    	nameLabel = new NomadLabel();
-    	nameLabel.setDynamicOverlay(true);
+    	nameLabel = new ModuleGuiTitleLabel(info, module);
         nameLabel.setLocation(3,0);
         nameLabel.setFont(new Font("Dialog", Font.PLAIN, 10));
-        nameLabel.setText(info.getName());
         add(nameLabel);
+        
+        setFocusable(true);
+        addMouseListener(new MouseAdapter(){
+        	public void mousePressed(MouseEvent event) {
+        		requestFocus();
+        	}
+        });
         
 		setSize(Module.getPixWidth(), Module.getPixHeight(info));
 		if (module!=null)

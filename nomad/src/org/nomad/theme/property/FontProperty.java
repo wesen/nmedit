@@ -37,6 +37,9 @@ import org.nomad.theme.property.editor.PropertyEditor;
  */
 public abstract class FontProperty extends Property {
 
+	private final static String defaultFontString =
+		getFontString(new Font("SansSerif", Font.PLAIN, 9));
+	
 	/**
 	 * @param component
 	 */
@@ -44,12 +47,15 @@ public abstract class FontProperty extends Property {
 		super(component);
 		setName("font");
 		setIsInlineEditor(false);
+	}
+
+	public void setupForEditing() {
+		super.setupForEditing();
 		setHandler(Font.class, new PropertyValueHandler(){
 			public void writeValue(Object value) throws IllegalArgumentException {
 				setFont((Font)value);
 			}});
 	}
-
 	/**
 	 * i=italic
 	 * b=bold
@@ -59,6 +65,10 @@ public abstract class FontProperty extends Property {
 	
 	public static boolean isValidFontString(String fString) {
 		return p.matcher(fString).matches();
+	}
+	
+	public boolean isInDefaultState() {
+		return defaultFontString.equals(getValueString());
 	}
 	
 	public static Font parseFont(String fString) {

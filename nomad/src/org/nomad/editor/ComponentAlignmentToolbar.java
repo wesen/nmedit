@@ -65,7 +65,7 @@ public class ComponentAlignmentToolbar extends JToolBar {
 	}
 
 	private void addAction(String pngIconName, String toolTipText, int actionId) {
-		String imgFile = "src/data/images/icons/stock_"+pngIconName+".png";
+		String imgFile = "data/images/icons/stock_"+pngIconName+".png";
 		ImageIcon icon = new ImageIcon(imgFile);
 		addAction(icon, toolTipText, actionId);
 	}

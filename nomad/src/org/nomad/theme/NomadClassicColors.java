@@ -31,8 +31,21 @@ public class NomadClassicColors {
 	public final static Color MORPH_YELLOW = Color.decode("#E5DE45");
 	public final static Color MORPH_GREEN = Color.decode("#9AC899");
 	public final static Color MORPH_GRAY = Color.decode("#A8A8A8");
+
+	public final static Color BUTTON_BACKGROUND = Color.decode("#A5A5A5");
+	public final static Color BUTTON_FOCUSED_BACKGROUND = Color.decode("#C4F6ED");
+	public final static Color BUTTON_SELECTED_BACKGROUND = Color.decode("#C6CCDE");
 	
-	public final static Color MODULE_BACKGROUND = Color.decode("#CFCFCF");
+	public static final Color BUTTON_FOREGROUND = Color.decode("#EBEAEF");
+	public final static Color MODULE_BACKGROUND = Color.decode("#BFBFBF");
+	public final static Color TEXT_DISPLAY_BACKGROUND = Color.decode("#372C7B");
+
+	public final static Color AUDIO_LEVEL_DISPLAY_LOW = Color.decode("#087309");
+	public final static Color AUDIO_LEVEL_DISPLAY_HIGH = Color.decode("#767518");
+	public final static Color AUDIO_LEVEL_DISPLAY_LIGHT = Color.decode("#00CC00");
+	public static final Color GROUPBOX_BORDER = Color.decode("#777777");
+	
+	
 	
 	public static Color alpha(Color c, int alpha) {
 		

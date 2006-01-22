@@ -4,7 +4,6 @@ package org.nomad.main;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
-import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -60,7 +59,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
   
     Synth synth = null;
 
-	JFileChooser fileChooser = new JFileChooser("./src/data/patches/");
+	JFileChooser fileChooser = new JFileChooser("data/patches/");
 	
 	JMenuBar menuBar = null;
 	JMenu menuFile = null;
@@ -128,7 +127,6 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
             viewManager.setSelectedDocument(tab);
             viewManager.getSelectedDocument().setName(viewManager.getTitleAt(viewManager.getSelectedDocumentIndex()));
         	
-        	//System.out.println(p);
         }
     }
     
@@ -298,8 +296,8 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		Run.statusMessage("images");
 		theImageTracker = new ImageTracker();
 		try {
-			theImageTracker.loadFromDirectory("src/data/images/slice/");
-			theImageTracker.loadFromDirectory("src/data/images/single/");
+			theImageTracker.loadFromDirectory("data/images/slice/");
+			theImageTracker.loadFromDirectory("data/images/single/");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -310,11 +308,11 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 
 		// load substitutions
 		Run.statusMessage("parameter substitutions");
-		Substitutions subs = new Substitutions("src/data/xml/substitutions.xml");
+		Substitutions subs = new Substitutions("data/xml/substitutions.xml");
 		
 		// load module descriptors
 		Run.statusMessage("module description");
-		ModuleDescriptions.init("src/data/xml/modules.xml", subs);
+		ModuleDescriptions.init("data/xml/modules.xml", subs);
 
 		uifactory = PluginManager.getDefaultUIFactory();
 		uifactory.setEditing(false);
@@ -356,7 +354,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
     }
 	
 	public void initialLoading() {
-		loader.loadPatch("src/data/patches/all.pch");
+		loader.loadPatch("data/patches/all.pch");
 	}
 	
 	private void newSynth(ComPort comPort) {

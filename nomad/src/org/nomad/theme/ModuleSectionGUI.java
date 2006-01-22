@@ -7,9 +7,16 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JDesktopPane;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
 
+import org.nomad.main.ModuleGroupsMenu;
 import org.nomad.main.ModuleToolbarButton;
 import org.nomad.patch.ModuleSection;
 import org.nomad.xml.dom.module.DModule;
@@ -24,11 +31,53 @@ public class ModuleSectionGUI extends JDesktopPane implements DropTargetListener
 
 	public static final DataFlavor ModuleSectionGUIFlavor = new DataFlavor("nomad/ModuleSectionGUIFlavor", "Nomad ModuleSectionGUI");
 
+	private JPopupMenu popup = null;
+	
     public ModuleSectionGUI(ModuleSection moduleSection) {
         super();
         this.moduleSection = moduleSection;
 //      dropTarget = new DropTarget(this, dropAction, this, true);
         new DropTarget(this, dropAction, this, true);
+        
+        addMouseListener(new MouseListener() {
+
+			public void mouseClicked(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mousePressed(MouseEvent event) {
+				if (event.isPopupTrigger()) {
+					JMenu moduleSubMenu = ModuleGroupsMenu.getMenu();
+					JPopupMenu popup = new JPopupMenu();
+					popup.add(new JMenuItem("Cut")).setEnabled(false);
+					popup.add(new JMenuItem("Copy")).setEnabled(false);
+					popup.add(new JMenuItem("Paste")).setEnabled(false);
+					popup.add(new JSeparator());
+					popup.add(moduleSubMenu);
+					popup.show(event.getComponent(),event.getX(),event.getY());
+				}
+			}
+
+			public void mouseReleased(MouseEvent event) {
+				if (popup!=null) {
+		            if (event.isPopupTrigger()) {
+		            	popup.show(event.getComponent(), event.getX(), event.getY());
+		            	popup = null;
+		            }
+				}
+			}
+
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}});
+        
     }
 
 	public void dragEnter(DropTargetDragEvent dtde) {
@@ -82,4 +131,8 @@ public class ModuleSectionGUI extends JDesktopPane implements DropTargetListener
 	public void dragExit(DropTargetEvent dte) {
 	}
 
+	/*public void paint(Graphics g) {
+		// 
+	}*/
+	
 }

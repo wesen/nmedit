@@ -30,36 +30,42 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
 import org.nomad.theme.ImageString;
 import org.nomad.theme.property.BooleanProperty;
 import org.nomad.theme.property.FontProperty;
 import org.nomad.theme.property.Property;
+import org.nomad.theme.property.PropertySet;
 
 /**
  * @author Christian Schneider
  */
 public class NomadLabel extends NomadComponent {
 
-	private ImageString imageString = new ImageString();
+	private ImageString imageString = new ImageString("label");
 	private int sx = 0;
 	private int sy = 0;
 	private boolean flagVertText = false;
 	private boolean flagAutoResize = true;
 	private boolean flagTextAntialiasing = true;
+	private final static Font defaultLabelFont = new Font("SansSerif", Font.PLAIN, 9);
 	
 	public NomadLabel() {
 		super();
-		setFont(new Font("SansSerif", Font.PLAIN, 9));
+		setFont(defaultLabelFont);
 		setOpaque(false);
 		setForeground(Color.BLACK);
-		setText("label");
-		getAccessibleProperties().add(new LabelTextProperty(this));
-		getAccessibleProperties().add(new VerticalTextProperty(this));
-		getAccessibleProperties().add(new LabelFontProperty(this));
-		getAccessibleProperties().add(new AntialiasTextProperty(this));
 		autoResize();
+	}
+	
+	protected void createProperties(PropertySet set) {
+		super.createProperties(set);
+		set.add(new LabelTextProperty(this));
+		set.add(new VerticalTextProperty(this));
+		set.add(new LabelFontProperty(this));
+		set.add(new AntialiasTextProperty(this));
 	}
 	
 	public static Rectangle getStringBounds(JComponent component, String string) {
@@ -123,12 +129,13 @@ public class NomadLabel extends NomadComponent {
 	}	
 
 	public void setText(String text) {
-		if (!imageString.getString().equals(text)) {
+		//if (!imageString.getString().equals(text)) {
 			imageString.setString(text);
-			if (getEnvironment()!=null)
+			if (getEnvironment()!=null) {
 				imageString.loadImage(getEnvironment().getImageTracker());
+			}
 			fireTextUpdateEvent();
-		}
+		//}
 	}
 	
 	public String getText() {
@@ -163,6 +170,11 @@ public class NomadLabel extends NomadComponent {
 					d = getTextDimensions();
 				} else {
 					d =imageString.getImageBounds(this).getSize();
+					if (d.width==-1||d.height==-1) {
+						// do some trick if image is not loaded
+						(new ImageIcon(imageString.getImage())).getIconWidth();
+						d =imageString.getImageBounds(this).getSize();
+					}
 				}
 				setMinimumSize(d);
 				setMaximumSize(d);
@@ -192,13 +204,13 @@ public class NomadLabel extends NomadComponent {
 		autoResize();
 		repaint();
 	}
-
+	
 	public void paintDecoration(Graphics2D g2) {
 		if (flagTextAntialiasing) {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		}
-		
+
 		g2.setFont(getFont());
 		g2.setColor(getForeground());
 
@@ -255,6 +267,7 @@ public class NomadLabel extends NomadComponent {
 			super(component);
 			setName("vertical");
 		}
+
 		public void setBooleanValue(boolean value) {
 			setVertical(value);
 		}
