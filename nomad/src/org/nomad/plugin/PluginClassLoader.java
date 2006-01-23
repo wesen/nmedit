@@ -183,8 +183,7 @@ public class PluginClassLoader extends URLClassLoader {
 					String jarEntry = jarEntryName(file, pluginName);
 					if (jar.getJarEntry(jarEntry)!=null) {
 						return pluginName;
-					} else {
-					}
+					} 
 				} catch (Throwable e) {
 					// not a jar, so no further checking
 				}

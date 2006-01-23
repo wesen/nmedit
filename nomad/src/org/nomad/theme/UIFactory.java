@@ -1,5 +1,6 @@
 package org.nomad.theme;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.nomad.patch.Module;
@@ -45,8 +46,13 @@ public abstract class UIFactory extends NomadFactory {
 	}
 
 	public Class[] getInstalledClasses() {
-		return componentClasses.values().toArray(new Class[componentClasses.size()]);
+		// componentClasses.values() can contain duplicates
+		ArrayList<Class> dup = new ArrayList<Class>();
+		for (Class c : componentClasses.values()) {
+			if (!dup.contains(c)) dup.add(c);
+		}
 		
+		return dup.toArray(new Class[dup.size()]);
 	}
 
 	public NomadComponent newComponentInstance(String componentNameString) {
