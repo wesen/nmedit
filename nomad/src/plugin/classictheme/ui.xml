@@ -1105,25 +1105,25 @@
       <property name="text" value="{@decoration-15}" />
       <property name="x,y" value="209,50" />
     </component>
-    <component name="org.nomad.theme.component.NomadActiveLabel">
+    <component name="display.text">
       <property name="text" value="attack" />
       <property name="parameter#0" value="20.1.p.attack" />
       <property name="size" value="27,16" />
       <property name="x,y" value="63,29" />
     </component>
-    <component name="org.nomad.theme.component.NomadActiveLabel">
+    <component name="display.text">
       <property name="text" value="decay" />
       <property name="parameter#0" value="20.2.p.decay" />
       <property name="size" value="27,16" />
       <property name="x,y" value="97,29" />
     </component>
-    <component name="org.nomad.theme.component.NomadActiveLabel">
+    <component name="display.text">
       <property name="text" value="sustain" />
       <property name="parameter#0" value="20.3.p.sustain" />
       <property name="size" value="27,16" />
       <property name="x,y" value="130,28" />
     </component>
-    <component name="org.nomad.theme.component.NomadActiveLabel">
+    <component name="display.text">
       <property name="text" value="release" />
       <property name="parameter#0" value="20.4.p.release" />
       <property name="size" value="27,16" />
@@ -4481,7 +4481,7 @@
       <property name="text" value="{@decorator.rndgen}" />
       <property name="x,y" value="212,9" />
     </component>
-    <component name="org.nomad.theme.component.NomadActiveLabel">
+    <component name="display.text">
       <property name="text" value="rate" />
       <property name="parameter#0" value="110.0.p.rate" />
       <property name="size" value="36,16" />
@@ -4725,7 +4725,7 @@
       <property name="text" value="{@wf.square}" />
       <property name="x,y" value="220,10" />
     </component>
-    <component name="org.nomad.theme.component.NomadActiveLabel">
+    <component name="display.text">
       <property name="text" value="rate" />
       <property name="parameter#0" value="29.0.p.rate" />
       <property name="size" value="40,16" />
@@ -4880,7 +4880,7 @@
       <property name="x,y" value="170,29" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadResetButton">
+    <component name="knob.reset">
       <property name="parameter#0" value="102.5.p.feedback" />
       <property name="x,y" value="145,24" />
       <property name="size" value="9,6" />
@@ -5503,7 +5503,7 @@
       <property name="text" value="LP" />
       <property name="x,y" value="223,44" />
     </component>
-    <component name="org.nomad.theme.component.NomadActiveLabel">
+    <component name="display.text">
       <property name="text" value="freq" />
       <property name="parameter#0" value="50.0.p.freq" />
       <property name="size" value="27,16" />
@@ -5617,25 +5617,25 @@
       <property name="text" value="{@decoration-15}" />
       <property name="x,y" value="211,67" />
     </component>
-    <component name="org.nomad.theme.component.NomadActiveLabel">
+    <component name="display.text">
       <property name="text" value="attack" />
       <property name="parameter#0" value="23.0.p.attack" />
       <property name="size" value="27,16" />
       <property name="x,y" value="34,9" />
     </component>
-    <component name="org.nomad.theme.component.NomadActiveLabel">
+    <component name="display.text">
       <property name="text" value="decay" />
       <property name="parameter#0" value="23.1.p.decay" />
       <property name="size" value="27,16" />
       <property name="x,y" value="76,8" />
     </component>
-    <component name="org.nomad.theme.component.NomadActiveLabel">
+    <component name="display.text">
       <property name="text" value="sustain" />
       <property name="parameter#0" value="23.2.p.sustain" />
       <property name="size" value="27,16" />
       <property name="x,y" value="111,8" />
     </component>
-    <component name="org.nomad.theme.component.NomadActiveLabel">
+    <component name="display.text">
       <property name="text" value="release" />
       <property name="parameter#0" value="23.3.p.release" />
       <property name="size" value="27,16" />
@@ -5734,7 +5734,7 @@
       <property name="text" value="{@decorator.rndgen.diskret}" />
       <property name="x,y" value="210,9" />
     </component>
-    <component name="org.nomad.theme.component.NomadActiveLabel">
+    <component name="display.text">
       <property name="text" value="rate" />
       <property name="parameter#0" value="34.0.p.rate" />
       <property name="size" value="36,16" />
@@ -5799,7 +5799,7 @@
       <property name="text" value="{@wf.tri}" />
       <property name="x,y" value="220,10" />
     </component>
-    <component name="org.nomad.theme.component.NomadActiveLabel">
+    <component name="display.text">
       <property name="text" value="rate" />
       <property name="parameter#0" value="30.0.p.rate" />
       <property name="size" value="40,16" />
@@ -6477,7 +6477,7 @@
       <property name="text" value="{@wf.sine}" />
       <property name="x,y" value="220,10" />
     </component>
-    <component name="org.nomad.theme.component.NomadActiveLabel">
+    <component name="display.text">
       <property name="text" value="rate" />
       <property name="parameter#0" value="28.0.p.rate" />
       <property name="size" value="40,16" />
@@ -6916,7 +6916,7 @@
       <property name="text" value="Mst" />
       <property name="x,y" value="80,9" />
     </component>
-    <component name="org.nomad.theme.component.NomadActiveLabel">
+    <component name="display.text">
       <property name="text" value="rate" />
       <property name="parameter#0" value="27.0.p.rate" />
       <property name="size" value="40,16" />
@@ -7260,13 +7260,13 @@
       <property name="text" value="Out" />
       <property name="x,y" value="233,34" />
     </component>
-    <component name="org.nomad.theme.component.NomadActiveLabel">
+    <component name="display.text">
       <property name="text" value="pattern" />
       <property name="parameter#0" value="99.0.p.pattern" />
       <property name="size" value="27,16" />
       <property name="x,y" value="95,15" />
     </component>
-    <component name="org.nomad.theme.component.NomadActiveLabel">
+    <component name="display.text">
       <property name="text" value="bank" />
       <property name="parameter#0" value="99.1.p.bank" />
       <property name="size" value="27,16" />
@@ -7764,13 +7764,13 @@
       <property name="text" value="{@decoration-15}" />
       <property name="x,y" value="211,22" />
     </component>
-    <component name="org.nomad.theme.component.NomadActiveLabel">
+    <component name="display.text">
       <property name="text" value="attack" />
       <property name="parameter#0" value="84.0.p.attack" />
       <property name="size" value="27,16" />
       <property name="x,y" value="102,4" />
     </component>
-    <component name="org.nomad.theme.component.NomadActiveLabel">
+    <component name="display.text">
       <property name="text" value="decay" />
       <property name="parameter#0" value="84.1.p.decay" />
       <property name="size" value="27,16" />
@@ -8113,7 +8113,7 @@
       <property name="text" value="Pitch" />
       <property name="x,y" value="186,7" />
     </component>
-    <component name="org.nomad.theme.component.NomadResetButton">
+    <component name="knob.reset">
       <property name="parameter#0" value="97.1.p.pitch fine" />
       <property name="x,y" value="118,12" />
       <property name="size" value="9,6" />
@@ -8641,7 +8641,7 @@
       <property name="x,y" value="33,91" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadResetButton">
+    <component name="knob.reset">
       <property name="parameter#0" value="108.16.p.outgain" />
       <property name="x,y" value="232,50" />
       <property name="size" value="9,6" />

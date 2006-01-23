@@ -61,14 +61,12 @@ class ClassicModuleSectionGUI extends ModuleSectionGUI {
 		super(moduleSection) ;
         setDoubleBuffered(false);
 		if (bgpainter==null) {
-			bgpainter = new BackgroundPainter(
-					this, itracker.getImage("classic-patch-background")
-				);
+			bgpainter = new BackgroundPainter(itracker.getImage("classic-patch-background"));
 		}
 	}
 
 	public void paintComponent(Graphics g) {
-		bgpainter.paintBackground(g);
+		bgpainter.paintBackground(g, this);
 	}
 	
 }
