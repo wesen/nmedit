@@ -32,9 +32,9 @@ import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.SwingUtilities;
 
-import org.nomad.theme.component.model.NomadClassicKnobGraphics;
-import org.nomad.theme.component.model.NomadClassicKnobGraphics.ControlCachedGraphics;
-
+import org.nomad.theme.component.model.KnobMetrics;
+import org.nomad.theme.component.model.KnobPaintManager;
+import org.nomad.theme.component.model.KnobPainter;
 
 /**
  * @author Christian Schneider
@@ -44,7 +44,11 @@ public class NomadClassicKnob extends NomadControl {
 	//private final Color clDefaultKnobFill = Color.decode("#9B9B9B");
 	//private final Color clDefaultKnobOutline = Color.BLACK;
 
-	private ControlCachedGraphics controlGraphics = null;
+	private final static KnobPainter knobPainter = new KnobPainter();
+	private final static KnobPaintManager paintManager = new KnobPaintManager();
+	private KnobPaintManager.CachedKnobGraphics graphics = null;
+	
+	// private ControlCachedGraphics controlGraphics = null;
 	private final static ClassicKeyListener classicKeyListener
 	  = new ClassicKeyListener();
 	private final static ClassicMouseListener classicMouseListener
@@ -65,29 +69,26 @@ public class NomadClassicKnob extends NomadControl {
 		setSize(d);
 		setMinimumSize(d);
 		setMaximumSize(d);
-		//deleteOnScreenBuffer();
+		setKnobPainter(knobPainter); // bad, 
 	}
 
-	/*protected void createProperties(PropertySet set) {
-		super.createProperties(set);
-		//getAccessibleProperties().rewriteDefaults();
-	}*/
+	protected static void setKnobPainter(KnobPainter painter) {
+		paintManager.setKnobPainter(painter);
+	}
 	
 	boolean morphEnabled = true;
 
 	public void paintDecoration(Graphics2D g2) {
-		controlGraphics = NomadClassicKnobGraphics.obtainGraphicsCache(this, controlGraphics);
-		controlGraphics.paintDecorationCache(this, g2);
+		(graphics = paintManager.obtainGraphics(this, graphics)).paintDecoration(g2);
 	}
 	
 	public void paintDynamicOverlay(Graphics2D g2) {
-		controlGraphics = NomadClassicKnobGraphics.obtainGraphicsCache(this, controlGraphics);
-		controlGraphics.paintDynamicOverlay(this, g2);
+		(graphics = paintManager.obtainGraphics(this, graphics)).paintDynamicOverlay(this, g2);
 	}
 	
 	protected void finalize() throws Throwable {
-		if (controlGraphics!=null) {
-			controlGraphics.dispose();
+		if (graphics!=null) {
+			graphics.unregister();
 		}
 		super.finalize();
 	}
@@ -123,13 +124,13 @@ public class NomadClassicKnob extends NomadControl {
 		public void mouseDragged(MouseEvent event) {
 			if (event.getSource() instanceof NomadClassicKnob) {
 				NomadClassicKnob control = (NomadClassicKnob) event.getSource();
-				
 				if (SwingUtilities.isLeftMouseButton(event)) {
-					control.controlGraphics = NomadClassicKnobGraphics
-						.obtainGraphicsCache(control, control.controlGraphics);
+					KnobMetrics metrics = 
+						(control.graphics = NomadClassicKnob.paintManager.obtainGraphics(control, control.graphics)).getMetrics();
+					
 					control.setValue(	
 						control.getMinValue()
-						+ (int) (control.controlGraphics.getMetrics().calcRangeFactor(event.getPoint())
+						+ (int) (metrics.calcRangeFactor(event.getPoint())
 						* control.getRange())	
 					);
 				}				

@@ -26,5 +26,5 @@ import java.util.Iterator;
 
 public interface NomadDOMNode {
 	public int getNodeCount();
-	public Iterator iterator();
+	public Iterator<NomadDOMNode> iterator();
 }

@@ -1,7 +1,6 @@
 package org.nomad.theme;
 
 import java.awt.Font;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -26,7 +25,7 @@ import org.nomad.xml.dom.module.DModule;
 
 public class ModuleGUI extends NomadComponent implements MouseListener, MouseMotionListener, ModuleComponent {
 
-	private Border border = BorderFactory.createRaisedBevelBorder();
+	private final static Border border = BorderFactory.createRaisedBevelBorder();
 	
 	private NomadLabel nameLabel = null;
 	private ModuleSectionGUI parent = null;
@@ -42,7 +41,6 @@ public class ModuleGUI extends NomadComponent implements MouseListener, MouseMot
 
     public ModuleGUI(UIFactory factory, DModule info, Module module, ModuleSectionGUI moduleSectionGUI) {
     	this(info, module, moduleSectionGUI);
-    	setEnvironment(factory);
     }
     
     public ModuleGUI(DModule info, Module module, ModuleSectionGUI moduleSectionGUI) {
@@ -50,6 +48,7 @@ public class ModuleGUI extends NomadComponent implements MouseListener, MouseMot
 		setOpaque(true);
     	addMouseListener(this);
     	addMouseMotionListener(this);
+    	setBorder(border);
 
 	    removeItem.addActionListener(new RemoveModule());
 	    menu.add(removeItem);
@@ -105,12 +104,6 @@ public class ModuleGUI extends NomadComponent implements MouseListener, MouseMot
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}};
-	}
-    
-    public void paintDecoration(Graphics2D g2) {
-		super.paintDecoration(g2);
-		border.paintBorder(this, g2, 0, 0, getWidth(), getHeight());
-		setBorder(BorderFactory.createRaisedBevelBorder());	
 	}
     
     public void setNameLabel(String name, int width) {

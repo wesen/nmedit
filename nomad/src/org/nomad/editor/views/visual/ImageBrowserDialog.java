@@ -30,7 +30,6 @@ import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -51,7 +50,7 @@ public class ImageBrowserDialog extends JDialog {
 
 	private JList imageList=null;
 	private VisualEditor editor = null;
-	private ArrayList itemList = new ArrayList();
+	private ArrayList<ImageItem> itemList = new ArrayList<ImageItem>();
 	
 	public ImageBrowserDialog(VisualEditor editor) throws HeadlessException {
 		this.editor = editor;
@@ -71,8 +70,7 @@ public class ImageBrowserDialog extends JDialog {
 
 			public void mouseClicked(MouseEvent event) {
 				if (event.getClickCount()==2) {
-					ImageItem item = (ImageItem) imageList.getSelectedValue();
-					createImageLabel(item);
+					createImageLabel((ImageItem) imageList.getSelectedValue());
 				}
 			}});
 	}
@@ -85,11 +83,10 @@ public class ImageBrowserDialog extends JDialog {
 	}
 	
 	protected void fillList(ImageTracker itracker) {
-		for (Iterator keys=itracker.getKeys();keys.hasNext();) {
-			String key = (String) keys.next();
+		for (String key : itracker.getKeys()) {
 			Image image = itracker.getImage(key);
 			ImageItem item = new ImageItem(image, key);
-			itemList.add(item);
+			itemList.add(item);	
 		}
 	}
 

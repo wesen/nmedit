@@ -52,7 +52,8 @@ public class PluginClassLoader extends URLClassLoader {
 
 	// final static String jarPrefix = "jar:";
 	
-	protected Class findClass(String name) throws ClassNotFoundException {
+	protected Class<?> findClass(String name) throws ClassNotFoundException {
+		
 		// final String jarSuffix = "jar!/";
 		String classRessourceName = name.replaceAll("\\.","/")+".class";
 		URL classRessource = findResource(classRessourceName);
@@ -150,19 +151,15 @@ public class PluginClassLoader extends URLClassLoader {
 		if ((!pluginPath.exists()) || pluginPath.isFile()) return new String[0];
 
 		File[] plugins = pluginPath.listFiles();
-		ArrayList items = new ArrayList();
+		ArrayList<String> candidates = new ArrayList<String>();
 		for (int i=0;i<plugins.length;i++) {
 			String pluginName = checkPlugin(plugins[i]);
 			if (pluginName!=null) {
-				items.add(pluginPath.getName()+"."+pluginName+".NomadPlugin");
+				candidates.add(pluginPath.getName()+"."+pluginName+".NomadPlugin");
 			}
 		}
 		
-		String[] candidates = new String[items.size()];
-		for (int i=0;i<items.size();i++) {
-			candidates[i] = (String) items.get(i);
-		}
-		return candidates;
+		return candidates.toArray(new String[candidates.size()]);
 	}
 	
 	private String checkPlugin(File file) {

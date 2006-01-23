@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class DToolbarGroup {
 
 	/** A list containing DToolbarSection objects */
-	private ArrayList dsections = new ArrayList();
+	private ArrayList<DToolbarSection> dsections = new ArrayList<DToolbarSection>();
 	/** The name of this group */
 	private String name = null;
 	/** The short version of this groups name */
@@ -44,7 +44,7 @@ public class DToolbarGroup {
 	 * @return the section
 	 */
 	public DToolbarSection getSection(int index) {
-		return (DToolbarSection) dsections.get(index);
+		return dsections.get(index);
 	}
 	
 	/**

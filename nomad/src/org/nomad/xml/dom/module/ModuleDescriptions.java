@@ -20,11 +20,15 @@ import org.xmlpull.v1.XmlPullParserException;
 public class ModuleDescriptions {
 
 	/** Hashmap containing the pairs (DModule.getKey(), DModule) */
-	private HashMap dmodules = new HashMap();
+	private HashMap<String, DModule> dmodules = new HashMap<String, DModule>();
 	/** The groups */
-	private ArrayList dgroups = new ArrayList();
+	private ArrayList<DToolbarGroup> dgroups = new ArrayList<DToolbarGroup>();
 	/** the static data */
-	public static ModuleDescriptions model = null;
+	private static ModuleDescriptions model = null;
+	
+	public static ModuleDescriptions sharedInstance() {
+		return model;
+	}
 	
 	/**
 	 * Initializes the static model by loading all data from the xml file 
@@ -56,7 +60,7 @@ public class ModuleDescriptions {
 	 * @return the module
 	 */
 	public DModule getModuleByKey(String key) {
-		return (DModule) dmodules.get(key);
+		return dmodules.get(key);
 	}
 
 	/**
@@ -74,7 +78,7 @@ public class ModuleDescriptions {
 	 * @return the group
 	 */
 	public DToolbarGroup getGroup(int index) {
-		return (DToolbarGroup) dgroups.get(index);
+		return dgroups.get(index);
 	}
 	
 	/**

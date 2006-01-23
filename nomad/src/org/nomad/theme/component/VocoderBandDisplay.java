@@ -32,7 +32,8 @@ public class VocoderBandDisplay extends NomadComponent {
 	private int bgheight = 0;
 	private Border border = BorderFactory.createLoweredBevelBorder();
 	
-	private ArrayList bandChangeListeners = new ArrayList();
+	private ArrayList<VocoderBandChangeListener> 
+		bandChangeListeners = new ArrayList<VocoderBandChangeListener>();
 	private DParameter[] bandsInfo = new DParameter[NUM_BANDS];
 	private VocoderParameterLink paramLink = null;
 	
@@ -95,9 +96,8 @@ public class VocoderBandDisplay extends NomadComponent {
 	}
 	
 	public void fireBandChangedEvent(VocoderBandChangeEvent event) {
-		for (int i=0;i<bandChangeListeners.size();i++)
-			((VocoderBandChangeListener)bandChangeListeners.get(i))
-				.vocoderBandChanged(event);
+		for (VocoderBandChangeListener l : bandChangeListeners)
+			l.vocoderBandChanged(event);
 	}
 
 	protected void fireBandChangedEvent(int band) {

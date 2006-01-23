@@ -33,6 +33,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.nomad.theme.NomadClassicColors;
+
 /**
  * @author Christian Schneider
  */
@@ -41,10 +43,13 @@ public class NomadResetButton extends NomadControl {
 	private Metrics m = new Metrics();
 	private final static Color defaultBackground = Color.decode("#61A387");
 	private final static Color defaultForeground = Color.decode("#74E25D");
-	private final static Color clOutline = new Color(0, 0, 0, 0.4f);
+	private final static Color defaultOutline = new Color(0, 0, 0, 0.4f);
+	private final Color defaultHighlight = new Color(245, 245, 220, 180);
 	private boolean upsidedown = true;
 	private boolean rememberState = false;
-	private final Color clHighlight = new Color(245, 245, 220, 180);
+	
+	private Color clOutline = defaultOutline;
+	private Color clHighlight = defaultHighlight;
 	
 	public NomadResetButton() {
 		setOpaque(false);
@@ -84,6 +89,14 @@ public class NomadResetButton extends NomadControl {
 					}
 				}
 			}});
+	}
+	
+	public void setOutline(Color color) {
+		this.clOutline = color;
+	}
+	
+	public void setHighlight(Color color) {
+		this.clHighlight = color;
 	}
 	
 	protected void testIfStateChanged() {
@@ -171,16 +184,18 @@ public class NomadResetButton extends NomadControl {
 			configureGraphics(g2);
 			m.update();
 			
+			Color f = getForeground();
+			g2.setColor(NomadClassicColors.alpha(f, 165));
+			g2.fill(m.polygonFill);
+
 			if (hasFocus()) {
 				// we highlight the buttons outline
 				g2.setColor(clHighlight);
-				// outer outline
-				g2.draw(m.polygonDraw);
+			} else {
+				g2.setColor(clOutline);
 			}
-			
-			Color f = getForeground();
-			g2.setColor(new Color(f.getRed(), f.getGreen(), f.getBlue(), 165));
-			g2.fill(m.polygonFill);
+			// outer outline
+			g2.draw(m.polygonDraw);
 		}
 	}
 	

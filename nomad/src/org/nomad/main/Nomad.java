@@ -9,16 +9,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -27,29 +22,25 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
-import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
+import org.nomad.dialog.ComPortSettingsDialog;
 import org.nomad.dialog.JTaskDialog;
 import org.nomad.dialog.TaskModel;
-import org.nomad.main.run.Run;
+import org.nomad.env.Environment;
 import org.nomad.patch.Patch;
 import org.nomad.plugin.NomadPlugin;
-import org.nomad.plugin.PluginManager;
 import org.nomad.port.ComPort;
 import org.nomad.port.ComPortFactory;
-import org.nomad.port.NullComPort;
 import org.nomad.port.Synth;
 import org.nomad.port.SynthConnectionStateListener;
 import org.nomad.port.SynthException;
-import org.nomad.theme.ModuleGUIBuilder;
 import org.nomad.theme.PatchGUI;
 import org.nomad.theme.UIFactory;
-import org.nomad.util.graphics.ImageTracker;
-import org.nomad.xml.dom.module.DConnector;
-import org.nomad.xml.dom.module.ModuleDescriptions;
-import org.nomad.xml.dom.substitution.Substitutions;
+import org.nomad.util.view.DocumentManager;
+import org.nomad.util.view.SelectableDocumentManager;
 
 
 public class Nomad extends JFrame implements SynthConnectionStateListener {
@@ -57,6 +48,8 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
     public static String creatorVersion = "v0.1";
     public static String creatorRelease = "development build";
   
+    Environment env = null;
+    
     Synth synth = null;
 
 	JFileChooser fileChooser = new JFileChooser("data/patches/");
@@ -78,25 +71,16 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		JMenu menuPatchTheme = null;
 		
 	JMenu menuHelp = null;
-		JMenu menuHelpLookAndFeel = null;
+		LookAndFeelMenu menuHelpLookAndFeel = null;
 		JMenuItem menuHelpPluginsList = null;
 		JMenuItem menuHelpAbout = null;
-
-//	JPanel toolPanel = null;
-	ModuleToolbar moduleToolbar = null;
 
 	JButton button = null;
 
 	JPanel panelMain = null;
-	ImageTracker theImageTracker = null;
-	
-	private DocumentManager viewManager = null;
-	private static UIFactory uifactory;
 
-	public static UIFactory getUIFactory() {
-		return uifactory;
-	}
-	
+	DocumentManager viewManager = null;
+
     class NewListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	Patch patch = new Patch();
@@ -198,19 +182,23 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 	}
 	class MenuShowPluginListListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			PluginDialog.invokeDialog();
+			noDialogYet();
 		}
 	}
 	
 	class MenuShowAboutDialogListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			JOptionPane.showMessageDialog(Nomad.this,
-				    "The About Dialog is not implemented, yet.",
-				    "Warning",
-				    JOptionPane.INFORMATION_MESSAGE); // info message
+			noDialogYet();
 		}
 	}
 
+	void noDialogYet() {
+		JOptionPane.showMessageDialog(Nomad.this,
+			    "The About Dialog is not implemented, yet.",
+			    "Warning",
+			    JOptionPane.INFORMATION_MESSAGE); // info message
+	}
+	
 	class ExitWindowListener extends WindowAdapter {
 		public void windowClosing(WindowEvent e) {
 			if (synth.isConnected())
@@ -225,111 +213,13 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		}
 	}
 	
-	class PatchLoader implements Runnable {
-
-		private ArrayList panelList = new ArrayList();
-		private ArrayList nameList = new ArrayList();
-		
-		public PatchLoader() { }
-		public void loadPatch(String file) {
-			loadPatch(new String[]{file});
-		}
-
-		public void loadPatch(File[] files) {
-			String[] sfiles = new String[files.length];
-			for (int i=files.length-1;i>=0;i--)
-				sfiles[i]=files[i].getAbsolutePath();
-			
-			loadPatch(sfiles);
-		}
-
-		public void loadPatch(final String[] files) {
-			JTaskDialog.processTasks(Nomad.this, new TaskModel(){
-				public String getDescription() {
-					return "Loading Nord Modular patch...";
-				}
-
-				public int getTaskCount() {
-					return files.length;
-				}
-
-				public String getTaskName(int taskIndex) {
-					String name = files[taskIndex];
-					return name.substring(name.lastIndexOf('/')+1);
-				}
-
-				public void run(int taskIndex) {
-					String file = files[taskIndex];
-					
-					Patch patch = new Patch();				
-			        JPanel tab = Patch.createPatch(file, patch);
-					String name = file.substring(0,file.lastIndexOf(".pch"));
-					name = name.substring(name.lastIndexOf('/')+1);
-					panelList.add(tab);
-					nameList.add(name);
-					
-			        if (taskIndex==getTaskCount()-1)
-			        	SwingUtilities.invokeLater(PatchLoader.this);
-				}});
-		}
-		
-		public void run() {
-
-			JComponent tab = null;
-
-			while (panelList.size()>0) {
-				viewManager.addDocument((String)nameList.remove(0), tab = (JComponent) panelList.remove(0));
-			}
-
-			if (tab!=null)
-				viewManager.setSelectedDocument(tab);
-	        
-		}
-		
-	}
-	
-	PatchLoader loader = new PatchLoader();
+	PatchLoader loader = new PatchLoader(this);
 	
 	public Nomad() {
+		env = Environment.sharedInstance();
+		env.loadAll();
 
-		// feed image tracker
-		Run.statusMessage("images");
-		theImageTracker = new ImageTracker();
-		try {
-			theImageTracker.loadFromDirectory("data/images/slice/");
-			theImageTracker.loadFromDirectory("data/images/single/");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		// load plugin names
-		Run.statusMessage("Plugin Manager");
-		PluginManager.init();
-
-		// load substitutions
-		Run.statusMessage("parameter substitutions");
-		Substitutions subs = new Substitutions("data/xml/substitutions.xml");
-		
-		// load module descriptors
-		Run.statusMessage("module description");
-		ModuleDescriptions.init("data/xml/modules.xml", subs);
-
-		uifactory = PluginManager.getDefaultUIFactory();
-		uifactory.setEditing(false);
-		uifactory.getImageTracker().addFrom(theImageTracker);
-
-		// load module/connector icons
-		ModuleDescriptions.model.loadImages(theImageTracker);
-
-		// build toolbar
-		Run.statusMessage("building toolbar");
-		moduleToolbar = new ModuleToolbar();
-
-		// create gui builder
-		Run.statusMessage("ui builder");	
-		ModuleGUIBuilder.createGUIBuilder(uifactory);
-
-        ToolTipManager.sharedInstance().setInitialDelay(0);
+		ToolTipManager.sharedInstance().setInitialDelay(0);
         
         this.setTitle(creatorProgram + " " + creatorVersion + " " + creatorRelease);
 
@@ -340,7 +230,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		panelMain.setLayout(new BorderLayout());
 
 		this.getContentPane().add(panelMain,BorderLayout.CENTER);
-		this.getContentPane().add(moduleToolbar, BorderLayout.NORTH);
+		this.getContentPane().add(env.getToolbar(), BorderLayout.NORTH);
 
 		this.addWindowListener(new ExitWindowListener());
 
@@ -401,9 +291,23 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 
 
 		menuSynth = new JMenu("Synth");
-			menuSelectComport = new JMenu("ComPort interface");
-				menuSynth.add(menuSelectComport);
-				createComPortMenuItems(menuSelectComport);
+			menuSelectComport = new ComPortPluginMenu(this, "ComPort interface");
+			menuSynth.add(menuSelectComport);
+			
+			((ComPortPluginMenu)menuSelectComport).addPluginSelectionListener(new ChangeListener(){
+				public void stateChanged(ChangeEvent event) {
+					NomadPlugin plugin = ((ComPortPluginMenu)menuSelectComport).getSelectedPlugin();
+					
+					newSynth(((ComPortFactory)plugin.getFactoryInstance()).getInstance());
+					
+					JOptionPane.showMessageDialog(Nomad.this,
+						    "Changed ComPort interface to '"+plugin.getName()+"'.",
+						    "Info",
+						    JOptionPane.INFORMATION_MESSAGE); // info message
+					
+					
+				}});
+				
 			menuSynth.addSeparator();
 			menuSynthSetup = menuSynth.add("Setup");
 			menuSynthConnectionMenuItem = menuSynth.add("Connect");
@@ -429,76 +333,44 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 			docViewGroup.add(menuDocumentViewTabbed);
 			docViewGroup.add(menuDocumentViewMDI);
 		
-			menuPatchTheme = new JMenu("Theme");
-			ButtonGroup themeGroup = new ButtonGroup();
-			for (int i=0;i<PluginManager.getPluginCount();i++) {
-				NomadPlugin plugin = PluginManager.getPlugin(i);
-				if (plugin.getFactoryType()==NomadPlugin.NOMAD_FACTORY_TYPE_UI) {
-					JRadioButtonMenuItem menuItem = new ThemeChanger(plugin);
-					menuPatchTheme.add(menuItem);
-					themeGroup.add(menuItem);
-					if (plugin.getName().equals("Classic Theme"))
-						menuItem.setSelected(true);
-					
-					// TODO remove - only for testing
-					/*else
-						menuItem.doClick();*/
-					// -- end --
-				}
-			}	
+			menuPatchTheme = new ThemePluginMenu("Theme");
+			((ThemePluginMenu)menuPatchTheme).addPluginSelectionListener(new ChangeListener(){
 
+				public void stateChanged(ChangeEvent event) {
+					NomadPlugin plugin = ((ThemePluginMenu)menuPatchTheme).getSelectedPlugin();
+					if (plugin!=null)
+						changeSynthInterface(plugin);
+				}});
+			
 			menuAppearance.add(menuDocumentViewMode);
 			menuAppearance.add(menuPatchTheme);
 		
 		menuBar.add(menuAppearance);
 			
 		menuHelp = new JMenu("Help");
-			menuHelpLookAndFeel = new JMenu("Look and Feel");
+			menuHelpLookAndFeel = new LookAndFeelMenu("Look and Feel");
+			// add components that should be updated
+			menuHelpLookAndFeel.addAffectedComponent(this);
+			menuHelpLookAndFeel.addAffectedComponent(fileChooser);
 			menuHelp.add(menuHelpLookAndFeel);
+			
 			menuHelp.addSeparator();
 			menuHelpPluginsList = menuHelp.add("Plugins");
 			menuHelp.addSeparator();
 			menuHelp.add("Call gc()").addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent event) {
 					System.gc();
-					ModuleGUIBuilder.info();
+					env.getBuilder().info();
 				}});
 			menuHelpAbout = menuHelp.add("About");
 
-		// build look and feel menu
-		ButtonGroup lookAndFeelGroup = new ButtonGroup();
-		String current = UIManager.getLookAndFeel().getName();
-		UIManager.LookAndFeelInfo[] lookAndFeelInfo = UIManager.getInstalledLookAndFeels();
-		for (int i=0;i<lookAndFeelInfo.length;i++) {
-			JRadioButtonMenuItem item = new JRadioButtonMenuItem(lookAndFeelInfo[i].getName());
-		    item.addActionListener(new LookAndFeelChanger(lookAndFeelInfo[i]));
-		    menuHelpLookAndFeel.add(item);
-		    lookAndFeelGroup.add(item);
-		    item.setSelected(lookAndFeelInfo[i].getName().equals(current));
-		} // end build look and feel menu
-			
+
 		menuBar.add(menuHelp);
 		menuHelpPluginsList.addActionListener(new MenuShowPluginListListener());
 		menuHelpAbout.addActionListener(new MenuShowAboutDialogListener());
 		return menuBar; 
 	}
-
-	private class ThemeChanger extends JRadioButtonMenuItem
-		implements ActionListener {
-		private NomadPlugin plugin = null;
-		public ThemeChanger(NomadPlugin plugin) {
-			super(plugin.getName());
-			setToolTipText(plugin.getDescription());
-			this.plugin = plugin;
-
-			addActionListener(this);
-		}
-		
-		public void actionPerformed(ActionEvent event) {
-			changeSynthInterface(plugin);
-		}
-	}
-
+	
 	void changeSynthInterface(final NomadPlugin plugin) {
 		
 		JTaskDialog.processTasks(Nomad.this, new TaskModel(){
@@ -531,127 +403,39 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 					case 1: init2(); break;
 					default: {
 						if (taskIndex==documentCount+2) finish();
-						else migrate();
+						else migrate(taskIndex-2);
 					}
 				}
 			}
 
 			public void init() {
-				Nomad.this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-				Nomad.this.menuBar.setEnabled(false);
-				Nomad.this.moduleToolbar.setEnabled(false);
+				setCursor(new Cursor(Cursor.WAIT_CURSOR));
+				menuBar.setEnabled(false);
+				env.getToolbar().setEnabled(false);
 			}
 			
 			public void init2() {
-				uifactory = (UIFactory) plugin.getFactoryInstance();
-				uifactory.setEditing(false);
-				uifactory.getImageTracker().addFrom(theImageTracker);
-				ModuleGUIBuilder.instance.setUIFactory(uifactory);
-				DConnector.setImageTracker(uifactory.getImageTracker());
+				env.setFactory((UIFactory) plugin.getFactoryInstance());
 			}
 			
 			public void finish() {
 				if (selectionIndex>=0)
 					viewManager.setSelectedDocument(selectionIndex);
 
-				Nomad.this.setCursor(Cursor.getDefaultCursor());
-				Nomad.this.menuBar.setEnabled(true);
-				Nomad.this.moduleToolbar.setEnabled(true);
+				setCursor(Cursor.getDefaultCursor());
+				menuBar.setEnabled(true);
+				env.getToolbar().setEnabled(true);
 				viewManager.getDocumentContainer().validate();
 				viewManager.getDocumentContainer().repaint();
 			}
 			
-			public void migrate() {
-				String name = viewManager.getTitleAt(0);
-				PatchGUI oldPatchGUI = (PatchGUI) viewManager.getDocumentAt(0);
-				viewManager.removeDocument(oldPatchGUI);
-
-				Patch patch = new Patch();
-				Reader r = new StringReader(oldPatchGUI.getPatch().savePatch().toString());
-				PatchGUI newPatchGUI = (PatchGUI) Patch.createPatch(r, patch);
-
-				if (newPatchGUI!=null)
-					viewManager.addDocument(name, newPatchGUI);
+			public void migrate(int document) {
+				((PatchGUI) viewManager.getDocumentAt(document)).rebuildUI();
 			}
 			
 		});
 
 	}
-
-	private class LookAndFeelChanger implements ActionListener {
-	    UIManager.LookAndFeelInfo info;
-	    LookAndFeelChanger(UIManager.LookAndFeelInfo info) {
-	      this.info = info;
-	    }
-
-	    public void actionPerformed(ActionEvent actionEvent) {
-	      try {
-	        UIManager.setLookAndFeel(info.getClassName());
-	        SwingUtilities.updateComponentTreeUI(Nomad.this);
-	      } catch (Exception e) {
-	        e.printStackTrace();
-	      }
-	    }
-	}
-	
-	private void createComPortMenuItems(JMenu menuSelectComport) {
-		ButtonGroup group = new ButtonGroup();
-		for (int i=0;i<PluginManager.getPluginCount();i++) {
-			NomadPlugin plugin = PluginManager.getPlugin(i);
-			if (plugin.getFactoryType()==NomadPlugin.NOMAD_FACTORY_TYPE_COMPORT) {
-				JRadioButtonMenuItem mItem = new JRadioButtonMenuItem(plugin.getName());
-				group.add(mItem);
-				mItem.setToolTipText(plugin.getDescription());
-				mItem.addActionListener(new ComPortSelectorListener(mItem, plugin));
-				mItem.setSelected(NullComPort.class.getName().endsWith(plugin.getName()));
-				menuSelectComport.add(mItem);
-			}
-		}
-	}
-	
-	private class ComPortSelectorListener implements ActionListener {
-		
-		private NomadPlugin plugin = null;
-		private JRadioButtonMenuItem mItem = null;
-		
-		public ComPortSelectorListener(JRadioButtonMenuItem mItem, NomadPlugin comPortPlugin) {
-			this.plugin = comPortPlugin;
-			this.mItem = mItem;
-		}
-		
-		public void actionPerformed(ActionEvent event) {
-			if (!plugin.supportsCurrentPlatform())
-				JOptionPane.showMessageDialog(Nomad.this,
-					    "The ComPort interface you selected does not support the current platform.",
-					    "Warning",
-					    JOptionPane.WARNING_MESSAGE); // error message
-			else {
-				newSynth(((ComPortFactory)plugin.getFactoryInstance()).getInstance());
-				
-				JOptionPane.showMessageDialog(Nomad.this,
-					    "Changed ComPort interface to '"+plugin.getName()+"'.",
-					    "Info",
-					    JOptionPane.INFORMATION_MESSAGE); // info message
-				
-				mItem.setSelected(true);
-			}
-		}
-	}
-
-	/*
-	public static void main(String[] args) {
-		try {
-//			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}
-		catch (Exception e) {
-		}
-
-		/* Default theme *
-		System.setProperty("swing.metalTheme", "steel");
-
-		new Nomad();
-	}*/
 
 	public void synthConnectionStateChanged(Synth synth) {
 		this.menuSynthConnectionMenuItem.setText(

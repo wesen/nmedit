@@ -14,7 +14,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 public class Substitutions 
 {
-	private HashMap subs = new HashMap();
+	private HashMap<String, Substitution> subs = new HashMap<String, Substitution>();
 	
 	public Substitutions() {
 		super();
@@ -29,7 +29,7 @@ public class Substitutions
 	}
 
 	public Substitution getSubstitution(String key) {
-		return (Substitution) subs.get(key);
+		return subs.get(key);
 	}
 
 	public boolean contains(String key) {

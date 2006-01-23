@@ -1,4 +1,4 @@
-package org.nomad.main;
+package org.nomad.dialog;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 public class VEHotSpotManager extends VEManager implements MouseListener, MouseMotionListener {
 
-	private ArrayList hotSpotList = new ArrayList();
+	private ArrayList<VEHotSpot> hotSpotList = new ArrayList<VEHotSpot>();
 	private VEHotSpot currentSpot = null;
 	private boolean broadCastEvents = false;
 	
@@ -61,7 +61,7 @@ public class VEHotSpotManager extends VEManager implements MouseListener, MouseM
 	}
 	
 	public VEHotSpot get(int index) {
-		return (VEHotSpot) hotSpotList.get(index);
+		return hotSpotList.get(index);
 	}
 
 	public VEHotSpot getHotSpotAt(MouseEvent event) {

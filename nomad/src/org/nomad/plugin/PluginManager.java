@@ -14,7 +14,7 @@ import org.nomad.theme.UIFactory;
 public class PluginManager {
 	
 	// contains the NomadPlugin objects
-	private static ArrayList plugins = new ArrayList();
+	private static ArrayList<NomadPlugin> plugins = new ArrayList<NomadPlugin>();
 	private static String[] pluginResources = new String[0];
 	private static PluginClassLoader loader = new PluginClassLoader();
 	/*
@@ -28,11 +28,11 @@ public class PluginManager {
 	 * the NomadPlugin class.
 	 */
 	public static void init() {
-
-		loadBuiltinPlugins();
 		
 		plugins.clear();
 		pluginResources = loader.listPossiblePlugins();
+
+		loadBuiltinPlugins();
 		
 		for (int i=0;i<pluginResources.length;i++) {
 
@@ -85,7 +85,7 @@ public class PluginManager {
 	 * @return the plugin
 	 */
 	public static NomadPlugin getPlugin(int index) {
-		return (NomadPlugin) plugins.get(index);
+		return plugins.get(index);
 	}
 	
 	/**

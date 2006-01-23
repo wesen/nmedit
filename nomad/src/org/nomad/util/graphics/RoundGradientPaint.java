@@ -20,7 +20,7 @@
 /*
  * Created on Jan 11, 2006
  */
-package org.nomad.theme;
+package org.nomad.util.graphics;
 
 import java.awt.Color;
 import java.awt.Paint;

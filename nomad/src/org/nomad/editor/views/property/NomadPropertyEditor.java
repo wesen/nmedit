@@ -31,7 +31,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.EventObject;
-import java.util.Iterator;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -60,7 +59,7 @@ public class NomadPropertyEditor extends JPanel {
 	private JFrame ownerFrame = null;
 	private PropertyEditWindowAction pwea = new PropertyEditWindowAction();
 	private PropertySet thePropertySet = null;
-	private ArrayList properties = new ArrayList();
+	private ArrayList<Property> properties = new ArrayList<Property>();
 	
 	public NomadPropertyEditor(JFrame ownerFrame) {
 		super();
@@ -90,7 +89,7 @@ public class NomadPropertyEditor extends JPanel {
 			int row = table.rowAtPoint(me.getPoint());
 			
 			if ((column==1)&&(0<=row)&&(row<table.getRowCount())) {
-				Property property = (Property) properties.get(row);
+				Property property = properties.get(row);
 				if (!property.isInlineEditor()) { // we show the dialog window
 					
 					EditWindowDialog ewd = new EditWindowDialog(getOwnerFrame(), NomadPropertyEditor.this, property);
@@ -116,8 +115,8 @@ public class NomadPropertyEditor extends JPanel {
 			if (thePropertySet!=null) {
 				thePropertySet.setupForEditing();
 				thePropertySet.addPropertySetListener(model);
-				for (Iterator iter=thePropertySet.iterator();iter.hasNext();) {
-					properties.add(iter.next());
+				for (Property p : thePropertySet) {
+					properties.add(p);
 				}
 			}
 			tableUpdate();
@@ -137,15 +136,14 @@ public class NomadPropertyEditor extends JPanel {
 		public boolean isCellEditable(int row, int col) {
 			if (col==0) return false;
 			else {
-				Property property = (Property) properties.get(row);
-				return property.isInlineEditor();
+				return properties.get(row).isInlineEditor();
 			} 
 		}
 		public Object getValueAt(int row, int col) {
 			if (thePropertySet==null) {
 				return null;
 			} else {
-				Property property = (Property) properties.get(row);
+				Property property = properties.get(row);
 				return col == 0 ? property.getName() : property.getValueString();
 			}
 		}

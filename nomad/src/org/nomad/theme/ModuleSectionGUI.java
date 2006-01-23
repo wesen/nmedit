@@ -1,5 +1,6 @@
 package org.nomad.theme;
 
+import java.awt.Component;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
@@ -9,8 +10,10 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Enumeration;
 
 import javax.swing.JDesktopPane;
+import javax.swing.JLayeredPane;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -18,6 +21,7 @@ import javax.swing.JSeparator;
 
 import org.nomad.main.ModuleGroupsMenu;
 import org.nomad.main.ModuleToolbarButton;
+import org.nomad.patch.Module;
 import org.nomad.patch.ModuleSection;
 import org.nomad.xml.dom.module.DModule;
 
@@ -129,6 +133,31 @@ public class ModuleSectionGUI extends JDesktopPane implements DropTargetListener
 	}
 
 	public void dragExit(DropTargetEvent dte) {
+	}
+
+	public void rebuildUI() {
+		removeModuleDisplays();
+		populate();
+	}
+	
+	public void populate() {
+		Module module = null;
+        for (Enumeration e = moduleSection.getModules().keys(); e.hasMoreElements();) {
+            module = moduleSection.getModule(((Integer) e.nextElement()).intValue());
+            add(module.createModuleGUI(this), JLayeredPane.DEFAULT_LAYER.intValue());
+        }
+
+	}
+	
+	public void removeModuleDisplays() {
+
+		while (getComponentCount()>0) {
+			Component c = getComponent(0); remove(0);
+			if (c instanceof ModuleGUI) {
+				((ModuleGUI) c).unlink();
+			}
+		}
+
 	}
 
 	/*public void paint(Graphics g) {

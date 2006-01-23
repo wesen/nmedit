@@ -32,7 +32,7 @@ import javax.swing.event.ChangeListener;
  */
 public class PropertyContainer {
 
-	private ArrayList changeListenerList = null;
+	private ArrayList<ChangeListener> changeListenerList = null;
 	
 	public PropertyContainer() {
 		super();
@@ -40,7 +40,7 @@ public class PropertyContainer {
 
 	public void addChangeListener(ChangeListener l) {
 		if (changeListenerList==null) 
-			changeListenerList = new ArrayList();
+			changeListenerList = new ArrayList<ChangeListener>();
 		if (!changeListenerList.contains(l))
 			changeListenerList.add(l);
 	}
@@ -57,7 +57,7 @@ public class PropertyContainer {
 	public void fireChangeEvent(ChangeEvent event) {
 		if (changeListenerList!=null) {
 			for (int i=changeListenerList.size()-1;i>=0;i--)
-				((ChangeListener)changeListenerList.get(i)).stateChanged(event);
+				changeListenerList.get(i).stateChanged(event);
 		}
 	}
 	

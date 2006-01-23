@@ -1,4 +1,4 @@
-package org.nomad.main;
+package org.nomad.util.view;
 
 import javax.swing.JComponent;
 import javax.swing.JTabbedPane;

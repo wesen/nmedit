@@ -18,6 +18,7 @@ import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+import org.nomad.env.Environment;
 import org.nomad.theme.ModuleGUI;
 import org.nomad.theme.ModuleGUIBuilder;
 import org.nomad.util.misc.MathRound;
@@ -33,7 +34,6 @@ public class ModuleToolbarButton extends JButton implements MouseListener, DragG
 
 	private DragSource dragSource = null;
 	private int dragAction = DnDConstants.ACTION_COPY;
-	private boolean allowDragging = true;
 	private ModuleToolbar toolbar = null;
 	
 	public static final DataFlavor ModuleToolbarButtonFlavor = new DataFlavor("nomad/ModuleToolbarButtonFlavor", "Nomad ModuleToolbarButton");
@@ -58,16 +58,8 @@ public class ModuleToolbarButton extends JButton implements MouseListener, DragG
 		return module;
 	}
 	
-	public void setAllowDragging(boolean enabled) {
-		this.allowDragging = enabled;
-	}
-	
-	public boolean getAllowDragging() {
-		return allowDragging;
-	}
-
 	public void dragGestureRecognized(DragGestureEvent dge) {
-		if (allowDragging)
+		if (toolbar.hasDraggingSupport())
 			dge.startDrag(DragSource.DefaultCopyDrop, this, this);
 	}
 
@@ -109,21 +101,25 @@ public class ModuleToolbarButton extends JButton implements MouseListener, DragG
 	public void mouseReleased(MouseEvent event) { }
 
 	public void mouseEntered(MouseEvent event) {
-		 
-		if (ModuleGUIBuilder.instance != null) {
-			ModuleGUI gui = ModuleGUIBuilder.instance._createGUI(module, null);
-			PermanentToolTip tip = new PermanentToolTip(this);
-			if (gui!=null) {
-				gui.setMinimumSize(gui.getSize());
-				gui.setMaximumSize(gui.getSize());
-				gui.setPreferredSize(gui.getSize());
-				tip.addOneLine(gui);
-			}
+		try {
+			ModuleGUIBuilder builder = Environment.sharedInstance().getBuilder();
 
+			PermanentToolTip tip = new PermanentToolTip(this);
+			if (builder != null) {
+				ModuleGUI gui = builder.createGUI(module, null);
+				if (gui!=null) {
+					gui.setMinimumSize(gui.getSize());
+					gui.setMaximumSize(gui.getSize());
+					gui.setPreferredSize(gui.getSize());
+					tip.addOneLine(gui);
+				}
+			}
 			tip.addProperty("Name:", module.getName());
 			tip.addProperty("Category:", module.getParent().getParent().getName());
 			tip.addProperty("Cycles:", MathRound.round(module.getCycles(), -2) + "%");
 			tip.showTip(500);
+		} catch (NullPointerException e) {
+			// TODO remove this catch block - workaround : exception is caused if a new theme/patch is loaded 
 		}
 	}
 

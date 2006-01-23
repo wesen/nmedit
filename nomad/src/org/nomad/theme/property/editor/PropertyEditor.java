@@ -46,7 +46,8 @@ import org.nomad.theme.property.Property;
 public abstract class PropertyEditor {
 
 	private Property property = null;
-	private ArrayList cellEditorListenerList = new ArrayList();
+	private ArrayList<CellEditorListener> 
+		cellEditorListenerList = new ArrayList<CellEditorListener>();
 	private boolean flagAutoWritebackHook = false;
 
 	public PropertyEditor(Property p) {
@@ -97,12 +98,12 @@ public abstract class PropertyEditor {
 	
 	public void fireEditingCanceled(ChangeEvent event) {
 		for (int i=cellEditorListenerList.size()-1;i>=0;i--)
-			((CellEditorListener)cellEditorListenerList.get(i)).editingCanceled(event);
+			cellEditorListenerList.get(i).editingCanceled(event);
 	}
 	
 	public void	fireEditingStopped(ChangeEvent event) {
 		for (int i=cellEditorListenerList.size()-1;i>=0;i--)
-			((CellEditorListener)cellEditorListenerList.get(i)).editingStopped(event);
+			cellEditorListenerList.get(i).editingStopped(event);
  	}
 	
 	public abstract JComponent getEditorComponent();

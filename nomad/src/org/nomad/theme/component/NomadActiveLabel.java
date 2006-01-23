@@ -28,7 +28,6 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Rectangle;
 
-import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -46,8 +45,6 @@ import org.nomad.xml.dom.module.DParameter;
 public class NomadActiveLabel extends NomadLabel {
 
 	private int padding = 2;
-	Border b = NomadBorderFactory.createNordEditor311Border();
-	Insets nomadInsets = b.getBorderInsets(this);
 	private boolean isInitialized = false;
 	private DParameter parameterInfo = null;
 
@@ -60,6 +57,7 @@ public class NomadActiveLabel extends NomadLabel {
 		autoResize();
 		setPreferredSize(getSize());
 		setAutoResize(false);
+		setBorder(NomadBorderFactory.createNordEditor311Border());
 	}
 	
 	protected void createProperties(PropertySet set) {
@@ -86,14 +84,13 @@ public class NomadActiveLabel extends NomadLabel {
 	
 	public Dimension getFittingSize() {
 		if (!isInitialized) {
-			b = NomadBorderFactory.createNordEditor311Border();
-			nomadInsets = b.getBorderInsets(this);
 			isInitialized=true;
 		}
+		Insets ins = getInsets();
 		
 		Dimension d = getTextDimensions();
-		d.width+=2*padding-1+nomadInsets.left+nomadInsets.right;
-		d.height+=2*padding-1+nomadInsets.bottom+nomadInsets.top;
+		d.width+=2*padding-1+ins.left+ins.right;
+		d.height+=2*padding-1+ins.bottom+ins.top;
 		return d;
 	}
 
@@ -110,18 +107,20 @@ public class NomadActiveLabel extends NomadLabel {
 	public void paintDecoration(Graphics2D g2) {
 		if (getBackground()!=null) {
 			g2.setColor(getBackground());
-			g2.fillRect(nomadInsets.left, nomadInsets.top, 
-					getWidth()-1-nomadInsets.bottom, getHeight()-1-nomadInsets.right);
+			Insets ins = getInsets();
+			g2.fillRect(ins.left, ins.top, 
+					getWidth()-1-ins.bottom, getHeight()-1-ins.right);
 		}
-		b.paintBorder(this, g2, 0, 0, getWidth(), getHeight());
+		paintNomadBorder(g2);
 	}
 	
 	public void paintDynamicOverlay(Graphics2D g2) {		
 		{ // text
 			Graphics2D gtext = (Graphics2D) g2.create();
-			gtext.translate(padding+nomadInsets.left, padding+nomadInsets.top);
-			gtext.setClip(new Rectangle(0, 0, getWidth()-2*padding-(+nomadInsets.left+nomadInsets.right), 
-					getHeight()-2*padding-(nomadInsets.bottom+nomadInsets.top)));
+			Insets ins = getInsets();
+			gtext.translate(padding+ins.left, padding+ins.top);
+			gtext.setClip(new Rectangle(0, 0, getWidth()-2*padding-(+ins.left+ins.right), 
+					getHeight()-2*padding-(ins.bottom+ins.top)));
 			super.paintDecoration(gtext);
 			gtext.dispose();
 		}
@@ -152,21 +151,24 @@ public class NomadActiveLabel extends NomadLabel {
 		if (module!=null) {
 			parameter = module.findParameter(getParameterInfo());
 			if (parameter!=null) {
-				plistener = new ParameterChangeListener();
-				parameter.addChangeListener(plistener);
+				paramListener = new ParameterChangeListener();
+				parameter.addChangeListener(paramListener);
 				updateParamText();
 			}
 		}
 	}
 
 	public void unlink() {
-		//TODO revert link()
+		if (parameter!=null) {
+			parameter.removeChangeListener(paramListener);
+			parameter = null;
+			paramListener = null;
+		}
 	}
+	private ParameterChangeListener paramListener = null;
+	
 	private Parameter parameter = null;
-	
-	
-	private ParameterChangeListener plistener = null;
-	
+
 	private void updateParamText() {
 		if (parameter!=null) {
 			setText(parameter.getInfo().getFormattedValue(parameter.getValue()));

@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 
 /** 
@@ -28,7 +29,7 @@ public class ImageTracker {
 	public final static int IMAGE_TRACKER_DISALLOW_REPLACE = 1;
 	
 	// Pairs (String, Image)
-	protected HashMap images = new HashMap();
+	protected HashMap<String, Image> images = new HashMap<String, Image>();
 	
 	// one of IMAGE_TRACKER_ALLOW_REPLACE or IMAGE_TRACKER_DISALLOW_REPLACE
 	private int policy = IMAGE_TRACKER_ALLOW_REPLACE;
@@ -87,7 +88,7 @@ public class ImageTracker {
 	 * @return the image
 	 */
 	public Image getImage(String key) {
-		return (Image) images.get(key);
+		return images.get(key);
 	}
 
 	/**
@@ -96,19 +97,21 @@ public class ImageTracker {
 	 * 
 	 * @return iterator key-iterator
 	 */
-	public Iterator getKeys() {
+	public Iterator<String> getKeyIterator() {
 		return images.keySet().iterator();
 	}
 
+	public Set<String> getKeys() {
+		return images.keySet();
+	}
+	
 	/**
 	 * Adds all images contained in the given itracker parameter.
 	 * The images are added according to the policy.
 	 * @param itracker the source image tracker
 	 */
 	public void addFrom(ImageTracker itracker) {
-		Iterator keyIterator = itracker.getKeys();
-		while (keyIterator.hasNext()) {
-			String key = (String) keyIterator.next();
+		for (String key : itracker.images.keySet()) {
 			putImage(key, itracker.getImage(key));
 		}
 	}

@@ -40,10 +40,10 @@ public class PersistenceManager {
 	 * Containes the tupels (Object key, ArrayList) where ArrayList contains
 	 * ImageBuffer instances each containing the same valid image.
 	 */
-	private HashMap map = new HashMap();
+	private HashMap<Object, ReferencedImage> map = new HashMap<Object, ReferencedImage>();
 	
 	protected ReferencedImage get(Object key) {
-		return (ReferencedImage) map.get(key);
+		return map.get(key);
 	}
 	
 	Image getUnmanaged(Object key) {

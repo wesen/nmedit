@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class DToolbarSection {
 
 	/** A list containing the DModule objects */
-	private ArrayList dmodules = new ArrayList();
+	private ArrayList<DModule> dmodules = new ArrayList<DModule>();
 	/** The toolbar group this section belongs to */
 	private DToolbarGroup parent = null;
 	
@@ -40,7 +40,7 @@ public class DToolbarSection {
 	 * @return the module
 	 */
 	public DModule getModule(int index) {
-		return (DModule) dmodules.get(index);
+		return dmodules.get(index);
 	}
 	
 	/**

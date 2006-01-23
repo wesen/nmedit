@@ -18,22 +18,15 @@
  */
 
 /*
- * Created on Jan 13, 2006
+ * Created on Jan 22, 2006
  */
-package org.nomad.theme;
+package org.nomad.theme.component.model;
 
-import org.nomad.util.graphics.ImageTracker;
+import java.awt.Graphics2D;
 
-public class ThemeEnvironment {
+public interface NomadComponentPainter {
 
-	private ImageTracker imageTracker;
-	
-	public ThemeEnvironment() {
-		super();
-	}
+	public void paintDecoration(Graphics2D g2);
+	public void paintDynamicOverlay(Graphics2D g2);
 
-	public ImageTracker getImageTracker() {
-		return imageTracker;
-	}
-	
 }

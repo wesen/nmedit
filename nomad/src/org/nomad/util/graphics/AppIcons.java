@@ -25,7 +25,6 @@ package org.nomad.util.graphics;
 import java.awt.Image;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.swing.ImageIcon;
 
@@ -65,9 +64,8 @@ public final class AppIcons extends ImageTracker {
 	 *   '_\d+'   
 	 */
 	protected void formatKeys() {
-		ArrayList keys = new ArrayList(images.keySet());
-		for (Iterator iter = keys.iterator();iter.hasNext();) {
-			String oldkey = (String) iter.next();
+		ArrayList<String> keys = new ArrayList<String>(images.keySet());
+		for (String oldkey:keys) {
 			String key = oldkey;
 			if (key.startsWith("stock_"))
 				key = key.replaceFirst("stock_","");
@@ -75,8 +73,6 @@ public final class AppIcons extends ImageTracker {
 				key = key.substring(0, key.lastIndexOf("-"));
 			else if (key.matches(".*_\\d+"))
 				key = key.substring(0, key.lastIndexOf("_"));
-
-			System.out.println(oldkey+"--"+key);
 			images.put(key, images.remove(oldkey));
 		}
 	}

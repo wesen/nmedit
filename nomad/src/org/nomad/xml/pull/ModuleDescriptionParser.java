@@ -238,6 +238,7 @@ public class ModuleDescriptionParser extends NomadPullParser {
 				case XmlPullParser.START_TAG:
 
 					errorNoSuchElement(parser); // has no children
+					break;
 
 				case XmlPullParser.END_TAG:
 					
@@ -423,6 +424,7 @@ public class ModuleDescriptionParser extends NomadPullParser {
 				case XmlPullParser.START_TAG:
 
 					errorNoSuchElement(parser); // has no children
+					break;
 
 				case XmlPullParser.END_TAG:
 					
@@ -498,6 +500,7 @@ public class ModuleDescriptionParser extends NomadPullParser {
 				case XmlPullParser.START_TAG:
 
 					errorNoSuchElement(parser); // has no children
+					break;
 
 				case XmlPullParser.END_TAG:
 					

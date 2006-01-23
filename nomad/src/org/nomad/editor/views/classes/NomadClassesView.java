@@ -44,7 +44,8 @@ import org.nomad.theme.component.NomadComponent;
 
 public class NomadClassesView extends JPanel {
 	
-	private ArrayList listItemList = new ArrayList();
+	private ArrayList<ComponentClassListItem> 
+		listItemList = new ArrayList<ComponentClassListItem>();
 	
 
 	private JList classPreviewList = new JList();
@@ -185,6 +186,7 @@ public class NomadClassesView extends JPanel {
 		
 		if (theUIFactory==null) return;
 		
+		listItemList.clear();
 		//this.factory = theUIFactory;		
 		Class[] classList = theUIFactory.getInstalledClasses();
 		for (int i=0;i<classList.length;i++)

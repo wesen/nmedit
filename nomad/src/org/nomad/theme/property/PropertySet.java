@@ -36,11 +36,11 @@ import org.nomad.xml.dom.theme.NomadDOMComponent;
 /**
  * @author Christian Schneider
  */
-public class PropertySet {
+public class PropertySet implements Iterable<Property> {
 
 	private Property fallBack = null;
-	private ArrayList propertySetListenerList = null;
-	private HashMap propertyMap = new HashMap(4);
+	private ArrayList<PropertySetListener> propertySetListenerList = null;
+	private HashMap<String,Property> propertyMap = new HashMap<String,Property>(4);
 	private boolean flagUseEventListening = false;
 
 	private ChangeListener broadCast = null;
@@ -51,7 +51,7 @@ public class PropertySet {
 
 	public void addPropertySetListener(PropertySetListener l) {
 		if (propertySetListenerList==null) 
-			propertySetListenerList = new ArrayList();
+			propertySetListenerList = new ArrayList<PropertySetListener>();
 		if (!propertySetListenerList.contains(l))
 			propertySetListenerList.add(l);
 	}
@@ -86,8 +86,9 @@ public class PropertySet {
 	}
 	
 	protected void firePropertySetEventNoCheck(PropertySetEvent event) {
-		for (int i=propertySetListenerList.size()-1;i>=0;i--)
-			((PropertySetListener)propertySetListenerList.get(i)).propertySetEvent(event);
+		for (PropertySetListener l : propertySetListenerList) {
+			l.propertySetEvent(event);
+		}
 	}
 	
 	public void add(Property p) {
@@ -113,7 +114,7 @@ public class PropertySet {
 	 */
 	public Property byName(String name) {
 		//if ((name==null)) return null;
-		Property p = (Property) propertyMap.get(name);
+		Property p = propertyMap.get(name);
 		if (p==null && fallBack!=null) {
 			p=fallBack;
 			p.setName(name);
@@ -125,7 +126,7 @@ public class PropertySet {
 		fallBack = p;
 	}
 
-	public Iterator iterator() {
+	public Iterator<Property> iterator() {
 		return propertyMap.values().iterator();
 	}
 
@@ -149,9 +150,7 @@ public class PropertySet {
 	}
 
 	public void clear() {
-		ArrayList items = new ArrayList(propertyMap.values());
-		for (Iterator iter=items.iterator();iter.hasNext();) {
-			Property p = ((Property)iter.next());
+		for (Property p : new ArrayList<Property>(propertyMap.values()) ) {
 			p.removeChangeListener(broadCast);
 			propertyMap.remove(p.getName());
 		}

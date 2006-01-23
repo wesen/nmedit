@@ -34,7 +34,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 public class DomImpl extends DOMNodeImpl implements NomadDOM {
 
-	private HashMap moduleMap = new HashMap();
+	private HashMap<String, NomadDOMModule> moduleMap = new HashMap<String, NomadDOMModule>();
 	
 	public DomImpl() {
 		super();
@@ -48,12 +48,12 @@ public class DomImpl extends DOMNodeImpl implements NomadDOM {
 	}
 
 	public NomadDOMModule createModuleNode(int id) { 
-		DModule info = ModuleDescriptions.model.getModuleById(id);
+		DModule info = ModuleDescriptions.sharedInstance().getModuleById(id);
 		return createModuleNode(info);
 	}
 
 	public NomadDOMModule getModuleNodeById(int id) {
-		return (NomadDOMModule) moduleMap.get(DModule.getKeyFromId(id));
+		return moduleMap.get(DModule.getKeyFromId(id));
 	}
 
 	public NomadDOMModule getModuleNode(int index) {

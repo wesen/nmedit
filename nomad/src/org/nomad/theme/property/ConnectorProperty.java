@@ -79,7 +79,7 @@ public class ConnectorProperty extends Property {
 
 		boolean isOut = inout.equals("out");
 
-		DModule module = ModuleDescriptions.model.getModuleById(moduleId);
+		DModule module = ModuleDescriptions.sharedInstance().getModuleById(moduleId);
 		if (module==null) {
 			System.err.println("In ConnectorProperty.decode(): Module [id="+moduleId+"] not found");
 			return null;

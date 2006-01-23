@@ -32,11 +32,10 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import javax.swing.JComponent;
-import javax.swing.border.Border;
 
+import org.nomad.env.Environment;
 import org.nomad.patch.Module;
 import org.nomad.theme.ModuleGUI;
-import org.nomad.theme.UIFactory;
 import org.nomad.theme.property.ComponentLocationProperty;
 import org.nomad.theme.property.ComponentSizeProperty;
 import org.nomad.theme.property.PropertySet;
@@ -51,33 +50,39 @@ public class NomadComponent extends JComponent {
 
 	private ImageBuffer alternativeBackground = new ImageBuffer();
 	private boolean flagHasDynamicOverlay = false;
-	private UIFactory uiFactory = null;
+	private Environment env;
 	private Module module = null;
 	private PropertySet accessibleProperties = null;
 
 	public NomadComponent() {
+		env=Environment.sharedInstance();
 		setDoubleBuffered(true); // disable default double buffer
 		setOpaque(false);
 		//RepaintManager.currentManager(this).setDoubleBufferingEnabled(false);
 	}
 
-	public void setEnvironment(UIFactory factory) {
-		this.uiFactory = factory;
+	public void setEnvironment(Environment env) {
+		this.env = env;
 	}
 	
-	public UIFactory getEnvironment() {
-		return uiFactory;
+	public Environment getEnvironment() {
+		return env;
 	}
-	
-	public void setBorder(Border border) {
-		// super.setBorder(null);
-	}
-	
+
 	protected void finalize() throws Throwable {
 		alternativeBackground.dispose();
 		super.finalize();
 	}
-	
+
+    public void paintBorder(Graphics g) {
+    	// do not paint border here
+    }
+
+    public void paintNomadBorder(Graphics2D g2) {
+    	// but we still want to be able to paint the border
+		super.paintBorder(g2);
+    }
+    
 	public final PropertySet createAccessibleProperties(boolean permanent) {
 		
 		if (accessibleProperties!=null)
@@ -101,6 +106,7 @@ public class NomadComponent extends JComponent {
 		if (isOpaque() && getBackground()!=null) {
 			g2.setColor(getBackground());
 			g2.fillRect(0, 0, getWidth(),getHeight());
+			paintNomadBorder(g2);
 		}
 	}
 
@@ -226,6 +232,10 @@ public class NomadComponent extends JComponent {
 	}
 	
 	public void link() {
+		//
+	}
+	
+	public void unlink() {
 		//
 	}
 	

@@ -25,32 +25,38 @@ package org.nomad.theme.component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-import org.nomad.theme.component.model.NomadClassicConnectorGraphics;
-import org.nomad.theme.component.model.NomadClassicConnectorGraphics.ConnectorCachedGraphics;
+import org.nomad.theme.component.model.ConnectorPaintManager;
+import org.nomad.theme.component.model.ConnectorPainter;
+import org.nomad.theme.component.model.ConnectorPaintManager.CachedKnobGraphics;
 
 public class NomadClassicConnector extends NomadConnector {
 
-	private ConnectorCachedGraphics connectorGraphics = null;
+	protected final static ConnectorPaintManager paintManager = new ConnectorPaintManager();
+	private CachedKnobGraphics graphics = null;
+	private static boolean gradients = true;
 	
 	public NomadClassicConnector() {
 		super();
 		setConnectorType(false);
 		setConnectedState(false);
 		//setBackground(NomadClassicColors.MORPH_YELLOW);
+		setGraphicsGradient(true);
 	}
-/*
-	protected void createProperties(PropertySet set) {
-		super.createProperties(set);
-		//getAccessibleProperties().rewriteDefaults();
-	}*/
-
+	
+	protected static void setGraphicsGradient(boolean enable) {
+		if (gradients!=enable) {
+			gradients = enable;
+			paintManager.setConnectorPainter(new ConnectorPainter(gradients));
+		}
+	}
+	
 	public void paintComponent(Graphics g) {
 		/* We have our custom double buffer and need no background buffer,
 		 * so we override paintComponent.
 		 */
-		connectorGraphics = NomadClassicConnectorGraphics
-			.obtainGraphicsCache(this, connectorGraphics);
-		connectorGraphics.paint(this, (Graphics2D) g);
+		
+		graphics=paintManager.obtainGraphics(this, graphics);
+		graphics.paint(this, (Graphics2D) g);
 	}
 
 	/*
@@ -63,8 +69,8 @@ public class NomadClassicConnector extends NomadConnector {
 	} */
 	
 	protected void finalize() throws Throwable {
-		if (connectorGraphics!=null)
-			connectorGraphics.dispose();
+		if (graphics!=null)
+			graphics.unregister();
 		super.finalize();
 	}
 	

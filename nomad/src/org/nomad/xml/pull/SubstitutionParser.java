@@ -242,7 +242,7 @@ public class SubstitutionParser extends NomadPullParser {
 		
 		assureAttributeExists(parser, "id", attId);
 		
-		ArrayList items = new ArrayList();
+		ArrayList<String> items = new ArrayList<String>();
 		boolean done = false;
 		event = parser.nextToken();
 		while (event!=XmlPullParser.END_DOCUMENT) {
@@ -278,12 +278,8 @@ public class SubstitutionParser extends NomadPullParser {
 			
 			event = parser.nextToken();
 		}
-		
-		String[] sitems = new String[items.size()];
-		for (int i=items.size()-1;i>=0;i--)
-			sitems[i] = (String) items.get(i);
-		
-		ListSubstitution subs = new ListSubstitution(sitems);
+
+		ListSubstitution subs = new ListSubstitution(items.toArray(new String[items.size()]));
 		substitution(subs, attId);
 	}
 

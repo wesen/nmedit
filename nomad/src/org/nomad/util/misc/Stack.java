@@ -2,18 +2,16 @@ package org.nomad.util.misc;
 
 import java.util.ArrayList;
 
-public class Stack extends ArrayList {
+public class Stack<T> extends ArrayList<T> {
 
-	public Stack() {
-		
-	}
-	
-	public Stack(Object top) {
+	public Stack() { }
+
+	public Stack(T top) {
 		if (top!=null)
 			push(top);
 	}
 	
-	public void push(Object obj) {
+	public void push(T obj) {
 		add(obj);
 	}
 	
@@ -21,7 +19,7 @@ public class Stack extends ArrayList {
 		return size()-1;
 	}
 	
-	public Object top() {
+	public T top() {
 		return get(getTopIndex());
 	}
 	

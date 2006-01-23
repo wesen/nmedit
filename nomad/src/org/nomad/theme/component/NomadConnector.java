@@ -41,7 +41,7 @@ import org.nomad.xml.dom.module.DConnector;
 
 public class NomadConnector extends NomadComponent {
 
-	private ArrayList connectorChangeListenerList = null;
+	private ArrayList<ChangeListener> connectorChangeListenerList = null;
 	private boolean flagConnected = false;
 	private boolean flagIsInput = false;
 	private DConnector connectorInfo = null;
@@ -244,7 +244,7 @@ public class NomadConnector extends NomadComponent {
 
 	public void addConnectorChangeListener(ChangeListener l) {
 		if (connectorChangeListenerList==null)
-			connectorChangeListenerList = new ArrayList();
+			connectorChangeListenerList = new ArrayList<ChangeListener>();
 		
 		if (!connectorChangeListenerList.contains(l))
 			connectorChangeListenerList.add(l);
@@ -259,8 +259,8 @@ public class NomadConnector extends NomadComponent {
 	public void fireConnectorChangeEvent(ChangeEvent event) {
 		if (connectorChangeListenerList==null) return;
 		
-		for (int i=connectorChangeListenerList.size()-1;i>=0;i--) {
-			((ChangeListener)connectorChangeListenerList.get(i)).stateChanged(event);
+		for (ChangeListener l : connectorChangeListenerList ) {
+			l.stateChanged(event);
 		}
 	}
 	

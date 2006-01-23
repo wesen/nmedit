@@ -122,7 +122,8 @@ public abstract class Property extends PropertyContainer {
 	 * Used to validate the properties name.
 	 * @see #setName(String)
 	 */
-	private final static Pattern validateNamePattern = Pattern.compile("[:a-zA-Z][,#a-zA-Z0-9:\\.\\-]*");
+	private final static Pattern 
+		validateNamePattern = Pattern.compile("[:a-zA-Z][,#a-zA-Z0-9:\\.\\-]*");
 
 	/**
 	 * The properties name
@@ -234,9 +235,9 @@ public abstract class Property extends PropertyContainer {
 	// ---- value type handler ------------------------------------------
 
 	/**
-	 * map containing pairs (Class, PropertyValueWriter)
+	 * map containing pairs (Class, PropertyValueHandler)
 	 */
-	private HashMap handlerMap = new HashMap(); 
+	private HashMap<Class, PropertyValueHandler> handlerMap = null; 
 
 	/**
 	 * Sets the handler for a given type.
@@ -412,6 +413,7 @@ public abstract class Property extends PropertyContainer {
 	 */
 	public void setupForEditing() {
 		this.isEventhandlingInstalled = true;
+		handlerMap = new HashMap<Class, PropertyValueHandler>();
 	}
 
 }

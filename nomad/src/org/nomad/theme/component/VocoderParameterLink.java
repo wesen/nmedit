@@ -22,6 +22,8 @@
  */
 package org.nomad.theme.component;
 
+import java.util.ArrayList;
+
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -33,6 +35,10 @@ public class VocoderParameterLink {
 
 	private VocoderBandDisplay vbd = null;
 	private Parameter[] pbands = null;
+	private Module linkedModule = null;
+	private ArrayList<ParameterChangeListener> 
+		paramListeners = new ArrayList<ParameterChangeListener>();
+	private ParameterBroadcast broadcast = new ParameterBroadcast();
 	
 	public VocoderParameterLink(VocoderBandDisplay vbd) {
 		this.vbd = vbd;
@@ -50,21 +56,30 @@ public class VocoderParameterLink {
 	}
 	
 	public void link() {
-		Module module = getVocoderBandDisplay().getModule();
-		if (module!=null) {
+		linkedModule = getVocoderBandDisplay().getModule();
+		if (linkedModule!=null) {
 			for (int i=VocoderBandDisplay.NUM_BANDS-1;i>=0;i--) {
-				pbands[i] = module.findParameter(getParameterInfo(i));
+				pbands[i] = linkedModule.findParameter(getParameterInfo(i));
 				if (pbands[i]!=null) {
 					getVocoderBandDisplay().setBand(i, pbands[i].getValue());
-					pbands[i].addChangeListener(new ParameterChangeListener(i));
-					getVocoderBandDisplay().addBandChangeListener(new ParameterBroadcast());
+					ParameterChangeListener l = new ParameterChangeListener(i); 
+					paramListeners.add(l);
+					pbands[i].addChangeListener(l);
+					getVocoderBandDisplay().addBandChangeListener(broadcast);
 				}
 			}
 		}
 	}
 
 	public void unlink() {
-		//TODO revert link()
+		if (linkedModule!=null) {
+			for (int i=VocoderBandDisplay.NUM_BANDS-1;i>=0;i--) {
+				pbands[i].removeChangeListener(paramListeners.get(i));
+				pbands[i] = null;
+				getVocoderBandDisplay().removeBandChangeListener(broadcast);
+			}
+			paramListeners.clear();
+		}
 	}
 
 	private class ParameterChangeListener implements ChangeListener {

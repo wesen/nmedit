@@ -4,7 +4,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -18,12 +18,15 @@ import org.nomad.xml.dom.module.ModuleDescriptions;
 /**
  * @author Christian Schneider
  */
-public class ModuleToolbar extends JTabbedPane
+public class ModuleToolbar extends JTabbedPane implements ActionListener
 {
   private JPanel[] paneGroups;
-  private Vector buttons;
+  private ArrayList<ModuleToolbarButton> buttons;
   //private boolean draggingSupport = true;
-  private Vector moduleButtonClickListeners = new Vector();
+  private ArrayList<ModuleToolbarEventListener> 
+  	moduleButtonClickListeners = new ArrayList<ModuleToolbarEventListener>();
+
+  private boolean draggingSupport = true;
 
   /**
    * Creates the ModuleToolbar using ModuleDescriptions.model
@@ -34,8 +37,16 @@ public class ModuleToolbar extends JTabbedPane
   }
   
   public ModuleToolbar(boolean draggingSupport) {
-	  this(ModuleDescriptions.model, draggingSupport);
+	  this(ModuleDescriptions.sharedInstance(), draggingSupport);
   }
+
+  public void setAllowDragging(boolean enabled) {
+	this.draggingSupport = enabled;
+  }
+	
+	public boolean hasDraggingSupport() {
+		return draggingSupport;
+	}
 
   /**
    * Creates the toolbar using the specifed module descriptions.
@@ -46,11 +57,10 @@ public class ModuleToolbar extends JTabbedPane
   public ModuleToolbar(ModuleDescriptions moduleDescriptions, boolean draggingSupport)
   {
     super(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
+    this.draggingSupport = draggingSupport;
     //this.draggingSupport = draggingSupport;
     paneGroups = new JPanel[moduleDescriptions.getGroupCount()];
-    buttons = new Vector();
-    
-    ButtOnClickListener buttonClickListener = new ButtOnClickListener();
+    buttons = new ArrayList<ModuleToolbarButton>();
     
     for (int gi=0;gi<moduleDescriptions.getGroupCount();gi++) {
     	DToolbarGroup group = moduleDescriptions.getGroup(gi);
@@ -72,10 +82,7 @@ public class ModuleToolbar extends JTabbedPane
         	
         	for (int mi=0;mi<section.getModuleCount();mi++) {
                 ModuleToolbarButton btn = new ModuleToolbarButton(this, section.getModule(mi));
-                if (!draggingSupport)
-                	btn.addActionListener(buttonClickListener);
-                	
-                btn.setAllowDragging(draggingSupport);
+                btn.addActionListener(this);
                 toolbar.add(btn);
                 buttons.add(btn);
         	}
@@ -85,9 +92,6 @@ public class ModuleToolbar extends JTabbedPane
         }
        
     }
-
-    //setupDragModule();
-
   }
   
   public void addModuleButtonClickListener(ModuleToolbarEventListener listener) {
@@ -98,32 +102,14 @@ public class ModuleToolbar extends JTabbedPane
 	  moduleButtonClickListeners.remove(listener);
   }
   
-  private class ButtOnClickListener implements ActionListener {
-
 	public void actionPerformed(ActionEvent event) {
-		ModuleToolbarButton btn = (ModuleToolbarButton) event.getSource();
-		for (int i=0;i<moduleButtonClickListeners.size();i++) {
-			ModuleToolbarEventListener listener = 
-				(ModuleToolbarEventListener) moduleButtonClickListeners.get(i);
-			listener.toolbarModuleSelected(btn.getModuleDescription());
+		if (!draggingSupport) {
+			ModuleToolbarButton btn = (ModuleToolbarButton) event.getSource();
+			for (int i=0;i<moduleButtonClickListeners.size();i++) {
+				moduleButtonClickListeners.get(i)
+					.toolbarModuleSelected(btn.getModuleDescription());
+			}
 		}
 	}
-	  
-  }
-  /*
-  public Vector getButtons()
-  { return buttons; }
-
-  private void setupDragModule()
-  {
-    private
-
-    for (Iterator iterator = getButtons().iterator();iterator.hasNext();)
-    {
-      ModuleButton btn = (ModuleButton) iterator.next();
-      btn.addActionListener();
-    }
-  }*/
-	
 }
 

@@ -24,49 +24,31 @@ package org.nomad.xml.dom.theme.impl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 import org.nomad.xml.dom.theme.NomadDOMNode;
 
 public abstract class DOMNodeImpl implements NomadDOMNode {
 
-	private ArrayList children = null;
+	private ArrayList<NomadDOMNode> children = new ArrayList<NomadDOMNode>();
 
 	public int getNodeCount() {
 		return (children==null) ? 0 : children.size();
 	}
 
 	protected void add(DOMNodeImpl node) {
-		if (children==null) children=new ArrayList();
 		children.add(node);
 	}
 	
 	public DOMNodeImpl getNode(int index) {
-		return (children==null) ? null : (DOMNodeImpl) children.get(index);
+		return (DOMNodeImpl) children.get(index);
 	}
 	
-	public Iterator iterator() {
-		
-		if (children==null)
-			return new Iterator(){
-
-				public boolean hasNext() {
-					return false;
-				}
-
-				public Object next() {
-					throw new NoSuchElementException();
-				}
-
-				public void remove() {
-					throw new UnsupportedOperationException();
-				}};
-		
+	public Iterator<NomadDOMNode> iterator() {
 		return children.iterator();
 	}
 	
 	public void removeChildren() {
-		children = null;
+		children.clear();
 	}
 	
 }

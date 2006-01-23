@@ -15,9 +15,6 @@ import javax.swing.ImageIcon;
  */
 public class BackgroundPainter {
 
-	// the component that ownes the background painter
-	private Component comp = null;
-	
 	// the fill
 	private Image tile = null;
 	
@@ -30,8 +27,7 @@ public class BackgroundPainter {
 	 * @param comp the component that should be filled 
 	 * @param tile the image used to fill the background
 	 */
-	public BackgroundPainter(Component comp, Image tile) {
-		this.comp = comp;
+	public BackgroundPainter(Image tile) {
 		this.tile = tile;
 		
 		if (tile!=null) {
@@ -62,8 +58,8 @@ public class BackgroundPainter {
 	 * 
 	 * @param g the graphics context
 	 */
-	public void paintBackground(Graphics g) {
-		paintBackground(g, comp.getBackground());
+	public void paintBackground(Graphics g, Component comp) {
+		paintBackground(g, comp, comp.getBackground());
 	}
 
 	/**
@@ -77,7 +73,7 @@ public class BackgroundPainter {
 	 * @param g the graphics context
 	 * @param alternativeBackground alternative fill color
 	 */
-	public void paintBackground(Graphics g, Color alternativeBackground) {
+	public void paintBackground(Graphics g, Component comp, Color alternativeBackground) {
 		int tw = comp.getWidth();
 		int th = comp.getHeight();
 

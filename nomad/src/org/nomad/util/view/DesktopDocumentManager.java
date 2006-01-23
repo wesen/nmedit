@@ -1,4 +1,4 @@
-package org.nomad.main;
+package org.nomad.util.view;
 
 import java.awt.BorderLayout;
 import java.beans.PropertyVetoException;
@@ -11,11 +11,11 @@ import javax.swing.JInternalFrame;
 public class DesktopDocumentManager extends JDesktopPane implements
 		DocumentManager {
 
-	private ArrayList frames = new ArrayList();
-	private ArrayList components = new ArrayList();
+	private ArrayList<JInternalFrame> frames = new ArrayList<JInternalFrame>();
+	private ArrayList<JComponent> components = new ArrayList<JComponent>();
 	
 	private JInternalFrame getFrameAt(int index) {
-		return (JInternalFrame) frames.get(index);
+		return frames.get(index);
 	}
 	
 	public JComponent getDocumentContainer() {
@@ -69,7 +69,7 @@ public class DesktopDocumentManager extends JDesktopPane implements
 
 	public void removeDocumentAt(int index) {
 		JInternalFrame frame = getFrameAt(index);
-		JComponent component = (JComponent) components.get(index);
+		JComponent component = components.get(index);
 		
 		frames.remove(index);
 		components.remove(index);

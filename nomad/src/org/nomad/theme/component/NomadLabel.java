@@ -33,11 +33,11 @@ import java.awt.RenderingHints;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
-import org.nomad.theme.ImageString;
 import org.nomad.theme.property.BooleanProperty;
 import org.nomad.theme.property.FontProperty;
 import org.nomad.theme.property.Property;
 import org.nomad.theme.property.PropertySet;
+import org.nomad.util.misc.ImageString;
 
 /**
  * @author Christian Schneider

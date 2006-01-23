@@ -8,9 +8,7 @@ import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.Enumeration;
 
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -42,9 +40,6 @@ public class Patch {
     private ModuleSectionGUI desktopPaneCommon;
 
 	public Patch() {
-		patchPanel = new PatchGUI(this);
-		patchPanel.setLayout(new BorderLayout());
-
         header = new Header();
         modulesPoly = new ModuleSection(this, ModuleSection.ModulesSectionType.POLY);
         modulesCommon = new ModuleSection(this, ModuleSection.ModulesSectionType.COMMON);
@@ -55,6 +50,12 @@ public class Patch {
         controlMap = new ControlMap();
         patchNotes = new PatchNotes();
         morphMap = new MorphMap();
+
+		patchPanel = new PatchGUI(this);
+		patchPanel.setLayout(new BorderLayout());
+
+		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        patchPanel.add(splitPane, BorderLayout.CENTER);
 	}
 
     public ModuleSection getModulesPoly() {
@@ -91,52 +92,48 @@ public class Patch {
 	}
 	
 	public static JPanel createPatchUI(Patch patch) {
-
-//	    loadPatch(reader);
-
-	    patch.desktopPanePoly = patch.modulesPoly.getModuleSectionGUI();
-        patch.desktopPaneCommon = patch.modulesCommon.getModuleSectionGUI();
-
-		patch.splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-        patch.splitPane.setDividerLocation(patch.header.getSeperator() + 1);
-
-        patch.desktopPanePoly.setPreferredSize(new Dimension(patch.modulesPoly.getMaxGridPixWidth(), patch.modulesPoly.getMaxGridPixHeight()));
-        patch.desktopPaneCommon.setPreferredSize(new Dimension(patch.modulesCommon.getMaxGridPixWidth(), patch.modulesCommon.getMaxGridPixHeight()));
-
-        patch.scrollPanePoly = new JScrollPane(patch.desktopPanePoly); 
-        patch.scrollPaneCommon = new JScrollPane(patch.desktopPaneCommon);
-
-        patch.splitPane.add(patch.scrollPanePoly, JSplitPane.TOP);
-        patch.splitPane.add(patch.scrollPaneCommon, JSplitPane.BOTTOM);
-
-		// long time = System.currentTimeMillis(); // too slow ...
-        patch.addModules();
-		// System.out.println("** time: "+((System.currentTimeMillis()-time)/1000.0d)+"s");
-		
-
-        patch.patchPanel.add(patch.splitPane, BorderLayout.CENTER);
-
+		patch.rebuildUI();
 		return patch.patchPanel;
 	}
 
-    public void addModules() {
-        int i = 0;
-        Module tempMod = null;
+	public void rebuildUI() {
 
-        for (Enumeration e = modulesPoly.getModules().keys(); e.hasMoreElements();) { 
-            i = ((Integer) e.nextElement()).intValue();
-            tempMod = modulesPoly.getModule(i);
-            tempMod.createModuleGUI(desktopPanePoly);
-            desktopPanePoly.add(tempMod.getModuleGUI(), JLayeredPane.DEFAULT_LAYER.intValue());
-        }
+		// remove
+		if (scrollPaneCommon!=null) {
+			splitPane.remove(scrollPaneCommon);
+			// important, unlinks the displays
+			desktopPaneCommon.removeModuleDisplays();
+		}
 
-        for (Enumeration e = modulesCommon.getModules().keys(); e.hasMoreElements();) {
-            i = ((Integer) e.nextElement()).intValue();
-            tempMod = modulesCommon.getModule(i);
-            tempMod.createModuleGUI(desktopPaneCommon);
-            desktopPaneCommon.add(tempMod.getModuleGUI(), JLayeredPane.DEFAULT_LAYER.intValue());
-        }
-    }
+		if (scrollPanePoly!=null) {
+			splitPane.remove(scrollPanePoly);
+			// important, unlinks the displays
+			desktopPanePoly.removeModuleDisplays();
+		}
+		
+		// new
+		
+		// create a new gui
+		modulesPoly.resetModuleSectionGUI();
+		modulesCommon.resetModuleSectionGUI();
+		
+	    desktopPanePoly = modulesPoly.getModuleSectionGUI();
+        desktopPaneCommon = modulesCommon.getModuleSectionGUI();
+
+        desktopPanePoly.setPreferredSize(new Dimension(modulesPoly.getMaxGridPixWidth(), modulesPoly.getMaxGridPixHeight()));
+        desktopPaneCommon.setPreferredSize(new Dimension(modulesCommon.getMaxGridPixWidth(), modulesCommon.getMaxGridPixHeight()));
+
+        scrollPanePoly = new JScrollPane(desktopPanePoly); 
+        scrollPaneCommon = new JScrollPane(desktopPaneCommon);
+
+        splitPane.add(scrollPanePoly, JSplitPane.TOP);
+        splitPane.add(scrollPaneCommon, JSplitPane.BOTTOM);
+
+        splitPane.setDividerLocation(header.getSeperator() + 1);
+
+        desktopPanePoly.populate();
+        desktopPaneCommon.populate();		
+	}
 
 //    public void loadPatch(String fileName) {
 //    	try {

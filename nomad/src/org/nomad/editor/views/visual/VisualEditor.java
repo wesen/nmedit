@@ -45,7 +45,7 @@ import org.nomad.xml.dom.module.DModule;
 public class VisualEditor extends NomadComponent implements ModuleComponent {
 
 	private VEHotSpotManager spots= null;
-	private ArrayList selection = new ArrayList(); // NomadComponents
+	private ArrayList<NomadComponent> selection = new ArrayList<NomadComponent>();
 	private VEPainter painter = null;
 	private VEPropertySetChangeHandler propertySetListener = null;
 	private VEMouseEventHandler mouseHandler = null;
@@ -176,7 +176,7 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 	
 	public NomadComponent getFirstSelection() {
 		if (selection.size()>0)
-			return (NomadComponent) selection.get(0);
+			return selection.get(0);
 		return null;
 	}
 	
@@ -206,7 +206,7 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 		this.tbAlignment = tbAlignment;
 	}
 
-	public ArrayList getSelection() {
-		return new ArrayList(selection);
+	public ArrayList<NomadComponent> getSelection() {
+		return new ArrayList<NomadComponent>(selection);
 	}
 }

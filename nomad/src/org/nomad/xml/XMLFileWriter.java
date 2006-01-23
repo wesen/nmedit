@@ -3,7 +3,8 @@ package org.nomad.xml;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.util.Vector;
+
+import org.nomad.util.misc.Stack;
 
 /**
  * A class that allows to write xml files.
@@ -17,7 +18,7 @@ public class XMLFileWriter extends PrintStream {
 	// if we are in a new line 
 	private boolean freshLine = true;
 	// stack containing the nodes from the current node to the top node
-	private Vector elementStack = new Vector();
+	private Stack<String> elementStack = new Stack<String>();
 
 	// current tag is a closed tag
 	private boolean closed = false;
@@ -64,7 +65,7 @@ public class XMLFileWriter extends PrintStream {
 	 * @param element the element
 	 */
 	private void push(String element) {
-		elementStack.add(element);
+		elementStack.push(element);
 	}
 	
 	/*
@@ -82,11 +83,11 @@ public class XMLFileWriter extends PrintStream {
 	 * @return the element name
 	 */
 	private String pop() {
-		if (elementStack.size()==0)
+		if (elementStack.isEmpty())
 			return null;
 		else {
-			String top = (String) elementStack.lastElement();
-			elementStack.remove(top);
+			String top = elementStack.top();
+			elementStack.pop();
 			return top;
 		}
 	}

@@ -20,7 +20,7 @@
 /*
  * Created on Jan 13, 2006
  */
-package org.nomad.theme;
+package org.nomad.util.misc;
 
 import java.awt.Image;
 import java.awt.Rectangle;

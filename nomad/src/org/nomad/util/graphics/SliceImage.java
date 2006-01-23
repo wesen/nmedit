@@ -39,7 +39,7 @@ public class SliceImage
   /**
    * Hashmap for key to slice-coordinate association.
    */
-  private HashMap directors;
+  private HashMap<String, Point> directors;
 
   /**
    * Caches slices.
@@ -138,8 +138,7 @@ public class SliceImage
       }
 
     // max(number of keys) = width*height
-    int initialHashMapCapacity = sliceCountHrz*sliceCountVrt;
-    directors = new HashMap(initialHashMapCapacity);
+    directors = new HashMap<String, Point>();
   }
 
   // getters and setters
@@ -198,7 +197,7 @@ public class SliceImage
    * @throws IndexOutOfBoundsException
    *          If conditions for x and y are not fulfilled.
    */
-  public void setKey(int x, int y, Object key)
+  public void setKey(int x, int y, String key)
     throws IndexOutOfBoundsException
   {
     if (!checkCoordinates(x, y))
@@ -219,7 +218,7 @@ public class SliceImage
   public Image getSlice(Object key)
     throws NullPointerException
   {
-    Point sliceSelector = (Point) directors.get(key);
+    Point sliceSelector = directors.get(key);
     if (sliceSelector==null)
       throw new NullPointerException("Key '"
         +key+"' is not associated with a coordinate.");
@@ -233,7 +232,7 @@ public class SliceImage
    * all keys.
    * @return key iterator
    */
-  public Iterator getKeys() {
+  public Iterator<String> getKeys() {
 	  return directors.keySet().iterator();
   }
   

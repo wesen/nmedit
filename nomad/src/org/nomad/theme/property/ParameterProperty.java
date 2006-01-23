@@ -84,7 +84,7 @@ public class ParameterProperty extends Property {
 		String type = pieces[2];
 		boolean isCustom = type.equals("c");
 
-		DModule module = ModuleDescriptions.model.getModuleById(moduleId);
+		DModule module = ModuleDescriptions.sharedInstance().getModuleById(moduleId);
 		if (module==null){
 			System.err.println("In ParameterProperty.decode(): Module [id="+moduleId+"] not found");
 			return null;

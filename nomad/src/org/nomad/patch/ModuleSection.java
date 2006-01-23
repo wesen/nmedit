@@ -10,7 +10,7 @@ import java.util.List;
 
 import javax.swing.JLayeredPane;
 
-import org.nomad.main.Nomad;
+import org.nomad.env.Environment;
 import org.nomad.theme.ModuleSectionGUI;
 import org.nomad.xml.dom.module.DModule;
 import org.nomad.xml.dom.module.ModuleDescriptions;
@@ -44,15 +44,19 @@ public class ModuleSection {
     Patch patch = null;
 	
 	ModuleSection(Patch patch, int moduleSection) {
+		this.moduleSection = moduleSection;
 		modules = new Hashtable();
 		cables = new Cables();
 
-		moduleSectionGUI = Nomad.getUIFactory().getModuleSectionGUI(this);
-		this.moduleSection = moduleSection;
+		resetModuleSectionGUI();
         this.patch = patch;
 	}
 	
-    public int getMaxGridPixWidth() {
+    public int getModulesSectionType() {
+    	return moduleSection;
+    }
+	
+	public int getMaxGridPixWidth() {
         return maxGridX * ModulePixDimension.PIXWIDTH;
     }
 
@@ -94,7 +98,7 @@ public class ModuleSection {
 		int gridX = Integer.parseInt(paramArray[2]);
 		int gridY = Integer.parseInt(paramArray[3]);
 		
-        Module mod = new Module(pchIndex, gridX, gridY, this, ModuleDescriptions.model.getModuleById(type));
+        Module mod = new Module(pchIndex, gridX, gridY, this, ModuleDescriptions.sharedInstance().getModuleById(type));
 
     	modules.put(pchIndex, mod);
         if (gridX + mod.getGridWidth() > maxGridX)
@@ -158,6 +162,14 @@ public class ModuleSection {
 
 	public ModuleSectionGUI getModuleSectionGUI() {
 		return moduleSectionGUI;
+	}
+
+	public void resetModuleSectionGUI() {
+		setModuleSectionGUI(Environment.sharedInstance().getFactory().getModuleSectionGUI(this));
+	}
+	
+	public void setModuleSectionGUI(ModuleSectionGUI gui) {
+		this.moduleSectionGUI = gui;
 	}
 
 	public void recalcMaxGridXY() {

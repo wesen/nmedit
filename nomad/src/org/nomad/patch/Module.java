@@ -1,8 +1,8 @@
 package org.nomad.patch;
 
+import org.nomad.env.Environment;
 import org.nomad.patch.ModuleSection.ModulePixDimension;
 import org.nomad.theme.ModuleGUI;
-import org.nomad.theme.ModuleGUIBuilder;
 import org.nomad.theme.ModuleSectionGUI;
 import org.nomad.xml.dom.module.DConnector;
 import org.nomad.xml.dom.module.DCustom;
@@ -141,8 +141,8 @@ public class Module {
     }
 
     public ModuleGUI createModuleGUI(ModuleSectionGUI moduleSectionGUI) {
-    	moduleGUI = ModuleGUIBuilder.createGUI(this, moduleSectionGUI); 
-        return moduleGUI;
+    	return moduleGUI = 
+    		Environment.sharedInstance().getBuilder().createGUI(this, moduleSectionGUI);
     }
     
     public ModuleGUI getModuleGUI() {

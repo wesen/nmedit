@@ -35,13 +35,13 @@ import java.util.regex.Pattern;
 
 import javax.swing.border.Border;
 
-import org.nomad.theme.ImageString;
 import org.nomad.theme.NomadClassicColors;
 import org.nomad.theme.component.model.NomadButtonArrayBehaviour;
 import org.nomad.theme.component.model.NomadButtonArrayModel;
 import org.nomad.theme.property.BooleanProperty;
 import org.nomad.theme.property.Property;
 import org.nomad.theme.property.PropertySet;
+import org.nomad.util.misc.ImageString;
 
 public class NomadButtonArray extends NomadControl implements NomadButtonArrayModel {
 
@@ -92,7 +92,10 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		for (int i=labelList.length-1;i>=0;i--) {
 			labelList[i] = null;
 		}
-		
+
+		setSelectionBorder(NomadBorderFactory.createNordEditor311LoweredButtonBorder());
+		setDefaultBorder(NomadBorderFactory.createNordEditor311RaisedButtonBorder());
+
 		addMouseListener(buttonArrayMouseListener);
 		//addFocusListener(buttonArrayFocusListener);
 
@@ -156,7 +159,6 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 	}
 
 	public Dimension getPreferredCellSize(int index) {
-		
 		if (flagIsCylicDisplay) {
 			return getMaxLabelSize();
 		} else {
@@ -218,8 +220,35 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 	public void paintDecoration(Graphics2D g2) {
 	}
 
-	private final static Border defBorder = NomadBorderFactory.createNordEditor311RaisedButtonBorder();
-	private final static Border selBorder = NomadBorderFactory.createNordEditor311LoweredButtonBorder();
+	public void setSelectionBorder(Border border) {
+		selBorder = border;
+		repaint();
+	}
+	
+	public void setDefaultBorder(Border border) {
+		defBorder = border;
+		repaint();
+	}
+
+	private Color focusedColor = NomadClassicColors.BUTTON_FOCUSED_BACKGROUND;
+	private Color selectedColor= NomadClassicColors.BUTTON_SELECTED_BACKGROUND;
+	
+	public void setButtonFocusedColor(Color color) {
+		if (this.focusedColor!=color) {
+			this.focusedColor = color;
+			repaint();
+		}
+	}
+	
+	public void setButtonSelectedColor(Color color) {
+		if (this.selectedColor!=color) {
+			this.selectedColor = color;
+			repaint();
+		}
+	}
+
+	private Border defBorder = null;
+	private Border selBorder = null;
 	
 	public void paintDynamicOverlay(Graphics2D g2) {
 		behaviour.calculateMetrics();
@@ -245,9 +274,13 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 			else
 				bounds = NomadLabel.getStringBounds(this, istr.getString());
 			Point cell = behaviour.getCell(0);
-			
-			g2.setColor(hasFocus() ? NomadClassicColors.BUTTON_FOCUSED_BACKGROUND : getBackground());
-			g2.fillRect(cell.x, cell.y, behaviour.getCellWidth()-2, behaviour.getCellHeight()-2);
+
+			if (getValue()==1)
+				g2.setColor(selectedColor);
+			else
+				g2.setColor(hasFocus()?focusedColor:getBackground());
+
+			g2.fillRect(cell.x, cell.y, behaviour.getCellWidth(), behaviour.getCellHeight());
 			
 			g2.setColor(Color.WHITE);
 
@@ -282,13 +315,12 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 					bounds = NomadLabel.getStringBounds(this, istr.getString());
 				Point cell = behaviour.getCell(i);
 
-				if (hasFocus())
-					g2.setColor(NomadClassicColors.BUTTON_FOCUSED_BACKGROUND);
-				else if (getValue()==i)
-					g2.setColor(NomadClassicColors.BUTTON_SELECTED_BACKGROUND);
+				if (getValue()==i)
+					g2.setColor(selectedColor);
 				else
-					g2.setColor(getBackground());
-				g2.fillRect(cell.x, cell.y, behaviour.getCellWidth()-2, behaviour.getCellHeight()-2);
+					g2.setColor(hasFocus()?focusedColor:getBackground());
+
+				g2.fillRect(cell.x, cell.y, behaviour.getCellWidth(), behaviour.getCellHeight());
 				
 				g2.setColor(Color.WHITE);
 				if (i==getValue()) {

@@ -44,7 +44,7 @@ public class ModuleGroupsMenu extends JMenu {
 	
 	public ModuleGroupsMenu() {
 		super("Modules");
-		ModuleDescriptions m = ModuleDescriptions.model;
+		ModuleDescriptions m = ModuleDescriptions.sharedInstance();
 		for (int i=0;i<m.getGroupCount();i++)
 			add (new ModuleGroupMenu(m.getGroup(i)));
 	}
