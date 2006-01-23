@@ -118,6 +118,7 @@
 			</javac>
 			<copy todir="${build.plugin}/@{name}/plugin/@{name}" >
 				<fileset dir="${source.plugin}/@{name}" includes="**/*.xml" />
+				<fileset dir="${source.plugin}/@{name}" includes="**/*.jpg" />
 			</copy>			
 		</sequential>
 	</macrodef>
@@ -177,10 +178,21 @@
 		</sequential>
 	</macrodef>
 
+        <macrodef name="process-plugin">
+                <attribute name="name" />
+		<sequential>
+		      <echo message="Building Plugin @{name}" />
+                      <compile-extension name="@{name}" />
+                      <release-extension-dirty name="@{name}" />
+		</sequential>
+        </macrodef>
+        
 	<target name="dist.plugin.dirty" depends="compile.plugin" description="Building jar(s) for plugins">
 		<mkdir dir="${dist.plugin}"/>
-		<echo message="Classic Theme" />
-		<release-extension-dirty name="classictheme" />
+                <!-- <echo message="Classic Theme" />
+                <release-extension-dirty name="classictheme" /> -->
+                <process-plugin name="classictheme" />
+                <process-plugin name="g2theme" />
 	</target>
 	
 	<!-- ************************************************** -->
@@ -210,7 +222,7 @@
 	<!-- run nomad                                          -->
 	<!-- ************************************************** -->
 	
-	<target name="nomad" >
+        <target name="nomad" >
 		<java jar="${dist.nomad}/org.nomad.jar" fork="true" dir="${dist.nomad}" />
 	</target>
 
