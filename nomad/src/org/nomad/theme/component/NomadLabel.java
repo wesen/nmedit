@@ -236,7 +236,7 @@ public class NomadLabel extends NomadComponent {
 			setName("antialiasing");
 		}
 
-		public void setBooleanValue(boolean value) {
+		public void setBoolean(boolean value) {
 			setTextAntialiased(value);
 		}
 
@@ -253,11 +253,11 @@ public class NomadLabel extends NomadComponent {
 			setName("text");
 		}
 
-		public Object getValue() {
+		public String getValue() {
 			return ((NomadLabel)getComponent()).getText();
 		}
 
-		public void setValueFromString(String value) {
+		public void setValue(String value) {
 			setText(value);
 		}
 	}
@@ -268,7 +268,7 @@ public class NomadLabel extends NomadComponent {
 			setName("vertical");
 		}
 
-		public void setBooleanValue(boolean value) {
+		public void setBoolean(boolean value) {
 			setVertical(value);
 		}
 
@@ -282,7 +282,6 @@ public class NomadLabel extends NomadComponent {
 		public LabelFontProperty(NomadComponent component) {
 			super(component);
 		}
-		public Object getValue() { return getComponent().getFont(); }
 		public Font getFont() { return getComponent().getFont(); }
 		public void setFont(Font f) {
 			getComponent().setFont(f);

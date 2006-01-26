@@ -144,14 +144,16 @@ public class NomadPropertyEditor extends JPanel {
 				return null;
 			} else {
 				Property property = properties.get(row);
-				return col == 0 ? property.getName() : property.getValueString();
+				return col == 0 ? property.getName() : property.getValue();
 			}
 		}
 		
 		public void setValueAt(Object value, int row, int col) {
 			if (thePropertySet!=null) {
-				Property property = (Property) properties.get(row);
-				property.setValue(value);
+				if (value instanceof String) {
+					Property property = (Property) properties.get(row);
+					property.setValue((String)value);
+				}
 			}
 		}
 

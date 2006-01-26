@@ -1583,7 +1583,7 @@
       <property name="x,y" value="58,10" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.GroupDecoration">
+    <component name="border.groupbox">
       <property name="x,y" value="9,21" />
       <property name="size" value="240,60" />
     </component>
@@ -4885,11 +4885,11 @@
       <property name="x,y" value="145,24" />
       <property name="size" value="9,6" />
     </component>
-    <component name="org.nomad.theme.component.GroupDecoration">
+    <component name="border.groupbox">
       <property name="x,y" value="3,15" />
       <property name="size" value="80,80" />
     </component>
-    <component name="org.nomad.theme.component.GroupDecoration">
+    <component name="border.groupbox">
       <property name="x,y" value="167,28" />
       <property name="size" value="82,46" />
     </component>
@@ -8037,7 +8037,7 @@
       <property name="x,y" value="58,11" />
       <property name="size" value="9,6" />
     </component>
-    <component name="org.nomad.theme.component.GroupDecoration">
+    <component name="border.groupbox">
       <property name="x,y" value="32,8" />
       <property name="size" value="51,63" />
     </component>
@@ -8187,71 +8187,71 @@
       <property name="x,y" value="239,2" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.AudioLevelDisplay">
+    <component name="display.audiolevel">
       <property name="x,y" value="91,4" />
       <property name="size" value="92,5" />
     </component>
-    <component name="org.nomad.theme.component.AudioLevelDisplay">
+    <component name="display.audiolevel">
       <property name="x,y" value="91,20" />
       <property name="size" value="92,5" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="12,11" />
       <property name="text" value="30" />
       <property name="antialiasing" value="true" />
       <property name="x,y" value="86,9" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="12,11" />
       <property name="text" value="20" />
       <property name="antialiasing" value="true" />
       <property name="x,y" value="101,9" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="12,11" />
       <property name="text" value="10" />
       <property name="antialiasing" value="true" />
       <property name="x,y" value="116,9" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="6,11" />
       <property name="text" value="7" />
       <property name="antialiasing" value="true" />
       <property name="x,y" value="131,9" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="6,11" />
       <property name="text" value="5" />
       <property name="antialiasing" value="true" />
       <property name="x,y" value="140,9" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="6,11" />
       <property name="text" value="3" />
       <property name="antialiasing" value="true" />
       <property name="x,y" value="150,9" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="6,11" />
       <property name="text" value="2" />
       <property name="antialiasing" value="true" />
       <property name="x,y" value="159,9" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="6,11" />
       <property name="text" value="0" />
       <property name="antialiasing" value="true" />
       <property name="x,y" value="177,9" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="6,11" />
       <property name="text" value="1" />
       <property name="antialiasing" value="true" />
@@ -8627,14 +8627,14 @@
       <property name="x,y" value="31,100" />
       <property name="size" value="160,16" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="195,11" />
       <property name="text" value="{@decoration.vocoder.top}" />
       <property name="antialiasing" value="true" />
       <property name="x,y" value="18,25" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="203,21" />
       <property name="text" value="{@decoration.vocoder.bottom}" />
       <property name="antialiasing" value="true" />

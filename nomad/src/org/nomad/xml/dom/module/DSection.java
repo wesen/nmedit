@@ -9,18 +9,18 @@ import java.util.ArrayList;
  * @author Christian Schneider
  * @composed 1 - n nomad.model.descriptive.DModule
  */
-public class DToolbarSection {
+public class DSection {
 
 	/** A list containing the DModule objects */
 	private ArrayList<DModule> dmodules = new ArrayList<DModule>();
 	/** The toolbar group this section belongs to */
-	private DToolbarGroup parent = null;
+	private DGroup parent = null;
 	
 	/**
 	 * Creates a new toolbar section that belongs to the given toolbar group
 	 * @param parent
 	 */
-	public DToolbarSection(DToolbarGroup parent) {
+	public DSection(DGroup parent) {
 		this.parent = parent;
 		if (parent==null)
 			throw new NullPointerException("'parent' must not be null");
@@ -47,7 +47,7 @@ public class DToolbarSection {
 	 * Returns the toolbar group this section belongs to
 	 * @return the toolbar group this section belongs to
 	 */
-	public DToolbarGroup getParent() {
+	public DGroup getParent() {
 		return parent;
 	}
 

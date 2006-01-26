@@ -34,10 +34,12 @@ import java.util.ArrayList;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import org.nomad.editor.ComponentAlignmentToolbar;
+import org.nomad.editor.ComponentAlignmentMenu;
 import org.nomad.editor.views.property.NomadPropertyEditor;
 import org.nomad.theme.ModuleComponent;
+import org.nomad.theme.NomadClassicColors;
 import org.nomad.theme.component.NomadComponent;
+import org.nomad.theme.property.Property;
 import org.nomad.theme.property.PropertySet;
 import org.nomad.theme.property.PropertySetListener;
 import org.nomad.xml.dom.module.DModule;
@@ -52,8 +54,11 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 	private DModule info = null;
 	private NomadPropertyEditor propertyEditor = null;
 	private Rectangle selectionRect = new Rectangle(0,0,0,0);
-	private ComponentAlignmentToolbar tbAlignment = null;
+	private ComponentAlignmentMenu tbAlignment = new ComponentAlignmentMenu();
 	private JPopupMenu popup = null;
+	
+	private final static ArrayList<NomadComponent> copyMemory
+		= new ArrayList<NomadComponent>();
 	
 	public VisualEditor(DModule info) {
 		setLayout(null);
@@ -64,6 +69,7 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 		painter = new VEPainter();
 		propertySetListener = new VEPropertySetChangeHandler(this);
 		mouseHandler = new VEMouseEventHandler(this);
+		setBackground(NomadClassicColors.MODULE_BACKGROUND);
 
 		JMenuItem imageImage = new JMenuItem("Add images...");
 		imageImage.addActionListener(new ActionListener(){
@@ -71,7 +77,30 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 				ImageBrowserDialog.showDialog(VisualEditor.this);
 			}});
 
+		JMenuItem mnCopy  = new JMenuItem("Copy");
+		mnCopy.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				copySelection();
+			}});
+		JMenuItem mnPaste = new JMenuItem("Paste");
+		mnPaste.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				pasteCopy();
+			}});
+		JMenuItem mnDelete= new JMenuItem("Delete");
+		mnDelete.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				deleteSelection();
+			}});
+		
 		popup = new JPopupMenu();
+		popup.add(mnCopy);
+		popup.add(mnPaste);
+		popup.addSeparator();
+		popup.add(mnDelete);
+		popup.addSeparator();
+		popup.add(tbAlignment);
+		popup.addSeparator();
 		popup.add(imageImage);
 		
 		addMouseListener(new MouseAdapter(){
@@ -198,15 +227,50 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 		return selection.contains(component);
 	}
 
-	public ComponentAlignmentToolbar getAlignmentToolbar() {
-		return tbAlignment;
-	}
-
-	public void setAlignmentToolbar(ComponentAlignmentToolbar tbAlignment) {
-		this.tbAlignment = tbAlignment;
-	}
-
 	public ArrayList<NomadComponent> getSelection() {
 		return new ArrayList<NomadComponent>(selection);
 	}
+
+	public void copySelection() {
+		copyMemory.clear();
+		for (NomadComponent c : selection) {
+			NomadComponent clone = cloneComponent(c);
+			if (clone!=null)
+				copyMemory.add(clone);
+		}
+	}
+	
+	public void pasteCopy() {
+		for (NomadComponent c : copyMemory) {
+			add(c);
+		}
+		repaint();
+	}
+
+	public void deleteSelection() {
+		for (NomadComponent c : selection) {
+			remove(c);
+		}
+		setSelection(null);
+	}
+	
+	public NomadComponent cloneComponent(NomadComponent c) {
+		NomadComponent clone;
+		try {
+			clone = c.getClass().newInstance();
+		} catch (Throwable e) {
+			return null;
+		}
+		
+		PropertySet clonedSet = clone.createAccessibleProperties(true);
+		clonedSet.setupForEditing();
+		PropertySet copySet = c.createAccessibleProperties(true);
+		
+		for (Property p : copySet) {
+			clonedSet.byName(p.getName()).setValue(p.getValue());
+		}
+		
+		return clone;
+	}
+	
 }

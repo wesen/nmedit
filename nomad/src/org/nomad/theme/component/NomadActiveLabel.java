@@ -142,8 +142,8 @@ public class NomadActiveLabel extends NomadLabel {
 			super(component);
 			setName("padding");
 		}
-		public void setIntegerValue(int integer) { if (integer>=0) setPadding(integer); }
-		public int getIntegerValue() { return ((NomadActiveLabel)getComponent()).getPadding(); }
+		public void setInteger(int integer) { if (integer>=0) setPadding(integer); }
+		public int getInteger() { return ((NomadActiveLabel)getComponent()).getPadding(); }
 	}
 		
 	public void link() {

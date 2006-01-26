@@ -21,7 +21,7 @@ public class DModule {
 	/** A list containing DConnector objects describing the connectors this module has */
 	private DConnector[] dconnectors = new DConnector[0];
 	/** The parent toolbar section this module belongs to */
-	private DToolbarSection parent = null;
+	private DSection parent = null;
 	/** The name of this module */
 	private String name=null;
 	/** A shortend version of the modules name */
@@ -53,13 +53,13 @@ public class DModule {
 	 * @param parent toolbar section  this module belongs to
 	 * @param name name of this module
 	 */
-	public DModule(DToolbarSection parent, String name) {
+	public DModule(DSection parent, String name) {
 		this(parent);
 		this.name = name;
 		setName(name);
 	}
 	
-	public DModule(DToolbarSection parent) {
+	public DModule(DSection parent) {
 		this.parent = parent;
 	}
 	
@@ -89,7 +89,7 @@ public class DModule {
 	 * Sets the parent toolbar section this module belongs to
 	 * @param parent the parent toolbar section this module belongs to
 	 */
-	public void setParent(DToolbarSection parent) {
+	public void setParent(DSection parent) {
 		this.parent = parent;
 	}
 
@@ -190,7 +190,7 @@ public class DModule {
 	 * Returns the toolbar section this module belongs to
 	 * @return the toolbar section this module belongs to
 	 */
-	public DToolbarSection getParent() {
+	public DSection getParent() {
 		return parent;
 	}
 	

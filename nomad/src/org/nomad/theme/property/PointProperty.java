@@ -42,32 +42,16 @@ public abstract class PointProperty extends Property {
 		super(component);
 		setName("x,y");
 	}
-	public void setupForEditing() {
-		super.setupForEditing();
-		setHandler(Point.class, new PropertyValueHandler(){
-			public void writeValue(Object value) throws IllegalArgumentException {
-				try {
-					Point loc = (Point) value;
-					setXY(loc.x, loc.y);
-				} catch (ClassCastException e) {
-					throw new IllegalArgumentException(e);
-				}
-			}});
-	}
-	
+
 	public abstract void setXY(int x, int y) ;
 	public abstract int getX();
 	public abstract int getY();
-
-	public Object getValue() {
-		return getLocation();
-	}
 	
 	public Point getLocation() {
 		return new Point(getX(), getY());
 	}
 
-	public String getValueString() {
+	public String getValue() {
 		return PointProperty.getXYString(getX(),getY());
 	}
 
@@ -82,7 +66,7 @@ public abstract class PointProperty extends Property {
 		return new int[] {Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2))};
 	}
 
-	public void setValueFromString(String value) {
+	public void setValue(String value) {
 		//63ms
 		int x=0;int y=0;int i=0;int end = value.length()-1;
 		boolean xset = false;

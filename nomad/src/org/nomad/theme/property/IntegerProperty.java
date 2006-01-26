@@ -33,27 +33,17 @@ public abstract class IntegerProperty extends Property {
 		super(component);
 		setName("integer");
 	}
-	public void setupForEditing() {
-		super.setupForEditing();
-		setHandler(Integer.class, new PropertyValueHandler(){
-			public void writeValue(Object value) throws IllegalArgumentException {
-				setInteger((Integer)value); 
-			} 
-		});
-	}
 	
-	public abstract void setIntegerValue(int integer);
-	public abstract int getIntegerValue();
+	public abstract void setInteger(int integer);
+	public abstract int getInteger();
 
-	public void setInteger(Integer integer) { setIntegerValue(integer.intValue()); }
-	public Integer getInteger() { return new Integer(getIntegerValue()); }
-	public Object getValue() {
-		return getInteger();
+	public String getValue() {
+		return ""+getInteger();
 	}
 
-	public void setValueFromString(String value) {
+	public void setValue(String value) {
 		try {
-			setIntegerValue(Integer.parseInt((String)value));
+			setInteger(Integer.parseInt((String)value));
 		} catch (NumberFormatException e) {
 			throw new IllegalArgumentException(e);
 		}

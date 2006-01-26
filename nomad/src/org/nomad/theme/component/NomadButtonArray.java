@@ -355,11 +355,12 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 			setName(encodeButtonName(index));
 		}
 
-		public Object getValue() {
-			return ((NomadButtonArray)getComponent()).labelList[index];
+		public String getValue() {
+			ImageString is = ((NomadButtonArray)getComponent()).labelList[index]; 
+			return is == null ? "null" : is.getString();
 		}
 
-		public void setValueFromString(String value) {
+		public void setValue(String value) {
 			if (0<=index && index<labelList.length) {
 				setButton(index, value);
 			}
@@ -378,14 +379,14 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 			setName("landscape");
 		}
 
-		public void setBooleanValue(boolean value) {
+		public void setBoolean(boolean value) {
 			setLandscape(value);
 		}
 
 		public boolean getBoolean() {
 			return ((NomadButtonArray)getComponent()).isLandscape();
 		}
-		
+
 	}
 	
 	private class CyclicProperty extends BooleanProperty {
@@ -395,7 +396,7 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 			setName("cyclic");
 		}
 
-		public void setBooleanValue(boolean value) {
+		public void setBoolean(boolean value) {
 			setIsCylicDisplay(value);
 		}
 

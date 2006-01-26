@@ -217,12 +217,10 @@ public class ModuleGUIBuilder {
 							Property compProperty = properties.byName(propNode.getName());
 
 							try {
-								compProperty.setValueFromString(propNode.getValue());
+								compProperty.setValue(propNode.getValue());
 							} catch (Throwable t) {
 								System.err.println("** In component "+comp.getClass().getName()+": error setting property '"+propNode.getName()+"'.");
 								System.err.println("** "+t);
-								t.printStackTrace();
-								//t.printStackTrace();
 							}
 						}
 						modulePane.add(comp);
@@ -265,11 +263,10 @@ public class ModuleGUIBuilder {
 						Property compProperty = properties.byName(propNode.getName());
 
 						try {
-							compProperty.setValueFromString(propNode.getValue());
+							compProperty.setValue(propNode.getValue());
 						} catch (Throwable t) {
 							System.err.println("** In component "+comp.getClass().getName()+": error setting property '"+propNode.getName()+"'.");
 							System.err.println("** "+t);
-							//t.printStackTrace();
 						}
 					}
 

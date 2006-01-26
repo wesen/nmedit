@@ -22,7 +22,7 @@ public class ModuleDescriptions {
 	/** Hashmap containing the pairs (DModule.getKey(), DModule) */
 	private HashMap<String, DModule> dmodules = new HashMap<String, DModule>();
 	/** The groups */
-	private ArrayList<DToolbarGroup> dgroups = new ArrayList<DToolbarGroup>();
+	private ArrayList<DGroup> dgroups = new ArrayList<DGroup>();
 	/** the static data */
 	private static ModuleDescriptions model = null;
 	
@@ -77,7 +77,7 @@ public class ModuleDescriptions {
 	 * @param index the index
 	 * @return the group
 	 */
-	public DToolbarGroup getGroup(int index) {
+	public DGroup getGroup(int index) {
 		return dgroups.get(index);
 	}
 	
@@ -93,7 +93,7 @@ public class ModuleDescriptions {
 	 * Returns a collection containing all DModule objects
 	 * @return a collection containing all DModule objects
 	 */
-	public Collection getModules() {
+	public Collection<DModule> getModules() {
 		return dmodules.values();
 	}
 	
@@ -121,7 +121,7 @@ public class ModuleDescriptions {
 		dmodules.put(module.getKey(), module);
 	}
 
-	public void addToolbarGroup(DToolbarGroup group) {
+	public void addToolbarGroup(DGroup group) {
 		dgroups.add(group);
 	}
 

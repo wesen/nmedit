@@ -38,29 +38,8 @@ public class ConnectorProperty extends Property {
 		super(component);
 		setName("connector#0");
 	}
-	public void setupForEditing() {
-		super.setupForEditing();
-		setHandler(null, new PropertyValueHandler(){
-			public void writeValue(Object value) throws IllegalArgumentException {
-				// we accept null values
-				
-				if (value!=null)
-					throw new IllegalArgumentException("Illegal argument "+value+" in property "+this+".");
-				
-				setDConnector(null);
-				
-			}});
-		setHandler(DConnector.class, new PropertyValueHandler(){
-			public void writeValue(Object value) throws IllegalArgumentException {
-				setDConnector((DConnector)value);
-			}});
-	}
 
-	public Object getValue() {
-		return getDConnector();
-	}
-
-	public void setValueFromString(String value) {
+	public void setValue(String value) {
 		setDConnector(decode(value));
 	}
 	
@@ -93,7 +72,7 @@ public class ConnectorProperty extends Property {
 		return p.getParent().getModuleID()+"."+p.getId()+"."+(p.isInput()?"in":"out")+"."+p.getName();
 	}
 	
-	public String getValueString() {
+	public String getValue() {
 		return encode(getDConnector());
 	}
 	
@@ -135,6 +114,6 @@ public class ConnectorProperty extends Property {
 		if (list==null)
 			return super.getEditor();
 		else
-			return new PropertyEditor.ComboBoxEditor(this, list, getValueString());
+			return new PropertyEditor.ComboBoxEditor(this, list, getValue());
 	}
 }

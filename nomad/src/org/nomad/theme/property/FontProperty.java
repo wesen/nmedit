@@ -49,13 +49,6 @@ public abstract class FontProperty extends Property {
 		setIsInlineEditor(false);
 	}
 
-	public void setupForEditing() {
-		super.setupForEditing();
-		setHandler(Font.class, new PropertyValueHandler(){
-			public void writeValue(Object value) throws IllegalArgumentException {
-				setFont((Font)value);
-			}});
-	}
 	/**
 	 * i=italic
 	 * b=bold
@@ -68,7 +61,7 @@ public abstract class FontProperty extends Property {
 	}
 	
 	public boolean isInDefaultState() {
-		return defaultFontString.equals(getValueString());
+		return defaultFontString.equals(getValue());
 	}
 	
 	public static Font parseFont(String fString) {
@@ -100,11 +93,11 @@ public abstract class FontProperty extends Property {
 	public abstract Font getFont();
 	public abstract void setFont(Font f);
 
-	public String getValueString() {
+	public String getValue() {
 		return getFontString(getFont());
 	}
 
-	public void setValueFromString(String value) {
+	public void setValue(String value) {
 		Font f = parseFont(value);
 		if (f==null) throw new IllegalArgumentException("Invalid Font String in "+this+" :"+value);
 		setFont(f);
@@ -123,8 +116,8 @@ public abstract class FontProperty extends Property {
 			super(p);
 		}
 
-		public Object getEditorValue() {		
-			return fontChooser==null?null: fontChooser.getFont();
+		public String getEditorValue() {		
+			return fontChooser==null?null: getFontString(fontChooser.getFont());
 		}
 		
 		public Font getFont() {

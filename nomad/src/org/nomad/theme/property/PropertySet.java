@@ -134,7 +134,7 @@ public class PropertySet implements Iterable<Property> {
 		for (Iterator iter=iterator();iter.hasNext();) {
 			Property p = (Property) iter.next();
 			if (p.isExportable() && (!p.isInDefaultState()))
-				node.createPropertyNode(p.getName()).setValue(p.getValueString());
+				node.createPropertyNode(p.getName()).setValue(p.getValue());
 		}
 	}
 

@@ -88,17 +88,13 @@ class ComponentClassListItem extends JPanel {
 		lblCompName.setForeground(Color.DARK_GRAY);
 		lblCompName.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		// bottom dash line
-		DashPane dash = new DashPane(this);
-		dash.setAlignmentX(Component.CENTER_ALIGNMENT); // not necessary
-		
 		add(createSpace());
 		add(component);
 		add(createSpace());
 		add(lblCompName);
-		add(dash);
+		add(new DashPane()); // bottom line
 		
-		validate();
+		//validate();
 	}
 	
 	public void setItemIsSelected(boolean selected) {

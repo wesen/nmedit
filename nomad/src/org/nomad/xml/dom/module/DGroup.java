@@ -9,10 +9,10 @@ import java.util.ArrayList;
  * @author Christian Schneider
  * @composed 1 - n nomad.model.descriptive.DSection
  */
-public class DToolbarGroup {
+public class DGroup {
 
 	/** A list containing DToolbarSection objects */
-	private ArrayList<DToolbarSection> dsections = new ArrayList<DToolbarSection>();
+	private ArrayList<DSection> dsections = new ArrayList<DSection>();
 	/** The name of this group */
 	private String name = null;
 	/** The short version of this groups name */
@@ -22,7 +22,7 @@ public class DToolbarGroup {
 	 * Creates a new toolbar group with given name. Short name will be the same as name
 	 * @param name the name of this group
 	 */
-	public DToolbarGroup(String name) {
+	public DGroup(String name) {
 		this(name, null);
 	}
 
@@ -31,7 +31,7 @@ public class DToolbarGroup {
 	 * @param name the name
 	 * @param shortname the short name
 	 */
-	public DToolbarGroup(String name, String shortname) {
+	public DGroup(String name, String shortname) {
 		this.name = name;
 		if (name==null)
 			throw new NullPointerException("'name' must not be null");
@@ -43,7 +43,7 @@ public class DToolbarGroup {
 	 * @param index the index
 	 * @return the section
 	 */
-	public DToolbarSection getSection(int index) {
+	public DSection getSection(int index) {
 		return dsections.get(index);
 	}
 	
@@ -59,7 +59,7 @@ public class DToolbarGroup {
 	 * Adds a new section to this toolbar group
 	 * @param s the section
 	 */
-	public void addSection(DToolbarSection s) {
+	public void addSection(DSection s) {
 		dsections.add(s);
 	}
 	

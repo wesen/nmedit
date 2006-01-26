@@ -40,7 +40,7 @@ public class G2ThemeFactory extends UIFactory {
 		installClass(G2ResetButton.class,"knob.reset");
 		installClass(VocoderBandDisplay.class,"display.vocoder");
 		installClass(NomadVocoderController.class,"display.vocoder.controller");
-		installClass(AudioLevelDisplay.class,"display.audio.level");
+		installClass(AudioLevelDisplay.class,"display.audiolevel");
 		installClass(GroupDecoration.class,"border.groupbox");
 		
 	

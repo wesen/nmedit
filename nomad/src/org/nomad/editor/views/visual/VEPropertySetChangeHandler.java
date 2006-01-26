@@ -22,10 +22,14 @@
  */
 package org.nomad.editor.views.visual;
 
+import java.awt.event.ComponentEvent;
+import java.awt.event.ContainerAdapter;
+
+import org.nomad.theme.component.NomadComponent;
 import org.nomad.theme.property.PropertySetEvent;
 import org.nomad.theme.property.PropertySetListener;
 
-public class VEPropertySetChangeHandler implements PropertySetListener {
+public class VEPropertySetChangeHandler extends ContainerAdapter implements PropertySetListener {
 
 	private VisualEditor editor = null;
 	
@@ -39,6 +43,16 @@ public class VEPropertySetChangeHandler implements PropertySetListener {
 	
 	public void propertySetEvent(PropertySetEvent event) {
 		editor.repaint();
+	}
+
+	public void componentAdded(ComponentEvent event) {
+		if (event.getSource() instanceof NomadComponent) {
+			((NomadComponent)event.getSource()).createAccessibleProperties(true);
+		}
+	}
+
+	public void componentRemoved(ComponentEvent event) {
+		// editor.repaint();
 	}
 
 }

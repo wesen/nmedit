@@ -127,7 +127,7 @@ public class ImageBrowserDialog extends JDialog {
 			keyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 			add(imgLabel);
 			add(keyLabel);
-			add(new DashPane(this));
+			add(new DashPane());
 		}
 
 		public void setItemHasFocus(boolean cellHasFocus) {

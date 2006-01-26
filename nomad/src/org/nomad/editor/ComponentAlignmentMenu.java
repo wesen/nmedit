@@ -27,12 +27,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JToolBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 import org.nomad.theme.component.NomadComponent;
 
-public class ComponentAlignmentToolbar extends JToolBar {
+public class ComponentAlignmentMenu extends JMenu {
 
 	private ActionActionListener actionDispatcher
 		= new ActionActionListener();
@@ -45,11 +45,13 @@ public class ComponentAlignmentToolbar extends JToolBar {
 	public final static int ACT_ALBOTTOM= 5;
 	public final static int ACT_CENTER_HRZ= 6;
 	public final static int ACT_CENTER_VERT= 7;
+	public final static int ACT_CENTER_HRZ_MEDIAN= 8;
+	public final static int ACT_CENTER_VERT_MEDIAN= 9;
 	
 	private NomadComponent[] components = null;
 	
-	public ComponentAlignmentToolbar() {
-		super();
+	public ComponentAlignmentMenu() {
+		super("Align");
 		
 		//addAction("to-top", "Bring Forward", ACT_BRINGFORWARD);
 		//addAction("to-bottom", "Send Backward", ACT_SENDBACKWARD);
@@ -57,9 +59,12 @@ public class ComponentAlignmentToolbar extends JToolBar {
 		addAction("alignment-right-16", "Align Right", ACT_ALRIGHT);
 		addAction("alignment-top-16", "Align Top", ACT_ALTOP);
 		addAction("alignment-bottom", "Align Bottom", ACT_ALBOTTOM);
-
+		addSeparator();
+		addAction("alignment-centered-horizontally", "Center Hrz. (Median)", ACT_CENTER_HRZ_MEDIAN);
+		addAction("alignment-centered-vertically-16", "Center Vrt. (Median)", ACT_CENTER_VERT_MEDIAN);
+		addSeparator();
 		addAction("alignment-centered-horizontally", "Center Hrz.", ACT_CENTER_HRZ);
-		addAction("alignment-centered-vertically-16", "Center Vrt", ACT_CENTER_VERT);
+		addAction("alignment-centered-vertically-16", "Center Vrt.", ACT_CENTER_VERT);
 		setEnabled(false);
 
 	}
@@ -70,17 +75,17 @@ public class ComponentAlignmentToolbar extends JToolBar {
 		addAction(icon, toolTipText, actionId);
 	}
 	
-	private void addAction(ImageIcon icon, String toolTipText, int actionId) {
+	private void addAction(ImageIcon icon, String toolTipText, int actionId) {		
 		JActionButton btn = new JActionButton(icon, toolTipText, actionId);
 		btn.addActionListener(actionDispatcher);
 		add(btn);
 	}
 	
-	private class JActionButton extends JButton {
+	private class JActionButton extends JMenuItem {
 		public int actionId;
 		public JActionButton(ImageIcon icon, String toolTipText, int actionId) {
 			setIcon(icon);
-			setToolTipText(toolTipText);
+			setText(toolTipText);
 			this.actionId = actionId;
 		}
 	}
@@ -123,6 +128,8 @@ public class ComponentAlignmentToolbar extends JToolBar {
 				case ACT_ALBOTTOM: alignBottom(components); break;
 				case ACT_CENTER_HRZ: alignHorizontalCenter(components); break;
 				case ACT_CENTER_VERT: alignVerticalCenter(components); break;
+				case ACT_CENTER_HRZ_MEDIAN: alignHorizontalMedian(components); break;
+				case ACT_CENTER_VERT_MEDIAN: alignVerticalMedian(components); break;
 			}
 		}
 		
@@ -198,59 +205,44 @@ public class ComponentAlignmentToolbar extends JToolBar {
 		}
 	}
 	
-	/*	
-	// aligns all selected components at lowest component
-	menuAlign.add("Vertical (Median)").addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent event) {
-			ModulePane mpane = workBench.getModulePane();
-			ArrayList components = mpane.getSelectedComponents();
-			if (components.size()>1) {
-				int ymedian = 0;
+	public static void alignVerticalMedian(NomadComponent[] components) {
+		int ymedian = 0;
 
-				for (int i=0;i<components.size();i++) {
-					Component c = (Component) components.get(i);
-					ymedian+=c.getY()+c.getHeight()/2;
-				}
-				
-				ymedian /=components.size();
-				
-				for (int i=0;i<components.size();i++) {
-					Component c = (Component) components.get(i);
-					int current = c.getY()+c.getHeight()/2;
-					c.setLocation(
-						c.getLocation().x,
-						c.getLocation().y+(ymedian-current)
-					);
-				}
-			}
-		}});
-	
-menuAlign.addSeparator();
-
-// aligns all selected components at lowest component
-menuAlign.add("Horizontal (Median)").addActionListener(new ActionListener(){
-	public void actionPerformed(ActionEvent event) {
-		ModulePane mpane = workBench.getModulePane();
-		ArrayList components = mpane.getSelectedComponents();
-		if (components.size()>1) {
-			int xmedian = 0;
-
-			for (int i=0;i<components.size();i++) {
-				Component c = (Component) components.get(i);
-				xmedian+=c.getX()+c.getWidth()/2;
-			}
-			
-			xmedian /=components.size();
-			
-			for (int i=0;i<components.size();i++) {
-				Component c = (Component) components.get(i);
-				int current = c.getX()+c.getWidth()/2;
-				c.setLocation(
-					c.getLocation().x+(xmedian-current),
-					c.getLocation().y
-				);
-			}
+		for (int i=0;i<components.length;i++) {
+			Component c = (Component) components[i];
+			ymedian+=c.getY()+c.getHeight()/2;
 		}
-	}});
-*/
+		
+		ymedian /=components.length;
+		
+		for (int i=0;i<components.length;i++) {
+			Component c = (Component) components[i];
+			int current = c.getY()+c.getHeight()/2;
+			c.setLocation(
+				c.getLocation().x,
+				c.getLocation().y+(ymedian-current)
+			);
+		}
+	}
+	
+	public static void alignHorizontalMedian(NomadComponent[] components) {
+		int xmedian = 0;
+
+		for (int i=0;i<components.length;i++) {
+			Component c = (Component) components[i];
+			xmedian+=c.getX()+c.getWidth()/2;
+		}
+		
+		xmedian /=components.length;
+		
+		for (int i=0;i<components.length;i++) {
+			Component c = (Component) components[i];
+			int current = c.getX()+c.getWidth()/2;
+			c.setLocation(
+				c.getLocation().x+(xmedian-current),
+				c.getLocation().y
+			);
+		}
+	}
+
 }

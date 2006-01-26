@@ -22,9 +22,7 @@
  */
 package org.nomad.theme.property;
 
-import java.util.HashMap;
 import java.util.regex.Pattern;
-
 
 import org.nomad.theme.ModuleComponent;
 import org.nomad.theme.component.NomadComponent;
@@ -232,115 +230,20 @@ public abstract class Property extends PropertyContainer {
 		return new PropertyEditor.TextEditor(this);
 	}
 	
-	// ---- value type handler ------------------------------------------
-
-	/**
-	 * map containing pairs (Class, PropertyValueHandler)
-	 */
-	private HashMap<Class, PropertyValueHandler> handlerMap = null; 
-
-	/**
-	 * Sets the handler for a given type.
-	 * 
-	 * If type is null this will set or remove the default handler.
-	 * If type is not null this will set or remove the handler for this type.
-	 * 
-	 * If handler is null means the current handler for the given type should be removed.
-	 * If handler is not null sets the new handler  for the given type.
-	 *  
-	 * The default handler is used if no other handler matches a values type.
-	 * 
-	 * @param type the type which will be handled
-	 * @param handler the handler for the given type
-	 */
-	public void setHandler(Class type, PropertyValueHandler handler) {
-		if (handler==null) {
-			handlerMap.remove(type); // remove
-		} else {
-			handlerMap.put(type, handler); // set handler
-		}
-	}
-
-	/**
-	 * Returns the default handler
-	 * @return the default handler
-	 * @see #setDefaultHandler(PropertyValueHandler)
-	 */
-	public PropertyValueHandler getDefaultHandler() {
-		return (PropertyValueHandler) handlerMap.get(null);
-	}
-
-	/**
-	 * Returns true if the default handler is set
-	 * @return true if the default handler is set
-	 */
-	public boolean isDefaultHandlerSet() {
-		return handlerMap.containsKey(null);
-	}
-	
-	/**
-	 * Returns the handler for the value's type.
-	 * If no handler has been found it tries to get the default handler.
-	 * If the default handler is not set too, null will be returned.
-	 * 
-	 * @param value the value to find a handler for
-	 * @return the handler for the given value
-	 */
-	public PropertyValueHandler findHandler(Object value) {
-		if (value!=null && handlerMap.containsKey(value.getClass()))
-			return (PropertyValueHandler) handlerMap.get(value.getClass());
-		else
-			return (PropertyValueHandler) handlerMap.get(null);
-	}
-
 	// ---- read/write the value ----------------------------------------
-
-	/**
-	 * Returns the value
-	 * @return the value
-	 */
-	public abstract Object getValue();
 
 	/**
 	 * Returns a string representation of the value
 	 * @return a string representation of the value
 	 */
-	public String getValueString() {
-		return ""+getValue();
-	}
+	public abstract String getValue();
 
 	/**
 	 * Uses the string representation to set the value.
 	 * @param value string representation of the value to set
 	 */
-	public abstract void setValueFromString(String value);
+	public abstract void setValue(String value);
 
-	/**
-	 * Uses <code>findHandler(Object)</code> to obtain a handler for value.
-	 * If no handler is found an IllegalArgumentException will be thrown.
-	 * Otherwise value will be passed to the handler and a ChangeEvent
-	 * will be fired.
-	 * 
-	 * @param value the value to set
-	 * @see #findHandler(Object)
-	 */
-	public void setValue(Object value) {
-		if (value instanceof String) {
-			setValueFromString((String)value);
-			if (isEventhandlingInstalled)
-				fireChangeEvent();
-		} else {
-			PropertyValueHandler handle = findHandler(value);
-			if (handle==null) {
-				throw new IllegalArgumentException("Property '"+this+"' does not handle: "+value);
-			} else {
-				handle.writeValue(value);
-				if (isEventhandlingInstalled)
-					fireChangeEvent();
-			}
-		}
-	}
-	
 	// ---- construction -----------------------------------------
 	
 	/**
@@ -367,16 +270,13 @@ public abstract class Property extends PropertyContainer {
 	}
 
 	public String toString() {
-		return getClass().getName()+"["+getName()+"="+getValueString()+"]";
+		return getClass().getName()+"["+getName()+"="+getValue()+"]";
 	}
 	
 	public void exportToXml(XMLFileWriter xml) {
-		String name = getName();
-		String value= getValueString();
-		
 		xml.beginTagStart("property");
-		xml.addAttribute("name", name);
-		xml.addAttribute("value", value);
+		xml.addAttribute("name", getName());
+		xml.addAttribute("value", getValue());
 		xml.beginTagFinish(false);
 	}
 	
@@ -396,8 +296,6 @@ public abstract class Property extends PropertyContainer {
 	
 	private boolean flagExportable = true;
 
-	private boolean isEventhandlingInstalled;
-
 	public boolean isExportable() {
 		return flagExportable;
 	}
@@ -405,15 +303,9 @@ public abstract class Property extends PropertyContainer {
 	public void setExportable(boolean exportable) {
 		this.flagExportable = exportable;
 	}
-
-	/**
-	 * only if this is called
-	 * - listeners should be installed
-	 * - handlers should be installed
-	 */
+	
 	public void setupForEditing() {
-		this.isEventhandlingInstalled = true;
-		handlerMap = new HashMap<Class, PropertyValueHandler>();
+		;
 	}
 
 }

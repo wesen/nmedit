@@ -47,12 +47,12 @@ public abstract class UIFactory extends NomadFactory {
 
 	public Class[] getInstalledClasses() {
 		// componentClasses.values() can contain duplicates
-		ArrayList<Class> dup = new ArrayList<Class>();
+		ArrayList<Class> setList = new ArrayList<Class>();
 		for (Class c : componentClasses.values()) {
-			if (!dup.contains(c)) dup.add(c);
+			if (!setList.contains(c)) setList.add(c);
 		}
 		
-		return dup.toArray(new Class[dup.size()]);
+		return setList.toArray(new Class[setList.size()]);
 	}
 
 	public NomadComponent newComponentInstance(String componentNameString) {

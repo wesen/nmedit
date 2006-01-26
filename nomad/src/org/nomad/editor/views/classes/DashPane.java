@@ -24,38 +24,29 @@ package org.nomad.editor.views.classes;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.Stroke;
 
 import javax.swing.JPanel;
 
 public class DashPane extends JPanel {
-	/**
-	 * 
-	 */
-	private final Component item;
-	public DashPane(Component item) {
-		this.item = item;
+
+	private final Stroke dashLines = new BasicStroke( 1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[]{ 1, 2 }, 0 ); 
+	
+	public DashPane() {
 		setOpaque(false);
-		setBackground(Color.GRAY);
-		setSize(10,10);
+		setMinimumSize(new Dimension(10,10));
 	}
+
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g.create();
-		g2.setColor(this.item.getBackground());
-		g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2.setStroke(new BasicStroke( 1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[]{ 1, 2 }, 0 ));
-		g2.drawLine(0, this.item.getHeight()-1, this.item.getWidth(), this.item.getHeight()-1); // draw at the bottom
+		g2.setColor(Color.DARK_GRAY);
+		g2.setStroke(dashLines);
+		g2.drawLine(0, getHeight()-1, getWidth(), getHeight()-1);
 		g2.dispose();
 	}
-	public Dimension getPreferredSize() {
-		if (this.item.getParent()!=null)
-			return new Dimension(this.item.getParent().getWidth(), ComponentClassListItem.PADDING);
-		else
-			return new Dimension(100, ComponentClassListItem.PADDING);
-	}
+
 }

@@ -28,8 +28,8 @@ import org.nomad.xml.dom.module.DConnector;
 import org.nomad.xml.dom.module.DCustom;
 import org.nomad.xml.dom.module.DModule;
 import org.nomad.xml.dom.module.DParameter;
-import org.nomad.xml.dom.module.DToolbarGroup;
-import org.nomad.xml.dom.module.DToolbarSection;
+import org.nomad.xml.dom.module.DGroup;
+import org.nomad.xml.dom.module.DSection;
 import org.nomad.xml.dom.module.ModuleDescriptions;
 import org.nomad.xml.dom.substitution.Substitution;
 import org.xmlpull.v1.XmlPullParser;
@@ -129,9 +129,9 @@ public class ModuleDescriptionParser extends NomadPullParser {
 		assureAttributeExists(parser, "name", attGroupName);
 		
 
-		DToolbarGroup group =
-			attShortName==null ? new DToolbarGroup(attGroupName)
-		                       : new DToolbarGroup(attGroupName, attShortName);
+		DGroup group =
+			attShortName==null ? new DGroup(attGroupName)
+		                       : new DGroup(attGroupName, attShortName);
 		dmodules.addToolbarGroup(group);
 
 		boolean done = false;
@@ -166,11 +166,11 @@ public class ModuleDescriptionParser extends NomadPullParser {
 		
 	}
 
-	private void section(XmlPullParser parser, DToolbarGroup group) throws XmlPullParserException, IOException {
+	private void section(XmlPullParser parser, DGroup group) throws XmlPullParserException, IOException {
 
 		assureNoAttributes(parser);
 		
-		DToolbarSection section = new DToolbarSection(group);
+		DSection section = new DSection(group);
 		group.addSection(section);
 		
 		boolean done = false;
@@ -204,7 +204,7 @@ public class ModuleDescriptionParser extends NomadPullParser {
 		// TODO assure section insert count >0
 	}
 
-	private void insert(XmlPullParser parser, DToolbarSection section) throws XmlPullParserException, IOException {
+	private void insert(XmlPullParser parser, DSection section) throws XmlPullParserException, IOException {
 
 		String attModuleId = null;
 		

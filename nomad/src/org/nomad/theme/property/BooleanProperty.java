@@ -36,15 +36,6 @@ public abstract class BooleanProperty extends Property {
 	
 	public void setupForEditing() {
 		super.setupForEditing();
-
-		setHandler(Boolean.class, new PropertyValueHandler(){
-			public void writeValue(Object value) throws IllegalArgumentException {
-				try {
-					setBooleanValue((Boolean)value);
-				} catch (ClassCastException c) {
-					throw new IllegalArgumentException(c);
-				}
-			}});
 	}
 
 	/*public void setValue(Object value) {
@@ -64,17 +55,11 @@ public abstract class BooleanProperty extends Property {
 		}
 	}
 
-	public Object getValue() {
-		return getBooleanValue();
+	public String getValue() {
+		return ""+ getBoolean();
 	}
 
-	public void setBooleanValue(Boolean value) {
-		setBooleanValue(value.booleanValue());		
-	}
-	public abstract void setBooleanValue(boolean value);
-	public Boolean getBooleanValue() {
-		return new Boolean(getBoolean());
-	}
+	public abstract void setBoolean(boolean value);
 	public abstract boolean getBoolean();
 	
 	/*public PropertyEditor getEditor() {
@@ -84,13 +69,12 @@ public abstract class BooleanProperty extends Property {
 	}*/
 	
 	public PropertyEditor getEditor() {
-		Boolean b = (Boolean) getValue();
-		return new PropertyEditor.CheckBoxEditor(this, b.booleanValue());
+		return new PropertyEditor.CheckBoxEditor(this, getBoolean());
 	}
 	
-	public void setValueFromString(String value) {
+	public void setValue(String value) {
 		Boolean b = fromString((String)value);
-		if (b!=null) setBooleanValue(b.booleanValue()); else throw new IllegalArgumentException();
+		if (b!=null) setBoolean(b.booleanValue()); else throw new IllegalArgumentException();
 	}
 	
 }

@@ -1,15 +1,12 @@
 package org.nomad.main.run;
 
-import javax.swing.JFrame;
-import javax.swing.UIManager;
+import java.lang.reflect.InvocationTargetException;
+
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import org.nomad.main.Nomad;
-
-
-import java.awt.*;
-import java.lang.Math;
-import java.lang.reflect.InvocationTargetException;
+import org.nomad.util.misc.NomadUtilities;
 
 /**
  * @author Christian Schneider
@@ -46,32 +43,9 @@ public class AppRunner implements Runnable
 	    	e.printStackTrace();
 	    }
 	
-	    Nomad nomad = null;
-	
-	    try {
-	        nomad = new Nomad();
-	    }
-	    catch (Exception e){
-	    	e.printStackTrace();
-	        System.exit(1);
-	    }
-        nomad.validate();
-	
-	    // center window
-	    Dimension screensz  = Toolkit.getDefaultToolkit().getScreenSize();
-	    Dimension framesz   = nomad.getSize();
-	
-	    framesz.height = Math.min(framesz.height, screensz.height);
-	    framesz.width  = Math.min(framesz.width,  screensz.width);
-	
-	    nomad.setLocation(
-	      (screensz.width-framesz.width)/2,
-	      (screensz.height-framesz.height)/2
-	    );
-	
-	    // set close operation, then show window
-	    nomad.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-	    nomad.setVisible(true);
+	    Nomad nomad = new Nomad();
+		NomadUtilities.setupAndShow(nomad, 0.75, 0.75);
+	    
 	    //nomad.toFront();
 	    nomad.initialLoading();
     }

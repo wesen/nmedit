@@ -1,16 +1,9 @@
 package org.nomad.editor.app;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 
@@ -18,13 +11,14 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.nomad.editor.ComponentAlignmentToolbar;
+import org.nomad.dialog.JTaskDialog;
+import org.nomad.dialog.TaskModel;
+import org.nomad.editor.views.WorkspacePanel;
 import org.nomad.editor.views.classes.NomadClassesView;
 import org.nomad.editor.views.property.NomadPropertyEditor;
 import org.nomad.editor.views.visual.VisualEditor;
@@ -32,255 +26,151 @@ import org.nomad.env.Environment;
 import org.nomad.main.ThemePluginMenu;
 import org.nomad.patch.ModuleSection;
 import org.nomad.plugin.NomadPlugin;
-import org.nomad.theme.NomadClassicColors;
 import org.nomad.theme.UIFactory;
+import org.nomad.util.misc.NomadUtilities;
 import org.nomad.xml.XMLFileWriter;
 import org.nomad.xml.dom.module.DModule;
+import org.nomad.xml.dom.module.ModuleDescriptions;
 
 public class UIEditor extends JFrame {
 	
-//	public ImageTracker defaultImageTracker = new ImageTracker();
-
+	// main()
+	
 	public static void main(String[] args) {
-		UIEditor frame = new UIEditor();
-		frame.validate();
-	    // center window
-	    Dimension screensz  = Toolkit.getDefaultToolkit().getScreenSize();
-		frame.setSize(screensz.width/2,screensz.height/2);
-	    Dimension framesz   = frame.getSize();
-		
-		
-	    framesz.height = Math.min(framesz.height, screensz.height);
-	    framesz.width  = Math.min(framesz.width,  screensz.width);
-	
-	    frame.setLocation(
-	      (screensz.width-framesz.width)/2,
-	      (screensz.height-framesz.height)/2
-	    );
-	
-	    // set close operation, then show window
-	    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-	    frame.setVisible(true);
+		NomadUtilities.setupAndShow(new UIEditor(), 0.4, 0.5);
 	}
 	
-	Environment env = Environment.sharedInstance();
-
-	JPanel workspace = new JPanel() {
-		
-		{
-			addComponentListener(new ComponentAdapter(){
-				public void componentResized(ComponentEvent event) {checkChild();}
-			});
-			addContainerListener(new ContainerListener(){
-
-				public void componentAdded(ContainerEvent arg0) {
-					checkChild();
-				}
-
-				public void componentRemoved(ContainerEvent arg0) {
-					repaint();
-				}});
-		}
-		
-		public void checkChild() {
-			if (getComponentCount()>0) {
-				Component c = getComponent(0);
-				c.setLocation((getWidth()-c.getWidth())/2,(getHeight()-c.getHeight())/2);
-			}
-		}
-	};
-
-	JMenuBar menuBar = null;
-	JMenu menuFile = null;
-	JMenuItem menuExitItem,	menuNewItem, menuOpenItem, menuCloseItem = null;
-	JMenuItem menuSaveItem, menuSaveAsItem = null;
-	JMenu menuAlign = null;
-	ThemePluginMenu menuThemePlugins = null;
+	// properties
 	
-	NomadClassesView classesView = new NomadClassesView();
-	NomadPropertyEditor propertyEditor = new NomadPropertyEditor(this);
-	VisualEditor visualEditor = null;
-	ComponentAlignmentToolbar tbComponents = new ComponentAlignmentToolbar();
+	private Environment env = null;
+	private WorkspacePanel workspace = null;
+	private NomadClassesView classesView = null;
+	private NomadPropertyEditor propertyEditor = null;
+	private VisualEditor visualEditor = null;
+    private DModule modified = null;
 
-	private String fileName = "";
+	// constructor
 	
 	public UIEditor() {
 		
+		// title
+		
 		super("Nomad UI Editor");
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		// environment
+		
+		env = Environment.sharedInstance();
 		env.loadAll();
-
-		fileName = env.getFactory().getUIDescriptionFileName();
 		env.getToolbar().setAllowDragging(false);
 		env.getToolbar().addModuleButtonClickListener(new ModuleButtonClickListener());
 
-		this.add(BorderLayout.NORTH, env.getToolbar());
+		// components
 		
+		classesView = new NomadClassesView();
 		classesView.setFactory(env.getFactory());
-		
-		propertyEditor.setPreferredSize(new Dimension(200, 400));
 
-		JPanel workspaceCascade = new JPanel();
-		workspaceCascade.setLayout(new BorderLayout());
-		workspaceCascade.add(workspace, BorderLayout.CENTER);
-		workspaceCascade.add(BorderLayout.SOUTH,tbComponents);
-		workspace.setLayout(null);
-		workspace.setSize(new Dimension(400,400));
-		
-		this.add(BorderLayout.EAST, propertyEditor);
-		this.add(BorderLayout.WEST, classesView);
-		this.add(BorderLayout.CENTER, workspaceCascade);
+		propertyEditor = new NomadPropertyEditor(this);
+		propertyEditor.setPreferredSize(new Dimension(200, 100));
+		propertyEditor.setMinimumSize(new Dimension(10, 100));
+
+		workspace = new WorkspacePanel();
+		workspace.setSize(new Dimension(250,400));
+
+		JSplitPane split = new JSplitPane( JSplitPane.VERTICAL_SPLIT, propertyEditor, classesView );
+		split.setDividerLocation(0.5);
+
+		getContentPane().setLayout(new BorderLayout());
+		getContentPane().add(env.getToolbar(), 	BorderLayout.NORTH);
+		getContentPane().add(split, 			BorderLayout.EAST);
+		getContentPane().add(workspace, 		BorderLayout.CENTER);
 		
 		// menu
 
-		menuBar = new JMenuBar();
+		JMenuBar mnBar = new JMenuBar();
+		JMenu mnMenu = null;
 
-		menuFile = new JMenu("File");
-			//menuNewItem = menuFile.add("New");
-			menuOpenItem = menuFile.add("Open...");
-			//menuCloseItem = menuFile.add("Close");
-			//menuFile.addSeparator();
-			menuSaveItem = menuFile.add("Save");
-			//menuSaveAsItem = menuFile.add("Save As...");
-			menuFile.addSeparator();
-			menuExitItem = menuFile.add("Exit");
-			
-			menuSaveItem.addActionListener(new SaveItemListener());
-			menuOpenItem.addActionListener(new LoadItemListener());
+		// file
+		mnMenu = new JMenu("File");
+		mnMenu.add("Open..."	).addActionListener(new FileOpenAction());
+		mnMenu.add("Save as..."	).addActionListener(new SaveFileAsAction());
+		mnMenu.addSeparator();
+		mnMenu.add("Exit"		).addActionListener(new AppExitAction());
+		mnBar.add(mnMenu);
 
-		menuBar.add(menuFile);
+		// theme
+		mnMenu = new ThemePluginMenu("Theme");
+		((ThemePluginMenu)mnMenu).addPluginSelectionListener(new ThemeChangeAction());		
+		mnBar.add(mnMenu);
 		
-		menuThemePlugins = new ThemePluginMenu("Theme");
-		menuThemePlugins.addPluginSelectionListener(new ChangeListener(){
+		// dom
+		mnMenu = new JMenu("DOM");
+		mnMenu.add("rebuild").addActionListener(new RebuildDomAction());
+		mnBar.add(mnMenu);
 
-			public void stateChanged(ChangeEvent event) {
-				NomadPlugin plugin = menuThemePlugins.getSelectedPlugin();
-				if (plugin!=null)
-					changeTheme(plugin);
-			}});
-		
-		menuBar.add(menuThemePlugins);
-		
-		
-		menuAlign = new JMenu("Align");
-		
-		menuBar.add(menuAlign);
-		
-		this.setJMenuBar(menuBar);
+		this.setJMenuBar(mnBar);
 
-        menuExitItem.addActionListener(new ExitListener());
-		this.addWindowListener(new ExitWindowListener());
-		
 		pack();
 	}
 	
-	class SaveItemListener implements ActionListener {
-		public void actionPerformed(ActionEvent event) {
-			JFileChooser fileChooser = new JFileChooser(fileName);
-			
-			if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-				fileName = fileChooser.getSelectedFile().getAbsolutePath();
-				
-				if (JOptionPane.showConfirmDialog(UIEditor.this,
-					    "The file '"+fileName+"' will be written.\nShall I go on ?",
-					    "Warning",
-					    JOptionPane.YES_NO_OPTION) // info message
-			       != JOptionPane.YES_OPTION
-			    ) {
-					return;
-				} else {
-	
-					XMLFileWriter xml;
-					try {
-						xml = new XMLFileWriter(fileName,
-							"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
-							"<!DOCTYPE ui-description SYSTEM \"ui-description.dtd\">"
-						);
-						env.getBuilder().exportDom(xml);			
-						xml.flush();
-						xml.close();
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					}		
-				}
-			}			
-		}
-	}
-	
-	class LoadItemListener implements ActionListener {
-		public void actionPerformed(ActionEvent event) {
-			JFileChooser fileChooser = new JFileChooser(fileName);
-			
-			if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-				fileName = fileChooser.getSelectedFile().getAbsolutePath();
-
-				if (JOptionPane.showConfirmDialog(UIEditor.this,
-					    "Changes will be lost.\nShall I go on ?",
-					    "Warning",
-					    JOptionPane.YES_NO_OPTION) // info message
-			       != JOptionPane.YES_OPTION
-			    ) {
-					return;
-				} else {
-					env.getBuilder().load(fileName);
-				}
+	public void saveFileAs() {
+		String uiFile = env.getFactory().getUIDescriptionFileName();
+		JFileChooser fileChooser = new JFileChooser(uiFile);
+		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			uiFile = fileChooser.getSelectedFile().getAbsolutePath();
+			if (NomadUtilities.isConfirmedByUser(this, "The file '"+uiFile+"' will be overwritten.\nShall I go on ?" )) {
+				XMLFileWriter xml;
+				try {
+					xml = new XMLFileWriter(uiFile,
+						"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+						"<!DOCTYPE ui-description SYSTEM \"ui-description.dtd\">"
+					);
+					env.getBuilder().exportDom(xml);			
+					xml.flush();
+					xml.close();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}		
 			}
 		}
 	}
 	
-	class ExitWindowListener extends WindowAdapter {
-		public void windowClosing(WindowEvent e) {
-			System.exit(0);
+	public void loadFile() {
+		String uiFile = env.getFactory().getUIDescriptionFileName();		
+		JFileChooser fileChooser = new JFileChooser(uiFile);
+		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			uiFile = fileChooser.getSelectedFile().getAbsolutePath();
+			if (NomadUtilities.isConfirmedByUser(this, "Changes will be lost.\nShall I go on ?" )) {
+				env.getBuilder().load(uiFile);
+			}
 		}
 	}
-
-    class ExitListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-        	UIEditor.this.processEvent(new WindowEvent(UIEditor.this, WindowEvent.WINDOW_CLOSING));
-        }
-    }
-    
-    private DModule module = null;
+	
+	public void quit() {
+    	UIEditor.this.processEvent(new WindowEvent(UIEditor.this, WindowEvent.WINDOW_CLOSING));
+	}
     
     public DModule getModule() {
-    	return module;
+    	return modified;
     }
     
     public void setModule(DModule module) {
-    	this.module = module;
-		//workBench.setModule((ModulePane)modules.get(module));
+    	this.modified = module;
 		if (visualEditor!=null) {
 			// write back
 			env.getBuilder().rewriteDOM(visualEditor, visualEditor.getModuleInfo());
 			visualEditor.setComponentPropertyEditor(null);
 			workspace.remove(visualEditor);
-			visualEditor.setAlignmentToolbar(null);
 		}
 
 		if (module!=null) {
 			visualEditor = new VisualEditor(module);
 			visualEditor.setComponentPropertyEditor(propertyEditor);
-			visualEditor.setBackground(NomadClassicColors.MODULE_BACKGROUND);
-	
 			env.getBuilder().createGUIComponents(visualEditor, module, false);
-			
-			//visualEditor.setLocation(0,0);
 			visualEditor.setSize(ModuleSection.ModulePixDimension.PIXWIDTH,ModuleSection.ModulePixDimension.PIXHEIGHT*module.getHeight());
-			//visualEditor.setNameLabel(module.getName());
 			visualEditor.setVisible(true);
-			visualEditor.setAlignmentToolbar(tbComponents);
-			tbComponents.setEnabled(false);
-			
 			workspace.add(visualEditor);
 		}
     }
-
-	private class ModuleButtonClickListener implements org.nomad.main.ModuleToolbarEventListener {
-		public void toolbarModuleSelected(DModule module) {
-			setModule(module);
-		}
-	}
 
 	void changeTheme(final NomadPlugin plugin) {
 		DModule current = getModule();
@@ -291,5 +181,87 @@ public class UIEditor extends JFrame {
 		setModule(current);
 	}
 
+	public void rebuildDOM() {
+		if (JOptionPane.showConfirmDialog(UIEditor.this,
+			    "This will rebuild the complete DOM.\nShall I go on ?",
+			    "Warning",
+			    JOptionPane.YES_NO_OPTION) // info message
+	       != JOptionPane.YES_OPTION
+	    ) {
+			return;
+		} else {
+			
+			JTaskDialog.processTasks(
+				this, new TaskModel() {
+
+					DModule tmp = getModule();
+					DModule[] modules = 
+						ModuleDescriptions.sharedInstance().getModules()
+							.toArray(new DModule[ModuleDescriptions.sharedInstance().getModules().size()]);
+					
+					public String getDescription() {
+						return "Rewriting DOM...";
+					}
+
+					public int getTaskCount() {
+						return modules.length+1;
+					}
+
+					public String getTaskName(int taskIndex) {
+						if (taskIndex < modules.length )
+							return "Module: "+ modules[taskIndex].getName();
+						else return "Finished.";
+					}
+
+					public void run(int taskIndex) {
+						if (taskIndex < modules.length )
+							setModule(modules[taskIndex]);
+						else
+							setModule(tmp);
+					}} );
+		}
+		
+	}
+
+	class SaveFileAsAction implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			saveFileAs();
+		}
+	}
+	
+	class FileOpenAction implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			loadFile();
+		}
+	}
+	
+    class AppExitAction implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+        	quit();
+        }
+    }
+
+	private class ModuleButtonClickListener implements org.nomad.main.ModuleToolbarEventListener {
+		public void toolbarModuleSelected(DModule module) {
+			setModule(module);
+		}
+	}
+	
+	class ThemeChangeAction implements ChangeListener {
+		public void stateChanged(ChangeEvent event) {
+			
+			if (event.getSource() instanceof ThemePluginMenu) {
+				ThemePluginMenu menuThemePlugin = (ThemePluginMenu) event.getSource();
+				NomadPlugin plugin = menuThemePlugin.getSelectedPlugin();
+				if (plugin!=null) changeTheme(plugin);
+			}
+		}
+	}
+	
+	class RebuildDomAction implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			rebuildDOM();
+		}
+	}
 	
 }

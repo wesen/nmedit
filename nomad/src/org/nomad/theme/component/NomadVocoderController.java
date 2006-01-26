@@ -104,7 +104,7 @@ public class NomadVocoderController extends NomadComponent implements NomadButto
 					if (!locate()) {
 						getParent().addContainerListener(new ContainerAdapter() {
 							public void componentAdded(ContainerEvent event) {
-								System.out.println(" "+display+" "+event.getChild());
+								//System.out.println(" "+display+" "+event.getChild());
 								if (event.getChild() instanceof VocoderBandDisplay) {
 									getParent().removeContainerListener(this);
 									// found

@@ -27,8 +27,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import org.nomad.xml.dom.module.DModule;
-import org.nomad.xml.dom.module.DToolbarGroup;
-import org.nomad.xml.dom.module.DToolbarSection;
+import org.nomad.xml.dom.module.DGroup;
+import org.nomad.xml.dom.module.DSection;
 import org.nomad.xml.dom.module.ModuleDescriptions;
 
 public class ModuleGroupsMenu extends JMenu {
@@ -52,10 +52,10 @@ public class ModuleGroupsMenu extends JMenu {
 }
 
 class ModuleGroupMenu extends JMenu {
-	public ModuleGroupMenu(DToolbarGroup group) {
+	public ModuleGroupMenu(DGroup group) {
 		super(group.getName());
 		for (int i=0;i<group.getSectionCount();i++) {
-			DToolbarSection section = group.getSection(i);
+			DSection section = group.getSection(i);
 			for (int j=0;j<section.getModuleCount();j++) {
 				DModule module = section.getModule(j);
 				

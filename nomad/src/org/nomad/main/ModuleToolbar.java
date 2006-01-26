@@ -10,8 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
-import org.nomad.xml.dom.module.DToolbarGroup;
-import org.nomad.xml.dom.module.DToolbarSection;
+import org.nomad.xml.dom.module.DGroup;
+import org.nomad.xml.dom.module.DSection;
 import org.nomad.xml.dom.module.ModuleDescriptions;
 
 
@@ -63,7 +63,7 @@ public class ModuleToolbar extends JTabbedPane implements ActionListener
     buttons = new ArrayList<ModuleToolbarButton>();
     
     for (int gi=0;gi<moduleDescriptions.getGroupCount();gi++) {
-    	DToolbarGroup group = moduleDescriptions.getGroup(gi);
+    	DGroup group = moduleDescriptions.getGroup(gi);
     	
     	JPanel pane = new JPanel();
         pane.setLayout(new GridLayout(1,1));
@@ -78,7 +78,7 @@ public class ModuleToolbar extends JTabbedPane implements ActionListener
         pane.add(toolbar);
         
         for (int si=0;si<group.getSectionCount();si++) {
-        	DToolbarSection section = group.getSection(si);
+        	DSection section = group.getSection(si);
         	
         	for (int mi=0;mi<section.getModuleCount();mi++) {
                 ModuleToolbarButton btn = new ModuleToolbarButton(this, section.getModule(mi));

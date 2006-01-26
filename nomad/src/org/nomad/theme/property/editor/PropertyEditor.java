@@ -77,7 +77,7 @@ public abstract class PropertyEditor {
 		return flagAutoWritebackHook;
 	}
 	
-	public abstract Object getEditorValue();
+	public abstract String getEditorValue();
 	
 	public void addCellEditorListener(CellEditorListener l) {
 		if (!cellEditorListenerList.contains(l))
@@ -135,11 +135,11 @@ public abstract class PropertyEditor {
 				}
 			});
 			
-			textField.setText(p.getValueString());
+			textField.setText(p.getValue());
 			textField.setSelectionStart(0);
 			textField.setSelectionEnd(textField.getText().length()-1);
 		}
-		public Object getEditorValue() { return textField.getText(); }		
+		public String getEditorValue() { return textField.getText(); }		
 		public JComponent getEditorComponent() { return textField; }	
 	}
 	
@@ -175,11 +175,11 @@ public abstract class PropertyEditor {
 				}
 			});
 			
-			textArea.setText(p.getValueString());
+			textArea.setText(p.getValue());
 			textArea.setSelectionStart(0);
 			textArea.setSelectionEnd(textArea.getText().length()-1);
 		}
-		public Object getEditorValue() { return textArea.getText(); }		
+		public String getEditorValue() { return textArea.getText(); }		
 		public JComponent getEditorComponent() { return textArea; }	
 	}
 	
@@ -187,7 +187,7 @@ public abstract class PropertyEditor {
 		private JComboBox comboBox = null;
 		private Object[] items = null;
 
-		public ComboBoxEditor(Property p, Object[] items, Object selected) {
+		public ComboBoxEditor(Property p, String[] items, Object selected) {
 			super(p);
 			this.items = items;
 			comboBox = new JComboBox(items);
@@ -218,10 +218,10 @@ public abstract class PropertyEditor {
 			});
 		}
 		
-		public ComboBoxEditor(Property p, Object[] items) {
+		public ComboBoxEditor(Property p, String[] items) {
 			this(p,items, p.getValue());
 		}
-		public Object getEditorValue() { return items[comboBox.getSelectedIndex()]; }		
+		public String getEditorValue() { return (String) items[comboBox.getSelectedIndex()]; }		
 		public JComponent getEditorComponent() { return comboBox; }	
 	}
 	
@@ -251,7 +251,7 @@ public abstract class PropertyEditor {
 			});
 
 		}
-		public Object getEditorValue() { return new Boolean(checkBox.isSelected()); }		
+		public String getEditorValue() { return ""+checkBox.isSelected(); }		
 		public JComponent getEditorComponent() { return checkBox; }	
 	}
 	

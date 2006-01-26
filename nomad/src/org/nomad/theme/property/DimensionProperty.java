@@ -35,22 +35,20 @@ public abstract class DimensionProperty extends PointProperty {
 		super(component);
 		setName("size");
 	}
+
+	public void setXY(int x, int y) {
+		setDim(new Dimension(x, y));
+	}
 	
-	public void setupForEditing() {
-		super.setupForEditing();
-		setHandler(Dimension.class, new PropertyValueHandler(){
-			public void writeValue(Object value) throws IllegalArgumentException {
-				Dimension d = (Dimension) value;
-				setXY(d.width, d.height);
-			}});
+	public int getX() {
+		return getDim().width;
+	}
+	
+	public int getY() {
+		return getDim().height;
 	}
 
-	public Dimension getDim() {
-		return new Dimension(getX(), getY());
-	}
-
-	public void setDim(Dimension dim) {
-		setXY(dim.width, dim.height);
-	}
+	public abstract Dimension getDim();
+	public abstract void setDim(Dimension dim);
 	
 }

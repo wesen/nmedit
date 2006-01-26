@@ -69,7 +69,7 @@ class PatchLoader {
 		JTaskDialog.processTasks(this.nomad, new TaskModel(){
 			
 			int taskCount = fileList.size();
-			int selection = nomad.viewManager.getDocumentCount();
+			int selection = nomad.getDocumentManager().getDocumentCount();
 			
 			public String getDescription() {
 				return "Loading Nord Modular patch...";
@@ -95,7 +95,7 @@ class PatchLoader {
 					SwingUtilities.invokeAndWait(
 						new Runnable() {
 							public void run() {
-								nomad.viewManager.addDocument(task.patchName, tab);
+								nomad.getDocumentManager().addDocument(task.patchName, tab);
 							}
 						}
 					);
@@ -105,7 +105,7 @@ class PatchLoader {
 				}
 
 				if (taskIndex==getTaskCount()-1) {
-					nomad.viewManager.setSelectedDocument(selection);
+					nomad.getDocumentManager().setSelectedDocument(selection);
 					fileList.clear();
 				}
 			}

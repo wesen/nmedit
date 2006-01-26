@@ -39,33 +39,8 @@ public class ParameterProperty extends Property {
 		super(component);
 		setName("parameter#0");
 	}
-	public void setupForEditing() {
-		super.setupForEditing();
-		setHandler(null, new PropertyValueHandler(){
-			public void writeValue(Object value) throws IllegalArgumentException {
-				// we accept null values
 
-				if (value!=null)
-					throw new IllegalArgumentException("Illegal argument "+value+" in property "+this+".");
-				
-				setDParameter(null);
-				
-			}});
-		setHandler(DParameter.class, new PropertyValueHandler(){
-			public void writeValue(Object value) throws IllegalArgumentException {
-				setDParameter((DParameter)value);
-			}});
-		setHandler(DCustom.class, new PropertyValueHandler(){
-			public void writeValue(Object value) throws IllegalArgumentException {
-				setDParameter((DParameter)value);
-			}});
-	}
-
-	public Object getValue() {
-		return getDParameter();
-	}
-
-	public void setValueFromString(String value) {
+	public void setValue(String value) {
 		setDParameter(decode(value));
 		fireChangeEvent();
 	}
@@ -98,7 +73,7 @@ public class ParameterProperty extends Property {
 		return p.getParent().getModuleID()+"."+p.getId()+"."+ (p instanceof DCustom?"c":"p")+"."+p.getName();
 	}
 	
-	public String getValueString() {
+	public String getValue() {
 		return encode(getDParameter());
 	}
 	
@@ -140,7 +115,7 @@ public class ParameterProperty extends Property {
 		if (list==null)
 			return super.getEditor();
 		else
-			return new PropertyEditor.ComboBoxEditor(this, list, getValueString());
+			return new PropertyEditor.ComboBoxEditor(this, list, getValue());
 	}
 	
 }
