@@ -88,10 +88,8 @@ public class NomadConnector extends NomadComponent {
 	}
 	
 	public void setConnectedState(boolean isConnected, boolean fireEvent) {
-		if (flagConnected!=isConnected) {
-			flagConnected=isConnected;
-			if (fireEvent) fireConnectorChangeEvent();
-		}
+		flagConnected=isConnected;
+		if (fireEvent) fireConnectorChangeEvent();
 	}
 	
 	public void setConnectorType(boolean isInput) {
@@ -99,10 +97,8 @@ public class NomadConnector extends NomadComponent {
 	}
 	
 	public void setConnectorType(boolean isInput, boolean fireEvent) {
-		if (flagIsInput!=isInput) {
-			flagIsInput=isInput;
-			if (fireEvent) fireConnectorChangeEvent();
-		}
+		flagIsInput=isInput;
+		if (fireEvent) fireConnectorChangeEvent();
 	}
 	
 	public boolean isInputConnector() {

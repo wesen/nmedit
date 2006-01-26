@@ -22,9 +22,6 @@
  */
 package org.nomad.theme.property;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.nomad.theme.component.NomadComponent;
 import org.nomad.theme.component.NomadConnector;
 import org.nomad.theme.property.editor.PropertyEditor;
@@ -43,28 +40,69 @@ public class ConnectorProperty extends Property {
 		setDConnector(decode(value));
 	}
 	
-	private final static Pattern pattern = Pattern.compile("(\\d+)\\.(\\d+)\\.((in)|(out))\\..*");
+	//private final static Pattern pattern = Pattern.compile("(\\d+)\\.(\\d+)\\.((in)|(out))\\..*");
 	
 	public static DConnector decode(String value) {
-		Matcher m = pattern.matcher(value);
-		if (!m.matches()) {
-			System.err.println("Connector pattern not matched by "+value);
-			return null;
+		int moduleId = 0;
+		int connectorId = 0;
+		int input = -1; // 0 = output, 1 = input
+		
+		char[] str = value.toCharArray();
+
+		int i = 0;
+		// module id
+		for(;i<str.length;i++) {
+			if (Character.isDigit(str[i])) {
+				moduleId *= 10;
+				moduleId += (str[i]-'0');
+			} else if (str[i]=='.') {
+				i++;
+				break;
+			} else {
+				System.err.println("Invalid DConnector encoding: '"+value+"'.");
+				return null;
+			}
 		}
 
-		int moduleId = Integer.parseInt(m.group(1));
-		int connectorId = Integer.parseInt(m.group(2));
-		String inout = m.group(3);
-
-		boolean isOut = inout.equals("out");
+		// connector id
+		for(;i<str.length;i++) {
+			if (Character.isDigit(str[i])) {
+				connectorId *= 10;
+				connectorId += (str[i]-'0');
+			} else if (str[i]=='.') {
+				i++;
+				break;
+			} else {
+				System.err.println("Invalid DConnector encoding: '"+value+"'.");
+				return null;
+			}
+		}
+		
+		// (in | out)
+		String sub = value.substring(i);
+		if (sub.startsWith("in")) input = 1;
+		else if (sub.startsWith("out")) input = 0;
+		
+		
+		// validation TODO check that id's part of string has not length 0
+		if (moduleId<0 || connectorId<0 || input<0) {
+			System.err.println("Invalid DConnector encoding: '"+value+"'.");
+			return null;
+		}
 
 		DModule module = ModuleDescriptions.sharedInstance().getModuleById(moduleId);
 		if (module==null) {
 			System.err.println("In ConnectorProperty.decode(): Module [id="+moduleId+"] not found");
 			return null;
 		}
+		
+		DConnector connector = module.getConnectorById(connectorId, input==1);
+		if (connector == null){
+			System.err.println("In ConnectorProperty.decode(): Module [id="+moduleId+"] has no Connector [ id="+connectorId+"].");
+			return null;
+		}
 
-		return module.getConnectorById(connectorId, !isOut);
+		return connector;
 	}
 
 	public static String encode(DConnector p) {

@@ -133,8 +133,12 @@ public class PropertySet implements Iterable<Property> {
 	public void exportToDOM(NomadDOMComponent node) {
 		for (Iterator iter=iterator();iter.hasNext();) {
 			Property p = (Property) iter.next();
-			if (p.isExportable() && (!p.isInDefaultState()))
+			if (p.isExportable() && (!p.isInDefaultState())) {
+				if (p.getName().equals("type"))
+					System.out.println(p.getName()+"="+p.getValue());
+				
 				node.createPropertyNode(p.getName()).setValue(p.getValue());
+			}
 		}
 	}
 
