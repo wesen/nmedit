@@ -18,7 +18,7 @@
 */
 
 %{
-  #include <stdio.h>
+  #include <cstdio>
   #include <fstream>
 
   #include "pdl/parser.h"

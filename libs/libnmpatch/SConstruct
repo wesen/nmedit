@@ -4,11 +4,18 @@ src = 'patchparser.yy patchlexer.ll nmlexer.cc cable.cc ctrlmap.cc knobmap.cc mo
 inc = 'cable.h ctrlmap.h knobmap.h module.h modulesection.h morph.h morphmap.h note.h patch.h moduletype.h modulelistener.h modulesectionlistener.h'
 
 import os
-java_home = os.environ['JAVA_HOME']
-withJava = int(ARGUMENTS.get('JAVA', 0))==1;
+
+withJava = int(ARGUMENTS.get('JAVA', 0)) == 1;
+java_home = os.environ.get('JAVA_HOME','')
+
+# check is JAVA compilation is requested and JAVA_HOME is set
+if not os.environ.has_key('JAVA_HOME') and (withJava == 1):
+	print "compilation with JAVA requested, but JAVA_HOME not set, aborting!"
+	Exit(1)
+
 if withJava:
-  print 'Compiling with java support (JAVA_HOME='+java_home+')'
-  src = 'nmpatch.i '+src
+  print 'Compiling with java support (JAVA_HOME="%s")' % java_home
+  src = 'nmpatch.i %s' % src
 
 pkg = 'module.ppf patch.pdl'
 
