@@ -28,6 +28,10 @@
 #include "nmprotocol/netmididriver.h"
 #endif
 
+#ifdef RTMIDI
+#include "nmprotocol/rtmididriver.h"
+#endif
+
 const unsigned char MidiDriver::SYSEX_END = 0xf7;
 
 MidiDriver::MidiDriver()
@@ -50,6 +54,10 @@ MidiDriver::StringList MidiDriver::getDrivers()
   drivers.push_back("NETMIDI");
 #endif
 
+#ifdef RTMIDI
+  drivers.push_back("RTMIDI");
+#endif
+
   return drivers;
 }
 
@@ -64,6 +72,12 @@ MidiDriver* MidiDriver::createDriver(string driverName)
   #ifdef NETMIDI
   if (driverName == "NETMIDI") {
     return new NetMidiDriver();
+  }
+  #endif
+
+  #ifdef RTMIDI
+  if (driverName == "RTMIDI") {
+	  return new RtMidiDriver();
   }
   #endif
 
