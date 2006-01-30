@@ -12,7 +12,7 @@
 
   <target name="compile" depends="init"
           description="compile the source">
-    <javac srcdir="${src}" destdir="${build}">
+    <javac srcdir="${src}" destdir="${build}" debug="true">
       <classpath>
         <pathelement path="."/>
         <pathelement location="../jpdl/dist/lib/jpdl.jar"/>
@@ -28,7 +28,7 @@
 
   <target name="compile-test" depends="init"
           description="compile the test source">
-    <javac srcdir="${test}" destdir="${build}">
+    <javac srcdir="${test}" destdir="${build}" debug="true">
       <classpath>
         <pathelement path="."/>
         <pathelement location="../jpdl/dist/lib/jpdl.jar"/>
@@ -41,8 +41,9 @@
     <junit showoutput="true" printsummary="on">
       <classpath>
         <pathelement path="${build}"/>
+        <pathelement location="../jpdl/dist/lib/jpdl.jar"/>
       </classpath>
-      <test name="net.sf.nmedit.jnmprotocol.Tester"/>
+      <test name="net.sf.nmedit.jnmprotocol.ProtocolTester"/>
     </junit>
   </target>
 

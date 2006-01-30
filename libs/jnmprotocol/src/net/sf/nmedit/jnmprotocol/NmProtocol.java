@@ -77,7 +77,7 @@ public class NmProtocol
 	
 	while (receiveBytes.length > 0) {
 	    for (int i = 0; i < receiveBytes.length; i++) {
-		bitStream.append(i, 8);
+		bitStream.append(receiveBytes[i], 8);
 	    }
 	    MidiMessage midiMessage = MidiMessage.create(bitStream);
 	    if (midiMessage != null) {
@@ -115,7 +115,7 @@ public class NmProtocol
 	bitStreamList = midiMessage.getBitStream();
 	for(Iterator i = bitStreamList.iterator(); i.hasNext(); ) {
 	    BitStream bitStream = (BitStream)i.next();
-	    byte[] sendBytes = new byte[bitStream.getSize() % 8];
+	    byte[] sendBytes = new byte[bitStream.getSize() / 8];
 	    for (int n = 0; n < sendBytes.length; n++) {
 		sendBytes[n] = (byte)bitStream.getInt(8);
 	    }

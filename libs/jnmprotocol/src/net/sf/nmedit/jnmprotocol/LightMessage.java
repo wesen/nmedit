@@ -22,48 +22,49 @@ package net.sf.nmedit.jnmprotocol;
 import java.util.*;
 import net.sf.nmedit.jpdl.*;
 
-public class IAmMessage extends MidiMessage
+public class LightMessage extends MidiMessage
 {
-    public static final int PC = 0;
-    public static final int MODULAR = 1;
-
-    public IAmMessage()
+    public LightMessage()
 	throws Exception
     {
 	super();
 
-	addParameter("sender", "data:sender");
-	addParameter("versionHigh", "data:versionHigh");
-	addParameter("versionLow", "data:versionLow");
-	set("cc", 0);
-	set("sender", PC);
-	set("versionHigh", 3);
-	set("versionLow", 3);
-
-	expectsreply = true;
-	isreply = true;
+	addParameter("pid", "data:pid");
+	addParameter("startIndex", "data:data:startIndex");
+	addParameter("light0", "data:data:l0");
+	addParameter("light1", "data:data:l1");
+	addParameter("light2", "data:data:l2");
+	addParameter("light3", "data:data:l3");
+	addParameter("light4", "data:data:l4");
+	addParameter("light5", "data:data:l5");
+	addParameter("light6", "data:data:l6");
+	addParameter("light7", "data:data:l7");
+	addParameter("light8", "data:data:l8");
+	addParameter("light9", "data:data:l9");
+	addParameter("light10", "data:data:l10");
+	addParameter("light11", "data:data:l11");
+	addParameter("light12", "data:data:l12");
+	addParameter("light13", "data:data:l13");
+	addParameter("light14", "data:data:l14");
+	addParameter("light15", "data:data:l15");
+	addParameter("light16", "data:data:l16");
+	addParameter("light17", "data:data:l17");
+	addParameter("light18", "data:data:l18");
+	addParameter("light19", "data:data:l19");
     }
 
-    IAmMessage(Packet packet)
+    LightMessage(Packet packet)
 	throws Exception
     {
 	this();
-	setAll(packet);
-	if (get("sender") == MODULAR) {
-	    addParameter("unknown1", "data:unknown:unknown1");
-	    addParameter("unknown2", "data:unknown:unknown2");
-	    addParameter("unknown3", "data:unknown:unknown3");
-	    addParameter("unknown4", "data:unknown:unknown4");
-	}
 	setAll(packet);
     }
 
     public List getBitStream()
 	throws Exception
     {
-	LinkedList bitStreamList = new LinkedList();
-	bitStreamList.add(getBitStream(appendAll()));
-	return bitStreamList;
+	throw new MidiException("LightMessage::getBitStream not implemented.",
+				0);
     }
     
     public void notifyListener(NmProtocolListener listener)

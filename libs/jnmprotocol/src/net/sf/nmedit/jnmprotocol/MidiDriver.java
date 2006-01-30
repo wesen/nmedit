@@ -39,69 +39,23 @@ public class MidiDriver implements Receiver
 	inputBuffer = new LinkedList();
     }
 
-    /**
-       Get lists with midi i/o ports to be used in connect().
-    */
-    public String[] getMidiInputPorts()
-    {
-	return getMidiOutputPorts();
-    }
-
-    public String[] getMidiOutputPorts()
-    {
-	MidiDevice.Info[] info = MidiSystem.getMidiDeviceInfo();
-	String[] ports = new String[info.length];
-	for (int i = 0; i < info.length; i++) {
-	    ports[i] = info[i].getName();
-	}
-	return ports;
-    }
-    
-    public void connect(String midiInputPort, String midiOutputPort)
+    public void connect(MidiDevice.Info inputInfo, MidiDevice.Info outputInfo)
 	throws Exception
     {	
-	MidiDevice.Info inputInfo = null;
-	MidiDevice.Info outputInfo = null;
-	MidiDevice.Info[] info = MidiSystem.getMidiDeviceInfo();
-
-	for (int i = 0; i < info.length; i++) {
-	    if (info[i].getName().equals(midiInputPort)) {
-		inputInfo = info[i];
-	    }
-	    if (info[i].getName().equals(midiOutputPort)) {
-		outputInfo = info[i];
-	    }
-	}
-	if (inputInfo == null) {
-	    throw new MidiException("Unable to find port: " + midiInputPort,
-				    0);
-	}
-	if (outputInfo == null) {
-	    throw new MidiException("Unable to find port: " + midiOutputPort,
-				    0);
-	}
-
 	inputDevice = MidiSystem.getMidiDevice(inputInfo);
 	inputDevice.open();
-	if (inputInfo == outputInfo) {
-	    outputDevice = inputDevice;
-	}
-	else {
-	    outputDevice = MidiSystem.getMidiDevice(outputInfo);
-	    outputDevice.open();
-	}
-
-	out = MidiSystem.getMidiDevice(outputInfo).getReceiver();
-	in = MidiSystem.getMidiDevice(inputInfo).getTransmitter();
+	in = inputDevice.getTransmitter();
 	in.setReceiver(this);
+
+	outputDevice = MidiSystem.getMidiDevice(outputInfo);
+	outputDevice.open();
+	out = outputDevice.getReceiver();
     }
 
     public void disconnect()
     {
 	inputDevice.close();
-	if (outputDevice != inputDevice) {
-	    outputDevice.close();
-	}
+	outputDevice.close();
     }
 
     /**

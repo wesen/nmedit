@@ -24,7 +24,7 @@ import net.sf.nmedit.jpdl.*;
 
 public abstract class MidiMessage
 {
-    public static void usePDLFile(String filename, Tracer tracer)
+    public static void usePdlFile(String filename, Tracer tracer)
 	throws Exception
     {
 	pdlFile = filename;
@@ -93,8 +93,7 @@ public abstract class MidiMessage
 		    return null;
 		}
 		if (packet.contains("Lights")) {
-		    //return new LightMessage(packet);
-		    return null;
+		    return new LightMessage(packet);
 		}
 		if (packet.contains("KnobChange")) {
 		    //return new ParameterMessage(packet);
@@ -200,6 +199,7 @@ public abstract class MidiMessage
 
 	addParameter("cc", "cc");
 	addParameter("slot", "slot");
+	set("slot", 0);
     }
   
     protected BitStream getBitStream(IntStream intStream)

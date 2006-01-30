@@ -32,6 +32,7 @@ public class AckMessage extends MidiMessage
 	addParameter("pid1", "data:pid1");
 	addParameter("type", "data:type");
 	addParameter("pid2", "data:pid2");
+	set("cc", 0x16);
 	set("type", 0x7f);
 
 	isreply = true;
