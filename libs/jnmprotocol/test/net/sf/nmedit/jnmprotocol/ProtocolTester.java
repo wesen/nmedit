@@ -67,8 +67,6 @@ public class ProtocolTester extends TestCase
 	public void messageReceived(IAmMessage message)
 	{
 	    System.out.println("IAmMessage: " +
-			       "slot:" + message.get("slot") + " " +
-			       "cc:" + message.get("cc") + " " +
 			       "sender:" + message.get("sender") + " " +
 			       "versionHigh:" + message.get("versionHigh") + " " +
 			       "versionLow:" + message.get("versionLow"));
@@ -85,7 +83,6 @@ public class ProtocolTester extends TestCase
 	{
 	    System.out.println("LightMessage: " +
 			       "slot:" + message.get("slot") + " " +	
-			       "cc:" + message.get("cc") + " " +
 			       "pid:" + message.get("pid") + " " +
 			       message.get("light0") +
 			       message.get("light1") +
@@ -115,19 +112,57 @@ public class ProtocolTester extends TestCase
 	{
 	    System.out.println("AckMessage: " +
 			       "slot:" + message.get("slot") + " " +
-			       "cc:" + message.get("cc") + " " +
 			       "pid1:" + message.get("pid1") + " " +
 			       "type:" + message.get("type") + " " +
 			       "pid2:" + message.get("pid2"));
 	}
 
 	//    public void messageReceived(PatchListMessage message) {}
-	//    public void messageReceived(NewPatchInSlotMessage message) {}
-	//    public void messageReceived(VoiceCountMessage message) {}
+
+	public void messageReceived(NewPatchInSlotMessage message)
+	{
+	    System.out.println("NewPatchInSlotMessage: " +
+			       "slot:" + message.get("slot") + " " +	
+			       "pid:" + message.get("pid"));	    
+	}
+	
+	public void messageReceived(VoiceCountMessage message)
+	{
+	    System.out.println("VoiceCountMessage: " +
+			       "voiceCount0:" + message.get("voiceCount0") + " " +
+			       "voiceCount1:" + message.get("voiceCount1") + " " +
+			       "voiceCount2:" + message.get("voiceCount2") + " " +
+			       "voiceCount3:" + message.get("voiceCount3"));	    
+	}
+	
 	//    public void messageReceived(GetPatchMessage message) {}
-	//    public void messageReceived(SlotsSelectedMessage message) {}
-	//    public void messageReceived(SlotActivatedMessage message) {}
+	
+	public void messageReceived(SlotsSelectedMessage message)
+	{
+	    System.out.println("SlotsSelectedMessage: " +
+			       "slot0Selected:" + message.get("slot0Selected") + " " +
+			       "slot1Selected:" + message.get("slot1Selected") + " " +
+			       "slot2Selected:" + message.get("slot2Selected") + " " +
+			       "slot3Selected:" + message.get("slot3Selected"));
+	}
+	
+	public void messageReceived(SlotActivatedMessage message)
+	{
+	    System.out.println("SlotActivatedMessage: " +
+			       "activeSlot:" + message.get("activeSlot"));
+	}
+	
 	//    public void messageReceived(RequestPatchMessage message) {}
-	//    public void messageReceived(ParameterMessage message) {}
+
+	public void messageReceived(ParameterMessage message)
+	{
+	    System.out.println("ParameterMessage: " +
+			       "slot:" + message.get("slot") + " " +
+			       "pid:" + message.get("pid") + " " +
+			       "section:" + message.get("section") + " " +
+			       "module:" + message.get("module") + " " +
+			       "parameter:" + message.get("parameter") + " " +
+			       "value:" + message.get("value"));
+	}
     }
 }

@@ -22,23 +22,20 @@ package net.sf.nmedit.jnmprotocol;
 import java.util.*;
 import net.sf.nmedit.jpdl.*;
 
-public class AckMessage extends MidiMessage
+public class VoiceCountMessage extends MidiMessage
 {
-    public AckMessage()
+    public VoiceCountMessage()
 	throws Exception
     {
 	super();
 
-	addParameter("pid1", "data:pid1");
-	addParameter("type", "data:type");
-	addParameter("pid2", "data:pid2");
-	set("cc", 0x16);
-	set("type", 0x7f);
-
-	isreply = true;
+	addParameter("voiceCount0", "data:data:c0");
+	addParameter("voiceCount1", "data:data:c1");
+	addParameter("voiceCount2", "data:data:c2");
+	addParameter("voiceCount3", "data:data:c3");
     }
 
-    AckMessage(Packet packet)
+    VoiceCountMessage(Packet packet)
 	throws Exception
     {
 	this();
@@ -48,14 +45,9 @@ public class AckMessage extends MidiMessage
     public List getBitStream()
 	throws Exception
     {
-	IntStream intStream = appendAll();
-	if (get("type") == 0x36) {
-	    appendChecksum(intStream);
-	}
-	
-	LinkedList bitStreamList = new LinkedList();
-	bitStreamList.add(getBitStream(intStream));
-	return bitStreamList;
+	throw new
+	    MidiException("VoiceCountMessage::getBitStream not implemented.", 0);
+
     }
     
     public void notifyListener(NmProtocolListener listener)

@@ -77,27 +77,22 @@ public abstract class MidiMessage
 	    if (checksumIsCorrect(bitStream)) {
 		
 		if (packet.contains("VoiceCount")) {
-		    // return new VoiceCountMessage(packet);
-		    return null;
+		    return new VoiceCountMessage(packet);
 		}
 		if (packet.contains("SlotsSelected")) {
-		    //return new SlotsSelectedMessage(packet);
-		    return null;
+		    return new SlotsSelectedMessage(packet);
 		}
 		if (packet.contains("SlotActivated")) {
-		    //return new SlotActivatedMessage(packet);
-		    return null;
+		    return new SlotActivatedMessage(packet);
 		}
 		if (packet.contains("NewPatchInSlot")) {
-		    //return new NewPatchInSlotMessage(packet);
-		    return null;
+		    return new NewPatchInSlotMessage(packet);
 		}
 		if (packet.contains("Lights")) {
 		    return new LightMessage(packet);
 		}
 		if (packet.contains("KnobChange")) {
-		    //return new ParameterMessage(packet);
-		    return null;
+		    return new ParameterMessage(packet);
 		}
 		if (packet.contains("PatchListResponse")) {
 		    //return new PatchListMessage(packet);
@@ -156,11 +151,17 @@ public abstract class MidiMessage
 
     public void set(String parameter, int value)
     {
+	if (!parameters.contains(parameter)) {
+	    throw new RuntimeException("Unsupported paramenter: " + parameter);
+	}
 	values.put(parameter, new Integer(value));
     }
 
     public int get(String parameter)
     {
+	if (!parameters.contains(parameter)) {
+	    throw new RuntimeException("Unsupported paramenter: " + parameter);
+	}
 	return ((Integer)values.get(parameter)).intValue();
     }
 

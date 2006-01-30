@@ -22,23 +22,24 @@ package net.sf.nmedit.jnmprotocol;
 import java.util.*;
 import net.sf.nmedit.jpdl.*;
 
-public class AckMessage extends MidiMessage
+public class ParameterMessage extends MidiMessage
 {
-    public AckMessage()
+    public ParameterMessage()
 	throws Exception
     {
 	super();
 
-	addParameter("pid1", "data:pid1");
-	addParameter("type", "data:type");
-	addParameter("pid2", "data:pid2");
-	set("cc", 0x16);
-	set("type", 0x7f);
-
-	isreply = true;
+	addParameter("pid", "data:pid");
+	addParameter("sc", "data:sc");
+	addParameter("section", "data:data:section");
+	addParameter("module", "data:data:module");
+	addParameter("parameter", "data:data:parameter");
+	addParameter("value", "data:data:value");
+	set("cc", 0x14);
+	set("sc", 0x40);
     }
 
-    AckMessage(Packet packet)
+    ParameterMessage(Packet packet)
 	throws Exception
     {
 	this();
@@ -49,9 +50,7 @@ public class AckMessage extends MidiMessage
 	throws Exception
     {
 	IntStream intStream = appendAll();
-	if (get("type") == 0x36) {
-	    appendChecksum(intStream);
-	}
+	appendChecksum(intStream);
 	
 	LinkedList bitStreamList = new LinkedList();
 	bitStreamList.add(getBitStream(intStream));

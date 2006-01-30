@@ -22,23 +22,17 @@ package net.sf.nmedit.jnmprotocol;
 import java.util.*;
 import net.sf.nmedit.jpdl.*;
 
-public class AckMessage extends MidiMessage
+public class NewPatchInSlotMessage extends MidiMessage
 {
-    public AckMessage()
+    public NewPatchInSlotMessage()
 	throws Exception
     {
 	super();
 
-	addParameter("pid1", "data:pid1");
-	addParameter("type", "data:type");
-	addParameter("pid2", "data:pid2");
-	set("cc", 0x16);
-	set("type", 0x7f);
-
-	isreply = true;
+	addParameter("pid", "data:pid");
     }
 
-    AckMessage(Packet packet)
+    NewPatchInSlotMessage(Packet packet)
 	throws Exception
     {
 	this();
@@ -48,14 +42,9 @@ public class AckMessage extends MidiMessage
     public List getBitStream()
 	throws Exception
     {
-	IntStream intStream = appendAll();
-	if (get("type") == 0x36) {
-	    appendChecksum(intStream);
-	}
-	
-	LinkedList bitStreamList = new LinkedList();
-	bitStreamList.add(getBitStream(intStream));
-	return bitStreamList;
+	throw new
+	    MidiException("NewPatchInSlotMessage::getBitStream not implemented.", 0);
+
     }
     
     public void notifyListener(NmProtocolListener listener)
