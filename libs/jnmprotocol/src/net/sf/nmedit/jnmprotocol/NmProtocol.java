@@ -135,6 +135,7 @@ public class NmProtocol
     }
 
     private void notifyListeners(MidiMessage midiMessage)
+	throws Exception
     {
 	for (Iterator i = listeners.iterator(); i.hasNext(); ) {
 	    midiMessage.notifyListener((NmProtocolListener)i.next());

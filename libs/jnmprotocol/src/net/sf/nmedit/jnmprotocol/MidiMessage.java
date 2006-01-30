@@ -126,7 +126,8 @@ public abstract class MidiMessage
     public abstract List getBitStream()
 	throws Exception;
 
-    public abstract void notifyListener(NmProtocolListener listener);
+    public abstract void notifyListener(NmProtocolListener listener)
+	throws Exception;
 
     public boolean expectsReply()
     {

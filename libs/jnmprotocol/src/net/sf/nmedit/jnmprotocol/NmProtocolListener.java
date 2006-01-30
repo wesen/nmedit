@@ -30,9 +30,7 @@ public abstract class NmProtocolListener
     //    public void messageReceived(PatchListMessage message) {}
     public void messageReceived(NewPatchInSlotMessage message) {}
     public void messageReceived(VoiceCountMessage message) {}
-    //    public void messageReceived(GetPatchMessage message) {}
     public void messageReceived(SlotsSelectedMessage message) {}
     public void messageReceived(SlotActivatedMessage message) {}
-    //    public void messageReceived(RequestPatchMessage message) {}
     public void messageReceived(ParameterMessage message) {}
 }

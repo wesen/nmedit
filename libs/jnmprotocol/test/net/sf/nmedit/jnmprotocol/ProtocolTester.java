@@ -135,8 +135,6 @@ public class ProtocolTester extends TestCase
 			       "voiceCount3:" + message.get("voiceCount3"));	    
 	}
 	
-	//    public void messageReceived(GetPatchMessage message) {}
-	
 	public void messageReceived(SlotsSelectedMessage message)
 	{
 	    System.out.println("SlotsSelectedMessage: " +
@@ -152,8 +150,6 @@ public class ProtocolTester extends TestCase
 			       "activeSlot:" + message.get("activeSlot"));
 	}
 	
-	//    public void messageReceived(RequestPatchMessage message) {}
-
 	public void messageReceived(ParameterMessage message)
 	{
 	    System.out.println("ParameterMessage: " +
