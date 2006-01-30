@@ -1,0 +1,256 @@
+/*
+    Nord Modular Midi Protocol 3.03 Library
+    Copyright (C) 2003 Marcus Andersson
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
+package net.sf.nmedit.jnmprotocol;
+
+import java.util.*;
+import net.sf.nmedit.jpdl.*;
+
+public abstract class MidiMessage
+{
+    public static void usePDLFile(String filename, Tracer tracer)
+	throws Exception
+    {
+	pdlFile = filename;
+	protocol = new Protocol(pdlFile);
+	packetParser = protocol.getPacketParser("Sysex");
+	protocol.useTracer(tracer);
+    }
+    
+    public static int calculateChecksum(BitStream bitStream)
+    {
+	int checksum = 0;
+	bitStream.setPosition(0);
+	
+	while (bitStream.isAvailable(24)) {
+	    checksum += bitStream.getInt(8);
+	}
+	checksum = checksum % 128;
+	
+	return checksum;
+    }
+
+    public static boolean checksumIsCorrect(BitStream bitStream)
+    {
+	int checksum = calculateChecksum(bitStream);
+	
+	bitStream.setPosition(bitStream.getSize()-16);
+	int messageChecksum = bitStream.getInt(8);
+	
+	if (messageChecksum == checksum) {
+	    return true;
+	}
+	
+	System.out.println("Checksum mismatch " + messageChecksum +
+			   " != " + checksum + ".");
+	return false;
+    }
+
+    public static MidiMessage create(BitStream bitStream)
+	throws Exception
+    {
+	Packet packet = new Packet();
+	boolean success = packetParser.parse(bitStream, packet);
+	bitStream.setPosition(0);
+	
+	if (success) {
+	    if (packet.contains("IAm")) { 
+		return new IAmMessage(packet);
+	    }
+	    
+	    if (checksumIsCorrect(bitStream)) {
+		
+		if (packet.contains("VoiceCount")) {
+		    // return new VoiceCountMessage(packet);
+		    return null;
+		}
+		if (packet.contains("SlotsSelected")) {
+		    //return new SlotsSelectedMessage(packet);
+		    return null;
+		}
+		if (packet.contains("SlotActivated")) {
+		    //return new SlotActivatedMessage(packet);
+		    return null;
+		}
+		if (packet.contains("NewPatchInSlot")) {
+		    //return new NewPatchInSlotMessage(packet);
+		    return null;
+		}
+		if (packet.contains("Lights")) {
+		    //return new LightMessage(packet);
+		    return null;
+		}
+		if (packet.contains("KnobChange")) {
+		    //return new ParameterMessage(packet);
+		    return null;
+		}
+		if (packet.contains("PatchListResponse")) {
+		    //return new PatchListMessage(packet);
+		    return null;
+		}
+		else if(packet.contains("ACK")) {
+		    return new AckMessage(packet);
+		}
+		
+		if (packet.contains("PatchPacket")) {
+		    //PatchMessage patchMessage = new PatchMessage();
+		    //patchMessage.append(packet);
+		    //return patchMessage;
+		    return null;
+		}	  
+	    }
+	    System.out.print("unsupported packet: ");
+	}
+	else {
+	    System.out.print("parse failed: ");
+	}
+	
+	while (bitStream.isAvailable(8)) {
+	    System.out.print(" " + bitStream.getInt(8));
+	}
+	System.out.println();
+	
+	return null;
+    }
+
+    public abstract List getBitStream()
+	throws Exception;
+
+    public abstract void notifyListener(NmProtocolListener listener);
+
+    public boolean expectsReply()
+    {
+	return expectsreply;
+    }
+
+    public boolean isReply()
+    {
+	return isreply;
+    }
+
+    protected void addParameter(String name, String path)
+    {
+	parameters.add(name);
+	paths.put(name, path);
+    }
+
+    protected boolean isParameter(String name)
+    {
+	return paths.keySet().contains(name);
+    }
+
+    public void set(String parameter, int value)
+    {
+	values.put(parameter, new Integer(value));
+    }
+
+    public int get(String parameter)
+    {
+	return ((Integer)values.get(parameter)).intValue();
+    }
+
+    public void setAll(Packet packet)
+    {
+	for (Iterator i = parameters.iterator(); i.hasNext(); ) {
+	    String name = (String)i.next();
+	    set(name, packet.getVariable((String)paths.get(name)));
+	}	
+    }
+
+    public IntStream appendAll()
+    {
+	IntStream intStream = new IntStream();
+
+	for (Iterator i = parameters.iterator(); i.hasNext(); ) {
+	    intStream.append(get((String)i.next()));
+	}
+
+	return intStream;
+    }
+    
+    protected MidiMessage()
+	throws Exception
+    {
+	parameters = new LinkedList();
+	paths = new HashMap();
+	values = new HashMap();
+	expectsreply = false;
+	isreply = false;
+	
+	if (protocol == null) {
+	    protocol = new Protocol(pdlFile);
+	    packetParser = protocol.getPacketParser("Sysex");
+	}
+
+	addParameter("cc", "cc");
+	addParameter("slot", "slot");
+    }
+  
+    protected BitStream getBitStream(IntStream intStream)
+	throws Exception
+    {
+	BitStream bitStream = new BitStream();
+	boolean success = packetParser.generate(intStream, bitStream);
+	
+	if (!success || intStream.isAvailable(1)) {
+	    throw new MidiException("Information mismatch in generate.",
+				    intStream.getSize() - intStream.getPosition());
+	}
+
+	return bitStream;
+    }
+
+    protected void appendChecksum(IntStream intStream)
+	throws Exception
+    {
+	int checksum = 0;
+	intStream.append(checksum);
+	
+	BitStream bitStream = getBitStream(intStream);
+	
+	checksum = calculateChecksum(bitStream);
+	
+	intStream.setSize(intStream.getSize()-1);
+	intStream.append(checksum);
+    }
+    
+    protected String extractName(Packet name)
+    {
+	String result = "";
+	List chars = name.getVariableList("chars");
+	for (Iterator i = chars.iterator(); i.hasNext(); ) {
+	    int data = ((Integer)i.next()).intValue();
+	    if (data != 0) {
+		result += (char)data;
+	    }
+	}
+	return result;
+    }
+    
+    protected boolean isreply;
+    protected boolean expectsreply;
+
+    private LinkedList parameters;
+    private HashMap paths;
+    private HashMap values;
+
+    private static Protocol protocol;
+    private static String pdlFile;
+    private static PacketParser packetParser;
+}
