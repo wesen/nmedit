@@ -106,7 +106,9 @@ public class ProtocolTester extends TestCase
 			       message.get("light19"));
 	}
 
-	//    public void messageReceived(PatchMessage message) {}
+	public void messageReceived(PatchMessage message)
+	{
+	}
 
 	public void messageReceived(AckMessage message)
 	{

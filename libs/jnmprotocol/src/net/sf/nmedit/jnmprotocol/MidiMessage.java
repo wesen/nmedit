@@ -103,10 +103,7 @@ public abstract class MidiMessage
 		}
 		
 		if (packet.contains("PatchPacket")) {
-		    //PatchMessage patchMessage = new PatchMessage();
-		    //patchMessage.append(packet);
-		    //return patchMessage;
-		    return null;
+		    return new PatchMessage(packet);
 		}	  
 	    }
 	    System.out.print("unsupported packet: ");
