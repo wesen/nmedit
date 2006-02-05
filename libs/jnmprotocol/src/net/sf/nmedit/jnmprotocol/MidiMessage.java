@@ -95,8 +95,7 @@ public abstract class MidiMessage
 		    return new ParameterMessage(packet);
 		}
 		if (packet.contains("PatchListResponse")) {
-		    //return new PatchListMessage(packet);
-		    return null;
+		    return new PatchListMessage(packet);
 		}
 		else if(packet.contains("ACK")) {
 		    return new AckMessage(packet);

@@ -119,8 +119,10 @@ public class ProtocolTester extends TestCase
 			       "pid2:" + message.get("pid2"));
 	}
 
-	//    public void messageReceived(PatchListMessage message) {}
-
+	public void messageReceived(PatchListMessage message)
+	{
+	}
+	
 	public void messageReceived(NewPatchInSlotMessage message)
 	{
 	    System.out.println("NewPatchInSlotMessage: " +
