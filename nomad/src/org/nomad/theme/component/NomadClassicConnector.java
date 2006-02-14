@@ -27,12 +27,12 @@ import java.awt.Graphics2D;
 
 import org.nomad.theme.component.model.ConnectorPaintManager;
 import org.nomad.theme.component.model.ConnectorPainter;
-import org.nomad.theme.component.model.ConnectorPaintManager.CachedKnobGraphics;
+import org.nomad.theme.component.model.ConnectorPaintManager.CachedConnectorGraphics;
 
 public class NomadClassicConnector extends NomadConnector {
 
 	protected final static ConnectorPaintManager paintManager = new ConnectorPaintManager();
-	private CachedKnobGraphics graphics = null;
+	private CachedConnectorGraphics graphics = null;
 	private static boolean gradients = true;
 	
 	public NomadClassicConnector() {

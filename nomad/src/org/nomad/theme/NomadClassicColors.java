@@ -24,10 +24,12 @@ package org.nomad.theme;
 
 import java.awt.Color;
 
+import org.nomad.xml.dom.module.DConnector;
+
 public class NomadClassicColors {
 
 	public final static Color MORPH_BLUE = Color.decode("#5A5FB3");
-	public final static Color MORPH_RED = Color.decode("#CE9287");
+	public final static Color MORPH_RED = Color.decode("#CB4F4F" /*"#CE9287"*/);
 	public final static Color MORPH_YELLOW = Color.decode("#E5DE45");
 	public final static Color MORPH_GREEN = Color.decode("#9AC899");
 	public final static Color MORPH_GRAY = Color.decode("#A8A8A8");
@@ -44,8 +46,19 @@ public class NomadClassicColors {
 	public final static Color AUDIO_LEVEL_DISPLAY_HIGH = Color.decode("#767518");
 	public final static Color AUDIO_LEVEL_DISPLAY_LIGHT = Color.decode("#00CC00");
 	public static final Color GROUPBOX_BORDER = Color.decode("#777777");
-	
-	
+
+	public static Color getConnectorColor(DConnector info) {
+		return info==null ? Color.WHITE : getConnectorColor(info.getSignal());
+	}
+	public static Color getConnectorColor(int signal) {
+		switch (signal) {
+			case DConnector.SIGNAL_AUDIO: return NomadClassicColors.MORPH_RED;
+			case DConnector.SIGNAL_CONTROL: return NomadClassicColors.MORPH_BLUE;
+			case DConnector.SIGNAL_LOGIC: return  NomadClassicColors.MORPH_YELLOW;
+			case DConnector.SIGNAL_SLAVE: return  NomadClassicColors.MORPH_GRAY; 
+		}
+		return Color.WHITE;
+	}
 	
 	public static Color alpha(Color c, int alpha) {
 		

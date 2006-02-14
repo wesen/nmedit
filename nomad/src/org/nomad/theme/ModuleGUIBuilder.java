@@ -28,6 +28,8 @@ import java.util.Iterator;
 
 import org.nomad.env.Environment;
 import org.nomad.patch.Module;
+import org.nomad.patch.ui.ModuleSectionUI;
+import org.nomad.patch.ui.ModuleUI;
 import org.nomad.theme.component.NomadComponent;
 import org.nomad.theme.component.NomadContainerCacher;
 import org.nomad.theme.property.Property;
@@ -148,15 +150,17 @@ public class ModuleGUIBuilder {
 		return nomadDom;
 	}
 
-	public ModuleGUI createGUI(Module module, ModuleSectionGUI moduleSectionGUI) {
+	public ModuleUI createGUI(Module module, ModuleSectionUI moduleSection) {
 		//ModuleGUI moduleGUI = new ModuleGUI(uifactory, module, moduleSectionGUI);
-		ModuleGUI moduleGUI = uifactory.getModuleGUI(module.getDModule(), module, moduleSectionGUI);
-		createGUIComponents(moduleGUI, module.getDModule(), true);
+		
+		ModuleUI moduleGUI = createGUI(module.getInfo(), moduleSection);
+		moduleGUI.setModule(module);
 		return moduleGUI;
 	}
 	
-	public ModuleGUI createGUI(DModule moduleInfo, ModuleSectionGUI moduleSectionGUI) {
-		ModuleGUI moduleGUI = uifactory.getModuleGUI(moduleInfo, null,moduleSectionGUI);
+	public ModuleUI createGUI(DModule moduleInfo, ModuleSectionUI moduleSection) {
+		ModuleUI moduleGUI = uifactory.getModuleGUI(moduleInfo);
+		moduleGUI.setModuleSectionUI(moduleSection);
 		createGUIComponents(moduleGUI, moduleInfo, true);
 		return moduleGUI;
 	}
@@ -224,7 +228,6 @@ public class ModuleGUIBuilder {
 							}
 						}
 						modulePane.add(comp);
-						comp.link();
 					}
 				}
 			}
@@ -271,7 +274,6 @@ public class ModuleGUIBuilder {
 					}
 
 					modulePane.add(comp);
-					comp.link();
 				}
 			}
 		}

@@ -290,19 +290,16 @@ public abstract class NomadControl extends NomadComponent {
 		return getMaxValue()-getMinValue();
 	}
 	
-	public void link() {
+	public void link(Module module) {
 		if (broadcast==null)
 			broadcast = new ParameterControlBroadcast();
 		addValueChangeListener(broadcast);
 
-		Module module = getModule();
-		if (module!=null) {
-			parameter = module.findParameter(getParameterInfo());
-			if (parameter!=null) {
-				setValue(parameter.getValue());
-				paramListener = new ParameterChangeListener();
-				parameter.addChangeListener(paramListener);
-			}
+		parameter = module.findParameter(getParameterInfo());
+		if (parameter!=null) {
+			setValue(parameter.getValue());
+			paramListener = new ParameterChangeListener();
+			parameter.addChangeListener(paramListener);
 		}
 	}
 

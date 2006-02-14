@@ -24,7 +24,7 @@ import org.nomad.editor.views.property.NomadPropertyEditor;
 import org.nomad.editor.views.visual.VisualEditor;
 import org.nomad.env.Environment;
 import org.nomad.main.ThemePluginMenu;
-import org.nomad.patch.ModuleSection;
+import org.nomad.patch.ui.ModuleUI;
 import org.nomad.plugin.NomadPlugin;
 import org.nomad.theme.UIFactory;
 import org.nomad.util.misc.NomadUtilities;
@@ -166,12 +166,12 @@ public class UIEditor extends JFrame {
 			visualEditor = new VisualEditor(module);
 			visualEditor.setComponentPropertyEditor(propertyEditor);
 			env.getBuilder().createGUIComponents(visualEditor, module, false);
-			visualEditor.setSize(ModuleSection.ModulePixDimension.PIXWIDTH,ModuleSection.ModulePixDimension.PIXHEIGHT*module.getHeight());
+			visualEditor.setSize(ModuleUI.Metrics.WIDTH, ModuleUI.Metrics.getHeight(module));
 			visualEditor.setVisible(true);
 			workspace.add(visualEditor);
 		}
     }
-
+    
 	void changeTheme(final NomadPlugin plugin) {
 		DModule current = getModule();
 		setModule(null);

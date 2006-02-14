@@ -3,8 +3,9 @@ package org.nomad.theme;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.nomad.patch.Module;
 import org.nomad.patch.ModuleSection;
+import org.nomad.patch.ui.ModuleSectionUI;
+import org.nomad.patch.ui.ModuleUI;
 import org.nomad.plugin.NomadFactory;
 import org.nomad.theme.component.NomadComponent;
 import org.nomad.util.graphics.ImageTracker;
@@ -77,12 +78,12 @@ public abstract class UIFactory extends NomadFactory {
 	
 	public abstract String getUIDescriptionFileName();
 
-	public ModuleGUI getModuleGUI(DModule info, Module module, ModuleSectionGUI moduleSectionGUI) {
-		return new ModuleGUI(this, info, module, moduleSectionGUI);
+	public ModuleUI getModuleGUI(DModule info) {
+		return new ModuleUI(info);
 	}
 	
-	public ModuleSectionGUI getModuleSectionGUI(ModuleSection moduleSection) {
-		return new ModuleSectionGUI(moduleSection);
+	public ModuleSectionUI getModuleSectionUI(ModuleSection moduleSection) {
+		return new ModuleSectionUI(moduleSection);
 	}
 	
 }

@@ -46,8 +46,8 @@ public class ConnectorPaintManager extends CacheManager {
 		}
 	}
 	
-	public CachedKnobGraphics obtainGraphics(NomadComponent comp, CachedKnobGraphics graphics) {
-		return (CachedKnobGraphics) obtain(comp, graphics);
+	public CachedConnectorGraphics obtainGraphics(NomadComponent comp, CachedConnectorGraphics graphics) {
+		return (CachedConnectorGraphics) obtain(comp, graphics);
 	}
 	
 	protected int computeHash(Object state) {
@@ -56,16 +56,16 @@ public class ConnectorPaintManager extends CacheManager {
 	}
 	
 	private Dimension size(Object obj) {
-		if (obj instanceof CachedKnobGraphics)
-			return ((CachedKnobGraphics) obj).size;
+		if (obj instanceof CachedConnectorGraphics)
+			return ((CachedConnectorGraphics) obj).size;
 		else if (obj instanceof Component)
 			return ((Component)obj).getSize();
 		else
 			return new Dimension(0,0);
 	}
 	private Color color(Object obj) {
-		if (obj instanceof CachedKnobGraphics)
-			return ((CachedKnobGraphics) obj).background;
+		if (obj instanceof CachedConnectorGraphics)
+			return ((CachedConnectorGraphics) obj).background;
 		else if (obj instanceof Component)
 			return ((Component)obj).getBackground();
 		else
@@ -73,10 +73,10 @@ public class ConnectorPaintManager extends CacheManager {
 	}
 
 	public CachedState newCacheObject(Object state) {
-		return new CachedKnobGraphics(this, size(state), color(state));
+		return new CachedConnectorGraphics(this, size(state), color(state));
 	}
 
-	public class CachedKnobGraphics extends CachedState {
+	public class CachedConnectorGraphics extends CachedState {
 		Dimension size;
 		BufferedImage image = null;
 		private Color background ;
@@ -85,7 +85,7 @@ public class ConnectorPaintManager extends CacheManager {
 		private BufferedImage cacheOutUnplugged = null;
 		private BufferedImage cacheOutPlugged = null;
 		
-		public CachedKnobGraphics(CacheManager manager, Dimension size, Color background) {
+		public CachedConnectorGraphics(CacheManager manager, Dimension size, Color background) {
 			super(manager);
 			this.size = new Dimension(size);
 			this.background = background;

@@ -33,8 +33,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -225,12 +225,7 @@ public class WorkspacePanel extends JPanel implements ContainerListener, Compone
 		
 	}
 	
-	private class InvalidComponentAction implements MouseListener {
-
-		public void mouseClicked(MouseEvent event) {
-			// TODO Auto-generated method stub
-			
-		}
+	private class InvalidComponentAction extends MouseAdapter {
 
 		public void mousePressed(MouseEvent event) {
 			for (Component c: clo.invalid) {
@@ -264,21 +259,6 @@ public class WorkspacePanel extends JPanel implements ContainerListener, Compone
 			}
 		}
 
-		public void mouseReleased(MouseEvent event) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		public void mouseEntered(MouseEvent event) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		public void mouseExited(MouseEvent event) {
-			// TODO Auto-generated method stub
-			
-		}
-		
 	}
 	
 }

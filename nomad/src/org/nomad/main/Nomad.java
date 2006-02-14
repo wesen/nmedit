@@ -9,8 +9,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JFileChooser;
@@ -30,13 +28,14 @@ import org.nomad.dialog.JTaskDialog;
 import org.nomad.dialog.TaskModel;
 import org.nomad.env.Environment;
 import org.nomad.patch.Patch;
+import org.nomad.patch.format.PatchPreview;
+import org.nomad.patch.ui.PatchUI;
 import org.nomad.plugin.NomadPlugin;
 import org.nomad.port.ComPort;
 import org.nomad.port.ComPortFactory;
 import org.nomad.port.Synth;
 import org.nomad.port.SynthConnectionStateListener;
 import org.nomad.port.SynthException;
-import org.nomad.theme.PatchGUI;
 import org.nomad.theme.UIFactory;
 import org.nomad.util.misc.NomadUtilities;
 import org.nomad.util.view.DocumentManager;
@@ -86,6 +85,9 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		documents = new SelectableDocumentManager(panelMain);
 		
 		addWindowListener(new AutomaticSynthShutdownAction());
+		
+		// file chooser
+		fileChooser.setAccessory(new PatchPreview(fileChooser));
     }
 	
 	public void initialLoading() {
@@ -187,8 +189,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 	}
 	
 	public void newPatch() {
-    	Patch patch = new Patch();
-        JPanel tab = Patch.createPatch("", patch);
+    	PatchUI tab = PatchUI.newInstance(new Patch());
         documents.addDocument("new" + (documents.getDocumentCount()+1), tab);
         documents.setSelectedDocument(tab);
         documents.getSelectedDocument().setName(documents.getTitleAt(documents.getSelectedDocumentIndex()));
@@ -210,10 +211,11 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 	public void savePatchAs() {
 		fileChooser.setSelectedFile(new File(documents.getSelectedDocument().getName() + "_new.pch"));
 		if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			/*
 			OutputStream stream;
 			try {
 				stream = new FileOutputStream(fileChooser.getSelectedFile());
-				PatchGUI patchGUI = (PatchGUI) documents.getSelectedDocument();
+				PatchUI patchGUI = (PatchUI) documents.getSelectedDocument();
 				
 				stream.write(patchGUI.getPatch().savePatch().toString().getBytes());
 				stream.flush();
@@ -222,6 +224,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 			catch (Exception e1) {
 				e1.printStackTrace();
 			}
+			*/
 		}
 	}
 
@@ -317,7 +320,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 			}
 			
 			public void migrate(int document) {
-				((PatchGUI) documents.getDocumentAt(document)).rebuildUI();
+				((PatchUI) documents.getDocumentAt(document)).rebuild();
 			}
 			
 		});
@@ -401,7 +404,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
         		return;
         	}
         	
-            JPanel tab = Patch.createPatchUI(p);
+        	PatchUI tab = PatchUI.newInstance(p);
             documents.addDocument("<uploaded>",tab);
             documents.setSelectedDocument(tab);
             documents.getSelectedDocument().setName(documents.getTitleAt(documents.getSelectedDocumentIndex()));

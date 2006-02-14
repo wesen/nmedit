@@ -33,6 +33,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JTextField;
 
 import org.nomad.patch.Module;
+import org.nomad.patch.ui.ModuleUI;
 import org.nomad.theme.NomadClassicColors;
 import org.nomad.xml.dom.module.DModule;
 
@@ -40,10 +41,9 @@ public class ModuleGuiTitleLabel extends NomadLabel {
 
 	private Module module = null;
 	
-	public ModuleGuiTitleLabel(DModule info, Module module) {
-		this.module = module;
+	public ModuleGuiTitleLabel(DModule info) {
     	setDynamicOverlay(true);
-        setText( module == null ? info.getName() : module.getModuleTitle() );
+        setText( info.getName() );
         
 	    addMouseListener(new MouseAdapter() {
 	       	public void mouseClicked(MouseEvent event) {
@@ -53,10 +53,16 @@ public class ModuleGuiTitleLabel extends NomadLabel {
 	    });
 	}
 
+	public void setModule(Module module) {
+		this.module = module;
+		if (module!=null)
+			setText( module.getName() );
+	}
+	
 	private void editModuleTitle() {
 		ModuleTitleEditor mte = new ModuleTitleEditor();
 		Dimension size = mte.getPreferredSize();
-		mte.setSize(Math.max(size.width, Module.getPixWidth()/2), size.height);
+		mte.setSize(Math.max(size.width, ModuleUI.Metrics.WIDTH_DIV_2), size.height);
 		mte.setLocation(getLocation());
 		getParent().add(mte);
 		mte.requestFocus();
@@ -93,7 +99,7 @@ public class ModuleGuiTitleLabel extends NomadLabel {
 			removeKeyListener(this);
 			removeFocusListener(this);
 			if (writeBack) {
-				module.setModuleTitle(getText());
+				module.setName(getText());
 				label().setText(getText());
 			}
 		}

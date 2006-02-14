@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
+import org.nomad.patch.Module;
 import org.nomad.theme.property.ParameterProperty;
 import org.nomad.theme.property.PropertySet;
 import org.nomad.util.graphics.BackgroundRenderer;
@@ -235,7 +236,7 @@ public class VocoderBandDisplay extends NomadComponent {
 		
 	}
 
-	public void link() {
+	public void link(Module module) {
 		paramLink.link();
 	}
 

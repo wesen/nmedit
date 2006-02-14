@@ -22,6 +22,7 @@
  */
 package org.nomad.editor.views.visual;
 
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -35,6 +36,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import org.nomad.editor.ComponentAlignmentMenu;
+import org.nomad.editor.views.ComponentZOrderMenuItem;
 import org.nomad.editor.views.property.NomadPropertyEditor;
 import org.nomad.theme.ModuleComponent;
 import org.nomad.theme.NomadClassicColors;
@@ -59,6 +61,8 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 	
 	private final static ArrayList<NomadComponent> copyMemory
 		= new ArrayList<NomadComponent>();
+	
+	private ComponentZOrderMenuItem mnSendToBack = null;
 	
 	public VisualEditor(DModule info) {
 		setLayout(null);
@@ -93,11 +97,16 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 				deleteSelection();
 			}});
 		
+		mnSendToBack = new ComponentZOrderMenuItem("Send To Back");
+		mnSendToBack.addActionListener(new ComponentZOrderMenuItem.SendToBackAction());
+		
 		popup = new JPopupMenu();
 		popup.add(mnCopy);
 		popup.add(mnPaste);
 		popup.addSeparator();
 		popup.add(mnDelete);
+		popup.addSeparator();
+		popup.add(mnSendToBack);
 		popup.addSeparator();
 		popup.add(tbAlignment);
 		popup.addSeparator();
@@ -106,6 +115,7 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 		addMouseListener(new MouseAdapter(){
 	        public void mousePressed(MouseEvent evt) {
 	            if (evt.isPopupTrigger()) {
+	            	mnSendToBack.setComponent(findAnyComponentAt(evt.getX(), evt.getY()));
 	            	popup.show(evt.getComponent(), evt.getX(), evt.getY());
 	            }
 	        }
@@ -172,6 +182,14 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 			selectionRect = new Rectangle(r);
 		}
 		repaint();
+	}
+	
+	protected Component findAnyComponentAt(int x, int y) {
+		for (int i=getComponentCount()-1;i>=0;i--) {
+			if (getComponent(i).getBounds().contains(x, y))
+				return getComponent(i);
+		}
+		return null;
 	}
 
 	public void rebuildSelection() {

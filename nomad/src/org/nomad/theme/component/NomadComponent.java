@@ -35,7 +35,7 @@ import javax.swing.JComponent;
 
 import org.nomad.env.Environment;
 import org.nomad.patch.Module;
-import org.nomad.theme.ModuleGUI;
+import org.nomad.patch.ui.ModuleUI;
 import org.nomad.theme.property.ComponentLocationProperty;
 import org.nomad.theme.property.ComponentSizeProperty;
 import org.nomad.theme.property.PropertySet;
@@ -60,7 +60,7 @@ public class NomadComponent extends JComponent {
 		setOpaque(false);
 		//RepaintManager.currentManager(this).setDoubleBufferingEnabled(false);
 	}
-
+	
 	public void setEnvironment(Environment env) {
 		this.env = env;
 	}
@@ -224,14 +224,14 @@ public class NomadComponent extends JComponent {
 	}
 
 	public Module getModule() {
-		if ((module == null) && (getParent() instanceof ModuleGUI)) {
-			module = ((ModuleGUI)getParent()).getModule();
+		if ((module == null) && (getParent() instanceof ModuleUI)) {
+			module = ((ModuleUI)getParent()).getModule();
 		}
 
 		return module;
 	}
-	
-	public void link() {
+
+	public void link(Module module) {
 		//
 	}
 	

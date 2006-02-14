@@ -23,14 +23,17 @@
 package org.nomad.main;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import org.nomad.dialog.JTaskDialog;
 import org.nomad.dialog.TaskModel;
-import org.nomad.patch.Patch;
+import org.nomad.patch.format.PatchConstructor;
+import org.nomad.patch.format.PatchFile303;
+import org.nomad.patch.format.PatchFileException;
+import org.nomad.patch.ui.PatchUI;
 
 class PatchLoader {
 
@@ -85,10 +88,13 @@ class PatchLoader {
 
 			public void run(int taskIndex) {
 				final PatchFile task = fileList.get(taskIndex);
-				Patch patch = new Patch();
-				final JPanel tab = Patch.createPatch(task.fileName, patch);
-
 				try {
+					PatchConstructor cons = new PatchConstructor();
+					PatchFile303 reader = new PatchFile303(task.fileName, cons);
+					reader.readAll();
+					
+					final PatchUI tab = PatchUI.newInstance(cons.getPatch());
+					
 					/**
 					 * Because Swing's not thread save.
 					 */
@@ -99,13 +105,18 @@ class PatchLoader {
 							}
 						}
 					);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (PatchFileException e) {
+					e.printStackTrace();
 				} catch (Throwable t) {
-					// t.printStackTrace();
-					System.err.println("Problem while loading patch: "+t);
+					System.out.println("Error while loading patch.");
+					t.printStackTrace();
 				}
 
 				if (taskIndex==getTaskCount()-1) {
-					nomad.getDocumentManager().setSelectedDocument(selection);
+					if (selection>=0 && selection<nomad.getDocumentManager().getDocumentCount())
+						nomad.getDocumentManager().setSelectedDocument(selection);
 					fileList.clear();
 				}
 			}

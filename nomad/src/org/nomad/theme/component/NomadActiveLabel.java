@@ -146,15 +146,12 @@ public class NomadActiveLabel extends NomadLabel {
 		public int getInteger() { return ((NomadActiveLabel)getComponent()).getPadding(); }
 	}
 		
-	public void link() {
-		Module module = getModule();
-		if (module!=null) {
-			parameter = module.findParameter(getParameterInfo());
-			if (parameter!=null) {
-				paramListener = new ParameterChangeListener();
-				parameter.addChangeListener(paramListener);
-				updateParamText();
-			}
+	public void link(Module module) {
+		parameter = module.findParameter(getParameterInfo());
+		if (parameter!=null) {
+			paramListener = new ParameterChangeListener();
+			parameter.addChangeListener(paramListener);
+			updateParamText();
 		}
 	}
 

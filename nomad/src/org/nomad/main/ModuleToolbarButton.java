@@ -19,7 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import org.nomad.env.Environment;
-import org.nomad.theme.ModuleGUI;
+import org.nomad.patch.ui.ModuleUI;
 import org.nomad.theme.ModuleGUIBuilder;
 import org.nomad.util.misc.MathRound;
 import org.nomad.util.misc.PermanentToolTip;
@@ -106,7 +106,7 @@ public class ModuleToolbarButton extends JButton implements MouseListener, DragG
 
 			PermanentToolTip tip = new PermanentToolTip(this);
 			if (builder != null) {
-				ModuleGUI gui = builder.createGUI(module, null);
+				ModuleUI gui = builder.createGUI(module, null);
 				if (gui!=null) {
 					gui.setMinimumSize(gui.getSize());
 					gui.setMaximumSize(gui.getSize());
