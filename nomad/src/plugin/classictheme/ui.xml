@@ -18,7 +18,7 @@
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
-      <property name="connector#0" value="91.1.in.reset" />
+      <property name="connector#0" value="91.1.out.sync" />
       <property name="x,y" value="6,89" />
       <property name="size" value="13,13" />
     </component>
@@ -34,15 +34,17 @@
     </component>
     <component name="button">
       <property name="parameter#0" value="91.17.p.uni" />
+      <property name="btn#1" value="Uni" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
+      <property name="size" value="24,16" />
+      <property name="btn#0" value="Uni" />
       <property name="x,y" value="229,57" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="91.18.p.loop" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
+      <property name="size" value="24,16" />
       <property name="x,y" value="106,4" />
       <property name="landscape" value="false" />
     </component>
@@ -263,12 +265,12 @@
   <module id="92">
     <component name="connector">
       <property name="connector#0" value="92.0.in.freq mod 1" />
-      <property name="x,y" value="5,31" />
+      <property name="x,y" value="11,38" />
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
       <property name="connector#0" value="92.1.in.freq mod 2" />
-      <property name="x,y" value="5,60" />
+      <property name="x,y" value="11,67" />
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
@@ -283,42 +285,45 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="92.0.p.frequency" />
-      <property name="x,y" value="58,50" />
+      <property name="x,y" value="61,54" />
       <property name="size" value="30,30" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="92.1.p.kbt" />
-      <property name="x,y" value="99,48" />
+      <property name="x,y" value="101,58" />
       <property name="size" value="24,24" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="92.2.p.resonance" />
-      <property name="x,y" value="136,50" />
+      <property name="x,y" value="139,54" />
       <property name="size" value="30,30" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="92.3.p.freq mod 1" />
-      <property name="x,y" value="24,25" />
-      <property name="size" value="24,24" />
+      <property name="x,y" value="30,32" />
+      <property name="size" value="22,22" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="92.4.p.freq mod 2" />
-      <property name="x,y" value="24,55" />
-      <property name="size" value="24,24" />
+      <property name="x,y" value="30,62" />
+      <property name="size" value="22,22" />
     </component>
     <component name="button">
+      <property name="btn#2" value="24" />
       <property name="parameter#0" value="92.5.p.slope" />
-      <property name="btn#1" value="2" />
-      <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="btn#0" value="1" />
+      <property name="btn#1" value="18" />
+      <property name="cyclic" value="false" />
+      <property name="size" value="60,16" />
+      <property name="btn#0" value="12" />
       <property name="x,y" value="184,49" />
-      <property name="landscape" value="false" />
+      <property name="landscape" value="true" />
     </component>
     <component name="button">
       <property name="parameter#0" value="92.6.p.bypass" />
+      <property name="btn#1" value="B" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
+      <property name="size" value="18,16" />
+      <property name="btn#0" value="B" />
       <property name="x,y" value="217,70" />
       <property name="landscape" value="false" />
     </component>
@@ -328,16 +333,16 @@
       <property name="padding" value="2" />
       <property name="size" value="40,16" />
       <property name="vertical" value="false" />
-      <property name="x,y" value="53,28" />
+      <property name="x,y" value="56,32" />
       <property name="antialiasing" value="true" />
     </component>
     <component name="display.text">
-      <property name="text" value="frequency" />
-      <property name="parameter#0" value="92.0.p.frequency" />
+      <property name="text" value="resonance" />
+      <property name="parameter#0" value="92.2.p.resonance" />
       <property name="padding" value="2" />
       <property name="size" value="30,16" />
       <property name="vertical" value="false" />
-      <property name="x,y" value="135,28" />
+      <property name="x,y" value="138,32" />
       <property name="antialiasing" value="true" />
     </component>
     <component name="label">
@@ -351,21 +356,21 @@
       <property name="size" value="20,11" />
       <property name="text" value="Freq" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="60,16" />
+      <property name="x,y" value="63,20" />
       <property name="vertical" value="false" />
     </component>
     <component name="label">
       <property name="size" value="17,11" />
       <property name="text" value="KBT" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="102,36" />
+      <property name="x,y" value="105,40" />
       <property name="vertical" value="false" />
     </component>
     <component name="label">
       <property name="size" value="16,11" />
       <property name="text" value="Res" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="141,17" />
+      <property name="x,y" value="144,21" />
       <property name="vertical" value="false" />
     </component>
     <component name="label">
@@ -374,6 +379,19 @@
       <property name="antialiasing" value="true" />
       <property name="x,y" value="199,36" />
       <property name="vertical" value="false" />
+    </component>
+    <component name="knob.reset">
+      <property name="parameter#0" value="92.1.p.kbt" />
+      <property name="x,y" value="109,52" />
+      <property name="size" value="9,6" />
+    </component>
+    <component name="border.groupbox">
+      <property name="x,y" value="8,19" />
+      <property name="size" value="120,68" />
+    </component>
+    <component name="border.groupbox">
+      <property name="x,y" value="130,19" />
+      <property name="size" value="46,68" />
     </component>
   </module>
   <module id="118">
@@ -662,8 +680,10 @@
     </component>
     <component name="button">
       <property name="parameter#0" value="94.2.p.bypass" />
+      <property name="btn#1" value="B" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
+      <property name="size" value="18,16" />
+      <property name="btn#0" value="B" />
       <property name="x,y" value="211,15" />
       <property name="landscape" value="false" />
     </component>
@@ -972,15 +992,16 @@
       <property name="cyclic" value="true" />
       <property name="size" value="34,19" />
       <property name="btn#0" value="1" />
-      <property name="x,y" value="160,35" />
+      <property name="x,y" value="187,36" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
+      <property name="btn#2" value="{@env.multi.uni-lin}" />
       <property name="parameter#0" value="52.10.p.curve" />
       <property name="btn#1" value="{@env.multi.uni-exp}" />
       <property name="cyclic" value="false" />
-      <property name="size" value="68,19" />
-      <property name="btn#0" value="1" />
+      <property name="size" value="68,16" />
+      <property name="btn#0" value="{@env.multi.bipolar}" />
       <property name="x,y" value="90,2" />
       <property name="landscape" value="true" />
     </component>
@@ -1194,6 +1215,15 @@
       <property name="x,y" value="217,2" />
       <property name="vertical" value="false" />
     </component>
+    <component name="display.text">
+      <property name="text" value="frequency" />
+      <property name="parameter#0" value="86.0.p.frequency" />
+      <property name="padding" value="2" />
+      <property name="size" value="40,16" />
+      <property name="vertical" value="false" />
+      <property name="x,y" value="107,7" />
+      <property name="antialiasing" value="true" />
+    </component>
   </module>
   <module id="20">
     <component name="connector">
@@ -1227,11 +1257,13 @@
       <property name="size" value="13,13" />
     </component>
     <component name="button">
+      <property name="btn#2" value="{@env.exp}" />
       <property name="parameter#0" value="20.0.p.attack shape" />
       <property name="btn#1" value="{@env.lin}" />
       <property name="cyclic" value="false" />
-      <property name="size" value="68,19" />
-      <property name="x,y" value="58,4" />
+      <property name="size" value="68,16" />
+      <property name="btn#0" value="{@env.log}" />
+      <property name="x,y" value="62,8" />
       <property name="landscape" value="true" />
     </component>
     <component name="knob">
@@ -1257,8 +1289,8 @@
     <component name="button">
       <property name="parameter#0" value="20.5.p.invert" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="155,4" />
+      <property name="size" value="26,16" />
+      <property name="x,y" value="150,7" />
       <property name="landscape" value="false" />
     </component>
     <component name="label">
@@ -1572,6 +1604,10 @@
     </component>
   </module>
   <module id="96">
+    <component name="border.groupbox">
+      <property name="x,y" value="4,6" />
+      <property name="size" value="140,50" />
+    </component>
     <component name="connector">
       <property name="connector#0" value="96.0.in.pitch mod 1" />
       <property name="x,y" value="7,33" />
@@ -1593,7 +1629,7 @@
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
-      <property name="connector#0" value="96.1.in.pitch mod 2" />
+      <property name="connector#0" value="96.1.out.slave" />
       <property name="x,y" value="151,42" />
       <property name="size" value="13,13" />
     </component>
@@ -1697,10 +1733,6 @@
       <property name="parameter#0" value="96.1.p.pitch fine" />
       <property name="x,y" value="124,21" />
       <property name="size" value="9,6" />
-    </component>
-    <component name="border.groupbox">
-      <property name="x,y" value="4,6" />
-      <property name="size" value="140,50" />
     </component>
   </module>
   <module id="32">
@@ -1837,8 +1869,10 @@
     </component>
     <component name="button">
       <property name="parameter#0" value="43.1.p.unipolar" />
+      <property name="btn#1" value="Uni" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
+      <property name="size" value="24,16" />
+      <property name="btn#0" value="Uni" />
       <property name="x,y" value="81,7" />
       <property name="landscape" value="false" />
     </component>
@@ -1865,8 +1899,10 @@
     </component>
     <component name="button">
       <property name="parameter#0" value="76.0.p.on/off" />
+      <property name="btn#1" value="On" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
+      <property name="size" value="24,16" />
+      <property name="btn#0" value="On" />
       <property name="x,y" value="157,7" />
       <property name="landscape" value="false" />
     </component>
@@ -1907,6 +1943,15 @@
       <property name="antialiasing" value="true" />
       <property name="x,y" value="217,2" />
       <property name="vertical" value="false" />
+    </component>
+    <component name="display.text">
+      <property name="text" value="frequency" />
+      <property name="parameter#0" value="87.0.p.frequency" />
+      <property name="padding" value="2" />
+      <property name="size" value="40,16" />
+      <property name="vertical" value="false" />
+      <property name="x,y" value="107,7" />
+      <property name="antialiasing" value="true" />
     </component>
   </module>
   <module id="79">
@@ -2234,6 +2279,10 @@
     </component>
   </module>
   <module id="9">
+    <component name="border.groupbox">
+      <property name="x,y" value="2,7" />
+      <property name="size" value="140,50" />
+    </component>
     <component name="connector">
       <property name="connector#0" value="9.0.in.FMA" />
       <property name="x,y" value="165,37" />
@@ -2255,7 +2304,7 @@
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
-      <property name="connector#0" value="9.1.in.pitch" />
+      <property name="connector#0" value="9.1.out.slv" />
       <property name="x,y" value="5,40" />
       <property name="size" value="13,13" />
     </component>
@@ -2350,10 +2399,6 @@
       <property name="parameter#0" value="9.1.p.pitch fine" />
       <property name="x,y" value="120,25" />
       <property name="size" value="9,6" />
-    </component>
-    <component name="border.groupbox">
-      <property name="x,y" value="2,7" />
-      <property name="size" value="140,50" />
     </component>
   </module>
   <module id="90">
@@ -2965,27 +3010,27 @@
   <module id="17">
     <component name="connector">
       <property name="connector#0" value="17.0.in.clock" />
-      <property name="x,y" value="2,19" />
+      <property name="x,y" value="5,11" />
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
       <property name="connector#0" value="17.1.in.reset" />
-      <property name="x,y" value="2,41" />
+      <property name="x,y" value="5,35" />
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
-      <property name="connector#0" value="17.0.in.clock" />
-      <property name="x,y" value="237,33" />
+      <property name="connector#0" value="17.0.out.out1" />
+      <property name="x,y" value="236,36" />
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
-      <property name="connector#0" value="17.1.in.reset" />
-      <property name="x,y" value="237,53" />
+      <property name="connector#0" value="17.1.out.out2" />
+      <property name="x,y" value="236,56" />
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
       <property name="connector#0" value="17.2.out.sync" />
-      <property name="x,y" value="2,58" />
+      <property name="x,y" value="5,57" />
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
@@ -2995,253 +3040,308 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="17.0.p.stepcount" />
-      <property name="x,y" value="129,-1" />
-      <property name="size" value="24,24" />
+      <property name="x,y" value="181,1" />
+      <property name="size" value="22,22" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.1.p.active" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="89,1" />
+      <property name="size" value="24,16" />
+      <property name="x,y" value="95,5" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.2.p.gate1" />
+      <property name="btn#1" value="G" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="219,32" />
+      <property name="size" value="14,16" />
+      <property name="btn#0" value="G" />
+      <property name="x,y" value="217,35" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.3.p.gate2" />
+      <property name="btn#1" value="G" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="219,52" />
+      <property name="size" value="14,16" />
+      <property name="btn#0" value="G" />
+      <property name="x,y" value="217,54" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.4.p.seq 1, step 1" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="53,32" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="23,35" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.5.p.seq 1, step 2" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="63,32" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="35,35" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.6.p.seq 1, step 3" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="73,32" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="47,35" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.7.p.seq 1, step 4" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="83,32" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="59,35" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.8.p.seq 1, step 5" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="93,32" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="71,35" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.9.p.seq 1, step 6" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="103,32" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="83,35" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.10.p.seq 1, step 7" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="113,32" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="95,35" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.11.p.seq 1, step 8" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="123,32" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="107,35" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.12.p.seq 1, step 9" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="133,32" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="119,35" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.13.p.seq 1, step 10" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="143,32" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="131,35" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.14.p.seq 1, step 11" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="153,32" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="143,35" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.15.p.seq 1, step 12" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="163,32" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="155,35" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.16.p.seq 1, step 13" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="173,32" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="167,35" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.17.p.seq 1, step 14" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="183,32" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="179,35" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.18.p.seq 1, step 15" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="193,32" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="191,35" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.19.p.seq 1, step 16" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="203,32" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="203,35" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.20.p.seq 2, step 1" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="53,52" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="23,54" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.21.p.seq 2, step 2" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="63,52" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="35,54" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.22.p.seq 2, step 3" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="73,52" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="47,54" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.23.p.seq 2, step 4" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="83,52" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="59,54" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.24.p.seq 2, step 5" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="93,52" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="71,54" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.25.p.seq 2, step 6" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="103,52" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="83,54" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.26.p.seq 2, step 7" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="113,52" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="95,54" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.27.p.seq 2, step 8" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="123,52" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="107,54" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.28.p.seq 2, step 9" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="133,52" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="119,54" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.29.p.seq 2, step 10" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="143,52" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="131,54" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.30.p.seq 2, step 11" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="153,52" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="143,54" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.31.p.seq 2, step 12" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="163,52" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="155,54" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.32.p.seq 2, step 13" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="173,52" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="167,54" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.33.p.seq 2, step 14" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="183,52" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="179,54" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.34.p.seq 2, step 15" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="193,52" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="191,54" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="17.35.p.seq 2, step 16" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="203,52" />
+      <property name="size" value="12,16" />
+      <property name="x,y" value="203,54" />
       <property name="landscape" value="false" />
+    </component>
+    <component name="label">
+      <property name="size" value="14,11" />
+      <property name="text" value="Clk" />
+      <property name="antialiasing" value="true" />
+      <property name="x,y" value="20,12" />
+      <property name="vertical" value="false" />
+    </component>
+    <component name="org.nomad.theme.component.NomadLabel">
+      <property name="size" value="14,11" />
+      <property name="text" value="Rst" />
+      <property name="antialiasing" value="true" />
+      <property name="x,y" value="5,24" />
+      <property name="vertical" value="false" />
+    </component>
+    <component name="org.nomad.theme.component.NomadLabel">
+      <property name="size" value="16,11" />
+      <property name="text" value="Snc" />
+      <property name="antialiasing" value="true" />
+      <property name="x,y" value="5,46" />
+      <property name="vertical" value="false" />
+    </component>
+    <component name="org.nomad.theme.component.NomadLabel">
+      <property name="size" value="16,11" />
+      <property name="text" value="Out" />
+      <property name="antialiasing" value="true" />
+      <property name="x,y" value="234,25" />
+      <property name="vertical" value="false" />
+    </component>
+    <component name="org.nomad.theme.component.NomadLabel">
+      <property name="size" value="19,11" />
+      <property name="text" value="Link" />
+      <property name="antialiasing" value="true" />
+      <property name="x,y" value="214,3" />
+      <property name="vertical" value="false" />
+    </component>
+    <component name="org.nomad.theme.component.NomadLabel">
+      <property name="size" value="19,11" />
+      <property name="text" value="Step" />
+      <property name="antialiasing" value="true" />
+      <property name="x,y" value="135,6" />
+      <property name="vertical" value="false" />
+    </component>
+    <component name="org.nomad.theme.component.NomadActiveLabel">
+      <property name="text" value="stepcount" />
+      <property name="parameter#0" value="17.0.p.stepcount" />
+      <property name="padding" value="2" />
+      <property name="size" value="25,16" />
+      <property name="vertical" value="false" />
+      <property name="x,y" value="155,4" />
+      <property name="antialiasing" value="true" />
     </component>
   </module>
   <module id="36">
@@ -3831,6 +3931,10 @@
     </component>
   </module>
   <module id="7">
+    <component name="border.groupbox">
+      <property name="x,y" value="164,6" />
+      <property name="size" value="50,70" />
+    </component>
     <component name="connector">
       <property name="connector#0" value="7.0.in.sync" />
       <property name="x,y" value="140,70" />
@@ -3862,7 +3966,7 @@
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
-      <property name="connector#0" value="7.1.in.FMA" />
+      <property name="connector#0" value="7.1.out.slv" />
       <property name="x,y" value="8,41" />
       <property name="size" value="13,13" />
     </component>
@@ -4010,10 +4114,6 @@
       <property name="parameter#0" value="7.1.p.freq fine" />
       <property name="x,y" value="110,15" />
       <property name="size" value="9,6" />
-    </component>
-    <component name="border.groupbox">
-      <property name="x,y" value="164,6" />
-      <property name="size" value="50,70" />
     </component>
     <component name="knob.reset">
       <property name="parameter#0" value="7.2.p.freq KBT" />
@@ -4644,6 +4744,10 @@
     </component>
   </module>
   <module id="107">
+    <component name="border.groupbox">
+      <property name="x,y" value="162,5" />
+      <property name="size" value="50,68" />
+    </component>
     <component name="connector">
       <property name="connector#0" value="107.0.in.fma" />
       <property name="x,y" value="90,57" />
@@ -4670,7 +4774,7 @@
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
-      <property name="connector#0" value="107.1.in.pitch mod 1" />
+      <property name="connector#0" value="107.1.out.slave" />
       <property name="x,y" value="5,26" />
       <property name="size" value="13,13" />
     </component>
@@ -4823,10 +4927,6 @@
       <property name="x,y" value="139,12" />
       <property name="antialiasing" value="true" />
     </component>
-    <component name="border.groupbox">
-      <property name="x,y" value="162,5" />
-      <property name="size" value="50,68" />
-    </component>
   </module>
   <module id="110">
     <component name="connector">
@@ -4869,6 +4969,10 @@
     </component>
   </module>
   <module id="8">
+    <component name="border.groupbox">
+      <property name="x,y" value="163,7" />
+      <property name="size" value="50,50" />
+    </component>
     <component name="connector">
       <property name="connector#0" value="8.0.in.FMA" />
       <property name="x,y" value="95,69" />
@@ -4895,7 +4999,7 @@
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
-      <property name="connector#0" value="8.1.in.pitch 1" />
+      <property name="connector#0" value="8.1.out.slv" />
       <property name="x,y" value="7,41" />
       <property name="size" value="13,13" />
     </component>
@@ -5024,10 +5128,6 @@
       <property name="x,y" value="105,15" />
       <property name="size" value="9,6" />
     </component>
-    <component name="border.groupbox">
-      <property name="x,y" value="163,7" />
-      <property name="size" value="50,50" />
-    </component>
     <component name="knob.reset">
       <property name="parameter#0" value="8.2.p.Freq KBT" />
       <property name="x,y" value="136,18" />
@@ -5052,32 +5152,38 @@
     </component>
     <component name="button">
       <property name="parameter#0" value="66.0.p.inv 1" />
+      <property name="btn#1" value="Inv" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
+      <property name="size" value="26,16" />
+      <property name="btn#0" value="Inv" />
       <property name="x,y" value="81,7" />
       <property name="landscape" value="false" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="66.1.p.level 1" />
-      <property name="x,y" value="128,2" />
-      <property name="size" value="24,24" />
+      <property name="x,y" value="128,4" />
+      <property name="size" value="22,22" />
     </component>
     <component name="button">
       <property name="parameter#0" value="66.2.p.inv 2" />
+      <property name="btn#1" value="Inv" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
+      <property name="size" value="26,16" />
+      <property name="btn#0" value="Inv" />
       <property name="x,y" value="159,7" />
       <property name="landscape" value="false" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="66.3.p.level 2" />
-      <property name="x,y" value="206,2" />
-      <property name="size" value="24,24" />
+      <property name="x,y" value="206,4" />
+      <property name="size" value="22,22" />
     </component>
     <component name="button">
       <property name="parameter#0" value="66.4.p.mode" />
+      <property name="btn#1" value="Lin" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
+      <property name="size" value="26,16" />
+      <property name="btn#0" value="Lin" />
       <property name="x,y" value="43,7" />
       <property name="landscape" value="false" />
     </component>
@@ -5281,6 +5387,10 @@
     </component>
   </module>
   <module id="49">
+    <component name="border.groupbox">
+      <property name="x,y" value="4,16" />
+      <property name="size" value="130,52" />
+    </component>
     <component name="connector">
       <property name="connector#0" value="49.0.in.freq mod" />
       <property name="x,y" value="21,50" />
@@ -5313,18 +5423,18 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="49.1.p.kbt" />
-      <property name="x,y" value="109,30" />
+      <property name="x,y" value="106,34" />
       <property name="size" value="24,24" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="49.2.p.resonance" />
-      <property name="x,y" value="146,46" />
+      <property name="x,y" value="148,43" />
       <property name="size" value="30,30" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="49.3.p.freqmod" />
       <property name="x,y" value="43,44" />
-      <property name="size" value="24,24" />
+      <property name="size" value="22,22" />
     </component>
     <component name="display.text">
       <property name="text" value="freq" />
@@ -5336,12 +5446,12 @@
       <property name="antialiasing" value="true" />
     </component>
     <component name="display.text">
-      <property name="text" value="freq" />
-      <property name="parameter#0" value="49.0.p.freq" />
+      <property name="text" value="resonance" />
+      <property name="parameter#0" value="49.2.p.resonance" />
       <property name="padding" value="2" />
       <property name="size" value="30,16" />
       <property name="vertical" value="false" />
-      <property name="x,y" value="147,28" />
+      <property name="x,y" value="148,27" />
       <property name="antialiasing" value="true" />
     </component>
     <component name="label">
@@ -5355,14 +5465,14 @@
       <property name="size" value="17,11" />
       <property name="text" value="KBT" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="114,17" />
+      <property name="x,y" value="110,18" />
       <property name="vertical" value="false" />
     </component>
     <component name="label">
       <property name="size" value="49,11" />
       <property name="text" value="Resonance" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="138,17" />
+      <property name="x,y" value="139,16" />
       <property name="vertical" value="false" />
     </component>
     <component name="label">
@@ -5393,11 +5503,16 @@
       <property name="x,y" value="221,57" />
       <property name="vertical" value="false" />
     </component>
+    <component name="knob.reset">
+      <property name="parameter#0" value="49.1.p.kbt" />
+      <property name="x,y" value="114,27" />
+      <property name="size" value="9,6" />
+    </component>
   </module>
   <module id="39">
     <component name="connector">
       <property name="connector#0" value="39.0.in.in" />
-      <property name="x,y" value="199,8" />
+      <property name="x,y" value="195,8" />
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
@@ -5407,7 +5522,7 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="39.0.p.time" />
-      <property name="x,y" value="166,2" />
+      <property name="x,y" value="150,3" />
       <property name="size" value="24,24" />
     </component>
     <component name="display.text">
@@ -5416,8 +5531,15 @@
       <property name="padding" value="2" />
       <property name="size" value="50,16" />
       <property name="vertical" value="false" />
-      <property name="x,y" value="109,7" />
+      <property name="x,y" value="93,7" />
       <property name="antialiasing" value="true" />
+    </component>
+    <component name="label">
+      <property name="size" value="18,10" />
+      <property name="text" value="{@decoration-17}" />
+      <property name="antialiasing" value="true" />
+      <property name="x,y" value="212,10" />
+      <property name="vertical" value="false" />
     </component>
   </module>
   <module id="82">
@@ -5432,12 +5554,13 @@
       <property name="size" value="13,13" />
     </component>
     <component name="button">
+      <property name="btn#2" value="{@diode.full}" />
       <property name="parameter#0" value="82.0.p.mode" />
-      <property name="btn#1" value="{@diode.full}" />
+      <property name="btn#1" value="{@diode.half}" />
       <property name="cyclic" value="false" />
-      <property name="size" value="60,22" />
-      <property name="btn#0" value="1" />
-      <property name="x,y" value="105,4" />
+      <property name="size" value="66,16" />
+      <property name="btn#0" value="{@wf.sine}" />
+      <property name="x,y" value="105,7" />
       <property name="landscape" value="true" />
     </component>
     <component name="label">
@@ -5466,8 +5589,10 @@
     </component>
     <component name="button">
       <property name="parameter#0" value="112.1.p.unipolar" />
+      <property name="btn#1" value="Uni" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
+      <property name="size" value="24,16" />
+      <property name="btn#0" value="Uni" />
       <property name="x,y" value="93,7" />
       <property name="landscape" value="false" />
     </component>
@@ -5528,36 +5653,38 @@
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
-      <property name="connector#0" value="103.0.in.in" />
+      <property name="connector#0" value="103.0.out.out" />
       <property name="x,y" value="237,42" />
       <property name="size" value="13,13" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="103.0.p.freq" />
-      <property name="x,y" value="3,23" />
+      <property name="x,y" value="7,24" />
       <property name="size" value="30,30" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="103.1.p.gain" />
-      <property name="x,y" value="87,32" />
+      <property name="x,y" value="91,32" />
       <property name="size" value="24,24" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="103.2.p.bandwidth" />
-      <property name="x,y" value="126,32" />
+      <property name="x,y" value="131,32" />
       <property name="size" value="24,24" />
     </component>
     <component name="button">
       <property name="parameter#0" value="103.3.p.bypass" />
+      <property name="btn#1" value="B" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
+      <property name="size" value="18,16" />
+      <property name="btn#0" value="B" />
       <property name="x,y" value="215,41" />
       <property name="landscape" value="false" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="103.4.p.in level" />
-      <property name="x,y" value="161,35" />
-      <property name="size" value="24,24" />
+      <property name="x,y" value="163,35" />
+      <property name="size" value="22,22" />
     </component>
     <component name="display.text">
       <property name="text" value="freq" />
@@ -5565,46 +5692,46 @@
       <property name="padding" value="2" />
       <property name="size" value="40,16" />
       <property name="vertical" value="false" />
-      <property name="x,y" value="36,26" />
+      <property name="x,y" value="40,27" />
       <property name="antialiasing" value="true" />
     </component>
     <component name="display.text">
       <property name="text" value="gain" />
       <property name="parameter#0" value="103.1.p.gain" />
       <property name="padding" value="2" />
-      <property name="size" value="30,16" />
+      <property name="size" value="34,16" />
       <property name="vertical" value="false" />
-      <property name="x,y" value="84,14" />
+      <property name="x,y" value="86,14" />
       <property name="antialiasing" value="true" />
     </component>
     <component name="display.text">
       <property name="text" value="bandwidth" />
       <property name="parameter#0" value="103.2.p.bandwidth" />
       <property name="padding" value="2" />
-      <property name="size" value="30,16" />
+      <property name="size" value="34,16" />
       <property name="vertical" value="false" />
-      <property name="x,y" value="124,14" />
+      <property name="x,y" value="126,14" />
       <property name="antialiasing" value="true" />
     </component>
     <component name="label">
       <property name="size" value="20,11" />
       <property name="text" value="Freq" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="46,13" />
+      <property name="x,y" value="50,14" />
       <property name="vertical" value="false" />
     </component>
     <component name="label">
       <property name="size" value="21,11" />
       <property name="text" value="Gain" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="88,3" />
+      <property name="x,y" value="93,3" />
       <property name="vertical" value="false" />
     </component>
     <component name="label">
       <property name="size" value="13,11" />
       <property name="text" value="BW" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="133,3" />
+      <property name="x,y" value="137,3" />
       <property name="vertical" value="false" />
     </component>
   </module>
@@ -5620,7 +5747,7 @@
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
-      <property name="connector#0" value="24.0.in.rate" />
+      <property name="connector#0" value="24.0.out.slv" />
       <property name="x,y" value="8,57" />
       <property name="size" value="13,13" />
     </component>
@@ -5814,8 +5941,10 @@
     </component>
     <component name="button">
       <property name="parameter#0" value="61.2.p.sym" />
+      <property name="btn#1" value="Sym" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
+      <property name="size" value="26,16" />
+      <property name="btn#0" value="Sym" />
       <property name="x,y" value="46,21" />
       <property name="landscape" value="false" />
     </component>
@@ -5835,6 +5964,10 @@
     </component>
   </module>
   <module id="50">
+    <component name="border.groupbox">
+      <property name="x,y" value="6,15" />
+      <property name="size" value="80,40" />
+    </component>
     <component name="connector">
       <property name="connector#0" value="50.0.in.in" />
       <property name="x,y" value="189,28" />
@@ -5857,33 +5990,36 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="50.0.p.freq" />
-      <property name="x,y" value="60,28" />
+      <property name="x,y" value="53,21" />
       <property name="size" value="30,30" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="50.1.p.resonance" />
-      <property name="x,y" value="150,27" />
+      <property name="x,y" value="137,25" />
       <property name="size" value="30,30" />
     </component>
     <component name="button">
       <property name="parameter#0" value="50.2.p.gain control" />
+      <property name="btn#1" value="GC" />
       <property name="cyclic" value="true" />
-      <property name="size" value="26,19" />
-      <property name="x,y" value="118,37" />
+      <property name="size" value="26,16" />
+      <property name="btn#4" value="null" />
+      <property name="btn#0" value="GC" />
+      <property name="x,y" value="100,41" />
       <property name="landscape" value="false" />
     </component>
     <component name="label">
       <property name="size" value="20,11" />
       <property name="text" value="Freq" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="22,20" />
+      <property name="x,y" value="17,19" />
       <property name="vertical" value="false" />
     </component>
     <component name="label">
       <property name="size" value="49,11" />
       <property name="text" value="Resonance" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="105,14" />
+      <property name="x,y" value="89,13" />
       <property name="vertical" value="false" />
     </component>
     <component name="label">
@@ -5918,15 +6054,24 @@
       <property name="text" value="freq" />
       <property name="parameter#0" value="50.0.p.freq" />
       <property name="padding" value="2" />
-      <property name="size" value="27,16" />
+      <property name="size" value="40,16" />
       <property name="vertical" value="false" />
-      <property name="x,y" value="21,36" />
+      <property name="x,y" value="10,33" />
+      <property name="antialiasing" value="true" />
+    </component>
+    <component name="display.text">
+      <property name="text" value="resonance" />
+      <property name="parameter#0" value="50.1.p.resonance" />
+      <property name="padding" value="2" />
+      <property name="size" value="25,16" />
+      <property name="vertical" value="false" />
+      <property name="x,y" value="100,25" />
       <property name="antialiasing" value="true" />
     </component>
   </module>
   <module id="23">
     <component name="connector">
-      <property name="connector#0" value="23.0.in.gate" />
+      <property name="connector#0" value="23.7.in.amp" />
       <property name="x,y" value="7,22" />
       <property name="size" value="13,13" />
     </component>
@@ -5961,7 +6106,7 @@
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
-      <property name="connector#0" value="23.7.in.amp" />
+      <property name="connector#0" value="23.0.in.gate" />
       <property name="x,y" value="7,47" />
       <property name="size" value="13,13" />
     </component>
@@ -5977,7 +6122,7 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="23.0.p.attack" />
-      <property name="x,y" value="36,29" />
+      <property name="x,y" value="39,29" />
       <property name="size" value="24,24" />
     </component>
     <component name="knob">
@@ -5992,7 +6137,7 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="23.3.p.release" />
-      <property name="x,y" value="150,29" />
+      <property name="x,y" value="149,29" />
       <property name="size" value="24,24" />
     </component>
     <component name="knob">
@@ -6018,7 +6163,7 @@
     <component name="button">
       <property name="parameter#0" value="23.8.p.invert" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
+      <property name="size" value="24,16" />
       <property name="x,y" value="190,34" />
       <property name="landscape" value="false" />
     </component>
@@ -6085,6 +6230,34 @@
       <property name="vertical" value="false" />
       <property name="x,y" value="147,8" />
       <property name="antialiasing" value="true" />
+    </component>
+    <component name="org.nomad.theme.component.NomadLabel">
+      <property name="size" value="6,11" />
+      <property name="text" value="A" />
+      <property name="antialiasing" value="true" />
+      <property name="x,y" value="29,32" />
+      <property name="vertical" value="false" />
+    </component>
+    <component name="org.nomad.theme.component.NomadLabel">
+      <property name="size" value="7,11" />
+      <property name="text" value="D" />
+      <property name="antialiasing" value="true" />
+      <property name="x,y" value="67,34" />
+      <property name="vertical" value="false" />
+    </component>
+    <component name="org.nomad.theme.component.NomadLabel">
+      <property name="size" value="5,11" />
+      <property name="text" value="S" />
+      <property name="antialiasing" value="true" />
+      <property name="x,y" value="106,34" />
+      <property name="vertical" value="false" />
+    </component>
+    <component name="org.nomad.theme.component.NomadLabel">
+      <property name="size" value="6,11" />
+      <property name="text" value="R" />
+      <property name="antialiasing" value="true" />
+      <property name="x,y" value="142,34" />
+      <property name="vertical" value="false" />
     </component>
   </module>
   <module id="113">
@@ -6273,6 +6446,10 @@
     </component>
   </module>
   <module id="18">
+    <component name="border.groupbox">
+      <property name="x,y" value="44,2" />
+      <property name="size" value="120,40" />
+    </component>
     <component name="connector">
       <property name="connector#0" value="18.0.in.in1" />
       <property name="x,y" value="198,6" />
@@ -6347,12 +6524,8 @@
     </component>
     <component name="knob.reset">
       <property name="parameter#0" value="18.1.p.crossfade" />
-      <property name="x,y" value="131,4" />
+      <property name="x,y" value="131,5" />
       <property name="size" value="9,6" />
-    </component>
-    <component name="border.groupbox">
-      <property name="x,y" value="44,2" />
-      <property name="size" value="120,40" />
     </component>
   </module>
   <module id="111">
@@ -6373,8 +6546,10 @@
     </component>
     <component name="button">
       <property name="parameter#0" value="111.1.p.unipolar" />
+      <property name="btn#1" value="Uni" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
+      <property name="size" value="26,16" />
+      <property name="btn#0" value="Uni" />
       <property name="x,y" value="93,7" />
       <property name="landscape" value="false" />
     </component>
@@ -6396,6 +6571,10 @@
     </component>
   </module>
   <module id="25">
+    <component name="border.groupbox">
+      <property name="x,y" value="159,31" />
+      <property name="size" value="74,38" />
+    </component>
     <component name="connector">
       <property name="connector#0" value="25.0.in.rate" />
       <property name="x,y" value="26,57" />
@@ -6408,7 +6587,7 @@
     </component>
     <component name="connector">
       <property name="connector#0" value="25.2.in.PWmod" />
-      <property name="x,y" value="157,40" />
+      <property name="x,y" value="163,47" />
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
@@ -6417,7 +6596,7 @@
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
-      <property name="connector#0" value="25.1.in.rst" />
+      <property name="connector#0" value="25.1.out.slv" />
       <property name="x,y" value="5,58" />
       <property name="size" value="13,13" />
     </component>
@@ -6425,15 +6604,6 @@
       <property name="parameter#0" value="25.0.p.rate" />
       <property name="x,y" value="70,43" />
       <property name="size" value="30,30" />
-    </component>
-    <component name="button">
-      <property name="parameter#0" value="25.1.p.range" />
-      <property name="btn#1" value="Hi" />
-      <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="btn#0" value="Lo" />
-      <property name="x,y" value="103,20" />
-      <property name="landscape" value="false" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="25.2.p.phase" />
@@ -6445,13 +6615,6 @@
       <property name="x,y" value="45,48" />
       <property name="size" value="24,24" />
     </component>
-    <component name="button">
-      <property name="parameter#0" value="25.4.p.mono" />
-      <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="99,3" />
-      <property name="landscape" value="false" />
-    </component>
     <component name="knob">
       <property name="parameter#0" value="25.5.p.rate kbt" />
       <property name="x,y" value="132,48" />
@@ -6459,12 +6622,12 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="25.6.p.PW mod" />
-      <property name="x,y" value="173,34" />
+      <property name="x,y" value="179,41" />
       <property name="size" value="24,24" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="25.7.p.PW" />
-      <property name="x,y" value="197,34" />
+      <property name="x,y" value="203,41" />
       <property name="size" value="24,24" />
     </component>
     <component name="display.text">
@@ -6517,7 +6680,7 @@
       <property name="size" value="17,11" />
       <property name="text" value="KBT" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="136,34" />
+      <property name="x,y" value="137,30" />
       <property name="vertical" value="false" />
     </component>
     <component name="label">
@@ -6531,8 +6694,44 @@
       <property name="size" value="13,11" />
       <property name="text" value="PW" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="157,27" />
+      <property name="x,y" value="163,34" />
       <property name="vertical" value="false" />
+    </component>
+    <component name="button">
+      <property name="btn#2" value="null" />
+      <property name="btn#3" value="null" />
+      <property name="parameter#0" value="25.4.p.mono" />
+      <property name="btn#1" value="Mono" />
+      <property name="cyclic" value="true" />
+      <property name="size" value="26,18" />
+      <property name="btn#4" value="null" />
+      <property name="btn#0" value="Mono" />
+      <property name="btn#5" value="null" />
+      <property name="x,y" value="104,3" />
+      <property name="landscape" value="false" />
+    </component>
+    <component name="button">
+      <property name="btn#2" value="Sub" />
+      <property name="btn#3" value="null" />
+      <property name="parameter#0" value="25.1.p.range" />
+      <property name="btn#1" value="Lo" />
+      <property name="cyclic" value="false" />
+      <property name="size" value="26,50" />
+      <property name="btn#4" value="null" />
+      <property name="btn#0" value="Hi" />
+      <property name="btn#5" value="null" />
+      <property name="x,y" value="103,23" />
+      <property name="landscape" value="false" />
+    </component>
+    <component name="knob.reset">
+      <property name="parameter#0" value="25.5.p.rate kbt" />
+      <property name="x,y" value="140,41" />
+      <property name="size" value="9,6" />
+    </component>
+    <component name="knob.reset">
+      <property name="parameter#0" value="25.7.p.PW" />
+      <property name="x,y" value="211,33" />
+      <property name="size" value="9,6" />
     </component>
   </module>
   <module id="57">
@@ -6620,43 +6819,18 @@
       <property name="x,y" value="91,18" />
       <property name="size" value="30,30" />
     </component>
-    <component name="button">
-      <property name="parameter#0" value="26.1.p.range" />
-      <property name="btn#1" value="Hi" />
-      <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="btn#0" value="Lo" />
-      <property name="x,y" value="128,9" />
-      <property name="landscape" value="false" />
-    </component>
-    <component name="button">
-      <property name="btn#2" value="3" />
-      <property name="btn#3" value="4" />
-      <property name="parameter#0" value="26.2.p.waveform" />
-      <property name="btn#1" value="{@wf.tri}" />
-      <property name="cyclic" value="true" />
-      <property name="size" value="17,15" />
-      <property name="btn#0" value="1" />
-      <property name="x,y" value="161,4" />
-      <property name="landscape" value="false" />
-    </component>
     <component name="knob">
       <property name="parameter#0" value="26.3.p.rate mod" />
       <property name="x,y" value="61,33" />
       <property name="size" value="24,24" />
     </component>
     <component name="button">
-      <property name="parameter#0" value="26.4.p.mono" />
-      <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="161,27" />
-      <property name="landscape" value="false" />
-    </component>
-    <component name="button">
       <property name="parameter#0" value="26.5.p.mute" />
+      <property name="btn#1" value="M" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="210,38" />
+      <property name="size" value="18,16" />
+      <property name="btn#0" value="M" />
+      <property name="x,y" value="216,39" />
       <property name="landscape" value="false" />
     </component>
     <component name="display.text">
@@ -6688,6 +6862,45 @@
       <property name="antialiasing" value="true" />
       <property name="x,y" value="97,6" />
       <property name="vertical" value="false" />
+    </component>
+    <component name="button">
+      <property name="btn#2" value="{@wf.saw}" />
+      <property name="btn#3" value="{@wf.saw.inv}" />
+      <property name="parameter#0" value="26.2.p.waveform" />
+      <property name="btn#1" value="{@wf.tri}" />
+      <property name="cyclic" value="false" />
+      <property name="size" value="90,15" />
+      <property name="btn#4" value="{@wf.square}" />
+      <property name="btn#0" value="{@wf.sine}" />
+      <property name="btn#5" value="null" />
+      <property name="x,y" value="161,3" />
+      <property name="landscape" value="true" />
+    </component>
+    <component name="button">
+      <property name="btn#2" value="null" />
+      <property name="btn#3" value="null" />
+      <property name="parameter#0" value="26.4.p.mono" />
+      <property name="btn#1" value="Mono" />
+      <property name="cyclic" value="true" />
+      <property name="size" value="26,18" />
+      <property name="btn#4" value="null" />
+      <property name="btn#0" value="Mono" />
+      <property name="btn#5" value="null" />
+      <property name="x,y" value="165,36" />
+      <property name="landscape" value="false" />
+    </component>
+    <component name="button">
+      <property name="btn#2" value="Sub" />
+      <property name="btn#3" value="null" />
+      <property name="parameter#0" value="26.1.p.range" />
+      <property name="btn#1" value="Lo" />
+      <property name="cyclic" value="false" />
+      <property name="size" value="26,50" />
+      <property name="btn#4" value="null" />
+      <property name="btn#0" value="Hi" />
+      <property name="btn#5" value="null" />
+      <property name="x,y" value="122,7" />
+      <property name="landscape" value="false" />
     </component>
   </module>
   <module id="19">
@@ -6807,7 +7020,7 @@
   <module id="51">
     <component name="connector">
       <property name="connector#0" value="51.0.in.freq mod 1" />
-      <property name="x,y" value="5,45" />
+      <property name="x,y" value="6,42" />
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
@@ -6822,92 +7035,141 @@
     </component>
     <component name="connector">
       <property name="connector#0" value="51.3.in.freq mod 2" />
-      <property name="x,y" value="5,70" />
+      <property name="x,y" value="6,67" />
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
-      <property name="connector#0" value="51.0.in.freq mod 1" />
+      <property name="connector#0" value="51.0.out.out" />
       <property name="x,y" value="237,70" />
       <property name="size" value="13,13" />
     </component>
     <component name="button">
-      <property name="btn#2" value="3" />
+      <property name="btn#2" value="BP" />
+      <property name="btn#3" value="LP" />
       <property name="parameter#0" value="51.0.p.filter type" />
-      <property name="btn#1" value="2" />
-      <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="btn#0" value="1" />
-      <property name="x,y" value="107,23" />
+      <property name="btn#1" value="HP" />
+      <property name="cyclic" value="false" />
+      <property name="size" value="24,60" />
+      <property name="btn#0" value="BR" />
+      <property name="x,y" value="108,16" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="51.1.p.gain control" />
+      <property name="btn#1" value="GC" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="138,10" />
+      <property name="size" value="24,16" />
+      <property name="btn#0" value="GC" />
+      <property name="x,y" value="138,17" />
       <property name="landscape" value="false" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="51.2.p.frequency mod 1" />
-      <property name="x,y" value="22,39" />
-      <property name="size" value="24,24" />
+      <property name="x,y" value="24,37" />
+      <property name="size" value="22,22" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="51.3.p.frequency" />
-      <property name="x,y" value="49,36" />
+      <property name="x,y" value="49,32" />
       <property name="size" value="30,30" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="51.4.p.kbt" />
-      <property name="x,y" value="77,64" />
+      <property name="x,y" value="81,59" />
       <property name="size" value="24,24" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="51.5.p.resonance mod" />
       <property name="x,y" value="159,64" />
-      <property name="size" value="24,24" />
+      <property name="size" value="22,22" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="51.6.p.resonance" />
-      <property name="x,y" value="147,36" />
+      <property name="x,y" value="148,34" />
       <property name="size" value="30,30" />
     </component>
     <component name="button">
       <property name="parameter#0" value="51.7.p.slope" />
-      <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="193,46" />
-      <property name="landscape" value="false" />
+      <property name="btn#1" value="24" />
+      <property name="cyclic" value="false" />
+      <property name="size" value="44,16" />
+      <property name="btn#0" value="12" />
+      <property name="x,y" value="200,46" />
+      <property name="landscape" value="true" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="51.8.p.frequency mod 2" />
-      <property name="x,y" value="22,64" />
-      <property name="size" value="24,24" />
+      <property name="x,y" value="23,62" />
+      <property name="size" value="22,22" />
     </component>
     <component name="button">
       <property name="parameter#0" value="51.9.p.bypass" />
+      <property name="btn#1" value="B" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
+      <property name="size" value="18,16" />
+      <property name="btn#4" value="null" />
+      <property name="btn#0" value="B" />
       <property name="x,y" value="217,69" />
       <property name="landscape" value="false" />
     </component>
     <component name="display.text">
-      <property name="text" value="filter type" />
-      <property name="parameter#0" value="51.0.p.filter type" />
+      <property name="text" value="frequency" />
+      <property name="parameter#0" value="51.3.p.frequency" />
       <property name="padding" value="2" />
       <property name="size" value="40,16" />
       <property name="vertical" value="false" />
-      <property name="x,y" value="43,9" />
+      <property name="x,y" value="44,16" />
       <property name="antialiasing" value="true" />
     </component>
     <component name="display.text">
-      <property name="text" value="filter type" />
-      <property name="parameter#0" value="51.0.p.filter type" />
+      <property name="text" value="resonance" />
+      <property name="parameter#0" value="51.6.p.resonance" />
       <property name="padding" value="2" />
-      <property name="size" value="30,16" />
+      <property name="size" value="24,16" />
       <property name="vertical" value="false" />
-      <property name="x,y" value="171,9" />
+      <property name="x,y" value="163,17" />
       <property name="antialiasing" value="true" />
+    </component>
+    <component name="label">
+      <property name="size" value="16,11" />
+      <property name="text" value="Res" />
+      <property name="antialiasing" value="true" />
+      <property name="x,y" value="153,6" />
+      <property name="vertical" value="false" />
+    </component>
+    <component name="knob.reset">
+      <property name="parameter#0" value="51.4.p.kbt" />
+      <property name="x,y" value="89,52" />
+      <property name="size" value="9,6" />
+    </component>
+    <component name="label">
+      <property name="size" value="20,11" />
+      <property name="text" value="Freq" />
+      <property name="antialiasing" value="true" />
+      <property name="x,y" value="20,18" />
+      <property name="vertical" value="false" />
+    </component>
+    <component name="label">
+      <property name="size" value="15,11" />
+      <property name="text" value="Kbt" />
+      <property name="antialiasing" value="true" />
+      <property name="x,y" value="85,39" />
+      <property name="vertical" value="false" />
+    </component>
+    <component name="label">
+      <property name="size" value="31,11" />
+      <property name="text" value="dB/Oct" />
+      <property name="antialiasing" value="true" />
+      <property name="x,y" value="206,33" />
+      <property name="vertical" value="false" />
+    </component>
+    <component name="border.groupbox">
+      <property name="x,y" value="3,13" />
+      <property name="size" value="104,74" />
+    </component>
+    <component name="border.groupbox">
+      <property name="x,y" value="135,6" />
+      <property name="size" value="56,82" />
     </component>
   </module>
   <module id="28">
@@ -7479,12 +7741,12 @@
   <module id="80">
     <component name="connector">
       <property name="connector#0" value="80.0.in.master" />
-      <property name="x,y" value="10,18" />
+      <property name="x,y" value="7,19" />
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
       <property name="connector#0" value="80.1.in.reset" />
-      <property name="x,y" value="10,39" />
+      <property name="x,y" value="7,40" />
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
@@ -7494,38 +7756,13 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="80.0.p.rate" />
-      <property name="x,y" value="93,23" />
+      <property name="x,y" value="91,24" />
       <property name="size" value="30,30" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="80.1.p.phase" />
-      <property name="x,y" value="168,1" />
+      <property name="x,y" value="164,6" />
       <property name="size" value="24,24" />
-    </component>
-    <component name="button">
-      <property name="btn#2" value="3" />
-      <property name="btn#3" value="4" />
-      <property name="parameter#0" value="80.2.p.waveform" />
-      <property name="btn#1" value="{@wf.tri}" />
-      <property name="cyclic" value="true" />
-      <property name="size" value="17,15" />
-      <property name="btn#0" value="1" />
-      <property name="x,y" value="124,40" />
-      <property name="landscape" value="false" />
-    </component>
-    <component name="button">
-      <property name="parameter#0" value="80.3.p.mono" />
-      <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="53,38" />
-      <property name="landscape" value="false" />
-    </component>
-    <component name="button">
-      <property name="parameter#0" value="80.4.p.mute" />
-      <property name="cyclic" value="true" />
-      <property name="size" value="16,19" />
-      <property name="x,y" value="215,38" />
-      <property name="landscape" value="false" />
     </component>
     <component name="display.text">
       <property name="text" value="rate" />
@@ -7533,7 +7770,7 @@
       <property name="padding" value="2" />
       <property name="size" value="50,16" />
       <property name="vertical" value="false" />
-      <property name="x,y" value="44,18" />
+      <property name="x,y" value="41,19" />
       <property name="antialiasing" value="true" />
     </component>
     <component name="display.text">
@@ -7542,36 +7779,75 @@
       <property name="padding" value="2" />
       <property name="size" value="30,16" />
       <property name="vertical" value="false" />
-      <property name="x,y" value="134,10" />
+      <property name="x,y" value="130,15" />
       <property name="antialiasing" value="true" />
     </component>
     <component name="label">
       <property name="size" value="16,11" />
       <property name="text" value="Mst" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="26,19" />
+      <property name="x,y" value="23,20" />
       <property name="vertical" value="false" />
     </component>
     <component name="label">
       <property name="size" value="14,11" />
       <property name="text" value="Rst" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="26,40" />
+      <property name="x,y" value="23,41" />
       <property name="vertical" value="false" />
     </component>
     <component name="label">
       <property name="size" value="19,11" />
       <property name="text" value="Rate" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="99,10" />
+      <property name="x,y" value="97,11" />
       <property name="vertical" value="false" />
     </component>
     <component name="label">
       <property name="size" value="26,11" />
       <property name="text" value="Phase" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="134,0" />
+      <property name="x,y" value="130,5" />
       <property name="vertical" value="false" />
+    </component>
+    <component name="org.nomad.theme.component.NomadButtonArray">
+      <property name="btn#2" value="null" />
+      <property name="btn#3" value="null" />
+      <property name="parameter#0" value="80.3.p.mono" />
+      <property name="btn#1" value="Mono" />
+      <property name="cyclic" value="true" />
+      <property name="size" value="26,18" />
+      <property name="btn#4" value="null" />
+      <property name="btn#0" value="Mono" />
+      <property name="btn#5" value="null" />
+      <property name="x,y" value="53,37" />
+      <property name="landscape" value="false" />
+    </component>
+    <component name="org.nomad.theme.component.NomadButtonArray">
+      <property name="btn#2" value="{@wf.saw}" />
+      <property name="btn#3" value="{@wf.saw.inv}" />
+      <property name="parameter#0" value="80.2.p.waveform" />
+      <property name="btn#1" value="{@wf.tri}" />
+      <property name="cyclic" value="false" />
+      <property name="size" value="90,15" />
+      <property name="btn#4" value="{@wf.square}" />
+      <property name="btn#0" value="{@wf.sine}" />
+      <property name="btn#5" value="null" />
+      <property name="x,y" value="124,38" />
+      <property name="landscape" value="true" />
+    </component>
+    <component name="org.nomad.theme.component.NomadButtonArray">
+      <property name="btn#2" value="null" />
+      <property name="btn#3" value="null" />
+      <property name="parameter#0" value="80.4.p.mute" />
+      <property name="btn#1" value="M" />
+      <property name="cyclic" value="true" />
+      <property name="size" value="18,16" />
+      <property name="btn#4" value="null" />
+      <property name="btn#0" value="M" />
+      <property name="btn#5" value="null" />
+      <property name="x,y" value="216,39" />
+      <property name="landscape" value="false" />
     </component>
   </module>
   <module id="46">
@@ -7582,17 +7858,17 @@
     </component>
     <component name="connector">
       <property name="connector#0" value="46.1.in.A mod" />
-      <property name="x,y" value="48,53" />
+      <property name="x,y" value="47,55" />
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
       <property name="connector#0" value="46.2.in.H mod" />
-      <property name="x,y" value="106,53" />
+      <property name="x,y" value="105,55" />
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
       <property name="connector#0" value="46.3.in.D mod" />
-      <property name="x,y" value="154,54" />
+      <property name="x,y" value="154,56" />
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
@@ -7617,33 +7893,33 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="46.0.p.A" />
-      <property name="x,y" value="43,27" />
+      <property name="x,y" value="44,25" />
       <property name="size" value="24,24" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="46.1.p.H" />
-      <property name="x,y" value="99,27" />
+      <property name="x,y" value="100,25" />
       <property name="size" value="24,24" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="46.2.p.D" />
-      <property name="x,y" value="151,28" />
+      <property name="x,y" value="152,26" />
       <property name="size" value="24,24" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="46.3.p.A mod" />
-      <property name="x,y" value="64,47" />
-      <property name="size" value="24,24" />
+      <property name="x,y" value="63,49" />
+      <property name="size" value="22,22" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="46.4.p.H mod" />
-      <property name="x,y" value="123,47" />
-      <property name="size" value="24,24" />
+      <property name="x,y" value="122,49" />
+      <property name="size" value="22,22" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="46.5.p.D mod" />
-      <property name="x,y" value="169,48" />
-      <property name="size" value="24,24" />
+      <property name="x,y" value="169,50" />
+      <property name="size" value="22,22" />
     </component>
     <component name="label">
       <property name="size" value="27,19" />
@@ -7678,6 +7954,27 @@
       <property name="vertical" value="false" />
       <property name="x,y" value="148,6" />
       <property name="antialiasing" value="true" />
+    </component>
+    <component name="org.nomad.theme.component.NomadLabel">
+      <property name="size" value="6,11" />
+      <property name="text" value="A" />
+      <property name="antialiasing" value="true" />
+      <property name="x,y" value="34,28" />
+      <property name="vertical" value="false" />
+    </component>
+    <component name="org.nomad.theme.component.NomadLabel">
+      <property name="size" value="7,11" />
+      <property name="text" value="H" />
+      <property name="antialiasing" value="true" />
+      <property name="x,y" value="90,29" />
+      <property name="vertical" value="false" />
+    </component>
+    <component name="org.nomad.theme.component.NomadLabel">
+      <property name="size" value="7,11" />
+      <property name="text" value="D" />
+      <property name="antialiasing" value="true" />
+      <property name="x,y" value="142,30" />
+      <property name="vertical" value="false" />
     </component>
   </module>
   <module id="99">
@@ -7715,7 +8012,7 @@
       <property name="parameter#0" value="99.2.p.low delta" />
       <property name="btn#1" value="Low" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
+      <property name="size" value="32,16" />
       <property name="btn#0" value="High" />
       <property name="x,y" value="221,16" />
       <property name="landscape" value="false" />
@@ -7905,32 +8202,36 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="104.0.p.freq" />
-      <property name="x,y" value="3,23" />
+      <property name="x,y" value="12,23" />
       <property name="size" value="30,30" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="104.1.p.gain" />
-      <property name="x,y" value="87,32" />
+      <property name="x,y" value="101,31" />
       <property name="size" value="24,24" />
     </component>
     <component name="button">
       <property name="parameter#0" value="104.2.p.mode" />
-      <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="176,8" />
+      <property name="btn#1" value="Lo" />
+      <property name="cyclic" value="false" />
+      <property name="size" value="22,32" />
+      <property name="btn#0" value="Hi" />
+      <property name="x,y" value="141,4" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="104.3.p.bypass" />
+      <property name="btn#1" value="B" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
+      <property name="size" value="18,16" />
+      <property name="btn#0" value="B" />
       <property name="x,y" value="215,41" />
       <property name="landscape" value="false" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="104.4.p.in level" />
       <property name="x,y" value="161,35" />
-      <property name="size" value="24,24" />
+      <property name="size" value="22,22" />
     </component>
     <component name="display.text">
       <property name="text" value="freq" />
@@ -7938,30 +8239,30 @@
       <property name="padding" value="2" />
       <property name="size" value="40,16" />
       <property name="vertical" value="false" />
-      <property name="x,y" value="36,26" />
+      <property name="x,y" value="45,26" />
       <property name="antialiasing" value="true" />
     </component>
     <component name="display.text">
       <property name="text" value="gain" />
       <property name="parameter#0" value="104.1.p.gain" />
       <property name="padding" value="2" />
-      <property name="size" value="30,16" />
+      <property name="size" value="40,16" />
       <property name="vertical" value="false" />
-      <property name="x,y" value="84,14" />
+      <property name="x,y" value="93,13" />
       <property name="antialiasing" value="true" />
     </component>
     <component name="label">
       <property name="size" value="20,11" />
       <property name="text" value="Freq" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="46,13" />
+      <property name="x,y" value="55,13" />
       <property name="vertical" value="false" />
     </component>
     <component name="label">
       <property name="size" value="21,11" />
       <property name="text" value="Gain" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="88,3" />
+      <property name="x,y" value="103,2" />
       <property name="vertical" value="false" />
     </component>
   </module>
@@ -8283,14 +8584,16 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="84.1.p.decay" />
-      <property name="x,y" value="154,20" />
+      <property name="x,y" value="152,19" />
       <property name="size" value="24,24" />
     </component>
     <component name="button">
       <property name="parameter#0" value="84.2.p.gate" />
+      <property name="btn#1" value="Gate" />
       <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="x,y" value="2,12" />
+      <property name="size" value="26,16" />
+      <property name="btn#0" value="Gate" />
+      <property name="x,y" value="2,9" />
       <property name="landscape" value="false" />
     </component>
     <component name="label">
@@ -8311,7 +8614,7 @@
       <property name="size" value="17,11" />
       <property name="text" value="Dcy" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="135,24" />
+      <property name="x,y" value="133,23" />
       <property name="vertical" value="false" />
     </component>
     <component name="label">
@@ -8336,7 +8639,7 @@
       <property name="padding" value="2" />
       <property name="size" value="27,16" />
       <property name="vertical" value="false" />
-      <property name="x,y" value="151,5" />
+      <property name="x,y" value="149,4" />
       <property name="antialiasing" value="true" />
     </component>
   </module>
@@ -8469,6 +8772,10 @@
     </component>
   </module>
   <module id="45">
+    <component name="border.groupbox">
+      <property name="x,y" value="33,9" />
+      <property name="size" value="51,63" />
+    </component>
     <component name="connector">
       <property name="connector#0" value="45.0.in.in" />
       <property name="x,y" value="202,57" />
@@ -8596,12 +8903,8 @@
     </component>
     <component name="knob.reset">
       <property name="parameter#0" value="45.6.p.frequency" />
-      <property name="x,y" value="58,11" />
+      <property name="x,y" value="57,13" />
       <property name="size" value="9,6" />
-    </component>
-    <component name="border.groupbox">
-      <property name="x,y" value="32,8" />
-      <property name="size" value="51,63" />
     </component>
   </module>
   <module id="97">
@@ -8616,7 +8919,7 @@
       <property name="size" value="13,13" />
     </component>
     <component name="connector">
-      <property name="connector#0" value="97.0.in.pitch mod 1" />
+      <property name="connector#0" value="97.0.out.slave" />
       <property name="x,y" value="3,27" />
       <property name="size" value="13,13" />
     </component>
@@ -8889,13 +9192,13 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="75.0.p.range" />
-      <property name="x,y" value="125,3" />
+      <property name="x,y" value="125,5" />
       <property name="size" value="24,24" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="75.1.p.notes" />
-      <property name="x,y" value="161,6" />
-      <property name="size" value="24,24" />
+      <property name="x,y" value="163,8" />
+      <property name="size" value="22,22" />
     </component>
     <component name="display.text">
       <property name="text" value="range" />
@@ -8917,14 +9220,14 @@
       <property name="size" value="28,11" />
       <property name="text" value="Range" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="92,-1" />
+      <property name="x,y" value="92,0" />
       <property name="vertical" value="false" />
     </component>
     <component name="label">
       <property name="size" value="26,11" />
       <property name="text" value="Notes" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="161,-1" />
+      <property name="x,y" value="161,0" />
       <property name="vertical" value="false" />
     </component>
   </module>
@@ -9233,26 +9536,26 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="71.0.p.attack" />
-      <property name="x,y" value="101,15" />
+      <property name="x,y" value="101,17" />
       <property name="size" value="24,24" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="71.1.p.release" />
-      <property name="x,y" value="154,15" />
+      <property name="x,y" value="154,17" />
       <property name="size" value="24,24" />
     </component>
     <component name="label">
       <property name="size" value="14,11" />
       <property name="text" value="Atk" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="83,22" />
+      <property name="x,y" value="83,24" />
       <property name="vertical" value="false" />
     </component>
     <component name="label">
       <property name="size" value="14,11" />
       <property name="text" value="Rel" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="136,22" />
+      <property name="x,y" value="136,24" />
       <property name="vertical" value="false" />
     </component>
     <component name="label">
@@ -9261,6 +9564,24 @@
       <property name="antialiasing" value="true" />
       <property name="x,y" value="211,27" />
       <property name="vertical" value="false" />
+    </component>
+    <component name="display.text">
+      <property name="text" value="attack" />
+      <property name="parameter#0" value="71.0.p.attack" />
+      <property name="padding" value="2" />
+      <property name="size" value="30,16" />
+      <property name="vertical" value="false" />
+      <property name="x,y" value="98,2" />
+      <property name="antialiasing" value="true" />
+    </component>
+    <component name="display.text">
+      <property name="text" value="release" />
+      <property name="parameter#0" value="71.1.p.release" />
+      <property name="padding" value="2" />
+      <property name="size" value="30,16" />
+      <property name="vertical" value="false" />
+      <property name="x,y" value="151,2" />
+      <property name="antialiasing" value="true" />
     </component>
   </module>
   <module id="21">
@@ -9605,7 +9926,7 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="22.0.p.range" />
-      <property name="x,y" value="5,5" />
+      <property name="x,y" value="152,3" />
       <property name="size" value="24,24" />
     </component>
     <component name="label">
@@ -9614,6 +9935,15 @@
       <property name="antialiasing" value="true" />
       <property name="x,y" value="210,9" />
       <property name="vertical" value="false" />
+    </component>
+    <component name="display.text">
+      <property name="text" value="range" />
+      <property name="parameter#0" value="22.0.p.range" />
+      <property name="padding" value="2" />
+      <property name="size" value="46,16" />
+      <property name="vertical" value="false" />
+      <property name="x,y" value="98,7" />
+      <property name="antialiasing" value="true" />
     </component>
   </module>
   <module id="73">
@@ -9633,11 +9963,14 @@
       <property name="size" value="13,13" />
     </component>
     <component name="button">
+      <property name="btn#2" value="XOR" />
       <property name="parameter#0" value="73.0.p.mode" />
-      <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
+      <property name="btn#1" value="OR" />
+      <property name="cyclic" value="false" />
+      <property name="size" value="100,16" />
+      <property name="btn#0" value="AND" />
       <property name="x,y" value="60,7" />
-      <property name="landscape" value="false" />
+      <property name="landscape" value="true" />
     </component>
     <component name="label">
       <property name="size" value="52,19" />
@@ -9665,97 +9998,119 @@
     </component>
     <component name="button">
       <property name="parameter#0" value="98.1.p.cont" />
+      <property name="btn#1" value="Cont" />
       <property name="cyclic" value="true" />
-      <property name="size" value="24,16" />
-      <property name="x,y" value="194,25" />
+      <property name="size" value="28,16" />
+      <property name="btn#0" value="Cont" />
+      <property name="x,y" value="191,22" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="98.2.p.E" />
+      <property name="btn#1" value="E" />
       <property name="cyclic" value="true" />
-      <property name="size" value="23,16" />
-      <property name="x,y" value="48,40" />
+      <property name="size" value="21,16" />
+      <property name="btn#0" value="E" />
+      <property name="x,y" value="51,34" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="98.3.p.F" />
+      <property name="btn#1" value="F" />
       <property name="cyclic" value="true" />
-      <property name="size" value="23,16" />
-      <property name="x,y" value="70,40" />
+      <property name="size" value="21,16" />
+      <property name="btn#0" value="F" />
+      <property name="x,y" value="73,34" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="98.4.p.F#" />
+      <property name="btn#1" value="F#" />
       <property name="cyclic" value="true" />
-      <property name="size" value="23,16" />
-      <property name="x,y" value="82,24" />
+      <property name="size" value="21,16" />
+      <property name="btn#0" value="F#" />
+      <property name="x,y" value="85,18" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="98.5.p.G" />
+      <property name="btn#1" value="G" />
       <property name="cyclic" value="true" />
-      <property name="size" value="23,16" />
-      <property name="x,y" value="92,40" />
+      <property name="size" value="21,16" />
+      <property name="btn#0" value="G" />
+      <property name="x,y" value="95,34" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="98.6.p.G#" />
+      <property name="btn#1" value="G#" />
       <property name="cyclic" value="true" />
-      <property name="size" value="23,16" />
-      <property name="x,y" value="104,24" />
+      <property name="size" value="21,16" />
+      <property name="btn#0" value="G#" />
+      <property name="x,y" value="107,18" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="98.7.p.A" />
+      <property name="btn#1" value="A" />
       <property name="cyclic" value="true" />
-      <property name="size" value="23,16" />
-      <property name="x,y" value="114,40" />
+      <property name="size" value="21,16" />
+      <property name="btn#0" value="A" />
+      <property name="x,y" value="117,34" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="98.8.p.Bb" />
+      <property name="btn#1" value="Bb" />
       <property name="cyclic" value="true" />
-      <property name="size" value="23,16" />
-      <property name="x,y" value="126,24" />
+      <property name="size" value="21,16" />
+      <property name="btn#0" value="Bb" />
+      <property name="x,y" value="129,18" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="98.9.p.B" />
+      <property name="btn#1" value="B" />
       <property name="cyclic" value="true" />
-      <property name="size" value="23,16" />
-      <property name="x,y" value="136,40" />
+      <property name="size" value="21,16" />
+      <property name="btn#0" value="B" />
+      <property name="x,y" value="139,34" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="98.10.p.C" />
+      <property name="btn#1" value="C" />
       <property name="cyclic" value="true" />
-      <property name="size" value="23,16" />
-      <property name="x,y" value="4,40" />
+      <property name="size" value="21,16" />
+      <property name="btn#0" value="C" />
+      <property name="x,y" value="7,34" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="98.11.p.C#" />
       <property name="btn#1" value="C#" />
       <property name="cyclic" value="true" />
-      <property name="size" value="23,16" />
+      <property name="size" value="21,16" />
       <property name="btn#0" value="C#" />
-      <property name="x,y" value="16,24" />
+      <property name="x,y" value="19,18" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="98.12.p.D" />
+      <property name="btn#1" value="D" />
       <property name="cyclic" value="true" />
-      <property name="size" value="23,16" />
-      <property name="x,y" value="26,40" />
+      <property name="size" value="21,16" />
+      <property name="btn#0" value="D" />
+      <property name="x,y" value="29,34" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
       <property name="parameter#0" value="98.13.p.D#" />
       <property name="btn#1" value="D#" />
       <property name="cyclic" value="true" />
-      <property name="size" value="23,16" />
+      <property name="size" value="21,16" />
       <property name="btn#0" value="D#" />
-      <property name="x,y" value="38,24" />
+      <property name="x,y" value="41,18" />
       <property name="landscape" value="false" />
     </component>
     <component name="display.text">
@@ -9764,7 +10119,7 @@
       <property name="padding" value="2" />
       <property name="size" value="30,16" />
       <property name="vertical" value="false" />
-      <property name="x,y" value="194,7" />
+      <property name="x,y" value="191,4" />
       <property name="antialiasing" value="true" />
     </component>
     <component name="label">
@@ -9772,6 +10127,13 @@
       <property name="text" value="{@decoration-6}" />
       <property name="antialiasing" value="true" />
       <property name="x,y" value="210,42" />
+      <property name="vertical" value="false" />
+    </component>
+    <component name="label">
+      <property name="size" value="28,11" />
+      <property name="text" value="Range" />
+      <property name="antialiasing" value="true" />
+      <property name="x,y" value="160,7" />
       <property name="vertical" value="false" />
     </component>
   </module>

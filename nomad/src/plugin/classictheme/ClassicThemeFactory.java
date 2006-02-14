@@ -2,10 +2,9 @@ package plugin.classictheme;
 
 import java.awt.Graphics;
 
-import org.nomad.patch.Module;
 import org.nomad.patch.ModuleSection;
-import org.nomad.theme.ModuleGUI;
-import org.nomad.theme.ModuleSectionGUI;
+import org.nomad.patch.ui.ModuleSectionUI;
+import org.nomad.patch.ui.ModuleUI;
 import org.nomad.theme.NomadClassicColors;
 import org.nomad.theme.UIFactory;
 import org.nomad.theme.component.AudioLevelDisplay;
@@ -42,19 +41,19 @@ public class ClassicThemeFactory extends UIFactory {
 		return "plugin/classictheme/ui.xml";
 	}
 
-	public ModuleGUI getModuleGUI(DModule info, Module module, ModuleSectionGUI moduleSectionGUI) {
-		ModuleGUI gui = super.getModuleGUI(info, module, moduleSectionGUI);
+	public ModuleUI getModuleGUI(DModule info) {
+		ModuleUI gui = super.getModuleGUI(info);
 		gui.setBackground(NomadClassicColors.MODULE_BACKGROUND);
 		return gui;
 	}
 
-	public ModuleSectionGUI getModuleSectionGUI(ModuleSection moduleSection) {
+	public ModuleSectionUI getModuleSectionUI(ModuleSection moduleSection) {
 		return new ClassicModuleSectionGUI(moduleSection, getImageTracker());
 	}
 	
 }
 
-class ClassicModuleSectionGUI extends ModuleSectionGUI {
+class ClassicModuleSectionGUI extends ModuleSectionUI {
 	private static BackgroundPainter bgpainter = null;
 	
 	public ClassicModuleSectionGUI(ModuleSection moduleSection, ImageTracker itracker) {

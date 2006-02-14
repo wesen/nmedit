@@ -3,10 +3,10 @@ package plugin.g2theme;
 import java.awt.Graphics;
 import java.io.FileNotFoundException;
 
-import org.nomad.patch.Module;
 import org.nomad.patch.ModuleSection;
-import org.nomad.theme.ModuleGUI;
-import org.nomad.theme.ModuleSectionGUI;
+import org.nomad.patch.Section;
+import org.nomad.patch.ui.ModuleSectionUI;
+import org.nomad.patch.ui.ModuleUI;
 import org.nomad.theme.UIFactory;
 import org.nomad.theme.component.AudioLevelDisplay;
 import org.nomad.theme.component.GroupDecoration;
@@ -58,17 +58,17 @@ public class G2ThemeFactory extends UIFactory {
 		return "plugin/classictheme/ui.xml";
 	}
 
-	public ModuleGUI getModuleGUI(DModule info, Module module, ModuleSectionGUI moduleSectionGUI) {
-		ModuleGUI gui = super.getModuleGUI(info, module, moduleSectionGUI);
+	public ModuleUI getModuleGUI(DModule info) {
+		ModuleUI gui = super.getModuleGUI(info);
 		gui.setBackground(G2ColorConstants.MODULE_BACKGROUND);
 		gui.setBorder(G2BorderFactory.createG2ModulePaneBorder());
 		return gui;
 	}
 
-	public ModuleSectionGUI getModuleSectionGUI(ModuleSection moduleSection) {
+	public ModuleSectionUI getModuleSectionUI(ModuleSection moduleSection) {
 		BackgroundPainter painter = bgpainterVA;			
 		if (moduleSection!=null 
-			&& moduleSection.getModulesSectionType()==ModuleSection.ModulesSectionType.POLY) {
+			&& moduleSection.getIndex()==Section.POLY) {
 			painter = bgpainterFX;
 		}
 		return new G2ModuleSectionGUI(moduleSection, getImageTracker(), painter);
@@ -76,7 +76,7 @@ public class G2ThemeFactory extends UIFactory {
 	
 }
 
-class G2ModuleSectionGUI extends ModuleSectionGUI {
+class G2ModuleSectionGUI extends ModuleSectionUI {
 	
 	private BackgroundPainter background;
 	
@@ -84,7 +84,6 @@ class G2ModuleSectionGUI extends ModuleSectionGUI {
 			BackgroundPainter background
 	) {
 		super(moduleSection) ;
-        setDoubleBuffered(false);
         this.background = background;
 	}
 
