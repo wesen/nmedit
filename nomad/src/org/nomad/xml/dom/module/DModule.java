@@ -384,12 +384,11 @@ public class DModule {
 	 * @return the connector or null if the connector does not exist
 	 */
 	public DConnector getConnectorById(int connectorID, boolean isInput) {
-		for (int i=0;i<getConnectorCount();i++) {
-			DConnector c = getConnector(i);
+		for (DConnector c : dconnectors) {
 			if (c.getId()==connectorID) {
-				if (isInput && c.getType()==DConnector.CONNECTOR_TYPE_INPUT)
+				if (isInput && c.isInput())
 					return c;
-				else if (!isInput && c.getType()==DConnector.CONNECTOR_TYPE_OUTPUT)
+				else if ((!isInput) && c.isOutput())
 					return c;
 			}
 		}

@@ -3,8 +3,7 @@ package org.nomad.xml;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-
-import org.nomad.util.misc.Stack;
+import java.util.Stack;
 
 /**
  * A class that allows to write xml files.
@@ -86,8 +85,7 @@ public class XMLFileWriter extends PrintStream {
 		if (elementStack.isEmpty())
 			return null;
 		else {
-			String top = elementStack.top();
-			elementStack.pop();
+			String top = elementStack.pop();
 			return top;
 		}
 	}
