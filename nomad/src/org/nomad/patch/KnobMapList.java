@@ -22,28 +22,36 @@
  */
 package org.nomad.patch;
 
-public class Note {
+import java.util.Arrays;
 
-	private int noteNumber;
-	private int attackVelocity;
-	private int releaseVelocity;
+public class KnobMapList {
+	
+	private KnobMap[] knobMapList ;
 
-	public Note(int noteNumber, int attackVelocity, int releaseVelocity) {
-		this.noteNumber = noteNumber;
-		this.attackVelocity = attackVelocity;
-		this.releaseVelocity = releaseVelocity;
+	public KnobMapList() {
+		knobMapList = new KnobMap[23];
+		Arrays.fill(knobMapList, null);
+		for (int i=KnobMap.KNOB1;i<=KnobMap.KNOB18;i++)
+			knobMapList[i] = new KnobMap(i);
+
+		KnobMap m;
+		
+		m = new KnobMap(KnobMap.PEDAL);
+		knobMapList[m.getIndex()] = m;
+		
+		m = new KnobMap(KnobMap.AFTERTOUCH);
+		knobMapList[m.getIndex()] = m;
+		
+		m = new KnobMap(KnobMap.SWITCH);
+		knobMapList[m.getIndex()] = m;
 	}
 
-	public int getAttackVelocity() {
-		return attackVelocity;
+	protected boolean inBounds(int knobIndex) {
+		return (knobIndex>=0) && (knobIndex<knobMapList.length);
 	}
-
-	public int getNoteNumber() {
-		return noteNumber;
+	
+	public KnobMap getKnobMap(int knobIndex) {
+		return inBounds(knobIndex) ? knobMapList[knobIndex] : null;
 	}
-
-	public int getReleaseVelocity() {
-		return releaseVelocity;
-	}
-
+	
 }

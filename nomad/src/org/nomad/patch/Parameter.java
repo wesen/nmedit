@@ -1,3 +1,25 @@
+/* Copyright (C) 2006 Christian Schneider
+ * 
+ * This file is part of Nomad.
+ * 
+ * Nomad is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * Nomad is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Nomad; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+/*
+ * Created on Feb 13, 2006
+ */
 package org.nomad.patch;
 
 import java.util.ArrayList;
@@ -7,116 +29,92 @@ import javax.swing.event.ChangeListener;
 
 import org.nomad.xml.dom.module.DParameter;
 
-
 public class Parameter {
-	private int value;
-	private DParameter dParameter = null;
-	//private NomadControl port = null;
-	private ArrayList changeListeners = new ArrayList();
-	//private PortToParam p2p = new PortToParam(this);
 
-	Parameter(DParameter dParameter) {
-		this.dParameter = dParameter;
-		value = dParameter.getDefaultValue();
-//		addChangeListener(p2p);
+	private ArrayList<ChangeListener> changeListenerList ;
+	private DParameter info;
+	private int value =  0;
+	private int morph = -1;
+	private int morph_range = 0;
+	private int knob_assignment = -1;
+	private Module module;
+
+	public Parameter(DParameter info, Module module) {
+		changeListenerList = new ArrayList<ChangeListener>();
+		this.info = info;
+		this.module = module;
+	}
+	
+	public Module getModule() {
+		return module;
 	}
 
+	public DParameter getInfo() {
+		return info;
+	}
+
+	public void setValue(int value) {
+		this.value = value;
+	}
+	
 	public int getValue() {
 		return value;
 	}
+	
+	public void setMorph(int morph) {
+		this.morph = morph;
+	}
 
-    public void setValue(int newValue) {
-    	setValue(this, newValue);
-    }
+	public int getMorph() {
+		return morph;
+	}
 
-    public void setValue(Object sender, int newValue) {
-    	if (value!=newValue) {
-    		value = newValue;
-    		fireChangeEvent(sender);
-    	}
-    }
-    
-    public DParameter getInfo() {
-    	return dParameter;
-    }
- 
-    /*public void setUI(NomadControl port) {
-    	if (this.port!=null) {
-    		this.port.removeChangeListener(p2p);
-    	}
+	public boolean isMorphAssigned() {
+		return getMorph()>=0;
+	}
+	
+	public void setMorphRange(int morph_range) {
+		this.morph_range = morph_range;
+	}
 
-		this.p2p.port = port;
-    	this.port = port;
-    	if (this.port!=null) {
-    		this.port.setParameterValue(getValue());
-    		this.port.addChangeListener(p2p);
-    		// TODO update value
-    		// this.port.setParameterValue(getValue());
-    	}
-    }
-    
-    public AbstractControlPort getUI() {
-    	return this.port;
-    }*/
-  /*  
-    private class PortToParam implements ChangeListener {
-    	
-    	private Parameter p = null;
-    	private AbstractControlPort port = null;
-    	
-    	public PortToParam(Parameter p) {
-    		this.p = p;
-    	}
-    	
-		public void stateChanged(ChangeEvent event) {
-			if (event.getSource()==port) {
-				p.setValue(this,port.getParameterValue());
-			} else {
-				if (port!=null) {
-					port.removeChangeListener(this);
-					port.setParameterValue(p.getValue());
-					port.addChangeListener(this);
-				}
-			}
-		}
-    	
-    }
-*/
+	public int setMorphRange() {
+		return morph_range;
+	}
+	
+	public void setMorph(int morph, int morph_range) {
+		setMorph(morph);
+		setMorphRange(morph_range);
+	}
+	
+	public int getKnobAssignment() {
+		return knob_assignment;
+	}
+	
+	public void setKnobAssignment(int knob) {
+		this.knob_assignment = knob;
+	}
+
+	public int getIndex() {
+		return getInfo().getId();
+	}
+
 	public void fireChangeEvent() {
 		fireChangeEvent(new ChangeEvent(this));
 	}
 
-	public void fireChangeEvent(Object sender) {
-		ChangeEvent event = new ChangeEvent(this);
-		for (int i=0;i<changeListeners.size();i++) {
-			ChangeListener listener = (ChangeListener)changeListeners.get(i);
-			if (listener!=sender)
-				listener.stateChanged(event);
+	public void fireChangeEvent(ChangeEvent event) {
+		for (ChangeListener l : changeListenerList) {
+			l.stateChanged(event);
 		}
 	}
 	
-	public void addChangeListener(ChangeListener listener) {
-		if (!changeListeners.contains(listener))
-			changeListeners.add(listener);
+	public void addChangeListener(ChangeListener l) {
+		if (!changeListenerList.contains(l))
+			changeListenerList.add(l);
 	}
 	
-	public void removeChangeListener(ChangeListener listener) {
-		if (changeListeners.contains(listener))
-			changeListeners.remove(listener);
+	public void removeChangeListener(ChangeListener l) {
+		changeListenerList.remove(l);
 	}
-
-	
-
-/*
-    public void setValue(Object sender, int newValue) {
-        if (bc!=null && sender!=bc)
-        	bc.paramChanged(dParameter.getParent().getModuleID(), dParameter.getId(), value);
-
-        System.out.println("param:in:"+newValue);
-        if ((port!=null)&&(port!=sender))
-        	port.setParameterValue(newValue);
-        else
-        	System.out.println("buhu, no port, "+port+", "+sender);
-    }*/
 	
 }

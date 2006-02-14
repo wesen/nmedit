@@ -22,28 +22,10 @@
  */
 package org.nomad.patch;
 
-public class Note {
+public class Section {
 
-	private int noteNumber;
-	private int attackVelocity;
-	private int releaseVelocity;
-
-	public Note(int noteNumber, int attackVelocity, int releaseVelocity) {
-		this.noteNumber = noteNumber;
-		this.attackVelocity = attackVelocity;
-		this.releaseVelocity = releaseVelocity;
-	}
-
-	public int getAttackVelocity() {
-		return attackVelocity;
-	}
-
-	public int getNoteNumber() {
-		return noteNumber;
-	}
-
-	public int getReleaseVelocity() {
-		return releaseVelocity;
-	}
-
+	public final static int COMMON 	= 0;
+	public final static int POLY 	= 1;
+	public final static int MORPH 	= 2;
+	
 }

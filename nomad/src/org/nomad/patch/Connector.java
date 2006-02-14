@@ -1,44 +1,55 @@
-// http://www.javaworld.com/javaworld/jw-03-1999/jw-03-dragndrop-p1.html
+/* Copyright (C) 2006 Christian Schneider
+ * 
+ * This file is part of Nomad.
+ * 
+ * Nomad is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * Nomad is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Nomad; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 
+/*
+ * Created on Feb 13, 2006
+ */
 package org.nomad.patch;
 
+import org.nomad.theme.component.NomadConnector;
 import org.nomad.xml.dom.module.DConnector;
-
 
 public class Connector {
 
-	private DConnector dConnector = null;
-	
-	private int conX, conY;
+	private DConnector info;
+	private Module module;
+	private NomadConnector ui = null;
 
-	public Connector(DConnector dConnector, int newX, int newY) {
-		this.dConnector = dConnector;
-		conX = newX;
-		conY = newY;
-	}
-
-	public String getConnectionName() {
-		return dConnector.getName();
+	public Connector(DConnector info, Module module) {
+		this.info = info;
+		this.module = module;
 	}
 
-	public int getConnectionType() {
-		return 0;
-	}
-
-	public int getX() {
-		return conX;
-	}
-	
-	public int getY() {
-		return conY;
-	}
-	
-	/**
-	 * Returns the associated DConnector object
-	 * @return the associated DConnector object
-	 */
 	public DConnector getInfo() {
-		return dConnector;
+		return info;
+	}
+
+	public Module getModule() {
+		return module;
+	}
+
+	public NomadConnector getUI() {
+		return ui;
+	}
+
+	public void setUI(NomadConnector connectorUI) {
+		this.ui = connectorUI;
 	}
 	
 }

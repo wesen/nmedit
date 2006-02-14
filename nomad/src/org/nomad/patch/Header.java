@@ -1,123 +1,182 @@
+/* Copyright (C) 2006 Christian Schneider
+ * 
+ * This file is part of Nomad.
+ * 
+ * Nomad is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * Nomad is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Nomad; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+/*
+ * Created on Feb 13, 2006
+ */
 package org.nomad.patch;
 
-import java.io.BufferedReader;
 
-import javax.swing.JSplitPane;
+public class Header {
 
-class Header {
+	// defaults ???
+	
+	private int keyboard_range_min = 0;
+	private int keyboard_range_max = 127;
 
-    // .pch info
-    private String version;
-	private int kbrangemin, kbrangemax, velrangemin, velrangemax, bendrange;
-	private int portatime, portamento, requestedvoices;
-	private int octaveshift, seperator;
-	private int voiceretriggerpoly, voiceretriggercommon;
-	private int v13, v14, v15, v16;
-	private int redvisible, bluevisible, yellowvisible, grayvisible;
-	private int greenvisible, purplevisible, whitevisible;
-    // .pch info
-    
-	Header() {
-			version = "Nord Modular patch 3.0";
-			kbrangemin = 0;
-			kbrangemax = 127;
-			velrangemin = 0;
-			velrangemax = 127;
-			bendrange = 2;
-			portatime = 0;
-			portamento = 0;
-			requestedvoices = 1;
-			seperator = 600;
-			octaveshift = 2;
-			voiceretriggerpoly = 1;
-			voiceretriggercommon = 1;
-			v13 = 1;
-			v14 = 1;
-			v15 = 1;
-			v16 = 1;
-			redvisible = 1;
-			bluevisible = 1;
-			yellowvisible = 1;
-			grayvisible = 1;
-			greenvisible = 1;
-			purplevisible = 1;
-			whitevisible = 1;
+	private int velocity_range_min = 0;
+	private int velocity_range_max = 127;
+
+	private int portamento_time = 0;
+	private boolean portamento_auto = false;
+
+	private boolean voice_retrigger_poly_active = false;
+	private boolean voice_retrigger_common_active = false;
+
+	public final static int CABLE_RED 		= 0;
+	public final static int CABLE_BLUE 		= 1;
+	public final static int CABLE_YELLOW 	= 2;
+	public final static int CABLE_GRAY 		= 3;
+	public final static int CABLE_GREEN 	= 4;
+	public final static int CABLE_PURPLE 	= 5;
+	public final static int CABLE_WHITE 	= 6;
+	
+	private boolean[] cable_visibility = new boolean[7];
+	
+	private int bend_range = 0;
+	private int requested_voices = 0;
+	private int separator_position = 0;
+	private int octave_shift = 0;
+
+	public boolean isCableVisible(int cable) {
+		return cable_visibility[cable];
 	}
 	
-	public String getVersion() {
-		return version;
+	public void setCableVisible(int cable, boolean visible) {
+		cable_visibility[cable] = visible;
 	}
-	
-    public int getSeperator() {
-        return seperator;
-    }
 
-    public void setSeperator(int newSeperator) {
-        seperator = newSeperator;
-    }
-	
-	public void readHeader(BufferedReader pchFile) {
-		String[] sa = new String[22];
-		try {
-			version = pchFile.readLine().substring(8);
-			sa = pchFile.readLine().split(" ");
-			kbrangemin = Integer.parseInt(sa[0]);
-			kbrangemax = Integer.parseInt(sa[1]);
-			velrangemin = Integer.parseInt(sa[2]);
-			velrangemax = Integer.parseInt(sa[3]);
-			bendrange = Integer.parseInt(sa[4]);
-			portatime = Integer.parseInt(sa[5]);
-			portamento = Integer.parseInt(sa[6]);
-			requestedvoices = Integer.parseInt(sa[7]);
-			seperator = Integer.parseInt(sa[8]);
-			octaveshift = Integer.parseInt(sa[9]);
-			voiceretriggerpoly = Integer.parseInt(sa[10]);
-			voiceretriggercommon =Integer.parseInt(sa[11]);
-			v13 = Integer.parseInt(sa[12]);
-			v14 = Integer.parseInt(sa[13]);
-			v15 = Integer.parseInt(sa[14]);
-			v16 = Integer.parseInt(sa[15]);
-			redvisible = Integer.parseInt(sa[16]);
-			bluevisible = Integer.parseInt(sa[17]);
-			yellowvisible = Integer.parseInt(sa[18]);
-			grayvisible = Integer.parseInt(sa[19]);
-			greenvisible = Integer.parseInt(sa[20]);
-			purplevisible = Integer.parseInt(sa[21]);
-			whitevisible = Integer.parseInt(sa[22]);
-		}
-		catch(Exception e) {
-			System.out.println(e);
-		}
+	public int getBendRange() {
+		return bend_range;
 	}
-	
-	public StringBuffer createHeader(StringBuffer result, JSplitPane splitPane) {
-		result.append("[Header]\r\n");
-		result.append("Version=" + version + "\r\n");
 
-		result.append("" + kbrangemin + ' ' + 
-						kbrangemax + ' ' + 
-						velrangemin + ' ' + 
-						velrangemax + ' ' + 
-						bendrange + ' ' + 
-						portatime + ' ' + 
-						portamento + ' ' + 
-						requestedvoices + ' ' + 
-						(splitPane.getDividerLocation()-1)+ ' ' + 
-						octaveshift + ' ' + 
-						voiceretriggerpoly + ' ' + 
-						voiceretriggercommon + ' ' + 
-						v13 + ' ' + 
-						v14 + ' ' + 
-						v15 + ' ' + 
-						v16 + ' ' + 
-						redvisible + ' ' + 
-						bluevisible + ' ' + 
-						yellowvisible + ' ' + 
-						grayvisible + ' ' + 
-						greenvisible + ' ' + 
-						purplevisible + ' ' + 
-						whitevisible + "\r\n");
-		result.append("[/Header]\r\n\r\n");
-		return result;
+	public void setBendRange(int bend_range) {
+		this.bend_range = bend_range;
 	}
+
+	public int getKeyboardRangeMax() {
+		return keyboard_range_max;
+	}
+
+	public void setKeyboardRangeMax(int keyboard_range_max) {
+		this.keyboard_range_max = keyboard_range_max;
+	}
+
+	public void setKeyboardRange(int min, int max) {
+		setKeyboardRangeMin(min);
+		setKeyboardRangeMax(max);
+	}
+
+	public int getKeyboardRangeMin() {
+		return keyboard_range_min;
+	}
+
+	public void setKeyboardRangeMin(int keyboard_range_min) {
+		this.keyboard_range_min = keyboard_range_min;
+	}
+
+	public int getOctaveShift() {
+		return octave_shift;
+	}
+
+	public void setOctaveShift(int octave_shift) {
+		this.octave_shift = octave_shift;
+	}
+
+	public boolean isPortamentoAutoEnabled() {
+		return portamento_auto;
+	}
+
+	public void setPortamentoAutoEnabled(boolean enable) {
+		this.portamento_auto = enable;
+	}
+
+	public void setPortamento(int portamento_time, boolean autoEnabled) {
+		setPortamentoTime(portamento_time);
+		setPortamentoAutoEnabled(autoEnabled);
+	}
+
+	public int getPortamentoTime() {
+		return portamento_time;
+	}
+
+	public void setPortamentoTime(int portamento_time) {
+		this.portamento_time = portamento_time;
+	}
+
+	public int getRequestedVoices() {
+		return requested_voices;
+	}
+
+	public void setRequestedVoices(int requested_voices) {
+		this.requested_voices = requested_voices;
+	}
+
+	public int getSeparatorPosition() {
+		return separator_position;
+	}
+
+	public void setSeparatorPosition(int separator_position) {
+		this.separator_position = separator_position;
+	}
+
+	public int getVelocityRangeMax() {
+		return velocity_range_max;
+	}
+
+	public void setVelocityRangeMax(int velocity_range_max) {
+		this.velocity_range_max = velocity_range_max;
+	}
+
+	public int getVelocityRangeMin() {
+		return velocity_range_min;
+	}
+
+	public void setVelocityRangeMin(int velocity_range_min) {
+		this.velocity_range_min = velocity_range_min;
+	}
+
+	public void setVelocityRange(int min, int max) {
+		setVelocityRangeMin(min);
+		setVelocityRangeMax(max);
+	}
+
+	public boolean isVoiceRetriggerCommonActive() {
+		return voice_retrigger_common_active;
+	}
+
+	public void setVoiceRetriggerActive(boolean poly_active, boolean common_active) {
+		setVoiceRetriggerCommonActive(common_active);
+		setVoiceRetriggerPolyActive(poly_active);
+	}
+
+	public void setVoiceRetriggerCommonActive(boolean active) {
+		this.voice_retrigger_common_active = active;
+	}
+
+	public boolean isVoiceRetriggerPolyActive() {
+		return voice_retrigger_poly_active;
+	}
+
+	public void setVoiceRetriggerPolyActive(boolean active) {
+		this.voice_retrigger_poly_active = active;
+	}
+
+	
 }

@@ -22,28 +22,20 @@
  */
 package org.nomad.patch;
 
-public class Note {
+public class CtrlMap extends Assignable {
 
-	private int noteNumber;
-	private int attackVelocity;
-	private int releaseVelocity;
-
-	public Note(int noteNumber, int attackVelocity, int releaseVelocity) {
-		this.noteNumber = noteNumber;
-		this.attackVelocity = attackVelocity;
-		this.releaseVelocity = releaseVelocity;
+	private int cc ;
+	
+	public CtrlMap(int cc) {
+		this.cc = cc;
+	}
+	
+	public int getCC() {
+		return cc;
 	}
 
-	public int getAttackVelocity() {
-		return attackVelocity;
-	}
-
-	public int getNoteNumber() {
-		return noteNumber;
-	}
-
-	public int getReleaseVelocity() {
-		return releaseVelocity;
+	public final static boolean isValidCC(int cc) {
+		return (0<=cc && cc<=120) && (cc!=32);
 	}
 
 }

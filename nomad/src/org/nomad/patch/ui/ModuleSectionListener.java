@@ -18,32 +18,15 @@
  */
 
 /*
- * Created on Feb 13, 2006
+ * Created on Feb 14, 2006
  */
-package org.nomad.patch;
+package org.nomad.patch.ui;
 
-public class Note {
+import org.nomad.patch.Module;
 
-	private int noteNumber;
-	private int attackVelocity;
-	private int releaseVelocity;
+public interface ModuleSectionListener {
 
-	public Note(int noteNumber, int attackVelocity, int releaseVelocity) {
-		this.noteNumber = noteNumber;
-		this.attackVelocity = attackVelocity;
-		this.releaseVelocity = releaseVelocity;
-	}
-
-	public int getAttackVelocity() {
-		return attackVelocity;
-	}
-
-	public int getNoteNumber() {
-		return noteNumber;
-	}
-
-	public int getReleaseVelocity() {
-		return releaseVelocity;
-	}
+	public void moduleAdded(Module module);
+	public void moduleRemoved(Module module);
 
 }

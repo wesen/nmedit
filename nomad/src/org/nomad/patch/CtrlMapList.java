@@ -22,28 +22,27 @@
  */
 package org.nomad.patch;
 
-public class Note {
+import java.util.Arrays;
 
-	private int noteNumber;
-	private int attackVelocity;
-	private int releaseVelocity;
+public class CtrlMapList { 
 
-	public Note(int noteNumber, int attackVelocity, int releaseVelocity) {
-		this.noteNumber = noteNumber;
-		this.attackVelocity = attackVelocity;
-		this.releaseVelocity = releaseVelocity;
+	private CtrlMap[] ctrlMapList ;
+	
+	public CtrlMapList() {
+		ctrlMapList = new CtrlMap[121];
+		Arrays.fill(ctrlMapList, null);
+		for (int i=0;i<=33;i++)
+			ctrlMapList[i] = new CtrlMap(i);
+		for (int i=33;i<=120;i++)
+			ctrlMapList[i] = new CtrlMap(i);
 	}
 
-	public int getAttackVelocity() {
-		return attackVelocity;
+	protected boolean inBounds(int cc) {
+		return (cc>=0) && (cc<ctrlMapList.length);
 	}
-
-	public int getNoteNumber() {
-		return noteNumber;
+	
+	public CtrlMap getCtrl(int cc) {
+		return inBounds(cc) ? ctrlMapList[cc] : null;
 	}
-
-	public int getReleaseVelocity() {
-		return releaseVelocity;
-	}
-
+	
 }
