@@ -21,9 +21,12 @@
  * Created on Jan 1, 2006
  */
 package org.nomad.util.graphics;
+import java.awt.AlphaComposite;
 import java.awt.Component;
+import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
@@ -188,6 +191,13 @@ public class ImageToolkit {
 				}
 			}
 		}
+	}
+
+	public static void clearRegion(Graphics2D g2, int x, int y, int w, int h) {
+		Composite c = g2.getComposite();
+		g2.setComposite(AlphaComposite.Clear);
+		g2.fillRect(x, y, w, h);
+		g2.setComposite(c);
 	}
 
 }

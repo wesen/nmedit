@@ -1,4 +1,4 @@
-package org.nomad.util.misc;
+package org.nomad.util.iterate;
 
 import java.util.Iterator;
 
@@ -7,13 +7,13 @@ import java.util.Iterator;
  *
  * @author Christian Schneider
  */
-public class SequenceIterator implements Iterator {
+public class SequencialIterator<T> implements Iterator<T> {
 
-	private Iterator ia = null;
-	private Iterator ib = null;
+	private Iterator<T> ia = null;
+	private Iterator<T> ib = null;
 	
 	// the previously called iterator
-	private Iterator lastCalled = null;
+	private Iterator<T> lastCalled = null;
 	
 	/**
 	 * An iterator that links two iterators
@@ -21,7 +21,7 @@ public class SequenceIterator implements Iterator {
 	 * @param a first iterator
 	 * @param b second iterator
 	 */
-	public SequenceIterator(Iterator a, Iterator b) {
+	public SequencialIterator(Iterator<T> a, Iterator<T> b) {
 		this.ia = a;
 		this.ib = b;
 	}
@@ -31,11 +31,11 @@ public class SequenceIterator implements Iterator {
 	}
 	
 	// returns the current iterator
-	private Iterator getCurrent() {
+	private Iterator<T> getCurrent() {
 		return lastCalled = ia.hasNext()?ia:ib;
 	}
 
-	public Object next() {
+	public T next() {
 		return getCurrent().next();
 	}
 

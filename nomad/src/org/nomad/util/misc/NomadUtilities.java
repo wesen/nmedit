@@ -24,12 +24,85 @@ package org.nomad.util.misc;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 public class NomadUtilities {
+
+	public static <T> void addAll(ArrayList<T> list, Iterator<T> iterator)
+	{
+		while (iterator.hasNext())
+			list.add(iterator.next());
+	}
+	
+	public static void scale(Rectangle rect, double factor)
+	{
+		scale(rect, factor, factor);
+	}
+
+	public static void scale(Rectangle rect, double xfactor, double yfactor)
+	{
+		double xx = rect.x * xfactor;
+		double yy = rect.y * yfactor;
+
+		int fx = (int) Math.floor(xx);
+		int cx = (int) Math.ceil (xx);
+		
+		int fy = (int) Math.floor(yy);
+		int cy = (int) Math.ceil (yy);
+
+		rect.x = fx;
+		rect.y = fy;
+		
+		rect.width  = ((int) Math.ceil(rect.width *xfactor));
+		rect.height = ((int) Math.ceil(rect.height*yfactor));
+		
+		if (fx<cx) rect.width ++;
+		if (fy<cy) rect.height++;
+	}
+	
+	public static void enlarge(Rectangle rect, int enlargement)
+	{
+		int enlargement2  = enlargement*2; 
+		rect.x 		-= enlargement;
+		rect.y 		-= enlargement;
+		rect.width	+= enlargement2;
+		rect.height	+= enlargement2;
+	}
+
+	public static void intersect(Rectangle rect, int width, int height)
+	{
+		intersect(rect, 0, 0, width, height);
+	}
+	
+	public static void intersect(Rectangle rect, int x, int y, int width, int height)
+	{
+		if (rect.x<x)
+		{
+			rect.width -= (x-rect.x+1);
+			rect.x = x;
+		}
+		
+		if (rect.y<y)
+		{
+			rect.height -= (y-rect.y+1);
+			rect.y = y;
+		}
+
+		int r = x+width -1;
+		int b = y+height-1;
+
+		int rr= rect.x+rect.width -1;
+		int rb= rect.y+rect.height-1;
+		
+		if (rr>r) rect.width  = Math.max(x, r-rect.x);
+		if (rb>b) rect.height = Math.max(y, b-rect.y);
+	}
 
 	public static void setupAndShow(JFrame frame, double dw, double dh) {
 	    Dimension screensz  = Toolkit.getDefaultToolkit().getScreenSize();
