@@ -26,6 +26,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -126,6 +127,16 @@ public class NomadUtilities {
 	    // set close operation, then show window
 	    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	    frame.setVisible(true);
+	}
+	
+	public static void center(Window w) {
+	    Dimension screensz  = Toolkit.getDefaultToolkit().getScreenSize();
+	    Dimension size = w.getSize();
+	
+	    w.setLocation(
+	      (screensz.width- size.width)/2,
+	      (screensz.height-size.height)/2
+	    );
 	}
 	
 	public static void infoDialog(Component c, String message) {

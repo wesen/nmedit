@@ -16,14 +16,12 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.ToolTipManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.nomad.dialog.ComPortSettingsDialog;
 import org.nomad.dialog.JTaskDialog;
 import org.nomad.dialog.TaskModel;
 import org.nomad.env.Environment;
@@ -31,11 +29,8 @@ import org.nomad.patch.Patch;
 import org.nomad.patch.format.PatchPreview;
 import org.nomad.patch.ui.PatchUI;
 import org.nomad.plugin.NomadPlugin;
-import org.nomad.port.ComPort;
-import org.nomad.port.ComPortFactory;
-import org.nomad.port.Synth;
-import org.nomad.port.SynthConnectionStateListener;
-import org.nomad.port.SynthException;
+import org.nomad.synth.SynthConnection;
+import org.nomad.synth.SynthConnectionStateListener;
 import org.nomad.theme.UIFactory;
 import org.nomad.util.misc.NomadUtilities;
 import org.nomad.util.view.DocumentManager;
@@ -49,7 +44,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
     public static String creatorRelease = "development build";
   
     private Environment env = null;
-    private Synth synth = null;
+    private SynthConnection synthConnection = null;
     private JFileChooser fileChooser = new JFileChooser("data/patches/");
     private JPanel panelMain = null;
     private DocumentManager documents = null;
@@ -81,7 +76,9 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		// further setup
 		setJMenuBar(createMenu());
 		ToolTipManager.sharedInstance().setInitialDelay(0);
-		newSynth(ComPort.getDefaultComPortInstance());
+		//newSynth(ComPort.getDefaultComPortInstance());
+		synthConnection = new SynthConnection();
+		synthConnection.addConnectionStateListener(this);
 		documents = new SelectableDocumentManager(panelMain);
 		
 		addWindowListener(new AutomaticSynthShutdownAction());
@@ -244,6 +241,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		NomadUtilities.infoDialog(this, "The dialog is not implemented, yet.");
 	}
 	
+	/*
 	private void newSynth(ComPort comPort) {
 		if (synth != null) {
 			if (synth.isConnected())
@@ -261,7 +259,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		// initialize
 		synthConnectionStateChanged(synth);
 		synth.addSynthConnectionStateListener(this);
-	}
+	}*/
 	
 	void changeSynthInterface(final NomadPlugin plugin) {
 		
@@ -327,25 +325,21 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 
 	}
 
-	public void synthConnectionStateChanged(Synth synth) {
+	public void synthConnectionStateChanged(SynthConnection synth) {
 		this.menuSynthConnectionMenuItem.setText(
-			synth.getCompPort().isPortOpen()?"Disconnect":"Connect"
+			synth.isConnected()?"Disconnect":"Connect"
 		);
 		this.menuSynthUploadPatchFromCurrentSlot.setEnabled(
-			synth.getCompPort().isPortOpen()
+			synth.isConnected()
 		);
 	}
 
 	class AutomaticSynthShutdownAction extends WindowAdapter {
 		public void windowClosing(WindowEvent event) {
-			if (synth.isConnected())
-				try {
-					System.out.println("Closing midi connection.");
-					synth.disconnect();
-				} catch (SynthException e) {
-					System.out.println("Synth exception while exit:"+e);
-					e.printStackTrace();
-				}
+			if (synthConnection.isConnected()) {
+				System.out.println("Closing midi connection.");
+				synthConnection.disconnect();
+			}
 		}
 	}
 	
@@ -357,7 +351,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 	
 	class SelectComportAction implements ChangeListener {
 		public void stateChanged(ChangeEvent event) {
-			if (event.getSource() instanceof ComPortPluginMenu) {
+	/*		if (event.getSource() instanceof ComPortPluginMenu) {
 				NomadPlugin plugin = ((ComPortPluginMenu)event.getSource()).getSelectedPlugin();
 				
 				newSynth(((ComPortFactory)plugin.getFactoryInstance()).getInstance());
@@ -368,7 +362,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 					    JOptionPane.INFORMATION_MESSAGE); // info message
 				
 				
-			}
+			}*/
 		}
 	}
 	
@@ -397,7 +391,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 
     class UploadPatchFromCurrentSlotAction implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        	Patch p = synth.getCompPort().getPatchFromActiveSlot();
+        	Patch p = synthConnection.getSynth().getActiveSlot();
         	
         	if (p==null) {
         		System.err.println("no patch data");
@@ -435,20 +429,16 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 
 	class SynthConnectionMenuItemListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
-			try {
-				if (!synth.isConnected())
-					synth.connect();
-				else
-					synth.disconnect();
-			} catch (SynthException cause) {
-				cause.printStackTrace();
-			}
+			if (!synthConnection.isConnected())
+				synthConnection.connect();
+			else
+				synthConnection.disconnect();
 		}
 	}
 	
 	class SetupSynthAction implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			ComPortSettingsDialog.invokeDialog(synth.getCompPort());
+			synthConnection.setup();
 		}
 	}
 	
