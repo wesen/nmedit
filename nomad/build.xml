@@ -135,7 +135,7 @@
 		<jar jarfile="${dist.nomad}/org.nomad.jar" basedir="${build.nomad}">
 	      <manifest> <!-- java -jar example.jar -->
 	        <attribute name="Main-class" value="org.nomad.main.run.Run"/>
-	        <attribute name="Class-Path" value="../../lib/xpp3-1.1.3.4.H.jar ../../lib/xpp3_min-1.1.3.4.H.jar ../../lib/xpp3_xpath-1.1.3.4.H.jar ../../plugin/classictheme.jar"/>
+	        <attribute name="Class-Path" value="../../lib/xpp3-1.1.3.4.H.jar ../../lib/xpp3_min-1.1.3.4.H.jar ../../lib/xpp3_xpath-1.1.3.4.H.jar ../../lib/jnmprotocol.jar ../../lib/jpdl.jar ../../plugin/classictheme.jar"/>
 	      </manifest>
 		</jar> 
 	</target>
