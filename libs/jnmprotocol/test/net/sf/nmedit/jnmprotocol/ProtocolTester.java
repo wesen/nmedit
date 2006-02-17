@@ -43,13 +43,15 @@ public class ProtocolTester extends TestCase
 	throws Exception
     {
 	try {
-	    MidiMessage.usePdlFile("/usr/local/lib/nmprotocol/midi.pdl", null);
+	    MidiMessage.usePdlFile("/usr/local/lib/nmprotocol/midi.pdl",
+				   null);
 	    MidiDriver md = new MidiDriver();
 	    MidiDevice.Info[] info = MidiSystem.getMidiDeviceInfo();
 	    md.connect(info[0], info[1]);
 	    NmProtocol p = new NmProtocol(md);
 	    p.addListener(new Listener());
 	    p.send(new IAmMessage());
+	    p.send(new RequestPatchMessage());
 	    int n = 0;
 	    while(n < 200) {
 		n++;
@@ -57,8 +59,20 @@ public class ProtocolTester extends TestCase
 		Thread.sleep(10);
 	    }
 	}
+	catch (MidiException me) {
+	    me.printStackTrace();
+	    System.out.println("" + me.getError());
+	}
 	catch (Throwable e) {
 	    e.printStackTrace();
+	}
+    }
+
+    class TestTracer implements net.sf.nmedit.jpdl.Tracer
+    {
+	public void trace(String message)
+	{
+	    System.out.println("T: " + message);
 	}
     }
 

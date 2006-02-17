@@ -226,6 +226,7 @@ public abstract class MidiMessage
 	
 	intStream.setSize(intStream.getSize()-1);
 	intStream.append(checksum);
+	intStream.setPosition(0);
     }
     
     protected String extractName(Packet name)
