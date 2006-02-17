@@ -22,31 +22,33 @@
  */
 package org.nomad.xml.dom.theme.impl;
 
-import org.nomad.xml.dom.theme.NomadDOMProperty;
+import java.util.ArrayList;
+import java.util.Iterator;
 
-public class DOMPropertyImpl extends DOMNodeImpl implements NomadDOMProperty {
+import org.nomad.xml.dom.theme.Node;
 
-	private String name = null;
-	private String value = null;
-	
-	public DOMPropertyImpl(String name) {
-		this.name = name;
+public abstract class NodeImpl implements Node {
+
+	private ArrayList<Node> children = new ArrayList<Node>();
+
+	public int getNodeCount() {
+		return (children==null) ? 0 : children.size();
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setValue(String value) {
-		this.value=value;
-	}
-
-	public String getValue() {
-		return value;
+	protected void add(NodeImpl node) {
+		children.add(node);
 	}
 	
-	public String toString() {
-		return "NomadDOMProperty[name="+name+",value="+value+"]";
+	public NodeImpl getNode(int index) {
+		return (NodeImpl) children.get(index);
+	}
+	
+	public Iterator<Node> iterator() {
+		return children.iterator();
+	}
+	
+	public void removeChildren() {
+		children.clear();
 	}
 	
 }

@@ -24,18 +24,18 @@ package org.nomad.xml.pull;
 
 import java.io.IOException;
 
-import org.nomad.xml.dom.theme.NomadDOM;
-import org.nomad.xml.dom.theme.NomadDOMComponent;
-import org.nomad.xml.dom.theme.NomadDOMModule;
-import org.nomad.xml.dom.theme.NomadDOMProperty;
+import org.nomad.xml.dom.theme.ThemeNode;
+import org.nomad.xml.dom.theme.ComponentNode;
+import org.nomad.xml.dom.theme.ModuleNode;
+import org.nomad.xml.dom.theme.PropertyNode;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-public class UIParser extends NomadPullParser {
+public class ThemeParser extends NomadPullParser {
 
-	private NomadDOM dom = null;
+	private ThemeNode dom = null;
 	
-	public UIParser(NomadDOM dom) {
+	public ThemeParser(ThemeNode dom) {
 		this.dom = dom;
 	}
 
@@ -46,7 +46,7 @@ public class UIParser extends NomadPullParser {
 			switch (event) {
 				case XmlPullParser.START_TAG:
 
-					if (tag(parser, "ui-description"))
+					if (tag(parser, "theme"))
 						; // all right
 					else if (tag(parser, "module")) 
 						module(parser);
@@ -72,7 +72,7 @@ public class UIParser extends NomadPullParser {
 		}
 
 		assureAttributeExists(parser, "id", attModuleId);
-		NomadDOMModule domModule = dom.createModuleNode(convertInteger(parser, "id", attModuleId));
+		ModuleNode domModule = dom.createModuleNode(convertInteger(parser, "id", attModuleId));
 
 		boolean done = false;
 		event = parser.nextToken();
@@ -105,7 +105,7 @@ public class UIParser extends NomadPullParser {
 		
 	}
 
-	private void component(XmlPullParser parser, NomadDOMModule domModule) throws XmlPullParserException, IOException {
+	private void component(XmlPullParser parser, ModuleNode domModule) throws XmlPullParserException, IOException {
 		String attComponentName = null;
 
 		for (int i=parser.getAttributeCount()-1;i>=0;i--) {
@@ -118,7 +118,7 @@ public class UIParser extends NomadPullParser {
 		}
 
 		assureAttributeExists(parser, "name", attComponentName);
-		NomadDOMComponent domComponent = domModule.createComponentNode(attComponentName);
+		ComponentNode domComponent = domModule.createComponentNode(attComponentName);
 
 
 		boolean done = false;
@@ -151,7 +151,7 @@ public class UIParser extends NomadPullParser {
 		}
 	}
 
-	private void property(XmlPullParser parser, NomadDOMComponent domComponent) throws XmlPullParserException, IOException {
+	private void property(XmlPullParser parser, ComponentNode domComponent) throws XmlPullParserException, IOException {
 		String attPropertyName = null;
 		String attPropertyValue = null;
 
@@ -168,7 +168,7 @@ public class UIParser extends NomadPullParser {
 
 		assureAttributeExists(parser, "name", attPropertyName);
 		assureAttributeExists(parser, "value", attPropertyValue);
-		NomadDOMProperty domProperty = domComponent.createPropertyNode(attPropertyName);
+		PropertyNode domProperty = domComponent.createPropertyNode(attPropertyName);
 		domProperty.setValue(attPropertyValue);
 
 		boolean done = false;

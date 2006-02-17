@@ -22,9 +22,12 @@
  */
 package org.nomad.xml.dom.theme;
 
-import java.util.Iterator;
 
-public interface NomadDOMNode {
-	public int getNodeCount();
-	public Iterator<NomadDOMNode> iterator();
+
+public interface ComponentNode extends Node {
+
+	public String getName();
+	public PropertyNode createPropertyNode(String name);
+	public PropertyNode getPropertyNode(int index);
+	
 }

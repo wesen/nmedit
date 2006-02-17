@@ -20,16 +20,31 @@
 /*
  * Created on Jan 12, 2006
  */
-package org.nomad.xml.dom.theme;
+package org.nomad.xml.dom.theme.impl;
 
+import org.nomad.xml.dom.theme.ComponentNode;
+import org.nomad.xml.dom.theme.PropertyNode;
 
-import org.nomad.xml.dom.module.DModule;
+public class ComponentNodeImpl extends NodeImpl implements ComponentNode {
 
-public interface NomadDOMModule extends NomadDOMNode {
-
-	public DModule getInfo();
-	public NomadDOMComponent createComponentNode(String name);
-	public NomadDOMComponent getComponentNode(int index);
-	public void removeChildren();
+	private String name = null;
 	
+	public ComponentNodeImpl(String name) {
+		this.name=name;
+	}
+
+	public PropertyNode createPropertyNode(String name) {
+		PropertyNodeImpl p = new PropertyNodeImpl(name);
+		add(p);
+		return p;
+	}
+
+	public PropertyNode getPropertyNode(int index) {
+		return  (PropertyNode) getNode(index);
+	}
+
+	public String getName() {
+		return name;
+	}
+
 }

@@ -27,7 +27,7 @@ import java.io.FileNotFoundException;
 import org.nomad.main.ModuleToolbar;
 import org.nomad.main.run.Run;
 import org.nomad.plugin.PluginManager;
-import org.nomad.theme.ModuleGUIBuilder;
+import org.nomad.theme.ModuleBuilder;
 import org.nomad.theme.UIFactory;
 import org.nomad.util.graphics.ImageTracker;
 import org.nomad.xml.dom.module.DConnector;
@@ -49,13 +49,13 @@ public class Environment {
 	private ImageTracker imageTracker = null;
 	private UIFactory factory = null;
 	private ModuleToolbar moduleToolbar = null;
-	private ModuleGUIBuilder builder = null;
+	private ModuleBuilder builder = null;
 
 	public ImageTracker getImageTracker(){
 		return imageTracker;
 	}
 	
-	public ModuleGUIBuilder getBuilder() {
+	public ModuleBuilder getBuilder() {
 		return builder;
 	}
 	
@@ -96,7 +96,7 @@ public class Environment {
 	}
 	
 	public void loadDefaultBuilder() {
-		builder = new ModuleGUIBuilder(this);
+		builder = new ModuleBuilder(this);
 	}
 	
 	public void loadPluginManager() {

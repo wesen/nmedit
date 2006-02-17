@@ -38,7 +38,7 @@ public class ClassicThemeFactory extends UIFactory {
 	}
 
 	public String getUIDescriptionFileName() {
-		return "plugin/classictheme/ui.xml";
+		return "plugin/classictheme/theme.xml";
 	}
 
 	public ModuleUI getModuleGUI(DModule info) {

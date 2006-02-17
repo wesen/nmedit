@@ -20,10 +20,33 @@
 /*
  * Created on Jan 12, 2006
  */
-package org.nomad.xml.dom.theme;
+package org.nomad.xml.dom.theme.impl;
 
-public interface NomadDOMProperty {
-	public String getName();
-	public void setValue(String value);
-	public String getValue();
+
+import org.nomad.xml.dom.module.DModule;
+import org.nomad.xml.dom.theme.ComponentNode;
+import org.nomad.xml.dom.theme.ModuleNode;
+
+public class ModuleNodeImpl extends NodeImpl implements ModuleNode {
+
+	private DModule moduleInfo = null;
+	
+	public ModuleNodeImpl(DModule info) {
+		moduleInfo = info;
+	}
+
+	public DModule getModule() {
+		return moduleInfo;
+	}
+
+	public ComponentNode createComponentNode(String name) {
+		ComponentNodeImpl impl = new ComponentNodeImpl(name);
+		add(impl);
+		return impl;
+	}
+
+	public ComponentNode getComponentNode(int index) {
+		return (ComponentNode) getNode(index);
+	}
+
 }

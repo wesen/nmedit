@@ -55,7 +55,7 @@ public class G2ThemeFactory extends UIFactory {
 
 	public String getUIDescriptionFileName() {
 		// use the classic theme ui file
-		return "plugin/classictheme/ui.xml";
+		return "plugin/classictheme/theme.xml";
 	}
 
 	public ModuleUI getModuleGUI(DModule info) {

@@ -80,7 +80,7 @@ public class Module {
 	}
 
 	public ModuleUI newUI(ModuleSectionUI moduleSection) {
-    	return ui = Environment.sharedInstance().getBuilder().createGUI(this, moduleSection);
+    	return ui = Environment.sharedInstance().getBuilder().compose(this, moduleSection);
 	}
 	
 	void setModuleSection(ModuleSection moduleSection) {

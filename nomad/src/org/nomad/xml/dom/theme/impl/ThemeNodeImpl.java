@@ -27,41 +27,41 @@ import java.util.HashMap;
 
 import org.nomad.xml.dom.module.DModule;
 import org.nomad.xml.dom.module.ModuleDescriptions;
-import org.nomad.xml.dom.theme.NomadDOM;
-import org.nomad.xml.dom.theme.NomadDOMModule;
-import org.nomad.xml.pull.UIParser;
+import org.nomad.xml.dom.theme.ThemeNode;
+import org.nomad.xml.dom.theme.ModuleNode;
+import org.nomad.xml.pull.ThemeParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-public class DomImpl extends DOMNodeImpl implements NomadDOM {
+public class ThemeNodeImpl extends NodeImpl implements ThemeNode {
 
-	private HashMap<String, NomadDOMModule> moduleMap = new HashMap<String, NomadDOMModule>();
+	private HashMap<String, ModuleNode> moduleMap = new HashMap<String, ModuleNode>();
 	
-	public DomImpl() {
+	public ThemeNodeImpl() {
 		super();
 	}
 
-	public NomadDOMModule createModuleNode(DModule info) {
-		DomModuleImpl mod = new DomModuleImpl(info);
+	public ModuleNode createModuleNode(DModule info) {
+		ModuleNodeImpl mod = new ModuleNodeImpl(info);
 		add(mod);
 		moduleMap.put(info.getKey(), mod);
 		return mod;
 	}
 
-	public NomadDOMModule createModuleNode(int id) { 
+	public ModuleNode createModuleNode(int id) { 
 		DModule info = ModuleDescriptions.sharedInstance().getModuleById(id);
 		return createModuleNode(info);
 	}
 
-	public NomadDOMModule getModuleNodeById(int id) {
+	public ModuleNode getModuleNodeById(int id) {
 		return moduleMap.get(DModule.getKeyFromId(id));
 	}
 
-	public NomadDOMModule getModuleNode(int index) {
-		return (NomadDOMModule) getNode(index);
+	public ModuleNode getModuleNode(int index) {
+		return (ModuleNode) getNode(index);
 	}
 
-	public static void importDocument(DomImpl dom, String file) {
-		UIParser parser = new UIParser(dom);
+	public static void importDocument(ThemeNodeImpl dom, String file) {
+		ThemeParser parser = new ThemeParser(dom);
 		try {
 			parser.parse(file);
 		} catch (FileNotFoundException e) {

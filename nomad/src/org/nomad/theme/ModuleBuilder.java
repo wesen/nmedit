@@ -38,15 +38,15 @@ import org.nomad.util.graphics.ImageBuffer;
 import org.nomad.util.graphics.PersistenceManager;
 import org.nomad.xml.XMLFileWriter;
 import org.nomad.xml.dom.module.DModule;
-import org.nomad.xml.dom.theme.NomadDOM;
-import org.nomad.xml.dom.theme.NomadDOMComponent;
-import org.nomad.xml.dom.theme.NomadDOMModule;
-import org.nomad.xml.dom.theme.NomadDOMProperty;
-import org.nomad.xml.dom.theme.impl.DomImpl;
+import org.nomad.xml.dom.theme.ThemeNode;
+import org.nomad.xml.dom.theme.ComponentNode;
+import org.nomad.xml.dom.theme.ModuleNode;
+import org.nomad.xml.dom.theme.PropertyNode;
+import org.nomad.xml.dom.theme.impl.ThemeNodeImpl;
 
-public class ModuleGUIBuilder {
+public class ModuleBuilder {
 
-	private NomadDOM nomadDom = null;
+	private ThemeNode nomadDom = null;
 	private UIFactory uifactory = null;
 	private PersistenceManager backgroundManager = new PersistenceManager();
 	
@@ -58,7 +58,7 @@ public class ModuleGUIBuilder {
 		return env;
 	}
 	
-	public ModuleGUIBuilder(Environment env) {
+	public ModuleBuilder(Environment env) {
 		this.env = env;
 	}
 
@@ -67,7 +67,7 @@ public class ModuleGUIBuilder {
 		if (nomadDom==null)
 			throw new NullPointerException("No Dom");
 		
-		NomadDOMModule node = nomadDom.getModuleNodeById(info.getModuleID());
+		ModuleNode node = nomadDom.getModuleNodeById(info.getModuleID());
 		if (node != null)
 			node.removeChildren();
 		else
@@ -76,7 +76,7 @@ public class ModuleGUIBuilder {
     	for (Iterator iter = moduleContainer.getExportableNomadComponents();iter.hasNext();) {
     		NomadComponent comp = (NomadComponent) iter.next();
     		
-    		NomadDOMComponent compNode = node.createComponentNode(comp.getNameAlias());
+    		ComponentNode compNode = node.createComponentNode(comp.getNameAlias());
     		comp.createAccessibleProperties(false).exportToDOM(compNode); 
     	}
     }
@@ -85,21 +85,21 @@ public class ModuleGUIBuilder {
 		out.beginTag("ui-description", true);
 		
 		for (int i=0;i<nomadDom.getNodeCount();i++) {
-			NomadDOMModule mod = nomadDom.getModuleNode(i);
+			ModuleNode mod = nomadDom.getModuleNode(i);
 			
 			out.beginTagStart("module");
-			out.addAttribute("id", ""+mod.getInfo().getModuleID());
+			out.addAttribute("id", ""+mod.getModule().getModuleID());
 			out.beginTagFinish(true);
 			
 			for (int j=0;j<mod.getNodeCount();j++) {
-				NomadDOMComponent compNode = mod.getComponentNode(j);
+				ComponentNode compNode = mod.getComponentNode(j);
 				
 				out.beginTagStart("component");
 				out.addAttribute("name", compNode.getName()); // TODO use associations i.e. 'button', 'knob'
 				out.beginTagFinish(true);
 
 				for (int k=0;k<compNode.getNodeCount();k++) {
-					NomadDOMProperty pNode = compNode.getPropertyNode(k);
+					PropertyNode pNode = compNode.getPropertyNode(k);
 					
 					out.beginTagStart("property");
 					out.addAttribute("name",pNode.getName());
@@ -146,25 +146,35 @@ public class ModuleGUIBuilder {
 		load();
 	}
 
-	public NomadDOM getDom() {
+	public ThemeNode getDom() {
 		return nomadDom;
 	}
 
-	public ModuleUI createGUI(Module module, ModuleSectionUI moduleSection) {
-		ModuleUI moduleGUI = createGUI(module.getInfo(), moduleSection);
+	public ModuleUI compose(Module module, ModuleSectionUI moduleSection) {
+		ModuleUI moduleGUI = compose(module.getInfo(), moduleSection);
 		moduleGUI.setModule(module);
 		return moduleGUI;
 	}
 	
-	public ModuleUI createGUI(DModule moduleInfo, ModuleSectionUI moduleSection) {
-		ModuleUI moduleGUI = uifactory.getModuleGUI(moduleInfo);
+	public ModuleUI compose(DModule module, ModuleSectionUI moduleSection) {
+		ModuleUI moduleGUI = uifactory.getModuleGUI(module);
 		moduleGUI.setModuleSectionUI(moduleSection);
-		createGUIComponents(moduleGUI, moduleInfo, true);
+		createGUIComponents(moduleGUI, module, true);
+		return moduleGUI;
+	}
+	
+	public ModuleUI compose(DModule module) {
+		ModuleUI moduleGUI = uifactory.getModuleGUI(module);
+		createGUIComponents(moduleGUI, module, true);
 		return moduleGUI;
 	}
 
 	private Object getCacheKey(DModule moduleInfo) {
 		return new Integer(moduleInfo.getModuleID());
+	}
+	
+	private boolean isDecoration(Class clazz) {
+		return decorationComponentMap.containsKey(clazz);
 	}
 	
 	public void createGUIComponents(NomadComponent modulePane, DModule moduleInfo, boolean useCache) {
@@ -185,15 +195,15 @@ public class ModuleGUIBuilder {
 			}
 
 			// get module ui information
-			NomadDOMModule domModule = nomadDom.getModuleNodeById(moduleInfo.getModuleID());
+			ModuleNode domModule = nomadDom.getModuleNodeById(moduleInfo.getModuleID());
 			
 			for (Iterator itComp=domModule.iterator();itComp.hasNext();) {
-				NomadDOMComponent compNode = (NomadDOMComponent) itComp.next();
+				ComponentNode compNode = (ComponentNode) itComp.next();
 
 				String compName = compNode.getName();
 				Class compClass = uifactory.getNomadComponentClass(compName);
 
-				keyNotFound = !decorationComponentMap.containsKey(compClass);
+				keyNotFound = !isDecoration(compClass);
 				
 				if(isRendering || keyNotFound) {
 					
@@ -211,8 +221,8 @@ public class ModuleGUIBuilder {
 						// setup component
 						PropertySet properties = comp.createAccessibleProperties(false);
 						for (Iterator itProp=compNode.iterator();itProp.hasNext();) {
-							NomadDOMProperty propNode = (NomadDOMProperty) itProp.next();
-							Property compProperty = properties.byName(propNode.getName());
+							PropertyNode propNode = (PropertyNode) itProp.next();
+							Property compProperty = properties.get(propNode.getName());
 
 							try {
 								compProperty.setValue(propNode.getValue());
@@ -235,10 +245,10 @@ public class ModuleGUIBuilder {
 			// no caching
 
 			// get module ui information
-			NomadDOMModule domModule = nomadDom.getModuleNodeById(moduleInfo.getModuleID());
+			ModuleNode domModule = nomadDom.getModuleNodeById(moduleInfo.getModuleID());
 			
 			for (Iterator itComp=domModule.iterator();itComp.hasNext();) {
-				NomadDOMComponent compNode = (NomadDOMComponent) itComp.next();
+				ComponentNode compNode = (ComponentNode) itComp.next();
 
 				String compName = compNode.getName();
 				Class compClass = uifactory.getNomadComponentClass(compName);
@@ -256,8 +266,8 @@ public class ModuleGUIBuilder {
 					PropertySet properties = comp.createAccessibleProperties(false);
 
 					for (Iterator itProp=compNode.iterator();itProp.hasNext();) {
-						NomadDOMProperty propNode = (NomadDOMProperty) itProp.next();
-						Property compProperty = properties.byName(propNode.getName());
+						PropertyNode propNode = (PropertyNode) itProp.next();
+						Property compProperty = properties.get(propNode.getName());
 
 						try {
 							compProperty.setValue(propNode.getValue());
@@ -275,9 +285,9 @@ public class ModuleGUIBuilder {
 		
 	// -----------
 
-	public NomadDOM read(String file) {
-		DomImpl dom = new DomImpl();
-		DomImpl.importDocument(dom, file);
+	public ThemeNode read(String file) {
+		ThemeNodeImpl dom = new ThemeNodeImpl();
+		ThemeNodeImpl.importDocument(dom, file);
 		return dom;
 	}
 	

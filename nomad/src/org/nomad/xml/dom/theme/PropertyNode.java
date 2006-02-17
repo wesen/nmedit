@@ -22,11 +22,8 @@
  */
 package org.nomad.xml.dom.theme;
 
-
-public interface NomadDOM extends NomadDOMNode {
-
-	public NomadDOMModule createModuleNode(int id);
-	public NomadDOMModule getModuleNodeById(int id);
-	public NomadDOMModule getModuleNode(int index);
-
+public interface PropertyNode {
+	public String getName();
+	public void setValue(String value);
+	public String getValue();
 }

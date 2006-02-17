@@ -284,7 +284,7 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 		PropertySet copySet = c.createAccessibleProperties(true);
 		
 		for (Property p : copySet) {
-			clonedSet.byName(p.getName()).setValue(p.getValue());
+			clonedSet.get(p.getName()).setValue(p.getValue());
 		}
 		
 		return clone;

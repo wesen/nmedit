@@ -20,35 +20,16 @@
 /*
  * Created on Jan 12, 2006
  */
-package org.nomad.xml.dom.theme.impl;
+package org.nomad.xml.dom.theme;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 
-import org.nomad.xml.dom.theme.NomadDOMNode;
+import org.nomad.xml.dom.module.DModule;
 
-public abstract class DOMNodeImpl implements NomadDOMNode {
+public interface ModuleNode extends Node {
 
-	private ArrayList<NomadDOMNode> children = new ArrayList<NomadDOMNode>();
-
-	public int getNodeCount() {
-		return (children==null) ? 0 : children.size();
-	}
-
-	protected void add(DOMNodeImpl node) {
-		children.add(node);
-	}
-	
-	public DOMNodeImpl getNode(int index) {
-		return (DOMNodeImpl) children.get(index);
-	}
-	
-	public Iterator<NomadDOMNode> iterator() {
-		return children.iterator();
-	}
-	
-	public void removeChildren() {
-		children.clear();
-	}
+	public DModule getModule();
+	public ComponentNode createComponentNode(String name);
+	public ComponentNode getComponentNode(int index);
+	public void removeChildren();
 	
 }

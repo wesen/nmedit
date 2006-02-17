@@ -22,29 +22,31 @@
  */
 package org.nomad.xml.dom.theme.impl;
 
-import org.nomad.xml.dom.theme.NomadDOMComponent;
-import org.nomad.xml.dom.theme.NomadDOMProperty;
+import org.nomad.xml.dom.theme.PropertyNode;
 
-public class DomComponentImpl extends DOMNodeImpl implements NomadDOMComponent {
+public class PropertyNodeImpl extends NodeImpl implements PropertyNode {
 
 	private String name = null;
+	private String value = null;
 	
-	public DomComponentImpl(String name) {
-		this.name=name;
-	}
-
-	public NomadDOMProperty createPropertyNode(String name) {
-		DOMPropertyImpl p = new DOMPropertyImpl(name);
-		add(p);
-		return p;
-	}
-
-	public NomadDOMProperty getPropertyNode(int index) {
-		return  (NomadDOMProperty) getNode(index);
+	public PropertyNodeImpl(String name) {
+		this.name = name;
 	}
 
 	public String getName() {
 		return name;
 	}
 
+	public void setValue(String value) {
+		this.value=value;
+	}
+
+	public String getValue() {
+		return value;
+	}
+	
+	public String toString() {
+		return "NomadDOMProperty[name="+name+",value="+value+"]";
+	}
+	
 }

@@ -30,7 +30,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.nomad.xml.XMLFileWriter;
-import org.nomad.xml.dom.theme.NomadDOMComponent;
+import org.nomad.xml.dom.theme.ComponentNode;
 
 
 /**
@@ -112,7 +112,7 @@ public class PropertySet implements Iterable<Property> {
 	 * @param string
 	 * @return
 	 */
-	public Property byName(String name) {
+	public Property get(String name) {
 		//if ((name==null)) return null;
 		Property p = propertyMap.get(name);
 		if (p==null && fallBack!=null) {
@@ -130,7 +130,7 @@ public class PropertySet implements Iterable<Property> {
 		return propertyMap.values().iterator();
 	}
 
-	public void exportToDOM(NomadDOMComponent node) {
+	public void exportToDOM(ComponentNode node) {
 		for (Iterator iter=iterator();iter.hasNext();) {
 			Property p = (Property) iter.next();
 			if (p.isExportable() && (!p.isInDefaultState())) {
