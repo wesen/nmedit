@@ -120,6 +120,7 @@ public class VEComponentHotSpot extends VEHotSpot implements ContainerListener {
 			}
 		}
 		dragStart = event.getPoint();
+		getEditor().getPropertyEditor().updateProperties();
 	}
 	
 	public void mouseReleased(MouseEvent event) {

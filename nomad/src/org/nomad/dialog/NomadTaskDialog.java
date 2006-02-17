@@ -30,42 +30,28 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
-public class JTaskDialog extends JDialog {
+public class NomadTaskDialog extends NomadDialog {
 
 	private TaskModel model = null;
 	private int task = 0;
-	private boolean flagStayOpen = true;
 	private JLabel lblDescription = null;
 	private JLabel lblCurrentTask = null;
 	private JLabel lblCurrentTaskName = null;
 	private JProgressBar pgBar = null;
-	private boolean cancelRequested = false;
-	private JButton btnStartStop = null;
-	private JButton btnClose = null;
-	private final static String TEXT_START = "Start";
-	private final static String TEXT_STOP = "Stop";
-	private final static String TEXT_CLOSE = "Close";
 	private Thread thread = null;
 	
-	public JTaskDialog(JFrame owner, TaskModel model) {
-		super(owner);
+	public NomadTaskDialog(TaskModel model) {
 		this.model = model;
 		setTitle(model.getDescription());
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		
 		Dimension size = new Dimension(360,240);
 		setSize(size);
@@ -76,8 +62,12 @@ public class JTaskDialog extends JDialog {
 		setLocation((screen.width-getWidth())/2, (screen.height-getHeight())/2);
 
 		// create components
-		createComponents((JComponent)getContentPane());
+		createComponents(this);
 		validate();
+	}
+	
+	public void invoke() {
+		super.invoke(null);
 	}
 
 	private void createComponents(JComponent contentPane) {
@@ -91,21 +81,6 @@ public class JTaskDialog extends JDialog {
 		pgBar.setMaximum(model.getTaskCount()-1);
 		pgBar.setValue(0);
 		pgBar.setStringPainted(true);
-		btnStartStop = new JButton(TEXT_STOP);
-		btnClose = new JButton(TEXT_CLOSE);
-		btnClose.setEnabled(false);
-		btnStartStop.setDefaultCapable(true);
-
-		btnStartStop.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent event) {
-				setCanceled(!cancelRequested);
-			}});
-		
-		btnClose.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent event) {
-				setVisible(false);
-				dispose();
-			}});
 		
 		lblDescription.setAlignmentX(Component.LEFT_ALIGNMENT);
 		lblCurrentTask.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -149,38 +124,8 @@ public class JTaskDialog extends JDialog {
 		progressPane.setBorder(BorderFactory.createEtchedBorder());
 		progressPane.setBackground(Color.WHITE);
 				
-		JPanel btnPane = new JPanel();
-		btnPane.setLayout( new BoxLayout(btnPane, BoxLayout.LINE_AXIS));
-		btnPane.add(Box.createHorizontalGlue());
-		btnPane.add(btnStartStop);
-		btnPane.add(Box.createHorizontalStrut(10));
-		btnPane.add(btnClose);
-		btnPane.add(Box.createHorizontalStrut(10));
-		btnPane.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnPane.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-		btnPane.setSize(Integer.MAX_VALUE,50);
-		btnPane.setBorder(BorderFactory.createEtchedBorder());
-		
 		contentPane.add(progressPane);
 		contentPane.add(Box.createVerticalStrut(10));
-		contentPane.add(btnPane);
-	}
-
-	public static boolean processTasks(JFrame owner, TaskModel model) {
-		return processTasks(owner, model, false);
-	}
-
-	public static boolean processTasks(JFrame owner, TaskModel model, boolean stayOpen) {
-		JTaskDialog dialog = new JTaskDialog(owner, model);
-		dialog.setStayOpen(stayOpen);
-		dialog.setVisible(true);
-		dialog.processQueue();
-		dialog.setModal(true);
-		return !dialog.cancelRequested;
-	}
-
-	private void setStayOpen(boolean stayOpen) {
-		this.flagStayOpen = stayOpen;
 	}
 
 	private void status() {
@@ -199,52 +144,60 @@ public class JTaskDialog extends JDialog {
 		lblCurrentTaskName.setText(lblCurrentTaskName.getText()+" ("+t.getClass().getSimpleName()+" :"+t.getMessage()+")");
 		lblCurrentTaskName.setForeground(Color.RED);
 	}
-	
-	private void setCanceled(boolean cancel) {
-		cancelRequested = cancel;
-		if (!cancelRequested) {
-			processQueue();
-		}
-		btnStartStop.setText(cancelRequested?TEXT_START:TEXT_STOP);
+
+	public void run() {
+		processQueue();
 	}
 
 	private void processQueue() {
 		if (thread !=null ) {
 			return;
 		}
-
-		thread = new Thread(new Runnable(){
+		
+		thread = new Thread(
+				new Runnable(){
 			public void run() {
 
-				JTaskDialog.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-				btnClose.setEnabled(false);
-				try {
-					while ((!cancelRequested) && (task<model.getTaskCount())) {
+				NomadTaskDialog.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				while (task<model.getTaskCount()) {
+					try {
 						status();
 						repaint();
 						model.run(task);
 						task++;
+					} catch (Throwable t) {
+						task++;
+						error(t);
+						return;
 					}
-				} catch (Throwable t) {
-					t.printStackTrace();
-					flagStayOpen = true;
-					setCanceled(true);
-					status(t);
-					task++;
 				}
-				JTaskDialog.this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-				threadExited();
+				NomadTaskDialog.this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				close();
 			}});
 		thread.start();
 	}
-	
-	private void threadExited() {
-		thread = null;
-		if (!((task<model.getTaskCount())||flagStayOpen)) {
-			setVisible(false);
+
+	private void error(Throwable t) {
+		status(t);
+		ExceptionNotificationDialog dialog = new ExceptionNotificationDialog(t);
+
+		if (task>=model.getTaskCount()-1) {
+			dialog.invoke();
+			NomadTaskDialog.this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			close();
 		} else {
-			btnStartStop.setText(TEXT_START);
-			btnClose.setEnabled(true);
+			String ignore="Ignore";
+			
+			dialog.invoke(new String[]{ignore,":Abort"});
+			if (ignore.equals(dialog.getResult())) {
+				
+				thread = null;
+				
+				processQueue();
+			} else {
+				NomadTaskDialog.this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				close();
+			}
 		}
 	}
 	

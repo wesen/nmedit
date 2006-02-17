@@ -16,7 +16,7 @@ import javax.swing.JSplitPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.nomad.dialog.JTaskDialog;
+import org.nomad.dialog.NomadTaskDialog;
 import org.nomad.dialog.TaskModel;
 import org.nomad.editor.views.WorkspacePanel;
 import org.nomad.editor.views.classes.NomadClassesView;
@@ -191,8 +191,8 @@ public class UIEditor extends JFrame {
 			return;
 		} else {
 			
-			JTaskDialog.processTasks(
-				this, new TaskModel() {
+			NomadTaskDialog dialog = new NomadTaskDialog(
+				new TaskModel() {
 
 					DModule tmp = getModule();
 					DModule[] modules = 
@@ -219,6 +219,9 @@ public class UIEditor extends JFrame {
 						else
 							setModule(tmp);
 					}} );
+			
+			dialog.setInfo("Info","Rewriting DOM");
+			dialog.invoke();
 		}
 		
 	}

@@ -106,6 +106,14 @@ public class NomadPropertyEditor extends JPanel {
 	JFrame getOwnerFrame() {
 		return ownerFrame;
 	}
+	
+	public void updateProperties() {
+		if (thePropertySet!=null) {
+			PropertySet s = thePropertySet;
+			setEditingPropertySet(null);
+			setEditingPropertySet(s);
+		}
+	}
 
 	public void setEditingPropertySet(PropertySet thePropertySet) {
 		if (this.thePropertySet!=thePropertySet) {
@@ -113,7 +121,6 @@ public class NomadPropertyEditor extends JPanel {
 			if (thePropertySet!=null) thePropertySet.removePropertySetListener(model);
 			this.thePropertySet=thePropertySet;
 			if (thePropertySet!=null) {
-				thePropertySet.setupForEditing();
 				thePropertySet.addPropertySetListener(model);
 				for (Property p : thePropertySet) {
 					properties.add(p);

@@ -18,15 +18,29 @@
  */
 
 /*
- * Created on Jan 18, 2006
+ * Created on Feb 14, 2006
  */
-package org.nomad.dialog;
+package org.nomad.dialog.decoration;
 
-public interface TaskModel {
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
-	public String getDescription();
-	public int getTaskCount();
-	public String getTaskName(int taskIndex);
-	public void run(int taskIndex) throws Throwable;
+import javax.swing.JPanel;
+
+public class DialogPane extends JPanel {
+
+	public DialogPane() {
+		setBackground(Color.WHITE);
+	}
+
+	protected void paintChildren(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		
+		super.paintChildren(g);
+	}
 	
 }

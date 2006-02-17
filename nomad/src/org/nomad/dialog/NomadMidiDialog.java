@@ -22,8 +22,8 @@
  */
 package org.nomad.dialog;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,69 +32,67 @@ import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiDevice.Info;
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.nomad.util.misc.NomadUtilities;
-
-import sun.awt.VerticalBagLayout;
-
-public class MidiDialog extends JDialog {
+public class NomadMidiDialog extends NomadDialog {
 	
 	private DeviceSelector in ;
 	private DeviceSelector out;
+
+	private Info choiceIn ;
+	private Info choiceOut ;
+
+	public NomadMidiDialog() {
+		this(null, null);
+	}
 	
-	public MidiDialog(Info midiIn, Info midiOut) {
+	public NomadMidiDialog(Info midiIn, Info midiOut) {
 		super();
+
+		choiceIn = midiIn;
+		choiceOut = midiOut;
 		
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setSize(300, 280);
-		NomadUtilities.center(this);
-
-
+		setTitle("Midi Driver");
+		setInfo("Info", 
+				"Choose a Midi Driver"
+		);
+		
+		setScrollbarEnabled(true);
+		
 		in = new DeviceSelector();
 		out = new DeviceSelector();
 
 		in.setChoice(midiIn);
 		out.setChoice(midiOut);
 		
-		Container c = getContentPane();
-		c.setLayout(new VerticalBagLayout());
+		JLabel lbl ;
 		
-		c.add( new JLabel("Input") );
-		c.add(in);
-		c.add( new JLabel("Output") );
-		c.add(out);
+		add( lbl = new JLabel("Input") );
+		lbl.setAlignmentX(0);
 		
-		JButton ok = new JButton("Ok");
+		add(in);
+		add( lbl = new JLabel("Output") );
+		lbl.setAlignmentX(0);
 		
-		c.add(ok);
-		
-		validate();
-		
-		ok.addActionListener(new ActionListener(){
+		add(out);
+	}
 
-			public void actionPerformed(ActionEvent event) {
-				setVisible(false);
-			}});
-		
-		setModal(true);
-		//setVisible(true);
+	public void invoke() {
+		super.invoke(new String[]{RESULT_OK, ":"+RESULT_CANCEL});
 	}
 
 	public MidiDevice.Info getInputDevice() {
-		return in.getChoice();
+		return getResult().equals(RESULT_OK) ? in.getChoice() : choiceIn;
 	}
 	
 	public MidiDevice.Info getOutputDevice() {
-		return out.getChoice();
+		return getResult().equals(RESULT_OK) ? out.getChoice() : choiceOut;
 	}
 
-	public static MidiDialog invokeDialog(Info midiIn, Info midiOut) {
-		MidiDialog dlg = new MidiDialog(midiIn, midiOut);
+	public static NomadMidiDialog invokeDialog(Info midiIn, Info midiOut) {
+		NomadMidiDialog dlg = new NomadMidiDialog(midiIn, midiOut);
 		
 		dlg.setVisible(true);
 		
@@ -103,67 +101,65 @@ public class MidiDialog extends JDialog {
 
 	private class DeviceSelector extends JPanel implements ActionListener {
 		private JComboBox cbox;
-		private MidiDeviceInfoView infoView = new MidiDeviceInfoView();
+
+		private JLabel vendor = new JLabel();
+		private JLabel desc = new JLabel();
+		private JLabel version = new JLabel(); 
 		
 		public DeviceSelector() {
+			setLayout(new GridLayout(4,0));
 			
+			setBackground(Color.WHITE);
 			setBorder(BorderFactory.createEtchedBorder());
 			
-			setLayout(new BorderLayout());
+			version.setAlignmentX(LEFT_ALIGNMENT);
+			vendor.setAlignmentX(LEFT_ALIGNMENT);
+			desc.setAlignmentX(LEFT_ALIGNMENT);
 			cbox = new JComboBox(MidiSystem.getMidiDeviceInfo());
+		
+			Font font = new Font("SansSerif", Font.PLAIN, 11);
+			cbox.setFont(font);
+			version.setFont(font);
+			vendor.setFont(font);
+			desc.setFont(font);
+
+			add(cbox);
+			add(version);
+			add(vendor);
+			add(desc);
+			
+			setDevice(null);
+
 			cbox.addActionListener(this);
 			if (cbox.getItemCount()>0) cbox.setSelectedIndex(0);
-
-			add(cbox, BorderLayout.NORTH);
-			add(infoView, BorderLayout.CENTER);
 		}
 		
 		public void setChoice(Info midiDev) {
-			if (midiDev!=null)
+			if (midiDev!=null) {
 				cbox.setSelectedItem(midiDev);
+			}
 		}
 
 		public void actionPerformed(ActionEvent event) {
-			infoView.setDevice(getChoice());
+			setDevice(getChoice());
 		}
 		
 		public MidiDevice.Info getChoice() {
 			return (MidiDevice.Info)cbox.getSelectedItem();
-		}
-	}
-	
-	private class MidiDeviceInfoView extends JPanel {
-
-		private JLabel vendor ;
-		private JLabel desc ;
-		private JLabel name ;
-		private JLabel version ; 
-		
-		public MidiDeviceInfoView() {
-			setLayout(new GridLayout(0, 1));
-
-			add(name = new JLabel());
-			add(version = new JLabel());
-			add(vendor = new JLabel());
-			add(desc = new JLabel());
-			
-			setDevice(null);
 		}
 		
 		public void setDevice(MidiDevice.Info info) {
 			if (info==null) {
 				vendor.setText("-");
 				desc.setText("-");
-				name.setText("-");
 				version.setText("-");
 				return;
 			}
 			
 			vendor.setText(info.getVendor());
 			version.setText(info.getVersion());
-			name.setText(info.getName());
 			desc.setText(info.getDescription());
 		}
 	}
-
+	
 }

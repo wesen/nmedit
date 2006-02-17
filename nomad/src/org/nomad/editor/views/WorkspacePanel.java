@@ -40,8 +40,8 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import org.nomad.theme.NomadClassicColors;
 import org.nomad.theme.component.NomadComponent;
+import org.nomad.util.misc.NomadUtilities;
 
 public class WorkspacePanel extends JPanel implements ContainerListener, ComponentListener {
 
@@ -135,7 +135,7 @@ public class WorkspacePanel extends JPanel implements ContainerListener, Compone
 			g2.setStroke(stroke);
 			*/
 			
-			g2.setColor(NomadClassicColors.alpha(Color.RED, 160));
+			g2.setColor(NomadUtilities.alpha(Color.RED, 160));
 			for (Component c : clo.invalid) {
 				g2.fill(absoluteBounds(c));
 			}

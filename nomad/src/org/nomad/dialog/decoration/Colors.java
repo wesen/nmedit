@@ -18,15 +18,14 @@
  */
 
 /*
- * Created on Jan 18, 2006
+ * Created on Feb 14, 2006
  */
-package org.nomad.dialog;
+package org.nomad.dialog.decoration;
 
-public interface TaskModel {
+import java.awt.Color;
 
-	public String getDescription();
-	public int getTaskCount();
-	public String getTaskName(int taskIndex);
-	public void run(int taskIndex) throws Throwable;
+public class Colors {
+
+	public final static Color WHITE_SMOKE = Color.decode("#F5F5F5");
 	
 }
