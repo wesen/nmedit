@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import javax.sound.midi.MidiDevice;
 
 import net.sf.nmedit.jnmprotocol.AckMessage;
+import net.sf.nmedit.jnmprotocol.GetPatchListMessage;
 import net.sf.nmedit.jnmprotocol.IAmMessage;
 import net.sf.nmedit.jnmprotocol.LightMessage;
 import net.sf.nmedit.jnmprotocol.MidiDriver;
@@ -37,14 +38,19 @@ import net.sf.nmedit.jnmprotocol.NmProtocolListener;
 import net.sf.nmedit.jnmprotocol.ParameterMessage;
 import net.sf.nmedit.jnmprotocol.PatchListMessage;
 import net.sf.nmedit.jnmprotocol.PatchMessage;
+import net.sf.nmedit.jnmprotocol.RequestPatchMessage;
 import net.sf.nmedit.jnmprotocol.SlotActivatedMessage;
 import net.sf.nmedit.jnmprotocol.SlotsSelectedMessage;
 import net.sf.nmedit.jnmprotocol.VoiceCountMessage;
 
-import org.nomad.dialog.MidiDialog;
+import org.nomad.dialog.ExceptionNotificationDialog;
+import org.nomad.dialog.NomadMidiDialog;
+import org.nomad.patch.Patch;
+import org.nomad.patch.format.PatchConstructionException;
+import org.nomad.patch.format.PatchMessageDecoder;
 
 // TODO if heartbeat fails, disconnect() should be called
-public class SynthConnection {
+public class SynthConnection implements HeartbeatErrorHandler {
 
 	private Synth synth ;
 
@@ -60,7 +66,10 @@ public class SynthConnection {
 		connectionListenerList ;
 	
 	public SynthConnection() {
-		synth = new Synth();
+		
+		PatchMessageDecoder.init();
+		
+		synth = new Synth(this);
 	    try {
 			MidiMessage.usePdlFile("/usr/local/lib/nmprotocol/midi.pdl", null);
 		} catch (Exception e) {
@@ -91,10 +100,13 @@ public class SynthConnection {
 		return midiIn!=null && midiOut!=null;
 	}
 
-	public void setup() {
-		MidiDialog dlg = MidiDialog.invokeDialog(midiIn, midiOut);
+	public boolean setup() {
+		NomadMidiDialog dlg = new NomadMidiDialog(midiIn, midiOut);
+		dlg.invoke();
 		midiIn = dlg.getInputDevice();
 		midiOut = dlg.getOutputDevice();
+		
+		return dlg.isOkResult();
 	}
 	
 	public void connect() {
@@ -104,7 +116,8 @@ public class SynthConnection {
 		}
 		
 		if (!areMidiDevicesSet()) {
-			setup();
+			if (!setup())
+				return ;
 		
 			if (!areMidiDevicesSet()) {
 
@@ -131,7 +144,7 @@ public class SynthConnection {
 			e1.printStackTrace();
 		}
 		
-		hbtask = new HeartbeatTask(protocol);
+		hbtask = new HeartbeatTask(protocol, this);
 		try {
 			hbtask.start();
 		} catch (HeartbeatTaskException e) {
@@ -178,6 +191,20 @@ public class SynthConnection {
 					   "unknown3:" + message.get("unknown3") + " " +
 					   "unknown4:" + message.get("unknown4"));
 		    }
+		    
+		    RequestPatchMessage requestPatchMessage;
+			try {
+				requestPatchMessage = new RequestPatchMessage();
+				requestPatchMessage.set("slot", 0);
+				//for (int slot = 0; slot < 4; slot++) 
+				//	requestPatchMessage.set("slot", slot);
+				
+			    	protocol.send(requestPatchMessage);
+				//}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		public void messageReceived(LightMessage message)
@@ -209,6 +236,16 @@ public class SynthConnection {
 
 		public void messageReceived(PatchMessage message)
 		{
+			System.out.print("Decoding patch...");
+			
+			try {
+				Patch p = PatchMessageDecoder.decode(message);
+				System.out.println("[Done]");
+				synth.setSlot(0, p);
+			} catch (PatchConstructionException e) {
+				System.out.println("[Failed]");
+				e.printStackTrace();
+			}
 		}
 
 		public void messageReceived(AckMessage message)
@@ -218,10 +255,12 @@ public class SynthConnection {
 				       "pid1:" + message.get("pid1") + " " +
 				       "type:" + message.get("type") + " " +
 				       "pid2:" + message.get("pid2"));
+
 		}
 
 		public void messageReceived(PatchListMessage message)
 		{
+			System.out.println(message);
 		}
 		
 		public void messageReceived(NewPatchInSlotMessage message)
@@ -265,6 +304,13 @@ public class SynthConnection {
 				       "parameter:" + message.get("parameter") + " " +
 				       "value:" + message.get("value"));
 		}
+	}
+
+	public void exceptionOccured(HeartbeatTaskExceptionMessage message) {
+		message.emergencyStop();
+		disconnect();
+		ExceptionNotificationDialog dialog = new ExceptionNotificationDialog(message.getCause());
+		dialog.invoke();
 	}
 	
 }

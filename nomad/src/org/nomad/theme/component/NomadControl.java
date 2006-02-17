@@ -25,8 +25,6 @@ package org.nomad.theme.component;
 import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.event.ChangeEvent;
@@ -36,7 +34,6 @@ import org.nomad.patch.Module;
 import org.nomad.patch.Parameter;
 import org.nomad.theme.property.ParameterProperty;
 import org.nomad.theme.property.PropertySet;
-import org.nomad.util.misc.ParameterToolTip;
 import org.nomad.xml.dom.module.DParameter;
 
 
@@ -44,8 +41,8 @@ import org.nomad.xml.dom.module.DParameter;
  * @author Christian Schneider
  */
 public abstract class NomadControl extends NomadComponent {
-	private ArrayList<ChangeListener> valueChangeListenerList = new ArrayList<ChangeListener>(2);
-	private ArrayList<ChangeListener> valueOptionChangeListenerList = new ArrayList<ChangeListener>(2);
+	private ArrayList<ChangeListener> valueChangeListenerList = new ArrayList<ChangeListener>(4);
+	private ArrayList<ChangeListener> valueOptionChangeListenerList = new ArrayList<ChangeListener>(4);
 	private int value = 0;
 	private int minValue = 0;
 	private int maxValue = 100;
@@ -76,7 +73,7 @@ public abstract class NomadControl extends NomadComponent {
 		addValueChangeListener(repainter);
 		addValueOptionChangeListener(repainter);
 		addFocusListener(repainter);
-
+/*
 		addMouseListener(new MouseAdapter(){
 
 			public void mousePressed(MouseEvent event) {
@@ -91,7 +88,7 @@ public abstract class NomadControl extends NomadComponent {
 
 			public void mouseExited(MouseEvent event) {
 				ParameterToolTip.removeTip();
-			}});
+			}});*/
 	}
 
 	protected void createProperties(PropertySet set) {

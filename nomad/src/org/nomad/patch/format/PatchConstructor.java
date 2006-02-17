@@ -32,25 +32,39 @@ import org.nomad.patch.Note;
 import org.nomad.patch.Parameter;
 import org.nomad.patch.Patch;
 import org.nomad.patch.Section;
-import org.nomad.patch.format.PatchFileCallback303.Validating;
+import org.nomad.patch.format.PatchConstructorCallback303.Validating;
 import org.nomad.xml.dom.module.DConnector;
 import org.nomad.xml.dom.module.ModuleDescriptions;
 
 public class PatchConstructor extends Validating {
 
 	private Patch patch;
-
+	
 	public PatchConstructor() {
 		this.patch = new Patch();
+	}
+
+	public void patch_name(String name) throws PatchConstructionException {
+		super.patch_name(name);
+		patch.setName(name);
 	}
 	
 	public Patch getPatch() {
 		return patch;
 	}
 	
-	public void notes(String note) throws PatchFileException {
+	public void notes(String note) throws PatchConstructionException {
 		super.notes(note);
 		getPatch().setNote(note);
+	}
+
+	public void header_data(int[] data) throws PatchConstructionException	{
+		super.header_data(data);
+		Header h = getPatch().getHeader();
+		h.setUnknown1(data[PatchFile303.HEADER_UNKNOWN1]);
+		h.setUnknown2(data[PatchFile303.HEADER_UNKNOWN2]);
+		h.setUnknown3(data[PatchFile303.HEADER_UNKNOWN3]);
+		h.setUnknown4(data[PatchFile303.HEADER_UNKNOWN4]);
 	}
 
 	public void header_keyboard_range(int min, int max) {
@@ -117,13 +131,13 @@ public class PatchConstructor extends Validating {
 			.setName(moduleName);
 	}
 
-	public void parameterDump(boolean isPolySection, int module_index, int module_type, int[] parameters) throws PatchFileException {
+	public void parameterDump(boolean isPolySection, int module_index, int module_type, int[] parameters) throws PatchConstructionException {
 		(isPolySection ? getPatch().getPolySection() : getPatch().getCommonSection())
 			.get(module_index)
 			.setParameterValues(parameters);
 	}
 
-	public void customDump(boolean isPolySection, int module_index, int[] customs) throws PatchFileException {
+	public void customDump(boolean isPolySection, int module_index, int[] customs) throws PatchConstructionException {
 		(isPolySection ? getPatch().getPolySection() : getPatch().getCommonSection())
 			.get(module_index)
 			.setCustomValues(customs);
@@ -166,7 +180,7 @@ public class PatchConstructor extends Validating {
 
 	public void morphMapDump(boolean isPolySection, int module_index,
 			int parameter_index, int morph_index, int morph_range)
-			throws PatchFileException {
+			throws PatchConstructionException {
 		
 		(isPolySection ? getPatch().getPolySection() : getPatch().getCommonSection())
 			.get(module_index)

@@ -28,11 +28,11 @@ import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
 
-import org.nomad.dialog.JTaskDialog;
+import org.nomad.dialog.NomadTaskDialog;
 import org.nomad.dialog.TaskModel;
 import org.nomad.patch.format.PatchConstructor;
 import org.nomad.patch.format.PatchFile303;
-import org.nomad.patch.format.PatchFileException;
+import org.nomad.patch.format.PatchConstructionException;
 import org.nomad.patch.ui.PatchUI;
 
 class PatchLoader {
@@ -69,7 +69,7 @@ class PatchLoader {
 			fileList.add(new PatchFile(fileName));
 		}
 
-		JTaskDialog.processTasks(this.nomad, new TaskModel(){
+		NomadTaskDialog dlg = new NomadTaskDialog(new TaskModel(){
 			
 			int taskCount = fileList.size();
 			int selection = nomad.getDocumentManager().getDocumentCount();
@@ -86,7 +86,7 @@ class PatchLoader {
 				return fileList.get(taskIndex).patchName;
 			}
 
-			public void run(int taskIndex) {
+			public void run(int taskIndex) throws Throwable {
 				final PatchFile task = fileList.get(taskIndex);
 				try {
 					PatchConstructor cons = new PatchConstructor();
@@ -106,9 +106,9 @@ class PatchLoader {
 						}
 					);
 				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (PatchFileException e) {
-					e.printStackTrace();
+					throw e;
+				} catch (PatchConstructionException e) {
+					throw e;
 				} catch (Throwable t) {
 					System.out.println("Error while loading patch.");
 					t.printStackTrace();
@@ -122,6 +122,8 @@ class PatchLoader {
 			}
 			
 		});
+		
+		dlg.invoke();
 		
 	}
 		

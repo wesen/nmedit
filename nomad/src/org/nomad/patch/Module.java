@@ -29,7 +29,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.nomad.env.Environment;
-import org.nomad.patch.format.PatchFileException;
+import org.nomad.patch.format.PatchConstructionException;
 import org.nomad.patch.ui.ModuleSectionUI;
 import org.nomad.patch.ui.ModuleUI;
 import org.nomad.xml.dom.module.DConnector;
@@ -72,7 +72,7 @@ public class Module {
 		for (int i=connectors.length-1;i>=0;i--)
 			connectors[i] = new Connector(getInfo().getConnector(i), this);
 		
-		locationChangeListenerList = new ArrayList<ChangeListener>();
+		locationChangeListenerList = new ArrayList<ChangeListener>(2);
 	}
 
 	public ModuleUI getUI() {
@@ -182,16 +182,16 @@ public class Module {
 		this.name = name;
 	}
 
-	public void setParameterValues(int[] parameter_values) throws PatchFileException {
+	public void setParameterValues(int[] parameter_values) throws PatchConstructionException {
 		if (getParameterCount()!=parameter_values.length)
-			throw new PatchFileException("Invalid number of parameter values");
+			throw new PatchConstructionException("Invalid number of parameter values");
 		for (int i=parameter_values.length-1;i>=0;i--)
 			getParameter(i).setValue(parameter_values[i]);
 	}
 
-	public void setCustomValues(int[] custom_values) throws PatchFileException {
+	public void setCustomValues(int[] custom_values) throws PatchConstructionException {
 		if (getCustomCount()!=custom_values.length) {
-			throw new PatchFileException("Invalid number of custom values");
+			throw new PatchConstructionException("Invalid number of custom values");
 		} 
 		for (int i=custom_values.length-1;i>=0;i--)
 			getCustom(i).setValue(custom_values[i]);
@@ -216,12 +216,11 @@ public class Module {
 	}
 	
 	public void fireLocationChangedEvent() {
-		fireLocationChangedEvent(new ChangeEvent(this));
+		if (!locationChangeListenerList.isEmpty()) {
+			ChangeEvent event = new ChangeEvent(this);
+			for (ChangeListener l : locationChangeListenerList)
+				l.stateChanged(event);
+		}
 	}
 
-	public void fireLocationChangedEvent(ChangeEvent event) {
-		for (ChangeListener l : locationChangeListenerList)
-			l.stateChanged(event);
-	}
-	
 }

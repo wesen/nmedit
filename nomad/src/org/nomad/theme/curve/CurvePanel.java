@@ -12,17 +12,15 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
-import java.util.Iterator;
 
-import javax.swing.JLayeredPane;
+import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
-import org.nomad.patch.Connector;
 import org.nomad.patch.Cables;
+import org.nomad.patch.Connector;
 import org.nomad.patch.ui.ModuleUI;
 import org.nomad.theme.component.NomadConnector;
 import org.nomad.util.array.TransitionChangeListener;
-import org.nomad.util.array.TransitionMatrix;
 import org.nomad.util.iterate.ComponentIterator;
 
 /* Copyright (C) 2006 Christian Schneider
@@ -48,18 +46,21 @@ import org.nomad.util.iterate.ComponentIterator;
  * Created on Feb 1, 2006
  */
 
-public class CurvePanel extends CurvePaintPanel implements TransitionChangeListener<Connector, CCurve> {
+public class CurvePanel extends CurvePaintPanel implements TransitionChangeListener<CCurve> {
 
-	private JLayeredPane root ;
+	private JComponent root ;
 	private Cables table = null;
-	private RootContainerListener rcl = new RootContainerListener();
-	private ConnectorListener connectorListener = new ConnectorListener();
-	private ModuleListener moduleListener = new ModuleListener();
+	private RootContainerListener rcl ;
+	private ConnectorListener connectorListener ;
+	private ModuleListener moduleListener ;
 	private ArrayList<CurvePopupListener> curvePopupListenerList = new ArrayList<CurvePopupListener>();
 
-	public CurvePanel(JLayeredPane root) {
+	public CurvePanel(JComponent root) {
 		super(root);
 		this.root = root;
+		rcl = new RootContainerListener();
+		connectorListener = new ConnectorListener();
+		moduleListener = new ModuleListener();
 		root.addContainerListener(rcl);
 	}
 	
@@ -78,9 +79,11 @@ public class CurvePanel extends CurvePaintPanel implements TransitionChangeListe
 			curvePopupListenerList.get(i).popup(event);
 	}
 	
-	public void transitionChanged(TransitionMatrix<Connector, CCurve> matrix, Connector a, Connector b, CCurve told, CCurve tnew) {
-		if (told!=null) removeCurve( told );
-		if (tnew!=null) addCurve( tnew ); // updateCurve(newCurve);
+	public void transitionChanged(CCurve t, boolean transition_added) {
+		if (transition_added) 
+			addCurve(t); 
+		else 
+			removeCurve(t);
 	}
 	
 	public Cables getTransitions() {
@@ -89,20 +92,27 @@ public class CurvePanel extends CurvePaintPanel implements TransitionChangeListe
 
 	public void setTable(Cables table) {
 		if (this.table!=table) {
-			// TODO clear current curves
 			
-			if (this.table!=null)
+			setUpdatingEnabled(true);
+			
+			if (this.table!=null) {
 				this.table.removeChangeListener(this);
+				clearCurves();
+			}
 			this.table = table;
 			if (table!=null) {
 				table.addChangeListener(this);
 				//newTable(table);
 				for (Curve t : getTransitions()) addCurve(t);
 			}
+			
+			setUpdatingEnabled(false);
+			if (isDisplayable())
+				repaint();
 		}
 	}
 	
-	public JLayeredPane getRoot() {
+	public JComponent getRoot() {
 		return root;
 	}
 
@@ -146,10 +156,12 @@ public class CurvePanel extends CurvePaintPanel implements TransitionChangeListe
 				
 				m.addComponentListener(moduleListener);
 				m.addMouseListener(moduleListener);
-				
-				for (NomadConnector c : new ConnectorIterator(m)) {
-					c.addMouseListener(connectorListener);
-					c.addMouseMotionListener(connectorListener);
+				for (Connector cc:m.getModule().getConnectors()) {
+					NomadConnector c = cc.getUI();
+					if(c!=null){
+						c.addMouseListener(connectorListener);
+						c.addMouseMotionListener(connectorListener);
+					}
 				}
 			}
 		}
@@ -161,9 +173,12 @@ public class CurvePanel extends CurvePaintPanel implements TransitionChangeListe
 				m.removeComponentListener(moduleListener);
 				m.removeMouseListener(moduleListener);
 				
-				for (NomadConnector c : new ConnectorIterator(m)) {
-					c.removeMouseListener(connectorListener);
-					c.removeMouseMotionListener(connectorListener);
+				for (Connector cc:m.getModule().getConnectors()) {
+					NomadConnector c = cc.getUI();
+					if(c!=null){
+						c.removeMouseListener(connectorListener);
+						c.removeMouseMotionListener(connectorListener);
+					}
 				}
 			}
 		}
@@ -257,19 +272,32 @@ public class CurvePanel extends CurvePaintPanel implements TransitionChangeListe
 		updateCurves(getTransitions());
 	}
 	
+	public void addCurve(Curve curve) {
+		if (curve instanceof CCurve) {
+			
+			// make sure that new curves have the correct location 
+			
+			CCurve t = (CCurve) curve;
+
+			NomadConnector c1 = t.getC1().getUI();
+			NomadConnector c2 = t.getC2().getUI();
+			if (c1!=null && c2!=null) {
+				t.setCurve(getLocation(c1), getLocation(c2));
+			}
+		}
+		
+		super.addCurve(curve);
+	}
+	
 	public void updateCurves(Iterable<CCurve> curves)
 	{
 		for (Curve transition : curves)
 		{			
 			CCurve t = (CCurve) transition;
-			
-			if (t.getC1()!=null && t.getC2()!=null)
-			{
-				NomadConnector c1 = t.getC1().getUI();
-				NomadConnector c2 = t.getC2().getUI();
-				if (c1!=null && c2!=null) {
-					t.setCurve(getLocation(c1), getLocation(c2));
-				}
+			NomadConnector c1 = t.getC1().getUI();
+			NomadConnector c2 = t.getC2().getUI();
+			if (c1!=null && c2!=null) {
+				t.setCurve(getLocation(c1), getLocation(c2));
 			}
 		}
 	}
@@ -287,9 +315,7 @@ public class CurvePanel extends CurvePaintPanel implements TransitionChangeListe
 			{	// for each connector
 				Connector c = a.getConnector();
 				if (c!=null) {
-					for (Iterator<Connector> iter=getTransitions().traverseDirect(c);iter.hasNext();)
-					{
-						CCurve t = getTransitions().getTransition(c, iter.next());
+					for ( CCurve t : getTransitions().getTransitions(c)) {
 						if (!affected.contains(t)) affected.add(t);
 					}
 				}

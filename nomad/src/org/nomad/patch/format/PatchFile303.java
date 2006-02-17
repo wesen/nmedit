@@ -29,6 +29,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
+import org.nomad.util.misc.NomadUtilities;
+
 public class PatchFile303 {
 	
 	public final static int SEC_CABLE_DUMP 				= 1 <<  0;
@@ -301,24 +303,26 @@ public class PatchFile303 {
 	private BufferedReader in;
 	private int lineNumber = 0;
 	private String currentLine = null;
-	private PatchFileCallback303 cb;
+	private PatchConstructorCallback303 cb;
 	private int currentSection = -1;
+	private String patch_name;
 
-	public PatchFile303(String file, PatchFileCallback303 callBack) throws FileNotFoundException {
+	public PatchFile303(String file, PatchConstructorCallback303 callBack) throws FileNotFoundException {
 		this(new File(file), callBack);
 	}
 	
-	public PatchFile303(File file, PatchFileCallback303 callBack) throws FileNotFoundException {
-		this(new FileReader(file), callBack);
+	public PatchFile303(File file, PatchConstructorCallback303 callBack) throws FileNotFoundException {
+		this(new FileReader(file), callBack, NomadUtilities.removeFileExtension(file.getName()));
 	}
 	
-	public PatchFile303(FileReader in, PatchFileCallback303 callBack) {
-		this(new BufferedReader(in), callBack);
+	public PatchFile303(FileReader in, PatchConstructorCallback303 callBack, String patch_name) {
+		this(new BufferedReader(in), callBack, patch_name);
 	}
 	
-	public PatchFile303(BufferedReader in, PatchFileCallback303 callBack) {
+	public PatchFile303(BufferedReader in, PatchConstructorCallback303 callBack, String patch_name) {
 		this.in = in;
 		this.cb = callBack;
+		this.patch_name=patch_name;
 	}
 	
 	protected String readln() throws IOException {
@@ -327,16 +331,16 @@ public class PatchFile303 {
 		return currentLine;
 	}
 	
-	public void readAll() throws PatchFileException {
+	public void readAll() throws PatchConstructionException {
 		read(SEC_ALL);
 	}
 	
-	public static PatchFileCallback303.Adapter info(File file) {
+	public static PatchConstructorCallback303.Adapter info(File file) {
 
-		PatchFileCallback303.Adapter info = new PatchFileCallback303.Adapter();
+		PatchConstructorCallback303.Adapter info = new PatchConstructorCallback303.Adapter();
 		try {
 
-			PatchFile303 pfile = new PatchFile303(new BufferedReader(new FileReader(file)), info);
+			PatchFile303 pfile = new PatchFile303(file, info);
 
 			if (pfile.readInformation())
 				return info;
@@ -358,14 +362,15 @@ public class PatchFile303 {
 		}
 	}
 
-	public void read(int sections) throws PatchFileException {
+	public void read(int sections) throws PatchConstructionException {
 		
 		try {
+			cb.patch_name(patch_name);
 			readE(sections);
-		} catch (PatchFileException e) {
+		} catch (PatchConstructionException e) {
 			
 			if (!e.isFormatted()) {
-				PatchFileException converted = exception(e.getMessage());
+				PatchConstructionException converted = exception(e.getMessage());
 				converted.setStackTrace(e.getStackTrace());
 				e = converted;
 			}
@@ -377,7 +382,7 @@ public class PatchFile303 {
 		
 	}
 	
-	private void readE(int sections) throws IOException, PatchFileException {
+	private void readE(int sections) throws IOException, PatchConstructionException {
 		
 		String line ;
 		
@@ -508,7 +513,7 @@ public class PatchFile303 {
 		return PT_SPACES.split(numberLine, limit);
 	}
 
-	private void readHeaderDump() throws IOException, PatchFileException {
+	private void readHeaderDump() throws IOException, PatchConstructionException {
 		String line;
 		
 		boolean versionLineFound = false;
@@ -567,7 +572,7 @@ public class PatchFile303 {
 		
 	}
 
-	private void readCustomDump() throws IOException, PatchFileException {
+	private void readCustomDump() throws IOException, PatchConstructionException {
 		String line;
 		
 		line = readln();
@@ -604,7 +609,7 @@ public class PatchFile303 {
 		
 	}
 
-	private void readParameterDump() throws IOException, PatchFileException {
+	private void readParameterDump() throws IOException, PatchConstructionException {
 		String line;
 		
 		line = readln();
@@ -641,7 +646,7 @@ public class PatchFile303 {
 		
 	}
 	
-	private void readNotesDump() throws IOException, PatchFileException {
+	private void readNotesDump() throws IOException, PatchConstructionException {
 		String line;
 		
 		String notes = "";
@@ -674,7 +679,7 @@ public class PatchFile303 {
 		throw exception("Expected end of section "+NAME_NOTES);
 	}
 
-	private void readMorphMapDump() throws IOException, PatchFileException {
+	private void readMorphMapDump() throws IOException, PatchConstructionException {
 		String line;
 		
 		line = readln();
@@ -728,7 +733,7 @@ public class PatchFile303 {
 		
 	}
 	
-	private boolean isPolySection(String line) throws PatchFileException {
+	private boolean isPolySection(String line) throws PatchConstructionException {
 
 		if (line == null)
 			throw exception(	"section "+NAME_MODULE_DUMP +" has no data");
@@ -739,7 +744,7 @@ public class PatchFile303 {
 		return line.charAt(0)=='1';
 	}
 
-	private void readModuleDump() throws IOException, PatchFileException {
+	private void readModuleDump() throws IOException, PatchConstructionException {
 		String line;
 
 		// first line
@@ -778,7 +783,7 @@ public class PatchFile303 {
 		
 	}
 
-	private void readKnobmapDump() throws IOException, PatchFileException {
+	private void readKnobmapDump() throws IOException, PatchConstructionException {
 		String line;
 		
 		while ((line = readln())!=null)
@@ -808,7 +813,7 @@ public class PatchFile303 {
 		
 	}
 
-	private void readKeyboardAssignment() throws IOException, PatchFileException {
+	private void readKeyboardAssignment() throws IOException, PatchConstructionException {
 		String line;
 		
 		line = readln();
@@ -837,7 +842,7 @@ public class PatchFile303 {
 		
 	}
 
-	private void readNameDump() throws IOException, PatchFileException {
+	private void readNameDump() throws IOException, PatchConstructionException {
 		String line;
 		
 		line = readln();
@@ -879,7 +884,7 @@ public class PatchFile303 {
 		
 	}
 
-	private void readCurrentNoteDump() throws IOException, PatchFileException {
+	private void readCurrentNoteDump() throws IOException, PatchConstructionException {
 		String line;
 
 		while ((line = readln())!=null)
@@ -910,7 +915,7 @@ public class PatchFile303 {
 		
 	}
 
-	private void readCtrlMapDump() throws IOException, PatchFileException {
+	private void readCtrlMapDump() throws IOException, PatchConstructionException {
 		String line;
 		
 		while ((line = readln())!=null)
@@ -939,7 +944,7 @@ public class PatchFile303 {
 		
 	}
 
-	private void readCableDump() throws IOException, PatchFileException {
+	private void readCableDump() throws IOException, PatchConstructionException {
 		String line;
 		
 		line = readln();
@@ -976,7 +981,7 @@ public class PatchFile303 {
 		
 	}
 
-	private int sectionHeader(String line, boolean expectBegin, int expectedSection, boolean failOnSyntaxError) throws PatchFileException
+	private int sectionHeader(String line, boolean expectBegin, int expectedSection, boolean failOnSyntaxError) throws PatchConstructionException
 	{
 
 		final int MIN_LEN = 3;
@@ -1023,17 +1028,17 @@ public class PatchFile303 {
 		
 	}
 	
-	private PatchFileException exception(String message)
+	private PatchConstructionException exception(String message)
 	{
-		return new PatchFileException(
+		return new PatchConstructionException(
 			"An exception occured at line:'"+lineNumber+"',section:'"+getName(currentSection)+"';"+message+"; line --> '"+currentLine+"'",
 			true
 		);
 	}
 	
-	private PatchFileException exception(Throwable t)
+	private PatchConstructionException exception(Throwable t)
 	{
-		return new PatchFileException(
+		return new PatchConstructionException(
 			"An exception occured at line:'"+lineNumber+"',section:'"+getName(currentSection)+"'; line --> '"+currentLine+"'", t, true
 		);
 	}

@@ -26,16 +26,20 @@ import org.nomad.patch.Connector;
 import org.nomad.patch.Module;
 import org.nomad.patch.ModuleSection;
 import org.nomad.theme.component.NomadConnector;
+import org.nomad.util.array.Transition;
 import org.nomad.xml.dom.module.DConnector;
 import org.nomad.xml.dom.module.DModule;
 
-public class CCurve extends Curve {
+public class CCurve extends Curve implements Transition<Connector> {
 
 	private Connector c1;
 	private Connector c2;
 	
 	public CCurve(Connector c1, Connector c2) {
 		super();
+		
+		if (c1==null||c2==null) throw new NullPointerException("Connectors can not be null.");
+		
 		this.c1 = c1;
 		this.c2 = c2;
 	}
@@ -46,6 +50,9 @@ public class CCurve extends Curve {
 	
 	public Connector getC1() { return c1; }
 	public Connector getC2() { return c2; }
+
+	public Connector getN1() { return c1; }
+	public Connector getN2() { return c2; }
 
 	public static CCurve parse(ModuleSection msection, String params) {
 		

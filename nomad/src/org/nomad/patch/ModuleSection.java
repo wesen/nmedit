@@ -68,7 +68,6 @@ public class ModuleSection implements Iterable<Module> {
 
 	public void add(Module module) {        
         adjustGrid(module);
-        transitionTable.add(module);
         if (module.getIndex()<=0)
         	module.setIndex( getModulesMaxIndex()+1 );
 		moduleList.put(new Integer(module.getIndex()), module);
@@ -80,7 +79,6 @@ public class ModuleSection implements Iterable<Module> {
 	
 	public void remove(Module module) {
 		moduleList.remove(new Integer(module.getIndex()));
-        transitionTable.remove(module);
 		module.setModuleSection(null);
 		module.setIndex(-1);
 		
@@ -121,7 +119,6 @@ public class ModuleSection implements Iterable<Module> {
 
 	public void rearangeModules(Module module) {
 		// module must not be in list
-		
 		// stores all modules with same x grid coordinate and which are below module
 		// sorted by the y value
 		ArrayList<Module> col = new ArrayList<Module>(getModuleCount());
@@ -189,13 +186,15 @@ public class ModuleSection implements Iterable<Module> {
 	}
 	
 	public void fireModuleRemovedEvent(Module m) {
-		for (ModuleSectionListener l:sectionListenerList)
-			l.moduleRemoved(m);
+		if (!sectionListenerList.isEmpty())
+			for (ModuleSectionListener l:sectionListenerList)
+				l.moduleRemoved(m);
 	}
 	
 	public void fireModuleAddedEvent(Module m) {
-		for (ModuleSectionListener l:sectionListenerList)
-			l.moduleAdded(m);
+		if (!sectionListenerList.isEmpty())
+			for (ModuleSectionListener l:sectionListenerList)
+				l.moduleAdded(m);
 	}
 	
 }

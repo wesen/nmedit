@@ -31,6 +31,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import javax.swing.border.Border;
@@ -69,44 +70,30 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		}
 	};
 	
-	/*
-	private final static FocusListener buttonArrayFocusListener = new FocusListener(){
-
-		public void focusGained(FocusEvent event) {
-		//	repaint();
-		}
-
-		public void focusLost(FocusEvent event) {
-	//		repaint();
-		}
-	};*/
-		
+	private static Dimension prefSize = new Dimension(30,10);
+	private static Border DEFAULT_SEL_Border = NomadBorderFactory.createNordEditor311LoweredButtonBorder();
+	private static Border DEFAULT_Border = NomadBorderFactory.createNordEditor311RaisedButtonBorder();
+	
+	private final static Font defaultFont = new Font("SansSerif", Font.PLAIN, 10);
+	
 	public NomadButtonArray() {
 		setBackground(NomadClassicColors.BUTTON_BACKGROUND);
 		//setForeground(NomadClassicColors.BUTTON_FOREGROUND);
 		setOpaque(false);
-		setFont(new Font("SansSerif", Font.PLAIN, 10));
+		setFont(defaultFont);
 		setDynamicOverlay(true);
 		setFocusable(true);
 
-		for (int i=labelList.length-1;i>=0;i--) {
-			labelList[i] = null;
-		}
+		Arrays.fill(labelList, null);
 
-		setSelectionBorder(NomadBorderFactory.createNordEditor311LoweredButtonBorder());
-		setDefaultBorder(NomadBorderFactory.createNordEditor311RaisedButtonBorder());
-
+		setSelectionBorder(DEFAULT_SEL_Border);
+		setDefaultBorder(DEFAULT_Border);
 		addMouseListener(buttonArrayMouseListener);
-		//addFocusListener(buttonArrayFocusListener);
-
-		//addButton(encodeButtonName(labelList.length));
-		//addButton(createPropertyName(labelList.size()));
 		autoResize(false);
-		Dimension d = new Dimension(30,10);
-		setMinimumSize(d);
-		setMaximumSize(d);
-		setPreferredSize(d);
-		setSize(d);
+		setMinimumSize(prefSize);
+		setMaximumSize(prefSize);
+		setPreferredSize(prefSize);
+		setSize(prefSize);
 	}
 
 	protected void createProperties(PropertySet set) {

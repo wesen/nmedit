@@ -29,6 +29,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JTextField;
 
@@ -40,17 +41,21 @@ import org.nomad.xml.dom.module.DModule;
 public class ModuleGuiTitleLabel extends NomadLabel {
 
 	private Module module = null;
-	
+	private final static MouseListener editRequest =
+		new MouseAdapter() {
+       	public void mouseClicked(MouseEvent event) {
+       		if (event.getClickCount()==2
+       		&& event.getComponent() instanceof ModuleGuiTitleLabel		
+       		)
+       			((ModuleGuiTitleLabel)event.getComponent())
+       			.editModuleTitle();
+       	}
+    };
+
 	public ModuleGuiTitleLabel(DModule info) {
     	setDynamicOverlay(true);
         setText( info.getName() );
-        
-	    addMouseListener(new MouseAdapter() {
-	       	public void mouseClicked(MouseEvent event) {
-	       		if (event.getClickCount()==2)
-	       			editModuleTitle();
-	       	}
-	    });
+	    addMouseListener(editRequest);
 	}
 
 	public void setModule(Module module) {

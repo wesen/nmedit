@@ -26,11 +26,16 @@ import org.nomad.patch.Patch;
 
 public class Synth {
 
-	private Patch[] slots = new Patch[4];
+	private Patch[] slots = new Patch[4] ;
 	private int[] pids = new int[4];
+	private SynthConnection connection;
 	
-	public Synth() {
-		
+	public Synth(SynthConnection connection) {
+		this.connection = connection;
+		for (int i=0;i<slots.length;i++)
+			slots[i] = new Patch();
+		for (int i=0;i<pids.length;i++)
+			pids[i] = 0;
 	}
 
 	public void setPId(int slot, int pid) {
@@ -46,7 +51,7 @@ public class Synth {
 	}
 	
 	public Patch getActiveSlot() {
-		return null;
+		return slots[0];
 	}
 	
 }

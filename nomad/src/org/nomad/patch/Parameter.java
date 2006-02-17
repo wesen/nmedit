@@ -36,7 +36,7 @@ public class Parameter {
 	private int value =  0;
 	private int morph = -1;
 	private int morph_range = 0;
-	private int knob_assignment = -1;
+	// private KnobMap knob_assignment = null;
 	private Module module;
 
 	public Parameter(DParameter info, Module module) {
@@ -54,7 +54,10 @@ public class Parameter {
 	}
 
 	public void setValue(int value) {
-		this.value = value;
+		if (this.value!=value) {
+			this.value = value;
+			fireChangeEvent();
+		}
 	}
 	
 	public int getValue() {
@@ -81,18 +84,22 @@ public class Parameter {
 		return morph_range;
 	}
 	
+	public int getMorphRange() {
+		return morph_range;
+	}
+	
 	public void setMorph(int morph, int morph_range) {
 		setMorph(morph);
 		setMorphRange(morph_range);
 	}
 	
-	public int getKnobAssignment() {
+	/*public KnobMap getKnobAssignment() {
 		return knob_assignment;
 	}
 	
-	public void setKnobAssignment(int knob) {
+	public void setKnobAssignment(KnobMap knob) {
 		this.knob_assignment = knob;
-	}
+	}*/
 
 	public int getIndex() {
 		return getInfo().getId();

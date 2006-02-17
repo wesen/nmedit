@@ -62,12 +62,12 @@ public class CurveSegments extends Segments<Curve> {
 
 	public void addToSegments(ArrayList<? extends Curve> curves) {
 		for (Curve curve : curves)
-			addToSegments(curve);
+			addToSegments(curve, curve);
 	}
 
 	public void removeFromSegments(ArrayList<? extends Curve> curves) {
 		for (Curve curve : curves)
-			removeFromSegments(curve);
+			removeFromSegments(curve, curve);
 	}
 
 	public void addToSegments(Curve curve) {

@@ -56,8 +56,9 @@ public class NomadComponent extends JComponent {
 
 	public NomadComponent() {
 		env=Environment.sharedInstance();
-		setDoubleBuffered(true); // disable default double buffer
+		//setDoubleBuffered(true); // disable default double buffer
 		setOpaque(false);
+		setDoubleBuffered(true);
 		//RepaintManager.currentManager(this).setDoubleBufferingEnabled(false);
 	}
 	

@@ -34,6 +34,7 @@ public class Patch {
 	private KnobMapList knobMapList ;
 	private CtrlMapList ctrlMapList ;
 	private String note = "";
+	private String name;
 	
 	public Patch() {
 		header = new Header();
@@ -79,6 +80,14 @@ public class Patch {
 	
 	public CtrlMapList getCtrlMapList() {
 		return ctrlMapList;
+	}
+
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 }

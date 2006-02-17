@@ -31,8 +31,6 @@ import org.nomad.util.graphics.Segments;
 
 public class CurveSegment<T extends Curve> extends Segment<T> {
 
-	//public final static int DEFAULT_SEGMENT_SIZE = 20;
-
 	public CurveSegment(Segments<T> segments) {
 		super(segments);
 	}

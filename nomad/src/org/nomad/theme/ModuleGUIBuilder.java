@@ -151,8 +151,6 @@ public class ModuleGUIBuilder {
 	}
 
 	public ModuleUI createGUI(Module module, ModuleSectionUI moduleSection) {
-		//ModuleGUI moduleGUI = new ModuleGUI(uifactory, module, moduleSectionGUI);
-		
 		ModuleUI moduleGUI = createGUI(module.getInfo(), moduleSection);
 		moduleGUI.setModule(module);
 		return moduleGUI;
@@ -164,11 +162,7 @@ public class ModuleGUIBuilder {
 		createGUIComponents(moduleGUI, moduleInfo, true);
 		return moduleGUI;
 	}
-/*
-	public void createGUIComponents(NomadComponent modulePane, Object object, DModule moduleInfo) {
-		createGUIComponents(modulePane, object, moduleInfo, true);
-	}
-*/
+
 	private Object getCacheKey(DModule moduleInfo) {
 		return new Integer(moduleInfo.getModuleID());
 	}

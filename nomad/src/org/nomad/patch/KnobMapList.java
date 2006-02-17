@@ -23,8 +23,11 @@
 package org.nomad.patch;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
-public class KnobMapList {
+import org.nomad.util.iterate.ArrayIterator;
+
+public class KnobMapList implements Iterable<KnobMap> {
 	
 	private KnobMap[] knobMapList ;
 
@@ -52,6 +55,10 @@ public class KnobMapList {
 	
 	public KnobMap getKnobMap(int knobIndex) {
 		return inBounds(knobIndex) ? knobMapList[knobIndex] : null;
+	}
+
+	public Iterator<KnobMap> iterator() {
+		return new ArrayIterator<KnobMap>(knobMapList);
 	}
 	
 }

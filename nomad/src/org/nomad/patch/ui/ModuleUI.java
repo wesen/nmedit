@@ -1,21 +1,17 @@
 package org.nomad.patch.ui;
 
-import java.awt.Font;
+import java.awt.Component;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import javax.swing.BorderFactory;
-import javax.swing.JLayeredPane;
-import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -64,39 +60,39 @@ public class ModuleUI extends NomadComponent implements ModuleComponent {
 	private ModuleSectionUI moduleSection = null;
 
     JPopupMenu menu = new JPopupMenu();
-    JMenuItem removeItem = new JMenuItem("Remove");
+   // JMenuItem removeItem = new JMenuItem("Remove");
     
     private DModule info = null;
     private LocationChangedAction locationListener = null;
 
+    private static MouseListener focusRequest = new MouseAdapter() {
+    	public void mousePressed(MouseEvent event) {
+    		event.getComponent().requestFocus();
+    	}
+    };
+    
+    private static ModuleMouseAction mouseAction = new ModuleMouseAction();
 
     public ModuleUI(DModule info) {
     	this.info = info;
-		setBackground(UIManager.getColor("Button.background"));
+		// setBackground(UIManager.getColor("Button.background"));
 		setOpaque(true);
 		
-		ModuleMouseAction mouse = new ModuleMouseAction(this);
-		
-    	addMouseListener(mouse);
-    	addMouseMotionListener(mouse);
+    	addMouseListener(mouseAction);
+    	addMouseMotionListener(mouseAction);
     	setBorder(border);
 
-	    removeItem.addActionListener(new RemoveModule());
-	    menu.add(removeItem);
+//	    removeItem.addActionListener(new RemoveModule());
+//	    menu.add(removeItem);
 	    
         setLayout(null);
     	
     	nameLabel = new ModuleGuiTitleLabel(info);
         nameLabel.setLocation(3,0);
-        nameLabel.setFont(new Font("Dialog", Font.PLAIN, 10));
         add(nameLabel);
         
         setFocusable(true);
-        addMouseListener(new MouseAdapter(){
-        	public void mousePressed(MouseEvent event) {
-        		requestFocus();
-        	}
-        });
+        addMouseListener(focusRequest);
         
         setSize(Metrics.WIDTH, Metrics.getHeight(info));
         
@@ -203,6 +199,15 @@ public class ModuleUI extends NomadComponent implements ModuleComponent {
 		return info;
 	}
 	
+	private boolean draggingEnabled = false;
+	
+	private void setDraggingEnabled(boolean enable) {
+		if (draggingEnabled!=enable) {
+			draggingEnabled = enable;
+			getModuleSection().setDraggedComponent(enable?this:null);
+		}
+	}
+	
 	private static class ModuleMouseAction extends MouseAdapter implements MouseMotionListener { 
 
 //	  --- drag
@@ -210,51 +215,37 @@ public class ModuleUI extends NomadComponent implements ModuleComponent {
 	    int oldModuleDragX = 0;
 	    int oldModuleDragY = 0;
 	
-		private ModuleUI moduleUI;
-
-		public ModuleMouseAction(ModuleUI moduleUI) {
-			this.moduleUI = moduleUI;
-		}
-		
-		public ModuleUI getModuleUI() {
-			return moduleUI;
-		}
-		
-		public ModuleSectionUI getParent() {
-			return getModuleUI().getModuleSection();
-		}
-
 		public void mousePressed(MouseEvent e) {
 			// Sadly enough, e.isPopupTrigger() does always return false
 	//		System.out.println(e.isPopupTrigger()?"Popup":"Normal");		
 	//		System.out.println(e.getButton());
 			if (SwingUtilities.isLeftMouseButton(e)) {
+				ModuleUI m = (ModuleUI) e.getComponent();
 		        dragX = e.getX();
 		        dragY = e.getY();
 		        oldModuleDragX = dragX;
 		        oldModuleDragY = dragY;
-		        getParent().setLayer(getModuleUI(), JLayeredPane.DRAG_LAYER.intValue());
+
+				m.setDraggingEnabled(true);
 		    }
 		}
 	
 		public void mouseReleased(MouseEvent e) {
+			ModuleUI m = (ModuleUI) e.getComponent();
 			if (!e.isPopupTrigger()) { 
-				getParent().setLayer(getModuleUI(), JLayeredPane.DEFAULT_LAYER.intValue());
+				m.setDraggingEnabled(false);
 
-		    	Module m = getModuleUI().getModule();
+		    	Point l = Metrics.getGridLocation(m);
 		    	
-		    	Point l = Metrics.getGridLocation(getModuleUI());
-		    	
-		    	if (getModuleUI().getX()%Metrics.WIDTH - Metrics.WIDTH_DIV_2 >= 0)
+		    	if (m.getX()%Metrics.WIDTH - Metrics.WIDTH_DIV_2 >= 0)
 		    		l.x++;
 		    	
 		    	l.x = Math.max(0, l.x);
 		    	
-		    	m.setLocation(l);
-		    	
-		    	m.getModuleSection().rearangeModules(m);
+		    	m.getModule().setLocation(l);
+		    	m.getModule().getModuleSection().rearangeModules(m.getModule());
 		    } else {
-		    	getModuleUI().getPopup().show(e.getComponent(), e.getX(), e.getY());
+		    	m.getPopup().show(e.getComponent(), e.getX(), e.getY());
 	        }
 		}
 	
@@ -263,17 +254,22 @@ public class ModuleUI extends NomadComponent implements ModuleComponent {
 	//		System.out.println(e.isPopupTrigger()?"Popup":"Normal");		
 	//		System.out.println(e.getButton());
 			if (SwingUtilities.isLeftMouseButton(e)) {
-				getModuleUI().
-	            setLocation(getModuleUI().getX() + (e.getX() - dragX), getModuleUI().getY() + (e.getY() - dragY));
+				Component c = e.getComponent(); 
+				//ModuleUI m = (ModuleUI) e.getComponent();
+				int x = c.getX() + (e.getX() - dragX);
+				int y = c.getY() + (e.getY() - dragY);
+	            c.setLocation(x, y);
 	        }
 		}
 	
 		public void mouseMoved(MouseEvent e) { }
 	}
+	
+	/*
     class RemoveModule implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	getModule().getModuleSection().remove(getModule());
         }
-    }
+    }*/
 
 }

@@ -22,30 +22,24 @@
  */
 package org.nomad.patch.ui;
 
-import java.awt.BorderLayout;
-
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
 import org.nomad.env.Environment;
 import org.nomad.patch.Patch;
 
-public class PatchUI extends JPanel {
+public class PatchUI extends JSplitPane {
 
 	private Patch patch;
 
-	private JSplitPane splitPane = null;
 	private JScrollPane scrollPanePoly = null;
 	private JScrollPane scrollPaneCommon = null;
 	private ModuleSectionUI commonSectionUI = null;
 	private ModuleSectionUI polySectionUI = null;
 
 	protected PatchUI(Patch patch) {
+		super(JSplitPane.VERTICAL_SPLIT);
 		this.patch = patch;
-		setLayout(new BorderLayout());
-		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-        add(splitPane, BorderLayout.CENTER);
 	}
 	
 	public static PatchUI newInstance(Patch patch) {
@@ -69,8 +63,8 @@ public class PatchUI extends JPanel {
 	public void rebuild() {
 
 		// remove
-		if (scrollPaneCommon!=null) 	splitPane.remove(scrollPaneCommon);
-		if (scrollPanePoly!=null) 		splitPane.remove(scrollPanePoly);
+		if (scrollPaneCommon!=null) 	remove(scrollPaneCommon);
+		if (scrollPanePoly!=null) 		remove(scrollPanePoly);
 		if (getCommonSection()!=null) 	getCommonSection().unlink();
 		if (getPolySection()!=null) 	getPolySection().unlink();
 
@@ -78,15 +72,15 @@ public class PatchUI extends JPanel {
 		polySectionUI 	= Environment.sharedInstance().getFactory().getModuleSectionUI(getPatch().getPolySection());
 		polySectionUI.setSize(polySectionUI.getPreferredSize());
         scrollPanePoly = new JScrollPane(polySectionUI); 
-        splitPane.add(scrollPanePoly, JSplitPane.TOP);
+        add(scrollPanePoly, JSplitPane.TOP);
 		
 		
 		commonSectionUI = Environment.sharedInstance().getFactory().getModuleSectionUI(getPatch().getCommonSection());
 		commonSectionUI.setSize(commonSectionUI.getPreferredSize());
         scrollPaneCommon = new JScrollPane(commonSectionUI);
-        splitPane.add(scrollPaneCommon, JSplitPane.BOTTOM);
+        add(scrollPaneCommon, JSplitPane.BOTTOM);
 
-        splitPane.setDividerLocation(getPatch().getHeader().getSeparatorPosition() + 1);
+        setDividerLocation(getPatch().getHeader().getSeparatorPosition() + 1);
 
         polySectionUI.populate();
         commonSectionUI.populate();

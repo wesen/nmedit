@@ -39,7 +39,7 @@ import org.nomad.theme.property.ConnectorProperty;
 import org.nomad.theme.property.PropertySet;
 import org.nomad.xml.dom.module.DConnector;
 
-public class NomadConnector extends NomadComponent {
+public class NomadConnector extends NomadComponent implements ChangeListener {
 
 	private ArrayList<ChangeListener> connectorChangeListenerList = null;
 	private boolean flagConnected = false;
@@ -47,15 +47,21 @@ public class NomadConnector extends NomadComponent {
 	private DConnector connectorInfo = null;
 	private Connector connector = null;
 
+	private static Dimension preferedSize = new Dimension(13,13);
+	
 	public NomadConnector() {
 		super();
 		setColorFromSignal(DConnector.SIGNAL_AUDIO);
 		setDynamicOverlay(true);
-		Dimension d = new Dimension(13,13);
-		setPreferredSize(d);
-		setMinimumSize(d);
-		setMaximumSize(d);
-		setSize(d);
+		setPreferredSize(preferedSize);
+		setMinimumSize(preferedSize);
+		setMaximumSize(preferedSize);
+		setSize(preferedSize);
+	}
+	
+	public void stateChanged(ChangeEvent event) {
+		if (connector!=null)
+			setConnectedState(connector.isConnected());
 	}
 	
 	protected CurvePanel getCurvePanel() {
@@ -183,6 +189,8 @@ public class NomadConnector extends NomadComponent {
 		connector = module.findConnector(getConnectorInfo());
 		if (connector!=null) {
 			connector.setUI(this);
+			this.setConnectedState(connector.isConnected());
+			connector.addChangeListener(this);
 			// TODO link connector <-> ui
 		}
 	}
@@ -190,6 +198,7 @@ public class NomadConnector extends NomadComponent {
 	public void unlink() {
 		if (connector!=null) {
 			connector.setUI(this);
+			connector.removeChangeListener(this);
 			connector = null;
 		}
 	}

@@ -22,28 +22,31 @@
  */
 package org.nomad.patch.ui;
 
-import java.awt.Container;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ContainerAdapter;
+import java.awt.event.ContainerEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
 
-import javax.swing.JDesktopPane;
-import javax.swing.JLayeredPane;
+import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
+import javax.swing.RepaintManager;
 
 import org.nomad.main.ModuleGroupsMenu;
 import org.nomad.main.ModuleToolbarButton;
@@ -58,28 +61,32 @@ import org.nomad.theme.curve.CurvePopupListener;
 import org.nomad.util.iterate.ComponentIterator;
 import org.nomad.xml.dom.module.DModule;
 
-public class ModuleSectionUI extends JDesktopPane implements DropTargetListener, ModuleSectionListener {
+public class ModuleSectionUI extends JComponent implements ModuleSectionListener {
 
 	private ModuleSection moduleSection;
+	
+	private Component overlay = null;
 
 	public ModuleSection getModuleSection() {
 		return moduleSection;
 	}
 	
 //	private DropTarget dropTarget = null;
-	private int dropAction = DnDConstants.ACTION_COPY;
+	private final static int dropAction = DnDConstants.ACTION_COPY;
 
 	public static final DataFlavor ModuleSectionGUIFlavor = new DataFlavor("nomad/ModuleSectionGUIFlavor", "Nomad ModuleSectionGUI");
 
 	private JPopupMenu popup = null;
 	private CurvePanel curvePanel = null;
 
+	private DragDropAction ddAction = new DragDropAction();
 
 	public ModuleSectionUI(ModuleSection moduleSection) {
         this.moduleSection = moduleSection;
-        
+        setOpaque(true);
+        setDoubleBuffered(true);
 //      dropTarget = new DropTarget(this, dropAction, this, true);
-        new DropTarget(this, dropAction, this, true);
+        new DropTarget(this, dropAction, ddAction, true);
         
         addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent event) {
@@ -94,7 +101,6 @@ public class ModuleSectionUI extends JDesktopPane implements DropTargetListener,
 					popup.show(event.getComponent(),event.getX(),event.getY());
 				}
 			}
-
 			public void mouseReleased(MouseEvent event) {
 				if (popup!=null) {
 		            if (event.isPopupTrigger()) {
@@ -106,7 +112,6 @@ public class ModuleSectionUI extends JDesktopPane implements DropTargetListener,
 
         
         curvePanel = new CurvePanel(this);
-        curvePanel.setTable(moduleSection.getCables());
         curvePanel.addCurvePopupListener(new CurvePopupListener(){
 			public void popup(CurvePopupEvent event) {
 				JPopupMenu popup = new JPopupMenu();
@@ -114,29 +119,28 @@ public class ModuleSectionUI extends JDesktopPane implements DropTargetListener,
 				event.show(popup);
 			}});
         
-        /*
-        addComponentListener(new ComponentAdapter() {
-
-			public void componentResized(ComponentEvent event) {
-				curvePanel.setSize(getSize());
-			}}); */
+        add(curvePanel);
         
-        // +1 : cables are in front of dragged module, -1 : behind
-        add(curvePanel, new Integer(JLayeredPane.DRAG_LAYER.intValue()-1));
+        addContainerListener(new ContainerAdapter(){
+			public void componentAdded(ContainerEvent arg0) {
+				setComponentZOrder(curvePanel, 0);
+			}
+        });
         
-        setPreferredSize(
-        	new Dimension(
-        		ModuleUI.Metrics.getPixelX(moduleSection.getMaxGridX()),
-        		ModuleUI.Metrics.getPixelY(moduleSection.getMaxGridY())
-        	)	
-        );       
-        setSize(getPreferredSize());
+        Dimension d = new Dimension( ModuleUI.Metrics.getPixelX(moduleSection.getMaxGridX()),
+        	ModuleUI.Metrics.getPixelY(moduleSection.getMaxGridY()) );
+        
+        setPreferredSize(d);       
+        setSize(d);
         
         moduleSection.addSectionListener(this);
     }
 
 	public void moduleAdded(Module module) {
-		add(module.newUI(this));
+		Component c;
+		add(c=module.newUI(this));
+		Rectangle r = c.getBounds();
+		RepaintManager.currentManager(this).addDirtyRegion(this, r.x, r.y, r.width, r.height);
 	}
 	
 	public void moduleRemoved(Module module) {
@@ -169,82 +173,80 @@ public class ModuleSectionUI extends JDesktopPane implements DropTargetListener,
     	}
 		
 		protected void loadCables(ArrayList<CCurve> cables) {
-			cables.addAll(transitions.getDirectTransitions(connector));
+			for (CCurve t : transitions.getTransitions(connector))
+				cables.add(t);
 		}
     }
     
-	public void dragEnter(DropTargetDragEvent dtde) {
-	}
+    private class DragDropAction extends DropTargetAdapter {
 
-	public void dragOver(DropTargetDragEvent dtde) {
-		// We will only accept the ModuleToolbarButton.ModuleToolbarButtonFlavor
-		if (dtde.getCurrentDataFlavorsAsList().contains(ModuleToolbarButton.ModuleToolbarButtonFlavor)) {
-			dtde.acceptDrag(DnDConstants.ACTION_COPY);
-		}
-	}
+    	public void dragOver(DropTargetDragEvent dtde) {
+    		// We will only accept the ModuleToolbarButton.ModuleToolbarButtonFlavor
+    		if (dtde.getCurrentDataFlavorsAsList().contains(ModuleToolbarButton.ModuleToolbarButtonFlavor)) {
+    			dtde.acceptDrag(DnDConstants.ACTION_COPY);
+    		}
+    	}
 
-	public void dropActionChanged(DropTargetDragEvent dtde) {
-		// Depends on Ctrl or Shift
-	}
+    	public void drop(DropTargetDropEvent dtde) {
+    		DataFlavor chosen = null;
+    		Object data = null;
 
-	public void drop(DropTargetDropEvent dtde) {
-		DataFlavor chosen = null;
-		Object data = null;
+    		// We will only accept the ModuleToolbarButton.ModuleToolbarButtonFlavor
+    		if (dtde.isDataFlavorSupported(ModuleToolbarButton.ModuleToolbarButtonFlavor) 
+    				&& dtde.isLocalTransfer()) {
+    			
+    			// If there were more sourceFlavors, specify which one you like
+    			chosen = ModuleToolbarButton.ModuleToolbarButtonFlavor;
+    			
+    			try {
+    				// Get the data
+    				dtde.acceptDrop(dropAction);
+    				data = dtde.getTransferable().getTransferData(chosen);
+    		  	}
+    		  	catch (Throwable t) {
+    				t.printStackTrace();
+    				dtde.dropComplete(false);
+    				return;
+    		  	}
+    		  	
+    			if (data instanceof ModuleToolbarButton) {
+    				// Cast the data and create a nice module.
+    				DModule info = ((ModuleToolbarButton)data).getModuleDescription();
+    				Point p = dtde.getLocation();
+    		        Module mod = new Module(info);
+    		        mod.setLocation(ModuleUI.Metrics.getGridX(p.x),ModuleUI.Metrics.getGridY((p.y - ModuleUI.Metrics.HEIGHT)) );
 
-		// We will only accept the ModuleToolbarButton.ModuleToolbarButtonFlavor
-		if (dtde.isDataFlavorSupported(ModuleToolbarButton.ModuleToolbarButtonFlavor) 
-				&& dtde.isLocalTransfer()) {
-			
-			// If there were more sourceFlavors, specify which one you like
-			chosen = ModuleToolbarButton.ModuleToolbarButtonFlavor;
-			
-			try {
-				// Get the data
-				dtde.acceptDrop(dropAction);
-				data = dtde.getTransferable().getTransferData(chosen);
-		  	}
-		  	catch (Throwable t) {
-				t.printStackTrace();
-				dtde.dropComplete(false);
-				return;
-		  	}
-		  	
-			if (data instanceof ModuleToolbarButton) {
-				// Cast the data and create a nice module.
-				DModule info = ((ModuleToolbarButton)data).getModuleDescription();
-				Point p = dtde.getLocation();
-		        Module mod = new Module(info);
-		        mod.setLocation(ModuleUI.Metrics.getGridX(p.x),ModuleUI.Metrics.getGridY((p.y - ModuleUI.Metrics.HEIGHT)) );
+    		        moduleSection.add(mod);				
+    			}
+    			dtde.dropComplete(true);
+    		} else {
+    			dtde.rejectDrop();      
+    			dtde.dropComplete(false);
+    		}
+    	}
 
-		        moduleSection.add(mod);				
-			}
-			dtde.dropComplete(true);
-		} else {
-			dtde.rejectDrop();      
-			dtde.dropComplete(false);
-		}
-	}
-
-	public void dragExit(DropTargetEvent dte) {
-	}
-
+    }
+    
 	/*public void rebuildUI() {
 		removeModuleDisplays();
 		populate();
 	}*/
 	
 	void populate() {
+        curvePanel.setTable(null); // will disable updates
+
 		for (Module module : getModuleSection()) {
             //module = moduleSection.getModule(((Integer) e.nextElement()).intValue());
 			
-            add(module.newUI(this), JLayeredPane.DEFAULT_LAYER.intValue());
+            add(module.newUI(this)/*, JLayeredPane.DEFAULT_LAYER.intValue()*/);
         }
 		
-		getCurvePanel().updateCurves();
+        curvePanel.setTable(moduleSection.getCables());
+		//getCurvePanel().updateCurves();
 	}
 	
 	void removeModuleDisplays() {
-		for (ModuleUIIterator iter = new ModuleUIIterator(this); iter.hasNext();) {
+		for (Iterator<ModuleUI> iter = new ComponentIterator<ModuleUI>(ModuleUI.class, this); iter.hasNext(); ) {
 			iter.next().unlink();
 			iter.remove();
 		}
@@ -253,13 +255,16 @@ public class ModuleSectionUI extends JDesktopPane implements DropTargetListener,
 	public CurvePanel getCurvePanel() {
 		return curvePanel;
 	}
-
-	private class ModuleUIIterator extends ComponentIterator<ModuleUI> {
-
-		public ModuleUIIterator(Container container) {
-			super(ModuleUI.class, container);
+	
+	public void setDraggedComponent(Component c) {
+		if (this.overlay!=c) {
+			this.overlay = c;
+			if (c!=null) {
+				setComponentZOrder(c, 0);
+			} else {
+				setComponentZOrder(curvePanel, 0);
+			}
 		}
-
 	}
 	
 }

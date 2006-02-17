@@ -129,7 +129,7 @@ public abstract class Property extends PropertyContainer {
 	 */
 	private String name = null;
 	
-	private boolean flagValidateName = false;
+	//private final static boolean flagValidateName = false;
 	
 	/**
 	 * Returns the name of this property.
@@ -139,14 +139,14 @@ public abstract class Property extends PropertyContainer {
 	public String getName() {
 		return name;
 	}
-	
+	/*s
 	public boolean isValidatingName() {
 		return flagValidateName;
 	}
-	
+	/*
 	public void setValidatingName(boolean validate) {
 		flagValidateName = validate;
-	}
+	}*/
 
 	/**
 	 * Sets the name of the property
@@ -160,9 +160,9 @@ public abstract class Property extends PropertyContainer {
 	 * @throws IllegalArgumentException if the name does not match the regular expression.
 	 */
 	public void setName(String name) {
-		if (flagValidateName && !Property.isValidName(name))
+		/*		if (flagValidateName && !Property.isValidName(name))
 			throw new IllegalArgumentException("Illegal property name.");
-
+*/
 		//if (this.name==null||!this.name.equals(name)) {
 			this.name = name;
 			// fireChangeEvent();
@@ -173,15 +173,15 @@ public abstract class Property extends PropertyContainer {
 		return false;
 	}
 	
-	/**
+	/*
 	 * Returns true if name is not null and matching the regular expression.
 	 * @param name name to validate
 	 * @return true if name is not null and matching the regular expression.
 	 * @see #setName(String)
-	 */
+	 *
 	public static boolean isValidName(String name) {
 		return name==null?false:validateNamePattern.matcher(name).matches();
-	}
+	}*/
 	
 	// ---- Editor ------------------------------------------
 
@@ -302,10 +302,6 @@ public abstract class Property extends PropertyContainer {
 
 	public void setExportable(boolean exportable) {
 		this.flagExportable = exportable;
-	}
-	
-	public void setupForEditing() {
-		;
 	}
 
 }

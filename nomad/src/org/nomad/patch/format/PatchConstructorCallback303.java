@@ -25,61 +25,66 @@ package org.nomad.patch.format;
 import org.nomad.patch.CtrlMap;
 
 
-public interface PatchFileCallback303 {
+public interface PatchConstructorCallback303 {
 
-	void header_version	(String version) throws PatchFileException;
-	void header_data	(int[] data) throws PatchFileException;
-	void moduleDump		(boolean isPolySection, int[] data) throws PatchFileException;
-	void currentNoteDump(int[] data) throws PatchFileException;
-	void cableDump		(boolean isPolySection, int[] data) throws PatchFileException;
-	void parameterDump	(boolean isPolySection, int[] data) throws PatchFileException;
-	void customDump		(boolean isPolySection, int[] data) throws PatchFileException;
-	void morphMapDumpMorphKnobValues(int[] morphKnobValues) throws PatchFileException;
-	void morphMapDump	(int[] morph) throws PatchFileException;
-	void keyboardAssignment(int[] data) throws PatchFileException;
-	void knobMapDump	(int[] data) throws PatchFileException;
-	void ctrlMapDump	(int[] data) throws PatchFileException;
-	void nameDump		(boolean isPolySection, int moduleIndex, String moduleName) throws PatchFileException; 
-	void notes			(String notes) throws PatchFileException;
-	void unrecognizedSection(String header, String content) throws PatchFileException;
+	void patch_name (String name) throws PatchConstructionException;
+	void header_version	(String version) throws PatchConstructionException;
+	void header_data	(int[] data) throws PatchConstructionException;
+	void moduleDump		(boolean isPolySection, int[] data) throws PatchConstructionException;
+	void currentNoteDump(int[] data) throws PatchConstructionException;
+	void cableDump		(boolean isPolySection, int[] data) throws PatchConstructionException;
+	void parameterDump	(boolean isPolySection, int[] data) throws PatchConstructionException;
+	void customDump		(boolean isPolySection, int[] data) throws PatchConstructionException;
+	void morphMapDumpMorphKnobValues(int[] morphKnobValues) throws PatchConstructionException;
+	void morphMapDump	(int[] morph) throws PatchConstructionException;
+	void keyboardAssignment(int[] data) throws PatchConstructionException;
+	void knobMapDump	(int[] data) throws PatchConstructionException;
+	void ctrlMapDump	(int[] data) throws PatchConstructionException;
+	void nameDump		(boolean isPolySection, int moduleIndex, String moduleName) throws PatchConstructionException; 
+	void notes			(String notes) throws PatchConstructionException;
+	void unrecognizedSection(String header, String content) throws PatchConstructionException;
 
-	public class Adapter implements PatchFileCallback303 {
+	public class Adapter implements PatchConstructorCallback303 {
 
 		private String versionName = "";
 		private String notes = "";
 		private int[] versionNumber = new int[] {-1, -1};
+		private String name = null;
 
 		public String getVersionName()	{ return versionName; }
 		public String getNotes() 	{ return notes; }
 		public int getMinorVersion()	{ return versionNumber[0]; }
 		public int getMajorVersion()	{ return versionNumber[1]; }
+		public String getName() { return name ; } 
+		public void patch_name(String name) throws PatchConstructionException {
+			this.name = name;
+		}
 		
-		public void header_version(String version) 
-			throws PatchFileException {
+		public void header_version(String version) throws PatchConstructionException {
 			if (version!=null) {
 				PatchFile303.extractVersionNumber(versionNumber,   version);
 				this.versionName = PatchFile303.extractVersionName(version);
 			}
 		}
 
-		public void notes(String note) throws PatchFileException {
+		public void notes(String note) throws PatchConstructionException {
 			this.notes = note;
 		}
 
-		public void header_data(int[] data)								throws PatchFileException { }
-		public void moduleDump(boolean isPolySection, int[] data)		throws PatchFileException { }
-		public void currentNoteDump(int[] data)							throws PatchFileException { }
-		public void cableDump(boolean isPolySection, int[] data)		throws PatchFileException { }
-		public void parameterDump(boolean isPolySection, int[] data)	throws PatchFileException { }
-		public void customDump(boolean isPolySection, int[] data)		throws PatchFileException { }
-		public void morphMapDumpMorphKnobValues(int[] morphKnobValues)	throws PatchFileException { }
-		public void morphMapDump(int[] morph)							throws PatchFileException { }
-		public void keyboardAssignment(int[] data)						throws PatchFileException { }
-		public void knobMapDump(int[] data)								throws PatchFileException { }
-		public void ctrlMapDump(int[] data)								throws PatchFileException { }
-		public void unrecognizedSection(String header, String content)	throws PatchFileException { }
+		public void header_data(int[] data)								throws PatchConstructionException { }
+		public void moduleDump(boolean isPolySection, int[] data)		throws PatchConstructionException { }
+		public void currentNoteDump(int[] data)							throws PatchConstructionException { }
+		public void cableDump(boolean isPolySection, int[] data)		throws PatchConstructionException { }
+		public void parameterDump(boolean isPolySection, int[] data)	throws PatchConstructionException { }
+		public void customDump(boolean isPolySection, int[] data)		throws PatchConstructionException { }
+		public void morphMapDumpMorphKnobValues(int[] morphKnobValues)	throws PatchConstructionException { }
+		public void morphMapDump(int[] morph)							throws PatchConstructionException { }
+		public void keyboardAssignment(int[] data)						throws PatchConstructionException { }
+		public void knobMapDump(int[] data)								throws PatchConstructionException { }
+		public void ctrlMapDump(int[] data)								throws PatchConstructionException { }
+		public void unrecognizedSection(String header, String content)	throws PatchConstructionException { }
 		public void nameDump(boolean isPolySection, int moduleIndex, String moduleName)	
-																		throws PatchFileException { }
+																		throws PatchConstructionException { }
 
 	}
 
@@ -90,22 +95,22 @@ public interface PatchFileCallback303 {
 		public boolean isValidating() { return validating; }
 		public void setValidatingEnabled(boolean enable) {	this.validating = enable; }
 		
-		protected void validateRange(int min, int max, int value, String name)	throws PatchFileException {
+		protected void validateRange(int min, int max, int value, String name)	throws PatchConstructionException {
 			if (min>value || value>max) 
-				throw new PatchFileException("out of range: '"+name+"'");
+				throw new PatchConstructionException("out of range: '"+name+"'");
 		}
 
-		protected void validateMin(int min, int value, String name) throws PatchFileException {
+		protected void validateMin(int min, int value, String name) throws PatchConstructionException {
 			if (min>value)
-				throw new PatchFileException("out of range: '"+name+"'");
+				throw new PatchConstructionException("out of range: '"+name+"'");
 		}
 
-		protected void validateEq(int eq, int value, String name) throws PatchFileException {
+		protected void validateEq(int eq, int value, String name) throws PatchConstructionException {
 			if (eq>value)
-				throw new PatchFileException("not equal: '"+name+"'");
+				throw new PatchConstructionException("not equal: '"+name+"'");
 		}
 		
-		public void header_data(int[] data) throws PatchFileException {
+		public void header_data(int[] data) throws PatchConstructionException {
 			
 			if (isValidating())
 			{
@@ -157,10 +162,10 @@ public interface PatchFileCallback303 {
 			header_octave_shift (data[PatchFile303.HEADER_OCTAVE_SHIFT]);
 		}
 
-		public abstract void header_keyboard_range ( int min, int max ) throws PatchFileException;
-		public abstract void header_velocity_range ( int min, int max ) throws PatchFileException;
-		public abstract void header_portamento ( int portamento_time, boolean portamento_auto ) throws PatchFileException;
-		public abstract void header_voice_regtrigger ( boolean poly_active, boolean common_active ) throws PatchFileException;
+		public abstract void header_keyboard_range ( int min, int max ) throws PatchConstructionException;
+		public abstract void header_velocity_range ( int min, int max ) throws PatchConstructionException;
+		public abstract void header_portamento ( int portamento_time, boolean portamento_auto ) throws PatchConstructionException;
+		public abstract void header_voice_regtrigger ( boolean poly_active, boolean common_active ) throws PatchConstructionException;
 
 		public abstract void header_cable_visibility (
 			boolean cable_red_visible,
@@ -170,14 +175,14 @@ public interface PatchFileCallback303 {
 			boolean cable_green_visible,
 			boolean cable_purple_visible,
 			boolean cable_white_visible
-		) throws PatchFileException;
+		) throws PatchConstructionException;
 
-		public abstract void header_bend(int range) throws PatchFileException;
-		public abstract void header_requested_voices(int count) throws PatchFileException;
-		public abstract void header_separator(int position) throws PatchFileException;
-		public abstract void header_octave_shift(int position) throws PatchFileException;
+		public abstract void header_bend(int range) throws PatchConstructionException;
+		public abstract void header_requested_voices(int count) throws PatchConstructionException;
+		public abstract void header_separator(int position) throws PatchConstructionException;
+		public abstract void header_octave_shift(int position) throws PatchConstructionException;
 		
-		public void moduleDump(boolean isPolySection, int[] data) throws PatchFileException { 
+		public void moduleDump(boolean isPolySection, int[] data) throws PatchConstructionException { 
 			if (isValidating())
 			{
 				validateMin  (1, data[PatchFile303.MODULE_DUMP_MODULE_INDEX], "module index");
@@ -197,7 +202,7 @@ public interface PatchFileCallback303 {
 		public abstract void moduleDump(boolean isPolySection, 
 			int moduleIndex, int moduleType, int xpos, int ypos ) ;
 		
-		public void currentNoteDump(int[] data) throws PatchFileException { 
+		public void currentNoteDump(int[] data) throws PatchConstructionException { 
 			if (isValidating())
 			{
 				validateRange(0, 127, data[PatchFile303.CURRENT_NOTE_DUMP_NOTE], "note");
@@ -216,7 +221,7 @@ public interface PatchFileCallback303 {
 			int note, int attack_velocity, int release_velocity
 		) ;
 		
-		public void cableDump(boolean isPolySection, int[] data) throws PatchFileException { 
+		public void cableDump(boolean isPolySection, int[] data) throws PatchConstructionException { 
 			if (isValidating())
 			{
 				validateRange(0, 6, data[PatchFile303.CABLE_DUMP_COLOR], "color");
@@ -244,9 +249,9 @@ public interface PatchFileCallback303 {
 		public abstract void cableDump(boolean isPolySection, 
 			int color, int dst_module_index, int dst_connector_index, boolean dst_connector_isInput,
 			int src_module_index, int src_connector_index, boolean src_connector_isInput
-		) throws PatchFileException;
+		) throws PatchConstructionException;
 		
-		public void parameterDump(boolean isPolySection, int[] data) throws PatchFileException {
+		public void parameterDump(boolean isPolySection, int[] data) throws PatchConstructionException {
 			if (isValidating())
 			{
 				validateMin(1, data[PatchFile303.PARAMETER_DUMP_MODULE_INDEX], "module index");
@@ -268,9 +273,9 @@ public interface PatchFileCallback303 {
 		}
 
 		public abstract void parameterDump(boolean isPolySection, 
-			int module_index, int module_typem, int[] parameters) throws PatchFileException;
+			int module_index, int module_typem, int[] parameters) throws PatchConstructionException;
 
-		public void customDump(boolean isPolySection, int[] data) throws PatchFileException {
+		public void customDump(boolean isPolySection, int[] data) throws PatchConstructionException {
 			if (isValidating())
 			{
 				validateMin(1, data[PatchFile303.CUSTOM_DUMP_MODULE_INDEX], "module index");
@@ -289,9 +294,9 @@ public interface PatchFileCallback303 {
 		}
 
 		public abstract void customDump(boolean isPolySection, 
-			int module_index, int[] customs) throws PatchFileException;
+			int module_index, int[] customs) throws PatchConstructionException;
 
-		public void morphMapDumpMorphKnobValues(int[] morphKnobValues) throws PatchFileException {
+		public void morphMapDumpMorphKnobValues(int[] morphKnobValues) throws PatchConstructionException {
 			if (isValidating())
 			{ 
 				validateRange(0, 127, morphKnobValues[PatchFile303.MORPH_MAP_DUMP_VALUES_MORPH1], "morph 1");
@@ -307,10 +312,10 @@ public interface PatchFileCallback303 {
 		}
 
 		public abstract void morphMapDumpMorphKnobValues(int morph1, int morph2,
-			int morph3, int morph4) throws PatchFileException;
+			int morph3, int morph4) throws PatchConstructionException;
 		                
 		
-		public void morphMapDump(int[] data) throws PatchFileException {
+		public void morphMapDump(int[] data) throws PatchConstructionException {
 			if (isValidating())
 			{
 				validateRange(0, 1, data[PatchFile303.MORPH_MAP_DUMP_SECTION], "section index");
@@ -329,9 +334,9 @@ public interface PatchFileCallback303 {
 		}
 
 		public abstract void morphMapDump(boolean isPolySection, int module_index,
-				int parameter_index, int morph_index, int morph_range) throws PatchFileException;
+				int parameter_index, int morph_index, int morph_range) throws PatchConstructionException;
 		
-		public void keyboardAssignment(int[] data) throws PatchFileException { 
+		public void keyboardAssignment(int[] data) throws PatchConstructionException { 
 			if (isValidating())
 			{
 				validateRange(0, 2, data[PatchFile303.KEYBOARD_ASSIGNMENT_MORPH1], "morph 1");
@@ -345,9 +350,9 @@ public interface PatchFileCallback303 {
 					data[PatchFile303.KEYBOARD_ASSIGNMENT_MORPH4] );
 		}
 
-		public abstract void keyboardAssignment(int morph1, int morph2, int morph3, int morph4) throws PatchFileException;
+		public abstract void keyboardAssignment(int morph1, int morph2, int morph3, int morph4) throws PatchConstructionException;
 		
-		public void knobMapDump(int[] data) throws PatchFileException {
+		public void knobMapDump(int[] data) throws PatchConstructionException {
 			if (isValidating())
 			{
 				validateRange(0, 2, data[PatchFile303.KNOB_MAP_DUMP_SECTION_INDEX], "section index");
@@ -359,7 +364,7 @@ public interface PatchFileCallback303 {
 				      ||(data[PatchFile303.KNOB_MAP_DUMP_KNOB_INDEX]==19)
 				      ||(data[PatchFile303.KNOB_MAP_DUMP_KNOB_INDEX]==20)
 				      ||(data[PatchFile303.KNOB_MAP_DUMP_KNOB_INDEX]==22))
-				) throw new PatchFileException("out of range: 'knob index'");
+				) throw new PatchConstructionException("out of range: 'knob index'");
 			}
 			
 			knobMapDump(
@@ -371,9 +376,9 @@ public interface PatchFileCallback303 {
 		}
 
 		public abstract void knobMapDump(int section, int module_index, int parameter_index,
-			int knob_index) throws PatchFileException;
+			int knob_index) throws PatchConstructionException;
 		
-		public void ctrlMapDump(int[] data) throws PatchFileException {
+		public void ctrlMapDump(int[] data) throws PatchConstructionException {
 			if (isValidating())
 			{
 				validateRange(0, 2, data[PatchFile303.CTRL_MAP_DUMP_SECTION_INDEX], "section index");
@@ -381,7 +386,7 @@ public interface PatchFileCallback303 {
 				validateMin(0, data[PatchFile303.CTRL_MAP_DUMP_PARAMETER_INDEX], "parameter index");
 				
 				if (!CtrlMap.isValidCC(data[PatchFile303.CTRL_MAP_DUMP_CC_INDEX]))
-					throw new PatchFileException("out of range: 'cc index'");
+					throw new PatchConstructionException("out of range: 'cc index'");
 			}
 			
 			ctrlMapDump(
@@ -394,7 +399,7 @@ public interface PatchFileCallback303 {
 		}
 
 		public abstract void ctrlMapDump(int section,
-			int module_index, int parameter_index, int cc_index) throws PatchFileException ;
+			int module_index, int parameter_index, int cc_index) throws PatchConstructionException ;
 		
 		public abstract void nameDump(boolean isPolySection, int moduleIndex, String moduleName);
 		

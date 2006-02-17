@@ -22,9 +22,6 @@
  */
 package org.nomad.theme.property;
 
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-
 import org.nomad.theme.component.NomadComponent;
 
 /**
@@ -45,10 +42,4 @@ public class ComponentLocationProperty extends PointProperty {
 	public int getX() { return getComponent().getX(); }
 	public int getY() { return getComponent().getY(); }
 
-	public void setupForEditing() {
-		getComponent().addComponentListener(new ComponentAdapter(){
-			public void componentMoved(ComponentEvent event) {
-				fireChangeEvent();
-			}});
-	}
 }

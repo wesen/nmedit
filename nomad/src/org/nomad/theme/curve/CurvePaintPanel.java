@@ -1,15 +1,15 @@
-		package org.nomad.theme.curve;
-import java.awt.Color;
+package org.nomad.theme.curve;
+
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 
-import javax.swing.JLayeredPane;
+import javax.swing.JComponent;
 import javax.swing.RepaintManager;
 
 import org.nomad.util.misc.NomadUtilities;
@@ -37,26 +37,26 @@ import org.nomad.util.misc.NomadUtilities;
  * Created on Feb 1, 2006
  */
 
-public class CurvePaintPanel extends JLayeredPane {
+public class CurvePaintPanel extends JComponent {
 
 	private ArrayList<Curve> curveList = new ArrayList<Curve>();
 	private ArrayList<Curve> unmanagedCurveList = new ArrayList<Curve>();
 //	private Curve draggedCurve = null;
 
 	private CurvePainter painter = new CurvePainter();
-	final static boolean debug = false;
 	private CurveSegments segments = new CurveSegments(this, painter);
 	private UnmanagedCurveModification ucModification = new UnmanagedCurveModification();
 	private OwnedCurveModification ocModification = new OwnedCurveModification();
 	private Curve draggedCurve = null;
-	private boolean renderUnmanaged = true;
-	private boolean renderUnmanagedAsLines = false;
-	private boolean unmanagedHaveShadow = true;
-	
+	private final static boolean renderUnmanaged = true;
+	private final static boolean renderUnmanagedAsLines = false;
+	private final static boolean unmanagedHaveShadow = true;
+	private RepaintManager repaintManager;
 	private Container owner ;
+	private boolean updating = false;
 	
 	public CurvePaintPanel(Container owner) {
-		//setDoubleBuffered(false);
+		setDoubleBuffered(false);
 		this.owner = owner;
 		setSize(owner.getSize());
 		owner.addComponentListener(new ComponentAdapter(){
@@ -64,13 +64,20 @@ public class CurvePaintPanel extends JLayeredPane {
 				setSize(event.getComponent().getSize());
 			}});
 		setOpaque(false);
+		repaintManager = RepaintManager.currentManager(this);
+	}
+	
+	protected void clearCurves() {
+		resetUnmanaged();
+		while (curveList.size()>0)
+			removeCurve(curveList.get(0));
 	}
 	
 	public Container getOwner() {
 		return owner;
 	}
 	
-	public void resetUnmanaged() {		
+	protected void resetUnmanaged() {		
 		if (!unmanagedCurveList.isEmpty()) {
 			for (Curve curve:unmanagedCurveList) {
 				curve.setCallback(ocModification);
@@ -114,18 +121,29 @@ public class CurvePaintPanel extends JLayeredPane {
 		segments.addToSegments(curve);
 	}
 	
+	private Cursor previousCursor = null;
+	
 	public void setDraggedCurve(Curve curve) {
 		if (draggedCurve != null) {
 			draggedCurve.setCallback(null); // remove callback
 			Curve c = draggedCurve;
 			draggedCurve = null;
-			//markDirty(c);
 			addDirtyRegion(c);
+			
+			if (curve==null && previousCursor!=null) {
+				setCursor(previousCursor);
+				previousCursor = null;
+			}
 		}
 		
 		this.draggedCurve = curve;
 		
 		if (draggedCurve != null) {
+			if (previousCursor==null) {
+				previousCursor = getCursor();
+				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			}
+			
 			draggedCurve.setCallback(ucModification);
 			addDirtyRegion(draggedCurve);
 		} 
@@ -135,56 +153,42 @@ public class CurvePaintPanel extends JLayeredPane {
 		Graphics2D g2 = (Graphics2D) g;
 		segments.paint(g2);
 
-		//g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		
 		if (renderUnmanaged) {
 			if (renderUnmanagedAsLines) {
-				for (Curve curve : unmanagedCurveList) {
+				for (Curve curve : unmanagedCurveList)
 					painter.line(g2, curve);
-				}
 			} else {
-				for (Curve curve : unmanagedCurveList) {
+				for (Curve curve : unmanagedCurveList)
 					painter.paint(g2, curve, unmanagedHaveShadow);
-				}
 			}
 		}
 		
-		if (draggedCurve != null) {
-			painter.paint(g2, draggedCurve, unmanagedHaveShadow); 
-			
-			if (debug) {
-
-				g2.setColor(Color.BLACK);
-				paintPoint(g2, draggedCurve.getP1());
-				paintPoint(g2, draggedCurve.getP2());
-				g2.setColor(Color.BLUE);
-				paintPoint(g2, draggedCurve.getCtrlP1());
-				paintPoint(g2, draggedCurve.getCtrlP2());
-			}
-		}
-	}
-
-	private void paintPoint(Graphics2D g2, int x, int y) {
-		g2.drawRect(x-5, y-5, 10,10);
+		if (draggedCurve != null) painter.paint(g2, draggedCurve, unmanagedHaveShadow);
 	}
 	
-	private void paintPoint(Graphics2D g2, Point p) {
-		paintPoint(g2, p.x, p.y);
+	public void setUpdatingEnabled(boolean enable) {
+		updating = enable;
+		segments.setUpdatingEnabled(enable);
 	}
 	
+	public boolean isUpdatingEnabled() {
+		return updating;
+	}
+
 	protected void addDirtyRegion(Curve curve) {
-		
-		Rectangle dirty = curve.getBounds();
-		NomadUtilities.enlarge(dirty, 4);
-		
-		RepaintManager
-			.currentManager(this)
-			.addDirtyRegion(
-				this,
-				dirty.x, dirty.y,
-				dirty.width,
-				dirty.height
-			);
+		if (!updating) {
+			// use bounds rather than path because repaintmanager builds always one clip rect
+			// a more accurate resulution would only bring unecessary overhead
+			Rectangle dirty = curve.getBounds();
+			NomadUtilities.enlarge(dirty, 4);
+			
+			repaintManager.addDirtyRegion(
+					this,
+					dirty.x, dirty.y,
+					dirty.width,
+					dirty.height
+				);
+		}
 	}
 	
 	private class UnmanagedCurveModification implements CurveEventCallback {
@@ -193,13 +197,8 @@ public class CurvePaintPanel extends JLayeredPane {
 	}
 	
 	private class OwnedCurveModification implements CurveEventCallback {
-		public void beforeChange(Curve curve) {
-			segments.removeFromSegments(curve);
-		}
-
-		public void afterChange(Curve curve) {
-			segments.addToSegments(curve);
-		}
+		public void beforeChange(Curve curve)	{ segments.removeFromSegments(curve); }
+		public void afterChange(Curve curve)	{ segments.addToSegments(curve); }
 	}
 
 	public CurvePainter getCurvePainter() {

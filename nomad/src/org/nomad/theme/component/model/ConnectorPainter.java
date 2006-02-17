@@ -31,8 +31,8 @@ import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
 
-import org.nomad.theme.NomadClassicColors;
 import org.nomad.util.graphics.RoundGradientPaint;
+import org.nomad.util.misc.NomadUtilities;
 
 public class ConnectorPainter {
 
@@ -86,8 +86,8 @@ public class ConnectorPainter {
 			if (gradients) {
 				ell = new Ellipsed(1,size);
 				g2.setPaint(new GradientPaint(
-						ell.pad, ell.pad, NomadClassicColors.alpha(Color.WHITE, 0),
-						ell.r,ell.b, NomadClassicColors.alpha(Color.WHITE, 160)
+						ell.pad, ell.pad, NomadUtilities.alpha(Color.WHITE, 0),
+						ell.r,ell.b, NomadUtilities.alpha(Color.WHITE, 160)
 				));
 				Stroke tmp = g2.getStroke();
 				g2.setStroke(new BasicStroke(3f));
@@ -100,22 +100,22 @@ public class ConnectorPainter {
 		ell = new Ellipsed(3.5,size); // inside black hole
 		if (gradients) {
 			g2.setPaint(new RoundGradientPaint(ell.ellipse,
-				NomadClassicColors.alpha(Color.BLACK, 150),
-				NomadClassicColors.alpha(Color.BLACK, 0)
+				NomadUtilities.alpha(Color.BLACK, 150),
+				NomadUtilities.alpha(Color.BLACK, 0)
 			));
 		} else {
 			//g2.setColor(Color.decode("#470F0F"));
-			g2.setColor(NomadClassicColors.alpha(Color.BLACK, 200));
+			g2.setColor(NomadUtilities.alpha(Color.BLACK, 200));
 		}
 		g2.fill(ell.ellipse);
 		
 
 		//g2.setColor(); // outline
 		/*if (renderInput) {
-			g2.setColor(NomadClassicColors.alpha(color.brighter(), 120)); // outline
+			g2.setColor(NomadUtilities.alpha(color.brighter(), 120)); // outline
 			g2.draw(frame.ellipse);
 		} else {*/
-			g2.setColor(NomadClassicColors.alpha(Color.DARK_GRAY, gradients?120:200)); // outline
+			g2.setColor(NomadUtilities.alpha(Color.DARK_GRAY, gradients?120:200)); // outline
 			
 		if (renderInput)
 			g2.draw(frame.ellipse);
@@ -135,8 +135,8 @@ public class ConnectorPainter {
 
 			Ellipsed ell = new Ellipsed(2,size); // black hole
 			g2.setPaint(new RoundGradientPaint(ell.ellipse,
-				NomadClassicColors.alpha(color.brighter(), 200),
-				NomadClassicColors.alpha(color, 60)
+				NomadUtilities.alpha(color.brighter(), 200),
+				NomadUtilities.alpha(color, 60)
 			));
 			g2.fill(ell.ellipse);	
 		}

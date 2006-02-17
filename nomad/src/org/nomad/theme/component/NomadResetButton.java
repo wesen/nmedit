@@ -33,7 +33,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.nomad.theme.NomadClassicColors;
+import org.nomad.util.misc.NomadUtilities;
 
 /**
  * @author Christian Schneider
@@ -185,7 +185,7 @@ public class NomadResetButton extends NomadControl {
 			m.update();
 			
 			Color f = getForeground();
-			g2.setColor(NomadClassicColors.alpha(f, 165));
+			g2.setColor(NomadUtilities.alpha(f, 165));
 			g2.fill(m.polygonFill);
 
 			if (hasFocus()) {

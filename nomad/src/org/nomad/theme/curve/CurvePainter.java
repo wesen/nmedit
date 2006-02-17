@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 
+import org.nomad.util.misc.NomadUtilities;
+
 
 /* Copyright (C) 2006 Christian Schneider
  * 
@@ -29,14 +31,12 @@ import java.awt.Stroke;
  */
 
 public class CurvePainter {
-	
-	private final static int cap = BasicStroke.CAP_ROUND;
-	private final static int join= BasicStroke.JOIN_ROUND;
-	private BasicStroke stShadow = new BasicStroke(cableSize, cap, join);
-	private BasicStroke stFill   = new BasicStroke(innerSize, cap, join);
-	private final static int cableSize = 2;
-	private final static int innerSize = cableSize-1;
-	private final static double shadowAlpha = 0.2;
+
+	private final static float cableSize = 2.3f;
+	private final static float innerSize = cableSize-0.6f;
+	private BasicStroke stShadow = new BasicStroke(cableSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+	private BasicStroke stFill   = new BasicStroke(innerSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+	private final static double shadowAlpha = 0.3;
 		
 	public CurvePainter() {
 		
@@ -58,12 +58,12 @@ public class CurvePainter {
 	}
 	
 	public void paint(Graphics2D g2, Curve curve, Color fillColor, int alpha) {
-		Color clShadow = neighbour(fillColor, Color.BLACK, shadowAlpha);
-		paint(g2, curve, alpha(fillColor,alpha), alpha(clShadow, alpha));
+		Color clShadow = NomadUtilities.neighbour(fillColor, Color.BLACK, shadowAlpha);
+		paint(g2, curve, NomadUtilities.alpha(fillColor,alpha), NomadUtilities.alpha(clShadow, alpha));
 	}
 
 	public void paint(Graphics2D g2, Curve curve, Color fillColor) {
-		Color clShadow = neighbour(fillColor, Color.BLACK, shadowAlpha);
+		Color clShadow = NomadUtilities.neighbour(fillColor, Color.BLACK, shadowAlpha);
 		paint(g2, curve, fillColor, clShadow);
 	}
 
@@ -74,9 +74,9 @@ public class CurvePainter {
 			g2.setStroke(stShadow);
 			g2.setColor(shadow);
 	
-			g2.translate(+1,1); // draw shadow with a small offset
+			g2.translate(+1, 1); // draw shadow with a small offset
 			g2.draw(curve);
-			g2.translate(-1, -1); // undo translation
+			g2.translate(-1,-1); // undo translation
 		}
 	
 		g2.setStroke(stFill);
@@ -85,19 +85,6 @@ public class CurvePainter {
 		g2.draw(curve);
 		
 		g2.setStroke(restoreStroke); // restore stroke
-	}
-
-	private static Color alpha(Color c, int alpha) {
-		return new Color(c.getRed(), c.getGreen(), c.getBlue(), alpha);
-	}
-	
-	private static Color neighbour(Color c1, Color c2, double f) {
-		return new Color(
-			c1.getRed() 	+ (int)((c2.getRed()	-c1.getRed()	)*f),
-			c1.getGreen() 	+ (int)((c2.getGreen()	-c1.getGreen()	)*f),
-			c1.getBlue() 	+ (int)((c2.getBlue()	-c1.getBlue()	)*f),
-			c1.getAlpha() 	+ (int)((c2.getAlpha()	-c1.getAlpha()	)*f)
-		);
 	}
 
 	public void line(Graphics2D g2, Curve curve) {

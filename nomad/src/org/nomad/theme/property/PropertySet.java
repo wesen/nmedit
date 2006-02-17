@@ -40,7 +40,7 @@ public class PropertySet implements Iterable<Property> {
 
 	private Property fallBack = null;
 	private ArrayList<PropertySetListener> propertySetListenerList = null;
-	private HashMap<String,Property> propertyMap = new HashMap<String,Property>(4);
+	private HashMap<String,Property> propertyMap = new HashMap<String,Property>();
 	private boolean flagUseEventListening = false;
 
 	private ChangeListener broadCast = null;
@@ -157,22 +157,6 @@ public class PropertySet implements Iterable<Property> {
 		for (Property p : new ArrayList<Property>(propertyMap.values()) ) {
 			p.removeChangeListener(broadCast);
 			propertyMap.remove(p.getName());
-		}
-	}
-	
-	public void setupForEditing() {
-		flagUseEventListening = true;
-		
-		broadCast = new ChangeListener() {
-			public void stateChanged(ChangeEvent event) {
-				if (flagUseEventListening)
-					firePropertyChangedEvent((Property) event.getSource(), event);
-			}};
-		
-		for (Iterator iter=iterator();iter.hasNext();) {
-			Property p = ((Property)iter.next());
-			p.setupForEditing();
-			p.addChangeListener(broadCast);			
 		}
 	}
 

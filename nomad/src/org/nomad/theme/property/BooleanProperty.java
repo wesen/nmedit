@@ -34,10 +34,6 @@ public abstract class BooleanProperty extends Property {
 		super(component);
 	}
 	
-	public void setupForEditing() {
-		super.setupForEditing();
-	}
-
 	/*public void setValue(Object value) {
 		if (!(value instanceof String && fromString((String)value)==null) && !(value instanceof Boolean))
 			throw new IllegalArgumentException("Incompatible value "+value);

@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -18,15 +19,19 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.KeyStroke;
 import javax.swing.ToolTipManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.nomad.dialog.JTaskDialog;
+import org.nomad.dialog.NomadAboutDialog;
+import org.nomad.dialog.NomadTaskDialog;
+import org.nomad.dialog.PatchSettingsDialog;
 import org.nomad.dialog.TaskModel;
 import org.nomad.env.Environment;
+import org.nomad.main.run.SplashWindow;
 import org.nomad.patch.Patch;
-import org.nomad.patch.format.PatchPreview;
+import org.nomad.patch.format.PatchFilePreviewComponent;
 import org.nomad.patch.ui.PatchUI;
 import org.nomad.plugin.NomadPlugin;
 import org.nomad.synth.SynthConnection;
@@ -39,6 +44,8 @@ import org.nomad.util.view.SelectableDocumentManager;
 
 public class Nomad extends JFrame implements SynthConnectionStateListener {
 
+	private static Nomad instance = null;
+	
     public static String creatorProgram = "nomad";
     public static String creatorVersion = "v0.1";
     public static String creatorRelease = "development build";
@@ -55,10 +62,16 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 	JRadioButtonMenuItem menuDocumentViewTabbed = null;
 	JRadioButtonMenuItem menuDocumentViewMDI = null;
 	
+	public static Nomad sharedInstance() {
+		return instance;
+	}
+	
 	public Nomad() {
+		
+		instance = this;
+		
 		// frame setup
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle(creatorProgram + " " + creatorVersion + " " + creatorRelease);
 		
 		// load environment 
@@ -75,7 +88,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 
 		// further setup
 		setJMenuBar(createMenu());
-		ToolTipManager.sharedInstance().setInitialDelay(0);
+		ToolTipManager.sharedInstance().setInitialDelay(100);
 		//newSynth(ComPort.getDefaultComPortInstance());
 		synthConnection = new SynthConnection();
 		synthConnection.addConnectionStateListener(this);
@@ -84,25 +97,36 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		addWindowListener(new AutomaticSynthShutdownAction());
 		
 		// file chooser
-		fileChooser.setAccessory(new PatchPreview(fileChooser));
+		fileChooser.setAccessory(new PatchFilePreviewComponent(fileChooser));
     }
 	
 	public void initialLoading() {
-		loader.loadPatch("data/patches/all.pch");
+		
+		SplashWindow.disposeSplash();
+		loader.loadPatch("data/patches/simple.pch");
+		
+	}
+	
+	private void menuItem(JMenu menu, String text, ActionListener action, KeyStroke ks) {
+		JMenuItem item = menu.add(text);
+		item.addActionListener(action);
+		item.setAccelerator(ks);
 	}
 	
 	public JMenuBar createMenu() {
 		JMenuBar mnBar = new JMenuBar();
 		JMenu mnMenu = null;
-		
+
 		// file
 		
 		mnMenu = new JMenu("File");
-		mnMenu.add("New").addActionListener(new NewPatchAction());
-		mnMenu.add("Open...").addActionListener(new LoadPatchAction());
+		menuItem(mnMenu, "New", new NewPatchAction(), KeyStroke.getKeyStroke('N', InputEvent.CTRL_MASK));
+		menuItem(mnMenu, "Open...", new LoadPatchAction(), KeyStroke.getKeyStroke('O', InputEvent.CTRL_MASK));
+				
 		mnMenu.add("Close").addActionListener(new ClosePatchAction());
 		mnMenu.add("Close all").addActionListener(new CloseAllAction());
-		mnMenu.add("Save As...").addActionListener(new SavePatchAsAction());
+		menuItem(mnMenu, "Save As...", new SavePatchAsAction(), KeyStroke.getKeyStroke('S', InputEvent.CTRL_MASK));
+		
 		mnMenu.addSeparator();
 		mnMenu.add("Exit").addActionListener(new ExitNomadAction());
 		mnBar.add(mnMenu);
@@ -120,6 +144,11 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 		mnMenu.addSeparator();
 		menuSynthUploadPatchFromCurrentSlot = mnMenu.add("Upload Active Slot");
 		menuSynthUploadPatchFromCurrentSlot.addActionListener(new UploadPatchFromCurrentSlotAction());
+		mnBar.add(mnMenu);
+		
+		// patch
+		mnMenu = new JMenu("Patch");
+		mnMenu.add("Settings").addActionListener(new PatchSettingsAction());
 		mnBar.add(mnMenu);
 		
 		// appearance
@@ -263,7 +292,7 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 	
 	void changeSynthInterface(final NomadPlugin plugin) {
 		
-		JTaskDialog.processTasks(Nomad.this, new TaskModel(){
+		NomadTaskDialog dlg = new NomadTaskDialog(new TaskModel(){
 
 			final int selectionIndex = documents.getSelectedDocumentIndex();
 			final int documentCount = documents.getDocumentCount();
@@ -323,6 +352,8 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 			
 		});
 
+		dlg.invoke();
+		
 	}
 
 	public void synthConnectionStateChanged(SynthConnection synth) {
@@ -380,6 +411,24 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
     class NewPatchAction implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	newPatch();
+        }
+    }
+
+    PatchUI getActivePatch() {
+    	return
+    		getDocumentManager().getSelectedDocument()==null ? null
+    		: (PatchUI) getDocumentManager().getSelectedDocument(); 
+    }
+    
+    class PatchSettingsAction implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+        	
+        	PatchUI patch = getActivePatch();
+        	if (patch!=null)
+        	{
+        		PatchSettingsDialog dialog = new PatchSettingsDialog(patch.getPatch());
+        		dialog.invoke();
+        	}
         }
     }
 
@@ -455,7 +504,8 @@ public class Nomad extends JFrame implements SynthConnectionStateListener {
 	
 	class ShowAboutDialogAction implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			noDialogYet();
+			NomadAboutDialog dlg = new NomadAboutDialog();
+			dlg.invoke();
 		}
 	}
 	

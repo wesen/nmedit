@@ -22,93 +22,66 @@
  */
 package org.nomad.patch.format;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 
-import javax.swing.BorderFactory;
+import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
-public class PatchPreview extends JPanel implements PropertyChangeListener {
+public class PatchFilePreviewComponent extends JScrollPane implements PropertyChangeListener {
 
-    final static String preFileName		= "<b>File:</b>";
-    final static String preVersionName 	= "<b>Version:</b>";
-    final static String preNotes  		= "<b>Notes:</b>";
     File file = null;
-    JLabel lblFileName		= lbl();
-    JLabel lblVersionName 	= lbl();
-    JLabel lblNotes  		= lbl();
+    JEditorPane edPane ;
 
-    private JLabel lbl() {
-    	JLabel label = new JLabel();
-    	label.setFont(new Font("SansSerif", Font.PLAIN, 11));
-    	return label;
-    }
-    
-    public PatchPreview(JFileChooser fc) {
+    public PatchFilePreviewComponent(JFileChooser fc) {
+    	super(new JEditorPane());
         setPreferredSize(new Dimension(160, 50));
         fc.addPropertyChangeListener(this);
+        edPane = (JEditorPane)getViewport().getView();
         
-        setBorder(BorderFactory.createEtchedBorder());
-        
-        JPanel top = new JPanel();
-        top.setLayout(new GridLayout(0, 1));
-        top.add(lblFileName);
-        top.add(lblVersionName);
-        setLayout(new BorderLayout());
-        add(top, BorderLayout.NORTH);
-        add(lblNotes, BorderLayout.CENTER);
-        clearData();
-    }
-
-    void clearData() {
-    	html(lblFileName, preFileName+"-");
-    	html(lblVersionName, preVersionName+"-");
-    	html(lblNotes, preNotes+"-");
-    }
-    
-    void html(JLabel lbl, String text) {
-    	lbl.setText("<html>"+text+"</html>");
+        edPane.setEditable(false);
+        edPane.setContentType("text/html");
     }
     
     public void loadData() {
-    	clearData();
-    	
-        if (file == null) return;
-        
-        html(lblFileName, preFileName+"<br>"+file.getName());
-        
-        PatchFileCallback303.Adapter info = PatchFile303.info(file);
-        if (info!=null)
-        {
-        	String v = "";
-        	
-        	if (info.getVersionName()!=null)
-        		v += "<br>"+ info.getVersionName()+" ";
-        	if (info.getMinorVersion()>=0&&info.getMajorVersion()>=0)
-        		v += "<br>"+ info.getMajorVersion()+"."+info.getMinorVersion();
+        String text = "";
+        if (file != null) {
+        	final String P = "<p style=\"margin:2px;\">"; 
+        	text+="<html><body style=\"font-family:sans-serif;font-size:9px;padding:2px;margin:0;\">";
+        	text+=P+"<b>File:</b> "+file.getName()+"</p>";
+	        PatchConstructorCallback303.Adapter info = PatchFile303.info(file);
+	        if (info!=null)
+	        {
+	        	String v = "";
+	        	if (info.getVersionName()!=null)
+	        		v += info.getVersionName()+" ";
+	        	if (info.getMinorVersion()>=0&&info.getMajorVersion()>=0)
+	        		v += info.getMajorVersion()+"."+info.getMinorVersion();
 
-        	html(lblVersionName, preVersionName+(v.length()==0 ? "-" : v));
-        	
-        	html(lblNotes, notes(info));
+	        	text+=P+"<b>Version:</b> "+(v.length()==0?"-":v)+"</p>";
+	        	text+=P+"<b>Notes:</b> ";
+	        	text+="";
+	        	text+=notes(info);
+	        	text+="</p>";
+	        }
+	        text+="</body></html>";
         }
+        edPane.setText(text);
+        // edPane.scrollRectToVisible(new Rectangle(0,0,1,1));
     }
     
-    private String notes(PatchFileCallback303.Adapter info) {
+    private String notes(PatchConstructorCallback303.Adapter info) {
     	String notes = info.getNotes();
     	if (notes != null && (notes = notes.trim()).length()>0) {
     		notes = notes.replaceAll("\\s\\s+", "...");
     		notes = notes.replaceAll("\\n"," ");
-    		notes = notes.substring(0, Math.min(100, notes.length()-1));
-    		return preNotes+"<br>"+notes;	
+    		//notes = notes.substring(0, Math.min(100, notes.length()-1));
+    		return "<br>"+notes;	
     	} else {
-    		return preNotes+"-";
+    		return "-";
     	}
     }
 

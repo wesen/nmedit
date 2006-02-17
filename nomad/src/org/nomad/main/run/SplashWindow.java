@@ -3,22 +3,19 @@ package org.nomad.main.run;
 // @see http://www.randelshofer.ch/oop/javasplash/javasplash.html
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.Window;
-import java.awt.Image;
-import java.awt.Frame;
-import java.lang.InterruptedException;
-import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.Graphics;
-import java.awt.EventQueue;
-import java.awt.Toolkit;
-import java.lang.Runtime;
 import java.net.URL;
-import java.lang.InternalError;
 
 /**
  * @author Christian Schneider
@@ -192,7 +189,6 @@ public class SplashWindow extends Window
   
   private void updateStatus() {
 	  this.update(this.getGraphics());
-		//this.update(this.getGraphics());
   }
   
   private Font statusFont = new Font("Tahoma", Font.PLAIN , 10);
@@ -261,25 +257,4 @@ public class SplashWindow extends Window
     }
   }
 
-  /**
-   * Invokes the main method of the provided class name.
-   * @param className The class name 
-   * @param args the command line arguments
-   */
-  public static void invokeMain(String className, String[] args)
-  {
-    try
-    {
-      Class.forName(className)
-        .getMethod("main", new Class[] {String[].class})
-        .invoke(null, new Object[] {args});
-    }
-    catch (Exception e)
-    {
-      InternalError error =
-        new InternalError("Failed to invoke main method");
-      error.initCause(e);
-      throw error;
-    }
-  }
 }

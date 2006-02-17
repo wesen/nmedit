@@ -135,7 +135,6 @@ public class HeartbeatTask
 			try {
 				protocol.heartbeat(); 
 			} catch (Throwable cause) {
-				cause.printStackTrace();
 				
 				//returnedFromHeartbeat = true;
 				if (errorHandler==null) {
@@ -156,6 +155,7 @@ public class HeartbeatTask
 							e.printStackTrace();
 						}
 				}
+
 			}
 		}
 	}

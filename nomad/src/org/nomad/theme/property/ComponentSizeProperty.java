@@ -23,8 +23,6 @@
 package org.nomad.theme.property;
 
 import java.awt.Dimension;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 
 import org.nomad.theme.component.NomadComponent;
 
@@ -40,13 +38,6 @@ public class ComponentSizeProperty extends DimensionProperty {
 	public void setXY(int x, int y) { getComponent().setSize(x, y); }
 	public int getX() { return getComponent().getWidth(); }
 	public int getY() { return getComponent().getHeight(); }
-
-	public void setupForEditing() {
-		getComponent().addComponentListener(new ComponentAdapter(){
-			public void componentResized(ComponentEvent event) {
-				fireChangeEvent();
-			}});
-	}
 
 	public Dimension getDim() {
 		return getComponent().getSize();

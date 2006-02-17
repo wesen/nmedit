@@ -22,9 +22,6 @@
  */
 package org.nomad.theme.property;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.nomad.theme.component.NomadComponent;
 import org.nomad.theme.component.NomadControl;
 import org.nomad.theme.property.editor.PropertyEditor;
@@ -45,8 +42,9 @@ public class ParameterProperty extends Property {
 		fireChangeEvent();
 	}
 	
-	private final static Pattern pattern = Pattern.compile("(\\d+)\\.(\\d+)\\.([cp])\\..*");
-	
+	// private final static Pattern pattern = Pattern.compile("(\\d+)\\.(\\d+)\\.([cp])\\..*");
+
+	/*
 	public static DParameter decode(String value) {
 		Matcher m = pattern.matcher(value);
 		if (!m.matches()) {			
@@ -59,6 +57,69 @@ public class ParameterProperty extends Property {
 		String type = pieces[2];
 		boolean isCustom = type.equals("c");
 
+		DModule module = ModuleDescriptions.sharedInstance().getModuleById(moduleId);
+		if (module==null){
+			System.err.println("In ParameterProperty.decode(): Module [id="+moduleId+"] not found");
+			return null;
+		}
+		if (isCustom) return module.getCustomParamById(paramId);
+		else return module.getParameterById(paramId);
+	}*/
+
+	public static DParameter decode(String value) {
+		int pos = 0;
+		char c;
+
+		if (pos>=value.length()) {
+			System.err.println("In ParameterProperty.decode(): no data.");
+			return null;
+		}
+		int moduleId = 0;
+		
+		for (;pos<value.length();pos++) {
+			c = value.charAt(pos);
+			if (Character.isDigit(c)) {
+				moduleId = (moduleId*10)+c-'0';
+			} else if (c=='.') {
+				pos++;
+				break;
+			}
+			else {
+				System.err.println("In ParameterProperty.decode(): Expected module id.");
+				return null;
+			}
+		}
+		
+		if (pos>=value.length()) return null;
+		int paramId  = 0;
+		
+		for (;pos<value.length();pos++) {
+			c = value.charAt(pos);
+			if (Character.isDigit(c)) {
+				paramId = (paramId*10)+c-'0';
+			} else if (c=='.') {
+				pos++;
+				break;
+			}
+			else {
+				System.err.println("In ParameterProperty.decode(): Expected parameter id.");
+				return null;
+			}
+		}
+		
+		boolean isCustom;
+		if (pos>=value.length()) return null;
+		c = value.charAt(pos);
+		switch (c) {
+			case 'c': isCustom = true;  break;
+			case 'p': isCustom = false; break;
+			default : 
+				System.err.println("In ParameterProperty.decode(): Expected 'c' for custom or 'p' for parameter, but found '"+c+"'.");
+				return null;
+		}
+		
+		// rest of string is not necessary
+		
 		DModule module = ModuleDescriptions.sharedInstance().getModuleById(moduleId);
 		if (module==null){
 			System.err.println("In ParameterProperty.decode(): Module [id="+moduleId+"] not found");

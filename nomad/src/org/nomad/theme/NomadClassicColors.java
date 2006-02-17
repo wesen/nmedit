@@ -60,10 +60,4 @@ public class NomadClassicColors {
 		return Color.WHITE;
 	}
 	
-	public static Color alpha(Color c, int alpha) {
-		
-		return new Color(c.getRed(), c.getGreen(), c.getBlue(), alpha);
-		
-	}
-	
 }

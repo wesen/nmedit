@@ -47,6 +47,8 @@ public class Header {
 	public final static int CABLE_PURPLE 	= 5;
 	public final static int CABLE_WHITE 	= 6;
 	
+	private int[] unknown = new int[]{0,0,0,0};
+	
 	private boolean[] cable_visibility = new boolean[7];
 	
 	private int bend_range = 0;
@@ -57,6 +59,24 @@ public class Header {
 	public boolean isCableVisible(int cable) {
 		return cable_visibility[cable];
 	}
+	
+	public int getUnknown(int index) {
+		return unknown[index];
+	}
+	
+	public void setUnknown(int index, int value) {
+		unknown[index]=value;
+	}
+	
+	public int getUnknown1() { return getUnknown(0); }
+	public int getUnknown2() { return getUnknown(1); }
+	public int getUnknown3() { return getUnknown(2); }
+	public int getUnknown4() { return getUnknown(3); }
+
+	public void setUnknown1(int value) { setUnknown(0, value); }
+	public void setUnknown2(int value) { setUnknown(1, value); }
+	public void setUnknown3(int value) { setUnknown(2, value); }
+	public void setUnknown4(int value) { setUnknown(3, value); }
 	
 	public void setCableVisible(int cable, boolean visible) {
 		cable_visibility[cable] = visible;

@@ -51,6 +51,7 @@ public class NomadLabel extends NomadComponent {
 	private boolean flagAutoResize = true;
 	private boolean flagTextAntialiasing = true;
 	private final static Font defaultLabelFont = new Font("SansSerif", Font.PLAIN, 9);
+	private Dimension textDim = null;
 	
 	public NomadLabel() {
 		super();
@@ -91,7 +92,7 @@ public class NomadLabel extends NomadComponent {
 		return bounds;
 	}
 
-	public Dimension getTextDimensions() {
+	private Dimension getTextDimensionsX() {
 		Font font = getFont();
 		FontMetrics fm = getFontMetrics(font);
 		Dimension preferredSize;
@@ -104,6 +105,12 @@ public class NomadLabel extends NomadComponent {
 			sx = 0; sy = preferredSize.height-fm.getDescent();
 		} 
 		return preferredSize;
+	}
+	
+	protected Dimension getTextDimensions() {
+		if (textDim == null)
+			textDim = getTextDimensionsX();
+		return new Dimension(textDim);
 	}
 
 	public boolean isTextAntialiased() {
@@ -129,6 +136,9 @@ public class NomadLabel extends NomadComponent {
 	}	
 
 	public void setText(String text) {
+		
+		textDim = null;
+		
 		//if (!imageString.getString().equals(text)) {
 			imageString.setString(text);
 			if (getEnvironment()!=null) {

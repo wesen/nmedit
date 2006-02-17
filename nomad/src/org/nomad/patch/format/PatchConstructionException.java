@@ -22,37 +22,37 @@
  */
 package org.nomad.patch.format;
 
-public class PatchFileException extends Exception {
+public class PatchConstructionException extends Exception {
 
 	private boolean isFormatted = false;
 
-	public PatchFileException() {
+	public PatchConstructionException() {
 		super();
 	}
 
-	public PatchFileException(String message) {
+	public PatchConstructionException(String message) {
 		super(message);
 	}
 
-	public PatchFileException(String message, boolean isFormatted) {
+	public PatchConstructionException(String message, boolean isFormatted) {
 		super(message);
 		this.isFormatted = isFormatted;
 	}
 
-	public PatchFileException(String message, Throwable t) {
+	public PatchConstructionException(String message, Throwable t) {
 		super(message, t);
 	}
 
-	public PatchFileException(String message, Throwable t, boolean isFormatted) {
+	public PatchConstructionException(String message, Throwable t, boolean isFormatted) {
 		super(message, t);
 		this.isFormatted = isFormatted;
 	}
 
-	public PatchFileException(Throwable t) {
+	public PatchConstructionException(Throwable t) {
 		super(t);
 	}
 
-	public PatchFileException(Throwable t, boolean isFormatted) {
+	public PatchConstructionException(Throwable t, boolean isFormatted) {
 		super(t);
 		this.isFormatted = isFormatted;
 	}
