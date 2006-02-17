@@ -18,13 +18,13 @@
  */
 
 /*
- * Created on Feb 8, 2006
+ * Created on Feb 15, 2006
  */
 package org.nomad.util.array;
 
-public interface TransitionChangeListener<T> { //<N, T> {
+public interface Transition<N> {
 
-	//public void transitionChanged(TransitionMatrix<N, T> matrix, N a, N b, T told, T tnew);
-	public void transitionChanged(T t, boolean transition_added);
-
+	public N getN1();
+	public N getN2();
+	
 }

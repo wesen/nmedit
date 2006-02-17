@@ -18,13 +18,33 @@
  */
 
 /*
- * Created on Feb 8, 2006
+ * Created on Feb 15, 2006
  */
-package org.nomad.util.array;
+package org.nomad.util.iterate;
 
-public interface TransitionChangeListener<T> { //<N, T> {
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-	//public void transitionChanged(TransitionMatrix<N, T> matrix, N a, N b, T told, T tnew);
-	public void transitionChanged(T t, boolean transition_added);
+public class ArrayIterator<T> implements Iterator<T> {
+
+	private T[] array;
+	private int successor = 0;
+
+	public ArrayIterator(T[] array) {
+		this.array = array;
+	}
+	
+	public boolean hasNext() {
+		return successor<array.length;
+	}
+
+	public T next() {
+		if(!hasNext()) throw new NoSuchElementException();
+		return array[successor++];
+	}
+
+	public void remove() {
+		throw new UnsupportedOperationException();
+	}
 
 }

@@ -66,10 +66,10 @@ public class G2ThemeFactory extends UIFactory {
 	}
 
 	public ModuleSectionUI getModuleSectionUI(ModuleSection moduleSection) {
-		BackgroundPainter painter = bgpainterVA;			
+		BackgroundPainter painter = bgpainterFX;			
 		if (moduleSection!=null 
 			&& moduleSection.getIndex()==Section.POLY) {
-			painter = bgpainterFX;
+			painter = bgpainterVA;
 		}
 		return new G2ModuleSectionGUI(moduleSection, getImageTracker(), painter);
 	}

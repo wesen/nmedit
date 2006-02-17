@@ -33,12 +33,11 @@ public class Segment<T> extends ArrayList<T> {
 
 	public final static boolean debug = false;
 	
-	private boolean modified = false;
-	private boolean dirty    = false;
 	private int offsetX;
 	private int offsetY;
 	private Segments<T> segments;
 	private BufferedImage image = null;
+	private boolean shouldRender = false;
 	
 	public Segment(Segments<T> segments) {
 		this(segments, 0, 0);
@@ -104,24 +103,15 @@ public class Segment<T> extends ArrayList<T> {
 	}
 
 	public void setModified() {
-		setModified(true);
+		
+		if (!hasPaintData()) {
+			this.image = null;
+		} else
+			shouldRender = true;
+		
+		getSegments().modified(this);
 	}
 
-	public void setModified(boolean isModified) {
-		this.modified = isModified;
-		dirty |= modified;
-		if (modified)
-			getSegments().modified(this);
-	}
-	
-	public boolean isModified() {
-		return modified;
-	}
-	
-	public boolean isDirty() {
-		return dirty;
-	}
-	
 	public boolean hasPaintData() {
 		return size()>0;
 	}
@@ -132,6 +122,7 @@ public class Segment<T> extends ArrayList<T> {
 			image = ImageToolkit.createCompatibleBuffer(
 					getSegments().getSegmentSize(), 
 					getSegments().getSegmentSize(), Transparency.TRANSLUCENT);
+			
 			g2 = image.createGraphics();
 		} else {
 			g2 = image.createGraphics();
@@ -142,22 +133,22 @@ public class Segment<T> extends ArrayList<T> {
 		getSegments().render(g2, this);
 		// g2.translate(offsetX, offsetY);
 		g2.dispose();
-
-		modified = false;
+		
+		shouldRender = false;
 	}
 
 	public void paint(Graphics2D g2) {
 		if (hasPaintData()) {
-			if (isModified()) render();
+			if (shouldRender || (image==null)) render();
 
 			g2.drawImage(image, offsetX, offsetY, null);
-			dirty = modified;
+			//dirty = modified;
 
 			if (debug) {
 				g2.setColor(Color.blue);
 				g2.drawRect(offsetX, offsetY, image.getWidth(), image.getHeight());
 			}
-		}
+		} 
 	}
 	
 }

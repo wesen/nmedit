@@ -3299,42 +3299,42 @@
       <property name="x,y" value="20,12" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="14,11" />
       <property name="text" value="Rst" />
       <property name="antialiasing" value="true" />
       <property name="x,y" value="5,24" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="16,11" />
       <property name="text" value="Snc" />
       <property name="antialiasing" value="true" />
       <property name="x,y" value="5,46" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="16,11" />
       <property name="text" value="Out" />
       <property name="antialiasing" value="true" />
       <property name="x,y" value="234,25" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="19,11" />
       <property name="text" value="Link" />
       <property name="antialiasing" value="true" />
       <property name="x,y" value="214,3" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="19,11" />
       <property name="text" value="Step" />
       <property name="antialiasing" value="true" />
       <property name="x,y" value="135,6" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadActiveLabel">
+    <component name="display.text">
       <property name="text" value="stepcount" />
       <property name="parameter#0" value="17.0.p.stepcount" />
       <property name="padding" value="2" />
@@ -6231,28 +6231,28 @@
       <property name="x,y" value="147,8" />
       <property name="antialiasing" value="true" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="6,11" />
       <property name="text" value="A" />
       <property name="antialiasing" value="true" />
       <property name="x,y" value="29,32" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="7,11" />
       <property name="text" value="D" />
       <property name="antialiasing" value="true" />
       <property name="x,y" value="67,34" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="5,11" />
       <property name="text" value="S" />
       <property name="antialiasing" value="true" />
       <property name="x,y" value="106,34" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="6,11" />
       <property name="text" value="R" />
       <property name="antialiasing" value="true" />
@@ -7810,7 +7810,7 @@
       <property name="x,y" value="130,5" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadButtonArray">
+    <component name="button">
       <property name="btn#2" value="null" />
       <property name="btn#3" value="null" />
       <property name="parameter#0" value="80.3.p.mono" />
@@ -7823,7 +7823,7 @@
       <property name="x,y" value="53,37" />
       <property name="landscape" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadButtonArray">
+    <component name="button">
       <property name="btn#2" value="{@wf.saw}" />
       <property name="btn#3" value="{@wf.saw.inv}" />
       <property name="parameter#0" value="80.2.p.waveform" />
@@ -7836,7 +7836,7 @@
       <property name="x,y" value="124,38" />
       <property name="landscape" value="true" />
     </component>
-    <component name="org.nomad.theme.component.NomadButtonArray">
+    <component name="button">
       <property name="btn#2" value="null" />
       <property name="btn#3" value="null" />
       <property name="parameter#0" value="80.4.p.mute" />
@@ -7955,21 +7955,21 @@
       <property name="x,y" value="148,6" />
       <property name="antialiasing" value="true" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="6,11" />
       <property name="text" value="A" />
       <property name="antialiasing" value="true" />
       <property name="x,y" value="34,28" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="7,11" />
       <property name="text" value="H" />
       <property name="antialiasing" value="true" />
       <property name="x,y" value="90,29" />
       <property name="vertical" value="false" />
     </component>
-    <component name="org.nomad.theme.component.NomadLabel">
+    <component name="label">
       <property name="size" value="7,11" />
       <property name="text" value="D" />
       <property name="antialiasing" value="true" />

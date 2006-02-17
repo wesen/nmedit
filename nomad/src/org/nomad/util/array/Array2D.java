@@ -49,10 +49,6 @@ public abstract class Array2D<T> implements Iterable<T> {
 		return null;
 	}
 	
-	protected T newCell(int index) {
-		return newCell(Array2D.getX(index, xdim), Array2D.getY(index, xdim));
-	}
-	
 	protected int getIndex(int x, int y) {
 		return Array2D.getIndex(x, y, xdim, ydim);
 	}
@@ -70,7 +66,7 @@ public abstract class Array2D<T> implements Iterable<T> {
 	}
 	
 	public T getCell(int x, int y) {
-		return getCell(getIndex(x,y));
+		return data[Array2D.getIndex(x, y, xdim, ydim)];
 	}
 	
 	public int getSize() {
@@ -95,11 +91,11 @@ public abstract class Array2D<T> implements Iterable<T> {
 	}
 	
 	public void resetCell(int index) {
-		data[index] = newCell(index);
+		data[index] = newCell(Array2D.getX(index,xdim),Array2D.getY(index, xdim));
 	}
 
 	public void resetCell(int x, int y) {
-		resetCell(getIndex(x, y));
+		data[Array2D.getIndex(x,y,xdim,ydim)]=newCell(x,y);
 	}
 	
 	public Dimension getContentBounds() {
@@ -138,11 +134,46 @@ public abstract class Array2D<T> implements Iterable<T> {
 
 		size = xdim*ydim;
 		if (oxdim==0||oydim==0) {
-			resetPath(getColScanPath());
+			// faster than using path iterator
+			int index = 0;
+			for (int y=0;y<ydim;y++)
+				for (int x=0;x<xdim;x++) 
+					data[index++]=newCell(x, y);
 		} else {
 			// scan new rows/cols and reset their content
-			if (oxdim<xdim) resetCols(Math.max(oxdim-1, 0), xdim-1);
-			if (oydim<ydim) resetRows(Math.max(oydim-1, 0), ydim-1);
+
+			int xmin = Math.min(oxdim,xdim);
+			int ymin = Math.min(oydim,ydim);
+			
+			if (oxdim<xdim) {
+				// right area
+				int line = 0;
+				for (int y=0;y<ymin;y++) {
+					for (int x=oxdim;x<xdim;x++)
+						data[line+x]=newCell(x,y);
+					line += xdim;
+				}
+			}
+
+			if (oydim<ydim) {
+				// bottom area
+				int line = ymin*xdim;
+				for (int y=ymin;y<ydim;y++) {
+					for (int x=0;x<xmin;x++)
+						data[line+x]=newCell(x,y);
+					line += xdim;
+				}
+			}
+			
+			if (oxdim<xdim && oydim<ydim) {
+				// bottom right area (corner)
+				int line = ymin*xdim;
+				for (int y=ymin;y<ydim;y++) {
+					for (int x=xmin;x<xdim;x++)
+						data[line+x]=newCell(x,y);
+					line += xdim;
+				}
+			}
 		}
 	}
 	
@@ -172,7 +203,7 @@ public abstract class Array2D<T> implements Iterable<T> {
 	public void resetPath(CellIterator<T> iterator) {
 		while (iterator.hasNext()) {
 			if (iterator.next()==null)
-				iterator.setCurrent(newCell(iterator.getCurrentIndex()));
+				resetCell(iterator.getCurrentIndex());
 		}
 	}
 	

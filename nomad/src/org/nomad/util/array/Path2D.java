@@ -24,7 +24,6 @@ package org.nomad.util.array;
 
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.geom.Area;
 
 import org.nomad.util.iterate.ConditionF;
 import org.nomad.util.iterate.ConditionMask;
@@ -61,9 +60,9 @@ public abstract class Path2D {
 	public int getStartIndex(int xdim, int ydim, int xydim) {
 		return 0;
 	}
-	
+
 	/**
-	 * A class that assures that the successor of the given path always points to a cell thats value fullfills the given condition 
+	 * only visits the cells that meet the given condition 
 	 */
 	public static class ConditionalF<T> extends Path2D {
 		private T[] array2d;
@@ -93,7 +92,7 @@ public abstract class Path2D {
 	}
 	
 	/**
-	 * A class that assures that the successor of the given path always points to a cell in the array that is not null. 
+	 * only visits the cells that meet the given condition 
 	 */
 	public static class MaskedPath extends Path2D {
 		private Path2D path;
@@ -250,17 +249,13 @@ public abstract class Path2D {
 	public static Path2D createShapePath(Shape shape, int xdim, int ydim, int rw, int rh) {
 		Rectangle bounds = shape.getBounds();
 		NomadUtilities.scale(bounds, 1.0d/(double)rw, 1.0d/(double)rh);
-		NomadUtilities.enlarge(bounds, 1);
 
-		// now use mask on box
-		return new MaskedPath(
-			new Rectangular(bounds, xdim, ydim), 
-			new AreaMask(new Area(shape), rw, rh)
-		);
+		// now use mask on box 
+		return new ShapePath(bounds, xdim, ydim, shape, rw, rh);
 	}
 
-	private static class AreaMask implements ConditionMask {
-		private Area area;
+	private static class ShapePath extends Rectangular implements ConditionMask {
+		private Shape shape;
 		private int sx;
 		private int sy;
 		private int thresholdx;
@@ -268,68 +263,42 @@ public abstract class Path2D {
 		private int thresholdw;
 		private int thresholdh;
 
-		public AreaMask(Area area, int sx, int sy) {
-			this.area = area;
+		public ShapePath(Rectangle bounds, int xdim, int ydim, Shape shape, int sx, int sy) {
+			super(bounds, xdim, ydim);
+			this.shape = shape;
 			this.sx = sx;
 			this.sy = sy;
 
-			this.thresholdx = sx/2;
-			this.thresholdy = sy/2;
+			this.thresholdx = sx/4 ;
+			this.thresholdy = sy/4 ;
 
-			this.thresholdw = sx+(sx/2); // *2
-			this.thresholdh = sy+(sy/2); // *2
+			this.thresholdw = (thresholdx<<2) +thresholdx; // thresholdx*5;
+			this.thresholdh = (thresholdy<<2) +thresholdy; // thresholdy*5;
+		}
+		
+		private int align(int s, int xdim, int ydim, int xydim) {
+			while (s>=0) {
+				int x = Array2D.getX(s,xdim);
+				int y = Array2D.getY(s,xdim);
+				if (isTrue(x,y,xdim,ydim)) break;
+				s = super.getSuccessor(x,y,xdim,ydim,xydim);
+			}
+			return s;
+		}
+		
+		public int getStartIndex(int xdim, int ydim, int xydim) {
+			return align(super.getStartIndex(xdim,ydim,xydim), xdim, ydim, xydim);
+		}
+		
+		public int getSuccessor(int x, int y, int xdim, int ydim, int xydim) {
+			return align(super.getSuccessor(x,y,xdim,ydim,xydim), xdim, ydim, xydim);
 		}
 
 		public boolean isTrue(int x, int y, int xdim, int ydim) {
-			return area.intersects((x*sx)-thresholdx, (y*sy)-thresholdy, thresholdw, thresholdh);
+			return shape.intersects((x*sx)-thresholdx, (y*sy)-thresholdy, thresholdw, thresholdh);
 		}
 	}
 	
-	/*
-	public static Path2D createShapePath(Shape shape, int xdim, int ydim, int rw, int rh, int thresholdx, int thresholdy) {
-		double sx = 1.0d/rw;
-		double sy = 1.0d/rh;
-		
-		Rectangle bounds = shape.getBounds();
-		NomadUtilities.scale(bounds, sx, sy);
-		NomadUtilities.enlarge(bounds, 1);
-				
-		// use box path
-		Rectangular boxPath = new Rectangular(bounds, xdim, ydim);
-
-		// now use conditional path
-		//Conditional
-		Area area = new Area(shape);
-		area.transform(AffineTransform.getScaleInstance(sx, sy));
-		
-		ConditionMask mask = new AreaMask(area, rw, rh, ((double)thresholdx)*sx, ((double)thresholdy)*sy);
-		
-		// now use mask on box
-		MaskedPath maskedPath = new MaskedPath(boxPath, mask);
-		
-		return maskedPath;
-	}
-
-	private static class AreaMask implements ConditionMask {
-		private Area area;
-		private double offsetx;
-		private double offsety;
-		private double thresholdw;
-		private double thresholdh;
-
-		public AreaMask(Area area, double thresholdx, double thresholdy) {
-			this.area = area;
-			this.offsetx = -thresholdx-0.5d;
-			this.offsety = -thresholdy-0.5d;
-			this.thresholdw = (2.0d*thresholdx);
-			this.thresholdh = (2.0d*thresholdy);
-		}
-
-		public boolean isTrue(int x, int y, int xdim, int ydim) {
-			return area.intersects(((double)x)+offsetx, ((double)y)+offsety, thresholdw, thresholdh);
-		}
-	}
-*/
 	/**
      * Scans from top to bottom, left to right.
 	 */

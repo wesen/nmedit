@@ -22,6 +22,7 @@
  */
 package org.nomad.util.misc;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -149,6 +150,26 @@ public class NomadUtilities {
 	
 	public static boolean isConfirmedByUser(Component c, String text, String label) {
 		return JOptionPane.showConfirmDialog(c, text, label, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+	}
+
+	public static Color alpha(Color c, int alpha) {
+		
+		return new Color(c.getRed(), c.getGreen(), c.getBlue(), alpha);
+		
+	}
+	
+	public static Color neighbour(Color c1, Color c2, double f) {
+		return new Color(
+			c1.getRed() 	+ (int)((c2.getRed()	-c1.getRed()	)*f),
+			c1.getGreen() 	+ (int)((c2.getGreen()	-c1.getGreen()	)*f),
+			c1.getBlue() 	+ (int)((c2.getBlue()	-c1.getBlue()	)*f),
+			c1.getAlpha() 	+ (int)((c2.getAlpha()	-c1.getAlpha()	)*f)
+		);
+	}
+
+	public static String removeFileExtension(String name) {
+		int index = name.lastIndexOf('.');
+		return (index<=0) ? name : name.substring(0, index);
 	}
 	
 }
