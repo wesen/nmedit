@@ -130,7 +130,8 @@ public class NomadDialog extends DialogPane implements Runnable {
 		group.setBorder(BorderFactory.createEtchedBorder());
 		group.setBackground(getBackground());
 		group.setLayout(new BoxLayout(group, BoxLayout.PAGE_AXIS));
-		addRow(group, new Component[]{title, Box.createHorizontalGlue()});
+		if (title!=null)
+			addRow(group, new Component[]{title, Box.createHorizontalGlue()});
 		return group;
 	}
 	
@@ -143,7 +144,7 @@ public class NomadDialog extends DialogPane implements Runnable {
 			row.add(components[i]);
 		}
 		group.add(row);
-		group.add(Box.createVerticalStrut(10));
+		//group.add(Box.createVerticalStrut(10));
 	}
 	
 	public void addRow(JPanel group, String title, Component[] components) {

@@ -23,7 +23,6 @@
 package org.nomad.dialog;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Frame;
 
 import javax.swing.BorderFactory;
@@ -58,7 +57,6 @@ public class NomadDialogWindow extends JDialog {
 		
 		setTitle(dialog.getTitle());
 		this.dialog = dialog;
-		setBackground(Color.WHITE);
 		
 		setSize(640*3/4,480*3/4);
 		
@@ -95,6 +93,9 @@ public class NomadDialogWindow extends JDialog {
 		
 		dialog.window = this;
 		validate();
+		
+		if (!dialog.isScrollbarEnabled())
+			pack();
 	}
 
 	public void done() {

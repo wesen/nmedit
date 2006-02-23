@@ -23,13 +23,14 @@
 package org.nomad.dialog;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.MidiDevice.Info;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -49,7 +50,7 @@ public class NomadMidiDialog extends NomadDialog {
 	}
 	
 	public NomadMidiDialog(Info midiIn, Info midiOut) {
-		super();
+		setScrollbarEnabled(true);
 
 		choiceIn = midiIn;
 		choiceOut = midiOut;
@@ -59,30 +60,50 @@ public class NomadMidiDialog extends NomadDialog {
 				"Choose a Midi Driver"
 		);
 		
-		setScrollbarEnabled(true);
-		
-		in = new DeviceSelector();
-		out = new DeviceSelector();
+		in = new DeviceSelector(true);
+		out = new DeviceSelector(false);
 
 		in.setChoice(midiIn);
 		out.setChoice(midiOut);
+
+		JPanel group;
+		group = newGroup("Input");
+		add(group, in);
 		
-		JLabel lbl ;
+		group = newGroup("Output");
+		add(group, out);
 		
-		add( lbl = new JLabel("Input") );
-		lbl.setAlignmentX(0);
 		
-		add(in);
-		add( lbl = new JLabel("Output") );
-		lbl.setAlignmentX(0);
-		
-		add(out);
+	}
+	
+	private void add(JPanel group, DeviceSelector ds) {
+		addRow(group, "device", ds.cbox);
+		addRow(group, "description", ds.desc);
+		addRow(group, "version", ds.version);
+		addRow(group, "vendor", ds.vendor);
+		add(group);
 	}
 
 	public void invoke() {
 		super.invoke(new String[]{RESULT_OK, ":"+RESULT_CANCEL});
 	}
 
+	public void setInputDevice(String name) {
+		in.setDevice(name);		
+	}
+
+	public void setInputDevice(MidiDevice.Info dev) {
+		in.setDevice(dev);
+	}
+	
+	public void setOutputDevice(String name) {
+		out.setDevice(name);		
+	}
+
+	public void setOutputDevice(MidiDevice.Info dev) {
+		out.setDevice(dev);
+	}
+	
 	public MidiDevice.Info getInputDevice() {
 		return getResult().equals(RESULT_OK) ? in.getChoice() : choiceIn;
 	}
@@ -99,14 +120,39 @@ public class NomadMidiDialog extends NomadDialog {
 		return dlg;
 	}
 
-	private class DeviceSelector extends JPanel implements ActionListener {
+	private class DeviceSelector implements ActionListener {
 		private JComboBox cbox;
 
 		private JLabel vendor = new JLabel();
 		private JLabel desc = new JLabel();
 		private JLabel version = new JLabel(); 
 		
-		public DeviceSelector() {
+		private Info[] getDeviceList(boolean listInputs) {
+			ArrayList<Info> candidateList = new ArrayList<Info>();
+			
+			if (listInputs) {
+				for (Info d : MidiSystem.getMidiDeviceInfo()) {
+					try {
+						if (MidiSystem.getMidiDevice(d).getMaxTransmitters()!=0)
+							candidateList.add(d);
+					} catch (MidiUnavailableException e) {
+						// ignore
+					}
+				}
+			} else {
+				for (Info d : MidiSystem.getMidiDeviceInfo()) {
+					try {
+						if (MidiSystem.getMidiDevice(d).getMaxReceivers()!=0)
+							candidateList.add(d);
+					} catch (MidiUnavailableException e) {
+						// ignore
+					}
+				}
+			}
+			return candidateList.toArray(new Info[candidateList.size()]);
+		}
+		
+		public DeviceSelector(boolean listInputs) {
 			setLayout(new GridLayout(4,0));
 			
 			setBackground(Color.WHITE);
@@ -115,20 +161,9 @@ public class NomadMidiDialog extends NomadDialog {
 			version.setAlignmentX(LEFT_ALIGNMENT);
 			vendor.setAlignmentX(LEFT_ALIGNMENT);
 			desc.setAlignmentX(LEFT_ALIGNMENT);
-			cbox = new JComboBox(MidiSystem.getMidiDeviceInfo());
-		
-			Font font = new Font("SansSerif", Font.PLAIN, 11);
-			cbox.setFont(font);
-			version.setFont(font);
-			vendor.setFont(font);
-			desc.setFont(font);
+			cbox = new JComboBox(getDeviceList(listInputs));
 
-			add(cbox);
-			add(version);
-			add(vendor);
-			add(desc);
-			
-			setDevice(null);
+			setDevice((MidiDevice.Info)null);
 
 			cbox.addActionListener(this);
 			if (cbox.getItemCount()>0) cbox.setSelectedIndex(0);
@@ -148,6 +183,16 @@ public class NomadMidiDialog extends NomadDialog {
 			return (MidiDevice.Info)cbox.getSelectedItem();
 		}
 		
+		public void setDevice(String name) {
+			for (int i=0;i<cbox.getItemCount();i++) {
+				MidiDevice.Info dev = (MidiDevice.Info) cbox.getItemAt(i);
+				if (dev.getName().equals(name)) {
+					setDevice(dev);
+					break;
+				}
+			}
+		}
+		
 		public void setDevice(MidiDevice.Info info) {
 			if (info==null) {
 				vendor.setText("-");
@@ -155,7 +200,8 @@ public class NomadMidiDialog extends NomadDialog {
 				version.setText("-");
 				return;
 			}
-			
+
+			cbox.setSelectedItem(info);
 			vendor.setText(info.getVendor());
 			version.setText(info.getVersion());
 			desc.setText(info.getDescription());

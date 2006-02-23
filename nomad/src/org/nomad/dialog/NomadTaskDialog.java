@@ -23,18 +23,9 @@
 package org.nomad.dialog;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Toolkit;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -43,37 +34,17 @@ public class NomadTaskDialog extends NomadDialog {
 
 	private TaskModel model = null;
 	private int task = 0;
-	private JLabel lblDescription = null;
 	private JLabel lblCurrentTask = null;
 	private JLabel lblCurrentTaskName = null;
 	private JProgressBar pgBar = null;
 	private Thread thread = null;
 	
 	public NomadTaskDialog(TaskModel model) {
+		setScrollbarEnabled(false);
 		this.model = model;
 		setTitle(model.getDescription());
-		
-		Dimension size = new Dimension(360,240);
-		setSize(size);
-		setPreferredSize(size);
-		setMinimumSize(size);
-		
-		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-		setLocation((screen.width-getWidth())/2, (screen.height-getHeight())/2);
+		setPreferredSize(new Dimension(360,200));
 
-		// create components
-		createComponents(this);
-		validate();
-	}
-	
-	public void invoke() {
-		super.invoke(null);
-	}
-
-	private void createComponents(JComponent contentPane) {
-		contentPane.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
-		lblDescription = new JLabel(model.getDescription());
 		lblCurrentTask = new JLabel();
 		lblCurrentTaskName = new JLabel();
 		pgBar = new JProgressBar();
@@ -82,62 +53,24 @@ public class NomadTaskDialog extends NomadDialog {
 		pgBar.setValue(0);
 		pgBar.setStringPainted(true);
 		
-		lblDescription.setAlignmentX(Component.LEFT_ALIGNMENT);
-		lblCurrentTask.setAlignmentX(Component.LEFT_ALIGNMENT);
-		lblCurrentTaskName.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-		lblDescription.setLocation(0,0);
-		lblCurrentTask.setLocation(0,0);
-		lblCurrentTaskName.setLocation(0,0);
-		pgBar.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-		JPanel textPane = new JPanel();
-		textPane.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-		textPane.setBackground(null);
-		textPane.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		c.weightx=1;c.weighty=1;
-		//c.insets=new Insets(10,10,10,10);
-		//c.anchor = GridBagConstraints.LINE_START;
-		c.anchor=GridBagConstraints.LINE_START;
-		c.fill=GridBagConstraints.HORIZONTAL;
-		c.gridwidth=4; c.gridheight=1; c.gridx=1; c.gridy=1; c.gridwidth=GridBagConstraints.REMAINDER;
-		textPane.add(setupFont(lblDescription,true),c);
-		c.fill=GridBagConstraints.NONE;
-		c.gridwidth=1; c.gridheight=1; c.gridx=1; c.gridy=2;
-		textPane.add(setupFont(new JLabel("Task:"),true),c);
-		c.gridwidth=3; c.gridheight=1; c.gridx=2; c.gridy=2; c.gridwidth=GridBagConstraints.REMAINDER;
-		textPane.add(setupFont(lblCurrentTaskName,false),c);
-		c.gridwidth=1; c.gridheight=1; c.gridx=1; c.gridy=3;
-		textPane.add(setupFont(new JLabel("Progress:"),true),c);
-		c.gridwidth=3; c.gridheight=1; c.gridx=2; c.gridy=3; c.gridwidth=GridBagConstraints.REMAINDER;
-		textPane.add(setupFont(lblCurrentTask,false),c);
-		c.gridwidth=4; c.gridheight=1; c.gridx=1; c.gridy=4; c.gridwidth=GridBagConstraints.REMAINDER;
-		c.fill=GridBagConstraints.HORIZONTAL;
-		textPane.add(pgBar,c);
-		
-		//pgBar.setSize(100,20);
-		JPanel progressPane = new JPanel();
-		progressPane.setLayout(new BoxLayout(progressPane, BoxLayout.PAGE_AXIS));		
-
-		progressPane.add(textPane);
-		progressPane.setBorder(BorderFactory.createEtchedBorder());
-		progressPane.setBackground(Color.WHITE);
-				
-		contentPane.add(progressPane);
-		contentPane.add(Box.createVerticalStrut(10));
+		JPanel group;
+		group = newGroup("Current");
+		addRow(group,"Name", lblCurrentTaskName);
+		addRow(group,"Task", lblCurrentTask);
+		addRow(group,"Progress", pgBar);
+		add(group);
 	}
+	
+	public void invoke() {
+		super.invoke(null);
+	}
+
 
 	private void status() {
 		lblCurrentTask.setText((task+1)+"/"+model.getTaskCount());
 		lblCurrentTaskName.setText(model.getTaskName(task));
 		pgBar.setValue(task);
-	}
-	
-	private JComponent setupFont(JComponent c, boolean isLabel) {
-		Font f = new Font("SansSerif", isLabel?Font.BOLD:Font.PLAIN, 11);
-		c.setFont(f);
-		return c;
+		//repaint();
 	}
 	
 	private void status(Throwable t) {
