@@ -145,5 +145,10 @@ public class Slot implements ModuleSectionListener, ModuleChangeListener {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void rearangingModules(boolean finished) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

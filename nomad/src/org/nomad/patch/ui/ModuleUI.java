@@ -246,11 +246,9 @@ public class ModuleUI extends NomadComponent implements ModuleComponent {
 		    	l.x = Math.max(0, l.x);
 		    	
 
-		    	//m.getModuleSection().getCurvePanel().setUpdatingEnabled(true);
 		    	m.getModule().setLocation(l);
 		    	m.obtainLocation();
 		    	m.getModuleSection().getModuleSection().rearangeModules(m.getModule());
-		    	//m.getModuleSection().getCurvePanel().setUpdatingEnabled(false);
 		    	
 		    	scrollTo(m);
 		    }

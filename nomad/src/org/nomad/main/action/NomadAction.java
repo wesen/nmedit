@@ -18,17 +18,24 @@
  */
 
 /*
- * Created on Feb 14, 2006
+ * Created on Feb 23, 2006
  */
-package org.nomad.patch.ui;
+package org.nomad.main.action;
 
-import org.nomad.patch.Module;
+import javax.swing.AbstractAction;
 
-public interface ModuleSectionListener {
+import org.nomad.main.Nomad;
 
-	public void moduleAdded(Module module);
-	public void moduleRemoved(Module module);
-	public void moduleSectionResized();
-	public void rearangingModules(boolean finished);
+public abstract class NomadAction extends AbstractAction {
+
+	private Nomad nomad;
+
+	public NomadAction(Nomad nomad) {
+		this.nomad = nomad;
+	}
+	
+	public Nomad getNomad() {
+		return nomad;
+	}
 
 }

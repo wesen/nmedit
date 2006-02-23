@@ -18,17 +18,35 @@
  */
 
 /*
- * Created on Feb 14, 2006
+ * Created on Feb 23, 2006
  */
-package org.nomad.patch.ui;
+package org.nomad.main.action;
 
-import org.nomad.patch.Module;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
-public interface ModuleSectionListener {
+import javax.swing.KeyStroke;
 
-	public void moduleAdded(Module module);
-	public void moduleRemoved(Module module);
-	public void moduleSectionResized();
-	public void rearangingModules(boolean finished);
+import org.nomad.main.Nomad;
+import org.nomad.util.graphics.AppIcons;
+
+public class FileNewAction extends NomadAction {
+
+	public FileNewAction(Nomad nomad) {
+		super(nomad);
+		
+		final String description = "Create new patch";
+		putValue(NAME, "New");
+		putValue(SMALL_ICON, AppIcons.IC_DOCUMENT_NEW);
+	    putValue(SHORT_DESCRIPTION, description);
+	    putValue(LONG_DESCRIPTION, 	description);
+	    putValue(ACCELERATOR_KEY, 	KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
+	    putValue(MNEMONIC_KEY, 		new Integer(KeyEvent.VK_N) );    
+		
+	}
+
+	public void actionPerformed(ActionEvent event) {
+		getNomad().newPatch();
+	}
 
 }

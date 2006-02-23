@@ -47,6 +47,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.RepaintManager;
+import javax.swing.SwingUtilities;
 
 import org.nomad.main.ModuleGroupsMenu;
 import org.nomad.main.ModuleToolbarButton;
@@ -274,6 +275,16 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 				setComponentZOrder(curvePanel, 0);
 			}
 		}
+	}
+
+	public void rearangingModules(boolean finished) {
+		if (!finished)
+			getCurvePanel().setUpdatingEnabled(true);
+		else SwingUtilities.invokeLater(new Runnable() {
+
+			public void run() {
+				getCurvePanel().setUpdatingEnabled(false);
+			}});
 	}
 
 }

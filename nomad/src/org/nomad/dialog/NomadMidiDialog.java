@@ -157,12 +157,17 @@ public class NomadMidiDialog extends NomadDialog {
 			
 			setBackground(Color.WHITE);
 			setBorder(BorderFactory.createEtchedBorder());
-			
+
+			cbox = new JComboBox(getDeviceList(listInputs));
+
 			version.setAlignmentX(LEFT_ALIGNMENT);
 			vendor.setAlignmentX(LEFT_ALIGNMENT);
 			desc.setAlignmentX(LEFT_ALIGNMENT);
-			cbox = new JComboBox(getDeviceList(listInputs));
-
+			version.setFont(getFont());
+			vendor.setFont(getFont());
+			desc.setFont(getFont());
+			cbox.setFont(getFont());
+			
 			setDevice((MidiDevice.Info)null);
 
 			cbox.addActionListener(this);

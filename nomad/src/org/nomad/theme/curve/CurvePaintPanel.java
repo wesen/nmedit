@@ -53,12 +53,11 @@ public class CurvePaintPanel extends JComponent implements Repainter {
 	private final static boolean unmanagedHaveShadow = true;
 	private RepaintManager repaintManager;
 	private Container owner ;
-	private boolean updating = false;
 	
 	public CurvePaintPanel(Container owner) {
 		setDoubleBuffered(false);
 		this.owner = owner;
-		setSize(owner.getSize());
+		//setSize(owner.getSize());
 		owner.addComponentListener(new ComponentAdapter(){
 			public void componentResized(ComponentEvent event) {
 				setSize(event.getComponent().getSize());
@@ -162,16 +161,18 @@ public class CurvePaintPanel extends JComponent implements Repainter {
 	}
 	
 	public void setUpdatingEnabled(boolean enable) {
-		updating = enable;
+		//updating = enable;
+		
 		segments.setUpdatingEnabled(enable);
+		/*
 		if (updating && !updateRegion.isEmpty()) {
 			forceDirtyRegion(updateRegion);
 			updateRegion.setBounds(0,0,0,0);
-		}
+		}*/
 	}
 	
 	public boolean isUpdatingEnabled() {
-		return updating;
+		return segments.isUpdatingEnabled();
 	}
 
 	private final static int curve_bounds_enlargement=4;
@@ -184,22 +185,11 @@ public class CurvePaintPanel extends JComponent implements Repainter {
 			addDirtyRegion(dirty);
 	}
 	
-	private Rectangle updateRegion = new Rectangle(0,0,0,0);
-	
 	public void addDirtyRegion(int x, int y, int w, int h) {
 		addDirtyRegion(new Rectangle(x, y, w, h));
 	}
 	
 	protected void addDirtyRegion(Rectangle dirty) {
-		if (updating) {
-			updateRegion = updateRegion.union(dirty);
-		} else {
-			forceDirtyRegion(dirty);
-		}
-	}
-	
-	private void forceDirtyRegion(Rectangle dirty) {
-
 		NomadUtilities.enlargeToGrid(dirty, Segments.SEGMENT_SIZE);
 		
 		repaintManager.addDirtyRegion(
@@ -209,7 +199,7 @@ public class CurvePaintPanel extends JComponent implements Repainter {
 				dirty.height
 			);
 	}
-	
+
 	private class UnmanagedCurveModification implements CurveEventCallback {
 		
 		Rectangle r = new Rectangle();
@@ -218,7 +208,7 @@ public class CurvePaintPanel extends JComponent implements Repainter {
 		public void afterChange(Curve curve) 	{ 
 			r.union(curve.getBounds());
 			NomadUtilities.enlarge(r, curve_bounds_enlargement);
-			forceDirtyRegion(r);
+			addDirtyRegion(r);
 		}
 		
 	}

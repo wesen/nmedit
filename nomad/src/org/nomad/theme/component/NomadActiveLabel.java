@@ -50,16 +50,15 @@ public class NomadActiveLabel extends NomadLabel {
 
 	public NomadActiveLabel() {
 		super();
+		setIconSupportEnabled(false);
 		isInitialized = true;
 		setDynamicOverlay(true);
 		setBackground(NomadClassicColors.TEXT_DISPLAY_BACKGROUND);
 		setForeground(Color.WHITE);
-		autoResize();
-		setPreferredSize(getSize());
 		setAutoResize(false);
 		setBorder(NomadBorderFactory.createNordEditor311Border());
 	}
-	
+
 	public void registerProperties(PropertySet set) {
 		super.registerProperties(set);
 		set.add(new PaddingProperty());
@@ -88,26 +87,18 @@ public class NomadActiveLabel extends NomadLabel {
 		}
 	}
 
-	public Dimension getFittingSize() {
+	protected void recalculateSize() {
+		super.recalculateSize();
+		
 		if (!isInitialized) {
 			isInitialized=true;
 		}
 		Insets ins = getInsets();
-		
-		Dimension d = getTextDimensions();
-		d.width+=2*padding-1+ins.left+ins.right;
-		d.height+=2*padding-1+ins.bottom+ins.top;
-		return d;
-	}
 
-	protected void autoResize() {
-		if (isAutoResizeEnabled()) {
-			Dimension d = getFittingSize();
-			setPreferredSize(d);
-			setMinimumSize(d);
-			setMaximumSize(d);
-			setSize(d);
-		}
+		Dimension d = new Dimension(getContentSize());
+		d.width += 2*padding-1+ins.left+ins.right;
+		d.height+= 2*padding-1+ins.bottom+ins.top;
+		setContentSize(d);
 	}
 
 	public void paintDecoration(Graphics2D g2) {

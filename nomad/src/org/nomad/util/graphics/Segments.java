@@ -56,7 +56,16 @@ public abstract class Segments<T> extends Array2D<Segment<T>> {
 	}
 	
 	public void setUpdatingEnabled(boolean enable) {
-		updating = enable;
+		if (updating != enable) {
+			updating = enable;
+			if (!updating) {
+				for (Segment<T> s : this)
+					if (s.dirty) {
+						addDirtyRegion(s);
+						s.dirty = false;
+					}
+			}
+		}
 	}
 	
 	public boolean isUpdatingEnabled() {
@@ -196,8 +205,11 @@ public abstract class Segments<T> extends Array2D<Segment<T>> {
 		}
 	}
 */
-	public void modified(final Segment<T> segment) {
-		addDirtyRegion(segment);  // update region
+	public void modified( Segment<T> segment) {
+		if (updating)
+			segment.dirty = true;
+		else
+			addDirtyRegion(segment);  // update region
 	}
 
 	protected Segment<T> newCell(int x, int y) {

@@ -18,17 +18,35 @@
  */
 
 /*
- * Created on Feb 14, 2006
+ * Created on Feb 23, 2006
  */
-package org.nomad.patch.ui;
+package org.nomad.main.action;
 
-import org.nomad.patch.Module;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
-public interface ModuleSectionListener {
+import javax.swing.KeyStroke;
 
-	public void moduleAdded(Module module);
-	public void moduleRemoved(Module module);
-	public void moduleSectionResized();
-	public void rearangingModules(boolean finished);
+import org.nomad.main.Nomad;
+
+public class SynthSetupAction extends NomadAction {
+
+	public SynthSetupAction(Nomad nomad) {
+		super(nomad);
+		
+		final String description = "Midi device settings";
+
+		putValue(NAME, "Setup...");
+		//putValue(SMALL_ICON, AppIcons.IC_APP_EXIT);
+	    putValue(SHORT_DESCRIPTION, description);
+	    putValue(LONG_DESCRIPTION, 	description);
+	    putValue(ACCELERATOR_KEY, 	KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK));
+	    putValue(MNEMONIC_KEY, 		KeyEvent.VK_E );    
+		
+	}
+
+	public void actionPerformed(ActionEvent event) {
+		getNomad().setupSynth();
+	}
 
 }

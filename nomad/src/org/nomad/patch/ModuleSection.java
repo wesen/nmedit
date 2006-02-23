@@ -159,6 +159,9 @@ public class ModuleSection implements Iterable<Module> {
 	}
 
 	public void rearangeModules(Module module) {
+		
+		fireRearangingEvent(false);
+		
 		// module must not be in list
 		// stores all modules with same x grid coordinate and which are below module
 		// sorted by the y value
@@ -208,6 +211,8 @@ public class ModuleSection implements Iterable<Module> {
 		}
 		
 		recalculateGrid();
+		
+		fireRearangingEvent(true);
 	}
 
 	public int getMaxGridX() {
@@ -243,6 +248,12 @@ public class ModuleSection implements Iterable<Module> {
 		if (!sectionListenerList.isEmpty())
 			for (ModuleSectionListener l:sectionListenerList)
 				l.moduleSectionResized();
+	}
+
+	private void fireRearangingEvent(boolean finished) {
+		if (!sectionListenerList.isEmpty())
+			for (ModuleSectionListener l:sectionListenerList)
+				l.rearangingModules(finished);
 	}
 	
 }

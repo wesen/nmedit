@@ -18,17 +18,34 @@
  */
 
 /*
- * Created on Feb 14, 2006
+ * Created on Feb 23, 2006
  */
-package org.nomad.patch.ui;
+package org.nomad.main.action;
 
-import org.nomad.patch.Module;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
-public interface ModuleSectionListener {
+import org.nomad.main.Nomad;
+import org.nomad.util.graphics.AppIcons;
 
-	public void moduleAdded(Module module);
-	public void moduleRemoved(Module module);
-	public void moduleSectionResized();
-	public void rearangingModules(boolean finished);
+public class AppExitAction extends NomadAction {
+
+	public AppExitAction(Nomad nomad) {
+		super(nomad);
+		
+		final String description = "Exit application";
+
+		putValue(NAME, "Exit");
+		putValue(SMALL_ICON, AppIcons.IC_APP_EXIT);
+	    putValue(SHORT_DESCRIPTION, description);
+	    putValue(LONG_DESCRIPTION, 	description);
+	    //putValue(ACCELERATOR_KEY, 	KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+	    putValue(MNEMONIC_KEY, 		new Integer(KeyEvent.VK_X) );    
+		
+	}
+
+	public void actionPerformed(ActionEvent event) {
+		getNomad().exitNomad();
+	}
 
 }

@@ -47,8 +47,9 @@ public class NomadDialog extends DialogPane implements Runnable {
 	public final static String RESULT_CANCEL 	= "Cancel";
 	
 	NomadDialogWindow window;
-	
+
 	public NomadDialog() {
+		setFont(new Font("SansSerif", Font.PLAIN, 11));
 		setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 	}
@@ -127,6 +128,7 @@ public class NomadDialog extends DialogPane implements Runnable {
 	
 	public JPanel newGroup(JComponent title) {
 		JPanel group = new JPanel();
+		group.setFont(getFont());
 		group.setBorder(BorderFactory.createEtchedBorder());
 		group.setBackground(getBackground());
 		group.setLayout(new BoxLayout(group, BoxLayout.PAGE_AXIS));
@@ -137,6 +139,7 @@ public class NomadDialog extends DialogPane implements Runnable {
 	
 	public void addRow(JPanel group, Component[] components) {
 		JPanel row = new JPanel();
+		row.setFont(getFont());
 		row.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
 		row.setLayout(new BoxLayout(row, BoxLayout.LINE_AXIS));
 		row.setBackground(getBackground());

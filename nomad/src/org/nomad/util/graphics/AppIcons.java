@@ -33,12 +33,15 @@ public final class AppIcons extends ImageTracker {
 	private final static AppIcons instance = new AppIcons();
 	public final static ImageIcon IC_DOCUMENT_NEW = getImageIcon("new");
 	public final static ImageIcon IC_DOCUMENT_SAVE = getImageIcon("save");
+	public final static ImageIcon IC_DOCUMENT_OPEN = getImageIcon("open");
 	public final static ImageIcon IC_DOCUMENT_SAVE_AS = getImageIcon("save_as");
 	public final static ImageIcon IC_DOCUMENT_CLOSE = getImageIcon("close");
 	public final static ImageIcon IC_APP_HELP = getImageIcon("help-agent");
 	public final static ImageIcon IC_APP_ABOUT = getImageIcon("draw-callouts");
+	public final static ImageIcon IC_APP_EXIT = getImageIcon("exit");
 	public final static ImageIcon IC_PATCH_CHOOSE_THEMES = getImageIcon("choose-themes");
 	public final static ImageIcon IC_SEARCH = getImageIcon("zoom-page");
+	public final static ImageIcon IC_DATA_TABLE = getImageIcon("data-table");
 	
 	public static Image getIcon(String key) {
 		return instance.getImage(key);
@@ -75,6 +78,7 @@ public final class AppIcons extends ImageTracker {
 				key = key.substring(0, key.lastIndexOf("-"));
 			else if (key.matches(".*_\\d+"))
 				key = key.substring(0, key.lastIndexOf("_"));
+			
 			images.put(key, images.remove(oldkey));
 		}
 	}

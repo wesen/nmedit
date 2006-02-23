@@ -3,9 +3,10 @@
 package org.nomad.main;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -22,7 +23,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.KeyStroke;
 import javax.swing.ToolTipManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -30,6 +30,15 @@ import javax.swing.event.ChangeListener;
 import org.nomad.dialog.NomadAboutDialog;
 import org.nomad.dialog.PatchSettingsDialog;
 import org.nomad.env.Environment;
+import org.nomad.main.action.AppExitAction;
+import org.nomad.main.action.FileCloseAction;
+import org.nomad.main.action.FileCloseAllAction;
+import org.nomad.main.action.FileNewAction;
+import org.nomad.main.action.FileOpenAction;
+import org.nomad.main.action.FileSaveAction;
+import org.nomad.main.action.FileSaveAsAction;
+import org.nomad.main.action.PatchSettingsAction;
+import org.nomad.main.action.SynthSetupAction;
 import org.nomad.main.run.SplashWindow;
 import org.nomad.patch.Patch;
 import org.nomad.patch.format.PatchFilePreviewComponent;
@@ -62,6 +71,8 @@ public class Nomad extends JFrame implements SynthDeviceStateListener, SlotListe
     private PatchUI[] slotDocs = new PatchUI[4];
     
 	public Nomad() {
+		
+		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
 		// load environment 
 		env = Environment.sharedInstance();
@@ -107,12 +118,15 @@ public class Nomad extends JFrame implements SynthDeviceStateListener, SlotListe
 		loader.loadPatch("data/patches/simple.pch");
 		
 	}
-	
-	private void menuItem(JMenu menu, String text, ActionListener action, KeyStroke ks) {
-		JMenuItem item = menu.add(text);
-		item.addActionListener(action);
-		item.setAccelerator(ks);
-	}
+
+	private FileNewAction fileNewAction = new FileNewAction(this);
+	private FileOpenAction fileOpenAction = new FileOpenAction(this);
+	private FileCloseAction fileCloseAction = new FileCloseAction(this);
+	private FileCloseAllAction fileCloseAllAction = new FileCloseAllAction(this);
+	private FileSaveAction fileSaveAction = new FileSaveAction(this);
+	private FileSaveAsAction fileSaveAsAction = new FileSaveAsAction(this);
+	private AppExitAction appExitAction = new AppExitAction(this);
+	private PatchSettingsAction patchSettingsAction = new PatchSettingsAction(this);
 	
 	public JMenuBar createMenu() {
 		JMenuBar mnBar = new JMenuBar();
@@ -121,21 +135,25 @@ public class Nomad extends JFrame implements SynthDeviceStateListener, SlotListe
 		// file
 		
 		mnMenu = new JMenu("File");
-		menuItem(mnMenu, "New", new NewPatchAction(), KeyStroke.getKeyStroke('N', InputEvent.CTRL_MASK));
-		menuItem(mnMenu, "Open...", new LoadPatchAction(), KeyStroke.getKeyStroke('O', InputEvent.CTRL_MASK));
-				
-		mnMenu.add("Close").addActionListener(new ClosePatchAction());
-		mnMenu.add("Close all").addActionListener(new CloseAllAction());
-		menuItem(mnMenu, "Save As...", new SavePatchAsAction(), KeyStroke.getKeyStroke('S', InputEvent.CTRL_MASK));
-		
+		mnMenu.setMnemonic(KeyEvent.VK_F);
+		mnMenu.add(fileNewAction);
+		mnMenu.add(fileOpenAction);
 		mnMenu.addSeparator();
-		mnMenu.add("Exit").addActionListener(new ExitNomadAction());
+		mnMenu.add(fileCloseAction);
+		mnMenu.add(fileCloseAllAction);
+		mnMenu.addSeparator();
+		mnMenu.add(fileSaveAction);
+		mnMenu.add(fileSaveAsAction);
+		mnMenu.addSeparator();
+		mnMenu.add(appExitAction);
 		mnBar.add(mnMenu);
 		
 		// synth
 		
 		mnMenu = new JMenu("Synth");
-		mnMenu.add("Setup...").addActionListener(new SetupSynthAction());
+		mnMenu.setMnemonic(KeyEvent.VK_S);
+
+		mnMenu.add(new SynthSetupAction(this));
 		menuSynthConnectionMenuItem = mnMenu.add("Connect");
 		menuSynthConnectionMenuItem.addActionListener(new SynthConnectionMenuItemListener());
 		mnMenu.addSeparator();
@@ -145,7 +163,8 @@ public class Nomad extends JFrame implements SynthDeviceStateListener, SlotListe
 		
 		// patch
 		mnMenu = new JMenu("Patch");
-		mnMenu.add("Settings").addActionListener(new PatchSettingsAction());
+		mnMenu.setMnemonic(KeyEvent.VK_P);
+		mnMenu.add(patchSettingsAction);
 		mnBar.add(mnMenu);
 		
 		// appearance
@@ -214,6 +233,9 @@ public class Nomad extends JFrame implements SynthDeviceStateListener, SlotListe
         documents.addDocument("new" + (documents.getDocumentCount()+1), tab);
         documents.setSelectedDocument(tab);
         documents.getSelectedDocument().setName(documents.getTitleAt(documents.getSelectedDocumentIndex()));
+        
+        fileCloseAction.setEnabled(true);
+		fileCloseAllAction.setEnabled(true);
 	}
 	
 	public void exitNomad() {
@@ -228,6 +250,9 @@ public class Nomad extends JFrame implements SynthDeviceStateListener, SlotListe
 		if (fileChooser.showOpenDialog(Nomad.this) == JFileChooser.APPROVE_OPTION) {
 			File[] files = fileChooser.getSelectedFiles();
 			loader.loadPatch(files);
+			
+			fileCloseAction.setEnabled(true);
+			fileCloseAllAction.setEnabled(true);
 		}
 		fileChooser.setMultiSelectionEnabled(false);
     }
@@ -256,16 +281,26 @@ public class Nomad extends JFrame implements SynthDeviceStateListener, SlotListe
 		}
 	}
 
+	public boolean canClose() {
+		return documents.getDocumentCount()>0;
+	}
+	
 	public void closePatch() {
 		if (documents.getSelectedDocument()!=null) {
 			documents.removeDocumentAt(documents.getSelectedDocumentIndex());
 		}
+		 
+		fileCloseAction.setEnabled(canClose());
+		fileCloseAllAction.setEnabled(canClose());
 	}
 	
 	public void closeEachPatch() {
 		while (documents.getDocumentCount()>0) {
 			documents.removeDocumentAt(0);
 		}
+		
+		fileCloseAction.setEnabled(false);
+		fileCloseAllAction.setEnabled(false);
 	}
 
 	void noDialogYet() {
@@ -275,6 +310,47 @@ public class Nomad extends JFrame implements SynthDeviceStateListener, SlotListe
 	void changeSynthInterface(NomadPlugin plugin) {
 		ThemePluginSwitcher switcher = new ThemePluginSwitcher(this, plugin);
 		switcher.switchPlugin();
+	}
+
+    PatchUI getActivePatch() {
+    	return (PatchUI) getDocumentManager().getSelectedDocument();
+    }
+    
+    public void editPatchSettings() {
+    	PatchUI patch = getActivePatch();
+    	if (patch!=null)
+    	{
+    		PatchSettingsDialog dialog = new PatchSettingsDialog(patch.getPatch());
+    		dialog.invoke();
+    	}
+    }
+	
+	public void setupSynth() {
+		synthConnection.setup();
+	}
+
+	public void newPatchInSlot(Slot slot) {
+		int index = slot.getId();
+		if (slotDocs[index]!=null) {
+			documents.removeDocument(slotDocs[index]);
+			slotDocs[index] = null;
+		}
+		Patch p = slot.getPatch();
+		if (p!=null) {
+	    	PatchUI tab = PatchUI.newInstance(p);
+	        documents.addDocument(tab.getPatch().getName()+" (slot:"+index+")",tab);
+	        documents.setSelectedDocument(tab);
+	        documents.getSelectedDocument().setName(documents.getTitleAt(documents.getSelectedDocumentIndex()));
+	        slotDocs[index] = tab;
+	        
+	        fileCloseAction.setEnabled(true);
+			fileCloseAllAction.setEnabled(true);
+		}
+	}
+
+	public void slotSelected(Slot slot) {
+		PatchUI doc =slotDocs[slot.getId()]; 
+		if (doc!=null) documents.setSelectedDocument(doc);
 	}
 
 	public void synthConnectionStateChanged(SynthDevice synth) {
@@ -295,12 +371,6 @@ public class Nomad extends JFrame implements SynthDeviceStateListener, SlotListe
 		}
 	}
 	
-	class CloseAllAction implements ActionListener {
-		public void actionPerformed(ActionEvent event) {
-			closeEachPatch();
-		}
-	}
-	
 	class SelectThemeAction implements ChangeListener {
 		public void stateChanged(ChangeEvent event) {
 			if (event.getSource() instanceof ThemePluginMenu) {
@@ -311,33 +381,6 @@ public class Nomad extends JFrame implements SynthDeviceStateListener, SlotListe
 			}
 		}
 	}
-
-    class NewPatchAction implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-        	newPatch();
-        }
-    }
-
-    PatchUI getActivePatch() {
-    	return (PatchUI) getDocumentManager().getSelectedDocument();
-    }
-    
-    class PatchSettingsAction implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-        	PatchUI patch = getActivePatch();
-        	if (patch!=null)
-        	{
-        		PatchSettingsDialog dialog = new PatchSettingsDialog(patch.getPatch());
-        		dialog.invoke();
-        	}
-        }
-    }
-
-    class ExitNomadAction implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-        	exitNomad();
-        }
-    }
 
     class UploadPatchFromCurrentSlotAction implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -365,18 +408,6 @@ public class Nomad extends JFrame implements SynthDeviceStateListener, SlotListe
 		}
     }
 
-	class LoadPatchAction implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			openPatchFile();
-		}
-	}
-	
-	class SavePatchAsAction implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			savePatchAs();
-		}
-	}
-
 	class SynthConnectionMenuItemListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			if (!synthConnection.isConnected())
@@ -386,17 +417,6 @@ public class Nomad extends JFrame implements SynthDeviceStateListener, SlotListe
 		}
 	}
 	
-	class SetupSynthAction implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			synthConnection.setup();
-		}
-	}
-	
-	class ClosePatchAction implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			closePatch();
-		}
-	}
 	class ShowPluginDialogAction implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			noDialogYet();
@@ -408,27 +428,6 @@ public class Nomad extends JFrame implements SynthDeviceStateListener, SlotListe
 			NomadAboutDialog dlg = new NomadAboutDialog();
 			dlg.invoke();
 		}
-	}
-
-	public void newPatchInSlot(Slot slot) {
-		int index = slot.getId();
-		if (slotDocs[index]!=null) {
-			documents.removeDocument(slotDocs[index]);
-			slotDocs[index] = null;
-		}
-		Patch p = slot.getPatch();
-		if (p!=null) {
-	    	PatchUI tab = PatchUI.newInstance(p);
-	        documents.addDocument(tab.getPatch().getName()+" (slot:"+index+")",tab);
-	        documents.setSelectedDocument(tab);
-	        documents.getSelectedDocument().setName(documents.getTitleAt(documents.getSelectedDocumentIndex()));
-	        slotDocs[index] = tab;
-		}
-	}
-
-	public void slotSelected(Slot slot) {
-		PatchUI doc =slotDocs[slot.getId()]; 
-		if (doc!=null) documents.setSelectedDocument(doc);
 	}
 	
 }

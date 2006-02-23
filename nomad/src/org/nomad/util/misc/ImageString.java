@@ -97,7 +97,7 @@ public class ImageString {
 		return image!=null;
 	}
 	
-	private final static String extractKeyFromImageString(String str) {
+	public final static String extractKeyFromImageString(String str) {
 		// {@.+}
 		final int min_len = 3;
 		final int l = str.length();

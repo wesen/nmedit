@@ -38,6 +38,7 @@ public class Segment<T> extends ArrayList<T> {
 	private Segments<T> segments;
 	private BufferedImage image = null;
 	private boolean shouldRender = false;
+	public boolean dirty = false;
 	
 	public Segment(Segments<T> segments) {
 		this(segments, 0, 0);
