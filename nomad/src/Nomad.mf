@@ -1,2 +1,2 @@
 Manifest-Version: 1.0
-Main-Class: main.application.Run
+Main-Class: org.nomad.main.run.Run
