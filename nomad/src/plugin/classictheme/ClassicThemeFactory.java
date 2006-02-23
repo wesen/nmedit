@@ -13,7 +13,6 @@ import org.nomad.theme.component.NomadActiveLabel;
 import org.nomad.theme.component.NomadButtonArray;
 import org.nomad.theme.component.NomadClassicConnector;
 import org.nomad.theme.component.NomadClassicKnob;
-import org.nomad.theme.component.NomadImageView;
 import org.nomad.theme.component.NomadLabel;
 import org.nomad.theme.component.NomadResetButton;
 import org.nomad.theme.component.NomadVocoderController;
@@ -28,7 +27,6 @@ public class ClassicThemeFactory extends UIFactory {
 		installClass(NomadButtonArray.class,"button");
 		installClass(NomadClassicConnector.class,"connector");
 		installClass(NomadClassicKnob.class,"knob");
-		installClass(NomadImageView.class,"image");
 		installClass(NomadLabel.class,"label");
 		installClass(NomadResetButton.class,"knob.reset");
 		installClass(VocoderBandDisplay.class,"display.vocoder");

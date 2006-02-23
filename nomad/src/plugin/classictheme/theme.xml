@@ -7625,41 +7625,41 @@
   <module id="27">
     <component name="connector">
       <property name="connector#0" value="27.0.in.mst" />
-      <property name="x,y" value="100,8" />
       <property name="size" value="13,13" />
+      <property name="x,y" value="100,8" />
     </component>
     <component name="connector">
       <property name="connector#0" value="27.0.out.out" />
-      <property name="x,y" value="235,8" />
       <property name="size" value="13,13" />
+      <property name="x,y" value="235,8" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="27.0.p.rate" />
-      <property name="x,y" value="180,2" />
       <property name="size" value="24,24" />
+      <property name="x,y" value="180,2" />
     </component>
     <component name="label">
-      <property name="size" value="11,9" />
       <property name="text" value="{@wf.saw}" />
+      <property name="size" value="11,9" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="220,10" />
       <property name="vertical" value="false" />
+      <property name="x,y" value="220,10" />
     </component>
     <component name="label">
-      <property name="size" value="16,11" />
       <property name="text" value="Mst" />
+      <property name="size" value="16,11" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="80,9" />
       <property name="vertical" value="false" />
+      <property name="x,y" value="80,9" />
     </component>
     <component name="display.text">
       <property name="text" value="rate" />
       <property name="parameter#0" value="27.0.p.rate" />
       <property name="padding" value="2" />
       <property name="size" value="40,16" />
+      <property name="antialiasing" value="true" />
       <property name="vertical" value="false" />
       <property name="x,y" value="128,6" />
-      <property name="antialiasing" value="true" />
     </component>
   </module>
   <module id="70">
@@ -7741,74 +7741,74 @@
   <module id="80">
     <component name="connector">
       <property name="connector#0" value="80.0.in.master" />
-      <property name="x,y" value="7,19" />
       <property name="size" value="13,13" />
+      <property name="x,y" value="7,19" />
     </component>
     <component name="connector">
       <property name="connector#0" value="80.1.in.reset" />
-      <property name="x,y" value="7,40" />
       <property name="size" value="13,13" />
+      <property name="x,y" value="7,40" />
     </component>
     <component name="connector">
       <property name="connector#0" value="80.0.out.out" />
-      <property name="x,y" value="237,41" />
       <property name="size" value="13,13" />
+      <property name="x,y" value="237,41" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="80.0.p.rate" />
-      <property name="x,y" value="91,24" />
       <property name="size" value="30,30" />
+      <property name="x,y" value="91,24" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="80.1.p.phase" />
-      <property name="x,y" value="164,6" />
       <property name="size" value="24,24" />
+      <property name="x,y" value="164,6" />
     </component>
     <component name="display.text">
       <property name="text" value="rate" />
       <property name="parameter#0" value="80.0.p.rate" />
       <property name="padding" value="2" />
       <property name="size" value="50,16" />
+      <property name="antialiasing" value="true" />
       <property name="vertical" value="false" />
       <property name="x,y" value="41,19" />
-      <property name="antialiasing" value="true" />
     </component>
     <component name="display.text">
-      <property name="text" value="rate" />
-      <property name="parameter#0" value="80.0.p.rate" />
+      <property name="text" value="phase" />
+      <property name="parameter#0" value="80.1.p.phase" />
       <property name="padding" value="2" />
       <property name="size" value="30,16" />
+      <property name="antialiasing" value="true" />
       <property name="vertical" value="false" />
       <property name="x,y" value="130,15" />
-      <property name="antialiasing" value="true" />
     </component>
     <component name="label">
-      <property name="size" value="16,11" />
       <property name="text" value="Mst" />
+      <property name="size" value="16,11" />
       <property name="antialiasing" value="true" />
+      <property name="vertical" value="false" />
       <property name="x,y" value="23,20" />
-      <property name="vertical" value="false" />
     </component>
     <component name="label">
-      <property name="size" value="14,11" />
       <property name="text" value="Rst" />
+      <property name="size" value="14,11" />
       <property name="antialiasing" value="true" />
+      <property name="vertical" value="false" />
       <property name="x,y" value="23,41" />
-      <property name="vertical" value="false" />
     </component>
     <component name="label">
-      <property name="size" value="19,11" />
       <property name="text" value="Rate" />
+      <property name="size" value="19,11" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="97,11" />
       <property name="vertical" value="false" />
+      <property name="x,y" value="97,11" />
     </component>
     <component name="label">
-      <property name="size" value="26,11" />
       <property name="text" value="Phase" />
+      <property name="size" value="26,11" />
       <property name="antialiasing" value="true" />
-      <property name="x,y" value="130,5" />
       <property name="vertical" value="false" />
+      <property name="x,y" value="130,5" />
     </component>
     <component name="button">
       <property name="btn#2" value="null" />
@@ -7816,8 +7816,8 @@
       <property name="parameter#0" value="80.3.p.mono" />
       <property name="btn#1" value="Mono" />
       <property name="cyclic" value="true" />
-      <property name="size" value="26,18" />
       <property name="btn#4" value="null" />
+      <property name="size" value="26,18" />
       <property name="btn#0" value="Mono" />
       <property name="btn#5" value="null" />
       <property name="x,y" value="53,37" />
@@ -7829,8 +7829,8 @@
       <property name="parameter#0" value="80.2.p.waveform" />
       <property name="btn#1" value="{@wf.tri}" />
       <property name="cyclic" value="false" />
-      <property name="size" value="90,15" />
       <property name="btn#4" value="{@wf.square}" />
+      <property name="size" value="90,15" />
       <property name="btn#0" value="{@wf.sine}" />
       <property name="btn#5" value="null" />
       <property name="x,y" value="124,38" />
@@ -7842,8 +7842,8 @@
       <property name="parameter#0" value="80.4.p.mute" />
       <property name="btn#1" value="M" />
       <property name="cyclic" value="true" />
-      <property name="size" value="18,16" />
       <property name="btn#4" value="null" />
+      <property name="size" value="18,16" />
       <property name="btn#0" value="M" />
       <property name="btn#5" value="null" />
       <property name="x,y" value="216,39" />

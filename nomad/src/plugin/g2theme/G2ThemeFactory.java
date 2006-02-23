@@ -10,7 +10,6 @@ import org.nomad.patch.ui.ModuleUI;
 import org.nomad.theme.UIFactory;
 import org.nomad.theme.component.AudioLevelDisplay;
 import org.nomad.theme.component.GroupDecoration;
-import org.nomad.theme.component.NomadImageView;
 import org.nomad.theme.component.NomadLabel;
 import org.nomad.theme.component.NomadVocoderController;
 import org.nomad.theme.component.VocoderBandDisplay;
@@ -35,7 +34,6 @@ public class G2ThemeFactory extends UIFactory {
 		installClass(G2ButtonArray.class,"button");
 		installClass(G2Connector.class,"connector");
 		installClass(G2Knob.class,"knob");
-		installClass(NomadImageView.class,"image");
 		installClass(NomadLabel.class,"label");
 		installClass(G2ResetButton.class,"knob.reset");
 		installClass(VocoderBandDisplay.class,"display.vocoder");
