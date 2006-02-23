@@ -38,13 +38,15 @@ public final class AppIcons extends ImageTracker {
 	public final static ImageIcon IC_APP_HELP = getImageIcon("help-agent");
 	public final static ImageIcon IC_APP_ABOUT = getImageIcon("draw-callouts");
 	public final static ImageIcon IC_PATCH_CHOOSE_THEMES = getImageIcon("choose-themes");
+	public final static ImageIcon IC_SEARCH = getImageIcon("zoom-page");
 	
 	public static Image getIcon(String key) {
 		return instance.getImage(key);
 	}
 	
 	public static ImageIcon getImageIcon(String key) {
-		return new ImageIcon(getIcon(key));
+		Image img = getIcon(key);
+		return img == null ? null : new ImageIcon(img);
 	}
 
 	public AppIcons() {

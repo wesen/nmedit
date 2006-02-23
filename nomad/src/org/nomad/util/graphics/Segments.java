@@ -27,24 +27,24 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 
 import javax.swing.JComponent;
-import javax.swing.RepaintManager;
 
 import org.nomad.util.array.Array2D;
 import org.nomad.util.array.Path2D;
 import org.nomad.util.array.Path2DIterator;
+import org.nomad.util.array.Path2D.Rectangular;
 import org.nomad.util.misc.NomadUtilities;
 
 public abstract class Segments<T> extends Array2D<Segment<T>> {
 
 	private JComponent component = null;
-	private RepaintManager m ;
+	private Repainter m ;
 	private boolean updating = false;
 	
 	public final static int SEGMENT_SIZE = 64; // pixel
 
-	public Segments(JComponent component) {
+	public Segments(JComponent component, Repainter repainter) {
 		this.component = component;
-		m = RepaintManager.currentManager(component);
+		m = repainter;
 	}
 	
 	public JComponent getComponent() {
@@ -65,12 +65,12 @@ public abstract class Segments<T> extends Array2D<Segment<T>> {
 
 	protected void addDirtyRegion(int ix, int iy) {
 		if (!updating)
-			m.addDirtyRegion(getComponent(), ix*getSegmentSize(), iy*getSegmentSize(), getSegmentSize(), getSegmentSize());
+			m.addDirtyRegion(ix*getSegmentSize(), iy*getSegmentSize(), getSegmentSize(), getSegmentSize());
 	}
 
 	protected void addDirtyRegion(Segment<T> segment) {
 		if (!updating)
-			m.addDirtyRegion(getComponent(), segment.getOffsetX(), segment.getOffsetY(), getSegmentSize(), getSegmentSize());
+			m.addDirtyRegion(segment.getOffsetX(), segment.getOffsetY(), getSegmentSize(), getSegmentSize());
 	}
 
 	protected void addDirtyRegion(Path2DIterator iterator) {
@@ -96,8 +96,8 @@ public abstract class Segments<T> extends Array2D<Segment<T>> {
 
 	public void addToSegments(T item, Shape itemShape) {
 		Rectangle bounds = itemShape.getBounds();
-		int neww = Math.max(getWidth(),  1+ (bounds.x+bounds.width)/getSegmentSize());
-		int newh = Math.max(getHeight(), 1+ (bounds.y+bounds.height)/getSegmentSize());
+		int neww = Math.max(getWidth(), 1+ (bounds.x+bounds.width)/getSegmentSize());
+		int newh = Math.max(getHeight(),1+ (bounds.y+bounds.height)/getSegmentSize());
 		resize(neww, newh); // assure that segments exist
 
 
@@ -113,7 +113,15 @@ public abstract class Segments<T> extends Array2D<Segment<T>> {
 	}
 	
 	public void removeFromSegments(T item, Shape itemShape) {
+		Rectangle bounds = itemShape.getBounds();
+		NomadUtilities.scale(bounds, 1.0d/getSegmentSize());
+		NomadUtilities.enlarge(bounds, 1);
+		
+		Path2DIterator path = new Path2DIterator(getWidth(), getHeight(), new Rectangular(bounds, getWidth(), getHeight()));
+		
+		/*
 		Path2DIterator path = getPathIterator(itemShape);
+		*/
 		while (path.hasNext()) {
 			path.nextCell();
 			if (hasCell(path.getCurrentIndex())) {

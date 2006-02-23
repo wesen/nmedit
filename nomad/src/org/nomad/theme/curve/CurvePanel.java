@@ -46,7 +46,7 @@ import org.nomad.util.iterate.ComponentIterator;
  * Created on Feb 1, 2006
  */
 
-public class CurvePanel extends CurvePaintPanel implements TransitionChangeListener<CCurve> {
+public class CurvePanel extends CurvePaintPanel implements TransitionChangeListener<Cable> {
 
 	private JComponent root ;
 	private Cables table = null;
@@ -79,7 +79,7 @@ public class CurvePanel extends CurvePaintPanel implements TransitionChangeListe
 			curvePopupListenerList.get(i).popup(event);
 	}
 	
-	public void transitionChanged(CCurve t, boolean transition_added) {
+	public void transitionChanged(Cable t, boolean transition_added) {
 		if (transition_added) 
 			addCurve(t); 
 		else 
@@ -119,7 +119,14 @@ public class CurvePanel extends CurvePaintPanel implements TransitionChangeListe
 	// returns the location of the connector relative to the root origin
 	protected Point getLocation(NomadConnector connector) {
 		Point p = new Point(connector.getWidth()/2, connector.getHeight()/2);
-		return SwingUtilities.convertPoint(connector, p, getRoot());
+		
+		Container c = connector;
+		p.translate(c.getX(), c.getY());
+		c = c.getParent();
+		p.translate(c.getX(), c.getY());
+		
+		return p;
+		//return SwingUtilities.convertPoint(connector, p, getRoot());
 	}
 	
 	// find a NomadConnector at given location
@@ -204,7 +211,7 @@ public class CurvePanel extends CurvePaintPanel implements TransitionChangeListe
 			this.start = start;
 			Point location = getLocation(start);
 			Curve drag = new Curve(location, location);
-			drag.setColor(getTransitions().determineColor(start.getConnector(), null));
+			drag.setColor(Cable.getColorByColorCode(getTransitions().determineColor(start.getConnector(), null)));
 			setDraggedCurve(drag);
 		}
 		
@@ -212,7 +219,7 @@ public class CurvePanel extends CurvePaintPanel implements TransitionChangeListe
 			// isDragging() must be true
 			NomadConnector start = this.start;
 			abortDragging();
-			CCurve curve = new CCurve(start, stop);
+			Cable curve = new Cable(start, stop);
 			curve.setCurve(getLocation(start), getLocation(stop));
 			getTransitions().addTransition(curve);
 		}
@@ -273,11 +280,11 @@ public class CurvePanel extends CurvePaintPanel implements TransitionChangeListe
 	}
 	
 	public void addCurve(Curve curve) {
-		if (curve instanceof CCurve) {
+		if (curve instanceof Cable) {
 			
 			// make sure that new curves have the correct location 
 			
-			CCurve t = (CCurve) curve;
+			Cable t = (Cable) curve;
 
 			NomadConnector c1 = t.getC1().getUI();
 			NomadConnector c2 = t.getC2().getUI();
@@ -289,11 +296,11 @@ public class CurvePanel extends CurvePaintPanel implements TransitionChangeListe
 		super.addCurve(curve);
 	}
 	
-	public void updateCurves(Iterable<CCurve> curves)
+	public void updateCurves(Iterable<Cable> curves)
 	{
 		for (Curve transition : curves)
 		{			
-			CCurve t = (CCurve) transition;
+			Cable t = (Cable) transition;
 			NomadConnector c1 = t.getC1().getUI();
 			NomadConnector c2 = t.getC2().getUI();
 			if (c1!=null && c2!=null) {
@@ -306,7 +313,7 @@ public class CurvePanel extends CurvePaintPanel implements TransitionChangeListe
 	private class ModuleListener extends ComponentAdapter implements MouseListener {
 
 		private boolean dragging = false;
-		private ArrayList<CCurve> affected = new ArrayList<CCurve>();
+		private ArrayList<Cable> affected = new ArrayList<Cable>();
 
 		void setAffected(ModuleUI m)
 		{
@@ -315,7 +322,7 @@ public class CurvePanel extends CurvePaintPanel implements TransitionChangeListe
 			{	// for each connector
 				Connector c = a.getConnector();
 				if (c!=null) {
-					for ( CCurve t : getTransitions().getTransitions(c)) {
+					for ( Cable t : getTransitions().getTransitions(c)) {
 						if (!affected.contains(t)) affected.add(t);
 					}
 				}

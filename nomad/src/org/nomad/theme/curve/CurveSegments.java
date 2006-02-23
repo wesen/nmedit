@@ -28,6 +28,7 @@ import java.util.ArrayList;
 
 import javax.swing.JComponent;
 
+import org.nomad.util.graphics.Repainter;
 import org.nomad.util.graphics.Segment;
 import org.nomad.util.graphics.Segments;
 
@@ -36,8 +37,8 @@ public class CurveSegments extends Segments<Curve> {
 	//public final static int PATH_SEGMENT_SIZE = CurveSegment.DEFAULT_SEGMENT_SIZE/2;
 	private CurvePainter painter;	
 
-	public CurveSegments(JComponent component, CurvePainter painter) {
-		super(component);
+	public CurveSegments(JComponent component, Repainter repainter, CurvePainter painter) {
+		super(component, repainter);
 		this.painter = painter;
 	}
 	

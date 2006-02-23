@@ -26,8 +26,8 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JPopupMenu;
 
-import org.nomad.patch.Connector;
 import org.nomad.patch.Cables;
+import org.nomad.patch.Connector;
 
 public class CurvePopupEvent {
 

@@ -36,7 +36,8 @@ public class CurvePainter {
 	private final static float innerSize = cableSize-0.6f;
 	private BasicStroke stShadow = new BasicStroke(cableSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 	private BasicStroke stFill   = new BasicStroke(innerSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-	private final static double shadowAlpha = 0.3;
+	public final static double shadowAlpha = 0.3;
+	//public final static int ALPHA = (int) (255*shadowAlpha);
 		
 	public CurvePainter() {
 		

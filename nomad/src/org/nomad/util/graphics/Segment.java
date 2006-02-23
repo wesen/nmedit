@@ -91,24 +91,30 @@ public class Segment<T> extends ArrayList<T> {
 	}
 
 	public T remove(int index) {
-		T t = super.remove(index); 
+		T t = super.remove(index);
 		setModified();
 		return t;
 	}
 
 	public boolean remove(Object element) {
-		boolean result = super.remove(element); 
-		setModified();
-		return result;
+		boolean removed = super.remove(element);
+		if (removed)
+			setModified();
+		return removed;
 	}
 
-	public void setModified() {
-		
-		if (!hasPaintData()) {
-			this.image = null;
-		} else
+	protected void setModified() {
+		if (hasPaintData()) {
 			shouldRender = true;
-		
+			if (image==null) {
+				image = ImageToolkit.createCompatibleBuffer(
+					getSegments().getSegmentSize(), 
+					getSegments().getSegmentSize(), Transparency.TRANSLUCENT
+				);
+			}
+		} else {
+			this.image = null;
+		}
 		getSegments().modified(this);
 	}
 
@@ -117,18 +123,10 @@ public class Segment<T> extends ArrayList<T> {
 	}
 
 	public void render() {
-		Graphics2D g2 ;
-		if (image==null) {
-			image = ImageToolkit.createCompatibleBuffer(
-					getSegments().getSegmentSize(), 
-					getSegments().getSegmentSize(), Transparency.TRANSLUCENT);
-			
-			g2 = image.createGraphics();
-		} else {
-			g2 = image.createGraphics();
+		Graphics2D g2 = image.createGraphics();
+		if (shouldRender) {
 			ImageToolkit.clearRegion(g2, 0, 0, image.getWidth(), image.getHeight());
 		}
-
 		g2.translate(-offsetX, -offsetY);
 		getSegments().render(g2, this);
 		// g2.translate(offsetX, offsetY);
@@ -139,7 +137,7 @@ public class Segment<T> extends ArrayList<T> {
 
 	public void paint(Graphics2D g2) {
 		if (hasPaintData()) {
-			if (shouldRender || (image==null)) render();
+			if (shouldRender) render();
 
 			g2.drawImage(image, offsetX, offsetY, null);
 			//dirty = modified;

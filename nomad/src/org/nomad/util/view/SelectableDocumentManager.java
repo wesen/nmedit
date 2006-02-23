@@ -36,6 +36,7 @@ public class SelectableDocumentManager implements DocumentManager {
 			transferTo(new TabbedPaneDocumentManager());
 		else if (!tabbedManager && !usesDesktopDocumentManager())
 			transferTo(new DesktopDocumentManager());
+		contentPane.validate();
 	}
 
 	private void transferTo(DocumentManager newManager) {

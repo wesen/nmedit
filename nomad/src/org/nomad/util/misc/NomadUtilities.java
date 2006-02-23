@@ -46,6 +46,25 @@ public class NomadUtilities {
 	{
 		scale(rect, factor, factor);
 	}
+	
+	public static void enlargeToGrid(Rectangle rect, int grid) {
+		enlargeToGrid(rect, grid, grid);
+	}
+	
+	public static void enlargeToGrid(Rectangle rect, int gridx, int gridy) {
+		int dx = rect.x % gridx;
+		int dy = rect.y % gridy;
+
+		rect.x-=dx;
+		rect.y-=dy;
+		rect.width +=dx;
+		rect.height+=dy;
+
+		dx = rect.width % gridx;
+		dy = rect.height % gridy;
+		rect.width += gridx-dx+1;
+		rect.height+= gridy-dy+1;
+	}
 
 	public static void scale(Rectangle rect, double xfactor, double yfactor)
 	{
@@ -70,7 +89,7 @@ public class NomadUtilities {
 	
 	public static void enlarge(Rectangle rect, int enlargement)
 	{
-		int enlargement2  = enlargement*2; 
+		int enlargement2  = enlargement<<1; // *2 
 		rect.x 		-= enlargement;
 		rect.y 		-= enlargement;
 		rect.width	+= enlargement2;

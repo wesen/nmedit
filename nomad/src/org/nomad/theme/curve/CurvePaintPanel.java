@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.RepaintManager;
 
+import org.nomad.util.graphics.Repainter;
+import org.nomad.util.graphics.Segments;
 import org.nomad.util.misc.NomadUtilities;
 
 /* Copyright (C) 2006 Christian Schneider
@@ -37,19 +39,17 @@ import org.nomad.util.misc.NomadUtilities;
  * Created on Feb 1, 2006
  */
 
-public class CurvePaintPanel extends JComponent {
+public class CurvePaintPanel extends JComponent implements Repainter {
 
 	private ArrayList<Curve> curveList = new ArrayList<Curve>();
 	private ArrayList<Curve> unmanagedCurveList = new ArrayList<Curve>();
 //	private Curve draggedCurve = null;
 
 	private CurvePainter painter = new CurvePainter();
-	private CurveSegments segments = new CurveSegments(this, painter);
+	private CurveSegments segments = new CurveSegments(this, this, painter);
 	private UnmanagedCurveModification ucModification = new UnmanagedCurveModification();
 	private OwnedCurveModification ocModification = new OwnedCurveModification();
 	private Curve draggedCurve = null;
-	private final static boolean renderUnmanaged = true;
-	private final static boolean renderUnmanagedAsLines = false;
 	private final static boolean unmanagedHaveShadow = true;
 	private RepaintManager repaintManager;
 	private Container owner ;
@@ -97,7 +97,7 @@ public class CurvePaintPanel extends JComponent {
 		for (Curve curve:curves) {
 			segments.removeFromSegments(curve);
 			unmanagedCurveList.add(curve);
-			curve.setCallback(renderUnmanaged ? ucModification : null);
+			curve.setCallback(ucModification);
 		}
 	}
 	
@@ -153,47 +153,74 @@ public class CurvePaintPanel extends JComponent {
 		Graphics2D g2 = (Graphics2D) g;
 		segments.paint(g2);
 
-		if (renderUnmanaged) {
-			if (renderUnmanagedAsLines) {
-				for (Curve curve : unmanagedCurveList)
-					painter.line(g2, curve);
-			} else {
-				for (Curve curve : unmanagedCurveList)
-					painter.paint(g2, curve, unmanagedHaveShadow);
-			}
-		}
+		if (!unmanagedCurveList.isEmpty())
+			for (Curve curve : unmanagedCurveList)
+				painter.paint(g2, curve);
 		
-		if (draggedCurve != null) painter.paint(g2, draggedCurve, unmanagedHaveShadow);
+		if (draggedCurve != null) 
+			painter.paint(g2, draggedCurve, unmanagedHaveShadow);
 	}
 	
 	public void setUpdatingEnabled(boolean enable) {
 		updating = enable;
 		segments.setUpdatingEnabled(enable);
+		if (updating && !updateRegion.isEmpty()) {
+			forceDirtyRegion(updateRegion);
+			updateRegion.setBounds(0,0,0,0);
+		}
 	}
 	
 	public boolean isUpdatingEnabled() {
 		return updating;
 	}
 
+	private final static int curve_bounds_enlargement=4;
+	
 	protected void addDirtyRegion(Curve curve) {
-		if (!updating) {
 			// use bounds rather than path because repaintmanager builds always one clip rect
 			// a more accurate resulution would only bring unecessary overhead
 			Rectangle dirty = curve.getBounds();
-			NomadUtilities.enlarge(dirty, 4);
-			
-			repaintManager.addDirtyRegion(
-					this,
-					dirty.x, dirty.y,
-					dirty.width,
-					dirty.height
-				);
+			NomadUtilities.enlarge(dirty, curve_bounds_enlargement);
+			addDirtyRegion(dirty);
+	}
+	
+	private Rectangle updateRegion = new Rectangle(0,0,0,0);
+	
+	public void addDirtyRegion(int x, int y, int w, int h) {
+		addDirtyRegion(new Rectangle(x, y, w, h));
+	}
+	
+	protected void addDirtyRegion(Rectangle dirty) {
+		if (updating) {
+			updateRegion = updateRegion.union(dirty);
+		} else {
+			forceDirtyRegion(dirty);
 		}
 	}
 	
+	private void forceDirtyRegion(Rectangle dirty) {
+
+		NomadUtilities.enlargeToGrid(dirty, Segments.SEGMENT_SIZE);
+		
+		repaintManager.addDirtyRegion(
+				this,
+				dirty.x, dirty.y,
+				dirty.width,
+				dirty.height
+			);
+	}
+	
 	private class UnmanagedCurveModification implements CurveEventCallback {
-		public void beforeChange(Curve curve) 	{ addDirtyRegion(curve); } 
-		public void afterChange(Curve curve) 	{ addDirtyRegion(curve); }
+		
+		Rectangle r = new Rectangle();
+		
+		public void beforeChange(Curve curve) 	{ r.setBounds(curve.getBounds()); } 
+		public void afterChange(Curve curve) 	{ 
+			r.union(curve.getBounds());
+			NomadUtilities.enlarge(r, curve_bounds_enlargement);
+			forceDirtyRegion(r);
+		}
+		
 	}
 	
 	private class OwnedCurveModification implements CurveEventCallback {

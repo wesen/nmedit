@@ -211,10 +211,10 @@ public abstract class Path2D {
 	 */
 	public static class Rectangular extends Path2D {
 	
-		private int dx;
-		private int dy;
-		private int dr;
-		private int db;
+		protected int dx;
+		protected int dy;
+		protected int dr;
+		protected int db;
 
 		public Rectangular(Rectangle bounds, int xdim, int ydim) {
 			this(bounds.x, bounds.y, bounds.width, bounds.height, xdim, ydim);
@@ -277,11 +277,18 @@ public abstract class Path2D {
 		}
 		
 		private int align(int s, int xdim, int ydim, int xydim) {
-			while (s>=0) {
+			if (s>=0) {
 				int x = Array2D.getX(s,xdim);
 				int y = Array2D.getY(s,xdim);
-				if (isTrue(x,y,xdim,ydim)) break;
-				s = super.getSuccessor(x,y,xdim,ydim,xydim);
+				
+				while (!isTrue(x,y,xdim,ydim)) {
+					if (++x>dr) {
+						// x>dr
+						x = dx;
+						if (++y>db) return -1;
+					}
+				}
+				return Array2D.getIndex(x, y, xdim, ydim);
 			}
 			return s;
 		}

@@ -22,20 +22,25 @@
  */
 package org.nomad.theme.curve;
 
+import java.awt.Color;
+
 import org.nomad.patch.Connector;
+import org.nomad.patch.Header;
 import org.nomad.patch.Module;
 import org.nomad.patch.ModuleSection;
+import org.nomad.theme.NomadClassicColors;
 import org.nomad.theme.component.NomadConnector;
 import org.nomad.util.array.Transition;
 import org.nomad.xml.dom.module.DConnector;
 import org.nomad.xml.dom.module.DModule;
 
-public class CCurve extends Curve implements Transition<Connector> {
+public class Cable extends Curve implements Transition<Connector> {
 
 	private Connector c1;
 	private Connector c2;
+	private int colorCode = Header.CABLE_WHITE;
 	
-	public CCurve(Connector c1, Connector c2) {
+	public Cable(Connector c1, Connector c2) {
 		super();
 		
 		if (c1==null||c2==null) throw new NullPointerException("Connectors can not be null.");
@@ -43,8 +48,29 @@ public class CCurve extends Curve implements Transition<Connector> {
 		this.c1 = c1;
 		this.c2 = c2;
 	}
+	
+	public void setColor(int colorCode) {
+		setColor(getColorByColorCode(this.colorCode=colorCode));
+	}
+	
+	public final static Color getColorByColorCode(int colorCode) {
+		switch (colorCode) {
+			case Header.CABLE_RED: 		return NomadClassicColors.MORPH_RED;
+			case Header.CABLE_BLUE: 	return NomadClassicColors.MORPH_BLUE;
+			case Header.CABLE_YELLOW: 	return NomadClassicColors.MORPH_YELLOW;
+			case Header.CABLE_GRAY: 	return NomadClassicColors.MORPH_GRAY;
+			case Header.CABLE_GREEN: 	return Color.GREEN;
+			case Header.CABLE_PURPLE: 	return Color.PINK;
+			case Header.CABLE_WHITE: 	return Color.WHITE;
+			default: return Color.WHITE;
+		}
+	}
+	
+	public int getColorCode() {
+		return colorCode;
+	}
 
-	public CCurve(NomadConnector start, NomadConnector stop) {
+	public Cable(NomadConnector start, NomadConnector stop) {
 		this(start.getConnector(), stop.getConnector());
 	}
 	
@@ -54,7 +80,7 @@ public class CCurve extends Curve implements Transition<Connector> {
 	public Connector getN1() { return c1; }
 	public Connector getN2() { return c2; }
 
-	public static CCurve parse(ModuleSection msection, String params) {
+	public static Cable parse(ModuleSection msection, String params) {
 		
 		final int isInput = 0;
 		
@@ -79,7 +105,7 @@ public class CCurve extends Curve implements Transition<Connector> {
         Connector c1 = c1Mod.findConnector(c1Mod.getInfo().getConnectorById(c1ConIdx, c1Type==isInput));
         Connector c2 = c2Mod.findConnector(c2Mod.getInfo().getConnectorById(c2ConIdx, c2Type==isInput));
 
-        return new CCurve(c1, c2);
+        return new Cable(c1, c2);
 	}
 	
 	public String encode() {

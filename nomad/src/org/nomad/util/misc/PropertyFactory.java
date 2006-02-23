@@ -1,11 +1,10 @@
 package org.nomad.util.misc;
 
-import java.util.Properties;
-import java.io.FileNotFoundException;
 import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.SecurityException;
+import java.io.InputStream;
+import java.util.Properties;
 
 public class PropertyFactory
 {

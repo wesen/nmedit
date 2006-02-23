@@ -48,7 +48,9 @@ public class ImageToolkit {
 	 * @see #createCompatibleBuffer(int, int, int, GraphicsConfiguration)
 	 */
 	public static BufferedImage createCompatibleBuffer(Component c, int transparency) {
-		return createCompatibleBuffer(c.getSize(), transparency, c);
+		GraphicsConfiguration gc = c.getGraphicsConfiguration();		
+		return createCompatibleBuffer(c.getWidth(), c.getHeight(), transparency, 
+				gc!=null?gc:getDefaultGraphicsConfiguration());
 	}
 	
 	/**
@@ -58,17 +60,20 @@ public class ImageToolkit {
 	public static BufferedImage createCompatibleBuffer(Dimension size, int transparency) {
 		return createCompatibleBuffer(size.width, size.height, transparency);
 	}
+
+	private static GraphicsConfiguration getDefaultGraphicsConfiguration() {
+		return GraphicsEnvironment
+			.getLocalGraphicsEnvironment()
+			.getDefaultScreenDevice()
+			.getDefaultConfiguration();
+	}
 	
 	/**
 	 * Creates a image using the screen graphics configuration.
 	 * @see #createCompatibleBuffer(int, int, int, GraphicsConfiguration)
 	 */
 	public static BufferedImage createCompatibleBuffer(int width, int height, int transparency) {
-	    return createCompatibleBuffer(width, height, transparency, 
-	    		GraphicsEnvironment
-					.getLocalGraphicsEnvironment()
-					.getDefaultScreenDevice()
-					.getDefaultConfiguration());
+	    return createCompatibleBuffer(width, height, transparency, getDefaultGraphicsConfiguration());
 	}
 
 	/**

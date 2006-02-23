@@ -24,8 +24,6 @@ package org.nomad.util.misc;
 
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.nomad.theme.component.NomadComponent;
 import org.nomad.util.graphics.ImageTracker;
@@ -35,7 +33,7 @@ public class ImageString {
 	private String string = "";
 	private Image image = null;
 	private boolean isImageString = false;
-	private final static Pattern pattern = Pattern.compile("\\{@(.+)\\}");
+	//private final static Pattern pattern = Pattern.compile("\\{@(.+)\\}");
 	private int lineCount = 1;
 	
 	public ImageString() {
@@ -99,11 +97,18 @@ public class ImageString {
 		return image!=null;
 	}
 	
+	private final static String extractKeyFromImageString(String str) {
+		// {@.+}
+		final int min_len = 3;
+		final int l = str.length();
+		if (l<min_len||str.charAt(0)!='{'||str.charAt(1)!='@'||str.charAt(l-1)!='}')
+			return null;
+		else
+			return str.substring(2, l-1);
+	}
+	
 	public final static String matchImageString(String string) {
-		if (string==null) return null;
-		Matcher m = pattern.matcher(string);
-		if (!m.matches()) return null;
-		return m.group(1);
+		return string == null ? null : extractKeyFromImageString(string);
 	}
 
 	public String getString() {
