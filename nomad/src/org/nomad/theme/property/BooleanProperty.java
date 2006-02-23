@@ -22,7 +22,6 @@
  */
 package org.nomad.theme.property;
 
-import org.nomad.theme.component.NomadComponent;
 import org.nomad.theme.property.editor.PropertyEditor;
 
 /**
@@ -30,9 +29,7 @@ import org.nomad.theme.property.editor.PropertyEditor;
  */
 public abstract class BooleanProperty extends Property {
 
-	public BooleanProperty(NomadComponent component) {
-		super(component);
-	}
+	public BooleanProperty() { }
 	
 	/*public void setValue(Object value) {
 		if (!(value instanceof String && fromString((String)value)==null) && !(value instanceof Boolean))

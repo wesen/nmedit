@@ -22,7 +22,6 @@
  */
 package org.nomad.theme.property;
 
-import org.nomad.theme.component.NomadComponent;
 import org.nomad.theme.component.NomadControl;
 import org.nomad.theme.property.editor.PropertyEditor;
 import org.nomad.xml.dom.module.DCustom;
@@ -32,14 +31,13 @@ import org.nomad.xml.dom.module.ModuleDescriptions;
 
 public class ParameterProperty extends Property {
 
-	public ParameterProperty(NomadComponent component) {
-		super(component);
+	public ParameterProperty() {
 		setName("parameter#0");
 	}
 
 	public void setValue(String value) {
 		setDParameter(decode(value));
-		fireChangeEvent();
+		//fireChangeEvent();
 	}
 	
 	// private final static Pattern pattern = Pattern.compile("(\\d+)\\.(\\d+)\\.([cp])\\..*");

@@ -22,8 +22,6 @@
  */
 package org.nomad.theme.property;
 
-import org.nomad.theme.component.NomadComponent;
-
 /**
  * @author Christian Schneider
  */
@@ -32,9 +30,7 @@ public class ComponentLocationProperty extends PointProperty {
 	/**
 	 * @param component
 	 */
-	public ComponentLocationProperty(NomadComponent component) {
-		super(component);
-	}
+	public ComponentLocationProperty() { }
 
 	public void setXY(int x, int y) {
 		getComponent().setLocation(x, y);

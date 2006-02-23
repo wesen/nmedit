@@ -24,15 +24,12 @@ package org.nomad.theme.property;
 
 import java.awt.Dimension;
 
-import org.nomad.theme.component.NomadComponent;
-
 /**
  * @author Christian Schneider
  */
 public abstract class DimensionProperty extends PointProperty {
 
-	public DimensionProperty(NomadComponent component) {
-		super(component);
+	public DimensionProperty() {
 		setName("size");
 	}
 

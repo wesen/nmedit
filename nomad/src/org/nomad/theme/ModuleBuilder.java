@@ -23,7 +23,6 @@
 package org.nomad.theme;
 
 
-import java.util.HashMap;
 import java.util.Iterator;
 
 import org.nomad.env.Environment;
@@ -34,14 +33,15 @@ import org.nomad.theme.component.NomadComponent;
 import org.nomad.theme.component.NomadContainerCacher;
 import org.nomad.theme.property.Property;
 import org.nomad.theme.property.PropertySet;
+import org.nomad.theme.property.PropertyUtils;
 import org.nomad.util.graphics.ImageBuffer;
 import org.nomad.util.graphics.PersistenceManager;
 import org.nomad.xml.XMLFileWriter;
 import org.nomad.xml.dom.module.DModule;
-import org.nomad.xml.dom.theme.ThemeNode;
 import org.nomad.xml.dom.theme.ComponentNode;
 import org.nomad.xml.dom.theme.ModuleNode;
 import org.nomad.xml.dom.theme.PropertyNode;
+import org.nomad.xml.dom.theme.ThemeNode;
 import org.nomad.xml.dom.theme.impl.ThemeNodeImpl;
 
 public class ModuleBuilder {
@@ -50,8 +50,6 @@ public class ModuleBuilder {
 	private UIFactory uifactory = null;
 	private PersistenceManager backgroundManager = new PersistenceManager();
 	
-	private HashMap<Class,Class> decorationComponentMap = new HashMap<Class,Class>(); 
-
 	private Environment env = null;
 	
 	public Environment getEnvironment() {
@@ -73,34 +71,27 @@ public class ModuleBuilder {
 		else
 			node = nomadDom.createModuleNode(info.getModuleID());
 		
-    	for (Iterator iter = moduleContainer.getExportableNomadComponents();iter.hasNext();) {
-    		NomadComponent comp = (NomadComponent) iter.next();
-    		
+    	for (Iterator<NomadComponent> iter = moduleContainer.getExportableNomadComponents();iter.hasNext();) {
+    		NomadComponent comp = iter.next();
     		ComponentNode compNode = node.createComponentNode(comp.getNameAlias());
-    		comp.createAccessibleProperties(false).exportToDOM(compNode); 
+    		PropertyUtils.exportToDOM(compNode, uifactory.getProperties(comp) ); 
     	}
     }
     
 	public void exportDom(XMLFileWriter out) {
-		out.beginTag("ui-description", true);
+		out.beginTag("theme", true);
 		
-		for (int i=0;i<nomadDom.getNodeCount();i++) {
-			ModuleNode mod = nomadDom.getModuleNode(i);
-			
+		for (ModuleNode mod : nomadDom) {
 			out.beginTagStart("module");
 			out.addAttribute("id", ""+mod.getModule().getModuleID());
 			out.beginTagFinish(true);
 			
-			for (int j=0;j<mod.getNodeCount();j++) {
-				ComponentNode compNode = mod.getComponentNode(j);
-				
+			for (ComponentNode compNode : mod) {
 				out.beginTagStart("component");
 				out.addAttribute("name", compNode.getName()); // TODO use associations i.e. 'button', 'knob'
 				out.beginTagFinish(true);
 
-				for (int k=0;k<compNode.getNodeCount();k++) {
-					PropertyNode pNode = compNode.getPropertyNode(k);
-					
+				for (PropertyNode pNode : compNode) {
 					out.beginTagStart("property");
 					out.addAttribute("name",pNode.getName());
 					out.addAttribute("value", pNode.getValue());
@@ -138,7 +129,6 @@ public class ModuleBuilder {
 	public void load(String file) {
 		backgroundManager = new PersistenceManager(); // remove all backgrounds
 		nomadDom = read(file);
-		decorationComponentMap = new HashMap<Class,Class>();
 	}
 
 	public void setUIFactory(UIFactory uifactory) {
@@ -155,6 +145,8 @@ public class ModuleBuilder {
 		moduleGUI.setModule(module);
 		return moduleGUI;
 	}
+	
+	// TODO remove components border if cache is used
 	
 	public ModuleUI compose(DModule module, ModuleSectionUI moduleSection) {
 		ModuleUI moduleGUI = uifactory.getModuleGUI(module);
@@ -173,16 +165,10 @@ public class ModuleBuilder {
 		return new Integer(moduleInfo.getModuleID());
 	}
 	
-	private boolean isDecoration(Class clazz) {
-		return decorationComponentMap.containsKey(clazz);
-	}
-	
 	public void createGUIComponents(NomadComponent modulePane, DModule moduleInfo, boolean useCache) {
+		boolean isRendering = false ;
 		
 		if (useCache) {
-			boolean keyNotFound = false;
-			boolean isRendering = false ;
-			
 			Object cacheKey = getCacheKey(moduleInfo);
 			ImageBuffer bgCache = new ImageBuffer(backgroundManager, cacheKey);
 
@@ -193,80 +179,26 @@ public class ModuleBuilder {
 				NomadContainerCacher.enableHook(modulePane, backgroundManager, cacheKey);
 				isRendering = true;
 			}
+		} else {
+			isRendering = true;
+		}
 
-			// get module ui information
-			ModuleNode domModule = nomadDom.getModuleNodeById(moduleInfo.getModuleID());
-			
-			for (Iterator itComp=domModule.iterator();itComp.hasNext();) {
-				ComponentNode compNode = (ComponentNode) itComp.next();
+		// get module ui information
+		ModuleNode domModule = nomadDom.getModuleNodeById(moduleInfo.getModuleID());
+		
+		for (ComponentNode compNode : domModule) {
+			String compName = compNode.getName();
+			Class<? extends NomadComponent> compClass = uifactory.getNomadComponentClass(compName);
 
-				String compName = compNode.getName();
-				Class compClass = uifactory.getNomadComponentClass(compName);
-
-				keyNotFound = !isDecoration(compClass);
-				
-				if(isRendering || keyNotFound) {
-					
+			if (compClass==null) {
+				System.err.println("Cannot create component with name '"+compName+"'.");
+			} else {
+				if(isRendering || !uifactory.isDecoration(compClass)) {
 					NomadComponent comp = uifactory.newComponentInstanceByClass(compClass);
 
-					if (comp==null) {
-						System.err.println("Cannot create componenent with name '"+compName+"'.");
-					} else {
-						comp.setSize(comp.getPreferredSize());
-						
-						if (keyNotFound && !comp.hasDynamicOverlay()) {
-							decorationComponentMap.put(compClass,compClass);
-						}
-						
-						// setup component
-						PropertySet properties = comp.createAccessibleProperties(false);
-						for (Iterator itProp=compNode.iterator();itProp.hasNext();) {
-							PropertyNode propNode = (PropertyNode) itProp.next();
-							Property compProperty = properties.get(propNode.getName());
-
-							try {
-								compProperty.setValue(propNode.getValue());
-							} catch (Throwable t) {
-								System.err.println("** In component "+comp.getClass().getName()+": error setting property '"+propNode.getName()+"'.");
-								System.err.println("** "+t);
-							}
-						}
-						modulePane.add(comp);
-					}
-				}
-			}
-
-
-			NomadContainerCacher.closeHook();
-			//NomadContainerCacher.disable();
-			
-		} else {
-			
-			// no caching
-
-			// get module ui information
-			ModuleNode domModule = nomadDom.getModuleNodeById(moduleInfo.getModuleID());
-			
-			for (Iterator itComp=domModule.iterator();itComp.hasNext();) {
-				ComponentNode compNode = (ComponentNode) itComp.next();
-
-				String compName = compNode.getName();
-				Class compClass = uifactory.getNomadComponentClass(compName);
-
-				NomadComponent comp = uifactory.newComponentInstanceByClass(compClass);
-
-				if (comp==null) {
-
-					System.err.println("Cannot create componenent with name '"+compName+"'.");
-
-				} else {
-					comp.setSize(comp.getPreferredSize());
-								
 					// setup component
-					PropertySet properties = comp.createAccessibleProperties(false);
-
-					for (Iterator itProp=compNode.iterator();itProp.hasNext();) {
-						PropertyNode propNode = (PropertyNode) itProp.next();
+					PropertySet properties = uifactory.getProperties(comp);
+					for (PropertyNode propNode : compNode) {
 						Property compProperty = properties.get(propNode.getName());
 
 						try {
@@ -276,13 +208,16 @@ public class ModuleBuilder {
 							System.err.println("** "+t);
 						}
 					}
-
 					modulePane.add(comp);
 				}
-			}
+			} 
 		}
-	}
+
+		NomadContainerCacher.closeHook();
+		//NomadContainerCacher.disable();
 		
+	}
+
 	// -----------
 
 	public ThemeNode read(String file) {

@@ -29,7 +29,6 @@ import java.awt.Rectangle;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 import javax.swing.JComponent;
 
@@ -40,6 +39,8 @@ import org.nomad.theme.property.ComponentLocationProperty;
 import org.nomad.theme.property.ComponentSizeProperty;
 import org.nomad.theme.property.PropertySet;
 import org.nomad.util.graphics.ImageBuffer;
+import org.nomad.util.graphics.ImageToolkit;
+import org.nomad.util.iterate.ComponentIterator;
 
 /**
  * @author Christian Schneider
@@ -52,16 +53,13 @@ public class NomadComponent extends JComponent {
 	private boolean flagHasDynamicOverlay = false;
 	private Environment env;
 	private Module module = null;
-	private PropertySet accessibleProperties = null;
 
 	public NomadComponent() {
 		env=Environment.sharedInstance();
-		//setDoubleBuffered(true); // disable default double buffer
 		setOpaque(false);
-		setDoubleBuffered(true);
-		//RepaintManager.currentManager(this).setDoubleBufferingEnabled(false);
+		setDoubleBuffered(false);
 	}
-	
+
 	public void setEnvironment(Environment env) {
 		this.env = env;
 	}
@@ -84,23 +82,9 @@ public class NomadComponent extends JComponent {
 		super.paintBorder(g2);
     }
     
-	public final PropertySet createAccessibleProperties(boolean permanent) {
-		
-		if (accessibleProperties!=null)
-			return accessibleProperties;
-		else {
-			PropertySet set = new PropertySet();
-			createProperties(set);
-			if (permanent) {
-				accessibleProperties = set;
-			}
-			return set;
-		}
-	}
-
-	protected void createProperties(PropertySet set) {
-		set.add(new ComponentLocationProperty(this));
-		set.add(new ComponentSizeProperty(this));
+	public void registerProperties(PropertySet set) {
+		set.add(new ComponentLocationProperty());
+		set.add(new ComponentSizeProperty());
 	}
 	
 	public void paintDecoration(Graphics2D g2) {
@@ -121,13 +105,10 @@ public class NomadComponent extends JComponent {
 	
 	public void setDynamicOverlay(boolean enable) {
 		this.flagHasDynamicOverlay = enable;
-		//screenBuffer.dispose();
-		//repaint();
 	}
 
 	public void deleteAlternativeBackground() {
 		alternativeBackground.dispose();
-		//repaint();
 	}
 	
 	public NomadComponent getNomadComponent(int i) {
@@ -138,7 +119,6 @@ public class NomadComponent extends JComponent {
 		alternativeBackground.dispose();
 		alternativeBackground = new ImageBuffer(background);
 		setOpaque(true);
-		repaint();
 	}
 
 	public void setAlternativeBackground(Image image, Rectangle bounds) {
@@ -146,27 +126,40 @@ public class NomadComponent extends JComponent {
 		alternativeBackground = new ImageBuffer(image);
 		alternativeBackground.setRegion(bounds);
 		setOpaque(true);
-		repaint();
 	}
 	
 	private BufferedImage screen = null;
 	private int sw = 0;
 	private int sh = 0;
 	
-	public void repaint() {
-		screen = null;
-		super.repaint();
+	private boolean screenInvalid = true;
+
+	public void fullRepaint() {
+		screenInvalid = true;
+		repaint();
 	}
 
 	private Graphics2D getOffscreenBufferGraphics() {
 		int w = getWidth(); 
 		int h = getHeight();
 		
-		if ((screen==null)||(sw!=w)||(sh!=h)/*||(screen.contentsLost())*/) {
-			sw=w; sh=h; screen = getGraphicsConfiguration().createCompatibleImage(sw,sh,
-				alternativeBackground.isValid() ? Transparency.OPAQUE : Transparency.TRANSLUCENT);
-			//sw=w; sh=h; screen = getGraphicsConfiguration().createCompatibleVolatileImage(sw,sh,Transparency.BITMASK);
-			return screen.createGraphics();
+		boolean resized = (sw!=w)||(sh!=h);
+		
+		if (screenInvalid||resized) {
+			sw=w; sh=h;
+			
+			if (resized||screen==null) {
+				screen = getGraphicsConfiguration().createCompatibleImage(sw,sh,
+						alternativeBackground.isValid() ? Transparency.OPAQUE : Transparency.TRANSLUCENT);
+				return screen.createGraphics();
+			} else {
+				// clear image
+				Graphics2D g2 = screen.createGraphics();
+				if (!isOpaque()) {
+					ImageToolkit.clearRegion(g2, 0, 0, sw, sh);;
+				}
+				return g2;
+			}
 		} else {
 			return null;
 		}
@@ -191,27 +184,13 @@ public class NomadComponent extends JComponent {
 		if ((g2=getOffscreenBufferGraphics())!=null) {
 			paintContents(g2);
 			g2.dispose();
+			screenInvalid = false;
 		}
 		g.drawImage(screen, 0, 0, this);
 	}
 	
-	public Iterator getExportableNomadComponents() {
-		return new Iterator() {
-			
-			int index = 0;
-
-			public boolean hasNext() {
-				return index<getComponentCount();
-			}
-
-			public Object next() {
-				if (!hasNext()) throw new NoSuchElementException();
-				return getComponent(index++);
-			}
-
-			public void remove() {
-				throw new UnsupportedOperationException();
-			}};
+	public Iterator<NomadComponent> getExportableNomadComponents() {
+		return new ComponentIterator<NomadComponent>(NomadComponent.class, this);
 	}
 
 	private String nameAlias = getClass().getName();

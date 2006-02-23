@@ -29,7 +29,6 @@ import java.util.regex.Pattern;
 import javax.swing.JComponent;
 
 import org.nomad.dialog.JFontChooser;
-import org.nomad.theme.component.NomadComponent;
 import org.nomad.theme.property.editor.PropertyEditor;
 
 /**
@@ -43,8 +42,7 @@ public abstract class FontProperty extends Property {
 	/**
 	 * @param component
 	 */
-	public FontProperty(NomadComponent component) {
-		super(component);
+	public FontProperty() {
 		setName("font");
 		setIsInlineEditor(false);
 	}

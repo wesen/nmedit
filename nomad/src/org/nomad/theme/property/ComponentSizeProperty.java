@@ -24,16 +24,12 @@ package org.nomad.theme.property;
 
 import java.awt.Dimension;
 
-import org.nomad.theme.component.NomadComponent;
-
 /**
  * @author Christian Schneider
  */
 public class ComponentSizeProperty extends DimensionProperty {
 
-	public ComponentSizeProperty(NomadComponent component) {
-		super(component);
-	}
+	public ComponentSizeProperty() {}
 
 	public void setXY(int x, int y) { getComponent().setSize(x, y); }
 	public int getX() { return getComponent().getWidth(); }

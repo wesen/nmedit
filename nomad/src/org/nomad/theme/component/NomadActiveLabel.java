@@ -60,28 +60,34 @@ public class NomadActiveLabel extends NomadLabel {
 		setBorder(NomadBorderFactory.createNordEditor311Border());
 	}
 	
-	protected void createProperties(PropertySet set) {
-		super.createProperties(set);
-		set.add(new PaddingProperty(this));
-		set.add(new ParameterProperty(this) {
-			public void setDParameter(DParameter p) {
-				parameterInfo = p;
-				
-				if (parameterInfo!=null) {
-					setText(parameterInfo.getName());
-				}
-				
-			}
-			public DParameter getDParameter() {
-				return ((NomadActiveLabel)getComponent()).getParameterInfo();
-			}
-		});
+	public void registerProperties(PropertySet set) {
+		super.registerProperties(set);
+		set.add(new PaddingProperty());
+		set.add(new LabelParamProperty());
+	}
+	
+	private static class LabelParamProperty extends ParameterProperty {
+		public void setDParameter(DParameter p) {
+			((NomadActiveLabel)getComponent()).setParameter(p);
+			
+		}
+		public DParameter getDParameter() {
+			return ((NomadActiveLabel)getComponent()).getParameterInfo();
+		}
 	}
 	
 	public DParameter getParameterInfo() {
 		return parameterInfo;
 	}
 	
+	public void setParameter(DParameter p) {
+		parameterInfo = p;
+		
+		if (parameterInfo!=null) {
+			setText(parameterInfo.getName());
+		}
+	}
+
 	public Dimension getFittingSize() {
 		if (!isInitialized) {
 			isInitialized=true;
@@ -137,12 +143,11 @@ public class NomadActiveLabel extends NomadLabel {
 		return padding;
 	}
 
-	private class PaddingProperty extends IntegerProperty {
-		public PaddingProperty(NomadComponent component) {
-			super(component);
+	private static class PaddingProperty extends IntegerProperty {
+		public PaddingProperty() {
 			setName("padding");
 		}
-		public void setInteger(int integer) { if (integer>=0) setPadding(integer); }
+		public void setInteger(int integer) { if (integer>=0) ((NomadActiveLabel)getComponent()).setPadding(integer); }
 		public int getInteger() { return ((NomadActiveLabel)getComponent()).getPadding(); }
 	}
 		
@@ -175,7 +180,6 @@ public class NomadActiveLabel extends NomadLabel {
 	private class ParameterChangeListener implements ChangeListener {
 		public void stateChanged(ChangeEvent event) {
 			updateParamText();
-			repaint();
 		}
 	}
 	

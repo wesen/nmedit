@@ -18,12 +18,30 @@
  */
 
 /*
- * Created on Jan 12, 2006
+ * Created on Feb 22, 2006
  */
 package org.nomad.theme.property;
 
-public interface PropertySetListener {
+import java.util.Map;
 
-	public void propertySetEvent(PropertySetEvent event);
-	
+import org.nomad.xml.XMLFileWriter;
+import org.nomad.xml.dom.theme.ComponentNode;
+
+public class PropertyUtils {
+
+	public static void exportToDOM(ComponentNode node, Map<String, Property> map) {
+		for (Property p : map.values()) {
+			if (p.isExportable() && (!p.isInDefaultState())) {
+				node.createPropertyNode(p.getName()).setValue(p.getValue());
+			}
+		}
+	}
+
+	public static void exportToXml(XMLFileWriter xml, Map<String, Property> map) {
+		xml.beginTag("properties", true);
+		for (Property p : map.values())
+			p.exportToXml(xml);
+		xml.endTag();
+	}
+
 }

@@ -65,7 +65,6 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 				} else {
 					nba.setValue(nba.behaviour.getButtonIndexAt(event.getPoint()));
 				}
-				//repaint();
 			}
 		}
 	};
@@ -89,20 +88,20 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		setSelectionBorder(DEFAULT_SEL_Border);
 		setDefaultBorder(DEFAULT_Border);
 		addMouseListener(buttonArrayMouseListener);
-		autoResize(false);
+		//autoResize(false);
 		setMinimumSize(prefSize);
 		setMaximumSize(prefSize);
 		setPreferredSize(prefSize);
 		setSize(prefSize);
 	}
 
-	protected void createProperties(PropertySet set) {
-		super.createProperties(set);
+	public void registerProperties(PropertySet set) {
+		super.registerProperties(set);
 		for (int i=labelList.length-1;i>=0;i--) {
-			set.add(new BtnTextProperty(this,i));
+			set.add(new BtnTextProperty(i));
 		}
-		set.add(new OrientationProperty(this));
-		set.add(new CyclicProperty(this));
+		set.add(new OrientationProperty());
+		set.add(new CyclicProperty());
 	}
 
 	public void autoResize(boolean force) {
@@ -155,7 +154,7 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 
 	private Pattern btnNamePattern = Pattern.compile("btn#(\\d+)");
 
-	private String encodeButtonName(int index) {
+	private static String encodeButtonName(int index) {
 		return "btn#"+index;
 	}
 	
@@ -181,14 +180,14 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 				labelList[index] = null;
 			else
 				labelList[index] = newLabel(label);
-			repaint();
+			fullRepaint();
 		}
 	}
 
 	public void removeButton(int index) {
 		if (0<=index && index<labelList.length) {
 			labelList[index] = null;
-			repaint();
+			fullRepaint();
 		}
 	}
 
@@ -209,12 +208,12 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 
 	public void setSelectionBorder(Border border) {
 		selBorder = border;
-		repaint();
+		fullRepaint();
 	}
 	
 	public void setDefaultBorder(Border border) {
 		defBorder = border;
-		repaint();
+		fullRepaint();
 	}
 
 	private Color focusedColor = NomadClassicColors.BUTTON_FOCUSED_BACKGROUND;
@@ -223,14 +222,14 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 	public void setButtonFocusedColor(Color color) {
 		if (this.focusedColor!=color) {
 			this.focusedColor = color;
-			repaint();
+			fullRepaint();
 		}
 	}
 	
 	public void setButtonSelectedColor(Color color) {
 		if (this.selectedColor!=color) {
 			this.selectedColor = color;
-			repaint();
+			fullRepaint();
 		}
 	}
 
@@ -334,12 +333,11 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		}
 	}
 
-	private class BtnTextProperty extends Property {
+	private static class BtnTextProperty extends Property {
 		int index;
-		public BtnTextProperty(NomadComponent component, int index) {
-			super(component);
+		public BtnTextProperty(int index) {
 			this.index=index;
-			setName(encodeButtonName(index));
+			setName(NomadButtonArray.encodeButtonName(index));
 		}
 
 		public String getValue() {
@@ -348,26 +346,25 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		}
 
 		public void setValue(String value) {
-			if (0<=index && index<labelList.length) {
-				setButton(index, value);
+			if (0<=index && index<((NomadButtonArray)getComponent()).labelList.length) {
+				((NomadButtonArray)getComponent()).setButton(index, value);
 			}
 		}
 
 		public boolean isExportable() {
-			return labelList[index]!=null;
+			return ((NomadButtonArray)getComponent()).labelList[index]!=null;
 		}
 		
 	}
 
-	private class OrientationProperty extends BooleanProperty {
+	private static class OrientationProperty extends BooleanProperty {
 
-		public OrientationProperty(NomadComponent component) {
-			super(component);
+		public OrientationProperty() {
 			setName("landscape");
 		}
 
 		public void setBoolean(boolean value) {
-			setLandscape(value);
+			((NomadButtonArray)getComponent()).setLandscape(value);
 		}
 
 		public boolean getBoolean() {
@@ -376,15 +373,14 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 
 	}
 	
-	private class CyclicProperty extends BooleanProperty {
+	private static class CyclicProperty extends BooleanProperty {
 
-		public CyclicProperty(NomadComponent component) {
-			super(component);
+		public CyclicProperty() {
 			setName("cyclic");
 		}
 
 		public void setBoolean(boolean value) {
-			setIsCylicDisplay(value);
+			((NomadButtonArray)getComponent()).setIsCylicDisplay(value);
 		}
 
 		public boolean getBoolean() {

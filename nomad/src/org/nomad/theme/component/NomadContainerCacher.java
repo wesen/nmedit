@@ -90,16 +90,18 @@ public class NomadContainerCacher {
 	}
 	
 	public void finish() {
-		component.removeContainerListener(cel);
-		cel=null;
-		ib.dispose();
-
-		if (g2!=null) {
-			rel.configure(null, null);
-			g2.dispose();
-			image = null;
-		} else {
-			brl.configure(null);
+		if (component!=null) {
+			component.removeContainerListener(cel);
+			cel=null;
+			ib.dispose();
+	
+			if (g2!=null) {
+				rel.configure(null, null);
+				g2.dispose();
+				image = null;
+			} else {
+				brl.configure(null);
+			}
 		}
 	}
 

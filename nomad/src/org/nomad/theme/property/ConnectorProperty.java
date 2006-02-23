@@ -22,7 +22,6 @@
  */
 package org.nomad.theme.property;
 
-import org.nomad.theme.component.NomadComponent;
 import org.nomad.theme.component.NomadConnector;
 import org.nomad.theme.property.editor.PropertyEditor;
 import org.nomad.xml.dom.module.DConnector;
@@ -31,8 +30,7 @@ import org.nomad.xml.dom.module.ModuleDescriptions;
 
 public class ConnectorProperty extends Property {
 
-	public ConnectorProperty(NomadComponent component) {
-		super(component);
+	public ConnectorProperty() {
 		setName("connector#0");
 	}
 

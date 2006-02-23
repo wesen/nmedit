@@ -63,7 +63,7 @@ public abstract class NomadControl extends NomadComponent {
 		public void focusGained(FocusEvent event) { repaint(event.getSource()); }
 		public void focusLost(FocusEvent event) { repaint(event.getSource()); }
 		void repaint(Object source) {
-			if (source instanceof NomadControl) ((NomadControl)source).repaint();
+			if (source instanceof NomadControl) ((NomadControl)source).fullRepaint();
 		}
 		
 	}
@@ -91,9 +91,9 @@ public abstract class NomadControl extends NomadComponent {
 			}});*/
 	}
 
-	protected void createProperties(PropertySet set) {
-		super.createProperties(set);
-		set.add(new ParameterProperty(this));
+	public void registerProperties(PropertySet set) {
+		super.registerProperties(set);
+		set.add(new ParameterProperty());
 	}
 	
 	public void setParameterInfo(DParameter parameterInfo) {

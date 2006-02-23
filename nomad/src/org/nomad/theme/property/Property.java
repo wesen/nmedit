@@ -22,8 +22,6 @@
  */
 package org.nomad.theme.property;
 
-import java.util.regex.Pattern;
-
 import org.nomad.theme.ModuleComponent;
 import org.nomad.theme.component.NomadComponent;
 import org.nomad.theme.property.editor.PropertyEditor;
@@ -112,16 +110,7 @@ import org.nomad.xml.dom.module.DModule;
  * 
  * @author Christian Schneider
  */
-public abstract class Property extends PropertyContainer {
-
-	// ---- Property name + validation --------------------------------------
-	
-	/**
-	 * Used to validate the properties name.
-	 * @see #setName(String)
-	 */
-	private final static Pattern 
-		validateNamePattern = Pattern.compile("[:a-zA-Z][,#a-zA-Z0-9:\\.\\-]*");
+public abstract class Property  {
 
 	/**
 	 * The properties name
@@ -129,44 +118,18 @@ public abstract class Property extends PropertyContainer {
 	 */
 	private String name = null;
 	
-	//private final static boolean flagValidateName = false;
-	
 	/**
 	 * Returns the name of this property.
-	 * @return the name of this property
-	 * @see #setName(String)
 	 */
 	public String getName() {
 		return name;
 	}
-	/*s
-	public boolean isValidatingName() {
-		return flagValidateName;
-	}
-	/*
-	public void setValidatingName(boolean validate) {
-		flagValidateName = validate;
-	}*/
 
 	/**
 	 * Sets the name of the property
-	 * The name must match the regular expression <code>[:a-zA-Z][,a-zA-Z0-9\.\-:]*</code>
-	 * It must start with an letter and furthermore can contain letters, digits, comma,
-	 * dot, dash.
-	 * 
-	 * If the name is modified a ChangeEvent will be fired.  
-	 * 
-	 * @param name how the property will be named
-	 * @throws IllegalArgumentException if the name does not match the regular expression.
 	 */
 	public void setName(String name) {
-		/*		if (flagValidateName && !Property.isValidName(name))
-			throw new IllegalArgumentException("Illegal property name.");
-*/
-		//if (this.name==null||!this.name.equals(name)) {
-			this.name = name;
-			// fireChangeEvent();
-		//}
+		this.name = name;
 	}
 	
 	public boolean isInDefaultState() {
@@ -255,12 +218,14 @@ public abstract class Property extends PropertyContainer {
 	 * Creates a new property
 	 * @param component owner component of this property
 	 */
-	public Property(NomadComponent component) {
-		super();
-		this.ncomponent = component;
+	public Property() {
 		setName("property");
 	}
 
+	public void setComponent(NomadComponent component) {
+		this.ncomponent = component;
+	}
+	
 	/**
 	 * Returns the owner component of this property
 	 * @return the owner component of this property

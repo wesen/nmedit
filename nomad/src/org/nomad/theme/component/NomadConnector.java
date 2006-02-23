@@ -29,9 +29,9 @@ import java.util.ArrayList;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.nomad.patch.Cables;
 import org.nomad.patch.Connector;
 import org.nomad.patch.Module;
-import org.nomad.patch.Cables;
 import org.nomad.patch.ui.ModuleSectionUI;
 import org.nomad.theme.NomadClassicColors;
 import org.nomad.theme.curve.CurvePanel;
@@ -75,9 +75,9 @@ public class NomadConnector extends NomadComponent implements ChangeListener {
 		return null;
 	}
 
-	protected void createProperties(PropertySet set) {
-		super.createProperties(set);
-		set.add(new ConnectorProperty(this));
+	public void registerProperties(PropertySet set) {
+		super.registerProperties(set);
+		set.add(new ConnectorProperty());
 		//getAccessibleProperties().rewriteDefaults();
 	}
 	
@@ -96,7 +96,7 @@ public class NomadConnector extends NomadComponent implements ChangeListener {
 	
 	protected void setColorFromSignal(int signal) {
 		setBackground(NomadClassicColors.getConnectorColor(signal));
-		repaint();
+		fullRepaint();
 	}
 	
 	public void setConnectedState(boolean isConnected) {

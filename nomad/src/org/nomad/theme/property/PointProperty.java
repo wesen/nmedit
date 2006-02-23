@@ -26,8 +26,6 @@ import java.awt.Point;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.nomad.theme.component.NomadComponent;
-
 /**
  * @author Christian Schneider
  */
@@ -38,8 +36,7 @@ public abstract class PointProperty extends Property {
 	/**
 	 * @param component
 	 */
-	public PointProperty(NomadComponent component) {
-		super(component);
+	public PointProperty() {
 		setName("x,y");
 	}
 

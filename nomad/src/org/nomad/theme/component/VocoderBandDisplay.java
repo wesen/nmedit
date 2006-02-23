@@ -58,31 +58,31 @@ public class VocoderBandDisplay extends NomadComponent {
 		paramLink = new VocoderParameterLink(this);
 	}
 
-	protected void createProperties(PropertySet set) {
-		super.createProperties(set);
+	public void registerProperties(PropertySet set) {
+		super.registerProperties(set);
 		for (int i=0;i<NUM_BANDS;i++)
-			set.add(new ParamBandProperty(this,i));
+			set.add(new ParamBandProperty(i));
 	}
 	
 	public DParameter getInfo(int band) {
 		return bandsInfo[band];
 	}
 	
-	private class ParamBandProperty extends ParameterProperty {
+	private static class ParamBandProperty extends ParameterProperty {
 		int band;
-		public ParamBandProperty(NomadComponent component, int band) {
-			super(component);
+		public ParamBandProperty(int band) {
+			super();
 			setName("parameter#"+band);
 			this.band = band;
 		}
-		public void setDParameter(DParameter p) { bandsInfo[band] = p; }
+		public void setDParameter(DParameter p) { ((VocoderBandDisplay)getComponent()).bandsInfo[band] = p; }
 		public DParameter getDParameter() { return ((VocoderBandDisplay)getComponent()).bandsInfo[band]; }
 	}
 	
 	public void setBackgroundRenderer(BackgroundRenderer renderer) {
 		if (this.renderer!=renderer) {
 			this.renderer = renderer;
-			repaint();
+			fullRepaint();
 		}
 	}
 	
@@ -150,7 +150,7 @@ public class VocoderBandDisplay extends NomadComponent {
 	}
 	
 	protected void bandsChanged() {
-		repaint();
+		fullRepaint();
 	}
 	
 	public void paintDecoration(Graphics2D g) {

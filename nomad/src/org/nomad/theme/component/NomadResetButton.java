@@ -102,7 +102,7 @@ public class NomadResetButton extends NomadControl {
 	protected void testIfStateChanged() {
 		if (inDefaultState()!=rememberState) {
 			rememberState=!rememberState; // update memory
-			repaint();
+			fullRepaint();
 		}
 	}
 

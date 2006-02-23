@@ -60,13 +60,13 @@ public class NomadLabel extends NomadComponent {
 		setForeground(Color.BLACK);
 		autoResize();
 	}
-	
-	protected void createProperties(PropertySet set) {
-		super.createProperties(set);
-		set.add(new LabelTextProperty(this));
-		set.add(new VerticalTextProperty(this));
-		set.add(new LabelFontProperty(this));
-		set.add(new AntialiasTextProperty(this));
+
+	public void registerProperties(PropertySet set) {
+		super.registerProperties(set);
+		set.add(new LabelTextProperty());
+		set.add(new VerticalTextProperty());
+		set.add(new LabelFontProperty());
+		set.add(new AntialiasTextProperty());
 	}
 	
 	public static Rectangle getStringBounds(JComponent component, String string) {
@@ -212,12 +212,12 @@ public class NomadLabel extends NomadComponent {
 	 */
 	protected void fireTextUpdateEvent() {
 		autoResize();
-		repaint();
+		fullRepaint();
 	}
 	
 	public void paintDecoration(Graphics2D g2) {
 		if (flagTextAntialiasing) {
-			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			//g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		}
 
@@ -239,15 +239,14 @@ public class NomadLabel extends NomadComponent {
 		}
 	}
 	
-	private class AntialiasTextProperty extends BooleanProperty {
+	private static class AntialiasTextProperty extends BooleanProperty {
 
-		public AntialiasTextProperty(NomadComponent component) {
-			super(component);
+		public AntialiasTextProperty() {
 			setName("antialiasing");
 		}
 
 		public void setBoolean(boolean value) {
-			setTextAntialiased(value);
+			((NomadLabel)getComponent()).setTextAntialiased(value);
 		}
 
 		public boolean getBoolean() {
@@ -256,10 +255,9 @@ public class NomadLabel extends NomadComponent {
 		
 	}
 
-	private class LabelTextProperty extends Property {
+	private static class LabelTextProperty extends Property {
 
-		public LabelTextProperty(NomadComponent component) {
-			super(component);
+		public LabelTextProperty() {
 			setName("text");
 		}
 
@@ -268,18 +266,17 @@ public class NomadLabel extends NomadComponent {
 		}
 
 		public void setValue(String value) {
-			setText(value);
+			((NomadLabel)getComponent()).setText(value);
 		}
 	}
 	
-	private class VerticalTextProperty extends BooleanProperty {
-		public VerticalTextProperty(NomadComponent component) {
-			super(component);
+	private static class VerticalTextProperty extends BooleanProperty {
+		public VerticalTextProperty() {
 			setName("vertical");
 		}
 
 		public void setBoolean(boolean value) {
-			setVertical(value);
+			((NomadLabel)getComponent()).setVertical(value);
 		}
 
 		public boolean getBoolean() {
@@ -287,15 +284,13 @@ public class NomadLabel extends NomadComponent {
 		}
 	}
 	
-	private class LabelFontProperty extends FontProperty {
+	private static class LabelFontProperty extends FontProperty {
 
-		public LabelFontProperty(NomadComponent component) {
-			super(component);
-		}
+		public LabelFontProperty() { }
 		public Font getFont() { return getComponent().getFont(); }
 		public void setFont(Font f) {
 			getComponent().setFont(f);
-			fireTextUpdateEvent();
+			((NomadLabel)getComponent()).fireTextUpdateEvent();
 		}
 	}
 	

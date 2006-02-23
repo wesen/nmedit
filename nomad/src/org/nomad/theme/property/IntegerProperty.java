@@ -22,15 +22,12 @@
  */
 package org.nomad.theme.property;
 
-import org.nomad.theme.component.NomadComponent;
-
 /**
  * @author Christian Schneider
  */
 public abstract class IntegerProperty extends Property {
 
-	public IntegerProperty(NomadComponent component) {
-		super(component);
+	public IntegerProperty() {
 		setName("integer");
 	}
 	
@@ -43,7 +40,7 @@ public abstract class IntegerProperty extends Property {
 
 	public void setValue(String value) {
 		try {
-			setInteger(Integer.parseInt((String)value));
+			setInteger(Integer.parseInt(value));
 		} catch (NumberFormatException e) {
 			throw new IllegalArgumentException(e);
 		}
