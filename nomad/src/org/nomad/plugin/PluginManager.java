@@ -2,7 +2,6 @@ package org.nomad.plugin;
 
 import java.util.ArrayList;
 
-import org.nomad.port.NullComPortPlugin;
 import org.nomad.theme.UIFactory;
 
 
@@ -68,7 +67,7 @@ public class PluginManager {
 	 * loads built in plugins
 	 */
 	private static void loadBuiltinPlugins() {
-		plugins.add(new NullComPortPlugin());
+
 	}
 	
 	/**
