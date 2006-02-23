@@ -1,6 +1,6 @@
 package org.nomad.synth;
 
-public interface SynthConnectionStateListener {
+public interface SynthDeviceStateListener {
 	
 	/**
 	 * Called if the state of the current connection to the Nord Modular changes
@@ -8,6 +8,6 @@ public interface SynthConnectionStateListener {
      * 
 	 * @param connection Synth object that had a changed connection state.
 	 */
-	public void synthConnectionStateChanged(SynthConnection connection) ;
+	public void synthConnectionStateChanged(SynthDevice connection) ;
 
 }

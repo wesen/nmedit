@@ -22,36 +22,77 @@
  */
 package org.nomad.synth;
 
+import java.util.ArrayList;
+
 import org.nomad.patch.Patch;
 
 public class Synth {
 
-	private Patch[] slots = new Patch[4] ;
-	private int[] pids = new int[4];
-	private SynthConnection connection;
+	private Slot[] slots = new Slot[4];
+	private SynthDevice device;
+
+	private int activeSlot=0;
+	private ArrayList<SlotListener> slotListenerList = new ArrayList<SlotListener>();
 	
-	public Synth(SynthConnection connection) {
-		this.connection = connection;
+	public Synth(SynthDevice connection) {
+		this.device = connection;
 		for (int i=0;i<slots.length;i++)
-			slots[i] = new Patch();
-		for (int i=0;i<pids.length;i++)
-			pids[i] = 0;
+			slots[i] = new Slot(this, i);
 	}
 
 	public void setPId(int slot, int pid) {
-		pids[slot] = pid;
+		slots[slot].setPid(pid);
+	}
+	
+	public int getPId(int slot) {
+		return slots[slot].getPid();
 	}
 	
 	public Patch getSlot(int slot) {
+		return slots[slot].getPatch();
+	}
+	
+	public Slot getSlotInfo(int slot) {
 		return slots[slot];
 	}
 	
 	public void setSlot(int slot, Patch patch) {
-		slots[slot] = patch;
+		if (patch!=null) {
+			slots[slot].setPatch(patch);
+		}
 	}
 	
 	public Patch getActiveSlot() {
-		return slots[0];
+		return getSlot(activeSlot);
+	}
+	
+	public void setActiveSlot(int slot) {
+		activeSlot = slot;
+	}
+
+	public SynthDevice getDevice() {
+		return device;
+	}
+
+	public void addSlotListener(SlotListener l) {
+		if (!slotListenerList.contains(l))
+			slotListenerList.add(l);
+	}
+	
+	public void removeSlotListener(SlotListener l) {
+		slotListenerList.remove(l);
+	}
+	
+	public void fireNewPatchInSlot(Slot slot) {
+		if (!slotListenerList.isEmpty())
+			for (SlotListener l : slotListenerList)
+				l.newPatchInSlot(slot);
+	}
+	
+	public void fireSlotSelectedMessage(Slot slot) {
+		if (!slotListenerList.isEmpty())
+			for (SlotListener l : slotListenerList)
+				l.slotSelected(slot);
 	}
 	
 }
