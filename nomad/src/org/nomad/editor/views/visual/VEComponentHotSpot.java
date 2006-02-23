@@ -130,7 +130,6 @@ public class VEComponentHotSpot extends VEHotSpot implements ContainerListener {
 			getEditor().setCursor(lastCursor);
 			lastCursor = null;
 		}
-		//getEditor().repaint();
 	}
 	
 	public void mouseMoved(MouseEvent event) {

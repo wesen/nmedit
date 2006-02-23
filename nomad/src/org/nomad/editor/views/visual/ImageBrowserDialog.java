@@ -100,7 +100,6 @@ public class ImageBrowserDialog extends JDialog {
 		 *  do  this here, otherwise the new text value will be the default value
 		 *  and not exported to the dom
 		 */
-		label.createAccessibleProperties(true);
 		label.setEnvironment(editor.getEnvironment());
 		label.setText("{@" + imageKey + "}");
 		label.setLocation(10,10);

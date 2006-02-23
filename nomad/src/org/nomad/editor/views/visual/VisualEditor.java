@@ -31,6 +31,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -38,12 +39,12 @@ import javax.swing.JPopupMenu;
 import org.nomad.editor.ComponentAlignmentMenu;
 import org.nomad.editor.views.ComponentZOrderMenuItem;
 import org.nomad.editor.views.property.NomadPropertyEditor;
+import org.nomad.env.Environment;
 import org.nomad.theme.ModuleComponent;
 import org.nomad.theme.NomadClassicColors;
 import org.nomad.theme.component.NomadComponent;
 import org.nomad.theme.property.Property;
 import org.nomad.theme.property.PropertySet;
-import org.nomad.theme.property.PropertySetListener;
 import org.nomad.xml.dom.module.DModule;
 
 public class VisualEditor extends NomadComponent implements ModuleComponent {
@@ -51,7 +52,6 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 	private VEHotSpotManager spots= null;
 	private ArrayList<NomadComponent> selection = new ArrayList<NomadComponent>();
 	private VEPainter painter = null;
-	private VEPropertySetChangeHandler propertySetListener = null;
 	private VEMouseEventHandler mouseHandler = null;
 	private DModule info = null;
 	private NomadPropertyEditor propertyEditor = null;
@@ -71,7 +71,6 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 		spots = new VEHotSpotManager(this);
 		new VEComponentManager(this);
 		painter = new VEPainter();
-		propertySetListener = new VEPropertySetChangeHandler(this);
 		mouseHandler = new VEMouseEventHandler(this);
 		setBackground(NomadClassicColors.MODULE_BACKGROUND);
 
@@ -130,10 +129,6 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 
 	protected void createProperties(PropertySet set) {
 		// we do not call super() because we don't want to create any properties
-	}
-	
-	public PropertySetListener getPropertySetListener() {
-		return propertySetListener;
 	}
 	
 	public VEMouseEventHandler getMouseEventHandler() {
@@ -231,7 +226,9 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 		if (selection.size()!=1 || getFirstSelection()!=component) {
 			clearSelection();
 			if (component!=null) {
-				getPropertyEditor().setEditingPropertySet(component.createAccessibleProperties(true));
+				getPropertyEditor().setEditingPropertySet(
+						Environment.sharedInstance().getFactory().getProperties(component)
+				);
 				selection.add(component);
 				component.setVisible(true);
 			}
@@ -280,11 +277,14 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 			return null;
 		}
 		
-		PropertySet clonedSet = clone.createAccessibleProperties(true);
-		PropertySet copySet = c.createAccessibleProperties(true);
+		HashMap<String, String> src = new HashMap<String,String>();
 		
-		for (Property p : copySet) {
-			clonedSet.get(p.getName()).setValue(p.getValue());
+		for (Property p : Environment.sharedInstance().getFactory().getProperties(c)) {
+			src.put(p.getName(), p.getValue());
+		}
+		
+		for (Property p : Environment.sharedInstance().getFactory().getProperties(clone)) {
+			p.setValue( src.get(p.getName()) );
 		}
 		
 		return clone;

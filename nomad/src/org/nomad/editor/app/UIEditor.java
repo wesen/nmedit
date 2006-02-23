@@ -122,7 +122,7 @@ public class UIEditor extends JFrame {
 				try {
 					xml = new XMLFileWriter(uiFile,
 						"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
-						"<!DOCTYPE ui-description SYSTEM \"ui-description.dtd\">"
+						"<!DOCTYPE theme SYSTEM \"theme-v10.dtd\">"
 					);
 					env.getBuilder().exportDom(xml);			
 					xml.flush();
@@ -196,8 +196,7 @@ public class UIEditor extends JFrame {
 
 					DModule tmp = getModule();
 					DModule[] modules = 
-						ModuleDescriptions.sharedInstance().getModules()
-							.toArray(new DModule[ModuleDescriptions.sharedInstance().getModules().size()]);
+						ModuleDescriptions.sharedInstance().getModuleList();
 					
 					public String getDescription() {
 						return "Rewriting DOM...";

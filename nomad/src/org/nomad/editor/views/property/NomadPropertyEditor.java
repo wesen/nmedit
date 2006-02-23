@@ -44,8 +44,6 @@ import javax.swing.table.TableCellEditor;
 
 import org.nomad.theme.property.Property;
 import org.nomad.theme.property.PropertySet;
-import org.nomad.theme.property.PropertySetEvent;
-import org.nomad.theme.property.PropertySetListener;
 import org.nomad.theme.property.editor.PropertyEditor;
 
 /**
@@ -118,10 +116,8 @@ public class NomadPropertyEditor extends JPanel {
 	public void setEditingPropertySet(PropertySet thePropertySet) {
 		if (this.thePropertySet!=thePropertySet) {
 			properties.clear();
-			if (thePropertySet!=null) thePropertySet.removePropertySetListener(model);
 			this.thePropertySet=thePropertySet;
 			if (thePropertySet!=null) {
-				thePropertySet.addPropertySetListener(model);
 				for (Property p : thePropertySet) {
 					properties.add(p);
 				}
@@ -135,7 +131,7 @@ public class NomadPropertyEditor extends JPanel {
 		model.fireTableDataChanged();
 	}
 	
-	private class CPETableModel extends AbstractTableModel implements PropertySetListener {
+	private class CPETableModel extends AbstractTableModel {
 		
 	    public String getColumnName(int col) { return col==0?"Property":"Value"; }    
 	    public int getColumnCount() { return 2; }
@@ -161,33 +157,6 @@ public class NomadPropertyEditor extends JPanel {
 					Property property = (Property) properties.get(row);
 					property.setValue((String)value);
 				}
-			}
-		}
-
-		public void propertySetEvent(PropertySetEvent event) {
-			switch (event.getEventId()) {
-			case PropertySetEvent.PROPERTY_ADDED: {
-				System.out.println("** property added");
-				
-				properties.add(event.getProperty());
-				model.fireTableDataChanged();
-				tableUpdate();
-				break;
-			}
-			case PropertySetEvent.PROPERTY_REMOVED: {
-				System.out.println("** property removed");
-				
-				properties.remove(event.getProperty());				
-				tableUpdate();
-				//event.getProperty().removeChangeListener(this);
-				break;}
-				
-			case PropertySetEvent.PROPERTY_CHANGED: {
-				//Property property = event.getProperty();
-				tableUpdate();
-				/*int row = properties.indexOf(property);
-				fireTableCellUpdated(row, 1);*/
-				} break;
 			}
 		}
 	}
