@@ -34,6 +34,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import org.nomad.env.Environment;
+
 public class LookAndFeelMenu extends JMenu implements ActionListener {
 
 	private ArrayList<Component> affectedComponents = new ArrayList<Component>();
@@ -43,13 +45,31 @@ public class LookAndFeelMenu extends JMenu implements ActionListener {
 	public LookAndFeelMenu(String name) {
 		super(name);
 		ButtonGroup buttonGroup = new ButtonGroup();
-		String current = UIManager.getLookAndFeel().getName();
-		for (LookAndFeelInfo look : UIManager.getInstalledLookAndFeels() ) {
-			JRadioButtonMenuItem menuItem = new LookAndFeelMenuItem(look);
+
+		Environment env = Environment.sharedInstance();
+		String current = env.getProperty(key_laf);
+		if (current==null)
+			current = UIManager.getLookAndFeel().getName();
+
+		for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels() ) {
+			JRadioButtonMenuItem menuItem = new LookAndFeelMenuItem(info);
 			menuItem.addActionListener(this);
 		    add(menuItem);
 		    buttonGroup.add(menuItem);
-		    menuItem.setSelected(look.getName().equals(current));
+		    menuItem.setSelected(info.getName().equals(current));
+		}
+	}
+	
+	public void loadSelectedLaf() {
+		for (int i=0;i<getMenuComponentCount();i++) {
+			Component c = getMenuComponent(i);
+			if (c instanceof LookAndFeelMenuItem) {
+				LookAndFeelMenuItem menu = (LookAndFeelMenuItem) c;
+				if (menu.isSelected()) {
+					setLaf(menu.info);
+					break ;
+				}
+			}
 		}
 	}
 	
@@ -70,17 +90,26 @@ public class LookAndFeelMenu extends JMenu implements ActionListener {
 		affectedComponents.remove(component);
 	}
 
+	private final static String key_laf = "lookAndFeel";
+
 	public void actionPerformed(ActionEvent event) {
 		if (event.getSource() instanceof LookAndFeelMenuItem) {
-			try {
-				UIManager.setLookAndFeel( ((LookAndFeelMenuItem) event.getSource()).info.getClassName() );
-				for (Component c : affectedComponents) {
-		        	SwingUtilities.updateComponentTreeUI(c);
-		        }
-		      } catch (Exception e) {
-		        e.printStackTrace();
-		      }	
+			setLaf(((LookAndFeelMenuItem) event.getSource()).info);
 		}
+	}
+	
+	private void setLaf(LookAndFeelInfo info) {
+		try {
+			Environment env = Environment.sharedInstance();
+			env.setProperty(key_laf, info.getName());
+			
+			UIManager.setLookAndFeel( info.getClassName() );
+			for (Component c : affectedComponents) {
+	        	SwingUtilities.updateComponentTreeUI(c);
+	        }
+	      } catch (Exception e) {
+	        e.printStackTrace();
+	      }	
 	}
 	
 }

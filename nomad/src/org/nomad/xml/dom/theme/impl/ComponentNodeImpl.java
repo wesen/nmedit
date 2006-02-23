@@ -25,7 +25,7 @@ package org.nomad.xml.dom.theme.impl;
 import org.nomad.xml.dom.theme.ComponentNode;
 import org.nomad.xml.dom.theme.PropertyNode;
 
-public class ComponentNodeImpl extends NodeImpl implements ComponentNode {
+public class ComponentNodeImpl extends NodeImpl<PropertyNode> implements ComponentNode {
 
 	private String name = null;
 	

@@ -28,5 +28,6 @@ public interface ModuleSectionListener {
 
 	public void moduleAdded(Module module);
 	public void moduleRemoved(Module module);
+	public void moduleSectionResized();
 
 }

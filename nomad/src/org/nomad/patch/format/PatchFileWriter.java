@@ -34,7 +34,7 @@ import org.nomad.patch.Note;
 import org.nomad.patch.Parameter;
 import org.nomad.patch.Patch;
 import org.nomad.patch.Section;
-import org.nomad.theme.curve.CCurve;
+import org.nomad.theme.curve.Cable;
 
 public class PatchFileWriter {
 
@@ -56,6 +56,10 @@ public class PatchFileWriter {
 		cableDump(patch.getCommonSection());
 		parameterDump(patch.getPolySection());
 		parameterDump(patch.getCommonSection());
+		customDump(patch.getPolySection());
+		customDump(patch.getCommonSection());
+		nameDump(patch.getPolySection());
+		nameDump(patch.getCommonSection());
 		morphMapDump();
 		knobMapDump();
 	}
@@ -65,8 +69,8 @@ public class PatchFileWriter {
 		
 		MorphList m=patch.getMorphList();
 		println(m.getMorphValues());
-		moduleDump(patch.getCommonSection());
-		moduleDump(patch.getPolySection());
+		/*moduleDump(patch.getCommonSection());
+		moduleDump(patch.getPolySection());*/
 		println(Section.MORPH, m.getKeyboardAssignments());		
 		endSection();
 		
@@ -75,7 +79,7 @@ public class PatchFileWriter {
 	protected void morphMapDump(ModuleSection sec) {
 		int[] data = new int[5];
 		data[PatchFile303.MORPH_MAP_DUMP_SECTION]=sec.getIndex();
-		for (Module m : sec) {
+		for (Module m : sec.sortedModules()) {
 			data[PatchFile303.MORPH_MAP_DUMP_MODULE_INDEX] = m.getIndex();
 			for (int i=0;i<m.getParameterCount();i++) {
 				Parameter p = m.getParameter(i);
@@ -118,7 +122,7 @@ public class PatchFileWriter {
 		beginSection(PatchFile303.NAME_PARAMETER_DUMP);
 		println(sec.getIndex());
 		
-		for (Module m : sec) {
+		for (Module m : sec.sortedModules()) {
 			
 			int[] data = new int[m.getParameterCount()+3];
 			data[0] = m.getIndex();
@@ -133,13 +137,33 @@ public class PatchFileWriter {
 		
 		endSection();
 	}
+	
+	protected void customDump(ModuleSection sec) {
+		beginSection(PatchFile303.NAME_CUSTOM_DUMP);
+		println(sec.getIndex());
+		
+		for (Module m : sec.sortedModules()) {
+			if (m.getCustomCount()>0) {
+				int[] data = new int[m.getCustomCount()+PatchFile303.CUSTOM_DUMP_PARAMETER_BASE];
+				data[PatchFile303.CUSTOM_DUMP_MODULE_INDEX] = m.getIndex();
+				data[PatchFile303.CUSTOM_DUMP_PARAMETER_COUNT] = m.getCustomCount();
+				
+				for (int i=0;i<m.getCustomCount();i++)
+					data[PatchFile303.CUSTOM_DUMP_PARAMETER_BASE+i]=m.getCustom(i).getValue();
+				
+				println(data);
+			}
+		}
+		
+		endSection();
+	}
 
 	protected void cableDump(ModuleSection sec) {
 		beginSection(PatchFile303.NAME_CABLE_DUMP);
 		println(sec.getIndex());
 		
 		int[] data = new int[7];
-		for (CCurve t : sec.getCables()) {
+		for (Cable t : sec.getCables()) {
 			
 			Connector dst, src;
 			if (t.getC1().getInfo().isInput()) {
@@ -150,7 +174,7 @@ public class PatchFileWriter {
 				src=t.getC1();
 			}
 
-			data[0] = 0; //t.getColor() TODO cable color
+			data[0] = t.getColorCode(); //t.getColor() TODO cable color
 			data[1] = dst.getModule().getIndex();
 			data[2] = dst.getInfo().getId();
 			data[3] = bool(dst.getInfo().isOutput());
@@ -168,15 +192,18 @@ public class PatchFileWriter {
 	protected void currentNoteDump() {
 		beginSection(PatchFile303.NAME_CURRENTNOTE_DUMP);
 		
+		// Todo a line contains 6 entries - see BUG description
+		
 		ArrayList<Note> notes = patch.getNotes(); 
-		int[] data = new int[notes.size()*3]; 
+		final int block=3;
+		int[] data = new int[notes.size()*block]; 
 		int index = 0;
 		
 		for (Note n:notes) {
 			data[index+0]=n.getNoteNumber();
 			data[index+1]=n.getAttackVelocity();
 			data[index+2]=n.getReleaseVelocity();
-			index+=3;
+			index+=block;
 		}
 
 		println(data);
@@ -189,12 +216,22 @@ public class PatchFileWriter {
 		println(sec.getIndex());
 		
 		for (Module m : sec) {
-			// TODO seems to be sorted by index
 			println(new int[]{
 			m.getIndex(),
 			m.getInfo().getModuleID(),
 			m.getX(),
 			m.getY()});
+		}
+		
+		endSection();
+	}
+	
+	protected void nameDump(ModuleSection sec) {
+		beginSection(PatchFile303.NAME_NAME_DUMP);
+		println(sec.getIndex());
+		
+		for (Module m : sec.sortedModules()) {
+			println(m.getIndex()+" "+m.getName());
 		}
 		
 		endSection();
@@ -238,6 +275,8 @@ public class PatchFileWriter {
 		data[PatchFile303.HEADER_CABLE_VISIBILITY_GREEN]	=bool(h.isCableVisible(Header.CABLE_GREEN));
 		data[PatchFile303.HEADER_CABLE_VISIBILITY_PURPLE]	=bool(h.isCableVisible(Header.CABLE_PURPLE));
 		data[PatchFile303.HEADER_CABLE_VISIBILITY_WHITE]	=bool(h.isCableVisible(Header.CABLE_WHITE));
+		
+		println(data);
 	}
 	
 	protected int bool(boolean b) {

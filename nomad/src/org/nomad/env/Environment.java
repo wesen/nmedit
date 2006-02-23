@@ -23,6 +23,7 @@
 package org.nomad.env;
 
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 
 import org.nomad.main.ModuleToolbar;
 import org.nomad.main.run.Run;
@@ -30,9 +31,11 @@ import org.nomad.plugin.PluginManager;
 import org.nomad.theme.ModuleBuilder;
 import org.nomad.theme.UIFactory;
 import org.nomad.util.graphics.ImageTracker;
+import org.nomad.xml.XMLFileWriter;
 import org.nomad.xml.dom.module.DConnector;
 import org.nomad.xml.dom.module.ModuleDescriptions;
 import org.nomad.xml.dom.substitution.Substitutions;
+import org.nomad.xml.pull.PropertyParser;
 
 public class Environment {
 	
@@ -43,13 +46,59 @@ public class Environment {
 	}
 	
 	protected Environment() {
-		super();
+		properties = new HashMap<String,String>();
+		
+		Run.statusMessage("Loading properties");
+		loadProperties();
 	}
 	
 	private ImageTracker imageTracker = null;
 	private UIFactory factory = null;
 	private ModuleToolbar moduleToolbar = null;
 	private ModuleBuilder builder = null;
+    private HashMap<String,String> properties ;
+    private boolean propertiesModified = false;
+    
+    public String getProperty(String name) {
+    	return properties.get(name);
+    }
+    
+    public void setProperty(String name, String value) {
+    	propertiesModified = true;
+    	if (value == null)
+    		properties.remove(name);
+    	else
+    		properties.put(name, value);
+    }
+    
+    private final static String propertyFile = "data/xml/properties.xml";
+    
+    public void saveProperties() {
+    	
+    	if (!propertiesModified)
+    		return;
+    	
+    	try {
+	    	XMLFileWriter out = new XMLFileWriter(propertyFile,
+					"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+					"<!DOCTYPE properties SYSTEM \"properties.dtd\">");
+	    	out.beginTag("properties", true);
+	    	for (String name : properties.keySet()) {
+	    		out.beginTagStart("property");
+	    		out.addAttribute("name", name);
+	    		out.addAttribute("value", properties.get(name));
+	    		out.beginTagFinish(false);
+	    	}
+	    	out.endTag();
+	    	out.flush();
+    	} catch(FileNotFoundException e) {
+    		e.printStackTrace();
+    	}
+    }
+    
+    private void loadProperties() {
+    	PropertyParser.load(properties, propertyFile);
+    }
 
 	public ImageTracker getImageTracker(){
 		return imageTracker;
@@ -108,6 +157,7 @@ public class Environment {
 	}
 	
 	public void loadAll() {
+		
 		Run.statusMessage("images");
 		loadDefaultImageTracker();
 

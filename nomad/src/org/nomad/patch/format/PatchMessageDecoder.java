@@ -31,7 +31,6 @@ import net.sf.nmedit.jpdl.PacketParser;
 import net.sf.nmedit.jpdl.Protocol;
 import net.sf.nmedit.jpdl.Tracer;
 
-import org.nomad.patch.Patch;
 import org.nomad.patch.Section;
 
 public class PatchMessageDecoder {
@@ -40,18 +39,6 @@ public class PatchMessageDecoder {
 	private static Protocol patchProtocol = null;
 	private static String patchPdlFile = null;
 
-	public static Patch decode(PatchMessage message) throws PatchConstructionException {
-		return decode(message.getPatchStream());
-	}
-	
-	public static Patch decode(BitStream patchStream) throws PatchConstructionException {
-		PatchConstructor cons = new PatchConstructor();
-		
-		PatchMessageDecoder.decode(patchStream, cons);
-		
-		return cons.getPatch();
-	}
-	
 	public static void init() {
 		try {
 			usePDLFile("/usr/local/lib/nmpatch/patch.pdl", null);
@@ -75,7 +62,7 @@ public class PatchMessageDecoder {
 	private static String extractName(Packet name)
 	{
 		  String result="";
-		  List<Integer> chars = name.getVariableList("chars");
+		  List<Integer> chars = (List<Integer>) name.getVariableList("chars");
 		  
 		  for (Integer i : chars) {
 			  if (i!=0)
@@ -83,15 +70,6 @@ public class PatchMessageDecoder {
 		  }
 	  
 		  return result;
-	  /*
-	  for (Packet::VariableList::iterator i = chars.begin();
-	       i != chars.end(); i++) {
-	    if (*i != 0) {
-	      result += (char)*i;
-	    }
-	  }
-	  return result;
-	  */
 	}
 
 	//@SuppressWarnings("unchecked")
@@ -106,7 +84,7 @@ public class PatchMessageDecoder {
 
 					// Name section
 			      	case 55:
-			      	case 39:	
+			      	case 39:
 			      		cb.patch_name(extractName(sectionData.getPacket("name")));
 			      		break;
 
@@ -142,8 +120,8 @@ public class PatchMessageDecoder {
 				    	int[] data = new int[4];
 				    	boolean isPolySection = sectionData.getVariable("section") == Section.POLY;
 				    	for (Packet p : (List<Packet>) sectionData.getPacketList("modules")) {
-				    		data[PatchFile303.MODULE_DUMP_MODULE_INDEX] = p.getVariable("type");
-					    	data[PatchFile303.MODULE_DUMP_MODULE_TYPE] = p.getVariable("index");
+				    		data[PatchFile303.MODULE_DUMP_MODULE_INDEX] = p.getVariable("index");
+					    	data[PatchFile303.MODULE_DUMP_MODULE_TYPE] = p.getVariable("type");
 						    data[PatchFile303.MODULE_DUMP_MODULE_XPOS] = p.getVariable("xpos");
 							data[PatchFile303.MODULE_DUMP_MODULE_YPOS] = p.getVariable("ypos");				    	
 				    		cb.moduleDump(isPolySection, data);
@@ -171,7 +149,7 @@ public class PatchMessageDecoder {
 
 					// Cable section
 				    case 82: {
-				    	int[] data = new int[6];
+				    	int[] data = new int[7];
 				    	boolean isPolySection = sectionData.getVariable("section") == Section.POLY;
 
 				    	for (Packet note: (List<Packet>) sectionData.getPacketList("cables")) {
@@ -193,17 +171,19 @@ public class PatchMessageDecoder {
 				    	for (Packet modules: (List<Packet>) sectionData.getPacketList("parameters")) { 
 				    		int module_index = modules.getVariable("index");
 				    		
-				    		List<Packet> param = modules.getPacket("parameters").getAllVariables();
+				    		Packet parameters = modules.getPacket("parameters");
+				    		List<String> param = parameters.getAllVariables();
 				    		
-				    		int[] data = new int[2+param.size()];
+				    		int[] data = new int[3+param.size()];
 				    		data[PatchFile303.PARAMETER_DUMP_MODULE_INDEX] = module_index;
 				    		data[PatchFile303.PARAMETER_DUMP_MODULE_TYPE] = 1; // TODO read variable
 				    		data[PatchFile303.PARAMETER_DUMP_PARAMETER_COUNT] = param.size();
-				    		for (int i=0;i<param.size();i++)
-				    			data[PatchFile303.PARAMETER_DUMP_PARAMETER_BASE+i] = param.get(i).getVariable("value");
-				    			
-				    		cb.parameterDump(isPolySection, data);
 				    		
+ 				    		for (int i=0;i<param.size();i++)
+				    			data[PatchFile303.PARAMETER_DUMP_PARAMETER_BASE+i] = parameters.getVariable(param.get(i));// .intValue();//.getVariable("value");
+			    			
+				    		cb.parameterDump(isPolySection, data);
+		    		
 				    		param.clear();
 				    	}
 					} break;
@@ -231,7 +211,7 @@ public class PatchMessageDecoder {
 							data[PatchFile303.MORPH_MAP_DUMP_MORPH_INDEX] = p.getVariable("morph");
 							data[PatchFile303.MORPH_MAP_DUMP_SECTION] = p.getVariable("section");
 							data[PatchFile303.MORPH_MAP_DUMP_MODULE_INDEX] = p.getVariable("module");
-							data[PatchFile303.MORPH_MAP_DUMP_MORPH_RANGE] = p.getVariable("range");
+							data[PatchFile303.MORPH_MAP_DUMP_MORPH_RANGE] = p.getVariable("range"); //TODO out of range??? X-127 ???
 							data[PatchFile303.MORPH_MAP_DUMP_PARAMETER_INDEX] = p.getVariable("parameter");
 							
 							cb.morphMapDump(data);
@@ -240,7 +220,6 @@ public class PatchMessageDecoder {
 					} break;
 					// Knobmap section
 				    case 98: {
-				    	
 				    	int[] data = new int[5];
 				    	
 				    	for (int i = 0; i < 23; i++) {
@@ -259,7 +238,6 @@ public class PatchMessageDecoder {
 					
 					// Controlmap section
 				    case 96: {
-
 				    	int[] data = new int[4];
 				    	for (Packet p : (List<Packet>) sectionData.getPacketList("controls")) {
 
@@ -278,14 +256,15 @@ public class PatchMessageDecoder {
 
 				    	for (Packet modules: (List<Packet>) sectionData.getPacketList("customModules")) { 
 				    		int module_index = modules.getVariable("index");
-				    		
-				    		List<Packet> param = modules.getPacket("customValues").getAllVariables();
+
+				    		Packet parameters = modules.getPacket("customValues");
+				    		List<String> param = parameters.getAllVariables();
 				    		
 				    		int[] data = new int[2+param.size()];
 				    		data[PatchFile303.CUSTOM_DUMP_MODULE_INDEX] = module_index;
 				    		data[PatchFile303.CUSTOM_DUMP_PARAMETER_COUNT] = param.size();
 				    		for (int i=0;i<param.size();i++)
-				    			data[PatchFile303.CUSTOM_DUMP_PARAMETER_BASE+i] = param.get(i).getVariable("value");
+				    			data[PatchFile303.CUSTOM_DUMP_PARAMETER_BASE+i] = parameters.getVariable(param.get(i));
 				    			
 				    		cb.customDump(isPolySection, data);
 				    		
@@ -296,8 +275,9 @@ public class PatchMessageDecoder {
 					// Namedump section
 				    case 90: {
 					    boolean isPolySection = sectionData.getVariable("section") == Section.POLY;
-					    for (Packet p : (List<Packet>)sectionData.getPacketList("moduleNames"))
+					    for (Packet p : (List<Packet>)sectionData.getPacketList("moduleNames")) {
 					    	cb.nameDump(isPolySection, p.getVariable("index"), extractName(p.getPacket("name")));
+					    }
 					}
 					break;
 				}

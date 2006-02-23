@@ -24,7 +24,7 @@ package org.nomad.xml.dom.theme;
 
 
 
-public interface ComponentNode extends Node {
+public interface ComponentNode extends Node<PropertyNode> {
 
 	public String getName();
 	public PropertyNode createPropertyNode(String name);

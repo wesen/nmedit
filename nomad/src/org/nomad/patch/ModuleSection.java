@@ -98,15 +98,56 @@ public class ModuleSection implements Iterable<Module> {
 		return moduleList.values().iterator();
 	}
 	
+	public Collection<Module> sortedModules() {
+		Collection<Module> modules = moduleList.values();
+		ArrayList<Module> list = new ArrayList<Module> (modules.size());
+		
+		int max = -1;
+		for (Module m : modules) {
+			if (m.getIndex()>=max) {
+				max = m.getIndex();
+				list.add(m);
+			} else {
+				for (int i=list.size()-1;i>=0;i--) {
+					if (m.getIndex()>list.get(i).getIndex()) {
+						list.add(i, m);
+						break;
+					}
+				}
+			}
+		}
+		
+		return list;
+	}
+	
 	public int getModuleCount() {
 		return moduleList.values().size();
 	}
 	
 	protected void adjustGrid(Module mod) {
+		int w = Math.max(maxGridX, mod.getX()+1);
+        int h = Math.max(maxGridY, mod.getY()+mod.getInfo().getHeight());
 
-        maxGridX = Math.max(maxGridX, mod.getX()+1);
-        maxGridY = Math.max(maxGridY, mod.getY()+mod.getInfo().getHeight());
+		setGrid(w, h);
+	}
+	
+	protected void recalculateGrid() {
+		int w=0;
+		int h=0;
+		for (Module m : this) {
+			w = Math.max(w, m.getX()+1);
+			h = Math.max(h, m.getY()+m.getInfo().getHeight());
+		}
 
+		setGrid(w, h);
+	}
+	
+	protected void setGrid(int w, int h) {
+		if (w!=maxGridX || h!=maxGridY) {
+			maxGridX = w;
+			maxGridY = h;
+        	fireModuleSectionResized();
+		}
 	}
 
 	protected int getModulesMaxIndex() {
@@ -166,6 +207,7 @@ public class ModuleSection implements Iterable<Module> {
 			
 		}
 		
+		recalculateGrid();
 	}
 
 	public int getMaxGridX() {
@@ -195,6 +237,12 @@ public class ModuleSection implements Iterable<Module> {
 		if (!sectionListenerList.isEmpty())
 			for (ModuleSectionListener l:sectionListenerList)
 				l.moduleAdded(m);
+	}
+
+	private void fireModuleSectionResized() {
+		if (!sectionListenerList.isEmpty())
+			for (ModuleSectionListener l:sectionListenerList)
+				l.moduleSectionResized();
 	}
 	
 }

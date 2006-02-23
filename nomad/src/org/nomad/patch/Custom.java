@@ -44,7 +44,10 @@ public class Custom {
 	}
 
 	public void setValue(int value) {
-		this.value = value;
+		if (this.value!=value) {
+			getModule().fireCustomChangeEvent(this);
+			this.value = value;
+		}
 	}
 	
 	public int getValue() {

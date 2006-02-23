@@ -26,9 +26,9 @@ import java.io.IOException;
 
 import org.nomad.xml.dom.module.DConnector;
 import org.nomad.xml.dom.module.DCustom;
+import org.nomad.xml.dom.module.DGroup;
 import org.nomad.xml.dom.module.DModule;
 import org.nomad.xml.dom.module.DParameter;
-import org.nomad.xml.dom.module.DGroup;
 import org.nomad.xml.dom.module.DSection;
 import org.nomad.xml.dom.module.ModuleDescriptions;
 import org.nomad.xml.dom.substitution.Substitution;
@@ -221,7 +221,13 @@ public class ModuleDescriptionParser extends NomadPullParser {
 
 		// TODO ...
 		
-		DModule module = getModuleDescriptions().getModuleByKey(attModuleId); 
+		DModule module = null;
+		try {
+			module = getModuleDescriptions().getModuleById(Integer.parseInt(attModuleId));
+		} catch (NumberFormatException e) {
+			// error is given later
+		}
+		
 		if (module==null) {
 			warning();
 			error(parser, "Referenced module (key='"+attModuleId+"') does not exist. (Invalid element order?)");

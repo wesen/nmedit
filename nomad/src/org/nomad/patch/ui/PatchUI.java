@@ -37,8 +37,14 @@ public class PatchUI extends JSplitPane {
 	private ModuleSectionUI commonSectionUI = null;
 	private ModuleSectionUI polySectionUI = null;
 
+	double lastLoc = 1.0d;
+
 	protected PatchUI(Patch patch) {
 		super(JSplitPane.VERTICAL_SPLIT);
+        setOneTouchExpandable(true);
+        setContinuousLayout(false); // dont repaint when slider is moved
+        setResizeWeight(1); // top component (poly section) gets extra space when component is resized
+        
 		this.patch = patch;
 	}
 	
@@ -70,20 +76,24 @@ public class PatchUI extends JSplitPane {
 
 		// new
 		polySectionUI 	= Environment.sharedInstance().getFactory().getModuleSectionUI(getPatch().getPolySection());
+		polySectionUI.setPatchUI(this);
 		polySectionUI.setSize(polySectionUI.getPreferredSize());
         scrollPanePoly = new JScrollPane(polySectionUI); 
         add(scrollPanePoly, JSplitPane.TOP);
 		
-		
 		commonSectionUI = Environment.sharedInstance().getFactory().getModuleSectionUI(getPatch().getCommonSection());
+		commonSectionUI.setPatchUI(this);
 		commonSectionUI.setSize(commonSectionUI.getPreferredSize());
         scrollPaneCommon = new JScrollPane(commonSectionUI);
         add(scrollPaneCommon, JSplitPane.BOTTOM);
-
-        setDividerLocation(getPatch().getHeader().getSeparatorPosition() + 1);
-
+        
         polySectionUI.populate();
         commonSectionUI.populate();
-	}
 
+        revalidate();
+        
+        // 0 = top, 4000 = bottom
+        //setDividerLocation(getPatch().getHeader().getSeparatorPosition()/4000.0d);
+	}
+	
 }

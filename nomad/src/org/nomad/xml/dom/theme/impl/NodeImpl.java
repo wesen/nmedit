@@ -27,15 +27,15 @@ import java.util.Iterator;
 
 import org.nomad.xml.dom.theme.Node;
 
-public abstract class NodeImpl implements Node {
+public abstract class NodeImpl<N> implements Node<N> {
 
-	private ArrayList<Node> children = new ArrayList<Node>();
+	private ArrayList<N> children = new ArrayList<N>();
 
 	public int getNodeCount() {
 		return (children==null) ? 0 : children.size();
 	}
 
-	protected void add(NodeImpl node) {
+	protected void add(N node) {
 		children.add(node);
 	}
 	
@@ -43,7 +43,7 @@ public abstract class NodeImpl implements Node {
 		return (NodeImpl) children.get(index);
 	}
 	
-	public Iterator<Node> iterator() {
+	public Iterator<N> iterator() {
 		return children.iterator();
 	}
 	

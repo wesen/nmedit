@@ -2,6 +2,7 @@ package org.nomad.patch.ui;
 
 import java.awt.Component;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -13,14 +14,14 @@ import javax.swing.BorderFactory;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.nomad.patch.Module;
+import org.nomad.patch.event.ModuleChangeAdapter;
 import org.nomad.theme.ModuleComponent;
 import org.nomad.theme.component.ModuleGuiTitleLabel;
 import org.nomad.theme.component.NomadComponent;
 import org.nomad.util.iterate.ComponentIterator;
+import org.nomad.util.misc.NomadUtilities;
 import org.nomad.xml.dom.module.DModule;
 
 public class ModuleUI extends NomadComponent implements ModuleComponent {
@@ -86,7 +87,7 @@ public class ModuleUI extends NomadComponent implements ModuleComponent {
 //	    menu.add(removeItem);
 	    
         setLayout(null);
-    	
+	
     	nameLabel = new ModuleGuiTitleLabel(info);
         nameLabel.setLocation(3,0);
         add(nameLabel);
@@ -112,16 +113,16 @@ public class ModuleUI extends NomadComponent implements ModuleComponent {
     }
 	
 	public void link(Module module) {
-		for (Iterator<NomadComponent> iter=
-			new ComponentIterator<NomadComponent>(NomadComponent.class, this);
-		iter.hasNext();) {
-			iter.next().link(module);
+		for (int i=getComponentCount()-1;i>=0;i--) {
+			Component c = getComponent(i);
+			if (c instanceof NomadComponent)
+				((NomadComponent)c).link(module);
 		}
 	}
 	
 	public void unlink() {
 		
-		module.removeLocationChangeListener(locationListener);
+		module.removeModuleListener(locationListener);
 		
 		for (Iterator<NomadComponent> iter=
 			new ComponentIterator<NomadComponent>(NomadComponent.class, this);
@@ -137,19 +138,19 @@ public class ModuleUI extends NomadComponent implements ModuleComponent {
     	link(module);
 		setLocation( Metrics.getPixelLocation(module) );
 
-		
     	locationListener = new LocationChangedAction();
-    	module.addLocationChangeListener(locationListener);
+    	module.addModuleListener(locationListener);
 	}
     
 	
-    private class LocationChangedAction implements ChangeListener {
-
-		public void stateChanged(ChangeEvent event) {
-			if (module!=null)
-				setLocation( Metrics.getPixelLocation(module) );
+    private class LocationChangedAction extends ModuleChangeAdapter {
+		public void locationChanged(Module module) {
+			obtainLocation();
 		}
-    	
+    }
+    
+    private void obtainLocation() {
+    	setLocation( Metrics.getPixelLocation(module));
     }
     
     JPopupMenu getPopup() {
@@ -164,8 +165,8 @@ public class ModuleUI extends NomadComponent implements ModuleComponent {
     	this.moduleSection = moduleSection;
     }
 
-	public Iterator getExportableNomadComponents() {
-		return new Iterator() {
+	public Iterator<NomadComponent> getExportableNomadComponents() {
+		return new Iterator<NomadComponent>() {
 			int index = 0;
 
 			public boolean hasNext() {
@@ -176,9 +177,9 @@ public class ModuleUI extends NomadComponent implements ModuleComponent {
 				return false;
 			}
 
-			public Object next() {
+			public NomadComponent next() {
 				if (!hasNext()) throw new NoSuchElementException();
-				return getComponent(index++);
+				return (NomadComponent) getComponent(index++);
 			}
 
 			public void remove() {
@@ -219,20 +220,22 @@ public class ModuleUI extends NomadComponent implements ModuleComponent {
 			// Sadly enough, e.isPopupTrigger() does always return false
 	//		System.out.println(e.isPopupTrigger()?"Popup":"Normal");		
 	//		System.out.println(e.getButton());
+			ModuleUI m = (ModuleUI) e.getComponent();
 			if (SwingUtilities.isLeftMouseButton(e)) {
-				ModuleUI m = (ModuleUI) e.getComponent();
 		        dragX = e.getX();
 		        dragY = e.getY();
 		        oldModuleDragX = dragX;
 		        oldModuleDragY = dragY;
 
 				m.setDraggingEnabled(true);
+		    } else if (e.isPopupTrigger()) {
+		    	m.getPopup().show(e.getComponent(), e.getX(), e.getY());
 		    }
 		}
 	
 		public void mouseReleased(MouseEvent e) {
-			ModuleUI m = (ModuleUI) e.getComponent();
-			if (!e.isPopupTrigger()) { 
+			final ModuleUI m = (ModuleUI) e.getComponent();
+			if (m.draggingEnabled) { 
 				m.setDraggingEnabled(false);
 
 		    	Point l = Metrics.getGridLocation(m);
@@ -242,23 +245,36 @@ public class ModuleUI extends NomadComponent implements ModuleComponent {
 		    	
 		    	l.x = Math.max(0, l.x);
 		    	
+
+		    	//m.getModuleSection().getCurvePanel().setUpdatingEnabled(true);
 		    	m.getModule().setLocation(l);
-		    	m.getModule().getModuleSection().rearangeModules(m.getModule());
-		    } else {
-		    	m.getPopup().show(e.getComponent(), e.getX(), e.getY());
-	        }
+		    	m.obtainLocation();
+		    	m.getModuleSection().getModuleSection().rearangeModules(m.getModule());
+		    	//m.getModuleSection().getCurvePanel().setUpdatingEnabled(false);
+		    	
+		    	scrollTo(m);
+		    }
 		}
 	
+		private void scrollTo(ModuleUI m) {
+			Rectangle bounds = m.getBounds();
+	    	NomadUtilities.enlarge(bounds, 100);
+	    	bounds.x = Math.max(bounds.x, 0);
+	    	bounds.y = Math.max(bounds.y, 0);
+	    	m.getModuleSection().scrollRectToVisible(bounds);
+		}
+		
 		public void mouseDragged(MouseEvent e) {
 			// Sadly enough, e.isPopupTrigger() or e.getButton() always return false or 0
 	//		System.out.println(e.isPopupTrigger()?"Popup":"Normal");		
 	//		System.out.println(e.getButton());
 			if (SwingUtilities.isLeftMouseButton(e)) {
-				Component c = e.getComponent(); 
+				ModuleUI m = (ModuleUI) e.getComponent(); 
 				//ModuleUI m = (ModuleUI) e.getComponent();
-				int x = c.getX() + (e.getX() - dragX);
-				int y = c.getY() + (e.getY() - dragY);
-	            c.setLocation(x, y);
+				int x = m.getX() + (e.getX() - dragX);
+				int y = m.getY() + (e.getY() - dragY);
+	            m.setLocation(x, y);
+		    	scrollTo(m);
 	        }
 		}
 	

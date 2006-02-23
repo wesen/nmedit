@@ -23,7 +23,7 @@
 package org.nomad.xml.dom.theme;
 
 
-public interface ThemeNode extends Node {
+public interface ThemeNode extends Node<ModuleNode> {
 
 	public ModuleNode createModuleNode(int id);
 	public ModuleNode getModuleNodeById(int id);

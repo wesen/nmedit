@@ -26,8 +26,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import org.nomad.xml.dom.module.DModule;
 import org.nomad.xml.dom.module.DGroup;
+import org.nomad.xml.dom.module.DModule;
 import org.nomad.xml.dom.module.DSection;
 import org.nomad.xml.dom.module.ModuleDescriptions;
 

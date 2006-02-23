@@ -65,6 +65,8 @@ public class Connector {
 	}
 
 	public void fireChangeEvent(ChangeEvent event) {
+		getModule().fireConnectorChangeEvent(this);
+		
 		for (ChangeListener l : changeListenerList) {
 			l.stateChanged(event);
 		}

@@ -30,9 +30,9 @@ import javax.swing.SwingUtilities;
 
 import org.nomad.dialog.NomadTaskDialog;
 import org.nomad.dialog.TaskModel;
-import org.nomad.patch.format.PatchConstructor;
-import org.nomad.patch.format.PatchFile303;
 import org.nomad.patch.format.PatchConstructionException;
+import org.nomad.patch.format.PatchBuilder;
+import org.nomad.patch.format.PatchFile303;
 import org.nomad.patch.ui.PatchUI;
 
 class PatchLoader {
@@ -89,7 +89,7 @@ class PatchLoader {
 			public void run(int taskIndex) throws Throwable {
 				final PatchFile task = fileList.get(taskIndex);
 				try {
-					PatchConstructor cons = new PatchConstructor();
+					PatchBuilder cons = new PatchBuilder();
 					PatchFile303 reader = new PatchFile303(task.fileName, cons);
 					reader.readAll();
 					

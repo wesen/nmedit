@@ -25,7 +25,7 @@ package org.nomad.xml.dom.theme;
 
 import org.nomad.xml.dom.module.DModule;
 
-public interface ModuleNode extends Node {
+public interface ModuleNode extends Node<ComponentNode> {
 
 	public DModule getModule();
 	public ComponentNode createComponentNode(String name);

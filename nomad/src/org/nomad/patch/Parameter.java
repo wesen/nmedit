@@ -110,6 +110,8 @@ public class Parameter {
 	}
 
 	public void fireChangeEvent(ChangeEvent event) {
+		getModule().fireParameterChangeEvent(this);
+		
 		for (ChangeListener l : changeListenerList) {
 			l.stateChanged(event);
 		}

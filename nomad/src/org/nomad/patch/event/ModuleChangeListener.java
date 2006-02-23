@@ -18,35 +18,20 @@
  */
 
 /*
- * Created on Jan 12, 2006
+ * Created on Feb 20, 2006
  */
-package org.nomad.xml.dom.theme.impl;
+package org.nomad.patch.event;
 
+import org.nomad.patch.Connector;
+import org.nomad.patch.Custom;
+import org.nomad.patch.Module;
+import org.nomad.patch.Parameter;
 
-import org.nomad.xml.dom.module.DModule;
-import org.nomad.xml.dom.theme.ComponentNode;
-import org.nomad.xml.dom.theme.ModuleNode;
+public interface ModuleChangeListener {
 
-public class ModuleNodeImpl extends NodeImpl<ComponentNode> implements ModuleNode {
-
-	private DModule moduleInfo = null;
+	public void parameterChanged(Module module, Parameter parameter);
+	public void customChanged(Module module, Custom custom);
+	public void connectorChanged(Module module, Connector connector);
+	public void locationChanged(Module module);
 	
-	public ModuleNodeImpl(DModule info) {
-		moduleInfo = info;
-	}
-
-	public DModule getModule() {
-		return moduleInfo;
-	}
-
-	public ComponentNode createComponentNode(String name) {
-		ComponentNodeImpl impl = new ComponentNodeImpl(name);
-		add(impl);
-		return impl;
-	}
-
-	public ComponentNode getComponentNode(int index) {
-		return (ComponentNode) getNode(index);
-	}
-
 }

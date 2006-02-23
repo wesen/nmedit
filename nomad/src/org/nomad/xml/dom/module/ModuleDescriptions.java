@@ -2,9 +2,7 @@ package org.nomad.xml.dom.module;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Arrays;
 
 import org.nomad.util.graphics.ImageTracker;
 import org.nomad.xml.dom.substitution.Substitutions;
@@ -20,7 +18,9 @@ import org.xmlpull.v1.XmlPullParserException;
 public class ModuleDescriptions {
 
 	/** Hashmap containing the pairs (DModule.getKey(), DModule) */
-	private HashMap<String, DModule> dmodules = new HashMap<String, DModule>();
+	
+	private DModule[] modules = new DModule[130];
+	
 	/** The groups */
 	private ArrayList<DGroup> dgroups = new ArrayList<DGroup>();
 	/** the static data */
@@ -28,6 +28,10 @@ public class ModuleDescriptions {
 	
 	public static ModuleDescriptions sharedInstance() {
 		return model;
+	}
+	
+	public ModuleDescriptions() {
+		Arrays.fill(modules, null);
 	}
 	
 	/**
@@ -47,20 +51,11 @@ public class ModuleDescriptions {
 		DConnector.setImageTracker(imageTracker);
 		//DConnector.loadImages(imageTracker);
 
-		Iterator iter = dmodules.values().iterator();
-		while (iter.hasNext()) {
-			DModule module = (DModule) iter.next();
-			module.setIcon(imageTracker.getImage(Integer.toString(module.getModuleID())));
+		for (int i=0;i<modules.length;i++) {
+			if (modules[i]!=null) {
+				modules[i].setIcon(imageTracker.getImage(Integer.toString(i)));
+			}
 		}
-	}
-
-	/**
-	 * Retuns a module by it's key
-	 * @param key the key
-	 * @return the module
-	 */
-	public DModule getModuleByKey(String key) {
-		return dmodules.get(key);
 	}
 
 	/**
@@ -69,7 +64,7 @@ public class ModuleDescriptions {
 	 * @return the module
 	 */
 	public DModule getModuleById(int id) {
-		return getModuleByKey(DModule.getKeyFromId(id));
+		return modules[id];
 	}
 	
 	/**
@@ -93,9 +88,10 @@ public class ModuleDescriptions {
 	 * Returns a collection containing all DModule objects
 	 * @return a collection containing all DModule objects
 	 */
+	/*
 	public Collection<DModule> getModules() {
-		return dmodules.values();
-	}
+		
+	}*/
 	
 	private Substitutions substitutions = null;
 	
@@ -118,11 +114,27 @@ public class ModuleDescriptions {
 	}
 	
 	public void add(DModule module) {
-		dmodules.put(module.getKey(), module);
+		modules[module.getModuleID()] = module;
 	}
 
 	public void addToolbarGroup(DGroup group) {
 		dgroups.add(group);
 	}
 
+	public DModule[] getModuleList() {
+		int count = 0;
+		for (int i=modules.length-1;i>=0;i--)
+			if (modules[i]!=null)
+				count++;
+		
+		DModule[] list = new DModule[count];
+		
+		int dst=0;
+		for (int src=0;src<count;src++) 
+			if (modules[src]!=null)
+				list[dst++]=modules[src];
+		return list;
+		
+	}
+	
 }

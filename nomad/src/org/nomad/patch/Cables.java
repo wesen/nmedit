@@ -22,22 +22,21 @@
  */
 package org.nomad.patch;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
-import org.nomad.theme.NomadClassicColors;
-import org.nomad.theme.curve.CCurve;
+import org.nomad.theme.curve.Cable;
 import org.nomad.util.array.TransitionChangeListener;
 import org.nomad.util.array.TransitionMatrix;
+import org.nomad.xml.dom.module.DConnector;
 
-public class Cables extends TransitionMatrix<Connector, CCurve> {
+public class Cables extends TransitionMatrix<Connector, Cable> {
 	
 	public Cables() {
 		addChangeListener(new Colorizer());
 	}
 	
-	protected CCurve[] newArray(int size) {
-		return new CCurve[size];
+	protected Cable[] newArray(int size) {
+		return new Cable[size];
 	}
 
 	public boolean canHaveTransition(Connector c1, Connector c2) {
@@ -47,13 +46,16 @@ public class Cables extends TransitionMatrix<Connector, CCurve> {
 		return getOutput(c1)==null || getOutput(c2)==null; // at least one output has to be null
 	}
 
-	public void addTransition(Connector c1, Connector c2) {
+	public Cable addTransition(Connector c1, Connector c2) {
 		if (canHaveTransition(c1, c2)) {
-			super.addTransition(new CCurve(c1,c2));
+			Cable c = new Cable(c1,c2);
+			super.addTransition(c);
+			return c;
 		}
+		return null;
 	}
 
-	public void addTransition(CCurve t) {
+	public void addTransition(Cable t) {
 		if (canHaveTransition(t.getC1(),t.getC2())) {
 			super.addTransition(t);
 		}
@@ -68,27 +70,27 @@ public class Cables extends TransitionMatrix<Connector, CCurve> {
 		return null;
 	}
 
-	public void setCableColor(Connector connector, Color color) {
-		for (CCurve curve : getLinkedT(connector)) 
+	public void setCableColor(Connector connector, int color) {
+		for (Cable curve : getLinkedT(connector)) 
 			curve.setColor(color);
 	}
 	
-	private class Colorizer implements TransitionChangeListener<CCurve> {
-		public void transitionChanged(CCurve curve, boolean transition_added) {
+	private class Colorizer implements TransitionChangeListener<Cable> {
+		public void transitionChanged(Cable curve, boolean transition_added) {
 			Connector a = curve.getC1();
 			Connector b = curve.getC2();
 			
 
-			Color color = Color.WHITE;
+			int color = Header.CABLE_WHITE;
 			if (transition_added) {
 				Connector out = getOutput(a);
 				if (out!=null) {
-					color = NomadClassicColors.getConnectorColor(out.getInfo());
+					color = getColor(out.getInfo());
 					setCableColor(b, color);
 				} else {
 					out = getOutput(b);
 					if (out!=null) {
-						color = NomadClassicColors.getConnectorColor(out.getInfo());
+						color = getColor(out.getInfo());
 						setCableColor(a, color);
 					}
 				}
@@ -107,7 +109,7 @@ public class Cables extends TransitionMatrix<Connector, CCurve> {
 				if (getOutput(b) == null) removeColors = b;
 				
 				if (removeColors!=null) { // should always be true
-					setCableColor(removeColors, Color.WHITE);
+					setCableColor(removeColors, Header.CABLE_WHITE);
 				}
 				
 				if (!hasTransition(a)) a.setConnected(false);
@@ -115,18 +117,33 @@ public class Cables extends TransitionMatrix<Connector, CCurve> {
 			}
 		}
 	}
-
-	public Color determineColor(Connector c1, Connector c2) 
-	{
-		if (c1!=null) c1 = getOutput(c1);
-		if (c1!=null) return NomadClassicColors.getConnectorColor(c1.getInfo());
-		if (c2!=null) c2 = getOutput(c2);
-		if (c2!=null) return NomadClassicColors.getConnectorColor(c2.getInfo());
-		return Color.WHITE;
+	
+	private int getColor(DConnector connector) {
+		switch (connector.getSignal()) {
+			case DConnector.SIGNAL_AUDIO:
+				return Header.CABLE_RED;
+			case DConnector.SIGNAL_CONTROL:
+				return Header.CABLE_BLUE;
+			case DConnector.SIGNAL_LOGIC:
+				return Header.CABLE_YELLOW;
+			case DConnector.SIGNAL_SLAVE:
+				return Header.CABLE_GRAY;
+			default:
+				return Header.CABLE_WHITE;
+		}
 	}
 
-	public void remove(ArrayList<CCurve> transitions) {
-		for (CCurve c : transitions) {
+	public int determineColor(Connector c1, Connector c2) 
+	{
+		if (c1!=null) c1 = getOutput(c1);
+		if (c1!=null) return getColor(c1.getInfo());
+		if (c2!=null) c2 = getOutput(c2);
+		if (c2!=null) return getColor(c2.getInfo());
+		return Header.CABLE_WHITE;
+	}
+
+	public void remove(ArrayList<Cable> transitions) {
+		for (Cable c : transitions) {
 			removeTransition(c);
 		}
 	}

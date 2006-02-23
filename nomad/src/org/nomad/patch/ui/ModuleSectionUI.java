@@ -54,7 +54,7 @@ import org.nomad.patch.Cables;
 import org.nomad.patch.Connector;
 import org.nomad.patch.Module;
 import org.nomad.patch.ModuleSection;
-import org.nomad.theme.curve.CCurve;
+import org.nomad.theme.curve.Cable;
 import org.nomad.theme.curve.CurvePanel;
 import org.nomad.theme.curve.CurvePopupEvent;
 import org.nomad.theme.curve.CurvePopupListener;
@@ -71,7 +71,6 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 		return moduleSection;
 	}
 	
-//	private DropTarget dropTarget = null;
 	private final static int dropAction = DnDConstants.ACTION_COPY;
 
 	public static final DataFlavor ModuleSectionGUIFlavor = new DataFlavor("nomad/ModuleSectionGUIFlavor", "Nomad ModuleSectionGUI");
@@ -80,12 +79,13 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 	private CurvePanel curvePanel = null;
 
 	private DragDropAction ddAction = new DragDropAction();
+	
+	private PatchUI patchui = null;
 
 	public ModuleSectionUI(ModuleSection moduleSection) {
         this.moduleSection = moduleSection;
         setOpaque(true);
         setDoubleBuffered(true);
-//      dropTarget = new DropTarget(this, dropAction, this, true);
         new DropTarget(this, dropAction, ddAction, true);
         
         addMouseListener(new MouseAdapter() {
@@ -127,14 +127,17 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 			}
         });
         
-        Dimension d = new Dimension( ModuleUI.Metrics.getPixelX(moduleSection.getMaxGridX()),
-        	ModuleUI.Metrics.getPixelY(moduleSection.getMaxGridY()) );
-        
-        setPreferredSize(d);       
-        setSize(d);
-        
+        moduleSectionResized();
         moduleSection.addSectionListener(this);
     }
+	
+	public void setPatchUI(PatchUI patchui) {
+		this.patchui = patchui;
+	}
+	
+	public PatchUI getPatchUI() {
+		return patchui;
+	}
 
 	public void moduleAdded(Module module) {
 		Component c;
@@ -147,6 +150,12 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 		remove(module.getUI());
 	}
 
+	public void moduleSectionResized() {
+        Dimension d = new Dimension( ModuleUI.Metrics.getPixelX(moduleSection.getMaxGridX()),
+            	ModuleUI.Metrics.getPixelY(moduleSection.getMaxGridY()) );
+        setPreferredSize(d);       
+        setSize(d);
+	}
 
 	public void unlink() {
 		moduleSection.removeSectionListener(this);
@@ -156,7 +165,7 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 	
     private class JDisconnectorMenuItem extends JMenuItem {
     	private Connector connector;
-    	private ArrayList<CCurve> cables = new ArrayList<CCurve>();
+    	private ArrayList<Cable> cables = new ArrayList<Cable>();
 		private Cables transitions;
 
 		public JDisconnectorMenuItem(Cables t, Connector c) {
@@ -172,8 +181,8 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
     		});
     	}
 		
-		protected void loadCables(ArrayList<CCurve> cables) {
-			for (CCurve t : transitions.getTransitions(connector))
+		protected void loadCables(ArrayList<Cable> cables) {
+			for (Cable t : transitions.getTransitions(connector))
 				cables.add(t);
 		}
     }
@@ -266,5 +275,5 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 			}
 		}
 	}
-	
+
 }

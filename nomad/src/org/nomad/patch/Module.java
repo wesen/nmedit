@@ -25,10 +25,8 @@ package org.nomad.patch;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import org.nomad.env.Environment;
+import org.nomad.patch.event.ModuleChangeListener;
 import org.nomad.patch.format.PatchConstructionException;
 import org.nomad.patch.ui.ModuleSectionUI;
 import org.nomad.patch.ui.ModuleUI;
@@ -51,7 +49,7 @@ public class Module {
 	private String name;
 	private ModuleSection moduleSection = null;
 
-	private ArrayList<ChangeListener> locationChangeListenerList ;
+	private ArrayList<ModuleChangeListener> listenerList;
 	
 	public Module(DModule info) {
 		this.info = info;
@@ -62,19 +60,37 @@ public class Module {
 		for (int i=parameters.length-1;i>=0;i--)
 			parameters[i] = new Parameter(getInfo().getParameter(i), this);
 
-		
 		customs = new Custom[getInfo().getCustomParamCount()];
 		for (int i=customs.length-1;i>=0;i--)
 			customs[i] = new Custom(getInfo().getCustomParam(i), this);
 
-		
 		connectors = new Connector[getInfo().getConnectorCount()];
 		for (int i=connectors.length-1;i>=0;i--)
 			connectors[i] = new Connector(getInfo().getConnector(i), this);
 		
-		locationChangeListenerList = new ArrayList<ChangeListener>(2);
+		listenerList = new ArrayList<ModuleChangeListener>();
 	}
 
+	void fireParameterChangeEvent(Parameter parameter) {
+			for (ModuleChangeListener l : listenerList)
+				l.parameterChanged(this, parameter);
+	}
+	
+	void fireConnectorChangeEvent(Connector connector) {
+			for (ModuleChangeListener l : listenerList)
+				l.connectorChanged(this, connector);
+	}
+	
+	void fireCustomChangeEvent(Custom custom) {
+			for (ModuleChangeListener l : listenerList)
+				l.customChanged(this, custom);
+	}
+	
+	public void fireLocationChangeEvent() {
+			for (ModuleChangeListener l : listenerList)
+				l.locationChanged(this);
+	}
+	
 	public ModuleUI getUI() {
 		return ui;
 	}
@@ -151,9 +167,11 @@ public class Module {
 	}
 
 	public void setLocation(int x, int y) {
-		this.x = x;
-		this.y = y;
-		fireLocationChangedEvent();
+		if ((this.x!=x) || (this.y!=y)) {
+			this.x = x;
+			this.y = y;
+			fireLocationChangeEvent();
+		}
 	}
 
 	public int getX() {
@@ -161,8 +179,10 @@ public class Module {
 	}
 
 	public void setX(int x) {
-		this.x = x;
-		fireLocationChangedEvent();
+		if (this.x!=x) {
+			this.x = x;
+			fireLocationChangeEvent();
+		}
 	}
 
 	public int getY() {
@@ -170,8 +190,10 @@ public class Module {
 	}
 
 	public void setY(int y) {
-		this.y = y;
-		fireLocationChangedEvent();
+		if (this.y!=y) {
+			this.y = y;
+			fireLocationChangeEvent();
+		}
 	}
 
 	public String getName() {
@@ -206,21 +228,13 @@ public class Module {
 		return parameters[info.getContextId()];
 	}
 
-	public void addLocationChangeListener(ChangeListener l) {
-		if (!locationChangeListenerList.contains(l))
-			locationChangeListenerList.add(l);
+	public void addModuleListener(ModuleChangeListener l) {
+		if (!listenerList.contains(l))
+			listenerList.add(l);
 	}
-	
-	public void removeLocationChangeListener(ChangeListener l) {
-		locationChangeListenerList.remove(l);
-	}
-	
-	public void fireLocationChangedEvent() {
-		if (!locationChangeListenerList.isEmpty()) {
-			ChangeEvent event = new ChangeEvent(this);
-			for (ChangeListener l : locationChangeListenerList)
-				l.stateChanged(event);
-		}
+
+	public void removeModuleListener(ModuleChangeListener l) {
+		listenerList.remove(l);		
 	}
 
 }

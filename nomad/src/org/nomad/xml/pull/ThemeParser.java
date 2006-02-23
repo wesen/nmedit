@@ -24,10 +24,10 @@ package org.nomad.xml.pull;
 
 import java.io.IOException;
 
-import org.nomad.xml.dom.theme.ThemeNode;
 import org.nomad.xml.dom.theme.ComponentNode;
 import org.nomad.xml.dom.theme.ModuleNode;
 import org.nomad.xml.dom.theme.PropertyNode;
+import org.nomad.xml.dom.theme.ThemeNode;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 

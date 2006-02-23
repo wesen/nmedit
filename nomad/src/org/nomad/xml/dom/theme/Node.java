@@ -24,7 +24,7 @@ package org.nomad.xml.dom.theme;
 
 import java.util.Iterator;
 
-public interface Node {
+public interface Node<N> extends Iterable<N> {
 	public int getNodeCount();
-	public Iterator<Node> iterator();
+	public Iterator<N> iterator();
 }

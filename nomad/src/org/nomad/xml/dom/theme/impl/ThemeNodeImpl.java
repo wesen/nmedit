@@ -27,12 +27,12 @@ import java.util.HashMap;
 
 import org.nomad.xml.dom.module.DModule;
 import org.nomad.xml.dom.module.ModuleDescriptions;
-import org.nomad.xml.dom.theme.ThemeNode;
 import org.nomad.xml.dom.theme.ModuleNode;
+import org.nomad.xml.dom.theme.ThemeNode;
 import org.nomad.xml.pull.ThemeParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-public class ThemeNodeImpl extends NodeImpl implements ThemeNode {
+public class ThemeNodeImpl extends NodeImpl<ModuleNode> implements ThemeNode {
 
 	private HashMap<String, ModuleNode> moduleMap = new HashMap<String, ModuleNode>();
 	

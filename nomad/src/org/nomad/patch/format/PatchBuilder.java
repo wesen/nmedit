@@ -33,14 +33,16 @@ import org.nomad.patch.Parameter;
 import org.nomad.patch.Patch;
 import org.nomad.patch.Section;
 import org.nomad.patch.format.PatchConstructorCallback303.Validating;
+import org.nomad.theme.curve.Cable;
 import org.nomad.xml.dom.module.DConnector;
+import org.nomad.xml.dom.module.DModule;
 import org.nomad.xml.dom.module.ModuleDescriptions;
 
-public class PatchConstructor extends Validating {
+public class PatchBuilder extends Validating {
 
 	private Patch patch;
 	
-	public PatchConstructor() {
+	public PatchBuilder() {
 		this.patch = new Patch();
 	}
 
@@ -115,7 +117,12 @@ public class PatchConstructor extends Validating {
 
 	public void moduleDump(boolean isPolySection, int moduleIndex,
 			int moduleType, int xpos, int ypos) {
-		Module module = new Module(ModuleDescriptions.sharedInstance().getModuleById(moduleType));
+		DModule info = ModuleDescriptions.sharedInstance().getModuleById(moduleType);
+		if (info==null) {
+			System.err.println("Module Id "+moduleType+" unknown.");
+			return;
+		}
+		Module module = new Module(info);
 		module.setIndex(moduleIndex);
 		module.setLocation(xpos, ypos);
 		(isPolySection ? getPatch().getPolySection() : getPatch().getCommonSection()).add(module);
@@ -156,6 +163,16 @@ public class PatchConstructor extends Validating {
 		Module mdst = section.get(dst_module_index);
 		Module msrc = section.get(src_module_index);
 
+		if (mdst==null) {
+			System.err.println("Module[index="+dst_module_index+"] not found.");
+			return ;
+		}
+		
+		if (msrc==null) {
+			System.err.println("Module[index="+src_module_index+"] not found.");
+			return ;
+		}
+		
 		DConnector idst = mdst.getInfo().getConnectorById(dst_connector_index, dst_connector_isInput);
 		DConnector isrc = msrc.getInfo().getConnectorById(src_connector_index, src_connector_isInput);
 
@@ -175,7 +192,10 @@ public class PatchConstructor extends Validating {
 			return;
 		}
 		
-		section.getCables().addTransition(cdst, csrc);
+		Cable cable = section.getCables().addTransition(cdst, csrc);
+		
+		if (cable!=null)
+			cable.setColor(color);
 	}
 
 	public void morphMapDump(boolean isPolySection, int module_index,
