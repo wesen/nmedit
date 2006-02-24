@@ -24,7 +24,7 @@ package org.nomad.patch;
 
 import java.util.ArrayList;
 
-import org.nomad.theme.curve.Cable;
+import org.nomad.patch.ui.Cable;
 import org.nomad.util.array.TransitionChangeListener;
 import org.nomad.util.array.TransitionMatrix;
 import org.nomad.xml.dom.module.DConnector;
