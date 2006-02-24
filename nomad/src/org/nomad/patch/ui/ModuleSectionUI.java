@@ -55,10 +55,6 @@ import org.nomad.patch.Cables;
 import org.nomad.patch.Connector;
 import org.nomad.patch.Module;
 import org.nomad.patch.ModuleSection;
-import org.nomad.theme.curve.Cable;
-import org.nomad.theme.curve.CurvePanel;
-import org.nomad.theme.curve.CurvePopupEvent;
-import org.nomad.theme.curve.CurvePopupListener;
 import org.nomad.util.iterate.ComponentIterator;
 import org.nomad.xml.dom.module.DModule;
 
@@ -77,7 +73,7 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 	public static final DataFlavor ModuleSectionGUIFlavor = new DataFlavor("nomad/ModuleSectionGUIFlavor", "Nomad ModuleSectionGUI");
 
 	private JPopupMenu popup = null;
-	private CurvePanel curvePanel = null;
+	private CablePanel curvePanel = null;
 
 	private DragDropAction ddAction = new DragDropAction();
 	
@@ -112,13 +108,14 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 			}});
 
         
-        curvePanel = new CurvePanel(this);
+        curvePanel = new CablePanel(this);
+        /*
         curvePanel.addCurvePopupListener(new CurvePopupListener(){
 			public void popup(CurvePopupEvent event) {
 				JPopupMenu popup = new JPopupMenu();
 				popup.add(new JDisconnectorMenuItem(getCurvePanel().getTransitions(), event.getConnector()));
 				event.show(popup);
-			}});
+			}});*/
         
         add(curvePanel);
         
@@ -262,7 +259,7 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 		}
 	}
 
-	public CurvePanel getCurvePanel() {
+	public CablePanel getCurvePanel() {
 		return curvePanel;
 	}
 	
@@ -279,11 +276,11 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 
 	public void rearangingModules(boolean finished) {
 		if (!finished)
-			getCurvePanel().setUpdatingEnabled(true);
+			getCurvePanel().beginUpdate();
 		else SwingUtilities.invokeLater(new Runnable() {
 
 			public void run() {
-				getCurvePanel().setUpdatingEnabled(false);
+				getCurvePanel().endUpdate();
 			}});
 	}
 

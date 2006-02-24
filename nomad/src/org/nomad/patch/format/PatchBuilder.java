@@ -33,7 +33,7 @@ import org.nomad.patch.Parameter;
 import org.nomad.patch.Patch;
 import org.nomad.patch.Section;
 import org.nomad.patch.format.PatchConstructorCallback303.Validating;
-import org.nomad.theme.curve.Cable;
+import org.nomad.patch.ui.Cable;
 import org.nomad.xml.dom.module.DConnector;
 import org.nomad.xml.dom.module.DModule;
 import org.nomad.xml.dom.module.ModuleDescriptions;

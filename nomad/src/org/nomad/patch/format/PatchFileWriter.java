@@ -34,7 +34,7 @@ import org.nomad.patch.Note;
 import org.nomad.patch.Parameter;
 import org.nomad.patch.Patch;
 import org.nomad.patch.Section;
-import org.nomad.theme.curve.Cable;
+import org.nomad.patch.ui.Cable;
 
 public class PatchFileWriter {
 

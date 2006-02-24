@@ -89,11 +89,11 @@ public class NomadUtilities {
 	
 	public static void enlarge(Rectangle rect, int enlargement)
 	{
-		int enlargement2  = enlargement<<1; // *2 
+		int enlargement3  = enlargement+(enlargement<<1); // *3 
 		rect.x 		-= enlargement;
 		rect.y 		-= enlargement;
-		rect.width	+= enlargement2;
-		rect.height	+= enlargement2;
+		rect.width	+= enlargement3;
+		rect.height	+= enlargement3;
 	}
 
 	public static void intersect(Rectangle rect, int width, int height)

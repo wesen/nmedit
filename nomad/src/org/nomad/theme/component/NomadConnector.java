@@ -22,7 +22,6 @@
  */
 package org.nomad.theme.component;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
@@ -32,9 +31,7 @@ import javax.swing.event.ChangeListener;
 import org.nomad.patch.Cables;
 import org.nomad.patch.Connector;
 import org.nomad.patch.Module;
-import org.nomad.patch.ui.ModuleSectionUI;
 import org.nomad.theme.NomadClassicColors;
-import org.nomad.theme.curve.CurvePanel;
 import org.nomad.theme.property.ConnectorProperty;
 import org.nomad.theme.property.PropertySet;
 import org.nomad.xml.dom.module.DConnector;
@@ -63,7 +60,7 @@ public class NomadConnector extends NomadComponent implements ChangeListener {
 		if (connector!=null)
 			setConnectedState(connector.isConnected());
 	}
-	
+	/*
 	protected CurvePanel getCurvePanel() {
 		Component c = getParent();
 		if (c!=null) {
@@ -73,7 +70,7 @@ public class NomadConnector extends NomadComponent implements ChangeListener {
 			}
 		}
 		return null;
-	}
+	}*/
 
 	public void registerProperties(PropertySet set) {
 		super.registerProperties(set);
