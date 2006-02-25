@@ -263,7 +263,7 @@ public class ModuleUI extends NomadComponent implements ModuleComponent {
 	
 		private void scrollTo(ModuleUI m) {
 			Rectangle bounds = m.getBounds();
-	    	NomadUtilities.enlarge(bounds, 100);
+	    	NomadUtilities.enlarge(bounds, 20);
 	    	bounds.x = Math.max(bounds.x, 0);
 	    	bounds.y = Math.max(bounds.y, 0);
 	    	m.getModuleSection().scrollRectToVisible(bounds);

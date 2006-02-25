@@ -54,6 +54,10 @@ public abstract class ShapeDisplay<T extends Shape> implements Repainter {
 	public void paint(Graphics g) {
 		renderManager.paint(g);
 	}
+	
+	public void paintDirect(Graphics g) {
+		renderManager.paintDirect(g);
+	}
 
 	public JComponent getComponent() {
 		return component;

@@ -272,10 +272,13 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 				overlay.paint(g);
 				g.translate(-overlay.getX(), -overlay.getY());
 			}
+
+			getCurvePanel().paintDirect(g);
 			
 		} else {
 			super.paintChildren(g);
 			getCurvePanel().paint(g);
+			getCurvePanel().paintDirect(g);
 		}
 	}
 

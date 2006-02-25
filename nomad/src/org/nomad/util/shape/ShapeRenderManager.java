@@ -230,7 +230,9 @@ public class ShapeRenderManager<T extends Shape> extends Array2D<ShapeContainer<
 		for (int i=paintRect.x;i<=r;i++)
 			for (int j=paintRect.y;j<=b;j++)
 				getCell(i, j).paint(g, renderInfo, renderer);
-		
+	}
+	
+	public void paintDirect(Graphics g) {
 		// direct rendering
 		Set<T> set = directMap.keySet();
 		if (!set.isEmpty()) {
