@@ -35,7 +35,7 @@ public class Cable extends Curve implements Transition<Connector> {
 	private Connector c1;
 	private Connector c2;
 	private int colorCode = Header.CABLE_WHITE;
-	private CablePanel cablePanel;
+	private CableDisplay cablePanel;
 	
 	public Cable(Connector c1, Connector c2) {
 		super();
@@ -46,11 +46,11 @@ public class Cable extends Curve implements Transition<Connector> {
 		this.c2 = c2;
 	}
 	
-	void setCablePanel(CablePanel cablePanel) {
+	void setCablePanel(CableDisplay cablePanel) {
 		this.cablePanel = cablePanel;
 	}
 	
-	CablePanel getCablePanel() {
+	CableDisplay getCablePanel() {
 		return cablePanel;
 	}
 	

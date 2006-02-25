@@ -34,21 +34,31 @@ import javax.swing.RepaintManager;
 
 import org.nomad.util.graphics.Repainter;
 
-public abstract class ShapeDisplay<T extends Shape> extends JComponent implements Repainter {
+public abstract class ShapeDisplay<T extends Shape> implements Repainter {
 
 	private RepaintManager repaintManager;
 	private ShapeRenderer<T> shapeRenderer;
 	private ShapeRenderer<T> directRenderer;
 	private ShapeRenderInfo renderInfo = new ShapeRenderInfo();
 	private ShapeRenderManager<T> renderManager ;
+	private JComponent component;
 	
-	public ShapeDisplay() {
-		repaintManager = RepaintManager.currentManager(this);
+	public ShapeDisplay(JComponent component) {
+		this.component = component;
+		repaintManager = RepaintManager.currentManager(component);
 		shapeRenderer = new Renderer<T>(this);
 		directRenderer = new DirectRenderer<T>(this);
 		renderManager = new ShapeRenderManager<T>(renderInfo, this, shapeRenderer, directRenderer);
 	}
+	
+	public void paint(Graphics g) {
+		renderManager.paint(g);
+	}
 
+	public JComponent getComponent() {
+		return component;
+	}
+	
 	public ShapeDraggingTool<T> newShapeDraggingTool(T shape) {
 		ArrayList<T> collection = new ArrayList<T>(1);
 		collection.add(shape);
@@ -93,6 +103,10 @@ public abstract class ShapeDisplay<T extends Shape> extends JComponent implement
 			renderManager.remove(t);
 	}
 	
+	public void transformDirectRendering() {
+		renderManager.transformDirectRendering();
+	}
+	
 	public void setDirectRenderingEnabled(T t, boolean enable) {
 		if (enable) {
 			// check if shape exists - it would be added accidently otherwise
@@ -112,11 +126,6 @@ public abstract class ShapeDisplay<T extends Shape> extends JComponent implement
 		}
 	}
 	
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		renderManager.paint(g);
-	}
-	
 	public void update(T t) {
 		renderManager.update(t);
 	}
@@ -134,7 +143,7 @@ public abstract class ShapeDisplay<T extends Shape> extends JComponent implement
 	}
 	
 	public void addDirtyRegion(int x, int y, int w, int h) {
-		repaintManager.addDirtyRegion(this, x, y, w, h);
+		repaintManager.addDirtyRegion(getComponent(), x, y, w, h);
 	}
 	
 	private abstract static class ShapeDisplayRenderer<T extends Shape> implements ShapeRenderer<T> {

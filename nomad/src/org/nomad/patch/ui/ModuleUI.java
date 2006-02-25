@@ -107,6 +107,13 @@ public class ModuleUI extends NomadComponent implements ModuleComponent {
         }*/
     }
     
+    public void setLocation(int x, int y) {
+    	super.setLocation(x, y);
+    	if (moduleSection!=null) {
+    		moduleSection.locationSet(this);
+    	}
+    }
+    
     public ModuleUI(Module module) {
     	this(module.getInfo());
     	setModule(module);

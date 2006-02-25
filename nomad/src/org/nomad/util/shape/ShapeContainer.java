@@ -61,28 +61,45 @@ public class ShapeContainer<T extends Shape> extends ArrayList<ShapeInfo<T>> {
 	}
 
     public boolean add(ShapeInfo<T> element) {
-    	setModified();
-      	return super.add(element);
+    	if (super.add(element)) {
+    		setModified();
+    		return true;
+    	} else {
+    		return false;
+    	}
     }
     
     public boolean addAll(Collection<? extends ShapeInfo<T>> c) {
-    	setModified();
-      	return super.addAll(c);
+    	if (super.addAll(c)) {
+	    	setModified();
+	    	return true;
+    	} else {
+    		return false;
+    	}
     }
     
     public boolean addAll(int index, Collection<? extends ShapeInfo<T>> c) {
-    	setModified();
-      	return super.addAll(index, c);
+    	if (super.addAll(index, c)) {
+	    	setModified();
+	      	return true;
+    	} else {
+    		return false;
+    	}
     }
     
     public void clear() {
-    	setModified();
+    	if (!isEmpty())
+    		setModified();
        	super.clear();
     }
     
     public boolean remove(Object element) {
-    	setModified();
-       	return super.remove(element);
+    	if (super.remove(element)) {
+    		setModified();
+    		return true;
+    	} else {
+    		return false;
+    	}
     }
     
     public ShapeInfo<T> remove(int index) {

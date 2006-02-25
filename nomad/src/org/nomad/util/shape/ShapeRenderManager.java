@@ -129,6 +129,22 @@ public class ShapeRenderManager<T extends Shape> extends Array2D<ShapeContainer<
 		for (int i=0;i<sz;i+=2) 
 			cb.cell(coords[i], coords[i+1]);
 	}
+
+	public void transformDirectRendering() {
+		if (hasDirectRendered()) {
+			beginUpdate();
+			
+			for (T t : directMap.keySet()) {
+				ShapeInfo<T> info = directMap.get(t);
+				map.put(t, info);
+				add(info);
+				iterate(info, modifier);
+			}
+			
+			directMap.clear();
+			endUpdate();
+		}
+	}
 	
 	public void addDirectRendered(T t) {
 		beginUpdate();

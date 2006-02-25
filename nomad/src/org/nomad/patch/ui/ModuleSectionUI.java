@@ -24,6 +24,7 @@ package org.nomad.patch.ui;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.datatransfer.DataFlavor;
@@ -32,13 +33,8 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ContainerAdapter;
-import java.awt.event.ContainerEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.swing.JComponent;
@@ -51,8 +47,6 @@ import javax.swing.SwingUtilities;
 
 import org.nomad.main.ModuleGroupsMenu;
 import org.nomad.main.ModuleToolbarButton;
-import org.nomad.patch.Cables;
-import org.nomad.patch.Connector;
 import org.nomad.patch.Module;
 import org.nomad.patch.ModuleSection;
 import org.nomad.util.iterate.ComponentIterator;
@@ -73,13 +67,14 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 	public static final DataFlavor ModuleSectionGUIFlavor = new DataFlavor("nomad/ModuleSectionGUIFlavor", "Nomad ModuleSectionGUI");
 
 	private JPopupMenu popup = null;
-	private CablePanel curvePanel = null;
+	private CableDisplay curvePanel = null;
 
 	private DragDropAction ddAction = new DragDropAction();
 	
 	private PatchUI patchui = null;
 
 	public ModuleSectionUI(ModuleSection moduleSection) {
+        curvePanel = new CableDisplay(this);
         this.moduleSection = moduleSection;
         setOpaque(true);
         setDoubleBuffered(true);
@@ -108,7 +103,6 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 			}});
 
         
-        curvePanel = new CablePanel(this);
         /*
         curvePanel.addCurvePopupListener(new CurvePopupListener(){
 			public void popup(CurvePopupEvent event) {
@@ -117,17 +111,13 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 				event.show(popup);
 			}});*/
         
-        add(curvePanel);
-        
-        addContainerListener(new ContainerAdapter(){
-			public void componentAdded(ContainerEvent arg0) {
-				setComponentZOrder(curvePanel, 0);
-			}
-        });
-        
         moduleSectionResized();
         moduleSection.addSectionListener(this);
     }
+
+	public void locationSet(ModuleUI moduleUI) {
+		curvePanel.updateCableLocations(moduleUI);
+	}
 	
 	public void setPatchUI(PatchUI patchui) {
 		this.patchui = patchui;
@@ -160,7 +150,7 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 		getCurvePanel().setTable(null);
 		removeModuleDisplays();
 	}
-	
+	/*
     private class JDisconnectorMenuItem extends JMenuItem {
     	private Connector connector;
     	private ArrayList<Cable> cables = new ArrayList<Cable>();
@@ -183,7 +173,7 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 			for (Cable t : transitions.getTransitions(connector))
 				cables.add(t);
 		}
-    }
+    }*/
     
     private class DragDropAction extends DropTargetAdapter {
 
@@ -259,18 +249,33 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 		}
 	}
 
-	public CablePanel getCurvePanel() {
+	public CableDisplay getCurvePanel() {
 		return curvePanel;
 	}
 	
 	public void setDraggedComponent(Component c) {
 		if (this.overlay!=c) {
 			this.overlay = c;
-			if (c!=null) {
+			if (c!=null)
 				setComponentZOrder(c, 0);
-			} else {
-				setComponentZOrder(curvePanel, 0);
+		}
+	}
+	
+	protected void paintChildren(Graphics g) {
+		if (overlay!=null) {
+			super.paintChildren(g);
+			getCurvePanel().paint(g);
+			
+			Rectangle clip = g.getClipBounds();
+			if (clip==null || clip.intersects(overlay.getBounds())) {
+				g.translate(overlay.getX(), overlay.getY());
+				overlay.paint(g);
+				g.translate(-overlay.getX(), -overlay.getY());
 			}
+			
+		} else {
+			super.paintChildren(g);
+			getCurvePanel().paint(g);
 		}
 	}
 

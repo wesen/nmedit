@@ -26,13 +26,10 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
@@ -46,7 +43,7 @@ import org.nomad.util.iterate.ComponentIterator;
 import org.nomad.util.shape.ShapeDisplay;
 import org.nomad.util.shape.ShapeDraggingTool;
 
-public class CablePanel extends ShapeDisplay<Curve> implements TransitionChangeListener<Cable> {
+public class CableDisplay extends ShapeDisplay<Curve> implements TransitionChangeListener<Cable> {
 
 	private ModuleSectionUI moduleSectionUI;
 	private CurvePainter painter = new CurvePainter();
@@ -55,19 +52,17 @@ public class CablePanel extends ShapeDisplay<Curve> implements TransitionChangeL
 	private ConnectorListener connectorListener ;
 	private ModuleListener moduleListener ;
 
-	public CablePanel(ModuleSectionUI sectionUI) {
+	public CableDisplay(ModuleSectionUI sectionUI) {
+		super(sectionUI);
 		this.moduleSectionUI = sectionUI;
 		moduleListener = new ModuleListener();
 		connectorListener = new ConnectorListener();
 		rcl = new RootContainerListener();
 		moduleSectionUI.addContainerListener(rcl);
-		
-		setSize(sectionUI.getSize());
-		sectionUI.addComponentListener(new ComponentAdapter(){
-
-			public void componentResized(ComponentEvent event) {
-				setSize(event.getComponent().getSize());
-			}});
+	}
+	
+	public void updateCableLocations(ModuleUI moduleUI) {
+		moduleListener.updateConnectedCables(moduleUI);
 	}
 
 	public ModuleSectionUI getModuleSectionUI() {
@@ -125,7 +120,6 @@ public class CablePanel extends ShapeDisplay<Curve> implements TransitionChangeL
 			if (event.getChild() instanceof ModuleUI) {
 				ModuleUI m = (ModuleUI) event.getChild();
 				
-				m.addComponentListener(moduleListener);
 				m.addMouseListener(moduleListener);
 				for (Connector cc:m.getModule().getConnectors()) {
 					NomadConnector c = cc.getUI();
@@ -141,9 +135,7 @@ public class CablePanel extends ShapeDisplay<Curve> implements TransitionChangeL
 			if (event.getChild() instanceof ModuleUI) {
 				ModuleUI m = (ModuleUI) event.getChild();
 
-				m.removeComponentListener(moduleListener);
-				m.removeMouseListener(moduleListener);
-				
+				m.removeMouseListener(moduleListener);				
 				for (Connector cc:m.getModule().getConnectors()) {
 					NomadConnector c = cc.getUI();
 					if(c!=null){
@@ -263,42 +255,7 @@ public class CablePanel extends ShapeDisplay<Curve> implements TransitionChangeL
 			return SwingUtilities.convertPoint(event.getComponent(), event.getPoint(), getModuleSectionUI());
 		}
 	}
-/*
-	public void updateCurves()
-	{
-		updateCurves(getTransitions());
-	}
-	
-	public void addCurve(Curve curve) {
-		if (curve instanceof Cable) {
-			
-			// make sure that new curves have the correct location 
-			
-			Cable t = (Cable) curve;
 
-			NomadConnector c1 = t.getC1().getUI();
-			NomadConnector c2 = t.getC2().getUI();
-			if (c1!=null && c2!=null) {
-				t.setCurve(getLocation(c1), getLocation(c2));
-			}
-		}
-		
-		super.addCurve(curve);
-	}
-	
-	public void updateCurves(Iterable<Cable> curves)
-	{
-		for (Curve transition : curves)
-		{			
-			Cable t = (Cable) transition;
-			NomadConnector c1 = t.getC1().getUI();
-			NomadConnector c2 = t.getC2().getUI();
-			if (c1!=null && c2!=null) {
-				t.setCurve(getLocation(c1), getLocation(c2));
-			}
-		}
-	}*/
-	
 	public void remove(Curve t) {
 		if (t instanceof Cable) {
 			Cable c = (Cable) t;
@@ -328,152 +285,50 @@ public class CablePanel extends ShapeDisplay<Curve> implements TransitionChangeL
 	}
 	
 	// if module location changes cables will be adjusted accordingly
-	private class ModuleListener extends ComponentAdapter implements MouseListener {
+	private class ModuleListener extends MouseAdapter {
 
 		ArrayList<Cable> cableList = new ArrayList<Cable>();
 		
 		void updateConnectedCables(ModuleUI m) {
+
+			if (getTransitions()==null)
+				return;
+			
 			beginUpdate();
 			try {
-				for (NomadConnector a : new ComponentIterator<NomadConnector>(NomadConnector.class, m)) {
-					Connector c = a.getConnector();
-					if (c!=null) {
-						for ( Cable t : getTransitions().getTransitions(c)) {
-							updateCableLocation(t);
-						}
-					}
-				}
-			} catch (RuntimeException r) {
-				endUpdate();
-				throw r;
-			}
-			endUpdate();
-		}
-		
-		public void componentMoved(ComponentEvent event) {
-			updateConnectedCables ((ModuleUI)event.getComponent());
-		}
-		
-		public void mouseClicked(MouseEvent event) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		public void mousePressed(MouseEvent event) {
-			beginUpdate();
-			try {
-				for (NomadConnector a : new ComponentIterator<NomadConnector>(NomadConnector.class, (ModuleUI)event.getComponent())) {
-					Connector c = a.getConnector();
-					if (c!=null) {
-						for ( Cable t : getTransitions().getTransitions(c))
-							if (!cableList.contains(t)) {
-								cableList.add(t);
-								setDirectRenderingEnabled(t, true);
-							}
-					}
-				}
-			} catch (RuntimeException r) {
-				endUpdate();
-				throw r;
-			}
-			endUpdate();
-		}
-
-		public void mouseReleased(MouseEvent event) {
-			//endUpdate();
-			if (!cableList.isEmpty()) {
-				beginUpdate();
-				try {
-					for (Cable c : cableList) {
-						setDirectRenderingEnabled(c, false);
-					}
-				} catch (RuntimeException r) {
-					endUpdate();
-					throw r;
-				}
-				endUpdate();
-				cableList.clear();
-			}
-		}
-
-		public void mouseEntered(MouseEvent event) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		public void mouseExited(MouseEvent event) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		/*
-		
-		private boolean dragging = false;
-		private ArrayList<Cable> affected = new ArrayList<Cable>();
-
-		void setAffected(ModuleUI m)
-		{
-			affected.clear();
-			for (NomadConnector a : new ConnectorIterator(m)) 
-			{	// for each connector
-				Connector c = a.getConnector();
-				if (c!=null) {
+				for (Connector c : m.getModule().getConnectors()) {
 					for ( Cable t : getTransitions().getTransitions(c)) {
-						if (!affected.contains(t)) affected.add(t);
+						updateCableLocation(t);
 					}
 				}
+			} catch (RuntimeException r) {
+				endUpdate();
+				throw r;
 			}
+			endUpdate();
 		}
 		
-		void startDragging(ModuleUI m) {
-			if (isDragging()) stopDragging();
-			dragging = true;
-			setAffected(m);
-			setUnmanaged(affected);
-		}
-		
-		void stopDragging() {
-			if (isDragging()) {
-				dragging = false;
-				affected.clear();
-				resetUnmanaged();
-			}
-		}
-		
-		boolean isDragging() {
-			return dragging;
-		}
-
-		void updateAffected() 
-		{
-			updateCurves(affected);
-		}
-		
-		public void componentMoved(ComponentEvent event) {
-			if (isDragging()) {
-				updateAffected();
-			} else if (event.getComponent() instanceof ModuleUI) {
-				stopDragging();
-				setAffected((ModuleUI) event.getComponent());
-				updateAffected();
-				affected.clear();
-			}
-		}
-
 		public void mousePressed(MouseEvent event) {
-			if (SwingUtilities.isLeftMouseButton(event) && event.getComponent() instanceof ModuleUI)
-			{
-				startDragging((ModuleUI)event.getComponent());
+			beginUpdate();
+			try {
+				for (Connector c : ((ModuleUI)event.getComponent()).getModule().getConnectors()) {
+					for ( Cable t : getTransitions().getTransitions(c))
+						if (!cableList.contains(t)) {
+							cableList.add(t);
+							setDirectRenderingEnabled(t, true);
+						}
+				}
+				cableList.clear();
+			} catch (RuntimeException r) {
+				endUpdate();
+				throw r;
 			}
+			endUpdate();
 		}
 
 		public void mouseReleased(MouseEvent event) {
-			stopDragging();
+			transformDirectRendering();
 		}
 
-		public void mouseClicked(MouseEvent event) { }
-		public void mouseEntered(MouseEvent event) { }
-		public void mouseExited(MouseEvent event) { }
-		*/
 	}
 }
