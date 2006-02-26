@@ -35,7 +35,7 @@ public class ParameterMessage extends MidiMessage
 	addParameter("module", "data:data:module");
 	addParameter("parameter", "data:data:parameter");
 	addParameter("value", "data:data:value");
-	set("cc", 0x14);
+	set("cc", 0x13);
 	set("sc", 0x40);
     }
 

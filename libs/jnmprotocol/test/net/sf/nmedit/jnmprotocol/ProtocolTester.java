@@ -49,7 +49,7 @@ public class ProtocolTester extends TestCase
 	    MidiDevice.Info[] info = MidiSystem.getMidiDeviceInfo();
 	    md.connect(info[0], info[1]);
 	    NmProtocol p = new NmProtocol(md);
-	    p.addListener(new Listener());
+	    p.addListener(new Listener(p));
 	    p.send(new IAmMessage());
 	    p.send(new RequestPatchMessage());
 	    int n = 0;
@@ -78,6 +78,13 @@ public class ProtocolTester extends TestCase
 
     class Listener extends NmProtocolListener
     {
+	private NmProtocol p;
+
+	public Listener(NmProtocol p)
+	{
+	    this.p = p;
+	}
+
 	public void messageReceived(IAmMessage message)
 	{
 	    System.out.println("IAmMessage: " +
@@ -122,6 +129,7 @@ public class ProtocolTester extends TestCase
 
 	public void messageReceived(PatchMessage message)
 	{
+	    System.out.println("PatchMessage:");
 	}
 
 	public void messageReceived(AckMessage message)
@@ -131,6 +139,19 @@ public class ProtocolTester extends TestCase
 			       "pid1:" + message.get("pid1") + " " +
 			       "type:" + message.get("type") + " " +
 			       "pid2:" + message.get("pid2"));
+
+	    try {
+		GetPatchMessage gpm = new GetPatchMessage();
+		gpm.set("pid", p.getActivePid(0));
+		p.send(gpm);
+	    }
+	    catch (MidiException me) {
+		me.printStackTrace();
+		System.out.println("" + me.getError());
+	    }
+	    catch (Throwable e) {
+		e.printStackTrace();
+	    }
 	}
 
 	public void messageReceived(PatchListMessage message)
