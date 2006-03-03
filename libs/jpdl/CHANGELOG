@@ -1,0 +1,12 @@
+
+jPDL - Protocol Defintion Language for Java
+-------------------------------------------
+
+Copyright (C) 2003-2006 Marcus Andersson
+
+http://nmedit.sf.net
+
+
+Version 1.0
+-----------
+* Feature set suitable to handle the Nord Modular midi protocol.
