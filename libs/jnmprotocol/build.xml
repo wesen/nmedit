@@ -1,11 +1,9 @@
 <project name="jpdl" default="dist" basedir=".">
 
-  <property environment="env"/>
   <property name="src" location="src"/>
   <property name="test" location="test"/>
   <property name="build" location="build"/>
   <property name="dist" location="dist"/>
-  <property name="release" location="jnmprotocol-${env.VERSION}"/>
 
 
   <target name="init">
@@ -20,13 +18,7 @@
         <pathelement location="../jpdl/dist/lib/jpdl.jar"/>
       </classpath>
     </javac>
-  </target>
-
-  <target name="dist" depends="compile"
-          description="generate the distribution">
-    <mkdir dir="${dist}/lib"/>
-    <jar jarfile="${dist}/lib/jnmprotocol.jar" basedir="${build}"/>
-    <copy todir="${dist}">
+    <copy todir="${build}">
       <fileset dir=".">
         <include name="CHANGELOG"/>
         <include name="LICENSE"/>
@@ -34,12 +26,10 @@
     </copy>
   </target>
 
-  <target name="release" depends="dist"
-          description="generate the release file">
-    <copy todir="${release}">
-      <fileset dir="${dist}"/>
-    </copy>
-    <jar jarfile="${release}.jar" basedir="${release}"/>
+  <target name="dist" depends="compile"
+          description="generate the distribution">
+    <mkdir dir="${dist}/lib"/>
+    <jar jarfile="${dist}/lib/jnmprotocol.jar" basedir="${build}"/>
   </target>
 
   <target name="compile-test" depends="init"

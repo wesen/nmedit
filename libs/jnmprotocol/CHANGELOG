@@ -9,6 +9,7 @@ http://nmedit.sf.net
 
 Version 0.1
 -----------
+* Compiled with jpdl-1.0.jar
 * AckMessage
 * GetPatchListMessage
 * GetPatchMessage
