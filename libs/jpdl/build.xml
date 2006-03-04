@@ -1,11 +1,9 @@
 <project name="jpdl" default="dist" basedir=".">
 
-  <property environment="env"/>
   <property name="src" location="src"/>
   <property name="test" location="test"/>
   <property name="build" location="build"/>
   <property name="dist" location="dist"/>
-  <property name="release" location="jpdl-${env.VERSION}"/>
   <property name="byaccj" location="/usr/local/bin/byaccj"/>
   <property name="jflex" location="/usr/local/lib/jflex-1.4.1/lib/JFlex.jar"/>
 
@@ -27,13 +25,7 @@
   <target name="compile" depends="init"
           description="compile the source">
     <javac srcdir="${src}" destdir="${build}" debug="true"/>
-  </target>
-
-  <target name="dist" depends="compile"
-          description="generate the distribution">
-    <mkdir dir="${dist}/lib"/>
-    <jar jarfile="${dist}/lib/jpdl.jar" basedir="${build}"/>
-    <copy todir="${dist}">
+    <copy todir="${build}">
       <fileset dir=".">
         <include name="CHANGELOG"/>
         <include name="LICENSE"/>
@@ -41,12 +33,10 @@
     </copy>
   </target>
 
-  <target name="release" depends="dist"
-          description="generate the release file">
-    <copy todir="${release}">
-      <fileset dir="${dist}"/>
-    </copy>
-    <jar jarfile="${release}.jar" basedir="${release}"/>
+  <target name="dist" depends="compile"
+          description="generate the distribution">
+    <mkdir dir="${dist}/lib"/>
+    <jar jarfile="${dist}/lib/jpdl.jar" basedir="${build}"/>
   </target>
 
   <target name="compile-test" depends="init"
@@ -68,8 +58,6 @@
           description="clean up">
     <delete dir="${build}"/>
     <delete dir="${dist}"/>
-    <delete file="${release}.jar"/>
-    <delete dir="${release}"/>
   </target>
 </project>
 
