@@ -43,8 +43,7 @@ public class ProtocolTester extends TestCase
 	throws Exception
     {
 	try {
-	    MidiMessage.usePdlFile("/usr/local/lib/nmprotocol/midi.pdl",
-				   null);
+	    MidiMessage.usePdlFile("midi.pdl", null);
 	    MidiDriver md = new MidiDriver();
 	    MidiDevice.Info[] info = MidiSystem.getMidiDeviceInfo();
 	    md.connect(info[0], info[1]);

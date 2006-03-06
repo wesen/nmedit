@@ -84,7 +84,6 @@ bool PacketMatcher::apply(Protocol* protocol, Packet* packet,
 			  IntStream* data, BitStream* result)
 {
   int iterations;
-  Packet::PacketList packetList;
   PacketParser* packetParser = protocol->getPacketParser(parserName);
 
   trace(protocol);

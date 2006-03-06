@@ -102,6 +102,7 @@ Packet::VariableList Packet::getVariableList(string name)
 
 void Packet::clear()
 {
+  allVariables.clear();
   packets.clear();
   variables.clear();
   packetLists.clear();

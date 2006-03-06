@@ -24,6 +24,12 @@
         <include name="LICENSE"/>
       </fileset>
     </copy>
+    <copy todir="${build}">
+      <fileset dir="../codecs">
+        <include name="midi.pdl"/>
+        <include name="patch.pdl"/>
+      </fileset>
+    </copy>
   </target>
 
   <target name="dist" depends="compile"
@@ -42,7 +48,7 @@
     </javac>
   </target>
 
-  <target name="test" depends="compile, compile-test"
+  <target name="test" depends="dist, compile-test"
           description="run unit tests">
     <junit showoutput="true" printsummary="on">
       <classpath>

@@ -126,6 +126,12 @@ public void init(String filename, Protocol p)
   if (reader != null) {
     reader.close();
   }
-  reader = new java.io.FileReader(filename);
+  java.io.InputStream in = getClass().getResourceAsStream(filename);
+  if (in != null) {
+    reader = new java.io.InputStreamReader(in);
+  }
+  else {
+    reader = new java.io.FileReader(filename);
+  }
   yylex = new PdlLex(reader, this);
 }

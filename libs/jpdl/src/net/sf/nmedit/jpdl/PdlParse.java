@@ -293,10 +293,16 @@ public void init(String filename, Protocol p)
   if (reader != null) {
     reader.close();
   }
-  reader = new java.io.FileReader(filename);
+  java.io.InputStream in = getClass().getResourceAsStream(filename);
+  if (in != null) {
+    reader = new java.io.InputStreamReader(in);
+  }
+  else {
+    reader = new java.io.FileReader(filename);
+  }
   yylex = new PdlLex(reader, this);
 }
-//#line 236 "PdlParse.java"
+//#line 242 "PdlParse.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -487,7 +493,7 @@ case 16:
 { packetParser.addConstantMatcher(val_peek(2).ival, val_peek(0).ival,
                                           condition, optional); }
 break;
-//#line 422 "PdlParse.java"
+//#line 428 "PdlParse.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
