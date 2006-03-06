@@ -24,6 +24,15 @@ import net.sf.nmedit.jpdl.*;
 
 public abstract class MidiMessage
 {
+    static {
+	try {
+	    usePdlFile("/midi.pdl", null);
+	}
+	catch (Exception e) {
+	    System.out.println("MidiMessage: /midi.pdl not found.");
+	}
+    }
+
     public static void usePdlFile(String filename, Tracer tracer)
 	throws Exception
     {

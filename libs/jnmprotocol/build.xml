@@ -48,7 +48,7 @@
     </javac>
   </target>
 
-  <target name="test" depends="dist, compile-test"
+  <target name="test" depends="compile, compile-test"
           description="run unit tests">
     <junit showoutput="true" printsummary="on">
       <classpath>
