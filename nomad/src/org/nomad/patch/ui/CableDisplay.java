@@ -28,13 +28,18 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.Iterator;
 
 import javax.swing.SwingUtilities;
 
+import org.nomad.patch.CableColor;
 import org.nomad.patch.Cables;
 import org.nomad.patch.Connector;
 import org.nomad.theme.component.NomadConnector;
@@ -51,14 +56,46 @@ public class CableDisplay extends ShapeDisplay<Curve> implements TransitionChang
 	private RootContainerListener rcl ;
 	private ConnectorListener connectorListener ;
 	private ModuleListener moduleListener ;
+	private EnumSet<CableColor> visibleCables = EnumSet.allOf(CableColor.class) ;
 
 	public CableDisplay(ModuleSectionUI sectionUI) {
-		super(sectionUI);
 		this.moduleSectionUI = sectionUI;
 		moduleListener = new ModuleListener();
 		connectorListener = new ConnectorListener();
 		rcl = new RootContainerListener();
 		moduleSectionUI.addContainerListener(rcl);
+	}
+	
+    public void addDirtyRegion(int x, int y, int w, int h)
+    {
+        moduleSectionUI.triggerRepaint(x, y, w, h);
+    }
+    
+	public boolean areCablesVisible(CableColor cableColor) {
+		return visibleCables.contains(cableColor) ;
+	}
+	
+	public void setCablesVisible(CableColor cableColor, boolean visible) {
+		boolean contains = visibleCables.contains(cableColor) ;
+		if (contains ^ visible) {
+			if (contains) {
+				visibleCables.remove(cableColor);
+			} else {
+				visibleCables.add(cableColor);
+			}
+			
+			beginUpdate();
+			
+			for (Iterator<Curve> iter = getBuffered(); iter.hasNext(); ) {
+				Cable c = (Cable) iter.next() ;
+				if (c.getColorCode().ColorID == cableColor.ColorID) {
+					setShapeVisible(c, visible) ;
+				}
+			}
+
+			endUpdate();
+			
+		}
 	}
 	
 	public void updateCableLocations(ModuleUI moduleUI) {
@@ -124,6 +161,7 @@ public class CableDisplay extends ShapeDisplay<Curve> implements TransitionChang
 				for (Connector cc:m.getModule().getConnectors()) {
 					NomadConnector c = cc.getUI();
 					if(c!=null){
+						c.addKeyListener(connectorListener);
 						c.addMouseListener(connectorListener);
 						c.addMouseMotionListener(connectorListener);
 					}
@@ -139,6 +177,7 @@ public class CableDisplay extends ShapeDisplay<Curve> implements TransitionChang
 				for (Connector cc:m.getModule().getConnectors()) {
 					NomadConnector c = cc.getUI();
 					if(c!=null){
+						c.removeKeyListener(connectorListener);
 						c.removeMouseListener(connectorListener);
 						c.removeMouseMotionListener(connectorListener);
 					}
@@ -149,7 +188,7 @@ public class CableDisplay extends ShapeDisplay<Curve> implements TransitionChang
 
 
 	// returns the location of the connector relative to the root origin
-	protected Point getLocation(NomadConnector connector) {
+	protected Point getLocationX(NomadConnector connector) {
 		Point p = new Point(connector.getWidth()/2, connector.getHeight()/2);
 		
 		Container c = connector;
@@ -161,6 +200,13 @@ public class CableDisplay extends ShapeDisplay<Curve> implements TransitionChang
 		//return SwingUtilities.convertPoint(connector, p, getRoot());
 	}
 
+    protected void readLocation(NomadConnector c, Point dst)
+    {
+        dst.setLocation(c.getX()+(c.getWidth()/2), c.getY()+(c.getHeight()/2));
+        Container p = c.getParent();
+        dst.translate(p.getX(), p.getY());
+    }
+    
 	// find a NomadConnector at given location
 	protected NomadConnector findConnectorAt(Point location) {
 		return findConnectorAt(location.x, location.y);
@@ -188,11 +234,13 @@ public class CableDisplay extends ShapeDisplay<Curve> implements TransitionChang
 	}
 	
 	// create new cables
-	private class ConnectorListener extends MouseAdapter implements MouseMotionListener {
+	private class ConnectorListener extends MouseAdapter implements MouseMotionListener, KeyListener {
 
-		ShapeDraggingTool<Curve> tool = null;
+		ShapeDraggingTool<? extends Curve> tool = null;
 		NomadConnector start = null;
-		Point startLocation = null;
+        Point startLocation = new Point();
+        Point stopLocation = new Point();
+		boolean moveCableMode = false;
 
 		public void mousePressed(MouseEvent event) {
 			if (tool!=null) {
@@ -202,15 +250,30 @@ public class CableDisplay extends ShapeDisplay<Curve> implements TransitionChang
 			
 			if (SwingUtilities.isLeftMouseButton(event)) {
 				
-				if (event.getClickCount()==2)
-					// TODO dbl-click drag cable
-					;
-				
 				start = (NomadConnector) event.getComponent();
-				startLocation = getLocation(start);
-				Curve curve = new Curve(startLocation, startLocation);
-				curve.setColor(Cable.getColorByColorCode(getTransitions().determineColor(start.getConnector(), null)));
-				tool = newShapeDraggingTool(curve);
+				start.requestFocus(); // we want to listen key events
+				
+				if (event.getClickCount()==2) {
+					Connector c = start.getConnector();
+					// TODO dbl-click drag cable
+					if (c!=null) {
+						ArrayList<Cable> dragged = new ArrayList<Cable>();
+						for(Cable cable : getTransitions().getTransitions(c)) {
+							if (cable.getC1()!=c)
+								cable.swapConnectors();
+							dragged.add(cable);
+						}
+						getTransitions().remove(dragged);
+						tool = newShapeDraggingTool(dragged);
+						moveCableMode = true;
+					}
+				} else {	
+                    readLocation(start, startLocation);
+					Curve curve = new Curve(startLocation, startLocation);
+					curve.setColor(getTransitions().determineColor(start.getConnector(), null).getColor());
+					tool = newShapeDraggingTool(curve);
+					moveCableMode = false;
+				}
 			}
 		}
 		
@@ -218,15 +281,46 @@ public class CableDisplay extends ShapeDisplay<Curve> implements TransitionChang
 			if (isDragging()) {
 				beginUpdate();
 				try {
+					NomadConnector stop = findConnectorAt(getRootLocation(event));
+					if (!moveCableMode) {
+						if (stop!=null) {
+							Cable curve = new Cable(start, stop);
+                            
+                            readLocation(stop, stopLocation);
+							curve.setCurve(startLocation, stopLocation);
+							getTransitions().addTransition(curve);
+						}
+					} else {
+						if (stop==null || stop.getConnector()==null) {
+							// remove all : below
+						} else {
+							for (Iterator<? extends Curve> iter=tool.shapes(); iter.hasNext(); ) {
+								Cable cable = (Cable) iter.next();
+								Cable newCable = new Cable(cable.getC2(), stop.getConnector());
+								getTransitions().addTransition(newCable);
+							}
+						}
+					}
 					tool.removeAll();
 					tool = null;
-					NomadConnector stop = findConnectorAt(getRootLocation(event));
-					
-					if (stop!=null) {
-						Cable curve = new Cable(start, stop);
-						curve.setCurve(startLocation, getLocation(stop));
-						getTransitions().addTransition(curve);
+				} catch (RuntimeException e) {
+					endUpdate();
+					throw e;
+				}
+				endUpdate();
+			}
+		}
+		
+		private void abortMoveCableMode() {
+			if (isDragging() && moveCableMode) {
+				beginUpdate();
+				try {
+					tool.removeAll();
+					for (Iterator<? extends Curve> iter=tool.shapes(); iter.hasNext(); ) {
+						Cable cable = (Cable) iter.next();
+						getTransitions().addTransition(cable); // put cables back
 					}
+					tool = null;
 				} catch (RuntimeException e) {
 					endUpdate();
 					throw e;
@@ -243,9 +337,11 @@ public class CableDisplay extends ShapeDisplay<Curve> implements TransitionChang
 		public void mouseDragged(MouseEvent event) {
 			if (tool!=null) {
 				tool.updateShapes();
-				Curve curve = tool.shapes().next(); // there is at least one shape
-				curve.setP2(getRootLocation(event));
-				update(curve);
+				for (Iterator<? extends Curve> iter=tool.shapes();iter.hasNext();) {
+					Curve curve = iter.next();
+					curve.setP1(getRootLocation(event));
+					update(curve);
+				}
 			}
 		}
 
@@ -253,6 +349,18 @@ public class CableDisplay extends ShapeDisplay<Curve> implements TransitionChang
 		
 		Point getRootLocation(MouseEvent event) {
 			return SwingUtilities.convertPoint(event.getComponent(), event.getPoint(), getModuleSectionUI());
+		}
+
+		public void keyPressed(KeyEvent event) {  
+			System.out.println(event.getKeyCode()+", "+KeyEvent.VK_ESCAPE);
+			if (event.getKeyCode()==KeyEvent.VK_ESCAPE && moveCableMode) {
+				abortMoveCableMode();
+			}
+		}
+
+		public void keyTyped(KeyEvent event) { }
+
+		public void keyReleased(KeyEvent event) {
 		}
 	}
 
@@ -265,20 +373,31 @@ public class CableDisplay extends ShapeDisplay<Curve> implements TransitionChang
 	}
 	
 	public void add(Curve t) {
+		beginUpdate();
+		boolean visible = true;
 		if (t instanceof Cable) {
 			Cable c = (Cable) t;
 			c.setCablePanel(this);
 			updateCableLocation(c);
+			visible = areCablesVisible(c.getColorCode());
 		}
 		super.add(t);
+		setShapeVisible(t, visible);
+		endUpdate();
 	}
-	
+
+    Point dummy1 = new Point();
+    Point dummy2 = new Point();
+    
 	public void updateCableLocation(Cable t) {
 
 		NomadConnector c1 = t.getC1().getUI();
 		NomadConnector c2 = t.getC2().getUI();
-		if (c1!=null && c2!=null) {
-			t.setCurve(getLocation(c1), getLocation(c2));
+		if (c1!=null && c2!=null) 
+        {
+            readLocation(c1, dummy1);
+            readLocation(c2, dummy2);
+			t.setCurve(dummy1, dummy2);
 		}
 		
 		//update(t);
@@ -309,21 +428,23 @@ public class CableDisplay extends ShapeDisplay<Curve> implements TransitionChang
 		}
 		
 		public void mousePressed(MouseEvent event) {
-			beginUpdate();
-			try {
-				for (Connector c : ((ModuleUI)event.getComponent()).getModule().getConnectors()) {
-					for ( Cable t : getTransitions().getTransitions(c))
-						if (!cableList.contains(t)) {
-							cableList.add(t);
-							setDirectRenderingEnabled(t, true);
-						}
+			if (SwingUtilities.isLeftMouseButton(event)) {
+				beginUpdate();
+				try {
+					for (Connector c : ((ModuleUI)event.getComponent()).getModule().getConnectors()) {
+						for ( Cable t : getTransitions().getTransitions(c))
+							if (!cableList.contains(t)) {
+								cableList.add(t);
+								setDirectRenderingEnabled(t, true);
+							}
+					}
+					cableList.clear();
+				} catch (RuntimeException r) {
+					endUpdate();
+					throw r;
 				}
-				cableList.clear();
-			} catch (RuntimeException r) {
 				endUpdate();
-				throw r;
 			}
-			endUpdate();
 		}
 
 		public void mouseReleased(MouseEvent event) {

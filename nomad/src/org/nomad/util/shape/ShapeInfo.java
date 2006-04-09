@@ -36,6 +36,8 @@ public class ShapeInfo<T extends Shape> {
 	private Rectangle segBounds ;
 	private int[] coords = new int[initial_coordcount];
 	private int segCount = 0;
+
+	private boolean visible = true;
 	
 	public ShapeInfo(T shape) {
 		this.shape = shape;
@@ -44,6 +46,14 @@ public class ShapeInfo<T extends Shape> {
 	
 	public T getShape() {
 		return shape;
+	}
+	
+	public void setVisible(boolean visible) {
+		this.visible  = visible ;
+	}
+	
+	public boolean isVisible() {
+		return visible ;
 	}
 	
 	public void update(ShapeRenderInfo info) {

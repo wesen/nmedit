@@ -1,17 +1,22 @@
 package org.nomad.util.view;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 
 import javax.swing.JComponent;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-public class SelectableDocumentManager implements DocumentManager {
+public class SelectableDocumentManager implements DocumentManager, ChangeListener {
 
 	private DocumentManager theManager = null;
 	private JComponent contentPane = null;
+	private ArrayList<ChangeListener> changeListenerList = new ArrayList<ChangeListener>();
 	
 	public SelectableDocumentManager(JComponent contentPane) {
 		this.contentPane = contentPane; 
 		theManager = new TabbedPaneDocumentManager();
+		theManager.addDocumentSelectionListener(this);
 		contentPane.add(theManager.getDocumentContainer(), BorderLayout.CENTER);
 	}
 	
@@ -41,6 +46,8 @@ public class SelectableDocumentManager implements DocumentManager {
 
 	private void transferTo(DocumentManager newManager) {
 		
+		theManager.removeDocumentSelectionListener(this);
+		
 		int selectedIndex = theManager.getSelectedDocumentIndex();
 		
 		// remove old manager
@@ -62,6 +69,8 @@ public class SelectableDocumentManager implements DocumentManager {
 		newManager.getDocumentContainer().validate();
 		if (selectedIndex>0)
 			newManager.setSelectedDocument(selectedIndex);
+		
+		newManager.addDocumentSelectionListener(this);
 	}
 
 	/**
@@ -117,6 +126,21 @@ public class SelectableDocumentManager implements DocumentManager {
 
 	public JComponent getSelectedDocument() {
 		return theManager.getSelectedDocument();
+	}
+
+	public void addDocumentSelectionListener(ChangeListener l) {
+		if (!changeListenerList.contains(l))
+			changeListenerList.add(l);
+	}
+
+	public void removeDocumentSelectionListener(ChangeListener l) {
+		changeListenerList.remove(l);
+	}
+
+	public void stateChanged(ChangeEvent event) {
+		ChangeEvent evt = new ChangeEvent(this);
+		for (ChangeListener l : changeListenerList)
+			l.stateChanged(evt);
 	}
 
 }

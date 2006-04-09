@@ -1,12 +1,10 @@
 package org.nomad.main;
 
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
@@ -20,7 +18,7 @@ import org.nomad.xml.dom.module.ModuleDescriptions;
  */
 public class ModuleToolbar extends JTabbedPane implements ActionListener
 {
-  private JPanel[] paneGroups;
+  private JToolBar[] paneGroups;
   private ArrayList<ModuleToolbarButton> buttons;
   //private boolean draggingSupport = true;
   private ArrayList<ModuleToolbarEventListener> 
@@ -59,23 +57,18 @@ public class ModuleToolbar extends JTabbedPane implements ActionListener
     super(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
     this.draggingSupport = draggingSupport;
     //this.draggingSupport = draggingSupport;
-    paneGroups = new JPanel[moduleDescriptions.getGroupCount()];
+    paneGroups = new JToolBar[moduleDescriptions.getGroupCount()];
     buttons = new ArrayList<ModuleToolbarButton>();
-    
+
     for (int gi=0;gi<moduleDescriptions.getGroupCount();gi++) {
     	DGroup group = moduleDescriptions.getGroup(gi);
     	
-    	JPanel pane = new JPanel();
-        pane.setLayout(new GridLayout(1,1));
-        paneGroups[gi] = pane;
-
         // add tab
-        addTab(group.getShortName(), null, pane, "Group "+group.getName());
-        
         JToolBar toolbar = new JToolBar();
+        addTab(group.getShortName(), null, toolbar, "Group "+group.getName());
+        paneGroups[gi] = toolbar;
         toolbar.setMargin(new Insets(0, 0, 0, 0));
         toolbar.setFloatable(false);
-        pane.add(toolbar);
         
         for (int si=0;si<group.getSectionCount();si++) {
         	DSection section = group.getSection(si);

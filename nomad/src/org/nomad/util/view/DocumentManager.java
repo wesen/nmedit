@@ -1,6 +1,7 @@
 package org.nomad.util.view;
 
 import javax.swing.JComponent;
+import javax.swing.event.ChangeListener;
 
 public interface DocumentManager {
 
@@ -20,4 +21,8 @@ public interface DocumentManager {
 
 	public void setEnabled(boolean enable);
 	public boolean isEnabled();
+	
+	public void addDocumentSelectionListener(ChangeListener l);
+	public void removeDocumentSelectionListener(ChangeListener l);
+	
 }

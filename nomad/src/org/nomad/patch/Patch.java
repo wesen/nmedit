@@ -38,8 +38,8 @@ public class Patch {
 	
 	public Patch() {
 		header = new Header();
-		common_section = new ModuleSection(Section.COMMON);
-		poly_section = new ModuleSection(Section.POLY);
+		common_section = new ModuleSection(ModuleSectionType.COMMON);
+		poly_section = new ModuleSection(ModuleSectionType.POLY);
 		morphList = new MorphList();
 		noteList = new ArrayList<Note>();
 		knobMapList = new KnobMapList();

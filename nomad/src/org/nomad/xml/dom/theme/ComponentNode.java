@@ -18,16 +18,97 @@
  */
 
 /*
- * Created on Jan 12, 2006
+ * Created on Feb 27, 2006
  */
 package org.nomad.xml.dom.theme;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 
+import org.nomad.theme.UIFactory;
+import org.nomad.theme.component.NomadComponent;
+import org.nomad.theme.property.Property;
+import org.nomad.theme.property.PropertySet;
+import org.nomad.theme.property.Value;
 
-public interface ComponentNode extends Node<PropertyNode> {
+public class ComponentNode /*implements Iterable<String>*/ {
+	
+	private ArrayList<Value> values;
+	private ArrayList<String> propertyNames ;
+	private HashMap<String, String> propertyMap ;
+	private String name;
+	
+	public ComponentNode(String componentName) {
+        values = new ArrayList<Value>();
+		propertyNames = new ArrayList<String>(10);
+		propertyMap = new HashMap<String,String>();
+		name = componentName; 
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void putProperty(String name, String value) {
+		if (!propertyMap.containsKey(name))
+			propertyNames.add(name);
+		propertyMap.put(name, value);
+	}
+	
+	public void removeProperty(String name) {
+		propertyMap.remove(name);
+		propertyNames.remove(name);
+	}
+	
+	public String getProperty(String name) {
+		return propertyMap.get(name);
+	}
 
-	public String getName();
-	public PropertyNode createPropertyNode(String name);
-	public PropertyNode getPropertyNode(int index);
+	public int getPropertyCount() {
+		return propertyNames.size();
+	}
+
+	public String getPropertyName(int index) {
+		return propertyNames.get(index);
+	}
+	
+	public Value getPropertyC(int index) {
+		return values.get(index);
+	}
+	
+    
+	public int getCompiledPropertyCount() {
+		return values.size() ;
+	}
+	
+	public void compileProperties(UIFactory factory) {
+        values.clear() ;
+		PropertySet set = factory.getProperties(factory.getNomadComponentClass(getName()));
+		for(int i=0;i<propertyNames.size();i++) {
+			String name = propertyNames.get(i);
+			String value= propertyMap.get(name);
+			
+            Property p = set.get(name);
+            if (p!=null)
+            {
+    			Value pvalue = p.decode(value);
+                values.add(pvalue);
+            }
+            else
+            {
+                System.err.println("Property '"+name+"' not found.");
+            }
+		}
+	}
+	
+	public void assignProperties(NomadComponent component) {
+		for (int i=values.size()-1;i>=0;i--)
+        {
+            values.get(i).assignTo(component);
+            /*Value v = values.get(i);
+            if (v!=null)
+                v.assignTo(component);*/
+        }
+	}
 	
 }

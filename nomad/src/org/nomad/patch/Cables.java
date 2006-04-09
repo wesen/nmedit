@@ -23,6 +23,7 @@
 package org.nomad.patch;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.nomad.patch.ui.Cable;
 import org.nomad.util.array.TransitionChangeListener;
@@ -31,12 +32,25 @@ import org.nomad.xml.dom.module.DConnector;
 
 public class Cables extends TransitionMatrix<Connector, Cable> {
 	
+	private boolean coloringEnabled = false;
+	private Colorizer colorizer ;
+	
 	public Cables() {
-		addChangeListener(new Colorizer());
+		colorizer = new Colorizer();
+		addChangeListener(colorizer);
+		setColoringEnabled(true);
 	}
 	
 	protected Cable[] newArray(int size) {
 		return new Cable[size];
+	}
+	
+	public void setColoringEnabled(boolean enable) {
+		coloringEnabled = enable;
+	}
+	
+	public boolean isColoringEnabled() {
+		return coloringEnabled;
 	}
 
 	public boolean canHaveTransition(Connector c1, Connector c2) {
@@ -54,6 +68,10 @@ public class Cables extends TransitionMatrix<Connector, Cable> {
 		}
 		return null;
 	}
+	
+	public void addValidTransition(Cable t) {
+		super.addTransition(t);
+	}
 
 	public void addTransition(Cable t) {
 		if (canHaveTransition(t.getC1(),t.getC2())) {
@@ -70,9 +88,9 @@ public class Cables extends TransitionMatrix<Connector, Cable> {
 		return null;
 	}
 
-	public void setCableColor(Connector connector, int color) {
-		for (Cable curve : getLinkedT(connector)) 
-			curve.setColor(color);
+	public void setCableColor(Connector connector, CableColor color) {
+		for (Iterator<Cable> iter = getLinkedT(connector); iter.hasNext(); ) 
+			iter.next().setColor(color);
 	}
 	
 	private class Colorizer implements TransitionChangeListener<Cable> {
@@ -80,8 +98,15 @@ public class Cables extends TransitionMatrix<Connector, Cable> {
 			Connector a = curve.getC1();
 			Connector b = curve.getC2();
 			
+			if (!isColoringEnabled()) {
+				if (transition_added) {
+					a.setConnected(true);
+					b.setConnected(true);
+					return;
+				}
+			}
 
-			int color = Header.CABLE_WHITE;
+			CableColor color = CableColor.WHITE;
 			if (transition_added) {
 				Connector out = getOutput(a);
 				if (out!=null) {
@@ -109,7 +134,7 @@ public class Cables extends TransitionMatrix<Connector, Cable> {
 				if (getOutput(b) == null) removeColors = b;
 				
 				if (removeColors!=null) { // should always be true
-					setCableColor(removeColors, Header.CABLE_WHITE);
+					setCableColor(removeColors, CableColor.WHITE);
 				}
 				
 				if (!hasTransition(a)) a.setConnected(false);
@@ -118,31 +143,27 @@ public class Cables extends TransitionMatrix<Connector, Cable> {
 		}
 	}
 	
-	private int getColor(DConnector connector) {
-		switch (connector.getSignal()) {
-			case DConnector.SIGNAL_AUDIO:
-				return Header.CABLE_RED;
-			case DConnector.SIGNAL_CONTROL:
-				return Header.CABLE_BLUE;
-			case DConnector.SIGNAL_LOGIC:
-				return Header.CABLE_YELLOW;
-			case DConnector.SIGNAL_SLAVE:
-				return Header.CABLE_GRAY;
-			default:
-				return Header.CABLE_WHITE;
-		}
+	private CableColor getColor(DConnector connector) {
+		CableColor c = CableColor.byColorId(connector.getSignal()) ;
+		return (c == null) ? CableColor.WHITE : c ;
 	}
 
-	public int determineColor(Connector c1, Connector c2) 
+	public CableColor determineColor(Connector c1, Connector c2) 
 	{
-		if (c1!=null) c1 = getOutput(c1);
-		if (c1!=null) return getColor(c1.getInfo());
-		if (c2!=null) c2 = getOutput(c2);
-		if (c2!=null) return getColor(c2.getInfo());
-		return Header.CABLE_WHITE;
+		if (c1!=null) 
+		{
+			c1 = getOutput(c1);
+			if (c1!=null) return getColor(c1.getInfo());
+		}
+		if (c2!=null) 
+		{
+			c2 = getOutput(c2);
+			if (c2!=null) return getColor(c2.getInfo());
+		}
+		return CableColor.WHITE;
 	}
 
-	public void remove(ArrayList<Cable> transitions) {
+	public void remove(ArrayList<? extends Cable> transitions) {
 		for (Cable c : transitions) {
 			removeTransition(c);
 		}

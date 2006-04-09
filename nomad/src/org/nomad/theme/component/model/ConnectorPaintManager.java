@@ -105,14 +105,14 @@ public class ConnectorPaintManager extends CacheManager {
 		public void paint(NomadConnector c, Graphics2D g2) {
 			if (c.isConnected()) {
 				if (c.isInputConnector())
-					g2.drawImage(cacheInPlugged, 0, 0, c);
+					g2.drawImage(cacheInPlugged, 0, 0, null);
 				else
-					g2.drawImage(cacheOutPlugged, 0, 0, c);
+					g2.drawImage(cacheOutPlugged, 0, 0, null);
 			} else {
 				if (c.isInputConnector())
-					g2.drawImage(cacheInUnplugged, 0, 0, c);
+					g2.drawImage(cacheInUnplugged, 0, 0, null);
 				else
-					g2.drawImage(cacheOutUnplugged, 0, 0, c);
+					g2.drawImage(cacheOutUnplugged, 0, 0, null);
 			}
 		}
 

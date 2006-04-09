@@ -22,11 +22,6 @@
  */
 package org.nomad.patch;
 
-import java.util.ArrayList;
-
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import org.nomad.theme.component.NomadConnector;
 import org.nomad.xml.dom.module.DConnector;
 
@@ -35,13 +30,15 @@ public class Connector {
 	private DConnector info;
 	private Module module;
 	private NomadConnector ui = null;
-	private ArrayList<ChangeListener> changeListenerList;
 	private boolean stateConnected = false;
 
 	public Connector(DConnector info, Module module) {
 		this.info = info;
 		this.module = module;
-		changeListenerList = new ArrayList<ChangeListener>();
+	}
+
+	public void removeCables() {
+		getModule().getModuleSection().getCables().removeNode(this);
 	}
 
 	public DConnector getInfo() {
@@ -60,18 +57,6 @@ public class Connector {
 		this.ui = connectorUI;
 	}
 
-	public void fireChangeEvent() {
-		fireChangeEvent(new ChangeEvent(this));
-	}
-
-	public void fireChangeEvent(ChangeEvent event) {
-		getModule().fireConnectorChangeEvent(this);
-		
-		for (ChangeListener l : changeListenerList) {
-			l.stateChanged(event);
-		}
-	}
-	
 	public boolean isConnected() {
 		return stateConnected;
 	}
@@ -79,17 +64,10 @@ public class Connector {
 	public void setConnected(boolean connected) {
 		if (stateConnected!=connected) {
 			this.stateConnected = connected;
-			fireChangeEvent();
+			if (ui!=null)
+				ui.setConnectedState(connected);
+			getModule().fireConnectorChangeEvent(this);
 		}
 	}
-	
-	public void addChangeListener(ChangeListener l) {
-		if (!changeListenerList.contains(l))
-			changeListenerList.add(l);
-	}
-	
-	public void removeChangeListener(ChangeListener l) {
-		changeListenerList.remove(l);
-	}
-	
+
 }

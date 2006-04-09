@@ -33,7 +33,6 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.nomad.env.Environment;
 import org.nomad.plugin.NomadPlugin;
 import org.nomad.plugin.PluginManager;
 
@@ -46,30 +45,27 @@ public class ThemePluginMenu extends JMenu {
 	public ThemePluginMenu(String name) {
 		super(name);
 		
-		Environment env = Environment.sharedInstance();
-		String current = env.getProperty(key_theme);
-		if (current == null)
-			current = "Classic Theme";
+		String current = "Classic Theme";
 		
 		ButtonGroup themeGroup = new ButtonGroup();
 		for (int i=0;i<PluginManager.getPluginCount();i++) {
 			NomadPlugin plugin = PluginManager.getPlugin(i);
 			if (plugin.getFactoryType()==NomadPlugin.NOMAD_FACTORY_TYPE_UI) {
-				JRadioButtonMenuItem menuItem = new ThemeChanger(plugin);
+				JRadioButtonMenuItem menuItem = new ThemeChanger(plugin, plugin.getName().endsWith(current));
 				add(menuItem);
-				themeGroup.add(menuItem);
-				if (plugin.getName().equals(current)) {
-					menuItem.setSelected(true);
+				if (menuItem.isSelected()) {
 					this.selectedPlugin = plugin;
 				}
+				themeGroup.add(menuItem);
 			}
 		}	
 	}
 
 	private class ThemeChanger extends JRadioButtonMenuItem implements ActionListener {
 		private NomadPlugin plugin = null;
-		public ThemeChanger(NomadPlugin plugin) {
+		public ThemeChanger(NomadPlugin plugin, boolean selected) {
 			super(plugin.getName());
+			setSelected(selected);
 			setToolTipText(plugin.getDescription());
 			this.plugin = plugin;
 			addActionListener(this);
@@ -84,8 +80,6 @@ public class ThemePluginMenu extends JMenu {
 		return selectedPlugin;
 	}
 	
-	private final static String key_theme="theme";
-	
 	public void setSelectedPlugin(NomadPlugin plugin) {
 		for (int i=getMenuComponentCount()-1;i>=0;i--) {
 			Component c = getMenuComponent(i);
@@ -98,8 +92,6 @@ public class ThemePluginMenu extends JMenu {
 			}
 		}
 
-		Environment env = Environment.sharedInstance();
-		env.setProperty(key_theme, plugin.getName());
 		this.selectedPlugin = plugin;
 		firePluginSelectedEvent();
 	}

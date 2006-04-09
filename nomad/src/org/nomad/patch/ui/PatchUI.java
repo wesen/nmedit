@@ -25,7 +25,8 @@ package org.nomad.patch.ui;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
-import org.nomad.env.Environment;
+import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
+
 import org.nomad.patch.Patch;
 
 public class PatchUI extends JSplitPane {
@@ -69,19 +70,19 @@ public class PatchUI extends JSplitPane {
 	public void rebuild() {
 
 		// remove
-		if (scrollPaneCommon!=null) 	remove(scrollPaneCommon);
-		if (scrollPanePoly!=null) 		remove(scrollPanePoly);
-		if (getCommonSection()!=null) 	getCommonSection().unlink();
-		if (getPolySection()!=null) 	getPolySection().unlink();
+		if (scrollPaneCommon!=null) remove(scrollPaneCommon);
+		if (scrollPanePoly!=null) 	remove(scrollPanePoly);
+		if (commonSectionUI!=null) 	commonSectionUI.unlink();
+		if (polySectionUI!=null) 	polySectionUI.unlink();
 
 		// new
-		polySectionUI 	= Environment.sharedInstance().getFactory().getModuleSectionUI(getPatch().getPolySection());
+		polySectionUI 	= NomadEnvironment.sharedInstance().getFactory().getModuleSectionUI(getPatch().getPolySection());
 		polySectionUI.setPatchUI(this);
 		polySectionUI.setSize(polySectionUI.getPreferredSize());
         scrollPanePoly = new JScrollPane(polySectionUI); 
         add(scrollPanePoly, JSplitPane.TOP);
 		
-		commonSectionUI = Environment.sharedInstance().getFactory().getModuleSectionUI(getPatch().getCommonSection());
+		commonSectionUI = NomadEnvironment.sharedInstance().getFactory().getModuleSectionUI(getPatch().getCommonSection());
 		commonSectionUI.setPatchUI(this);
 		commonSectionUI.setSize(commonSectionUI.getPreferredSize());
         scrollPaneCommon = new JScrollPane(commonSectionUI);
@@ -90,8 +91,6 @@ public class PatchUI extends JSplitPane {
         polySectionUI.populate();
         commonSectionUI.populate();
 
-        revalidate();
-        
         // 0 = top, 4000 = bottom
         //setDividerLocation(getPatch().getHeader().getSeparatorPosition()/4000.0d);
 	}

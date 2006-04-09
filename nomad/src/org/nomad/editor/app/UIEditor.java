@@ -16,13 +16,14 @@ import javax.swing.JSplitPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
+
 import org.nomad.dialog.NomadTaskDialog;
 import org.nomad.dialog.TaskModel;
 import org.nomad.editor.views.WorkspacePanel;
 import org.nomad.editor.views.classes.NomadClassesView;
 import org.nomad.editor.views.property.NomadPropertyEditor;
 import org.nomad.editor.views.visual.VisualEditor;
-import org.nomad.env.Environment;
 import org.nomad.main.ThemePluginMenu;
 import org.nomad.patch.ui.ModuleUI;
 import org.nomad.plugin.NomadPlugin;
@@ -34,15 +35,9 @@ import org.nomad.xml.dom.module.ModuleDescriptions;
 
 public class UIEditor extends JFrame {
 	
-	// main()
+    // properties
 	
-	public static void main(String[] args) {
-		NomadUtilities.setupAndShow(new UIEditor(), 0.4, 0.5);
-	}
-	
-	// properties
-	
-	private Environment env = null;
+	private NomadEnvironment env = null;
 	private WorkspacePanel workspace = null;
 	private NomadClassesView classesView = null;
 	private NomadPropertyEditor propertyEditor = null;
@@ -51,16 +46,19 @@ public class UIEditor extends JFrame {
 
 	// constructor
 	
-	public UIEditor() {
+	public UIEditor(String name) {
 		
 		// title
 		
-		super("Nomad UI Editor");
+		super(name);
 
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        
 		// environment
 		
-		env = Environment.sharedInstance();
-		env.loadAll();
+		env = NomadEnvironment.sharedInstance();
+		env.setCachingEnabled(false);
+	//	env.loadAll();
 		env.getToolbar().setAllowDragging(false);
 		env.getToolbar().addModuleButtonClickListener(new ModuleButtonClickListener());
 
@@ -165,7 +163,7 @@ public class UIEditor extends JFrame {
 		if (module!=null) {
 			visualEditor = new VisualEditor(module);
 			visualEditor.setComponentPropertyEditor(propertyEditor);
-			env.getBuilder().createGUIComponents(visualEditor, module, false);
+			env.getBuilder().createGUIComponentsNoCaching(visualEditor, module);
 			visualEditor.setSize(ModuleUI.Metrics.WIDTH, ModuleUI.Metrics.getHeight(module));
 			visualEditor.setVisible(true);
 			workspace.add(visualEditor);
@@ -177,7 +175,7 @@ public class UIEditor extends JFrame {
 		setModule(null);
 		env.setFactory((UIFactory) plugin.getFactoryInstance());
 		classesView.setFactory(env.getFactory());
-		propertyEditor.setEditingPropertySet(null);
+		propertyEditor.setEditingPropertySet(null,null);
 		setModule(current);
 	}
 

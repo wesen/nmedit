@@ -39,14 +39,6 @@ public class Header {
 	private boolean voice_retrigger_poly_active = false;
 	private boolean voice_retrigger_common_active = false;
 
-	public final static int CABLE_RED 		= 0;
-	public final static int CABLE_BLUE 		= 1;
-	public final static int CABLE_YELLOW 	= 2;
-	public final static int CABLE_GRAY 		= 3;
-	public final static int CABLE_GREEN 	= 4;
-	public final static int CABLE_PURPLE 	= 5;
-	public final static int CABLE_WHITE 	= 6;
-	
 	private int[] unknown = new int[]{0,0,0,0};
 	
 	private boolean[] cable_visibility = new boolean[7];
@@ -56,8 +48,8 @@ public class Header {
 	private int separator_position = 0;
 	private int octave_shift = 0;
 
-	public boolean isCableVisible(int cable) {
-		return cable_visibility[cable];
+	public boolean isCableVisible(CableColor cable) {
+		return cable_visibility[cable.ColorID];
 	}
 	
 	public int getUnknown(int index) {
@@ -78,8 +70,8 @@ public class Header {
 	public void setUnknown3(int value) { setUnknown(2, value); }
 	public void setUnknown4(int value) { setUnknown(3, value); }
 	
-	public void setCableVisible(int cable, boolean visible) {
-		cable_visibility[cable] = visible;
+	public void setCableVisible(CableColor color, boolean visible) {
+		cable_visibility[color.ColorID] = visible;
 	}
 
 	public int getBendRange() {

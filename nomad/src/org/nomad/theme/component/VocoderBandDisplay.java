@@ -1,7 +1,6 @@
 package org.nomad.theme.component;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -12,7 +11,10 @@ import javax.swing.border.Border;
 
 import org.nomad.patch.Module;
 import org.nomad.theme.property.ParameterProperty;
+import org.nomad.theme.property.ParameterValue;
+import org.nomad.theme.property.Property;
 import org.nomad.theme.property.PropertySet;
+import org.nomad.theme.property.Value;
 import org.nomad.util.graphics.BackgroundRenderer;
 import org.nomad.util.graphics.LCDBackgroundRenderer;
 import org.nomad.xml.dom.module.DParameter;
@@ -45,14 +47,10 @@ public class VocoderBandDisplay extends NomadComponent {
 		setBackground(defaultBGColor);
 		setForeground(defaultFGColor);
 		setBands(0);
-		Dimension d = new Dimension(NUM_BANDS*11, 60);
-		setPreferredSize(d);
-		setMinimumSize(d);
-		setMaximumSize(d);
-		setSize(d);
+		setSize(NUM_BANDS*11, 60);
 
 		LCDBackgroundRenderer lcd = new LCDBackgroundRenderer();
-		lcd.randomizeBehaviour(d);
+		lcd.randomizeBehaviour(getSize());
 		setBackgroundRenderer(lcd);
 		
 		paramLink = new VocoderParameterLink(this);
@@ -71,18 +69,67 @@ public class VocoderBandDisplay extends NomadComponent {
 	private static class ParamBandProperty extends ParameterProperty {
 		int band;
 		public ParamBandProperty(int band) {
-			super();
-			setName("parameter#"+band);
+			super(band);
 			this.band = band;
 		}
-		public void setDParameter(DParameter p) { ((VocoderBandDisplay)getComponent()).bandsInfo[band] = p; }
-		public DParameter getDParameter() { return ((VocoderBandDisplay)getComponent()).bandsInfo[band]; }
+        
+        @Override
+        public Value decode( String value )
+        {
+            return new ParamBandValue( this, value );
+        }
+
+        @Override
+        public Value encode( NomadComponent component )
+        {
+            if (component instanceof VocoderBandDisplay)
+                return new ParamBandValue( this, ( (VocoderBandDisplay) component )
+                        .bandsInfo[band] );
+            else return null;
+        }
+        
+        /*
+		public void setDParameter(NomadComponent component, DParameter p) { ((VocoderBandDisplay)component).bandsInfo[band] = p; }
+		public DParameter getDParameter(NomadComponent component) { return ((VocoderBandDisplay)component).bandsInfo[band]; }
+        */
 	}
+    
+    private static class ParamBandValue extends ParameterValue
+    {
+
+        public ParamBandValue( ParamBandProperty property, String representation )
+        {
+            super( property, representation );
+        }
+        
+        public ParamBandValue( Property property, DParameter parameter )
+        {
+            super( property, parameter );
+        }
+        
+        public ParamBandProperty getParamBandProperty()
+        {
+            return (ParamBandProperty) getProperty();
+        }
+        
+/*
+        protected ParamBandValue( Property property, DParameter parameter, String representation )
+        {
+            super( property, parameter, representation );
+            // TODO Auto-generated constructor stub
+        }
+*/
+        public void assignTo( NomadComponent component )
+        {
+            ((VocoderBandDisplay) component).bandsInfo[getParamBandProperty().band] = getParameter();
+        }
+        
+    }
 	
 	public void setBackgroundRenderer(BackgroundRenderer renderer) {
 		if (this.renderer!=renderer) {
 			this.renderer = renderer;
-			fullRepaint();
+			repaint();
 		}
 	}
 	
@@ -150,7 +197,7 @@ public class VocoderBandDisplay extends NomadComponent {
 	}
 	
 	protected void bandsChanged() {
-		fullRepaint();
+		repaint();
 	}
 	
 	public void paintDecoration(Graphics2D g) {

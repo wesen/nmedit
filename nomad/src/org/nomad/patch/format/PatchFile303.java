@@ -388,7 +388,7 @@ public class PatchFile303 {
 		
 		while ((line = readln())!=null)
 		{
-			line = line.trim();
+			// line = line.trim();
 			
 			if (line.length() > 0)
 			{
@@ -407,7 +407,7 @@ public class PatchFile303 {
 	
 					while ((line = readln())!=null)
 					{	
-						line = line.trim();
+						// line = line.trim();
 						
 						
 						if (!line.equals(end)) {
@@ -460,7 +460,7 @@ public class PatchFile303 {
 	
 					while ((line = readln())!=null)
 					{	
-						line = line.trim();
+						// line = line.trim();
 						
 						
 						if (	currentSection == sectionHeader(line, false/*expect end header*/, currentSection/* expexted */, false/* do not fail on syntax error */) )
@@ -485,15 +485,202 @@ public class PatchFile303 {
 	private boolean isNumber(String s) {
 		return PT_NUMBER.matcher(s).matches();
 	}
+	
+	/**
+	 * Parses the string str which should be a list of numbers separated by whitespace.
+	 * 
+	 * @param dst
+	 * @param str
+	 * @return number of numbers that were parsed
+	 */
+	/*
+	public static int parseNumberList(int[] dst, String str) {
+		final int dlen = dst.length;
+		final int slen = str.length();
+		
+		int dpos = 0; // array pos
+		int spos = 0; // string pos
+		
+		char c;
+		while (spos<slen) {
+			c = str.charAt(spos);
+			if (Character.isDigit(c)) {
+				dst[dpos] = 0;
+				do {
+					dst[dpos] = (dst[dpos]*10)+(c-'0');
+					spos ++;
+				} while (spos<slen && Character.isDigit(c = str.charAt(spos)));
+				dpos ++;
+				if (dpos>=dlen) {
+					for (;spos<slen;spos++) {
+						c = str.charAt(spos);
+						if (!(Character.isWhitespace(c) || Character.isDigit(c)))
+							break;
+					}
+					break;
+				}
+			} else if (Character.isWhitespace(c)) {
+				do {
+					spos ++;
+				} while (spos<slen && Character.isWhitespace(str.charAt(spos)));
+			} else {
+				break;
+			}
+		}
 
+		return dpos;
+	}*/
+	
+	/*
 	private boolean isNumberList(String line) {
 		return PT_SEPARATED_NUMBERS.matcher(line).matches();
-	}
+	}*/
 
 	private boolean isMorphMap(String line) {
-		return PT_MORPHMAP.matcher(line).matches();
+		if (isNumberList(line)) {
+			// every fifth number may be negative
+			
+			for (int i=0;i<tmpDataSize;i++)
+				if (tmpData[i]<0 && i%4!=0)
+					return false;
+			
+			return true;
+		} else {
+			return false;
+		}
+		
+		//PT_MORPHMAP.matcher(line).matches();
 	}
 	
+	public static int parseIntList(int[] dst, String src) {
+		return parseIntList(dst, dst.length, src);
+	}
+
+	/**
+	 * Reads string containing a whitespace separated list of numbers into an integer array.
+	 * The string can contain whitespaces at the begining or at the end. Numbers can have
+	 * a negative sign prefix, but not the positive sign prefix.
+	 * 
+	 * @param dst
+	 * @param maxCount limits the number of digits that are read
+	 * @param src
+	 * @return returns a negative value if a parsing error occured.
+	 * Otherwise the number of digits that were parsed are returned. The
+	 * return value r will fullfill the condition 0&lt;= r &lt;= max(maxCount, dst.length())
+	 */
+	public static int parseIntList(int[] dst, int maxCount, String src) {
+		
+		final int STATE_WHITESPACE = 0; // \s  => STATE_WHITESPACE, '-' => STATE_NEGATIVE, '\d' => STATE_DIGIT
+		final int STATE_NEGATIVE   = 1; // \d  => STATE_DIGIT
+		final int STATE_DIGIT      = 2; // \s  => STATE_WHITESPACE, '\d' => STATE_DIGIT
+		final int STATE_ERROR 	   =-1; // other transition
+		final int STATE_DONE 	   =-2; // other transition
+		
+		int state = STATE_WHITESPACE;
+		
+		int slen = src.length();
+		int spos = 0;
+		char c;
+		boolean negative = false;
+		int number = 0 ;
+		int index = 0;
+		
+		maxCount = Math.min(maxCount, dst.length);
+		
+		while ((state!=STATE_DONE) && (state!=STATE_ERROR)) {
+			
+			if (spos>=slen) {
+				switch (state) {
+					case STATE_WHITESPACE:
+						state = STATE_DONE;
+						break;
+						
+					case STATE_DIGIT:
+						dst[index++] = negative ? -number : number;
+						state = STATE_DONE;
+						break;
+	
+					default:
+						state = STATE_ERROR;
+						break;
+				}
+				break;
+			}
+			
+			c = src.charAt(spos++);
+			
+			switch (c) {
+				case ' ':
+				case '\t':
+				case '\n':
+				case  0x0B:
+				case '\f':
+				case '\r': // ' '\t\n\x0B\f\r (whitespace)
+
+					switch (state) {
+						case STATE_WHITESPACE: 
+							break;
+						case STATE_DIGIT: 
+							// store number
+							dst[index++] = negative ? -number : number;
+							state = (index>=maxCount) ? state = STATE_DONE : STATE_WHITESPACE; 
+							break;
+						default:
+							state = STATE_ERROR;
+							break;
+					}
+					break;
+					
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9': // '\d' (digit)
+					
+					switch (state) {
+						case STATE_WHITESPACE:
+							number = c - '0';
+							state = STATE_DIGIT;
+							negative = false;
+							break;
+							
+						case STATE_NEGATIVE: 
+							number = c - '0';
+							state = STATE_DIGIT; 
+							negative = true;
+							break ;
+							
+						case STATE_DIGIT:
+							number = (number*10)+(c-'0');
+							break;
+
+						default:
+							state = STATE_ERROR;
+							break;
+					}
+					
+					break;
+					
+				case '-': // negative
+					if (state == STATE_WHITESPACE)  {
+						state = STATE_NEGATIVE;
+					} else {
+						state = STATE_ERROR;
+					}
+					break;
+
+			}
+		}
+		
+		return state == STATE_DONE ? index : STATE_ERROR; // index==count(parsed numbers)
+	}
+	
+	/*
 	private int[] parseIntegers(String[] numbers) {
 		int[] data = new int[numbers.length];
 		for (int i=numbers.length-1;i>=0;i--)
@@ -503,6 +690,22 @@ public class PatchFile303 {
 	
 	private int[] parseIntegers(String numberLine) {
 		return parseIntegers( PT_SPACES.split(numberLine) );
+	}*/
+	
+	private int[] tmpData = new int[100];
+	private int tmpDataSize = 0;
+	
+	/**
+	 * checks if str is a list containing only numbers and returns true if this is true
+	 * and at least one number was found. The numbers are accessible through the
+	 * tmpData array. tmpDataSize contains the number of valid fields.
+	 * 
+	 * @param str
+	 * @return
+	 */
+	private boolean isNumberList(String str) {
+		tmpDataSize = parseIntList(tmpData, str);
+		return tmpDataSize>0;
 	}
 	
 	protected String[] split(String numberLine) {
@@ -521,7 +724,7 @@ public class PatchFile303 {
 		
 		while ((line = readln())!=null)
 		{
-			line = line.trim();
+			// line = line.trim();
 			
 			
 			if (line.startsWith("Version"))
@@ -544,17 +747,15 @@ public class PatchFile303 {
 			{
 				if (dataLineFound)
 					throw exception("more then one data entry found");
-				
+
 				dataLineFound = true;
-				
-				int[] numbers = parseIntegers(line);
-				
+
 				final int EXPECTED = 23;
 				
-				if (numbers.length != EXPECTED)
-					throw exception("data format error in section '"+SEC_HEADER+"' (found "+numbers.length+" entries instead of "+EXPECTED+" )");	
+				if (tmpDataSize != EXPECTED)
+					throw exception("data format error in section '"+SEC_HEADER+"' (found "+tmpDataSize+" entries instead of "+EXPECTED+" )");	
 				
-				cb.header_data(numbers);
+				cb.header_data(tmpData);
 				
 			}
 			else {
@@ -576,7 +777,7 @@ public class PatchFile303 {
 		String line;
 		
 		line = readln();
-		line = line.trim();
+		// line = line.trim();
 		
 		
 		boolean isPolySection = isPolySection(line);
@@ -584,19 +785,17 @@ public class PatchFile303 {
 		while ((line = readln())!=null)
 		{
 
-			line = line.trim();
+			// line = line.trim();
 			
 			
 			if (isNumberList(line)) {
 
-				int[] numbers = parseIntegers(line);
-				
 				final int EXPECTED = 3;
 				
-				if (numbers.length < EXPECTED) 
-					throw exception("data format error in section '"+SEC_CUSTOM_DUMP+"' (found "+numbers.length+" entries instead of "+EXPECTED+" )");	
+				if (tmpDataSize < EXPECTED) 
+					throw exception("data format error in section '"+SEC_CUSTOM_DUMP+"' (found "+tmpDataSize+" entries instead of "+EXPECTED+" )");	
 				
-				cb.customDump(isPolySection, numbers);
+				cb.customDump(isPolySection, tmpData);
 				
 			} else {
 				break;
@@ -613,7 +812,7 @@ public class PatchFile303 {
 		String line;
 		
 		line = readln();
-		line = line.trim();
+		// line = line.trim();
 		
 		
 		boolean isPolySection = isPolySection(line);
@@ -621,19 +820,17 @@ public class PatchFile303 {
 		while ((line = readln())!=null)
 		{
 
-			line = line.trim();
+			// line = line.trim();
 			
 			
 			if (isNumberList(line)) {
 
-				int[] numbers = parseIntegers(line);
-				
 				final int EXPECTED = 4;
 				
-				if (numbers.length < EXPECTED) 
-					throw exception("data format error in section '"+SEC_PARAMETER_DUMP+"' (found "+numbers.length+" entries instead of "+EXPECTED+" )");	
+				if (tmpDataSize < EXPECTED) 
+					throw exception("data format error in section '"+SEC_PARAMETER_DUMP+"' (found "+tmpDataSize+" entries instead of "+EXPECTED+" )");	
 				
-				cb.parameterDump(isPolySection, numbers);
+				cb.parameterDump(isPolySection, tmpData);
 				
 			} else {
 				break;
@@ -683,42 +880,37 @@ public class PatchFile303 {
 		String line;
 		
 		line = readln();
-		line = line.trim();
+		// line = line.trim();
 		
 		
 		if (line == null || !isNumberList(line))
 			throw exception("Expected morph knob settings in section "+NAME_MORPHMAP_DUMP);
 		{
-			int [] morphKnobValues = parseIntegers(line);
-			
 			final int EXPECTED = 4;
 			
-			if (morphKnobValues.length != EXPECTED)
-				throw exception("data format error in section '"+NAME_MORPHMAP_DUMP+"' (found "+morphKnobValues.length+" entries instead of "+EXPECTED+" )");	
+			if (tmpDataSize != EXPECTED)
+				throw exception("data format error in section '"+NAME_MORPHMAP_DUMP+"' (found "+tmpDataSize+" entries instead of "+EXPECTED+" )");	
 			
-			cb.morphMapDumpMorphKnobValues(morphKnobValues);
+			cb.morphMapDumpMorphKnobValues(tmpData);
 		}
 		
 		while ((line = readln())!=null)
 		{
 
-			line = line.trim();
+			// line = line.trim();
 			
-			
-			if (isMorphMap(line)) { // TODO only each 5th can be negative, not all
+			if (isNumberList(line)) { // TODO only each 5th can be negative, not all
 
-				int [] morph = parseIntegers(line);
-				
 				final int EXPECTED = 5;
 				
-				if (morph.length % EXPECTED != 0)
-					throw exception("data format error in section '"+NAME_MORPHMAP_DUMP+"' (found "+morph.length+" entries instead of "+EXPECTED+" )");	
+				if (tmpDataSize % EXPECTED != 0)
+					throw exception("data format error in section '"+NAME_MORPHMAP_DUMP+"' (found "+tmpDataSize+" entries instead of "+EXPECTED+" )");	
 				
 				int [] morphE = new int[EXPECTED];
 				
-				for (int i=0;i<morph.length;i+=EXPECTED) {
+				for (int i=0;i<tmpDataSize;i+=EXPECTED) {
 					for (int j=0;j<EXPECTED;j++)
-						morphE[j] = morph[i+j];
+						morphE[j] = tmpData[i+j];
 					cb.morphMapDump(morphE);
 				}
 				
@@ -735,13 +927,16 @@ public class PatchFile303 {
 	
 	private boolean isPolySection(String line) throws PatchConstructionException {
 
-		if (line == null)
-			throw exception(	"section "+NAME_MODULE_DUMP +" has no data");
+		if (isNumberList(line)) {
 
-		if (line.length()!=1 || (line.charAt(0)!='0' && line.charAt(0)!='1'))
-			throw exception(	"section "+NAME_MODULE_DUMP +" must start with '1' or '0'");
-		
-		return line.charAt(0)=='1';
+			if (tmpDataSize==1) {
+				if (tmpData[0]==1) return true;
+				else if (tmpData[0]==0) return false;
+			}
+			
+		}
+
+		throw exception(	"section "+NAME_MODULE_DUMP +" must start with '1' or '0'");
 	}
 
 	private void readModuleDump() throws IOException, PatchConstructionException {
@@ -750,7 +945,7 @@ public class PatchFile303 {
 		// first line
 
 		line = readln();
-		line = line.trim();
+		// line = line.trim();
 		
 
 		boolean isPolySection = isPolySection(line);
@@ -758,19 +953,17 @@ public class PatchFile303 {
 		while ((line = readln())!=null)
 		{
 
-			line = line.trim();
+			// line = line.trim();
 			
 			
 			if (isNumberList(line)) {
 
-				int[] numbers = parseIntegers(line);
-				
 				final int EXPECTED = 4;
 				
-				if (numbers.length != EXPECTED)
-					throw exception("data format error in section '"+SEC_MODULE_DUMP+"' (found "+numbers.length+" entries instead of "+EXPECTED+" )");	
+				if (tmpDataSize != EXPECTED)
+					throw exception("data format error in section '"+SEC_MODULE_DUMP+"' (found "+tmpDataSize+" entries instead of "+EXPECTED+" )");	
 				
-				cb.moduleDump(isPolySection, numbers);
+				cb.moduleDump(isPolySection, tmpData);
 				
 			} else {
 				break;
@@ -789,18 +982,16 @@ public class PatchFile303 {
 		while ((line = readln())!=null)
 		{
 
-			line = line.trim();
+			// line = line.trim();
 			
 
 			if (isNumberList(line)) {
-				int [] data = parseIntegers(line);
-				
 				final int EXPECTED = 4;
 				
-				if (data.length != EXPECTED)
-					throw exception("data format error in section '"+NAME_KNOBMAP_DUMP+"' (found "+data.length+" entries instead of "+EXPECTED+" )");	
+				if (tmpDataSize != EXPECTED)
+					throw exception("data format error in section '"+NAME_KNOBMAP_DUMP+"' (found "+tmpDataSize+" entries instead of "+EXPECTED+" )");	
 				
-				cb.knobMapDump(data);
+				cb.knobMapDump(tmpData);
 			} else {
 				break;
 			}
@@ -817,24 +1008,22 @@ public class PatchFile303 {
 		String line;
 		
 		line = readln();
-		line = line.trim();
+		// line = line.trim();
 		
 		
 		if (line == null || !isNumberList(line))
 			throw exception("missing data in section "+NAME_KEYBOARDASSIGNMENT);
 		{
-			int [] data = parseIntegers(line);
-			
 			final int EXPECTED = 4;
 			
-			if (data.length != EXPECTED)
-				throw exception("data format error in section '"+NAME_KEYBOARDASSIGNMENT+"' (found "+data.length+" entries instead of "+EXPECTED+" )");	
+			if (tmpDataSize != EXPECTED)
+				throw exception("data format error in section '"+NAME_KEYBOARDASSIGNMENT+"' (found "+tmpDataSize+" entries instead of "+EXPECTED+" )");	
 			
-			cb.keyboardAssignment(data);
+			cb.keyboardAssignment(tmpData);
 		}
 
 		line = readln();
-		line = line.trim();
+		// line = line.trim();
 		
 		
 		sectionHeader(line, false/*expect end header*/, SEC_KEYBOARDASSIGNMENT/* expexted */, true/* fail on syntax error */);
@@ -846,14 +1035,14 @@ public class PatchFile303 {
 		String line;
 		
 		line = readln();
-		line = line.trim();
+		// line = line.trim();
 		
 		
 		boolean isPolySection = isPolySection(line);
 
 		while ((line = readln())!=null)
 		{
-			line = line.trim();
+			// line = line.trim();
 			
 			
 			if (line.length()>0 && line.charAt(0)!='[') {
@@ -890,19 +1079,17 @@ public class PatchFile303 {
 		while ((line = readln())!=null)
 		{
 
-			line = line.trim();
+			// line = line.trim();
 			
 			
 			if (isNumberList(line)) {
 
-				int[] numbers = parseIntegers(line);
-				
 				final int EXPECTED = 3;
 				
-				if (numbers.length < EXPECTED) // < instead of != due to bug 
-					throw exception("data format error in section '"+SEC_CURRENTNOTE_DUMP+"' (found "+numbers.length+" entries instead of "+EXPECTED+" )");	
+				if (tmpDataSize < EXPECTED) // < instead of != due to bug 
+					throw exception("data format error in section '"+SEC_CURRENTNOTE_DUMP+"' (found "+tmpDataSize+" entries instead of "+EXPECTED+" )");	
 				
-				cb.currentNoteDump(numbers);
+				cb.currentNoteDump(tmpData);
 				
 			} else {
 				break;
@@ -921,18 +1108,16 @@ public class PatchFile303 {
 		while ((line = readln())!=null)
 		{
 
-			line = line.trim();
+			// line = line.trim();
 			
 
 			if (isNumberList(line)) {
-				int [] data = parseIntegers(line);
-				
 				final int EXPECTED = 4;
 				
-				if (data.length != EXPECTED)
-					throw exception("data format error in section '"+NAME_CTRLMAP_DUMP+"' (found "+data.length+" entries instead of "+EXPECTED+" )");	
+				if (tmpDataSize != EXPECTED)
+					throw exception("data format error in section '"+NAME_CTRLMAP_DUMP+"' (found "+tmpDataSize+" entries instead of "+EXPECTED+" )");	
 				
-				cb.ctrlMapDump(data);
+				cb.ctrlMapDump(tmpData);
 			} else {
 				break;
 			}
@@ -948,7 +1133,7 @@ public class PatchFile303 {
 		String line;
 		
 		line = readln();
-		line = line.trim();
+		// line = line.trim();
 		
 		
 		boolean isPolySection = isPolySection(line);
@@ -956,19 +1141,17 @@ public class PatchFile303 {
 		while ((line = readln())!=null)
 		{
 
-			line = line.trim();
+			// line = line.trim();
 			
 			
 			if (isNumberList(line)) {
 
-				int[] numbers = parseIntegers(line);
-				
 				final int EXPECTED = 7;
 				
-				if (numbers.length != EXPECTED) 
-					throw exception("data format error in section '"+SEC_CABLE_DUMP+"' (found "+numbers.length+" entries instead of "+EXPECTED+" )");	
+				if (tmpDataSize != EXPECTED) 
+					throw exception("data format error in section '"+SEC_CABLE_DUMP+"' (found "+tmpDataSize+" entries instead of "+EXPECTED+" )");	
 				
-				cb.cableDump(isPolySection, numbers);
+				cb.cableDump(isPolySection, tmpData);
 				
 			} else {
 				break;

@@ -18,138 +18,59 @@
  */
 
 /*
- * Created on Jan 12, 2006
+ * Created on Mar 15, 2006
  */
 package org.nomad.theme.property;
 
+import org.nomad.theme.component.NomadComponent;
 import org.nomad.theme.component.NomadConnector;
-import org.nomad.theme.property.editor.PropertyEditor;
-import org.nomad.xml.dom.module.DConnector;
+import org.nomad.theme.property.editor.ComboBoxEditor;
+import org.nomad.theme.property.editor.Editor;
 import org.nomad.xml.dom.module.DModule;
-import org.nomad.xml.dom.module.ModuleDescriptions;
 
-public class ConnectorProperty extends Property {
+public class ConnectorProperty extends Property
+{
+    public ConnectorProperty()
+    {
+        this( 0 );
+    }
 
-	public ConnectorProperty() {
-		setName("connector#0");
-	}
+    public ConnectorProperty( int paramIndex )
+    {
+        super( "connector#" + paramIndex );
+    }
 
-	public void setValue(String value) {
-		setDConnector(decode(value));
-	}
-	
-	//private final static Pattern pattern = Pattern.compile("(\\d+)\\.(\\d+)\\.((in)|(out))\\..*");
-	
-	public static DConnector decode(String value) {
-		int moduleId = 0;
-		int connectorId = 0;
-		int input = -1; // 0 = output, 1 = input
-		
-		char[] str = value.toCharArray();
+    @Override
+    public Value decode( String value )
+    {
+        return new ConnectorValue( this, value );
+    }
 
-		int i = 0;
-		// module id
-		for(;i<str.length;i++) {
-			if (Character.isDigit(str[i])) {
-				moduleId *= 10;
-				moduleId += (str[i]-'0');
-			} else if (str[i]=='.') {
-				i++;
-				break;
-			} else {
-				System.err.println("Invalid DConnector encoding: '"+value+"'.");
-				return null;
-			}
-		}
+    @Override
+    public Value encode( NomadComponent component )
+    {
+        if (component instanceof NomadConnector)
+            return new ConnectorValue( this, ( (NomadConnector) component )
+                    .getConnectorInfo() );
+        else return null;
+    }
 
-		// connector id
-		for(;i<str.length;i++) {
-			if (Character.isDigit(str[i])) {
-				connectorId *= 10;
-				connectorId += (str[i]-'0');
-			} else if (str[i]=='.') {
-				i++;
-				break;
-			} else {
-				System.err.println("Invalid DConnector encoding: '"+value+"'.");
-				return null;
-			}
-		}
-		
-		// (in | out)
-		String sub = value.substring(i);
-		if (sub.startsWith("in")) input = 1;
-		else if (sub.startsWith("out")) input = 0;
-		
-		
-		// validation TODO check that id's part of string has not length 0
-		if (moduleId<0 || connectorId<0 || input<0) {
-			System.err.println("Invalid DConnector encoding: '"+value+"'.");
-			return null;
-		}
+    @Override
+    public Editor newEditor( NomadComponent component )
+    {
+        Value[] values;
 
-		DModule module = ModuleDescriptions.sharedInstance().getModuleById(moduleId);
-		if (module==null) {
-			System.err.println("In ConnectorProperty.decode(): Module [id="+moduleId+"] not found");
-			return null;
-		}
-		
-		DConnector connector = module.getConnectorById(connectorId, input==1);
-		if (connector == null){
-			System.err.println("In ConnectorProperty.decode(): Module [id="+moduleId+"] has no Connector [ id="+connectorId+"].");
-			return null;
-		}
+        DModule info = findModuleInfo( component );
+        if (info == null)
+            values = new Value[0];
+        else
+        {
+            values = new Value[info.getConnectorCount()];
+            for (int i = 0; i < info.getConnectorCount(); i++)
+                values[i] = new ConnectorValue( this, info.getConnector( i ) );
+        }
 
-		return connector;
-	}
+        return new ComboBoxEditor( this, component, values );
+    }
 
-	public static String encode(DConnector p) {
-		if (p==null) return "";
-		return p.getParent().getModuleID()+"."+p.getId()+"."+(p.isInput()?"in":"out")+"."+p.getName();
-	}
-	
-	public String getValue() {
-		return encode(getDConnector());
-	}
-	
-	public void setDConnector(DConnector p) {
-		if (getComponent() instanceof NomadConnector)
-			((NomadConnector) getComponent()).setConnectorInfo(p);
-	}
-	
-	public DConnector getDConnector() {
-		if (getComponent() instanceof NomadConnector)
-			return ((NomadConnector) getComponent()).getConnectorInfo();
-		return null;
-	}
-
-	public DConnector[] findConnectors() {
-		DModule info = findModuleInfo();
-		DConnector[] list = null;
-		if (info != null) {
-			list = new DConnector[info.getConnectorCount()];
-			for (int i=0;i<info.getConnectorCount();i++)
-				list[i] = info.getConnector(i);
-		}
-		return list;
-	}
-
-	public String[] findAndEncodeConnectors() {
-		DConnector[] conn = findConnectors();
-		if (conn!=null) {
-			String[] list = new String[conn.length];
-			for (int i=conn.length-1;i>=0;i--)
-				list[i]=encode(conn[i]);
-			return list;
-		}
-		return null;
-	}
-
-	public PropertyEditor getEditor() {
-		String[] list = findAndEncodeConnectors();
-		if (list==null)
-			return super.getEditor();
-		else
-			return new PropertyEditor.ComboBoxEditor(this, list, getValue());
-	}
 }

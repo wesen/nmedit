@@ -30,10 +30,11 @@ import net.sf.nmedit.jnmprotocol.IAmMessage;
 import net.sf.nmedit.jnmprotocol.MidiDriver;
 import net.sf.nmedit.jnmprotocol.MidiMessage;
 import net.sf.nmedit.jnmprotocol.NmProtocol;
+import net.sf.nmedit.nomad.core.application.Const;
+import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 
 import org.nomad.dialog.ExceptionNotificationDialog;
 import org.nomad.dialog.NomadMidiDialog;
-import org.nomad.env.Environment;
 import org.nomad.patch.format.PatchMessageDecoder;
 
 // TODO if heartbeat fails, disconnect() should be called
@@ -54,11 +55,7 @@ public class SynthDevice implements HeartbeatErrorHandler {
 	
 	public SynthDevice() {
 		PatchMessageDecoder.init();
-	    try {
-			MidiMessage.usePdlFile("/usr/local/lib/nmprotocol/midi.pdl", null);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
 		synth = new Synth(this);
 		protocolListener = new ProtocolListener(this);
 		connectionListenerList = new ArrayList<SynthDeviceStateListener>();
@@ -86,13 +83,13 @@ public class SynthDevice implements HeartbeatErrorHandler {
 		return midiIn!=null && midiOut!=null;
 	}
 
+    public final static String KEY_MIDI_IN_DEVICE =  Const.CUSTOM_PROPERTY_PREFIX_STRING+"synth.midi.in";
+    public final static String KEY_MIDI_OUT_DEVICE =  Const.CUSTOM_PROPERTY_PREFIX_STRING+"synth.midi.out";
 	public boolean setup() {
-		Environment env = Environment.sharedInstance();
-		
 		NomadMidiDialog dlg = new NomadMidiDialog(midiIn, midiOut);
 		
-		if (midiIn==null) dlg.setInputDevice(env.getProperty("synth.midi.in"));
-		if (midiOut==null) dlg.setOutputDevice(env.getProperty("synth.midi.out"));
+		if (midiIn==null) dlg.setInputDevice(NomadEnvironment.getProperty(KEY_MIDI_IN_DEVICE));
+		if (midiOut==null) dlg.setOutputDevice(NomadEnvironment.getProperty(KEY_MIDI_OUT_DEVICE));
 		
 		dlg.invoke();
 		
@@ -100,8 +97,8 @@ public class SynthDevice implements HeartbeatErrorHandler {
 			midiIn = dlg.getInputDevice();
 			midiOut = dlg.getOutputDevice();
 	
-			env.setProperty("synth.midi.in", midiIn.getName());
-			env.setProperty("synth.midi.out", midiOut.getName());
+            NomadEnvironment.setProperty(KEY_MIDI_IN_DEVICE, midiIn.getName());
+            NomadEnvironment.setProperty(KEY_MIDI_OUT_DEVICE, midiOut.getName());
 			
 			return true;
 		} else {

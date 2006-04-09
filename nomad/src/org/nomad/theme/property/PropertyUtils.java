@@ -24,24 +24,48 @@ package org.nomad.theme.property;
 
 import java.util.Map;
 
-import org.nomad.xml.XMLFileWriter;
+import org.nomad.theme.component.NomadComponent;
 import org.nomad.xml.dom.theme.ComponentNode;
 
 public class PropertyUtils {
 
-	public static void exportToDOM(ComponentNode node, Map<String, Property> map) {
+    public static void exportToDOM(ComponentNode node, Map<String, Property> map, NomadComponent component) {
+        for (Property p : map.values()) {
+            Value v = p.encode(component);
+
+            if (v == null)
+            {
+                throw new NullPointerException("Encoding failed in component "+component.getClass().getName()+" property "+p);
+            }
+
+            if (!v.isInDefaultState()) 
+            {
+                node.putProperty(p.getName(), v.getRepresentation());
+            }
+        }
+    }
+/*
+    public static void exportToXml(XMLFileWriter xml, Map<String, Property> map, NomadComponent component) {
+        xml.beginTag("properties", true);
+        for (Property p : map.values())
+            p.exportToXml(xml, component);
+        xml.endTag();
+    }*/
+    
+    /*
+	public static void exportToDOM(ComponentNode node, Map<String, Property> map, NomadComponent component) {
 		for (Property p : map.values()) {
-			if (p.isExportable() && (!p.isInDefaultState())) {
-				node.createPropertyNode(p.getName()).setValue(p.getValue());
+			if (p.isExportable() && (!p.isInDefaultState(component))) {
+				node.putProperty(p.getName(), p.getValue(component));
 			}
 		}
 	}
 
-	public static void exportToXml(XMLFileWriter xml, Map<String, Property> map) {
+	public static void exportToXml(XMLFileWriter xml, Map<String, Property> map, NomadComponent component) {
 		xml.beginTag("properties", true);
 		for (Property p : map.values())
-			p.exportToXml(xml);
+			p.exportToXml(xml, component);
 		xml.endTag();
 	}
-
+*/
 }

@@ -48,7 +48,7 @@ public class CurvePainter {
 	}
 
 	public void paint(Graphics2D g2, Curve curve) {
-		paint(g2, curve, curve.getColor());
+		paint(g2, curve, curve.getColor(), curve.getShadow());
 	}
 
 	public void paint(Graphics2D g2, Curve curve, boolean shadow) {
@@ -57,16 +57,19 @@ public class CurvePainter {
 		else
 			paint(g2, curve, curve.getColor(), null);
 	}
+    
+    public static Color createShadow(Curve curve)
+    {
+        return NomadUtilities.neighbour(curve.getColor(), Color.BLACK, shadowAlpha);
+    }
 	
 	public void paint(Graphics2D g2, Curve curve, Color fillColor, int alpha) {
-		Color clShadow = NomadUtilities.neighbour(fillColor, Color.BLACK, shadowAlpha);
-		paint(g2, curve, NomadUtilities.alpha(fillColor,alpha), NomadUtilities.alpha(clShadow, alpha));
+		paint(g2, curve, NomadUtilities.alpha(fillColor,alpha), NomadUtilities.alpha(curve.getShadow(), alpha));
 	}
-
+/*
 	public void paint(Graphics2D g2, Curve curve, Color fillColor) {
-		Color clShadow = NomadUtilities.neighbour(fillColor, Color.BLACK, shadowAlpha);
-		paint(g2, curve, fillColor, clShadow);
-	}
+		paint(g2, curve, fillColor, curve.getShadow());
+	}*/
 
 	public void paint(Graphics2D g2, Curve curve, Color fill, Color shadow) {
 		Stroke restoreStroke = g2.getStroke(); // save current stroke

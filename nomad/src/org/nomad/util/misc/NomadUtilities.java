@@ -51,6 +51,17 @@ public class NomadUtilities {
 		enlargeToGrid(rect, grid, grid);
 	}
 	
+	public final static String extractKeyFromImageString(String str) {
+		// {@.+}
+		final int min_len = 3;
+		final int l = str.length();
+		if (l<min_len) return null;
+		else if(str.charAt(0)!='{') return null;
+		else if(str.charAt(1)!='@') return null;
+		else if(str.charAt(l-1)!='}') return null;
+		else return str.substring(2, l-1);
+	}
+	
 	public static void enlargeToGrid(Rectangle rect, int gridx, int gridy) {
 		int dx = rect.x % gridx;
 		int dy = rect.y % gridy;
@@ -125,6 +136,15 @@ public class NomadUtilities {
 		if (rb>b) rect.height = Math.max(y, b-rect.y);
 	}
 
+    public static void union( Rectangle rect, int x, int y, int w, int h )
+    {
+        int l = Math.min(rect.x, x); // left
+        int t = Math.min(rect.y, y); // top
+        int r = Math.max(rect.x+rect.width, x+w); // right+1
+        int b = Math.max(rect.y+rect.height, y+h); // bottom+1
+        rect.setBounds(l, t, r-l, b-t);
+    }
+    
 	public static void setupAndShow(JFrame frame, double dw, double dh) {
 	    Dimension screensz  = Toolkit.getDefaultToolkit().getScreenSize();
 	    setupAndShow(frame, new Dimension((int)(screensz.width*dw), (int)(screensz.height*dh)));

@@ -8,7 +8,6 @@ import org.nomad.patch.ui.ModuleSectionUI;
 import org.nomad.patch.ui.ModuleUI;
 import org.nomad.plugin.NomadFactory;
 import org.nomad.theme.component.NomadComponent;
-import org.nomad.theme.property.Property;
 import org.nomad.theme.property.PropertySet;
 import org.nomad.util.graphics.ImageTracker;
 import org.nomad.xml.dom.module.DModule;
@@ -47,12 +46,20 @@ public abstract class UIFactory extends NomadFactory {
 		alias.put(componentClass, aliasName);
 	}
 	
-	public PropertySet getProperties(NomadComponent component) {
+    /*
+	public void setComponentProperty(NomadComponent component, String property, String value) {
 		PropertySet set = properties.get(component.getClass());
-		for (Property p : set)
-			p.setComponent(component);
-		
-		return set;
+		Property p = set.get(property);
+        
+		p.setValue(component, value);
+	}*/
+	
+	public PropertySet getProperties(NomadComponent component) {
+		return properties.get(component.getClass());
+	}
+	
+	public PropertySet getProperties(Class<? extends NomadComponent> clazz) {
+		return properties.get(clazz);
 	}
 	
 	public boolean isDecoration(Class<? extends NomadComponent> clazz) {
@@ -79,9 +86,7 @@ public abstract class UIFactory extends NomadFactory {
 	
 	public NomadComponent newComponentInstanceByClass(Class<? extends NomadComponent> componentClass) {
 		try {
-			NomadComponent c = componentClass.newInstance();
-			c.setNameAlias(alias.get(componentClass));
-			return c;
+			return componentClass.newInstance();
 		} catch (Throwable e) {
 			if (componentClass!=null)
 				e.printStackTrace();
@@ -101,6 +106,11 @@ public abstract class UIFactory extends NomadFactory {
 	
 	public ModuleSectionUI getModuleSectionUI(ModuleSection moduleSection) {
 		return new ModuleSectionUI(moduleSection);
+	}
+
+	public String getAlias(Class<? extends NomadComponent> clazz) {
+		String salias = alias.get(clazz);
+		return salias==null ? clazz.getName() : salias;
 	}
 	
 }

@@ -24,9 +24,10 @@ package org.nomad.main;
 
 import java.awt.Cursor;
 
+import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
+
 import org.nomad.dialog.NomadTaskDialog;
 import org.nomad.dialog.TaskModel;
-import org.nomad.env.Environment;
 import org.nomad.patch.ui.PatchUI;
 import org.nomad.plugin.NomadPlugin;
 import org.nomad.theme.UIFactory;
@@ -36,7 +37,7 @@ public class ThemePluginSwitcher implements TaskModel {
 
 	private Nomad nomad;
 	private NomadPlugin plugin;
-	private Environment env;
+	private NomadEnvironment env;
 	private DocumentManager documents;
 	private int selectionIndex;
 	private int documentCount;
@@ -44,7 +45,7 @@ public class ThemePluginSwitcher implements TaskModel {
 	public ThemePluginSwitcher(Nomad nomad, NomadPlugin plugin) {
 		this.nomad = nomad;
 		this.plugin = plugin;
-		env = Environment.sharedInstance();
+		env = NomadEnvironment.sharedInstance();
 		documents = nomad.getDocumentManager();
 		selectionIndex = documents.getSelectedDocumentIndex();
 		documentCount = documents.getDocumentCount();
@@ -116,8 +117,8 @@ public class ThemePluginSwitcher implements TaskModel {
 
 		nomad.setCursor(Cursor.getDefaultCursor());
 		env.getToolbar().setEnabled(true);
-		documents.getDocumentContainer().validate();
-		documents.getDocumentContainer().repaint();
+		//documents.getDocumentContainer().validate();
+		//documents.getDocumentContainer().repaint();
 	}
 	
 	public void migrate(int document) {

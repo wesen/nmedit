@@ -22,7 +22,6 @@
  */
 package org.nomad.theme.component;
 
-import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.Paint;
@@ -32,15 +31,9 @@ import org.nomad.theme.NomadClassicColors;
 
 public class AudioLevelDisplay extends NomadComponent {
 
-	private final static Dimension defaultSize = new Dimension(90,5);
-	
 	public AudioLevelDisplay() {
 		super();
-		setOpaque(true);
-		setPreferredSize(defaultSize);
-		setMinimumSize(defaultSize);
-		setMaximumSize(defaultSize);
-		setSize(defaultSize);
+		setSize(90,5);
 		setDynamicOverlay(true);
 	}
 

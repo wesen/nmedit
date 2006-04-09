@@ -26,12 +26,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import javax.swing.SwingUtilities;
-
 import org.nomad.dialog.NomadTaskDialog;
 import org.nomad.dialog.TaskModel;
-import org.nomad.patch.format.PatchConstructionException;
 import org.nomad.patch.format.PatchBuilder;
+import org.nomad.patch.format.PatchConstructionException;
 import org.nomad.patch.format.PatchFile303;
 import org.nomad.patch.ui.PatchUI;
 
@@ -68,63 +66,73 @@ class PatchLoader {
 		for (String fileName : files) {
 			fileList.add(new PatchFile(fileName));
 		}
+        
+        final TaskModel model = new TaskModel(){
+            
+            int taskCount = fileList.size();
+            int selection = nomad.getDocumentManager().getDocumentCount();
+            
+            public String getDescription() {
+                return "Loading Nord Modular patch...";
+            }
 
-		NomadTaskDialog dlg = new NomadTaskDialog(new TaskModel(){
-			
-			int taskCount = fileList.size();
-			int selection = nomad.getDocumentManager().getDocumentCount();
-			
-			public String getDescription() {
-				return "Loading Nord Modular patch...";
-			}
+            public int getTaskCount() {
+                return taskCount;
+            }
 
-			public int getTaskCount() {
-				return taskCount;
-			}
+            public String getTaskName(int taskIndex) {
+                return fileList.get(taskIndex).patchName;
+            }
 
-			public String getTaskName(int taskIndex) {
-				return fileList.get(taskIndex).patchName;
-			}
+            public void run(int taskIndex) throws Throwable {
+                final PatchFile task = fileList.get(taskIndex);
+                try {
+                    PatchBuilder cons = new PatchBuilder();
+                    PatchFile303 reader = new PatchFile303(task.fileName, cons);
+                    reader.readAll();
+                    
+                    final PatchUI tab = PatchUI.newInstance(cons.getPatch());
+                    
+                    synchronized (nomad)
+                    {
+                        nomad.addPatchUI(task.patchName, tab);
+                    }
+                } catch (FileNotFoundException e) {
+                    throw e;
+                } catch (PatchConstructionException e) {
+                    throw e;
+                } catch (Throwable t) {
+                    System.out.println("Error while loading patch.");
+                    t.printStackTrace();
+                }
 
-			public void run(int taskIndex) throws Throwable {
-				final PatchFile task = fileList.get(taskIndex);
-				try {
-					PatchBuilder cons = new PatchBuilder();
-					PatchFile303 reader = new PatchFile303(task.fileName, cons);
-					reader.readAll();
-					
-					final PatchUI tab = PatchUI.newInstance(cons.getPatch());
-					
-					/**
-					 * Because Swing's not thread save.
-					 */
-					SwingUtilities.invokeAndWait(
-						new Runnable() {
-							public void run() {
-								nomad.getDocumentManager().addDocument(task.patchName, tab);
-							}
-						}
-					);
-				} catch (FileNotFoundException e) {
-					throw e;
-				} catch (PatchConstructionException e) {
-					throw e;
-				} catch (Throwable t) {
-					System.out.println("Error while loading patch.");
-					t.printStackTrace();
-				}
-
-				if (taskIndex==getTaskCount()-1) {
-					if (selection>=0 && selection<nomad.getDocumentManager().getDocumentCount())
-						nomad.getDocumentManager().setSelectedDocument(selection);
-					fileList.clear();
-				}
-			}
-			
-		});
+                if (taskIndex==getTaskCount()-1) {
+                    if (selection>=0 && selection<nomad.getDocumentManager().getDocumentCount())
+                        nomad.getDocumentManager().setSelectedDocument(selection);
+                    fileList.clear();
+                }
+            }
+            
+        };
 		
-		dlg.invoke();
-		
+        if (model.getTaskCount() <= 1)
+        {
+        for (int i=0;i<model.getTaskCount();i++)
+        {
+            try
+            {
+                model.run(i);
+            }
+            catch (Throwable e)
+            {
+                e.printStackTrace();
+            }
+        }
+        } else
+        {
+            NomadTaskDialog dlg = new NomadTaskDialog(model);
+            dlg.invoke();
+        }
 	}
 		
 }

@@ -40,12 +40,8 @@ public class Morph {
 		public final static int NOTE 		= 2;
 		
 		public static boolean isValid(int keyboardAssignment) {
-			switch (keyboardAssignment) {
-				case KeyboardAssignment.NONE :
-				case KeyboardAssignment.VELOCITY:
-				case KeyboardAssignment.NOTE : return true;
-				default: return false;
-			}
+			return keyboardAssignment>=0
+				&& keyboardAssignment<=2;
 		}
 	}
 

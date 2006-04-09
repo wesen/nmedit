@@ -2,6 +2,7 @@ package org.nomad.util.view;
 
 import javax.swing.JComponent;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeListener;
 
 public class TabbedPaneDocumentManager extends JTabbedPane implements DocumentManager {
 
@@ -54,6 +55,14 @@ public class TabbedPaneDocumentManager extends JTabbedPane implements DocumentMa
 			return getDocumentAt(index);
 		else
 			return null;
+	}
+
+	public void addDocumentSelectionListener(ChangeListener l) {
+		addChangeListener(l);
+	}
+
+	public void removeDocumentSelectionListener(ChangeListener l) {
+		removeChangeListener(l);
 	}
 
 }

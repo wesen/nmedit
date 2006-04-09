@@ -18,113 +18,45 @@
  */
 
 /*
- * Created on Jan 8, 2006
+ * Created on Mar 9, 2006
  */
 package org.nomad.theme.property;
 
 import java.awt.Font;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import javax.swing.JComponent;
+import org.nomad.theme.component.NomadComponent;
+import org.nomad.theme.property.editor.Editor;
+import org.nomad.theme.property.editor.FontEditor;
 
-import org.nomad.dialog.JFontChooser;
-import org.nomad.theme.property.editor.PropertyEditor;
+public abstract class FontProperty extends Property
+{
 
-/**
- * @author Christian Schneider
- */
-public abstract class FontProperty extends Property {
+    public FontProperty( String name )
+    {
+        super( name );
+        // TODO Auto-generated constructor stub
+    }
 
-	private final static String defaultFontString =
-		getFontString(new Font("SansSerif", Font.PLAIN, 9));
-	
-	/**
-	 * @param component
-	 */
-	public FontProperty() {
-		setName("font");
-		setIsInlineEditor(false);
-	}
+    @Override
+    public Value decode( String value )
+    {
+        return decodeFont(value);
+    }
 
-	/**
-	 * i=italic
-	 * b=bold
-	 * Example: 8,i,Arial means Font Arial , size 8 , bold
-	 */
-	private final static Pattern p = Pattern.compile("(\\d+),(([ibIB]),)?(([ibIB]),)?([^,]+)");
-	
-	public static boolean isValidFontString(String fString) {
-		return p.matcher(fString).matches();
-	}
-	
-	public boolean isInDefaultState() {
-		return defaultFontString.equals(getValue());
-	}
-	
-	public static Font parseFont(String fString) {
-		Matcher m = p.matcher(fString);
-		if (!m.matches()) {
-			return null;
-		} else {
-			int size = Integer.parseInt(m.group(1));
-			String fontName = m.group(m.groupCount()).trim();
-			boolean i = false;
-			boolean b = false;
-			for (int j=0;j<=m.groupCount();j++) {
-				String g = m.group(j);
-				if (g!=null) {
-					g = g.toLowerCase();
-					if (g.equals("b")) b=true;
-					else if (g.equals("i")) i=true;
-				}
-			}
-			int style = (i?Font.ITALIC:0)|(b?Font.BOLD:0);
-			return new Font(fontName, style, size);
-		}
-	}
+    @Override
+    public Value encode( NomadComponent component )
+    {
+        return encodeFont(component);
+    }
 
-	public static String getFontString(Font f) {
-		return f.getSize()+","+ (f.isBold()?"b,":"")+(f.isItalic()?"i,":"")+f.getName();
-	}
-	
-	public abstract Font getFont();
-	public abstract void setFont(Font f);
+    @Override
+    public Editor newEditor( NomadComponent component )
+    {
+        return new FontEditor(this, component);
+    }
 
-	public String getValue() {
-		return getFontString(getFont());
-	}
+    public abstract FontValue encodeFont( Font font );
+    public abstract FontValue encodeFont( NomadComponent component );
+    public abstract FontValue decodeFont(String value);
 
-	public void setValue(String value) {
-		Font f = parseFont(value);
-		if (f==null) throw new IllegalArgumentException("Invalid Font String in "+this+" :"+value);
-		setFont(f);
-	}
-
-	
-	public PropertyEditor getEditor() {
-		return new FontEditor(this);
-	}
-
-	private static class FontEditor extends PropertyEditor {
-
-		private JFontChooser fontChooser = null;
-		
-		public FontEditor(Property p) {
-			super(p);
-		}
-
-		public String getEditorValue() {		
-			return fontChooser==null?null: getFontString(fontChooser.getFont());
-		}
-		
-		public Font getFont() {
-			return this.getFont();
-		}
-
-		public JComponent getEditorComponent() {
-			return fontChooser= new JFontChooser(((FontProperty) getProperty()).getFont());
-		}
-		
-	}
 }

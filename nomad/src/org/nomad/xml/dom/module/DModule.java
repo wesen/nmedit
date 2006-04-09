@@ -12,6 +12,8 @@ import java.awt.Image;
  */
 public class DModule {
 
+	public static final int APPROXIMATE_MODULE_COUNT = 130;
+	
 	/** An icon representation for this module */
 	private Image icon;
 	/** A list containing DParameter objects describing the parameters this module has */
@@ -20,6 +22,8 @@ public class DModule {
 	private DCustom[] dcustoms = new DCustom[0];
 	/** A list containing DConnector objects describing the connectors this module has */
 	private DConnector[] dconnectors = new DConnector[0];
+	private DConnector[] dinputs = new DConnector[0];
+	private DConnector[] doutputs = new DConnector[0];
 	/** The parent toolbar section this module belongs to */
 	private DSection parent = null;
 	/** The name of this module */
@@ -184,6 +188,20 @@ public class DModule {
 		tmp[context] = c;
 		c.setContextId(context);
 		dconnectors = tmp;
+		
+		DConnector[] src = c.isInput() ? dinputs : doutputs ;
+		
+		tmp = new DConnector[Math.max(src.length, c.getId())+1];
+		for (int i=0;i<src.length;i++)
+			tmp[i]=src[i];
+		for (int i=src.length;i<tmp.length;i++)
+			tmp[i]=null;
+		tmp[c.getId()] = c;
+		
+		if (c.isInput())
+			dinputs = tmp;
+		else
+			doutputs = tmp;
 	}
 	
 	/**
@@ -384,6 +402,15 @@ public class DModule {
 	 * @return the connector or null if the connector does not exist
 	 */
 	public DConnector getConnectorById(int connectorID, boolean isInput) {
+		
+		DConnector[] src = isInput ? dinputs : doutputs;
+		
+		if (connectorID>=0 && connectorID<src.length)
+			return src[connectorID];
+		else
+			return null;
+		
+		/*
 		for (DConnector c : dconnectors) {
 			if (c.getId()==connectorID) {
 				if (isInput && c.isInput())
@@ -393,6 +420,8 @@ public class DModule {
 			}
 		}
 		return null; // bad luck, not found
+		
+		*/
 	}
 
 	public boolean isCvaOnly() {
@@ -425,6 +454,18 @@ public class DModule {
 	
 	public DConnector[] getConnectorList() {
 		return dconnectors;
+	}
+
+	public int hashCode() {
+		return mdID;
+	}
+	
+	public boolean equals(Object object) {
+		if (object instanceof DModule) {
+			return mdID == ((DModule) object).mdID;
+		} else {
+			return false;
+		}
 	}
 	
 }

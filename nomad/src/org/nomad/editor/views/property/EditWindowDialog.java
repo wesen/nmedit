@@ -36,21 +36,27 @@ import javax.swing.JPanel;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 
+import org.nomad.theme.component.NomadComponent;
 import org.nomad.theme.property.Property;
-import org.nomad.theme.property.editor.PropertyEditor;
+import org.nomad.theme.property.Value;
+import org.nomad.theme.property.editor.Editor;
+import org.nomad.theme.property.editor.EditorEvent;
+import org.nomad.theme.property.editor.EditorListener;
 
-class EditWindowDialog extends JDialog implements ActionListener, CellEditorListener {
+class EditWindowDialog extends JDialog implements ActionListener, CellEditorListener, EditorListener {
 
-	private PropertyEditor propertyEditor = null;
+	private Editor propertyEditor = null;
 	private JButton modSave = new JButton("Save");
 	private JButton modCancel = new JButton("Cancel");
 	private Property property = null;
+	private NomadComponent component;
 	
-	public EditWindowDialog(JFrame frame, NomadPropertyEditor editor, Property property) {
+	public EditWindowDialog(JFrame frame, NomadComponent component, NomadPropertyEditor editor, Property property) {
 		super(frame, "Editor:"+property.getName());
+		this.component = component;
 		//this.editor = editor;
 		this.property = property;
-		propertyEditor = property.getEditor();
+		propertyEditor = property.newEditor(component);
 
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(getPropertyEditor().getEditorComponent(), BorderLayout.CENTER);
@@ -65,7 +71,7 @@ class EditWindowDialog extends JDialog implements ActionListener, CellEditorList
 		modCancel.addActionListener(this);
 		//this.editor.validate();
 		
-		getPropertyEditor().addCellEditorListener(this);
+		getPropertyEditor().addEditorListener(this);
 		
 
 		setSize(640/2, 480/2);
@@ -85,21 +91,26 @@ class EditWindowDialog extends JDialog implements ActionListener, CellEditorList
 		
 	}
 
-	PropertyEditor getPropertyEditor() {
+	Editor getPropertyEditor() {
 		return propertyEditor;
 	}
 
 	public void actionPerformed(ActionEvent event) {
 		if (event.getSource()==modCancel) {
-			getPropertyEditor().fireEditingCanceled();
+			getPropertyEditor().fireEditorEvent(EditorEvent.EventId.EDITING_CANCELED);
 		} else {
-			getPropertyEditor().fireEditingStopped();
+            getPropertyEditor().fireEditorEvent(EditorEvent.EventId.EDITING_STOPPED);
 		}
 	}
 
 	public void editingStopped(ChangeEvent event) {
-		property.setValue(getPropertyEditor().getEditorValue());
+        Value v = getPropertyEditor().getValue();
+        v.assignTo(getComponent());
 		shutDown();
+	}
+
+	private NomadComponent getComponent() {
+		return component;
 	}
 
 	public void editingCanceled(ChangeEvent event) {
@@ -107,8 +118,13 @@ class EditWindowDialog extends JDialog implements ActionListener, CellEditorList
 	}
 	
 	public void shutDown() {
-		getPropertyEditor().removeCellEditorListener(this);
+		getPropertyEditor().removeEditorListener(this);
 		setVisible(false);
 	}
+
+    public void editorChanged( EditorEvent e )
+    {
+        shutDown();
+    }
 
 }

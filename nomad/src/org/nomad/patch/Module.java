@@ -25,7 +25,8 @@ package org.nomad.patch;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import org.nomad.env.Environment;
+import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
+
 import org.nomad.patch.event.ModuleChangeListener;
 import org.nomad.patch.format.PatchConstructionException;
 import org.nomad.patch.ui.ModuleSectionUI;
@@ -50,7 +51,7 @@ public class Module {
 	private ModuleSection moduleSection = null;
 
 	private ArrayList<ModuleChangeListener> listenerList;
-	
+
 	public Module(DModule info) {
 		this.info = info;
 		
@@ -96,7 +97,7 @@ public class Module {
 	}
 
 	public ModuleUI newUI(ModuleSectionUI moduleSection) {
-    	return ui = Environment.sharedInstance().getBuilder().compose(this, moduleSection);
+    	return ui = NomadEnvironment.sharedInstance().getBuilder().compose(this, moduleSection);
 	}
 	
 	void setModuleSection(ModuleSection moduleSection) {
@@ -120,11 +121,24 @@ public class Module {
 	}
 	
 	public Parameter getParameter(int index) {
-		return Module.<Parameter>get(parameters, index);
+		/*if (index<0||index>=parameters.length)
+			return null;
+		else
+			*/return parameters[index];
 	}
 	
 	public Custom getCustom(int index) {
-		return Module.<Custom>get(customs, index);
+		/*if (index<0||index>=customs.length)
+			return null;
+		else
+			*/return customs[index];
+	}
+	
+	public Connector getConnector(int index) {
+		/*if (index<0||index>=connectors.length)
+			return null;
+		else
+			*/return connectors[index];
 	}
 	
 	public Parameter[] getParameters() {
@@ -137,17 +151,6 @@ public class Module {
 	
 	public Connector[] getConnectors() {
 		return connectors;
-	}
-	
-	protected static <T> T get(T[] array, int index) {
-		if (index<0 || index>=array.length)
-			return null;
-		else
-			return array[index];
-	}
-	
-	public Connector getConnector(int index) {
-		return Module.<Connector>get(connectors, index);
 	}
 	
 	public DModule getInfo() { 

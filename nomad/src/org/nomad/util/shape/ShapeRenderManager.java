@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import org.nomad.util.array.Array2D;
@@ -47,6 +48,7 @@ public class ShapeRenderManager<T extends Shape> extends Array2D<ShapeContainer<
 	private ShapeAdder<T> adder ;
 	private ShapeRemover<T> remover ;
 	private ShapeModifier<T> modifier ;
+	private ShapeRefresher<T> refresher;
 	private int updateCount = 0;
 
 	private int updateSegL = 0;
@@ -75,21 +77,47 @@ public class ShapeRenderManager<T extends Shape> extends Array2D<ShapeContainer<
 		adder 	= new ShapeAdder<T>(this);
 		remover = new ShapeRemover<T>(this);
 		modifier = new ShapeModifier<T>(this);
+		refresher =  new ShapeRefresher<T>(this);
 		map = new HashMap<T, ShapeInfo<T>>();
 		directMap = new HashMap<T, ShapeInfo<T>>();
 	}
 	
 	private int renderQueueStepSize = 10; // how many items are processed per call
 	
+	public void setShapeVisible(T shape, boolean visible) {
+		ShapeInfo<T> info = map.get(shape) ;
+		//if (info.isVisible() ^ visible) {
+		beginUpdate();
+			info.setVisible(visible) ;
+			iterate(info, refresher);
+		endUpdate();
+		//}
+	}
+	
+	public boolean isShapeVisible(T shape) {
+		return map.get(shape).isVisible() ;
+	}
+    
+	private Rectangle dirtyRegions = new Rectangle(0,0,0,0);
+	
 	private boolean processRenderQueue() {
 		int cnt = Math.min(renderQueueStepSize, renderQueue.size());
-		while (cnt>0) {
-			ShapeContainer<T> c = renderQueue.remove(0);
-			c.setHighQualityRendering(true);
-			c.forceRendering(renderInfo, renderer);
-			repainter.addDirtyRegion(c.getPxX(), c.getPxY(), renderInfo.getSegmentSize(), renderInfo.getSegmentSize());
-			cnt --;
-		} 
+        
+        if (cnt>0)
+        {
+            dirtyRegions.setBounds(0,0,0,0);
+        
+    		while (cnt>0) 
+            {
+    			ShapeContainer<T> c = renderQueue.remove(0);
+    			c.setHighQualityRendering(true);
+    			c.forceRendering(renderInfo, renderer);
+                
+                SwingUtilities.computeUnion(c.getPxX(), c.getPxY(), renderInfo.getSegmentSize(), renderInfo.getSegmentSize(), dirtyRegions);
+    			cnt --;
+    		} 
+            repainter.addDirtyRegion(dirtyRegions.x, dirtyRegions.y, dirtyRegions.width, dirtyRegions.height);
+        }
 		
 		return renderQueue.size()>0;
 	}
@@ -210,19 +238,14 @@ public class ShapeRenderManager<T extends Shape> extends Array2D<ShapeContainer<
 		--updateCount;
 		update();
 	}
-
+    
 	public void paint(Graphics g) {
-		Rectangle clip = g.getClipBounds();
+		g.getClipBounds(paintRect);
 		
-		if (clip==null) {
-			paintRect.setBounds(0, 0, getWidth(), getHeight());
-		} else {
-			paintRect.setBounds(clip);
 			renderInfo.scaleToSegment(paintRect);
 			NomadUtilities.enlarge(paintRect, 1); // make it a bit larger so that scaling errors are gone
 			paintRect.x      = Math.max(paintRect.x, 0);
 			paintRect.y      = Math.max(paintRect.y, 0);
-		}
 
 		int r = Math.min(paintRect.x+paintRect.width -1, getWidth() -1);
 		int b = Math.min(paintRect.y+paintRect.height-1, getHeight()-1);
@@ -343,14 +366,16 @@ public class ShapeRenderManager<T extends Shape> extends Array2D<ShapeContainer<
 		endUpdate();
 	}
 	
-	private static class RenderQueueProcessor<T extends Shape> implements ActionListener {
+	private static class RenderQueueProcessor<T extends Shape> 
+		implements ActionListener {
 		ShapeRenderManager<T> manager;
 		Timer timer;
 		public RenderQueueProcessor(ShapeRenderManager<T> m) {
+			final int delay=10;
 			this.manager = m;
-			timer = new Timer(0, this);
+			timer = new Timer(delay, this);
 			timer.setRepeats(true);
-			timer.setDelay(10);
+			timer.setDelay(delay);
 			timer.setCoalesce(true); // warning: must not be false . See javadocs
 		}
 
@@ -360,8 +385,9 @@ public class ShapeRenderManager<T extends Shape> extends Array2D<ShapeContainer<
 			}
 		}
 		
-		public void start() {
-			if ((!timer.isRunning())&&(!manager.renderQueue.isEmpty())) {
+		public void start() 
+        {
+			if ((!manager.renderQueue.isEmpty())&&(!timer.isRunning())) {
 				timer.start();
 			}
 		}
@@ -403,6 +429,11 @@ public class ShapeRenderManager<T extends Shape> extends Array2D<ShapeContainer<
 	private static class ShapeModifier<T extends Shape> extends ShapeCellCallback<T> {
 		public ShapeModifier(ShapeRenderManager<T> m) { super(m); }
 		public void cell(int x, int y) { manager.setModified(x, y); }
+	}
+	
+	private static class ShapeRefresher<T extends Shape> extends ShapeModifier<T> {
+		public ShapeRefresher(ShapeRenderManager<T> m) { super(m); }
+		public void cell(int x, int y) { manager.getCell(x,y).setModified(); super.cell(x,y); }
 	}
 	
 }

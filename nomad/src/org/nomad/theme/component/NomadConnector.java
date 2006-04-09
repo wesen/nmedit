@@ -22,60 +22,54 @@
  */
 package org.nomad.theme.component;
 
-import java.awt.Dimension;
-import java.util.ArrayList;
+import java.awt.event.MouseEvent;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import org.nomad.patch.Cables;
 import org.nomad.patch.Connector;
 import org.nomad.patch.Module;
+import org.nomad.patch.ui.ModuleUI;
 import org.nomad.theme.NomadClassicColors;
 import org.nomad.theme.property.ConnectorProperty;
 import org.nomad.theme.property.PropertySet;
 import org.nomad.xml.dom.module.DConnector;
 
-public class NomadConnector extends NomadComponent implements ChangeListener {
+public class NomadConnector extends NomadComponent {
 
-	private ArrayList<ChangeListener> connectorChangeListenerList = null;
 	private boolean flagConnected = false;
 	private boolean flagIsInput = false;
 	private DConnector connectorInfo = null;
 	private Connector connector = null;
 
-	private static Dimension preferedSize = new Dimension(13,13);
-	
 	public NomadConnector() {
 		super();
-		setColorFromSignal(DConnector.SIGNAL_AUDIO);
+        enableEvents(MouseEvent.MOUSE_EVENT_MASK);
+		//setColorFromSignal(DConnector.SIGNAL_AUDIO);
 		setDynamicOverlay(true);
-		setPreferredSize(preferedSize);
-		setMinimumSize(preferedSize);
-		setMaximumSize(preferedSize);
-		setSize(preferedSize);
+        setDefaultSize(13,13);
+		setSize(13,13);
+		setFocusable(true);
 	}
-	
-	public void stateChanged(ChangeEvent event) {
-		if (connector!=null)
-			setConnectedState(connector.isConnected());
-	}
-	/*
-	protected CurvePanel getCurvePanel() {
-		Component c = getParent();
-		if (c!=null) {
-			c = c.getParent();
-			if (c!=null && c instanceof ModuleSectionUI) {
-				return ((ModuleSectionUI) c).getCurvePanel();
-			}
-		}
-		return null;
-	}*/
-
+    
+    protected void processMouseEvent(MouseEvent event)
+    {
+        if (event.getID() == MouseEvent.MOUSE_PRESSED)
+        {
+            if (event.isPopupTrigger()) {
+                
+                NomadConnector nc = (NomadConnector) event.getComponent();
+                Connector c = nc.getConnector();
+                if (c!=null && nc.getModule().getUI()!=null) {
+                    ModuleUI m = nc.getModule().getUI();
+                    m.showConnectorPopup(event, c);
+                }
+            }
+        }
+        
+        super.processMouseEvent(event);
+    }
+    
 	public void registerProperties(PropertySet set) {
 		super.registerProperties(set);
 		set.add(new ConnectorProperty());
-		//getAccessibleProperties().rewriteDefaults();
 	}
 	
 	public void setConnectorInfo(DConnector connectorInfo) {
@@ -83,7 +77,6 @@ public class NomadConnector extends NomadComponent implements ChangeListener {
 		if (connectorInfo!=null) {
 			setConnectorType(connectorInfo.isInput(), false);
 			setColorFromSignal(connectorInfo.getSignal());
-			fireConnectorChangeEvent();
 		}
 	}
 	
@@ -91,18 +84,21 @@ public class NomadConnector extends NomadComponent implements ChangeListener {
 		return connectorInfo;
 	}
 	
+	private int sig=-1;
+	
 	protected void setColorFromSignal(int signal) {
-		setBackground(NomadClassicColors.getConnectorColor(signal));
-		fullRepaint();
+		if (sig!=signal) {
+			sig=signal;
+			setBackground(NomadClassicColors.getConnectorColor(signal));
+			repaint();
+		}
 	}
 	
-	public void setConnectedState(boolean isConnected) {
-		setConnectedState(isConnected, true);
-	}
-	
-	public void setConnectedState(boolean isConnected, boolean fireEvent) {
-		flagConnected=isConnected;
-		if (fireEvent) fireConnectorChangeEvent();
+	public void setConnectedState(boolean connected) {
+		if (flagConnected!=connected) {
+			flagConnected=connected;
+			repaint();
+		}
 	}
 	
 	public void setConnectorType(boolean isInput) {
@@ -111,7 +107,6 @@ public class NomadConnector extends NomadComponent implements ChangeListener {
 	
 	public void setConnectorType(boolean isInput, boolean fireEvent) {
 		flagIsInput=isInput;
-		if (fireEvent) fireConnectorChangeEvent();
 	}
 	
 	public boolean isInputConnector() {
@@ -122,80 +117,18 @@ public class NomadConnector extends NomadComponent implements ChangeListener {
 		return flagConnected;
 	}
 
-	public void addConnectorChangeListener(ChangeListener l) {
-		if (connectorChangeListenerList==null)
-			connectorChangeListenerList = new ArrayList<ChangeListener>();
-		
-		if (!connectorChangeListenerList.contains(l))
-			connectorChangeListenerList.add(l);
-	}
-	
-	public void removeConnectorChangeListener(ChangeListener l) {
-		if (connectorChangeListenerList.remove(l))
-			if (connectorChangeListenerList.size()==0)
-				connectorChangeListenerList=null;
-	}
-	
-	public void fireConnectorChangeEvent(ChangeEvent event) {
-		if (connectorChangeListenerList==null) return;
-		
-		for (ChangeListener l : connectorChangeListenerList ) {
-			l.stateChanged(event);
-		}
-	}
-	
-	public void fireConnectorChangeEvent() {
-		fireConnectorChangeEvent(new ChangeEvent(this));
-	}
-
-	public void addTransition(NomadConnector c) {
-		getTransitionTable().addTransition(connector, c.connector);
-	}
-
-	public ArrayList<Connector> getComposite() {
-		if (connector!=null) {
-			Cables t = getTransitionTable();
-			if (t!=null) {
-				return t.getLinked(connector);
-			}
-		}
-		return new ArrayList<Connector>();
-	}
-
-	public boolean hasTransition(NomadConnector stop) {
-		if (connector!=null) {
-			Cables t = getTransitionTable();
-			if (t!=null) {
-				return t.hasTransition(this.connector, stop.connector);
-			}
-		}
-		return false;
-	}
-	
-	public Connector getCableCompositeOutput() {
-		Cables t = getTransitionTable();
-		return t == null ? null : t.getOutput(connector);
-	}
-	
-	protected Cables getTransitionTable() {
-		Module m = getModule();
-		return (m==null) ? null : m.getModuleSection().getCables();
-	}
-	
 	public void link(Module module) {
 		connector = module.findConnector(getConnectorInfo());
 		if (connector!=null) {
-			connector.setUI(this);
 			this.setConnectedState(connector.isConnected());
-			connector.addChangeListener(this);
+			connector.setUI(this);
 			// TODO link connector <-> ui
 		}
 	}
 	
 	public void unlink() {
 		if (connector!=null) {
-			connector.setUI(this);
-			connector.removeChangeListener(this);
+			connector.setUI(null);
 			connector = null;
 		}
 	}

@@ -32,12 +32,12 @@ public class ShapeDraggingTool<T extends Shape> {
 	private ShapeDisplay<T> display;
 	private Collection<T> shapes;
 
-	protected ShapeDraggingTool(ShapeDisplay<T> display, Collection<T> shapes) {
+	protected ShapeDraggingTool(ShapeDisplay<T> display, Collection<? extends T> shapes) {
 		this.display = display;
 		this.shapes = new ArrayList<T>(shapes);
 	}
 
-	public static <T extends Shape> ShapeDraggingTool<T> newTool(ShapeDisplay<T> display, Collection<T> shapes){
+	public static <T extends Shape> ShapeDraggingTool<T> newTool(ShapeDisplay<T> display, Collection<? extends T> shapes){
 		ShapeDraggingTool<T> tool = new ShapeDraggingTool<T>(display, shapes);
 		tool.transferShapes();
 		return tool;

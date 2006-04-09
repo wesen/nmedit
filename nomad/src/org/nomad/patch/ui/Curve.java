@@ -36,6 +36,7 @@ public class Curve extends CubicCurve2D.Float {
 	private final static int gravityLimit = 100; 		// in pixel
 	private final static int hrzGravityTreshold = dyTreshold/2; 	// in pixel
 	private Color color = Color.WHITE;
+    private Color shadow = Color.WHITE;
 	//private ShapeGrid shapeGrid = new ShapeGrid() ;
 	
 	public Curve() {
@@ -57,9 +58,15 @@ public class Curve extends CubicCurve2D.Float {
 	public void setColor(Color c) {
 		if (c!=null && !this.color.equals(c)) {
 			this.color = c;
+            this.shadow = CurvePainter.createShadow(this);
 			update();
 		}
 	}
+    
+    public Color getShadow()
+    {
+        return this.shadow;
+    }
 
 	protected void update() { }
 
@@ -93,6 +100,14 @@ public class Curve extends CubicCurve2D.Float {
 	
 	public void setCurve(float x1, float y1, float ctrlx1, float ctrly1, float ctrlx2, float ctrly2, float x2, float y2) {
 		setCurve(x1, y1, x2, y2);
+	}
+	
+	protected void swapPoints() {
+		float tmp;
+		tmp = x1; x1=x2; x2=tmp;
+		tmp = y1; y1=y2; y2=tmp;
+		tmp = ctrlx1; ctrlx1=ctrlx2; ctrlx2=tmp;
+		tmp = ctrly1; ctrly1=ctrly2; ctrly2=tmp;
 	}
 	
 	public void setCurve(float x1, float y1, float x2, float y2) {

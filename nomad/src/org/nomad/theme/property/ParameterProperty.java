@@ -18,163 +18,64 @@
  */
 
 /*
- * Created on Jan 12, 2006
+ * Created on Mar 15, 2006
  */
 package org.nomad.theme.property;
 
+import org.nomad.theme.component.NomadActiveLabel;
+import org.nomad.theme.component.NomadComponent;
 import org.nomad.theme.component.NomadControl;
-import org.nomad.theme.property.editor.PropertyEditor;
-import org.nomad.xml.dom.module.DCustom;
+import org.nomad.theme.property.editor.ComboBoxEditor;
+import org.nomad.theme.property.editor.Editor;
 import org.nomad.xml.dom.module.DModule;
-import org.nomad.xml.dom.module.DParameter;
-import org.nomad.xml.dom.module.ModuleDescriptions;
 
-public class ParameterProperty extends Property {
+public class ParameterProperty extends Property
+{
+    public ParameterProperty()
+    {
+        this( 0 );
+    }
 
-	public ParameterProperty() {
-		setName("parameter#0");
-	}
+    public ParameterProperty( int paramIndex )
+    {
+        super( "parameter#" + paramIndex );
+    }
 
-	public void setValue(String value) {
-		setDParameter(decode(value));
-		//fireChangeEvent();
-	}
-	
-	// private final static Pattern pattern = Pattern.compile("(\\d+)\\.(\\d+)\\.([cp])\\..*");
+    @Override
+    public Value decode( String value )
+    {
+        return new ParameterValue( this, value );
+    }
 
-	/*
-	public static DParameter decode(String value) {
-		Matcher m = pattern.matcher(value);
-		if (!m.matches()) {			
-			System.err.println("Parameter pattern not matched by '"+value+"'.");
-			return null;
-		}
-		String[] pieces = value.split("\\.");		
-		int moduleId = Integer.parseInt(pieces[0]);
-		int paramId = Integer.parseInt(pieces[1]);
-		String type = pieces[2];
-		boolean isCustom = type.equals("c");
+    @Override
+    public Value encode( NomadComponent component )
+    {
+        if (component instanceof NomadControl)
+            return new ParameterValue( this, ( (NomadControl) component )
+                    .getParameterInfo() );
+        else  if (component instanceof NomadActiveLabel)
+            return new ParameterValue( this, ( (NomadActiveLabel) component )
+                    .getParameterInfo() );
+        else
+            return null;
+    }
 
-		DModule module = ModuleDescriptions.sharedInstance().getModuleById(moduleId);
-		if (module==null){
-			System.err.println("In ParameterProperty.decode(): Module [id="+moduleId+"] not found");
-			return null;
-		}
-		if (isCustom) return module.getCustomParamById(paramId);
-		else return module.getParameterById(paramId);
-	}*/
+    @Override
+    public Editor newEditor( NomadComponent component )
+    {
+        Value[] values;
 
-	public static DParameter decode(String value) {
-		int pos = 0;
-		char c;
+        DModule info = findModuleInfo( component );
+        if (info == null)
+            values = new Value[0];
+        else
+        {
+            values = new Value[info.getParameterCount()];
+            for (int i = 0; i < info.getParameterCount(); i++)
+                values[i] = new ParameterValue( this, info.getParameter( i ) );
+        }
 
-		if (pos>=value.length()) {
-			System.err.println("In ParameterProperty.decode(): no data.");
-			return null;
-		}
-		int moduleId = 0;
-		
-		for (;pos<value.length();pos++) {
-			c = value.charAt(pos);
-			if (Character.isDigit(c)) {
-				moduleId = (moduleId*10)+c-'0';
-			} else if (c=='.') {
-				pos++;
-				break;
-			}
-			else {
-				System.err.println("In ParameterProperty.decode(): Expected module id.");
-				return null;
-			}
-		}
-		
-		if (pos>=value.length()) return null;
-		int paramId  = 0;
-		
-		for (;pos<value.length();pos++) {
-			c = value.charAt(pos);
-			if (Character.isDigit(c)) {
-				paramId = (paramId*10)+c-'0';
-			} else if (c=='.') {
-				pos++;
-				break;
-			}
-			else {
-				System.err.println("In ParameterProperty.decode(): Expected parameter id.");
-				return null;
-			}
-		}
-		
-		boolean isCustom;
-		if (pos>=value.length()) return null;
-		c = value.charAt(pos);
-		switch (c) {
-			case 'c': isCustom = true;  break;
-			case 'p': isCustom = false; break;
-			default : 
-				System.err.println("In ParameterProperty.decode(): Expected 'c' for custom or 'p' for parameter, but found '"+c+"'.");
-				return null;
-		}
-		
-		// rest of string is not necessary
-		
-		DModule module = ModuleDescriptions.sharedInstance().getModuleById(moduleId);
-		if (module==null){
-			System.err.println("In ParameterProperty.decode(): Module [id="+moduleId+"] not found");
-			return null;
-		}
-		if (isCustom) return module.getCustomParamById(paramId);
-		else return module.getParameterById(paramId);
-	}
+        return new ComboBoxEditor( this, component, values );
+    }
 
-	public static String encode(DParameter p) {
-		if (p==null) return "";
-		return p.getParent().getModuleID()+"."+p.getId()+"."+ (p instanceof DCustom?"c":"p")+"."+p.getName();
-	}
-	
-	public String getValue() {
-		return encode(getDParameter());
-	}
-	
-	public void setDParameter(DParameter p) {
-		if (getComponent() instanceof NomadControl)
-			((NomadControl) getComponent()).setParameterInfo(p);
-	}
-	
-	public DParameter getDParameter() {
-		if (getComponent() instanceof NomadControl)
-			return ((NomadControl) getComponent()).getParameterInfo();
-		return null;
-	}
-
-	public DParameter[] findParameters() {
-		DModule info = findModuleInfo();
-		DParameter[] list = null;
-		if (info != null) {
-			list = new DParameter[info.getParameterCount()];
-			for (int i=0;i<info.getParameterCount();i++)
-				list[i] = info.getParameter(i);
-		}
-		return list;
-	}
-	
-	public String[] findAndEncodeParameters() {
-		DParameter[] params = findParameters();
-		if (params!=null) {
-			String[] list = new String[params.length];
-			for (int i=params.length-1;i>=0;i--)
-				list[i]=encode(params[i]);
-			return list;
-		}
-		return null;
-	}
-
-	public PropertyEditor getEditor() {
-		String[] list = findAndEncodeParameters();
-		if (list==null)
-			return super.getEditor();
-		else
-			return new PropertyEditor.ComboBoxEditor(this, list, getValue());
-	}
-	
 }

@@ -35,7 +35,6 @@ import java.awt.event.ContainerAdapter;
 import java.awt.event.ContainerEvent;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.border.Border;
@@ -52,6 +51,27 @@ public class NomadVocoderController extends NomadComponent implements NomadButto
 	private int cs=0;
 	private Dimension maxStringBound = null;
 	
+    protected void processMouseEvent(MouseEvent event)
+    {
+        if (event.getID() == MouseEvent.MOUSE_CLICKED)
+        {
+            if (display!=null) {
+                behaviour.calculateMetrics();
+                int index = behaviour.getButtonIndexAt(event.getPoint());
+                switch (index) {
+                    case 0: display.setBands(-2); break;
+                    case 1: display.setBands(-1); break;
+                    case 2: display.setBands( 0); break;
+                    case 3: display.setBands(+1); break;
+                    case 4: display.setBands(+2); break;
+                    case 5: display.setBandsInv(); break;
+                    case 6: display.setBandsRnd(); break;
+                }
+            }
+        }
+        super.processMouseEvent(event);
+    }
+    
 	public NomadVocoderController() {
 		super();
 		setDynamicOverlay(true);
@@ -69,28 +89,10 @@ public class NomadVocoderController extends NomadComponent implements NomadButto
 		behaviour = new NomadButtonArrayBehaviour(this);
 		behaviour.calculateMetrics();
 		Dimension d = behaviour.getPreferredSize();
-		setMinimumSize(d);
 		setSize(d);
-		setPreferredSize(d);
-		setMaximumSize(d);
 		
-		addMouseListener(new MouseAdapter(){
-			public void mouseClicked(MouseEvent event) {
-				if (display!=null) {
-					behaviour.calculateMetrics();
-					int index = behaviour.getButtonIndexAt(event.getPoint());
-					switch (index) {
-						case 0: display.setBands(-2); break;
-						case 1: display.setBands(-1); break;
-						case 2: display.setBands( 0); break;
-						case 3: display.setBands(+1); break;
-						case 4: display.setBands(+2); break;
-						case 5: display.setBandsInv(); break;
-						case 6: display.setBandsRnd(); break;
-					}
-				}
-			}});
-		
+        enableEvents(MouseEvent.MOUSE_EVENT_MASK);
+        
 		addHierarchyListener(new HierarchyListener() {
 
 			public void hierarchyChanged(HierarchyEvent event) {

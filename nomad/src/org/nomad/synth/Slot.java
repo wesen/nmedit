@@ -113,7 +113,7 @@ public class Slot implements ModuleSectionListener, ModuleChangeListener {
 		parameterMessage.set("slot", slotId);
 		parameterMessage.set("pid", pid);
 		parameterMessage.set("module", module.getIndex());
-		parameterMessage.set("section", module.getModuleSection().getIndex());
+		parameterMessage.set("section", module.getModuleSection().getType().SectionId);
 		parameterMessage.set("parameter",parameter.getInfo().getContextId());
 		parameterMessage.set("value",parameter.getValue());
 		try {

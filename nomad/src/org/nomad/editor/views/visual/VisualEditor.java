@@ -36,15 +36,17 @@ import java.util.HashMap;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
+
 import org.nomad.editor.ComponentAlignmentMenu;
 import org.nomad.editor.views.ComponentZOrderMenuItem;
 import org.nomad.editor.views.property.NomadPropertyEditor;
-import org.nomad.env.Environment;
 import org.nomad.theme.ModuleComponent;
 import org.nomad.theme.NomadClassicColors;
 import org.nomad.theme.component.NomadComponent;
 import org.nomad.theme.property.Property;
 import org.nomad.theme.property.PropertySet;
+import org.nomad.theme.property.Value;
 import org.nomad.xml.dom.module.DModule;
 
 public class VisualEditor extends NomadComponent implements ModuleComponent {
@@ -213,7 +215,7 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 		}
 
 		selection.clear();
-		getPropertyEditor().setEditingPropertySet(null);
+		getPropertyEditor().setEditingPropertySet(null, null);
 	}
 	
 	public NomadComponent getFirstSelection() {
@@ -227,7 +229,8 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 			clearSelection();
 			if (component!=null) {
 				getPropertyEditor().setEditingPropertySet(
-						Environment.sharedInstance().getFactory().getProperties(component)
+						component,
+						NomadEnvironment.sharedInstance().getFactory().getProperties(component)
 				);
 				selection.add(component);
 				component.setVisible(true);
@@ -277,14 +280,14 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 			return null;
 		}
 		
-		HashMap<String, String> src = new HashMap<String,String>();
+		HashMap<String, Value> src = new HashMap<String,Value>();
 		
-		for (Property p : Environment.sharedInstance().getFactory().getProperties(c)) {
-			src.put(p.getName(), p.getValue());
+		for (Property p : NomadEnvironment.sharedInstance().getFactory().getProperties(c)) {
+			src.put(p.getName(), p.encode(c));
 		}
 		
-		for (Property p : Environment.sharedInstance().getFactory().getProperties(clone)) {
-			p.setValue( src.get(p.getName()) );
+		for (Value v : src.values()) {
+            v.assignTo(c);
 		}
 		
 		return clone;

@@ -152,8 +152,10 @@ public class ShapeContainer<T extends Shape> extends ArrayList<ShapeInfo<T>> {
 				}
 		
 				g2.translate(-pxX, -pxY);
-				for (ShapeInfo<T> sinfo : this) 
-					renderer.paint(g2, sinfo.getShape());
+				for (ShapeInfo<T> sinfo : this) {
+					if (sinfo.isVisible())
+						renderer.paint(g2, sinfo.getShape());
+				}
 				// g2.translate(x, y); not necessary
 			
 			g2.dispose();

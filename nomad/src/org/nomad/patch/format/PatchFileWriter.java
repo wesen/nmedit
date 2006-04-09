@@ -25,15 +25,16 @@ package org.nomad.patch.format;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+import org.nomad.patch.CableColor;
 import org.nomad.patch.Connector;
 import org.nomad.patch.Header;
 import org.nomad.patch.Module;
 import org.nomad.patch.ModuleSection;
+import org.nomad.patch.ModuleSectionType;
 import org.nomad.patch.MorphList;
 import org.nomad.patch.Note;
 import org.nomad.patch.Parameter;
 import org.nomad.patch.Patch;
-import org.nomad.patch.Section;
 import org.nomad.patch.ui.Cable;
 
 public class PatchFileWriter {
@@ -71,14 +72,14 @@ public class PatchFileWriter {
 		println(m.getMorphValues());
 		/*moduleDump(patch.getCommonSection());
 		moduleDump(patch.getPolySection());*/
-		println(Section.MORPH, m.getKeyboardAssignments());		
+		println(ModuleSectionType.MORPH.SectionId, m.getKeyboardAssignments());		
 		endSection();
 		
 	}
 	
 	protected void morphMapDump(ModuleSection sec) {
 		int[] data = new int[5];
-		data[PatchFile303.MORPH_MAP_DUMP_SECTION]=sec.getIndex();
+		data[PatchFile303.MORPH_MAP_DUMP_SECTION]=sec.getType().SectionId;
 		for (Module m : sec.sortedModules()) {
 			data[PatchFile303.MORPH_MAP_DUMP_MODULE_INDEX] = m.getIndex();
 			for (int i=0;i<m.getParameterCount();i++) {
@@ -120,7 +121,7 @@ public class PatchFileWriter {
 	*/
 	protected void parameterDump(ModuleSection sec) {
 		beginSection(PatchFile303.NAME_PARAMETER_DUMP);
-		println(sec.getIndex());
+		println(sec.getType().SectionId);
 		
 		for (Module m : sec.sortedModules()) {
 			
@@ -140,7 +141,7 @@ public class PatchFileWriter {
 	
 	protected void customDump(ModuleSection sec) {
 		beginSection(PatchFile303.NAME_CUSTOM_DUMP);
-		println(sec.getIndex());
+		println(sec.getType().SectionId);
 		
 		for (Module m : sec.sortedModules()) {
 			if (m.getCustomCount()>0) {
@@ -160,7 +161,7 @@ public class PatchFileWriter {
 
 	protected void cableDump(ModuleSection sec) {
 		beginSection(PatchFile303.NAME_CABLE_DUMP);
-		println(sec.getIndex());
+		println(sec.getType().SectionId);
 		
 		int[] data = new int[7];
 		for (Cable t : sec.getCables()) {
@@ -174,7 +175,7 @@ public class PatchFileWriter {
 				src=t.getC1();
 			}
 
-			data[0] = t.getColorCode(); //t.getColor() TODO cable color
+			data[0] = t.getColorCode().ColorID; //t.getColor() TODO cable color
 			data[1] = dst.getModule().getIndex();
 			data[2] = dst.getInfo().getId();
 			data[3] = bool(dst.getInfo().isOutput());
@@ -213,7 +214,7 @@ public class PatchFileWriter {
 	
 	protected void moduleDump(ModuleSection sec) {
 		beginSection(PatchFile303.NAME_MODULE_DUMP);
-		println(sec.getIndex());
+		println(sec.getType().SectionId);
 		
 		for (Module m : sec) {
 			println(new int[]{
@@ -228,7 +229,7 @@ public class PatchFileWriter {
 	
 	protected void nameDump(ModuleSection sec) {
 		beginSection(PatchFile303.NAME_NAME_DUMP);
-		println(sec.getIndex());
+		println(sec.getType().SectionId);
 		
 		for (Module m : sec.sortedModules()) {
 			println(m.getIndex()+" "+m.getName());
@@ -268,13 +269,13 @@ public class PatchFileWriter {
 		data[PatchFile303.HEADER_UNKNOWN2]=h.getUnknown2();
 		data[PatchFile303.HEADER_UNKNOWN3]=h.getUnknown3();
 		data[PatchFile303.HEADER_UNKNOWN4]=h.getUnknown4();
-		data[PatchFile303.HEADER_CABLE_VISIBILITY_RED]		=bool(h.isCableVisible(Header.CABLE_RED));
-		data[PatchFile303.HEADER_CABLE_VISIBILITY_BLUE]		=bool(h.isCableVisible(Header.CABLE_BLUE));
-		data[PatchFile303.HEADER_CABLE_VISIBILITY_YELLOW]	=bool(h.isCableVisible(Header.CABLE_YELLOW));
-		data[PatchFile303.HEADER_CABLE_VISIBILITY_GRAY]		=bool(h.isCableVisible(Header.CABLE_GRAY));
-		data[PatchFile303.HEADER_CABLE_VISIBILITY_GREEN]	=bool(h.isCableVisible(Header.CABLE_GREEN));
-		data[PatchFile303.HEADER_CABLE_VISIBILITY_PURPLE]	=bool(h.isCableVisible(Header.CABLE_PURPLE));
-		data[PatchFile303.HEADER_CABLE_VISIBILITY_WHITE]	=bool(h.isCableVisible(Header.CABLE_WHITE));
+		data[PatchFile303.HEADER_CABLE_VISIBILITY_RED]		=bool(h.isCableVisible(CableColor.RED));
+		data[PatchFile303.HEADER_CABLE_VISIBILITY_BLUE]		=bool(h.isCableVisible(CableColor.BLUE));
+		data[PatchFile303.HEADER_CABLE_VISIBILITY_YELLOW]	=bool(h.isCableVisible(CableColor.YELLOW));
+		data[PatchFile303.HEADER_CABLE_VISIBILITY_GRAY]		=bool(h.isCableVisible(CableColor.GRAY));
+		data[PatchFile303.HEADER_CABLE_VISIBILITY_GREEN]	=bool(h.isCableVisible(CableColor.GREEN));
+		data[PatchFile303.HEADER_CABLE_VISIBILITY_PURPLE]	=bool(h.isCableVisible(CableColor.PURPLE));
+		data[PatchFile303.HEADER_CABLE_VISIBILITY_WHITE]	=bool(h.isCableVisible(CableColor.WHITE));
 		
 		println(data);
 	}

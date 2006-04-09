@@ -71,13 +71,13 @@ public class Assignable {
 		parameter = null;
 	}
 	
-	public int getSectionIndex() {
+	public ModuleSectionType getSectionIndex() {
 		if (isAssignedToParameter()) {
-			return getParameter().getModule().getModuleSection().getIndex();
+			return getParameter().getModule().getModuleSection().getType();
 		} else if (isAssignedToMorph()) { 
-			return Section.MORPH;
+			return ModuleSectionType.MORPH;
 		}
-		return -1;
+		return null;
 	}
 	
 	public int getModuleIndex() {

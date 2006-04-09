@@ -24,8 +24,6 @@ package org.nomad.theme.component;
 
 import java.awt.Color;
 import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.util.ArrayList;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -41,8 +39,6 @@ import org.nomad.xml.dom.module.DParameter;
  * @author Christian Schneider
  */
 public abstract class NomadControl extends NomadComponent {
-	private ArrayList<ChangeListener> valueChangeListenerList = new ArrayList<ChangeListener>(4);
-	private ArrayList<ChangeListener> valueOptionChangeListenerList = new ArrayList<ChangeListener>(4);
 	private int value = 0;
 	private int minValue = 0;
 	private int maxValue = 100;
@@ -52,43 +48,21 @@ public abstract class NomadControl extends NomadComponent {
 	private Double morphValue = null;
 	private DParameter parameterInfo = null;
 	private Parameter parameter = null;
-	private ParameterControlBroadcast broadcast = null;
 	private ParameterChangeListener paramListener = null;
 	
-	private final static Repainter repainter = new Repainter();
-	
-	private static class Repainter implements ChangeListener, FocusListener {
-
-		public void stateChanged(ChangeEvent event) { repaint(event.getSource()); }		
-		public void focusGained(FocusEvent event) { repaint(event.getSource()); }
-		public void focusLost(FocusEvent event) { repaint(event.getSource()); }
-		void repaint(Object source) {
-			if (source instanceof NomadControl) ((NomadControl)source).fullRepaint();
-		}
-		
-	}
+    protected void processFocusEvent(FocusEvent event)
+    {
+        if (event.getComponent() instanceof NomadControl)
+        {
+            event.getComponent().repaint();
+        }
+        
+        super.processFocusEvent(event);
+    }
 	
 	public NomadControl() {
 		super();	 
-		addValueChangeListener(repainter);
-		addValueOptionChangeListener(repainter);
-		addFocusListener(repainter);
-/*
-		addMouseListener(new MouseAdapter(){
-
-			public void mousePressed(MouseEvent event) {
-				ParameterToolTip.removeTip();
-			}
-			public void mouseEntered(MouseEvent event) {
-				if (parameterInfo!=null) {
-					ParameterToolTip tip = new ParameterToolTip(NomadControl.this, parameterInfo, getValue());
-					tip.showTip(500);
-				}
-			}
-
-			public void mouseExited(MouseEvent event) {
-				ParameterToolTip.removeTip();
-			}});*/
+        enableEvents(FocusEvent.FOCUS_EVENT_MASK);
 	}
 
 	public void registerProperties(PropertySet set) {
@@ -180,7 +154,7 @@ public abstract class NomadControl extends NomadComponent {
 	public Color getMorphBackground() {
 		return morphBackground;
 	}
-	
+	/*
 	public void addValueChangeListener(ChangeListener l) {
 		if (!valueChangeListenerList.contains(l))
 			valueChangeListenerList.add(l);
@@ -194,12 +168,19 @@ public abstract class NomadControl extends NomadComponent {
 		for (ChangeListener l : valueChangeListenerList ) {
 			l.stateChanged(event);
 		}
-	}
+	}*/
 	
 	public void fireValueChangeEvent() {
-		fireValueChangeEvent(new ChangeEvent(this));
+		//fireValueChangeEvent(new ChangeEvent(this));
+		repaint();
 	}
 	
+	public void fireValueOptionChangeEvent() {
+		//fireValueOptionChangeEvent(new ChangeEvent(this));
+		repaint();
+	}
+	
+	/*
 	public void addValueOptionChangeListener(ChangeListener l) {
 		if (valueOptionChangeListenerList==null)
 			valueOptionChangeListenerList = new ArrayList<ChangeListener>();
@@ -215,8 +196,8 @@ public abstract class NomadControl extends NomadComponent {
 		valueOptionChangeListenerList.remove(l);
 		if (valueOptionChangeListenerList.size()==0)
 			valueOptionChangeListenerList = null;
-	}
-	
+	}*/
+	/*
 	public void fireValueOptionChangeEvent(ChangeEvent event) {
 		if (valueOptionChangeListenerList==null)
 			return;
@@ -225,11 +206,7 @@ public abstract class NomadControl extends NomadComponent {
 			if (event.getSource()!=l) 
 				l.stateChanged(event);
 		}
-	}
-	
-	public void fireValueOptionChangeEvent() {
-		fireValueOptionChangeEvent(new ChangeEvent(this));
-	}
+	}*/
 	
 	public void setMaxValue(int max) {
 		if (this.maxValue!=max) {
@@ -253,15 +230,20 @@ public abstract class NomadControl extends NomadComponent {
 	}
 	
 	public void setValue(int value) {
-		setValue(value, this);
+		if (this.value!=value) {
+			this.value = value;
+			if (parameter!=null) parameter.setValue(getValue());
+			fireValueChangeEvent();
+		}
+		//setValue(value, this);
 	}
-	
+	/*
 	public void setValue(int value, Object sender) {
 		if (this.value!=value) {
 			this.value = value;
 			fireValueChangeEvent(new ChangeEvent(sender));
 		}
-	}
+	}*/
 
 	public int getMaxValue() {
 		return maxValue;
@@ -288,9 +270,7 @@ public abstract class NomadControl extends NomadComponent {
 	}
 	
 	public void link(Module module) {
-		if (broadcast==null)
-			broadcast = new ParameterControlBroadcast();
-		addValueChangeListener(broadcast);
+		//addValueChangeListener(broadcast);
 
 		parameter = module.findParameter(getParameterInfo());
 		if (parameter!=null) {
@@ -301,8 +281,7 @@ public abstract class NomadControl extends NomadComponent {
 	}
 
 	public void unlink() {
-		removeValueChangeListener(broadcast);
-		broadcast = null;
+//		removeValueChangeListener(broadcast);
 		if (parameter!=null) {
 			parameter.removeChangeListener(paramListener);
 			parameter = null;
@@ -313,16 +292,6 @@ public abstract class NomadControl extends NomadComponent {
 		public void stateChanged(ChangeEvent event) {
 			setValue(parameter.getValue());
 		}
-	}
-	
-	private class ParameterControlBroadcast implements ChangeListener {
-
-		public void stateChanged(ChangeEvent event) {
-			if (parameter!=null) {
-				parameter.setValue(getValue());
-			}
-		}
-		
 	}
 	
 }

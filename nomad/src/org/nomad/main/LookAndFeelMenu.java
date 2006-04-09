@@ -34,7 +34,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import org.nomad.env.Environment;
+import net.sf.nmedit.nomad.core.application.Const;
+import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 
 public class LookAndFeelMenu extends JMenu implements ActionListener {
 
@@ -46,8 +47,8 @@ public class LookAndFeelMenu extends JMenu implements ActionListener {
 		super(name);
 		ButtonGroup buttonGroup = new ButtonGroup();
 
-		Environment env = Environment.sharedInstance();
-		String current = env.getProperty(key_laf);
+		//NomadEnvironment env = NomadEnvironment.sharedInstance();
+		String current = NomadEnvironment.getProperty(key_laf);
 		if (current==null)
 			current = UIManager.getLookAndFeel().getName();
 
@@ -90,7 +91,7 @@ public class LookAndFeelMenu extends JMenu implements ActionListener {
 		affectedComponents.remove(component);
 	}
 
-	private final static String key_laf = "lookAndFeel";
+	private final static String key_laf = Const.CUSTOM_PROPERTY_PREFIX_STRING+"lookAndFeel";
 
 	public void actionPerformed(ActionEvent event) {
 		if (event.getSource() instanceof LookAndFeelMenuItem) {
@@ -100,8 +101,8 @@ public class LookAndFeelMenu extends JMenu implements ActionListener {
 	
 	private void setLaf(LookAndFeelInfo info) {
 		try {
-			Environment env = Environment.sharedInstance();
-			env.setProperty(key_laf, info.getName());
+			//NomadEnvironment env = NomadEnvironment.sharedInstance();
+            NomadEnvironment.setProperty(key_laf, info.getName());
 			
 			UIManager.setLookAndFeel( info.getClassName() );
 			for (Component c : affectedComponents) {

@@ -73,11 +73,15 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 	
 	private PatchUI patchui = null;
 
+    /*public void update(Graphics g) {
+        paint(g);
+    }*/
+    
 	public ModuleSectionUI(ModuleSection moduleSection) {
         curvePanel = new CableDisplay(this);
         this.moduleSection = moduleSection;
         setOpaque(true);
-        setDoubleBuffered(true);
+        setDoubleBuffered(false);
         new DropTarget(this, dropAction, ddAction, true);
         
         addMouseListener(new MouseAdapter() {
@@ -118,6 +122,11 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 	public void locationSet(ModuleUI moduleUI) {
 		curvePanel.updateCableLocations(moduleUI);
 	}
+
+    public void triggerRepaint( int x, int y, int w, int h )
+    {
+        RepaintManager.currentManager(this).addDirtyRegion(this,x, y, w, h);  
+    }
 	
 	public void setPatchUI(PatchUI patchui) {
 		this.patchui = patchui;
@@ -135,19 +144,50 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 	}
 	
 	public void moduleRemoved(Module module) {
+		ModuleUI m = module.getUI();
+		Rectangle bounds = m.getBounds(); 
 		remove(module.getUI());
+		if (isDisplayable())
+			RepaintManager.currentManager(this).addDirtyRegion(this,
+				bounds.x, bounds.y, bounds.width, bounds.height
+			);
 	}
 
-	public void moduleSectionResized() {
+    public void rearangingModules(boolean finished) {
+        /*
+        getCurvePanel().beginUpdate();
+        getCurvePanel().endUpdate();*/
+        
+        if (!finished)
+            getCableDisplay().beginUpdate();
+        else SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                getCableDisplay().endUpdate();
+                
+            }});
+    }
+	
+	private boolean adjustSize = false;
+
+	private boolean cablesVisible = true;
+
+	public void updateSize() {
         Dimension d = new Dimension( ModuleUI.Metrics.getPixelX(moduleSection.getMaxGridX()),
             	ModuleUI.Metrics.getPixelY(moduleSection.getMaxGridY()) );
         setPreferredSize(d);       
         setSize(d);
 	}
+	
+	public void moduleSectionResized() {
+		if (adjustSize) {
+			updateSize();
+		}
+	}
 
 	public void unlink() {
 		moduleSection.removeSectionListener(this);
-		getCurvePanel().setTable(null);
+		getCableDisplay().setTable(null);
 		removeModuleDisplays();
 	}
 	/*
@@ -230,16 +270,17 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 	}*/
 	
 	void populate() {
+		adjustSize = false;
         curvePanel.setTable(null); // will disable updates
 
-		for (Module module : getModuleSection()) {
-            //module = moduleSection.getModule(((Integer) e.nextElement()).intValue());
-			
-            add(module.newUI(this)/*, JLayeredPane.DEFAULT_LAYER.intValue()*/);
-        }
+		for (Module module : getModuleSection()) 
+            add(module.newUI(this));
 		
         curvePanel.setTable(moduleSection.getCables());
 		//getCurvePanel().updateCurves();
+        
+        adjustSize = true;
+        updateSize();
 	}
 	
 	void removeModuleDisplays() {
@@ -249,7 +290,7 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 		}
 	}
 
-	public CableDisplay getCurvePanel() {
+	public CableDisplay getCableDisplay() {
 		return curvePanel;
 	}
 	
@@ -260,36 +301,50 @@ public class ModuleSectionUI extends JComponent implements ModuleSectionListener
 				setComponentZOrder(c, 0);
 		}
 	}
-	
+
+    // do not use this instead of paintChildren()
+    private Rectangle clip = new Rectangle();
+    private Rectangle bounds = new Rectangle();
+    
 	protected void paintChildren(Graphics g) {
 		if (overlay!=null) {
 			super.paintChildren(g);
-			getCurvePanel().paint(g);
 			
-			Rectangle clip = g.getClipBounds();
-			if (clip==null || clip.intersects(overlay.getBounds())) {
-				g.translate(overlay.getX(), overlay.getY());
+			if (cablesVisible)
+				getCableDisplay().paint(g);
+			
+			if (clip.intersects(overlay.getBounds(bounds))) 
+            {
+				g.translate(bounds.x, bounds.y);
 				overlay.paint(g);
-				g.translate(-overlay.getX(), -overlay.getY());
+				g.translate(-bounds.x, -bounds.y);
 			}
 
-			getCurvePanel().paintDirect(g);
+			if (cablesVisible)
+            {
+				getCableDisplay().paintDirect(g);
+            }
 			
 		} else {
 			super.paintChildren(g);
-			getCurvePanel().paint(g);
-			getCurvePanel().paintDirect(g);
+			
+			if (cablesVisible)
+            {
+				getCableDisplay().paint(g);
+				getCableDisplay().paintDirect(g);
+			}
 		}
 	}
 
-	public void rearangingModules(boolean finished) {
-		if (!finished)
-			getCurvePanel().beginUpdate();
-		else SwingUtilities.invokeLater(new Runnable() {
+	public boolean areCablesVisible() {
+		return cablesVisible;
+	}
 
-			public void run() {
-				getCurvePanel().endUpdate();
-			}});
+	public void setCablesVisible(boolean visible) {
+		if (cablesVisible!=visible) {
+			cablesVisible = visible;
+			repaint();
+		}
 	}
 
 }

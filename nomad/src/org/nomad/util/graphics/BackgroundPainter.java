@@ -77,7 +77,7 @@ public class BackgroundPainter {
 		int tw = comp.getWidth();
 		int th = comp.getHeight();
 
-		Rectangle clip = g.getClipBounds();
+		Rectangle clip = g.getClipBounds(); // TODO replace by getClipBounds(Rectangle)
 		if (tile!=null) {
 			// align clip bounds
 			int x = clip.x;

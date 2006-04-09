@@ -26,7 +26,6 @@ import java.io.IOException;
 
 import org.nomad.xml.dom.theme.ComponentNode;
 import org.nomad.xml.dom.theme.ModuleNode;
-import org.nomad.xml.dom.theme.PropertyNode;
 import org.nomad.xml.dom.theme.ThemeNode;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -72,7 +71,8 @@ public class ThemeParser extends NomadPullParser {
 		}
 
 		assureAttributeExists(parser, "id", attModuleId);
-		ModuleNode domModule = dom.createModuleNode(convertInteger(parser, "id", attModuleId));
+		ModuleNode domModule = new ModuleNode(convertInteger(parser, "id", attModuleId));
+		dom.putModuleNode(domModule);
 
 		boolean done = false;
 		event = parser.nextToken();
@@ -118,7 +118,8 @@ public class ThemeParser extends NomadPullParser {
 		}
 
 		assureAttributeExists(parser, "name", attComponentName);
-		ComponentNode domComponent = domModule.createComponentNode(attComponentName);
+		ComponentNode domComponent = new ComponentNode(attComponentName);
+		domModule.addComponentNode(domComponent);
 
 
 		boolean done = false;
@@ -168,8 +169,7 @@ public class ThemeParser extends NomadPullParser {
 
 		assureAttributeExists(parser, "name", attPropertyName);
 		assureAttributeExists(parser, "value", attPropertyValue);
-		PropertyNode domProperty = domComponent.createPropertyNode(attPropertyName);
-		domProperty.setValue(attPropertyValue);
+		domComponent.putProperty(attPropertyName, attPropertyValue);
 
 		boolean done = false;
 		event = parser.nextToken();

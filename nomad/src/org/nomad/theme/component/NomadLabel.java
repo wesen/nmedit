@@ -33,361 +33,517 @@ import java.awt.RenderingHints;
 
 import javax.swing.JComponent;
 
-import org.nomad.env.Environment;
-import org.nomad.theme.property.BooleanProperty;
+import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
+
+import org.nomad.theme.property.BooleanValue;
 import org.nomad.theme.property.FontProperty;
+import org.nomad.theme.property.FontValue;
 import org.nomad.theme.property.Property;
 import org.nomad.theme.property.PropertySet;
-import org.nomad.util.misc.ImageString;
+import org.nomad.theme.property.Value;
+import org.nomad.theme.property.editor.CheckBoxEditor;
+import org.nomad.theme.property.editor.Editor;
+import org.nomad.theme.property.editor.TextEditor;
+import org.nomad.util.misc.NomadUtilities;
 
 /**
  * @author Christian Schneider
  */
-public class NomadLabel extends NomadComponent {
+public class NomadLabel extends NomadComponent
+{
 
-	private String text = null;
-	private String ikey = null;
-	private Image image = null;
-	private boolean iconSupport = true;
-	private boolean flagVertText = false;
-	private boolean flagTextAntialiasing = true;
-	private boolean flagAutoResize = true;
-	private Dimension contentSize = new Dimension(0, 0);
-	private int ty = 0;
+    private String              text                 = "label";
 
-	private final static Font defaultLabelFont = new Font("SansSerif", Font.PLAIN, 9);
-	
-	public NomadLabel() {
-		super();
-		setFont(defaultLabelFont);
-		setOpaque(false);
-		setForeground(Color.BLACK);
-		setText("label");
-	}
+    private String              ikey                 = null;
 
-	public Dimension getContentSize() {
-		return contentSize ;
-	}
-	
-	public void setContentSize(Dimension size) {
-		contentSize = new Dimension(size);
-	}
-	
-	public boolean isAutoResizeEnabled() {
-		return flagAutoResize;
-	}
-	
-	public void setAutoResize(boolean enabled) {
-		if (flagAutoResize!=enabled) {
-			flagAutoResize=enabled;
-			if (flagAutoResize)
-				fireTextUpdateEvent();
-		}
-	}
-	
-	protected void tryLoadIcon() {
-		if (iconSupport) {
-			ikey = ImageString.extractKeyFromImageString(text);
-			if (ikey!=null) {
-				image = Environment.sharedInstance().getImageTracker().getImage(ikey);
-			}
-		}
-	}
-	
-	public void setText(String text) {
-		if (this.text==text) return;
-		if (this.text!=null && text!=null && this.text.equals(text)) return;
-		this.text = text;
-		tryLoadIcon();
-		fireTextUpdateEvent();
-	}
-	
-	public void setIconSupportEnabled(boolean enable) {
-		//if (iconSupport!=enable) {
-			iconSupport = enable;
-		//	if (enable)
-		//		tryLoadIcon();
-		//	fireTextUpdateEvent();
-		//}
-	}
-	
-	protected void recalculateSize() {
-		if (iconSupport && image!=null) {
-			contentSize.setSize(image.getWidth(null), image.getHeight(null));
-		}
-		
-		FontMetrics fm = getFontMetrics(getFont());
-		
-		if (isVertical()) {
-			contentSize.setSize(fm.getMaxAdvance(), (fm.getHeight()+1)*text.length());
-			ty = fm.getHeight();
-		} else {
-			contentSize.setSize(fm.stringWidth(text), fm.getHeight());
-			ty = contentSize.height-fm.getDescent();
-		}
-		
-		useContentSize();
-	}
+    private Image               image                = null;
 
-	protected void useContentSize() {
-		if (flagAutoResize) {
-			setMinimumSize(contentSize);
-			setMaximumSize(contentSize);
-			setPreferredSize(contentSize);
-			setSize(contentSize);
-		}
-	}
-	
-	public boolean isTextAntialiased() {
-		return flagTextAntialiasing;
-	}
-	
-	public void setTextAntialiased(boolean enable) {
-		if (flagTextAntialiasing!=enable) {
-			flagTextAntialiasing=enable;
-			fireTextUpdateEvent();
-		}
-	}
-	
-	public void setVertical(boolean enable) {
-		if (this.flagVertText != enable) {
-			this.flagVertText = enable;
-			fireTextUpdateEvent();
-		}
-	}
+    public final static boolean DEFAULT_ANTIALIASING = false;
 
-	public boolean isVertical() {
-		return flagVertText;
-	}	
-	
-	// TODO replace with property event integration
-	protected void fireTextUpdateEvent() {
-		recalculateSize();
-		fullRepaint();
-	}
-	
-	public String getText() {
-		return text;
-	}
+    public final static boolean DEFAULT_VERTICAL     = false;
 
-	public void registerProperties(PropertySet set) {
-		super.registerProperties(set);
-		set.add(new LabelTextProperty());
-		set.add(new VerticalTextProperty());
-		set.add(new LabelFontProperty());
-		set.add(new AntialiasTextProperty());
-	}
-	
-	private static class AntialiasTextProperty extends BooleanProperty {
+    private boolean             iconSupport          = true;
 
-		public AntialiasTextProperty() {
-			setName("antialiasing");
-		}
+    private boolean             flagVertText         = DEFAULT_VERTICAL;
 
-		public void setBoolean(boolean value) {
-			((NomadLabel)getComponent()).setTextAntialiased(value);
-		}
+    private boolean             flagTextAntialiasing = DEFAULT_ANTIALIASING;
 
-		public boolean getBoolean() {
-			return ((NomadLabel)getComponent()).isTextAntialiased();
-		}
-		
-	}
+    private boolean             flagAutoResize       = true;
 
-	private static class LabelTextProperty extends Property {
+    private int                 contentWidth         = 30;
 
-		public LabelTextProperty() {
-			setName("text");
-		}
+    private int                 contentHeight        = 12;
 
-		public String getValue() {
-			return ((NomadLabel)getComponent()).getText();
-		}
+    private int                 ty                   = contentHeight - 2;
 
-		public void setValue(String value) {
-			((NomadLabel)getComponent()).setText(value);
-		}
-	}
-	
-	private static class VerticalTextProperty extends BooleanProperty {
-		public VerticalTextProperty() {
-			setName("vertical");
-		}
+    private final static Font   defaultLabelFont     = new Font( "SansSerif",
+                                                             Font.PLAIN, 9 );
 
-		public void setBoolean(boolean value) {
-			((NomadLabel)getComponent()).setVertical(value);
-		}
+    public NomadLabel()
+    {
+        super();
+        setSizePropertyEnabled( false );
+        super.setFont( defaultLabelFont );
+        setForeground( Color.BLACK );
+        useContentSize();
+    }
 
-		public boolean getBoolean() {
-			return ((NomadLabel)getComponent()).isVertical();
-		}
-	}
-	
-	private static class LabelFontProperty extends FontProperty {
+    public void setFont( Font f )
+    {
+        if (text != null)
+        {
+            recalculateSize();
+        }
+        super.setFont( f );
+    }
 
-		public LabelFontProperty() { }
-		public Font getFont() { return getComponent().getFont(); }
-		public void setFont(Font f) {
-			getComponent().setFont(f);
-			((NomadLabel)getComponent()).fireTextUpdateEvent();
-		}
-	}
-	
-	public static Rectangle getStringBounds(JComponent component, String string) {
-		return getStringBounds(component, string, component.getFont());
-	}
+    /*
+     * public Dimension getContentSize() { return contentSize; }
+     */
 
-	public static Rectangle getStringBounds(JComponent component, String string, Font font) {
-		return getStringBounds(component, string, font, false);
-	}
-	
-	public static Rectangle getStringBounds(JComponent component, String string, Font font, boolean vertical) {
-		FontMetrics fm = component.getFontMetrics(font);
-		Rectangle bounds = new Rectangle(0,0,0,0);
-		if (vertical) {
-			bounds.width = fm.getMaxAdvance();
-			bounds.height = (fm.getHeight()+1)*string.length();	
-			bounds.y=fm.getHeight();
-		} else {
-			bounds.width = fm.stringWidth(string);
-			bounds.height= fm.getHeight();
-			bounds.y = bounds.height-fm.getDescent();
-		} 
-		return bounds;
-	}
-	
-	public void paintDecoration(Graphics2D g2) {
-		if (image!=null) {
-			g2.drawImage(image, 0, 0, this);
-		} else {
-			if (flagTextAntialiasing) {
-				g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-			}
-			
-			g2.setFont(getFont());
-			g2.setColor(getForeground());
-			
-			if (isVertical()) {
-				FontMetrics fm = getFontMetrics(getFont());
-				for (int i=0;i<text.length();i++)
-					g2.drawString(Character.toString(text.charAt(i)), 0, (fm.getHeight()+1)*(i+1)-1);
-			} else {
-				g2.drawString(text, 0, ty);
-			}
-		}
-	}
-	
-	/*
-	
-	private ImageString imageString = new ImageString("label");
-	private int sx = 0;
-	private int sy = 0;
-	private Dimension textDim = null;
-	
-	
+    public int getContentWidth()
+    {
+        return contentWidth;
+    }
 
-	private Dimension getTextDimensionsX() {
-		Font font = getFont();
-		FontMetrics fm = getFontMetrics(font);
-		Dimension preferredSize;
-		if (isVertical()) {
-			preferredSize = new Dimension(fm.getMaxAdvance(), (fm.getHeight()+1)*imageString.getString().length());
-			// sx = 0; sy = 0;			
-			sy = fm.getHeight();
-		} else {
-			preferredSize = new Dimension(fm.stringWidth(imageString.getString()), fm.getHeight());
-			sx = 0; sy = preferredSize.height-fm.getDescent();
-		} 
-		return preferredSize;
-	}
-	
-	protected Dimension getTextDimensions() {
-		if (textDim == null)
-			textDim = getTextDimensionsX();
-		return new Dimension(textDim);
-	}
+    public int getContentHeight()
+    {
+        return contentHeight;
+    }
 
-	public void setText(String text) {
-		
-		textDim = null;
-		
-		//if (!imageString.getString().equals(text)) {
-			imageString.setString(text);
-			if (getEnvironment()!=null) {
-				imageString.loadImage(getEnvironment().getImageTracker());
-			}
-			fireTextUpdateEvent();
-		//}
-	}
-	
-	public String getText() {
-		return imageString.toString();
-	}
-	
-	public boolean isImageString() {
-		return imageString.getImage()!=null;
-	}
-	
-	private String lastString = "";
-	private boolean lastNoImage=true;
+    public void setContentSize( int w, int h )
+    {
+        this.contentWidth = w;
+        this.contentWidth = h;
+    }
 
-	protected void autoResize() {
-		if (flagAutoResize) {
-			
-			boolean hasNoImage = imageString.getImage()==null;
-			
-			if (	(lastNoImage!=hasNoImage)
-				||  (lastString!=imageString.getString()) )
-			{
-				// Comparing strings by reference is ok, since
-				// we have never another source
+    public void setContentSize( Dimension size )
+    {
+        contentWidth = size.width;
+        contentHeight = size.height;
+    }
 
-				lastNoImage=hasNoImage;
-				lastString=imageString.getString();				
-				Dimension d;
-				
-				if (hasNoImage) {
-					d = getTextDimensions();
-				} else {
-					d =imageString.getImageBounds(this).getSize();
-					if (d.width==-1||d.height==-1) {
-						// do some trick if image is not loaded
-						(new ImageIcon(imageString.getImage())).getIconWidth();
-						d =imageString.getImageBounds(this).getSize();
-					}
-				}
-				setMinimumSize(d);
-				setMaximumSize(d);
-				setPreferredSize(d);
-				setSize(d);
+    public boolean isAutoResizeEnabled()
+    {
+        return flagAutoResize;
+    }
 
-			}
-		}
-	}
-	
-	public void paintDecoration(Graphics2D g2) {
-		if (flagTextAntialiasing) {
-			//g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		}
+    public void setAutoResize( boolean enabled )
+    {
+        if (flagAutoResize != enabled)
+        {
+            flagAutoResize = enabled;
+            if (flagAutoResize) fireTextUpdateEvent();
+        }
+    }
 
-		g2.setFont(getFont());
-		g2.setColor(getForeground());
+    public void setText( String text )
+    {
+        this.text = text;
+        if (iconSupport)
+        {
+            ikey = NomadUtilities.extractKeyFromImageString( text );
+            if (ikey != null)
+            {
+                image = NomadEnvironment.sharedInstance().getImageTracker()
+                        .getImage( ikey );
+            }
+        }
+        recalculateSize();
+        fireTextUpdateEvent();
+    }
 
-		if (imageString.getImage()!=null) {
-			
-			g2.drawImage(imageString.getImage(),0,0,this);
-			
-		} else {
-			if (isVertical()) {
-				FontMetrics fm = getFontMetrics(getFont());
-				for (int i=0;i<imageString.getString().length();i++)
-					g2.drawString(Character.toString(imageString.getString().charAt(i)), 0, (fm.getHeight()+1)*(i+1)-1);
-			} else {
-				g2.drawString(imageString.getString(), sx, sy);
-			}
-		}
-	}
-	
-	*/
+    public void setIconSupportEnabled( boolean enable )
+    {
+        // if (iconSupport!=enable) {
+        iconSupport = enable;
+        // if (enable)
+        // tryLoadIcon();
+        // fireTextUpdateEvent();
+        // }
+    }
+
+    protected void recalculateSize()
+    {
+        if (flagAutoResize)
+        {
+            if (image == null || !iconSupport)
+            {
+                FontMetrics fm = getFontMetrics( getFont() );
+                if (!isVertical())
+                {
+                    contentWidth = fm.stringWidth( text );
+                    contentHeight = fm.getHeight();
+                    // ty = contentSize.height - fm.getDescent();
+                }
+                else
+                {
+                    contentWidth = fm.getMaxAdvance();
+                    contentHeight = ( fm.getHeight() + 1 ) * text.length();
+                }
+                ty = contentHeight;
+            }
+            else
+            {
+                contentWidth = image.getWidth( null );
+                contentHeight = image.getHeight( null );
+            }
+            useContentSize();
+        }
+    }
+
+    protected void useContentSize()
+    {
+        if (flagAutoResize)
+        {
+            setSize( contentWidth, contentHeight );
+        }
+    }
+
+    public boolean isTextAntialiased()
+    {
+        return flagTextAntialiasing;
+    }
+
+    public void setTextAntialiased( boolean enable )
+    {
+        if (flagTextAntialiasing != enable)
+        {
+            flagTextAntialiasing = enable;
+            fireTextUpdateEvent();
+        }
+    }
+
+    public void setVertical( boolean enable )
+    {
+        if (this.flagVertText != enable)
+        {
+            this.flagVertText = enable;
+            fireTextUpdateEvent();
+        }
+    }
+
+    public boolean isVertical()
+    {
+        return flagVertText;
+    }
+
+    // TODO replace with property event integration
+    protected void fireTextUpdateEvent()
+    {
+        repaint();
+    }
+
+    public String getText()
+    {
+        return text;
+    }
+
+    public void registerProperties( PropertySet set )
+    {
+        super.registerProperties( set );
+        set.add( new LabelTextProperty() );
+        set.add( new VerticalTextProperty() );
+        set.add( new LabelFontProperty() );
+        set.add( new AntialiasTextProperty() );
+    }
+
+    private static class AntialiasTextProperty extends Property
+    {
+
+        public AntialiasTextProperty()
+        {
+            super( "antialiasing" );
+        }
+
+        @Override
+        public Value decode( String value )
+        {
+            return new AntialiasValue( this, value );
+        }
+
+        @Override
+        public Value encode( NomadComponent component )
+        {
+            return new AntialiasValue( this, ( (NomadLabel) component )
+                    .isTextAntialiased() );
+        }
+
+        @Override
+        public Editor newEditor( NomadComponent component )
+        {
+            CheckBoxEditor editor = new CheckBoxEditor( this, component );
+            editor.setCheckedValue( new AntialiasValue(
+                    AntialiasTextProperty.this, true ) );
+            editor.setUncheckedValue( new AntialiasValue(
+                    AntialiasTextProperty.this, false ) );
+            editor.setSelected( ( (NomadLabel) component ).isTextAntialiased() );
+            return editor;
+        }
+    }
+
+    private static class AntialiasValue extends BooleanValue
+    {
+        public AntialiasValue( Property property, boolean value )
+        {
+            super( property, value );
+            setDefaultState( getBooleanValue() == DEFAULT_ANTIALIASING );
+        }
+
+        public AntialiasValue( Property property, String representation )
+        {
+            super( property, representation );
+            setDefaultState( getBooleanValue() == DEFAULT_ANTIALIASING );
+        }
+
+        public void assignTo( NomadComponent component )
+        {
+            ( (NomadLabel) component ).setTextAntialiased( getBooleanValue() );
+        }
+    }
+
+    private static class LabelTextProperty extends Property
+    {
+
+        public LabelTextProperty()
+        {
+            super( "text" );
+        }
+
+        @Override
+        public Value decode( String value )
+        {
+            return new LabelTextValue( this, value );
+        }
+
+        @Override
+        public Value encode( NomadComponent component )
+        {
+            return new LabelTextValue( this, ( (NomadLabel) component )
+                    .getText() );
+        }
+
+        @Override
+        public Editor newEditor( NomadComponent component )
+        {
+            return new TextEditor( this, component );
+        }
+
+        /*
+         * public LabelTextProperty() { setName("text"); } public String
+         * getValue(NomadComponent component) { return
+         * ((NomadLabel)component).getText(); } public void
+         * setValue(NomadComponent component, String value) {
+         * ((NomadLabel)component).setText(value); } public PropertyValue
+         * getValue(String value) { return new StringValue(this, value); }
+         */
+    }
+
+    private static class LabelTextValue extends Value
+    {
+
+        public LabelTextValue( Property property, String representation )
+        {
+            super( property, representation );
+        }
+
+        public void assignTo( NomadComponent component )
+        {
+            ( (NomadLabel) component ).setText( getRepresentation() );
+        }
+
+    }
+
+    private static class VerticalTextProperty extends Property
+    {
+
+        public VerticalTextProperty()
+        {
+            super( "vertical" );
+        }
+
+        @Override
+        public Value decode( String value )
+        {
+            return new VerticalTextValue( this, value );
+        }
+
+        @Override
+        public Value encode( NomadComponent component )
+        {
+            return new VerticalTextValue( this, ( (NomadLabel) component )
+                    .isVertical() );
+        }
+
+        @Override
+        public Editor newEditor( NomadComponent component )
+        {
+            CheckBoxEditor editor = new CheckBoxEditor( this, component );
+            editor.setCheckedValue( new VerticalTextValue(
+                    VerticalTextProperty.this, true ) );
+            editor.setUncheckedValue( new VerticalTextValue(
+                    VerticalTextProperty.this, false ) );
+            editor.setSelected( ( (NomadLabel) component ).isVertical() );
+            return editor;
+        }
+    }
+
+    private static class VerticalTextValue extends BooleanValue
+    {
+        public VerticalTextValue( Property property, boolean value )
+        {
+            super( property, value );
+            setDefaultState( getBooleanValue() == DEFAULT_VERTICAL );
+        }
+
+        public VerticalTextValue( Property property, String representation )
+        {
+            super( property, representation );
+            setDefaultState( getBooleanValue() == DEFAULT_VERTICAL );
+        }
+
+        public void assignTo( NomadComponent component )
+        {
+            ( (NomadLabel) component ).setVertical( getBooleanValue() );
+        }
+    }
+
+    /*
+     * private static class VerticalTextProperty extends BooleanProperty {
+     * public VerticalTextProperty() { setName("vertical"); } public void
+     * setBoolean(NomadComponent component, boolean value) {
+     * ((NomadLabel)component).setVertical(value); } public boolean
+     * getBoolean(NomadComponent component) { return
+     * ((NomadLabel)component).isVertical(); } public boolean
+     * isInDefaultState(NomadComponent component) { return
+     * ((NomadLabel)component).flagVertText==DEFAULT_VERTICAL; } public
+     * PropertyValue getCurrentValue(NomadComponent component) { return new
+     * BooleanValue(this, getBoolean(component)); } }
+     */
+
+    private static class LabelFontProperty extends FontProperty
+    {
+
+        public LabelFontProperty()
+        {
+            super( "font" );
+        }
+
+        @Override
+        public FontValue encodeFont( Font font )
+        {
+            return new LabelFont( this, font );
+        }
+
+        @Override
+        public FontValue encodeFont( NomadComponent component )
+        {
+            return new LabelFont( this, component.getFont() );
+        }
+
+        @Override
+        public FontValue decodeFont( String value )
+        {
+            return new LabelFont( this, value );
+        }
+
+        /*
+         * public LabelFontProperty() { } public Font getFont(NomadComponent
+         * component) { return component.getFont(); } public void
+         * setFont(NomadComponent component, Font f) { component.setFont(f);
+         * ((NomadLabel)component).fireTextUpdateEvent(); } public boolean
+         * isInDefaultState(NomadComponent component) { return
+         * ((NomadLabel)component).getFont()==NomadLabel.defaultLabelFont; }
+         */
+    }
+
+    private static class LabelFont extends FontValue
+    {
+        public LabelFont( Property property, Font font )
+        {
+            super( property, font );
+            setDefaultState( getFontValue() == NomadLabel.defaultLabelFont ); // TODO
+            // wrong,
+            // compare
+            // representation
+            // instead
+        }
+
+        public LabelFont( Property property, String representation )
+        {
+            super( property, representation );
+            setDefaultState( getFontValue() == NomadLabel.defaultLabelFont );
+        }
+
+        @Override
+        public void assignTo( NomadComponent component )
+        {
+            component.setFont( getFontValue() );
+            ( (NomadLabel) component ).fireTextUpdateEvent();
+        }
+
+    }
+
+    public static Rectangle getStringBounds( JComponent component, String string )
+    {
+        return getStringBounds( component, string, component.getFont() );
+    }
+
+    public static Rectangle getStringBounds( JComponent component,
+            String string, Font font )
+    {
+        return getStringBounds( component, string, font, false );
+    }
+
+    public static Rectangle getStringBounds( JComponent component,
+            String string, Font font, boolean vertical )
+    {
+        FontMetrics fm = component.getFontMetrics( font );
+        Rectangle bounds = new Rectangle( 0, 0, 0, 0 );
+        if (vertical)
+        {
+            bounds.width = fm.getMaxAdvance();
+            bounds.height = ( fm.getHeight() + 1 ) * string.length();
+            bounds.y = fm.getHeight();
+        }
+        else
+        {
+            bounds.width = fm.stringWidth( string );
+            bounds.height = fm.getHeight();
+            bounds.y = bounds.height - fm.getDescent();
+        }
+        return bounds;
+    }
+
+    public void paintDecoration( Graphics2D g2 )
+    {
+        if (image != null)
+        {
+            g2.drawImage( image, 0, 0, this );
+        }
+        else
+        {
+            if (flagTextAntialiasing)
+            {
+                g2.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING,
+                        RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
+            }
+
+            g2.setFont( getFont() );
+            g2.setColor( getForeground() );
+
+            if (isVertical())
+            {
+                FontMetrics fm = getFontMetrics( getFont() );
+                for (int i = 0; i < text.length(); i++)
+                    g2.drawString( Character.toString( text.charAt( i ) ), 0,
+                            ( fm.getHeight() + 1 ) * ( i + 1 ) - 1 );
+            }
+            else
+            {
+                g2.drawString( text, 0, ty );
+            }
+        }
+    }
+
 }

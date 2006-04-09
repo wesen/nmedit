@@ -23,7 +23,6 @@
 package org.nomad.dialog;
 
 import java.awt.Component;
-import java.awt.Font;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -49,7 +48,6 @@ public class NomadDialog extends DialogPane implements Runnable {
 	NomadDialogWindow window;
 
 	public NomadDialog() {
-		setFont(new Font("SansSerif", Font.PLAIN, 11));
 		setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 	}
@@ -122,7 +120,6 @@ public class NomadDialog extends DialogPane implements Runnable {
 	
 	public JPanel newGroup(String title) {
 		JLabel lbltitle = new JLabel(title);
-		lbltitle.setFont(new Font("SansSerif", Font.BOLD,11));
 		return newGroup(lbltitle);
 	}
 	
@@ -139,7 +136,6 @@ public class NomadDialog extends DialogPane implements Runnable {
 	
 	public void addRow(JPanel group, Component[] components) {
 		JPanel row = new JPanel();
-		row.setFont(getFont());
 		row.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
 		row.setLayout(new BoxLayout(row, BoxLayout.LINE_AXIS));
 		row.setBackground(getBackground());
@@ -152,7 +148,6 @@ public class NomadDialog extends DialogPane implements Runnable {
 	
 	public void addRow(JPanel group, String title, Component[] components) {
 		JLabel lbltitle = new JLabel(title==null?"":title);
-		lbltitle.setFont(new Font("SansSerif", Font.PLAIN,10));
 		Component[] c = new Component[2+components.length];
 		for (int i=0;i<components.length;i++)
 			c[i+2]=components[i];

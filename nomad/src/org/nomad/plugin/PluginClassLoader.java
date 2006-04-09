@@ -150,6 +150,7 @@ public class PluginClassLoader extends URLClassLoader {
 		File pluginPath = new File(path);
 		if ((!pluginPath.exists()) || pluginPath.isFile()) return new String[0];
 
+        
 		File[] plugins = pluginPath.listFiles();
 		ArrayList<String> candidates = new ArrayList<String>();
 		for (int i=0;i<plugins.length;i++) {

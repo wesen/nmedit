@@ -18,32 +18,26 @@
  */
 
 /*
- * Created on Jan 8, 2006
+ * Created on Mar 16, 2006
  */
 package org.nomad.theme.property;
 
-/**
- * @author Christian Schneider
- */
-public abstract class IntegerProperty extends Property {
+import org.nomad.theme.component.NomadComponent;
+import org.nomad.theme.property.editor.Editor;
+import org.nomad.theme.property.editor.TextEditor;
 
-	public IntegerProperty() {
-		setName("integer");
-	}
-	
-	public abstract void setInteger(int integer);
-	public abstract int getInteger();
+public abstract class IntegerProperty extends Property
+{
 
-	public String getValue() {
-		return ""+getInteger();
-	}
+    public IntegerProperty( String name )
+    {
+        super( name );
+    }
 
-	public void setValue(String value) {
-		try {
-			setInteger(Integer.parseInt(value));
-		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException(e);
-		}
-	}
+    @Override
+    public Editor newEditor( NomadComponent component )
+    {
+        return new TextEditor( this, component );
+    }
 
 }

@@ -42,9 +42,13 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 
+import org.nomad.theme.component.NomadComponent;
 import org.nomad.theme.property.Property;
 import org.nomad.theme.property.PropertySet;
-import org.nomad.theme.property.editor.PropertyEditor;
+import org.nomad.theme.property.Value;
+import org.nomad.theme.property.editor.Editor;
+import org.nomad.theme.property.editor.EditorEvent;
+import org.nomad.theme.property.editor.EditorListener;
 
 /**
  * @author Christian Schneider
@@ -58,6 +62,7 @@ public class NomadPropertyEditor extends JPanel {
 	private PropertyEditWindowAction pwea = new PropertyEditWindowAction();
 	private PropertySet thePropertySet = null;
 	private ArrayList<Property> properties = new ArrayList<Property>();
+	private NomadComponent component;
 	
 	public NomadPropertyEditor(JFrame ownerFrame) {
 		super();
@@ -88,11 +93,14 @@ public class NomadPropertyEditor extends JPanel {
 			
 			if ((column==1)&&(0<=row)&&(row<table.getRowCount())) {
 				Property property = properties.get(row);
-				if (!property.isInlineEditor()) { // we show the dialog window
+                
+                Editor e = property.newEditor(getComponent());
+                
+				if (e.isDialogModeEnabled()) { // we show the dialog window
 					
-					EditWindowDialog ewd = new EditWindowDialog(getOwnerFrame(), NomadPropertyEditor.this, property);
+					EditWindowDialog ewd = new EditWindowDialog(getOwnerFrame(), getComponent(), NomadPropertyEditor.this, property);
 
-					ewd.getPropertyEditor().setAutoWritebackHook(true);
+					//ewd.getPropertyEditor().setAutoWritebackHook(true);
 					ewd.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 					ewd.setModal(true);
 					ewd.setVisible(true);
@@ -108,12 +116,17 @@ public class NomadPropertyEditor extends JPanel {
 	public void updateProperties() {
 		if (thePropertySet!=null) {
 			PropertySet s = thePropertySet;
-			setEditingPropertySet(null);
-			setEditingPropertySet(s);
+			setEditingPropertySet(component, null);
+			setEditingPropertySet(component, s);
 		}
 	}
+	
+	public NomadComponent getComponent() {
+		return component;
+	}
 
-	public void setEditingPropertySet(PropertySet thePropertySet) {
+	public void setEditingPropertySet(NomadComponent component, PropertySet thePropertySet) {
+		this.component = component;
 		if (this.thePropertySet!=thePropertySet) {
 			properties.clear();
 			this.thePropertySet=thePropertySet;
@@ -139,7 +152,9 @@ public class NomadPropertyEditor extends JPanel {
 		public boolean isCellEditable(int row, int col) {
 			if (col==0) return false;
 			else {
-				return properties.get(row).isInlineEditor();
+                Editor e = properties.get(row).newEditor(getComponent());
+                
+				return !e.isDialogModeEnabled();
 			} 
 		}
 		public Object getValueAt(int row, int col) {
@@ -147,30 +162,40 @@ public class NomadPropertyEditor extends JPanel {
 				return null;
 			} else {
 				Property property = properties.get(row);
-				return col == 0 ? property.getName() : property.getValue();
+				return col == 0 ? property.getName() : property.encode(getComponent());
 			}
 		}
 		
+        /*
 		public void setValueAt(Object value, int row, int col) {
 			if (thePropertySet!=null) {
 				if (value instanceof String) {
 					Property property = (Property) properties.get(row);
-					property.setValue((String)value);
+					property.setValue(getComponent(), (String)value);
 				}
 			}
 		}
+        */
+        public void setValueAt(Object value, int row, int col) {
+            if (value instanceof Value) {
+                ((Value)value).assignTo(getComponent());
+            }
+        }
 	}
 	
-	private class CPECellEditor implements TableCellEditor {
+	private class CPECellEditor implements TableCellEditor, EditorListener {
 		
-		private PropertyEditor pe = null;
+		private Editor pe = null;
+        private ArrayList<CellEditorListener> listenerList = new ArrayList<CellEditorListener>();
 
 		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column)  {
 			pe = null;
+            listenerList.clear();
 			if (column==1 && thePropertySet!=null) {
 				Property property = (Property) properties.get(row);
-				if (property.isInlineEditor()) {
-					pe = property.getEditor();
+                pe = property.newEditor(getComponent());
+                pe.addEditorListener(this);
+				if (!pe.isDialogModeEnabled()) {
 					return pe.getEditorComponent();
 				}
 			}
@@ -178,7 +203,7 @@ public class NomadPropertyEditor extends JPanel {
 		}
 
 		public Object getCellEditorValue() {
-			return pe==null ? null : pe.getEditorValue();
+			return pe==null ? null : pe.getValue();
 		}
 
 		public boolean isCellEditable(EventObject anEvent)  {	
@@ -191,21 +216,44 @@ public class NomadPropertyEditor extends JPanel {
 
 		public boolean stopCellEditing() {
 			if (pe==null) return false;
-			pe.fireEditingStopped(new ChangeEvent(this));
+            pe.fireEditorEvent(EditorEvent.EventId.EDITING_STOPPED);
+			// pe.fireEditingStopped(new ChangeEvent(this));
 			return true;
 		}
 
 		public void cancelCellEditing() {
-			if (pe!=null) pe.fireEditingCanceled(new ChangeEvent(this));
+            if (pe!=null) pe.fireEditorEvent(EditorEvent.EventId.EDITING_CANCELED);
 		}
 
 		public void addCellEditorListener(CellEditorListener l) {
-			if (pe!=null) pe.addCellEditorListener(l);
+			if (pe!=null) 
+                listenerList.add(l);
 		}
 
 		public void removeCellEditorListener(CellEditorListener l) {
-			if (pe!=null) pe.removeCellEditorListener(l);
+			if (pe!=null) 
+                listenerList.remove(l);
 		}
+
+        public void editorChanged( EditorEvent e )
+        {
+            if (!listenerList.isEmpty())
+            {
+                ChangeEvent event = new ChangeEvent(this);
+
+                switch (e.getEventId())
+                {
+                    case EDITING_STOPPED:
+                        for (int i=listenerList.size()-1;i>=0;i--)
+                            listenerList.get(i).editingStopped(event);
+                        break;
+                    case EDITING_CANCELED:
+                    for (int i=listenerList.size()-1;i>=0;i--)
+                        listenerList.get(i).editingCanceled(event);
+                        break;
+                }
+            }
+        }
 	}
 	
 }

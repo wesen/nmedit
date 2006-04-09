@@ -22,11 +22,8 @@
  */
 package org.nomad.patch.ui;
 
-import java.awt.Color;
-
+import org.nomad.patch.CableColor;
 import org.nomad.patch.Connector;
-import org.nomad.patch.Header;
-import org.nomad.theme.NomadClassicColors;
 import org.nomad.theme.component.NomadConnector;
 import org.nomad.util.array.Transition;
 
@@ -34,7 +31,7 @@ public class Cable extends Curve implements Transition<Connector> {
 
 	private Connector c1;
 	private Connector c2;
-	private int colorCode = Header.CABLE_WHITE;
+	private CableColor colorCode = CableColor.WHITE;
 	private CableDisplay cablePanel;
 	
 	public Cable(Connector c1, Connector c2) {
@@ -59,24 +56,12 @@ public class Cable extends Curve implements Transition<Connector> {
 			cablePanel.update(this);
 	}
 	
-	public void setColor(int colorCode) {
-		setColor(getColorByColorCode(this.colorCode=colorCode));
+	public void setColor(CableColor color) {
+		colorCode = color;
+		setColor(color.getColor());
 	}
-	
-	public final static Color getColorByColorCode(int colorCode) {
-		switch (colorCode) {
-			case Header.CABLE_RED: 		return NomadClassicColors.MORPH_RED;
-			case Header.CABLE_BLUE: 	return NomadClassicColors.MORPH_BLUE;
-			case Header.CABLE_YELLOW: 	return NomadClassicColors.MORPH_YELLOW;
-			case Header.CABLE_GRAY: 	return NomadClassicColors.MORPH_GRAY;
-			case Header.CABLE_GREEN: 	return Color.GREEN;
-			case Header.CABLE_PURPLE: 	return Color.PINK;
-			case Header.CABLE_WHITE: 	return Color.WHITE;
-			default: return Color.WHITE;
-		}
-	}
-	
-	public int getColorCode() {
+
+	public CableColor getColorCode() {
 		return colorCode;
 	}
 
@@ -89,5 +74,12 @@ public class Cable extends Curve implements Transition<Connector> {
 
 	public Connector getN1() { return c1; }
 	public Connector getN2() { return c2; }
+
+	public void swapConnectors() {
+		Connector c = c1;
+		c1 = c2;
+		c2 = c;
+		swapPoints();
+	}
 
 }

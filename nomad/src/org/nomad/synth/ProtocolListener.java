@@ -38,8 +38,8 @@ import net.sf.nmedit.jnmprotocol.VoiceCountMessage;
 
 import org.nomad.patch.Module;
 import org.nomad.patch.ModuleSection;
+import org.nomad.patch.ModuleSectionType;
 import org.nomad.patch.Patch;
-import org.nomad.patch.Section;
 import org.nomad.patch.format.PatchBuilder;
 import org.nomad.patch.format.PatchConstructionException;
 import org.nomad.patch.format.PatchMessageDecoder;
@@ -205,9 +205,9 @@ public class ProtocolListener extends NmProtocolListener {
 	    //int pid = message.get("pid");
 	    int section = message.get("section");
 	    
-	    if (section==Section.POLY||section==Section.COMMON) {
+	    if (section==ModuleSectionType.POLY.SectionId||section==ModuleSectionType.COMMON.SectionId) {
 		    Patch patch = synth.getSlot(slot);
-		    ModuleSection msection = section==Section.POLY ? patch.getPolySection() : patch.getCommonSection();
+		    ModuleSection msection = section==ModuleSectionType.POLY.SectionId ? patch.getPolySection() : patch.getCommonSection();
 		    Module module = msection.get(message.get("module"));
 		    module.getParameter(message.get("parameter"))
 		    	.setValue(message.get("value"));

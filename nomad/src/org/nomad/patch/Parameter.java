@@ -22,7 +22,7 @@
  */
 package org.nomad.patch;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -31,7 +31,7 @@ import org.nomad.xml.dom.module.DParameter;
 
 public class Parameter {
 
-	private ArrayList<ChangeListener> changeListenerList ;
+	private LinkedList<ChangeListener> changeListenerList ;
 	private DParameter info;
 	private int value =  0;
 	private int morph = -1;
@@ -40,7 +40,7 @@ public class Parameter {
 	private Module module;
 
 	public Parameter(DParameter info, Module module) {
-		changeListenerList = new ArrayList<ChangeListener>();
+		changeListenerList = new LinkedList<ChangeListener>();
 		this.info = info;
 		this.module = module;
 	}
@@ -104,7 +104,17 @@ public class Parameter {
 	public int getIndex() {
 		return getInfo().getId();
 	}
-
+	
+	public void fireChangeEvent() {
+		getModule().fireParameterChangeEvent(this);
+		if (!changeListenerList.isEmpty()) {
+			ChangeEvent event = new ChangeEvent(this); 
+			for (ChangeListener l : changeListenerList)
+				l.stateChanged(event);
+		}
+	}
+	
+/*
 	public void fireChangeEvent() {
 		fireChangeEvent(new ChangeEvent(this));
 	}
@@ -115,7 +125,7 @@ public class Parameter {
 		for (ChangeListener l : changeListenerList) {
 			l.stateChanged(event);
 		}
-	}
+	}*/
 	
 	public void addChangeListener(ChangeListener l) {
 		if (!changeListenerList.contains(l))

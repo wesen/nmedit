@@ -1,5 +1,8 @@
 package org.nomad.main;
 
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Insets;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -15,10 +18,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.border.Border;
 
-import org.nomad.env.Environment;
+import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
+
 import org.nomad.patch.ui.ModuleUI;
 import org.nomad.theme.ModuleBuilder;
 import org.nomad.util.misc.MathRound;
@@ -38,6 +44,8 @@ public class ModuleToolbarButton extends JButton implements MouseListener, DragG
 	
 	public static final DataFlavor ModuleToolbarButtonFlavor = new DataFlavor("nomad/ModuleToolbarButtonFlavor", "Nomad ModuleToolbarButton");
 
+	private static final Border defaultBorder = new ToolbarButtonBorder(BorderFactory.createEtchedBorder(), 3);
+	
 	public ModuleToolbarButton(ModuleToolbar toolbar, DModule module) {
 		super(new ImageIcon(module.getIcon()));
 		this.toolbar = toolbar;
@@ -47,9 +55,38 @@ public class ModuleToolbarButton extends JButton implements MouseListener, DragG
 		dragSource = DragSource.getDefaultDragSource();
 		dragSource.createDefaultDragGestureRecognizer(this, dragAction, this);
 		
+		setBorder(defaultBorder);
+		
 		addMouseListener(this);
 	}
 
+	private static class ToolbarButtonBorder implements Border {
+
+		Border border;
+		int padding = 2;
+		
+		public ToolbarButtonBorder(Border border, int padding) {
+			this.border = border;
+			this.padding = padding;
+		}
+		
+		public void paintBorder(Component component, Graphics g, int x, int y, int w, int h) {
+			border.paintBorder(component, g, x, y, w, h);
+		}
+
+		public Insets getBorderInsets(Component c) {
+			Insets i = border.getBorderInsets(c);
+			i.set(i.left+padding, i.top+padding, i.right+padding, i.bottom+padding);
+			return i;
+		}
+
+		public boolean isBorderOpaque() {
+			// TODO Auto-generated method stub
+			return border.isBorderOpaque();
+		}
+		
+	}
+	
 	public ModuleToolbar getToolbar() {
 		return toolbar;
 	}
@@ -102,7 +139,7 @@ public class ModuleToolbarButton extends JButton implements MouseListener, DragG
 
 	public void mouseEntered(MouseEvent event) {
 		try {
-			ModuleBuilder builder = Environment.sharedInstance().getBuilder();
+			ModuleBuilder builder = NomadEnvironment.sharedInstance().getBuilder();
 
 			PermanentToolTip tip = new PermanentToolTip(this);
 			if (builder != null) {

@@ -26,12 +26,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.nomad.util.misc.NomadUtilities;
 
@@ -40,55 +37,77 @@ import org.nomad.util.misc.NomadUtilities;
  */
 public class NomadResetButton extends NomadControl {
 
-	private Metrics m = new Metrics();
+	private final static Metrics m = new Metrics();
 	private final static Color defaultBackground = Color.decode("#61A387");
 	private final static Color defaultForeground = Color.decode("#74E25D");
 	private final static Color defaultOutline = new Color(0, 0, 0, 0.4f);
 	private final Color defaultHighlight = new Color(245, 245, 220, 180);
-	private boolean upsidedown = true;
+	private final static boolean upsidedown = true;
 	private boolean rememberState = false;
 	
 	private Color clOutline = defaultOutline;
 	private Color clHighlight = defaultHighlight;
 	
-	public NomadResetButton() {
-		setOpaque(false);
+	public NomadResetButton() 
+    {
 		setDynamicOverlay(true);
+		setDefaultSize(9,6);
 		setSize(9,6);
-		setMinimumSize(getSize());
-		setMaximumSize(getSize());
-		setPreferredSize(getSize());
-		
+		setSizePropertyEnabled(false);
 		setBackground(defaultBackground);
 		setForeground(defaultForeground);
 		
-		setDefaultValue(new Integer(30));
-		
+		setDefaultValue(30);
+		/*
 		ChangeListener updater = new ChangeListener(){
 			public void stateChanged(ChangeEvent event) {
 				testIfStateChanged();
-			}};
+			}};*/
 
-
-		addMouseListener(new MouseAdapter(){
-				public void mousePressed(MouseEvent event) {
-					requestFocus();
-				}});
+        enableEvents(MouseEvent.MOUSE_EVENT_MASK);
 		
-		setFocusable(true);
-		
-		addValueChangeListener(updater);
-		addValueOptionChangeListener(updater);
-		addMouseListener(new MouseAdapter(){
-			public void mouseClicked(MouseEvent event) {
-				if (SwingUtilities.isLeftMouseButton(event)) {
-					m.update();
-					Integer def = getDefaultValue();
-					if (def!=null && m.polygonFill.getBounds().contains(event.getPoint())) {
-						setValue(def.intValue());
-					}
-				}
-			}});
+		/*addValueChangeListener(updater);
+		addValueOptionChangeListener(updater);*/
+        
+        setFocusable(true);
+	}
+    
+    protected void processMouseEvent(MouseEvent event)
+    {
+        switch (event.getID())
+        {
+            case MouseEvent.MOUSE_PRESSED:
+                {
+                    event.getComponent().requestFocus();
+                }
+                break;
+                
+            case MouseEvent.MOUSE_CLICKED:
+                {
+                if (SwingUtilities.isLeftMouseButton(event)) 
+                {
+                    NomadResetButton c = (NomadResetButton) event.getComponent();
+                    m.update(c.getWidth(), c.getHeight());
+                    Integer def = c.getDefaultValue();
+                    if (def!=null && m.polygonFill.getBounds().contains(event.getPoint())) {
+                        c.setValue(def.intValue());
+                    }
+                }
+        }
+                break;
+        }
+        
+        super.processMouseEvent(event);
+    }
+	
+	public void fireValueChangeEvent() {
+		testIfStateChanged();
+		super.fireValueChangeEvent();
+	}
+	
+	public void fireValueOptionChangeEvent() {
+		testIfStateChanged();
+		super.fireValueOptionChangeEvent();
 	}
 	
 	public void setOutline(Color color) {
@@ -102,7 +121,7 @@ public class NomadResetButton extends NomadControl {
 	protected void testIfStateChanged() {
 		if (inDefaultState()!=rememberState) {
 			rememberState=!rememberState; // update memory
-			fullRepaint();
+			repaint();
 		}
 	}
 
@@ -111,18 +130,18 @@ public class NomadResetButton extends NomadControl {
 		return (def!=null && def.intValue()==getValue());
 	}
 	
-	public class Metrics {
+	public static class Metrics {
 		int w = 0;
 		int h = 0;
 
 		Polygon polygonFill = null;
 		Polygon polygonDraw = null;
 		
-		public void update() {
-			if (w==getWidth()&&h==getHeight()&&polygonFill!=null&&polygonDraw!=null)
+		public void update(int width, int height) {
+			if (w==width&&h==height&&polygonFill!=null&&polygonDraw!=null)
 				return;
 			
-			w = getWidth(); h = getHeight();
+			w = width; h = height;
 			int s = (1-w%2); // is 0(uneven) or 1(even) , shift so that middle is not even
 			int thypotenuse = 0;
 			int theight = 0;
@@ -172,7 +191,7 @@ public class NomadResetButton extends NomadControl {
 	
 	public void paintDecoration(Graphics2D g2) {
 		configureGraphics(g2);
-		m.update();
+		m.update(getWidth(), getHeight());
 		g2.setColor(getBackground());
 		g2.fill(m.polygonFill);
 		g2.setColor(clOutline);
@@ -182,7 +201,7 @@ public class NomadResetButton extends NomadControl {
 	public void paintDynamicOverlay(Graphics2D g2) {
 		if (inDefaultState()) {
 			configureGraphics(g2);
-			m.update();
+			m.update(getWidth(), getHeight());
 			
 			Color f = getForeground();
 			g2.setColor(NomadUtilities.alpha(f, 165));

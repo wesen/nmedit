@@ -18,15 +18,56 @@
  */
 
 /*
- * Created on Jan 12, 2006
+ * Created on Feb 27, 2006
  */
 package org.nomad.xml.dom.theme;
 
+import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Iterator;
 
-public interface ThemeNode extends Node<ModuleNode> {
+import org.nomad.theme.UIFactory;
+import org.nomad.xml.pull.ThemeParser;
+import org.xmlpull.v1.XmlPullParserException;
 
-	public ModuleNode createModuleNode(int id);
-	public ModuleNode getModuleNodeById(int id);
-	public ModuleNode getModuleNode(int index);
+
+public class ThemeNode implements Iterable<ModuleNode> {
+
+	private HashMap<Integer, ModuleNode> moduleNodeMap ;
+
+	public ThemeNode() {
+		moduleNodeMap = new HashMap<Integer, ModuleNode>();
+	}
+
+	public void putModuleNode(ModuleNode moduleNode) {
+		moduleNodeMap.put(moduleNode.getId(), moduleNode);
+	}
+
+	public ModuleNode getModuleNode(int id) {
+		return moduleNodeMap.get(id);
+	}
+
+	public Iterator<ModuleNode> iterator() {
+		return moduleNodeMap.values().iterator();
+	}
+
+	public static void importDocument(ThemeNode dom, String file) {
+		ThemeParser parser = new ThemeParser(dom);
+		try {
+			parser.parse(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (XmlPullParserException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void compile(UIFactory f) {
+		for (ModuleNode m : this) {
+			for (ComponentNode c : m) {
+				c.compileProperties(f);
+			}
+		}
+	}
 
 }

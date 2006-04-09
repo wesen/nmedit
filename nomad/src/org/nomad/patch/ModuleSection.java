@@ -24,6 +24,7 @@ package org.nomad.patch;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 
@@ -31,7 +32,7 @@ import org.nomad.patch.ui.ModuleSectionListener;
 
 public class ModuleSection implements Iterable<Module> {
 
-	private int sectionIndex;
+	private ModuleSectionType section;
 	private Hashtable<Integer, Module> moduleList ;
 
 	private int maxGridX = 0;
@@ -43,8 +44,11 @@ public class ModuleSection implements Iterable<Module> {
 
 	// todo set modulesection of modules
 	
-	public ModuleSection(int sectionIndex) {
-		this.sectionIndex = sectionIndex;
+	public ModuleSection(ModuleSectionType section) {
+		if (!EnumSet.range(ModuleSectionType.COMMON, ModuleSectionType.POLY).contains(section))
+			throw new IllegalArgumentException("Invalid section type (neither common, nor poly section)");
+		
+		this.section = section;
 		moduleList = new Hashtable<Integer, Module>();
 		transitionTable = new Cables();
 		sectionListenerList = new ArrayList<ModuleSectionListener>(2);
@@ -54,16 +58,16 @@ public class ModuleSection implements Iterable<Module> {
 		return transitionTable;
 	}
 
-	public int getIndex() {
-		return sectionIndex;
+	public ModuleSectionType getType() {
+		return section;
 	}
 
 	public boolean isCommonSection() {
-		return getIndex() == Section.COMMON;
+		return ModuleSectionType.COMMON.equals(section);
 	}
 	
 	public boolean isPolySection() {
-		return getIndex() == Section.POLY;
+		return ModuleSectionType.POLY.equals(section);
 	}
 
 	public void add(Module module) {        
@@ -77,16 +81,24 @@ public class ModuleSection implements Iterable<Module> {
 		fireModuleAddedEvent(module);
 	}
 	
+	public void removeCables(Module module) {
+		for (Connector c : module.getConnectors()) {
+			getCables().removeNode(c);
+		}
+	}
+	
 	public void remove(Module module) {
-		moduleList.remove(new Integer(module.getIndex()));
+		moduleList.remove(module.getIndex());
 		module.setModuleSection(null);
 		module.setIndex(-1);
+		
+		removeCables(module);
 		
 		fireModuleRemovedEvent(module);
 	}
 
 	public Module get(int moduleIndex) {
-		return moduleList.get(new Integer(moduleIndex));
+		return moduleList.get(moduleIndex);
 	}
 	
 	public Module[] toArray() {
@@ -130,7 +142,8 @@ public class ModuleSection implements Iterable<Module> {
 
 		setGrid(w, h);
 	}
-	
+
+	// TODO call this only when necessaary
 	protected void recalculateGrid() {
 		int w=0;
 		int h=0;
@@ -157,8 +170,23 @@ public class ModuleSection implements Iterable<Module> {
 		}
 		return max;
 	}
+	
+	private boolean rearangingEnabled = true;
+	
+	public void setRearangingEnabled(boolean enable) {
+		this.rearangingEnabled = enable;
+	}
+	
+	public boolean isRearangingEnabled() {
+		return rearangingEnabled;
+	}
 
 	public void rearangeModules(Module module) {
+		
+		if (!isRearangingEnabled())
+			return ;
+		
+		// first check if there is any collision
 		
 		fireRearangingEvent(false);
 		

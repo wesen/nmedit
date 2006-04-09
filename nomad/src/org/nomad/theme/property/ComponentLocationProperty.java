@@ -18,24 +18,38 @@
  */
 
 /*
- * Created on Jan 6, 2006
+ * Created on Mar 16, 2006
  */
 package org.nomad.theme.property;
 
-/**
- * @author Christian Schneider
- */
-public class ComponentLocationProperty extends PointProperty {
+import org.nomad.theme.component.NomadComponent;
+import org.nomad.theme.property.editor.Editor;
+import org.nomad.theme.property.editor.TextEditor;
 
-	/**
-	 * @param component
-	 */
-	public ComponentLocationProperty() { }
+public class ComponentLocationProperty extends Property
+{
 
-	public void setXY(int x, int y) {
-		getComponent().setLocation(x, y);
-	}
-	public int getX() { return getComponent().getX(); }
-	public int getY() { return getComponent().getY(); }
+    public ComponentLocationProperty( )
+    {
+        super( "x,y" );
+    }
+
+    @Override
+    public Value decode( String value )
+    {
+        return new ComponentLocationValue(this, value);
+    }
+
+    @Override
+    public Value encode( NomadComponent component )
+    {
+        return new ComponentLocationValue(this, component.getLocation());
+    }
+
+    @Override
+    public Editor newEditor( NomadComponent component )
+    {
+        return new TextEditor(this, component);
+    }
 
 }

@@ -23,128 +23,174 @@
 package org.nomad.util.array;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
-
-import org.nomad.util.iterate.NullIterator;
+import java.util.LinkedList;
 
 public class TransitionMatrix<N, T extends Transition<N>> implements Iterable<T> {
 	
-	private final int DEFAULT_CAPACITY = 100;
+	// private final int DEFAULT_CAPACITY = 100;
 
-	private ArrayList<N> nodeList 		= new ArrayList<N>(DEFAULT_CAPACITY);
-	private ArrayList<T> all_transitions = new ArrayList<T>(DEFAULT_CAPACITY);
-	private ArrayList<ArrayList<T>> transitionList = new ArrayList<ArrayList<T>>(DEFAULT_CAPACITY); 
-	private ArrayList<TransitionChangeListener<T>> changeListenerList = 
-		new ArrayList<TransitionChangeListener<T>>();
-	
-	private void addNodeIfNotExists(N node, T t) {
-		int index = nodeList.indexOf(node);
-		ArrayList<T> transitions;
-		if (index<0) {
-			nodeList.add(node);
-			transitions = new ArrayList<T>(4);
-			transitions.add(t);
-			transitionList.add(transitions);
-		} else {
-			transitions = transitionList.get(index);
-			if (!transitions.contains(t))
-				transitions.add(t);
-		}
-	}
+	private HashMap<N,NodeWrapper<N, T>> nodes = new HashMap<N,NodeWrapper<N, T>>();
+	private LinkedList<T> all_transitions = new LinkedList<T>(); 
+	private LinkedList<TransitionChangeListener<T>> changeListenerList = 
+		new LinkedList<TransitionChangeListener<T>>();
 	
 	public void addTransition(T t) {
 		N n1 = t.getN1();
 		N n2 = t.getN2();
 		
 		if (n1!=n2) {
-			addNodeIfNotExists(n1, t);
-			addNodeIfNotExists(n2, t);
-			all_transitions.add(t);
+			NodeWrapper<N, T> nw;
+
+			nw = nodes.get(n1);
+			if (nw!=null) nw.addUnique(t);
+			else nodes.put(n1, new NodeWrapper<N, T>(n1, t));
 			
+			nw = nodes.get(n2);
+			if (nw!=null) nw.addUnique(t);
+			else nodes.put(n2, new NodeWrapper<N, T>(n2, t));
+
+			all_transitions.add(t);
 			fireChangeEvent(t, true);
 		}
 	}
-
+/*
 	public Iterator<N> traverseDirect(N node) {
-		int index = nodeList.indexOf(node);
-		ArrayList<T> list = null;
-		if (index>=0) {
-			list = transitionList.get(index);
-			if (list!=null)
-				return new TransitionToNodeIterator(list.iterator(), node);
-		}
-		return new NullIterator<N>();
-	}
+		NodeWrapper<N, T> nw = nodes.get(node);
+		if (nw!=null)
+			return nw.directTransitions();
+		else
+			return new NullIterator<N>();
+	}*/
 	
 	public Iterator<T> iterator() {
 		return all_transitions.iterator();
 	}
 	
 	public Iterable<T> getTransitions(N node) {
-		int index = nodeList.indexOf(node);
-		ArrayList<T> list = null;
-		
-		if (index>=0)  list = transitionList.get(index);
-		return list==null ? new ArrayList<T>() : list;
+		NodeWrapper<N, T> nw = nodes.get(node);
+		if (nw!=null) {
+			return nw.values();
+		} else
+			return new LinkedList<T>();
 	}
 	
-	public Iterable<T> getLinkedT(N node) {
-		ArrayList<T> trans = new ArrayList<T>(nodeList.size());
-		ArrayList<N> nodes = new ArrayList<N>(nodeList.size());
-		int visited = 0;
-		nodes.add(node);
+	public Collection<N> getLinked(N start) {
+		ArrayList<N> nodeList = new ArrayList<N>(nodes.keySet().size());
 		
-		while (visited<nodes.size()) {
-			node = nodes.get(visited++);
-			
-			for (T t : getTransitions(node)) {
-				N n1 = t.getN1();
-				N n2 = t.getN2();
-
-				if (!nodes.contains(n1)) nodes.add(n1);
-				if (!nodes.contains(n2)) nodes.add(n2);
-				if (!trans.contains(t)) trans.add(t);
-			}
-				
-		}
-		return trans;
-	}
-	
-	public ArrayList<N> getLinked(N start) {
-		ArrayList<N> nodes = new ArrayList<N>(nodeList.size());
-		
-		nodes.add(start);
+		nodeList.add(start);
 		int index = 0;
 		
-		while (index<nodes.size())
-			for (Iterator<N> link=traverseDirect(nodes.get(index++));link.hasNext();)
-			{
-				N node = link.next();
-				if (!nodes.contains(node)) nodes.add(node);
+		boolean found;
+		while (index<nodeList.size()) {
+			NodeWrapper<N,T> nw = nodes.get(nodeList.get(index++));
+			if (nw!=null) {
+				for (N n : nw.keySet()) {
+					found = false;
+					for (int i=0;i<index;i++)
+						if (nodeList.get(i)==n) {
+							found = true;
+							break;
+						}
+					if (!found) 
+						nodeList.add(n);
+				}
 			}
-		
-		return nodes;
+		}
+		return nodeList;
 	}
 	
-	private void removeTransition(N node, T t) {
-		int index = nodeList.indexOf(node);
-		ArrayList<T> tlist = transitionList.get(index);
-		tlist.remove(t);
-		if (tlist.size()<=0) {
-			nodeList.remove(index);
-			transitionList.remove(index);
+	public Iterator<T> getLinkedT(N start) {
+		ArrayList<N> nodeList = new ArrayList<N>(nodes.keySet().size());
+		HashMap<T,T> trans = new HashMap<T,T>();
+		
+		nodeList.add(start);
+		int index = 0;
+		
+		boolean found;
+		while (index<nodeList.size()) {
+			NodeWrapper<N,T> nw = nodes.get(nodeList.get(index++));
+			if (nw!=null) {
+				for (N n : nw.keySet()) {
+					found = false;
+					for (int i=0;i<index;i++)
+						if (nodeList.get(i)==n) {
+							found = true;
+							break;
+						}
+					if (!found) {
+						nodeList.add(n);
+						
+						for (T t : nodes.get(n).values()) {
+							if (!trans.containsKey(t))
+								trans.put(t,t);
+						}
+						
+					}
+				}
+			}
 		}
+		return trans.keySet().iterator();
 	}
+	
+	private void removeNode(NodeWrapper<N,T> nw) {
+		LinkedList<NodeWrapper<N,T>> removeList = new LinkedList<NodeWrapper<N,T>>();
+		LinkedList<T> transList = new LinkedList<T>();
+		removeList.add(nw);
+		
+		while (removeList.size()>0) {
+			nw = removeList.remove();
+			nodes.remove(nw.node);
+			
+			for (N n : nw.keySet()) {
+				NodeWrapper<N,T> nw2 = nodes.get(n);
+				T t = nw2.remove(nw.node);
+				if (!transList.contains(t)) {
+					all_transitions.remove(t);
+					transList.add(t);
+				}
+				
+				if (nw2.isEmpty())
+					removeList.add(nw2);
+			}
+		}
+		
+		for (T t : transList)
+			fireChangeEvent(t, false);
+	}
+	
+	public void removeNode(N node) {
+		NodeWrapper<N,T> nw = nodes.get(node);
+		if (nw!=null) removeNode(nw);
+	}
+	/*
+	private void removeTransition(N node, T t) {
+		NodeWrapper<N,T> nw = nodes.get(node);
+		if (nw!=null) {
+			nw.removeTransition(t);
+			all_transitions.remove(t);
+			if (nw.isEmpty()) {
+				nodes.remove(node);
+				nodeRemoved(nw);
+			}
+		}
+	}*/
 
 	public void removeTransition(T t) {
 		if (all_transitions.remove(t)) { // has transition
-			
-			N a = t.getN1();
-			N b = t.getN2();
 
-			removeTransition(a, t);
-			removeTransition(b, t);
+			NodeWrapper<N,T> nw1 = nodes.get(t.getN1());
+			NodeWrapper<N,T> nw2 = nodes.get(t.getN2());
+
+			nw1.remove(nw2.node);
+			nw2.remove(nw1.node);
+
+			if (nw1.isEmpty()) removeNode(nw1);
+			
+			if (nw2.isEmpty()) removeNode(nw1);
+			
 			fireChangeEvent(t, false);
 		}
 	}
@@ -154,21 +200,24 @@ public class TransitionMatrix<N, T extends Transition<N>> implements Iterable<T>
 	}
 
 	public boolean hasTransition(N node) {
-		return nodeList.contains(node);
+		return nodes.containsKey(node);
 	}
 	
 	public T getTransition(N a, N b) {
-		int ai1 = nodeList.indexOf(a);
-		if (ai1>=0) {
-			for (T t : transitionList.get(ai1))
-				if (t.getN1()==b||t.getN2()==b)
-					return t;
+		NodeWrapper<N,T> nwa = nodes.get(a);
+		if (nwa!=null) {
+			return nwa.get(b);
 		}
 		return null;
 	}
 
 	public boolean hasTransition(N a, N b) {
-		return getTransition(a, b)!=null;
+		NodeWrapper<N,T> nwa = nodes.get(a);
+		if (nwa!=null) {
+			return nwa.containsKey(b);
+		} else {
+			return false;
+		}
 	}
 
 	protected void fireChangeEvent(T t, boolean transition_added) {
@@ -185,32 +234,35 @@ public class TransitionMatrix<N, T extends Transition<N>> implements Iterable<T>
 	public void removeChangeListener(TransitionChangeListener<T> l) {
 		changeListenerList.remove(l);
 	}
-	
-	private class TransitionToNodeIterator implements Iterator<N> {
 
-		private Iterator<T> transitions;
-		private N neg_mask;
+	private static class NodeWrapper<N, T extends Transition<N>> extends HashMap<N, T> {
+		private N node;
 
-		public TransitionToNodeIterator(Iterator<T> transitions, N neg_mask) {
-			this.transitions = transitions;
-			this.neg_mask = neg_mask;
+		public NodeWrapper (N node, T t) {
+			this.node = node;
+			put(other(t), t);
 		}
 		
-		public boolean hasNext() {
-			return transitions.hasNext();
-		}
-
-		public N next() {
-			if (!hasNext()) throw new NoSuchElementException();
-			T t = transitions.next();
-			
-			return t.getN1()!=neg_mask?t.getN1():t.getN2();
-		}
-
-		public void remove() {
-			throw new UnsupportedOperationException();
+		public N other(T t) {
+			return t.getN1()==node ? t.getN2() : t.getN1();
 		}
 		
-	}
-	
+		public Iterator<N> directTransitions() {
+			return keySet().iterator();
+		}	
+		
+		public boolean contains(T t) {
+			return containsKey(other(t));
+		}
+
+		public void removeTransition(T t) {
+			remove(other(t));
+		}
+		
+		public void addUnique(T t) {
+			N n = other(t);
+			if (!containsKey(n)) put(n, t);
+		}
+		
+	}	
 }

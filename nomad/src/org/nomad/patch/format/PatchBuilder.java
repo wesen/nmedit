@@ -23,15 +23,17 @@
 package org.nomad.patch.format;
 
 import org.nomad.patch.Assignable;
+import org.nomad.patch.CableColor;
+import org.nomad.patch.Cables;
 import org.nomad.patch.Connector;
 import org.nomad.patch.Header;
 import org.nomad.patch.Module;
 import org.nomad.patch.ModuleSection;
+import org.nomad.patch.ModuleSectionType;
 import org.nomad.patch.Morph;
 import org.nomad.patch.Note;
 import org.nomad.patch.Parameter;
 import org.nomad.patch.Patch;
-import org.nomad.patch.Section;
 import org.nomad.patch.format.PatchConstructorCallback303.Validating;
 import org.nomad.patch.ui.Cable;
 import org.nomad.xml.dom.module.DConnector;
@@ -90,13 +92,13 @@ public class PatchBuilder extends Validating {
 			boolean cable_gray_visible, boolean cable_green_visible,
 			boolean cable_purple_visible, boolean cable_white_visible) {
 		Header h = getPatch().getHeader();
-		h.setCableVisible(Header.CABLE_RED, cable_red_visible);
-		h.setCableVisible(Header.CABLE_BLUE, cable_blue_visible);
-		h.setCableVisible(Header.CABLE_YELLOW, cable_yellow_visible);
-		h.setCableVisible(Header.CABLE_GRAY, cable_gray_visible);
-		h.setCableVisible(Header.CABLE_GREEN, cable_green_visible);
-		h.setCableVisible(Header.CABLE_PURPLE, cable_purple_visible);
-		h.setCableVisible(Header.CABLE_WHITE, cable_white_visible);
+		h.setCableVisible(CableColor.RED, 	cable_red_visible);
+		h.setCableVisible(CableColor.BLUE, 	cable_blue_visible);
+		h.setCableVisible(CableColor.YELLOW,cable_yellow_visible);
+		h.setCableVisible(CableColor.GRAY, 	cable_gray_visible);
+		h.setCableVisible(CableColor.GREEN, cable_green_visible);
+		h.setCableVisible(CableColor.PURPLE,cable_purple_visible);
+		h.setCableVisible(CableColor.WHITE, cable_white_visible);
 	}
 
 	public void header_bend(int range) {
@@ -125,7 +127,10 @@ public class PatchBuilder extends Validating {
 		Module module = new Module(info);
 		module.setIndex(moduleIndex);
 		module.setLocation(xpos, ypos);
-		(isPolySection ? getPatch().getPolySection() : getPatch().getCommonSection()).add(module);
+		ModuleSection ms = 	(isPolySection ? getPatch().getPolySection() : getPatch().getCommonSection());
+		ms.setRearangingEnabled(false);
+		ms.add(module);
+		ms.setRearangingEnabled(true);
 	}
 
 	public void morphMapDumpMorphKnobValues(int morph1, int morph2, int morph3, int morph4) {
@@ -176,10 +181,8 @@ public class PatchBuilder extends Validating {
 		DConnector idst = mdst.getInfo().getConnectorById(dst_connector_index, dst_connector_isInput);
 		DConnector isrc = msrc.getInfo().getConnectorById(src_connector_index, src_connector_isInput);
 
-		final String err = "Error in CableDump";
-		
 		if (idst==null||isrc==null) {
-			System.err.println(err);
+			System.err.println("Error in CableDump");
 			return;
 		}
 		
@@ -188,14 +191,17 @@ public class PatchBuilder extends Validating {
 		Connector csrc = msrc.findConnector(isrc);
 
 		if (cdst==null||csrc==null) {
-			System.err.println(err);
+			System.err.println("Error in CableDump");
 			return;
 		}
 		
-		Cable cable = section.getCables().addTransition(cdst, csrc);
-		
-		if (cable!=null)
-			cable.setColor(color);
+		Cable cable = new Cable(cdst, csrc);
+		CableColor c = CableColor.byColorId(color);
+		cable.setColor(c==null?CableColor.WHITE : CableColor.byColorId(color));
+        Cables d = section.getCables();
+		d.setColoringEnabled(false);
+		d.addValidTransition(cable);
+		d.setColoringEnabled(true);
 	}
 
 	public void morphMapDump(boolean isPolySection, int module_index,
@@ -221,20 +227,20 @@ public class PatchBuilder extends Validating {
 	}
 
 	protected boolean assign(Assignable assignable, int section, int module_index, int parameter_index) {
-		switch (section) {
-			case Section.COMMON: {
+		switch (ModuleSectionType.bySectionId(section)) {
+			case COMMON: {
 				Module module = getPatch().getCommonSection().get(module_index);
 				Parameter parameter = module.getParameter(parameter_index);
 				assignable.assignTo(parameter);
 				return true;
 			} 
-			case Section.POLY: {
+			case POLY: {
 				Module module = getPatch().getPolySection().get(module_index);
 				Parameter parameter = module.getParameter(parameter_index);
 				assignable.assignTo(parameter);
 				return true;
 			} 
-			case Section.MORPH: {
+			case MORPH: {
 				Morph morph = getPatch().getMorphList().get(parameter_index);
 				assignable.assignTo(morph);
 				return true;

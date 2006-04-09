@@ -4,7 +4,7 @@ import java.awt.Graphics;
 import java.io.FileNotFoundException;
 
 import org.nomad.patch.ModuleSection;
-import org.nomad.patch.Section;
+import org.nomad.patch.ModuleSectionType;
 import org.nomad.patch.ui.ModuleSectionUI;
 import org.nomad.patch.ui.ModuleUI;
 import org.nomad.theme.UIFactory;
@@ -66,7 +66,7 @@ public class G2ThemeFactory extends UIFactory {
 	public ModuleSectionUI getModuleSectionUI(ModuleSection moduleSection) {
 		BackgroundPainter painter = bgpainterFX;			
 		if (moduleSection!=null 
-			&& moduleSection.getIndex()==Section.POLY) {
+			&& ModuleSectionType.POLY.equals(moduleSection.getType())) {
 			painter = bgpainterVA;
 		}
 		return new G2ModuleSectionGUI(moduleSection, getImageTracker(), painter);

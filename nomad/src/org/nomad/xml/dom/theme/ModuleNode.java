@@ -18,18 +18,40 @@
  */
 
 /*
- * Created on Jan 12, 2006
+ * Created on Feb 27, 2006
  */
 package org.nomad.xml.dom.theme;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 
-import org.nomad.xml.dom.module.DModule;
 
-public interface ModuleNode extends Node<ComponentNode> {
+public class ModuleNode implements Iterable<ComponentNode> {
 
-	public DModule getModule();
-	public ComponentNode createComponentNode(String name);
-	public ComponentNode getComponentNode(int index);
-	public void removeChildren();
+	private LinkedList<ComponentNode> componentNodeList;
+	private int id;
+	
+	public ModuleNode(int id) {
+		this.id = id;
+		componentNodeList = new LinkedList<ComponentNode>();
+	}
+	
+	public void addComponentNode(ComponentNode cnode) {
+		if (cnode==null)
+			throw new NullPointerException();
+		componentNodeList.add(cnode);
+	}
+	
+	public Iterator<ComponentNode> iterator() {
+		return componentNodeList.iterator();
+	}
+
+	public void clear() {
+		componentNodeList.clear();
+	}
+
+	public int getId() {
+		return id;
+	}
 	
 }

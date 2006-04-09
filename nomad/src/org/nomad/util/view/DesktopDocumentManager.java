@@ -7,12 +7,17 @@ import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
 
 public class DesktopDocumentManager extends JDesktopPane implements
-		DocumentManager {
+		DocumentManager, InternalFrameListener {
 
 	private ArrayList<JInternalFrame> frames = new ArrayList<JInternalFrame>();
 	private ArrayList<JComponent> components = new ArrayList<JComponent>();
+	private ArrayList<ChangeListener> changeListenerList = new ArrayList<ChangeListener>();
 	
 	private JInternalFrame getFrameAt(int index) {
 		return frames.get(index);
@@ -58,6 +63,7 @@ public class DesktopDocumentManager extends JDesktopPane implements
 	public void addDocument(String title, JComponent component) {
 		JInternalFrame frame = new JInternalFrame(title, true, false, true, true);
 		frame.add(component, BorderLayout.CENTER);
+		frame.addInternalFrameListener(this);
 		
 		frames.add(frame);
 		components.add(component);
@@ -71,6 +77,8 @@ public class DesktopDocumentManager extends JDesktopPane implements
 		JInternalFrame frame = getFrameAt(index);
 		JComponent component = components.get(index);
 		
+		
+		frame.removeInternalFrameListener(this);
 		frames.remove(index);
 		components.remove(index);
 		frame.getContentPane().remove(component);
@@ -93,5 +101,32 @@ public class DesktopDocumentManager extends JDesktopPane implements
 		else
 			return null;
 	}
+
+	public void addDocumentSelectionListener(ChangeListener l) {
+		if (!changeListenerList.contains(l))
+			changeListenerList.add(l);
+	}
+
+	public void removeDocumentSelectionListener(ChangeListener l) {
+		changeListenerList.remove(l);
+	}
+
+	public void internalFrameOpened(InternalFrameEvent event) { }
+
+	public void internalFrameClosing(InternalFrameEvent event) { }
+
+	public void internalFrameClosed(InternalFrameEvent event) { }
+
+	public void internalFrameIconified(InternalFrameEvent event) { }
+
+	public void internalFrameDeiconified(InternalFrameEvent event) { }
+
+	public void internalFrameActivated(InternalFrameEvent event) {
+		ChangeEvent evt = new ChangeEvent(this);
+		for (ChangeListener l : changeListenerList)
+			l.stateChanged(evt);
+	}
+
+	public void internalFrameDeactivated(InternalFrameEvent event) { }
 
 }

@@ -19,7 +19,7 @@ public class ModuleDescriptions {
 
 	/** Hashmap containing the pairs (DModule.getKey(), DModule) */
 	
-	private DModule[] modules = new DModule[130];
+	private DModule[] modules = new DModule[DModule.APPROXIMATE_MODULE_COUNT];
 	
 	/** The groups */
 	private ArrayList<DGroup> dgroups = new ArrayList<DGroup>();
@@ -130,7 +130,7 @@ public class ModuleDescriptions {
 		DModule[] list = new DModule[count];
 		
 		int dst=0;
-		for (int src=0;src<count;src++) 
+		for (int src=0;src<modules.length-1;src++) 
 			if (modules[src]!=null)
 				list[dst++]=modules[src];
 		return list;

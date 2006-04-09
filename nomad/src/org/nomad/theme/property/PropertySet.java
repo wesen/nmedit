@@ -44,14 +44,6 @@ public class PropertySet extends HashMap<String, Property> implements Iterable<P
 		remove(p.getName());
 	}
 	
-	/**
-	 * @param string
-	 * @return
-	 */
-	public Property get(String name) {
-		return super.get(name);
-	}
-
 	public Iterator<Property> iterator() {
 		return values().iterator();
 	}

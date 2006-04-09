@@ -22,24 +22,19 @@
  */
 package org.nomad.theme.component;
 
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 
 import javax.swing.border.Border;
 
 public class GroupDecoration extends NomadComponent {
 	
-	private final static Dimension defaultSize = new Dimension(80,40);
 	private final static Border border = NomadBorderFactory.createNordEditor311GroupBoxBorder();
 	
 	public GroupDecoration() {
 		super();
 		setOpaque(false);
 		setDynamicOverlay(false);
-		setPreferredSize(defaultSize);
-		setMinimumSize(defaultSize);
-		setMaximumSize(defaultSize);
-		setSize(defaultSize);
+		setSize(80,40);
 	}
 
 	public void paintDecoration(Graphics2D g2) { 

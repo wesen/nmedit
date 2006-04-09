@@ -18,29 +18,38 @@
  */
 
 /*
- * Created on Jan 6, 2006
+ * Created on Mar 16, 2006
  */
 package org.nomad.theme.property;
 
-import java.awt.Dimension;
+import org.nomad.theme.component.NomadComponent;
+import org.nomad.theme.property.editor.Editor;
+import org.nomad.theme.property.editor.TextEditor;
 
-/**
- * @author Christian Schneider
- */
-public class ComponentSizeProperty extends DimensionProperty {
+public class ComponentSizeProperty extends Property
+{
 
-	public ComponentSizeProperty() {}
+    public ComponentSizeProperty( )
+    {
+        super( "size" );
+    }
 
-	public void setXY(int x, int y) { getComponent().setSize(x, y); }
-	public int getX() { return getComponent().getWidth(); }
-	public int getY() { return getComponent().getHeight(); }
+    @Override
+    public Value decode( String value )
+    {
+        return new ComponentSizeValue(this, value);
+    }
 
-	public Dimension getDim() {
-		return getComponent().getSize();
-	}
+    @Override
+    public Value encode( NomadComponent component )
+    {
+        return new ComponentSizeValue(this, component.getSize());
+    }
 
-	public void setDim(Dimension dim) {
-		getComponent().setSize(dim);
-	}
+    @Override
+    public Editor newEditor( NomadComponent component )
+    {
+        return new TextEditor(this, component);
+    }
 
 }

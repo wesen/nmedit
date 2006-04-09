@@ -42,6 +42,8 @@ import javax.swing.ListModel;
 import javax.swing.UIManager;
 import javax.swing.event.ListDataListener;
 
+import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
+
 import org.nomad.editor.views.classes.DashPane;
 import org.nomad.theme.component.NomadLabel;
 import org.nomad.util.graphics.ImageTracker;
@@ -57,7 +59,7 @@ public class ImageBrowserDialog extends JDialog {
 		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-		fillList( editor.getEnvironment().getImageTracker() );
+		fillList( NomadEnvironment.sharedInstance().getImageTracker() );
 
 		imageList = new JList();
 		JScrollPane pane = new JScrollPane(imageList);
@@ -100,7 +102,7 @@ public class ImageBrowserDialog extends JDialog {
 		 *  do  this here, otherwise the new text value will be the default value
 		 *  and not exported to the dom
 		 */
-		label.setEnvironment(editor.getEnvironment());
+		//labbel.setEnvironment(editor.getEnvironment());
 		label.setText("{@" + imageKey + "}");
 		label.setLocation(10,10);
 		label.setSize(label.getPreferredSize());
