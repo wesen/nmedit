@@ -51,7 +51,7 @@ public class PluginClassLoader extends URLClassLoader {
 	}
 
 	// final static String jarPrefix = "jar:";
-	
+	// TODO: IANH: Should we overwrite this?
 	protected Class<?> findClass(String name) throws ClassNotFoundException {
 		
 		// final String jarSuffix = "jar!/";
@@ -165,10 +165,10 @@ public class PluginClassLoader extends URLClassLoader {
 	
 	private String checkPlugin(File file) {
 		
-		if (file.getPath().toString().split("[^\\w\\./]",2).length>1) {
-			// file name contains illegal characters, so it can not be name of a package
-			return null;
-		}
+//		if (file.getPath().toString().split("[^\\w\\./]",2).length>1) {
+//			// file name contains illegal characters, so it can not be name of a package
+//			return null;
+//		}
 		
 		if (file.isDirectory()) {
 			File[] files = file.listFiles();
