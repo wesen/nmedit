@@ -2,5 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="D:/Data/projects/nomad/lib/jpdl-1.1.jar"/>
+	<classpathentry kind="lib" path="D:/Data/projects/nomad/lib/jnmprotocol-0.2.jar"/>
+	<classpathentry kind="lib" path="D:/Data/projects/nomad/lib/xpp3_xpath-1.1.3.4.H.jar"/>
+	<classpathentry kind="lib" path="D:/Data/projects/nomad/lib/xpp3-1.1.3.4.H.jar"/>
+	<classpathentry kind="lib" path="D:/Data/projects/nomad/lib/xpp3_min-1.1.3.4.H.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
