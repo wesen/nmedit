@@ -43,7 +43,7 @@ public class PatchMessage extends MidiMessage
 	isreply = true;
     }
 
-    PatchMessage(Packet packet)
+    public PatchMessage(Packet packet)
 	throws Exception
     {
 	this();
@@ -61,7 +61,8 @@ public class PatchMessage extends MidiMessage
 	
     }
 
-    PatchMessage(BitStream patchStream, List sectionEndPositions, int slot)
+    public PatchMessage(BitStream patchStream, List sectionEndPositions,
+			int slot)
 	throws Exception
     {
 	this();

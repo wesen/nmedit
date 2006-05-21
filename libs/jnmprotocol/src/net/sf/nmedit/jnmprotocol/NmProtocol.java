@@ -144,7 +144,7 @@ public class NmProtocol
 
     private long time()
     {
-	return (new Date()).getTime();
+	return System.currentTimeMillis();
     }
 
     private MidiDriver midiDriver;

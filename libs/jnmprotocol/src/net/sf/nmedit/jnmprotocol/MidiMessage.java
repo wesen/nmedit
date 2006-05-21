@@ -74,6 +74,7 @@ public abstract class MidiMessage
     public static MidiMessage create(BitStream bitStream)
 	throws Exception
     {
+	String error;
 	Packet packet = new Packet();
 	boolean success = packetParser.parse(bitStream, packet);
 	bitStream.setPosition(0);
@@ -114,18 +115,17 @@ public abstract class MidiMessage
 		    return new PatchMessage(packet);
 		}	  
 	    }
-	    System.out.print("unsupported packet: ");
+	    error = "unsupported packet: ";
 	}
 	else {
-	    System.out.print("parse failed: ");
+	    error = "parse failed: ";
 	}
 	
 	while (bitStream.isAvailable(8)) {
-	    System.out.print(" " + bitStream.getInt(8));
+	    error += " " + bitStream.getInt(8);
 	}
-	System.out.println();
-	
-	return null;
+
+	throw new MidiException(error, 0);
     }
 
     public abstract List getBitStream()

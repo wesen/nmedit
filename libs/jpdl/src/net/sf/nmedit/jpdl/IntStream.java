@@ -51,7 +51,9 @@ public class IntStream
 
     public void setSize(int size)
     {
-	ints = ints.subList(0, size);
+        if (ints.size() > size) {
+            ints.subList(size, ints.size()).clear();
+	}
 	if (position > size) {
 	    position = size;
 	}
