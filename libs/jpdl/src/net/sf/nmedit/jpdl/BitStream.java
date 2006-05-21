@@ -293,14 +293,10 @@ public class BitStream
                 Arrays.fill(array, unset+1, array.length, 0);
             }
             
-            // we may have to remove some bits in the last field 
-            int validbits = size&MASK; // == size%32;
-            if (validbits==0) array[unset] = 0;
-            else 
-            {
-                // set invalid bits to zero
-                array[unset] &= (0xFFFFFFFF>>(32-validbits));
-            }
+	    // we may have to remove some bits in the last field
+	    int validbits = size&MASK; // == size%32;
+	    // set invalid bits to zero
+	    array[unset] &= ~(0xFFFFFFFF>>>validbits);
 
             this.size = size;
             if (position > size) position = size;
