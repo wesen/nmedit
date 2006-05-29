@@ -43,7 +43,7 @@ public class NomadApplication extends NomadEnvironment
         super.startInternal(progress);
         progress.increment("Loading: Nomad");
         
-        mainFrame = new Nomad(getName());
+        mainFrame = new Nomad(getName()+" "+getVersion());
         configureMainFrame(mainFrame);
 
         NomadUtilities.setupAndShow(mainFrame, 0.75, 0.75);
