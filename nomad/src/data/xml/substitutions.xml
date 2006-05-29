@@ -22,6 +22,7 @@
     <transform id="compressor-treshold" offset="-30" suffix="dB">
         <if value-is="42" replace-with="Off"/>
     </transform>
+    <transform id="phaser-peaks" offset="+1" />
     <transform id="expander-treshold" offset="-84" suffix="dB">
         <if value-is="84" replace-with="Off"/>
     </transform>
@@ -57,25 +58,31 @@
     </transform>
     <transform id="transform-pulse-width" offset="1" factor="0.77165354330708658" suffix="%" />
 
-    <use-implementation id="amp-gain" class="org.nomad.xml.dom.substitution.AmpGain" />
-    <use-implementation id="bpm" class="org.nomad.xml.dom.substitution.BPM" />
-    <use-implementation id="digitizer-hz" class="org.nomad.xml.dom.substitution.DigitizerHz" />
-    <use-implementation id="drum-hz" class="org.nomad.xml.dom.substitution.DrumHz" />
-    <use-implementation id="drumpartials" class="org.nomad.xml.dom.substitution.DrumPartials" />
-    <use-implementation id="eq-hz" class="org.nomad.xml.dom.substitution.EqHz" />
-    <use-implementation id="filter-hz-1" class="org.nomad.xml.dom.substitution.FilterHz1" />
-    <use-implementation id="filter-hz-2" class="org.nomad.xml.dom.substitution.FilterHz2" />
-    <use-implementation id="lfo-hz" class="org.nomad.xml.dom.substitution.LFOHz" />
-    <use-implementation id="logic-delay" class="org.nomad.xml.dom.substitution.LogicDelay" />
-    <use-implementation id="note" class="org.nomad.xml.dom.substitution.Note" />
-    <use-implementation id="note-scale" class="org.nomad.xml.dom.substitution.NoteScale" />
-    <use-implementation id="osc-hz" class="org.nomad.xml.dom.substitution.OscHz" />
-    <use-implementation id="partial-range" class="org.nomad.xml.dom.substitution.PartialRange" />
-    <use-implementation id="partials" class="org.nomad.xml.dom.substitution.Partials" />
-    <use-implementation id="phase" class="org.nomad.xml.dom.substitution.Phase" />
-    <use-implementation id="semitones" class="org.nomad.xml.dom.substitution.Semitones" />
-    <use-implementation id="smooth-time" class="org.nomad.xml.dom.substitution.SmoothTime" />
-
+    <use-implementation id="amp-gain" class="net.sf.nmedit.nomad.xml.dom.substitution.AmpGain" />
+    <use-implementation id="bpm" class="net.sf.nmedit.nomad.xml.dom.substitution.BPM" />
+    <use-implementation id="digitizer-hz" class="net.sf.nmedit.nomad.xml.dom.substitution.DigitizerHz" />
+    <use-implementation id="drum-hz" class="net.sf.nmedit.nomad.xml.dom.substitution.DrumHz" />
+    <use-implementation id="drumpartials" class="net.sf.nmedit.nomad.xml.dom.substitution.DrumPartials" />
+    <use-implementation id="eq-hz" class="net.sf.nmedit.nomad.xml.dom.substitution.EqHz" />
+    <use-implementation id="filter-hz-1" class="net.sf.nmedit.nomad.xml.dom.substitution.FilterHz1" />
+    <use-implementation id="filter-hz-2" class="net.sf.nmedit.nomad.xml.dom.substitution.FilterHz2" />
+    <use-implementation id="lfo-hz" class="net.sf.nmedit.nomad.xml.dom.substitution.LFOHz" />
+    <use-implementation id="logic-delay" class="net.sf.nmedit.nomad.xml.dom.substitution.LogicDelay" />
+    <use-implementation id="note" class="net.sf.nmedit.nomad.xml.dom.substitution.Note" />
+    <use-implementation id="note-scale" class="net.sf.nmedit.nomad.xml.dom.substitution.NoteScale" />
+    <use-implementation id="osc-hz" class="net.sf.nmedit.nomad.xml.dom.substitution.OscHz" />
+    <use-implementation id="partial-range" class="net.sf.nmedit.nomad.xml.dom.substitution.PartialRange" />
+    <use-implementation id="partials" class="net.sf.nmedit.nomad.xml.dom.substitution.Partials" />
+    <use-implementation id="phase" class="net.sf.nmedit.nomad.xml.dom.substitution.Phase" />
+    <use-implementation id="semitones" class="net.sf.nmedit.nomad.xml.dom.substitution.Semitones" />
+    <use-implementation id="smooth-time" class="net.sf.nmedit.nomad.xml.dom.substitution.SmoothTime" />
+  <list id="multi-env-sustain">
+    <item>--</item>
+    <item>L1</item>
+    <item>L2</item>
+    <item>L3</item>
+    <item>L4</item>
+  </list>
   <list id="channel-select-out1">
     <item>1</item>
     <item>2</item>
@@ -744,7 +751,7 @@
     <item>2.63ms</item>
     <item>2.65ms</item>
   </list>
-  <list id="phaser-frequency">
+  <list id="phaser-center-frequency">
     <item>100Hz</item>
     <item>104Hz</item>
     <item>108Hz</item>
