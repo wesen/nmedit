@@ -17,12 +17,13 @@
 	<!-- ************************************************** -->
 
 	<!-- folder containing source-package org.nomad.* -->
-	<property name="source.nomad" location="src/org/nomad" />
+	<property name="source.nomad" location="src/net/sf/nmedit/nomad" />
 	<property name="source.editor" location="${source.nomad}/editor" />
 	<!-- folder containing external libraries (i.e. xml parser) -->
 	<property name="source.libraries" location="lib" />
 	<!-- folder containing data loaded at runtime, like images, xml configuration -->
 	<property name="source.data" location="src/data" />
+	<property name="source.conf" location="src/conf" />
 	<!-- folder containing plugins -->
 	<property name="source.plugin" location="src/plugin" />
 	
@@ -41,6 +42,7 @@
 	<property name="dist.plugin" location="${dist.nomad}/plugin" />
 	<property name="dist.libraries" location="${dist.nomad}/lib" />
 	<property name="dist.data" location="${dist.nomad}/data" />
+	<property name="dist.conf" location="${dist.nomad}/conf" />
 
 	<!-- ************************************************** -->
 	<!-- initial setup                                      -->
@@ -65,6 +67,11 @@
 			<fileset dir="${source.data}"  casesensitive="yes">
 			</fileset>
 		</copy>
+		<copy todir="${dist.conf}" taskname="Copying resources">
+			<fileset dir="${source.conf}"  casesensitive="yes">
+			</fileset>
+		</copy>
+
 		<!-- copy libraries -->
 		<copy todir="${dist.libraries}" taskname="Copying libraries">
 			<fileset dir="${source.libraries}"  casesensitive="yes">
@@ -74,7 +81,7 @@
 
 	<target name="compile.nomad" depends="install.resources" description="Compiling nomad">
 		<javac srcdir="${source.nomad}" destdir="${build.nomad}">
-				<compilerarg value="-Xlint:all,-serial" />
+			<compilerarg value="-Xlint:all,-serial" />
 			<exclude name="editor/**"/>
 			<classpath>
 				<pathelement path="${java.class.path}"/>
@@ -132,19 +139,22 @@
 	<!-- ************************************************** -->
 
 	<target name="dist.nomad" depends="compile.nomad" description="Building jar for Nomad">
-		<jar jarfile="${dist.nomad}/org.nomad.jar" basedir="${build.nomad}">
+		<jar jarfile="${dist.nomad}/nomad.jar" basedir="${build.nomad}">
 	      <manifest> <!-- java -jar example.jar -->
-	        <attribute name="Main-class" value="org.nomad.main.run.Run"/>
+	        <attribute name="Main-class" value="net.sf.nmedit.nomad.core.nomad.Nomad"/>
+                <attribute name="Class-Path" value="./lib/xpp3-1.1.3.4.H.jar ./lib/xpp3_min-1.1.3.4.H.jar ./lib/xpp3_xpath-1.1.3.4.H.jar ./lib/forms-1.0.7.jar ./lib/looks-2.0.2.jar ./lib/jnmprotocol.jar ./lib/jpdl.jar ./plugin/classictheme.jar"/>
+	      	<!--
 	        <attribute name="Class-Path" value="../../lib/xpp3-1.1.3.4.H.jar ../../lib/xpp3_min-1.1.3.4.H.jar ../../lib/xpp3_xpath-1.1.3.4.H.jar ../../lib/jnmprotocol.jar ../../lib/jpdl.jar ../../plugin/classictheme.jar"/>
+	      	-->
 	      </manifest>
 		</jar> 
 	</target>
 
 	<target name="dist.editor" depends="compile.editor" description="Building jar for editor">
-		<jar jarfile="${dist.nomad}/org.nomad.editor.jar" basedir="${build.editor}">
+		<jar jarfile="${dist.nomad}/editor.jar" basedir="${build.editor}">
 	      <manifest> <!-- java -jar example.jar -->
-	        <attribute name="Main-class" value="org.nomad.editor.app.RunUIEditor" />
-	        <attribute name="Class-Path" value="org.nomad.jar ../../lib/xpp3-1.1.3.4.H.jar ../../lib/xpp3_min-1.1.3.4.H.jar ../../lib/xpp3_xpath-1.1.3.4.H.jar ../../plugin/classictheme.jar"/>
+	        <attribute name="Main-class" value="net.sf.nmedit.nomad.editor.NomadEditor" />
+                <attribute name="Class-Path" value="nomad.jar ./lib/xpp3-1.1.3.4.H.jar ./lib/xpp3_min-1.1.3.4.H.jar ./lib/xpp3_xpath-1.1.3.4.H.jar ./lib/forms-1.0.7.jar ./lib/looks-2.0.2.jar ./plugin/classictheme.jar"/>
 	      </manifest>
 	    </jar>
 	</target>
@@ -223,7 +233,7 @@
 	<!-- ************************************************** -->
 	
         <target name="nomad" >
-		<java jar="${dist.nomad}/org.nomad.jar" fork="true" dir="${dist.nomad}" />
+		<java jar="${dist.nomad}/nomad.jar" fork="true" dir="${dist.nomad}" />
 	</target>
 
 	<target name="run" depends="nomad">
@@ -235,7 +245,7 @@
 	<!-- ************************************************** -->
 	
 	<target name="editor" >
-		<java jar="${dist.nomad}/org.nomad.editor.jar" fork="true" dir="${dist.nomad}" />
+		<java jar="${dist.nomad}/editor.jar" fork="true" dir="${dist.nomad}" />
 	</target>
 
 </project>
