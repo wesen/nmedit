@@ -177,6 +177,7 @@ public class NomadMidiDialog extends NomadDialog
             this.inputs = inputs;
             lastSelection = inputs ? defaultIn : defaultOut;
             regenerate();
+            updateLabels();
             setRenderer(this);
             addActionListener(this);
         }
@@ -186,16 +187,17 @@ public class NomadMidiDialog extends NomadDialog
             Info updateSelection = getSelectedDevice();
             if (updateSelection!=null)
                 lastSelection = updateSelection;
-            if (lastSelection==null && getItemCount()>0)
-            {
-                lastSelection = (Info) getItemAt(0);
-            }
             
             removeAllItems();
             for (Info info : inputs ? inDeviceList : outDeviceList)
             {
                 addItem(info);
             }
+            if (lastSelection==null && getItemCount()>0)
+            {
+                lastSelection = (Info) getItemAt(0);
+            }
+            
             setEnabled(getItemCount()>0);
             setSelectedDevice(lastSelection);
         }
@@ -224,6 +226,11 @@ public class NomadMidiDialog extends NomadDialog
         }
         
         public void actionPerformed(ActionEvent e)
+        {
+            updateLabels();
+        }
+        
+        private void updateLabels()
         {
             Info info = getSelectedDevice();
 
