@@ -22,7 +22,7 @@
  */
 package plugin.g2theme.custom;
 
-import org.nomad.theme.component.NomadActiveLabel;
+import net.sf.nmedit.nomad.theme.component.NomadActiveLabel;
 
 
 public class G2ActiveLabel extends NomadActiveLabel {

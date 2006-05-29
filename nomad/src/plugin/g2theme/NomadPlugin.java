@@ -1,17 +1,17 @@
 package plugin.g2theme; 
 
-import org.nomad.plugin.NomadFactory;
+import net.sf.nmedit.nomad.plugin.NomadFactory;
 
 /**
  * The classic theme plugin.
  * 
  * @author Christian Schneider
  */
-public class NomadPlugin extends org.nomad.plugin.NomadPlugin {
+public class NomadPlugin extends net.sf.nmedit.nomad.plugin.NomadPlugin {
 
 	private final
 	String[] author_list = 
-		new String[]{"Ian Hoogeboom", "Christian Schneider"};
+		new String[]{"Christian Schneider"};
 	
 	public String getName() {
 		return "G2 Theme";
@@ -26,7 +26,7 @@ public class NomadPlugin extends org.nomad.plugin.NomadPlugin {
 	}
 
 	public int getFactoryType() {
-		return org.nomad.plugin.NomadPlugin.NOMAD_FACTORY_TYPE_UI;
+		return net.sf.nmedit.nomad.plugin.NomadPlugin.NOMAD_FACTORY_TYPE_UI;
 	}
 
 	public NomadFactory getFactoryInstance() {
@@ -37,5 +37,17 @@ public class NomadPlugin extends org.nomad.plugin.NomadPlugin {
 		// supports any platform
 		return true;
 	}
+
+    @Override
+    public String getHomepage()
+    {
+        return "http://nmedit.sourceforge.net";
+    }
+    
+    @Override
+    public String getVersion()
+    {
+        return "0.1 (Preview)";
+    }
 
 }

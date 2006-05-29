@@ -26,7 +26,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import org.nomad.theme.component.NomadButtonArray;
+import net.sf.nmedit.nomad.theme.component.NomadButtonArray;
 
 
 public class G2ButtonArray extends NomadButtonArray {

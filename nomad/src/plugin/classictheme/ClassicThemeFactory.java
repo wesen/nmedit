@@ -1,25 +1,24 @@
 package plugin.classictheme;
 
-import java.awt.Graphics;
+import net.sf.nmedit.nomad.main.background.Background;
+import net.sf.nmedit.nomad.main.background.BackgroundFactory;
+import net.sf.nmedit.nomad.patch.ui.ModuleSectionUI;
+import net.sf.nmedit.nomad.patch.ui.ModuleUI;
+import net.sf.nmedit.nomad.patch.virtual.VoiceArea;
+import net.sf.nmedit.nomad.theme.NomadClassicColors;
+import net.sf.nmedit.nomad.theme.UIFactory;
+import net.sf.nmedit.nomad.theme.component.AudioLevelDisplay;
+import net.sf.nmedit.nomad.theme.component.GroupDecoration;
+import net.sf.nmedit.nomad.theme.component.NomadActiveLabel;
+import net.sf.nmedit.nomad.theme.component.NomadButtonArray;
+import net.sf.nmedit.nomad.theme.component.NomadClassicConnector;
+import net.sf.nmedit.nomad.theme.component.NomadClassicKnob;
+import net.sf.nmedit.nomad.theme.component.NomadLabel;
+import net.sf.nmedit.nomad.theme.component.NomadResetButton;
+import net.sf.nmedit.nomad.theme.component.NomadVocoderController;
+import net.sf.nmedit.nomad.theme.component.VocoderBandDisplay;
+import net.sf.nmedit.nomad.xml.dom.module.DModule;
 
-import org.nomad.patch.ModuleSection;
-import org.nomad.patch.ui.ModuleSectionUI;
-import org.nomad.patch.ui.ModuleUI;
-import org.nomad.theme.NomadClassicColors;
-import org.nomad.theme.UIFactory;
-import org.nomad.theme.component.AudioLevelDisplay;
-import org.nomad.theme.component.GroupDecoration;
-import org.nomad.theme.component.NomadActiveLabel;
-import org.nomad.theme.component.NomadButtonArray;
-import org.nomad.theme.component.NomadClassicConnector;
-import org.nomad.theme.component.NomadClassicKnob;
-import org.nomad.theme.component.NomadLabel;
-import org.nomad.theme.component.NomadResetButton;
-import org.nomad.theme.component.NomadVocoderController;
-import org.nomad.theme.component.VocoderBandDisplay;
-import org.nomad.util.graphics.BackgroundPainter;
-import org.nomad.util.graphics.ImageTracker;
-import org.nomad.xml.dom.module.DModule;
 
 public class ClassicThemeFactory extends UIFactory {
 	public ClassicThemeFactory() {
@@ -45,25 +44,18 @@ public class ClassicThemeFactory extends UIFactory {
 		return gui;
 	}
 
-	public ModuleSectionUI getModuleSectionUI(ModuleSection moduleSection) {
-		return new ClassicModuleSectionGUI(moduleSection, getImageTracker());
-	}
-	
-}
-
-class ClassicModuleSectionGUI extends ModuleSectionUI {
-	private static BackgroundPainter bgpainter = null;
-	
-	public ClassicModuleSectionGUI(ModuleSection moduleSection, ImageTracker itracker) {
-		super(moduleSection) ;
-        setDoubleBuffered(false);
-		if (bgpainter==null) {
-			bgpainter = new BackgroundPainter(itracker.getImage("classic-patch-background"));
-		}
-	}
-
-	public void paintComponent(Graphics g) {
-		bgpainter.paintBackground(g, this);
+    private Background classicBackground = null;
+    
+	public ModuleSectionUI getModuleSectionUI(VoiceArea moduleSection) {
+        
+        if (classicBackground==null)
+        {
+            classicBackground =
+                BackgroundFactory.createTiledBackground(getImageTracker().getImage("classic-patch-background"));
+        }
+        ModuleSectionUI msui = super.getModuleSectionUI(moduleSection);
+        msui.setBackgroundB(classicBackground);
+        return msui;
 	}
 	
 }

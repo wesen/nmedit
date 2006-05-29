@@ -18,21 +18,32 @@
  */
 
 /*
- * Created on Jan 22, 2006
+ * Created on May 15, 2006
  */
 package plugin.g2theme.custom;
 
 import java.awt.Color;
 
-import net.sf.nmedit.nomad.theme.component.NomadResetButton;
+import javax.swing.JComponent;
+import javax.swing.plaf.ComponentUI;
 
-public class G2ResetButton extends NomadResetButton {
+import net.sf.nmedit.nomad.theme.laf.KnobUI;
 
-	private final static Color lightBackground = Color.decode("#1AFF1A");
-	
-	public G2ResetButton() {
-		setHighlight(lightBackground);
-		setOutline(Color.BLACK);
-	}
-	
+public class G2KnobUI extends KnobUI
+{
+
+    public G2KnobUI()
+    {
+        clFill1 = Color.WHITE;
+        clFill2 = Color.LIGHT_GRAY;
+        edgeSize = 0;
+    }
+
+    private static G2KnobUI knobUI = new G2KnobUI();  
+    
+    public static ComponentUI createUI(JComponent c) 
+    {
+        return knobUI;
+    }
+    
 }

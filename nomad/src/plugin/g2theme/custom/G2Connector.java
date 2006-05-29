@@ -22,8 +22,9 @@
  */
 package plugin.g2theme.custom;
 
-import org.nomad.theme.component.NomadClassicConnector;
-import org.nomad.xml.dom.module.DConnector;
+import net.sf.nmedit.nomad.theme.component.NomadClassicConnector;
+import net.sf.nmedit.nomad.xml.dom.module.DConnector;
+
 
 public class G2Connector extends NomadClassicConnector {
 
