@@ -47,24 +47,18 @@ public abstract class Application
     /**
      * Command line arguments
      */
-    private static String[] commandLineArgs;
+    private final String[] commandLineArgs;
 
     /**
-     * Creates a new application instance. Passing <code>null</code> as
-     * command line arguments, causes a {@link NullPointerException} .
+     * Creates a new application instance. 
+     * When the argument is <code>null</code>,
+     * an empty String array is used. 
      * 
-     * @param args
-     *            the command line arguments.
-     * @throws NullPointerException
-     *             if args is null
+     * @param args the command line arguments.
      */
     public Application( String[] args )
     {
-        if (args == null)
-        {
-            throw new NullPointerException();
-        }
-        commandLineArgs = args;
+        commandLineArgs = args == null ? new String[0] : args;
     }
 
     /**
@@ -74,7 +68,7 @@ public abstract class Application
      */
     public String[] getCommandLineArgs()
     {
-        return commandLineArgs;
+        return commandLineArgs.clone();
     }
 
     /**

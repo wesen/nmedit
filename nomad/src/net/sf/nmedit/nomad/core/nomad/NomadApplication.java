@@ -24,9 +24,9 @@ package net.sf.nmedit.nomad.core.nomad;
 
 import net.sf.nmedit.nomad.core.application.ApplicationInstantiationException;
 import net.sf.nmedit.nomad.core.application.ProgressMeter;
+import net.sf.nmedit.nomad.main.Nomad;
+import net.sf.nmedit.nomad.util.NomadUtilities;
 
-import org.nomad.main.Nomad;
-import org.nomad.util.misc.NomadUtilities;
 
 public class NomadApplication extends NomadEnvironment
 {
@@ -52,6 +52,7 @@ public class NomadApplication extends NomadEnvironment
     @Override
     protected void stopInternal()
     {
+        mainFrame.shutdown();
         mainFrame.dispose();
         super.stopInternal();
     }

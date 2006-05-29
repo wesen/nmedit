@@ -27,16 +27,16 @@ import java.io.FileNotFoundException;
 import net.sf.nmedit.nomad.core.application.Application;
 import net.sf.nmedit.nomad.core.application.ApplicationInstantiationException;
 import net.sf.nmedit.nomad.core.application.ProgressMeter;
-import net.sf.nmedit.nomad.core.designer.Designer;
+import net.sf.nmedit.nomad.main.designer.Designer;
+import net.sf.nmedit.nomad.main.ui.ModuleToolbar;
+import net.sf.nmedit.nomad.plugin.PluginManager;
+import net.sf.nmedit.nomad.theme.ModuleBuilder;
+import net.sf.nmedit.nomad.theme.UIFactory;
+import net.sf.nmedit.nomad.util.graphics.ImageTracker;
+import net.sf.nmedit.nomad.xml.dom.module.DConnector;
+import net.sf.nmedit.nomad.xml.dom.module.ModuleDescriptions;
+import net.sf.nmedit.nomad.xml.dom.substitution.Substitutions;
 
-import org.nomad.main.ModuleToolbar;
-import org.nomad.plugin.PluginManager;
-import org.nomad.theme.ModuleBuilder;
-import org.nomad.theme.UIFactory;
-import org.nomad.util.graphics.ImageTracker;
-import org.nomad.xml.dom.module.DConnector;
-import org.nomad.xml.dom.module.ModuleDescriptions;
-import org.nomad.xml.dom.substitution.Substitutions;
 
 public abstract class NomadEnvironment extends Application
 {
