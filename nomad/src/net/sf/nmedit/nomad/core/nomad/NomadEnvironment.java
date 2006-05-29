@@ -81,7 +81,7 @@ public abstract class NomadEnvironment extends Application
         }
         catch (Exception e)
         {
-            System.err.println( "Failed loading custom properties: " + e );
+            System.err.println( "Failed loading custom properties, defaults will be used: " + e );
         }
 
         progress.increment( "loading media: images" );
