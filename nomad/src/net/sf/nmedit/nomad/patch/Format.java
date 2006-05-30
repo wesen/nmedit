@@ -727,6 +727,28 @@ public class Format
         }
     }
 
+    public static String getSectionName2(int ID)
+    {
+        switch (ID)
+        {
+            // PatchMessage section IDs
+            case S_NAME_1: return "Name 1";
+            case S_NAME_2: return "Name 2";
+            case S_HEADER: return NAME_HEADER;
+            case S_MODULE: return NAME_MODULE_DUMP;
+            case S_NOTE: return NAME_CURRENTNOTE_DUMP;
+            case S_CABLE: return NAME_CABLE_DUMP;
+            case S_MORPHMAP: return NAME_MORPHMAP_DUMP;
+            case S_KNOBMAP: return NAME_KNOBMAP_DUMP;
+            case S_CTRLMAP: return NAME_CTRLMAP_DUMP;
+            case S_CUSTOM: return NAME_CUSTOM_DUMP;
+            case S_NAMEDUMP: return NAME_NAME_DUMP;
+            case S_PARAMETER: return NAME_PARAMETER_DUMP;
+            default:
+                return null;
+        }
+    }
+    
     /**
      * Returns the voice area ID.
      * 
