@@ -59,30 +59,6 @@ public class DirectBitStreamBuilder
         intStream = new IntStream();
     }
 
-    protected static void sep(IntStream is, 
-            PacketParser patchParser,
-            List<Integer> sep)
-    {
-        IntStream isCopy = new IntStream();
-        while(is.isAvailable(1))
-            isCopy.append(is.getInt());
-        is.setPosition(0);
-        
-        BitStream bs = new BitStream();
-        boolean result = 
-            patchParser.generate(isCopy, bs);
-        System.out.println("section end position:"
-                +((bs.getSize()/8)-1)
-                +" (Generate returned '"+result+"')");
-        
-        //if (result)
-        {
-            sep.add((bs.getSize()/8)-1);
-        }
-        
-        // intStream.setPosition(0);
-    }
-    
     private void append(int value)
     {
         System.out.print (value+" ");
@@ -117,20 +93,34 @@ public class DirectBitStreamBuilder
     
     public PatchMessage generateMessage( int slotID ) throws Exception
     {
-        System.out.println("secpos:--");
+        System.out.print("<section-end-positions>");
         for (int i:sectionEndPositions)
             System.out.print( i+" ");
-        System.out.println();
+        System.out.println("</section-end-positions>");
         
         return new PatchMessage(getBitStream(), getSectionEndPositions(), slotID);
     }
 
     protected void storeEndPosition(IntStream intStream, List<Integer> sectionEndPositions)
     {        
-        System.out.println();
         sep(intStream, patchParser, sectionEndPositions);
     }
 
+    protected static void sep(IntStream is, 
+            PacketParser patchParser,
+            List<Integer> sep)
+    {
+        IntStream isCopy = new IntStream();
+        while(is.isAvailable(1))
+            isCopy.append(is.getInt());
+        is.setPosition(0);
+        
+        BitStream bs = new BitStream();
+        boolean result = patchParser.generate(isCopy, bs);
+        
+        sep.add((bs.getSize()/8)-1);
+    }
+    
     public void appendName( String s )
     {
         int limit = Math.min(16, s.length());
@@ -141,6 +131,18 @@ public class DirectBitStreamBuilder
         if (limit < 16) 
             append(0);
     }
+    
+    private void beginSection(int ID)
+    {
+        System.out.print("<section ID=\""+ID+"\" name=\""+Format.getSectionName2(ID)+"\">");
+        intStream.append(ID);
+    }
+    
+    private void endSection()
+    {
+        System.out.println("</section>");
+        storeEndPosition(intStream, sectionEndPositions);
+    }
 
     public void generate()
     {
@@ -149,13 +151,13 @@ public class DirectBitStreamBuilder
         
 
       // Name section
-      append(Format.S_NAME_1 /*55*/);
+      beginSection(Format.S_NAME_1 /*55*/);
       appendName(patch.getName());
-      storeEndPosition(intStream, sectionEndPositions);
+      endSection();
       
       // Header section
       Header h = patch.getHeader();
-      append(Format.S_HEADER);
+      beginSection(Format.S_HEADER);
       append(h.getKeyboardRangeMin());
       append(h.getKeyboardRangeMax());
       append(h.getVelocityRangeMin());
@@ -179,15 +181,14 @@ public class DirectBitStreamBuilder
       append(h.getValue(Format.HEADER_VOICE_RETRIGGER_POLY));
       append(0xF);
       append(0);
-      storeEndPosition(intStream, sectionEndPositions);
+      endSection();
 
       // Module section
       moduleSection(patch.getPolyVoiceArea());
       moduleSection(patch.getCommonVoiceArea());
 
       // Note section
-      System.out.println("note");
-      append(Format.S_NOTE);
+      beginSection(Format.S_NOTE);
       {
           append(64, 0, 0);
 
@@ -205,10 +206,9 @@ public class DirectBitStreamBuilder
               append(n.getNoteNumber(), n.getAttackVelocity(), n.getReleaseVelocity());
           }*/
       }
-      storeEndPosition(intStream, sectionEndPositions);
+      endSection();
       
       // Cable section
-      System.out.println("cable");
       cableSection(patch.getPolyVoiceArea());
       cableSection(patch.getCommonVoiceArea());
 
@@ -217,7 +217,7 @@ public class DirectBitStreamBuilder
       parameterSection(patch.getCommonVoiceArea());
 
       // Morph section
-      append(Format.S_MORPHMAP);
+      beginSection(Format.S_MORPHMAP);
       {
           int nknobs = 0;
           for (Morph m : patch.getMorphs()) // are ordered morph 1-4
@@ -242,10 +242,10 @@ public class DirectBitStreamBuilder
               }
           }
       }
-      storeEndPosition(intStream, sectionEndPositions);
+      endSection();
 
       // Knob section
-      append(Format.S_KNOBMAP);
+      beginSection(Format.S_KNOBMAP);
       for (int i = 0; i <= 22; i++) 
       {
           boolean found = false;
@@ -278,10 +278,10 @@ public class DirectBitStreamBuilder
               append(0);
           }
       }
-      storeEndPosition(intStream, sectionEndPositions);
+      endSection();
 
       // Control section
-      append(Format.S_CTRLMAP);
+      beginSection(Format.S_CTRLMAP);
       {
           int size = 0;
           for (Iterator i=patch.getMidiControllers().getAssignedMidiControllers();i.hasNext();)
@@ -311,7 +311,7 @@ public class DirectBitStreamBuilder
               }
           }
       }
-      storeEndPosition(intStream, sectionEndPositions);
+      endSection();
 
       // Custom section
       customSection(patch.getPolyVoiceArea());
@@ -324,7 +324,7 @@ public class DirectBitStreamBuilder
     
     private void moduleSection(VoiceArea va)
     {
-       append(Format.S_MODULE);
+        beginSection(Format.S_MODULE);
        append(Format.getVoiceAreaID(va.isPolyVoiceArea()));
        
        append(va.size());
@@ -335,12 +335,12 @@ public class DirectBitStreamBuilder
            append(m.getX());
            append(m.getY());   
        }
-       storeEndPosition(intStream, sectionEndPositions);
+       endSection();
     }
     
     private void cableSection(VoiceArea va)
     {
-        append(Format.S_CABLE);
+        beginSection(Format.S_CABLE);
         append(Format.getVoiceAreaID(va.isPolyVoiceArea()));
         
         IntStream intStream2 = new IntStream();
@@ -387,12 +387,12 @@ public class DirectBitStreamBuilder
         while (intStream2.isAvailable(1))
             append(intStream2.getInt());
       
-        storeEndPosition(intStream, sectionEndPositions);
+        endSection();
     }
 
     private void parameterSection(VoiceArea va)
     {
-        append(Format.S_PARAMETER);
+        beginSection(Format.S_PARAMETER);
         append(Format.getVoiceAreaID(va.isPolyVoiceArea()));
         
         int nmodules = 0;
@@ -417,12 +417,12 @@ public class DirectBitStreamBuilder
                 }
             }
         }
-        storeEndPosition(intStream, sectionEndPositions);
+        endSection();
     }  
 
     private void customSection(VoiceArea va)
     {
-        append(Format.S_CUSTOM);
+        beginSection(Format.S_CUSTOM);
         append(Format.getVoiceAreaID(va.isPolyVoiceArea()));
         
         int nmodules = 0;
@@ -448,12 +448,12 @@ public class DirectBitStreamBuilder
                 }
             }
         }
-        storeEndPosition(intStream, sectionEndPositions);
+        endSection();
     }
 
     private void moduleNameSection(VoiceArea va)
     {
-        append(Format.S_NAMEDUMP);
+        beginSection(Format.S_NAMEDUMP);
         append(Format.getVoiceAreaID(va.isPolyVoiceArea()));
         append(va.size());
         for (Module m : va)
@@ -461,7 +461,7 @@ public class DirectBitStreamBuilder
             append(m.getIndex());
             appendName(m.getName());
         }
-        storeEndPosition(intStream, sectionEndPositions);
+        endSection();
     }
 
 }
