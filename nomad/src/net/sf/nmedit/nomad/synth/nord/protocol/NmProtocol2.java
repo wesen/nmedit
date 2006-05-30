@@ -104,7 +104,9 @@ public abstract class NmProtocol2
                         }
                         else
                         {
-                            sendQueue.clear();
+                            if (!sendQueueIsEmpty())
+                                sendQueue.remove();
+                            //sendQueue.clear(); 
                             System.err.println("Ignore Message: "+e.getMessage());
                         }
                     }
