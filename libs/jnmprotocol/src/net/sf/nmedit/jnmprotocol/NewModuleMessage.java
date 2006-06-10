@@ -44,7 +44,7 @@ public class NewModuleMessage extends MidiMessage
 	    ("NewModuleMessage(Packet packet) not implemented", 0);
     }
     
-    public void moveModule(int section, int type, int xpos, int ypos)
+    public void newModule(int section, int type, int xpos, int ypos)
     {
         intStream.append(section);
 	intStream.append(type);
