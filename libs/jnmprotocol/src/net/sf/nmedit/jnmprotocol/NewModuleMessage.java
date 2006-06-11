@@ -46,6 +46,7 @@ public class NewModuleMessage extends MidiMessage
     
     public void newModule(int section, int type, int xpos, int ypos)
     {
+        intStream = appendAll();
         intStream.append(section);
 	intStream.append(type);
 	intStream.append(xpos);

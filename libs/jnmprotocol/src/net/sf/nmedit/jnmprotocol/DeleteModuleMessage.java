@@ -50,7 +50,6 @@ public class DeleteModuleMessage extends MidiMessage
         intStream = appendAll();
     }
 
-
     public void deleteModule(int section, int module)
     {
         intStream.append(section);

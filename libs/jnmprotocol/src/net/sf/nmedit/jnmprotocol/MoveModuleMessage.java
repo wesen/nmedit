@@ -44,6 +44,12 @@ public class MoveModuleMessage extends MidiMessage
 	    ("MoveModuleMessage(Packet packet) not implemented", 0);
     }
 
+    public void set(String parameter, int value)
+    {
+        super.set(parameter, value);
+        intStream = appendAll();
+    }
+
     public void moveModule(int section, int module, int xpos, int ypos)
     {
         intStream.append(section);
