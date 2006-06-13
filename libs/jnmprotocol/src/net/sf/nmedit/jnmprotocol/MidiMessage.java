@@ -107,8 +107,11 @@ public abstract class MidiMessage
 		if (packet.contains("PatchListResponse")) {
 		    return new PatchListMessage(packet);
 		}
-		else if(packet.contains("ACK")) {
+		if(packet.contains("ACK")) {
 		    return new AckMessage(packet);
+		}
+		if(packet.contains("NewModuleResponse")) {
+		    return new NewModuleResponseMessage(packet);
 		}
 		
 		if (packet.contains("PatchPacket")) {

@@ -31,6 +31,8 @@ public class NewModuleMessage extends MidiMessage
     {
 	super();
 	
+	expectsreply = true;
+
 	addParameter("pid", "data:data:pid");
 	addParameter("sc", "data:data:sc");
 	set("cc", 0x17);

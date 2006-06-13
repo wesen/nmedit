@@ -50,8 +50,10 @@ NMInfo % 1 :=
 	#sc=0x09 => SlotActivated$data
 	#sc=0x38 => NewPatchInSlot$data
 	#sc=0x39 => Lights$data
+	#sc=0x3a => UnknownNmInfo$unknown
 	#sc=0x40 => KnobChange$data
 	#sc=0x41 => VUMeters$data
+	#sc=0x7e => NewModuleResponse$data
 	0:1 checksum:7
 	;
 
@@ -82,9 +84,17 @@ Lights % 1 :=
 	0:4 l19:2 l18:2
 	;
 
+UnknownNmInfo % 1 :=
+	i1:8 i2:8 i3:8 i4:8 i5:8 i6:8 i7:8 i8:8 i9:8 i10:8 i11:8
+	;
+
 VUMeters % 1 :=
 	0:1 vui:7 0:1 u0r:7 0:1 vu0l:7 0:1 vu1r:7 0:1 vu1l:7 0:1
 	vu2r:7 0:1 vu2l:7 0:1 vu3r:7 0:1 vu3l:7 0:1 vu4r:7 0:1 vu4l:7
+	;
+
+NewModuleResponse % 1 :=
+	0:1 index:7
 	;
 
 KnobChange % 1 :=

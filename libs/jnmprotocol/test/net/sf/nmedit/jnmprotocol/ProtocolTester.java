@@ -5,6 +5,8 @@ import javax.sound.midi.*;
 
 public class ProtocolTester extends TestCase
 {
+    static private int pid0;
+    
     protected void setUp()
     {
     }
@@ -51,7 +53,47 @@ public class ProtocolTester extends TestCase
 	    p.send(new IAmMessage());
 	    p.send(new RequestPatchMessage());
 	    int n = 0;
-	    while(n < 200) {
+	    while(n < 100) {
+		n++;
+		p.heartbeat();
+		Thread.sleep(10);
+	    }
+	    pid0 = p.getActivePid(0);
+	}
+	catch (MidiException me) {
+	    me.printStackTrace();
+	    System.out.println("" + me.getError());
+	}
+	catch (Throwable e) {
+	    e.printStackTrace();
+	}
+    }
+
+    public void testModuleMessages()
+	throws Exception
+    {
+	System.out.println("testModuleMessages: " + pid0);
+	try {
+	    MidiDriver md = new MidiDriver();
+	    MidiDevice.Info[] info = MidiSystem.getMidiDeviceInfo();
+	    md.connect(info[0], info[1]);
+	    NmProtocol p = new NmProtocol(md);
+	    //MidiMessage.usePdlFile("/midi.pdl", new TestTracer());
+	    p.addListener(new Listener(p));
+	    MoveModuleMessage mm = new MoveModuleMessage();
+	    mm.set("pid", pid0);
+	    mm.moveModule(1, 1, 40, 40);
+	    p.send(mm);
+	    DeleteModuleMessage dm = new DeleteModuleMessage();
+	    dm.set("pid", pid0);
+	    dm.deleteModule(1, 1);
+	    p.send(dm);
+	    NewModuleMessage nm = new NewModuleMessage();
+	    nm.set("pid", pid0);
+	    nm.newModule(1, 1, 40, 40);
+	    p.send(nm);
+	    int n = 0;
+	    while(n < 100) {
 		n++;
 		p.heartbeat();
 		Thread.sleep(10);
@@ -196,6 +238,14 @@ public class ProtocolTester extends TestCase
 			       "module:" + message.get("module") + " " +
 			       "parameter:" + message.get("parameter") + " " +
 			       "value:" + message.get("value"));
+	}
+
+	public void messageReceived(NewModuleResponseMessage message)
+	{
+	    System.out.println("NewModuleResponseMessage: " +
+			       "slot:" + message.get("slot") + " " +
+			       "pid:" + message.get("pid") + " " +
+			       "index:" + message.get("index"));
 	}
     }
 }

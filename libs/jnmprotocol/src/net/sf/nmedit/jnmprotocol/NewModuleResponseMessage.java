@@ -22,51 +22,39 @@ package net.sf.nmedit.jnmprotocol;
 import java.util.*;
 import net.sf.nmedit.jpdl.*;
 
-public class DeleteModuleMessage extends MidiMessage
+public class NewModuleResponseMessage extends MidiMessage
 {
-    private IntStream intStream;
-    
-    public DeleteModuleMessage()
+    public NewModuleResponseMessage()
 	throws Exception
     {
 	super();
-	
-	expectsreply = true;
 
-	addParameter("pid", "data:data:pid");
-	addParameter("sc", "data:data:sc");
-	set("cc", 0x17);
-	set("sc", 0x32);
+	addParameter("pid", "data:pid");
+	addParameter("sc", "data:sc");
+	addParameter("index", "data:data:index");
+	set("cc", 0x14);
+	set("sc", 0x7e);
+	set("index", 0);
+
+	isreply = true;
     }
 
-    DeleteModuleMessage(Packet packet)
+    NewModuleResponseMessage(Packet packet)
 	throws Exception
     {
-	throw new MidiException
-	    ("DeleteModuleMessage(Packet packet) not implemented", 0);
+	this();
+	setAll(packet);
     }
 
-    public void deleteModule(int section, int module)
-    {
-        intStream = appendAll();
-        intStream.append(section);
-        intStream.append(module);
-    }
-    
     public List getBitStream()
 	throws Exception
     {
-	appendChecksum(intStream);
-	
-	LinkedList bitStreamList = new LinkedList();
-	bitStreamList.add(getBitStream(intStream));
-	return bitStreamList;
+	throw new
+	    MidiException("NewModuleResponseMessage::getBitStream not implemented.", 0);	
     }
     
     public void notifyListener(NmProtocolListener listener)
-	throws Exception
     {
-	throw new MidiException
-	    ("DeleteModuleMessage.notifyListener() not implemented", 0);
+	listener.messageReceived(this);
     }
 }

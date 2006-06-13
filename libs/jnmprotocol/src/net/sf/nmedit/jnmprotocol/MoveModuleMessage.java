@@ -30,7 +30,9 @@ public class MoveModuleMessage extends MidiMessage
 	throws Exception
     {
 	super();
-	
+
+	expectsreply = true;
+
 	addParameter("pid", "data:data:pid");
 	addParameter("sc", "data:data:sc");
 	set("cc", 0x17);
@@ -44,20 +46,14 @@ public class MoveModuleMessage extends MidiMessage
 	    ("MoveModuleMessage(Packet packet) not implemented", 0);
     }
 
-    public void set(String parameter, int value)
-    {
-        super.set(parameter, value);
-        intStream = appendAll();
-    }
-
     public void moveModule(int section, int module, int xpos, int ypos)
     {
+        intStream = appendAll();
         intStream.append(section);
 	intStream.append(module);
 	intStream.append(xpos);
 	intStream.append(ypos);
     }
-
 
     public List getBitStream()
 	throws Exception

@@ -31,10 +31,10 @@ public class ActivePidListener extends NmProtocolListener
 	activePidMap[message.get("slot")] = message.get("pid1");
     }
     
-    //    public void messageReceived(NewPatchInSlotMessage message)
-    //    {
-    //	activePidMap[message.get("slot")] = message.get("pid");
-    //    }
+    public void messageReceived(LightMessage message)
+    {
+	activePidMap[message.get("slot")] = message.get("pid");
+    }
     
     public int getActivePid(int slot)
     {
