@@ -187,9 +187,12 @@ public class BitStream
      */
     public int getInt( int bitcount )
     {
+	if (bitcount == 0)
+	    return 0;
+
         if (bitcount>32||bitcount<0)
             throw new IllegalArgumentException("Number of bits out of range (0-32):"+bitcount);
-
+	
         // array index
         final int index = (int) (position >>> SHIFT);
         // offset from the msb
