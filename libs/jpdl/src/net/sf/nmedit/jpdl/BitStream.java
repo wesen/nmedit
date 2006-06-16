@@ -23,58 +23,254 @@
 
 package net.sf.nmedit.jpdl;
 
-
 import java.util.Arrays;
 
-
 /**
- * A class for reading and writing bits. TODO position and size should be of
- * type long
+ * A class for reading and writing bits. 
+ * 
+ * TODO position and size should be of type long
+ * 
+ * <h1>History</h1>
+ * <h3>2006-06-14</h3>
+ * <ul>
+ *   <li>getInt(0) now returns 0 as expected</li>
+ *   <li>getInt(X) now fails when X is larger than number of available bits or negative</li>
+ * </ul>
  */
 public class BitStream
 {
 
-    /**
-     * the array grows in blocks of the given size
-     */
-    private final static int INIT_SIZE = 20;
+    private final static int INITIAL_CAPACITY = 20; // => 32*INITIAL_CAPACITY bits
+    private final static int OFFSET_MASK = 0x1F; // = 32-1 = ... 011111
+    private final static int INDEX_SHIFT = 5; // 2^SHIFT = 32
 
     /**
-     * the array index is calculated by dividing (bit position p) (p/32) which
-     * is equal to p>>SHIFT
+     * number of written bits
      */
-    private final static int SHIFT = 5; // 2^SHIFT = 32
-
+    private int size;
+    
     /**
-     * the bit position inside an array field is calculated by the modulo
-     * division (bit position p) (p % 32) which is equal to (p & MASK)
+     * points behind the last written bit
      */
-    private final static int MASK = 0x1F; // binary 0...011111 = (32-1)
-
+    private int position;
+    
     /**
-     * current bit position
+     * bits
+     * 
+     * bit sequences are aligned at the top most bit
+     * 
+     * <b>example</b>
+     * <p>the example uses fields with 4-bit capacity
+     * rather than 32-bits for readability</p>
+     * <code>
+     * a:append(binary(110), bits(3));
+     * b:append(binary(110), bits(3));
+     * c:append(binary(110), bits(3));
+     * 
+     * results in:
+     * 1101 1011 0___
+     * aaab bbcc c
+     * </code>
      */
-    private long position;
+    private int[] bits;
 
-    /**
-     * number of defined bits
-     */
-    private long size;
-
-    /**
-     * array with 32 bits per field fields are filled starting from the least
-     * significant bit to the most significant bit
-     */
-    private long[] array;
-
+    
     public BitStream()
     {
         // new array
-        array = new long[INIT_SIZE];
+        bits = new int[INITIAL_CAPACITY];
         // reset the bit stream
         clear();
     }
+    
+    public int getInt(int bits)
+    {
+        // pre-conditions
+        // 1. 0<=bits<=32
+        // 2. available(bits)
+        
+        if (bits<0 || bits>32)
+        {
+            throw new IllegalArgumentException
+            (
+              "Specified number of bits out of range [0..32]:"+bits
+            );
+        }
+        else if (bits==0)
+        {
+            // note: when position+bits>size
+            // the operation still returns 0
+            return 0;
+        }
+        else if (position+bits>size)
+        {
+            throw new IllegalArgumentException
+            (
+               "Number of requested bits ("+bits+") exceeds "
+              +"number of available bits ("+(size-position)+")"      
+            );
+        }
+        
+        
+        /*    | position
+         *    |
+         *    |   -bits-
+         *    |------------|
+         *    |            |
+         * [__(vhead][vtail]__]
+         *    
+         * [--fhead-][-ftail--]
+         */
+     
+        /* caution:
+         * 1) x >>> (32*i) == x
+         * 2) x  << (32*i) == x
+         */
+        
+        final int hIndex = position >>> INDEX_SHIFT;
+        final int hOffset = position & OFFSET_MASK;
+        final int hSpace = 32-hOffset; // available bits in head-field 
+        
+        final int vHead;
+        {
+            // move to msb - truncates bits before head
+            int fHead = this.bits[hIndex] << hOffset;
+            // note: see 'caution'
+            // - bitsHead == 0 => (fhead >>> (32-bits)) == fhead
+            vHead = (fHead >>> (32-bits))
+            // truncate bits behind head not necessary:
+            // 1. case: bit-count(tail)==0 => vhead is aligned at lsb
+            // 2. case: bit-count(tail) >0 => vhead was in fHead aligned at lsb
 
+            // there seems to be a bug:
+            // maybe optimizations make the shift operations
+            // behave like (this.bits[index]>>(32-bits-offset))
+            // which does not remove bits
+            // solution: remove bits with and-mask
+            & (0xFFFFFFFF>>>(32-bits)) ;
+        }
+        
+        // post-condition:
+        // - update position
+        position += bits;
+
+        if (bits<=hSpace)
+        {
+            // all bits are in fHead
+            // => bit-count(vtail) == 0
+            // => (vtail == 0)
+            // => ((vhead|vtail)==vhead) 
+            return vHead;
+        }
+        else
+        {
+            // some bits remain in fTail
+        
+            // final int tIndex  = idxHead+1;
+            // final int tOffset = 32;
+            
+            final int TAIL_SHIFT =
+                // shifts tail that is alignat at msb
+                // to its correct location (tail-1)...0
+                (32-(hOffset+bits-32));
+            
+            final int vTail;
+            {
+                // move to lsb
+                vTail = (    
+                    this.bits[hIndex+1] >>> 
+                    TAIL_SHIFT
+                )
+                // truncate bits before tail not necessary:
+                // fTail is aligned at msb => no leading bits
+
+                // this should not be necessary,
+                // bit the >>> operator sometimes
+                // does not set the upper bits
+                // to zero
+                & (0xFFFFFFFF>>>TAIL_SHIFT);
+            }
+            
+            return (vHead|vTail);
+        }
+    }
+
+    public void append( int data, int bits )
+    {
+        // pre-condition:
+        // - specified number of bits must be in range [0..32]
+        // - data must have only the specified number of bits set
+        // - truncate additional bits in parameter data
+        // - space for written bits has to be available
+        if (bits<0||bits>32)
+        {
+            throw new IllegalArgumentException
+            (
+               "Specified number of bits out of range [0..32]: "+bits
+            );
+        }
+        else if (bits==0)
+        {   
+            // no bits to write
+            return ; 
+        }
+        else
+        {
+            // 1<= bits <= 32
+            // note: this would fail if (bits==0)
+            // because 0xFFFFFFFF>>>32 = 0xFFFFFFFF
+            data &= (0xFFFFFFFF>>>(32-bits));
+        }
+        
+        // check space
+        if (((size + bits)>> INDEX_SHIFT)+1 >= this.bits.length)
+        {
+            // allocate space : double size
+            int newSize = this.bits.length<<2;
+            
+            int[] newArray = new int[newSize];
+            
+            // copy the definied data to the new array
+            for (int i = this.bits.length - 1; i >= 0; i--)
+                newArray[i] = this.bits[i];
+            // set the rest of the new array to zero
+            for (int i = this.bits.length; i < newSize; i++)
+                newArray[i] = 0;
+            // finally replace the array with the larger version
+            this.bits = newArray;
+        }
+
+        final int hIndex = size >>> INDEX_SHIFT;
+        final int hOffset = size & OFFSET_MASK;
+        final int hSpace= 32-hOffset;
+        
+        final int vHead = (
+            // move to msb
+            data << (32-bits)
+        )
+        // move to position in fHead
+        >>> hOffset;
+        
+        this.bits[hIndex] |= vHead;
+        
+        if (bits>hSpace)
+        {
+            // add additional bits at msb of fTail
+            this.bits[hIndex+1] 
+              = data << //(bits-hSpace);
+
+            (
+                    -bits // highest bit to index 0
+                    +32    // highest bit to index 31
+                    +(32-hOffset) // tail to msb
+            ) ;
+        }
+        
+        // post-condition
+        // - update size
+        size += bits;
+    }
+    
     /**
      * Removes all bits. The position and the size are set to 0 (zero).
      */
@@ -85,221 +281,35 @@ public class BitStream
         size = 0;
         
         // use a smaller array when it become too large
-        if (array.length>INIT_SIZE) 
-            array = new long[INIT_SIZE];
+        if (bits.length>INITIAL_CAPACITY) 
+            bits = new int[INITIAL_CAPACITY];
         
         // set each fields to zero
-        Arrays.fill( array, 0 ); 
-    }
-
-    /**
-     * Appends a specified number of bits to the end of the bit stream.
-     * Bits are appended starting from (bitcount-1) downto 0.
-     * 
-     * @param data the specified bits are appended starting from the index
-     * (bitcount-1) downto 0
-     * @param bitcount 0-32 bits are appended
-     */
-    public void append( int data, int bitcount )
-    {        
-        if (bitcount>32||bitcount<0)
-            throw new IllegalArgumentException("Number of bits out of range (0-32):"+bitcount);
-        //else if (bitcount==0) return;
-
-        // check if there is enough space left in the array
-        if (( ( size + bitcount ) >> SHIFT ) + 1 >= array.length)
-        {
-            // we have to create a larger array
-            // the array should grow in blocks
-            int asize = array.length << 2; // double array size
-            long[] newarray = new long[asize];
-            // copy the definied data to the new array
-            for (int i = array.length - 1; i >= 0; i--)
-                newarray[i] = array[i];
-            // set the rest of the new array to zero
-            for (int i = array.length; i < asize; i++)
-                newarray[i] = 0;
-            // finally replace the array with the larger version
-            array = newarray;
-        }
-
-        /*
-         * case 1: inside
-         * 
-         *         - bitcount -
-         *        |-------------|
-         * +----------------------------+
-         * | .A.  (head     ... )   .B. | , A and B can have 0 bits
-         * +----------------------------+
-         *  31                         0
-         *  
-         * case 2: overlapping
-         * 
-         *          - bitcount -
-         *        |--------------|
-         * +--------------+-------------+
-         * |      (head ..|. tail)      |
-         * +--------------+-------------+
-         *  31           0 31          0
-         */
-
-        // array index
-        final int index = (int) (size >>> SHIFT);
-        // offset from the msb
-        final long offset = size & MASK;
-
-        // values in long type
-        final long lsize = (long) bitcount;
-        final long ldata = (long) data;
-        
-        long head = ldata;
-        head &= (0xFFFFFFFF>>>(32-lsize)); // remove unecessary bits 
-        head <<= (32-lsize); // align at msb, this will remove overlapping bits
-        head>>>= (offset);  // align at defined bits
-
-        // store head without changing saved bits
-        array[index] |= head;
-
-        // check if there is a tail
-        if (offset+lsize>32)
-        {
-            // yes there is a tail
-            final long tail = ldata
-                << // tail is aligned at msb 
-                (
-                        -lsize // highest bit to index 0
-                        +32    // highest bit to index 31
-                        +(32-offset) // tail to msb
-                ) ;
-                
-            array[index+1] = tail;
-        }
-
-        size+=lsize;
-    }
-    
-    /**
-     * Returns a specified number of bits. The return value's bits are set
-     * starting from the index (bitCount-1) downto 0
-     * 
-     * @param bitcount 0-32 bits
-     * @return returns a specified number of bits
-     */
-    public int getInt( int bitcount )
-    {
-	if (bitcount == 0)
-	    return 0;
-
-        if (bitcount>32||bitcount<0)
-            throw new IllegalArgumentException("Number of bits out of range (0-32):"+bitcount);
-	
-        // array index
-        final int index = (int) (position >>> SHIFT);
-        // offset from the msb
-        final long offset = position & MASK;
-
-        // values in long type
-        final long lsize = bitcount;
-        
-        long head = array[index];
-        // align at msb
-        head <<= offset;
-        // move at correct position
-        head >>>= (32-lsize);
-        
-        // there seems to be a bug:
-        // maybe optimizations make the shift operations
-        // behave like (array[index]>>(32-lsize-offset))
-        // which does not remove bits
-        // solution: remove bits with and-mask
-        head &= (0xFFFFFFFF>>>(32-bitcount)) ;
-        
-        // tail
-        final long tail;
-        // check if tail exits
-        if (offset+lsize>32)
-        {
-            final long TAIL_SHIFT =
-                // shifts tail that is alignat at msb
-                // to its correct location (tail-1)...0
-                (32-(offset+lsize-32));
-            
-            tail =
-                (
-                // tail at msb in next field
-                array[index+1] 
-                // move to correct location    
-                >>>TAIL_SHIFT
-                )
-                // this should not be necessary,
-                // bit the >>> operator sometimes
-                // does not set the upper bits
-                // to zero
-                & (0xFFFFFFFF>>>TAIL_SHIFT);
-        }
-        else
-        {
-            // no tail
-            tail = 0;
-        }
-            
-        position+=lsize;
-        
-        return (int) (head|tail);
-    }
-
-    /**
-     * Returns the current bit position
-     * 
-     * @return the current bit position.
-     */
-    public int getPosition()
-    {
-        return (int) position;
-    }
-
-    /**
-     * Returns the number of defined bits.
-     * 
-     * @return the number of defined bits
-     */
-    public int getSize()
-    {
-        return (int) size;
-    }
-
-    /**
-     * Sets the position to the given bit index.
-     * 
-     * @param position bit index
-     */
-    public void setPosition( int position )
-    {
-        this.position = position;
+        Arrays.fill( bits, 0 ); 
     }
 
     /**
      * Sets the number of valid bits. The operation only removes the bits with
      * index >= size. It can not be used to make the bit stream larger.
      * 
-     * @param size the new size
+     * @param size the new size (in bits)
      */
-    public void setSize( int size )
+    public void setSize(int size)
     {
         // makes only smaller
         if (this.size > size)
         {
-            int unset = (size>>SHIFT);
-            if (unset+1<array.length)
+            int unset = (size>>INDEX_SHIFT);
+            if (unset+1<bits.length)
             {
                 // set fields unset+1 ... array.length-1 to zero
-                Arrays.fill(array, unset+1, array.length, 0);
+                Arrays.fill(bits, unset+1, bits.length, 0);
             }
-            
-	    // we may have to remove some bits in the last field
-	    int validbits = size&MASK; // == size%32;
-	    // set invalid bits to zero
-	    array[unset] &= ~(0xFFFFFFFF>>>validbits);
+
+            // we may have to remove some bits in the last field
+            int validbits = size&OFFSET_MASK; // == size%32;
+            // set invalid bits to zero
+            bits[unset] &= ~(0xFFFFFFFF>>>validbits);
 
             this.size = size;
             if (position > size) position = size;
@@ -307,16 +317,42 @@ public class BitStream
     }
 
     /**
-     * Returns true when the specified number of bits are definied starting from
+     * Returns true when the specified number of bits are available starting from
      * the current position.
      * 
      * @param amount number of bits
-     * @return true when the specified number of bits are definied starting from
-     * the current position.
+     * TODO throw IllegalArgumentException when (amount &lt; 0)
      */
     public boolean isAvailable( int amount )
     {
         return position + amount <= size;
+    }
+
+    /**
+     * Returns the number of written bits.
+     * @return the number of written bits
+     */
+    public int getSize()
+    {
+        return size;
+    }
+
+    /**
+     * Returns the current bit position.
+     * @return the current bit position.
+     */
+    public int getPosition()
+    {
+        return position;
+    }
+
+    /**
+     * Sets the position to the given bit index.
+     * @param position bit index
+     */
+    public void setPosition( int position )
+    {
+        this.position = position;
     }
 
 }
