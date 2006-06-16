@@ -53,7 +53,7 @@ NMInfo % 1 :=
 	#sc=0x3a => UnknownNmInfo$unknown
 	#sc=0x40 => KnobChange$data
 	#sc=0x41 => VUMeters$data
-	#sc=0x7e => NewModuleResponse$data
+	#sc=0x7e => Error$data
 	0:1 checksum:7
 	;
 
@@ -93,8 +93,8 @@ VUMeters % 1 :=
 	vu2r:7 0:1 vu2l:7 0:1 vu3r:7 0:1 vu3l:7 0:1 vu4r:7 0:1 vu4l:7
 	;
 
-NewModuleResponse % 1 :=
-	0:1 index:7
+Error % 1 :=
+	0:1 code:7
 	;
 
 KnobChange % 1 :=
@@ -196,7 +196,7 @@ GetPatchPart % 1 :=
 	;
 
 ModuleAdd % 1 :=
-	0:1 section:7 0:1 type:7 0:1 xpos:7 0:1 ypos:7
+	0:1 section:7 0:1 index:7 0:1 type:7 0:1 xpos:7 0:1 ypos:7
 	;
 
 KnobAssignment % 1 :=

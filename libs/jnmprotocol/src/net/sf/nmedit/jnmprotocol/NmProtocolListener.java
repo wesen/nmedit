@@ -33,5 +33,5 @@ public abstract class NmProtocolListener
     public void messageReceived(SlotsSelectedMessage message) {}
     public void messageReceived(SlotActivatedMessage message) {}
     public void messageReceived(ParameterMessage message) {}
-    public void messageReceived(NewModuleResponseMessage message) {}
+    public void messageReceived(ErrorMessage message) {}
 }

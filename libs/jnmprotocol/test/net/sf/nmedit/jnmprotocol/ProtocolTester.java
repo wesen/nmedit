@@ -90,7 +90,7 @@ public class ProtocolTester extends TestCase
 	    p.send(dm);
 	    NewModuleMessage nm = new NewModuleMessage();
 	    nm.set("pid", pid0);
-	    nm.newModule(1, 1, 40, 40);
+	    nm.newModule(1, 199, 1, 40, 40);
 	    p.send(nm);
 	    int n = 0;
 	    while(n < 100) {
@@ -240,12 +240,12 @@ public class ProtocolTester extends TestCase
 			       "value:" + message.get("value"));
 	}
 
-	public void messageReceived(NewModuleResponseMessage message)
+	public void messageReceived(ErrorMessage message)
 	{
-	    System.out.println("NewModuleResponseMessage: " +
+	    System.out.println("ErrorMessage: " +
 			       "slot:" + message.get("slot") + " " +
 			       "pid:" + message.get("pid") + " " +
-			       "index:" + message.get("index"));
+			       "code:" + message.get("code"));
 	}
     }
 }

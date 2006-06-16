@@ -110,8 +110,8 @@ public abstract class MidiMessage
 		if(packet.contains("ACK")) {
 		    return new AckMessage(packet);
 		}
-		if(packet.contains("NewModuleResponse")) {
-		    return new NewModuleResponseMessage(packet);
+		if(packet.contains("Error")) {
+		    return new ErrorMessage(packet);
 		}
 		
 		if (packet.contains("PatchPacket")) {
@@ -170,6 +170,9 @@ public abstract class MidiMessage
     {
 	if (!parameters.contains(parameter)) {
 	    throw new RuntimeException("Unsupported paramenter: " + parameter);
+	}
+	if (values.get(parameter) == null) {
+	    throw new RuntimeException("Missing parameter value: " + parameter);
 	}
 	return ((Integer)values.get(parameter)).intValue();
     }

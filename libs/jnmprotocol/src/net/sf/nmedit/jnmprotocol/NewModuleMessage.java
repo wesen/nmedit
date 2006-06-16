@@ -46,10 +46,11 @@ public class NewModuleMessage extends MidiMessage
 	    ("NewModuleMessage(Packet packet) not implemented", 0);
     }
     
-    public void newModule(int section, int type, int xpos, int ypos)
+    public void newModule(int section, int index, int type, int xpos, int ypos)
     {
         intStream = appendAll();
         intStream.append(section);
+	intStream.append(index);
 	intStream.append(type);
 	intStream.append(xpos);
 	intStream.append(ypos);

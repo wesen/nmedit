@@ -22,24 +22,24 @@ package net.sf.nmedit.jnmprotocol;
 import java.util.*;
 import net.sf.nmedit.jpdl.*;
 
-public class NewModuleResponseMessage extends MidiMessage
+public class ErrorMessage extends MidiMessage
 {
-    public NewModuleResponseMessage()
+    public ErrorMessage()
 	throws Exception
     {
 	super();
 
 	addParameter("pid", "data:pid");
 	addParameter("sc", "data:sc");
-	addParameter("index", "data:data:index");
+	addParameter("code", "data:data:code");
 	set("cc", 0x14);
 	set("sc", 0x7e);
-	set("index", 0);
+	set("code", 0);
 
 	isreply = true;
     }
 
-    NewModuleResponseMessage(Packet packet)
+    ErrorMessage(Packet packet)
 	throws Exception
     {
 	this();
@@ -50,7 +50,7 @@ public class NewModuleResponseMessage extends MidiMessage
 	throws Exception
     {
 	throw new
-	    MidiException("NewModuleResponseMessage::getBitStream not implemented.", 0);	
+	    MidiException("ErrorMessage::getBitStream not implemented.", 0);	
     }
     
     public void notifyListener(NmProtocolListener listener)
