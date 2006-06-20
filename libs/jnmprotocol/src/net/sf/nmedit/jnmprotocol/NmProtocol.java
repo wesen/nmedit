@@ -134,7 +134,7 @@ public class NmProtocol
 	return activePidListener.getActivePid(slot);
     }
 
-    private void notifyListeners(MidiMessage midiMessage)
+    protected void notifyListeners(MidiMessage midiMessage)
 	throws Exception
     {
 	for (Iterator i = listeners.iterator(); i.hasNext(); ) {
