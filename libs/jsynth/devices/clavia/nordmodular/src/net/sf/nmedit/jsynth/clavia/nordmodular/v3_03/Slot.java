@@ -52,7 +52,6 @@ public class Slot
     private ParameterMessage parameterMessage = null;
     private int voiceCount = 0;
     private boolean selected = false;
-    private int packetCount = 0;
     private ModuleListener ml = new ModuleListener();
 
     Slot(int ID, NordModular device)
@@ -165,7 +164,7 @@ public class Slot
             {
                 case ModuleEvent.MODULE_MOVED:
                 {
-                    if (isPatchInitialized())
+                    //if (isPatchInitialized())
                     {
                         try
                         {
@@ -178,8 +177,6 @@ public class Slot
                             msg.moveModule(Format.getVoiceAreaID(m.getVoiceArea().isPolyVoiceArea()),
                                     m.getIndex(), m.getX(), m.getY());
 
-                            System.out.println("move");
-                            
                             device.send(msg);
                         }
                         catch (Exception e)
@@ -205,7 +202,7 @@ public class Slot
                     install(event.getModule());
                     //synchsafe();
                     
-                    if (isPatchInitialized())
+                    //if (isPatchInitialized())
                     {
                         synchNewModule(event.getModule());
                     }
@@ -217,7 +214,7 @@ public class Slot
                     uninstall(event.getModule());
                     //synchsafe();
                     
-                    if (isPatchInitialized())
+                    //if (isPatchInitialized())
                     {
                         synchRemoveModule(event.getModule());
                     }
@@ -256,26 +253,26 @@ public class Slot
         int va = Format.getVoiceAreaID(module.getVoiceArea().isPolyVoiceArea());
         
         msg.newModule(
-           va, module.getID(), module.getX(), module.getY()      
+           va, module.getIndex(), module.getID(), module.getX(), module.getY()      
         );
         
         System.out.println
-        ("newModule: voice area:"+va+" module-id:"+module.getID()+" module.x:"+
+        ("newModule: voice area:"+va+" module-index:"+module.getIndex()+" module-id:"+module.getID()+" module.x:"+
                 module.getX()+" module.y:"+module.getY());
         /*
         newModule: voice area:1 module-id:1 module.x:0 module.y:0
         Ignore Message: parse failed:  240 51 80 6 4 126 5 0 247
         newModule: voice area:1 module-id:1 module.x:0 module.y:2
         Ignore Message: parse failed:  240 51 88 6 5 127 5 247
-*//*
+*/
         try
         {
             device.send(msg);
         }
-        catch (DeviceIOException e)
+        catch (SynthException e)
         {
             e.printStackTrace();
-        }*/
+        }
     }
 
     private void synchRemoveModule( Module module )
@@ -307,11 +304,6 @@ public class Slot
         {
             e.printStackTrace();
         }
-    }
-    
-    private boolean isPatchInitialized()
-    {
-        return packetCount == 13; // >= 13
     }
     
     /*private void synchsafe()
@@ -360,9 +352,9 @@ public class Slot
     public String toString()
     {
         return "Slot[ID="+ID
-        +", Device="+device.getName()
-        +", Version="+device.getVersion()
-        +", Vendor="+device.getVendor()+"]";            
+        +", Device="+device.getInfo().getName()
+        +", Version="+device.getInfo().getVersion()
+        +", Vendor="+device.getInfo().getVendor()+"]";            
     }
 
     public String getName()
@@ -417,7 +409,7 @@ public class Slot
 
     public void synchGetPatch()
     {
-        packetCount = 0;
+       // packetCount = 0;
         setPatch((Patch) device.getPatchImplementation().createPatch());
         GetPatchMessage msg;
         try {
@@ -429,7 +421,7 @@ public class Slot
             e.printStackTrace();
         }
     }
-
+/*
     public void signalPacketReceived()
     {
         packetCount ++;
@@ -438,6 +430,6 @@ public class Slot
     public boolean canUpdateSlot()
     {
         return packetCount<13;
-    }
+    }*/
     
 }

@@ -24,16 +24,23 @@ package net.sf.nmedit.jsynth.clavia.nordmodular.v3_03;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.sound.midi.MidiDevice;
+import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Receiver;
+import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.jnmprotocol.IAmMessage;
 import net.sf.nmedit.jnmprotocol.MidiDriver;
 import net.sf.nmedit.jnmprotocol.MidiMessage;
 import net.sf.nmedit.jnmprotocol.NmProtocol;
+import net.sf.nmedit.jnmprotocol.NmProtocolListener;
 import net.sf.nmedit.jpatch.spi.PatchImplementation;
 import net.sf.nmedit.jsynth.SynthException;
+import net.sf.nmedit.jsynth.Synthesizer;
 import net.sf.nmedit.jsynth.generic.AbstractSynthesizer;
 import net.sf.nmedit.jsynth.util.SelfRegulatingThread;
 
@@ -55,9 +62,12 @@ public class NordModular extends AbstractSynthesizer
     
     private PatchImplementation patchImplementation;
     
+    public static Synthesizer.Info DEVICE_INFO = new Synthesizer.Info( "Nord Modular", "Clavia", "3.03" );
+    private List<NmProtocolListener> protocolListenerList = new ArrayList<NmProtocolListener>();
+    
     public NordModular()
     {
-        super( "Nord Modular", "Clavia", "3.03" );
+        super(DEVICE_INFO);
 
         patchImplementation = PatchImplementation.getImplementation("Clavia Nord Modular Patch", "3.03");
         
@@ -69,6 +79,25 @@ public class NordModular extends AbstractSynthesizer
         this.driver = new MidiDriver();
         this.synthMessageHandler = new SynthMessageHandler(this);
         this.messageProcessor = null;
+    }
+    
+    public void addProtocolListener(NmProtocolListener l)
+    {
+        if (!protocolListenerList.contains(l))
+        {
+            protocolListenerList.add(l);
+            if (isConnected() && protocol!=null)
+                protocol.addListener(l);
+        }
+    }
+    
+    public void removeProtocolListener(NmProtocolListener l)
+    {
+        if (protocolListenerList.remove(l))
+        {
+            if (isConnected() && protocol!=null)
+                protocol.removeListener(l);
+        }
     }
     
     public int getSlotCount()
@@ -137,22 +166,30 @@ public class NordModular extends AbstractSynthesizer
                 }
                 
                 // create message thread 
-                
-                // create protocol
-                protocol = new NmProtocol(driver);
+
+                messageProcessor = new MessageProcessor();
                 try
                 {
+                    MidiDevice inDevice = MidiSystem.getMidiDevice(getMidiIn());
+                    inDevice.getTransmitter().setReceiver(messageProcessor);
+                    
+                    // create protocol
+                    protocol = new NmProcotolExtension(driver);
                     protocol.send(new IAmMessage());
                 }
                 catch (Exception e)
                 {
+                    messageProcessor = null;
                     driver.disconnect();
                     protocol = null;
                     throw new SynthException(e);
                 }
 
                 protocol.addListener(synthMessageHandler);
-                messageProcessor = new MessageProcessor();
+                
+                for (NmProtocolListener l:protocolListenerList)
+                    protocol.addListener(l);
+                
                 messageProcessor.start();
                 
                 fireSynthStateEvent();
@@ -165,8 +202,10 @@ public class NordModular extends AbstractSynthesizer
                 {
                     System.err.println("thread does not stop");
                 }
-                
                 protocol.removeListener(synthMessageHandler);
+                for (NmProtocolListener l:protocolListenerList)
+                    protocol.removeListener(l);
+                
                 protocol = null;
                 driver.disconnect();
 
@@ -201,7 +240,52 @@ public class NordModular extends AbstractSynthesizer
             messageProcessor.signalPendingWork();
         }
     }
-    
+
+    private class NmProcotolExtension extends NmProtocol implements Runnable
+    {
+        
+        private Queue<MidiMessage> incoming = new ConcurrentLinkedQueue<MidiMessage>();
+        private AtomicBoolean isBroadcasting = new AtomicBoolean(false);
+        
+        public NmProcotolExtension( MidiDriver midiDriver )
+        {
+            super( midiDriver );
+        }
+        
+        public void heartbeat() throws Exception
+        {
+            super.heartbeat();
+
+            if ((!isBroadcasting.get()) && !incoming.isEmpty())
+            {
+                SwingUtilities.invokeLater(this);
+            }
+        }
+
+        protected void notifyListeners(MidiMessage midiMessage)
+        {
+            incoming.offer(midiMessage);
+        }
+
+        public void run()
+        {
+            isBroadcasting.getAndSet(true);
+            MidiMessage message;
+            while ((message=incoming.poll())!=null)
+            {
+                try
+                {
+                    super.notifyListeners(message);
+                }
+                catch (Exception e)
+                {
+                    // TODO handle error
+                    e.printStackTrace();
+                }
+            }
+            isBroadcasting.getAndSet(false);
+        }
+    }
 
     private class MessageProcessor extends SelfRegulatingThread
         implements Receiver

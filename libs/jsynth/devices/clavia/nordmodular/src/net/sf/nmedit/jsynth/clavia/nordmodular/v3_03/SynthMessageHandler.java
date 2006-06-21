@@ -25,9 +25,9 @@ package net.sf.nmedit.jsynth.clavia.nordmodular.v3_03;
 import java.util.Arrays;
 
 import net.sf.nmedit.jnmprotocol.AckMessage;
+import net.sf.nmedit.jnmprotocol.ErrorMessage;
 import net.sf.nmedit.jnmprotocol.IAmMessage;
 import net.sf.nmedit.jnmprotocol.LightMessage;
-import net.sf.nmedit.jnmprotocol.NewModuleResponseMessage;
 import net.sf.nmedit.jnmprotocol.NewPatchInSlotMessage;
 import net.sf.nmedit.jnmprotocol.NmProtocolListener;
 import net.sf.nmedit.jnmprotocol.ParameterMessage;
@@ -259,9 +259,9 @@ public class SynthMessageHandler extends NmProtocolListener implements SynthStat
         }
     }
 
-    public void messageReceived(NewModuleResponseMessage message) 
+    public void messageReceived(ErrorMessage message) 
     {
-        System.out.println(message);
+        System.err.println("Received error message: code "+message.get("code"));
     }
 
 }
