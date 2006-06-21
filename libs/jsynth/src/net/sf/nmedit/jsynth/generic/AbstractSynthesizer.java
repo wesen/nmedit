@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.sound.midi.MidiDevice;
-import javax.sound.midi.MidiDevice.Info;
 
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.Synthesizer;
@@ -36,35 +35,21 @@ import net.sf.nmedit.jsynth.event.SynthStateListener;
 public abstract class AbstractSynthesizer implements Synthesizer
 {
 
-    private final String name;
-    private final String vendor;
-    private final String version;
     private MidiDevice.Info midiInInfo;
     private MidiDevice.Info midiOutInfo;
     private List<SynthStateListener> stateListenerList = new ArrayList<SynthStateListener>();
+    private Synthesizer.Info info;
 
-    public AbstractSynthesizer( String name, String vendor, String version )
+    public AbstractSynthesizer( Synthesizer.Info info )
     {
-        this.name = name;
-        this.vendor = vendor;
-        this.version = version;
+        this.info = info;
         this.midiInInfo = null;
         this.midiOutInfo = null;
-    }
-
-    public String getName()
+    }    
+    
+    public Synthesizer.Info getInfo()
     {
-        return name;
-    }
-
-    public String getVendor()
-    {
-        return vendor;
-    }
-
-    public String getVersion()
-    {
-        return version;
+        return info;
     }
 
     protected void failIfConnected( String message )
@@ -76,24 +61,24 @@ public abstract class AbstractSynthesizer implements Synthesizer
         }
     }
 
-    public void setMidiIn( Info in )
+    public void setMidiIn( MidiDevice.Info in )
     {
         failIfConnected( "Can't set MIDI input device." );
         this.midiInInfo = in;
     }
 
-    public void setMidiOut( Info out )
+    public void setMidiOut( MidiDevice.Info out )
     {
         failIfConnected( "Can't set MIDI output device." );
         this.midiOutInfo = out;
     }
 
-    public Info getMidiIn()
+    public MidiDevice.Info getMidiIn()
     {
         return midiInInfo;
     }
 
-    public Info getMidiOut()
+    public MidiDevice.Info getMidiOut()
     {
         return midiOutInfo;
     }
@@ -122,8 +107,7 @@ public abstract class AbstractSynthesizer implements Synthesizer
 
     public String toString()
     {
-        return getName() + "[Version=" + getVersion() + ", Vendor="
-                + getVendor() + "]";
+        return getInfo().toString();
     }
 
     protected void checkPreconditions(boolean connect) throws SynthException

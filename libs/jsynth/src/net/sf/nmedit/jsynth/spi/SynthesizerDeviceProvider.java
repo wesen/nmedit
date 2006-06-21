@@ -20,29 +20,15 @@
 /*
  * Created on Jun 19, 2006
  */
-package net.sf.nmedit.jsynth;
+package net.sf.nmedit.jsynth.spi;
+
+import net.sf.nmedit.jsynth.Synthesizer;
 
 public interface SynthesizerDeviceProvider
 {
 
-    /**
-     * Returns the name of the synthesizer.
-     * @return the name of the synthesizer
-     */
-    String getName();
+    public Synthesizer.Info getInfo();
     
-    /**
-     * Returns the vendor of the synthesizer
-     * @return the vendor of the synthesizer
-     */
-    String getVendor();
-    
-    /**
-     * Returns the version of the synthesizer.
-     * @return the version of the synthesizer
-     */
-    String getVersion();
-
     public Synthesizer createSynthesizer();
     
 }
