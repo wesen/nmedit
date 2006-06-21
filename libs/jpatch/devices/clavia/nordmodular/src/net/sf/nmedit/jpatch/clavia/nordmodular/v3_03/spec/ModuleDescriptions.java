@@ -1,6 +1,7 @@
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec;
 
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -39,8 +40,8 @@ public class ModuleDescriptions {
 	 * @param xmlfile the xml file
 	 * @param subs the substitution xml file reader
 	 */
-	public static void init(String xmlfile, Substitutions subs) {
-		model = new ModuleDescriptions(xmlfile, subs);
+	public static void init(Substitutions subs) {
+		model = new ModuleDescriptions(subs);
 	}
 
 	/**
@@ -80,19 +81,31 @@ public class ModuleDescriptions {
 	
 	private Substitutions substitutions = null;
 	
-	public ModuleDescriptions(String xmlfile, Substitutions subs) {
+	public ModuleDescriptions(Substitutions subs) {
 		this.substitutions = subs;
-
-		ModuleDescriptionParser parser = new ModuleDescriptionParser(this);
-		try {
-			parser.parse(xmlfile);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (XmlPullParserException e) {
-			e.printStackTrace();
-		}
-
 	}
+    
+    public void load(String xmlFile)
+    {
+        ModuleDescriptionParser parser = new ModuleDescriptionParser(this);
+        try {
+            parser.parse(xmlFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void load(InputStream is)
+    {
+        ModuleDescriptionParser parser = new ModuleDescriptionParser(this);
+        try {
+            parser.parse(is);
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        }
+    }
 	
 	public Substitutions getSubstitutions() {
 		return substitutions;
