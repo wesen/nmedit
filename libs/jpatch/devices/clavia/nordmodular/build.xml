@@ -21,6 +21,14 @@
         <pathelement location="../../../../jmisc/lib/xpp3_min-1.1.3_8.jar"/>
       </classpath>
 	</javac>
+    <copy todir="${build}">
+      <fileset dir="src/RESOURCE/">
+        <include name="modules.xml"/>
+        <include name="modules-definition-v10.dtd"/>
+        <include name="substitutions.xml"/>
+        <include name="substitutions.dtd"/>
+      </fileset>
+	</copy>
   </target>
 
   <target name="dist" depends="compile" description="generate the distribution">
