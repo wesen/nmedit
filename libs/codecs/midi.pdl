@@ -179,8 +179,8 @@ PatchModification % 1 :=
 	#sc=0x26 => KnobAssignmentChange$data
 	#sc=0x32 => ModuleDeletion$data
 	#sc=0x34 => ModuleMove$data
-	#sc=0x50 => CableInsertion$data
-	#sc=0x51 => CableDeletion$data
+	#sc=0x50 => CableInsert$data
+	#sc=0x51 => CableDelete$data
 	#sc=0x54 => CableMove$data
 	#sc=0x55 => SendControllerSnapshot$data
 	#sc=0x56 => Note$data
@@ -225,7 +225,16 @@ NextModuleMove % 1 :=
 	0:1 0x34:7 ModuleMove$data
 	;
 
-CableInsertion % 1 :=
+CableInsert % 1 :=
+	0:1 1:3 section:1 color:3
+        0:1 module1:7 0:1 type1:1 connector1:6
+        0:1 module2:7 0:1 type2:1 connector2:6
+	;
+
+CableDelete % 1 :=
+	0:1 1:6 section:1
+        0:1 module1:7 0:1 type1:1 connector1:6
+        0:1 module2:7 0:1 type2:1 connector2:6
 	;
 
 CableMove % 1 :=
