@@ -200,7 +200,8 @@ public class NordModular extends AbstractSynthesizer
 
                 if (messageProcessor.isAlive())
                 {
-                    System.err.println("thread does not stop");
+                    messageProcessor.setExitMessage("message thread: has stopped");
+                    System.err.println("message thread: not stopped");
                 }
                 protocol.removeListener(synthMessageHandler);
                 for (NmProtocolListener l:protocolListenerList)
@@ -292,11 +293,34 @@ public class NordModular extends AbstractSynthesizer
     {
         
         private final AtomicBoolean hasWork = new AtomicBoolean(true);
+        private String exitMessage = null;
+        private final Object messageLock = new Object(); 
 
         public MessageProcessor( )
         {
             super( 5000, 10 );
             setDaemon(true);
+        }
+
+        public void run()
+        {
+            super.run();
+            synchronized (messageLock)
+            {
+                if (exitMessage!=null)
+                {
+                    System.out.println(exitMessage);
+                    exitMessage = null;
+                }
+            }
+        }
+        
+        public void setExitMessage( String message )
+        {
+            synchronized (messageLock)
+            {
+                exitMessage = message;
+            }
         }
 
         @Override
