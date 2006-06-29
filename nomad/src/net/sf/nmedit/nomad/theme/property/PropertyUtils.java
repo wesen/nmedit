@@ -25,7 +25,7 @@ package net.sf.nmedit.nomad.theme.property;
 import java.util.Map;
 
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
-import net.sf.nmedit.nomad.xml.dom.theme.ComponentNode;
+import net.sf.nmedit.nomad.theme.xml.dom.ComponentNode;
 
 
 public class PropertyUtils {

@@ -18,30 +18,40 @@
  */
 
 /*
- * Created on Jan 22, 2006
+ * Created on Feb 27, 2006
  */
-package plugin.g2theme.custom;
+package net.sf.nmedit.nomad.theme.xml.dom;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DConnector;
-import net.sf.nmedit.nomad.theme.component.NomadClassicConnector;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 
-public class G2Connector extends NomadClassicConnector {
+public class ModuleNode implements Iterable<ComponentNode> {
 
-	public G2Connector() {
-		setGraphicsGradient(false);
-		// Colors
+	private LinkedList<ComponentNode> componentNodeList;
+	private int id;
+	
+	public ModuleNode(int id) {
+		this.id = id;
+		componentNodeList = new LinkedList<ComponentNode>();
+	}
+	
+	public void addComponentNode(ComponentNode cnode) {
+		if (cnode==null)
+			throw new NullPointerException();
+		componentNodeList.add(cnode);
+	}
+	
+	public Iterator<ComponentNode> iterator() {
+		return componentNodeList.iterator();
 	}
 
-	
-	protected void setColorFromSignal(int signal) {
-		switch (signal) {
-			case DConnector.SIGNAL_AUDIO: setBackground(G2ColorConstants.MORPH_RED); break;
-			case DConnector.SIGNAL_CONTROL: setBackground(G2ColorConstants.MORPH_BLUE); break;
-			case DConnector.SIGNAL_LOGIC: setBackground(G2ColorConstants.MORPH_YELLOW); break;
-			case DConnector.SIGNAL_SLAVE: setBackground(G2ColorConstants.MORPH_GREEN); break;
-		}
-		repaint();
+	public void clear() {
+		componentNodeList.clear();
+	}
+
+	public int getId() {
+		return id;
 	}
 	
 }

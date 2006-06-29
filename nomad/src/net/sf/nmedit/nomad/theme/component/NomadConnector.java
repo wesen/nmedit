@@ -24,15 +24,15 @@ package net.sf.nmedit.nomad.theme.component;
 
 import java.awt.event.MouseEvent;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ConnectorEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DConnector;
 import net.sf.nmedit.nomad.patch.ui.ModuleUI;
-import net.sf.nmedit.nomad.patch.virtual.Connector;
-import net.sf.nmedit.nomad.patch.virtual.Module;
-import net.sf.nmedit.nomad.patch.virtual.event.ConnectorEvent;
-import net.sf.nmedit.nomad.patch.virtual.event.EventListener;
 import net.sf.nmedit.nomad.theme.NomadClassicColors;
 import net.sf.nmedit.nomad.theme.property.ConnectorProperty;
 import net.sf.nmedit.nomad.theme.property.PropertySet;
-import net.sf.nmedit.nomad.xml.dom.module.DConnector;
 
 
 public class NomadConnector extends NomadComponent implements EventListener<ConnectorEvent> {

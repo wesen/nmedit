@@ -28,8 +28,8 @@ import java.awt.Graphics2D;
 
 import javax.swing.JComponent;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.nomad.patch.ui.ModuleUI;
-import net.sf.nmedit.nomad.patch.virtual.Module;
 import net.sf.nmedit.nomad.theme.property.ComponentLocationProperty;
 import net.sf.nmedit.nomad.theme.property.ComponentSizeProperty;
 import net.sf.nmedit.nomad.theme.property.PropertySet;

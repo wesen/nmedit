@@ -3,14 +3,14 @@ package net.sf.nmedit.nomad.theme;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.VoiceArea;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.nomad.patch.ui.ModuleSectionUI;
 import net.sf.nmedit.nomad.patch.ui.ModuleUI;
-import net.sf.nmedit.nomad.patch.virtual.VoiceArea;
 import net.sf.nmedit.nomad.plugin.NomadFactory;
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
 import net.sf.nmedit.nomad.theme.property.PropertySet;
 import net.sf.nmedit.nomad.util.graphics.ImageTracker;
-import net.sf.nmedit.nomad.xml.dom.module.DModule;
 
 
 public abstract class UIFactory extends NomadFactory {

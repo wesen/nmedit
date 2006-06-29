@@ -22,11 +22,11 @@
  */
 package net.sf.nmedit.nomad.theme.component;
 
-import net.sf.nmedit.nomad.patch.virtual.Module;
-import net.sf.nmedit.nomad.patch.virtual.Parameter;
-import net.sf.nmedit.nomad.patch.virtual.event.EventListener;
-import net.sf.nmedit.nomad.patch.virtual.event.ParameterEvent;
-import net.sf.nmedit.nomad.xml.dom.module.DParameter;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
 
 
 public class VocoderParameterLink implements EventListener<ParameterEvent> {

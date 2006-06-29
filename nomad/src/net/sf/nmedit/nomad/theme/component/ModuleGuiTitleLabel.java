@@ -31,10 +31,10 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JTextField;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.nomad.patch.ui.ModuleUI;
-import net.sf.nmedit.nomad.patch.virtual.Module;
 import net.sf.nmedit.nomad.theme.NomadClassicColors;
-import net.sf.nmedit.nomad.xml.dom.module.DModule;
 
 
 public class ModuleGuiTitleLabel extends NomadLabel

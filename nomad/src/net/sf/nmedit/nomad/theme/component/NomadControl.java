@@ -25,15 +25,15 @@ package net.sf.nmedit.nomad.theme.component;
 import java.awt.Color;
 import java.awt.event.FocusEvent;
 
-import net.sf.nmedit.nomad.patch.virtual.Module;
-import net.sf.nmedit.nomad.patch.virtual.Morph;
-import net.sf.nmedit.nomad.patch.virtual.Parameter;
-import net.sf.nmedit.nomad.patch.virtual.event.EventListener;
-import net.sf.nmedit.nomad.patch.virtual.event.ParameterEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Morph;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
 import net.sf.nmedit.nomad.theme.property.ParameterProperty;
 import net.sf.nmedit.nomad.theme.property.PropertySet;
 import net.sf.nmedit.nomad.util.NomadUtilities;
-import net.sf.nmedit.nomad.xml.dom.module.DParameter;
 
 
 

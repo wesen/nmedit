@@ -26,13 +26,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
 
-import net.sf.nmedit.nomad.util.parser.Parser;
-import net.sf.nmedit.nomad.util.parser.Record;
-import net.sf.nmedit.nomad.xml.dom.module.DConnector;
-import net.sf.nmedit.nomad.xml.dom.module.DCustom;
-import net.sf.nmedit.nomad.xml.dom.module.DModule;
-import net.sf.nmedit.nomad.xml.dom.module.DParameter;
-import net.sf.nmedit.nomad.xml.dom.module.ModuleDescriptions;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DConnector;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DCustom;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.ModuleDescriptions;
+import net.sf.nmedit.nomad.util.lexer.LexerException;
+import net.sf.nmedit.nomad.util.lexer.SimpleLexer;
+import net.sf.nmedit.nomad.util.lexer.StringLexer;
 
 
 public class PropertyUtilities
@@ -82,9 +83,30 @@ public class PropertyUtilities
         return encodeIntegerPair( p.x, p.y );
     }
 
+    public static Point decodeLocationE( String representation ) throws LexerException
+    {
+        SimpleLexer lex = new StringLexer(representation);
+        Point p = new Point();
+        p.x = lex.tkInteger();
+        lex.tkCharacter(',');
+        p.y = lex.tkInteger();
+        
+        return p;
+    }
 
     public static Point decodeLocation( String representation )
     {
+        try
+        {
+            return decodeLocationE(representation);
+        }
+        catch (LexerException e)
+        {
+            e.printStackTrace();
+            return new Point(0,0);
+        }
+        
+        /*
         Record r= new Record();
         r.slen=representation.length();
         r.spos=0;
@@ -94,10 +116,35 @@ public class PropertyUtilities
         r.spos++;
         p.y = Parser.parseDigits(representation, r);
         return p;
+        */
     }
+
+
+    public static Dimension decodeSizeE( String representation ) throws LexerException
+    {
+        SimpleLexer lex = new StringLexer(representation);
+        Dimension d = new Dimension();
+        d.width = lex.tkInteger();
+        lex.tkCharacter(',');
+        d.height = lex.tkInteger();
+        
+        return d;
+    }
+    
     
     public static Dimension decodeSize( String representation )
     {
+        try
+        {
+            return decodeSizeE(representation);
+        }
+        catch (LexerException e)
+        {
+            e.printStackTrace();
+            return new Dimension(0,0);
+        }
+        
+        /*
         Record r= new Record();
         r.slen=representation.length();
         r.spos=0;
@@ -106,7 +153,7 @@ public class PropertyUtilities
         d.width = Parser.parseDigits(representation, r);
         r.spos++;
         d.height = Parser.parseDigits(representation, r);
-        return d;
+        return d;*/
     }
 
     /**

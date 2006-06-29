@@ -2,18 +2,18 @@ package plugin.g2theme;
 
 import java.io.FileNotFoundException;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.VoiceArea;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.nomad.main.background.Background;
 import net.sf.nmedit.nomad.main.background.BackgroundFactory;
 import net.sf.nmedit.nomad.patch.ui.ModuleSectionUI;
 import net.sf.nmedit.nomad.patch.ui.ModuleUI;
-import net.sf.nmedit.nomad.patch.virtual.VoiceArea;
 import net.sf.nmedit.nomad.theme.UIFactory;
 import net.sf.nmedit.nomad.theme.component.AudioLevelDisplay;
 import net.sf.nmedit.nomad.theme.component.GroupDecoration;
 import net.sf.nmedit.nomad.theme.component.NomadLabel;
 import net.sf.nmedit.nomad.theme.component.NomadVocoderController;
 import net.sf.nmedit.nomad.theme.component.VocoderBandDisplay;
-import net.sf.nmedit.nomad.xml.dom.module.DModule;
 import plugin.g2theme.custom.G2ActiveLabel;
 import plugin.g2theme.custom.G2BorderFactory;
 import plugin.g2theme.custom.G2ButtonArray;

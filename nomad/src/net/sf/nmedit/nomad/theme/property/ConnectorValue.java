@@ -22,9 +22,9 @@
  */
 package net.sf.nmedit.nomad.theme.property;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DConnector;
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
 import net.sf.nmedit.nomad.theme.component.NomadConnector;
-import net.sf.nmedit.nomad.xml.dom.module.DConnector;
 
 
 public class ConnectorValue extends Value

@@ -24,17 +24,17 @@ package net.sf.nmedit.nomad.theme;
 
 import java.awt.Component;
 
+import net.sf.nmedit.jmisc.xml.XMLFileWriter;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 import net.sf.nmedit.nomad.patch.ui.ModuleSectionUI;
 import net.sf.nmedit.nomad.patch.ui.ModuleUI;
-import net.sf.nmedit.nomad.patch.virtual.Module;
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
 import net.sf.nmedit.nomad.theme.property.PropertyUtils;
-import net.sf.nmedit.nomad.xml.XMLFileWriter;
-import net.sf.nmedit.nomad.xml.dom.module.DModule;
-import net.sf.nmedit.nomad.xml.dom.theme.ComponentNode;
-import net.sf.nmedit.nomad.xml.dom.theme.ModuleNode;
-import net.sf.nmedit.nomad.xml.dom.theme.ThemeNode;
+import net.sf.nmedit.nomad.theme.xml.dom.ComponentNode;
+import net.sf.nmedit.nomad.theme.xml.dom.ModuleNode;
+import net.sf.nmedit.nomad.theme.xml.dom.ThemeNode;
 
 
 public class ModuleBuilder

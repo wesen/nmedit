@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
-import net.sf.nmedit.nomad.patch.virtual.Module;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
 import net.sf.nmedit.nomad.theme.property.ParameterProperty;
 import net.sf.nmedit.nomad.theme.property.ParameterValue;
 import net.sf.nmedit.nomad.theme.property.Property;
@@ -17,7 +18,6 @@ import net.sf.nmedit.nomad.theme.property.PropertySet;
 import net.sf.nmedit.nomad.theme.property.Value;
 import net.sf.nmedit.nomad.util.graphics.BackgroundRenderer;
 import net.sf.nmedit.nomad.util.graphics.LCDBackgroundRenderer;
-import net.sf.nmedit.nomad.xml.dom.module.DParameter;
 
 
 /**

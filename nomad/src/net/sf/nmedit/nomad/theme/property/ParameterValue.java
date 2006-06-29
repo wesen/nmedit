@@ -22,10 +22,10 @@
  */
 package net.sf.nmedit.nomad.theme.property;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
 import net.sf.nmedit.nomad.theme.component.NomadActiveLabel;
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
 import net.sf.nmedit.nomad.theme.component.NomadControl;
-import net.sf.nmedit.nomad.xml.dom.module.DParameter;
 
 
 public class ParameterValue extends Value

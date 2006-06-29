@@ -22,10 +22,10 @@
  */
 package net.sf.nmedit.nomad.theme.property;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.nomad.theme.ModuleComponent;
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
 import net.sf.nmedit.nomad.theme.property.editor.Editor;
-import net.sf.nmedit.nomad.xml.dom.module.DModule;
 
 
 /**
