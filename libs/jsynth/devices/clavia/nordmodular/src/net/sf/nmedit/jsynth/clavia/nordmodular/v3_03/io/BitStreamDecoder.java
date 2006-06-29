@@ -23,9 +23,7 @@
 package net.sf.nmedit.jsynth.clavia.nordmodular.v3_03.io;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.io.BitstreamTranscoder;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.io.TranscoderException;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.io.VirtualBuilder;
 import net.sf.nmedit.jpatch.io.PatchDecoder;
 import net.sf.nmedit.jpatch.io.PatchDecoderException;
 import net.sf.nmedit.jpatch.io.Source;
@@ -35,12 +33,12 @@ import net.sf.nmedit.jpatch.spi.PatchImplementation;
 public class BitStreamDecoder implements PatchDecoder
 {
     
-    private Patch patch;
-    private int section = 0;
+    private PatchImplementation impl;
+    private Patch patch = null;
 
     public BitStreamDecoder(PatchImplementation impl)
     {
-        patch = (Patch) impl.createPatch();
+        this.impl = impl;
     }
 
     public Patch getPatch() throws PatchDecoderException
@@ -54,22 +52,27 @@ public class BitStreamDecoder implements PatchDecoder
         if (!(source instanceof BitStreamSource)) throw new UnsupportedSourceException(source);
         BitStreamSource bsSource = ((BitStreamSource) source);
 
-        BitstreamTranscoder transcoder = new BitstreamTranscoder();
+        if (bsSource.section == 0)
+        {
+            bsSource.initialize(impl); // create patch, etc.
+        }
+        
+        bsSource.section ++; // increment
+        
         try
         {
-            transcoder.transcode(bsSource.getBitStream(), new VirtualBuilder(patch));
+            bsSource.processBitStream();
         }
         catch (TranscoderException e)
         {
             throw new PatchDecoderException(e);
         }
         
-        section++;
-    }
-    
-    public boolean isComplete()
-    {
-        return section>=13;
+        if (bsSource.isComplete())
+        {
+            this.patch = bsSource.patch;
+        }
+        
     }
 
 }

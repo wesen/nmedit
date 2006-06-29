@@ -24,6 +24,7 @@ package net.sf.nmedit.jsynth.clavia.nordmodular.v3_03.io;
 
 import java.util.List;
 
+import net.sf.nmedit.jnmprotocol.PatchMessage;
 import net.sf.nmedit.jpatch.io.Target;
 import net.sf.nmedit.jpdl.BitStream;
 
@@ -58,4 +59,8 @@ public class BitStreamTarget implements Target
         return sectionEndPositions;
     }
 
+    public PatchMessage generateMessage( int slotID ) throws Exception
+    {
+        return new PatchMessage(getBitStream(), getSectionEndPositions(), slotID);
+    }
 }
