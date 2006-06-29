@@ -33,7 +33,7 @@ import net.sf.nmedit.jsynth.clavia.nordmodular.v3_03.io.BitStreamTarget;
 public class NordUtilities
 {
 
-    public static PatchMessage generatePatchMessage(Patch patch, int slotID) throws Exception
+    public static PatchMessage generatePatchMessage(Patch patch, int slotID) throws Exception 
     {/*
         DirectBitStreamBuilder builder = new 
             DirectBitStreamBuilder(patch);

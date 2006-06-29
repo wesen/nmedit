@@ -206,14 +206,7 @@ public class SynthDeviceActions implements SlotListener, SynthStateListener, Doc
             if (patch!=null)
             {
                 slot.setPatch(patch.getPatch());
-                try
-                {
-                    slot.synchronize();
-                }
-                catch (SynthException e1)
-                {
-                    e1.printStackTrace();
-                }
+                slot.sendPatchMessage();
             }
         }
         
@@ -254,7 +247,7 @@ public class SynthDeviceActions implements SlotListener, SynthStateListener, Doc
     {
         public void actionPerformed( ActionEvent e )
         {
-            device.getSlot(getSlot().getID()).synchGetPatch();
+            device.getSlot(getSlot().getID()).sendGetPatchMessage();
 
             /*
             Patch p = device.getSlot(device.getActiveSlotID())

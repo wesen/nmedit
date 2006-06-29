@@ -122,7 +122,7 @@ public class SynthMessageHandler extends NmProtocolListener implements SynthStat
     private void requestSlot(int slotID) 
     {
         Slot slot = device.getSlot(slotID);
-        slot.synchRequestPatch();
+        slot.sendRequestPatchMessage();
         
             /*
         task[slot] = null;
@@ -228,7 +228,7 @@ public class SynthMessageHandler extends NmProtocolListener implements SynthStat
         if (pid1 != slot.getPID()) 
         {
             slot.setPID(pid1);
-            slot.synchGetPatch();
+            slot.sendGetPatchMessage();
         }
     }
     
