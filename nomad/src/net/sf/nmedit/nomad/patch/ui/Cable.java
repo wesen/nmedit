@@ -22,8 +22,8 @@
  */
 package net.sf.nmedit.nomad.patch.ui;
 
-import net.sf.nmedit.nomad.patch.virtual.Connector;
-import net.sf.nmedit.nomad.patch.virtual.Signal;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Signal;
 import net.sf.nmedit.nomad.theme.component.NomadConnector;
 
 

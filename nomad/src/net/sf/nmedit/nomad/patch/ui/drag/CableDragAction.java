@@ -29,10 +29,10 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector;
 import net.sf.nmedit.nomad.patch.ui.Cable;
 import net.sf.nmedit.nomad.patch.ui.CableDisplay;
 import net.sf.nmedit.nomad.patch.ui.Curve;
-import net.sf.nmedit.nomad.patch.virtual.Connector;
 import net.sf.nmedit.nomad.theme.component.NomadConnector;
 import net.sf.nmedit.nomad.util.graphics.GraphicsToolkit;
 import net.sf.nmedit.nomad.util.graphics.shape.RenderOp;

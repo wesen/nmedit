@@ -26,8 +26,8 @@ import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch;
 import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
-import net.sf.nmedit.nomad.patch.virtual.Patch;
 
 public class PatchUI extends JSplitPane implements net.sf.nmedit.nomad.util.document.Document {
 

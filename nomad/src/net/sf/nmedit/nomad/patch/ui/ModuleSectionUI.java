@@ -38,36 +38,40 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
-import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.VoiceArea;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.VoiceAreaEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
+import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 import net.sf.nmedit.nomad.main.background.BackgroundFactory;
 import net.sf.nmedit.nomad.main.resources.AppIcons;
+import net.sf.nmedit.nomad.main.ui.ModuleDragSource;
 import net.sf.nmedit.nomad.main.ui.ModuleGroupsMenu;
-import net.sf.nmedit.nomad.main.ui.ModuleToolbarButton;
 import net.sf.nmedit.nomad.main.ui.NComponent;
 import net.sf.nmedit.nomad.patch.ui.drag.CableDragAction;
 import net.sf.nmedit.nomad.patch.ui.drag.ModuleDragAction;
 import net.sf.nmedit.nomad.patch.ui.drag.PaintAbleDragAction;
 import net.sf.nmedit.nomad.patch.ui.drag.SelectingDragAction;
-import net.sf.nmedit.nomad.patch.virtual.Connector;
-import net.sf.nmedit.nomad.patch.virtual.Module;
-import net.sf.nmedit.nomad.patch.virtual.VoiceArea;
-import net.sf.nmedit.nomad.patch.virtual.event.EventListener;
-import net.sf.nmedit.nomad.patch.virtual.event.VoiceAreaEvent;
 import net.sf.nmedit.nomad.theme.component.NomadConnector;
 import net.sf.nmedit.nomad.util.NomadUtilities;
 import net.sf.nmedit.nomad.util.graphics.shape.RenderOp;
-import net.sf.nmedit.nomad.xml.dom.module.DModule;
 
 
 public class ModuleSectionUI extends NComponent implements EventListener<VoiceAreaEvent> {
@@ -80,17 +84,13 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
 	
 	private final static int dropAction = DnDConstants.ACTION_COPY;
 
-	public static final DataFlavor ModuleSectionGUIFlavor = new DataFlavor("nomad/ModuleSectionGUIFlavor", "Nomad ModuleSectionGUI");
+	//public static final DataFlavor ModuleSectionGUIFlavor = new DataFlavor("nomad/ModuleSectionGUIFlavor", "Nomad ModuleSectionGUI");
 
 	private JPopupMenu popup = null;
 	private CableDisplay curvePanel = null;
 
 	private DragDropAction ddAction = new DragDropAction();
 	
-    /*public void update(Graphics g) {
-        paint(g);
-    }*/
-    
 	public ModuleSectionUI(VoiceArea moduleSection) {
         this.moduleSection = moduleSection;
         moduleSection.addListener(this);
@@ -104,13 +104,16 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
         addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent event) {
 				if (event.isPopupTrigger()) {
-					JMenu moduleSubMenu = ModuleGroupsMenu.getMenu();
+					//JMenu moduleSubMenu = ModuleGroupsMenu.getMenu();
 					JPopupMenu popup = new JPopupMenu();
 					popup.add(new JMenuItem("Cut",AppIcons.IC_CUT)).setEnabled(false);
 					popup.add(new JMenuItem("Copy")).setEnabled(false);
 					popup.add(new JMenuItem("Paste",AppIcons.IC_PASTE)).setEnabled(false);
 					popup.add(new JSeparator());
-					popup.add(moduleSubMenu);
+					//popup.add(moduleSubMenu);
+                    
+                    ModuleGroupsMenu.build(popup);
+                    
 					popup.show(event.getComponent(),event.getX(),event.getY());
 				}
                 else if (SwingUtilities.isLeftMouseButton(event))
@@ -126,14 +129,7 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
 		            }
 				}
 			}});
-/*
-        curvePanel.addCurvePopupListener(new CurvePopupListener(){
-			public void popup(CurvePopupEvent event) {
-				JPopupMenu popup = new JPopupMenu();
-				popup.add(new JDisconnectorMenuItem(getCurvePanel().getTransitions(), event.getConnector()));
-				event.show(popup);
-			}});*/
-        
+
         setBackgroundB(BackgroundFactory.createMetallicBackground());
         moduleSectionResized();
        
@@ -154,8 +150,12 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
 		adjustSize = false;
       //  curvePanel.setTable(null); // will disable updates
 
-		for (Module module : getModuleSection()) 
-            add(module.newUI(this));
+		for (Module module : getModuleSection())
+        {
+            ModuleUI ui = NomadEnvironment.sharedInstance().getBuilder().compose(module, this);
+            module.setUI(ui);
+            add(ui);
+        };
 
         curvePanel.populate();
 	    
@@ -256,15 +256,20 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
 
             case VoiceAreaEvent.VA_MODULE_ADDED:
                 {
-                    Component c;
-                    add(c=event.getModule().newUI(this));
-                    Rectangle r = c.getBounds();
+
+                ModuleUI ui = NomadEnvironment.sharedInstance().getBuilder().compose(event.getModule(), this);
+                event.getModule().setUI(ui);
+                add(ui);
+                
+                    //Component c;
+                    add(ui/*c=event.getModule().newUI(this)*/);
+                    Rectangle r = ui.getBounds();
                     RepaintManager.currentManager(this).addDirtyRegion(this, r.x, r.y, r.width, r.height);
                 }
                 break;
             case VoiceAreaEvent.VA_MODULE_REMOVED:
                 {
-                    ModuleUI m = event.getModule().getUI();
+                    ModuleUI m = (ModuleUI) event.getModule().getUI();
                     Rectangle bounds = m.getBounds(); 
                     remove(m);
                     if (isDisplayable())
@@ -280,8 +285,12 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
 
         public void dragOver(DropTargetDragEvent dtde) {
             // We will only accept the ModuleToolbarButton.ModuleToolbarButtonFlavor
-            if (dtde.getCurrentDataFlavorsAsList().contains(ModuleToolbarButton.ModuleToolbarButtonFlavor)) {
+            if (dtde.getCurrentDataFlavorsAsList().contains(ModuleDragSource.ModuleInfoFlavor)) {
                 dtde.acceptDrag(DnDConstants.ACTION_COPY);
+            }
+            else
+            {
+                dtde.rejectDrag();
             }
         }
 
@@ -290,11 +299,11 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
             Object data = null;
 
             // We will only accept the ModuleToolbarButton.ModuleToolbarButtonFlavor
-            if (dtde.isDataFlavorSupported(ModuleToolbarButton.ModuleToolbarButtonFlavor) 
+            if (dtde.isDataFlavorSupported(ModuleDragSource.ModuleInfoFlavor) 
                     && dtde.isLocalTransfer()) {
                 
                 // If there were more sourceFlavors, specify which one you like
-                chosen = ModuleToolbarButton.ModuleToolbarButtonFlavor;
+                chosen = ModuleDragSource.ModuleInfoFlavor;
                 
                 try {
                     // Get the data
@@ -307,9 +316,9 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
                     return;
                 }
                 
-                if (data instanceof ModuleToolbarButton) {
+                if (data!=null && data instanceof DModule) {
                     // Cast the data and create a nice module.
-                    DModule info = ((ModuleToolbarButton)data).getModuleDescription();
+                    DModule info = ((DModule)data);
                     Point p = dtde.getLocation();
                     Module mod = new Module(info);
                     mod.setLocation(ModuleUI.Metrics.getGridX(p.x),ModuleUI.Metrics.getGridY((p.y - ModuleUI.Metrics.HEIGHT)) );
@@ -493,12 +502,14 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
             {
                 moduleSection.beginUpdate();
                 
+                /*
                 for (Iterator<ModuleUI> iter = iterator();iter.hasNext();)
                 {
                     ModuleUI m = iter.next();
                     m.setLocationEx(getDeltaX()+m.getX(),getDeltaY()+m.getY());
-                }
+                }*/
                 
+                moveSelection(getModules(), getDeltaX(), getDeltaY());
                 moduleSection.endUpdate();
             }
             public void paint(Graphics g)
@@ -615,6 +626,33 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
                 repaint(dirty.x, dirty.y, dirty.width, dirty.height);
             }
         };
+    }
+    
+    private void moveSelection(ModuleUI [] movedModules, int dx, int dy)
+    {
+        final List<ModuleUI> moved = Arrays.asList(movedModules);
+        final List<Point> locations = new ArrayList<Point>(moved.size());
+        
+        Collections.sort(moved, new DescendingYOrder());
+        
+        for (ModuleUI module:moved)
+        {
+            locations.add(new Point(module.getX()+dx, module.getY()+dy));
+        }
+        for (int i=0;i<moved.size();i++)
+        {
+            Point dst = locations.get(i);
+            moved.get(i).setLocationEx(dst.x, dst.y);
+        }
+    }
+
+    private static class DescendingYOrder implements Comparator<Component>
+    {
+        public int compare( Component o1, Component o2 )
+        {            
+            return o1.getY()-o2.getY();
+        }
+        
     }
     
 }

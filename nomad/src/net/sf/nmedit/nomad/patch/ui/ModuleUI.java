@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
 import java.awt.Point;
 import java.awt.Transparency;
 import java.awt.event.MouseEvent;
@@ -17,19 +18,19 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ModuleEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.nomad.patch.ui.action.BreakCablesAction;
 import net.sf.nmedit.nomad.patch.ui.action.DisconnectCablesAction;
 import net.sf.nmedit.nomad.patch.ui.action.RemoveCablesAction;
 import net.sf.nmedit.nomad.patch.ui.action.RemoveModuleAction;
-import net.sf.nmedit.nomad.patch.virtual.Connector;
-import net.sf.nmedit.nomad.patch.virtual.Module;
-import net.sf.nmedit.nomad.patch.virtual.event.EventListener;
-import net.sf.nmedit.nomad.patch.virtual.event.ModuleEvent;
 import net.sf.nmedit.nomad.theme.ModuleComponent;
 import net.sf.nmedit.nomad.theme.component.ModuleGuiTitleLabel;
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
 import net.sf.nmedit.nomad.util.graphics.GraphicsToolkit;
-import net.sf.nmedit.nomad.xml.dom.module.DModule;
 
 
 public class ModuleUI extends NomadComponent implements ModuleComponent, EventListener<ModuleEvent>
@@ -259,7 +260,10 @@ public class ModuleUI extends NomadComponent implements ModuleComponent, EventLi
         
         if (screen == null || w != sw || h != sh)
         {
-            screen = getGraphicsConfiguration().createCompatibleImage(
+            GraphicsConfiguration gc = getGraphicsConfiguration();
+            if (gc == null) gc = GraphicsToolkit.getDefaultGraphicsConfiguration();
+            
+            screen = gc.createCompatibleImage(
                     w, h, isOpaque() ? Transparency.OPAQUE : Transparency.TRANSLUCENT );
             fullRepaintRequired = true;
         }

@@ -39,10 +39,10 @@ import java.util.Map;
 
 import javax.swing.SwingUtilities;
 
-import net.sf.nmedit.nomad.patch.virtual.Connector;
-import net.sf.nmedit.nomad.patch.virtual.Module;
-import net.sf.nmedit.nomad.patch.virtual.event.EventListener;
-import net.sf.nmedit.nomad.patch.virtual.event.ModuleEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ModuleEvent;
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
 import net.sf.nmedit.nomad.theme.component.NomadConnector;
 import net.sf.nmedit.nomad.util.collection.ListEntry;

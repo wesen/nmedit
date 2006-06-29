@@ -24,8 +24,8 @@ package net.sf.nmedit.nomad.patch.ui.action;
 
 import java.awt.event.ActionEvent;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector;
 import net.sf.nmedit.nomad.patch.ui.ModuleUI;
-import net.sf.nmedit.nomad.patch.virtual.Connector;
 
 public class BreakCablesAction extends ModuleUIAction
 {

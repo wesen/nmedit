@@ -24,8 +24,8 @@ package net.sf.nmedit.nomad.patch.ui.action;
 
 import java.awt.event.ActionEvent;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.nomad.patch.ui.ModuleUI;
-import net.sf.nmedit.nomad.patch.virtual.Module;
 
 
 public class RemoveCablesAction extends ModuleUIAction {

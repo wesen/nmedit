@@ -37,16 +37,16 @@ import javax.swing.JTable;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Knob;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.MidiController;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.MidiControllerSet;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Morph;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.VoiceArea;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.misc.Assignment;
 import net.sf.nmedit.nomad.main.dialog.NomadDialog;
-import net.sf.nmedit.nomad.patch.virtual.Knob;
-import net.sf.nmedit.nomad.patch.virtual.MidiController;
-import net.sf.nmedit.nomad.patch.virtual.MidiControllerSet;
-import net.sf.nmedit.nomad.patch.virtual.Module;
-import net.sf.nmedit.nomad.patch.virtual.Morph;
-import net.sf.nmedit.nomad.patch.virtual.Parameter;
-import net.sf.nmedit.nomad.patch.virtual.Patch;
-import net.sf.nmedit.nomad.patch.virtual.VoiceArea;
-import net.sf.nmedit.nomad.patch.virtual.misc.Assignment;
 import net.sf.nmedit.nomad.theme.component.NomadControl;
 
 public class ControlPopup extends JPopupMenu

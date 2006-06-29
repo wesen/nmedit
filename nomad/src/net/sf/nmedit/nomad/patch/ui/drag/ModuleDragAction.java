@@ -62,6 +62,11 @@ public class ModuleDragAction extends PaintAbleDragAction implements Iterable<Mo
 
         GraphicsToolkit.union(globalBounds, x, y, w, h);
     }
+    
+    public ModuleUI[] getModules()
+    {
+        return modules.toArray(new ModuleUI[modules.size()]);
+    }
 
     public Iterator<ModuleUI> iterator()
     {
