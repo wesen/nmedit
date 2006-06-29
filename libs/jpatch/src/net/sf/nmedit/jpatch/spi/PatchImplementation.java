@@ -123,17 +123,12 @@ public abstract class PatchImplementation
         
         while (i.hasNext()) 
         {
-            Object candidate = i.next();
-        
-            if (candidate instanceof PatchDecoderProvider)
-            {
                 PatchDecoderProvider provider = 
-                    (PatchDecoderProvider) candidate;
+                    (PatchDecoderProvider) i.next();
                 if (provider.isSupported(this))
                 {
                     list.add(provider);
                 }
-            }
         }
         
         return list.toArray(new PatchDecoderProvider[list.size()]);
@@ -153,17 +148,12 @@ public abstract class PatchImplementation
         
         while (i.hasNext()) 
         {
-            Object candidate = i.next();
-        
-            if (candidate instanceof PatchEncoderProvider)
-            {
                 PatchEncoderProvider provider = 
-                    (PatchEncoderProvider) candidate;
+                    (PatchEncoderProvider) i.next();
                 if (provider.isSupported(this))
                 {
                     list.add(provider);
                 }
-            }
         }
         
         return list.toArray(new PatchEncoderProvider[list.size()]);
