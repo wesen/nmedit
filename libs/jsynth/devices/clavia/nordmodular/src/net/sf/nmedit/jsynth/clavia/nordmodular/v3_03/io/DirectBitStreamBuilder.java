@@ -61,7 +61,7 @@ public class DirectBitStreamBuilder
 
     private void append(int value)
     {
-        System.out.print (value+" ");
+        //System.out.print (value+" ");
         intStream.append(value);
     }
     
@@ -69,7 +69,7 @@ public class DirectBitStreamBuilder
     {
         for (int i=0;i<values.length;i++)
         {
-            System.out.print (values[i]+" ");
+            //System.out.print (values[i]+" ");
             intStream.append(values[i]);
         }
     }
@@ -91,15 +91,6 @@ public class DirectBitStreamBuilder
         return bitStream;
     }
     
-    public PatchMessage generateMessage( int slotID ) throws Exception
-    {
-        System.out.print("<section-end-positions>");
-        for (int i:sectionEndPositions)
-            System.out.print( i+" ");
-        System.out.println("</section-end-positions>");
-        
-        return new PatchMessage(getBitStream(), getSectionEndPositions(), slotID);
-    }
 
     protected void storeEndPosition(IntStream intStream, List<Integer> sectionEndPositions)
     {        
@@ -134,13 +125,13 @@ public class DirectBitStreamBuilder
     
     private void beginSection(int ID)
     {
-        System.out.print("<section ID=\""+ID+"\" name=\""+Format.getSectionName2(ID)+"\">");
+        //System.out.print("<section ID=\""+ID+"\" name=\""+Format.getSectionName2(ID)+"\">");
         intStream.append(ID);
     }
     
     private void endSection()
     {
-        System.out.println("</section>");
+        //System.out.println("</section>");
         storeEndPosition(intStream, sectionEndPositions);
     }
 
