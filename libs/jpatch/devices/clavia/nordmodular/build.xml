@@ -21,13 +21,20 @@
         <pathelement location="../../../../jmisc/lib/xpp3_min-1.1.3_8.jar"/>
       </classpath>
 	</javac>
-    <copy todir="${build}">
-      <fileset dir="src/RESOURCE/">
+    <copy todir="${build}/RESOURCE/xml">
+      <fileset dir="src/RESOURCE/xml">
         <include name="modules.xml"/>
         <include name="modules-definition-v10.dtd"/>
         <include name="substitutions.xml"/>
         <include name="substitutions.dtd"/>
       </fileset>
+    </copy>
+    <copy todir="${build}/META-INF/services">
+        <fileset dir="src/META-INF/services">
+           <include name="net.sf.nmedit.jpatch.spi.PatchDecoderProvider"/>
+           <include name="net.sf.nmedit.jpatch.spi.PatchEncoderProvider"/>
+           <include name="net.sf.nmedit.jpatch.spi.PatchImplementation"/>
+        </fileset>
 	</copy>
   </target>
 

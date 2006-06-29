@@ -22,6 +22,13 @@
         <pathelement location="../../../../jmisc/lib/xpp3_min-1.1.3_8.jar"/>
       </classpath>
 	</javac>
+    <copy todir="${build}/META-INF/services">
+        <fileset dir="src/META-INF/services">
+           <include name="net.sf.nmedit.jpatch.spi.PatchDecoderProvider"/>
+           <include name="net.sf.nmedit.jpatch.spi.PatchEncoderProvider"/>
+           <include name="net.sf.nmedit.jsynth.spi.SynthesizerDeviceProvider"/>
+        </fileset>
+	</copy>
   </target>
 
   <target name="dist" depends="compile" description="generate the distribution">
