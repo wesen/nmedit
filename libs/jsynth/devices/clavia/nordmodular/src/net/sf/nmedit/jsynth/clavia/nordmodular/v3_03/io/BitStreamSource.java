@@ -22,17 +22,36 @@
  */
 package net.sf.nmedit.jsynth.clavia.nordmodular.v3_03.io;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.io.BitstreamTranscoder;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.io.TranscoderException;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.io.VirtualBuilder;
 import net.sf.nmedit.jpatch.io.Source;
+import net.sf.nmedit.jpatch.spi.PatchImplementation;
 import net.sf.nmedit.jpdl.BitStream;
 
 public class BitStreamSource implements Source
 {
 
     private BitStream bitStream;
+    int section = 0;
+    int bitstreamSetCount = 0;
+    
+    Patch patch = null;
+    VirtualBuilder builder = null;
+    BitstreamTranscoder transcoder = null;
+    
 
     public BitStreamSource()
     {
         this.bitStream = null;
+    }
+    
+    void initialize(PatchImplementation impl)
+    {
+        patch = (Patch) impl.createPatch();
+        builder = new VirtualBuilder(patch);
+        transcoder = new BitstreamTranscoder();
     }
     
     public void setBitStream(BitStream bitStream)
@@ -43,6 +62,16 @@ public class BitStreamSource implements Source
     public BitStream getBitStream()
     {
         return bitStream;
+    }
+    
+    public boolean isComplete()
+    {
+        return section >= 13;
+    }
+    
+    void processBitStream() throws TranscoderException
+    {
+        transcoder.transcode(bitStream, builder);
     }
     
 }
