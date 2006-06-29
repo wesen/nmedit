@@ -1,0 +1,6 @@
+bin
+.externalToolBuilders
+.settings
+.classpath
+.fbprefs
+.project
