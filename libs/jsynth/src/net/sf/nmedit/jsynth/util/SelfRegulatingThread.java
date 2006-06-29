@@ -223,6 +223,7 @@ public abstract class SelfRegulatingThread extends Thread
         // as long as the thread is not dead
         while (isAlive())
         {
+            interrupt(); // interrupt again in case the flag has been erased
             // check if timeout has been reached
             if (System.currentTimeMillis()>timeout)
             {
