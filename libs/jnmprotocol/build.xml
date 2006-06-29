@@ -1,4 +1,4 @@
-<project name="jpdl" default="dist" basedir=".">
+<project name="jnmprotocol" default="dist" basedir=".">
 
   <property name="src" location="src"/>
   <property name="test" location="test"/>
