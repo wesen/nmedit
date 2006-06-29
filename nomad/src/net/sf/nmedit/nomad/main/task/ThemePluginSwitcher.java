@@ -108,7 +108,7 @@ public class ThemePluginSwitcher implements TaskModel {
 
 	public void init() {
 		nomad.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-		env.getToolbar().setEnabled(false);
+		//env.getToolbar().setEnabled(false);
 	}
 	
 	public void init2() {
@@ -120,7 +120,7 @@ public class ThemePluginSwitcher implements TaskModel {
 			documents.setSelectedDocument(selectionIndex);*/
 
 		nomad.setCursor(Cursor.getDefaultCursor());
-		env.getToolbar().setEnabled(true);
+		//env.getToolbar().setEnabled(true);
 		//documents.getDocumentContainer().validate();
 		//documents.getDocumentContainer().repaint();
 	}

@@ -18,14 +18,26 @@
  */
 
 /*
- * Created on Mar 1, 2006
+ * Created on Jun 11, 2006
  */
-package net.sf.nmedit.nomad.util.parser;
+package net.sf.nmedit.nomad.main.sidebar;
 
-public class Record {
+import javax.swing.Icon;
+import javax.swing.JComponent;
 
-	public int spos ;
-	
-	public int slen ;
-	
+public interface SidebarSection
+{
+    
+    Icon getIcon();
+    
+    String getTitle();
+    
+    String getTooltipText();
+    
+    JComponent createView();
+    
+    void disposeView();
+    
+    Sidebar getSidebar();
+    
 }

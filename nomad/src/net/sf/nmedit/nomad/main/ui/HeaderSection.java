@@ -24,11 +24,6 @@ package net.sf.nmedit.nomad.main.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridLayout;
-import java.awt.Paint;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -52,7 +47,7 @@ public class HeaderSection extends JComponent
     private JPanel 
     contentPane;
 
-    public HeaderSection( JComponent header )
+    private HeaderSection( JComponent header )
     {
         this.header = header;
         setOpaque(false);
@@ -62,10 +57,11 @@ public class HeaderSection extends JComponent
         contentPane.setOpaque(false);
         contentPane.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
                 
+        /*
         HeaderContainer h = new HeaderContainer();
-        h.add(header);
+        h.add(header);*/
         
-        add(h, BorderLayout.NORTH);
+        add(header, BorderLayout.NORTH);
         add(contentPane, BorderLayout.CENTER);   
     }
     
@@ -76,7 +72,7 @@ public class HeaderSection extends JComponent
     
     public HeaderSection( String title )
     {  
-        this(new JLabel(title));
+        this(new HeaderLabel(title));
         JLabel lblTitle = (JLabel) header;
         lblTitle.setBorder(BorderFactory.createEmptyBorder(2,4,2,2));
         lblTitle.setOpaque(false);
@@ -86,7 +82,7 @@ public class HeaderSection extends JComponent
     {
         return contentPane;
     }
-
+/*
     private static class HeaderContainer extends JComponent
     {
         public HeaderContainer()
@@ -106,14 +102,14 @@ public class HeaderSection extends JComponent
             g.fillRect(0, 0, getWidth(), getHeight());
             
             /*
-            gp = new GradientPaint(0, y, gradB1, 0, getHeight(), gradB2);
-            g2.setPaint(gp);
-            g.fillRect(0, y, getWidth(), getHeight());
-            */
+            //gp = new GradientPaint(0, y, gradB1, 0, getHeight(), gradB2);
+            //g2.setPaint(gp);
+            //g.fillRect(0, y, getWidth(), getHeight());
+            
             
             g2.setPaint(p);
         }
         
-    }
+   }*/
     
 }

@@ -8,9 +8,10 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.PrintWriter;
+import java.io.Writer;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -20,8 +21,15 @@ import javax.swing.ToolTipManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.misc.PatchFilePreviewComponent;
+import net.sf.nmedit.jpatch.io.FileTarget;
+import net.sf.nmedit.jpatch.io.PatchEncoder;
+import net.sf.nmedit.jpatch.spi.PatchImplementation;
+import net.sf.nmedit.jsynth.SynthException;
+import net.sf.nmedit.jsynth.clavia.nordmodular.v3_03.NordModular;
+import net.sf.nmedit.jsynth.spi.SynthesizerDeviceManager;
 import net.sf.nmedit.nomad.core.application.Application;
-import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 import net.sf.nmedit.nomad.main.action.AboutDialogAction;
 import net.sf.nmedit.nomad.main.action.AppExitAction;
 import net.sf.nmedit.nomad.main.action.FileCloseAction;
@@ -40,27 +48,22 @@ import net.sf.nmedit.nomad.main.task.ThemePluginSwitcher;
 import net.sf.nmedit.nomad.main.ui.CableSection;
 import net.sf.nmedit.nomad.main.ui.HeaderArea;
 import net.sf.nmedit.nomad.main.ui.PatchSection;
-import net.sf.nmedit.nomad.patch.builder.StreamBuilder;
-import net.sf.nmedit.nomad.patch.misc.PatchFilePreviewComponent;
-import net.sf.nmedit.nomad.patch.transcoder.VirtualTranscoder;
+import net.sf.nmedit.nomad.main.ui.sidebar.ModuleSidebar;
+import net.sf.nmedit.nomad.main.ui.sidebar.PatchLibSidebar;
+import net.sf.nmedit.nomad.main.ui.sidebar.SidebarControl;
 import net.sf.nmedit.nomad.patch.ui.PatchUI;
-import net.sf.nmedit.nomad.patch.virtual.Patch;
 import net.sf.nmedit.nomad.plugin.NomadPlugin;
-import net.sf.nmedit.nomad.synth.DeviceIOException;
-import net.sf.nmedit.nomad.synth.nord.NordModular;
 import net.sf.nmedit.nomad.util.NomadUtilities;
 import net.sf.nmedit.nomad.util.document.DefaultDocumentManager;
 import net.sf.nmedit.nomad.util.document.Document;
 import net.sf.nmedit.nomad.util.document.DocumentListener;
 import net.sf.nmedit.nomad.util.document.DocumentManager;
 
-import com.jgoodies.looks.plastic.PlasticLookAndFeel;
-
 
 public class Nomad extends JFrame implements DocumentListener
 {
 
-    private NomadEnvironment     env                         = null;
+    //private NomadEnvironment     env                  = null;
 
     private NordModular          device             = null;
     private SynthDeviceActions   synthDeviceActions = null;
@@ -101,11 +104,18 @@ public class Nomad extends JFrame implements DocumentListener
     private PatchSettingsAction  patchSettingsAction         = new PatchSettingsAction(
                                                                      this );
 
+    private PatchImplementation patchImplementation;
+    
     public Nomad( String name )
     {
         super( name );
 
-        env = NomadEnvironment.sharedInstance();
+        patchImplementation = PatchImplementation.getImplementation("Clavia Nord Modular Patch", "3.03");
+
+        if (patchImplementation == null)
+            throw new RuntimeException("Patch implementation not found");
+        
+        //env = NomadEnvironment.sharedInstance();
         /*
         // load environment
         env.loadAll();*/
@@ -119,9 +129,9 @@ public class Nomad extends JFrame implements DocumentListener
         
         panelTop = new HeaderArea();
         
-        panelTop.add( env.getToolbar() );
+       // panelTop.add( env.getToolbar() );
         
-        panelTop.addSeparator();
+        //panelTop.addSeparator();
         PatchSection ps = new PatchSection("Patch");
         ps.setDocumentManager(documents);
         panelTop.add(ps);
@@ -131,15 +141,33 @@ public class Nomad extends JFrame implements DocumentListener
         panelTop.addHSpace();
         
         //panelTop.setLayout( new GridLayout( 1, 2 ) );
-        env.getToolbar().setAlignmentX( 0 );
+       // env.getToolbar().setAlignmentX( 0 );
 
         
         this.getContentPane().setLayout(new BorderLayout());
-        this.getContentPane().add( documents.getContainer(), BorderLayout.CENTER );
+        /*
+        JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        split.setLeftComponent(documents.getContainer());
+        NomadSidebar sb = new NomadSidebar(this, split);
+        split.setRightComponent(sb.getContentPane());*/
+        
+        SidebarControl sbcontrol = new SidebarControl();
+        sbcontrol.getSplitPane().setLeftComponent(documents.getContainer());
+
+        sbcontrol.addSidebar(new ModuleSidebar(this, sbcontrol));
+        sbcontrol.addSidebar(new PatchLibSidebar(this, sbcontrol));
+        
+        //split.setDividerLocation(0);
+        this.getContentPane().add( sbcontrol.getSplitPane(), BorderLayout.CENTER );
+        this.getContentPane().add( sbcontrol, BorderLayout.EAST );
         this.getContentPane().add( panelTop, BorderLayout.NORTH );
+
         this.setSize( 1024, 768 );
         //this.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        device = new NordModular();
+        device = (NordModular) SynthesizerDeviceManager.getSynthesizer("Nord Modular", "3.03");
+            
+            
+            new NordModular();
         synthDeviceActions = new SynthDeviceActions(device, this);
 
         // further setup
@@ -157,6 +185,8 @@ public class Nomad extends JFrame implements DocumentListener
                 documentSelected( documents.getSelectedDocument() );
             }
         } );*/
+        
+        
 
         newPatch();
         validate();
@@ -171,7 +201,7 @@ public class Nomad extends JFrame implements DocumentListener
             {
                 device.setConnected(false);
             }
-            catch (DeviceIOException e)
+            catch (SynthException e)
             {
                 e.printStackTrace();
             }
@@ -181,7 +211,7 @@ public class Nomad extends JFrame implements DocumentListener
     public JMenuBar createMenu()
     {
         JMenuBar mnBar = new JMenuBar();
-        mnBar.putClientProperty(PlasticLookAndFeel.IS_3D_KEY,Boolean.TRUE);
+        //mnBar.putClientProperty(PlasticLookAndFeel.IS_3D_KEY,Boolean.TRUE);
 
         JMenu mnMenu = null;
 
@@ -300,7 +330,7 @@ public class Nomad extends JFrame implements DocumentListener
 
     public void newPatch()
     {
-        PatchUI tab = PatchUI.newInstance( new Patch() );
+        PatchUI tab = PatchUI.newInstance( (Patch) patchImplementation.createPatch() );
         documents.add( (Document) tab);
         //documents.setSelectedDocument( tab );
         /*
@@ -319,10 +349,14 @@ public class Nomad extends JFrame implements DocumentListener
         fileChooser.setMultiSelectionEnabled( true );
         if (fileChooser.showOpenDialog( Nomad.this ) == JFileChooser.APPROVE_OPTION)
         {
-            File[] files = fileChooser.getSelectedFiles();
-            loader.loadPatch( files );
+            openPatchFiles( fileChooser.getSelectedFiles() );
         }
         fileChooser.setMultiSelectionEnabled( false );
+    }
+
+    public void openPatchFiles(File[] files)
+    {
+        loader.loadPatch( files );
     }
 
     public void savePatchAs()
@@ -343,8 +377,18 @@ public class Nomad extends JFrame implements DocumentListener
 
             if (fileChooser.showSaveDialog( null ) == JFileChooser.APPROVE_OPTION)
             {
+
                 try
                 {
+                    PatchEncoder enc = patchImplementation.createPatchEncoder(FileTarget.class);
+                    
+                    enc.setSource(patchui.getPatch());
+                    Writer writer = new BufferedWriter(new FileWriter(fileChooser.getSelectedFile()));
+                    enc.encode(new FileTarget(writer));
+                    
+                    /*
+                    
+                    enc
 
                     PrintWriter out = new PrintWriter( new FileWriter(
                             fileChooser.getSelectedFile() ) );
@@ -353,6 +397,7 @@ public class Nomad extends JFrame implements DocumentListener
                     t.transcode(patchui.getPatch(), new StreamBuilder(out));
                     
                     out.flush();
+                    */
                 }
                 catch (Exception e)
                 {
@@ -439,6 +484,12 @@ public class Nomad extends JFrame implements DocumentListener
         fileSaveAction.setEnabled( canClose() );
         fileSaveAsAction.setEnabled( canClose() );
         patchSettingsAction.setEnabled( canClose() );
+    }
+
+
+    public PatchImplementation getPatchImplementation()
+    {
+        return patchImplementation;
     }
 
 }

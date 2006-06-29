@@ -30,11 +30,15 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
+
+import net.sf.nmedit.nomad.main.ui.DashBorder;
 
 /**
  * List item that shows a component a long with the components name.
@@ -49,7 +53,13 @@ class ComponentClassListItem extends JPanel {
 	private boolean flagItemHasFocus = false;
 	private Color bgColor = Color.WHITE;
 	private Color selColor = Color.YELLOW;
-	
+
+    private static Border border
+    = BorderFactory.createCompoundBorder(
+      DashBorder.create(false, false, false, true),
+      BorderFactory.createEmptyBorder(2, 2, 2, 2)
+    );
+    
 	public ComponentClassListItem(JComponent component) {
 		
 		Color c;
@@ -59,6 +69,7 @@ class ComponentClassListItem extends JPanel {
 		c = UIManager.getColor("List.background");
 		if (c!=null) bgColor=c;
 		
+        setBorder(border);
 		setBackground(bgColor);
 		
 		// check+store argument
@@ -97,7 +108,6 @@ class ComponentClassListItem extends JPanel {
 		add(component);
 		add(createSpace());
 		add(lblCompName);
-		add(new DashPane()); // bottom line
 		
 		//validate();
 	}

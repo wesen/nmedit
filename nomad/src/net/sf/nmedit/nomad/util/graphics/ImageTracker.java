@@ -29,7 +29,7 @@ public class ImageTracker {
 	public final static int IMAGE_TRACKER_DISALLOW_REPLACE = 1;
 	
 	// Pairs (String, Image)
-	protected HashMap<String, Image> images = new HashMap<String, Image>();
+	protected HashMap<String, Image> images = new HashMap<String, Image>(300);
 	
 	// one of IMAGE_TRACKER_ALLOW_REPLACE or IMAGE_TRACKER_DISALLOW_REPLACE
 	private int policy = IMAGE_TRACKER_ALLOW_REPLACE;

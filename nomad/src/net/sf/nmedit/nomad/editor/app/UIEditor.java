@@ -16,6 +16,9 @@ import javax.swing.JSplitPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import net.sf.nmedit.jmisc.xml.XMLFileWriter;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.ModuleDescriptions;
 import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 import net.sf.nmedit.nomad.editor.views.WorkspacePanel;
 import net.sf.nmedit.nomad.editor.views.classes.NomadClassesView;
@@ -28,9 +31,6 @@ import net.sf.nmedit.nomad.patch.ui.ModuleUI;
 import net.sf.nmedit.nomad.plugin.NomadPlugin;
 import net.sf.nmedit.nomad.theme.UIFactory;
 import net.sf.nmedit.nomad.util.NomadUtilities;
-import net.sf.nmedit.nomad.xml.XMLFileWriter;
-import net.sf.nmedit.nomad.xml.dom.module.DModule;
-import net.sf.nmedit.nomad.xml.dom.module.ModuleDescriptions;
 
 
 public class UIEditor extends JFrame {
@@ -60,8 +60,9 @@ public class UIEditor extends JFrame {
 		env = NomadEnvironment.sharedInstance();
 		env.setCachingEnabled(false);
 	//	env.loadAll();
+        /* TODO 
 		env.getToolbar().setAllowDragging(false);
-		env.getToolbar().addModuleButtonClickListener(new ModuleButtonClickListener());
+		env.getToolbar().addModuleButtonClickListener(new ModuleButtonClickListener());*/
 
 		// components
 		
@@ -79,7 +80,8 @@ public class UIEditor extends JFrame {
 		split.setDividerLocation(0.5);
 
 		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(env.getToolbar(), 	BorderLayout.NORTH);
+        // TODO add module tree
+		//getContentPane().add(env.getToolbar(), 	BorderLayout.NORTH);
 		getContentPane().add(split, 			BorderLayout.EAST);
 		getContentPane().add(workspace, 		BorderLayout.CENTER);
 		

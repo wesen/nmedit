@@ -24,18 +24,17 @@ package net.sf.nmedit.nomad.core.nomad;
 
 import java.io.FileNotFoundException;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.ModuleDescriptions;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.substitution.Substitutions;
 import net.sf.nmedit.nomad.core.application.Application;
 import net.sf.nmedit.nomad.core.application.ApplicationInstantiationException;
 import net.sf.nmedit.nomad.core.application.ProgressMeter;
 import net.sf.nmedit.nomad.main.designer.Designer;
-import net.sf.nmedit.nomad.main.ui.ModuleToolbar;
 import net.sf.nmedit.nomad.plugin.PluginManager;
 import net.sf.nmedit.nomad.theme.ModuleBuilder;
 import net.sf.nmedit.nomad.theme.UIFactory;
 import net.sf.nmedit.nomad.util.graphics.ImageTracker;
-import net.sf.nmedit.nomad.xml.dom.module.DConnector;
-import net.sf.nmedit.nomad.xml.dom.module.ModuleDescriptions;
-import net.sf.nmedit.nomad.xml.dom.substitution.Substitutions;
 
 
 public abstract class NomadEnvironment extends Application
@@ -44,9 +43,9 @@ public abstract class NomadEnvironment extends Application
 
     private ImageTracker       imageTracker;
 
-    private UIFactory          factory;
+    private UIFactory          factory;/*
 
-    private ModuleToolbar      moduleToolbar;
+    private ModuleToolbar      moduleToolbar;*/
 
     private ModuleBuilder      builder;
 
@@ -66,8 +65,8 @@ public abstract class NomadEnvironment extends Application
         
         setProperty( KEY_CUSTOM_PROPERTIES, "conf/properties.xml" );
         this.imageTracker = null;
-        this.factory = null;
-        this.moduleToolbar = null;
+        this.factory = null;/*
+        this.moduleToolbar = null;*/
         this.builder = null;
         this.cachingEnabled =  false;
     }
@@ -84,6 +83,9 @@ public abstract class NomadEnvironment extends Application
             System.err.println( "Failed loading custom properties, defaults will be used: " + e );
         }
 
+        progress.increment( "loading: initialising designer" );
+        Designer.init();
+
         progress.increment( "loading media: images" );
         loadDefaultImageTracker();
 
@@ -98,12 +100,9 @@ public abstract class NomadEnvironment extends Application
 
         progress.increment( "loading: plugin factory" );
         loadDefaultFactory();
-
-        progress.increment( "loading: initialising designer" );
-        Designer.init();
-        
+        /*
         progress.increment( "loading: module toolbar" );
-        loadModuleToolbar();
+        loadModuleToolbar();*/
     }
     
     protected void stopInternal()
@@ -142,17 +141,35 @@ public abstract class NomadEnvironment extends Application
     {
         return factory;
     }
-
+/*
     public ModuleToolbar getToolbar()
     {
         return moduleToolbar;
-    }
+    }*/
 
     public void loadModuleDefinitions()
     {
-        Substitutions subs = new Substitutions( "data/xml/substitutions.xml" );
-        ModuleDescriptions.init( "data/xml/modules.xml", subs );
-        ModuleDescriptions.sharedInstance().loadImages( imageTracker );
+        Substitutions subs = new Substitutions();
+        subs.load(subs.getClass().getResourceAsStream("/RESOURCE/xml/substitutions.xml"));
+        
+        ModuleDescriptions.init(subs);
+        ModuleDescriptions md = ModuleDescriptions.sharedInstance();
+        md.load(md.getClass().getResourceAsStream("/RESOURCE/xml/modules.xml"));
+
+        loadImages( ModuleDescriptions.sharedInstance(), imageTracker );
+    }
+
+    /**
+     * Loads the module icons
+     * @param imageTracker the image source
+     */
+    public void loadImages(ModuleDescriptions md, ImageTracker imageTracker) {
+        //DConnector.setImageTracker(imageTracker);
+
+        for (DModule m : md.getModuleList())
+        {
+            m.setIcon(imageTracker.getImage(Integer.toString(m.getModuleID())));
+        }
     }
 
     public void loadDefaultImageTracker()
@@ -168,7 +185,7 @@ public abstract class NomadEnvironment extends Application
             e.printStackTrace();
         }
 
-        DConnector.setImageTracker( imageTracker );
+        //DConnector.setImageTracker( imageTracker );
     }
 
     public void setFactory( UIFactory factory )
@@ -192,10 +209,10 @@ public abstract class NomadEnvironment extends Application
     {
         PluginManager.init();
     }
-
+/*
     public void loadModuleToolbar()
     {
         moduleToolbar = new ModuleToolbar();
-    }
+    }*/
 
 }

@@ -24,12 +24,12 @@ package net.sf.nmedit.nomad.main.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
@@ -39,8 +39,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch;
 import net.sf.nmedit.nomad.patch.ui.PatchUI;
-import net.sf.nmedit.nomad.patch.virtual.Patch;
 import net.sf.nmedit.nomad.util.document.Document;
 import net.sf.nmedit.nomad.util.document.DocumentListener;
 import net.sf.nmedit.nomad.util.document.DocumentManager;
@@ -67,11 +67,9 @@ public class PatchSection extends HeaderSection implements DocumentListener
     public PatchSection( String title )
     {
         super( title );
-        
         JComponent pane = getContentPane();
-        
-        pane.setLayout(new GridLayout(0, 2, 2, 2));
-        
+        pane.setLayout(new BoxLayout(pane, BoxLayout.LINE_AXIS));//new GridLayout(1, 0, 2, 2));
+
         load = new JProgressBar();
         load.setMinimum(0);
         load.setMaximum(100);
@@ -131,9 +129,9 @@ public class PatchSection extends HeaderSection implements DocumentListener
             }
             
         });
-        
+        /*
         pane.add(new JLabel("PVA:"));        
-        pane.add(load);
+        pane.add(load);*/
 
         pane.add(new JLabel("Name:"));
         pane.add(pName);

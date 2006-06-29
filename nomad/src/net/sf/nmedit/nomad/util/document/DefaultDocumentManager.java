@@ -31,8 +31,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.jgoodies.looks.Options;
-
 public class DefaultDocumentManager extends JTabbedPane implements DocumentManager
 {
 
@@ -45,9 +43,8 @@ public class DefaultDocumentManager extends JTabbedPane implements DocumentManag
         container.setOpaque(true);
         container.addChangeListener(new TabChangeListener());
         //container.putClientProperty(Options.NO_CONTENT_BORDER_KEY, Boolean.TRUE);
-        container.setBackground(Color.BLACK);
-        container.setForeground(Color.BLACK);
-        container.putClientProperty(Options.EMBEDDED_TABS_KEY, Boolean.TRUE);
+        //container.putClientProperty(Options.EMBEDDED_TABS_KEY, Boolean.TRUE);
+        container.setBorder(null);
     }
     
     protected void fireevent(DocumentEvent e)

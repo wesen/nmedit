@@ -18,35 +18,14 @@
  */
 
 /*
- * Created on Jan 20, 2006
+ * Created on Jun 28, 2006
  */
-package net.sf.nmedit.nomad.editor.views.classes;
+package net.sf.nmedit.nomad.main.ui.sidebar;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Stroke;
+public interface SidebarListener
+{
 
-import javax.swing.JPanel;
-
-public class DashPane extends JPanel {
-
-	private final static Stroke dashLines = new BasicStroke( 1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[]{ 1, 2 }, 0 ); 
-	
-	public DashPane() {
-		setOpaque(false);
-		setMinimumSize(new Dimension(10,10));
-	}
-
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D) g.create();
-		g2.setColor(Color.DARK_GRAY);
-		g2.setStroke(dashLines);
-		g2.drawLine(0, getHeight()-1, getWidth(), getHeight()-1);
-		g2.dispose();
-	}
-
+    public void sidebarActivated(SidebarEvent e);
+    public void sidebarDeactivated(SidebarEvent e);
+    
 }

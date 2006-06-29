@@ -31,6 +31,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -40,10 +41,11 @@ import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
 import javax.swing.event.ListDataListener;
 
 import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
-import net.sf.nmedit.nomad.editor.views.classes.DashPane;
+import net.sf.nmedit.nomad.main.ui.DashBorder;
 import net.sf.nmedit.nomad.theme.component.NomadLabel;
 import net.sf.nmedit.nomad.util.graphics.ImageTracker;
 
@@ -110,11 +112,21 @@ public class ImageBrowserDialog extends JDialog {
 		//editor.repaint();
 	}
 
+    private static Border border
+    = BorderFactory.createCompoundBorder(
+      DashBorder.create(false, false, false, true),
+      BorderFactory.createEmptyBorder(2, 2, 2, 2)
+    );
 	private class ImageItem extends JPanel {
 		
 		private final Color defBG = UIManager.getColor("List.selectionBackground");;
 		Image image ;
 		String key ;
+        
+        public ImageItem()
+        {
+            setBorder(border);
+        }
 		
 		public ImageItem(Image image, String key) {
 			this.image = image;
@@ -128,7 +140,7 @@ public class ImageBrowserDialog extends JDialog {
 			keyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 			add(imgLabel);
 			add(keyLabel);
-			add(new DashPane());
+            
 		}
 
 		public void setItemHasFocus(boolean cellHasFocus) {

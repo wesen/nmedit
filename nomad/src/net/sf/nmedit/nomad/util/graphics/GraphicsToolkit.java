@@ -33,7 +33,9 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.ImageObserver;
@@ -41,6 +43,50 @@ import java.awt.image.PixelGrabber;
 
 public class GraphicsToolkit
 {
+
+    public static BufferedImage getScaledImage(Image source, double f)
+    {
+        return getScaledImage(source, null, f);
+    }
+    
+    public static BufferedImage getScaledImage(Image source, BufferedImage reuse, double f)
+    {
+        if (f<=0) throw new IllegalArgumentException("invalid factor specified");
+        final int iw = source.getWidth(null);
+        final int ih = source.getHeight(null);
+        final int sw = (int) (iw*f);
+        final int sh = (int) (ih*f);
+        
+        final BufferedImage scaled;
+        final int transparency = (source instanceof Transparency) ? ((Transparency)source).getTransparency() : Transparency.OPAQUE;
+        
+        Graphics2D g2 = null; 
+        if (reuse!=null && reuse.getWidth()==sw && reuse.getHeight()==sh && transparency == reuse.getTransparency())
+        {
+            scaled = reuse;
+            g2 = scaled.createGraphics();
+            clearRegion(g2, 0, 0, sw, sh);
+        }
+        else
+        {
+            scaled = createCompatibleBuffer(sw, sh, transparency);
+            g2 = scaled.createGraphics();
+        }
+        
+        try
+        {
+            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g2.scale(f, f);
+            g2.drawImage(source, 0, 0, null);
+            g2.dispose();
+        }
+        finally
+        {
+            g2.dispose();
+        }
+        
+        return scaled;
+    }
 
     /**
      * Returns <code>true</code> when the color is transparent,
@@ -288,7 +334,7 @@ public class GraphicsToolkit
         .getDefaultScreenDevice()
         .getDefaultConfiguration();
     
-    private static GraphicsConfiguration getDefaultGraphicsConfiguration() {
+    public static GraphicsConfiguration getDefaultGraphicsConfiguration() {
         return gc;
     }
     

@@ -36,10 +36,10 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Format;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Header;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch;
 import net.sf.nmedit.nomad.main.resources.AppIcons;
-import net.sf.nmedit.nomad.patch.Format;
-import net.sf.nmedit.nomad.patch.virtual.Header;
-import net.sf.nmedit.nomad.patch.virtual.Patch;
 
 import com.jgoodies.forms.factories.ComponentFactory;
 import com.jgoodies.forms.factories.DefaultComponentFactory;

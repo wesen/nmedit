@@ -28,12 +28,10 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 
-import net.sf.nmedit.nomad.patch.virtual.Signal;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Signal;
 
 public class CableSection extends HeaderSection
 {
@@ -44,8 +42,18 @@ public class CableSection extends HeaderSection
 
         JComponent pane =
         getContentPane();
+
+        pane.add(create(Signal.AUDIO));
+        pane.add(create(Signal.CONTROL));
+        pane.add(create(Signal.LOGIC));
+        pane.add(create(Signal.SLAVE));
         
-        pane.setLayout(new BoxLayout(pane, BoxLayout.PAGE_AXIS));
+        pane.add(create(Signal.USER1));
+        pane.add(create(Signal.USER2));
+        pane.add(create(Signal.NONE));
+        
+        /*
+        pane.setLayout(new BoxLayout(pane, BoxLayout.LINE_AXIS));
         
         Box box = Box.createHorizontalBox();
         
@@ -61,7 +69,7 @@ public class CableSection extends HeaderSection
         box.add(create(Signal.USER2));
         box.add(create(Signal.NONE));
         box.add(Box.createHorizontalGlue());
-        pane.add(box);
+        pane.add(box);*/
     }
 
     private JComponent create (Signal s)

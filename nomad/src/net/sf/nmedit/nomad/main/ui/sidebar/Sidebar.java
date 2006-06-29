@@ -18,12 +18,34 @@
  */
 
 /*
- * Created on Feb 22, 2006
+ * Created on Jun 28, 2006
  */
-package net.sf.nmedit.nomad.util.graphics;
+package net.sf.nmedit.nomad.main.ui.sidebar;
 
-public interface Repainter {
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 
-	public void addDirtyRegion(int x, int y, int w, int h);
-	
+public interface Sidebar
+{
+
+    /**
+     * Returns an icon for the sidebar
+     */
+    public ImageIcon getIcon();
+    
+    /**
+     * Returns a discription of the sidebar used for tooltip text.
+     */
+    public String getDescription();
+
+    /**
+     * Creates the component displayed as sidebar.
+     */
+    public JComponent createView();
+    
+    /**
+     * Disposes the view and associated data.
+     */
+    public void disposeView();
+    
 }

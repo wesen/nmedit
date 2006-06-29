@@ -48,6 +48,7 @@ public final class AppIcons extends ImageTracker {
     public final static ImageIcon IC_PASTE = getImageIcon("paste");
     public final static ImageIcon IC_NORDMODULAR = getImageIcon("nord-modular");
     public final static ImageIcon IC_PATCH = getImageIcon("patch");
+    public final static ImageIcon REFRESH = getImageIcon("refresh");
 	
 	public static Image getIcon(String key) {
 		return instance.getImage(key);
@@ -84,7 +85,7 @@ public final class AppIcons extends ImageTracker {
 				key = key.substring(0, key.lastIndexOf("-"));
 			else if (key.matches(".*_\\d+"))
 				key = key.substring(0, key.lastIndexOf("_"));
-			
+		
 			images.put(key, images.remove(oldkey));
 		}
 	}

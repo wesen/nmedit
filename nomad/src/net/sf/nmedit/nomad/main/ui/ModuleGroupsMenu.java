@@ -23,13 +23,14 @@
 package net.sf.nmedit.nomad.main.ui;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import net.sf.nmedit.nomad.xml.dom.module.DGroup;
-import net.sf.nmedit.nomad.xml.dom.module.DModule;
-import net.sf.nmedit.nomad.xml.dom.module.DSection;
-import net.sf.nmedit.nomad.xml.dom.module.ModuleDescriptions;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DGroup;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DSection;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.ModuleDescriptions;
 
 public class ModuleGroupsMenu extends JMenu {
 
@@ -44,11 +45,16 @@ public class ModuleGroupsMenu extends JMenu {
 	
 	public ModuleGroupsMenu() {
 		super("Modules");
-		ModuleDescriptions m = ModuleDescriptions.sharedInstance();
-		for (int i=0;i<m.getGroupCount();i++)
-			add (new ModuleGroupMenu(m.getGroup(i)));
+        build(this);
 	}
 	
+    public static void build(JComponent parent)
+    {
+        ModuleDescriptions m = ModuleDescriptions.sharedInstance();
+        for (int i=0;i<m.getGroupCount();i++)
+            parent.add (new ModuleGroupMenu(m.getGroup(i)));
+    }
+    
 }
 
 class ModuleGroupMenu extends JMenu {

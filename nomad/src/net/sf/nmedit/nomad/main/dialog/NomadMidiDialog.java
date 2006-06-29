@@ -269,7 +269,8 @@ public class NomadMidiDialog extends NomadDialog
         return ( ! (device instanceof Sequencer) && ! (device instanceof Synthesizer));
     }
     
-    // BE AWARE THAT MidiDevice d : isInputDevice(d) <=/=> isOutputDevice(d) 
+    // MidiDevice d : isInputDevice(d) <=/=> isOutputDevice(d)
+    // but MidiDevice d : isInputDevice(d) & isOutputDevice(d) can be true 
     
     public static boolean isInputDevice(MidiDevice device)
     {

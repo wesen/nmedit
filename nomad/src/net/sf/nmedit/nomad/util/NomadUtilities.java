@@ -34,14 +34,115 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Properties;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTree;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 public class NomadUtilities {
 
+    public static Collection<TreePath> getLeafParents(JTree tree)
+    {
+        // TODO better method name
+        // returns paths to the nodes that only contain leafs
+
+        TreeNode node = (TreeNode)tree.getModel().getRoot();
+        Collection<TreePath> result = new LinkedList<TreePath>();
+
+        if (node!=null)
+        {
+            TreePath path = new TreePath(node);
+            getLeafParents(result, path, node);
+        }
+        return result;
+    }
+    
+    public static boolean getLeafParents( Collection<TreePath> result, TreePath path, TreeNode node )
+    {
+        // TODO better method name
+        // returns true <=> path expanded 
+        if (node.isLeaf()) return false;
+        boolean expanded = false;
+        
+        for (int i=node.getChildCount()-1;i>=0;i--)
+        {
+            TreeNode child = node.getChildAt(i);
+            if (!child.isLeaf())
+            {
+                expanded |= getLeafParents(result, path.pathByAddingChild(child), child);
+            }
+        }
+        
+        if (!expanded)
+        {
+            result.add(path);
+            expanded = true;
+        }
+        
+        return expanded;
+    }
+
+    public static void expandAll(JTree t)
+    {
+        for (TreePath path : getLeafParents(t))
+        {
+            t.expandPath(path);
+        }
+    }
+
+    public static void collapseAll(JTree t)
+    {
+        for (TreePath path : getLeafParents(t))
+        {
+            t.collapsePath(path);
+        }
+    }
+    
+    public static String minimalText(String text, int maxwidth, int maxheight)
+    {
+        StringBuffer sb = new StringBuffer();
+        for (String t : minimalTextA(text, maxwidth, maxheight))
+        {
+            sb.append(t+"\n");
+        }
+        return sb.substring(0, sb.length()-1);
+    }
+
+    public static String[] minimalTextA(String text, int maxwidth, int maxheight)
+    {
+        if (maxwidth<=0 || maxheight <= 0) throw new IllegalArgumentException("dimension <= 0");
+        
+        text = text.replaceAll("\\n|\\r", "");
+        text = text.replaceAll("\\s\\s\\s","");
+        
+        String[] lines = new String[Math.max(1,Math.min(text.length()/maxwidth, maxheight))];
+        lines[0] = new String();
+        int line = 0;
+        for (int i=0;i<text.length();i+=maxwidth)
+        {
+            lines[line++] = text.substring(i, Math.min(text.length(), i+maxwidth));
+            if (line>=lines.length) break;
+        }
+        
+        String last = lines[lines.length-1]+"...";
+        
+        while (last.length()>maxwidth+3)
+        {
+            last = last.substring(0, last.length()-1);
+        }
+        
+        lines[lines.length-1] = last;
+        
+        return lines;
+    }
+    
+    
 	public static <T> void addAll(ArrayList<T> list, Iterator<T> iterator)
 	{
 		while (iterator.hasNext())
@@ -228,35 +329,5 @@ public class NomadUtilities {
         in.close();
         return properties;
       }
-
-    /**
-     * Rounds d until digit '-to'. For example d=123, to=2 returns 120.
-     * If d=123.456 and to=-2 then 123.45 is returned.
-     * 
-     * @param d Value to round
-     * @param to decimal position
-     * @return rounded value of d
-     */
-    public static double roundTo(double d, int to) {
-        if (to == 0)
-            return Math.round(d);
-
-        double norm = Math.pow(10.0, -to);
-        return Math.round(d*norm) / norm;
-    }
-
-    /**
-     * Returns the value of d as a String. If d is a natural number,
-     * it is returned without decimal point.
-     * @param d value that should be converted to a string representation
-     * @return d as string
-     */
-    public static String doubleToStr(double d) {
-        double truncated = (int) d;
-        if (d==truncated)
-            return Integer.toString((int)d);
-        else
-            return Double.toString(d);
-    }
 
 }

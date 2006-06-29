@@ -30,28 +30,31 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+import javax.sound.midi.MidiDevice;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch;
+import net.sf.nmedit.jsynth.SynthException;
+import net.sf.nmedit.jsynth.clavia.nordmodular.v3_03.NordModular;
+import net.sf.nmedit.jsynth.clavia.nordmodular.v3_03.Slot;
+import net.sf.nmedit.jsynth.clavia.nordmodular.v3_03.SlotListener;
+import net.sf.nmedit.jsynth.event.SynthStateChangeEvent;
+import net.sf.nmedit.jsynth.event.SynthStateListener;
+import net.sf.nmedit.nomad.core.application.Const;
+import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 import net.sf.nmedit.nomad.main.Nomad;
+import net.sf.nmedit.nomad.main.dialog.NomadMidiDialog;
 import net.sf.nmedit.nomad.patch.ui.PatchUI;
-import net.sf.nmedit.nomad.patch.virtual.Patch;
-import net.sf.nmedit.nomad.synth.DeviceIOException;
-import net.sf.nmedit.nomad.synth.SynthDevice;
-import net.sf.nmedit.nomad.synth.SynthDeviceStateListener;
-import net.sf.nmedit.nomad.synth.nord.AbstractNordModularDevice;
-import net.sf.nmedit.nomad.synth.nord.NordUtilities;
-import net.sf.nmedit.nomad.synth.nord.Slot;
-import net.sf.nmedit.nomad.synth.nord.SlotListener;
 import net.sf.nmedit.nomad.util.document.Document;
 import net.sf.nmedit.nomad.util.document.DocumentListener;
 
-public class SynthDeviceActions implements SlotListener, SynthDeviceStateListener, DocumentListener
+public class SynthDeviceActions implements SlotListener, SynthStateListener, DocumentListener
 {
 
-    private final AbstractNordModularDevice device;
+    private final NordModular device;
     private final Nomad nomad;
     private final PatchUI[] slotDocs;
     private Action[] downloadToSlotActions;
@@ -61,7 +64,7 @@ public class SynthDeviceActions implements SlotListener, SynthDeviceStateListene
     private Action updloadCurrentSlotAction = new UploadPatchFromCurrentSlotAction();
     private Action downloadToCurrentSlotAction = new DownloadToCurrentSlotAction();
 
-    public SynthDeviceActions(AbstractNordModularDevice device, Nomad nomad)
+    public SynthDeviceActions(NordModular device, Nomad nomad)
     {
         this.device = device;
         this.nomad = nomad;
@@ -82,7 +85,7 @@ public class SynthDeviceActions implements SlotListener, SynthDeviceStateListene
         actions.add(downloadToCurrentSlotAction);
         
         device.addSlotListener(this);
-        device.addStateListener(this);
+        device.addSynthStateListener(this);
         nomad.addWindowListener( new AutomaticSynthShutdownAction() );
         
         updateActions();
@@ -90,9 +93,42 @@ public class SynthDeviceActions implements SlotListener, SynthDeviceStateListene
 
     public boolean setupSynth()
     {
-        return NordUtilities.showMidiConfigurationDialog(device);
+        return showMidiConfigurationDialog(device);
     }
 
+    public static boolean showMidiConfigurationDialog(NordModular dev)
+    {
+
+        final String KEY_MIDI_IN_DEVICE =  Const.CUSTOM_PROPERTY_PREFIX_STRING+"synth.midi.in";
+        final String KEY_MIDI_OUT_DEVICE =  Const.CUSTOM_PROPERTY_PREFIX_STRING+"synth.midi.out";
+
+        MidiDevice.Info midiIn = dev.getMidiIn();
+        MidiDevice.Info midiOut = dev.getMidiOut();
+        
+        NomadMidiDialog dlg = new NomadMidiDialog(midiIn, midiOut);
+            
+        if (midiIn==null) dlg.setInputDevice(NomadEnvironment.getProperty(KEY_MIDI_IN_DEVICE));
+        if (midiOut==null) dlg.setOutputDevice(NomadEnvironment.getProperty(KEY_MIDI_OUT_DEVICE));
+
+        dlg.invoke();
+        
+        if (dlg.isOkResult()) {
+            midiIn = dlg.getInputDevice();
+            midiOut = dlg.getOutputDevice();
+
+            if (midiIn!=null && midiOut!=null)
+            {
+                dev.setMidiIn(midiIn);
+                dev.setMidiOut(midiOut);
+                
+                NomadEnvironment.setProperty(KEY_MIDI_IN_DEVICE, midiIn.getName());
+                NomadEnvironment.setProperty(KEY_MIDI_OUT_DEVICE, midiOut.getName());
+                return true;
+            }
+        }
+        
+        return false;
+    }
     public void newPatchInSlot( Slot slot )
     {
         int index = slot.getID();
@@ -120,7 +156,7 @@ public class SynthDeviceActions implements SlotListener, SynthDeviceStateListene
         if (doc != null) nomad.getDocumentContainer().setSelection( doc );
     }
 
-    public void synthConnectionStateChanged( SynthDevice synth )
+    public void synthStateChanged(SynthStateChangeEvent e)
     {
         updateActions();
     }
@@ -144,7 +180,7 @@ public class SynthDeviceActions implements SlotListener, SynthDeviceStateListene
             {
                 if (!device.isConnected())
                 {
-                    if (device.getIn()==null || device.getOut()==null)
+                    if (device.getMidiIn()==null || device.getMidiOut()==null)
                        if (!setupSynth())
                            return;
 
@@ -155,7 +191,7 @@ public class SynthDeviceActions implements SlotListener, SynthDeviceStateListene
                     device.setConnected(false);
                 }
             }
-            catch (DeviceIOException e)
+            catch (SynthException e)
             {
                 e.printStackTrace();
             }
@@ -174,7 +210,7 @@ public class SynthDeviceActions implements SlotListener, SynthDeviceStateListene
                 {
                     slot.synchronize();
                 }
-                catch (DeviceIOException e1)
+                catch (SynthException e1)
                 {
                     e1.printStackTrace();
                 }
@@ -334,7 +370,7 @@ public class SynthDeviceActions implements SlotListener, SynthDeviceStateListene
                 {
                     device.setConnected(false);
                 }
-                catch (DeviceIOException e)
+                catch (SynthException e)
                 {
                     e.printStackTrace();
                 }

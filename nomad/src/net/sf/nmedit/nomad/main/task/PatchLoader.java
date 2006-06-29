@@ -26,10 +26,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch;
+import net.sf.nmedit.jpatch.io.FileSource;
+import net.sf.nmedit.jpatch.io.PatchDecoder;
+import net.sf.nmedit.jpatch.spi.PatchImplementation;
 import net.sf.nmedit.nomad.main.Nomad;
-import net.sf.nmedit.nomad.patch.builder.VirtualBuilder;
-import net.sf.nmedit.nomad.patch.parser.PatchFileParser;
-import net.sf.nmedit.nomad.patch.transcoder.PatchParserTranscoder;
 import net.sf.nmedit.nomad.patch.ui.PatchUI;
 
 
@@ -64,13 +65,18 @@ public class PatchLoader {
         {
             try 
             {
+                PatchImplementation impl =
+                nomad.getPatchImplementation();
+                
+                PatchDecoder decoder = impl.createPatchDecoder(FileSource.class);
+                
                 FileReader fr = new FileReader(name);
-                PatchFileParser parser = new PatchFileParser(fr);
-                VirtualBuilder builder = new VirtualBuilder();
-                PatchParserTranscoder t = new PatchParserTranscoder();
-                t.transcode(parser, builder);                
-                PatchUI tab = PatchUI.newInstance(builder.getPatch());
-                builder.getPatch().setName(extractPatchName(name));
+                decoder.decode( new FileSource(fr) );
+                
+                Patch patch = (Patch) decoder.getPatch();
+                
+                PatchUI tab = PatchUI.newInstance(patch);
+                patch.setName(extractPatchName(name));
                 tab.setName(extractPatchName(name));
                 synchronized (nomad)
                 {

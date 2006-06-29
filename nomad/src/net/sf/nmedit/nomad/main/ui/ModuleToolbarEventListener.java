@@ -1,6 +1,6 @@
 package net.sf.nmedit.nomad.main.ui;
 
-import net.sf.nmedit.nomad.xml.dom.module.DModule;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 
 public interface ModuleToolbarEventListener {
 

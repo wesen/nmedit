@@ -36,6 +36,7 @@ import java.util.HashMap;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 import net.sf.nmedit.nomad.editor.ComponentAlignmentMenu;
 import net.sf.nmedit.nomad.editor.views.ComponentZOrderMenuItem;
@@ -46,7 +47,6 @@ import net.sf.nmedit.nomad.theme.component.NomadComponent;
 import net.sf.nmedit.nomad.theme.property.Property;
 import net.sf.nmedit.nomad.theme.property.PropertySet;
 import net.sf.nmedit.nomad.theme.property.Value;
-import net.sf.nmedit.nomad.xml.dom.module.DModule;
 
 
 public class VisualEditor extends NomadComponent implements ModuleComponent {
