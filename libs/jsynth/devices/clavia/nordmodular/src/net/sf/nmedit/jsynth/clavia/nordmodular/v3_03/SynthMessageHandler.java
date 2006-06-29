@@ -24,6 +24,8 @@ package net.sf.nmedit.jsynth.clavia.nordmodular.v3_03;
 
 import java.util.Arrays;
 
+import javax.swing.SwingUtilities;
+
 import net.sf.nmedit.jnmprotocol.AckMessage;
 import net.sf.nmedit.jnmprotocol.ErrorMessage;
 import net.sf.nmedit.jnmprotocol.IAmMessage;
@@ -41,7 +43,9 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.VoiceArea;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.io.BitstreamTranscoder;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.io.TranscoderException;
+import net.sf.nmedit.jpatch.io.PatchDecoder;
+import net.sf.nmedit.jpatch.io.PatchDecoderException;
+import net.sf.nmedit.jsynth.clavia.nordmodular.v3_03.io.BitStreamSource;
 import net.sf.nmedit.jsynth.event.SynthStateChangeEvent;
 import net.sf.nmedit.jsynth.event.SynthStateListener;
 
@@ -54,14 +58,14 @@ public class SynthMessageHandler extends NmProtocolListener implements SynthStat
     }
 
     private NordModular device;
-    private final BufferedPatch[] incomplete;
+    private BitStreamSource[] incomplete;
 
     public SynthMessageHandler(NordModular synth)
     {
         this.device = synth;
         synth.addSynthStateListener(this);
         
-        incomplete = new BufferedPatch[device.getSlotCount()];
+        incomplete = new BitStreamSource[device.getSlotCount()];
         Arrays.fill(incomplete, null);
     }
     
@@ -147,29 +151,54 @@ public class SynthMessageHandler extends NmProtocolListener implements SynthStat
     {
         
         //System.out.println("messageReceived(PatchMessage)");
-        Slot slot = device.getSlot(message.get("slot"));
+        final Slot slot = device.getSlot(message.get("slot"));
 
-        
-        BufferedPatch buffer = incomplete[slot.getID()];
-        if (buffer == null)
+        PatchDecoder decoder;
+        try
         {
-            buffer = new BufferedPatch(slot);
-            incomplete[slot.getID()] = buffer;
+            decoder = device.getPatchImplementation().createPatchDecoder(BitStreamSource.class);
         }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return;
+        }
+        
+        BitStreamSource source = incomplete[slot.getID()];
+        if (source == null)
+        {
+            source = new BitStreamSource();
+            incomplete[slot.getID()] = source;
+        }
+        
+        source.setBitStream(message.getPatchStream());
         
         try
         {
-            buffer.build(message);
+            decoder.decode(source);
         }
-        catch (TranscoderException e)
+        catch (Exception e)
         {
             incomplete[slot.getID()] = null;
             e.printStackTrace();
         }
         
-        if (buffer.isComplete())
+        if (source.isComplete())
         {
             incomplete[slot.getID()] = null;
+            
+            try
+            {
+                slot.setPatch((Patch)decoder.getPatch());
+                
+                SwingUtilities.invokeLater(new Runnable(){public void run() {
+                device.fireNewPatchInSlot(slot);
+                }});
+            }
+            catch (PatchDecoderException e)
+            {
+                e.printStackTrace();
+            }
         }
         
         /*
@@ -226,14 +255,15 @@ public class SynthMessageHandler extends NmProtocolListener implements SynthStat
                    "slot2Selected:" + message.get("slot2Selected") + " " +
                    "slot3Selected:" + message.get("slot3Selected"));
         */
-        System.out.println("selected");
         for (int i=0;i<device.getSlotCount();i++)
         {
             boolean selected = message.get("slot"+i+"Selected")==1;
-            Slot slot = device.getSlot(i);
+            final Slot slot = device.getSlot(i);
             slot.setSelected(selected);
             if (selected)
+            {
                 device.fireSlotSelectedMessage(slot);
+            }
         }
     }
     
