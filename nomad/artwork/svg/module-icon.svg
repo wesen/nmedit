@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="20"
+   height="20"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.43"
+   version="1.0"
+   sodipodi:docbase="/home/christian/CVS-Arbeitsbereich/nmedit/nomad/artwork/svg"
+   sodipodi:docname="module-icon.svg"
+   inkscape:export-filename="/home/christian/CVS-Arbeitsbereich/nmedit/nomad/artwork/png/module-icon.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="64"
+     inkscape:cx="7.6717534"
+     inkscape:cy="4.0119298"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     gridtolerance="0.5px"
+     guidetolerance="0.5px"
+     showgrid="true"
+     showguides="true"
+     inkscape:window-width="712"
+     inkscape:window-height="588"
+     inkscape:window-x="452"
+     inkscape:window-y="348" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>module icons</dc:title>
+        <dc:date>2006-06-27</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Christian Schneider</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:publisher>
+          <cc:Agent>
+            <dc:title>http://nmedit.sf.net</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/GPL/2.0/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/GPL/2.0/">
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/Notice" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/ShareAlike" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/SourceCode" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="opacity:1;fill:#ff803f;fill-opacity:1;fill-rule:nonzero;stroke:#676767;stroke-width:1;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:8.83750021;stroke-opacity:1"
+       id="rect2228"
+       width="13.999262"
+       height="5.996263"
+       x="4.5007381"
+       y="12.503736"
+       inkscape:export-filename="/home/christian/CVS-Arbeitsbereich/nmedit/nomad/artwork/png/rect2228.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="opacity:1;fill:#ffd662;fill-opacity:1;fill-rule:nonzero;stroke:#676767;stroke-width:1;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:2;stroke-dasharray:none;stroke-dashoffset:8.83750021;stroke-opacity:1"
+       id="rect1325"
+       width="14"
+       height="6.0025001"
+       x="1.5"
+       y="1.49875" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#323232;stroke-width:0.99986774;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 15.500138,2.4764997 L 15.500138,7.5000633 L 1.499862,7.5000633"
+       id="path2224" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#676767;stroke-width:0.99983615;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 12.502532,8.4999181 L 12.502532,10.512654 L 15.500082,10.512654 L 15.500082,12.500167"
+       id="path2210"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#323232;stroke-width:0.99986774;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 18.500066,13.499934 L 18.500066,18.523497 L 4.4997904,18.523497"
+       id="path2226" />
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#676767;stroke-width:1.002;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:8.83750021;stroke-opacity:0.39215686"
+       id="rect2231"
+       width="12.991111"
+       height="4.995717"
+       x="1.506248"
+       y="1.5027223" />
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#676767;stroke-width:1;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:8.83750021;stroke-opacity:0.39215686"
+       id="rect2235"
+       width="12.991111"
+       height="4.9947438"
+       x="4.5"
+       y="12.502628" />
+  </g>
+</svg>
