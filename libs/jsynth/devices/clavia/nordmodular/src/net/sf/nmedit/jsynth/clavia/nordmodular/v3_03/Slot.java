@@ -22,14 +22,17 @@
  */
 package net.sf.nmedit.jsynth.clavia.nordmodular.v3_03;
 
+import net.sf.nmedit.jnmprotocol.DeleteCableMessage;
 import net.sf.nmedit.jnmprotocol.DeleteModuleMessage;
 import net.sf.nmedit.jnmprotocol.GetPatchMessage;
 import net.sf.nmedit.jnmprotocol.MidiException;
 import net.sf.nmedit.jnmprotocol.MoveModuleMessage;
+import net.sf.nmedit.jnmprotocol.NewCableMessage;
 import net.sf.nmedit.jnmprotocol.NewModuleMessage;
 import net.sf.nmedit.jnmprotocol.ParameterMessage;
 import net.sf.nmedit.jnmprotocol.PatchMessage;
 import net.sf.nmedit.jnmprotocol.RequestPatchMessage;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Format;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
@@ -204,7 +207,7 @@ public class Slot
                     
                     //if (isPatchInitialized())
                     {
-                        synchNewModule(event.getModule());
+                        //synchNewModule(event.getModule());
                     }
                 }
                 break;
@@ -222,9 +225,63 @@ public class Slot
                 break;
 
                 case VoiceAreaEvent.VA_CONNECTED:
+                {
+                    NewCableMessage message;
+                    try
+                    {
+                        message = new NewCableMessage();
+                        message.set("slot", getID());
+                        message.set("pid", pID);
+
+                        Connector src = event.getSrc();
+                        Connector dst = event.getDst();
+                        int section = Format.getVoiceAreaID(event.getVoiceArea().isPolyVoiceArea());
+                        int color = src.getConnectionColor().getSignalID();
+                        message.newCable(section, color, 
+                                dst.getModule().getIndex(), 
+                                Format.getOutputID(dst.isOutput()),
+                                dst.getID(),
+                                src.getModule().getIndex(), 
+                                Format.getOutputID(src.isOutput()),
+                                src.getID());
+                        
+                        device.send(message);
+                        
+                    }
+                    catch (Exception e)
+                    {
+                        // TODO  
+                        e.printStackTrace();
+                    }
+                }
+                break;
                 case VoiceAreaEvent.VA_DISCONNECTED:
                 {
-                    //synchsafe();
+                    try
+                    {
+                    DeleteCableMessage message = new DeleteCableMessage();
+                    message.set("slot", getID());
+                    message.set("pid", pID);
+
+                    Connector src = event.getSrc();
+                    Connector dst = event.getDst();
+                    int section = Format.getVoiceAreaID(event.getVoiceArea().isPolyVoiceArea());
+                    message.deleteCable(section,  
+                            dst.getModule().getIndex(), 
+                            Format.getOutputID(dst.isOutput()),
+                            dst.getID(),
+                            src.getModule().getIndex(), 
+                            Format.getOutputID(src.isOutput()),
+                            src.getID());
+                    
+                    device.send(message);
+                    
+                }
+                catch (Exception e)
+                {
+                    // TODO  
+                    e.printStackTrace();
+                }
                 }
                 break;
             }
