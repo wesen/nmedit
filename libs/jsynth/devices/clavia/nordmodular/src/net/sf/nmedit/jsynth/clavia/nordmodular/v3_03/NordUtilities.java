@@ -50,7 +50,7 @@ public class NordUtilities
         BitStreamTarget target = new BitStreamTarget();
         enc.encode(target);
         
-        return new PatchMessage(target.getBitStream(), target.getSectionEndPositions(), slotID);
+        return target.generateMessage(slotID);
         
         /*
         VirtualTranscoder transcoder = new VirtualTranscoder();
