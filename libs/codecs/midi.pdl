@@ -113,7 +113,7 @@ ACKChecksum % 1 :=
 	;
 
 PatchHandling % 1 :=
-	?PatchCommand$data ?PatchModification$data
+	?PatchCommand$data ?PatchModification$data ?ModuleAdd$data
 	;
 
 PatchCommand % 1 :=
@@ -174,7 +174,6 @@ PatchModification % 1 :=
 	#sc=0x66 => GetPatchPart$data
 	#sc=0x68 => GetPatchPart$data
 
-	#sc=0x18 => ModuleAdd$data
 	#sc=0x25 => KnobAssignment$data
 	#sc=0x26 => KnobAssignmentChange$data
 	#sc=0x32 => ModuleDeletion$data
@@ -196,7 +195,7 @@ GetPatchPart % 1 :=
 	;
 
 ModuleAdd % 1 :=
-	0:1 section:7 0:1 index:7 0:1 type:7 0:1 xpos:7 0:1 ypos:7
+	0:1 pid:7 0:1 0x18:7 ?PatchData$next
 	;
 
 KnobAssignment % 1 :=

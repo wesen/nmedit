@@ -24,6 +24,28 @@ import net.sf.nmedit.jpdl.*;
 
 public class NewModuleMessage extends MidiMessage
 {
+    static {
+	try {
+	    usePdlFile("/patch.pdl", null);
+	}
+	catch (Exception e) {
+	    System.out.println("NewModuleMessage: /patch.pdl not found.");
+	}
+    }
+
+    private static Protocol protocol;
+    private static String pdlFile;
+    private static PacketParser packetParser;
+
+    public static void usePdlFile(String filename, Tracer tracer)
+	throws Exception
+    {
+	pdlFile = filename;
+	protocol = new Protocol(pdlFile);
+	packetParser = protocol.getPacketParser("Patch");
+	protocol.useTracer(tracer);
+    }
+    
     private IntStream intStream;
 
     public NewModuleMessage()
@@ -34,9 +56,7 @@ public class NewModuleMessage extends MidiMessage
 	expectsreply = true;
 
 	addParameter("pid", "data:data:pid");
-	addParameter("sc", "data:data:sc");
 	set("cc", 0x17);
-	set("sc", 0x18);
     }
     
     NewModuleMessage(Packet packet)
@@ -46,14 +66,89 @@ public class NewModuleMessage extends MidiMessage
 	    ("NewModuleMessage(Packet packet) not implemented", 0);
     }
     
-    public void newModule(int section, int index, int type, int xpos, int ypos)
+    public void newModule(int type,
+			  int section,
+			  int index,
+			  int xpos,
+			  int ypos,
+			  String name,
+			  int[] parameterValues,
+			  int[] customValues)
+	throws MidiException
     {
+	IntStream patchData = new IntStream();
+	
+	patchData.append(48);
+	patchData.append(type);
+	patchData.append(section);
+	patchData.append(index);
+	patchData.append(xpos);
+	patchData.append(ypos);
+	appendName(name, patchData);
+
+	patchData.append(82);
+	patchData.append(section);
+	patchData.append(0);
+
+	patchData.append(77);
+	patchData.append(section);
+	patchData.append(1);
+	patchData.append(index);
+	patchData.append(type);
+	for (int i=0; i < parameterValues.length; i++) {
+	    patchData.append(parameterValues[i]);
+	}
+
+	patchData.append(91);
+	patchData.append(section);
+	patchData.append(1);
+	patchData.append(index);
+	patchData.append(customValues.length);
+	for (int i=0; i < customValues.length; i++) {
+	    patchData.append(customValues[i]);
+	}
+
+	patchData.append(90);
+	patchData.append(section);
+	patchData.append(1);
+	patchData.append(index);
+	appendName(name, patchData);
+
+	
+
+	// Encode patch data
+	BitStream patchStream = new BitStream();
+	boolean success = packetParser.generate(patchData, patchStream);
+	
+	if (!success || patchData.isAvailable(1)) {
+	    throw new MidiException("Information mismatch in generate.",
+				    patchData.getSize() -
+				    patchData.getPosition());
+	}
+	
+	// Pad. Extra bits are ignored later.
+	patchStream.append(0, 6);
+
+	// Throw away first 7 bits, already encoded with 'sc' parameter.
+        patchStream.getInt(7);
+	
+	// Generate message
         intStream = appendAll();
-        intStream.append(section);
-	intStream.append(index);
-	intStream.append(type);
-	intStream.append(xpos);
-	intStream.append(ypos);
+	while (patchStream.isAvailable(7)) {
+	    intStream.append(patchStream.getInt(7));
+	}
+    }
+
+    private void appendName(String stringName, IntStream patchData)
+    {
+	byte[] name = stringName.getBytes();
+	int i = 0;
+	for (i = 0; i < 16 && i < name.length; i++) {
+	    patchData.append(name[i]);
+	}
+	if (i < 16) {
+	    patchData.append(0);
+	}
     }
 
     public List getBitStream()
