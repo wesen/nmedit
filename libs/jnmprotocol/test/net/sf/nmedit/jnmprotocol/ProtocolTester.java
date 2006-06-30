@@ -116,13 +116,20 @@ public class ProtocolTester extends TestCase
 	    p.addListener(new Listener(p));
 	    MoveModuleMessage mm = new MoveModuleMessage();
 	    mm.set("pid", pid0);
-	    mm.moveModule(1, 1, 40, 40);
+	    mm.moveModule(1, 10, 40, 40);
 	    p.send(mm);
 	    DeleteModuleMessage dm = new DeleteModuleMessage();
 	    dm.set("pid", pid0);
-	    dm.deleteModule(1, 1);
+	    dm.deleteModule(1, 10);
 	    p.send(dm);
 	    int n = 0;
+	    NewModuleMessage nm = new NewModuleMessage();
+	    nm.set("pid", pid0);
+	    int[] parameterValues = {64, 64, 64, 64, 0, 0, 0, 0, 0, 0};
+	    int[] customValues = {0};
+	    nm.newModule(7, 1, 10, 2, 90, "OscA2",
+			 parameterValues, customValues);
+	    p.send(nm);
 	    while(n < 100) {
 		n++;
 		p.heartbeat();

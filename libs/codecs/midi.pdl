@@ -113,7 +113,7 @@ ACKChecksum % 1 :=
 	;
 
 PatchHandling % 1 :=
-	?PatchCommand$data ?PatchModification$data ?ModuleAdd$data
+	?PatchCommand$data ?PatchModification$data
 	;
 
 PatchCommand % 1 :=
@@ -194,10 +194,6 @@ GetPatchPartExtra % 1 :=
 GetPatchPart % 1 :=
 	;
 
-ModuleAdd % 1 :=
-	0:1 pid:7 0:1 0x18:7 ?PatchData$next
-	;
-
 KnobAssignment % 1 :=
 	0:1 unknown1:7 0:1 unknown2:7 0:1 knob:7
 	;
@@ -274,9 +270,16 @@ SetSynthSettings % 1 :=
 	;
 
 PatchSettings % 1 :=
-	pp:6 0:1 sc:7
+	?ModuleInsertion$data ?PatchSettingsWithChecksum$data
+	;
+
+ModuleInsertion % 1 :=
+	pid:6 0:1 0x18:7 ?PatchData$next
+	;
+
+PatchSettingsWithChecksum % 1 :=
+	pid:6 0:1 sc:7
 	#sc=0x10 => SetPatchSettings$data
-	#sc=0x18 => ModuleInsertion$data
 	#sc=0x21 => SEQZoom$data
 	0:1 checksum:7
 	;
@@ -284,9 +287,6 @@ PatchSettings % 1 :=
 SetPatchSettings % 1 :=
 	0:1 b0:7 0:1 b1:7 0:1 b2:7 0:1 b3:7 0:1 b4:7 0:1 b5:7 0:1 b6:7
 	0:1 b7:7 0:1 b8:7 0:1 b9:7 0:1 b10:7 0:1 b11:7 0:1 b12:7  
-	;
-
-ModuleInsertion % 1 :=
 	;
 
 SEQZoom % 1 :=

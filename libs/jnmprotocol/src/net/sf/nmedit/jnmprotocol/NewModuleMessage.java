@@ -55,8 +55,10 @@ public class NewModuleMessage extends MidiMessage
 	
 	expectsreply = true;
 
-	addParameter("pid", "data:data:pid");
-	set("cc", 0x17);
+	addParameter("command", "data:command");
+	addParameter("pid", "data:data:data:pid");
+	set("command", 0);
+	set("cc", 0x1f);
     }
     
     NewModuleMessage(Packet packet)
