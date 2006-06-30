@@ -38,7 +38,7 @@ public class VariableMatcher extends Matcher
 	LinkedList variableList = new LinkedList();
 	
 	trace(protocol);
-	
+
 	for (int i = 0; i < count; i++) {
 	    if (data.isAvailable(size)) {
 		int value = data.getInt(size);
@@ -54,8 +54,9 @@ public class VariableMatcher extends Matcher
 	}
 	
 	if (count == 1) {
-	    result.bindVariable(((Integer)variableList.get(0)).intValue(),
-				variable);
+	    int value = ((Integer)variableList.get(0)).intValue();
+	    trace(protocol, value);
+	    result.bindVariable(value, variable);
 	}
 	else {
 	    result.bindVariableList(variableList, variable);
@@ -86,8 +87,9 @@ public class VariableMatcher extends Matcher
 	}
 	
 	if (count == 1) {
-	    packet.bindVariable(((Integer)variableList.get(0)).intValue(),
-				variable);
+	    int value = ((Integer)variableList.get(0)).intValue();
+	    trace(protocol, value);
+	    packet.bindVariable(value, variable);
 	}
 	else {
 	    packet.bindVariableList(variableList, variable);
@@ -99,6 +101,16 @@ public class VariableMatcher extends Matcher
     {
 	if (count == 1) {
 	    protocol.trace(variable + ":" + size);
+	}
+	else {
+	    protocol.trace("" + count + "*" + variable + ":" + size);
+	}
+    }
+
+    private void trace(Protocol protocol, int value)
+    {
+	if (count == 1) {
+	    protocol.trace(variable + ":" + size + " = " + value);
 	}
 	else {
 	    protocol.trace("" + count + "*" + variable + ":" + size);

@@ -21,7 +21,7 @@
  * Created on Jun 14, 2006
  */
 
-//package net.sf.nmedit.jpdl;
+package net.sf.nmedit.jpdl;
 
 /**
  * TODO implement test as JUnit test
