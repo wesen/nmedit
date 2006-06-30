@@ -70,7 +70,7 @@ public class ProtocolTester extends TestCase
 	while (bitStream.isAvailable(8)) {
 	    int data = bitStream.getInt(8);
 	    //System.out.println(" " + data + " " + correctEncoding[n]);
-	    assert(data == correctEncoding[n]);
+	    Assert.assertEquals(data, correctEncoding[n]);
 	    n++;
 	}
     }
