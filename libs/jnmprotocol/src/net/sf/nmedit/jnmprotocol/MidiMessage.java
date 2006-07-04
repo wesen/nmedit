@@ -61,6 +61,7 @@ public abstract class MidiMessage
 	
 	bitStream.setPosition(bitStream.getSize()-16);
 	int messageChecksum = bitStream.getInt(8);
+	bitStream.setPosition(0);
 	
 	if (messageChecksum == checksum) {
 	    return true;
@@ -117,11 +118,15 @@ public abstract class MidiMessage
 		if (packet.contains("PatchPacket")) {
 		    return new PatchMessage(packet);
 		}	  
+		
+		error = " unsupported packet: ";
 	    }
-	    error = "unsupported packet: ";
+	    else {
+		error = " checksum error: ";
+	    }
 	}
 	else {
-	    error = "parse failed: ";
+	    error = " parse failed: ";
 	}
 	
 	while (bitStream.isAvailable(8)) {

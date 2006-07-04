@@ -155,6 +155,13 @@ public class ProtocolTester extends TestCase
 	    nm.newModule(7, 1, 10, 2, 90, "OscA2",
 			 parameterValues, customValues);
 	    p.send(nm);
+	    NewModuleMessage nm2 = new NewModuleMessage();
+	    nm2.set("pid", pid0);
+	    int[] parameterValues2 = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,0,0};
+	    int[] customValues2 = {};
+	    nm2.newModule(91, 1, 11, 1, 30, "CtrlSeqN",
+			  parameterValues2, customValues2);
+	    p.send(nm2);
 	    while(n < 100) {
 		n++;
 		p.heartbeat();
