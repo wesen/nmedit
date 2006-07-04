@@ -94,20 +94,30 @@ public class NewModuleMessage extends MidiMessage
 
 	patchData.append(77);
 	patchData.append(section);
-	patchData.append(1);
-	patchData.append(index);
-	patchData.append(type);
-	for (int i=0; i < parameterValues.length; i++) {
-	    patchData.append(parameterValues[i]);
+	if (parameterValues.length > 0) {
+	    patchData.append(1);
+	    patchData.append(index);
+	    patchData.append(type);
+	    for (int i=0; i < parameterValues.length; i++) {
+		patchData.append(parameterValues[i]);
+	    }
+	}
+	else {
+	    patchData.append(0);
 	}
 
 	patchData.append(91);
 	patchData.append(section);
-	patchData.append(1);
-	patchData.append(index);
-	patchData.append(customValues.length);
-	for (int i=0; i < customValues.length; i++) {
-	    patchData.append(customValues[i]);
+	if (customValues.length > 0) {
+	    patchData.append(1);
+	    patchData.append(index);
+	    patchData.append(customValues.length);
+	    for (int i=0; i < customValues.length; i++) {
+		patchData.append(customValues[i]);
+	    }
+	}
+	else {
+	    patchData.append(0);
 	}
 
 	patchData.append(90);

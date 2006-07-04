@@ -57,7 +57,7 @@ public class ProtocolTester extends TestCase
 	NewModuleMessage nm = new NewModuleMessage();
 	nm.set("pid", 5);
 	BitStream bitStream = null;
-	    try {
+	try {
 	    int[] parameterValues = {64, 64, 64, 64, 0, 0, 0, 0, 0, 0};
 	    int[] customValues = {0};
 	    nm.newModule(7, 1, 10, 2, 9, "OscA2", parameterValues, customValues);
@@ -73,6 +73,31 @@ public class ProtocolTester extends TestCase
 	    Assert.assertEquals(data, correctEncoding[n]);
 	    n++;
 	}
+    }
+
+    public void testNoParameterNewModuleMessage()
+	throws Exception
+    {
+	//NewModuleMessage.usePdlFile("/patch.pdl", new TestTracer());
+	//MidiMessage.usePdlFile("/midi.pdl", new TestTracer());
+	NewModuleMessage nm = new NewModuleMessage();
+	nm.set("pid", 5);
+	BitStream bitStream = null;
+	try {
+	    int[] parameterValues = {};
+	    int[] customValues = {};
+	    nm.newModule(1, 1, 9, 0, 28, "Some1", parameterValues, customValues);
+	    bitStream = (BitStream)nm.getBitStream().get(0);
+	} catch(Exception e) {
+	    e.printStackTrace();
+	}
+	int n = 0;
+	System.out.println("Size: " + bitStream.getSize());
+	while (bitStream.isAvailable(8)) {
+	    int data = bitStream.getInt(8);
+	    //System.out.println(" " + data + " " + correctEncoding[n]);
+	    n++;
+	}	
     }
 
     public void testProtocol()
