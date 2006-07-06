@@ -77,6 +77,12 @@
 			<fileset dir="${source.libraries}"  casesensitive="yes">
 			</fileset>
 		</copy>
+		
+	    <copy todir="${dist.nomad}">
+	      <fileset dir="src">
+	        <include name="gpl.txt"/>
+	      </fileset>
+	    </copy>
 	</target>
 
 	<target name="compile.nomad" depends="install.resources" description="Compiling nomad">
