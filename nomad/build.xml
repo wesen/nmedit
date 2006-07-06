@@ -63,8 +63,25 @@
 	
 	<target name="install.resources" depends="init" description="Install resource files">
 		<!-- copy data -->
-		<copy todir="${dist.data}" taskname="Copying resources">
-			<fileset dir="${source.data}"  casesensitive="yes">
+		<copy todir="${dist.data}/images/icons/app" taskname="Copying resources">
+			<fileset dir="${source.data}/images/icons/app"  casesensitive="yes">
+			</fileset>
+		</copy>
+		<copy todir="${dist.data}/images/single" taskname="Copying resources">
+			<fileset dir="${source.data}/images/single"  casesensitive="yes">
+			</fileset>
+		</copy>
+		<copy todir="${dist.data}/images/slice" taskname="Copying resources">
+			<fileset dir="${source.data}/images/slice"  casesensitive="yes">
+			</fileset>
+		</copy>
+		<copy todir="${dist.data}/images" taskname="Copying resources">
+			<fileset dir="${source.data}/images"  casesensitive="yes">
+	        <include name="splash.jpg"/>
+			</fileset>
+		</copy>
+		<copy todir="${dist.data}/patch" taskname="Copying resources">
+			<fileset dir="${source.data}/patch"  casesensitive="yes">
 			</fileset>
 		</copy>
 		<copy todir="${dist.conf}" taskname="Copying resources">
