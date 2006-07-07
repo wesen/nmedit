@@ -173,6 +173,24 @@ public abstract class Application
         return properties.getProperty( key );
     }
 
+
+    public static int getIntegerProperty( String key, int alternative )
+    {
+        String sint = properties.getProperty(key);
+        if (sint == null)
+            return alternative;
+        
+        try
+        {
+            return Integer.parseInt(sint);
+        }
+        catch (NumberFormatException e)
+        {
+            e.printStackTrace();
+            return alternative;
+        }
+    }
+
     /**
      * Sets the properties value. If key is null, the property will be removed.
      * 
