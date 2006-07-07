@@ -38,6 +38,7 @@ public final class AppIcons extends ImageTracker {
 	public final static ImageIcon IC_DOCUMENT_OPEN = getImageIcon("open");
 	public final static ImageIcon IC_DOCUMENT_SAVE_AS = getImageIcon("save_as");
 	public final static ImageIcon IC_DOCUMENT_CLOSE = getImageIcon("close");
+    public final static ImageIcon IC_FILE_FOLDER = getImageIcon("folder");
 	public final static ImageIcon IC_APP_HELP = getImageIcon("help-agent");
 	public final static ImageIcon IC_APP_ABOUT = getImageIcon("draw-callouts");
 	public final static ImageIcon IC_APP_EXIT = getImageIcon("exit");
@@ -49,6 +50,11 @@ public final class AppIcons extends ImageTracker {
     public final static ImageIcon IC_NORDMODULAR = getImageIcon("nord-modular");
     public final static ImageIcon IC_PATCH = getImageIcon("patch");
     public final static ImageIcon REFRESH = getImageIcon("refresh");
+    public static final ImageIcon IC_NOTE_SMALL = getImageIcon("insert-note-small");
+    public static final ImageIcon IC_NOTE_BIG = getImageIcon("insert-note");
+    public static final ImageIcon IC_UNDO = getImageIcon("undo");
+    public static final ImageIcon IC_REDO = getImageIcon("redo");
+    public static final ImageIcon IC_MIDI_PORT = getImageIcon("midi-port");
 	
 	public static Image getIcon(String key) {
 		return instance.getImage(key);
