@@ -48,7 +48,7 @@ public class Header extends ListenableAdapter<HeaderEvent>
         data[Format.HEADER_BEND_RANGE] = Format.HEADER_BEND_RANGE_DEFAULT;
         data[Format.HEADER_PORTAMENTO_TIME] = Format.HEADER_PORTAMENTO_TIME_DEFAULT;
         data[Format.HEADER_PORTAMENTO] = Format.HEADER_PORTAMENTO_DEFAULT;
-        data[Format.HEADER_REQUESTED_VOICES] = Format.HEADER_REQUESTED_VOICES_DEFAULT;
+        data[Format.HEADER_REQUESTED_VOICES] = Format.HEADER_REQUESTED_VOICES_DEFAULT+1;
         data[Format.HEADER_SECTION_SEPARATOR_POSITION] = Format.HEADER_SECTION_SEPARATOR_POSITION_DEFAULT;
         data[Format.HEADER_OCTAVE_SHIFT] = Format.HEADER_OCTAVE_SHIFT_DEFAULT;
         data[Format.HEADER_VOICE_RETRIGGER_POLY] = Format.HEADER_VOICE_RETRIGGER_POLY_DEFAULT;
@@ -326,8 +326,8 @@ public class Header extends ListenableAdapter<HeaderEvent>
     {
         if (data[index] != value)
         {
+            eventMessage.valueChanged(data[index], value, index);
             data[index] = value;
-            eventMessage.setValueIndex( index );
             fireEvent( eventMessage );
         }
     }
