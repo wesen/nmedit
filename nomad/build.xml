@@ -25,13 +25,13 @@
 	<property name="source.data" location="src/data" />
 	<property name="source.conf" location="src/conf" />
 	<!-- folder containing plugins -->
-	<property name="source.plugin" location="src/plugin" />
+	<property name="source.themes" location="themes/src" />
 	
 	<!-- temporary build directories -->
 	<property name="ant.build" location="ant.build" />
 	<property name="build.nomad" location="${ant.build}/nomad" />
 	<property name="build.editor" location="${ant.build}/editor" />
-	<property name="build.plugin" location="${ant.build}/plugin" />
+	<property name="build.themes" location="${ant.build}/themes" />
 	
 	<!-- distribution directory -->
 	<property name="ant.dist" location="ant.dist" />
@@ -39,8 +39,8 @@
 	<property name="dist.current" location="${ant.dist}" />
 
 	<property name="dist.nomad" location="${dist.current}/nomad" />
-	<property name="dist.plugin" location="${dist.nomad}/plugin" />
 	<property name="dist.libraries" location="${dist.nomad}/lib" />
+	<property name="dist.themes" location="${dist.libraries}" />
 	<property name="dist.data" location="${dist.nomad}/data" />
 	<property name="dist.conf" location="${dist.nomad}/conf" />
 
@@ -54,7 +54,7 @@
 		<!-- Create the build directory structure used by compile -->
 		<mkdir dir="${build.nomad}"/>
 		<mkdir dir="${build.editor}"/>
-		<mkdir dir="${build.plugin}"/>
+		<mkdir dir="${build.themes}"/>
 	</target>
 
 	<!-- ************************************************** -->
@@ -130,12 +130,9 @@
 		</javac>
 	</target>
 
-	<macrodef name="compile-extension">
-		<attribute name="name" />
-		<sequential>
-			<echo message="Building extension: @{name}" />
-			<mkdir dir="${build.plugin}/@{name}"/>
-			<javac srcdir="${source.plugin}/@{name}" destdir="${build.plugin}/@{name}">
+	<target name="compile.themes" depends="install.resources,compile.nomad" description="Compiling themes">
+			<echo message="Building themes" />
+			<javac srcdir="${source.themes}" destdir="${build.themes}">
 				<compilerarg value="-Xlint:all,-serial" />
 				<classpath>
 					<pathelement path="${java.class.path}" />
@@ -146,15 +143,11 @@
 					</fileset>
 				</classpath>
 			</javac>
-			<copy todir="${build.plugin}/@{name}/plugin/@{name}" >
-				<fileset dir="${source.plugin}/@{name}" includes="**/*.xml" />
-				<fileset dir="${source.plugin}/@{name}" includes="**/*.jpg" />
+			<copy todir="${build.themes}" >
+				<fileset dir="${source.themes}" includes="**/*.xml" />
+				<fileset dir="${source.themes}" includes="**/*.jpg" />
+				<fileset dir="${source.themes}" includes="META-INF/services/net.sf.nmedit.nomad.theme.plugin.ThemePluginProvider" />
 			</copy>			
-		</sequential>
-	</macrodef>
-
-	<target name="compile.plugin" depends="install.resources,compile.nomad" description="Compiling plugins">
-		<compile-extension name="classictheme" />
 	</target>
 
 	<!-- ************************************************** -->
@@ -165,7 +158,7 @@
 		<jar jarfile="${dist.nomad}/nomad.jar" basedir="${build.nomad}">
 	      <manifest> <!-- java -jar example.jar -->
 	        <attribute name="Main-class" value="net.sf.nmedit.nomad.core.nomad.Nomad"/>
-            <attribute name="Class-Path" value="./lib/xpp3_min-1.1.3_8.jar ./lib/forms-1.0.7.jar ./lib/looks-2.0.2.jar ./lib/jnmprotocol.jar ./lib/jpdl.jar ./lib/jpatch.jar ./lib/jsynth.jar ./lib/jpatch.nordmodular.jar ./lib/jsynth.nordmodular.jar ./lib/jmisc.jar ./plugin/classictheme.jar"/>
+            <attribute name="Class-Path" value="./lib/xpp3_min-1.1.3_8.jar ./lib/forms-1.0.7.jar ./lib/looks-2.0.2.jar ./lib/jnmprotocol.jar ./lib/jpdl.jar ./lib/jpatch.jar ./lib/jsynth.jar ./lib/jpatch.nordmodular.jar ./lib/jsynth.nordmodular.jar ./lib/jmisc.jar ./lib/themes.jar"/>
 	      </manifest>
 		</jar> 
 	</target>
@@ -174,57 +167,16 @@
 		<jar jarfile="${dist.nomad}/editor.jar" basedir="${build.editor}">
 	      <manifest> <!-- java -jar example.jar -->
 	        <attribute name="Main-class" value="net.sf.nmedit.nomad.editor.NomadEditor" />
-            <attribute name="Class-Path" value="nomad.jar ./lib/xpp3_min-1.1.3_8.jar ./lib/forms-1.0.7.jar ./lib/looks-2.0.2.jar ./plugin/classictheme.jar"/>
+            <attribute name="Class-Path" value="nomad.jar ./lib/xpp3_min-1.1.3_8.jar ./lib/forms-1.0.7.jar ./lib/looks-2.0.2.jar ./plugin/classictheme.jar ./lib/themes.jar"/>
 	      </manifest>
 	    </jar>
 	</target>
 
-	<macrodef name="release-extension">
-		<attribute name="name" />
-		<sequential>
-			<jar jarfile="${dist.plugin}/@{name}.jar" 
-				basedir="${build.plugin}/@{name}"
-				>
-		      <manifest> <!-- java -jar example.jar -->
-		        <attribute name="Main-class" value="plugin.@{name}.NomadPlugin" />
-		      </manifest>
-		    </jar>
-		</sequential>
-	</macrodef>
-
-	<target name="dist.plugin" depends="compile.plugin" description="Building jar(s) for plugins">
-		<mkdir dir="${dist.plugin}"/>
-		<echo message="Classic Theme" />
-		<release-extension name="classictheme" />
+	<target name="dist.themes" depends="compile.themes" description="Building jar(s) for themes">
+		<mkdir dir="${dist.themes}"/>
+        <jar jarfile="${dist.themes}/themes.jar" basedir="${build.themes}"></jar>
 	</target>
 
-
-	<macrodef name="release-extension-dirty">
-		<attribute name="name" />
-		<sequential>
-			<copy todir="${dist.plugin}">
-				<fileset dir="${build.plugin}/@{name}/plugin" />
-			</copy>
-		</sequential>
-	</macrodef>
-
-        <macrodef name="process-plugin">
-                <attribute name="name" />
-		<sequential>
-		      <echo message="Building Plugin @{name}" />
-                      <compile-extension name="@{name}" />
-                      <release-extension-dirty name="@{name}" />
-		</sequential>
-        </macrodef>
-        
-	<target name="dist.plugin.dirty" depends="compile.plugin" description="Building jar(s) for plugins">
-		<mkdir dir="${dist.plugin}"/>
-                <!-- <echo message="Classic Theme" />
-                <release-extension-dirty name="classictheme" /> -->
-                <process-plugin name="classictheme" />
-                <process-plugin name="g2theme" />
-	</target>
-		
 	<!-- ************************************************** -->
 	<!-- build/install libraries                            -->
 	<!-- ************************************************** -->
@@ -300,7 +252,7 @@
 		<!-- support for jar-plugins is not ready yet
 			<antcall target="dist.plugin" /> 
 		-->
-		<antcall target="dist.plugin.dirty" /> 
+		<antcall target="dist.themes" /> 
 	</target>
 
 	<!-- ************************************************** -->
