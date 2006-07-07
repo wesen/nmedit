@@ -44,12 +44,11 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-
-import sun.awt.VerticalBagLayout;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DGroup;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
@@ -63,8 +62,10 @@ import net.sf.nmedit.nomad.main.ui.fix.StripeEnabledTreeCellRenderer;
 import net.sf.nmedit.nomad.main.ui.fix.TreeStripes;
 import net.sf.nmedit.nomad.main.ui.fix.TreeStripesContainer;
 import net.sf.nmedit.nomad.util.NomadUtilities;
+import net.sf.nmedit.nomad.util.document.Document;
+import net.sf.nmedit.nomad.util.document.DocumentListener;
 
-public class ModuleSidebar extends JPanel implements SwingConstants, Sidebar, SidebarListener
+public class ModuleSidebar extends JPanel implements SwingConstants, Sidebar, SidebarListener, DocumentListener
 { 
 
     private Nomad nomad;
@@ -78,6 +79,7 @@ public class ModuleSidebar extends JPanel implements SwingConstants, Sidebar, Si
     {
         this.nomad = nomad;
         this.sbcontrol = sbcontrol;
+        nomad.getDocumentContainer().addListener(this);
         sbcontrol.addSidebarListener(this);
         setLayout(new BorderLayout());
         
@@ -128,7 +130,7 @@ public class ModuleSidebar extends JPanel implements SwingConstants, Sidebar, Si
 
         prev.setVerticalAutoresizeEnabled(false);
         prev.setHorizontalAutoresizeEnabled(false);
-        prev.setMinimumSize(new Dimension(0, 60));
+        prev.setMinimumSize(new Dimension(0, 80));
         prev.setPreferredSize(prev.getMinimumSize());
         prev.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
 
@@ -194,8 +196,10 @@ public class ModuleSidebar extends JPanel implements SwingConstants, Sidebar, Si
             else if (value instanceof DModule)
             {
                 DModule spec = (DModule)value; 
-                setText(spec.getName());                
-                setIcon(new ImageIcon(spec.getIcon()));
+                setText(spec.getName());
+                ImageIcon icon = new ImageIcon(spec.getIcon()); 
+                setIcon(icon);
+                setDisabledIcon(icon);
             } 
             
             return res;
@@ -237,6 +241,8 @@ public class ModuleSidebar extends JPanel implements SwingConstants, Sidebar, Si
     private JComponent build()
     {
         tree = new JTree(buildT());
+        tree.setEditable(false);
+        tree.setEnabled(false);
         tree.setRootVisible(false);
         tree.setCellRenderer(new STreeCellRenderer());
         tree.setOpaque(true);
@@ -247,6 +253,9 @@ public class ModuleSidebar extends JPanel implements SwingConstants, Sidebar, Si
         tree.addMouseListener(new MouseAdapter(){
            public void mousePressed(MouseEvent e)
            {
+               if (!SwingUtilities.isLeftMouseButton(e))
+                   return;
+               
                DModule sel = null;
                TreePath path = tree.getClosestPathForLocation(e.getX(), e.getY());
                if (e.getY()<tree.getRowCount()*tree.getRowHeight())
@@ -344,6 +353,20 @@ public class ModuleSidebar extends JPanel implements SwingConstants, Sidebar, Si
     public void sidebarDeactivated( SidebarEvent e )
     {
         setPreferredSize(getSize());
+    }
+
+    public void documentSelected( Document document )
+    {
+    }
+
+    public void documentRemoved( Document document )
+    {
+        tree.setEnabled(nomad.getDocumentContainer().getDocumentCount()>0);   
+    }
+
+    public void documentAdded( Document document )
+    {
+        tree.setEnabled(true);   
     }
     
 

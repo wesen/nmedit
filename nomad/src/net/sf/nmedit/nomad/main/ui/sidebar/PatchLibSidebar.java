@@ -25,208 +25,33 @@ package net.sf.nmedit.nomad.main.ui.sidebar;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
+import java.io.FileFilter;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import javax.swing.AbstractListModel;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JToolBar;
-import javax.swing.ListCellRenderer;
-import javax.swing.UIManager;
-import javax.swing.border.Border;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch;
-import net.sf.nmedit.jpatch.io.FileSource;
-import net.sf.nmedit.jpatch.io.PatchDecoder;
-import net.sf.nmedit.jpatch.spi.PatchImplementation;
+import net.sf.nmedit.nomad.core.application.Application;
 import net.sf.nmedit.nomad.main.Nomad;
 import net.sf.nmedit.nomad.main.resources.AppIcons;
-import net.sf.nmedit.nomad.main.ui.DashBorder;
-import net.sf.nmedit.nomad.util.NomadUtilities;
+import net.sf.nmedit.nomad.main.ui.fix.StripeEnabledListCellRenderer;
+import net.sf.nmedit.nomad.main.ui.fix.TreeStripes;
 
 public class PatchLibSidebar extends JPanel implements Sidebar, SidebarListener
 {
-    
-    private JList listView;
-    private JToolBar bar;
-    private File dir = new File("data/patch");
-    private PatchFileListModel model ;
-    private PatchImplementation pi = PatchImplementation.getImplementation("Clavia Nord Modular Patch", "3.03");
-    private Patch[] patches = new Patch[0];
-    private File[] files = new File[0];
-    private Nomad nomad;
-    private SidebarControl sbcontrol;
 
-    public PatchLibSidebar( Nomad nomad, SidebarControl sbcontrol  )
-    {
-        this.nomad = nomad;
-        this.sbcontrol = sbcontrol;
-        sbcontrol.addSidebarListener(this);
-        
-        if (nomad==null) throw new NullPointerException();
-        //setBorder(BorderFactory.createEtchedBorder());
-        setPreferredSize(new Dimension(200,0));
-        setLayout(new BorderLayout());
-        listView = new JList();
-        add(new JScrollPane(listView), BorderLayout.CENTER);
-        bar = new JToolBar();
-        bar.setFloatable(false);
-        add(bar, BorderLayout.NORTH);
-
-        updateView();
-        
-        bar.add(new JButton(AppIcons.REFRESH));
-        
-        listView.setModel(model = new PatchFileListModel());
-        listView.addMouseListener(new ListMouseAction());
-        listView.setCellRenderer(new PatchCellRenderer());
-    }
-    
-    public void setDirectory(File dir)
-    {
-        if (!dir.exists()) throw new RuntimeException("directory does not exist");
-        if (!dir.isDirectory()) throw new RuntimeException("not a directory: "+dir);
-        this.dir  = dir;
-        
-        updateView();
-    }
-
-    private void updateView()
-    {
-        java.util.List<Patch> patchList = new ArrayList<Patch>();
-        files = dir.listFiles();
-        for (File file : files)
-        {
-            if (file.isFile())
-            {
-                try
-                {
-                PatchDecoder decoder = pi.createPatchDecoder(FileSource.class);
-                FileSource fs = new FileSource(new FileReader(file));
-                decoder.decode(fs);
-                Patch p = (Patch)decoder.getPatch();
-                String name = file.getName();
-                
-                int slash = name.lastIndexOf('/');
-                if (slash==-1) slash = name.lastIndexOf('\\');
-                if (slash!=-1) name = name.substring(slash+1);
-                if (name.endsWith(".pch")) name = name.substring(0, name.length()-4);
-                
-                p.setName(name);
-                patchList.add(p);
-                } catch (Exception e)
-                {
-                    
-                }
-            }
-        }
-        patches = patchList.toArray(new Patch[patchList.size()]);
-    }
-    
-    private class PatchFileListModel extends AbstractListModel
-    {
-
-        public int getSize()
-        {
-            return patches.length;
-        }
-
-        public Object getElementAt( int index )
-        {
-            return patches[index];
-        }
-        
-    }
-    
-    private static Border border
-    = BorderFactory.createCompoundBorder(
-      DashBorder.create(false, false, false, true),
-      BorderFactory.createEmptyBorder(2, 2, 2, 2)
-    );
-    
-    private class PatchView extends JPanel
-    {
-        private boolean isSelected;
-        
-
-        public PatchView(Patch p, boolean isSelected)
-        {
-            this.isSelected = isSelected;
-            setOpaque(true);
-            setBorder(border);
-
-            setBackground(isSelected ? UIManager.getColor("List.selectionBackground") : listView.getBackground());
-            
-            setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-            add(label(p.getName(),true));
-            String n = p.getNote();
-            if (n!=null && n.length()>0)
-            {
-                n = NomadUtilities.minimalText(n, 30, isSelected ? 4 : 1);
-                
-                n = "<html>"+ n.replaceAll("\\n", "<br>")+"</html>";
-                
-                add(label(n,false));
-            }
-            
-        }
-        
-        private JLabel label(String text, boolean heading)
-        {
-            JLabel label = new JLabel(text);
-            label.setFont(new Font(heading?"SansSerif":"monospaced",heading ? Font.BOLD : Font.ITALIC, heading?11:9));
-            label.setForeground(isSelected ? UIManager.getColor("List.selectionForeground") : 
-                UIManager.getColor("List.foreground"));
-            return label;
-        }
-        
-    }
-    
-    private class ListMouseAction extends MouseAdapter
-    {     
-        public void mouseClicked(MouseEvent e)
-        {
-            if(e.getClickCount() == 2)
-            {
-                int index = listView.locationToIndex(e.getPoint());
-                if (index>=0 && index<files.length)
-                {
-                    listView.ensureIndexIsVisible(index);
-                    nomad.openPatchFiles(new File[]{files[index]});
-                }
-            }
-      }
-    }
-    
-    private class PatchCellRenderer implements ListCellRenderer
-    {
-
-        public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected, boolean cellHasFocus )
-        {
-            if (value !=null)
-            return new PatchView((Patch)value, isSelected|cellHasFocus);
-            else throw new NullPointerException();
-        }
-        
-    }
-
-    private ImageIcon icon = null;
-    
     public ImageIcon getIcon()
     {
-        return (icon == null) ? icon = AppIcons.getImageIcon("patches") : null;
+        return AppIcons.IC_FILE_FOLDER;
     }
 
     public String getDescription()
@@ -240,17 +65,195 @@ public class PatchLibSidebar extends JPanel implements Sidebar, SidebarListener
     }
 
     public void disposeView()
-    {        
+    {
+        // nothing to do
     }
 
     public void sidebarActivated( SidebarEvent e )
     {
-        
+        // nothing to do
     }
 
     public void sidebarDeactivated( SidebarEvent e )
     {
         setPreferredSize(getSize());
+    }
+    
+    private Nomad nomad;
+    private SidebarControl sbcontrol;
+    private File directory;
+    private File[] files ;
+    private JList listView;
+
+    public final static String KEY_CURRENT_DIRECTORY = "custom.patch.directory.default";
+    
+    public static String getDefaultPatchDirectory()
+    {
+        String value = Application.getProperty(KEY_CURRENT_DIRECTORY);
+        return value == null ? "data/patch" : value;
+    }
+
+    public static File getDefaultPatchDirectoryFile()
+    {
+        return (new File(getDefaultPatchDirectory())).getAbsoluteFile();
+    }
+
+    public static void setDefaultPatchDirectory( File currentDirectory )
+    {
+        if (currentDirectory.isDirectory())
+            Application.setProperty(KEY_CURRENT_DIRECTORY, currentDirectory.getAbsolutePath());
+    }
+    
+    public PatchLibSidebar( Nomad nomad, SidebarControl sbcontrol  )
+    {
+        this.nomad = nomad;
+        if (nomad==null) throw new NullPointerException();
+        
+        this.sbcontrol = sbcontrol;
+        sbcontrol.addSidebarListener(this);
+
+
+        setPreferredSize(new Dimension(200,0));
+        setLayout(new BorderLayout());
+        listView = new JList();
+        add(new JScrollPane(listView), BorderLayout.CENTER);
+
+        listView.setModel(new PatchFileListModel());
+        listView.addMouseListener(new ListMouseAction());
+        listView.setCellRenderer(new PatchFileCellRenderer());
+        
+        setDirectory(getDefaultPatchDirectoryFile());
+    }
+    
+    public File getDirectory()
+    {
+        return directory;
+    }
+    
+    public void setDirectory(File dir)
+    {
+        if (dir==null) return;
+        this.directory = dir;
+        this.files = dir.listFiles(new PatchFileFilter());
+        Arrays.<File>sort(files, new FileComparator());
+        
+        // TODO how to update list ???
+        //listView.setModel(listView.getModel());
+        listView.repaint();
+        listView.revalidate();
+    }
+    
+    private class FileComparator implements Comparator<File>
+    {
+
+        public int compare( File a, File b )
+        {
+            if (a.isDirectory() && !(b.isDirectory()))
+            {
+                return -1;
+            }
+            else if ((!a.isDirectory()) && b.isDirectory())
+            {
+                return 1;
+            }
+            else
+            {
+                return a.toString().compareTo(b.toString());
+            }
+        }
+        
+    }
+    
+    private class PatchFileFilter implements FileFilter
+    {
+        public boolean accept( File pathname )
+        {
+            return (pathname.isDirectory() || pathname.getName().toLowerCase().endsWith(".pch"));
+        }
+    }
+    
+    private class PatchFileListModel extends AbstractListModel 
+    {
+
+        public int getSize()
+        {
+            return files.length+1;
+        }
+
+        public Object getElementAt( int index )
+        {
+            return index==0 ? directory.getParentFile() : files[index-1];
+        }
+        
+    }
+
+    private class ListMouseAction extends MouseAdapter
+    {     
+        public void mouseClicked(MouseEvent e)
+        {
+            if(e.getClickCount() == 2)
+            {
+                int index = listView.locationToIndex(e.getPoint());
+                if (index>=0 && index<listView.getModel().getSize())
+                {
+                    listView.ensureIndexIsVisible(index);
+                    if (index == 0)
+                    {
+                        setDirectory(directory.getAbsoluteFile().getParentFile());
+                    }
+                    else
+                    {
+                        File file = files[index-1];
+                        if (file.isDirectory())
+                        {
+                            setDirectory(file);
+                        }
+                        else
+                        {
+                            nomad.openPatchFiles(new File[]{file});
+                        }
+                    }
+                }
+            }
+      }
+    }
+    
+    private class PatchFileCellRenderer extends StripeEnabledListCellRenderer
+    {
+
+        public PatchFileCellRenderer( )
+        {
+            super( TreeStripes.AlternatingStripes.createSoftBlueStripes() );
+        }
+
+        private ImageIcon fileIcon = AppIcons.IC_DOCUMENT_NEW; // TODO use other constant
+        private ImageIcon dirIcon = AppIcons.IC_FILE_FOLDER;
+        
+        public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected, boolean cellHasFocus )
+        {
+            if (value == null)
+            {
+                return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            }
+            File file = (File) value;
+            String label = file.getName();
+            int sep = label.lastIndexOf('/');
+            if (sep<0) sep = label.lastIndexOf('\\');
+            if (sep>0) label = label.substring(sep);
+            /*if (label.toLowerCase().endsWith(".pch"))
+                label = label.substring(0, label.length()-4);*/
+            
+            super.getListCellRendererComponent(list, index == 0 ? ".." : label, index, isSelected, cellHasFocus);
+            
+            setIcon((index == 0 || file.isDirectory())?dirIcon:fileIcon);
+            
+            /*if (value !=null)
+            return new PatchView((Patch)value, isSelected|cellHasFocus);
+            else throw new NullPointerException();*/
+            
+            return this;
+        }
+        
     }
 
 }

@@ -46,15 +46,22 @@ public abstract class ModuleDragSource implements DragGestureListener, DragSourc
     public static final DataFlavor ModuleInfoFlavor = new DataFlavor("nomad/ModuleInfoFlavor", "Nomad ModuleInfoFlavor");
 
     private DModule source = null;
+    private JComponent component;
     
-    public ModuleDragSource(JComponent source) {
+    public ModuleDragSource(JComponent source)
+    {
+        this.component = source;
         dragSource = DragSource.getDefaultDragSource();
         dragSource.createDefaultDragGestureRecognizer(source, dragAction, this);
     }
 
-    public void dragGestureRecognized(DragGestureEvent dge) {
-        source = locateModuleInfo(dge);
-        if (source!=null) dge.startDrag(DragSource.DefaultCopyDrop, this, this);
+    public void dragGestureRecognized(DragGestureEvent dge) 
+    {
+        if (component.isEnabled())
+        {
+            source = locateModuleInfo(dge);
+            if (source!=null) dge.startDrag(DragSource.DefaultCopyDrop, this, this);
+        }
     }
 
     public void dragEnter(DragSourceDragEvent dsde) { }

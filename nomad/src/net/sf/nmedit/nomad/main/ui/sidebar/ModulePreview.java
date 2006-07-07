@@ -22,10 +22,8 @@
  */
 package net.sf.nmedit.nomad.main.ui.sidebar;
 
-import java.awt.Component;
-import java.awt.Graphics;
+import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 
@@ -33,7 +31,6 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 import net.sf.nmedit.nomad.patch.ui.ModuleUI;
 import net.sf.nmedit.nomad.theme.ModuleBuilder;
-import net.sf.nmedit.nomad.theme.component.NomadComponent;
 import net.sf.nmedit.nomad.util.graphics.GraphicsToolkit;
 
 public class ModulePreview extends ImagePreview
@@ -65,32 +62,12 @@ public class ModulePreview extends ImagePreview
                     ui.setPreferredSize(ui.getSize());
                     
                     image = GraphicsToolkit.createCompatibleBuffer(ui.getWidth(), ui.getHeight(), Transparency.TRANSLUCENT);
-                    Graphics2D g2 = image.createGraphics(); 
+                    Graphics2D g2 = image.createGraphics();
+                    g2.setColor(Color.BLACK);
+                    g2.fillRect(0,0,ui.getWidth(), ui.getHeight());
                     try
                     {
-                        /*
-                        ui.repaint();
-
-                        for (Component c : ui.getComponents())
-                        {
-                            if (c instanceof NomadComponent)
-                            {
-                                ((NomadComponent)c).repaint();
-                            }
-                        }*/
-                        
-                        ui.paint(g2);
-
-                        for (Component c : ui.getComponents())
-                        {
-                            if (c instanceof NomadComponent)
-                            {
-                                Point p = c.getLocation();
-                                Graphics gtmp = g2.create(p.x, p.y, c.getWidth(), c.getHeight());
-                                ((NomadComponent)c).paint(gtmp);
-                                gtmp.dispose();
-                            }
-                        }
+                        ui.print(g2);
 
                     } 
                     catch (Exception e)

@@ -24,23 +24,29 @@ package net.sf.nmedit.nomad.main.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch;
-import net.sf.nmedit.nomad.patch.ui.PatchUI;
+import net.sf.nmedit.nomad.main.Nomad;
+import net.sf.nmedit.nomad.main.action.ShowNoteDialogAction;
+import net.sf.nmedit.nomad.patch.ui.PatchDocument;
 import net.sf.nmedit.nomad.util.document.Document;
 import net.sf.nmedit.nomad.util.document.DocumentListener;
 import net.sf.nmedit.nomad.util.document.DocumentManager;
@@ -48,9 +54,6 @@ import net.sf.nmedit.nomad.util.document.DocumentManager;
 public class PatchSection extends HeaderSection implements DocumentListener
 {
 
-    private JProgressBar
-        load;
-    
     private JTextField
         pName;
 
@@ -63,19 +66,16 @@ public class PatchSection extends HeaderSection implements DocumentListener
     
     private Patch patch = null;
     private Document document = null;
+    private Nomad nomad;
     
-    public PatchSection( String title )
+    public PatchSection( Nomad nomad, String title, ShowNoteDialogAction action )
     {
         super( title );
+        this.nomad = nomad;
         JComponent pane = getContentPane();
-        pane.setLayout(new BoxLayout(pane, BoxLayout.LINE_AXIS));//new GridLayout(1, 0, 2, 2));
+        pane.setLayout(new BoxLayout(pane, BoxLayout.X_AXIS));//new GridLayout(1, 0, 2, 2));
 
-        load = new JProgressBar();
-        load.setMinimum(0);
-        load.setMaximum(100);
-        load.setValue(40);
-
-        pName = new JTextField("Name");
+        pName = new JTextField(new LimitedText(16), "Name", 16);
         pName.setMinimumSize(new Dimension(80, 20));
         pName.addKeyListener(new KeyListener(){
             public void keyTyped( KeyEvent e )
@@ -100,8 +100,11 @@ public class PatchSection extends HeaderSection implements DocumentListener
             {
                 if (patch!=null)
                 {
-                    pName.setBackground(
-                            patch.getName().equals(pName.getText()) ?
+                    String name = patch.getName();
+                    if (name == null) name = "";
+                    pName.setBackground
+                    (
+                            name.equals(pName.getText()) ?
                             Color.WHITE:Color.RED
                     );
                 }   
@@ -112,6 +115,7 @@ public class PatchSection extends HeaderSection implements DocumentListener
                 if (patch!=null)
                 {
                     patch.setName(pName.getText());
+                    PatchSection.this.nomad.updateTitle(patch);
                 }
             }});
         
@@ -129,9 +133,6 @@ public class PatchSection extends HeaderSection implements DocumentListener
             }
             
         });
-        /*
-        pane.add(new JLabel("PVA:"));        
-        pane.add(load);*/
 
         pane.add(new JLabel("Name:"));
         pane.add(pName);
@@ -139,8 +140,34 @@ public class PatchSection extends HeaderSection implements DocumentListener
         pane.add(new JLabel("Voices:"));
         pane.add(pVoices);
         
+        pane.add(new JButton(action));
+        
         updateValues();
+    } 
+    
+    private class LimitedText extends DefaultStyledDocument {
+        
+        private int maxCharacters;
+     
+        public LimitedText(int maxCharacters) 
+        {
+            this.maxCharacters = maxCharacters;
+        }
+     
+        public void insertString(int offs, String str, AttributeSet a) 
+            throws BadLocationException {
+     
+            //This rejects the entire insertion if it would make
+            //the contents too long. Another option would be
+            //to truncate the inserted string so the contents
+            //would be exactly maxCharacters in length.
+            if ((getLength() + str.length()) <= maxCharacters)
+                super.insertString(offs, str, a);
+            else
+                Toolkit.getDefaultToolkit().beep();
+        }
     }
+
 
     public void setDocumentManager(DocumentManager dm)
     {
@@ -177,20 +204,19 @@ public class PatchSection extends HeaderSection implements DocumentListener
         }
         
         document = documentManager.getSelection();
-        PatchUI pui = (PatchUI) document;
-        if (pui==null)
+        PatchDocument doc = (PatchDocument) document;
+        if (doc==null)
         {
             disableView();
             return;
         }
-        patch = pui.getPatch();
+        patch = doc.getPatch();
             
         pVoices.setEnabled(true);
         voices.setValue(patch.getHeader().getRequestedVoices());
         pName.setEnabled(true);
-        pName.setText(patch.getName());
-        load.setEnabled(true);
-        load.setValue(0); // TODO accurate load
+        String n = patch.getName();
+        pName.setText(n == null ? "" : n);
     }
     
     private void disableView()
@@ -198,9 +224,12 @@ public class PatchSection extends HeaderSection implements DocumentListener
         pVoices.setEnabled(false);
         voices.setValue(32);
         pName.setEnabled(false);
-        pName.setText("-");
-        load.setEnabled(false);
-        load.setValue(0);
+        pName.setText("");
+    }
+
+    public void updateView()
+    {
+        updateValues();
     }
     
 }
