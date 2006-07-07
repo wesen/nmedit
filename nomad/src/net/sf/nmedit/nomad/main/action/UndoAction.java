@@ -23,28 +23,31 @@
 package net.sf.nmedit.nomad.main.action;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
 
 import net.sf.nmedit.nomad.main.Nomad;
-import net.sf.nmedit.nomad.main.dialog.NomadAboutDialog;
+import net.sf.nmedit.nomad.main.resources.AppIcons;
 
-public class AboutDialogAction extends NomadAction {
 
-	public AboutDialogAction(Nomad nomad) {
+public class UndoAction extends NomadAction {
+
+	public UndoAction(Nomad nomad) {
 		super(nomad);
 		
-		final String description = "Nomad About-Dialog";
-
-		putValue(NAME, "About Nomad");
-		// putValue(SMALL_ICON, AppIcons.IC_APP_ABOUT);
+		final String description = "Undo";
+		putValue(NAME, "Undo");
+		putValue(SMALL_ICON, AppIcons.IC_UNDO);
 	    putValue(SHORT_DESCRIPTION, description);
 	    putValue(LONG_DESCRIPTION, 	description);
-	    //putValue(ACCELERATOR_KEY, 	KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK));
-		
+	    putValue(ACCELERATOR_KEY, 	KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
+	    putValue(MNEMONIC_KEY, 		new Integer(KeyEvent.VK_U) );
 	}
 
-	public void actionPerformed(ActionEvent event) {
-        NomadAboutDialog dlg = new NomadAboutDialog();
-        dlg.invokeAboutDialog();
+	public void actionPerformed(ActionEvent event) 
+    {
+		getNomad().tryUndo();
 	}
 
 }

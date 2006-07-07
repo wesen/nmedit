@@ -27,15 +27,15 @@ import java.awt.event.ActionEvent;
 import net.sf.nmedit.nomad.main.Nomad;
 import net.sf.nmedit.nomad.main.dialog.NomadAboutDialog;
 
-public class AboutDialogAction extends NomadAction {
 
-	public AboutDialogAction(Nomad nomad) {
+public class LicenseDialogAction extends NomadAction {
+
+	public LicenseDialogAction(Nomad nomad) {
 		super(nomad);
 		
-		final String description = "Nomad About-Dialog";
+		final String description = "License";
 
-		putValue(NAME, "About Nomad");
-		// putValue(SMALL_ICON, AppIcons.IC_APP_ABOUT);
+		putValue(NAME, "License");
 	    putValue(SHORT_DESCRIPTION, description);
 	    putValue(LONG_DESCRIPTION, 	description);
 	    //putValue(ACCELERATOR_KEY, 	KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK));
@@ -44,7 +44,7 @@ public class AboutDialogAction extends NomadAction {
 
 	public void actionPerformed(ActionEvent event) {
         NomadAboutDialog dlg = new NomadAboutDialog();
-        dlg.invokeAboutDialog();
+        dlg.invokeLicenseDialog();
 	}
 
 }

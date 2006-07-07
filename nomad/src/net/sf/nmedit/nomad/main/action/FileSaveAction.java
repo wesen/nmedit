@@ -49,8 +49,9 @@ public class FileSaveAction extends NomadAction {
 		
 	}
 
-	public void actionPerformed(ActionEvent event) {
-		// getNomad().savePatchAs();
+	public void actionPerformed(ActionEvent event) 
+    {
+		getNomad().savePatch();
 	}
 
 }

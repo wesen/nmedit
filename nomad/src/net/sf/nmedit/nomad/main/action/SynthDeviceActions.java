@@ -47,6 +47,7 @@ import net.sf.nmedit.nomad.core.application.Const;
 import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 import net.sf.nmedit.nomad.main.Nomad;
 import net.sf.nmedit.nomad.main.dialog.NomadMidiDialog;
+import net.sf.nmedit.nomad.patch.ui.PatchDocument;
 import net.sf.nmedit.nomad.patch.ui.PatchUI;
 import net.sf.nmedit.nomad.util.document.Document;
 import net.sf.nmedit.nomad.util.document.DocumentListener;
@@ -56,7 +57,7 @@ public class SynthDeviceActions implements SlotListener, SynthStateListener, Doc
 
     private final NordModular device;
     private final Nomad nomad;
-    private final PatchUI[] slotDocs;
+    private final PatchDocument[] slotDocs;
     private Action[] downloadToSlotActions;
     private Action[] uploadFromSlotActions;
     private Collection<Action> actions = new ArrayList<Action>();
@@ -69,7 +70,7 @@ public class SynthDeviceActions implements SlotListener, SynthStateListener, Doc
         this.device = device;
         this.nomad = nomad;
         nomad.getDocumentContainer().addListener(this);
-        slotDocs = new PatchUI[device.getSlotCount()];
+        slotDocs = new PatchDocument[device.getSlotCount()];
         Arrays.fill( slotDocs, null );
 
         downloadToSlotActions = new Action[device.getSlotCount()];
@@ -140,19 +141,17 @@ public class SynthDeviceActions implements SlotListener, SynthStateListener, Doc
         Patch p = slot.getPatch();
         if (p != null)
         {
-            PatchUI tab = PatchUI.newInstance( p );
-            nomad.addPatchUI(tab.getPatch().getName() + " (slot:" + index + ")", tab );
-           // if (nomad.getDocumentContainer().getSelection()==null)
-                nomad.getDocumentContainer().setSelection( tab );
-            /* documents.getSelectedDocument() .setName(documents.getTitleAt( documents
-                                    .getSelectedDocumentIndex() ) ); */
-            slotDocs[index] = tab;
+            PatchDocument doc = new PatchDocument(PatchUI.newInstance( p ));
+            doc.setSlot(slot);
+            nomad.addPatchDocument(doc);
+            nomad.getDocumentContainer().setSelection( doc );
+            slotDocs[index] = doc;
         }
     }
 
     public void slotSelected( Slot slot )
     {
-        PatchUI doc = slotDocs[slot.getID()];
+        PatchDocument doc = slotDocs[slot.getID()];
         if (doc != null) nomad.getDocumentContainer().setSelection( doc );
     }
 
@@ -202,10 +201,13 @@ public class SynthDeviceActions implements SlotListener, SynthStateListener, Doc
     {
         public void download(Slot slot)
         {
-            PatchUI patch = nomad.getActivePatch();
-            if (patch!=null)
+            PatchDocument doc = nomad.getActivePatch();
+            if (doc!=null)
             {
-                slot.setPatch(patch.getPatch());
+                if (doc.getSlot()!=slot)
+                {
+                    slot.setPatch(doc.getPatch());
+                }
                 slot.sendPatchMessage();
             }
         }
@@ -221,9 +223,11 @@ public class SynthDeviceActions implements SlotListener, SynthStateListener, Doc
 
         public void actionPerformed( ActionEvent e )
         {
-            PatchUI patch = nomad.getActivePatch();
-            if (patch!=null)
-                download(device.getSlot(device.getActiveSlotID()));
+            PatchDocument doc = nomad.getActivePatch();
+            if (doc!=null)
+            {
+               download(device.getSlot(device.getActiveSlotID()));
+            }
         }
     }
 
@@ -248,26 +252,6 @@ public class SynthDeviceActions implements SlotListener, SynthStateListener, Doc
         public void actionPerformed( ActionEvent e )
         {
             device.getSlot(getSlot().getID()).sendGetPatchMessage();
-
-            /*
-            Patch p = device.getSlot(device.getActiveSlotID())
-            .getPatch();
-
-            if (p == null)
-            {
-                System.err.println( "no patch data" );
-                return;
-            }
-
-            PatchUI tab = PatchUI.newInstance( p );
-            nomad.addPatchUI( tab.getPatch().getName(), tab );
-            nomad.getDocumentContainer().setSelection( tab );*/
-            /*
-            documents.getSelectedDocument()
-                    .setName(
-                            documents.getTitleAt( documents
-                                    .getSelectedDocumentIndex() ) );
-            */
         }
         
         public abstract Slot getSlot();

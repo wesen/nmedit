@@ -27,6 +27,8 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
+import net.sf.nmedit.nomad.main.resources.AppIcons;
+
 
 public class SynthSetupAction extends NomadAction {
 
@@ -39,7 +41,7 @@ public class SynthSetupAction extends NomadAction {
 		final String description = "Midi device settings";
 
 		putValue(NAME, "Setup...");
-		//putValue(SMALL_ICON, AppIcons.IC_APP_EXIT);
+		putValue(SMALL_ICON, AppIcons.IC_MIDI_PORT);
 	    putValue(SHORT_DESCRIPTION, description);
 	    putValue(LONG_DESCRIPTION, 	description);
 	    putValue(ACCELERATOR_KEY, 	KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK));

@@ -35,14 +35,14 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import net.sf.nmedit.nomad.plugin.NomadPlugin;
-import net.sf.nmedit.nomad.plugin.PluginManager;
+import net.sf.nmedit.nomad.theme.plugin.ThemePluginManager;
+import net.sf.nmedit.nomad.theme.plugin.ThemePluginProvider;
 
 public class ThemePluginSelector
 {
     private final  String DEFAULT_PLUGIN_NAME="Classic Theme";
     private final List<ChangeListener> pluginSelectListenerList;
-    private NomadPlugin selectedPlugin = null;
+    private ThemePluginProvider selectedPlugin = null;
     private Action[] selectPluginActions;
 
     public ThemePluginSelector()
@@ -50,26 +50,23 @@ public class ThemePluginSelector
         pluginSelectListenerList = new ArrayList<ChangeListener>();
 
         List<Action> actions = new ArrayList<Action>();
-        for (int i=0;i<PluginManager.getPluginCount();i++) 
+        for (int i=0;i<ThemePluginManager.getPluginCount();i++) 
         {
-            NomadPlugin plugin = PluginManager.getPlugin(i);
-            if (plugin.getFactoryType()==NomadPlugin.NOMAD_FACTORY_TYPE_UI) 
+            ThemePluginProvider plugin = ThemePluginManager.getPlugin(i);
+            actions.add(new SelectPluginAction(plugin));
+            if (plugin.getName().equals(DEFAULT_PLUGIN_NAME))
             {
-                actions.add(new SelectPluginAction(plugin));
-                if (plugin.getName().equals(DEFAULT_PLUGIN_NAME))
-                {
-                    selectedPlugin = plugin;
-                }
+                selectedPlugin = plugin;
             }
         }
         selectPluginActions = actions.toArray(new Action[actions.size()]);
     }
 
-    public NomadPlugin getSelectedPlugin() {
+    public ThemePluginProvider getSelectedPlugin() {
         return selectedPlugin;
     }
     
-    public void setSelectedPlugin(NomadPlugin plugin) 
+    public void setSelectedPlugin(ThemePluginProvider plugin) 
     {
         if (this.selectedPlugin != plugin)
         {
@@ -124,9 +121,9 @@ public class ThemePluginSelector
     
     private class SelectPluginAction extends AbstractAction
     {
-        private final NomadPlugin plugin;
+        private final ThemePluginProvider plugin;
 
-        public SelectPluginAction(NomadPlugin plugin)
+        public SelectPluginAction(ThemePluginProvider plugin)
         {
             this.plugin = plugin;
             putValue(NAME, plugin.getName());
@@ -140,7 +137,7 @@ public class ThemePluginSelector
     
     private class PluginMenuItem extends JRadioButtonMenuItem implements ChangeListener
     {
-        private final NomadPlugin plugin;
+        private final ThemePluginProvider plugin;
         
         public PluginMenuItem(Action action)
         {
