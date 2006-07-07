@@ -22,8 +22,11 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ListenableAdapter;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.PatchEventS;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.history.impl.PatchHistoryImpl;
+import net.sf.nmedit.jpatch.history.PatchHistory;
 import net.sf.nmedit.jpatch.spi.PatchImplementation;
-
 
 /**
  * Implementation of the (virtual) patch according to the patch file format 3.0 specification.
@@ -31,7 +34,7 @@ import net.sf.nmedit.jpatch.spi.PatchImplementation;
  * @author Christian Schneider
  * TODO handle Micro Modular
  */
-public class Patch implements net.sf.nmedit.jpatch.Patch
+public class Patch extends ListenableAdapter<PatchEventS> implements net.sf.nmedit.jpatch.Patch
 {
 
     //   setPolyphonie(1-32)
@@ -89,6 +92,8 @@ public class Patch implements net.sf.nmedit.jpatch.Patch
     private NoteSet noteSet;
 
     private final PatchImplementation impl;
+    private PatchHistory history;
+    private PatchEventS event = new PatchEventS(this);
     
     /**
      * Creates a new patch.
@@ -104,8 +109,12 @@ public class Patch implements net.sf.nmedit.jpatch.Patch
         
         polyVoiceArea = new VoiceArea(this);
         commonVoiceArea = new VoiceArea(this);
-        name = "";
+        name = null;
         note = "";
+        
+        // TODO allow installing/uninstalling history
+        // TODO default: don't install history
+        this.history = new PatchHistoryImpl(this);
     }
     
     /**
@@ -174,13 +183,38 @@ public class Patch implements net.sf.nmedit.jpatch.Patch
         return name;
     }
     
+    private boolean eqString(String a, String b)
+    {
+        if (a!=b)
+        {
+            if (a==null)
+            {
+                a = b;
+                b = null;
+            }
+            if (a.length()==0) return true; // null == empty-string 
+            
+            return false; // x!=null
+        }
+        if (a==b) return true;  // null==null||a==a
+        // a != null & b != null
+        return a.equals(b);
+    }
+    
     /**
      * Sets the patch's name.
      * @param name the new name
      */
     public void setName(String name)
     {
-        this.name = name;
+        if (!eqString(this.name, name))
+        {
+            event.nameChanged(this.name, name);
+            
+            this.name = name;
+            
+            fireEvent(event);
+        }
     }
     
     /**
@@ -198,7 +232,14 @@ public class Patch implements net.sf.nmedit.jpatch.Patch
      */
     public void setNote(String text)
     {
-        this.note = text == null ? "" : text;
+        if (!eqString(this.note, text))
+        {
+            event.noteChanged(this.note, text);
+            
+            this.note = text == null ? "" : text;
+    
+            fireEvent(event);
+        }
     }
     
     /**
@@ -214,6 +255,11 @@ public class Patch implements net.sf.nmedit.jpatch.Patch
     public PatchImplementation getPatchImplementation()
     {
         return impl;
+    }
+
+    public PatchHistory getHistory()
+    {
+        return history;
     }
 
 }
