@@ -22,49 +22,84 @@
  */
 package net.sf.nmedit.nomad.main.dialog;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import net.sf.nmedit.nomad.core.application.Application;
 import net.sf.nmedit.nomad.main.resources.AppIcons;
-import net.sf.nmedit.nomad.plugin.NomadPlugin;
-import net.sf.nmedit.nomad.plugin.PluginManager;
+import net.sf.nmedit.nomad.theme.plugin.ThemePluginManager;
+import net.sf.nmedit.nomad.theme.plugin.ThemePluginProvider;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
 public class NomadAboutDialog extends NomadDialog implements MouseListener {
 
+    private JTabbedPane tabbedPane;
+    
 	public NomadAboutDialog() 
     {
 		setTitle("About");
         setImage(AppIcons.IC_NORDMODULAR);
-		setScrollbarEnabled(true);
+        setPackingEnabled(false);
+        setPreferredSize(new Dimension(540,300));
+		setScrollbarEnabled(false);
+        
+        tabbedPane = new JTabbedPane();
+        tabbedPane.setBorder(null);
+        setLayout(new BorderLayout());
+        add(BorderLayout.CENTER, tabbedPane);
+        tabbedPane.addTab("About", buildAboutComponent());
+        tabbedPane.addTab("License", buildLicenseComponent());
+	}
+
+    private JComponent buildAboutComponent()
+    {
+        JPanel panel = new JPanel();
 
         FormLayout layout = new FormLayout("pref, 20px, pref:grow", "");
-        DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
+        DefaultFormBuilder builder = new DefaultFormBuilder(layout, panel);
         builder.setDefaultDialogBorder();
         
         builder.appendSeparator("Nomad");
         addTextProperty(builder, "Version", Application.getVersion());
         builder.append("Homepage", createCopyTextLabel("http://nmedit.sourceforge.net"));
-        
+
         builder.appendSeparator("Main Programming");
         addTextProperty(builder, "Marcus.T. Andersson");
-        addTextProperty(builder, "Jan Punter");
         addTextProperty(builder, "Christian Schneider");
         addTextProperty(builder, "Ian Hoogeboom");
         
-        for (int i=0;i<PluginManager.getPluginCount();i++)
+        builder.appendSeparator("Reverse Engineering");
+        addTextProperty(builder, "Marcus.T. Andersson");
+        addTextProperty(builder, "Jan Punter");
+        
+        builder.appendSeparator("Artwork");
+        builder.append("Icons 1", createCopyTextLabel("http://jimmac.musichall.cz/"));
+        addTextProperty(builder, "Icons 2", "Christian Schneider");
+        addTextProperty(builder, "Splash Screen", "Tobias Weinald");
+        
+        for (int i=0;i<ThemePluginManager.getPluginCount();i++)
         {
-            NomadPlugin plugin = PluginManager.getPlugin(i);
+            ThemePluginProvider plugin = ThemePluginManager.getPlugin(i);
             builder.appendSeparator(plugin.getName());
 
             addTextProperty(builder, "Description", plugin.getDescription());
@@ -75,7 +110,37 @@ public class NomadAboutDialog extends NomadDialog implements MouseListener {
                 addTextProperty(builder, author);
             }
         }
-	}
+        
+        return new JScrollPane(panel);
+    }
+    
+    private JComponent buildLicenseComponent()
+    {
+        InputStream is = getClass().getResourceAsStream("/gpl.txt");
+        StringBuffer license = new StringBuffer();
+        if (is!=null)
+        {
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            String line;
+            try
+            {
+                while ((line=br.readLine())!=null)
+                {
+                    license.append(line);
+                    license.append("\n");
+                }
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        
+        JTextArea area = new JTextArea(license.toString());
+        area.setFont(new Font("monospaced", Font.PLAIN, getFont().getSize()));
+        area.setEditable(false);
+        return new JScrollPane(area);
+    }
     
     private void addTextProperty(DefaultFormBuilder builder, String title, String text)
     {
@@ -97,9 +162,14 @@ public class NomadAboutDialog extends NomadDialog implements MouseListener {
         return tf;
     }
     
-	public void invoke() {
-		super.invoke(new String[]{":Close"});
-	}
+    public void invokeAboutDialog() {
+        super.invoke(new String[]{":Close"});
+    }
+
+    public void invokeLicenseDialog() {
+        tabbedPane.setSelectedIndex(1);
+        super.invoke(new String[]{":Close"});
+    }
 
     private static class CopyTextPopupBuilder implements ActionListener 
     {
