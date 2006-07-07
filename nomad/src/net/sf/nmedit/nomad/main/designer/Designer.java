@@ -34,7 +34,6 @@ import javax.swing.plaf.FontUIResource;
 import com.jgoodies.looks.Options;
 import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
-import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jgoodies.looks.plastic.theme.DesertBluer;
 
 public class Designer
@@ -114,9 +113,7 @@ public class Designer
             Plastic3DLookAndFeel.setPlasticTheme(new DesertBluer());
             Plastic3DLookAndFeel.setTabStyle(Plastic3DLookAndFeel.TAB_STYLE_METAL_VALUE);
             //Plastic3DLookAndFeel.setHighContrastFocusColorsEnabled(false);
-
             UIManager.put(Options.POPUP_DROP_SHADOW_ENABLED_KEY, true);
-            
             UIManager.setLookAndFeel(Options.PLASTICXP_NAME);
             
             setDefaultFont( new FontUIResource( "sansserif", Font.PLAIN, 11 ) );
