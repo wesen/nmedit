@@ -255,7 +255,7 @@ public class Format
      * header-value index 
      */
     public final static int HEADER_REQUESTED_VOICES                 = 7;
-    public final static int HEADER_REQUESTED_VOICES_DEFAULT         = 16;
+    public final static int HEADER_REQUESTED_VOICES_DEFAULT         = 1-1;
     
     /**
      * header-value index 
@@ -762,5 +762,17 @@ public class Format
     }
 
 
+    public static String getUnescapedNote(String s)
+    {
+        // replaces '\[' with '['
+        return s.replaceAll("\\\\\\[", "[");
+    }
+    
+    public static String getEscapedNote(String s)
+    {
+        // replaces '[' with '\['
+        return s.replaceAll("\\[", "\\\\[");
+    }
+    
     
 }
