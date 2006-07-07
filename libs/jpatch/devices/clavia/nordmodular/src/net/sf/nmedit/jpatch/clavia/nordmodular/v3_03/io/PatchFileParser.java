@@ -585,9 +585,7 @@ public class PatchFileParser extends PatchParser
     }
 
     private final static String closingNotesHeader = "[/"
-                                                           + Format
-                                                                   .getSectionName( Format.SEC_NOTES )
-                                                           + "]";
+        + Format.getSectionName( Format.SEC_NOTES ) + "]";
 
     private int notes() throws PatchParserException, IOException
     {
@@ -612,7 +610,7 @@ public class PatchFileParser extends PatchParser
                     str.append(ch);
             }
         }
-        
+
         if ((indicator == '[') && (str.toString().compareTo( closingNotesHeader ) == 0))
         {
             if (!newLine())
@@ -629,6 +627,8 @@ public class PatchFileParser extends PatchParser
         {
             throw expectedNewLine();
         }
+        
+        str.replace(0, str.length(), Format.getUnescapedNote(str.toString()));
         
         return TK_RECORD;
     }

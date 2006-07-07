@@ -298,6 +298,8 @@ public class VirtualTranscoder extends Transcoder<Patch, PatchBuilder>
         {   // notes
             
             String notes = patch.getNote();
+            if (notes==null) notes = "";
+            else notes = Format.getEscapedNote(notes);
 
             if (notes.length()>0)
             {
