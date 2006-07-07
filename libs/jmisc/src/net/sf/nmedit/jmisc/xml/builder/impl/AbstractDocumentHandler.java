@@ -27,6 +27,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import net.sf.nmedit.jmisc.xml.builder.DocumentHandler;
 import net.sf.nmedit.jmisc.xml.builder.ElementHandler;
@@ -122,6 +124,15 @@ public abstract class AbstractDocumentHandler implements DocumentHandler
     {
         XmlPullParser parser = getParser();
         parser.setInput(new BufferedReader(new FileReader(file)));
+        processDocument(parser);
+    }
+
+    public void processDocument( InputStream in )
+    throws XmlPullParserException, 
+    XMLProcessingException, IOException, FileNotFoundException
+    {
+        XmlPullParser parser = getParser();
+        parser.setInput(new InputStreamReader(in));
         processDocument(parser);
     }
     
