@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.sf.nmedit.jnmprotocol.PatchMessage;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Format;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Header;
@@ -143,7 +142,11 @@ public class DirectBitStreamBuilder
 
       // Name section
       beginSection(Format.S_NAME_1 /*55*/);
-      appendName(patch.getName());
+      {
+          String name = patch.getName();
+          if (name == null) name = "";
+          appendName(name);
+      }
       endSection();
       
       // Header section
