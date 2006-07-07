@@ -98,6 +98,7 @@
 	    <copy todir="${dist.nomad}">
 	      <fileset dir="src">
 	        <include name="gpl.txt"/>
+	        <include name="README.txt"/>
 	      </fileset>
 	    </copy>
 	</target>
