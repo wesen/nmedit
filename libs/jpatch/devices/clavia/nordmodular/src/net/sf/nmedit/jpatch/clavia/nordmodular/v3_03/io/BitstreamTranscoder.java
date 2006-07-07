@@ -179,7 +179,7 @@ public class BitstreamTranscoder extends Transcoder<BitStream, PatchBuilder>
                 data[Format.HEADER_VOICE_RETRIGGER_POLY]=sectionData.getVariable("pretrigger");
                 data[Format.HEADER_VOICE_RETRIGGER_COMMON]=sectionData.getVariable("cretrigger");
                 data[Format.HEADER_BEND_RANGE]=sectionData.getVariable("brange");
-                data[Format.HEADER_REQUESTED_VOICES]=sectionData.getVariable("voices");
+                data[Format.HEADER_REQUESTED_VOICES]=sectionData.getVariable("voices")+1;
                 data[Format.HEADER_SECTION_SEPARATOR_POSITION]=sectionData.getVariable("sspos");
                 data[Format.HEADER_OCTAVE_SHIFT]=sectionData.getVariable("octave");
 
