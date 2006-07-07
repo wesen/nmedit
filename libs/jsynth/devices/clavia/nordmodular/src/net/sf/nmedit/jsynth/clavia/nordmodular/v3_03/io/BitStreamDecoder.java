@@ -71,6 +71,10 @@ public class BitStreamDecoder implements PatchDecoder
         if (bsSource.isComplete())
         {
             this.patch = bsSource.patch;
+
+            // TODO disable history while building
+            patch.getHistory().clear();
+            patch.getHistory().setModified(false);
         }
         
     }

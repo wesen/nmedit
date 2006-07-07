@@ -66,6 +66,9 @@ public class PatchFileDecoder implements PatchDecoder
             t.transcode(parser, builder);
             
             patch = builder.getPatch();
+            // TODO disable history while building
+            patch.getHistory().clear();
+            patch.getHistory().setModified(false);
         }
         catch (TranscoderException e)
         {
