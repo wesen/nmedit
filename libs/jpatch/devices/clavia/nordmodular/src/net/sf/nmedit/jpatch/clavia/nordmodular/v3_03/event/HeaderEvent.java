@@ -29,11 +29,40 @@ public class HeaderEvent extends PatchEvent
 
     private int valueIndex;
     private Header header;
+    private int old;
+    private int newValue;
 
     public HeaderEvent(Header header)
     {
         setID(HEADER_VALUE_CHANGED);
         this.header =  header;
+    }
+    
+    public void valueChanged(int oldValue, int newValue, int valueIndex)
+    {
+        setOldValue(oldValue);
+        setNewValue(newValue);
+        setValueIndex(valueIndex);
+    }
+    
+    private void setNewValue( int newValue )
+    {
+        this.newValue = newValue;
+    }
+
+    public int getNewValue()
+    {
+        return newValue;
+    }
+    
+    public void setOldValue(int old)
+    {
+        this.old = old;
+    }
+    
+    public int getOldValue()
+    {
+        return old;
     }
 
     public void setValueIndex( int index )

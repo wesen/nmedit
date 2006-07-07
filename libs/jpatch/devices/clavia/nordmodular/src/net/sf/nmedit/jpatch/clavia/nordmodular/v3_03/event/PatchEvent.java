@@ -55,8 +55,9 @@ public abstract class PatchEvent
 
     public static final int MORPH_KEYBOARD_ASSIGNMENT_CHANGED = 13;
 
-    public final static int HEADER_VALUE_CHANGED = 14;
-    public final static int PATCH_NAME_CHANGED = 15;
+    public final static int HEADER_VALUE_CHANGED = 30;
+    public final static int PATCH_NAME_CHANGED = 31;
+    public final static int PATCH_NOTE_CHANGED = 32;
 
     public final static int VA_MODULE_ADDED = 16;
     public final static int VA_MODULE_REMOVED = 17;
