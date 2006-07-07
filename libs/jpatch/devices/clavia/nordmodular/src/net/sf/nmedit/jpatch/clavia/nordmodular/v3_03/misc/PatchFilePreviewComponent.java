@@ -57,8 +57,16 @@ public class PatchFilePreviewComponent extends JScrollPane implements PropertyCh
 	        if (info!=null)
 	        {
 	        	String v = ""+info.getVersion();
+                if (v.length()==0)
+                    v = "-";
+                else
+                {
+                    final String start ="version=";
+                    if (v.toLowerCase().startsWith(start))
+                        v = v.substring(start.length());
+                }
                 
-	        	text+=P+"<b>Version:</b> "+(v.length()==0?"-":v)+"</p>";
+	        	text+=P+"<b>Version:</b> "+v+"</p>";
 	        	text+=P+"<b>Notes:</b> ";
 	        	text+="";
 	        	text+=notes(info);
@@ -67,7 +75,6 @@ public class PatchFilePreviewComponent extends JScrollPane implements PropertyCh
 	        text+="</body></html>";
         }
         edPane.setText(text);
-        // edPane.scrollRectToVisible(new Rectangle(0,0,1,1));
     }
     
     private String notes(PatchUtils.PatchInfo info) {
@@ -101,7 +108,9 @@ public class PatchFilePreviewComponent extends JScrollPane implements PropertyCh
         if (update) {
             if (isShowing()) {
                 loadData();
-                repaint();
+                revalidate();
+                repaint();/*
+                scrollRectToVisible(new Rectangle(0,0, 5,5));*/
             }
         }
     }

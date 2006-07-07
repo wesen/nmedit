@@ -137,7 +137,8 @@ public class SynthMessageHandler extends NmProtocolListener implements SynthStat
         }*/
     }
 
-    private void requestSlots() {
+    private void requestSlots() 
+    {
         for (int i=0;i<device.getSlotCount();i++)
             requestSlot(i);
     }
@@ -234,16 +235,17 @@ public class SynthMessageHandler extends NmProtocolListener implements SynthStat
     
     public void messageReceived(PatchListMessage message)
     {
-        System.out.println("PatchListMessage"+message);
+        System.out.println("PatchListMessage:"+message);
     }
     
     public void messageReceived(NewPatchInSlotMessage message)
     {
+        /*
         System.out.println("NewPatchInSlotMessage: " +
                    "slot:" + message.get("slot") + " " +    
-                   "pid:" + message.get("pid"));
-        //int slot = message.get("slot");
-       // requestSlot(slot);
+                   "pid:" + message.get("pid"));*/
+        int slot = message.get("slot");
+        // requestSlot(slot);
     }
     
     public void messageReceived(SlotsSelectedMessage message)

@@ -179,6 +179,7 @@ public class VirtualBuilder implements PatchBuilder
                 if (r.getValueCount() == Format.VALUE_COUNT_HEADER)
                 {
                     Header h = patch.getHeader();
+                    
                     for (int i = r.getValueCount() - 1; i >= 0; i--)
                     {
                         h.setValue( i, r.getValue( i ) );
