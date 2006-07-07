@@ -25,11 +25,17 @@ package net.sf.nmedit.nomad.main.dialog;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.nomad.main.dialog.decoration.ButtonPane;
@@ -115,6 +121,22 @@ public class NomadDialogWindow extends JDialog
         setSize( size );
         invalidate();
 
+
+        //  Handle escape key
+
+        KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false);
+        Action escapeAction = new AbstractAction()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                NomadDialogWindow.this.dialog.setResult(NomadDialog.RESULT_CANCEL);
+                done();
+            }
+        };
+
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKeyStroke, "ESCAPE");
+        getRootPane().getActionMap().put("ESCAPE", escapeAction);
+        
         if (( !dialog.isScrollbarEnabled() ) && ( dialog.isPackingEnabled() ))
         {
             pack();
