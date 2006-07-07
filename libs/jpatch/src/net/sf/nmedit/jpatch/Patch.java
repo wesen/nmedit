@@ -22,11 +22,14 @@
  */
 package net.sf.nmedit.jpatch;
 
+import net.sf.nmedit.jpatch.history.PatchHistory;
 import net.sf.nmedit.jpatch.spi.PatchImplementation;
 
 public interface Patch 
 {
 
     public PatchImplementation getPatchImplementation();
+    
+    public PatchHistory getHistory();
     
 }
