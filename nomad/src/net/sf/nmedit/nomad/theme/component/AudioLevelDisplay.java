@@ -23,6 +23,7 @@
 package net.sf.nmedit.nomad.theme.component;
 
 import java.awt.GradientPaint;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.geom.Point2D;
@@ -34,14 +35,14 @@ public class AudioLevelDisplay extends NomadComponent {
 	public AudioLevelDisplay() {
 		super();
 		setSize(90,5);
-		setDynamicOverlay(true);
 	}
 
 	private final static Point2D.Float gradientStart = new Point2D.Float(1,0);
 	private Point2D.Float gradientStop = new Point2D.Float(0,0);
-	
-	public void paintDecoration(Graphics2D g2) {
-		
+    
+    public void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D)g;
+        
 		g2.setColor(NomadClassicColors.MODULE_BACKGROUND);
 		g2.fillRect(0,0,getWidth()-1,getHeight()-1);
 		
@@ -63,9 +64,7 @@ public class AudioLevelDisplay extends NomadComponent {
 		g2.setColor(NomadClassicColors.MODULE_BACKGROUND.brighter());
 		g2.drawLine(getWidth()-1, 1, getWidth()-1, getHeight()-2); // right
 		
-	}
-	
-	public void paintDynamicOverlay(Graphics2D g2) {
+        // dynamic
 		g2.setColor(NomadClassicColors.AUDIO_LEVEL_DISPLAY_LIGHT);
 		int width = getWidth()-2;
 		int scaledWidth = (int) Math.round(width * getScale());

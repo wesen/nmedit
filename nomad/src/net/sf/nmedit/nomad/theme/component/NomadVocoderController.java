@@ -27,6 +27,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -75,7 +76,6 @@ public class NomadVocoderController extends NomadComponent implements NomadButto
     
 	public NomadVocoderController() {
 		super();
-		setDynamicOverlay(true);
 
 		setFont(new Font("SansSerif", Font.PLAIN, 9));
 		FontMetrics fm = getFontMetrics(getFont());
@@ -84,8 +84,6 @@ public class NomadVocoderController extends NomadComponent implements NomadButto
 		
 		setOpaque(true);
 		setBackground(NomadClassicColors.MODULE_BACKGROUND);
-		
-		setDynamicOverlay(true);
 		
 		behaviour = new NomadButtonArrayBehaviour(this);
 		behaviour.calculateMetrics();
@@ -123,8 +121,8 @@ public class NomadVocoderController extends NomadComponent implements NomadButto
 	}
 	
 	private Border border = NomadBorderFactory.createNordEditor311RaisedButtonBorder();
-	
-	public void paintDynamicOverlay(Graphics2D g2) {
+    public void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D)g;
 		behaviour.calculateMetrics();
 
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);

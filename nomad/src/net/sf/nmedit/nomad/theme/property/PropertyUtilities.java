@@ -26,14 +26,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
 
+import net.sf.nmedit.jmisc.parsing.LexerException;
+import net.sf.nmedit.jmisc.parsing.SimpleLexer;
+import net.sf.nmedit.jmisc.parsing.StringLexer;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DConnector;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DCustom;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.ModuleDescriptions;
-import net.sf.nmedit.nomad.util.lexer.LexerException;
-import net.sf.nmedit.nomad.util.lexer.SimpleLexer;
-import net.sf.nmedit.nomad.util.lexer.StringLexer;
 
 
 public class PropertyUtilities

@@ -23,6 +23,7 @@
 package net.sf.nmedit.nomad.theme.component;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
@@ -50,7 +51,6 @@ public class NomadResetButton extends NomadControl {
 	
 	public NomadResetButton() 
     {
-		setDynamicOverlay(true);
 		setDefaultSize(9,6);
 		setSize(9,6);
 		setSizePropertyEnabled(false);
@@ -188,17 +188,16 @@ public class NomadResetButton extends NomadControl {
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
 	}
-	
-	public void paintDecoration(Graphics2D g2) {
+    public void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D)g;
 		configureGraphics(g2);
 		m.update(getWidth(), getHeight());
 		g2.setColor(getBackground());
 		g2.fill(m.polygonFill);
 		g2.setColor(clOutline);
 		g2.draw(m.polygonDraw);
-	}
-	
-	public void paintDynamicOverlay(Graphics2D g2) {
+
+        // dymamic
 		if (inDefaultState()) {
 			configureGraphics(g2);
 			m.update(getWidth(), getHeight());

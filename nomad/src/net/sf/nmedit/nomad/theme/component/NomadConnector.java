@@ -46,7 +46,6 @@ public class NomadConnector extends NomadComponent implements EventListener<Conn
 		super();
         enableEvents(MouseEvent.MOUSE_EVENT_MASK);
 		//setColorFromSignal(DConnector.SIGNAL_AUDIO);
-		setDynamicOverlay(true);
         setDefaultSize(13,13);
 		setSize(13,13);
 		setFocusable(true);

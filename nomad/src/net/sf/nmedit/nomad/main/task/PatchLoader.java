@@ -29,10 +29,11 @@ import java.io.FileReader;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch;
 import net.sf.nmedit.jpatch.io.FileSource;
 import net.sf.nmedit.jpatch.io.PatchDecoder;
+import net.sf.nmedit.jpatch.spi.PatchDecoderProvider;
 import net.sf.nmedit.jpatch.spi.PatchImplementation;
 import net.sf.nmedit.nomad.main.Nomad;
+import net.sf.nmedit.nomad.patch.ui.PatchDocument;
 import net.sf.nmedit.nomad.patch.ui.PatchUI;
-
 
 public class PatchLoader {
 
@@ -56,31 +57,51 @@ public class PatchLoader {
     public static String extractPatchName(String fileName)
     {
         String patchName = fileName.substring(0,fileName.lastIndexOf(".pch"));
-        patchName = patchName.substring(patchName.lastIndexOf('/')+1);
+        int sep = patchName.lastIndexOf('/');
+        if (sep<0) sep = patchName.lastIndexOf('\\');
+        if (sep>=0)
+            patchName = patchName.substring(sep+1);
+        
         return patchName;
     }
 
     public void loadPatch(String[] files) {
+        PatchImplementation impl = nomad.getPatchImplementation();
+        PatchDecoderProvider provider;
+        try
+        {
+            provider = impl.getPatchDecoderProvider(FileSource.class);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return ;
+        }
+        
+        PatchDocument first = null;
+        
         for (String name:files)
         {
             try 
             {
-                PatchImplementation impl =
-                nomad.getPatchImplementation();
-                
-                PatchDecoder decoder = impl.createPatchDecoder(FileSource.class);
+                PatchDecoder decoder = provider.createDecoder(impl);
                 
                 FileReader fr = new FileReader(name);
                 decoder.decode( new FileSource(fr) );
                 
                 Patch patch = (Patch) decoder.getPatch();
                 
-                PatchUI tab = PatchUI.newInstance(patch);
-                patch.setName(extractPatchName(name));
-                tab.setName(extractPatchName(name));
+                PatchUI ui = PatchUI.newInstance(patch);
+                PatchDocument doc = new PatchDocument(ui);
+                if (first==null) first = doc;
+                doc.setFile(new File(name));
+                String pName = extractPatchName(name);
+
+                patch.setName(pName);
+                
                 synchronized (nomad)
                 {
-                    nomad.addPatchUI(tab.getName(), tab);
+                    nomad.addPatchDocument(doc);
                 }
                 
                 fr.close();
@@ -96,93 +117,11 @@ public class PatchLoader {
             }
         }
         
+        if (first!=null)
+        {
+            nomad.getDocumentContainer().setSelection(first);
+        }
+        
     }
     
-    /*
-	
-	public void loadPatch(final String[] files) {
-		for (String fileName : files) {
-			fileList.add(new PatchFile(fileName));
-		}
-        
-        final TaskModel model = new TaskModel(){
-            
-            int taskCount = fileList.size();
-            int selection = nomad.getDocumentContainer().getDocumentCount();
-            
-            public String getDescription() {
-                return "Loading Nord Modular patch...";
-            }
-
-            public int getTaskCount() {
-                return taskCount;
-            }
-
-            public String getTaskName(int taskIndex) {
-                return fileList.get(taskIndex).patchName;
-            }
-
-            public void run(int taskIndex) throws Throwable {
-                final PatchFile task = fileList.get(taskIndex);
-                try {
-                    
-                    FileReader fr = new FileReader(task.fileName);
-                    
-                    PatchFileParser parser = new PatchFileParser(fr);
-                    
-                    VirtualBuilder builder = new VirtualBuilder();
-                    
-                    PatchParserTranscoder t = new PatchParserTranscoder();
-                    t.transcode(parser, builder);
-                    
-                    // builder.getPatch().setName(cons);
-                    
-                    // PatchFile303 reader = new PatchFile303(task.fileName, cons);
-                    
-                    final PatchUI tab = PatchUI.newInstance(builder.getPatch());
-                    
-                    synchronized (nomad)
-                    {
-                        nomad.addPatchUI(task.patchName, tab);
-                    }
-                    
-                    fr.close();
-                    
-                } catch (FileNotFoundException e) {
-                    throw e;
-                } catch (Throwable t) {
-                    System.out.println("Error while loading patch.");
-                    t.printStackTrace();
-                }
-
-                if (taskIndex==getTaskCount()-1) {
-  //                  if (selection>=0 && selection<nomad.getDocumentContainer().getDocumentCount())
-//                        nomad.getDocumentContainer().setSelection(selection);
-                        
-                    fileList.clear();
-                }
-            }
-            
-        };
-		
-        if (model.getTaskCount() <= 1)
-        {
-        for (int i=0;i<model.getTaskCount();i++)
-        {
-            try
-            {
-                model.run(i);
-            }
-            catch (Throwable e)
-            {
-                e.printStackTrace();
-            }
-        }
-        } else
-        {
-            NomadTaskDialog dlg = new NomadTaskDialog(model);
-            dlg.invoke();
-        }
-	}*/
-		
 }

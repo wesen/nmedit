@@ -22,7 +22,7 @@
  */
 package net.sf.nmedit.nomad.theme.component;
 
-import java.awt.Graphics2D;
+import java.awt.Graphics;
 
 import javax.swing.border.Border;
 
@@ -33,12 +33,11 @@ public class GroupDecoration extends NomadComponent {
 	public GroupDecoration() {
 		super();
 		setOpaque(false);
-		setDynamicOverlay(false);
 		setSize(80,40);
 	}
-
-	public void paintDecoration(Graphics2D g2) { 
-		border.paintBorder(this, g2, 0, 0, getWidth(), getHeight());
+    public void paintComponent(Graphics g) 
+    {
+		border.paintBorder(this, g, 0, 0, getWidth(), getHeight());
 //		BorderFactory.createLineBorder()
 	}
 		

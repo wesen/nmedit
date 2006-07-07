@@ -22,7 +22,7 @@
  */
 package net.sf.nmedit.nomad.util.document;
 
-import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +42,6 @@ public class DefaultDocumentManager extends JTabbedPane implements DocumentManag
     {
         container.setOpaque(true);
         container.addChangeListener(new TabChangeListener());
-        //container.putClientProperty(Options.NO_CONTENT_BORDER_KEY, Boolean.TRUE);
-        //container.putClientProperty(Options.EMBEDDED_TABS_KEY, Boolean.TRUE);
         container.setBorder(null);
     }
     
@@ -132,7 +130,11 @@ public class DefaultDocumentManager extends JTabbedPane implements DocumentManag
 
     public Document getSelection()
     {
-        return (Document) container.getSelectedComponent();
+        Component sel = container.getSelectedComponent(); 
+        for (Document d : documentList)
+            if (d.getComponent()==sel)
+                return d;
+        return null ;
     }
 
     public void setSelection( Document d )
@@ -145,6 +147,18 @@ public class DefaultDocumentManager extends JTabbedPane implements DocumentManag
         public void stateChanged( ChangeEvent e )
         {
             fireevent(new DocumentEvent(DocumentEvent.DOCUMENT_SELECTED, getSelection()));
+        }
+    }
+
+    public void updateTitle( Document document )
+    {
+        for (int i=getTabCount()-1;i>=0;i--)
+        {
+            if (document.getComponent() == getComponentAt(i))
+            {
+                setTitleAt( i, document.getTitle() );
+                return;
+            }
         }
     }
 

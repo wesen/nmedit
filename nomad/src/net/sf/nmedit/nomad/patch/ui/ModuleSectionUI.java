@@ -47,9 +47,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
 import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
 
@@ -61,9 +58,7 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.VoiceAreaEvent;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 import net.sf.nmedit.nomad.main.background.BackgroundFactory;
-import net.sf.nmedit.nomad.main.resources.AppIcons;
 import net.sf.nmedit.nomad.main.ui.ModuleDragSource;
-import net.sf.nmedit.nomad.main.ui.ModuleGroupsMenu;
 import net.sf.nmedit.nomad.main.ui.NComponent;
 import net.sf.nmedit.nomad.patch.ui.drag.CableDragAction;
 import net.sf.nmedit.nomad.patch.ui.drag.ModuleDragAction;
@@ -86,7 +81,7 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
 
 	//public static final DataFlavor ModuleSectionGUIFlavor = new DataFlavor("nomad/ModuleSectionGUIFlavor", "Nomad ModuleSectionGUI");
 
-	private JPopupMenu popup = null;
+	//private JPopupMenu popup = null;
 	private CableDisplay curvePanel = null;
 
 	private DragDropAction ddAction = new DragDropAction();
@@ -100,10 +95,11 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
         setOpaque(true);
         setDoubleBuffered(true);
         new DropTarget(this, dropAction, ddAction, true);
-        
+  
         addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent event) {
-				if (event.isPopupTrigger()) {
+                // TODO implement popup
+				/*if (event.isPopupTrigger()) {
 					//JMenu moduleSubMenu = ModuleGroupsMenu.getMenu();
 					JPopupMenu popup = new JPopupMenu();
 					popup.add(new JMenuItem("Cut",AppIcons.IC_CUT)).setEnabled(false);
@@ -116,11 +112,12 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
                     
 					popup.show(event.getComponent(),event.getX(),event.getY());
 				}
-                else if (SwingUtilities.isLeftMouseButton(event))
+                else*/ if (SwingUtilities.isLeftMouseButton(event))
                 {
                     createSelectionAction(event);
                 }
 			}
+            /*
 			public void mouseReleased(MouseEvent event) {
 				if (popup!=null) {
 		            if (event.isPopupTrigger()) {
@@ -128,7 +125,9 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
 		            	popup = null;
 		            }
 				}
-			}});
+			}*/
+            
+        });
 
         setBackgroundB(BackgroundFactory.createMetallicBackground());
         moduleSectionResized();
@@ -174,9 +173,9 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
         }
 	}
     
-    // do not use this instead of paintChildren()
-	protected void paintChildren(Graphics g) {
-        super.paintChildren(g);
+    public void paint(Graphics g)
+    {
+        super.paint(g);
 
         if (cablesVisible)
         {
@@ -185,7 +184,7 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
 
         if (dragAction!=null)
             dragAction.paint(g);
-	}
+    }
 
 	public boolean areCablesVisible() {
 		return cablesVisible;
@@ -202,7 +201,8 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
         Dimension d = new Dimension( ModuleUI.Metrics.getPixelX(moduleSection.getImpliedWidth()),
                 ModuleUI.Metrics.getPixelY(moduleSection.getImpliedHeight()) );
         setPreferredSize(d);       
-        setSize(d);
+        //setSize(d);
+        revalidate();
     }
     
     public void moduleSectionResized() {

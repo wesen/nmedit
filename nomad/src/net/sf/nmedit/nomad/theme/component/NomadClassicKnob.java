@@ -35,6 +35,7 @@ public class NomadClassicKnob extends Knob {
 	public NomadClassicKnob() 
     {
 		Dimension d = new Dimension(24,24);
+        setOpaque(false);
 		setDefaultSize(d);
 		setSize(d);
         setUI(createUI());

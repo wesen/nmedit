@@ -57,7 +57,6 @@ public class NomadActiveLabel extends NomadLabel implements EventListener<Parame
         super();
         setSizePropertyEnabled( true );
         setIconSupportEnabled( false );
-        setDynamicOverlay( true );
         setOpaque(true);
         setBackground( NomadClassicColors.TEXT_DISPLAY_BACKGROUND );
         setForeground( Color.WHITE );

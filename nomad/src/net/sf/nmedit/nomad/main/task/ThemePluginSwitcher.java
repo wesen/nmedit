@@ -28,9 +28,9 @@ import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 import net.sf.nmedit.nomad.main.Nomad;
 import net.sf.nmedit.nomad.main.dialog.NomadTaskDialog;
 import net.sf.nmedit.nomad.main.dialog.TaskModel;
-import net.sf.nmedit.nomad.patch.ui.PatchUI;
-import net.sf.nmedit.nomad.plugin.NomadPlugin;
+import net.sf.nmedit.nomad.patch.ui.PatchDocument;
 import net.sf.nmedit.nomad.theme.UIFactory;
+import net.sf.nmedit.nomad.theme.plugin.ThemePluginProvider;
 import net.sf.nmedit.nomad.util.document.Document;
 import net.sf.nmedit.nomad.util.document.DocumentManager;
 
@@ -38,14 +38,14 @@ import net.sf.nmedit.nomad.util.document.DocumentManager;
 public class ThemePluginSwitcher implements TaskModel {
 
 	private Nomad nomad;
-	private NomadPlugin plugin;
+	private ThemePluginProvider plugin;
 	private NomadEnvironment env;
 	private DocumentManager documents;
 	//private int selectionIndex;
 	private int documentCount;
     private Document[] documentList;
 	
-	public ThemePluginSwitcher(Nomad nomad, NomadPlugin plugin) {
+	public ThemePluginSwitcher(Nomad nomad, ThemePluginProvider plugin) {
 		this.nomad = nomad;
 		this.plugin = plugin;
 		env = NomadEnvironment.sharedInstance();
@@ -59,7 +59,7 @@ public class ThemePluginSwitcher implements TaskModel {
 		return nomad;
 	}
 
-	public NomadPlugin getPlugin() {
+	public ThemePluginProvider getPlugin() {
 		return plugin;
 	}
 	
@@ -69,7 +69,7 @@ public class ThemePluginSwitcher implements TaskModel {
 	
 	public void switchPlugin() {
 		if (!nomad.isDisplayable()) {
-			env.setFactory((UIFactory) plugin.getFactoryInstance());
+			env.setFactory((UIFactory) plugin.getFactory());
 		} else {
 			NomadTaskDialog dlg = new NomadTaskDialog(this);
 			dlg.invoke();
@@ -112,7 +112,7 @@ public class ThemePluginSwitcher implements TaskModel {
 	}
 	
 	public void init2() {
-		env.setFactory((UIFactory) plugin.getFactoryInstance());
+		env.setFactory((UIFactory) plugin.getFactory());
 	}
 	
 	public void finish() {/*
@@ -125,7 +125,8 @@ public class ThemePluginSwitcher implements TaskModel {
 		//documents.getDocumentContainer().repaint();
 	}
 	
-	public void migrate(int document) {
-		((PatchUI) documentList[document]).rebuild();
+	public void migrate(int document) 
+    {
+		((PatchDocument) documentList[document]).getPatchUI().rebuild();
 	}
 }

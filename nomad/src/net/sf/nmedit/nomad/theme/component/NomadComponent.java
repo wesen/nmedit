@@ -22,9 +22,9 @@
  */
 package net.sf.nmedit.nomad.theme.component;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 
 import javax.swing.JComponent;
 
@@ -42,7 +42,6 @@ import net.sf.nmedit.nomad.theme.property.PropertySet;
  */
 public class NomadComponent extends JComponent {
 	
-	private boolean flagHasDynamicOverlay = false;
 	private Module module = null;
 	private boolean sizePropertyEnabled=true;
     private int defaultWidth  = -1;
@@ -52,8 +51,8 @@ public class NomadComponent extends JComponent {
     
 	public NomadComponent() 
     {
-		setOpaque(false);
-		setDoubleBuffered(false);
+		setOpaque(true);
+		setDoubleBuffered(true);
         /*
         cnt ++;
         if (cnt%100 == 0)
@@ -95,45 +94,16 @@ public class NomadComponent extends JComponent {
 		if (sizePropertyEnabled)
 			set.add(new ComponentSizeProperty());
 	}
-	
-	public void paintDecoration(Graphics2D g2) 
-    {
-        super.paintComponent(g2);
-        /*
-		if (isOpaque() && getBackground()!=null) {
-			g2.setColor(getBackground());
-			g2.fillRect(0, 0, getWidth(),getHeight());
-			//paintNomadBorder(g2);
-		}
-        */
-	}
 
-	public void paintDynamicOverlay(Graphics2D g2) {
-		// no dynamic painting here
-	}
-	
-	public boolean hasDynamicOverlay() {
-		return flagHasDynamicOverlay; // default
-	}
-	
-	public void setDynamicOverlay(boolean enable) {
-		this.flagHasDynamicOverlay = enable;
-	}
-/*
-	public void deleteAlternativeBackground() {
-		alternativeBackground.dispose();
-	}*/
-
-    private boolean dirtyDisplay = true;
-    
-    public boolean isDisplayDirty()
-    {
-        return dirtyDisplay;
-    }
-    
     public void repaint()
     {
-        dirtyDisplay = true;
+      //  dirtyDisplay = true;
+        Component c = getParent();
+        if (c instanceof ModuleUI)
+        {
+            ((ModuleUI)c).registerDirtyComponent(this);
+        }
+        
         super.repaint();
     }
 
@@ -141,35 +111,17 @@ public class NomadComponent extends JComponent {
 		return (NomadComponent) getComponent(i);
 	}
 
-    public void paint(Graphics g)
+	public void paintComponent(Graphics g) 
     {
-        try
-        {
-            super.paint(g);
-        }
-        finally
-        {
-            dirtyDisplay = false;
-        }
-    }
-
-	public void paintComponent(Graphics g) {
-
         int w = getWidth(); 
         int h = getHeight();
 		if (w<=0 || h <=0) return;
-
-        Graphics2D g2 = (Graphics2D) g;
-        
-        paintDecoration(g2);
-        if (hasDynamicOverlay()) 
-        {
-            paintDynamicOverlay(g2);
-        }
+        super.paintComponent(g);
 	}
 
 	public Module getModule() {
-		if ((module == null) && (getParent() instanceof ModuleUI)) {
+		if ((module == null) && (getParent() instanceof ModuleUI)) 
+        {
 			module = ((ModuleUI)getParent()).getModule();
 		}
 

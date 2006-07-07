@@ -67,6 +67,7 @@ public class NomadLabel extends NomadComponent
     public NomadLabel()
     {
         setFont(defaultLabelFont);
+        setOpaque(false);
         setUI(createLabelUI());
 
         if (defaultSize==null)

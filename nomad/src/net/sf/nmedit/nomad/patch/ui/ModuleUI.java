@@ -2,6 +2,7 @@ package net.sf.nmedit.nomad.patch.ui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -9,7 +10,6 @@ import java.awt.Point;
 import java.awt.Transparency;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -148,9 +148,8 @@ public class ModuleUI extends NomadComponent implements ModuleComponent, EventLi
             repaint();
         }
     }
-
-    public void paintDecoration(Graphics2D g2) 
-    {
+    public void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D)g;
         if (isOpaque() && getBackground()!=null) {
             g2.setColor(getBackground());
             g2.fillRect(0, 0, getWidth(),getHeight());
@@ -179,7 +178,6 @@ public class ModuleUI extends NomadComponent implements ModuleComponent, EventLi
         *
         scrollTo( m );*/
     }
-    
     /*
     protected void processMouseMotionEvent(MouseEvent event)
     {
@@ -203,10 +201,13 @@ public class ModuleUI extends NomadComponent implements ModuleComponent, EventLi
         
         super.processMouseMotionEvent(event);
     }*/
+    final static Font font = new Font("sanserif",Font.PLAIN,9);
 
     public ModuleUI( DModule info )
     {
         this.info = info;
+        setFont(font);
+        setForeground(Color.BLACK);
         // setBackground(UIManager.getColor("Button.background"));
         setOpaque( true );
         setDoubleBuffered( true );
@@ -304,7 +305,7 @@ public class ModuleUI extends NomadComponent implements ModuleComponent, EventLi
             g.drawRect(0,0,getWidth()-1,getHeight()-1);
         }
     }
-
+    /*
     private boolean hasChildrenWithDirtyDisplay()
     {
         for (int i=getComponentCount()-1;i>=0;i--)
@@ -319,14 +320,19 @@ public class ModuleUI extends NomadComponent implements ModuleComponent, EventLi
             }
         }
         return false;
-    }
+    }*/
 
-    private ArrayList<NomadComponent> dirtyComponents = new ArrayList<NomadComponent>();
-    
-    public void registerDirtyComponent( NomadComponent component )
+    // private ArrayList<NomadComponent> dirtyComponents = new ArrayList<NomadComponent>();
+private boolean dirty = false;
+    private boolean hasChildrenWithDirtyDisplay()
     {
+        return dirty;
+    }
+    public void registerDirtyComponent( NomadComponent component )
+    {/*
         if (!dirtyComponents.contains(component))
-            dirtyComponents.add(component);
+            dirtyComponents.add(component);*/
+        dirty=true;
     }
 
     public void buildDefaultPopup( JPopupMenu menu )

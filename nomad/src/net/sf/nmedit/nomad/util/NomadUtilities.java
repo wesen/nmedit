@@ -275,7 +275,7 @@ public class NomadUtilities {
 	    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	    frame.setVisible(true);
 	}
-	
+    
 	public static void center(Window w) {
 	    Dimension screensz  = Toolkit.getDefaultToolkit().getScreenSize();
 	    Dimension size = w.getSize();

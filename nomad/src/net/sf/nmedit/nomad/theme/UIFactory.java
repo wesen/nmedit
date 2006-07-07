@@ -1,5 +1,6 @@
 package net.sf.nmedit.nomad.theme;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -7,13 +8,13 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.VoiceArea;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.nomad.patch.ui.ModuleSectionUI;
 import net.sf.nmedit.nomad.patch.ui.ModuleUI;
-import net.sf.nmedit.nomad.plugin.NomadFactory;
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
 import net.sf.nmedit.nomad.theme.property.PropertySet;
+import net.sf.nmedit.nomad.theme.xml.dom.ThemeNode;
 import net.sf.nmedit.nomad.util.graphics.ImageTracker;
 
 
-public abstract class UIFactory extends NomadFactory {
+public abstract class UIFactory  {
 
 	private HashMap <String,Class<? extends NomadComponent>> 
 		componentClasses = new HashMap<String,Class<? extends NomadComponent>>();
@@ -24,9 +25,6 @@ public abstract class UIFactory extends NomadFactory {
 	private ImageTracker imageTracker = 
 		new ImageTracker(ImageTracker.IMAGE_TRACKER_DISALLOW_REPLACE);
 
-	private HashMap<Class<? extends NomadComponent>, Boolean> decorationMap 
-		= new HashMap<Class<? extends NomadComponent>, Boolean>();
-	
 	private HashMap<Class<? extends NomadComponent>, PropertySet>
 		properties = new HashMap<Class<? extends NomadComponent>, PropertySet>(); 
 	
@@ -34,9 +32,6 @@ public abstract class UIFactory extends NomadFactory {
 
 	public void installClass(Class<? extends NomadComponent> componentClass, String aliasName) {
 		NomadComponent c = newComponentInstanceByClass(componentClass);
-		
-		if (!c.hasDynamicOverlay())
-			decorationMap.put(componentClass, Boolean.TRUE);
 		
 		PropertySet set = new PropertySet();
 		c.registerProperties(set);
@@ -61,10 +56,6 @@ public abstract class UIFactory extends NomadFactory {
 	
 	public PropertySet getProperties(Class<? extends NomadComponent> clazz) {
 		return properties.get(clazz);
-	}
-	
-	public boolean isDecoration(Class<? extends NomadComponent> clazz) {
-		return decorationMap.containsKey(clazz);
 	}
 	
 	public Class<? extends NomadComponent> getNomadComponentClass(Object key) {
@@ -99,7 +90,18 @@ public abstract class UIFactory extends NomadFactory {
 		return imageTracker;
 	}
 	
-	public abstract String getUIDescriptionFileName();
+    public abstract ThemeNode getThemeSetup();
+
+    protected ThemeNode loadThemeSetup( String name )
+    {
+        ThemeNode dom = new ThemeNode();
+        InputStream in = getClass().getResourceAsStream(name);
+        ThemeNode.importDocument( dom, in );
+        dom.compile( this );
+        return dom;
+    }
+    
+//	public abstract String getUIDescriptionFileName();
 
 	public ModuleUI getModuleGUI(DModule info) {
 		return new ModuleUI(info);

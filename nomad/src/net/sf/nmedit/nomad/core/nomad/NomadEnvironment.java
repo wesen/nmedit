@@ -31,9 +31,9 @@ import net.sf.nmedit.nomad.core.application.Application;
 import net.sf.nmedit.nomad.core.application.ApplicationInstantiationException;
 import net.sf.nmedit.nomad.core.application.ProgressMeter;
 import net.sf.nmedit.nomad.main.designer.Designer;
-import net.sf.nmedit.nomad.plugin.PluginManager;
 import net.sf.nmedit.nomad.theme.ModuleBuilder;
 import net.sf.nmedit.nomad.theme.UIFactory;
+import net.sf.nmedit.nomad.theme.plugin.ThemePluginManager;
 import net.sf.nmedit.nomad.util.graphics.ImageTracker;
 
 
@@ -91,9 +91,6 @@ public abstract class NomadEnvironment extends Application
 
         progress.increment( "loading: module definitions" );
         loadModuleDefinitions();
-
-        progress.increment( "loading: plugin manager" );
-        loadPluginManager();
 
         progress.increment( "loading: ui builder" );
         loadDefaultBuilder();
@@ -197,7 +194,7 @@ public abstract class NomadEnvironment extends Application
 
     public void loadDefaultFactory()
     {
-        setFactory( PluginManager.getDefaultUIFactory() );
+        setFactory( ThemePluginManager.getDefaultUIFactory() );
     }
 
     public void loadDefaultBuilder()
@@ -205,14 +202,5 @@ public abstract class NomadEnvironment extends Application
         builder = new ModuleBuilder( this );
     }
 
-    public void loadPluginManager()
-    {
-        PluginManager.init();
-    }
-/*
-    public void loadModuleToolbar()
-    {
-        moduleToolbar = new ModuleToolbar();
-    }*/
 
 }

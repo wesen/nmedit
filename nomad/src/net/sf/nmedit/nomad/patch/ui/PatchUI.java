@@ -22,14 +22,19 @@
  */
 package net.sf.nmedit.nomad.patch.ui;
 
-import javax.swing.JComponent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JViewport;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch;
 import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 
-public class PatchUI extends JSplitPane implements net.sf.nmedit.nomad.util.document.Document {
+public class PatchUI extends JSplitPane 
+{
 
 	private Patch patch;
 
@@ -37,21 +42,59 @@ public class PatchUI extends JSplitPane implements net.sf.nmedit.nomad.util.docu
 	private JScrollPane scrollPaneCommon = null;
 	private ModuleSectionUI commonSectionUI = null;
 	private ModuleSectionUI polySectionUI = null;
-
-	double lastLoc = 1.0d;
-
-	protected PatchUI(Patch patch) {
-		super(JSplitPane.VERTICAL_SPLIT);
-        
-        setBorder(null);
-        setOneTouchExpandable(true);
-        setContinuousLayout(false); // dont repaint when slider is moved
-        setResizeWeight(1); // top component (poly section) gets extra space when component is resized
+	private JSplitPane split = this;
+    
+	protected PatchUI(Patch patch) 
+    {   
+        super(JSplitPane.VERTICAL_SPLIT);
+        this.patch = patch;
         setOpaque(true);
-		this.patch = patch;
+        
+        split.setBorder(BorderFactory.createLoweredBevelBorder());
+        split.setContinuousLayout(false); // dont repaint when slider is moved
+        split.setResizeWeight(1); // top component (poly section) gets extra space when component is resized
+        split.setDividerLocation(1.0d);
+        split.setOneTouchExpandable(true);
+        split.setOpaque(false);
+        split.setBackground(null);
+        split.addPropertyChangeListener( JSplitPane.DIVIDER_LOCATION_PROPERTY, new DivLocProperty());
+        
+        //setLayout(new BorderLayout());
+        //add(split, BorderLayout.CENTER);
 	}
 	
-	public static PatchUI newInstance(Patch patch) {
+    private class DivLocProperty implements PropertyChangeListener
+    {
+
+        public void propertyChange( PropertyChangeEvent evt )
+        {
+            double d = split.getDividerLocation();
+            double div = split.getHeight()-split.getDividerSize();
+            /*
+            System.out.println(
+              "loc:"+split.getDividerLocation()+
+              " h:"+split.getHeight()+
+              "-s:"+split.getDividerSize()
+              
+            );
+            */
+            if (div!=0)
+                d/=(double)div;
+            else
+                d = 1;
+            d*=4000.0d;
+            /*
+            patch.getHeader().setSeparatorPosition
+            (
+                    Math.max(Format.HEADER_SECTION_SEPARATOR_POSITION_TOP_MOST,
+                            Math.min((int)d, Format.HEADER_SECTION_SEPARATOR_POSITION_BOTTOM_MOST))
+            );*/
+        }
+        
+    }
+    
+	public static PatchUI newInstance(Patch patch) 
+    {
 		PatchUI ui = new PatchUI(patch);
 		ui.rebuild();
 		return ui;
@@ -69,11 +112,13 @@ public class PatchUI extends JSplitPane implements net.sf.nmedit.nomad.util.docu
 		return polySectionUI;
 	}
 
-	public void rebuild() {
-
+	public void rebuild() 
+    {
+        double sep = patch.getHeader().getSeparatorPosition(); 
+        
 		// remove
-		if (scrollPaneCommon!=null) remove(scrollPaneCommon);
-		if (scrollPanePoly!=null) 	remove(scrollPanePoly);
+		if (scrollPaneCommon!=null) split.remove(scrollPaneCommon);
+		if (scrollPanePoly!=null) 	split.remove(scrollPanePoly);
 		if (commonSectionUI!=null) 	commonSectionUI.unlink();
 		if (polySectionUI!=null) 	polySectionUI.unlink();
 
@@ -84,7 +129,7 @@ public class PatchUI extends JSplitPane implements net.sf.nmedit.nomad.util.docu
         scrollPanePoly = new JScrollPane(polySectionUI);
         scrollPanePoly.getViewport().setBorder(null);
         scrollPanePoly.setBorder(null);
-        add(scrollPanePoly, JSplitPane.TOP);
+        split.add(scrollPanePoly, JSplitPane.TOP);
 		
 		commonSectionUI = NomadEnvironment.sharedInstance().getFactory().getModuleSectionUI(getPatch().getCommonVoiceArea());
 		commonSectionUI.setSize(commonSectionUI.getPreferredSize());
@@ -92,23 +137,12 @@ public class PatchUI extends JSplitPane implements net.sf.nmedit.nomad.util.docu
         scrollPaneCommon = new JScrollPane(commonSectionUI);
         scrollPaneCommon.getViewport().setBorder(null);
         scrollPaneCommon.setBorder(null);
-        add(scrollPaneCommon, JSplitPane.BOTTOM);
-        
+        split.add(scrollPaneCommon, JSplitPane.BOTTOM);
+
         polySectionUI.populate();
         commonSectionUI.populate();
 
-        // 0 = top, 4000 = bottom
-        //setDividerLocation(getPatch().getHeader().getSeparatorPosition()/4000.0d);
+        split.setDividerLocation(sep/4000.0d);
 	}
 
-    public String getTitle()
-    {
-        return getName();
-    }
-
-    public JComponent getComponent()
-    {
-        return this;
-    }
-	
 }

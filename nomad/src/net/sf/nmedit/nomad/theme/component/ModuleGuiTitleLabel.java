@@ -44,7 +44,6 @@ public class ModuleGuiTitleLabel extends NomadLabel
 
     public ModuleGuiTitleLabel( DModule info )
     {
-        setDynamicOverlay( true );
         setText( info.getName() );
         enableEvents( MouseEvent.MOUSE_EVENT_MASK );
     }
@@ -56,7 +55,8 @@ public class ModuleGuiTitleLabel extends NomadLabel
                 && event.getComponent() instanceof ModuleGuiTitleLabel)
         {
             ( (ModuleGuiTitleLabel) event.getComponent() ).editModuleTitle();
-        }
+        } 
+        
         super.processMouseEvent( event );
     }
 

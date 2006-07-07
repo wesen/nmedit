@@ -108,7 +108,6 @@ public class KnobUI extends ComponentUI
         c.setOpaque(false);
         c.setFocusable(true);
         Knob k = (Knob) c;
-        k.setDynamicOverlay(true);
         getFeel().installFeel(k);
     }
     

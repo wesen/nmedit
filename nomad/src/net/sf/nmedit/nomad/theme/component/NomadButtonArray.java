@@ -25,6 +25,7 @@ package net.sf.nmedit.nomad.theme.component;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
@@ -94,7 +95,6 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		setBackground(NomadClassicColors.BUTTON_BACKGROUND);
 		//setForeground(NomadClassicColors.BUTTON_FOREGROUND);
 		setFont(defaultFont);
-		setDynamicOverlay(true);
 		setFocusable(true);
 
 		Arrays.fill(ltext, null);
@@ -259,8 +259,9 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 
 	private Border defBorder = null;
 	private Border selBorder = null;
-	
-	public void paintDynamicOverlay(Graphics2D g2) {
+    
+    public void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D)g;
 		behaviour.calculateMetrics();
 
 		g2.setFont(getFont());

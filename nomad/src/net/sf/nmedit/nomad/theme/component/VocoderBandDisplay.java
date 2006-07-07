@@ -43,7 +43,6 @@ public class VocoderBandDisplay extends NomadComponent {
 	
 	public VocoderBandDisplay() {
 		super();
-		setDynamicOverlay(true);
 		setOpaque(true);
 		setBackground(defaultBGColor);
 		setForeground(defaultFGColor);
@@ -200,11 +199,8 @@ public class VocoderBandDisplay extends NomadComponent {
 	protected void bandsChanged() {
 		repaint();
 	}
-	
-	public void paintDecoration(Graphics2D g) {
-	}
-	
-	public void paintDynamicOverlay(Graphics2D g) {
+    public void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D)g;
 		// paint
 		int w = this.getWidth();
 		int h = this.getHeight();
@@ -217,8 +213,8 @@ public class VocoderBandDisplay extends NomadComponent {
 			bgheight = h;
 		}
 
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
 		if (renderer!=null) {
 			// draw background
@@ -229,8 +225,8 @@ public class VocoderBandDisplay extends NomadComponent {
 			g.fillRect(0, 0, w, h);
 		}
 		
-		g.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
-		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+		g2.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+		g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
 
 		gcalc.update(w, h); // recalculate if necessary
 		

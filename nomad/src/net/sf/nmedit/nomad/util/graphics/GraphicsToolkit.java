@@ -224,8 +224,6 @@ public class GraphicsToolkit
         dest.height = (int) ay2;
     }
     
-    private static Rectangle dummy = new Rectangle();
-    
     /**
      * Fills the specified area with the image.
      * 
@@ -247,10 +245,10 @@ public class GraphicsToolkit
        dx -= x;
        dy -= y;
 
-       Shape saveClip = g.getClip();
+       Shape saveClip = g.getClip(); 
        if (saveClip!=null)
        {
-           synchronized (dummy)
+           Rectangle dummy = new Rectangle();
            {
                // get clip bounds
                g.getClipBounds(dummy);
@@ -482,12 +480,61 @@ public class GraphicsToolkit
         }
     }
 */
+    public static Dimension getImageSize(Image image)
+    {
+        int iw = image.getWidth(null);
+        int ih = image.getHeight(null);
+
+        if (iw<=0||ih<=0)
+        {
+            // the image is not loaded yet - wait for it
+
+            long timeout = System.currentTimeMillis()+500;
+            while ((iw = image.getWidth(null))<0) 
+            {
+                if (System.currentTimeMillis()>timeout) break;
+                Thread.yield();
+            }
+            
+            timeout = System.currentTimeMillis()+500;
+            while ((ih = image.getHeight(null))<0)  
+            {
+                if (System.currentTimeMillis()>timeout) break;
+                Thread.yield();
+            }
+            
+            if (iw<=0||ih<=0)
+            {
+                throw new IllegalStateException("invalid image size: <=0");
+            }   
+        }
+        
+        return new Dimension(iw, ih);
+    }
+    
     public static void clearRegion(Graphics2D g2, int x, int y, int w, int h) {
         Composite c = g2.getComposite();
         g2.setComposite(AlphaComposite.Clear);
         g2.fillRect(x, y, w, h);
         g2.setComposite(c);
     }
+/*
+    public static BufferedImage getBufferedImage( Image image )
+    {
+        if (image instanceof BufferedImage)
+            return (BufferedImage) image;
+        Dimension sz = getImageSize(image);
+        
+        int t = Transparency.OPAQUE;
+        if (image instanceof Transparency)
+            t = ((Transparency)image).getTransparency();
+        
+        BufferedImage bi = createCompatibleBuffer(sz.width, sz.height, t);
+        Graphics2D g2 = bi.createGraphics();
+        g2.drawImage(image, 0, 0, null);
+        g2.dispose();
+        return bi;
+    }*/
 
 }
  

@@ -129,12 +129,7 @@ public class ModuleBuilder
 
     public void load()
     {
-        load( uifactory.getUIDescriptionFileName() );
-    }
-
-    public void load( String file )
-    {
-        nomadDom = read( file );
+        nomadDom = uifactory.getThemeSetup();
     }
 
     public void setUIFactory( UIFactory uifactory )
@@ -206,16 +201,6 @@ public class ModuleBuilder
                 modulePane.add( comp );
             }
         }
-    }
-
-    // -----------
-
-    public ThemeNode read( String file )
-    {
-        ThemeNode dom = new ThemeNode();
-        ThemeNode.importDocument( dom, file );
-        dom.compile( uifactory );
-        return dom;
     }
 
 }

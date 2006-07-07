@@ -22,10 +22,14 @@
  */
 package net.sf.nmedit.nomad.core.nomad;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.JFrame;
+
 import net.sf.nmedit.nomad.core.application.ApplicationInstantiationException;
 import net.sf.nmedit.nomad.core.application.ProgressMeter;
 import net.sf.nmedit.nomad.main.Nomad;
-import net.sf.nmedit.nomad.util.NomadUtilities;
 
 
 public class NomadApplication extends NomadEnvironment
@@ -44,9 +48,27 @@ public class NomadApplication extends NomadEnvironment
         progress.increment("Loading: Nomad");
         
         mainFrame = new Nomad(getName()+" "+getVersion());
-        configureMainFrame(mainFrame);
+        // TODO add config... again but send an event rather than closing immediately
+        //configureMainFrame(mainFrame);
 
-        NomadUtilities.setupAndShow(mainFrame, 0.75, 0.75);
+        //NomadUtilities.setupAndShow(mainFrame, 0.75, 0.75);
+        //mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+
+        
+        mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+       
+        mainFrame.addWindowListener(
+          new WindowAdapter()
+          {
+              public void windowClosing( WindowEvent event )
+              {
+                  mainFrame.exitNomad();
+              }
+          }
+        );
+        
+        mainFrame.setVisible(true);
     }
 
     @Override

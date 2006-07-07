@@ -23,6 +23,7 @@
 package net.sf.nmedit.nomad.theme.xml.dom;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -50,7 +51,7 @@ public class ThemeNode implements Iterable<ModuleNode> {
 		return moduleNodeMap.values().iterator();
 	}
 
-	public static void importDocument(ThemeNode dom, String file) 
+    public static void importDocument(ThemeNode dom, String file) 
     {
         ThemeBuilder builder = new ThemeBuilder(dom);
         try
@@ -61,7 +62,20 @@ public class ThemeNode implements Iterable<ModuleNode> {
         {
             e.printStackTrace();
         }
-	}
+    }
+
+    public static void importDocument(ThemeNode dom, InputStream in) 
+    {
+        ThemeBuilder builder = new ThemeBuilder(dom);
+        try
+        {
+            builder.processDocument(in);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 	
 	public void compile(UIFactory f) {
 		for (ModuleNode m : this) {
