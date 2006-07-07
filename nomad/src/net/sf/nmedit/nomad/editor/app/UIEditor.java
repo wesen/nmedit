@@ -28,8 +28,8 @@ import net.sf.nmedit.nomad.main.action.ThemePluginSelector;
 import net.sf.nmedit.nomad.main.dialog.NomadTaskDialog;
 import net.sf.nmedit.nomad.main.dialog.TaskModel;
 import net.sf.nmedit.nomad.patch.ui.ModuleUI;
-import net.sf.nmedit.nomad.plugin.NomadPlugin;
 import net.sf.nmedit.nomad.theme.UIFactory;
+import net.sf.nmedit.nomad.theme.plugin.ThemePluginProvider;
 import net.sf.nmedit.nomad.util.NomadUtilities;
 
 
@@ -115,7 +115,7 @@ public class UIEditor extends JFrame {
 		pack();
 	}
 	
-	public void saveFileAs() {
+	public void saveFileAs() {/*
 		String uiFile = env.getFactory().getUIDescriptionFileName();
 		JFileChooser fileChooser = new JFileChooser(uiFile);
 		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -134,10 +134,10 @@ public class UIEditor extends JFrame {
 					e.printStackTrace();
 				}		
 			}
-		}
+		}*/
 	}
 	
-	public void loadFile() {
+	public void loadFile() {/*
 		String uiFile = env.getFactory().getUIDescriptionFileName();		
 		JFileChooser fileChooser = new JFileChooser(uiFile);
 		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -145,7 +145,7 @@ public class UIEditor extends JFrame {
 			if (NomadUtilities.isConfirmedByUser(this, "Changes will be lost.\nShall I go on ?" )) {
 				env.getBuilder().load(uiFile);
 			}
-		}
+		}*/
 	}
 	
 	public void quit() {
@@ -175,10 +175,10 @@ public class UIEditor extends JFrame {
 		}
     }
     
-	void changeTheme(final NomadPlugin plugin) {
+	void changeTheme(final ThemePluginProvider plugin) {
 		DModule current = getModule();
 		setModule(null);
-		env.setFactory((UIFactory) plugin.getFactoryInstance());
+		env.setFactory((UIFactory) plugin.getFactory());
 		classesView.setFactory(env.getFactory());
 		propertyEditor.setEditingPropertySet(null,null);
 		setModule(current);
@@ -255,7 +255,7 @@ public class UIEditor extends JFrame {
 	class ThemeChangeAction implements ChangeListener {
 		public void stateChanged(ChangeEvent event) 
         {
-			NomadPlugin plugin = tps.getSelectedPlugin();
+			ThemePluginProvider plugin = tps.getSelectedPlugin();
 			if (plugin!=null) changeTheme(plugin);
 		}
 	}
