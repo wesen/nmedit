@@ -79,14 +79,8 @@ public abstract class PatchImplementation
     public PatchDecoder createPatchDecoder(Class<? extends Source> source) 
     throws PatchDecoderException, UnsupportedSourceException
     {
-        for (PatchDecoderProvider provider : getPatchDecoders())
-        {
-            if (provider.isSupported(source))
-            {
-                return provider.createDecoder(this);
-            }
-        }
-        
+        PatchDecoderProvider provider = getPatchDecoderProvider(source);
+        if (provider!=null) return provider.createDecoder(this);
         throw new UnsupportedSourceException(source, "decoder not available");
     }
 
@@ -98,11 +92,44 @@ public abstract class PatchImplementation
     public PatchEncoder createPatchEncoder(Class<? extends Target> target) 
     throws PatchEncoderException, UnsupportedTargetException 
     {
+        PatchEncoderProvider provider = getPatchEncoderProvider(target);
+        if (provider!=null) return provider.createEncoder(this);
+        throw new UnsupportedTargetException(target, "encoder not available");
+    }
+
+    /**
+     * Returns a patch decoder provider for the specified source.
+     * @param source the decoder source 
+     * @return the patch decoder for the specified source
+     * @throws PatchEncoderException 
+     */
+    public PatchDecoderProvider getPatchDecoderProvider(Class<? extends Source> source) 
+    throws PatchDecoderException, UnsupportedSourceException
+    {
+        for (PatchDecoderProvider provider : getPatchDecoders())
+        {
+            if (provider.isSupported(source))
+            {
+                return provider;
+            }
+        }
+        
+        throw new UnsupportedSourceException(source, "decoder not available");
+    }
+
+    /**
+     * Creates a patch encoder provider for the specified target.
+     * @param target the encoder target
+     * @return the patch encoder for the specified target
+     */
+    public PatchEncoderProvider getPatchEncoderProvider(Class<? extends Target> target) 
+    throws PatchEncoderException, UnsupportedTargetException 
+    {
         for (PatchEncoderProvider provider : getPatchEncoders())
         {
             if (provider.isSupported(target))
             {
-                return provider.createEncoder(this);
+                return provider;
             }
         }
         
