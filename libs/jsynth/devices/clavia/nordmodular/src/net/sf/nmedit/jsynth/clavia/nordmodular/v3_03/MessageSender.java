@@ -25,6 +25,7 @@ package net.sf.nmedit.jsynth.clavia.nordmodular.v3_03;
 import net.sf.nmedit.jnmprotocol.DeleteCableMessage;
 import net.sf.nmedit.jnmprotocol.DeleteModuleMessage;
 import net.sf.nmedit.jnmprotocol.GetPatchMessage;
+import net.sf.nmedit.jnmprotocol.MidiException;
 import net.sf.nmedit.jnmprotocol.MidiMessage;
 import net.sf.nmedit.jnmprotocol.MoveModuleMessage;
 import net.sf.nmedit.jnmprotocol.NewCableMessage;
@@ -205,10 +206,20 @@ public class MessageSender
     
     private void sendNewModule( VoiceAreaEvent event )
     {
-        if (false) return ; // do not send message at the moment
+        // if (false) return ; // do not send message at the moment
         
         // get message instance
-        NewModuleMessage msg = (NewModuleMessage) createMessage(NewModuleMessage.class);
+        NewModuleMessage msg = null;// (NewModuleMessage) createMessage(NewModuleMessage.class);
+        try
+        {
+            msg = new NewModuleMessage();
+            msg.set("pid", slot.getPID());
+        }
+        catch (Exception e1)
+        {
+            e1.printStackTrace();
+        }
+        
         if (msg == null) return;
 
         // get data
@@ -219,16 +230,55 @@ public class MessageSender
         installListeners(module);
 
         // set data
-        msg.newModule
-        (
-            section, 
-            module.getIndex(), 
-            module.getID(), module.getX(), 
-            module.getY()      
-        );
+        try
+        {
+            /*
+            System.out.println
+            (
+                    "module-id:"+module.getID()+
+                    " section:"+section+
+                    " index:"+module.getIndex()+
+                    " x:"+module.getX()+ 
+                    " y:"+module.getY()+
+                    " name:"+module.getName()+
+                    " param:"+int2str(module.getParameterValues())+
+                    " custom:"+int2str(module.getCustomValues())        
+            );
+            */
+            
+            msg.newModule 
+            (
+                module.getID(),
+                section, 
+                module.getIndex(),
+                module.getX(), 
+                module.getY(),
+                "",// module.getName(),
+                module.getParameterValues(),
+                module.getCustomValues()
+            );
+        }
+        catch (MidiException e)
+        {
+            e.printStackTrace();
+            return ; 
+        }
         
         // send message
         send(msg);
+    }
+    
+    private String int2str(int[] array)
+    {
+        StringBuffer sb = new StringBuffer("{");
+        for (int i=0;i<array.length;i++)
+        {
+            sb.append(Integer.toString(array[i]));
+            if (i<array.length-1)
+                sb.append(',');
+        }
+        sb.append('}');
+        return sb.toString();
     }
 
     private void sendDeleteModule( VoiceAreaEvent event )
