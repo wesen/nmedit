@@ -22,36 +22,24 @@
  */
 package net.sf.nmedit.nomad.main.background;
 
+import java.awt.Dimension;
 import java.awt.Image;
+
+import net.sf.nmedit.nomad.util.graphics.GraphicsToolkit;
 
 public class TiledBackground extends AbstractTiledBackground
 {
 
     private Image image;
-    private int iw;
-    private int ih;
+    private Dimension sz;
 
     public TiledBackground(Image image, int dx, int dy)
     {
         super(dx, dy);
         this.image = image;
-        iw = image.getWidth(null);
-        ih = image.getHeight(null);
-
-        if (iw<=0||ih<=0)
-        {
-            // the image is not loaded yet - wait for it
-
-            while ((iw = image.getWidth(null))<0) ;
-            while ((ih = image.getHeight(null))<0) ;
-            
-            if (iw<=0||ih<=0)
-            {
-                throw new IllegalStateException("invalid image size: <=0");
-            }   
-        }
+        sz = GraphicsToolkit.getImageSize(image);
     }
-
+    
     public Image getImage()
     {
         return image;
@@ -59,12 +47,12 @@ public class TiledBackground extends AbstractTiledBackground
 
     public int getWidth()
     {
-        return iw;
+        return sz.width;
     }
 
     public int getHeight()
     {
-        return ih;
+        return sz.height;
     }
 
 }
