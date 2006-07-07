@@ -334,5 +334,25 @@ public class Module extends ListenableAdapter<ModuleEvent>
     {
         return ui;
     }
+
+    public int[] getParameterValues()
+    {
+        int[] values = new int[getParameterCount()];
+        for (int i=getParameterCount()-1;i>=0;i--)
+        {
+            values[i] = getParameter(i).getValue();
+        }
+        return values;
+    }
+
+    public int[] getCustomValues()
+    {
+        int[] values = new int[getCustomCount()];
+        for (int i=getCustomCount()-1;i>=0;i--)
+        {
+            values[i] = getCustom(i).getValue();
+        }
+        return values;
+    }
     
 }
