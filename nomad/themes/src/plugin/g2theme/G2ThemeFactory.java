@@ -14,6 +14,7 @@ import net.sf.nmedit.nomad.theme.component.GroupDecoration;
 import net.sf.nmedit.nomad.theme.component.NomadLabel;
 import net.sf.nmedit.nomad.theme.component.NomadVocoderController;
 import net.sf.nmedit.nomad.theme.component.VocoderBandDisplay;
+import net.sf.nmedit.nomad.theme.xml.dom.ThemeNode;
 import plugin.g2theme.custom.G2ActiveLabel;
 import plugin.g2theme.custom.G2BorderFactory;
 import plugin.g2theme.custom.G2ButtonArray;
@@ -43,11 +44,6 @@ public class G2ThemeFactory extends UIFactory {
 		}
 	}
 
-	public String getUIDescriptionFileName() {
-		// use the classic theme ui file
-		return "plugin/classictheme/theme.xml";
-	}
-
 	public ModuleUI getModuleGUI(DModule info) {
 		ModuleUI gui = super.getModuleGUI(info);
 		gui.setBackground(G2ColorConstants.MODULE_BACKGROUND);
@@ -67,5 +63,11 @@ public class G2ThemeFactory extends UIFactory {
         m.setBackgroundB(bg);
         return m;
 	}
+
+    @Override
+    public ThemeNode getThemeSetup()
+    {
+        return loadThemeSetup("/RESOURCE/xml/theme.xml");
+    }
 	
 }

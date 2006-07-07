@@ -1,5 +1,7 @@
 package plugin.classictheme;
 
+import java.awt.Image;
+
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.VoiceArea;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.nomad.main.background.Background;
@@ -18,6 +20,7 @@ import net.sf.nmedit.nomad.theme.component.NomadLabel;
 import net.sf.nmedit.nomad.theme.component.NomadResetButton;
 import net.sf.nmedit.nomad.theme.component.NomadVocoderController;
 import net.sf.nmedit.nomad.theme.component.VocoderBandDisplay;
+import net.sf.nmedit.nomad.theme.xml.dom.ThemeNode;
 
 
 public class ClassicThemeFactory extends UIFactory {
@@ -33,11 +36,6 @@ public class ClassicThemeFactory extends UIFactory {
 		installClass(AudioLevelDisplay.class,"display.audiolevel");
 		installClass(GroupDecoration.class,"border.groupbox");
 	}
-
-	public String getUIDescriptionFileName() {
-		return "plugin/classictheme/theme.xml";
-	}
-
 	public ModuleUI getModuleGUI(DModule info) {
 		ModuleUI gui = super.getModuleGUI(info);
 		gui.setBackground(NomadClassicColors.MODULE_BACKGROUND);
@@ -46,16 +44,24 @@ public class ClassicThemeFactory extends UIFactory {
 
     private Background classicBackground = null;
     
-	public ModuleSectionUI getModuleSectionUI(VoiceArea moduleSection) {
-        
+	public ModuleSectionUI getModuleSectionUI(VoiceArea moduleSection) 
+    {    
         if (classicBackground==null)
         {
+            Image image = getImageTracker().getImage("classic-patch-background");
             classicBackground =
-                BackgroundFactory.createTiledBackground(getImageTracker().getImage("classic-patch-background"));
+                BackgroundFactory.createTiledBackground(image);
         }
         ModuleSectionUI msui = super.getModuleSectionUI(moduleSection);
         msui.setBackgroundB(classicBackground);
+        msui.setOpaque(true);
         return msui;
 	}
+
+    @Override
+    public ThemeNode getThemeSetup()
+    {
+        return loadThemeSetup("/RESOURCE/xml/theme.xml");
+    }
 	
 }

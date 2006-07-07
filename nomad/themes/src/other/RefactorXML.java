@@ -20,7 +20,7 @@
 /*
  * Created on Jan 13, 2006
  */
-package plugin.classictheme;
+package other;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
