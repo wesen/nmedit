@@ -13,7 +13,7 @@ public class OscHz extends Substitution {
 	}
 
 	public String valueToString(int value) {
-		double aFloat = 440.0d * Math.pow(2.0d, (value-69)/12);
+		double aFloat = 440.0d * Math.pow(2.0d, (value-69)/12.0);
 
 		if (aFloat<10)
 			return ""+Math2.roundTo(aFloat, -2)+" Hz";
