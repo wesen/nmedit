@@ -99,6 +99,25 @@ public class VoiceArea extends ModuleSet implements EventListener<ModuleEvent>
     
     public boolean add( Module m )
     {
+        if (isPolyVoiceArea() && m.isCvaOnly())
+        {
+            // can only be added to common voice area
+            return false;
+        }
+        
+        int limit = m.getLimit(); //<=0 means unlimited
+        if (limit>0)
+        {
+            for (Module m2 : this)
+                if (m2.getID()==m.getID())
+                    limit --;
+            if (limit<=0)
+            {
+                // no more modules of this type allowed
+                return false;
+            }
+        }
+        
         if (super.add(m))
         {
             beginUpdate();
