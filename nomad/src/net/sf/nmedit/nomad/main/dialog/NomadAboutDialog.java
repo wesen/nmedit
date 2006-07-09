@@ -83,18 +83,18 @@ public class NomadAboutDialog extends NomadDialog implements MouseListener {
         addTextProperty(builder, "Version", Application.getVersion());
         builder.append("Homepage", createCopyTextLabel("http://nmedit.sourceforge.net"));
 
-        builder.appendSeparator("Main Programming");
-        addTextProperty(builder, "Marcus.T. Andersson");
+        builder.appendSeparator("Programming");
+        addTextProperty(builder, "Marcus Andersson");
         addTextProperty(builder, "Christian Schneider");
         addTextProperty(builder, "Ian Hoogeboom");
         
         builder.appendSeparator("Reverse Engineering");
-        addTextProperty(builder, "Marcus.T. Andersson");
+        addTextProperty(builder, "Marcus Andersson");
         addTextProperty(builder, "Jan Punter");
         
         builder.appendSeparator("Artwork");
-        builder.append("Icons 1", createCopyTextLabel("http://jimmac.musichall.cz/"));
-        addTextProperty(builder, "Icons 2", "Christian Schneider");
+        builder.append("Icons", createCopyTextLabel("http://jimmac.musichall.cz/"));
+        addTextProperty(builder, "Icons", "Christian Schneider");
         addTextProperty(builder, "Splash Screen", "Tobias Weinald");
         
         for (int i=0;i<ThemePluginManager.getPluginCount();i++)
