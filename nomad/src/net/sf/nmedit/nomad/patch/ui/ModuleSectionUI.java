@@ -186,6 +186,11 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
             dragAction.paint(g);
     }
 
+    public void printCables( Graphics g )
+    {
+        curvePanel.paint(g);
+    }
+
 	public boolean areCablesVisible() {
 		return cablesVisible;
 	}
