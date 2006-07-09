@@ -33,12 +33,14 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 import javax.swing.AbstractListModel;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 
 import net.sf.nmedit.nomad.core.application.Application;
 import net.sf.nmedit.nomad.main.Nomad;
@@ -133,14 +135,27 @@ public class PatchLibSidebar extends JPanel implements Sidebar, SidebarListener
     public void setDirectory(File dir)
     {
         if (dir==null) return;
-        this.directory = dir;
-        this.files = dir.listFiles(new PatchFileFilter());
-        Arrays.<File>sort(files, new FileComparator());
-        
-        // TODO how to update list ???
-        //listView.setModel(listView.getModel());
-        listView.repaint();
-        listView.revalidate();
+        dir = dir.getAbsoluteFile();
+        File[] list = dir.listFiles(new PatchFileFilter());
+        {
+            this.files = list;
+            this.directory = dir;
+            Arrays.<File>sort(files, new FileComparator());
+            fireModelChanged();
+        }
+    }
+    
+    protected void fireModelChanged() 
+    {
+        final ListDataListener[] list = 
+            ((AbstractListModel)listView.getModel()).getListDataListeners();
+        if (list.length==0) return;
+        final ListDataEvent lde = new ListDataEvent(listView.getModel(), 
+                ListDataEvent.CONTENTS_CHANGED, 0, listView.getModel().getSize());
+        SwingUtilities.invokeLater(new Runnable(){public void run() 
+        {
+            for(ListDataListener ldl:list) ldl.contentsChanged(lde);
+        }});
     }
     
     private class FileComparator implements Comparator<File>
@@ -256,4 +271,10 @@ public class PatchLibSidebar extends JPanel implements Sidebar, SidebarListener
         
     }
 
+    public void setSize( int x )
+    {
+        Dimension d = new Dimension(x, getHeight());
+        setPreferredSize(d);
+        setSize(d);
+    }
 }
