@@ -45,9 +45,12 @@ public class NomadApplication extends NomadEnvironment
     protected void startInternal(ProgressMeter progress) throws ApplicationInstantiationException
     {
         super.startInternal(progress);
-        progress.increment("Loading: Nomad");
         
-        mainFrame = new Nomad(getName()+" "+getVersion());
+        String fullName = getName()+" - "+getVersion();
+        
+        progress.increment(fullName);
+        
+        mainFrame = new Nomad(fullName);
         // TODO add config... again but send an event rather than closing immediately
         //configureMainFrame(mainFrame);
 
@@ -67,7 +70,7 @@ public class NomadApplication extends NomadEnvironment
               }
           }
         );
-        
+
         mainFrame.setVisible(true);
     }
 
