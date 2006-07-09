@@ -100,7 +100,7 @@ public class Format
     /**
      * section id - user notes
      */
-    public final static int SEC_NOTES                   = 1 << 12;
+    public final static int SEC_NOTE                   = 1 << 12;
     
     /**
      * section id - parameter dump
@@ -181,7 +181,7 @@ public class Format
     /**
      *  section name
      */
-    public final static String NAME_NOTES               = "Notes";
+    public final static String NAME_NOTE               = "Notes";
     
     /**
      *  section name
@@ -679,7 +679,7 @@ public class Format
         sectionIDMap.put(NAME_MODULE_DUMP         , SEC_MODULE_DUMP);
         sectionIDMap.put(NAME_MORPHMAP_DUMP       , SEC_MORPHMAP_DUMP);
         sectionIDMap.put(NAME_NAME_DUMP           , SEC_NAME_DUMP);
-        sectionIDMap.put(NAME_NOTES               , SEC_NOTES);
+        sectionIDMap.put(NAME_NOTE               , SEC_NOTE);
         sectionIDMap.put(NAME_PARAMETER_DUMP      , SEC_PARAMETER_DUMP);
     }
     
@@ -720,10 +720,11 @@ public class Format
             case SEC_MODULE_DUMP             : return NAME_MODULE_DUMP;
             case SEC_MORPHMAP_DUMP           : return NAME_MORPHMAP_DUMP;
             case SEC_NAME_DUMP               : return NAME_NAME_DUMP;
-            case SEC_NOTES                   : return NAME_NOTES;
+            case SEC_NOTE                   : return NAME_NOTE;
             case SEC_PARAMETER_DUMP          : return NAME_PARAMETER_DUMP;
             default:
-                return null;
+                throw new RuntimeException("unknown section[ID="+ID+"]");
+                //return null;
         }
     }
 
@@ -762,9 +763,14 @@ public class Format
     }
 
 
+    /*
     public static String getUnescapedNote(String s)
     {
         // replaces '\[' with '['
+        
+        if (s.startsWith("["))
+            return null;
+        
         return s.replaceAll("\\\\\\[", "[");
     }
     
@@ -772,7 +778,19 @@ public class Format
     {
         // replaces '[' with '\['
         return s.replaceAll("\\[", "\\\\[");
+    }*/
+    
+
+    public static String getUnescapedNote(String s)
+    {
+        // replaces '\[/' with '[/'
+        return s.replaceAll("\\\\\\[/", "[/");
     }
     
+    public static String getEscapedNote(String s)
+    {
+        // replaces '[/' with '\[/'
+        return s.replaceAll("\\[/", "\\\\[/");
+    }
     
 }

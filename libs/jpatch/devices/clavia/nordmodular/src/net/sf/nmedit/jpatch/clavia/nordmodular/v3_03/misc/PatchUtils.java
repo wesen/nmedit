@@ -118,7 +118,7 @@ public class PatchUtils
                                     }
                                 }
                                 break;
-                                case Format.SEC_NOTES:
+                                case Format.SEC_NOTE:
                                 {
                                     hasNotes = true;
                                     
