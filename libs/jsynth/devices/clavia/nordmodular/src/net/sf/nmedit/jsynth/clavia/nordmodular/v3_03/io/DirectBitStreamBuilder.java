@@ -141,7 +141,7 @@ public class DirectBitStreamBuilder
         
 
       // Name section
-      beginSection(Format.S_NAME_1 /*55*/);
+      beginSection(Format.S_NAME_1);
       {
           String name = patch.getName();
           if (name == null) name = "";
@@ -160,7 +160,7 @@ public class DirectBitStreamBuilder
       append(h.getPortamentoTime());
       append(h.getPortamento());
       append(1);
-      append(h.getRequestedVoices() - 1 /*-1 ??? */);
+      append(h.getRequestedVoices() - 1);
       append(0);
       append(h.getSeparatorPosition());
       append(h.getOctaveShift());
