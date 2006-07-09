@@ -81,8 +81,9 @@
 			</fileset>
 		</copy>
 		<copy todir="${dist.data}/patch" taskname="Copying resources">
-			<fileset dir="${source.data}/patch"  casesensitive="yes">
-			</fileset>
+	      <fileset dir="${source.data}/patch">
+	        <include name="example.pch"/>
+	      </fileset>
 		</copy>
 		<copy todir="${dist.conf}" taskname="Copying resources">
 			<fileset dir="${source.conf}"  casesensitive="yes">
@@ -269,7 +270,7 @@
 	<!-- run nomad                                          -->
 	<!-- ************************************************** -->
 	
-        <target name="nomad" >
+    <target name="nomad" >
 		<java jar="${dist.nomad}/nomad.jar" fork="true" dir="${dist.nomad}" />
 	</target>
 
