@@ -81,7 +81,7 @@ public class MidiControllerSet extends AbstractList<MidiController>
             {
                 return -1;
             }
-            else if (mc<120)
+            else if (mc<=120)
             {
                 return mc-1;
             }
@@ -99,7 +99,14 @@ public class MidiControllerSet extends AbstractList<MidiController>
     
     public MidiController getByMC(int mc)
     {
+        try
+        {
         return midiControllerList[getIndexForMC(mc)];
+        }
+        catch (IndexOutOfBoundsException e)
+        {
+            throw new RuntimeException("Invalid midi controller:"+mc);
+        }
     }
     
     public int indexOf(Object obj)

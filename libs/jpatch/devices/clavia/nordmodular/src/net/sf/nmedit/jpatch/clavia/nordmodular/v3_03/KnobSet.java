@@ -68,11 +68,20 @@ public class KnobSet extends AbstractList<Knob>
     
     public Knob getByID( int ID )
     {
-        if (ID >= 19)
+        int index = ID;
+        switch (index)
         {
-            ID--;
+            case 19:index=18;break;
+            case 20:index=19;break;
+            case 22:index=20;break;
         }
-        return knobs[ID];
+        try
+        {
+        return knobs[index];
+        } catch (ArrayIndexOutOfBoundsException e)
+        {
+            throw new RuntimeException("Invalid knob ID:"+ID+" (index="+index+")");
+        }
     }
 
     @Override
