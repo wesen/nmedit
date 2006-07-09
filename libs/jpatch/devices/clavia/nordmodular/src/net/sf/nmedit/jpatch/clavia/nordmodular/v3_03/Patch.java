@@ -185,19 +185,8 @@ public class Patch extends ListenableAdapter<PatchEventS> implements net.sf.nmed
     
     private boolean eqString(String a, String b)
     {
-        if (a!=b)
-        {
-            if (a==null)
-            {
-                a = b;
-                b = null;
-            }
-            if (a.length()==0) return true; // null == empty-string 
-            
-            return false; // x!=null
-        }
-        if (a==b) return true;  // null==null||a==a
-        // a != null & b != null
+        if (a==null) a="";
+        if (b==null) b="";
         return a.equals(b);
     }
     
