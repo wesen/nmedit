@@ -35,6 +35,7 @@ import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.jnmprotocol.IAmMessage;
 import net.sf.nmedit.jnmprotocol.MidiDriver;
+import net.sf.nmedit.jnmprotocol.MidiException;
 import net.sf.nmedit.jnmprotocol.MidiMessage;
 import net.sf.nmedit.jnmprotocol.NmProtocol;
 import net.sf.nmedit.jnmprotocol.NmProtocolListener;
@@ -199,9 +200,9 @@ public class NordModular extends AbstractSynthesizer
                 messageProcessor.dieAndWait(800);
 
                 if (messageProcessor.isAlive())
-                {
+                {/* TODO write message to logger
                     messageProcessor.setExitMessage("message thread: has stopped");
-                    System.err.println("message thread: not stopped");
+                    System.err.println("message thread: not stopped");*/
                 }
                 protocol.removeListener(synthMessageHandler);
                 for (NmProtocolListener l:protocolListenerList)
@@ -337,6 +338,11 @@ public class NordModular extends AbstractSynthesizer
                 try
                 {
                     protocol.heartbeat();
+                }
+                catch (MidiException e)
+                {
+                    System.err.println(e.getMessage()+" [ERROR:"+e.getError()+"]");
+                    e.printStackTrace();
                 }
                 catch (Exception e)
                 {
