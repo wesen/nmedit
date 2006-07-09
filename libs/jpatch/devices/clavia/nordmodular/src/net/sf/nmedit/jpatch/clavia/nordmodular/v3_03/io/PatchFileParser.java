@@ -265,8 +265,8 @@ public class PatchFileParser extends PatchParser
                                 }
                                 return setTokenType( TK_RECORD );
                             }
-
-                        case Format.SEC_NOTES:
+                               
+                        case Format.SEC_NOTE:
                             return setTokenType( notes() );
 
                         case Format.SEC_NAME_DUMP:
@@ -584,8 +584,8 @@ public class PatchFileParser extends PatchParser
 
     }
 
-    private final static String closingNotesHeader = "[/"
-        + Format.getSectionName( Format.SEC_NOTES ) + "]";
+    private final static String closingNoteHeader = "[/"
+        + Format.getSectionName( Format.SEC_NOTE ) + "]";
 
     private int notes() throws PatchParserException, IOException
     {
@@ -596,7 +596,7 @@ public class PatchFileParser extends PatchParser
         
         char indicator = buffer[pos];
         boolean stop = false;
-        
+            
         while ((pos<limit||refill()) && (!stop))
         {
             switch (buffer[pos])
@@ -611,7 +611,7 @@ public class PatchFileParser extends PatchParser
             }
         }
 
-        if ((indicator == '[') && (str.toString().compareTo( closingNotesHeader ) == 0))
+        if ((indicator == '[') && (str.toString().compareTo( closingNoteHeader ) == 0))
         {
             if (!newLine())
             {
@@ -627,13 +627,17 @@ public class PatchFileParser extends PatchParser
         {
             throw expectedNewLine();
         }
-        
         str.replace(0, str.length(), Format.getUnescapedNote(str.toString()));
-        
+
         return TK_RECORD;
     }
 
     private PatchParserException error( String message )
+    {
+        return new PatchParserException( message + " " + location () );
+    }
+
+    private String location ()
     {
         String section;
         if (sectionID < 0)
@@ -648,8 +652,7 @@ public class PatchFileParser extends PatchParser
         {
             section = Format.getSectionName( sectionID );
         }
-        return new PatchParserException( message + " @(line,column)=(" + line
-                + "," + col + ");section=" + section + ";" );
+        return "@(line,column)=(" + line+ "," + col + ");section=" + section + ";";
     }
 
     private PatchParserException unexpectedEOF()
@@ -687,9 +690,9 @@ public class PatchFileParser extends PatchParser
     }
 
     @Override
-    public int getValue( int index )
+    public int getValue( int index ) 
     {
-        if (index >= valueCount) throw new IndexOutOfBoundsException();
+        if (index >= valueCount) throw (new IndexOutOfBoundsException(location()+" index:"+index));
 
         return values[index];
     }

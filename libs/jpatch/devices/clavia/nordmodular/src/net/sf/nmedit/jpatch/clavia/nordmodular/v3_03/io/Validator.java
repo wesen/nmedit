@@ -45,7 +45,7 @@ public class Validator extends WrappedPatchParser
             switch (parser.getSectionID())
             {
 
-                case Format.SEC_NOTES:
+                case Format.SEC_NOTE:
                     // nothing to check here
                     break;
 

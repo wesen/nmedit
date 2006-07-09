@@ -147,65 +147,81 @@ public class VirtualTranscoder extends Transcoder<Patch, PatchBuilder>
             parameterDump(patch.getCommonVoiceArea(),  callback);
         }
         
-        {   // CustomDump
-            customDump(patch.getPolyVoiceArea(),  callback);
-            customDump(patch.getCommonVoiceArea(),  callback);
-        }
-        
         {  // MorphMapDump
-
-            r.setSectionID(Format.SEC_MORPHMAP_DUMP);
-            callback.beginSection(r.getSectionID());
 
             // first : morph group
             MorphSet morphs = patch.getMorphs();
-            
-            r.setSize(morphs.size());
-            for (int i=0;i<morphs.size();i++)
-                r.setValue(i, morphs.get(i).getValue());
-            callback.record(r);
-            
+
+            int size = 0;
             for (int i=0;i<morphs.size();i++)
             {
-                Morph morph = morphs.get(i);
-                if (morph.size()>0)
-                {
-                    r.setSize(Format.VALUE_COUNT_MORPH_MAP_DUMP*morph.size());
-                    int offset = 0;
-                    for (Parameter p : morph)
-                    {
-                        Module m = p.getModule();
-                        
-                        r.setValue(offset+Format.MORPH_MAP_DUMP_SECTION, Format.getVoiceAreaID(m.getVoiceArea().isPolyVoiceArea()));
-                        r.setValue(offset+Format.MORPH_MAP_DUMP_MODULE_INDEX, m.getIndex());
-                        r.setValue(offset+Format.MORPH_MAP_DUMP_PARAMETER_INDEX, p.getID());
-                        r.setValue(offset+Format.MORPH_MAP_DUMP_MORPH_RANGE, p.getMorphRange());
-                        r.setValue(offset+Format.MORPH_MAP_DUMP_MORPH_INDEX, morph.getID());
-                        offset+=Format.VALUE_COUNT_MORPH_MAP_DUMP;
-                    }
-                    callback.record(r);
-                }
+                size+= morphs.get(i).size();
             }
 
-            // second: list
-            r.reset();
-            callback.endSection(r.getSectionID());
+            if (size>0)
+            {
+                
+                // this reproduces a bug were morph values are not written
+                // when no knob is assigned to any morph
+
+                r.setSectionID(Format.SEC_MORPHMAP_DUMP);
+                callback.beginSection(r.getSectionID());
+                
+                r.setSize(morphs.size());
+                for (int i=0;i<morphs.size();i++)
+                    r.setValue(i, morphs.get(i).getValue());
+                callback.record(r);
+    
+                r.setSize(Format.VALUE_COUNT_MORPH_MAP_DUMP*size);
+                int offset = 0;
+                for (int i=0;i<morphs.size();i++)
+                {
+                    Morph morph = morphs.get(i);
+                    if (morph.size()>0)
+                    {
+                        for (Parameter p : morph)
+                        {
+                            Module m = p.getModule();
+                            
+                            r.setValue(offset+Format.MORPH_MAP_DUMP_SECTION, Format.getVoiceAreaID(m.getVoiceArea().isPolyVoiceArea()));
+                            r.setValue(offset+Format.MORPH_MAP_DUMP_MODULE_INDEX, m.getIndex());
+                            r.setValue(offset+Format.MORPH_MAP_DUMP_PARAMETER_INDEX, p.getID());
+                            r.setValue(offset+Format.MORPH_MAP_DUMP_MORPH_RANGE, p.getMorphRange());
+                            r.setValue(offset+Format.MORPH_MAP_DUMP_MORPH_INDEX, morph.getID());
+                            offset+=Format.VALUE_COUNT_MORPH_MAP_DUMP;
+                        }
+                    }
+                }
+                callback.record(r);
+    
+                // second: list
+                r.reset();
+                callback.endSection(r.getSectionID());
+            }
         }
         
         {   // KeyboardAssignment
-            r.setSectionID(Format.SEC_KEYBOARDASSIGNMENT);
-            callback.beginSection(r.getSectionID());
-
             MorphSet morphs = patch.getMorphs();
-            
-            r.setSize(4);
+            int [] values = new int[morphs.size()];
+            boolean writeKA = false;
             for (int i=0;i<morphs.size();i++)
             {
-                r.setValue(i, morphs.get(i).getKeyboardAssignment().getID());
+                int v = morphs.get(i).getKeyboardAssignment().getID();
+                writeKA |= (v!=0); // write section only when at least one is != 0 
+                values[i]=v;
             }
-            callback.record(r);
-            r.reset();
-            callback.endSection(r.getSectionID());
+            
+            if (writeKA)
+            {
+                r.setSectionID(Format.SEC_KEYBOARDASSIGNMENT);
+                callback.beginSection(r.getSectionID());
+    
+                r.setSize(4);
+                r.setValues(values);
+                callback.record(r);
+                r.reset();
+                callback.endSection(r.getSectionID());
+            }
         }
         
         {   // KnobMapDump
@@ -290,6 +306,11 @@ public class VirtualTranscoder extends Transcoder<Patch, PatchBuilder>
             }
         }
         
+        {   // CustomDump
+            customDump(patch.getPolyVoiceArea(),  callback);
+            customDump(patch.getCommonVoiceArea(),  callback);
+        }
+        
         {   // NameDump
             nameDump(patch.getPolyVoiceArea(),  callback);
             nameDump(patch.getCommonVoiceArea(),  callback);
@@ -298,6 +319,7 @@ public class VirtualTranscoder extends Transcoder<Patch, PatchBuilder>
         {   // notes
             
             String notes = patch.getNote();
+            
             if (notes==null) notes = "";
             else notes = Format.getEscapedNote(notes);
 
@@ -306,7 +328,7 @@ public class VirtualTranscoder extends Transcoder<Patch, PatchBuilder>
                 
                 notes = notes.replaceAll("\r", "");
                 
-                r.setSectionID(Format.SEC_NOTES);
+                r.setSectionID(Format.SEC_NOTE);
                 callback.beginSection(r.getSectionID());
                 
                 for (String line : notes.split("\n"))

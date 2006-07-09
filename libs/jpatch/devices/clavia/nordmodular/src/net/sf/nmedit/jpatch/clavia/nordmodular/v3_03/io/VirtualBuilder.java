@@ -97,7 +97,7 @@ public class VirtualBuilder implements PatchBuilder
     {
         switch (ID)
         {
-            case Format.SEC_NOTES:
+            case Format.SEC_NOTE:
             {
                 notes.replace( 0, notes.length(), "" );
             }
@@ -110,10 +110,11 @@ public class VirtualBuilder implements PatchBuilder
     {
         switch (ID)
         {
-            case Format.SEC_NOTES:
+            case Format.SEC_NOTE:
             {
                 // remove last \n because it does not belong there
-                notes.replace( notes.length() - 1, notes.length() - 1, "" );
+                notes.replace( notes.length() - 1, notes.length(), "" );
+                
                 patch.setNote( notes.toString() );
             }
                 break;
@@ -187,7 +188,7 @@ public class VirtualBuilder implements PatchBuilder
                 }
             }
                 break;
-            case Format.SEC_NOTES:
+            case Format.SEC_NOTE:
             {
                 notes.append( r.getString() + "\n" );
             }
@@ -239,14 +240,29 @@ public class VirtualBuilder implements PatchBuilder
                         // color not required
                         // r.getValue(Format.CABLE_DUMP_COLOR);
 
-                        Module msrc = va
-                                .get( r
-                                        .getValue( Format.CABLE_DUMP_MODULE_INDEX_SOURCE ) );
-                        Module mdst = va
-                                .get( r
-                                        .getValue( Format.CABLE_DUMP_MODULE_INDEX_DESTINATION ) );
+                        int idxSrc = r.getValue( Format.CABLE_DUMP_MODULE_INDEX_SOURCE );
+                        int idxDst = r.getValue( Format.CABLE_DUMP_MODULE_INDEX_DESTINATION );
+                        
+                        Module msrc = va.get( idxSrc );
+                        Module mdst = va.get( idxDst );
 
-                        DConnector isrc = msrc
+                        if (msrc==null)
+                        {
+                            throw new RuntimeException
+                            (
+                                "CableDump: source-module[index="+idxSrc+"] does not exist"
+                            );
+                        } 
+                        else if (mdst==null)
+                        {
+                            throw new RuntimeException
+                            (
+                                "CableDump: destination-module[index="+idxDst+"] does not exist"
+                            );
+                        }
+                        else
+                        {
+                            DConnector isrc = msrc
                                 .getDefinition()
                                 .getConnectorById(
                                         r
@@ -254,7 +270,7 @@ public class VirtualBuilder implements PatchBuilder
                                         r
                                                 .getValue( Format.CABLE_DUMP_CONNECTOR_TYPE_SOURCE ) == 0 );
 
-                        DConnector idst = mdst
+                            DConnector idst = mdst
                                 .getDefinition()
                                 .getConnectorById(
                                         r
@@ -262,17 +278,21 @@ public class VirtualBuilder implements PatchBuilder
                                         r
                                                 .getValue( Format.CABLE_DUMP_CONNECTOR_TYPE_DESTINATION ) == 0 );
 
-                        if (idst == null || isrc == null)
-                        {
-                            System.err.println( "Connector not found" );
-                        }
-                        else
-                        {
-                            Connector csrc = msrc.getConnector( isrc
-                                    .getContextId() );
-                            Connector cdst = mdst.getConnector( idst
-                                    .getContextId() );
-                            csrc.connect( cdst );
+                            if (idst == null || isrc == null)
+                            {
+                                System.err.println( "Connector not found" );
+                            }
+                            else
+                            {
+                                Connector csrc = msrc.getConnector( isrc
+                                        .getContextId() );
+                                Connector cdst = mdst.getConnector( idst
+                                        .getContextId() );
+                                
+                                int color = r.getValue(Format.CABLE_DUMP_COLOR);
+                                
+                                csrc.connect( cdst, net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Signal.bySignalID(color) );
+                            }
                         }
                     }
                 }
@@ -295,24 +315,12 @@ public class VirtualBuilder implements PatchBuilder
                 {
                     for (int i = 0; i < r.getValueCount(); i += 5)
                     {
-                        selectVoiceArea( r
-                                .getValue( Format.MORPH_MAP_DUMP_SECTION + i ) );
+                        selectVoiceArea( r.getValue( Format.MORPH_MAP_DUMP_SECTION + i ) );
 
-                        Module module = va.get( r
-                                .getValue( Format.MORPH_MAP_DUMP_MODULE_INDEX
-                                        + i ) );
-                        Parameter p = module
-                                .getParameter( r
-                                        .getValue( Format.MORPH_MAP_DUMP_PARAMETER_INDEX
-                                                + i ) );
-
-                        p.setMorphRange( r
-                                .getValue( Format.MORPH_MAP_DUMP_MORPH_RANGE
-                                        + i ) );
-
-                        morphs.get(
-                                r.getValue( Format.MORPH_MAP_DUMP_MORPH_INDEX
-                                        + i ) ).add( p );
+                        Module module = va.get( r.getValue( Format.MORPH_MAP_DUMP_MODULE_INDEX+ i ) );
+                        Parameter p = module.getParameter( r.getValue( Format.MORPH_MAP_DUMP_PARAMETER_INDEX+ i ) );
+                        p.setMorphRange( r.getValue( Format.MORPH_MAP_DUMP_MORPH_RANGE+ i ) );
+                        morphs.get(r.getValue( Format.MORPH_MAP_DUMP_MORPH_INDEX+ i ) ).add( p );
                     }
                 }
             }
@@ -385,9 +393,16 @@ public class VirtualBuilder implements PatchBuilder
             {
                 if (!selectVoiceArea( r ))
                 {
-                    Module module = va.get( r
-                            .getValue( Format.NAME_DUMP_MODULE_INDEX ) );
+                    int index = r.getValue( Format.NAME_DUMP_MODULE_INDEX );
+                    Module module = va.get( index );
+                    if (module==null)
+                    {
+                        throw new RuntimeException("NameDump: Module[index="+index+"] does not exist.");
+                    }
+                    else
+                    {
                     module.setName( r.getString() );
+                    }
                 }
             }
                 break;
@@ -437,9 +452,12 @@ public class VirtualBuilder implements PatchBuilder
             {
                 if (!selectVoiceArea( r ))
                 {
-                    Module module = va.get( r
-                            .getValue( Format.PARAMETER_DUMP_MODULE_INDEX ) );
-
+                    int mindex  = r.getValue( Format.PARAMETER_DUMP_MODULE_INDEX );
+                    Module module = va.get( mindex );
+                    
+                    if (module==null)
+                        throw new RuntimeException("ParameterDump: module[index="+mindex+"] does not exist");
+                    
                     if (module.getParameterCount() != r
                             .getValue( Format.PARAMETER_DUMP_PARAMETER_COUNT ))
                     {

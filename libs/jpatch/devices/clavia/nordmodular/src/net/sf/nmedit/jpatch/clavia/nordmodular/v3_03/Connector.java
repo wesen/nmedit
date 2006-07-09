@@ -235,7 +235,13 @@ public class Connector extends ListenableAdapter<ConnectorEvent>
      */
     public boolean connect( Connector c )
     {
-        return connect( this, c );
+        return connect( this, c, null );
+    }
+
+    // overwrites  color
+    public boolean connect( Connector c, Signal color )
+    {
+        return connect( this, c, color );
     }
 
     /**
@@ -263,7 +269,7 @@ public class Connector extends ListenableAdapter<ConnectorEvent>
      * @param b a connector
      * @return true if the connection could be established
      */
-    public static boolean connect( Connector a, Connector b )
+    public static boolean connect( Connector a, Connector b, Signal color )
     {
         if (a.graph == b.graph)
         {
@@ -292,6 +298,11 @@ public class Connector extends ListenableAdapter<ConnectorEvent>
                 for (Connector c : b.graph)
                 {
                     a.graph.add( c );
+                    if (color!=null)
+                    {
+                        a.graph.setColor(color);
+                        b.graph.setColor(color);
+                    }
                     c.graph = a.graph;
                 }
 
@@ -323,6 +334,13 @@ public class Connector extends ListenableAdapter<ConnectorEvent>
                 for (Connector aa : a.graph)
                 {
                     b.graph.add( aa );
+
+                    if (color!=null)
+                    {
+                        aa.graph.setColor(color);
+                        b.graph.setColor(color);
+                    }
+                    
                     aa.graph = b.graph;
                 }
 
@@ -351,6 +369,11 @@ public class Connector extends ListenableAdapter<ConnectorEvent>
                 for (Connector c : b.graph)
                 {
                     a.graph.add( c );
+                    if (color!=null)
+                    {
+                        a.graph.setColor(color);
+                        c.graph.setColor(color);
+                    }
                     c.graph = a.graph;
                 }
 
@@ -412,6 +435,7 @@ public class Connector extends ListenableAdapter<ConnectorEvent>
         a.children.remove( b );
 
         Graph g = new Graph();
+        g.setColor(a.graph.getColor());
         for (Iterator<Connector> iter = new BreadthFirstSearchIterator( b ); iter
                 .hasNext();)
         {
@@ -698,6 +722,8 @@ public class Connector extends ListenableAdapter<ConnectorEvent>
          * The output connector of the graph. Can be <code>null</code>.
          */
         private Connector out;
+        
+        private Signal userColor = null;
 
         public Graph()
         {
@@ -712,9 +738,20 @@ public class Connector extends ListenableAdapter<ConnectorEvent>
          */
         public Signal getColor()
         {
+            if (userColor != null)
+                return userColor;
+            
             // default: no signal
             return out == null ? Signal.NONE : Signal.bySignalID( out
                     .getSignal() );
+        }
+        
+        public void setColor(Signal s)
+        {
+            if (Signal.USER1.getSignalID()==s.getSignalID()||Signal.USER2.getSignalID()==s.getSignalID())
+                userColor = s;
+            else
+                userColor = null;
         }
 
         /**

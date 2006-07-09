@@ -104,19 +104,29 @@ public class StreamBuilder implements PatchBuilder
     {
         return nl;
     }
+    
+    private boolean ignoreSection = false;
 
     public void beginSection( int ID ) 
     {
+        ignoreSection = Format.SEC_DUMMY_PATCH_NAME == ID;
+        if (!ignoreSection)
         writer.print("["+Format.getSectionName(ID)+"]"+nl);
     }
 
     public void endSection( int ID )
     {
+        if (!ignoreSection)
         writer.print("[/"+Format.getSectionName(ID)+"]"+nl);
+        else
+        ignoreSection = false;
     }
 
     public void record( Record r )
     {
+        if (ignoreSection)
+            return;
+        
         for (int i=0;i<r.getValueCount();i++)
         {
             writer.print(r.getValue(i)+" ");
