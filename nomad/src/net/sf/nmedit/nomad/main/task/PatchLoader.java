@@ -98,6 +98,8 @@ public class PatchLoader {
                 String pName = extractPatchName(name);
 
                 patch.setName(pName);
+                patch.getHistory().clear();
+                patch.getHistory().setModified(false);
                 
                 synchronized (nomad)
                 {
