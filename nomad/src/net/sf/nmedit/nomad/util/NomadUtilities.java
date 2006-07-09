@@ -29,6 +29,7 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -330,4 +331,41 @@ public class NomadUtilities {
         return properties;
       }
 
+    public static String getFileExtension( File f )
+    {
+        return getFileExtension(f.getName());
+    }
+
+    public static String truncateFileName(File f)
+    {
+        return truncateFileName(f.getName());
+    }
+    
+    private static String truncateFileName( String name )
+    {
+        int sep = name.indexOf('/');
+        if (sep<0) sep = name.indexOf('\\');
+        return sep<0 ? name : name.substring(sep+1, name.length());
+    }
+
+    private static String getFileExtension( String name )
+    {
+        name = truncateFileName(name); // remove path
+        if (name.startsWith(".")) return "";
+        int sep = name.lastIndexOf('.');
+        return sep<0 ? "" : name.substring(sep+1, name.length());
+    }
+
+    public static File assureFileExtensionExists(File f, String ext)
+    {
+        if (!ext.equalsIgnoreCase(getFileExtension(f.getName())))
+        {
+            return new File(f.getPath()+"."+ext);
+        }
+        else
+        {
+            return f;
+        }
+    }
+    
 }
