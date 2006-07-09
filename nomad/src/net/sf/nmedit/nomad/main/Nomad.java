@@ -111,7 +111,6 @@ public class Nomad extends JFrame implements DocumentListener
         Sidebar defaultSidebar =  new ModuleSidebar( this, sbcontrol ) ;
         sbcontrol.addSidebar(defaultSidebar);
         sbcontrol.addSidebar( new PatchLibSidebar( this, sbcontrol ) );
-        //sbcontrol.setCurrentSidebar(defaultSidebar);
 
         Container cpane = getContentPane();
         cpane.setLayout( new BorderLayout() );
@@ -139,7 +138,9 @@ public class Nomad extends JFrame implements DocumentListener
         fileChooser = new JFileChooser( PatchLibSidebar.getDefaultPatchDirectoryFile() );
         fileChooser.setAccessory( new PatchFilePreviewComponent( fileChooser ) );
         fileChooser.addChoosableFileFilter( FileFilterBuilder.createFileFilter("pch", "Nord Modular Patch v3.03") );
-        
+
+        sbcontrol.setCurrentSidebar(defaultSidebar);
+        defaultSidebar.setSize(200);
         addComponentListener(new FrameTracker());
     }
     
@@ -270,18 +271,16 @@ public class Nomad extends JFrame implements DocumentListener
         }
 
         fileChooser.setSelectedFile(newFileSuggestion);
-        if (NomadUtilities.isConfirmedByUser( this,
-                "Saving does not produce valid files yet. Shall I go on ?" ))
 
-            if (fileChooser.showSaveDialog( null ) == JFileChooser.APPROVE_OPTION)
-            {
-                savePatchAs(doc, fileChooser.getSelectedFile());
+        if (fileChooser.showSaveDialog( null ) == JFileChooser.APPROVE_OPTION)
+        {
+            savePatchAs(doc, fileChooser.getSelectedFile());
 
-                PatchLibSidebar.setDefaultPatchDirectory
-                (
-                        fileChooser.getCurrentDirectory()
-                );
-            }
+            PatchLibSidebar.setDefaultPatchDirectory
+            (
+                    fileChooser.getCurrentDirectory()
+            );
+        }
     }
     
     private boolean savePatchAs(PatchDocument pdoc, File f)
@@ -292,6 +291,7 @@ public class Nomad extends JFrame implements DocumentListener
             PatchEncoder enc = patchImplementation
                     .createPatchEncoder( FileTarget.class );
 
+            f = NomadUtilities.assureFileExtensionExists(f, "pch");
             enc.setSource( pdoc.getPatch() );
             Writer writer = new BufferedWriter( new FileWriter(f) );
             enc.encode( new FileTarget( writer ) );
@@ -316,24 +316,47 @@ public class Nomad extends JFrame implements DocumentListener
         {
             PatchDocument doc = (PatchDocument) documents.getSelection();
             
+            int code = JOptionPane.YES_OPTION;
             if (doc.getPatch().getHistory().isModified())
             {
-                if (!isPatchCloseDataLossConfirmed())
+                code = confirmPatchClosingYNC(doc.getPatch());
+                if (code == JOptionPane.YES_OPTION)
                 {
-                    return false;
+                    if (!savePatch())
+                        code = JOptionPane.CANCEL_OPTION;
+                    
                 }
             }
-            
-            documents.remove( documents.getSelection() );
-            return true;
+            if (code==JOptionPane.YES_OPTION||code==JOptionPane.NO_OPTION)
+            {
+                documents.remove( documents.getSelection() );
+                return true;
+            }
         }
         return false;
     }
     
+    private int confirmPatchClosingYNC(Patch p)
+    {
+        return JOptionPane.showOptionDialog
+        (
+                this,
+                "Patch '"+p.getName()+"' has been modified. Save changes ?",
+                "Closing '"+p.getName()+"'",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.WARNING_MESSAGE,
+                null,
+                new Object[]{"Yes", "No", "Cancel"},
+                "Yes"
+        );
+    }
+
+    /*
     private boolean isPatchCloseDataLossConfirmed()
     {
         return JOptionPane.showOptionDialog(
-                this, "Modifications will be lost, do you really want to close?",
+                this,
+                "Modifications will be lost, do you really want to close?",
                 "Closing",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE,
@@ -341,7 +364,7 @@ public class Nomad extends JFrame implements DocumentListener
                 new Object[]{"Yes", "No"},
                 "No"
         ) == JOptionPane.YES_OPTION;
-    }
+    }*/
 
     public boolean closeEachPatch()
     {
@@ -418,7 +441,7 @@ public class Nomad extends JFrame implements DocumentListener
         }
     }
 
-    public void savePatch()
+    public boolean savePatch()
     {
         PatchDocument doc = getActivePatch();
         File f = doc.getFile();
@@ -428,8 +451,10 @@ public class Nomad extends JFrame implements DocumentListener
             if (savePatchAs(doc, f))
             {
                 doc.getPatch().getHistory().setModified(false);
+                return true;
             }
         }
+        return false;
     }
 
     public void tryRedo()
