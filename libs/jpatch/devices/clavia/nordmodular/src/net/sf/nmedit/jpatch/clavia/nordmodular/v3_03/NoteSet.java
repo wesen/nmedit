@@ -22,9 +22,10 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
-public class NoteSet extends HashSet<Note>
+public class NoteSet extends ArrayList<Note> //extends HashSet<Note>
 {
 
     /**
@@ -33,10 +34,11 @@ public class NoteSet extends HashSet<Note>
      * 
      * @see HashSet
      */
+    /*
     public boolean add(Note n)
     {
         remove(n);
         return super.add(n);
-    }
+    }*/
     
 }
