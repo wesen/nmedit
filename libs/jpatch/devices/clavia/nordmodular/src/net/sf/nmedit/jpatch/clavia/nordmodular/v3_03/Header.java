@@ -332,6 +332,12 @@ public class Header extends ListenableAdapter<HeaderEvent>
         }
     }
 
+    // TODO remove this fix for separator position bug
+    public void setValueWithoutNotification( int index, int value )
+    {
+        data[index] = value;
+    }
+
     public int getValue( int index )
     {
         return data[index];
