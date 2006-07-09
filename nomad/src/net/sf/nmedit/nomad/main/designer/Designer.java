@@ -32,7 +32,6 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.FontUIResource;
 
 import com.jgoodies.looks.Options;
-import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.plastic.theme.DesertBluer;
 
@@ -55,13 +54,13 @@ public class Designer
        // printKeyValues();
         /*
 /*        
+        InsetsUIResource mnMargin = new InsetsUIResource(1,1,1,1);
+        UIManager.put("MenuItem.margin", mnMargin);
         UIManager.put("Panel.background", panDark);
         UIManager.put("PopupMenu.background", panBright);
 
-        InsetsUIResource mnMargin = new InsetsUIResource(8,8,8,8);
         
         UIManager.put("MenuItem.background", panBright);
-        UIManager.put("MenuItem.margin", mnMargin);
         UIManager.put("CheckBoxMenuItem.background", panBright);
         UIManager.put("CheckBoxMenuItem.margin", mnMargin);
         UIManager.put("RadioButtonMenuItem.background", panBright);
@@ -108,10 +107,10 @@ public class Designer
                 new Dimension(18, 18));*/
         try {
             Options.setTabIconsEnabled(true);
-            Plastic3DLookAndFeel.set3DEnabled(true);
+            PlasticLookAndFeel.set3DEnabled(true);
             UIManager.put(PlasticLookAndFeel.IS_3D_KEY,Boolean.TRUE);
-            Plastic3DLookAndFeel.setPlasticTheme(new DesertBluer());
-            Plastic3DLookAndFeel.setTabStyle(Plastic3DLookAndFeel.TAB_STYLE_METAL_VALUE);
+            PlasticLookAndFeel.setPlasticTheme(new DesertBluer());
+            PlasticLookAndFeel.setTabStyle(PlasticLookAndFeel.TAB_STYLE_METAL_VALUE);
             //Plastic3DLookAndFeel.setHighContrastFocusColorsEnabled(false);
             UIManager.put(Options.POPUP_DROP_SHADOW_ENABLED_KEY, true);
             UIManager.setLookAndFeel(Options.PLASTICXP_NAME);

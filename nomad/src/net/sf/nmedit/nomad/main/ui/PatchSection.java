@@ -27,8 +27,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -77,13 +77,7 @@ public class PatchSection extends HeaderSection implements DocumentListener
 
         pName = new JTextField(new LimitedText(16), "Name", 16);
         pName.setMinimumSize(new Dimension(80, 20));
-        pName.addKeyListener(new KeyListener(){
-            public void keyTyped( KeyEvent e )
-            {
-                // TODO Auto-generated method stub
-                
-            }
-
+        pName.addKeyListener(new KeyAdapter(){
             public void keyPressed( KeyEvent e )
             {
                 if (e.getKeyCode()==KeyEvent.VK_ESCAPE)
@@ -120,8 +114,9 @@ public class PatchSection extends HeaderSection implements DocumentListener
             }});
         
         pVoices = new JSpinner(); 
-        voices = new SpinnerNumberModel(32, 1, 32, 1);
+        voices = new SpinnerNumberModel(1, 1, 32, 1);
         pVoices.setModel(voices);
+        pVoices.setValue(voices.getMinimum());
         
         voices.addChangeListener(new ChangeListener() {
             public void stateChanged( ChangeEvent e )
