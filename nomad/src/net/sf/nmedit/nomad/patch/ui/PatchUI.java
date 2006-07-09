@@ -28,8 +28,8 @@ import java.beans.PropertyChangeListener;
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JViewport;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Format;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch;
 import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 
@@ -62,7 +62,7 @@ public class PatchUI extends JSplitPane
         //setLayout(new BorderLayout());
         //add(split, BorderLayout.CENTER);
 	}
-	
+
     private class DivLocProperty implements PropertyChangeListener
     {
 
@@ -83,12 +83,14 @@ public class PatchUI extends JSplitPane
             else
                 d = 1;
             d*=4000.0d;
-            /*
-            patch.getHeader().setSeparatorPosition
+         
+            // TODO check when sep position can be set
+            patch.getHeader().setValueWithoutNotification
             (
+                    Format.HEADER_SECTION_SEPARATOR_POSITION,
                     Math.max(Format.HEADER_SECTION_SEPARATOR_POSITION_TOP_MOST,
                             Math.min((int)d, Format.HEADER_SECTION_SEPARATOR_POSITION_BOTTOM_MOST))
-            );*/
+            );
         }
         
     }
