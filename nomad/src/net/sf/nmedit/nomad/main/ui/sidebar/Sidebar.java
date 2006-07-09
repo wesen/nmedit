@@ -47,5 +47,7 @@ public interface Sidebar
      * Disposes the view and associated data.
      */
     public void disposeView();
+
+    public void setSize( int i );
     
 }

@@ -89,8 +89,15 @@ public class SidebarControl extends JToolBar
 
         sidebarsBuffer = null;
     }
-    
+
     public void setCurrentSidebar(Sidebar bar)
+    {
+        JToggleButton toggle = sidebars.get(bar);
+        if (toggle!=null)
+            toggle.doClick();
+    }
+    
+    private void setCurrentSidebarInternal(Sidebar bar)
     {
         if (current != bar)
         {
@@ -161,7 +168,7 @@ public class SidebarControl extends JToolBar
         splitPane.setRightComponent(c);
         Dimension d = c.getPreferredSize();
         if (d == null) d = c.getSize();
-        splitPane.setDividerLocation(splitPane.getWidth()-Math.max(160, d.width));
+        splitPane.setDividerLocation(splitPane.getWidth()-Math.max(200, d.width));
         
         message.setID(SidebarEvent.ACTIVATED);
         message.setSidebar(bar);
@@ -221,7 +228,7 @@ public class SidebarControl extends JToolBar
         public void actionPerformed( ActionEvent e )
         {
             if (getCurrentSidebar()==bar) closeCurrentSidebar();
-            else setCurrentSidebar(bar);
+            else setCurrentSidebarInternal(bar);
         }
     }
 
