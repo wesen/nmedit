@@ -50,6 +50,7 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import net.sf.nmedit.jmisc.math.Math2;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DGroup;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DSection;
@@ -195,8 +196,14 @@ public class ModuleSidebar extends JPanel implements SwingConstants, Sidebar, Si
                 setText(((DGroup)value).getName());
             else if (value instanceof DModule)
             {
-                DModule spec = (DModule)value; 
-                setText(spec.getName());
+                DModule spec = (DModule)value;
+                
+                String txt = spec.getName()
+                +" ("
+                +Math2.roundTo(spec.getCycles(), -2)
+                +"%)";
+                
+                setText(txt);
                 ImageIcon icon = new ImageIcon(spec.getIcon()); 
                 setIcon(icon);
                 setDisabledIcon(icon);
@@ -367,6 +374,13 @@ public class ModuleSidebar extends JPanel implements SwingConstants, Sidebar, Si
     public void documentAdded( Document document )
     {
         tree.setEnabled(true);   
+    }
+
+    public void setSize( int x )
+    {
+        Dimension d = new Dimension(x, getHeight());
+        setPreferredSize(d);
+        setSize(d);
     }
     
 
