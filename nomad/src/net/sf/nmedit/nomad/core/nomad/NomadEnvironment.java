@@ -29,6 +29,7 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.ModuleDescriptions;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.substitution.Substitutions;
 import net.sf.nmedit.nomad.core.application.Application;
 import net.sf.nmedit.nomad.core.application.ApplicationInstantiationException;
+import net.sf.nmedit.nomad.core.application.Logger;
 import net.sf.nmedit.nomad.core.application.ProgressMeter;
 import net.sf.nmedit.nomad.main.designer.Designer;
 import net.sf.nmedit.nomad.theme.ModuleBuilder;
@@ -80,26 +81,27 @@ public abstract class NomadEnvironment extends Application
         }
         catch (Exception e)
         {
-            System.err.println( "Failed loading custom properties, defaults will be used: " + e );
+            Logger l = Application.getLog();
+            l.println(e.getMessage());
+            l.println("Application seems to be started the first time: using default properties.");
         }
 
-        progress.increment( "loading: initialising designer" );
+        progress.increment( "Initializing" );
+        
+        
         Designer.init();
 
-        progress.increment( "loading media: images" );
+        progress.increment( "Images" );
         loadDefaultImageTracker();
 
-        progress.increment( "loading: module definitions" );
+        progress.increment( "Modules" );
         loadModuleDefinitions();
 
-        progress.increment( "loading: ui builder" );
+        progress.increment( "Module builder" );
         loadDefaultBuilder();
 
-        progress.increment( "loading: plugin factory" );
+        progress.increment( "Themes" );
         loadDefaultFactory();
-        /*
-        progress.increment( "loading: module toolbar" );
-        loadModuleToolbar();*/
     }
     
     protected void stopInternal()
