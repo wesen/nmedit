@@ -3,12 +3,12 @@
 <theme>
   <module id="62">
     <component name="connector">
-      <property name="connector#0" value="62.0.in.overdrive mod" />
+      <property name="connector#0" value="62.1.in.overdrive mod" />
       <property name="size" value="13,13" />
       <property name="x,y" value="78,22" />
     </component>
     <component name="connector">
-      <property name="connector#0" value="62.1.in.in" />
+      <property name="connector#0" value="62.0.in.in" />
       <property name="size" value="13,13" />
       <property name="x,y" value="198,25" />
     </component>
