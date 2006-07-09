@@ -601,8 +601,8 @@
       <parameter id="2" name="sym" min="0" max="1" bit-count="1" />
     </module>
     <module id="62" short-name="Overdrive" cycles="4.0" prog-mem="1.65625" x-mem="0.28125" y-mem="0.34375" zero-page="0.875" dyn-mem="0.34375" height="3" >
-      <input id="0" name="overdrive mod" type="control" />
-      <input id="1" name="in" type="audio" />
+      <input id="1" name="overdrive mod" type="control" />
+      <input id="0" name="in" type="audio" />
       <output id="0" name="out" type="audio" />
       <parameter id="0" name="overdrive mod" min="0" max="127" bit-count="7" />
       <parameter id="1" name="overdrive" min="0" max="127" bit-count="7" />
