@@ -37,8 +37,8 @@ public class FullscreenAction extends NomadAction
         super( nomad );
         
 
-        final String description = "Full screen mode";
-        putValue(NAME, "Full screen");
+        final String description = "Toggles full screen mode";
+        putValue(NAME, "Toggle full screen");
         // putValue(SMALL_ICON, AppIcons.IC_DOCUMENT_OPEN);
         putValue(SHORT_DESCRIPTION, description);
         putValue(LONG_DESCRIPTION,  description);

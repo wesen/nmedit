@@ -31,6 +31,7 @@ import javax.swing.event.ChangeListener;
 
 import net.sf.nmedit.nomad.main.action.AboutDialogAction;
 import net.sf.nmedit.nomad.main.action.AppExitAction;
+import net.sf.nmedit.nomad.main.action.ExportImageAction;
 import net.sf.nmedit.nomad.main.action.FileCloseAction;
 import net.sf.nmedit.nomad.main.action.FileCloseAllAction;
 import net.sf.nmedit.nomad.main.action.FileNewAction;
@@ -63,6 +64,7 @@ public class NomadActionControl
     public final AboutDialogAction aboutDialogAction;
     public final ThemePluginSelector  tpm;
     public final ShowNoteDialogAction showNoteDialogAction; 
+    public final ExportImageAction exportImageAction;
 
     public final UndoAction undoAction;
     public final RedoAction redoAction;
@@ -86,6 +88,7 @@ public class NomadActionControl
         aboutDialogAction = new AboutDialogAction(nomad);
         tpm = new ThemePluginSelector();
         licenseDialogAction = new LicenseDialogAction(nomad);
+        exportImageAction = new ExportImageAction(nomad);
 
         undoAction = new UndoAction(nomad);
         redoAction = new RedoAction(nomad);
@@ -94,6 +97,7 @@ public class NomadActionControl
         redoAction.setEnabled(false);
         
         this.nomad = nomad;
+        setDocumentActionsEnabled(false);
     }
 
     public JMenuBar createMenu()
@@ -115,6 +119,8 @@ public class NomadActionControl
         mnMenu.addSeparator();
         mnMenu.add( fileSaveAction );
         mnMenu.add( fileSaveAsAction );
+        mnMenu.addSeparator();
+        mnMenu.add( exportImageAction );
         mnMenu.addSeparator();
         mnMenu.add( appExitAction );
         mnBar.add( mnMenu );
@@ -150,11 +156,11 @@ public class NomadActionControl
 
         // appearance -> theme
 
-        JMenu mnTheme = new JMenu( "Theme" );
-        tpm.createMenu(mnTheme);
-        tpm.addPluginSelectionListener( new SelectThemeAction() );
+//        JMenu mnTheme = new JMenu( "Theme" );
+//        tpm.createMenu(mnTheme);
+//        tpm.addPluginSelectionListener( new SelectThemeAction() );
 
-        mnMenu.add( mnTheme );
+//        mnMenu.add( mnTheme );
 
         // appearance -> look and feel
 
@@ -173,7 +179,7 @@ public class NomadActionControl
         mnBar.validate();
         return mnBar;
     }
-
+    
     public void setDocumentActionsEnabled( boolean hasDocuments )
     {
         fileCloseAction.setEnabled( hasDocuments );    
@@ -183,6 +189,7 @@ public class NomadActionControl
         fileSaveAsAction.setEnabled( hasDocuments );
         patchSettingsAction.setEnabled( hasDocuments );
         showNoteDialogAction.setEnabled( hasDocuments );
+        exportImageAction.setEnabled(hasDocuments);
         
         undoAction.setEnabled( false );
         redoAction.setEnabled( false );

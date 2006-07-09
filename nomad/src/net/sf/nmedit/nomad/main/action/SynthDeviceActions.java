@@ -64,6 +64,7 @@ public class SynthDeviceActions implements SlotListener, SynthStateListener, Doc
     private JMenuItem menuSynthConnectionMenuItem = null;
     private Action updloadCurrentSlotAction = new UploadPatchFromCurrentSlotAction();
     private Action downloadToCurrentSlotAction = new DownloadToCurrentSlotAction();
+    private SynthSetupAction synthSetupAction ;
 
     public SynthDeviceActions(NordModular device, Nomad nomad)
     {
@@ -89,6 +90,7 @@ public class SynthDeviceActions implements SlotListener, SynthStateListener, Doc
         device.addSynthStateListener(this);
         nomad.addWindowListener( new AutomaticSynthShutdownAction() );
         
+        synthSetupAction = new SynthSetupAction(this);
         updateActions();
     }
 
@@ -163,6 +165,7 @@ public class SynthDeviceActions implements SlotListener, SynthStateListener, Doc
     private void updateActions()
     {
         boolean connected = device.isConnected();
+        synthSetupAction.setEnabled(!connected);
         if (menuSynthConnectionMenuItem!=null)
             this.menuSynthConnectionMenuItem.setText( connected ? "Disconnect" : "Connect" );
         for (Action action:actions)
@@ -204,10 +207,23 @@ public class SynthDeviceActions implements SlotListener, SynthStateListener, Doc
             PatchDocument doc = nomad.getActivePatch();
             if (doc!=null)
             {
+                /*
+                for (Document d : nomad.getDocumentContainer().getDocuments())
+                {
+                    PatchDocument pd = (PatchDocument) d;
+                    if (pd.getSlot()==slot && pd !=doc)
+                    {
+                        pd.setSlot(null);
+                        break;
+                    }
+                }*/
+
                 if (doc.getSlot()!=slot)
                 {
                     slot.setPatch(doc.getPatch());
                 }
+                
+                //doc.setSlot(slot);
                 slot.sendPatchMessage();
             }
         }
@@ -218,7 +234,7 @@ public class SynthDeviceActions implements SlotListener, SynthStateListener, Doc
     {
         public DownloadToCurrentSlotAction()
         {
-            putValue(NAME, "Download To Current Slot");
+            putValue(NAME, "Download to current Slot");
         }
 
         public void actionPerformed( ActionEvent e )
@@ -238,7 +254,7 @@ public class SynthDeviceActions implements SlotListener, SynthStateListener, Doc
         public DownloadToSlotAction(Slot slot)
         {
             this.slot = slot;
-            putValue(NAME, "Download To "+slot.getName());
+            putValue(NAME, "Download to "+slot.getName());
         }
         
         public void actionPerformed( ActionEvent e )
@@ -261,7 +277,7 @@ public class SynthDeviceActions implements SlotListener, SynthStateListener, Doc
     {
         public UploadPatchFromCurrentSlotAction()
         {
-            putValue(NAME, "Upload Active Slot");
+            putValue(NAME, "Upload active slot");
         }
         
         @Override
@@ -290,7 +306,7 @@ public class SynthDeviceActions implements SlotListener, SynthStateListener, Doc
 
     public void createSynthMenuItems(JMenu mnMenu)
     {
-        mnMenu.add( new SynthSetupAction( this ) );
+        mnMenu.add( synthSetupAction );
         menuSynthConnectionMenuItem = mnMenu.add( "Connect" );
         menuSynthConnectionMenuItem
                 .addActionListener( new SynthConnectionMenuItemListener() );
