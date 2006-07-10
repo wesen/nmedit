@@ -62,6 +62,13 @@ public class ExportImageAction extends NomadAction
             
             if (target!=null)
             {
+                if (target.exists())
+                {
+                    if (!NomadUtilities.isConfirmedByUser(nomad, "File already exists. Overwrite it?"))
+                        return;
+                    
+                }
+                
                 (new Thread(){public void run(){
                     synchronized(d.getPatchUI().getTreeLock())
                     {
@@ -78,7 +85,7 @@ public class ExportImageAction extends NomadAction
         fChooser.addChoosableFileFilter( FileFilterBuilder.createFileFilter("png", "Portable Network Graphics") );
         fChooser.setMultiSelectionEnabled(false);
 
-        if (fChooser.showOpenDialog( nomad ) == JFileChooser.APPROVE_OPTION)
+        if (fChooser.showSaveDialog( nomad ) == JFileChooser.APPROVE_OPTION)
         {
             return NomadUtilities.assureFileExtensionExists(fChooser.getSelectedFile(), "png"); 
         }
