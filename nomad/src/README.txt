@@ -1,6 +1,10 @@
 Nomad - Nord Modular Editor
 ---------------------------
 
+Project page
+------------
+http://sourceforge.net/projects/nmedit
+
 Starting Nomad
 --------------
 
@@ -15,6 +19,27 @@ Problems related to Nomad can be reported on the nmedit-devel mailing list:
 http://sourceforge.net/mailarchive/forum.php?forum_id=18303
 
 Please attach a copy of the log file (nomad.log) to your posting if appropriate.
+
+
+For Micro Modular users:
+------------------------
+
+	Since none of us developers has a Micro Modular, we have no change to test
+	the application with this model. If you supply us with feedback about what works
+	and what doesn't we can make the appropriate changes so that the Micro Modular
+	is supported. If you get errors please send the logfile 'nomad.log' on
+	the nmedit-devel mailing list.
+	
+	Before starting the editor open the file
+		nomad/conf/application.xml
+	with a text editor and change the line
+	
+		<entry key="nordmodular.slots">4</entry>
+
+	to
+
+		<entry key="nordmodular.slots">1</entry>
+
 
 Nomad - Version 0.2.1 (Current)
 -------------------------------
