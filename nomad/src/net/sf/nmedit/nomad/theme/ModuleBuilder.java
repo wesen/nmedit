@@ -24,6 +24,8 @@ package net.sf.nmedit.nomad.theme;
 
 import java.awt.Component;
 
+import javax.swing.JComponent;
+
 import net.sf.nmedit.jmisc.xml.XMLFileWriter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
@@ -167,13 +169,13 @@ public class ModuleBuilder
         return moduleGUI;
     }
 
-    public void createGUIComponents( NomadComponent modulePane,
+    public void createGUIComponents( JComponent modulePane,
             DModule moduleInfo )
     {
         createGUIComponentsNoCaching( modulePane, moduleInfo );
     }
 
-    public void createGUIComponentsNoCaching( NomadComponent modulePane,
+    public void createGUIComponentsNoCaching( JComponent modulePane,
             DModule moduleInfo )
     {
         // get module ui information

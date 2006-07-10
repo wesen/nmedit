@@ -3,12 +3,9 @@ package plugin.classictheme;
 import java.awt.Image;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.VoiceArea;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.nomad.main.background.Background;
 import net.sf.nmedit.nomad.main.background.BackgroundFactory;
 import net.sf.nmedit.nomad.patch.ui.ModuleSectionUI;
-import net.sf.nmedit.nomad.patch.ui.ModuleUI;
-import net.sf.nmedit.nomad.theme.NomadClassicColors;
 import net.sf.nmedit.nomad.theme.UIFactory;
 import net.sf.nmedit.nomad.theme.component.AudioLevelDisplay;
 import net.sf.nmedit.nomad.theme.component.GroupDecoration;
@@ -36,11 +33,12 @@ public class ClassicThemeFactory extends UIFactory {
 		installClass(AudioLevelDisplay.class,"display.audiolevel");
 		installClass(GroupDecoration.class,"border.groupbox");
 	}
+    
+    /*
 	public ModuleUI getModuleGUI(DModule info) {
 		ModuleUI gui = super.getModuleGUI(info);
-		gui.setBackground(NomadClassicColors.MODULE_BACKGROUND);
 		return gui;
-	}
+	}*/
 
     private Background classicBackground = null;
     

@@ -25,7 +25,6 @@ import net.sf.nmedit.jpatch.io.PatchEncoder;
 import net.sf.nmedit.jpatch.spi.PatchImplementation;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.clavia.nordmodular.v3_03.NordModular;
-import net.sf.nmedit.jsynth.spi.SynthesizerDeviceManager;
 import net.sf.nmedit.nomad.core.application.Application;
 import net.sf.nmedit.nomad.main.dialog.PatchSettingsDialog;
 import net.sf.nmedit.nomad.main.task.PatchLoader;
@@ -75,8 +74,14 @@ public class Nomad extends JFrame implements DocumentListener
         if (patchImplementation == null)
             throw new RuntimeException( "Patch implementation not found" );
 
-        device = (NordModular) SynthesizerDeviceManager.getSynthesizer(
-                "Nord Modular", "3.03" );
+        
+        int slotCount = Application.getIntegerProperty("nordmodular.slots", 4);
+        slotCount = Math.max(1, Math.min(slotCount, 4));
+        
+        
+        device = //(NordModular) SynthesizerDeviceManager.getSynthesizer(
+                //"Nord Modular", "3.03" );
+            new NordModular(slotCount);
 
         if (device == null)
             throw new RuntimeException( "Synthesizer implementation not found" );

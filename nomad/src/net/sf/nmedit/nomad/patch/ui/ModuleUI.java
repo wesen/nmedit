@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
@@ -28,12 +29,13 @@ import net.sf.nmedit.nomad.patch.ui.action.DisconnectCablesAction;
 import net.sf.nmedit.nomad.patch.ui.action.RemoveCablesAction;
 import net.sf.nmedit.nomad.patch.ui.action.RemoveModuleAction;
 import net.sf.nmedit.nomad.theme.ModuleComponent;
+import net.sf.nmedit.nomad.theme.NomadClassicColors;
 import net.sf.nmedit.nomad.theme.component.ModuleGuiTitleLabel;
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
 import net.sf.nmedit.nomad.util.graphics.GraphicsToolkit;
 
 
-public class ModuleUI extends NomadComponent implements ModuleComponent, EventListener<ModuleEvent>
+public class ModuleUI extends JComponent implements ModuleComponent, EventListener<ModuleEvent>
 {
 
     public static class Metrics
@@ -148,6 +150,8 @@ public class ModuleUI extends NomadComponent implements ModuleComponent, EventLi
             repaint();
         }
     }
+    
+    
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D)g;
         if (isOpaque() && getBackground()!=null) {
@@ -202,7 +206,18 @@ public class ModuleUI extends NomadComponent implements ModuleComponent, EventLi
         super.processMouseMotionEvent(event);
     }*/
     final static Font font = new Font("sanserif",Font.PLAIN,9);
-
+/*
+    static Background light
+    = new GradientSectorBackground(
+      new GradientPaint(
+              -800, 1600,
+              NomadClassicColors.MODULE_BACKGROUND.darker(),
+              2000, 0,
+              NomadClassicColors.MODULE_BACKGROUND
+      )      
+    );
+    */
+    
     public ModuleUI( DModule info )
     {
         this.info = info;
@@ -234,6 +249,9 @@ public class ModuleUI extends NomadComponent implements ModuleComponent, EventLi
 
         setSize( Metrics.WIDTH, Metrics.getHeight( info ) );
 
+        setBackground(NomadClassicColors.MODULE_BACKGROUND);
+       // setContentAreaFilled(true);
+        
         // TODO ?Why is the icon empty here?
         /*
          * if (module.getDModule().getIcon() != null) { NomadImageView imageView =
