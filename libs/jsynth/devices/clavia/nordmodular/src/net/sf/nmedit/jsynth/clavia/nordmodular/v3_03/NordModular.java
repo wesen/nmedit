@@ -65,14 +65,20 @@ public class NordModular extends AbstractSynthesizer
     
     public static Synthesizer.Info DEVICE_INFO = new Synthesizer.Info( "Nord Modular", "Clavia", "3.03" );
     private List<NmProtocolListener> protocolListenerList = new ArrayList<NmProtocolListener>();
-    
+
+
     public NordModular()
+    {
+        this(4);
+    }
+    
+    public NordModular(int slotCount)
     {
         super(DEVICE_INFO);
 
         patchImplementation = PatchImplementation.getImplementation("Clavia Nord Modular Patch", "3.03");
         
-        slots = new Slot[getSlotCount()];
+        slots = new Slot[slotCount];
         for (int i=0;i<slots.length;i++)
             slots[i] = new Slot(i, this);
 
@@ -103,7 +109,7 @@ public class NordModular extends AbstractSynthesizer
     
     public int getSlotCount()
     {
-        return 4;
+        return slots.length;
     }
 
     public Slot getSlot(int slotID)
