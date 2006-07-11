@@ -11,9 +11,9 @@
 	<classpathentry output="libs/jsynth/bin" kind="src" path="libs/jsynth/src"/>
 	<classpathentry output="nomad/bin" kind="src" path="nomad/src"/>
 	<classpathentry output="nomad/themes/bin" kind="src" path="nomad/themes/src"/>
-	<classpathentry exported="true" kind="lib" path="nomad/lib/forms-1.0.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="nomad/lib/looks-2.0.2.jar"/>
+	<classpathentry kind="lib" path="nomad/lib/forms-1.0.7.jar"/>
+	<classpathentry kind="lib" path="nomad/lib/looks-2.0.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="libs/jmisc/lib/xpp3_min-1.1.3_8.jar"/>
+	<classpathentry kind="lib" path="libs/jmisc/lib/xpp3_min-1.1.3_8.jar"/>
 	<classpathentry kind="output" path="nomad/bin"/>
 </classpath>
