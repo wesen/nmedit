@@ -4,3 +4,4 @@ bin
 .byecycle
 .settings
 .fbwarnings
+ant.*
