@@ -121,7 +121,7 @@ package net.sf.nmedit.jpdl;
 
 # { return PdlParse.CONDITIONAL; }
 
-[ \t]+ { }
+[ \t\r]+ { }
 
 \n { yyparser.pdlline++; }
 
