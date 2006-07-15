@@ -6,6 +6,9 @@ Copyright (C) 2003-2006 Marcus Andersson
 
 http://nmedit.sf.net
 
+Version 1.2
+-----------
+* PDL parser can read files with '\r\n' line termination.
 
 Version 1.1
 -----------
