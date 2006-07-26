@@ -112,10 +112,10 @@ public class NomadComponent extends JComponent {
 	}
 
 	public void paintComponent(Graphics g) 
-    {
+    {/*
         int w = getWidth(); 
         int h = getHeight();
-		if (w<=0 || h <=0) return;
+		if (w<=0 || h <=0) return;*/
         super.paintComponent(g);
 	}
 
