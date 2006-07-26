@@ -854,6 +854,12 @@
       <property name="size" value="25,11" />
       <property name="x,y" value="211,26" />
     </component>
+    <component name="ClipDisplay">
+      <property name="parameter#0" value="61.1.p.clip" />
+      <property name="parameter#1" value="61.2.p.sym" />
+      <property name="size" value="38,38" />
+      <property name="x,y" value="156,4" />
+    </component>
   </module>
   <module id="1">
     <component name="connector">
@@ -1938,6 +1944,15 @@
       <property name="text" value="R" />
       <property name="size" value="6,13" />
       <property name="x,y" value="142,34" />
+    </component>
+    <component name="ADSRModDisplay">
+      <property name="parameter#0" value="23.0.p.attack" />
+      <property name="parameter#1" value="23.1.p.decay" />
+      <property name="parameter#2" value="23.2.p.sustain" />
+      <property name="parameter#3" value="23.3.p.release" />
+	  <property name="parameter#4" value="23.8.p.invert" />
+      <property name="size" value="70,34" />
+      <property name="x,y" value="181,3" />
     </component>
   </module>
   <module id="87">
@@ -3416,6 +3431,11 @@
       <property name="size" value="25,11" />
       <property name="x,y" value="211,26" />
     </component>
+    <component name="WaveWrapDisplay">
+      <property name="parameter#0" value="74.1.p.wrap" />
+      <property name="size" value="38,38" />
+      <property name="x,y" value="156,4" />
+    </component>
   </module>
   <module id="46">
     <component name="connector">
@@ -3525,6 +3545,13 @@
       <property name="text" value="D" />
       <property name="size" value="7,13" />
       <property name="x,y" value="142,30" />
+    </component>
+    <component name="AHDDisplay">
+      <property name="parameter#0" value="46.0.p.A" />
+      <property name="parameter#1" value="46.2.p.D" />
+      <property name="parameter#2" value="46.1.p.H" />
+      <property name="size" value="70,34" />
+      <property name="x,y" value="181,3" />
     </component>
   </module>
   <module id="25">
@@ -6278,6 +6305,12 @@
       <property name="size" value="27,16" />
       <property name="x,y" value="149,4" />
     </component>
+    <component name="ADDisplay">
+      <property name="parameter#0" value="84.0.p.attack" />
+      <property name="parameter#1" value="84.1.p.decay" />
+      <property name="size" value="46,26" />
+      <property name="x,y" value="190,2" />
+    </component>
   </module>
   <module id="37">
     <component name="connector">
@@ -8522,6 +8555,16 @@
       <property name="parameter#0" value="20.4.p.release" />
       <property name="size" value="27,16" />
       <property name="x,y" value="166,28" />
+    </component>
+    <component name="ADSRDisplay">
+      <property name="parameter#0" value="20.1.p.attack" />
+      <property name="parameter#1" value="20.2.p.decay" />
+      <property name="parameter#2" value="20.3.p.sustain" />
+      <property name="parameter#3" value="20.4.p.release" />
+	  <property name="parameter#4" value="20.5.p.invert" />
+      <property name="parameter#5" value="20.0.p.attack shape" />
+      <property name="size" value="70,34" />
+      <property name="x,y" value="181,3" />
     </component>
   </module>
   <module id="110">

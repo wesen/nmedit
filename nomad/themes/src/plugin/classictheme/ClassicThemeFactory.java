@@ -7,7 +7,12 @@ import net.sf.nmedit.nomad.main.background.Background;
 import net.sf.nmedit.nomad.main.background.BackgroundFactory;
 import net.sf.nmedit.nomad.patch.ui.ModuleSectionUI;
 import net.sf.nmedit.nomad.theme.UIFactory;
+import net.sf.nmedit.nomad.theme.component.ADDisplay;
+import net.sf.nmedit.nomad.theme.component.ADSRDisplay;
+import net.sf.nmedit.nomad.theme.component.ADSRModDisplay;
+import net.sf.nmedit.nomad.theme.component.AHDDisplay;
 import net.sf.nmedit.nomad.theme.component.AudioLevelDisplay;
+import net.sf.nmedit.nomad.theme.component.ClipDisp;
 import net.sf.nmedit.nomad.theme.component.GroupDecoration;
 import net.sf.nmedit.nomad.theme.component.NomadActiveLabel;
 import net.sf.nmedit.nomad.theme.component.NomadButtonArray;
@@ -17,6 +22,7 @@ import net.sf.nmedit.nomad.theme.component.NomadLabel;
 import net.sf.nmedit.nomad.theme.component.NomadResetButton;
 import net.sf.nmedit.nomad.theme.component.NomadVocoderController;
 import net.sf.nmedit.nomad.theme.component.VocoderBandDisplay;
+import net.sf.nmedit.nomad.theme.component.WaveWrapDisp;
 import net.sf.nmedit.nomad.theme.xml.dom.ThemeNode;
 
 
@@ -31,7 +37,14 @@ public class ClassicThemeFactory extends UIFactory {
 		installClass(VocoderBandDisplay.class,"display.vocoder");
 		installClass(NomadVocoderController.class,"display.vocoder.controller");
 		installClass(AudioLevelDisplay.class,"display.audiolevel");
-		installClass(GroupDecoration.class,"border.groupbox");
+        installClass(GroupDecoration.class,"border.groupbox");
+        installClass(WaveWrapDisp.class,"WaveWrapDisplay");
+        installClass(ClipDisp.class,"ClipDisplay");
+
+        installClass(ADDisplay.class,"ADDisplay");
+        installClass(AHDDisplay.class,"AHDDisplay");
+        installClass(ADSRModDisplay.class,"ADSRModDisplay");
+        installClass(ADSRDisplay.class,"ADSRDisplay");
 	}
     
     /*
