@@ -196,7 +196,7 @@ public class EnvelopeDisp extends NomadDisplay
         }
         
         {   // decay
-            final float dx = (float) (vd*(1-vs));
+            final float dx = (float) (srEnabled ? (vd*(1-vs)) : vd);
             final float dy = srEnabled ? (float) vs : 0;
             final float l= left;
             left+=dx;
