@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="16px"
+   height="16px"
+   id="svg2263"
+   sodipodi:version="0.32"
+   inkscape:version="0.43"
+   sodipodi:docbase="/home/sak/wip/nmedit/audio_set"
+   sodipodi:docname="ringmod.svg">
+  <defs
+     id="defs2265" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="22.197802"
+     inkscape:cx="8"
+     inkscape:cy="8"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:grid-bbox="true"
+     inkscape:document-units="px"
+     inkscape:window-width="797"
+     inkscape:window-height="575"
+     inkscape:window-x="485"
+     inkscape:window-y="110"
+     inkscape:grid-points="true"
+     gridspacingx="0.5px"
+     gridspacingy="0.5px"
+     gridtolerance="0.5px"
+     inkscape:guide-points="true"
+     guidetolerance="0.5px"
+     inkscape:showpageshadow="false" />
+  <metadata
+     id="metadata2268">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/GPL/2.0/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/GPL/2.0/">
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/Notice" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/ShareAlike" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/SourceCode" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer">
+    <path
+       sodipodi:type="arc"
+       style="opacity:1;fill:#ed4b54;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.0932185;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path1317"
+       sodipodi:cx="8.2215347"
+       sodipodi:cy="8.22896"
+       sodipodi:rx="7.2304454"
+       sodipodi:ry="7.2304454"
+       d="M 15.45198 8.22896 A 7.2304454 7.2304454 0 1 1  0.99108934,8.22896 A 7.2304454 7.2304454 0 1 1  15.45198 8.22896 z"
+       transform="matrix(1.029072,0,0,1.029071,-0.460554,-0.468185)" />
+    <g
+       id="g1312"
+       transform="translate(0,-0.17015)">
+      <path
+         id="path2289"
+         d="M 3.46875,6.089295 C 3.46875,7.2302191 3.46875,8.3711431 3.46875,9.5120672 C 3.46875,10.337602 3.46875,9.9629284 3.46875,9.6021662 C 3.46875,9.43979 3.46875,9.9269187 3.46875,10.089295"
+         style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.9375;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="csssc"
+         id="path2291"
+         d="M 5.46875,3.4184415 C 5.46875,2.7880153 5.46875,4.1520998 5.46875,4.7055701 C 5.46875,6.0270223 5.46875,7.3484744 5.46875,8.6699266 C 5.46875,9.7060652 5.46875,10.742204 5.46875,11.778342 C 5.46875,12.24996 5.46875,12.586428 5.46875,13.058045"
+         style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.9375;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="cssc"
+         id="path2293"
+         d="M 7.46875,3.526795 C 7.46875,4.6916465 7.46875,5.5862009 7.46875,6.7510524 C 7.46875,8.057488 7.46875,9.3639237 7.46875,10.670359 C 7.46875,11.532406 7.46875,12.169204 7.46875,13.03125"
+         style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.9375;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         id="path2295"
+         d="M 9.46875,7.058045 C 9.46875,7.2049097 9.46875,7.3517743 9.46875,7.498639 C 9.46875,8.018441 9.46875,8.538243 9.46875,9.058045"
+         style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.9375;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="cssc"
+         id="path2297"
+         d="M 13.46875,6.5223396 C 13.46875,6.5824056 13.46875,6.086861 13.46875,6.026795 C 13.46875,6.687521 13.46875,7.8437917 13.46875,8.5045178 C 13.46875,9.0272901 13.46875,9.7302604 13.46875,10.253033"
+         style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.9375;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="ccc"
+         id="path2217"
+         d="M 3.46875,5.9317495 C 3.46875,5.9317495 6.198948,-0.12221074 8.4959777,4.9683833 C 8.4959777,4.9683833 10.495483,10.923333 13.46875,5.8693735"
+         style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:0.9375;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="ccc"
+         id="path2281"
+         d="M 3.4687499,10.498678 C 3.4687499,10.498678 6.1989479,16.552638 8.4959775,11.462044 C 8.4959775,11.462044 10.495483,5.5070943 13.46875,10.561054"
+         style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:0.9375;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+  </g>
+</svg>
