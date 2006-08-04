@@ -82,9 +82,12 @@ class ComponentClassListItem extends JPanel {
 		// component 
 		component.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 
-        component.setMinimumSize(component.getSize());
-        component.setMaximumSize(component.getSize());
-        component.setPreferredSize(component.getSize());
+        Dimension d = component.getPreferredSize();
+        if (d.width<=0 || d.height<= 0) d.setSize(20, 20);
+        
+        component.setMinimumSize(d);
+        component.setMaximumSize(d);
+        component.setPreferredSize(d);
         
 		//component.setSize(component.getPreferredSize());
 
