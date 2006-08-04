@@ -25,7 +25,6 @@ package net.sf.nmedit.nomad.editor;
 import net.sf.nmedit.nomad.core.application.ApplicationInstantiationException;
 import net.sf.nmedit.nomad.core.application.ProgressMeter;
 import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
-import net.sf.nmedit.nomad.editor.app.UIEditor;
 import net.sf.nmedit.nomad.util.NomadUtilities;
 
 
@@ -45,7 +44,7 @@ public class NomadEditorApplication extends NomadEnvironment
         super.startInternal(progress);
         
         mainFrame = new UIEditor(getName());
-        NomadUtilities.setupAndShow(mainFrame, 0.4, 0.5);
+        NomadUtilities.setupAndShow(mainFrame, 0.6, 0.5);
         configureMainFrame(mainFrame);
         //mainFrame.initialLoading();
     }
