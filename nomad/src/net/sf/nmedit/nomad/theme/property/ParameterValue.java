@@ -23,9 +23,7 @@
 package net.sf.nmedit.nomad.theme.property;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
-import net.sf.nmedit.nomad.theme.component.NomadActiveLabel;
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
-import net.sf.nmedit.nomad.theme.component.NomadControl;
 
 
 public class ParameterValue extends Value
@@ -47,8 +45,19 @@ public class ParameterValue extends Value
 
     public ParameterValue( Property property, String representation )
     {
-        this( property, PropertyUtilities.decodeParameter( representation ),
-                representation );
+        this( property, decodeSavely( representation ), representation );
+    }
+    
+    private static DParameter decodeSavely(String r)
+    {
+        try
+        {
+            return PropertyUtilities.decodeParameter(r);
+        } catch (DecoderException e)
+        {
+            // e.printStackTrace();
+            return null;
+        }
     }
 
     public DParameter getParameter()
@@ -56,16 +65,9 @@ public class ParameterValue extends Value
         return parameter;
     }
 
-    public void assignTo( NomadComponent component )
+    public final void assignTo( NomadComponent component )
     {
-        if (component instanceof NomadControl) 
-        {
-            ( (NomadControl) component ).setParameterInfo( getParameter() );
-        }
-        else if (component instanceof NomadActiveLabel)
-        {
-            ( (NomadActiveLabel) component ).setParameter( getParameter() );
-        }
+        component.setParameterInfo(getProperty().getName(), getParameter());
     }
 
 }

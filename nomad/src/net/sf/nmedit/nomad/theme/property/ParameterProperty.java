@@ -23,15 +23,15 @@
 package net.sf.nmedit.nomad.theme.property;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
-import net.sf.nmedit.nomad.theme.component.NomadActiveLabel;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
-import net.sf.nmedit.nomad.theme.component.NomadControl;
 import net.sf.nmedit.nomad.theme.property.editor.ComboBoxEditor;
 import net.sf.nmedit.nomad.theme.property.editor.Editor;
 
 
 public class ParameterProperty extends Property
 {
+    
     public ParameterProperty()
     {
         this( 0 );
@@ -49,16 +49,10 @@ public class ParameterProperty extends Property
     }
 
     @Override
-    public Value encode( NomadComponent component )
+    public final Value encode( NomadComponent component )
     {
-        if (component instanceof NomadControl)
-            return new ParameterValue( this, ( (NomadControl) component )
-                    .getParameterInfo() );
-        else  if (component instanceof NomadActiveLabel)
-            return new ParameterValue( this, ( (NomadActiveLabel) component )
-                    .getParameterInfo() );
-        else
-            return null;
+        DParameter p = component.getParameterInfo(getName());
+        return new ParameterValue( this, p );
     }
 
     @Override
