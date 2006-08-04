@@ -14,6 +14,7 @@ import net.sf.nmedit.nomad.theme.component.AHDDisplay;
 import net.sf.nmedit.nomad.theme.component.AudioLevelDisplay;
 import net.sf.nmedit.nomad.theme.component.ClipDisp;
 import net.sf.nmedit.nomad.theme.component.GroupDecoration;
+import net.sf.nmedit.nomad.theme.component.LFODisplay;
 import net.sf.nmedit.nomad.theme.component.NomadActiveLabel;
 import net.sf.nmedit.nomad.theme.component.NomadButtonArray;
 import net.sf.nmedit.nomad.theme.component.NomadClassicConnector;
@@ -21,6 +22,7 @@ import net.sf.nmedit.nomad.theme.component.NomadClassicKnob;
 import net.sf.nmedit.nomad.theme.component.NomadLabel;
 import net.sf.nmedit.nomad.theme.component.NomadResetButton;
 import net.sf.nmedit.nomad.theme.component.NomadVocoderController;
+import net.sf.nmedit.nomad.theme.component.NoteVelScaleDisplay;
 import net.sf.nmedit.nomad.theme.component.VocoderBandDisplay;
 import net.sf.nmedit.nomad.theme.component.WaveWrapDisp;
 import net.sf.nmedit.nomad.theme.xml.dom.ThemeNode;
@@ -45,6 +47,9 @@ public class ClassicThemeFactory extends UIFactory {
         installClass(AHDDisplay.class,"AHDDisplay");
         installClass(ADSRModDisplay.class,"ADSRModDisplay");
         installClass(ADSRDisplay.class,"ADSRDisplay");
+        installClass(LFODisplay.class,"LFODisplay");
+        
+        installClass(NoteVelScaleDisplay.class,"NoteVelScaleDisplay");
 	}
     
     /*

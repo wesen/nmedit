@@ -25,17 +25,14 @@ package net.sf.nmedit.nomad.theme.component;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterEvent;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
 import net.sf.nmedit.nomad.theme.property.ParameterProperty;
-import net.sf.nmedit.nomad.theme.property.ParameterValue;
 import net.sf.nmedit.nomad.theme.property.PropertySet;
-import net.sf.nmedit.nomad.theme.property.Value;
 
 public class AHDDisplay extends ADDisplay
 {
 
-    private DParameter infH = null;
     private Parameter parH = null;
+    public final static String IH = "parameter#2";
     
     public AHDDisplay()
     {
@@ -45,46 +42,11 @@ public class AHDDisplay extends ADDisplay
 
     public void registerProperties(PropertySet set) {
         super.registerProperties(set);
-        set.add(new ParHProperty());
+        set.add(new ParameterProperty(2));
     }
-
-    private static class ParHProperty extends ParameterProperty
-    {
-        public ParHProperty()
-        {
-            super(2);
-        }
-        
-        public Value encode( NomadComponent component )
-        {
-            if (component instanceof AHDDisplay)
-                return new ParameterValue( this, ( (AHDDisplay) component )
-                        .infH );
-            else
-                return super.encode(component);
-        }
-        
-        public Value decode( String value )
-        {
-            return new ParameterValue( this, value )
-            {
-                public void assignTo( NomadComponent component )
-                {
-                    if (component instanceof AHDDisplay) 
-                    {
-                        ( (AHDDisplay) component ).infH = getParameter() ;
-                    }
-                    else
-                        super.assignTo(component);
-                }
-
-            };
-        }
-    }
-
     public void link(Module module) 
     {
-        parH = module.getParameter(infH.getContextId());
+        parH = module.getParameter(getParameterInfo(IH).getContextId());
         if (parH!=null) parH.addListener(this);
         super.link(module);
     }

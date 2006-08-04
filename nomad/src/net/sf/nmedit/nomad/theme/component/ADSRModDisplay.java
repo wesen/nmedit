@@ -25,11 +25,8 @@ package net.sf.nmedit.nomad.theme.component;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterEvent;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
 import net.sf.nmedit.nomad.theme.property.ParameterProperty;
-import net.sf.nmedit.nomad.theme.property.ParameterValue;
 import net.sf.nmedit.nomad.theme.property.PropertySet;
-import net.sf.nmedit.nomad.theme.property.Value;
 
 public class ADSRModDisplay extends ADDisplay
 {
@@ -38,130 +35,28 @@ public class ADSRModDisplay extends ADDisplay
     {
         configureADSR();
     }
-
-    private DParameter infS = null;
-    private DParameter infR = null;
-    private DParameter infInv = null;
     private Parameter parS = null;
     private Parameter parR = null;
     private Parameter parInv = null;
+
+    public final static String IS = "parameter#2";
+    public final static String IR = "parameter#3";
+    public final static String IINV = "parameter#4";
     
     public void registerProperties(PropertySet set) {
         super.registerProperties(set);
-        set.add(new ParSProperty());
-        set.add(new ParRProperty());
-        set.add(new ParInvProperty());
-    }
-
-    private static class ParSProperty extends ParameterProperty
-    {
-        public ParSProperty()
-        {
-            super(2);
-        }
-        
-        public Value encode( NomadComponent component )
-        {
-            if (component instanceof ADSRModDisplay)
-                return new ParameterValue( this, ( (ADSRModDisplay) component )
-                        .infS );
-            else
-                return super.encode(component);
-        }
-        
-        public Value decode( String value )
-        {
-            return new ParameterValue( this, value )
-            {
-                public void assignTo( NomadComponent component )
-                {
-                    if (component instanceof ADSRModDisplay) 
-                    {
-                        ( (ADSRModDisplay) component ).infS = getParameter() ;
-                    }
-                    else
-                        super.assignTo(component);
-                }
-
-            };
-        }
-    }
-
-    private static class ParRProperty extends ParameterProperty
-    {
-        public ParRProperty()
-        {
-            super(3);
-        }
-        
-        public Value encode( NomadComponent component )
-        {
-            if (component instanceof ADSRModDisplay)
-                return new ParameterValue( this, ( (ADSRModDisplay) component )
-                        .infR );
-            else
-                return super.encode(component);
-        }
-        
-        public Value decode( String value )
-        {
-            return new ParameterValue( this, value )
-            {
-                public void assignTo( NomadComponent component )
-                {
-                    if (component instanceof ADSRModDisplay) 
-                    {
-                        ( (ADSRModDisplay) component ).infR = getParameter() ;
-                    }
-                    else
-                        super.assignTo(component);
-                }
-
-            };
-        }
-    }
-
-    private static class ParInvProperty extends ParameterProperty
-    {
-        public ParInvProperty()
-        {
-            super(4);
-        }
-        
-        public Value encode( NomadComponent component )
-        {
-            if (component instanceof ADSRModDisplay)
-                return new ParameterValue( this, ( (ADSRModDisplay) component )
-                        .infInv );
-            else
-                return super.encode(component);
-        }
-        
-        public Value decode( String value )
-        {
-            return new ParameterValue( this, value )
-            {
-                public void assignTo( NomadComponent component )
-                {
-                    if (component instanceof ADSRModDisplay) 
-                    {
-                        ( (ADSRModDisplay) component ).infInv = getParameter() ;
-                    }
-                    else
-                        super.assignTo(component);
-                }
-
-            };
-        }
+        set.add(new ParameterProperty(2));
+        set.add(new ParameterProperty(3));
+        set.add(new ParameterProperty(4));
     }
 
     public void link(Module module) 
     {
-        parS = module.getParameter(infS.getContextId());
+        parS = module.getParameter(getParameterInfo(IS).getContextId());
         if (parS!=null) parS.addListener(this);
-        parR = module.getParameter(infR.getContextId());
+        parR = module.getParameter(getParameterInfo(IR).getContextId());
         if (parR!=null) parR.addListener(this);
-        parInv = module.getParameter(infInv.getContextId());
+        parInv = module.getParameter(getParameterInfo(IINV).getContextId());
         if (parInv!=null) parInv.addListener(this);
         super.link(module);
     }

@@ -76,7 +76,7 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 					if (v>nba.getMaxValue()) v = nba.getMinValue();
 					nba.setValue(v);
 				} else {
-					nba.setValue(nba.behaviour.getButtonIndexAt(event.getPoint()));
+                    nba.setValue(nba.behaviour.getButtonIndexAt(event.getPoint()));
 				}
 			}
 		}
@@ -105,6 +105,9 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		addMouseListener(buttonArrayMouseListener);
 		//autoResize(false);
 		setSize(prefSize);
+        setMinValue(0);
+        setMaxValue(3);
+        setValue(0);
 	}
 
 	public void registerProperties(PropertySet set) {
@@ -125,7 +128,7 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 			lastH = getHeight(); 
 		}*/
 	}
-
+    
 	public int getButtonCount() {
 		return flagIsCylicDisplay ? 1 : getRange()+1;
 	}
@@ -263,7 +266,7 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D)g;
 		behaviour.calculateMetrics();
-
+        
 		g2.setFont(getFont());
 		Border b = defBorder;
 

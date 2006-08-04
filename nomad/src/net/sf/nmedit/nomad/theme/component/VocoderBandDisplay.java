@@ -12,10 +12,7 @@ import javax.swing.border.Border;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
 import net.sf.nmedit.nomad.theme.property.ParameterProperty;
-import net.sf.nmedit.nomad.theme.property.ParameterValue;
-import net.sf.nmedit.nomad.theme.property.Property;
 import net.sf.nmedit.nomad.theme.property.PropertySet;
-import net.sf.nmedit.nomad.theme.property.Value;
 import net.sf.nmedit.nomad.util.graphics.BackgroundRenderer;
 import net.sf.nmedit.nomad.util.graphics.LCDBackgroundRenderer;
 
@@ -38,7 +35,6 @@ public class VocoderBandDisplay extends NomadComponent {
 	
 	private ArrayList<VocoderBandChangeListener> 
 		bandChangeListeners = new ArrayList<VocoderBandChangeListener>();
-	private DParameter[] bandsDef = new DParameter[NUM_BANDS];
 	private VocoderParameterLink paramLink = null;
 	
 	public VocoderBandDisplay() {
@@ -59,72 +55,12 @@ public class VocoderBandDisplay extends NomadComponent {
 	public void registerProperties(PropertySet set) {
 		super.registerProperties(set);
 		for (int i=0;i<NUM_BANDS;i++)
-			set.add(new ParamBandProperty(i));
+			set.add(new ParameterProperty(i));
 	}
 	
 	public DParameter getDefinition(int band) {
-		return bandsDef[band];
+		return getParameterInfo("parameter#"+band);
 	}
-	
-	private static class ParamBandProperty extends ParameterProperty {
-		int band;
-		public ParamBandProperty(int band) {
-			super(band);
-			this.band = band;
-		}
-        
-        @Override
-        public Value decode( String value )
-        {
-            return new ParamBandValue( this, value );
-        }
-
-        @Override
-        public Value encode( NomadComponent component )
-        {
-            if (component instanceof VocoderBandDisplay)
-                return new ParamBandValue( this, ( (VocoderBandDisplay) component )
-                        .bandsDef[band] );
-            else return null;
-        }
-        
-        /*
-		public void setDParameter(NomadComponent component, DParameter p) { ((VocoderBandDisplay)component).bandsInfo[band] = p; }
-		public DParameter getDParameter(NomadComponent component) { return ((VocoderBandDisplay)component).bandsInfo[band]; }
-        */
-	}
-    
-    private static class ParamBandValue extends ParameterValue
-    {
-
-        public ParamBandValue( ParamBandProperty property, String representation )
-        {
-            super( property, representation );
-        }
-        
-        public ParamBandValue( Property property, DParameter parameter )
-        {
-            super( property, parameter );
-        }
-        
-        public ParamBandProperty getParamBandProperty()
-        {
-            return (ParamBandProperty) getProperty();
-        }
-        
-/*
-        protected ParamBandValue( Property property, DParameter parameter, String representation )
-        {
-            super( property, parameter, representation );
-            // TODO Auto-generated constructor stub
-        }
-*/
-        public void assignTo( NomadComponent component )
-        {
-            ((VocoderBandDisplay) component).bandsDef[getParamBandProperty().band] = getParameter();
-        }
-        
-    }
 	
 	public void setBackgroundRenderer(BackgroundRenderer renderer) {
 		if (this.renderer!=renderer) {

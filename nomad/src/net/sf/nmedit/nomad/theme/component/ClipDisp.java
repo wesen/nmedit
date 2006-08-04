@@ -7,11 +7,8 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterEvent;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
 import net.sf.nmedit.nomad.theme.property.ParameterProperty;
-import net.sf.nmedit.nomad.theme.property.ParameterValue;
 import net.sf.nmedit.nomad.theme.property.PropertySet;
-import net.sf.nmedit.nomad.theme.property.Value;
 
 /* Copyright (C) 2006 Christian Schneider
  * 
@@ -63,7 +60,7 @@ public class ClipDisp extends NomadDisplay implements EventListener<ParameterEve
         
         g.setColor(getForeground());
         
-        double delta = (len*vclip)/2.0d;
+        double delta = (len*(1-vclip))/2.0d;
         int dx = (int) Math.ceil(delta);
         int dy = dx;
 
@@ -92,96 +89,34 @@ public class ClipDisp extends NomadDisplay implements EventListener<ParameterEve
         this.vsym = v;
         repaint();
     }
-    
-    private double bounded(double v)
+
+    protected double bounded(double v)
     {
         return Math.max(0, Math.min(v, 1.0d));
     }
 
-    private DParameter clipInfo = null;
     private Parameter clipParam = null;
-
-    private DParameter symInfo = null;
     private Parameter symParam = null;
+
+    public final static String ICLIP = "parameter#0";
+    public final static String ISYM = "parameter#1";
 
     public void registerProperties(PropertySet set) {
         super.registerProperties(set);
-        set.add(new ClipParameterProperty());
-        set.add(new SymParameterProperty());
+        set.add(new ParameterProperty(0));
+        set.add(new ParameterProperty(1));
     }
 
-    private static class ClipParameterProperty extends ParameterProperty
-    {
-        public Value encode( NomadComponent component )
-        {
-            if (component instanceof ClipDisp)
-                return new ParameterValue( this, ( (ClipDisp) component )
-                        .clipInfo );
-            else
-                return super.encode(component);
-        }
-        
-        public Value decode( String value )
-        {
-            return new ParameterValue( this, value )
-            {
-                public void assignTo( NomadComponent component )
-                {
-                    if (component instanceof ClipDisp) 
-                    {
-                        ( (ClipDisp) component ).clipInfo = getParameter() ;
-                    }
-                    else
-                        super.assignTo(component);
-                }
-
-            };
-        }
-    }
-
-    private static class SymParameterProperty extends ParameterProperty
-    {
-        public SymParameterProperty()
-        {
-            super(1);
-        }
-        public Value encode( NomadComponent component )
-        {
-            if (component instanceof ClipDisp)
-                return new ParameterValue( this, ( (ClipDisp) component )
-                        .symInfo );
-            else
-                return super.encode(component);
-        }
-        
-        public Value decode( String value )
-        {
-            return new ParameterValue( this, value )
-            {
-                public void assignTo( NomadComponent component )
-                {
-                    if (component instanceof ClipDisp) 
-                    {
-                        ( (ClipDisp) component ).symInfo = getParameter() ;
-                    }
-                    else
-                        super.assignTo(component);
-                }
-
-            };
-        }
-    }
-    
     public void link(Module module) {
         //addValueChangeListener(broadcast);
 
-        symParam = module.getParameter(symInfo.getContextId());
+        symParam = module.getParameter(getParameterInfo(ISYM).getContextId());
         if (symParam!=null) 
         {
             symParam.addListener(this);
         }
         
-        clipParam = module.getParameter(clipInfo.getContextId());
+        clipParam = module.getParameter(getParameterInfo(ICLIP).getContextId());
         if (clipParam!=null) 
         {
             clipParam.addListener(this);

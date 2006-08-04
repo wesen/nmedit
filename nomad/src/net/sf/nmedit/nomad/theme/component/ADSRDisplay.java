@@ -25,61 +25,24 @@ package net.sf.nmedit.nomad.theme.component;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterEvent;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
 import net.sf.nmedit.nomad.theme.property.ParameterProperty;
-import net.sf.nmedit.nomad.theme.property.ParameterValue;
 import net.sf.nmedit.nomad.theme.property.PropertySet;
-import net.sf.nmedit.nomad.theme.property.Value;
 
 public class ADSRDisplay extends ADSRModDisplay
 {
 
     // attack type
-    private DParameter infAT = null;
     private Parameter parAT = null;
+    public final static String IAT = "parameter#5";
     
     public void registerProperties(PropertySet set) {
         super.registerProperties(set);
-        set.add(new ParATProperty());
-    }
-
-    private static class ParATProperty extends ParameterProperty
-    {
-        public ParATProperty()
-        {
-            super(5);
-        }
-        
-        public Value encode( NomadComponent component )
-        {
-            if (component instanceof ADSRDisplay)
-                return new ParameterValue( this, ( (ADSRDisplay) component )
-                        .infAT );
-            else
-                return super.encode(component);
-        }
-        
-        public Value decode( String value )
-        {
-            return new ParameterValue( this, value )
-            {
-                public void assignTo( NomadComponent component )
-                {
-                    if (component instanceof ADSRDisplay) 
-                    {
-                        ( (ADSRDisplay) component ).infAT = getParameter() ;
-                    }
-                    else
-                        super.assignTo(component);
-                }
-
-            };
-        }
+        set.add(new ParameterProperty(5));
     }
 
     public void link(Module module) 
     {
-        parAT = module.getParameter(infAT.getContextId());
+        parAT = module.getParameter(getParameterInfo(IAT).getContextId());
         if (parAT!=null) parAT.addListener(this);
         super.link(module);
     }

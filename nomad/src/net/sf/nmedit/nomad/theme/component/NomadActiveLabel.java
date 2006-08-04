@@ -45,8 +45,6 @@ public class NomadActiveLabel extends NomadLabel implements EventListener<Parame
 
     public final static int     DEFAULT_PADDING = 2;
 
-    private DParameter          parameterInfo   = null;
-
     private final static Border defaultBorder   =
         BorderFactory.createCompoundBorder(
         NomadBorderFactory.createNordEditor311Border(),
@@ -72,41 +70,14 @@ public class NomadActiveLabel extends NomadLabel implements EventListener<Parame
     public void registerProperties( PropertySet set )
     {
         super.registerProperties( set );
-    //    set.add( new PaddingProperty() );
-        set.add( new LabelParamProperty() );
-    }
-
-    public DParameter getParameterInfo()
-    {
-        return parameterInfo;
-    }
-
-    public void setParameter( DParameter p )
-    {
-        parameterInfo = p;
-        /*
-         * if (parameterInfo!=null) { setText(parameterInfo.getName()); }
-         */
-    }
-
-    private static class LabelParamProperty extends ParameterProperty
-    {
-        public void setDParameter( NomadComponent component, DParameter p )
-        {
-            ( (NomadActiveLabel) component ).setParameter( p );
-
-        }
-
-        public DParameter getDParameter( NomadComponent component )
-        {
-            return ( (NomadActiveLabel) component ).getParameterInfo();
-        }
+        set.add( new ParameterProperty());
     }
 
     public void link( Module module )
     {
-        if (getParameterInfo() != null) // TODO remove this
-            parameter = module.getParameter( getParameterInfo().getContextId() );
+        DParameter p = getParameterInfo("parameter#0");
+        if (p != null) // TODO remove this
+            parameter = module.getParameter( p.getContextId() );
         if (parameter != null)
         {
             parameter.addListener( this );

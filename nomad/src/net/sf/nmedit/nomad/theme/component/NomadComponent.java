@@ -25,10 +25,12 @@ package net.sf.nmedit.nomad.theme.component;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.HashMap;
 
 import javax.swing.JComponent;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
 import net.sf.nmedit.nomad.patch.ui.ModuleUI;
 import net.sf.nmedit.nomad.theme.property.ComponentLocationProperty;
 import net.sf.nmedit.nomad.theme.property.ComponentSizeProperty;
@@ -46,6 +48,7 @@ public class NomadComponent extends JComponent {
 	private boolean sizePropertyEnabled=true;
     private int defaultWidth  = -1;
     private int defaultHeight = -1;
+    private HashMap<String, DParameter> parameters = null;
 
     //static int cnt = 0;
     
@@ -135,5 +138,28 @@ public class NomadComponent extends JComponent {
 	public void unlink() {
 		//
 	}
+
+    public final DParameter getParameterInfo( String name )
+    {
+        return parameters == null ? null: parameters.get(name);
+    }
+
+    public void setParameterInfo( String name, DParameter p )
+    {
+        if (p==null)
+        {
+            if (parameters!=null)
+            {
+                parameters.remove(name);
+                if (parameters.size()==0)
+                    parameters = null;
+            }
+        }
+        else {
+            if (parameters==null)
+                parameters = new HashMap<String, DParameter>();
+            parameters.put(name, p);
+        }
+    }
 	
 }

@@ -48,9 +48,11 @@ public abstract class NomadControl extends NomadComponent implements EventListen
 	private Color morphForeground = new Color(1, 0, 0, 0.5f);
 	private Color morphBackground = new Color(1, 0.25f, 0.25f, 0.25f);
 	private Double morphValue = null;
-	private DParameter parameterInfo = null;
+
 	private Parameter parameter = null;
 	
+    public final static String PAR0 = "parameter#0";
+    
     protected void processFocusEvent(FocusEvent event)
     {
         if (event.getComponent() instanceof NomadControl)
@@ -62,31 +64,39 @@ public abstract class NomadControl extends NomadComponent implements EventListen
     }
 	
 	public NomadControl() {
-		super();	 
+		super();
         enableEvents(FocusEvent.FOCUS_EVENT_MASK);
 	}
 
 	public void registerProperties(PropertySet set) {
 		super.registerProperties(set);
-		set.add(new ParameterProperty());
+		set.add(new ParameterProperty(0));
 	}
+    
+    public void setParameterInfo(DParameter parameterInfo) 
+    {
+        setParameterInfo(PAR0,parameterInfo);
+    }
 	
-	public void setParameterInfo(DParameter parameterInfo) {
-		this.parameterInfo = parameterInfo;
-		if (parameterInfo!=null) {
-			setMinValue(parameterInfo.getMinValue());
-			setMaxValue(parameterInfo.getMaxValue());
-			setDefaultValue(new Integer(parameterInfo.getDefaultValue()));
-		}
-	}
-	
+    public void setParameterInfo(String name, DParameter info)
+    {
+        super.setParameterInfo(name, info);
+        if (info!=null && PAR0.equals(name)) 
+        {
+            setMinValue(info.getMinValue());
+            setMaxValue(info.getMaxValue());
+            setValue(info.getDefaultValue());
+            setDefaultValue(info.getDefaultValue());
+        }
+    }
+    
     public Parameter getParameter()
     {
         return parameter;
     }
     
 	public DParameter getParameterInfo() {
-		return parameterInfo;
+		return getParameterInfo(PAR0);
 	}
 	
 	public Double getMorphValue() {
@@ -220,11 +230,13 @@ public abstract class NomadControl extends NomadComponent implements EventListen
 	}
 	
 	public void setValue(int value) {
+        value = Math.max(getMinValue(), Math.min(value, getMaxValue()));
+        
 		if (this.value!=value) {
 			this.value = value;
 			if (parameter!=null) 
             {
-                parameter.setValue(getValue());
+                parameter.setValue(value);
             }
 			fireValueChangeEvent();
 		}
@@ -265,7 +277,7 @@ public abstract class NomadControl extends NomadComponent implements EventListen
 	public void link(Module module) {
 		//addValueChangeListener(broadcast);
 
-		parameter = module.getParameter(parameterInfo.getContextId());
+		parameter = module.getParameter(getParameterInfo(PAR0).getContextId());
 		if (parameter!=null) {
 			setValue(parameter.getValue());
 			parameter.addListener(this);
@@ -317,5 +329,5 @@ public abstract class NomadControl extends NomadComponent implements EventListen
             setMorphForeground(color.brighter());
         }
     }
-    
+
 }

@@ -30,6 +30,8 @@ import java.awt.RenderingHints;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
+
 public class NomadDisplay extends NomadComponent
 {
 
@@ -40,7 +42,7 @@ public class NomadDisplay extends NomadComponent
         BorderFactory.createCompoundBorder(
         NomadBorderFactory.createNordEditor311Border(),
         BorderFactory.createEmptyBorder(2,2,2,2));
-
+    
     public NomadDisplay()
     {
         setOpaque(true);
@@ -63,5 +65,11 @@ public class NomadDisplay extends NomadComponent
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
+
     
+    protected double getDoubleValue(Parameter p)
+    {
+        return (p.getValue()-p.getMinValue())
+        / (double) (p.getMaxValue()-p.getMinValue());
+    }
 }

@@ -58,8 +58,11 @@ public class NomadConnector extends NomadComponent implements EventListener<Conn
             if (event.isPopupTrigger() && event.getComponent() == this) 
             {
                 Connector c = getConnector();
-                ModuleUI m = (ModuleUI) getParent();
-                m.showConnectorPopup(event, c);
+                if (getParent() instanceof ModuleUI)
+                {
+                    ModuleUI m = (ModuleUI) getParent();
+                    m.showConnectorPopup(event, c);
+                }
             }
         }
         

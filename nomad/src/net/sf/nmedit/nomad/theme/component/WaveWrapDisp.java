@@ -136,47 +136,16 @@ public class WaveWrapDisp extends NomadDisplay implements EventListener<Paramete
         gp.transform(at);
     }
 
-    private DParameter parameterInfo = null;
     private Parameter parameter = null;
 
-    public void registerProperties(PropertySet set) {
-        super.registerProperties(set);
-        set.add(new MyParameterProperty());
-    }
-
-    private static class MyParameterProperty extends ParameterProperty
+    public void registerProperties(PropertySet set) 
     {
-        public Value encode( NomadComponent component )
-        {
-            if (component instanceof WaveWrapDisp)
-                return new ParameterValue( this, ( (WaveWrapDisp) component )
-                        .parameterInfo );
-            else
-                return super.encode(component);
-        }
-        
-        public Value decode( String value )
-        {
-            return new ParameterValue( this, value )
-            {
-                public void assignTo( NomadComponent component )
-                {
-                    if (component instanceof WaveWrapDisp) 
-                    {
-                        ( (WaveWrapDisp) component ).parameterInfo = getParameter() ;
-                    }
-                    else
-                        super.assignTo(component);
-                }
-
-            };
-        }
+        super.registerProperties(set);
+        set.add(new ParameterProperty(0));
     }
     
     public void link(Module module) {
-        //addValueChangeListener(broadcast);
-
-        parameter = module.getParameter(parameterInfo.getContextId());
+        parameter = module.getParameter(getParameterInfo("parameter#0").getContextId());
         if (parameter!=null) {
             setWaveWrapValue( parameter );
             parameter.addListener(this);

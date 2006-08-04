@@ -79,8 +79,8 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="31.0.p.color" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="100,2" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="102,5" />
     </component>
     <component name="label">
       <property name="text" value="White" />
@@ -225,12 +225,12 @@
     </component>
     <component name="label">
       <property name="text" value="{@decoration-7}" />
-      <property name="size" value="35,16" />
+      <property name="size" value="-1,-1" />
       <property name="x,y" value="83,7" />
     </component>
     <component name="label">
       <property name="text" value="{@decoration-8}" />
-      <property name="size" value="59,13" />
+      <property name="size" value="-1,-1" />
       <property name="x,y" value="165,4" />
     </component>
     <component name="label">
@@ -272,7 +272,7 @@
     </component>
     <component name="label">
       <property name="text" value="{@ds-2-8}" />
-      <property name="size" value="-1,16" />
+      <property name="size" value="-1,-1" />
       <property name="x,y" value="219,9" />
     </component>
     <component name="label">
@@ -285,39 +285,6 @@
       <property name="parameter#0" value="86.0.p.frequency" />
       <property name="size" value="40,16" />
       <property name="x,y" value="107,7" />
-    </component>
-  </module>
-  <module id="59">
-    <component name="connector">
-      <property name="connector#0" value="59.0.in.in" />
-      <property name="size" value="13,13" />
-      <property name="x,y" value="190,8" />
-    </component>
-    <component name="connector">
-      <property name="connector#0" value="59.0.out.out" />
-      <property name="size" value="13,13" />
-      <property name="x,y" value="236,8" />
-    </component>
-    <component name="knob">
-      <property name="parameter#0" value="59.0.p.level" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="140,2" />
-    </component>
-    <component name="display.text">
-      <property name="text" value="level" />
-      <property name="parameter#0" value="59.0.p.level" />
-      <property name="size" value="50,16" />
-      <property name="x,y" value="90,7" />
-    </component>
-    <component name="label">
-      <property name="text" value="A" />
-      <property name="size" value="6,13" />
-      <property name="x,y" value="179,9" />
-    </component>
-    <component name="label">
-      <property name="text" value="A>=C" />
-      <property name="size" value="26,13" />
-      <property name="x,y" value="208,9" />
     </component>
   </module>
   <module id="118">
@@ -405,6 +372,72 @@
       <property name="parameter#0" value="118.0.p.quant bits" />
       <property name="size" value="27,16" />
       <property name="x,y" value="34,25" />
+    </component>
+  </module>
+  <module id="59">
+    <component name="connector">
+      <property name="connector#0" value="59.0.in.in" />
+      <property name="size" value="13,13" />
+      <property name="x,y" value="190,8" />
+    </component>
+    <component name="connector">
+      <property name="connector#0" value="59.0.out.out" />
+      <property name="size" value="13,13" />
+      <property name="x,y" value="236,8" />
+    </component>
+    <component name="knob">
+      <property name="parameter#0" value="59.0.p.level" />
+      <property name="size" value="24,24" />
+      <property name="x,y" value="140,2" />
+    </component>
+    <component name="display.text">
+      <property name="text" value="level" />
+      <property name="parameter#0" value="59.0.p.level" />
+      <property name="size" value="50,16" />
+      <property name="x,y" value="90,7" />
+    </component>
+    <component name="label">
+      <property name="text" value="A" />
+      <property name="size" value="6,13" />
+      <property name="x,y" value="179,9" />
+    </component>
+    <component name="label">
+      <property name="text" value="A>=C" />
+      <property name="size" value="26,13" />
+      <property name="x,y" value="208,9" />
+    </component>
+  </module>
+  <module id="34">
+    <component name="connector">
+      <property name="connector#0" value="34.0.in.mst" />
+      <property name="size" value="13,13" />
+      <property name="x,y" value="120,8" />
+    </component>
+    <component name="connector">
+      <property name="connector#0" value="34.0.out.out" />
+      <property name="size" value="13,13" />
+      <property name="x,y" value="236,8" />
+    </component>
+    <component name="knob">
+      <property name="parameter#0" value="34.0.p.rate" />
+      <property name="size" value="24,24" />
+      <property name="x,y" value="179,2" />
+    </component>
+    <component name="label">
+      <property name="text" value="Mst" />
+      <property name="size" value="16,13" />
+      <property name="x,y" value="100,9" />
+    </component>
+    <component name="label">
+      <property name="text" value="{@decorator.rndgen.diskret}" />
+      <property name="size" value="17,11" />
+      <property name="x,y" value="210,9" />
+    </component>
+    <component name="display.text">
+      <property name="text" value="rate" />
+      <property name="parameter#0" value="34.0.p.rate" />
+      <property name="size" value="36,16" />
+      <property name="x,y" value="137,6" />
     </component>
   </module>
   <module id="32">
@@ -498,39 +531,6 @@
     <component name="border.groupbox">
       <property name="size" value="240,60" />
       <property name="x,y" value="9,21" />
-    </component>
-  </module>
-  <module id="34">
-    <component name="connector">
-      <property name="connector#0" value="34.0.in.mst" />
-      <property name="size" value="13,13" />
-      <property name="x,y" value="120,8" />
-    </component>
-    <component name="connector">
-      <property name="connector#0" value="34.0.out.out" />
-      <property name="size" value="13,13" />
-      <property name="x,y" value="236,8" />
-    </component>
-    <component name="knob">
-      <property name="parameter#0" value="34.0.p.rate" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="179,2" />
-    </component>
-    <component name="label">
-      <property name="text" value="Mst" />
-      <property name="size" value="16,13" />
-      <property name="x,y" value="100,9" />
-    </component>
-    <component name="label">
-      <property name="text" value="{@decorator.rndgen.diskret}" />
-      <property name="size" value="17,11" />
-      <property name="x,y" value="210,9" />
-    </component>
-    <component name="display.text">
-      <property name="text" value="rate" />
-      <property name="parameter#0" value="34.0.p.rate" />
-      <property name="size" value="36,16" />
-      <property name="x,y" value="137,6" />
     </component>
   </module>
   <module id="96">
@@ -648,72 +648,6 @@
       <property name="x,y" value="124,21" />
     </component>
   </module>
-  <module id="117">
-    <component name="connector">
-      <property name="connector#0" value="117.0.in.in" />
-      <property name="size" value="13,13" />
-      <property name="x,y" value="197,27" />
-    </component>
-    <component name="connector">
-      <property name="connector#0" value="117.1.in.modulation" />
-      <property name="size" value="13,13" />
-      <property name="x,y" value="217,4" />
-    </component>
-    <component name="connector">
-      <property name="connector#0" value="117.2.in.modulationdepth" />
-      <property name="size" value="13,13" />
-      <property name="x,y" value="75,22" />
-    </component>
-    <component name="connector">
-      <property name="connector#0" value="117.0.out.out" />
-      <property name="size" value="13,13" />
-      <property name="x,y" value="236,27" />
-    </component>
-    <component name="knob">
-      <property name="parameter#0" value="117.0.p.ringmod depth mod" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="92,16" />
-    </component>
-    <component name="knob">
-      <property name="parameter#0" value="117.1.p.ringmod depth" />
-      <property name="size" value="26,26" />
-      <property name="x,y" value="146,16" />
-    </component>
-    <component name="label">
-      <property name="text" value="Mod depth" />
-      <property name="size" value="49,13" />
-      <property name="x,y" value="70,5" />
-    </component>
-    <component name="label">
-      <property name="text" value="0" />
-      <property name="size" value="6,13" />
-      <property name="x,y" value="135,29" />
-    </component>
-    <component name="label">
-      <property name="text" value="AM" />
-      <property name="size" value="14,13" />
-      <property name="x,y" value="152,1" />
-    </component>
-    <component name="label">
-      <property name="text" value="RM" />
-      <property name="size" value="14,13" />
-      <property name="x,y" value="175,29" />
-    </component>
-    <component name="label">
-      <property name="text" value="Mod" />
-      <property name="size" value="20,13" />
-      <property name="x,y" value="194,4" />
-    </component>
-    <component name="label">
-      <property name="text" value="{@decoration-3}" />
-      <property name="size" value="-1,-1" />
-      <property name="x,y" value="211,17" />
-    </component>
-    <component name="knob.reset">
-      <property name="parameter#0" value="117.1.p.ringmod depth" />
-      <property name="x,y" value="154,10" />
-    </component>
-  </module>
   <module id="85">
     <component name="connector">
       <property name="connector#0" value="85.0.in.master" />
@@ -809,6 +743,72 @@
       <property name="x,y" value="117,13" />
     </component>
   </module>
+  <module id="117">
+    <component name="connector">
+      <property name="connector#0" value="117.0.in.in" />
+      <property name="size" value="13,13" />
+      <property name="x,y" value="197,27" />
+    </component>
+    <component name="connector">
+      <property name="connector#0" value="117.1.in.modulation" />
+      <property name="size" value="13,13" />
+      <property name="x,y" value="217,4" />
+    </component>
+    <component name="connector">
+      <property name="connector#0" value="117.2.in.modulationdepth" />
+      <property name="size" value="13,13" />
+      <property name="x,y" value="75,22" />
+    </component>
+    <component name="connector">
+      <property name="connector#0" value="117.0.out.out" />
+      <property name="size" value="13,13" />
+      <property name="x,y" value="236,27" />
+    </component>
+    <component name="knob">
+      <property name="parameter#0" value="117.0.p.ringmod depth mod" />
+      <property name="size" value="24,24" />
+      <property name="x,y" value="92,16" />
+    </component>
+    <component name="knob">
+      <property name="parameter#0" value="117.1.p.ringmod depth" />
+      <property name="size" value="26,26" />
+      <property name="x,y" value="146,16" />
+    </component>
+    <component name="label">
+      <property name="text" value="Mod depth" />
+      <property name="size" value="49,13" />
+      <property name="x,y" value="70,5" />
+    </component>
+    <component name="label">
+      <property name="text" value="0" />
+      <property name="size" value="6,13" />
+      <property name="x,y" value="135,29" />
+    </component>
+    <component name="label">
+      <property name="text" value="AM" />
+      <property name="size" value="14,13" />
+      <property name="x,y" value="152,1" />
+    </component>
+    <component name="label">
+      <property name="text" value="RM" />
+      <property name="size" value="14,13" />
+      <property name="x,y" value="175,29" />
+    </component>
+    <component name="label">
+      <property name="text" value="Mod" />
+      <property name="size" value="20,13" />
+      <property name="x,y" value="194,4" />
+    </component>
+    <component name="label">
+      <property name="text" value="{@decoration-3}" />
+      <property name="size" value="-1,-1" />
+      <property name="x,y" value="211,17" />
+    </component>
+    <component name="knob.reset">
+      <property name="parameter#0" value="117.1.p.ringmod depth" />
+      <property name="x,y" value="154,10" />
+    </component>
+  </module>
   <module id="61">
     <component name="connector">
       <property name="connector#0" value="61.0.in.in" />
@@ -865,42 +865,42 @@
     <component name="connector">
       <property name="connector#0" value="1.0.out.Note" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="93,8" />
+      <property name="x,y" value="123,8" />
     </component>
     <component name="connector">
       <property name="connector#0" value="1.1.out.gate" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="142,8" />
+      <property name="x,y" value="161,8" />
     </component>
     <component name="connector">
       <property name="connector#0" value="1.2.out.velocity on" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="185,8" />
+      <property name="x,y" value="199,8" />
     </component>
     <component name="connector">
       <property name="connector#0" value="1.3.out.velocity off" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="232,8" />
+      <property name="x,y" value="237,8" />
     </component>
     <component name="label">
       <property name="text" value="Note" />
       <property name="size" value="21,13" />
-      <property name="x,y" value="64,9" />
+      <property name="x,y" value="101,8" />
     </component>
     <component name="label">
       <property name="text" value="Gate" />
       <property name="size" value="20,13" />
-      <property name="x,y" value="111,9" />
+      <property name="x,y" value="139,8" />
     </component>
     <component name="label">
       <property name="text" value="Vel" />
       <property name="size" value="14,13" />
-      <property name="x,y" value="162,9" />
+      <property name="x,y" value="184,8" />
     </component>
     <component name="label">
       <property name="text" value="Rel\nvel" />
       <property name="size" value="14,24" />
-      <property name="x,y" value="212,4" />
+      <property name="x,y" value="222,2" />
     </component>
   </module>
   <module id="29">
@@ -940,79 +940,79 @@
     <component name="connector">
       <property name="connector#0" value="100.0.in.note" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="191,1" />
+      <property name="x,y" value="192,2" />
     </component>
     <component name="connector">
       <property name="connector#0" value="100.1.in.gate" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="191,15" />
+      <property name="x,y" value="192,15" />
     </component>
     <component name="connector">
       <property name="connector#0" value="100.2.in.vel" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="191,29" />
+      <property name="x,y" value="192,28" />
     </component>
     <component name="connector">
       <property name="connector#0" value="100.0.out.note" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="236,1" />
+      <property name="x,y" value="238,2" />
     </component>
     <component name="connector">
       <property name="connector#0" value="100.1.out.gate" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="236,15" />
+      <property name="x,y" value="238,15" />
     </component>
     <component name="connector">
       <property name="connector#0" value="100.2.out.vel" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="236,29" />
+      <property name="x,y" value="238,28" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="100.0.p.lower" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="87,13" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="90,17" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="100.1.p.upper" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="120,13" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="130,17" />
     </component>
     <component name="label">
       <property name="text" value="Lower" />
       <property name="size" value="27,13" />
-      <property name="x,y" value="86,2" />
+      <property name="x,y" value="86,3" />
     </component>
     <component name="label">
       <property name="text" value="Upper" />
       <property name="size" value="27,13" />
-      <property name="x,y" value="119,2" />
+      <property name="x,y" value="127,3" />
     </component>
     <component name="label">
       <property name="text" value="Note" />
       <property name="size" value="21,13" />
-      <property name="x,y" value="208,3" />
+      <property name="x,y" value="210,3" />
     </component>
     <component name="label">
       <property name="text" value="Gate" />
       <property name="size" value="20,13" />
-      <property name="x,y" value="208,17" />
+      <property name="x,y" value="210,17" />
     </component>
     <component name="label">
       <property name="text" value="Vel" />
       <property name="size" value="14,13" />
-      <property name="x,y" value="209,31" />
+      <property name="x,y" value="211,30" />
     </component>
     <component name="display.text">
       <property name="text" value="label" />
       <property name="parameter#0" value="100.0.p.lower" />
       <property name="size" value="30,16" />
-      <property name="x,y" value="52,17" />
+      <property name="x,y" value="55,19" />
     </component>
     <component name="display.text">
       <property name="text" value="label" />
       <property name="parameter#0" value="100.1.p.upper" />
       <property name="size" value="30,16" />
-      <property name="x,y" value="148,17" />
+      <property name="x,y" value="157,19" />
     </component>
   </module>
   <module id="68">
@@ -1358,6 +1358,16 @@
     </component>
   </module>
   <module id="63">
+    <component name="label">
+      <property name="text" value="Latest\nrel vel" />
+      <property name="size" value="28,24" />
+      <property name="x,y" value="217,4" />
+    </component>
+    <component name="label">
+      <property name="text" value="Latest\nvel on" />
+      <property name="size" value="28,24" />
+      <property name="x,y" value="156,4" />
+    </component>
     <component name="connector">
       <property name="connector#0" value="63.0.out.latest note" />
       <property name="size" value="13,13" />
@@ -1366,7 +1376,7 @@
     <component name="connector">
       <property name="connector#0" value="63.1.out.patch gate" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="100,27" />
+      <property name="x,y" value="103,27" />
     </component>
     <component name="connector">
       <property name="connector#0" value="63.2.out.latest vel on" />
@@ -1386,74 +1396,64 @@
     <component name="label">
       <property name="text" value="Patch gate" />
       <property name="size" value="46,13" />
-      <property name="x,y" value="85,15" />
-    </component>
-    <component name="label">
-      <property name="text" value="Latest\nvel on" />
-      <property name="size" value="28,24" />
-      <property name="x,y" value="156,3" />
-    </component>
-    <component name="label">
-      <property name="text" value="Latest\nrel vel" />
-      <property name="size" value="28,24" />
-      <property name="x,y" value="217,2" />
+      <property name="x,y" value="86,15" />
     </component>
   </module>
   <module id="3">
+    <component name="label">
+      <property name="text" value="Level" />
+      <property name="size" value="23,13" />
+      <property name="x,y" value="221,1" />
+    </component>
     <component name="connector">
       <property name="connector#0" value="3.0.in.out 1" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="83,24" />
+      <property name="x,y" value="108,21" />
     </component>
     <component name="connector">
       <property name="connector#0" value="3.1.in.out 2" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="118,24" />
+      <property name="x,y" value="140,21" />
     </component>
     <component name="connector">
       <property name="connector#0" value="3.2.in.out 3" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="153,24" />
+      <property name="x,y" value="170,21" />
     </component>
     <component name="connector">
       <property name="connector#0" value="3.3.in.out 4" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="187,24" />
+      <property name="x,y" value="200,21" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="3.0.p.level" />
       <property name="size" value="30,30" />
-      <property name="x,y" value="218,12" />
+      <property name="x,y" value="218,11" />
     </component>
     <component name="label">
       <property name="text" value="Mix Bus" />
       <property name="size" value="36,13" />
-      <property name="x,y" value="29,26" />
+      <property name="x,y" value="54,22" />
     </component>
     <component name="label">
       <property name="text" value="1" />
       <property name="size" value="6,13" />
-      <property name="x,y" value="86,10" />
+      <property name="x,y" value="111,7" />
     </component>
     <component name="label">
       <property name="text" value="2" />
       <property name="size" value="6,13" />
-      <property name="x,y" value="122,10" />
+      <property name="x,y" value="144,7" />
     </component>
     <component name="label">
       <property name="text" value="3" />
       <property name="size" value="6,13" />
-      <property name="x,y" value="155,10" />
+      <property name="x,y" value="172,7" />
     </component>
     <component name="label">
       <property name="text" value="4" />
       <property name="size" value="6,13" />
-      <property name="x,y" value="190,10" />
-    </component>
-    <component name="label">
-      <property name="text" value="Level" />
-      <property name="size" value="23,13" />
-      <property name="x,y" value="221,0" />
+      <property name="x,y" value="203,7" />
     </component>
   </module>
   <module id="81">
@@ -1480,7 +1480,7 @@
     </component>
     <component name="label">
       <property name="text" value="{@decoration-12}" />
-      <property name="size" value="64,16" />
+      <property name="size" value="-1,-1" />
       <property name="x,y" value="171,4" />
     </component>
   </module>
@@ -1530,8 +1530,8 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="64.0.p.time" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="140,2" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="144,5" />
     </component>
     <component name="display.text">
       <property name="text" value="time" />
@@ -1541,35 +1541,35 @@
     </component>
     <component name="label">
       <property name="text" value="{@ds-2-3}" />
-      <property name="size" value="-1,16" />
+      <property name="size" value="-1,-1" />
       <property name="x,y" value="216,7" />
     </component>
   </module>
   <module id="2">
+    <component name="label">
+      <property name="text" value="L" />
+      <property name="size" value="5,13" />
+      <property name="x,y" value="224,2" />
+    </component>
     <component name="connector">
       <property name="connector#0" value="2.0.out.left" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="219,13" />
+      <property name="x,y" value="221,13" />
     </component>
     <component name="connector">
       <property name="connector#0" value="2.1.out.right" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="236,13" />
+      <property name="x,y" value="237,13" />
     </component>
     <component name="label">
       <property name="text" value="Left" />
       <property name="size" value="16,13" />
-      <property name="x,y" value="57,3" />
+      <property name="x,y" value="85,3" />
     </component>
     <component name="label">
       <property name="text" value="Right" />
       <property name="size" value="24,13" />
-      <property name="x,y" value="54,16" />
-    </component>
-    <component name="label">
-      <property name="text" value="L" />
-      <property name="size" value="5,13" />
-      <property name="x,y" value="223,2" />
+      <property name="x,y" value="85,16" />
     </component>
     <component name="label">
       <property name="text" value="R" />
@@ -1578,84 +1578,56 @@
     </component>
     <component name="display.audiolevel">
       <property name="size" value="92,5" />
-      <property name="x,y" value="91,4" />
+      <property name="x,y" value="115,4" />
     </component>
     <component name="display.audiolevel">
       <property name="size" value="92,5" />
-      <property name="x,y" value="91,20" />
+      <property name="x,y" value="115,20" />
     </component>
     <component name="label">
       <property name="text" value="30" />
       <property name="size" value="12,13" />
-      <property name="x,y" value="86,9" />
+      <property name="x,y" value="111,9" />
     </component>
     <component name="label">
       <property name="text" value="20" />
       <property name="size" value="12,13" />
-      <property name="x,y" value="101,9" />
+      <property name="x,y" value="125,9" />
     </component>
     <component name="label">
       <property name="text" value="10" />
       <property name="size" value="12,13" />
-      <property name="x,y" value="116,9" />
+      <property name="x,y" value="138,9" />
     </component>
     <component name="label">
       <property name="text" value="7" />
       <property name="size" value="6,13" />
-      <property name="x,y" value="131,9" />
+      <property name="x,y" value="153,9" />
     </component>
     <component name="label">
       <property name="text" value="5" />
       <property name="size" value="6,13" />
-      <property name="x,y" value="140,9" />
+      <property name="x,y" value="163,9" />
     </component>
     <component name="label">
       <property name="text" value="3" />
       <property name="size" value="6,13" />
-      <property name="x,y" value="150,9" />
+      <property name="x,y" value="172,9" />
     </component>
     <component name="label">
       <property name="text" value="2" />
       <property name="size" value="6,13" />
-      <property name="x,y" value="159,9" />
+      <property name="x,y" value="183,9" />
     </component>
     <component name="label">
       <property name="text" value="0" />
       <property name="size" value="6,13" />
-      <property name="x,y" value="177,9" />
+      <property name="x,y" value="203,9" />
     </component>
     <component name="label">
       <property name="text" value="1" />
       <property name="size" value="6,13" />
-      <property name="x,y" value="167,9" />
-    </component>
-  </module>
-  <module id="38">
-    <component name="connector">
-      <property name="connector#0" value="38.0.in.in" />
-      <property name="size" value="13,13" />
-      <property name="x,y" value="198,8" />
-    </component>
-    <component name="connector">
-      <property name="connector#0" value="38.0.out.out" />
-      <property name="size" value="13,13" />
-      <property name="x,y" value="236,8" />
-    </component>
-    <component name="knob">
-      <property name="parameter#0" value="38.0.p.time" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="140,2" />
-    </component>
-    <component name="display.text">
-      <property name="text" value="time" />
-      <property name="parameter#0" value="38.0.p.time" />
-      <property name="size" value="50,16" />
-      <property name="x,y" value="90,7" />
-    </component>
-    <component name="label">
-      <property name="text" value="{@ds-2-4}" />
-      <property name="size" value="-1,16" />
-      <property name="x,y" value="216,7" />
+      <property name="x,y" value="193,9" />
     </component>
   </module>
   <module id="28">
@@ -1689,6 +1661,34 @@
       <property name="parameter#0" value="28.0.p.rate" />
       <property name="size" value="40,16" />
       <property name="x,y" value="130,8" />
+    </component>
+  </module>
+  <module id="38">
+    <component name="connector">
+      <property name="connector#0" value="38.0.in.in" />
+      <property name="size" value="13,13" />
+      <property name="x,y" value="198,8" />
+    </component>
+    <component name="connector">
+      <property name="connector#0" value="38.0.out.out" />
+      <property name="size" value="13,13" />
+      <property name="x,y" value="236,8" />
+    </component>
+    <component name="knob">
+      <property name="parameter#0" value="38.0.p.time" />
+      <property name="size" value="24,24" />
+      <property name="x,y" value="140,2" />
+    </component>
+    <component name="display.text">
+      <property name="text" value="time" />
+      <property name="parameter#0" value="38.0.p.time" />
+      <property name="size" value="50,16" />
+      <property name="x,y" value="90,7" />
+    </component>
+    <component name="label">
+      <property name="text" value="{@ds-2-4}" />
+      <property name="size" value="-1,-1" />
+      <property name="x,y" value="216,7" />
     </component>
   </module>
   <module id="57">
@@ -1817,7 +1817,7 @@
     <component name="connector">
       <property name="connector#0" value="23.6.in.in" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="198,74" />
+      <property name="x,y" value="198,68" />
     </component>
     <component name="connector">
       <property name="connector#0" value="23.0.in.gate" />
@@ -1827,58 +1827,58 @@
     <component name="connector">
       <property name="connector#0" value="23.0.out.env" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="238,55" />
+      <property name="x,y" value="238,49" />
     </component>
     <component name="connector">
       <property name="connector#0" value="23.1.out.out" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="238,74" />
+      <property name="x,y" value="238,68" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="23.0.p.attack" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="39,29" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="39,35" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="23.1.p.decay" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="77,29" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="77,35" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="23.2.p.sustain" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="113,29" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="113,35" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="23.3.p.release" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="149,29" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="149,35" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="23.4.p.attack mod" />
-      <property name="size" value="24,24" />
+      <property name="size" value="20,20" />
       <property name="x,y" value="46,61" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="23.5.p.decay mod" />
-      <property name="size" value="24,24" />
+      <property name="size" value="20,20" />
       <property name="x,y" value="90,61" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="23.6.p.sustain mod" />
-      <property name="size" value="24,24" />
+      <property name="size" value="20,20" />
       <property name="x,y" value="132,61" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="23.7.p.release mod" />
-      <property name="size" value="24,24" />
+      <property name="size" value="20,20" />
       <property name="x,y" value="174,61" />
     </component>
     <component name="button">
       <property name="parameter#0" value="23.8.p.invert" />
       <property name="cyclic" value="true" />
       <property name="size" value="24,16" />
-      <property name="x,y" value="190,34" />
+      <property name="x,y" value="182,34" />
       <property name="landscape" value="false" />
     </component>
     <component name="label">
@@ -1899,60 +1899,60 @@
     <component name="label">
       <property name="text" value="{@decoration-15}" />
       <property name="size" value="27,19" />
-      <property name="x,y" value="211,67" />
+      <property name="x,y" value="211,61" />
     </component>
     <component name="display.text">
       <property name="text" value="attack" />
       <property name="parameter#0" value="23.0.p.attack" />
-      <property name="size" value="27,16" />
-      <property name="x,y" value="34,9" />
+      <property name="size" value="34,16" />
+      <property name="x,y" value="34,16" />
     </component>
     <component name="display.text">
       <property name="text" value="decay" />
       <property name="parameter#0" value="23.1.p.decay" />
-      <property name="size" value="27,16" />
-      <property name="x,y" value="76,8" />
+      <property name="size" value="34,16" />
+      <property name="x,y" value="70,16" />
     </component>
     <component name="display.text">
       <property name="text" value="sustain" />
       <property name="parameter#0" value="23.2.p.sustain" />
-      <property name="size" value="27,16" />
-      <property name="x,y" value="111,8" />
+      <property name="size" value="34,16" />
+      <property name="x,y" value="106,16" />
     </component>
     <component name="display.text">
       <property name="text" value="release" />
       <property name="parameter#0" value="23.3.p.release" />
-      <property name="size" value="27,16" />
-      <property name="x,y" value="147,8" />
+      <property name="size" value="34,16" />
+      <property name="x,y" value="142,16" />
     </component>
     <component name="label">
       <property name="text" value="A" />
       <property name="size" value="6,13" />
-      <property name="x,y" value="29,32" />
+      <property name="x,y" value="30,38" />
     </component>
     <component name="label">
       <property name="text" value="D" />
       <property name="size" value="7,13" />
-      <property name="x,y" value="67,34" />
+      <property name="x,y" value="66,38" />
     </component>
     <component name="label">
       <property name="text" value="S" />
       <property name="size" value="5,13" />
-      <property name="x,y" value="106,34" />
+      <property name="x,y" value="104,38" />
     </component>
     <component name="label">
       <property name="text" value="R" />
       <property name="size" value="6,13" />
-      <property name="x,y" value="142,34" />
+      <property name="x,y" value="139,38" />
     </component>
     <component name="ADSRModDisplay">
+      <property name="parameter#3" value="23.3.p.release" />
+      <property name="parameter#2" value="23.2.p.sustain" />
       <property name="parameter#0" value="23.0.p.attack" />
       <property name="parameter#1" value="23.1.p.decay" />
-      <property name="parameter#2" value="23.2.p.sustain" />
-      <property name="parameter#3" value="23.3.p.release" />
-	  <property name="parameter#4" value="23.8.p.invert" />
-      <property name="size" value="70,34" />
-      <property name="x,y" value="181,3" />
+      <property name="parameter#4" value="23.8.p.invert" />
+      <property name="size" value="69,27" />
+      <property name="x,y" value="182,3" />
     </component>
   </module>
   <module id="87">
@@ -1973,7 +1973,7 @@
     </component>
     <component name="label">
       <property name="text" value="{@ds-2-7}" />
-      <property name="size" value="-1,16" />
+      <property name="size" value="-1,-1" />
       <property name="x,y" value="218,9" />
     </component>
     <component name="label">
@@ -2425,32 +2425,32 @@
     <component name="connector">
       <property name="connector#0" value="65.0.out.clock" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="109,8" />
+      <property name="x,y" value="119,8" />
     </component>
     <component name="connector">
       <property name="connector#0" value="65.1.out.sync" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="168,8" />
+      <property name="x,y" value="178,8" />
     </component>
     <component name="connector">
       <property name="connector#0" value="65.2.out.active" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="234,8" />
+      <property name="x,y" value="237,8" />
     </component>
     <component name="label">
       <property name="text" value="Clock" />
       <property name="size" value="25,13" />
-      <property name="x,y" value="78,9" />
+      <property name="x,y" value="90,8" />
     </component>
     <component name="label">
       <property name="text" value="Sync" />
       <property name="size" value="21,13" />
-      <property name="x,y" value="142,9" />
+      <property name="x,y" value="150,8" />
     </component>
     <component name="label">
       <property name="text" value="Active" />
       <property name="size" value="27,13" />
-      <property name="x,y" value="197,9" />
+      <property name="x,y" value="207,8" />
     </component>
   </module>
   <module id="33">
@@ -2489,7 +2489,7 @@
     </component>
     <component name="label">
       <property name="text" value="{@decorator.rndgen.diskret}" />
-      <property name="size" value="-1,11" />
+      <property name="size" value="-1,-1" />
       <property name="x,y" value="217,9" />
     </component>
   </module>
@@ -2543,8 +2543,8 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="24.3.p.rate mod" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="48,42" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="49,44" />
     </component>
     <component name="button">
       <property name="parameter#0" value="24.4.p.mono" />
@@ -2557,13 +2557,13 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="24.5.p.rate kbt" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="138,48" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="140,50" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="24.6.p.phase" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="173,1" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="174,7" />
     </component>
     <component name="button">
       <property name="parameter#0" value="24.7.p.mute" />
@@ -2620,6 +2620,13 @@
       <property name="parameter#0" value="24.5.p.rate kbt" />
       <property name="x,y" value="145,44" />
     </component>
+    <component name="LFODisplay">
+      <property name="parameter#0" value="24.6.p.phase" />
+      <property name="waveform" value="2" />
+      <property name="parameter#1" value="24.2.p.waveform" />
+      <property name="size" value="46,20" />
+      <property name="x,y" value="200,7" />
+    </component>
   </module>
   <module id="115">
     <component name="connector">
@@ -2639,71 +2646,78 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="115.0.p.velocity sensitivity" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="59,33" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="55,34" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="115.1.p.left gain" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="102,33" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="95,32" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="115.2.p.breakpoint" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="136,33" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="129,32" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="115.3.p.right gain" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="171,33" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="164,32" />
     </component>
     <component name="display.text">
       <property name="text" value="left gain" />
       <property name="parameter#0" value="115.1.p.left gain" />
       <property name="size" value="30,16" />
-      <property name="x,y" value="99,16" />
+      <property name="x,y" value="90,13" />
     </component>
     <component name="display.text">
       <property name="text" value="breakpoint" />
       <property name="parameter#0" value="115.2.p.breakpoint" />
       <property name="size" value="30,16" />
-      <property name="x,y" value="133,16" />
+      <property name="x,y" value="125,13" />
     </component>
     <component name="display.text">
       <property name="text" value="right gain" />
       <property name="parameter#0" value="115.3.p.right gain" />
       <property name="size" value="30,16" />
-      <property name="x,y" value="167,16" />
+      <property name="x,y" value="162,13" />
     </component>
     <component name="label">
       <property name="text" value="Vel" />
       <property name="size" value="14,13" />
-      <property name="x,y" value="6,26" />
+      <property name="x,y" value="6,29" />
     </component>
     <component name="label">
       <property name="text" value="Note" />
       <property name="size" value="21,13" />
-      <property name="x,y" value="26,26" />
+      <property name="x,y" value="26,29" />
     </component>
     <component name="label">
       <property name="text" value="Vel Sens" />
       <property name="size" value="38,13" />
-      <property name="x,y" value="53,21" />
+      <property name="x,y" value="48,22" />
     </component>
     <component name="label">
       <property name="text" value="L Gain" />
       <property name="size" value="29,13" />
-      <property name="x,y" value="100,4" />
+      <property name="x,y" value="90,3" />
     </component>
     <component name="label">
       <property name="text" value="Brk Pnt" />
       <property name="size" value="31,13" />
-      <property name="x,y" value="132,4" />
+      <property name="x,y" value="124,3" />
     </component>
     <component name="label">
       <property name="text" value="R Gain" />
       <property name="size" value="30,13" />
-      <property name="x,y" value="167,4" />
+      <property name="x,y" value="162,3" />
+    </component>
+    <component name="NoteVelScaleDisplay">
+      <property name="parameter#2" value="115.2.p.breakpoint" />
+      <property name="parameter#0" value="115.3.p.right gain" />
+      <property name="parameter#1" value="115.1.p.left gain" />
+      <property name="size" value="54,28" />
+      <property name="x,y" value="196,4" />
     </component>
   </module>
   <module id="88">
@@ -2777,7 +2791,7 @@
     <component name="knob">
       <property name="parameter#0" value="4.0.p.level" />
       <property name="size" value="30,30" />
-      <property name="x,y" value="219,13" />
+      <property name="x,y" value="219,12" />
     </component>
     <component name="button">
       <property name="btn#2" value="CVA" />
@@ -2801,7 +2815,7 @@
     <component name="label">
       <property name="text" value="Destination" />
       <property name="size" value="52,13" />
-      <property name="x,y" value="1,25" />
+      <property name="x,y" value="3,24" />
     </component>
     <component name="label">
       <property name="text" value="Mix Bus" />
@@ -2848,60 +2862,8 @@
     </component>
     <component name="label">
       <property name="text" value="{@ds-2-1}" />
-      <property name="size" value="-1,16" />
+      <property name="size" value="-1,-1" />
       <property name="x,y" value="215,7" />
-    </component>
-  </module>
-  <module id="114">
-    <component name="connector">
-      <property name="connector#0" value="114.0.in.in 1" />
-      <property name="size" value="13,13" />
-      <property name="x,y" value="159,8" />
-    </component>
-    <component name="connector">
-      <property name="connector#0" value="114.1.in.in 2" />
-      <property name="size" value="13,13" />
-      <property name="x,y" value="194,8" />
-    </component>
-    <component name="connector">
-      <property name="connector#0" value="114.0.out.out" />
-      <property name="size" value="13,13" />
-      <property name="x,y" value="234,8" />
-    </component>
-    <component name="knob">
-      <property name="parameter#0" value="114.0.p.fade" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="88,2" />
-    </component>
-    <component name="label">
-      <property name="text" value="1" />
-      <property name="size" value="6,13" />
-      <property name="x,y" value="74,14" />
-    </component>
-    <component name="label">
-      <property name="text" value="2" />
-      <property name="size" value="6,13" />
-      <property name="x,y" value="121,14" />
-    </component>
-    <component name="label">
-      <property name="text" value="1" />
-      <property name="size" value="6,13" />
-      <property name="x,y" value="148,9" />
-    </component>
-    <component name="label">
-      <property name="text" value="2" />
-      <property name="size" value="6,13" />
-      <property name="x,y" value="185,9" />
-    </component>
-    <component name="label">
-      <property name="text" value="{@decoration-7}" />
-      <property name="size" value="35,16" />
-      <property name="x,y" value="83,7" />
-    </component>
-    <component name="label">
-      <property name="text" value="{@decoration-9}" />
-      <property name="size" value="68,13" />
-      <property name="x,y" value="172,3" />
     </component>
   </module>
   <module id="26">
@@ -3000,11 +2962,112 @@
       <property name="landscape" value="false" />
     </component>
   </module>
+  <module id="114">
+    <component name="connector">
+      <property name="connector#0" value="114.0.in.in 1" />
+      <property name="size" value="13,13" />
+      <property name="x,y" value="159,8" />
+    </component>
+    <component name="connector">
+      <property name="connector#0" value="114.1.in.in 2" />
+      <property name="size" value="13,13" />
+      <property name="x,y" value="194,8" />
+    </component>
+    <component name="connector">
+      <property name="connector#0" value="114.0.out.out" />
+      <property name="size" value="13,13" />
+      <property name="x,y" value="234,8" />
+    </component>
+    <component name="knob">
+      <property name="parameter#0" value="114.0.p.fade" />
+      <property name="size" value="24,24" />
+      <property name="x,y" value="88,2" />
+    </component>
+    <component name="label">
+      <property name="text" value="1" />
+      <property name="size" value="6,13" />
+      <property name="x,y" value="74,14" />
+    </component>
+    <component name="label">
+      <property name="text" value="2" />
+      <property name="size" value="6,13" />
+      <property name="x,y" value="121,14" />
+    </component>
+    <component name="label">
+      <property name="text" value="1" />
+      <property name="size" value="6,13" />
+      <property name="x,y" value="148,9" />
+    </component>
+    <component name="label">
+      <property name="text" value="2" />
+      <property name="size" value="6,13" />
+      <property name="x,y" value="185,9" />
+    </component>
+    <component name="label">
+      <property name="text" value="{@decoration-7}" />
+      <property name="size" value="35,16" />
+      <property name="x,y" value="83,7" />
+    </component>
+    <component name="label">
+      <property name="text" value="{@decoration-9}" />
+      <property name="size" value="-1,-1" />
+      <property name="x,y" value="172,3" />
+    </component>
+  </module>
+  <module id="127">
+    <component name="connector">
+      <property name="connector#0" value="127.0.out.Left" />
+      <property name="size" value="13,13" />
+      <property name="x,y" value="222,13" />
+    </component>
+    <component name="connector">
+      <property name="connector#0" value="127.1.out.Right" />
+      <property name="size" value="13,13" />
+      <property name="x,y" value="238,13" />
+    </component>
+    <component name="button">
+      <property name="parameter#0" value="127.0.p.+6db" />
+      <property name="btn#1" value="+6dB" />
+      <property name="cyclic" value="true" />
+      <property name="size" value="30,14" />
+      <property name="btn#0" value="+6dB" />
+      <property name="x,y" value="190,12" />
+      <property name="landscape" value="false" />
+    </component>
+    <component name="label">
+      <property name="text" value="L" />
+      <property name="size" value="5,13" />
+      <property name="x,y" value="85,3" />
+    </component>
+    <component name="label">
+      <property name="text" value="R" />
+      <property name="size" value="6,13" />
+      <property name="x,y" value="85,16" />
+    </component>
+    <component name="label">
+      <property name="text" value="L" />
+      <property name="size" value="5,13" />
+      <property name="x,y" value="225,2" />
+    </component>
+    <component name="label">
+      <property name="text" value="R" />
+      <property name="size" value="6,13" />
+      <property name="x,y" value="241,2" />
+    </component>
+    <component name="display.audiolevel">
+      <property name="size" value="90,5" />
+      <property name="x,y" value="95,6" />
+    </component>
+    <component name="display.audiolevel">
+      <property name="size" value="90,5" />
+      <property name="x,y" value="95,20" />
+    </component>
+  </module>
   <module id="67">
     <component name="connector">
       <property name="connector#0" value="67.0.out.gate" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="180,8" />
+      <property name="x,y" value="181,8" />
     </component>
     <component name="connector">
       <property name="connector#0" value="67.1.out.velocity" />
@@ -3018,70 +3081,29 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="67.0.p.note" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="124,2" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="132,5" />
     </component>
     <component name="label">
       <property name="text" value="Gate" />
       <property name="size" value="20,13" />
-      <property name="x,y" value="154,9" />
+      <property name="x,y" value="158,8" />
     </component>
     <component name="label">
       <property name="text" value="V" />
       <property name="size" value="6,13" />
-      <property name="x,y" value="198,9" />
+      <property name="x,y" value="201,8" />
     </component>
     <component name="label">
       <property name="text" value="R" />
       <property name="size" value="6,13" />
-      <property name="x,y" value="226,9" />
+      <property name="x,y" value="228,8" />
     </component>
     <component name="display.text">
       <property name="text" value="" />
       <property name="parameter#0" value="67.0.p.note" />
       <property name="size" value="30,16" />
-      <property name="x,y" value="80,7" />
-    </component>
-  </module>
-  <module id="127">
-    <component name="connector">
-      <property name="connector#0" value="127.0.out.Left" />
-      <property name="size" value="13,13" />
-      <property name="x,y" value="221,13" />
-    </component>
-    <component name="connector">
-      <property name="connector#0" value="127.1.out.Right" />
-      <property name="size" value="13,13" />
-      <property name="x,y" value="237,13" />
-    </component>
-    <component name="button">
-      <property name="parameter#0" value="127.0.p.+6db" />
-      <property name="btn#1" value="+6dB" />
-      <property name="cyclic" value="true" />
-      <property name="size" value="34,19" />
-      <property name="btn#0" value="+6dB" />
-      <property name="x,y" value="177,6" />
-      <property name="landscape" value="false" />
-    </component>
-    <component name="label">
-      <property name="text" value="L" />
-      <property name="size" value="5,13" />
-      <property name="x,y" value="73,2" />
-    </component>
-    <component name="label">
-      <property name="text" value="R" />
-      <property name="size" value="6,13" />
-      <property name="x,y" value="73,15" />
-    </component>
-    <component name="label">
-      <property name="text" value="L" />
-      <property name="size" value="5,13" />
-      <property name="x,y" value="223,1" />
-    </component>
-    <component name="label">
-      <property name="text" value="R" />
-      <property name="size" value="6,13" />
-      <property name="x,y" value="239,1" />
+      <property name="x,y" value="98,7" />
     </component>
   </module>
   <module id="108">
@@ -3274,7 +3296,7 @@
     </component>
     <component name="label">
       <property name="text" value="{@decoration-14}" />
-      <property name="size" value="68,11" />
+      <property name="size" value="-1,-1" />
       <property name="x,y" value="167,4" />
     </component>
   </module>
@@ -3441,22 +3463,22 @@
     <component name="connector">
       <property name="connector#0" value="46.0.in.trig" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="4,28" />
+      <property name="x,y" value="7,30" />
     </component>
     <component name="connector">
       <property name="connector#0" value="46.1.in.A mod" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="47,55" />
+      <property name="x,y" value="53,55" />
     </component>
     <component name="connector">
       <property name="connector#0" value="46.2.in.H mod" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="105,55" />
+      <property name="x,y" value="100,55" />
     </component>
     <component name="connector">
       <property name="connector#0" value="46.3.in.D mod" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="154,56" />
+      <property name="x,y" value="149,55" />
     </component>
     <component name="connector">
       <property name="connector#0" value="46.4.in.in" />
@@ -3466,7 +3488,7 @@
     <component name="connector">
       <property name="connector#0" value="46.5.in.amp" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="4,55" />
+      <property name="x,y" value="7,57" />
     </component>
     <component name="connector">
       <property name="connector#0" value="46.0.out.env" />
@@ -3480,33 +3502,33 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="46.0.p.A" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="44,25" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="50,32" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="46.1.p.H" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="100,25" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="98,32" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="46.2.p.D" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="152,26" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="146,32" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="46.3.p.A mod" />
-      <property name="size" value="22,22" />
-      <property name="x,y" value="63,49" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="72,51" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="46.4.p.H mod" />
-      <property name="size" value="22,22" />
-      <property name="x,y" value="122,49" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="120,51" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="46.5.p.D mod" />
-      <property name="size" value="22,22" />
-      <property name="x,y" value="169,50" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="168,51" />
     </component>
     <component name="label">
       <property name="text" value="{@decoration-15}" />
@@ -3516,53 +3538,53 @@
     <component name="display.text">
       <property name="text" value="A" />
       <property name="parameter#0" value="46.0.p.A" />
-      <property name="size" value="27,16" />
-      <property name="x,y" value="41,6" />
+      <property name="size" value="34,16" />
+      <property name="x,y" value="40,15" />
     </component>
     <component name="display.text">
       <property name="text" value="H" />
       <property name="parameter#0" value="46.1.p.H" />
-      <property name="size" value="27,16" />
-      <property name="x,y" value="97,6" />
+      <property name="size" value="34,16" />
+      <property name="x,y" value="87,15" />
     </component>
     <component name="display.text">
       <property name="text" value="D" />
       <property name="parameter#0" value="46.2.p.D" />
-      <property name="size" value="27,16" />
-      <property name="x,y" value="148,6" />
+      <property name="size" value="34,16" />
+      <property name="x,y" value="136,15" />
     </component>
     <component name="label">
       <property name="text" value="A" />
       <property name="size" value="6,13" />
-      <property name="x,y" value="34,28" />
+      <property name="x,y" value="40,36" />
     </component>
     <component name="label">
       <property name="text" value="H" />
       <property name="size" value="7,13" />
-      <property name="x,y" value="90,29" />
+      <property name="x,y" value="87,36" />
     </component>
     <component name="label">
       <property name="text" value="D" />
       <property name="size" value="7,13" />
-      <property name="x,y" value="142,30" />
+      <property name="x,y" value="136,36" />
     </component>
     <component name="AHDDisplay">
+      <property name="parameter#2" value="46.1.p.H" />
       <property name="parameter#0" value="46.0.p.A" />
       <property name="parameter#1" value="46.2.p.D" />
-      <property name="parameter#2" value="46.1.p.H" />
-      <property name="size" value="70,34" />
+      <property name="size" value="70,27" />
       <property name="x,y" value="181,3" />
     </component>
   </module>
   <module id="25">
     <component name="border.groupbox">
       <property name="size" value="74,38" />
-      <property name="x,y" value="159,31" />
+      <property name="x,y" value="159,33" />
     </component>
     <component name="connector">
       <property name="connector#0" value="25.0.in.rate" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="26,57" />
+      <property name="x,y" value="24,54" />
     </component>
     <component name="connector">
       <property name="connector#0" value="25.1.in.rst" />
@@ -3572,7 +3594,7 @@
     <component name="connector">
       <property name="connector#0" value="25.2.in.PWmod" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="163,47" />
+      <property name="x,y" value="163,49" />
     </component>
     <component name="connector">
       <property name="connector#0" value="25.0.out.out" />
@@ -3587,54 +3609,54 @@
     <component name="knob">
       <property name="parameter#0" value="25.0.p.rate" />
       <property name="size" value="30,30" />
-      <property name="x,y" value="70,43" />
+      <property name="x,y" value="66,40" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="25.2.p.phase" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="180,1" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="176,4" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="25.3.p.rate mod" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="45,48" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="42,48" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="25.5.p.rate kbt" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="132,48" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="133,48" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="25.6.p.PW mod" />
       <property name="size" value="24,24" />
-      <property name="x,y" value="179,41" />
+      <property name="x,y" value="179,43" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="25.7.p.PW" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="203,41" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="206,46" />
     </component>
     <component name="display.text">
       <property name="text" value="rate" />
       <property name="parameter#0" value="25.0.p.rate" />
-      <property name="size" value="50,16" />
-      <property name="x,y" value="45,18" />
+      <property name="size" value="48,16" />
+      <property name="x,y" value="46,18" />
     </component>
     <component name="display.text">
       <property name="text" value="phase" />
       <property name="parameter#0" value="25.2.p.phase" />
       <property name="size" value="30,16" />
-      <property name="x,y" value="149,10" />
+      <property name="x,y" value="136,15" />
     </component>
     <component name="label">
       <property name="text" value="Rst" />
       <property name="size" value="14,13" />
-      <property name="x,y" value="4,13" />
+      <property name="x,y" value="4,16" />
     </component>
     <component name="label">
       <property name="text" value="Slv" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="5,42" />
+      <property name="x,y" value="5,46" />
     </component>
     <component name="label">
       <property name="text" value="Rate" />
@@ -3644,22 +3666,22 @@
     <component name="label">
       <property name="text" value="Rate" />
       <property name="size" value="19,13" />
-      <property name="x,y" value="23,42" />
+      <property name="x,y" value="21,42" />
     </component>
     <component name="label">
       <property name="text" value="KBT" />
       <property name="size" value="17,13" />
-      <property name="x,y" value="137,30" />
+      <property name="x,y" value="135,30" />
     </component>
     <component name="label">
       <property name="text" value="Phase" />
       <property name="size" value="26,13" />
-      <property name="x,y" value="150,0" />
+      <property name="x,y" value="138,3" />
     </component>
     <component name="label">
       <property name="text" value="PW" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="163,34" />
+      <property name="x,y" value="163,36" />
     </component>
     <component name="button">
       <property name="btn#2" value="null" />
@@ -3671,7 +3693,7 @@
       <property name="size" value="26,18" />
       <property name="btn#0" value="Mono" />
       <property name="btn#5" value="null" />
-      <property name="x,y" value="104,3" />
+      <property name="x,y" value="102,3" />
       <property name="landscape" value="false" />
     </component>
     <component name="button">
@@ -3681,7 +3703,7 @@
       <property name="btn#1" value="Lo" />
       <property name="cyclic" value="false" />
       <property name="btn#4" value="null" />
-      <property name="size" value="26,50" />
+      <property name="size" value="24,46" />
       <property name="btn#0" value="Hi" />
       <property name="btn#5" value="null" />
       <property name="x,y" value="103,23" />
@@ -3689,11 +3711,18 @@
     </component>
     <component name="knob.reset">
       <property name="parameter#0" value="25.5.p.rate kbt" />
-      <property name="x,y" value="140,41" />
+      <property name="x,y" value="138,41" />
     </component>
     <component name="knob.reset">
       <property name="parameter#0" value="25.7.p.PW" />
-      <property name="x,y" value="211,33" />
+      <property name="x,y" value="211,37" />
+    </component>
+    <component name="LFODisplay">
+      <property name="parameter#0" value="25.2.p.phase" />
+      <property name="waveform" value="4" />
+      <property name="parameter#1" value="" />
+      <property name="size" value="46,20" />
+      <property name="x,y" value="200,7" />
     </component>
   </module>
   <module id="5">
@@ -4315,7 +4344,7 @@
     </component>
     <component name="label">
       <property name="text" value="{@decoration-11}" />
-      <property name="size" value="65,16" />
+      <property name="size" value="-1,-1" />
       <property name="x,y" value="171,4" />
     </component>
   </module>
@@ -4338,11 +4367,11 @@
     <component name="knob">
       <property name="parameter#0" value="80.0.p.rate" />
       <property name="size" value="30,30" />
-      <property name="x,y" value="91,24" />
+      <property name="x,y" value="93,24" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="80.1.p.phase" />
-      <property name="size" value="24,24" />
+      <property name="size" value="20,20" />
       <property name="x,y" value="164,6" />
     </component>
     <component name="display.text">
@@ -4415,6 +4444,13 @@
       <property name="btn#5" value="null" />
       <property name="x,y" value="216,39" />
       <property name="landscape" value="false" />
+    </component>
+    <component name="LFODisplay">
+      <property name="parameter#0" value="80.1.p.phase" />
+      <property name="waveform" value="2" />
+      <property name="parameter#1" value="80.2.p.waveform" />
+      <property name="size" value="46,20" />
+      <property name="x,y" value="200,7" />
     </component>
   </module>
   <module id="73">
@@ -4543,12 +4579,12 @@
     </component>
     <component name="label">
       <property name="text" value="{@ds-2-6}" />
-      <property name="size" value="-1,16" />
+      <property name="size" value="-1,-1" />
       <property name="x,y" value="176,7" />
     </component>
     <component name="label">
       <property name="text" value="{@ds-2-5}" />
-      <property name="size" value="-1,16" />
+      <property name="size" value="-1,-1" />
       <property name="x,y" value="215,7" />
     </component>
   </module>
@@ -5088,7 +5124,7 @@
     </component>
     <component name="label">
       <property name="text" value="{@decoration-18}" />
-      <property name="size" value="17,19" />
+      <property name="size" value="-1,-1" />
       <property name="x,y" value="207,13" />
     </component>
     <component name="label">
@@ -5230,7 +5266,7 @@
     </component>
     <component name="label">
       <property name="text" value="{@decoration-13}" />
-      <property name="size" value="25,19" />
+      <property name="size" value="-1,-1" />
       <property name="x,y" value="211,13" />
     </component>
     <component name="knob.reset">
@@ -5625,7 +5661,7 @@
     </component>
     <component name="label">
       <property name="text" value="{@decoration-2}" />
-      <property name="size" value="91,18" />
+      <property name="size" value="-1,-1" />
       <property name="x,y" value="140,4" />
     </component>
   </module>
@@ -6229,20 +6265,25 @@
     </component>
   </module>
   <module id="84">
+    <component name="label">
+      <property name="text" value="{@decoration-15}" />
+      <property name="size" value="27,19" />
+      <property name="x,y" value="211,22" />
+    </component>
     <component name="connector">
       <property name="connector#0" value="84.0.in.trigger" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="2,28" />
+      <property name="x,y" value="7,29" />
     </component>
     <component name="connector">
       <property name="connector#0" value="84.1.in.in" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="198,28" />
+      <property name="x,y" value="198,29" />
     </component>
     <component name="connector">
       <property name="connector#0" value="84.2.in.amp" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="39,28" />
+      <property name="x,y" value="40,28" />
     </component>
     <component name="connector">
       <property name="connector#0" value="84.0.out.envelope" />
@@ -6252,17 +6293,17 @@
     <component name="connector">
       <property name="connector#0" value="84.1.out.out" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="238,28" />
+      <property name="x,y" value="238,29" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="84.0.p.attack" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="105,19" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="101,22" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="84.1.p.decay" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="152,19" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="152,21" />
     </component>
     <component name="button">
       <property name="parameter#0" value="84.2.p.gate" />
@@ -6270,46 +6311,41 @@
       <property name="cyclic" value="true" />
       <property name="size" value="26,16" />
       <property name="btn#0" value="Gate" />
-      <property name="x,y" value="2,9" />
+      <property name="x,y" value="5,11" />
       <property name="landscape" value="false" />
     </component>
     <component name="label">
       <property name="text" value="Amp" />
       <property name="size" value="20,13" />
-      <property name="x,y" value="36,13" />
+      <property name="x,y" value="37,16" />
     </component>
     <component name="label">
       <property name="text" value="Attack" />
       <property name="size" value="27,13" />
-      <property name="x,y" value="72,24" />
+      <property name="x,y" value="68,26" />
     </component>
     <component name="label">
       <property name="text" value="Dcy" />
       <property name="size" value="17,13" />
-      <property name="x,y" value="133,23" />
-    </component>
-    <component name="label">
-      <property name="text" value="{@decoration-15}" />
-      <property name="size" value="27,19" />
-      <property name="x,y" value="211,22" />
+      <property name="x,y" value="133,26" />
     </component>
     <component name="display.text">
       <property name="text" value="attack" />
       <property name="parameter#0" value="84.0.p.attack" />
-      <property name="size" value="27,16" />
-      <property name="x,y" value="102,4" />
+      <property name="size" value="34,16" />
+      <property name="x,y" value="94,4" />
     </component>
     <component name="display.text">
       <property name="text" value="decay" />
       <property name="parameter#0" value="84.1.p.decay" />
-      <property name="size" value="27,16" />
-      <property name="x,y" value="149,4" />
+      <property name="size" value="34,16" />
+      <property name="x,y" value="145,4" />
     </component>
     <component name="ADDisplay">
       <property name="parameter#0" value="84.0.p.attack" />
       <property name="parameter#1" value="84.1.p.decay" />
-      <property name="size" value="46,26" />
-      <property name="x,y" value="190,2" />
+      <property name="size" value="40,24" />
+      <property name="x,y" value="194,4" />
     </component>
   </module>
   <module id="37">
@@ -6336,7 +6372,7 @@
     </component>
     <component name="label">
       <property name="text" value="{@ds-2-2}" />
-      <property name="size" value="-1,16" />
+      <property name="size" value="-1,-1" />
       <property name="x,y" value="215,7" />
     </component>
   </module>
@@ -6673,43 +6709,43 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="40.0.p.in sense 1" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="4,33" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="6,32" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="40.1.p.in sense 2" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="32,33" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="34,32" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="40.2.p.in sense 3" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="59,33" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="61,32" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="40.3.p.in sense 4" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="86,33" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="88,32" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="40.4.p.in sense 5" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="114,33" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="116,32" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="40.5.p.in sense 6" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="141,33" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="143,32" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="40.6.p.in sense 7" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="168,33" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="170,32" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="40.7.p.in sense 8" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="195,33" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="197,32" />
     </component>
     <component name="button">
       <property name="parameter#0" value="40.8.p.-6dB" />
@@ -7510,47 +7546,47 @@
     </component>
     <component name="knob">
       <property name="parameter#0" value="52.0.p.level 1" />
-      <property name="size" value="24,24" />
+      <property name="size" value="20,20" />
       <property name="x,y" value="34,36" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="52.1.p.level 2" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="69,36" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="68,36" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="52.2.p.level 3" />
-      <property name="size" value="24,24" />
+      <property name="size" value="20,20" />
       <property name="x,y" value="102,36" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="52.3.p.level 4" />
-      <property name="size" value="24,24" />
+      <property name="size" value="20,20" />
       <property name="x,y" value="135,36" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="52.4.p.time 1" />
-      <property name="size" value="24,24" />
+      <property name="size" value="20,20" />
       <property name="x,y" value="34,79" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="52.5.p.time 2" />
-      <property name="size" value="24,24" />
+      <property name="size" value="20,20" />
       <property name="x,y" value="69,79" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="52.6.p.time 3" />
-      <property name="size" value="24,24" />
+      <property name="size" value="20,20" />
       <property name="x,y" value="102,79" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="52.7.p.time 4" />
-      <property name="size" value="24,24" />
+      <property name="size" value="20,20" />
       <property name="x,y" value="135,79" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="52.8.p.time 5" />
-      <property name="size" value="24,24" />
+      <property name="size" value="20,20" />
       <property name="x,y" value="168,79" />
     </component>
     <component name="button">
@@ -7699,6 +7735,43 @@
       <property name="x,y" value="209,79" />
     </component>
   </module>
+  <module id="111">
+    <component name="connector">
+      <property name="connector#0" value="111.0.in.in" />
+      <property name="size" value="13,13" />
+      <property name="x,y" value="195,8" />
+    </component>
+    <component name="connector">
+      <property name="connector#0" value="111.0.out.out" />
+      <property name="size" value="13,13" />
+      <property name="x,y" value="235,8" />
+    </component>
+    <component name="knob">
+      <property name="parameter#0" value="111.0.p.multiplier" />
+      <property name="size" value="24,24" />
+      <property name="x,y" value="126,2" />
+    </component>
+    <component name="button">
+      <property name="parameter#0" value="111.1.p.unipolar" />
+      <property name="btn#1" value="Uni" />
+      <property name="cyclic" value="true" />
+      <property name="size" value="26,16" />
+      <property name="btn#0" value="Uni" />
+      <property name="x,y" value="93,7" />
+      <property name="landscape" value="false" />
+    </component>
+    <component name="display.text">
+      <property name="text" value="multiplier" />
+      <property name="parameter#0" value="111.0.p.multiplier" />
+      <property name="size" value="30,16" />
+      <property name="x,y" value="157,7" />
+    </component>
+    <component name="label">
+      <property name="text" value="{@decoration-12}" />
+      <property name="size" value="64,16" />
+      <property name="x,y" value="171,4" />
+    </component>
+  </module>
   <module id="90">
     <component name="connector">
       <property name="connector#0" value="90.0.in.clock" />
@@ -7840,43 +7913,6 @@
       <property name="size" value="34,19" />
       <property name="x,y" value="5,65" />
       <property name="landscape" value="false" />
-    </component>
-  </module>
-  <module id="111">
-    <component name="connector">
-      <property name="connector#0" value="111.0.in.in" />
-      <property name="size" value="13,13" />
-      <property name="x,y" value="195,8" />
-    </component>
-    <component name="connector">
-      <property name="connector#0" value="111.0.out.out" />
-      <property name="size" value="13,13" />
-      <property name="x,y" value="235,8" />
-    </component>
-    <component name="knob">
-      <property name="parameter#0" value="111.0.p.multiplier" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="126,2" />
-    </component>
-    <component name="button">
-      <property name="parameter#0" value="111.1.p.unipolar" />
-      <property name="btn#1" value="Uni" />
-      <property name="cyclic" value="true" />
-      <property name="size" value="26,16" />
-      <property name="btn#0" value="Uni" />
-      <property name="x,y" value="93,7" />
-      <property name="landscape" value="false" />
-    </component>
-    <component name="display.text">
-      <property name="text" value="multiplier" />
-      <property name="parameter#0" value="111.0.p.multiplier" />
-      <property name="size" value="30,16" />
-      <property name="x,y" value="157,7" />
-    </component>
-    <component name="label">
-      <property name="text" value="{@decoration-12}" />
-      <property name="size" value="64,16" />
-      <property name="x,y" value="171,4" />
     </component>
   </module>
   <module id="19">
@@ -8423,32 +8459,32 @@
     <component name="connector">
       <property name="connector#0" value="20.0.in.in" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="196,57" />
+      <property name="x,y" value="198,57" />
     </component>
     <component name="connector">
       <property name="connector#0" value="20.1.in.gate" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="4,21" />
+      <property name="x,y" value="6,26" />
     </component>
     <component name="connector">
       <property name="connector#0" value="20.2.in.retrig" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="4,38" />
+      <property name="x,y" value="6,42" />
     </component>
     <component name="connector">
       <property name="connector#0" value="20.3.in.amp" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="4,56" />
+      <property name="x,y" value="6,58" />
     </component>
     <component name="connector">
       <property name="connector#0" value="20.0.out.env" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="236,38" />
+      <property name="x,y" value="238,38" />
     </component>
     <component name="connector">
       <property name="connector#0" value="20.1.out.out" />
       <property name="size" value="13,13" />
-      <property name="x,y" value="236,57" />
+      <property name="x,y" value="238,57" />
     </component>
     <component name="button">
       <property name="btn#2" value="{@env.exp}" />
@@ -8457,114 +8493,114 @@
       <property name="cyclic" value="false" />
       <property name="size" value="68,16" />
       <property name="btn#0" value="{@env.log}" />
-      <property name="x,y" value="62,8" />
+      <property name="x,y" value="54,14" />
       <property name="landscape" value="true" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="20.1.p.attack" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="64,47" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="60,51" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="20.2.p.decay" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="97,47" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="99,51" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="20.3.p.sustain" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="131,47" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="134,51" />
     </component>
     <component name="knob">
       <property name="parameter#0" value="20.4.p.release" />
-      <property name="size" value="24,24" />
-      <property name="x,y" value="166,47" />
+      <property name="size" value="20,20" />
+      <property name="x,y" value="172,51" />
     </component>
     <component name="button">
       <property name="parameter#0" value="20.5.p.invert" />
       <property name="cyclic" value="true" />
       <property name="size" value="26,16" />
-      <property name="x,y" value="150,7" />
+      <property name="x,y" value="150,14" />
       <property name="landscape" value="false" />
     </component>
     <component name="label">
       <property name="text" value="Gate" />
       <property name="size" value="20,13" />
-      <property name="x,y" value="21,22" />
+      <property name="x,y" value="23,27" />
     </component>
     <component name="label">
       <property name="text" value="Retrig" />
       <property name="size" value="27,13" />
-      <property name="x,y" value="21,39" />
+      <property name="x,y" value="23,43" />
     </component>
     <component name="label">
       <property name="text" value="Amp" />
       <property name="size" value="20,13" />
-      <property name="x,y" value="21,57" />
+      <property name="x,y" value="23,59" />
     </component>
     <component name="label">
       <property name="text" value="A" />
       <property name="size" value="6,13" />
-      <property name="x,y" value="51,54" />
+      <property name="x,y" value="50,56" />
     </component>
     <component name="label">
       <property name="text" value="D" />
       <property name="size" value="7,13" />
-      <property name="x,y" value="89,54" />
+      <property name="x,y" value="86,56" />
     </component>
     <component name="label">
       <property name="text" value="S" />
       <property name="size" value="5,13" />
-      <property name="x,y" value="123,54" />
+      <property name="x,y" value="124,56" />
     </component>
     <component name="label">
       <property name="text" value="R" />
       <property name="size" value="6,13" />
-      <property name="x,y" value="159,54" />
+      <property name="x,y" value="161,56" />
     </component>
     <component name="label">
       <property name="text" value="Env" />
       <property name="size" value="16,13" />
-      <property name="x,y" value="216,39" />
+      <property name="x,y" value="218,39" />
     </component>
     <component name="label">
       <property name="text" value="{@decoration-15}" />
       <property name="size" value="-1,-1" />
-      <property name="x,y" value="209,50" />
+      <property name="x,y" value="211,50" />
     </component>
     <component name="display.text">
       <property name="text" value="attack" />
       <property name="parameter#0" value="20.1.p.attack" />
-      <property name="size" value="27,16" />
-      <property name="x,y" value="63,29" />
+      <property name="size" value="33,16" />
+      <property name="x,y" value="54,33" />
     </component>
     <component name="display.text">
       <property name="text" value="decay" />
       <property name="parameter#0" value="20.2.p.decay" />
-      <property name="size" value="27,16" />
-      <property name="x,y" value="97,29" />
+      <property name="size" value="33,16" />
+      <property name="x,y" value="92,33" />
     </component>
     <component name="display.text">
       <property name="text" value="sustain" />
       <property name="parameter#0" value="20.3.p.sustain" />
-      <property name="size" value="27,16" />
-      <property name="x,y" value="130,28" />
+      <property name="size" value="33,16" />
+      <property name="x,y" value="128,33" />
     </component>
     <component name="display.text">
       <property name="text" value="release" />
       <property name="parameter#0" value="20.4.p.release" />
-      <property name="size" value="27,16" />
-      <property name="x,y" value="166,28" />
+      <property name="size" value="33,16" />
+      <property name="x,y" value="166,33" />
     </component>
     <component name="ADSRDisplay">
+      <property name="parameter#3" value="20.4.p.release" />
+      <property name="parameter#2" value="20.3.p.sustain" />
+      <property name="parameter#5" value="20.0.p.attack shape" />
       <property name="parameter#0" value="20.1.p.attack" />
       <property name="parameter#1" value="20.2.p.decay" />
-      <property name="parameter#2" value="20.3.p.sustain" />
-      <property name="parameter#3" value="20.4.p.release" />
-	  <property name="parameter#4" value="20.5.p.invert" />
-      <property name="parameter#5" value="20.0.p.attack shape" />
-      <property name="size" value="70,34" />
-      <property name="x,y" value="181,3" />
+      <property name="parameter#4" value="20.5.p.invert" />
+      <property name="size" value="69,27" />
+      <property name="x,y" value="182,3" />
     </component>
   </module>
   <module id="110">
@@ -8590,7 +8626,7 @@
     </component>
     <component name="label">
       <property name="text" value="{@decorator.rndgen}" />
-      <property name="size" value="-1,11" />
+      <property name="size" value="-1,-1" />
       <property name="x,y" value="212,9" />
     </component>
     <component name="display.text">
