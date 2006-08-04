@@ -92,8 +92,14 @@ public class ComponentNode /*implements Iterable<String>*/ {
             Property p = set.get(name);
             if (p!=null)
             {
+                try
+                {
     			Value pvalue = p.decode(value);
                 values.add(pvalue);
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
             else
             {
