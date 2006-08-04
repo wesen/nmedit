@@ -30,6 +30,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JComboBox;
 
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
+import net.sf.nmedit.nomad.theme.property.Property;
 import net.sf.nmedit.nomad.theme.property.Value;
 import net.sf.nmedit.nomad.theme.property.editor.EditorEvent.EventId;
 
@@ -37,7 +38,7 @@ import net.sf.nmedit.nomad.theme.property.editor.EditorEvent.EventId;
 public class ComboBoxEditor extends Editor implements ActionListener
 {
 
-    public ComboBoxEditor( net.sf.nmedit.nomad.theme.property.Property property,
+    public ComboBoxEditor( Property property,
             NomadComponent component, Value[] values )
     {
         super( property, component, false );

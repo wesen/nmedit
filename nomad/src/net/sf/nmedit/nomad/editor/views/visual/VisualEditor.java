@@ -23,6 +23,7 @@
 package net.sf.nmedit.nomad.editor.views.visual;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -33,8 +34,10 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.BorderFactory;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.border.Border;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
@@ -65,8 +68,12 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 		= new ArrayList<NomadComponent>();
 	
 	private ComponentZOrderMenuItem mnSendToBack = null;
+    private final static Border                border           = BorderFactory
+    .createRaisedBevelBorder();
+
 	
 	public VisualEditor(DModule info) {
+        setBorder(border);
 		setLayout(null);
 		this.info = info;
 		new VEComponentDropAction(this);
@@ -142,6 +149,12 @@ public class VisualEditor extends NomadComponent implements ModuleComponent {
 	}
 
 	public void newComponenentDropped(NomadComponent component) {
+        
+        if  (component.getWidth()<=0 || component.getHeight() <= 0)
+        {
+           component.setSize(20, 20);
+        }
+        
 		add(component);
 	}
 

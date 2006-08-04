@@ -55,23 +55,26 @@ public class NomadButtonArrayBehaviour {
 	
 	private int getButtonIndexAt(int x, int y) {
 		int index;
+
 		if (model.isLandscape()) {
-			index= x/cell_width;
+			index= (cell_width==0) ? 0 : x/cell_width;
 		} else {
-			index= y/cell_height;
+			index= (cell_height==0) ? 0 : y/cell_height;
 		}
-		
-		if (index<0||index>=model.getButtonCount())
-			return -1;
-		
+
+        if (index<0||index>=model.getButtonCount())
+            return -1;
+        
 		return index;
 	}
 
 	public void calculateMetrics() {
 		Dimension size = model.getSize();
 		
-		if (model.getButtonCount()==0)
+		if (model.getButtonCount()<=0)
+        {
 			return;
+        }
 		
 		if (model.isLandscape()) {
 			cell_width = size.width / model.getButtonCount();
