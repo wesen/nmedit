@@ -137,7 +137,9 @@ public class WorkspacePanel extends JPanel implements ContainerListener, Compone
 			*/
 			
 			g2.setColor(NomadUtilities.alpha(Color.RED, 160));
-			for (Component c : clo.invalid) {
+            for (Object o : clo.invalid.toArray()) // fix: no concurrent modification exception
+            {
+                Component c = (Component) o;
 				g2.fill(absoluteBounds(c));
 			}
 			
