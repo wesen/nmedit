@@ -8,10 +8,21 @@
 # references:
 #   http://www.cit.gu.edu.au/~anthony/graphics/imagick6/mosaics/
 
-export tiles="audio_set inout_set"
-export map="png/map.slice"
-
 echo "Mosaic generator, Copyright (C) 2006 Christian Schneider"
+
+
+tiles=""
+
+for tset in svg/*
+do
+  tset=${tset:4}
+  if [ $tset != "CVS" ]
+  then
+    tiles="$tiles $tset"
+  fi
+done
+
+export map="png/map.slice"
 
 if [ "$1" == "clean" ]
 then
