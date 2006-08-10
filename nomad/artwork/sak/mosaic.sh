@@ -9,16 +9,16 @@
 #   http://www.cit.gu.edu.au/~anthony/graphics/imagick6/mosaics/
 
 export tiles="audio_set inout_set"
-export map="mosaic/map.slice"
+export map="png/map.slice"
 
 echo "Mosaic generator, Copyright (C) 2006 Christian Schneider"
 
 if [ "$1" == "clean" ]
 then
   echo "[cleaning]"
-  if [ -d "mosaic" ]
+  if [ -d "png" ]
   then
-    rm -r "mosaic"
+    rm -r "png"
   fi
 elif [ -n "$1" ]
 then
@@ -27,9 +27,9 @@ then
   echo "mosaic clean - remove generated files"
 else
   echo "[mosaic]"
-  if [ ! -d "mosaic" ]
+  if [ ! -d "png" ]
   then
-    mkdir "mosaic"
+    mkdir "png"
     touch $map
   fi
   echo "" > $map;
@@ -40,12 +40,17 @@ else
     files=""
     vx="0"
     echo "# $tileset" >> $map
-    for tile in $tileset/*.svg
+    for tile in svg/$tileset/*.svg
     do
       key=$tile
+      #remove svg/
+      key=${key:4}
+      #remove path name
       key=${key/"$tileset"/}
-      key=${key/.svg/}
+      #remove /
       key=${key:1}
+      # remove file extension
+      key=${key/.svg/}
       echo "$key    $vx $vy" >> $map
       let "vx=$vx+1"
       files="$files $tile"
@@ -54,11 +59,11 @@ else
     then
       echo "- $tileset"
     fi
-    montage -background Transparent $files -mode Concatenate -tile x1 mosaic/$tileset.png
-    mosaicfiles="$mosaicfiles mosaic/$tileset.png"
+    montage -background Transparent $files -mode Concatenate -tile x1 png/$tileset.png
+    mosaicfiles="$mosaicfiles png/$tileset.png"
     let "vy=$vy+1"
   done
   echo "- completing mosaic"
-  montage -background Transparent $mosaicfiles -mode Concatenate -tile 1x mosaic/mosaic.png
+  montage -background Transparent $mosaicfiles -mode Concatenate -tile 1x png/mosaic.png
 fi
 echo "done."
