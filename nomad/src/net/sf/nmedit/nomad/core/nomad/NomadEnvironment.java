@@ -23,7 +23,9 @@
 package net.sf.nmedit.nomad.core.nomad;
 
 import java.io.FileNotFoundException;
+import java.util.regex.Pattern;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DGroup;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.ModuleDescriptions;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.substitution.Substitutions;
@@ -169,6 +171,30 @@ public abstract class NomadEnvironment extends Application
         {
             m.setIcon(imageTracker.getImage(Integer.toString(m.getModuleID())));
         }
+
+        // TODO better solution for new icons
+        
+        // load new icons
+        Pattern p = Pattern.compile(".*-id-\\d*");
+        
+        for (String key : imageTracker.getKeys())
+        {
+            String ID = key;
+            if (p.matcher(ID).matches())
+            {
+                ID = ID.substring(ID.lastIndexOf('-')+1);
+                
+                try
+                {
+                    DModule module = md.getModuleById(Integer.parseInt(ID));
+                    module.setIcon(imageTracker.getImage(key));
+                }
+                catch (NumberFormatException e)
+                { /* ignore fail */ }
+                
+            }
+        }
+
     }
 
     public void loadDefaultImageTracker()
