@@ -54,6 +54,8 @@ public class SliceImage
    * Number of sclices in vertical direction.
    */
   private int sliceCountVrt;
+  
+  private boolean pxDimension = false;
 
   /**
    * Creates a SliceImage object.
@@ -80,8 +82,14 @@ public class SliceImage
   public SliceImage(String imageFile, Dimension grid)
     throws IllegalArgumentException
   {
-    this(Toolkit.getDefaultToolkit().getImage(imageFile), grid);
+    this(Toolkit.getDefaultToolkit().getImage(imageFile), grid, false);
   }
+  
+  public SliceImage(String imageFile, Dimension grid, boolean pxDimension)
+  throws IllegalArgumentException
+  {
+  this(Toolkit.getDefaultToolkit().getImage(imageFile), grid, pxDimension);
+    }
 
   /**
    * Creates a SliceImage object.
@@ -91,7 +99,7 @@ public class SliceImage
    * @throws IllegalArgumentException If grid has at least
    * one dimension less or equal zero.
    */
-  public SliceImage(Image image, Dimension grid)
+  public SliceImage(Image image, Dimension grid, boolean pxDimension)
     throws IllegalArgumentException
   {	  
     // check grid dimensions
@@ -102,19 +110,34 @@ public class SliceImage
     // Trick to make sure that required data is available.
     image = (new ImageIcon(image)).getImage();
 
-    // store grid dimensions
-    this.sliceCountHrz = (int) grid.getWidth();
-    this.sliceCountVrt = (int) grid.getHeight();
-
-    // Create slices ...
-
     // source image dimensions
     int imgW  = image.getWidth(null);
     int imgH  = image.getHeight(null);
 
     // slice dimensions in Pixel
-    int pxsliceW = (int) (imgW / sliceCountHrz);
-    int pxsliceH = (int) (imgH / sliceCountVrt);
+    int pxsliceW;
+    int pxsliceH;
+
+    this.pxDimension  = pxDimension;
+    if (pxDimension)
+    {
+        pxsliceW = grid.width;
+        pxsliceH = grid.height;
+        
+        // store grid dimensions
+        this.sliceCountHrz = imgW/pxsliceW;
+        this.sliceCountVrt = imgH/pxsliceH;
+    }
+    else
+    {    
+        // store grid dimensions
+        this.sliceCountHrz = grid.width;
+        this.sliceCountVrt = grid.height;
+        pxsliceW = (int) (imgW / sliceCountHrz);
+        pxsliceH = (int) (imgH / sliceCountVrt);
+    }
+    
+    // Create slices ...
 
     // create slices cache
     slices = new Image[sliceCountHrz][sliceCountVrt];
@@ -308,7 +331,16 @@ public class SliceImage
         "Missing 'slice'-attribute(s) in property file.");
 
     int dimx, dimy;
+    
+    boolean pxDimension = false;
 
+    if (shproperty.endsWith("px") && svproperty.endsWith("px"))
+    {
+        shproperty = shproperty.substring(0, shproperty.length()-2);
+        svproperty = shproperty.substring(0, svproperty.length()-2);
+        pxDimension = true; // dim specified as pixel
+    }
+    
     try
     {
       dimx = Integer.parseInt(shproperty);
@@ -320,7 +352,8 @@ public class SliceImage
         "Syntax error in 'slice'-attibute(s).", cause);
     }
 
-    SliceImage si = new SliceImage(imageFile, new Dimension(dimx, dimy));
+    SliceImage si = new SliceImage(imageFile, new Dimension(dimx, dimy),
+            pxDimension);
 
     for (Enumeration e=properties.propertyNames();e.hasMoreElements();)
     {
