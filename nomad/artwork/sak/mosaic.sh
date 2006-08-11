@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# this script requires imagemagick
+# this script requires imagemagick and inkscape
 # usage:
 #   mosaic       - create mosaic
 #   mosaic clean - remove generated files
@@ -22,7 +22,7 @@ do
   fi
 done
 
-export map="png/map.slice"
+map="png/module-icons.slice"
 
 if [ "$1" == "clean" ]
 then
@@ -43,14 +43,29 @@ else
     mkdir "png"
     touch $map
   fi
-  echo "" > $map;
+  
+  echo "# 16px*16px dimension" > $map;
+  echo "slice.hrz 16px" >> $map;
+  echo "slice.vrt 16px" >> $map;
   mosaicfiles=""
   vy="0"
+  
   for tileset in $tiles
   do
+     
     files=""
     vx="0"
-    echo "# $tileset" >> $map
+
+    if [ ! -d "png/$tileset" ]
+    then
+      # create dir: example png/inout_set
+      mkdir "png/$tileset"
+    fi
+    
+    echo -e "\n# $tileset" >> $map
+
+    echo -e "- $tileset \c"
+    
     for tile in svg/$tileset/*.svg
     do
       key=$tile
@@ -64,17 +79,26 @@ else
       key=${key/.svg/}
       echo "$key    $vx $vy" >> $map
       let "vx=$vx+1"
-      files="$files $tile"
-    done
-    if [ $vy > 0 ]
+      target="png/$tileset/$key.png"
+      files="$files $target"
+      inkscape $tile --export-png $target >/dev/null
+      echo -e ".\c"
+    done 
+    if [ $vx -gt 0 ]
     then
-      echo "- $tileset"
+      echo " ($vx images)"
+      montage -background Transparent $files -mode Concatenate -tile x1 png/$tileset.png
+      mosaicfiles="$mosaicfiles png/$tileset.png"
+      let "vy=$vy+1"
     fi
-    montage -background Transparent $files -mode Concatenate -tile x1 png/$tileset.png
-    mosaicfiles="$mosaicfiles png/$tileset.png"
-    let "vy=$vy+1"
   done
-  echo "- completing mosaic"
-  montage -background Transparent $mosaicfiles -mode Concatenate -tile 1x png/mosaic.png
+  
+  if [ $vy -gt 0 ]
+  then
+    echo "- completing mosaic ($vy sets)"
+    montage -background Transparent $mosaicfiles -mode Concatenate -tile 1x png/module-icons.png
+  else
+    echo "- completing mosaic (no images)"
+  fi
 fi
 echo "done."
