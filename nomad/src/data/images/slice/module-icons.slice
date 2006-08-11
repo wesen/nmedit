@@ -1,0 +1,32 @@
+# 16px*16px dimension
+slice.hrz 16px
+slice.vrt 16px
+
+# audio_set
+clip-id-61    0 0
+compressor-id-21    1 0
+delay-id-78    2 0
+digitizer-id-118    3 0
+diode-id-82    4 0
+expander-id-105    5 0
+invlevshift-id-57    6 0
+overdrive-id-62    7 0
+phaser-id-102    8 0
+quantizer-id-54    9 0
+ringmod-id-117    10 0
+sampleandhold-id-53    11 0
+shaper-id-83    12 0
+stereochorus-id-94    13 0
+wavewrap-id-74    14 0
+
+# inout_set
+1output-id-5    0 1
+2output-id-4    1 1
+4output-id-3    2 1
+audioin-id-2    3 1
+keyboard-id-1    4 1
+keyboardpatch-id-63    5 1
+keybsplit-id-100    6 1
+midiglobal-id-65    7 1
+notedetect-id-67    8 1
+polyareain-id-127    9 1
