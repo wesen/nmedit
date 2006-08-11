@@ -33,6 +33,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -42,6 +43,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import sun.rmi.runtime.WeakKey;
 
 import net.sf.nmedit.nomad.core.application.Application;
 import net.sf.nmedit.nomad.main.resources.AppIcons;
@@ -114,10 +117,16 @@ public class NomadAboutDialog extends NomadDialog implements MouseListener {
         return new JScrollPane(panel);
     }
     
-    private JComponent buildLicenseComponent()
+    private static WeakReference<String> license = new WeakReference<String>(null);
+    
+    public static String getLicense()
     {
-        InputStream is = getClass().getResourceAsStream("/gpl.txt");
-        StringBuffer license = new StringBuffer();
+        String l = license.get();
+        
+        if (l!=null) return l;
+        
+        InputStream is = NomadAboutDialog.class.getResourceAsStream("/gpl.txt");
+        StringBuffer sb = new StringBuffer();
         if (is!=null)
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -126,8 +135,8 @@ public class NomadAboutDialog extends NomadDialog implements MouseListener {
             {
                 while ((line=br.readLine())!=null)
                 {
-                    license.append(line);
-                    license.append("\n");
+                    sb.append(line);
+                    sb.append("\n");
                 }
             }
             catch (IOException e)
@@ -135,8 +144,16 @@ public class NomadAboutDialog extends NomadDialog implements MouseListener {
                 e.printStackTrace();
             }
         }
+     
+        l = sb.toString();
+        license = new WeakReference<String>(l);
         
-        JTextArea area = new JTextArea(license.toString());
+        return l;
+    }
+    
+    private JComponent buildLicenseComponent()
+    {   
+        JTextArea area = new JTextArea(getLicense());
         area.setFont(new Font("monospaced", Font.PLAIN, getFont().getSize()));
         area.setEditable(false);
         return new JScrollPane(area);
