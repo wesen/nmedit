@@ -14,7 +14,7 @@
    id="svg2"
    sodipodi:version="0.32"
    inkscape:version="0.43"
-   sodipodi:docname="4output.svg"
+   sodipodi:docname="4output-id-3.svg"
    sodipodi:docbase="/home/sak/wip/nmedit/inout_set">
   <defs
      id="defs4">
@@ -88,8 +88,8 @@
      guidetolerance="0.5px"
      inkscape:window-width="801"
      inkscape:window-height="579"
-     inkscape:window-x="538"
-     inkscape:window-y="280"
+     inkscape:window-x="443"
+     inkscape:window-y="232"
      inkscape:showpageshadow="false" />
   <metadata
      id="metadata7">
@@ -116,21 +116,20 @@
        sodipodi:ry="7.2304454"
        d="M 15.45198 8.22896 A 7.2304454 7.2304454 0 1 1  0.99108934,8.22896 A 7.2304454 7.2304454 0 1 1  15.45198 8.22896 z"
        transform="matrix(1.029072,0,0,1.029071,-0.4637,-0.4543)" />
-    <text
-       xml:space="preserve"
-       style="font-size:12px;font-style:normal;font-weight:normal;line-height:125%;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="7.9199219"
-       y="10.475586"
-       id="text1382"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan1384"
-         x="7.9199219"
-         y="10.475586"
-         style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Mitra Mono">4</tspan></text>
     <path
        style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 6.3687019,4.0107422 L 4.3687019,7.0107422 L 3.3687019,7.0107422 L 3.3687019,9.0107422 L 4.3687019,9.0107422 L 6.3687019,12.010742 L 6.3687019,4.0107422 z "
        id="path4254" />
+    <text
+       xml:space="preserve"
+       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="7"
+       y="11.290039"
+       id="text1417"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan1419"
+         x="7"
+         y="11.290039">4</tspan></text>
   </g>
 </svg>

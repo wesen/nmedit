@@ -13,7 +13,7 @@
    id="svg2"
    sodipodi:version="0.32"
    inkscape:version="0.43"
-   sodipodi:docname="2output.svg"
+   sodipodi:docname="2output-id-4.svg"
    sodipodi:docbase="/home/sak/wip/nmedit/inout_set">
   <defs
      id="defs4" />
@@ -39,8 +39,8 @@
      guidetolerance="0.5px"
      inkscape:window-width="801"
      inkscape:window-height="579"
-     inkscape:window-x="663"
-     inkscape:window-y="246"
+     inkscape:window-x="394"
+     inkscape:window-y="178"
      inkscape:showpageshadow="false" />
   <metadata
      id="metadata7">
@@ -73,15 +73,14 @@
        id="path4254" />
     <text
        xml:space="preserve"
-       style="font-size:12px;font-style:normal;font-weight:normal;line-height:125%;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="8"
-       y="10.588867"
-       id="text1382"
+       style="font-size:9px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="7.3408203"
+       y="11"
+       id="text1372"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         id="tspan1384"
-         x="8"
-         y="10.588867"
-         style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Mitra Mono">2</tspan></text>
+         id="tspan1374"
+         x="7.3408203"
+         y="11">2</tspan></text>
   </g>
 </svg>
