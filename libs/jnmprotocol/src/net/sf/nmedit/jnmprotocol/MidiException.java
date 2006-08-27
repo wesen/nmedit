@@ -39,4 +39,10 @@ public class MidiException extends Exception
 
     private String message;
     private int error;
+    
+    public String toString()
+    {
+        return super.toString() + " [error:"+getError()+"]";
+    }
+    
 }
