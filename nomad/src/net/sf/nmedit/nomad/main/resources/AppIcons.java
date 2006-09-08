@@ -56,6 +56,8 @@ public final class AppIcons extends ImageTracker {
     public static final ImageIcon IC_REDO = getImageIcon("redo");
     public static final ImageIcon IC_MIDI_PORT = getImageIcon("midi-port");
 	
+    public static final ImageIcon IC_MIDI_ILLUSTRATION = getImageIcon("midi-ill");
+    
 	public static Image getIcon(String key) {
 		return instance.getImage(key);
 	}
