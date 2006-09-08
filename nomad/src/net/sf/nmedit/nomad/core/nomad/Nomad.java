@@ -34,7 +34,7 @@ public class Nomad
     {
         Application.setProperty(Const.APPLICATION_CLASS_NAME, "net.sf.nmedit.nomad.core.nomad.NomadApplication");
         Application.setProperty(Const.APPLICATION_NAME, "Nomad");
-        Application.setProperty(Const.APPLICATION_VERSION, "0.2.1 (pre-release)");
+        Application.setProperty(Const.APPLICATION_VERSION, "0.2.2 (pre-release)");
         Application.setProperty(Const.APPLICATION_LOGFILE, "nomad.log");
         Application.setProperty(Const.APPLICATION_PROPERTYFILE, "conf/application.xml");
 
