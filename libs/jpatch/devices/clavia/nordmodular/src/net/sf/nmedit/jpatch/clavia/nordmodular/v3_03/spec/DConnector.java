@@ -238,19 +238,4 @@ public class DConnector extends DModulePart {
 		//return images[cnSignal][cnType][free?CONNECTOR_FREE:CONNECTOR_IN_USE];
 	}*/
 	
-	public boolean equals(Object obj) {
-		if (obj instanceof DConnector) {
-			DConnector comp = (DConnector) obj;
-			return 
-			    // same module
-				(comp.getParent().getModuleID() == getParent().getModuleID())
-				// same id
-			  &&(comp.getId()==getId())
-			    // same type (input|output). ids are only unique together with their input/output type
-			  &&(comp.getType()==getType())
-			;
-		} else
-			return super.equals(obj);
-	}
-	
 }

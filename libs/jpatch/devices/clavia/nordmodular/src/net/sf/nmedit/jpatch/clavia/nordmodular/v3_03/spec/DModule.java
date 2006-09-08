@@ -203,7 +203,17 @@ public class DModule {
 		else
 			doutputs = tmp;
 	}
-	
+
+    public int getInputCount()
+    {
+        return dinputs.length;
+    }
+
+    public int getOutputCount()
+    {
+        return doutputs.length;
+    }
+    
 	/**
 	 * Returns the toolbar section this module belongs to
 	 * @return the toolbar section this module belongs to
@@ -458,14 +468,6 @@ public class DModule {
 
 	public int hashCode() {
 		return mdID;
-	}
-	
-	public boolean equals(Object object) {
-		if (object instanceof DModule) {
-			return mdID == ((DModule) object).mdID;
-		} else {
-			return false;
-		}
 	}
 	
 }
