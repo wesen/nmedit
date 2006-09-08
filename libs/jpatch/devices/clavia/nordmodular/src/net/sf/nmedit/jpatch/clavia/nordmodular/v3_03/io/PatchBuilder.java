@@ -36,7 +36,7 @@ public interface PatchBuilder
      * Notifies the builder that a new section is found.
      * 
      * @param ID id of the section. The section IDs
-     * are defined in {@link net.sf.nmedit.nomad.patch.Format}
+     * are defined in {@link net.sf.nmedit.jmisc.nomad.patch.Format}
      */
     public void beginSection(int ID);
     
@@ -44,7 +44,7 @@ public interface PatchBuilder
      * Notifies the builder that a section is completed.
      * 
      * @param ID id of the section. The section IDs
-     * are defined in {@link net.sf.nmedit.nomad.patch.Format}
+     * are defined in {@link net.sf.nmedit.jmisc.nomad.patch.Format}
      */
     public void endSection(int ID);
     

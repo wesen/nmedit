@@ -24,8 +24,8 @@ package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.io;
 
 
 /**
- * Uses a {@link net.sf.nmedit.nomad.patch.parser.PatchParser} as source and
- * feeds the {@link net.sf.nmedit.nomad.patch.builder.PatchDecoder} with the data. 
+ * Uses a {@link net.sf.nmedit.jmisc.nomad.patch.parser.PatchParser} as source and
+ * feeds the {@link net.sf.nmedit.jmisc.nomad.patch.builder.PatchDecoder} with the data. 
  * 
  * @author Christian Schneider
  */

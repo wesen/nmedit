@@ -35,7 +35,7 @@ import net.sf.nmedit.jpdl.Tracer;
 
 /**
  * Uses a {@link net.sf.nmedit.jpdl.BitStream} as source and
- * feeds the {@link net.sf.nmedit.nomad.patch.builder.PatchDecoder} with the data. 
+ * feeds the {@link net.sf.nmedit.jmisc.nomad.patch.builder.PatchDecoder} with the data. 
  * 
  * @author Christian Schneider
  */

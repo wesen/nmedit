@@ -22,6 +22,10 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.io;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+
 import net.sf.nmedit.jpatch.Patch;
 import net.sf.nmedit.jpatch.io.FileSource;
 import net.sf.nmedit.jpatch.io.PatchDecoder;
@@ -56,23 +60,40 @@ public class PatchFileDecoder implements PatchDecoder
         if (!(source instanceof FileSource)) throw new UnsupportedSourceException(source);
         decoded = true;
    
-        PatchFileParser parser = new PatchFileParser(((FileSource)source).getReader());
-        VirtualBuilder builder = new VirtualBuilder(
-                (net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch)impl.createPatch()
-        );
-        PatchParserTranscoder t = new PatchParserTranscoder();
+        Reader reader = ((FileSource)source).getReader();
+        if (!(reader instanceof BufferedReader))
+            reader = new BufferedReader(reader);
+        PatchFileParser parser = new PatchFileParser(reader);
         try
         {
-            t.transcode(parser, builder);
-            
-            patch = builder.getPatch();
-            // TODO disable history while building
-            patch.getHistory().clear();
-            patch.getHistory().setModified(false);
+            VirtualBuilder builder = new VirtualBuilder(
+                    (net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch)impl.createPatch()
+            );
+            PatchParserTranscoder t = new PatchParserTranscoder();
+            try
+            {
+                t.transcode(parser, builder);
+                
+                patch = builder.getPatch();
+                // TODO disable history while building
+                patch.getHistory().clear();
+                patch.getHistory().setModified(false);
+            }
+            catch (TranscoderException e)
+            {
+                throw new PatchDecoderException(e);
+            }
         }
-        catch (TranscoderException e)
+        finally 
         {
-            throw new PatchDecoderException(e);
+            try
+            {
+                reader.close();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 

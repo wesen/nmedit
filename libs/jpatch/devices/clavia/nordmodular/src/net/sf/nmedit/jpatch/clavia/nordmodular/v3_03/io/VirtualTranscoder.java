@@ -23,6 +23,7 @@
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.io;
 
 import java.util.Iterator;
+import java.util.List;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Format;
@@ -31,7 +32,6 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Knob;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.MidiController;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Morph;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.MorphSet;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Note;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.NoteSet;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
@@ -40,8 +40,8 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.VoiceArea;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.misc.StandaloneRecord;
 
 /**
- * Uses a {@link net.sf.nmedit.nomad.patch.virtual.Patch} as source and
- * feeds the {@link net.sf.nmedit.nomad.patch.builder.PatchDecoder} with the data. 
+ * Uses a {@link net.sf.nmedit.jmisc.nomad.patch.virtual.Patch} as source and
+ * feeds the {@link net.sf.nmedit.jmisc.nomad.patch.builder.PatchDecoder} with the data. 
  * 
  * @author Christian Schneider
  */
@@ -150,7 +150,7 @@ public class VirtualTranscoder extends Transcoder<Patch, PatchBuilder>
         {  // MorphMapDump
 
             // first : morph group
-            MorphSet morphs = patch.getMorphs();
+            List<Morph> morphs = patch.getMorphs();
 
             int size = 0;
             for (int i=0;i<morphs.size();i++)
@@ -201,7 +201,7 @@ public class VirtualTranscoder extends Transcoder<Patch, PatchBuilder>
         }
         
         {   // KeyboardAssignment
-            MorphSet morphs = patch.getMorphs();
+            List<Morph> morphs = patch.getMorphs();
             int [] values = new int[morphs.size()];
             boolean writeKA = false;
             for (int i=0;i<morphs.size();i++)

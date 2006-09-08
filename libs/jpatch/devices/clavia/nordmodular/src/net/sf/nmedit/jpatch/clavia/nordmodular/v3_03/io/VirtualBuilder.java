@@ -22,6 +22,8 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.io;
 
+import java.util.List;
+
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Format;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Header;
@@ -30,7 +32,6 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Knob;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.MidiController;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Morph;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.MorphSet;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Note;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.NoteSet;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
@@ -299,7 +300,7 @@ public class VirtualBuilder implements PatchBuilder
                 break;
             case Format.SEC_MORPHMAP_DUMP:
             {
-                MorphSet morphs = patch.getMorphs();
+                List<Morph> morphs = patch.getMorphs();
                 if (r.getValueCount() == 4)
                 {
                     morphs.get( 0 ).setValue(
@@ -327,7 +328,7 @@ public class VirtualBuilder implements PatchBuilder
                 break;
             case Format.SEC_KEYBOARDASSIGNMENT:
             {
-                MorphSet morphs = patch.getMorphs();
+                List<Morph> morphs = patch.getMorphs();
                 morphs
                         .get( 0 )
                         .setKeyboardAssignment(
