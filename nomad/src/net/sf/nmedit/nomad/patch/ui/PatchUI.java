@@ -28,6 +28,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JViewport;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Format;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch;
@@ -48,6 +49,7 @@ public class PatchUI extends JSplitPane
     {   
         super(JSplitPane.VERTICAL_SPLIT);
         this.patch = patch;
+        patch.setProperty(Patch.UI, this);
         setOpaque(true);
         
         split.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -113,17 +115,35 @@ public class PatchUI extends JSplitPane
 	public ModuleSectionUI getPolySection() {
 		return polySectionUI;
 	}
+    
+    public void dispose()
+    {
+        unlinkInternal();
+        patch = null;
+        scrollPanePoly = null;
+        scrollPaneCommon = null;
+        commonSectionUI = null;
+        polySectionUI = null;
+        split = null;
+    }
+    
+    private void unlinkInternal()
+    {
+        // remove
+        if (scrollPaneCommon!=null) split.remove(scrollPaneCommon);
+        if (scrollPanePoly!=null)   split.remove(scrollPanePoly);
+        if (commonSectionUI!=null)  commonSectionUI.unlink();
+        if (polySectionUI!=null)    polySectionUI.unlink();
+    }
 
 	public void rebuild() 
     {
         double sep = patch.getHeader().getSeparatorPosition(); 
         
-		// remove
-		if (scrollPaneCommon!=null) split.remove(scrollPaneCommon);
-		if (scrollPanePoly!=null) 	split.remove(scrollPanePoly);
-		if (commonSectionUI!=null) 	commonSectionUI.unlink();
-		if (polySectionUI!=null) 	polySectionUI.unlink();
+        final int SCROLL_MODE = JViewport.BLIT_SCROLL_MODE;
 
+        unlinkInternal();
+        
 		// new
 		polySectionUI 	= NomadEnvironment.sharedInstance().getFactory().getModuleSectionUI(getPatch().getPolyVoiceArea());
 		polySectionUI.setSize(polySectionUI.getPreferredSize());
@@ -131,6 +151,8 @@ public class PatchUI extends JSplitPane
         scrollPanePoly = new JScrollPane(polySectionUI);
         scrollPanePoly.getViewport().setBorder(null);
         scrollPanePoly.setBorder(null);
+        scrollPanePoly.getViewport().setScrollMode(SCROLL_MODE);
+        
         split.add(scrollPanePoly, JSplitPane.TOP);
 		
 		commonSectionUI = NomadEnvironment.sharedInstance().getFactory().getModuleSectionUI(getPatch().getCommonVoiceArea());
@@ -139,6 +161,7 @@ public class PatchUI extends JSplitPane
         scrollPaneCommon = new JScrollPane(commonSectionUI);
         scrollPaneCommon.getViewport().setBorder(null);
         scrollPaneCommon.setBorder(null);
+        scrollPaneCommon.getViewport().setScrollMode(SCROLL_MODE);
         split.add(scrollPaneCommon, JSplitPane.BOTTOM);
 
         polySectionUI.populate();

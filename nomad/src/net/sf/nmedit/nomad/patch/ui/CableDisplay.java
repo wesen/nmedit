@@ -41,16 +41,17 @@ import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ModuleEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ModuleListener;
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
 import net.sf.nmedit.nomad.theme.component.NomadConnector;
+import net.sf.nmedit.nomad.theme.graphics.CableRenderer;
 import net.sf.nmedit.nomad.util.collection.ListEntry;
 import net.sf.nmedit.nomad.util.graphics.shape.RenderOp;
-import net.sf.nmedit.nomad.util.graphics.shape.ShapeDisplay;
+import net.sf.nmedit.nomad.util.graphics.shape.ShapeDisplay2;
 
 
-public class CableDisplay extends ShapeDisplay<Curve> {
+public class CableDisplay extends ShapeDisplay2<Curve> {
 
     private ModuleSectionUI moduleSectionUI;
     private CDEventHandler cdEventHandler = new CDEventHandler();
@@ -75,9 +76,8 @@ public class CableDisplay extends ShapeDisplay<Curve> {
             while (list!=null)
             {
                 Cable c = list.item;
-                updateColor(c);
                 updateLocation(c);
-                update(c);
+                repaint(c);
                 list = list.remaining;
             }
         }
@@ -99,11 +99,6 @@ public class CableDisplay extends ShapeDisplay<Curve> {
         return null;
     }
     
-    private void updateColor(Cable cable)
-    {
-        cable.setColor(cable.getC1().getConnectionColor());
-    }
-    
     private void updateLocation(Cable cable)
     {
         NomadComponent ui1 = (NomadComponent) cable.getC1().getUI();
@@ -115,13 +110,13 @@ public class CableDisplay extends ShapeDisplay<Curve> {
             getLocation(ui1, p1);
             getLocation(ui2, p2);
             cable.setCurve(p1, p2);
+            repaint(cable);
         }
     }
     
     public void add(Connector a, Connector b)
     {
         Cable cable = new Cable(a, b);
-        updateColor(cable);
         updateLocation(cable);
         map.put(a, new ListEntry<Cable>(cable, map.get(a)));
         map.put(b, new ListEntry<Cable>(cable, map.get(b)));
@@ -172,8 +167,7 @@ public class CableDisplay extends ShapeDisplay<Curve> {
         if (cable!=null)
         {
             updateLocation(cable);
-            updateColor(cable);
-            update(cable);
+            repaint(cable);
         }
     }
     
@@ -262,7 +256,7 @@ public class CableDisplay extends ShapeDisplay<Curve> {
     private static class CableRenderOp implements RenderOp
     {
         
-        CurvePainter painter = new CurvePainter();
+        CableRenderer painter = new CableRenderer();
 
         public void configure( Graphics2D g2, int optimization )
         {
@@ -280,13 +274,13 @@ public class CableDisplay extends ShapeDisplay<Curve> {
 
         public void render( Graphics2D g2, Shape shape )
         {
-            painter.paint(g2, (Curve) shape);
+            painter.render(g2,(Curve)shape);
         }
         
     }
     
     private class CDEventHandler extends MouseAdapter implements ContainerListener, 
-        EventListener<ModuleEvent>
+        ModuleListener
     {
 
         public void componentAdded(ContainerEvent event) 
@@ -294,7 +288,7 @@ public class CableDisplay extends ShapeDisplay<Curve> {
             if (event.getChild() instanceof ModuleUI) {
                 ModuleUI m = (ModuleUI) event.getChild();
                 Module mod = m.getModule();
-                mod.addListener(this);
+                mod.addModuleListener(this);
                 for (int i=0;i<mod.getConnectorCount();i++) 
                 {
                     Component c =  mod.getConnector(i).getUI();
@@ -309,7 +303,7 @@ public class CableDisplay extends ShapeDisplay<Curve> {
             {
                 ModuleUI m = (ModuleUI) event.getChild();
                 Module mod = m.getModule();
-                mod.removeListener(this);
+                mod.removeModuleListener(this);
                 for (int i=0;i<mod.getConnectorCount();i++)
                 {
                     Component c = mod.getConnector(i).getUI();
@@ -326,12 +320,14 @@ public class CableDisplay extends ShapeDisplay<Curve> {
             }
         }
 
-        public void event(ModuleEvent event)
+        public void moduleRenamed( Event e )
         {
-            if (event.getID()==ModuleEvent.MODULE_MOVED)
-            {
-                updateCables(event.getModule());
-            }
+            
+        }
+
+        public void moduleMoved( Event e )
+        {
+            updateCables(e.getModule());
         }
         
     }

@@ -53,8 +53,8 @@ import javax.swing.SwingUtilities;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.VoiceArea;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.VoiceAreaEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.VoiceAreaListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 import net.sf.nmedit.nomad.main.background.BackgroundFactory;
@@ -69,14 +69,16 @@ import net.sf.nmedit.nomad.util.NomadUtilities;
 import net.sf.nmedit.nomad.util.graphics.shape.RenderOp;
 
 
-public class ModuleSectionUI extends NComponent implements EventListener<VoiceAreaEvent> {
+public class ModuleSectionUI extends NComponent implements
+//Scrollable,
+VoiceAreaListener{
 
 	private VoiceArea moduleSection;
 	
 	public VoiceArea getModuleSection() {
 		return moduleSection;
 	}
-	
+    
 	private final static int dropAction = DnDConstants.ACTION_COPY;
 
 	//public static final DataFlavor ModuleSectionGUIFlavor = new DataFlavor("nomad/ModuleSectionGUIFlavor", "Nomad ModuleSectionGUI");
@@ -85,10 +87,27 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
 	private CableDisplay curvePanel = null;
 
 	private DragDropAction ddAction = new DragDropAction();
-	
+
+    /*
+     * TODO optimizations
+    //Overridden for performance reasons.
+
+     */
+    public void validate() {
+    }
+
+    public void revalidate() {
+    }
+    
+    public void update(Graphics g) {
+        
+    }
+
+
 	public ModuleSectionUI(VoiceArea moduleSection) {
+        setAutoscrolls(true);
         this.moduleSection = moduleSection;
-        moduleSection.addListener(this);
+        moduleSection.addVoiceAreaListener(this);
         curvePanel = new CableDisplay(this);
       //  patchUI = null;
         
@@ -134,12 +153,12 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
        
     }
 
-	private boolean adjustSize = false;
+	private boolean adjustSize = true;
 
 	private boolean cablesVisible = true;
 
 	public void unlink() {
-		moduleSection.removeListener(this);
+		moduleSection.removeVoiceAreaListener(this);
 		//getCableDisplay().setTable(null);
 		removeModuleDisplays();
         curvePanel.clear();
@@ -205,84 +224,16 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
     public void updateSize() {
         Dimension d = new Dimension( ModuleUI.Metrics.getPixelX(moduleSection.getImpliedWidth()),
                 ModuleUI.Metrics.getPixelY(moduleSection.getImpliedHeight()) );
+        d.width+=ModuleUI.Metrics.getPixelX(1);
+        d.height+=ModuleUI.Metrics.getPixelY(5);
         setPreferredSize(d);       
-        //setSize(d);
+        setSize(d);
         revalidate();
     }
     
     public void moduleSectionResized() {
         if (adjustSize) {
             updateSize();
-        }
-    }
-
-    public void event( VoiceAreaEvent event )
-    {
-        switch (event.getID())
-        {
-            case VoiceAreaEvent.VA_UPDATE_CONNECTION:
-                {
-                    Connector src = event.getSrc();
-                    for (Iterator<Connector> i=src.breadthFirstSearch();i.hasNext();)
-                    {
-                        src = i.next();
-                        if (src.getChildCount()>0)
-                        {
-                            for (Iterator<Connector> iter = src.childIterator(); iter.hasNext(); )
-                            {
-                                curvePanel.update(src, iter.next());
-                            }
-                        }
-                    }
-                    
-                }
-                break;
-
-            case VoiceAreaEvent.VA_BEGIN_UPDATE:
-                curvePanel.beginUpdate();
-                break;
-                
-            case VoiceAreaEvent.VA_END_UPDATE:
-                curvePanel.endUpdate();
-                break;
-                
-            case VoiceAreaEvent.VA_CONNECTED:
-                
-                curvePanel.add(event.getSrc(), event.getDst());
-                
-                break;
-            case VoiceAreaEvent.VA_DISCONNECTED:
-                curvePanel.remove(event.getSrc(), event.getDst());
-                break;
-                
-            case VoiceAreaEvent.VA_RESIZED:
-                moduleSectionResized();
-                break;
-
-            case VoiceAreaEvent.VA_MODULE_ADDED:
-                {
-
-                ModuleUI ui = NomadEnvironment.sharedInstance().getBuilder().compose(event.getModule(), this);
-                event.getModule().setUI(ui);
-                add(ui);
-                
-                    //Component c;
-                    add(ui/*c=event.getModule().newUI(this)*/);
-                    Rectangle r = ui.getBounds();
-                    RepaintManager.currentManager(this).addDirtyRegion(this, r.x, r.y, r.width, r.height);
-                }
-                break;
-            case VoiceAreaEvent.VA_MODULE_REMOVED:
-                {
-                    ModuleUI m = (ModuleUI) event.getModule().getUI();
-                    Rectangle bounds = m.getBounds(); 
-                    remove(m);
-                    if (isDisplayable())
-                        RepaintManager.currentManager(this).addDirtyRegion(this,
-                            bounds.x, bounds.y, bounds.width, bounds.height
-                        );
-                }
-                break;
         }
     }
 
@@ -361,7 +312,6 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
             
             {
                 curve.setCurve(getStartConnectorLocation(), getStartConnectorLocation());
-                curve.setColor(getStart().getConnector().getConnectionColor().getDefaultColor());
                 add(curve);
             }
 
@@ -648,6 +598,7 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
         {
             Point dst = locations.get(i);
             moved.get(i).setLocationEx(dst.x, dst.y);
+            
         }
     }
 
@@ -659,5 +610,61 @@ public class ModuleSectionUI extends NComponent implements EventListener<VoiceAr
         }
         
     }
-    
+
+    public void moduleAdded( Event e )
+    {
+        ModuleUI ui = NomadEnvironment.sharedInstance().getBuilder().compose(e.getModule(), this);
+        e.getModule().setUI(ui);
+        add(ui);
+        
+            //Component c;
+            add(ui/*c=event.getModule().newUI(this)*/);
+            Rectangle r = ui.getBounds();
+            RepaintManager.currentManager(this).addDirtyRegion(this, r.x, r.y, r.width, r.height);
+    }
+
+    public void moduleRemoved( Event e )
+    {
+        ModuleUI m = (ModuleUI) e.getModule().getUI();
+        Rectangle bounds = m.getBounds(); 
+        remove(m);
+        if (isDisplayable())
+            RepaintManager.currentManager(this).addDirtyRegion(this,
+                bounds.x, bounds.y, bounds.width, bounds.height
+            );
+        e.getModule().setUI(null);
+    }
+
+    public void voiceAreaResized( Event e )
+    {
+        moduleSectionResized();
+    }
+
+    public void cablesAdded( Event e )
+    {
+        curvePanel.add(e.getConnector1(), e.getConnector2());
+    }
+
+    public void cablesRemoved( Event e )
+    {
+        curvePanel.remove(e.getConnector1(), e.getConnector2());
+    }
+
+    public void cableGraphUpdated( Event e )
+    {
+        Connector src = e.getConnector();
+        curvePanel.beginUpdate();
+        for (Iterator<Connector> i=src.breadthFirstSearch();i.hasNext();)
+        {
+            src = i.next();
+            if (src.getChildCount()>0)
+            {
+                for (Iterator<Connector> iter = src.childIterator(); iter.hasNext(); )
+                {
+                    curvePanel.update(src, iter.next());
+                }
+            }
+        }
+        curvePanel.endUpdate();
+    }
 }

@@ -31,7 +31,6 @@ public class Cable extends Curve  {
 
 	private Connector c1;
 	private Connector c2;
-	private Signal colorCode = Signal.NONE;
 	
 	public Cable(Connector c1, Connector c2) {
 		super();
@@ -42,13 +41,8 @@ public class Cable extends Curve  {
 		this.c2 = c2;
 	}
 
-	public void setColor(Signal color) {
-		colorCode = color;
-		setColor(color.getDefaultColor());
-	}
-
 	public Signal getColorCode() {
-		return colorCode;
+		return c1 != null ? c1.getConnectionColor() : Signal.NONE;
 	}
 
 	public Cable(NomadConnector start, NomadConnector stop) {

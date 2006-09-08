@@ -21,8 +21,8 @@ import javax.swing.border.Border;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ModuleEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ModuleListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.nomad.patch.ui.action.BreakCablesAction;
 import net.sf.nmedit.nomad.patch.ui.action.DisconnectCablesAction;
@@ -35,9 +35,21 @@ import net.sf.nmedit.nomad.theme.component.NomadComponent;
 import net.sf.nmedit.nomad.util.graphics.GraphicsToolkit;
 
 
-public class ModuleUI extends JComponent implements ModuleComponent, EventListener<ModuleEvent>
+public class ModuleUI extends JComponent implements ModuleComponent, ModuleListener
 {
+//  Overridden for performance reasons.
+    public void validate() {
+    }
 
+    public void revalidate() {
+        
+    }
+    
+    /*
+    public void repaint(long tm, int x, int y, int width, int height) {
+    }
+    public void repaint(Rectangle r) {
+    }*/
     public static class Metrics
     {
 
@@ -151,7 +163,11 @@ public class ModuleUI extends JComponent implements ModuleComponent, EventListen
         }
     }
     
-    
+    public ModuleUI()
+    {
+        setOpaque(true);
+        setDoubleBuffered(true);
+    }
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D)g;
         if (isOpaque() && getBackground()!=null) {
@@ -408,7 +424,7 @@ private boolean dirty = false;
 
     public void unlink()
     {
-        module.removeListener( this );
+        module.removeModuleListener( this );
         for (Component c : getComponents())
         {
             if (c instanceof NomadComponent)
@@ -434,14 +450,9 @@ private boolean dirty = false;
 
         link( module );
         Metrics.setModuleUILocation( this, module );
-        module.addListener( this );
+        module.addModuleListener( this );
     }
 
-    public void event( ModuleEvent event )
-    {
-        Metrics.setModuleUILocation( this, module );
-    }
-    
     public ModuleSectionUI getModuleSection()
     {
         return moduleSection;
@@ -501,6 +512,16 @@ private boolean dirty = false;
     public DModule getModuleInfo()
     {
         return info;
+    }
+
+    public void moduleRenamed( Event e )
+    {
+        // TODO Auto-generated method stub
+    }
+
+    public void moduleMoved( Event e )
+    {
+        Metrics.setModuleUILocation( this, module );
     }
 
     /*

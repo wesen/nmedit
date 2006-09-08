@@ -22,7 +22,6 @@
  */
 package net.sf.nmedit.nomad.patch.ui;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Point2D;
@@ -35,8 +34,6 @@ public class Curve extends CubicCurve2D.Float {
 	private final static int dxTreshold = 300; 	// in pixel
 	private final static int gravityLimit = 100; 		// in pixel
 	private final static int hrzGravityTreshold = dyTreshold/2; 	// in pixel
-	private Color color = Color.WHITE;
-    private Color shadow = Color.WHITE;
 	//private ShapeGrid shapeGrid = new ShapeGrid() ;
 	
 	public Curve() {
@@ -51,22 +48,6 @@ public class Curve extends CubicCurve2D.Float {
 		setCurve((float)p1.getX(), (float)p1.getY(), (float)p2.getX(), (float)p2.getY());
 	}
 	
-	public Color getColor() {
-		return color;
-	}
-	
-	public void setColor(Color c) {
-		if (c!=null && !this.color.equals(c)) {
-			this.color = c;
-            this.shadow = CurvePainter.createShadow(this);
-		}
-	}
-    
-    public Color getShadow()
-    {
-        return this.shadow;
-    }
-
 	public Point getP1() { return new Point(getX1i(), getY1i()); }
 	public Point getP2() { return new Point(getX2i(), getY2i()); } 
 	public Point getCtrlP1() { return new Point(getCtrlX1i(), getCtrlY1i()); }
