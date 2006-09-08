@@ -23,6 +23,7 @@ import net.sf.nmedit.nomad.theme.component.NomadLabel;
 import net.sf.nmedit.nomad.theme.component.NomadResetButton;
 import net.sf.nmedit.nomad.theme.component.NomadVocoderController;
 import net.sf.nmedit.nomad.theme.component.NoteVelScaleDisplay;
+import net.sf.nmedit.nomad.theme.component.Slider;
 import net.sf.nmedit.nomad.theme.component.VocoderBandDisplay;
 import net.sf.nmedit.nomad.theme.component.WaveWrapDisp;
 import net.sf.nmedit.nomad.theme.xml.dom.ThemeNode;
@@ -35,7 +36,8 @@ public class ClassicThemeFactory extends UIFactory {
 		installClass(NomadClassicConnector.class,"connector");
 		installClass(NomadClassicKnob.class,"knob");
 		installClass(NomadLabel.class,"label");
-		installClass(NomadResetButton.class,"knob.reset");
+        installClass(NomadResetButton.class,"knob.reset");
+        installClass(Slider.class,"slider");
 		installClass(VocoderBandDisplay.class,"display.vocoder");
 		installClass(NomadVocoderController.class,"display.vocoder.controller");
 		installClass(AudioLevelDisplay.class,"display.audiolevel");
