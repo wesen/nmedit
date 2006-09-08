@@ -22,10 +22,8 @@
  */
 package net.sf.nmedit.nomad.core.application.splash;
 
-import java.awt.Component;
 import java.awt.Frame;
 import java.awt.Image;
-import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -196,21 +194,6 @@ public class SplashScreen
         else
         {
             return null;
-        }
-    }
-
-    public static void waitFor( Image image, Component comp )
-    {
-        final int IMAGE_ID = 0;
-
-        MediaTracker mt = new MediaTracker( comp );
-        mt.addImage( image, IMAGE_ID );
-        try
-        {
-            mt.waitForID( IMAGE_ID );
-        }
-        catch (InterruptedException ie)
-        {
         }
     }
 

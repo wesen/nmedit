@@ -35,6 +35,8 @@ import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import net.sf.nmedit.jmisc.util.ImageQuery;
+
 public class SplashWindow extends Window
 {
 
@@ -57,7 +59,7 @@ public class SplashWindow extends Window
         this.splashImage = splashImage;
         addMouseListener( new UserControlledDispose() );
 
-        SplashScreen.waitFor( splashImage, this );
+        ImageQuery.waitForDimensions(splashImage, 5000);
 
         int iw = splashImage.getWidth( this );
         int ih = splashImage.getHeight( this );
