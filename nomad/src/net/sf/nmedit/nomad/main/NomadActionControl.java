@@ -69,7 +69,7 @@ public class NomadActionControl
     public final UndoAction undoAction;
     public final RedoAction redoAction;
     public final LicenseDialogAction licenseDialogAction;
-
+    
     private Nomad nomad;
 
     public NomadActionControl( Nomad nomad )
@@ -135,7 +135,7 @@ public class NomadActionControl
         mnMenu = new JMenu( "Synth" );
         mnMenu.setMnemonic( KeyEvent.VK_S );
         synthDeviceActions.createSynthMenuItems(mnMenu);
-        
+
         mnBar.add( mnMenu );
 
         // patch
