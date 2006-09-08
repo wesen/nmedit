@@ -25,7 +25,6 @@ package net.sf.nmedit.nomad.core.nomad;
 import java.io.FileNotFoundException;
 import java.util.regex.Pattern;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DGroup;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.ModuleDescriptions;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.substitution.Substitutions;
