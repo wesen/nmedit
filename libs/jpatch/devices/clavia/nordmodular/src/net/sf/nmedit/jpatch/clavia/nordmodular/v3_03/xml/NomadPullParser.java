@@ -232,19 +232,23 @@ public abstract class NomadPullParser {
 	}
 	
 	public void parse(String fileName) throws FileNotFoundException, XmlPullParserException {
-		parse(new BufferedReader(new FileReader(fileName)));
+		parse(new FileReader(fileName));
 	}
 	
 	public void parse(File file) throws FileNotFoundException, XmlPullParserException {
-		parse(new BufferedReader(new FileReader(file)));
+		parse(new FileReader(file));
 	}
 	
 	public void parse(InputStream in) throws XmlPullParserException {
-		parse(new BufferedReader(new InputStreamReader(in)));
+		parse(new InputStreamReader(in));
 	}
 	
 	public void parse(Reader reader) throws XmlPullParserException {
 		XmlPullParser parser = getParser();
+        
+        if (!(reader instanceof BufferedReader))
+            reader = new BufferedReader(reader);
+        
 		parser.setInput(reader);
 		try {
 			parse(parser);
