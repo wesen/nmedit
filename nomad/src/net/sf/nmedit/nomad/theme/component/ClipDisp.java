@@ -5,8 +5,8 @@ import java.awt.Graphics;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterListener;
 import net.sf.nmedit.nomad.theme.property.ParameterProperty;
 import net.sf.nmedit.nomad.theme.property.PropertySet;
 
@@ -33,7 +33,7 @@ import net.sf.nmedit.nomad.theme.property.PropertySet;
  * Created on Jul 24, 2006
  */
 
-public class ClipDisp extends NomadDisplay implements EventListener<ParameterEvent>
+public class ClipDisp extends NomadDisplay implements ParameterListener
 {
 
     private double vclip = 1; // 0 - 1
@@ -113,13 +113,13 @@ public class ClipDisp extends NomadDisplay implements EventListener<ParameterEve
         symParam = module.getParameter(getParameterInfo(ISYM).getContextId());
         if (symParam!=null) 
         {
-            symParam.addListener(this);
+            symParam.addParameterListener(this);
         }
         
         clipParam = module.getParameter(getParameterInfo(ICLIP).getContextId());
         if (clipParam!=null) 
         {
-            clipParam.addListener(this);
+            clipParam.addParameterListener(this);
         }
         updateValues();
     }
@@ -128,21 +128,13 @@ public class ClipDisp extends NomadDisplay implements EventListener<ParameterEve
 //      removeValueChangeListener(broadcast);
         if (symParam!=null) 
         {
-            symParam.removeListener(this);
+            symParam.removeParameterListener(this);
             symParam = null;
         }
         if (clipParam!=null) 
         {
-            clipParam.removeListener(this);
+            clipParam.removeParameterListener(this);
             clipParam = null;
-        }
-    }
-
-    public void event(ParameterEvent event)
-    {
-        if (event.getID()==ParameterEvent.PARAMETER_VALUE_CHANGED)
-        {
-            updateValues();
         }
     }
 
@@ -159,6 +151,23 @@ public class ClipDisp extends NomadDisplay implements EventListener<ParameterEve
         
         if (symParam!=null)
             setSymmetric(symParam.getValue() == symParam.getMaxValue());
+    } 
+    
+    public void parameterValueChanged( Event e )
+    {
+        updateValues();
     }
+
+    public void parameterMorphValueChanged( Event e )
+    { }
+
+    public void parameterKnobAssignmentChanged( Event e )
+    { }
+
+    public void parameterMorphAssignmentChanged( Event e )
+    {  }
+
+    public void parameterMidiCtrlAssignmentChanged( Event e )
+    { }
 
 }

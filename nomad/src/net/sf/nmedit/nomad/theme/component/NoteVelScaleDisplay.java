@@ -28,13 +28,13 @@ import java.awt.Graphics;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterListener;
 import net.sf.nmedit.nomad.theme.property.ParameterProperty;
 import net.sf.nmedit.nomad.theme.property.PropertySet;
 
 
-public class NoteVelScaleDisplay extends NomadDisplay implements EventListener<ParameterEvent> 
+public class NoteVelScaleDisplay extends NomadDisplay implements ParameterListener 
 { 
 
     private double vlGain = 0.5; // 0 - 1, 0.5=center
@@ -105,19 +105,19 @@ public class NoteVelScaleDisplay extends NomadDisplay implements EventListener<P
 
     public void link(Module module) {
         parLGain = module.getParameter(getParameterInfo(SLGAIN).getContextId());
-        if (parLGain!=null) parLGain.addListener(this);
+        if (parLGain!=null) parLGain.addParameterListener(this);
         parRGain = module.getParameter(getParameterInfo(SRGAIN).getContextId());
-        if (parRGain!=null) parRGain.addListener(this);
+        if (parRGain!=null) parRGain.addParameterListener(this);
         parBreak = module.getParameter(getParameterInfo(SBREAK).getContextId());
-        if (parBreak!=null) parBreak.addListener(this);
+        if (parBreak!=null) parBreak.addParameterListener(this);
         
         updateValues();
     }
 
     public void unlink() {
-        if (parLGain!=null) parLGain.removeListener(this);
-        if (parRGain!=null) parRGain.removeListener(this);
-        if (parBreak!=null) parBreak.removeListener(this);
+        if (parLGain!=null) parLGain.removeParameterListener(this);
+        if (parRGain!=null) parRGain.removeParameterListener(this);
+        if (parBreak!=null) parBreak.removeParameterListener(this);
 
         parLGain = null;
         parRGain = null;
@@ -131,17 +131,25 @@ public class NoteVelScaleDisplay extends NomadDisplay implements EventListener<P
         if (parBreak!=null) setBreakPoint(getDoubleValue(parBreak));
     }
     
-    public void event(ParameterEvent event)
+    public void parameterValueChanged( Event e )
     {
-        Parameter p = event.getParameter();
-        
-        if (event.getID()==ParameterEvent.PARAMETER_VALUE_CHANGED)
-        {
-            if (parLGain==p) setLeftGain(getDoubleValue(p));
-            else if (parRGain==p) setRightGain(getDoubleValue(p));
-            else if (parBreak==p) setBreakPoint(getDoubleValue(p));
-        }
+        Parameter p = e.getParameter();
+        if (parLGain==p) setLeftGain(getDoubleValue(p));
+        else if (parRGain==p) setRightGain(getDoubleValue(p));
+        else if (parBreak==p) setBreakPoint(getDoubleValue(p));
     }
+
+    public void parameterMorphValueChanged( Event e )
+    { }
+
+    public void parameterKnobAssignmentChanged( Event e )
+    { }
+
+    public void parameterMorphAssignmentChanged( Event e )
+    { }
+
+    public void parameterMidiCtrlAssignmentChanged( Event e )
+    { }
     
     
 }

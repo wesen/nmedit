@@ -26,8 +26,8 @@ import java.awt.event.MouseEvent;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ConnectorEvent;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ConnectorListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DConnector;
 import net.sf.nmedit.nomad.patch.ui.ModuleUI;
 import net.sf.nmedit.nomad.theme.NomadClassicColors;
@@ -35,7 +35,7 @@ import net.sf.nmedit.nomad.theme.property.ConnectorProperty;
 import net.sf.nmedit.nomad.theme.property.PropertySet;
 
 
-public class NomadConnector extends NomadComponent implements EventListener<ConnectorEvent> {
+public class NomadConnector extends NomadComponent implements ConnectorListener {
 
 	private boolean flagConnected = false;
 	private boolean flagIsInput = false;
@@ -124,13 +124,13 @@ public class NomadConnector extends NomadComponent implements EventListener<Conn
 		if (connector!=null) {
 			this.setConnectedState(connector.isConnected());
             connector.setUI(this);
-            connector.addListener(this);
+            connector.addConnectorStateListener(this);
 		}
 	}
 	
 	public void unlink() {
 		if (connector!=null) {
-            connector.removeListener(this);
+            connector.removeConnectorStateListener(this);
             connector.setUI(null);
 			connector = null;
 		}
@@ -140,7 +140,7 @@ public class NomadConnector extends NomadComponent implements EventListener<Conn
 		return connector;
 	}
 
-    public void event( ConnectorEvent event )
+    public void connectorStateChanged( Event e )
     {
         if (connector != null)
             setConnectedState(connector.isConnected());

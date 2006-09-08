@@ -24,7 +24,7 @@ package net.sf.nmedit.nomad.theme.component;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
 import net.sf.nmedit.nomad.theme.property.ParameterProperty;
 import net.sf.nmedit.nomad.theme.property.PropertySet;
 
@@ -43,28 +43,23 @@ public class ADSRDisplay extends ADSRModDisplay
     public void link(Module module) 
     {
         parAT = module.getParameter(getParameterInfo(IAT).getContextId());
-        if (parAT!=null) parAT.addListener(this);
+        if (parAT!=null) parAT.addParameterListener(this);
         super.link(module);
     }
 
     public void unlink() {
-        if (parAT!=null) parAT.removeListener(this);
+        if (parAT!=null) parAT.removeParameterListener(this);
         parAT = null;
         super.unlink();
     }
-
-    public void event(ParameterEvent event)
-    {
-        super.event(event);
-        
-        Parameter p = event.getParameter();
-        
-        if (event.getID()==ParameterEvent.PARAMETER_VALUE_CHANGED)
-        {
-            if (parAT==p) setAttackType(p.getValue());
-        }
-    }
     
+    public void parameterValueChanged( Event e )
+    {
+        super.parameterValueChanged(e);
+        Parameter p = e.getParameter();
+        if (parAT==p) setAttackType(p.getValue());
+    }
+
     protected void updateValues()
     {
         if (parAT!=null) setAttackType(parAT.getValue());

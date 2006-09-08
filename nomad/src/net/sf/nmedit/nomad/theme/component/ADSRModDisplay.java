@@ -24,7 +24,7 @@ package net.sf.nmedit.nomad.theme.component;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
 import net.sf.nmedit.nomad.theme.property.ParameterProperty;
 import net.sf.nmedit.nomad.theme.property.PropertySet;
 
@@ -53,38 +53,33 @@ public class ADSRModDisplay extends ADDisplay
     public void link(Module module) 
     {
         parS = module.getParameter(getParameterInfo(IS).getContextId());
-        if (parS!=null) parS.addListener(this);
+        if (parS!=null) parS.addParameterListener(this);
         parR = module.getParameter(getParameterInfo(IR).getContextId());
-        if (parR!=null) parR.addListener(this);
+        if (parR!=null) parR.addParameterListener(this);
         parInv = module.getParameter(getParameterInfo(IINV).getContextId());
-        if (parInv!=null) parInv.addListener(this);
+        if (parInv!=null) parInv.addParameterListener(this);
         super.link(module);
     }
 
     public void unlink() {
-        if (parS!=null) parS.removeListener(this);
-        if (parR!=null) parR.removeListener(this);
-        if (parInv!=null) parInv.removeListener(this);
+        if (parS!=null) parS.removeParameterListener(this);
+        if (parR!=null) parR.removeParameterListener(this);
+        if (parInv!=null) parInv.removeParameterListener(this);
         parS = null;
         parR = null;
         parInv = null;
         super.unlink();
     }
 
-    public void event(ParameterEvent event)
+    public void parameterValueChanged( Event e )
     {
-        super.event(event);
-        
-        Parameter p = event.getParameter();
-        
-        if (event.getID()==ParameterEvent.PARAMETER_VALUE_CHANGED)
-        {
-            if (parS==p) setSustain(getDoubleValue(p));
-            else if (parR==p) setRelease(getDoubleValue(p));
-            else if (parInv==p) setInverse(parInv.getValue()==1);
-        }
+        super.parameterValueChanged(e);
+        Parameter p = e.getParameter();
+        if (parS==p) setSustain(getDoubleValue(p));
+        else if (parR==p) setRelease(getDoubleValue(p));
+        else if (parInv==p) setInverse(parInv.getValue()==1);
     }
-    
+
     protected void updateValues()
     {
         if (parS!=null) setSustain(getDoubleValue(parS));

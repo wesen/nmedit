@@ -24,12 +24,12 @@ package net.sf.nmedit.nomad.theme.component;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterListener;
 import net.sf.nmedit.nomad.theme.property.ParameterProperty;
 import net.sf.nmedit.nomad.theme.property.PropertySet;
 
-public class ADDisplay extends EnvelopeDisp implements EventListener<ParameterEvent> 
+public class ADDisplay extends EnvelopeDisp implements ParameterListener 
 {
 
     private Parameter parA = null;
@@ -51,17 +51,17 @@ public class ADDisplay extends EnvelopeDisp implements EventListener<ParameterEv
 
     public void link(Module module) {
         parA = module.getParameter(getParameterInfo(IATTACK).getContextId());
-        if (parA!=null) parA.addListener(this);
+        if (parA!=null) parA.addParameterListener(this);
 
         parD = module.getParameter(getParameterInfo(IDECAY).getContextId());
-        if (parD!=null) parD.addListener(this);
+        if (parD!=null) parD.addParameterListener(this);
         
         updateValues();
     }
 
     public void unlink() {
-        if (parA!=null) parA.removeListener(this);
-        if (parD!=null) parD.removeListener(this);
+        if (parA!=null) parA.removeParameterListener(this);
+        if (parD!=null) parD.removeParameterListener(this);
 
         parA = null;
         parD = null;
@@ -73,15 +73,23 @@ public class ADDisplay extends EnvelopeDisp implements EventListener<ParameterEv
         if (parD!=null) setDecay(getDoubleValue(parD));
     }
     
-    public void event(ParameterEvent event)
+    public void parameterValueChanged( Event e )
     {
-        Parameter p = event.getParameter();
-        
-        if (event.getID()==ParameterEvent.PARAMETER_VALUE_CHANGED)
-        {
-            if (parA==p) setAttack(getDoubleValue(p));
-            else if (parD==p) setDecay(getDoubleValue(p));
-        }
+        Parameter p = e.getParameter();
+        if (parA==p) setAttack(getDoubleValue(p));
+        else if (parD==p) setDecay(getDoubleValue(p));
     }
+
+    public void parameterMorphValueChanged( Event e )
+    { }
+
+    public void parameterKnobAssignmentChanged( Event e )
+    { }
+
+    public void parameterMorphAssignmentChanged( Event e )
+    { }
+
+    public void parameterMidiCtrlAssignmentChanged( Event e )
+    { }
     
 }

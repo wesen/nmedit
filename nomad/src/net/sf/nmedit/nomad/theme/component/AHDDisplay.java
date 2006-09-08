@@ -24,7 +24,7 @@ package net.sf.nmedit.nomad.theme.component;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
 import net.sf.nmedit.nomad.theme.property.ParameterProperty;
 import net.sf.nmedit.nomad.theme.property.PropertySet;
 
@@ -47,28 +47,23 @@ public class AHDDisplay extends ADDisplay
     public void link(Module module) 
     {
         parH = module.getParameter(getParameterInfo(IH).getContextId());
-        if (parH!=null) parH.addListener(this);
+        if (parH!=null) parH.addParameterListener(this);
         super.link(module);
     }
 
     public void unlink() {
-        if (parH!=null) parH.removeListener(this);
+        if (parH!=null) parH.removeParameterListener(this);
         parH = null;
         super.unlink();
     }
 
-    public void event(ParameterEvent event)
+    public void parameterValueChanged( Event e )
     {
-        super.event(event);
-        
-        Parameter p = event.getParameter();
-        
-        if (event.getID()==ParameterEvent.PARAMETER_VALUE_CHANGED)
-        {
-            if (parH==p) setHold(getDoubleValue(p));
-        }
+        super.parameterValueChanged(e);
+        Parameter p = e.getParameter();
+        if (parH==p) setHold(getDoubleValue(p));
     }
-    
+
     protected void updateValues()
     {
         if (parH!=null) setHold(getDoubleValue(parH));

@@ -28,8 +28,8 @@ import java.awt.event.FocusEvent;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Morph;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
 import net.sf.nmedit.nomad.theme.property.ParameterProperty;
 import net.sf.nmedit.nomad.theme.property.PropertySet;
@@ -40,7 +40,7 @@ import net.sf.nmedit.nomad.util.NomadUtilities;
 /**
  * @author Christian Schneider
  */
-public abstract class NomadControl extends NomadComponent implements EventListener<ParameterEvent> {
+public abstract class NomadControl extends NomadComponent implements ParameterListener {
 	private int value = 0;
 	private int minValue = 0;
 	private int maxValue = 100;
@@ -280,7 +280,7 @@ public abstract class NomadControl extends NomadComponent implements EventListen
 		parameter = module.getParameter(getParameterInfo(PAR0).getContextId());
 		if (parameter!=null) {
 			setValue(parameter.getValue());
-			parameter.addListener(this);
+			parameter.addParameterListener(this);
             loadMorphSettings();
 		}
 	}
@@ -289,32 +289,10 @@ public abstract class NomadControl extends NomadComponent implements EventListen
 //		removeValueChangeListener(broadcast);
 		if (parameter!=null) {
             setMorphValue(null);
-			parameter.removeListener(this);
+			parameter.removeParameterListener(this);
 			parameter = null;
 		}
 	}
-
-    public void event(ParameterEvent event)
-    {
-        Parameter p = event.getParameter();
-        
-        switch (event.getID())
-        {
-            case ParameterEvent.PARAMETER_MORPHRANGE_CHANGED:
-                setMorphValue( p.getMorphRange()/127.0d );
-                break;
-            case ParameterEvent.PARAMETER_VALUE_CHANGED:
-                setValue( p.getValue() );
-                break;
-            case ParameterEvent.MORPH_VALUE_CHANGED:
-                break;
-            case ParameterEvent.MORPH_ASSIGNMENT:
-                {
-                    loadMorphSettings();
-                }
-                break;
-        }
-    }
     
     protected void loadMorphSettings()
     {
@@ -329,5 +307,25 @@ public abstract class NomadControl extends NomadComponent implements EventListen
             setMorphForeground(color.brighter());
         }
     }
+    public void parameterValueChanged( Event e )
+    {
+        setValue( e.getParameter().getValue() );
+    }
+
+    public void parameterMorphValueChanged( Event e )
+    { 
+        setMorphValue( e.getParameter().getMorphRange()/127.0d );
+    }
+
+    public void parameterKnobAssignmentChanged( Event e )
+    { }
+
+    public void parameterMorphAssignmentChanged( Event e )
+    { 
+        loadMorphSettings();
+    }
+
+    public void parameterMidiCtrlAssignmentChanged( Event e )
+    { }
 
 }

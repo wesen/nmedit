@@ -24,12 +24,12 @@ package net.sf.nmedit.nomad.theme.component;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
 
 
-public class VocoderParameterLink implements EventListener<ParameterEvent> {
+public class VocoderParameterLink implements ParameterListener {
 
 	private VocoderBandDisplay vbd = null;
 	private Parameter[] pbands = null;
@@ -58,7 +58,7 @@ public class VocoderParameterLink implements EventListener<ParameterEvent> {
 				pbands[i] = linkedModule.getParameter(getParameterInfo(i).getContextId());
 				if (pbands[i]!=null) {
 					getVocoderBandDisplay().setBand(i, pbands[i].getValue());
-					pbands[i].addListener(this);
+					pbands[i].addParameterListener(this);
 					getVocoderBandDisplay().addBandChangeListener(broadcast);
 				}
 			}
@@ -68,7 +68,7 @@ public class VocoderParameterLink implements EventListener<ParameterEvent> {
 	public void unlink() {
 		if (linkedModule!=null) {
 			for (int i=VocoderBandDisplay.NUM_BANDS-1;i>=0;i--) {
-				pbands[i].removeListener(this);
+				pbands[i].removeParameterListener(this);
 				pbands[i] = null;
 				getVocoderBandDisplay().removeBandChangeListener(broadcast);
 			}
@@ -92,14 +92,23 @@ public class VocoderParameterLink implements EventListener<ParameterEvent> {
 		}
 	}
 
-    public void event( ParameterEvent event )
+    public void parameterValueChanged( Event e )
     {
-        if (event.getID()==ParameterEvent.PARAMETER_VALUE_CHANGED)
-        {
-            int band = event.getParameter().getDefinition().getContextId();
-            if (pbands[band]!=null)
-                getVocoderBandDisplay().setBand(band, event.getParameter().getValue());
-        }
+        int band = e.getParameter().getDefinition().getContextId();
+        if (pbands[band]!=null)
+            getVocoderBandDisplay().setBand(band, e.getParameter().getValue());
     }
+
+    public void parameterMorphValueChanged( Event e )
+    { }
+
+    public void parameterKnobAssignmentChanged( Event e )
+    { }
+
+    public void parameterMorphAssignmentChanged( Event e )
+    { }
+
+    public void parameterMidiCtrlAssignmentChanged( Event e )
+    { }
 	
 }

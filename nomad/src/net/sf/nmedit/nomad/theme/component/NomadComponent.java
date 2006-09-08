@@ -25,6 +25,7 @@ package net.sf.nmedit.nomad.theme.component;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.util.HashMap;
 
 import javax.swing.JComponent;
@@ -51,7 +52,49 @@ public class NomadComponent extends JComponent {
     private HashMap<String, DParameter> parameters = null;
 
     //static int cnt = 0;
-    
+
+//  Overridden for performance reasons.
+    public void validate() {
+    }
+
+    public void revalidate() {
+    }
+    protected void firePropertyChange(String propertyName, Object oldValue,
+            Object newValue) {
+    }
+
+    public void firePropertyChange(String propertyName, byte oldValue,
+            byte newValue) {
+    }
+
+    public void firePropertyChange(String propertyName, char oldValue,
+            char newValue) {
+    }
+
+    public void firePropertyChange(String propertyName, short oldValue,
+            short newValue) {
+    }
+
+    public void firePropertyChange(String propertyName, int oldValue,
+            int newValue) {
+    }
+
+    public void firePropertyChange(String propertyName, long oldValue,
+            long newValue) {
+    }
+
+    public void firePropertyChange(String propertyName, float oldValue,
+            float newValue) {
+    }
+
+    public void firePropertyChange(String propertyName, double oldValue,
+            double newValue) {
+    }
+
+    public void firePropertyChange(String propertyName, boolean oldValue,
+            boolean newValue) {
+    }
+
 	public NomadComponent() 
     {
 		setOpaque(true);

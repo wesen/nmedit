@@ -29,8 +29,8 @@ import javax.swing.border.Border;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
 import net.sf.nmedit.nomad.theme.NomadClassicColors;
 import net.sf.nmedit.nomad.theme.property.ParameterProperty;
@@ -40,7 +40,7 @@ import net.sf.nmedit.nomad.theme.property.PropertySet;
 /**
  * @author Christian Schneider
  */
-public class NomadActiveLabel extends NomadLabel implements EventListener<ParameterEvent>
+public class NomadActiveLabel extends NomadLabel implements ParameterListener
 {
 
     public final static int     DEFAULT_PADDING = 2;
@@ -80,7 +80,7 @@ public class NomadActiveLabel extends NomadLabel implements EventListener<Parame
             parameter = module.getParameter( p.getContextId() );
         if (parameter != null)
         {
-            parameter.addListener( this );
+            parameter.addParameterListener( this );
             updateParamText();
         }
     }
@@ -89,7 +89,7 @@ public class NomadActiveLabel extends NomadLabel implements EventListener<Parame
     {
         if (parameter != null)
         {
-            parameter.removeListener( this );
+            parameter.removeParameterListener( this );
             parameter = null;
         }
     }
@@ -105,9 +105,21 @@ public class NomadActiveLabel extends NomadLabel implements EventListener<Parame
         }
     }
 
-    public void event( ParameterEvent event )
+    public void parameterValueChanged( Event e )
     {
         updateParamText();
     }
 
+    public void parameterMorphValueChanged( Event e )
+    { }
+
+    public void parameterKnobAssignmentChanged( Event e )
+    { }
+
+    public void parameterMorphAssignmentChanged( Event e )
+    { }
+
+    public void parameterMidiCtrlAssignmentChanged( Event e )
+    { }
+    
 }

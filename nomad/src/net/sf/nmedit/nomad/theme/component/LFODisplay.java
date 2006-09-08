@@ -28,8 +28,8 @@ import java.awt.geom.GeneralPath;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
 import net.sf.nmedit.nomad.theme.property.IntegerProperty;
 import net.sf.nmedit.nomad.theme.property.IntegerValue;
@@ -39,7 +39,7 @@ import net.sf.nmedit.nomad.theme.property.PropertySet;
 import net.sf.nmedit.nomad.theme.property.Value;
 
 
-public class LFODisplay extends NomadDisplay implements EventListener<ParameterEvent>
+public class LFODisplay extends NomadDisplay implements ParameterListener
 {
 
     public final static int WF_SINE = 0;
@@ -256,20 +256,20 @@ public class LFODisplay extends NomadDisplay implements EventListener<ParameterE
 
     public void link(Module module) {
         parPhase = module.getParameter(getParameterInfo(IPHASE).getContextId());
-        if (parPhase!=null) parPhase.addListener(this);
+        if (parPhase!=null) parPhase.addParameterListener(this);
         DParameter info = getParameterInfo(IWF);
         if (info!=null)
         {
             parWave = module.getParameter(info.getContextId());
-            if (parWave!=null) parWave.addListener(this);
+            if (parWave!=null) parWave.addParameterListener(this);
         }
         
         updateValues();
     }
 
     public void unlink() {
-        if (parPhase!=null) parPhase.removeListener(this);
-        if (parWave!=null) parWave.removeListener(this);
+        if (parPhase!=null) parPhase.removeParameterListener(this);
+        if (parWave!=null) parWave.removeParameterListener(this);
 
         parPhase = null;
         parWave = null;
@@ -281,14 +281,22 @@ public class LFODisplay extends NomadDisplay implements EventListener<ParameterE
         if (parWave!=null) setWaveform(parWave.getValue()-parWave.getMinValue());
     }
     
-    public void event(ParameterEvent event)
+    public void parameterValueChanged( Event e )
     {
-        Parameter p = event.getParameter();
-        
-        if (event.getID()==ParameterEvent.PARAMETER_VALUE_CHANGED)
-        {
-            if (parPhase==p) setPhase(getDoubleValue(p));
-            else if (parWave==p) setWaveform(p.getValue()-p.getMinValue());
-        }
+        Parameter p = e.getParameter();
+        if (parPhase==p) setPhase(getDoubleValue(p));
+        else if (parWave==p) setWaveform(p.getValue()-p.getMinValue());
     }
+    public void parameterMorphValueChanged( Event e )
+    { }
+
+    public void parameterKnobAssignmentChanged( Event e )
+    { }
+
+    public void parameterMorphAssignmentChanged( Event e )
+    {  }
+
+    public void parameterMidiCtrlAssignmentChanged( Event e )
+    { }
+
 }

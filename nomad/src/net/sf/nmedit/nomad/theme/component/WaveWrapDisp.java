@@ -8,13 +8,10 @@ import java.awt.geom.GeneralPath;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterEvent;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterListener;
 import net.sf.nmedit.nomad.theme.property.ParameterProperty;
-import net.sf.nmedit.nomad.theme.property.ParameterValue;
 import net.sf.nmedit.nomad.theme.property.PropertySet;
-import net.sf.nmedit.nomad.theme.property.Value;
 
 /* Copyright (C) 2006 Christian Schneider
  * 
@@ -39,7 +36,7 @@ import net.sf.nmedit.nomad.theme.property.Value;
  * Created on Jul 24, 2006
  */
 
-public class WaveWrapDisp extends NomadDisplay implements EventListener<ParameterEvent> 
+public class WaveWrapDisp extends NomadDisplay implements ParameterListener
 {
 
     private double vwrap = 0; // 0 - 1
@@ -148,7 +145,7 @@ public class WaveWrapDisp extends NomadDisplay implements EventListener<Paramete
         parameter = module.getParameter(getParameterInfo("parameter#0").getContextId());
         if (parameter!=null) {
             setWaveWrapValue( parameter );
-            parameter.addListener(this);
+            parameter.addParameterListener(this);
         }
     }
 
@@ -156,26 +153,33 @@ public class WaveWrapDisp extends NomadDisplay implements EventListener<Paramete
 //      removeValueChangeListener(broadcast);
         if (parameter!=null) 
         {
-            parameter.removeListener(this);
+            parameter.removeParameterListener(this);
             parameter = null;
         }
     }
 
-    public void event(ParameterEvent event)
-    {
-        Parameter p = event.getParameter();
-        
-        if (event.getID()==ParameterEvent.PARAMETER_VALUE_CHANGED)
-        {
-            setWaveWrapValue( p );
-        }
-    }
-    
     private void setWaveWrapValue(Parameter p)
     {
         double v = (p.getValue()-p.getMinValue())
             / (double) (p.getMaxValue()-p.getMinValue());
         setWaveWrap(v);
     }
+
+    public void parameterValueChanged( Event e )
+    {
+        setWaveWrapValue( e.getParameter() );
+    }
+
+    public void parameterMorphValueChanged( Event e )
+    { }
+
+    public void parameterKnobAssignmentChanged( Event e )
+    { }
+
+    public void parameterMorphAssignmentChanged( Event e )
+    { }
+
+    public void parameterMidiCtrlAssignmentChanged( Event e )
+    { }
 
 }
