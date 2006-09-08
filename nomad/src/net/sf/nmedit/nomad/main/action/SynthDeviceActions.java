@@ -104,11 +104,14 @@ public class SynthDeviceActions implements SlotListener, SynthStateListener, Doc
 
         final String KEY_MIDI_IN_DEVICE =  Const.CUSTOM_PROPERTY_PREFIX_STRING+"synth.midi.in";
         final String KEY_MIDI_OUT_DEVICE =  Const.CUSTOM_PROPERTY_PREFIX_STRING+"synth.midi.out";
+        final String KEY_MICROMODULAR =  Const.CUSTOM_PROPERTY_PREFIX_STRING+"synth.micromodular";
 
         MidiDevice.Info midiIn = dev.getMidiIn();
         MidiDevice.Info midiOut = dev.getMidiOut();
         
-        NomadMidiDialog dlg = new NomadMidiDialog(midiIn, midiOut);
+        boolean MicroModular = "true".equalsIgnoreCase(NomadEnvironment.getProperty(KEY_MICROMODULAR));
+        
+        NomadMidiDialog dlg = new NomadMidiDialog(midiIn, midiOut, !MicroModular);
             
         if (midiIn==null) dlg.setInputDevice(NomadEnvironment.getProperty(KEY_MIDI_IN_DEVICE));
         if (midiOut==null) dlg.setOutputDevice(NomadEnvironment.getProperty(KEY_MIDI_OUT_DEVICE));
@@ -118,7 +121,9 @@ public class SynthDeviceActions implements SlotListener, SynthStateListener, Doc
         if (dlg.isOkResult()) {
             midiIn = dlg.getInputDevice();
             midiOut = dlg.getOutputDevice();
+            NomadEnvironment.setProperty(KEY_MICROMODULAR, Boolean.toString(!dlg.isNordModularSelected()));
 
+            
             if (midiIn!=null && midiOut!=null)
             {
                 dev.setMidiIn(midiIn);
@@ -132,6 +137,7 @@ public class SynthDeviceActions implements SlotListener, SynthStateListener, Doc
         
         return false;
     }
+    
     public void newPatchInSlot( Slot slot )
     {
         int index = slot.getID();

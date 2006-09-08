@@ -23,7 +23,9 @@
 package net.sf.nmedit.nomad.main.dialog;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -35,9 +37,14 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Sequencer;
 import javax.sound.midi.Synthesizer;
 import javax.sound.midi.MidiDevice.Info;
+import javax.swing.Box;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 import javax.swing.ListCellRenderer;
 import javax.swing.Timer;
 
@@ -57,10 +64,13 @@ public class NomadMidiDialog extends NomadDialog
     private MidiDevice.Info[] inDeviceList;
     private MidiDevice.Info[] outDeviceList;
 
-    public NomadMidiDialog(Info midiIn, Info midiOut)
+    private JToggleButton tgNordModular ;
+    private JToggleButton tgMicroModular ; 
+    
+    public NomadMidiDialog(Info midiIn, Info midiOut, boolean NordModularSelected)
     {
         setTitle("MIDI Setup");
-        setImage(AppIcons.IC_NORDMODULAR);
+        setImage(AppIcons.IC_MIDI_ILLUSTRATION);
         setLayout(null);
         setScrollbarEnabled(true);
         setPackingEnabled(false);
@@ -79,6 +89,25 @@ public class NomadMidiDialog extends NomadDialog
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
         builder.setDefaultDialogBorder();
 
+        JPanel devPanel = new JPanel(new GridLayout(1, 2));
+        devPanel.add(tgNordModular = new JToggleButton(new ImageIcon("data/images/icons/app/nord-modular.png")));
+        devPanel.add(tgMicroModular = new JToggleButton(new ImageIcon("data/images/icons/app/micromodular.png")));
+
+        tgNordModular.setText("Nord Modular");
+        tgMicroModular.setText("Micro Modular");
+
+        tgNordModular.setSelected(NordModularSelected);
+        tgMicroModular.setSelected(!NordModularSelected);
+        
+        ButtonGroup group = new ButtonGroup();
+        group.add(tgNordModular);
+        group.add(tgMicroModular);
+
+        builder.appendSeparator("Synthesizer");
+        builder.append(Box.createGlue());
+        builder.append(devPanel);        
+        builder.nextLine();
+        
         builder.appendSeparator("Input");
         build(builder, inDeviceChooser);
         
@@ -90,6 +119,14 @@ public class NomadMidiDialog extends NomadDialog
         observerTask.setInitialDelay(2000);
         observerTask.setRepeats(true);
         observerTask.start();
+        
+        setPreferredSize(new Dimension(600,460));
+        
+    }
+    
+    public boolean isNordModularSelected()
+    {
+        return tgNordModular.isSelected();
     }
 
     private void build(DefaultFormBuilder builder, MidiDeviceChooser deviceChooser)
@@ -154,9 +191,9 @@ public class NomadMidiDialog extends NomadDialog
         return defaultOut;
     }
 
-    public static NomadMidiDialog invokeDialog(Info midiIn, Info midiOut) 
+    public static NomadMidiDialog invokeDialog(Info midiIn, Info midiOut, boolean NordModularSelected) 
     {
-        NomadMidiDialog dlg = new NomadMidiDialog(midiIn, midiOut);
+        NomadMidiDialog dlg = new NomadMidiDialog(midiIn, midiOut, NordModularSelected);
         dlg.setVisible(true);
         return dlg;
     }
