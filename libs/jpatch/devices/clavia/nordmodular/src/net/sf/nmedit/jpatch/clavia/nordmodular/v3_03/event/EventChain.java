@@ -22,41 +22,22 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
 /**
  * Linked list of event listeners.
- * <h1>Usage</h1>
- * 
- * <pre><code>
- * // the listener list contains no elements. Thus listenerList is null.
- * EventChain listenerList = null;
- * 
- * // adding a listener l
- * listenerList = new EventChain( l, listenerList );
- * 
- * // firing an event e
- * if (listenerList != null) listenerList.fireEvent( e );
- * 
- * // removing a listener l
- * if (listenerList != null) listenerList = listenerList.remove( l );
- * </code></pre>
- * 
  * @author Christian Schneider
  */
-public class EventChain<T> implements Iterable<EventListener<T>>
+public class EventChain<L> 
 {
 
     /**
      * the listener
      */
-    private EventListener<T> listener;
+    private L listener;
 
     /**
      * chain of event listeners
      */
-    private EventChain<T> chain;
+    private EventChain<L> chain;
 
     /**
      * Creates a new event chain.
@@ -65,10 +46,20 @@ public class EventChain<T> implements Iterable<EventListener<T>>
      * @param chain the current event chain or (<code>null</code> is allowed
      * here)
      */
-    public EventChain( EventListener<T> l, EventChain<T> chain )
+    public EventChain( L l, EventChain<L> chain )
     {
         this.listener = l;
         this.chain = chain;
+    }
+    
+    public EventChain<L> getChain()
+    {
+        return chain;
+    }
+    
+    public L getListener()
+    {
+        return listener;
     }
 
     /**
@@ -77,9 +68,9 @@ public class EventChain<T> implements Iterable<EventListener<T>>
      * @param l event listener
      * @return true if the list contains the listener
      */
-    public boolean containsListener( EventListener<T> l )
+    public boolean containsListener( L l )
     {
-        EventChain<T> pos = this;
+        EventChain<L> pos = this;
         do
         {
             if (pos.listener == l)
@@ -97,13 +88,13 @@ public class EventChain<T> implements Iterable<EventListener<T>>
      * @param l the listener
      * @return the new event chain without the listener l
      */
-    public EventChain<T> remove( EventListener<T> l )
+    public EventChain<L> remove( L l )
     {
         if (listener == l)
         {
             // the listener is at this position
             // we have to remove this link from the list:
-            EventChain<T> newList = chain; // store the event chain
+            EventChain<L> newList = chain; // store the event chain
             chain = null; // remove reference to the event chain
             return newList; // return the new event chain
         }
@@ -113,10 +104,10 @@ public class EventChain<T> implements Iterable<EventListener<T>>
             // thus we iterate over the event chain
 
             // candidate that might contain the listener
-            EventChain<T> candidate = chain;
+            EventChain<L> candidate = chain;
 
             // predecessor of the candidate
-            EventChain<T> predecessor = this;
+            EventChain<L> predecessor = this;
 
             // while the chain contains further listener
             while (candidate != null)
@@ -145,72 +136,6 @@ public class EventChain<T> implements Iterable<EventListener<T>>
             // we are still head of the chain
             return this;
         }
-    }
-
-    /**
-     * Sends the event message to all listeners.
-     * Listeners are notified in the reverse order
-     * they were added to the list (newest listener first).
-     * 
-     * @param e event message
-     */
-    public void fireEvent( T e )
-    {
-        EventChain<T> chain = this;
-        while (chain != null)
-        {
-            chain.listener.event( e );
-            chain = chain.chain;
-        }
-    }
-
-    /**
-     * Iterates over the event listeners.
-     * The iterator does not support the {@link Iterator#remove()} operation.
-     * @return iteration over the event listeners
-     */
-    public Iterator<EventListener<T>> iterator()
-    {
-        return new EventListenerIterator();
-    }
-
-    /**
-     * Event listener iterator implementation
-     * @author Christian Schneider
-     */
-    private class EventListenerIterator implements Iterator<EventListener<T>>
-    {
-
-        /**
-         * next event chain element - starting from the latest element that was made available
-         */
-        EventChain<T> next = EventChain.this;
-
-        public boolean hasNext()
-        {
-            return next != null;
-        }
-
-        public EventListener<T> next()
-        {
-            if (!hasNext())
-            {
-                throw new NoSuchElementException();
-            }
-            EventChain<T> current = next;
-            next = current.chain;
-            return current.listener;
-        }
-
-        /**
-         * The operation is not supported.
-         * @see Iterator#remove()
-         */
-        public void remove()
-        {
-            throw new UnsupportedOperationException();
-        }
-
     }
 
 }

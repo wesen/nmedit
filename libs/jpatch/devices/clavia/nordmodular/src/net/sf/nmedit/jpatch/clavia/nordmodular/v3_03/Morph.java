@@ -26,7 +26,10 @@ import java.awt.Color;
 import java.util.Collection;
 import java.util.HashSet;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.MorphEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventBuilder;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventChain;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.MorphListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.misc.Assignment;
 
 public class Morph extends HashSet<Parameter> implements Assignment
@@ -35,9 +38,8 @@ public class Morph extends HashSet<Parameter> implements Assignment
     private final int ID;
     private int value;
     private KeyboardAssignment keyboardAssignment;
-    private final MorphSet set;
     private final static int maxCapacity = 25;
-    private static MorphEvent eventMessage = new MorphEvent();
+    private Patch patch;
 
     // TODO right colors
     private Color clMorph1 = Color.decode("#BD7B7B");
@@ -47,9 +49,9 @@ public class Morph extends HashSet<Parameter> implements Assignment
     
     // assign to : keyboard: Note / Velocity
     
-    public Morph(MorphSet set, int ID)
+    public Morph(Patch patch, int ID)
     {
-        this.set = set;
+        this.patch = patch;
         this.ID = ID;
         this.keyboardAssignment = KeyboardAssignment.NONE;
     }
@@ -78,10 +80,7 @@ public class Morph extends HashSet<Parameter> implements Assignment
             if (super.add(p))
             {
                 p.setAssignedMorph(this);
-                
-                eventMessage.assigned(this, null, p);
-                set.fireEvent(eventMessage);
-                
+                fireMorphAssigned();
                 return true;
             }
             else
@@ -101,9 +100,8 @@ public class Morph extends HashSet<Parameter> implements Assignment
         {
             Parameter p = ((Parameter) obj);
             p.setAssignedMorph(null);
-            
-            eventMessage.assigned(this, p, null);
-            set.fireEvent(eventMessage);
+
+            fireMorphDeassigned();
 
             return true;
         }
@@ -112,7 +110,7 @@ public class Morph extends HashSet<Parameter> implements Assignment
             return false;
         }
     }
-    
+
     public boolean addAll( Collection<? extends Parameter> c )
     {
         throw new UnsupportedOperationException();
@@ -133,11 +131,10 @@ public class Morph extends HashSet<Parameter> implements Assignment
         if (this.value!=value)
         {
             this.value = value;
-            eventMessage.valueChanged(this);
-            set.fireEvent(eventMessage);
+            fireValueChanged();
         }
     }
-    
+
     public int getValue()
     {
         return value;
@@ -148,14 +145,91 @@ public class Morph extends HashSet<Parameter> implements Assignment
         if (this.keyboardAssignment!=keyboardAssignment)
         {
             this.keyboardAssignment = keyboardAssignment;
-            eventMessage.keyboardAssignmentChanged(this);
-            set.fireEvent(eventMessage);
+            fireKeyboardAssignmentChanged();
         }
     }
-    
+
     public KeyboardAssignment getKeyboardAssignment()
     {
         return keyboardAssignment;
+    }
+    
+    private EventChain<MorphListener> listenerList = null;
+    
+    public void addMorphListener(MorphListener l)
+    {
+        listenerList = new EventChain<MorphListener>(l, listenerList);
+    }
+    
+    public void removeMorphListener(MorphListener l)
+    {
+        if (listenerList!=null)
+            listenerList = listenerList.remove(l);
+    }
+
+    private void fireMorphAssigned()
+    {
+        if (listenerList!=null)
+        {
+            Event e = EventBuilder.morphAssigned(this);
+            EventChain<MorphListener> l = listenerList;
+            do
+            {
+                l.getListener().morphAssigned(e);
+                l = l.getChain();
+            }
+            while (l!=null);
+        }
+    }
+    
+    private void fireMorphDeassigned()
+    {
+        if (listenerList!=null)
+        {
+            Event e = EventBuilder.morphDeassigned(this);
+            EventChain<MorphListener> l = listenerList;
+            do
+            {
+                l.getListener().morphDeassigned(e);
+                l = l.getChain();
+            }
+            while (l!=null);
+        }
+    }
+    
+    private void fireValueChanged()
+    {
+        if (listenerList!=null)
+        {
+            Event e = EventBuilder.morphValueChanged(this);
+            EventChain<MorphListener> l = listenerList;
+            do
+            {
+                l.getListener().morphValueChanged(e);
+                l = l.getChain();
+            }
+            while (l!=null);
+        }
+    }
+    
+    private void fireKeyboardAssignmentChanged()
+    {
+        if (listenerList!=null)
+        {
+            Event e = EventBuilder.morphKeyboardAssignmentChanged(this);
+            EventChain<MorphListener> l = listenerList;
+            do
+            {
+                l.getListener().morphKeyboardAssignmentChanged(e);
+                l = l.getChain();
+            }
+            while (l!=null);
+        }
+    }
+
+    public Patch getPatch()
+    {
+        return patch;
     }
 
 }

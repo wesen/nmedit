@@ -18,49 +18,14 @@
  */
 
 /*
- * Created on Apr 21, 2006
+ * Created on Sep 7, 2006
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.misc.Assignment;
-
-public class AssignmentEvent<T> extends PatchEvent
+public interface ModuleListener
 {
-    
-    private T source;
-    private Assignment oldAssignment;
-    private Assignment newAssignment;
 
-    public AssignmentEvent()
-    {
-        source = null;
-    }
-    
-    public T getSource()
-    {
-        return source;
-    }
-
-    protected void setSource(T source)
-    {
-        this.source = source;
-    }
-    
-    public void assigned( T source, Assignment oldAssignment, Assignment newAssignment )
-    {
-        setSource(source);
-        this.oldAssignment = oldAssignment;
-        this.newAssignment = newAssignment;
-    }
-
-    public Assignment getNewAssignment()
-    {
-        return newAssignment;
-    }
-
-    public Assignment getOldAssignment()
-    {
-        return oldAssignment;
-    }
+    public void moduleRenamed(Event e);
+    public void moduleMoved(Event e);
 
 }

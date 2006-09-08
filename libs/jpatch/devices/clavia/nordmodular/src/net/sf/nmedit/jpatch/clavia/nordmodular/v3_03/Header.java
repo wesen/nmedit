@@ -22,8 +22,10 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.HeaderEvent;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ListenableAdapter;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventBuilder;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.HeaderListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventChain;
 
 /**
  * Patch header section.
@@ -31,15 +33,16 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ListenableAdapter;
  * @author Christian Schneider
  * TODO add version property
  */
-public class Header extends ListenableAdapter<HeaderEvent>
+public class Header 
 {
 
     private int[] data;
-    private HeaderEvent eventMessage;
+    
+    private Patch patch;
 
-    public Header()
+    public Header(Patch patch)
     {
-        eventMessage = new HeaderEvent( this );
+        this.patch = patch;
         data = new int[Format.VALUE_COUNT_HEADER];
         
         data[Format.HEADER_KEYBOARD_RANGE_MAX] = Format.HEADER_KEYBOARD_RANGE_MAX_DEFAULT;
@@ -324,12 +327,17 @@ public class Header extends ListenableAdapter<HeaderEvent>
 
     public void setValue( int index, int value )
     {
-        if (data[index] != value)
+        int oldValue = data[index];
+        if (oldValue != value)
         {
-            eventMessage.valueChanged(data[index], value, index);
             data[index] = value;
-            fireEvent( eventMessage );
+            fireValueChangedEvent(index, oldValue, value);
         }
+    }
+
+    public int getValue( int index )
+    {
+        return data[index];
     }
 
     // TODO remove this fix for separator position bug
@@ -338,9 +346,37 @@ public class Header extends ListenableAdapter<HeaderEvent>
         data[index] = value;
     }
 
-    public int getValue( int index )
+    private EventChain<HeaderListener> listenerList = null;
+
+    private void fireValueChangedEvent( int index, int oldValue, int value )
     {
-        return data[index];
+        if (listenerList!=null)
+        {
+            Event e = EventBuilder.headerValueChanged(this, index, oldValue, value);
+            EventChain<HeaderListener> l = listenerList;
+            do
+            {
+                l.getListener().headerValueChanged(e);
+                l = l.getChain();
+            }
+            while (l!=null);
+        }
+    }
+
+    public void addHeaderListener(HeaderListener l)
+    {
+        listenerList = new EventChain<HeaderListener> (l, listenerList);
+    }
+    
+    public void removeListener(HeaderListener l)
+    {
+        if (listenerList!=null)
+            listenerList = listenerList.remove(l);
+    }
+
+    public Patch getPatch()
+    {
+        return patch;
     }
 
 }

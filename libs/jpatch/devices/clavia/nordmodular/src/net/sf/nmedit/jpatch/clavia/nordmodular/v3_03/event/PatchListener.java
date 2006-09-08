@@ -18,11 +18,14 @@
  */
 
 /*
- * Created on Apr 21, 2006
+ * Created on Sep 8, 2006
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event;
 
-public interface EventListener<T>
+public interface PatchListener
 {
-    public void event(T event);
+
+    void patchHeaderChanged(Event e);
+    void patchPropertyChanged(Event e);
+    
 }

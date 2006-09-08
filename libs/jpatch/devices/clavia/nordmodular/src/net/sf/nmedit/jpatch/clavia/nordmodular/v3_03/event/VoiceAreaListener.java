@@ -18,37 +18,18 @@
  */
 
 /*
- * Created on Apr 10, 2006
+ * Created on Sep 7, 2006
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Morph;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.misc.Assignment;
-
-public class MorphEvent extends AssignmentEvent<Morph>
+public interface VoiceAreaListener
 {
 
-    public MorphEvent()
-    {
-        setID(KNOB_ASSIGNMENT);
-    }
+    void moduleAdded(Event e);
+    void moduleRemoved(Event e);
+    void voiceAreaResized(Event e);
+    void cablesAdded(Event e);
+    void cablesRemoved(Event e);
+    void cableGraphUpdated( Event e );
 
-    public void assigned( Morph a, Assignment oldAssignment, Assignment newAssignment )
-    {
-        setID(MORPH_ASSIGNMENT);
-        super.assigned(a, oldAssignment, newAssignment);
-    }
-
-    public void valueChanged( Morph morph )
-    {
-        setSource(morph);
-        setID(MORPH_VALUE_CHANGED);
-    }
-
-    public void keyboardAssignmentChanged( Morph morph )
-    {
-        setSource(morph);
-        setID(MORPH_KEYBOARD_ASSIGNMENT_CHANGED);
-    }
-    
 }

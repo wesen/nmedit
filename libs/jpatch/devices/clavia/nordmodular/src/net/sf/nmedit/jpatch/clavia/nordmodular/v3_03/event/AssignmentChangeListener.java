@@ -18,18 +18,13 @@
  */
 
 /*
- * Created on Apr 10, 2006
+ * Created on Sep 8, 2006
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.MidiController;
-
-public class MidiControllerEvent extends AssignmentEvent<MidiController>
+public interface AssignmentChangeListener
 {
 
-    public MidiControllerEvent()
-    {
-        setID(MIDICONTROLLER_ASSIGNMENT);
-    }
+    void assignmentChanged(Event e);
 
 }

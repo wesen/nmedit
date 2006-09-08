@@ -25,9 +25,11 @@ package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03;
 import java.util.AbstractList;
 import java.util.Iterator;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.AssignmentChangeListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventBuilder;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventChain;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.KnobEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.misc.Assignment;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.misc.Filter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.misc.FilteringIterator;
 
@@ -35,10 +37,17 @@ public class KnobSet extends AbstractList<Knob>
 {
 
     private Knob[] knobs;
-    private EventChain<KnobEvent> listenerList;
 
-    public KnobSet()
+    private Patch patch;
+    
+    public Patch getPatch()
     {
+        return patch;
+    }
+    
+    public KnobSet(Patch patch)
+    {        
+        this.patch = patch;
         knobs = new Knob[21];
         for (int i = 0; i < 18; i++)
         {
@@ -49,23 +58,6 @@ public class KnobSet extends AbstractList<Knob>
         knobs[20] = new Knob( this, 22 );
     }
 
-    public void addListener(EventListener<KnobEvent> l)
-    {
-        listenerList = new EventChain<KnobEvent>(l, listenerList);
-    }
-
-    public void removeListener(EventListener<KnobEvent> l)
-    {
-        if (listenerList!=null)
-            listenerList = listenerList.remove(l);
-    }
-    
-    void fireEvent(KnobEvent e)
-    {
-        if (listenerList!=null)
-            listenerList.fireEvent(e);
-    }
-    
     public Knob getByID( int ID )
     {
         int index = ID;
@@ -104,6 +96,34 @@ public class KnobSet extends AbstractList<Knob>
     public Iterator<Knob> getAssignedKnobs()
     {
         return iterator( new Filter.AssignedKnobs() );
+    }
+
+    private EventChain<AssignmentChangeListener> listenerList = null;
+    
+    public void addAssignmentChangeListener(AssignmentChangeListener l)
+    {
+        listenerList = new EventChain<AssignmentChangeListener>(l, listenerList);
+    }
+    
+    public void removeAssignmentChangeListener(AssignmentChangeListener l)
+    {
+        if (listenerList != null)
+            listenerList = listenerList.remove(l);
+    }
+    
+    public void fireAssignmentChanged( Knob knob, Assignment oldValue, Assignment newValue)
+    {
+        if (listenerList!=null)
+        {
+            Event e = EventBuilder.assignmentChanged(patch, knob, oldValue, newValue);
+            EventChain <AssignmentChangeListener> l = listenerList;
+            do
+            {
+                l.getListener().assignmentChanged(e);
+                l = l.getChain();
+            }
+            while ( l != null );
+        }
     }
 
 }

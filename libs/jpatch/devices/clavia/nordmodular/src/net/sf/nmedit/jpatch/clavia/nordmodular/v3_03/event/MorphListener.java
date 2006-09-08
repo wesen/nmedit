@@ -18,18 +18,16 @@
  */
 
 /*
- * Created on Apr 10, 2006
+ * Created on Sep 8, 2006
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Knob;
-
-public class KnobEvent extends AssignmentEvent<Knob>
+public interface MorphListener
 {
 
-    public KnobEvent()
-    {
-        setID(KNOB_ASSIGNMENT);
-    }
+    void morphAssigned(Event e);
+    void morphDeassigned(Event e);
+    void morphKeyboardAssignmentChanged(Event e);
+    void morphValueChanged(Event e);
 
 }

@@ -22,9 +22,17 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ListenableAdapter;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.PatchEventS;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.history.impl.PatchHistoryImpl;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventBuilder;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventChain;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.PatchListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.features.History;
 import net.sf.nmedit.jpatch.history.PatchHistory;
 import net.sf.nmedit.jpatch.spi.PatchImplementation;
 
@@ -34,7 +42,7 @@ import net.sf.nmedit.jpatch.spi.PatchImplementation;
  * @author Christian Schneider
  * TODO handle Micro Modular
  */
-public class Patch extends ListenableAdapter<PatchEventS> implements net.sf.nmedit.jpatch.Patch
+public class Patch implements net.sf.nmedit.jpatch.Patch
 {
 
     //   setPolyphonie(1-32)
@@ -57,16 +65,6 @@ public class Patch extends ListenableAdapter<PatchEventS> implements net.sf.nmed
     private VoiceArea commonVoiceArea;
     
     /**
-     * name of the patch
-     */
-    private String name;
-    
-    /**
-     * user notes
-     */
-    private String note;
-    
-    /**
      * midi controller settings
      * @see MidiControllerSet
      */
@@ -82,7 +80,7 @@ public class Patch extends ListenableAdapter<PatchEventS> implements net.sf.nmed
      * morph groups
      * @see MorphSet
      */
-    private MorphSet morphSet;
+    private List<Morph> morphs;
     
     /**
      * A set of notes. The hashcode of the note class is equal to the note number.
@@ -91,9 +89,18 @@ public class Patch extends ListenableAdapter<PatchEventS> implements net.sf.nmed
      */
     private NoteSet noteSet;
 
+    public final static String MODIFIED = "patch.modified";
+    public final static String NAME = "patch.name";
+    public final static String NOTE = "patch.note";
+    public final static String UI = "patch.ui";
+    public final static String VERSION = "patch.version";
+    public final static String SLOT = "patch.slot";
+    public final static String HISTORY = "patch.history";
+    public final static String VAPOLY_CYCLES = "patch.va.poly.cycles";
+    public final static String VACOMMON_CYCLES = "patch.va.common.cycles";
+    private Map<String, Object> properties = new HashMap<String,Object>();
+
     private final PatchImplementation impl;
-    private PatchHistory history;
-    private PatchEventS event = new PatchEventS(this);
     
     /**
      * Creates a new patch.
@@ -101,20 +108,23 @@ public class Patch extends ListenableAdapter<PatchEventS> implements net.sf.nmed
     public Patch(PatchImplementation impl)
     {
         this.impl = impl;
-        header = new Header();
+        header = new Header(this);
         noteSet = new NoteSet();
-        morphSet = new MorphSet();
-        midiControllerSet = new MidiControllerSet();
-        knobs = new KnobSet();
+        
+        morphs = new ArrayList<Morph>();
+        for (int i=0;i<4;i++)
+            morphs.add(new Morph(this,i));
+        morphs = Collections.unmodifiableList(morphs);
+        midiControllerSet = new MidiControllerSet(this);
+        knobs = new KnobSet(this);
         
         polyVoiceArea = new VoiceArea(this);
         commonVoiceArea = new VoiceArea(this);
-        name = null;
-        note = "";
-        
+
         // TODO allow installing/uninstalling history
         // TODO default: don't install history
-        this.history = new PatchHistoryImpl(this);
+        History h =  new History(this);
+        setProperty(HISTORY, h);
     }
     
     /**
@@ -175,70 +185,13 @@ public class Patch extends ListenableAdapter<PatchEventS> implements net.sf.nmed
     }
 
     /**
-     * Returns the patch's name.
-     * @return the patch's name
-     */
-    public String getName()
-    {
-        return name;
-    }
-    
-    private boolean eqString(String a, String b)
-    {
-        if (a==null) a="";
-        if (b==null) b="";
-        return a.equals(b);
-    }
-    
-    /**
-     * Sets the patch's name.
-     * @param name the new name
-     */
-    public void setName(String name)
-    {
-        if (!eqString(this.name, name))
-        {
-            event.nameChanged(this.name, name);
-            
-            this.name = name;
-            
-            fireEvent(event);
-        }
-    }
-    
-    /**
-     * Returns the user's notes.
-     * @return the user's notes
-     */
-    public String getNote()
-    {
-        return note;
-    }
-    
-    /**
-     * Sets the user's notes property.
-     * @param text the text
-     */
-    public void setNote(String text)
-    {
-        if (!eqString(this.note, text))
-        {
-            event.noteChanged(this.note, text);
-            
-            this.note = text == null ? "" : text;
-    
-            fireEvent(event);
-        }
-    }
-    
-    /**
      * Returns the morph group.
      * @return the morph group
      * @see MorphSet
      */
-    public MorphSet getMorphs()
+    public List<Morph> getMorphs()
     {
-        return morphSet;
+        return morphs;
     }
 
     public PatchImplementation getPatchImplementation()
@@ -248,7 +201,90 @@ public class Patch extends ListenableAdapter<PatchEventS> implements net.sf.nmed
 
     public PatchHistory getHistory()
     {
-        return history;
+        return (PatchHistory) getProperty(HISTORY);
+    }
+
+    public Object getProperty(String name)
+    {
+        return properties.get(name);
+    }
+    
+    public void setProperty(String name, Object value)
+    {
+        Object oldValue = properties.get(name);
+        
+        if (oldValue!=value)
+        {
+            if (value==null)
+            {
+                properties.remove(name);
+                firePropertyChanged(name, oldValue, value);
+            }
+            else if (!value.equals(oldValue))
+            {
+                properties.put(name, value);
+                firePropertyChanged(name, oldValue, value);
+            }
+        }
+    }
+    
+    public void setModified(boolean changed)
+    {
+        setProperty(MODIFIED, changed ? Boolean.TRUE : Boolean.FALSE);
+    }
+    
+    public boolean isModified()
+    {
+        Boolean b = (Boolean) getProperty(MODIFIED);
+        return b != null ? b : false;
+    }
+    
+    public String getName()
+    {
+        return (String) getProperty(NAME);
+    }
+    
+    public void setName(String name)
+    {
+        setProperty(NAME, name);
+    }
+
+    public String getNote()
+    {
+        return (String) getProperty(NOTE);
+    }
+    
+    public void setNote(String note)
+    {
+        setProperty(NOTE, note);
+    }
+    
+    private EventChain<PatchListener> listenerList = null; 
+    
+    private void firePropertyChanged(String propertyName, Object oldValue, Object newValue)
+    {
+        if (listenerList!=null)
+        {
+            Event e = EventBuilder.patchPropertyChanged(this, propertyName, oldValue, newValue);
+            EventChain<PatchListener> l = listenerList;
+            do
+            {
+                l.getListener().patchPropertyChanged(e);
+                l = l.getChain();
+            }
+            while (l!=null);
+        }
+    }
+    
+    public void addPatchListener(PatchListener l)
+    {
+        listenerList = new EventChain<PatchListener> (l, listenerList);
+    }
+    
+    public void removeListener(PatchListener l)
+    {
+        if (listenerList!=null)
+            listenerList = listenerList.remove(l);
     }
 
 }

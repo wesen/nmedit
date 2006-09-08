@@ -27,11 +27,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Queue;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ConnectorEvent;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ListenableAdapter;
+import net.sf.nmedit.jmisc.java.lang.BFSIterator;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ConnectorListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventBuilder;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventChain;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DConnector;
 
 /**
@@ -67,7 +69,7 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DConnector;
  * 
  * @author Christian Schneider
  */
-public class Connector extends ListenableAdapter<ConnectorEvent>
+public class Connector 
 {
 
     /**
@@ -101,11 +103,6 @@ public class Connector extends ListenableAdapter<ConnectorEvent>
      * the user interface component displaying the connector
      */
     private Component ui;
-
-    /**
-     * event message object
-     */
-    private static ConnectorEvent eventMessage = new ConnectorEvent();
 
     /**
      * Creates a new connector.
@@ -191,7 +188,7 @@ public class Connector extends ListenableAdapter<ConnectorEvent>
      */
     public Iterator<Connector> breadthFirstSearch()
     {
-        return new BreadthFirstSearchIterator( this );
+        return new ConnectionBFSIterator( this );
     }
 
     /**
@@ -436,7 +433,7 @@ public class Connector extends ListenableAdapter<ConnectorEvent>
 
         Graph g = new Graph();
         g.setColor(a.graph.getColor());
-        for (Iterator<Connector> iter = new BreadthFirstSearchIterator( b ); iter
+        for (Iterator<Connector> iter = new ConnectionBFSIterator( b ); iter
                 .hasNext();)
         {
             Connector c = iter.next();
@@ -468,6 +465,19 @@ public class Connector extends ListenableAdapter<ConnectorEvent>
 
         return true;
     }
+    
+    private EventChain<ConnectorListener> listenerList = null;
+    
+    public void addConnectorStateListener(ConnectorListener l)
+    {
+        listenerList = new EventChain<ConnectorListener>(l, listenerList);
+    }
+    
+    public void removeConnectorStateListener(ConnectorListener l)
+    {
+        if (listenerList!=null)
+            listenerList = listenerList.remove(l);
+    }
 
     /**
      * Notifies the listeners of this connector that the
@@ -475,8 +485,17 @@ public class Connector extends ListenableAdapter<ConnectorEvent>
      */
     private void fireConnectionStateChanged()
     {
-        eventMessage.connectionStateChanged( this );
-        fireEvent( eventMessage );
+        if (listenerList!=null)
+        {
+            EventChain<ConnectorListener> l = listenerList;
+            Event e = EventBuilder.connectorStateChanged(this);
+            do
+            {
+                l.getListener().connectorStateChanged(e);
+                l = l.getChain();
+            }
+            while (l!=null);
+        }
     }
 
     /**
@@ -776,58 +795,21 @@ public class Connector extends ListenableAdapter<ConnectorEvent>
         }
 
     }
-
-    /**
-     * Iterator performing a breadth first search starting from the connector
-     * passed to the constructor.
-     * 
-     * @author Christian Schneider
-     */
-    private static final class BreadthFirstSearchIterator implements Iterator<Connector>
+    
+    private static final class ConnectionBFSIterator extends BFSIterator<Connector>
     {
 
-        /**
-         * Queue for the iteration. children are appended to the queue
-         */
-        private Queue<Connector> queue = new LinkedList<Connector>();
-
-        /**
-         * Creates a breadth first search iterator starting from the given
-         * connector.
-         * 
-         * @param start iteration start
-         */
-        public BreadthFirstSearchIterator( Connector start )
+        public ConnectionBFSIterator( Connector start )
         {
-            queue.offer( start );
+            super( start );
         }
 
-        public boolean hasNext()
+        @Override
+        protected void enqueueChildren( Queue<Connector> queue, Connector parent )
         {
-            return !queue.isEmpty();
+            queue.addAll(parent.children);
         }
-
-        public Connector next()
-        {
-            if (queue.isEmpty())
-            {
-                throw new NoSuchElementException();
-            }
-
-            // remove head of the queue
-            Connector n = queue.remove();
-
-            // append children
-            queue.addAll( n.children );
-
-            return n;
-        }
-
-        public void remove()
-        {
-            throw new UnsupportedOperationException();
-        }
-
+        
     }
 
 }

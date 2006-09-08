@@ -18,41 +18,17 @@
  */
 
 /*
- * Created on Apr 21, 2006
+ * Created on Sep 7, 2006
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
-
-public class ModuleEvent extends PatchEvent
+public interface ParameterListener 
 {
 
-    private Module module;
+    void parameterValueChanged(Event e);
+    void parameterMorphValueChanged(Event e);
+    void parameterKnobAssignmentChanged(Event e);
+    void parameterMorphAssignmentChanged(Event e);
+    void parameterMidiCtrlAssignmentChanged(Event e);
 
-    public ModuleEvent( )
-    {
-    }
-
-    protected void setModule(Module m)
-    {
-        this.module = m;
-    }
-    
-    public Module getModule()
-    {
-        return module;
-    }
-
-    public void moduleMoved( Module module )
-    {
-        setID(MODULE_MOVED);
-        setModule(module);
-    }
-
-    public void moduleRenamed( Module module )
-    {
-        setID(MODULE_RENAMED);
-        setModule(module);
-    }
-    
 }

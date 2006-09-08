@@ -22,13 +22,15 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ListenableAdapter;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventBuilder;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventChain;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.misc.Assignment;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
 
 
-public class Parameter extends ListenableAdapter<ParameterEvent> implements Assignment
+public class Parameter implements Assignment
 {
 
     private final DParameter definition;
@@ -54,8 +56,6 @@ public class Parameter extends ListenableAdapter<ParameterEvent> implements Assi
     //private MidiController assignedMidiController;
     // private MidiController midiController;
 
-    private static ParameterEvent eventMessage = new ParameterEvent();
-
     /*
     private Morph morph;*/
 
@@ -75,13 +75,101 @@ public class Parameter extends ListenableAdapter<ParameterEvent> implements Assi
         }
     }
 */
+    
+    private EventChain<ParameterListener> listenerList = null;
+
+    public void addParameterListener(ParameterListener l)
+    {
+        listenerList = new EventChain<ParameterListener>(l, listenerList);
+    }
+
+    public void removeParameterListener(ParameterListener l)
+    {
+        if (listenerList!=null)
+            listenerList = listenerList.remove(l);
+    }
+    
+    void fireParameterValueChanged()
+    {
+        if (listenerList!=null)
+        {
+            Event e = EventBuilder.parameterValueChanged(this);
+            EventChain<ParameterListener> l = listenerList;
+            do
+            {
+                l.getListener().parameterValueChanged(e);
+                l = l.getChain();
+            }
+            while (l!=null);
+        }
+    }
+    
+    void fireMorphValueChanged()
+    {
+        if (listenerList!=null)
+        {
+            Event e = EventBuilder.parameterMorphValueChanged(this);
+            EventChain<ParameterListener> l = listenerList;
+            do
+            {
+                l.getListener().parameterMorphValueChanged(e);
+                l = l.getChain();
+            }
+            while (l!=null);
+        }
+    }
+    
+    void fireMorphAssignmentChanged()
+    {
+        if (listenerList!=null)
+        {
+            Event e = EventBuilder.parameterMorphAssignmentChanged(this);
+            EventChain<ParameterListener> l = listenerList;
+            do
+            {
+                l.getListener().parameterMorphAssignmentChanged(e);
+                l = l.getChain();
+            }
+            while (l!=null);
+        }
+    }
+    
+    void fireKnobAssignmentChanged()
+    {
+        if (listenerList!=null)
+        {
+            Event e = EventBuilder.parameterKnobAssignmentChanged(this);
+            EventChain<ParameterListener> l = listenerList;
+            do
+            {
+                l.getListener().parameterKnobAssignmentChanged(e);
+                l = l.getChain();
+            }
+            while (l!=null);
+        }
+    }
+    
+    void fireMidiCtrlAssignmentChanged()
+    {
+        if (listenerList!=null)
+        {
+            Event e = EventBuilder.parameterMidiCtrlAssignmentChanged(this);
+            EventChain<ParameterListener> l = listenerList;
+            do
+            {
+                l.getListener().parameterMidiCtrlAssignmentChanged(e);
+                l = l.getChain();
+            }
+            while (l!=null);
+        }
+    }
+    
     void setAssignedMorph(Morph m)
     {
         if (assignedMorph!=m)
         {
             assignedMorph = m;
-            eventMessage.morphAssignment(this);
-            fireEvent(eventMessage);
+            fireMorphAssignmentChanged();
         }
     }
     
@@ -95,8 +183,7 @@ public class Parameter extends ListenableAdapter<ParameterEvent> implements Assi
         if (assignedKnob!=k)
         {
             assignedKnob = k;
-            eventMessage.knobAssignment(this);
-            fireEvent(eventMessage);
+            fireKnobAssignmentChanged();
         }
     }
     
@@ -120,8 +207,7 @@ public class Parameter extends ListenableAdapter<ParameterEvent> implements Assi
         if (this.value != v && isValueInRange(v))
         {
             this.value = v;
-            eventMessage.valueChanged(this);
-            fireEvent(eventMessage);
+            fireParameterValueChanged();
         }
     }
     
@@ -137,8 +223,7 @@ public class Parameter extends ListenableAdapter<ParameterEvent> implements Assi
         if (morphRange!=morph)
         {
             morphRange = morph;
-            eventMessage.morphRangeChanged(this);
-            fireEvent(eventMessage);
+            fireMorphValueChanged();
         }
     }
 

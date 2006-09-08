@@ -25,9 +25,11 @@ package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03;
 import java.util.AbstractList;
 import java.util.Iterator;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.AssignmentChangeListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventBuilder;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventChain;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.MidiControllerEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.misc.Assignment;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.misc.Filter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.misc.FilteringIterator;
 
@@ -35,11 +37,17 @@ public class MidiControllerSet extends AbstractList<MidiController>
 {
     
     private MidiController[] midiControllerList;
-    private EventChain<MidiControllerEvent> listenerList;
     
-    public MidiControllerSet()
+    private Patch patch;
+    
+    public Patch getPatch()
+    {
+        return patch;
+    }
+    
+    public MidiControllerSet(Patch patch)
     {        
-        listenerList = null;
+        this.patch = patch;
         midiControllerList = new MidiController[120];
         for (int i=0;i<32;i++)
             midiControllerList[i] = new MidiController(this, i);
@@ -47,23 +55,6 @@ public class MidiControllerSet extends AbstractList<MidiController>
             midiControllerList[i-1] = new MidiController(this, i);
     }
 
-    public void addListener(EventListener<MidiControllerEvent> l)
-    {
-        listenerList = new EventChain<MidiControllerEvent>(l, listenerList);
-    }
-
-    public void removeListener(EventListener<MidiControllerEvent> l)
-    {
-        if (listenerList!=null)
-            listenerList = listenerList.remove(l);
-    }
-    
-    void fireEvent(MidiControllerEvent e)
-    {
-        if (listenerList!=null)
-            listenerList.fireEvent(e);
-    }
-    
     public static boolean isValidMC(int mc)
     {
         return 0 <= mc && mc<= 120 && mc!=32;
@@ -146,6 +137,34 @@ public class MidiControllerSet extends AbstractList<MidiController>
     public Iterator<MidiController> getAssignedMidiControllers()
     {
         return iterator(new Filter.AssignedMidiControllers());
+    }
+
+    private EventChain<AssignmentChangeListener> listenerList = null;
+    
+    public void addAssignmentChangeListener(AssignmentChangeListener l)
+    {
+        listenerList = new EventChain<AssignmentChangeListener>(l, listenerList);
+    }
+    
+    public void removeAssignmentChangeListener(AssignmentChangeListener l)
+    {
+        if (listenerList != null)
+            listenerList = listenerList.remove(l);
+    }
+    
+    public void fireAssignmentChanged( MidiController mctrl, Assignment oldValue, Assignment newValue)
+    {
+        if (listenerList!=null)
+        {
+            Event e = EventBuilder.assignmentChanged(patch, mctrl, oldValue, newValue);
+            EventChain <AssignmentChangeListener> l = listenerList;
+            do
+            {
+                l.getListener().assignmentChanged(e);
+                l = l.getChain();
+            }
+            while ( l != null );
+        }
     }
 
 }

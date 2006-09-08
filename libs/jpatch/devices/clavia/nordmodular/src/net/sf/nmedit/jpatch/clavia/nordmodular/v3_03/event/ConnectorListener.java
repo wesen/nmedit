@@ -18,32 +18,13 @@
  */
 
 /*
- * Created on Apr 22, 2006
+ * Created on Sep 7, 2006
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event;
 
-/**
- * A class that supports listening to events.
- * 
- * @author Christian Schneider
- */
-public interface Listenable<T>
+public interface ConnectorListener
 {
+    
+    public void connectorStateChanged(Event e);
 
-    /**
-     * Adds an event listener.
-     * 
-     * Listeners are notified of an event in the reverse order
-     * they were added to the listener list.
-     * 
-     * @param l the listener
-     */
-    void addListener(EventListener<T> l);
-    
-    /**
-     * Removes an event listener
-     * @param l the listener
-     */
-    void removeListener(EventListener<T> l);
-    
 }

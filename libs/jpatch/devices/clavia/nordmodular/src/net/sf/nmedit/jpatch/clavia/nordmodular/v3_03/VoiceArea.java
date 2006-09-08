@@ -22,47 +22,95 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03;
 
+import java.lang.ref.WeakReference;
+import java.util.Arrays;
+import java.util.Comparator;
+
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventBuilder;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventChain;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ModuleEvent;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.VoiceAreaEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ModuleListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.VoiceAreaListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.misc.ModuleSet;
 
-public class VoiceArea extends ModuleSet implements EventListener<ModuleEvent>
+public class VoiceArea extends ModuleSet implements ModuleListener
 {
 
+    public static final int UPDATE =-1;
+    public static final int MOVE = 0;
+    public static final int ADD = 1;
+    public static final int REMOVE = 2;
+    
     private int impWidth;
     private int impHeight;
     private Patch patch;
+    private double cyclesTotal = 0;
     
-    private EventChain<VoiceAreaEvent> listenerList;
-    private static VoiceAreaEvent eventMessage = new VoiceAreaEvent();
-
     public VoiceArea(Patch patch)
     {
-        listenerList = null;
         impWidth = 0;
         impHeight = 0;
         this.patch = patch;
     }
-
-    public void addListener(EventListener<VoiceAreaEvent> l)
+    
+    private EventChain<VoiceAreaListener> listenerList = null;
+    
+    public void addVoiceAreaListener(VoiceAreaListener l)
     {
-        listenerList = new EventChain<VoiceAreaEvent>(l, listenerList);
+        listenerList = new EventChain<VoiceAreaListener>(l, listenerList);
     }
-
-    public void removeListener(EventListener<VoiceAreaEvent> l)
+    
+    public void removeVoiceAreaListener(VoiceAreaListener l)
     {
         if (listenerList!=null)
             listenerList = listenerList.remove(l);
     }
     
-    void fireEvent(VoiceAreaEvent e)
+    void fireModuleAddedEvent(Module m)
     {
         if (listenerList!=null)
-            listenerList.fireEvent(e);
+        {
+            EventChain<VoiceAreaListener> l = listenerList;
+            Event e = EventBuilder.moduleAdded(m);
+            do
+            {
+                l.getListener().moduleAdded(e);
+                l = l.getChain();
+            }
+            while (l!=null);
+        }
     }
     
+    void fireModuleRemovedEvent(Module m)
+    {
+        if (listenerList!=null)
+        {
+            EventChain<VoiceAreaListener> l = listenerList;
+            Event e = EventBuilder.moduleRemoved(this, m);
+            do
+            {
+                l.getListener().moduleRemoved(e);
+                l = l.getChain();
+            }
+            while (l!=null);
+        }
+    }
+    
+    void fireVoiceAreaResizedEvent()
+    {
+        if (listenerList!=null)
+        {
+            EventChain<VoiceAreaListener> l = listenerList;
+            Event e = EventBuilder.voiceAreaResized(this);
+            do
+            {
+                l.getListener().voiceAreaResized(e);
+                l = l.getChain();
+            }
+            while (l!=null);
+        }
+    }
+
     public boolean isPolyVoiceArea()
     {
         return patch.getPolyVoiceArea()==this;
@@ -79,8 +127,7 @@ public class VoiceArea extends ModuleSet implements EventListener<ModuleEvent>
     {
         if (updateCount == 0)
         {
-            eventMessage.beginUpdate(this);
-            fireEvent(eventMessage);
+            // fire begin update
         }
         updateCount ++;
     }
@@ -92,8 +139,7 @@ public class VoiceArea extends ModuleSet implements EventListener<ModuleEvent>
         updateCount --;
         if (updateCount==0)
         {
-            eventMessage.endUpdate(this);
-            fireEvent(eventMessage);
+            // fire end update
         }
     }
     
@@ -121,15 +167,14 @@ public class VoiceArea extends ModuleSet implements EventListener<ModuleEvent>
         if (super.add(m))
         {
             beginUpdate();
-            
-            m.setVoiceArea( this );
-            adjustImpliedSize( m, true );
-            locationChanged(m);
-            
-            eventMessage.moduleAdded(this, m);
-            fireEvent(eventMessage);
 
-            m.addListener(this);
+            m.setVoiceArea( this );
+            updateSize(m, ADD);
+
+            cyclesTotal += m.getDefinition().getCycles();
+            patch.setProperty( isPolyVoiceArea() ? Patch.VAPOLY_CYCLES : Patch.VACOMMON_CYCLES, cyclesTotal);
+            fireModuleAddedEvent(m);
+            m.addModuleListener(this);
 
             endUpdate();
             
@@ -146,10 +191,11 @@ public class VoiceArea extends ModuleSet implements EventListener<ModuleEvent>
         if (super.remove(m))
         {
             m.makeUseless();
-            adjustImpliedSize( m, false );
-            m.removeListener(this);    
-            eventMessage.moduleRemoved(this, m);
-            fireEvent(eventMessage);
+            m.removeModuleListener(this);  
+            updateSize(m, REMOVE); 
+            cyclesTotal -= m.getDefinition().getCycles();
+            patch.setProperty( isPolyVoiceArea() ? Patch.VAPOLY_CYCLES : Patch.VACOMMON_CYCLES, cyclesTotal);
+            fireModuleRemovedEvent(m);
             return true;
         }
         else
@@ -158,14 +204,21 @@ public class VoiceArea extends ModuleSet implements EventListener<ModuleEvent>
         }
     }
 
-    public void event( ModuleEvent event )
+    public void updateCycles()
     {
-        if (event.getID() == ModuleEvent.MODULE_MOVED)
-        {
-            adjustImpliedSize();
-        }
+        double c = 0;
+        for (Module m : this)
+            c+=m.getDefinition().getCycles();
+        cyclesTotal = c;
+        patch.setProperty( isPolyVoiceArea() ? Patch.VAPOLY_CYCLES : Patch.VACOMMON_CYCLES, cyclesTotal);
+        // TODO event
     }
     
+    public double getCyclesTotal()
+    {
+        return cyclesTotal;
+    }
+    /*
     private void adjustImpliedSize()
     {
         Module m;
@@ -186,47 +239,20 @@ public class VoiceArea extends ModuleSet implements EventListener<ModuleEvent>
         {
             impWidth = newW;
             impHeight = newH;
-            eventMessage.resized(this);
-            fireEvent(eventMessage);
+            fireVoiceAreaResizedEvent();
         }
     }
     
     private void adjustImpliedSize( Module m, boolean added )
     {
-        int right = m.getX() + 1;
-        int bottom = m.getY() + m.getHeight();
-
-        int oldWidth = impWidth;
-        int oldHeight = impHeight;
-        
-        if (added)
-        {
-            impWidth = Math.max( impWidth, right );
-            impHeight = Math.max( impHeight, bottom );
-        }
-        else
-        {
-            // check if the module is on the border line
-            if (impWidth <= right || impHeight <= bottom)
-            {
-                impWidth = size() > 0 ? 1 : 0;
-                impHeight = 0;
-
-                for (Module mm : this)
-                {
-                    impWidth = Math.max( impWidth, mm.getX() );
-                    impHeight = Math.max( impHeight, mm.getY() + mm.getHeight() );
-                }
-            }
-        }
-        
-        if (oldWidth!=impWidth || oldHeight!=impHeight)
-        {
-            eventMessage.resized(this);
-            fireEvent(eventMessage);
-        }
+        adjustImpliedSize();
     }
 
+    void locationChanged( Module m )
+    {
+        adjustImpliedSize(null, false);
+    }
+*/
     public int getImpliedWidth()
     {
         return impWidth;
@@ -236,142 +262,148 @@ public class VoiceArea extends ModuleSet implements EventListener<ModuleEvent>
     {
         return impHeight;
     }
-
-    void locationChanged( Module m )
-    {
-        // Search modules that have to be reordered.
-        // These modules are:
-        // - in the same column
-        // - intersecting with the module
-        // - below the intersected module
-        // - ...
-        
-        // in the same column the following cases appear for a module c
-        // - c above module      : c.getY()+c.getHeight()<=m.getY()
-        // - c below module      : c.getY()>m.getY()+m.getHeight()
-        // - c intersects module : else (if c.getY()<m.getY() : moveY(m))
-        
-        if (m.getY()<0)
-        {
-            m.setYWithoutEventNotification(0);
-        }
-        
-        int mbottom = m.getY()+m.getHeight();
-        int cbottom ;
-
-        Module[] moveList = null;
-        int mlSize = 0;
-        int moveMod= 0;
-        
-        // find intersection
-        for (int i=size()-1;i>=0;i--)
-        {
-            Module c = map[i];
-            
-            if ((c!=null) && (c.getX() == m.getX()) && (c!=m))
-            {
-                cbottom = c.getY()+c.getHeight();
-                
-                if (m.getY()>c.getY() && m.getY()<=cbottom)
-                {
-                    // c intersects m
-                    moveMod = cbottom;
-                }
-                else if (m.getY()<=c.getY())
-                {
-                    if (moveList == null)
-                    {
-                        // => (mlSize == 0)
-                        
-                        // create the move list with space
-                        // for each of the following modules
-                        moveList = new Module[i+1];
-
-                        // c is below any other listed module
-                        // so we append it to the end
-                        moveList[0] = c;
-                        mlSize = 1;
-                    }
-                    else
-                    {
-                        // c is between other modules
-                        // we have to insert it at the correct place
-                        for (int j=mlSize-1;j>=0;j--)
-                        {
-                            // move current field
-                            moveList[j+1] = moveList[j]; 
-                            if ((moveList[j].getY()<c.getY()))
-                            {
-                                // insert
-                                moveList[j+1] = c;
-                                break;
-                            }
-                            else if (j==0)
-                            {
-                                moveList[j] = c;
-                                break;
-                            }
-                        }
-                        
-                        mlSize ++;
-                    }
-                }
-            }
-        }
-
-        if (moveMod>0)
-        {
-            m.setYWithoutEventNotification(moveMod);
-            // update mbottom
-            mbottom = m.getY()+m.getHeight();
-        }
-        
-        if (mlSize>0)  // implies moveList!=null
-        {            
-            // we have modules that should be moved down
-            // the modules are already sorted
-            
-            int ylimit = mbottom;
-            Module c;
-            
-            for (int i=0;i<mlSize;i++)
-            {
-                c = moveList[i];
-                if (c.getY()<ylimit)
-                {
-                    // set y value
-                    c.setYWithoutEventNotification(ylimit);
-                    c.fireLocationChangedEvent();
-
-                    // set next y limit
-                    ylimit = c.getY()+c.getHeight();
-                }
-                else
-                {
-                    // no further intersection => done
-                 //   break ;
-                }
-            }
-        }
-        
-    }
-
+    
     void connected( Connector a, Connector b )
     {
-        eventMessage.connected(this, a, b);
-        fireEvent(eventMessage);
+        if (listenerList!=null)
+        {
+            EventChain<VoiceAreaListener> l = listenerList;
+            Event e = EventBuilder.cableAdded(a, b);
+            do
+            {
+                l.getListener().cablesAdded(e);
+                l = l.getChain();
+            }
+            while (l!=null);
+        }
     }
 
     void disconnected( Connector a, Connector b )
     {
-        eventMessage.disconnected(this, a, b);  
-        fireEvent(eventMessage); 
+        if (listenerList!=null)
+        {
+            EventChain<VoiceAreaListener> l = listenerList;
+            Event e = EventBuilder.cableRemoved(this, a, b);
+            do
+            {
+                l.getListener().cablesRemoved(e);
+                l = l.getChain();
+            }
+            while (l!=null);
+        }
     }
-
+    
     public void updateConnection( Connector c )
     {
-        eventMessage.updateConnection(c);
-        fireEvent(eventMessage);
+        if (listenerList!=null)
+        {
+            EventChain<VoiceAreaListener> l = listenerList;
+            Event e = EventBuilder.cableGraphUpdate(c);
+            do
+            {
+                l.getListener().cableGraphUpdated(e);
+                l = l.getChain();
+            }
+            while (l!=null);
+        }
+    }
+
+    public void moduleRenamed( Event e )
+    {
+    }
+
+    public void moduleMoved( Event e )
+    {
+        // we are notified directly
+    }
+    
+    private void setNewSize(int w, int h)
+    {
+        if ((w!=impWidth) || (h!=impHeight))
+        {
+            impWidth = w;
+            impHeight = h;
+            fireVoiceAreaResizedEvent();
+        }
+    }
+
+
+    void updateSize( Module module, int op )
+    {
+        if (op==REMOVE)
+        {
+            int w = 0;
+            int h = 0;
+            for (int i=map.length-1;i>=0;i--)
+            {
+                w = Math.max(w, module.getX());
+                h = Math.max(h, module.getY()+module.getHeight());
+            }
+            setNewSize(w, h);
+            return ;
+        }
+        
+        if (module.getY()<0)
+            module.setYWithoutVANotification(0);
+        
+        Module[] temp = tempModuleList != null ? tempModuleList.get() : null;
+        boolean updateReference = temp!=null;
+        
+        if (temp == null || temp.length<map.length)
+        {
+            temp = new Module[map.length];
+            updateReference = true;
+        }
+        else
+            Arrays.fill(temp, null);
+
+        int right = 0;
+        int bottom = 0;
+        int pos = 0;
+        int y = module.getY()+module.getHeight();
+
+        for (int i=map.length-1;i>=0;i--)
+        {
+            Module m2 = map[i];
+            if (m2!=null)
+            {
+                right = Math.max(right, m2.getX());
+                bottom = Math.max(bottom, m2.getY()+m2.getHeight());
+                if (m2!=module && m2.getX()==module.getX()&&(m2.getY()+m2.getHeight()>module.getY()))
+                {
+                    temp[pos++] = m2;
+                }
+            }
+        }
+        right++;
+
+        Arrays.<Module>sort(temp, 0, pos, YOrder.instance);
+        // temp are all modules in the same column and below the specified module
+
+        for (int i=0;i<pos;i++)
+        {
+             Module m2 = temp[i];
+             if (m2.getY()<y)
+               m2.setYWithoutVANotification(y);
+             y = m2.getY()+m2.getHeight();
+        }
+                       
+        if (updateReference)
+            tempModuleList = new WeakReference<Module[]>(temp);
+        
+        setNewSize(right, Math.max(y, bottom));
+    }
+    
+
+    private WeakReference<Module[]> tempModuleList = null;
+    private static class YOrder implements Comparator<Module>
+    {
+        final static Comparator<Module> instance = new YOrder();
+        
+        public int compare( Module o1, Module o2 )
+        {
+            return o1.getY()-o2.getY();
+        }
     }
 
 }

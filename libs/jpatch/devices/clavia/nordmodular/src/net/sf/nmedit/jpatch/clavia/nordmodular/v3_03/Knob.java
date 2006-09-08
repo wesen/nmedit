@@ -22,7 +22,6 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.KnobEvent;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.misc.Assignment;
 
 public class Knob
@@ -31,7 +30,6 @@ public class Knob
     private final int ID;
     private Assignment assignment;
     private KnobSet set;
-    private static KnobEvent eventMessage = new KnobEvent();
     
     Knob(KnobSet set, int ID)
     {
@@ -54,7 +52,7 @@ public class Knob
         if (a != assignment)
         {
 
-            eventMessage.assigned(this, assignment, a);
+            Assignment oldValue = assignment;
             
             if (assignment != null && assignment instanceof Parameter)
             {
@@ -74,7 +72,7 @@ public class Knob
                 p.setAssignedKnob(this);
             }   
             
-            set.fireEvent(eventMessage);
+            set.fireAssignmentChanged(this, oldValue, a);
         }
     }
     

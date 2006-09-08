@@ -18,42 +18,13 @@
  */
 
 /*
- * Created on Apr 21, 2006
+ * Created on Sep 8, 2006
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector;
-
-/**
- * Event sent by a {@link net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector}.
- * 
- * @author Christian Schneider
- */
-public class ConnectorEvent extends PatchEvent
+public interface HeaderListener
 {
 
-    /**
-     * The connector.
-     */
-    private Connector c = null;
-
-    /**
-     * Returns the connector
-     * @return the connector
-     */
-    public Connector getConnector()
-    {
-        return c;
-    }
-
-    /**
-     * Initialize the event object.
-     * @param connector
-     */
-    public void connectionStateChanged( Connector connector )
-    {
-        setID(CONNECTOR_CONNECTED_STATE_CHANGED);
-        this.c = connector;
-    }
+    void headerValueChanged(Event e);
     
 }

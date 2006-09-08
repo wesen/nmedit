@@ -26,12 +26,14 @@ import java.awt.Point;
 
 import javax.swing.JComponent;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ListenableAdapter;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ModuleEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventBuilder;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventChain;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ModuleListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 
 
-public class Module extends ListenableAdapter<ModuleEvent>
+public class Module 
 {
 
     private final DModule     definition;
@@ -53,8 +55,6 @@ public class Module extends ListenableAdapter<ModuleEvent>
     private int               index;
 
     //private ModuleUI ui;
-    
-    private static ModuleEvent eventMessage = new ModuleEvent();
     
     public Module( DModule definition )
     {
@@ -174,23 +174,68 @@ public class Module extends ListenableAdapter<ModuleEvent>
     public void setLocation( int vx, int vy )
     {
         if (( this.x != vx ) || ( this.y != vy ))
-        {
+        {            
             this.x = vx;
             this.y = vy;
 
             if (voiceArea!=null)
-            {
-                voiceArea.locationChanged(this);
-            }
+                voiceArea.updateSize(this, VoiceArea.MOVE);
 
             fireLocationChangedEvent();
         }
     }
 
+    void setYWithoutVANotification(int vy)
+    {
+        if (( this.y != vy ))
+        {            
+            this.y = vy;
+
+            fireLocationChangedEvent();
+        }
+    }
+    
+    private EventChain<ModuleListener> listenerList = null;
+    
+    public void addModuleListener(ModuleListener l)
+    {
+        listenerList = new EventChain<ModuleListener>(l, listenerList);
+    }
+    
+    public void removeModuleListener(ModuleListener l)
+    {
+        if (listenerList!=null)
+            listenerList = listenerList.remove(l);
+    }
+
     void fireLocationChangedEvent()
     {
-        eventMessage.moduleMoved(this);
-        fireEvent(eventMessage);
+        if (listenerList!=null)
+        {
+            Event e = EventBuilder.moduleMoved(this);
+            EventChain<ModuleListener> l = listenerList;
+            do
+            {
+                l.getListener().moduleMoved(e);
+                l = l.getChain();
+            }
+            while (l!=null);
+        }
+    }
+    
+    void fireModuleRenamedEvent()
+    {
+        if (listenerList!=null)
+        {
+            Event e = EventBuilder.moduleRenamed(this);
+            EventChain<ModuleListener> l = listenerList;
+            do
+            {
+                l.getListener().moduleMoved(e);
+                l = l.getChain();
+            }
+            while (l!=null);
+        }
     }
     
     public int getX()
@@ -211,11 +256,6 @@ public class Module extends ListenableAdapter<ModuleEvent>
     public void setY( int value )
     {
         setLocation( this.x, value );
-    }
-
-    void setYWithoutEventNotification(int value)
-    {
-        this.y = value;
     }
     
     public final DModule getDefinition()
@@ -260,14 +300,16 @@ public class Module extends ListenableAdapter<ModuleEvent>
 
     public void setName( String name )
     {
-        this.name = name;
-        /*
-        if (ui!=null && name!=null)
+        if (this.name!=name)
         {
-            ui.setTitle(name);
-        }*/
-        eventMessage.moduleRenamed(this);
-        fireEvent(eventMessage);
+            this.name = name;
+            /*
+            if (ui!=null && name!=null)
+            {
+                ui.setTitle(name);
+            }*/
+            fireModuleRenamedEvent();
+        }
     }
 
     public String getShortName()

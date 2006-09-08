@@ -22,7 +22,6 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.MidiControllerEvent;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.misc.Assignment;
 
 public class MidiController
@@ -31,7 +30,6 @@ public class MidiController
     private final int ID;
     private Assignment assignment;
     private MidiControllerSet set;
-    private static MidiControllerEvent eventMessage = new MidiControllerEvent();
 
     MidiController(MidiControllerSet set, int ID)
     {
@@ -54,9 +52,9 @@ public class MidiController
     {
         if (this.assignment != a)
         {
-            eventMessage.assigned(this, assignment, a);
+            Assignment oldValue = this.assignment;
             this.assignment = a;
-            set.fireEvent(eventMessage);
+            set.fireAssignmentChanged(this, oldValue, a);
         }
     }
 

@@ -22,8 +22,6 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.v3_03;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.CustomEvent;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ListenableAdapter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DCustom;
 
 
@@ -32,7 +30,7 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DCustom;
  * 
  * @author Christian Schneider
  */
-public class Custom extends ListenableAdapter<CustomEvent>
+public class Custom 
 {
 
     /**
@@ -45,11 +43,6 @@ public class Custom extends ListenableAdapter<CustomEvent>
      */
     private final DCustom definition;
     
-    /**
-     * event message object
-     */
-    private static CustomEvent eventMessage = new CustomEvent();
-
     /**
      * creates a new custom parameter 
      * @param definition 
@@ -74,9 +67,28 @@ public class Custom extends ListenableAdapter<CustomEvent>
         if (this.value != v && definition.getMinValue()<=v && v<=definition.getMaxValue())
         {
             this.value = v;
-            eventMessage.valueChanged(this);
-            fireEvent(eventMessage);
+            // FIXME: listener not notified
+            //fireParameterValueChanged();
         }
     }
+/*
+    private EventChain<ParameterListener,Event> parameterListenerList = null;
+
+    public void addParameterListener(ParameterListener l)
+    {
+        parameterListenerList = new EventChain<ParameterListener,Event>(l, parameterListenerList);
+    }
+
+    public void removeParameterListener(ParameterListener l)
+    {
+        if (parameterListenerList!=null)
+            parameterListenerList = parameterListenerList.remove(l);
+    }
+
+    void fireParameterValueChanged()
+    {
+        if (parameterListenerList!=null)
+            parameterListenerList.fireEvent(ParameterListener.ValueChangeSenderInstance, EventBuilder.parameterValueChanged(this));
+    }*/
     
 }
