@@ -116,20 +116,20 @@ public class Utils
                         Method m2 = methods[j];
                         if (m2!=null)
                         {
-                            PropertyName am2 = m.getAnnotation(PropertyName.class);
+                            PropertyName am2 = m2.getAnnotation(PropertyName.class);
                             if (am2.name().equals(am.name()))
                             {
                                 // we found the second annotation
                                 if (g!=null)
                                 {
                                     if (!isSetter(m2))
-                                        throw new RuntimeException("method "+m2+" is not a setter");
+                                        throw new RuntimeException("method "+m2+" is not a setter for "+m);
                                     s = m2;
                                 }
                                 else if (s!=null)
                                 {
                                     if (!isGetter(m2)) 
-                                        throw new RuntimeException("method "+m2+" is not a getter");
+                                        throw new RuntimeException("method "+m2+" is not a getter for "+m);
                                     g = m2;
                                 }
                                 methods[j]=null;
