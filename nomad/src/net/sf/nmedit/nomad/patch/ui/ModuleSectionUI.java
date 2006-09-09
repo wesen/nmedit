@@ -93,6 +93,9 @@ VoiceAreaListener{
     //Overridden for performance reasons.
 
      */
+    public void invalidate() {
+        
+    }
     public void validate() {
     }
 
@@ -170,8 +173,10 @@ VoiceAreaListener{
 
 		for (Module module : getModuleSection())
         {
-            ModuleUI ui = NomadEnvironment.sharedInstance().getBuilder().compose(module, this);
+            ModuleUI ui = NomadEnvironment.sharedInstance().
+                getTheme().buildModule(module);
             module.setUI(ui);
+            ui.setModuleSectionUI(this);
             add(ui);
         };
 
@@ -226,11 +231,12 @@ VoiceAreaListener{
                 ModuleUI.Metrics.getPixelY(moduleSection.getImpliedHeight()) );
         d.width+=ModuleUI.Metrics.getPixelX(1);
         d.height+=ModuleUI.Metrics.getPixelY(5);
-        setPreferredSize(d);       
+        setPreferredSize(d);
         setSize(d);
-        revalidate();
+        //revalidate();
+        
     }
-    
+
     public void moduleSectionResized() {
         if (adjustSize) {
             updateSize();
@@ -613,7 +619,8 @@ VoiceAreaListener{
 
     public void moduleAdded( Event e )
     {
-        ModuleUI ui = NomadEnvironment.sharedInstance().getBuilder().compose(e.getModule(), this);
+        ModuleUI ui = NomadEnvironment.sharedInstance().getTheme().buildModule(e.getModule());
+        ui.setModuleSectionUI(this);
         e.getModule().setUI(ui);
         add(ui);
         
@@ -626,6 +633,7 @@ VoiceAreaListener{
     public void moduleRemoved( Event e )
     {
         ModuleUI m = (ModuleUI) e.getModule().getUI();
+        m.setModuleSectionUI(null);
         Rectangle bounds = m.getBounds(); 
         remove(m);
         if (isDisplayable())

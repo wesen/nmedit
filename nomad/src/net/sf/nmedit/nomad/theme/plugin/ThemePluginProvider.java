@@ -22,7 +22,7 @@
  */
 package net.sf.nmedit.nomad.theme.plugin;
 
-import net.sf.nmedit.nomad.theme.UIFactory;
+import net.sf.nmedit.nomad.theme.NMTheme;
 
 public abstract class ThemePluginProvider
 {
@@ -49,7 +49,7 @@ public abstract class ThemePluginProvider
      * Returns an instance of the factory. 
      * @return instance of the factory.
      */
-    public abstract UIFactory getFactory();
+    public abstract NMTheme getFactory();
 
     public abstract String getHomepage();
     public abstract String getVersion();

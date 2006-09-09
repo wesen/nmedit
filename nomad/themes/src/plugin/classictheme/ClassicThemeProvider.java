@@ -22,7 +22,7 @@
  */
 package plugin.classictheme;
 
-import net.sf.nmedit.nomad.theme.UIFactory;
+import net.sf.nmedit.nomad.theme.NMTheme;
 import net.sf.nmedit.nomad.theme.plugin.ThemePluginProvider;
 
 public class ClassicThemeProvider extends ThemePluginProvider
@@ -44,7 +44,7 @@ public class ClassicThemeProvider extends ThemePluginProvider
         return "Theme of the official editor.";
     }
 
-    public UIFactory getFactory() {
+    public NMTheme getFactory() {
         return new ClassicThemeFactory();
     }
 

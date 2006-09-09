@@ -140,22 +140,24 @@ public class PatchUI extends JSplitPane
     {
         double sep = patch.getHeader().getSeparatorPosition(); 
         
-        final int SCROLL_MODE = JViewport.BLIT_SCROLL_MODE;
+        final int SCROLL_MODE = JViewport.BACKINGSTORE_SCROLL_MODE;//BLIT_SCROLL_MODE;
 
         unlinkInternal();
         
 		// new
-		polySectionUI 	= NomadEnvironment.sharedInstance().getFactory().getModuleSectionUI(getPatch().getPolyVoiceArea());
+		polySectionUI 	= NomadEnvironment.sharedInstance().getTheme().getModuleSectionUI(getPatch().getPolyVoiceArea());
 		polySectionUI.setSize(polySectionUI.getPreferredSize());
      //   polySectionUI.setPatchUI(this);
         scrollPanePoly = new JScrollPane(polySectionUI);
         scrollPanePoly.getViewport().setBorder(null);
         scrollPanePoly.setBorder(null);
         scrollPanePoly.getViewport().setScrollMode(SCROLL_MODE);
-        
+        scrollPanePoly.getHorizontalScrollBar().setUnitIncrement(10);
+        scrollPanePoly.getVerticalScrollBar().setUnitIncrement(10);
+
         split.add(scrollPanePoly, JSplitPane.TOP);
 		
-		commonSectionUI = NomadEnvironment.sharedInstance().getFactory().getModuleSectionUI(getPatch().getCommonVoiceArea());
+		commonSectionUI = NomadEnvironment.sharedInstance().getTheme().getModuleSectionUI(getPatch().getCommonVoiceArea());
 		commonSectionUI.setSize(commonSectionUI.getPreferredSize());
        // commonSectionUI.setPatchUI(this);
         scrollPaneCommon = new JScrollPane(commonSectionUI);
@@ -163,6 +165,8 @@ public class PatchUI extends JSplitPane
         scrollPaneCommon.setBorder(null);
         scrollPaneCommon.getViewport().setScrollMode(SCROLL_MODE);
         split.add(scrollPaneCommon, JSplitPane.BOTTOM);
+        scrollPaneCommon.getHorizontalScrollBar().setUnitIncrement(10);
+        scrollPaneCommon.getVerticalScrollBar().setUnitIncrement(10);
 
         polySectionUI.populate();
         commonSectionUI.populate();

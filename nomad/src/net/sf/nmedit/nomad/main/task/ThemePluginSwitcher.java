@@ -29,7 +29,6 @@ import net.sf.nmedit.nomad.main.Nomad;
 import net.sf.nmedit.nomad.main.dialog.NomadTaskDialog;
 import net.sf.nmedit.nomad.main.dialog.TaskModel;
 import net.sf.nmedit.nomad.patch.ui.PatchDocument;
-import net.sf.nmedit.nomad.theme.UIFactory;
 import net.sf.nmedit.nomad.theme.plugin.ThemePluginProvider;
 import net.sf.nmedit.nomad.util.document.Document;
 import net.sf.nmedit.nomad.util.document.DocumentManager;
@@ -69,7 +68,7 @@ public class ThemePluginSwitcher implements TaskModel {
 	
 	public void switchPlugin() {
 		if (!nomad.isDisplayable()) {
-			env.setFactory((UIFactory) plugin.getFactory());
+			env.setFactory(plugin.getFactory());
 		} else {
 			NomadTaskDialog dlg = new NomadTaskDialog(this);
 			dlg.invoke();
@@ -112,7 +111,7 @@ public class ThemePluginSwitcher implements TaskModel {
 	}
 	
 	public void init2() {
-		env.setFactory((UIFactory) plugin.getFactory());
+		env.setFactory(plugin.getFactory());
 	}
 	
 	public void finish() {/*

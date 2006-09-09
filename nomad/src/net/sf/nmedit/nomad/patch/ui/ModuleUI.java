@@ -28,21 +28,23 @@ import net.sf.nmedit.nomad.patch.ui.action.BreakCablesAction;
 import net.sf.nmedit.nomad.patch.ui.action.DisconnectCablesAction;
 import net.sf.nmedit.nomad.patch.ui.action.RemoveCablesAction;
 import net.sf.nmedit.nomad.patch.ui.action.RemoveModuleAction;
-import net.sf.nmedit.nomad.theme.ModuleComponent;
 import net.sf.nmedit.nomad.theme.NomadClassicColors;
 import net.sf.nmedit.nomad.theme.component.ModuleGuiTitleLabel;
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
 import net.sf.nmedit.nomad.util.graphics.GraphicsToolkit;
 
 
-public class ModuleUI extends JComponent implements ModuleComponent, ModuleListener
+public class ModuleUI extends JComponent implements ModuleListener
 {
 //  Overridden for performance reasons.
+
+    public void invalidate() {
+        
+    }
     public void validate() {
     }
 
     public void revalidate() {
-        
     }
     
     /*
@@ -112,7 +114,7 @@ public class ModuleUI extends JComponent implements ModuleComponent, ModuleListe
 
     private Module                             module           = null;
 
-    private ModuleSectionUI                    moduleSection    = null;
+    private ModuleSectionUI                    voiceAreaUI    = null;
 
     // JMenuItem removeItem = new JMenuItem("Remove");
 
@@ -163,11 +165,6 @@ public class ModuleUI extends JComponent implements ModuleComponent, ModuleListe
         }
     }
     
-    public ModuleUI()
-    {
-        setOpaque(true);
-        setDoubleBuffered(true);
-    }
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D)g;
         if (isOpaque() && getBackground()!=null) {
@@ -234,9 +231,8 @@ public class ModuleUI extends JComponent implements ModuleComponent, ModuleListe
     );
     */
     
-    public ModuleUI( DModule info )
+    public ModuleUI()
     {
-        this.info = info;
         setFont(font);
         setForeground(Color.BLACK);
         // setBackground(UIManager.getColor("Button.background"));
@@ -257,13 +253,7 @@ public class ModuleUI extends JComponent implements ModuleComponent, ModuleListe
 
         setLayout( null );
 
-        nameLabel = new ModuleGuiTitleLabel( info );
-        nameLabel.setLocation( 3, 0 );
-        add( nameLabel );
-
         setFocusable( true );
-
-        setSize( Metrics.WIDTH, Metrics.getHeight( info ) );
 
         setBackground(NomadClassicColors.MODULE_BACKGROUND);
        // setContentAreaFilled(true);
@@ -278,6 +268,19 @@ public class ModuleUI extends JComponent implements ModuleComponent, ModuleListe
          */
     }
 
+    public void setModuleSpec(DModule m)
+    {
+        this.info = m;
+        if (nameLabel==null)
+        {
+            nameLabel = new ModuleGuiTitleLabel( info );
+            nameLabel.setLocation( 3, 0 );
+            add( nameLabel );
+        }
+        setSize( Metrics.WIDTH, Metrics.getHeight( info ) );
+
+    }
+    
     private BufferedImage screen   = null;
     private int sw = 0;
     private int sh = 0;
@@ -406,12 +409,6 @@ private boolean dirty = false;
         }
     }
 */
-    public ModuleUI( Module module )
-    {
-        this( module.getDefinition() );
-        setModule( module );
-    }
-
     public void link( Module module )
     {
         for (int i = getComponentCount() - 1; i >= 0; i--)
@@ -457,12 +454,12 @@ private boolean dirty = false;
 
     public ModuleSectionUI getModuleSection()
     {
-        return moduleSection;
+        return voiceAreaUI;
     }
 
-    public void setModuleSectionUI( ModuleSectionUI moduleSection )
+    public void setModuleSectionUI( ModuleSectionUI voiceAreaUI )
     {
-        this.moduleSection = moduleSection;
+        this.voiceAreaUI = voiceAreaUI;
     }
 
     public Iterator<NomadComponent> getExportableNomadComponents()

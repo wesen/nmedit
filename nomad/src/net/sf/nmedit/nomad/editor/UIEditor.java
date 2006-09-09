@@ -31,8 +31,6 @@ import net.sf.nmedit.nomad.editor.views.classes.NomadClassesView;
 import net.sf.nmedit.nomad.main.action.ThemePluginSelector;
 import net.sf.nmedit.nomad.main.dialog.NomadTaskDialog;
 import net.sf.nmedit.nomad.main.dialog.TaskModel;
-import net.sf.nmedit.nomad.patch.ui.ModuleUI;
-import net.sf.nmedit.nomad.theme.UIFactory;
 import net.sf.nmedit.nomad.theme.plugin.ThemePluginProvider;
 import net.sf.nmedit.nomad.util.NomadUtilities;
 
@@ -68,7 +66,7 @@ public class UIEditor extends JFrame implements ListSelectionListener {
 		// components
 		
 		classesView = new NomadClassesView();
-		classesView.setFactory(env.getFactory());
+		classesView.setFactory(env.getTheme());
 
 		workspace = new WorkspacePanel();
 		workspace.setSize(new Dimension(250,400));
@@ -127,7 +125,7 @@ public class UIEditor extends JFrame implements ListSelectionListener {
 						"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
 						"<!DOCTYPE theme SYSTEM \"theme-v10.dtd\">"
 					);
-					env.getBuilder().exportDom(xml);			
+					env.getTheme().getDom().exportDocument(xml);			
 					xml.flush();
 					xml.close();
 				} catch (FileNotFoundException e) {
@@ -168,8 +166,8 @@ public class UIEditor extends JFrame implements ListSelectionListener {
         
         if (module!=null)
         {
-            JComponent c = env.getBuilder().compose(module);
-            ceView = new ComponentEditorView(env.getFactory().configuration, c);
+            JComponent c = env.getTheme().buildModule(module);
+            ceView = new ComponentEditorView(env.getTheme().getThemeConfiguration(), c);
             workspace.add(ceView);
             ceView.setPreferredSize(c.getSize());
             ceView.setSize(c.getSize());
@@ -197,8 +195,8 @@ public class UIEditor extends JFrame implements ListSelectionListener {
 	void changeTheme(final ThemePluginProvider plugin) {
 		DModule current = getModule();
 		setModule(null);
-		env.setFactory((UIFactory) plugin.getFactory());
-		classesView.setFactory(env.getFactory());
+		env.setFactory(plugin.getFactory());
+		classesView.setFactory(env.getTheme());
 		//propertyEditor.setEditingPropertySet(null,null);
 		setModule(current);
 	}

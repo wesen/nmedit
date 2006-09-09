@@ -38,7 +38,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.TransferHandler;
 
-import net.sf.nmedit.nomad.theme.UIFactory;
+import net.sf.nmedit.nomad.theme.NMTheme;
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
 
 
@@ -178,13 +178,13 @@ public class NomadClassesView extends JPanel {
 	 * TODO uninstall factory + update table
 	 * @param theUIFactory
 	 */
-	public void setFactory(UIFactory theUIFactory) {
+	public void setFactory(NMTheme theUIFactory) {
 		
 		if (theUIFactory==null) return;
 		
 		listItemList.clear();
 		//this.factory = theUIFactory;		
-		Class[] classList = theUIFactory.getInstalledClasses();
+		Class[] classList = theUIFactory.getClassList();
 		for (int i=0;i<classList.length;i++)
 			registerNomadComponentClass(classList[i]);
 	}

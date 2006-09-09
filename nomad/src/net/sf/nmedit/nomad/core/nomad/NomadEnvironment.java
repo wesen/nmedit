@@ -33,8 +33,7 @@ import net.sf.nmedit.nomad.core.application.ApplicationInstantiationException;
 import net.sf.nmedit.nomad.core.application.Logger;
 import net.sf.nmedit.nomad.core.application.ProgressMeter;
 import net.sf.nmedit.nomad.main.designer.Designer;
-import net.sf.nmedit.nomad.theme.ModuleBuilder;
-import net.sf.nmedit.nomad.theme.UIFactory;
+import net.sf.nmedit.nomad.theme.NMTheme;
 import net.sf.nmedit.nomad.theme.plugin.ThemePluginManager;
 import net.sf.nmedit.nomad.util.graphics.ImageTracker;
 
@@ -45,11 +44,7 @@ public abstract class NomadEnvironment extends Application
 
     private ImageTracker       imageTracker;
 
-    private UIFactory          factory;/*
-
-    private ModuleToolbar      moduleToolbar;*/
-
-    private ModuleBuilder      builder;
+    private NMTheme theme ;
 
     private boolean            cachingEnabled;
 
@@ -67,9 +62,7 @@ public abstract class NomadEnvironment extends Application
         
         setProperty( KEY_CUSTOM_PROPERTIES, "conf/properties.xml" );
         this.imageTracker = null;
-        this.factory = null;/*
-        this.moduleToolbar = null;*/
-        this.builder = null;
+        this.theme = null;
         this.cachingEnabled =  false;
     }
 
@@ -97,9 +90,6 @@ public abstract class NomadEnvironment extends Application
 
         progress.increment( "Modules" );
         loadModuleDefinitions();
-
-        progress.increment( "Module builder" );
-        loadDefaultBuilder();
 
         progress.increment( "Themes" );
         loadDefaultFactory();
@@ -132,20 +122,10 @@ public abstract class NomadEnvironment extends Application
         return imageTracker;
     }
 
-    public ModuleBuilder getBuilder()
+    public NMTheme getTheme()
     {
-        return builder;
+        return theme;
     }
-
-    public UIFactory getFactory()
-    {
-        return factory;
-    }
-/*
-    public ModuleToolbar getToolbar()
-    {
-        return moduleToolbar;
-    }*/
 
     public void loadModuleDefinitions()
     {
@@ -212,22 +192,15 @@ public abstract class NomadEnvironment extends Application
         //DConnector.setImageTracker( imageTracker );
     }
 
-    public void setFactory( UIFactory factory )
+    public void setFactory( NMTheme theme )
     {
-        this.factory = factory;
-        factory.getImageTracker().addFrom( imageTracker );
-        builder.setUIFactory( factory );
+        this.theme = theme;
+        theme.getImageTracker().addFrom( imageTracker );
     }
 
     public void loadDefaultFactory()
     {
         setFactory( ThemePluginManager.getDefaultUIFactory() );
     }
-
-    public void loadDefaultBuilder()
-    {
-        builder = new ModuleBuilder( this );
-    }
-
 
 }

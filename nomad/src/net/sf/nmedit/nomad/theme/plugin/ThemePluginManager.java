@@ -6,7 +6,7 @@ import java.util.List;
 
 import sun.misc.Service;
 
-import net.sf.nmedit.nomad.theme.UIFactory;
+import net.sf.nmedit.nomad.theme.NMTheme;
 
 
 /**
@@ -73,7 +73,7 @@ public class ThemePluginManager
 	 * Returns the default UIFactory instance.
 	 * @return the default UIFactory instance.
 	 */
-	public static UIFactory getDefaultUIFactory() 
+	public static NMTheme getDefaultUIFactory() 
     {
         ThemePluginProvider p = getDefaultProvider();
         return p.getFactory();

@@ -6,7 +6,7 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.VoiceArea;
 import net.sf.nmedit.nomad.main.background.Background;
 import net.sf.nmedit.nomad.main.background.BackgroundFactory;
 import net.sf.nmedit.nomad.patch.ui.ModuleSectionUI;
-import net.sf.nmedit.nomad.theme.UIFactory;
+import net.sf.nmedit.nomad.theme.NMTheme;
 import net.sf.nmedit.nomad.theme.component.ADDisplay;
 import net.sf.nmedit.nomad.theme.component.ADSRDisplay;
 import net.sf.nmedit.nomad.theme.component.ADSRModDisplay;
@@ -26,39 +26,36 @@ import net.sf.nmedit.nomad.theme.component.NoteVelScaleDisplay;
 import net.sf.nmedit.nomad.theme.component.Slider;
 import net.sf.nmedit.nomad.theme.component.VocoderBandDisplay;
 import net.sf.nmedit.nomad.theme.component.WaveWrapDisp;
-import net.sf.nmedit.nomad.theme.xml.dom.ThemeNode;
 
 
-public class ClassicThemeFactory extends UIFactory {
-	public ClassicThemeFactory() {
-		installClass(NomadActiveLabel.class,"display.text");
-		installClass(NomadButtonArray.class,"button");
-		installClass(NomadClassicConnector.class,"connector");
-		installClass(NomadClassicKnob.class,"knob");
-		installClass(NomadLabel.class,"label");
-        installClass(NomadResetButton.class,"knob.reset");
-        installClass(Slider.class,"slider");
-		installClass(VocoderBandDisplay.class,"display.vocoder");
-		installClass(NomadVocoderController.class,"display.vocoder.controller");
-		installClass(AudioLevelDisplay.class,"display.audiolevel");
-        installClass(GroupDecoration.class,"border.groupbox");
-        installClass(WaveWrapDisp.class,"WaveWrapDisplay");
-        installClass(ClipDisp.class,"ClipDisplay");
+public class ClassicThemeFactory extends NMTheme 
+{
+	public ClassicThemeFactory() 
+    {
+		putComponentClass(NomadActiveLabel.class,"display.text");
+		putComponentClass(NomadButtonArray.class,"button");
+		putComponentClass(NomadClassicConnector.class,"connector");
+		putComponentClass(NomadClassicKnob.class,"knob");
+		putComponentClass(NomadLabel.class,"label");
+        putComponentClass(NomadResetButton.class,"knob.reset");
+        putComponentClass(Slider.class,"slider");
+		putComponentClass(VocoderBandDisplay.class,"display.vocoder");
+		putComponentClass(NomadVocoderController.class,"display.vocoder.controller");
+		putComponentClass(AudioLevelDisplay.class,"display.audiolevel");
+        putComponentClass(GroupDecoration.class,"border.groupbox");
+        putComponentClass(WaveWrapDisp.class,"WaveWrapDisplay");
+        putComponentClass(ClipDisp.class,"ClipDisplay");
 
-        installClass(ADDisplay.class,"ADDisplay");
-        installClass(AHDDisplay.class,"AHDDisplay");
-        installClass(ADSRModDisplay.class,"ADSRModDisplay");
-        installClass(ADSRDisplay.class,"ADSRDisplay");
-        installClass(LFODisplay.class,"LFODisplay");
+        putComponentClass(ADDisplay.class,"ADDisplay");
+        putComponentClass(AHDDisplay.class,"AHDDisplay");
+        putComponentClass(ADSRModDisplay.class,"ADSRModDisplay");
+        putComponentClass(ADSRDisplay.class,"ADSRDisplay");
+        putComponentClass(LFODisplay.class,"LFODisplay");
         
-        installClass(NoteVelScaleDisplay.class,"NoteVelScaleDisplay");
+        putComponentClass(NoteVelScaleDisplay.class,"NoteVelScaleDisplay");
+        
+        init();
 	}
-    
-    /*
-	public ModuleUI getModuleGUI(DModule info) {
-		ModuleUI gui = super.getModuleGUI(info);
-		return gui;
-	}*/
 
     private Background classicBackground = null;
     
@@ -75,11 +72,10 @@ public class ClassicThemeFactory extends UIFactory {
         msui.setOpaque(true);
         return msui;
 	}
-
-    @Override
-    public ThemeNode getThemeSetup()
+    
+    public void init()
     {
-        return loadThemeSetup("/RESOURCE/xml/theme.xml");
+        init("/RESOURCE/xml/theme.xml");
     }
 	
 }

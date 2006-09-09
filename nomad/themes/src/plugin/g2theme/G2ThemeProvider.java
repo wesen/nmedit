@@ -22,7 +22,7 @@
  */
 package plugin.g2theme;
 
-import net.sf.nmedit.nomad.theme.UIFactory;
+import net.sf.nmedit.nomad.theme.NMTheme;
 import net.sf.nmedit.nomad.theme.plugin.ThemePluginProvider;
 
 public class G2ThemeProvider extends ThemePluginProvider
@@ -44,7 +44,7 @@ public class G2ThemeProvider extends ThemePluginProvider
         return "Theme of the official G2 editor.";
     }
 
-    public UIFactory getFactory() {
+    public NMTheme getFactory() {
         return new G2ThemeFactory();
     }
 

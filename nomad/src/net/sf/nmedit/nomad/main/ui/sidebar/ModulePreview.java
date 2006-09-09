@@ -30,7 +30,7 @@ import java.awt.image.BufferedImage;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 import net.sf.nmedit.nomad.patch.ui.ModuleUI;
-import net.sf.nmedit.nomad.theme.ModuleBuilder;
+import net.sf.nmedit.nomad.theme.NMTheme;
 import net.sf.nmedit.nomad.util.graphics.GraphicsToolkit;
 
 public class ModulePreview extends ImagePreview
@@ -50,11 +50,11 @@ public class ModulePreview extends ImagePreview
 
             BufferedImage image = null;
             
-            ModuleBuilder builder = NomadEnvironment.sharedInstance().getBuilder();
+            NMTheme builder = NomadEnvironment.sharedInstance().getTheme();
             ModuleUI ui = null;
             if (builder != null) 
             {
-                ui = builder.compose(module, null);
+                ui = builder.buildModule(module);
                 if (ui!=null) 
                 {
                     ui.setMinimumSize(ui.getSize());
