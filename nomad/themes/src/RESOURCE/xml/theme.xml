@@ -917,8 +917,8 @@
       <property name="location" value="211,26" />
     </component>
     <component name="ClipDisplay">
-      <property name="parameterspec" value="61.1.p.clip" />
-      <property name="parameter#1" value="61.2.p.sym" />
+      <property name="clip" value="61.1.p.clip" />
+      <property name="symmetric" value="61.2.p.sym" />
       <property name="size" value="38,38" />
       <property name="location" value="156,4" />
     </component>
@@ -2746,9 +2746,9 @@
       <property name="location" value="162,3" />
     </component>
     <component name="NoteVelScaleDisplay">
-      <property name="parameter#2" value="115.2.p.breakpoint" />
-      <property name="parameterspec" value="115.3.p.right gain" />
-      <property name="parameter#1" value="115.1.p.left gain" />
+      <property name="breakpoint" value="115.2.p.breakpoint" />
+      <property name="rgain" value="115.3.p.right gain" />
+      <property name="lgain" value="115.1.p.left gain" />
       <property name="size" value="54,28" />
       <property name="location" value="196,4" />
     </component>
@@ -3460,7 +3460,7 @@
       <property name="location" value="211,26" />
     </component>
     <component name="WaveWrapDisplay">
-      <property name="parameterspec" value="74.1.p.wrap" />
+      <property name="wavewrap" value="74.1.p.wrap" />
       <property name="size" value="38,38" />
       <property name="location" value="156,4" />
     </component>
