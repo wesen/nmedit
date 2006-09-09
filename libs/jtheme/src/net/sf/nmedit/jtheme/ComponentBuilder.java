@@ -56,6 +56,12 @@ public class ComponentBuilder
             Property p = getThemeConfiguration().getProperty(
                     component.getClass(), propertyNode.getPropertyName() );
 
+            if (p == null)
+                throw new RuntimeException(
+                 "property <"+propertyNode.getPropertyName()+"> not found in class "+
+                 component.getClass()
+                );
+            
             if (value==null)
             {   
                 ValueType<?> type = getThemeConfiguration()
@@ -66,7 +72,18 @@ public class ComponentBuilder
                       "type found for "+p.getPropertyClass()      
                     );
 
-                value = type.fromString(propertyNode.getPropertyValue());
+                try
+                {
+                    value = type.fromString(propertyNode.getPropertyValue());
+                }
+                catch (RuntimeException e)
+                {
+                    throw new RuntimeException(
+                    "could not convert property "+
+                    propertyNode.getPropertyName()+"=<"+
+                    propertyNode.getPropertyValue()+"> in class "+
+                    component.getClass() , e);
+                }
                 propertyNode.setUserObject(value);
             }
 
