@@ -214,7 +214,8 @@ public class NomadUtilities {
 		rect.width	+= enlargement3;
 		rect.height	+= enlargement3;
 	}
-
+/*
+ * USE SwingUtilities
 	public static void intersect(Rectangle rect, int width, int height)
 	{
 		intersect(rect, 0, 0, width, height);
@@ -252,7 +253,7 @@ public class NomadUtilities {
         int b = Math.max(rect.y+rect.height, y+h); // bottom+1
         rect.setBounds(l, t, r-l, b-t);
     }
-    
+    */
 	public static void setupAndShow(JFrame frame, double dw, double dh) {
 	    Dimension screensz  = Toolkit.getDefaultToolkit().getScreenSize();
 	    setupAndShow(frame, new Dimension((int)(screensz.width*dw), (int)(screensz.height*dh)));
