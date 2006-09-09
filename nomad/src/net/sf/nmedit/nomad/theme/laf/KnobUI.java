@@ -447,13 +447,13 @@ public class KnobUI extends ComponentUI
                 
                 if (!setMorph)
                 {
-                    int dragValue = startValue + (delta/3);
+                    int dragValue = startValue + (delta/2);
                     dragValue = Math.max(knob.getMinValue(), Math.min(dragValue, knob.getMaxValue()));
                     knob.setValue(dragValue);
                 }
                 else
                 {
-                    double dragValue = startMorph+(delta/3)/(double)knob.getRange();
+                    double dragValue = startMorph+(delta/2)/(double)knob.getRange();
                     double dragValueAbs = dragValue*knob.getRange()+knob.getValue();
                     dragValueAbs = Math.max(knob.getMinValue(), Math.min(dragValueAbs, knob.getMaxValue()));
                     dragValue = (dragValueAbs-knob.getValue())/knob.getRange();

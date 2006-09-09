@@ -7,6 +7,8 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
+import net.sf.nmedit.jtheme.PropertyName;
 
 /* Copyright (C) 2006 Christian Schneider
  * 
@@ -99,20 +101,32 @@ public class ClipDisp extends NomadDisplay implements ParameterListener
     public final static String ICLIP = "parameter#0";
     public final static String ISYM = "parameter#1";
 
+    @PropertyName(name="symmetric")
+    public void setSymmetricParameterSpec(DParameter p)
+    {   setParameterInfo(ISYM, p); }
+
+    @PropertyName(name="symmetric")
+    public DParameter getSymmetricParameterSpec()
+    {   return getParameterInfo(ISYM); }
+    
+    @PropertyName(name="clip")
+    public void setClipParameterSpec(DParameter p)
+    {   setParameterInfo(ICLIP, p); }
+
+    @PropertyName(name="clip")
+    public DParameter getClipParameterSpec()
+    {   return getParameterInfo(ICLIP); }
+
     public void link(Module module) {
         //addValueChangeListener(broadcast);
 
-        symParam = module.getParameter(getParameterInfo(ISYM).getContextId());
-        if (symParam!=null) 
-        {
-            symParam.addParameterListener(this);
-        }
-        
-        clipParam = module.getParameter(getParameterInfo(ICLIP).getContextId());
-        if (clipParam!=null) 
-        {
-            clipParam.addParameterListener(this);
-        }
+        DParameter p;
+        p = getParameterInfo(ISYM);
+        if (p!=null) symParam = module.getParameter(p.getContextId());
+        if (symParam!=null) symParam.addParameterListener(this);
+        p = getParameterInfo(ICLIP);
+        if (p!=null) clipParam = module.getParameter(p.getContextId());
+        if (clipParam!=null) clipParam.addParameterListener(this);
         updateValues();
     }
 

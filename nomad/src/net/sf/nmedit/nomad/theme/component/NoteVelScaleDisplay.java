@@ -30,6 +30,8 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
+import net.sf.nmedit.jtheme.PropertyName;
 
 
 public class NoteVelScaleDisplay extends NomadDisplay implements ParameterListener 
@@ -93,6 +95,26 @@ public class NoteVelScaleDisplay extends NomadDisplay implements ParameterListen
         this.vrGain = bounded(v);
         repaint();
     }
+
+    @PropertyName(name="lgain")
+    public void setLeftGainParamSpec(DParameter p)
+    {  setParameterInfo(SLGAIN, p); }
+    @PropertyName(name="rgain")
+    public void setRightGainParamSpec(DParameter p)
+    {  setParameterInfo(SRGAIN, p); }
+    @PropertyName(name="breakpoint")
+    public void setBreakParamSpec(DParameter p)
+    {  setParameterInfo(SBREAK, p); }
+
+    @PropertyName(name="lgain")
+    public DParameter getLeftGainParamSpec()
+    {  return getParameterInfo(SLGAIN); }
+    @PropertyName(name="rgain")
+    public DParameter getRightGainParamSpec()
+    {  return getParameterInfo(SRGAIN); }
+    @PropertyName(name="breakpoint")
+    public DParameter getBreakParamSpec()
+    {  return getParameterInfo(SBREAK); }
 
     public void link(Module module) {
         parLGain = module.getParameter(getParameterInfo(SLGAIN).getContextId());

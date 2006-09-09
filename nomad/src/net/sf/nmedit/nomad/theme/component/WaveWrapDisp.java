@@ -10,6 +10,8 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
+import net.sf.nmedit.jtheme.PropertyName;
 
 /* Copyright (C) 2006 Christian Schneider
  * 
@@ -133,8 +135,19 @@ public class WaveWrapDisp extends NomadDisplay implements ParameterListener
 
     private Parameter parameter = null;
 
+    private final static String WW = "wavewrap";
+
+    @PropertyName(name="wavewrap")
+    public void setWWParameterSpec(DParameter p)
+    { setParameterInfo(WW, p); }
+    @PropertyName(name="wavewrap")
+    public DParameter getWWParameterSpec()
+    { return getParameterInfo(WW); }
+    
     public void link(Module module) {
-        parameter = module.getParameter(getParameterInfo("parameter#0").getContextId());
+        
+        DParameter p = getParameterInfo(WW);
+        if (p!=null) parameter = module.getParameter(p.getContextId());
         if (parameter!=null) {
             setWaveWrapValue( parameter );
             parameter.addParameterListener(this);
