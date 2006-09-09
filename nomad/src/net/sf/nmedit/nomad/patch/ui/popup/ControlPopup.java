@@ -60,7 +60,7 @@ public class ControlPopup extends JPopupMenu
 
     public ControlPopup(NomadControl control)
     {
-        super(control.getParameterInfo().getName());
+        super(control.getParameterInfo("parameter#0").getName());
         //this.control = control;
         parameter = control.getParameter();
         module = parameter.getModule();
