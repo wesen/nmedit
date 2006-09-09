@@ -36,12 +36,18 @@ import net.sf.nmedit.jnmprotocol.RequestPatchMessage;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Format;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Morph;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.EventListener;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ModuleEvent;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterEvent;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.VoiceAreaEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.VoiceArea;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.AssignmentChangeListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.HeaderListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ModuleListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.MorphListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.PatchListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.VoiceAreaListener;
 import net.sf.nmedit.jsynth.SynthException;
 
 /**
@@ -55,18 +61,14 @@ public class MessageSender
     private final NordModular device;
     private final Slot slot;
     private Patch patch;
-    private VoiceAreaEventBroadcaster vaBroadcaster;
-    private ModuleEventBroadcaster modBroadcaster;
-    private ParameterEventBroadcaster paBroadcaster;
+    private Broadcast Broadcast;
 
     MessageSender(Slot slot)
     {
         this.slot = slot;
         this.device = slot.getDevice();
         this.patch = null;
-        this.vaBroadcaster = new VoiceAreaEventBroadcaster();
-        this.modBroadcaster = new ModuleEventBroadcaster();
-        this.paBroadcaster = new ParameterEventBroadcaster();
+        this.Broadcast = new Broadcast();
     }
     
     public NordModular getDevice()
@@ -85,41 +87,17 @@ public class MessageSender
         if (patch == null) throw new NullPointerException("patch");
         this.patch = patch;
 
-        for (Module m : patch.getPolyVoiceArea()) 
-            installListeners(m);
-        for (Module m : patch.getCommonVoiceArea())
-            installListeners(m);
-        patch.getPolyVoiceArea().addListener(vaBroadcaster);
-        patch.getCommonVoiceArea().addListener(vaBroadcaster);
+        Broadcast.install(patch);
     }
 
     public void uninstall()
     {
         if (!isInstalled()) throw new IllegalStateException(getClass().getSimpleName()+" has not installed");
 
-        for (Module m : patch.getPolyVoiceArea())
-            uninstallListeners(m);
-        for (Module m : patch.getCommonVoiceArea())
-            uninstallListeners(m);
-        patch.getPolyVoiceArea().removeListener(vaBroadcaster);
-        patch.getCommonVoiceArea().removeListener(vaBroadcaster);
+        Broadcast.uninstall(patch);
         patch = null;
     }
 
-    private void installListeners(Module m)
-    {
-        m.addListener(modBroadcaster);
-        for (int i=m.getParameterCount()-1;i>=0;i--)
-            m.getParameter(i).addListener(paBroadcaster);
-    }
-    
-    private void uninstallListeners(Module m)
-    {
-        m.removeListener(modBroadcaster);
-        for (int i=m.getParameterCount()-1;i>=0;i--)
-            m.getParameter(i).removeListener(paBroadcaster);
-    }
-    
     private MidiMessage createMessage(Class<? extends MidiMessage> messageClass)
     {
         try
@@ -204,7 +182,7 @@ public class MessageSender
         send(msg);
     }
     
-    private void sendNewModule( VoiceAreaEvent event )
+    private void sendNewModule( Module module )
     {
         // if (false) return ; // do not send message at the moment
         
@@ -223,12 +201,8 @@ public class MessageSender
         if (msg == null) return;
 
         // get data
-        Module module = event.getModule();
         int section = Format.getVoiceAreaID(module.getVoiceArea().isPolyVoiceArea());
         
-        // install listeners
-        installListeners(module);
-
         // set data
         try
         {
@@ -281,18 +255,14 @@ public class MessageSender
         return sb.toString();
     }
 
-    private void sendDeleteModule( VoiceAreaEvent event )
+    private void sendDeleteModule( Module module )
     {
         // get message instance
         DeleteModuleMessage msg = (DeleteModuleMessage) createMessage(DeleteModuleMessage.class);
         if (msg == null) return;
 
         // get data
-        Module module = event.getModule();
         int section = Format.getVoiceAreaID(module.getVoiceArea().isPolyVoiceArea());
-        
-        // uninstall listeners
-        uninstallListeners(module);
         
         // set data
         msg.deleteModule
@@ -305,16 +275,16 @@ public class MessageSender
         send(msg);
     }
 
-    private void sendDeleteCable( VoiceAreaEvent event )
+    private void sendDeleteCable( VoiceArea va, Connector a, Connector b )
     {
         // get message instance
         DeleteCableMessage msg = (DeleteCableMessage) createMessage(DeleteCableMessage.class);
         if (msg == null) return;
 
         // get data
-        Connector src = event.getSrc();
-        Connector dst = event.getDst();
-        int section = Format.getVoiceAreaID(event.getVoiceArea().isPolyVoiceArea());
+        Connector src = a;
+        Connector dst = b;
+        int section = Format.getVoiceAreaID(va.isPolyVoiceArea());
 
         // set data
         msg.deleteCable
@@ -334,16 +304,16 @@ public class MessageSender
         send(msg);
     }
 
-    private void sendNewCable( VoiceAreaEvent event )
+    private void sendNewCable( VoiceArea va, Connector a, Connector b )
     {
         // get message instance
         NewCableMessage msg = (NewCableMessage) createMessage(NewCableMessage.class);
         if (msg == null) return;
 
         // get data
-        Connector src = event.getSrc();
-        Connector dst = event.getDst();
-        int section = Format.getVoiceAreaID(event.getVoiceArea().isPolyVoiceArea());
+        Connector src = a;
+        Connector dst = b;
+        int section = Format.getVoiceAreaID(va.isPolyVoiceArea());
         int color = src.getConnectionColor().getSignalID();
         
         // set data
@@ -365,15 +335,12 @@ public class MessageSender
         send(msg);
     }
 
-    private void sendMovedModule( ModuleEvent event )
+    private void sendMovedModule( Module module )
     {
         // get message instance
         MoveModuleMessage msg = (MoveModuleMessage) createMessage(MoveModuleMessage.class);
         if (msg == null) return;
 
-        // get data
-        Module module = event.getModule();
-        
         // set data
         msg.moveModule
         (
@@ -386,15 +353,14 @@ public class MessageSender
         // send message
         send(msg);
     }
-
-    private void sendParameterChanged( ParameterEvent event )
+    
+    private void sendParameterChanged( Parameter parameter )
     {
         // get message instance
         ParameterMessage msg = (ParameterMessage) createMessage(ParameterMessage.class);
         if (msg == null) return;
 
         // get data
-        Parameter parameter = event.getParameter();
         Module module = parameter.getModule();
         
         // set data
@@ -419,71 +385,193 @@ public class MessageSender
         }
     }
 
-    private class VoiceAreaEventBroadcaster implements EventListener<VoiceAreaEvent>
-    {
-        public void event( VoiceAreaEvent event )
-        {
-            switch (event.getID())
-            {
-                case VoiceAreaEvent.VA_MODULE_ADDED:
-                {
-                    sendNewModule(event);
-                }
-                break;
-                case VoiceAreaEvent.VA_MODULE_REMOVED:
-                {
-                    sendDeleteModule(event);
-                }
-                break;
-                case VoiceAreaEvent.VA_CONNECTED:
-                {
-                    sendNewCable(event);
-                }
-                break;
-                case VoiceAreaEvent.VA_DISCONNECTED:
-                {
-                    sendDeleteCable(event);
-                }
-                break;
-            }
-        }
-    }
-    
-    private class ModuleEventBroadcaster implements EventListener<ModuleEvent>
-    {
-        public void event( ModuleEvent event )
-        {
-            switch (event.getID())
-            {
-                case ModuleEvent.MODULE_MOVED:
-                {
-                    sendMovedModule(event);
-                }                
-                break;
-                /* case ModuleEvent.MODULE_RENAMED:
-                {
-                    sendModuleRenamed(event);
-                }                
-                break; */
-            }
-        }
-    }
-    
-    private class ParameterEventBroadcaster implements EventListener<ParameterEvent> 
+    private class Broadcast implements 
+        HeaderListener, ModuleListener, MorphListener,
+        ParameterListener, PatchListener, VoiceAreaListener,
+        AssignmentChangeListener
     {
 
-        public void event( ParameterEvent event )
+        public void install( Patch patch )
         {
-            switch (event.getID())
+            patch.addPatchListener(this);
+            patch.getHeader().addHeaderListener(this);
+            for (Morph m : patch.getMorphs())
+                m.addMorphListener(this);
+            patch.getMidiControllers().addAssignmentChangeListener(this);
+            patch.getKnobs().addAssignmentChangeListener(this);
+            install(patch.getPolyVoiceArea());
+            install(patch.getCommonVoiceArea());
+        }
+
+        public void uninstall( Patch patch )
+        {
+            patch.removeListener(this);
+            patch.getHeader().removeListener(this);
+            for (Morph m : patch.getMorphs())
+                m.removeMorphListener(this);
+            patch.getMidiControllers().removeAssignmentChangeListener(this);
+            patch.getKnobs().removeAssignmentChangeListener(this);
+            uninstall(patch.getPolyVoiceArea());
+            uninstall(patch.getCommonVoiceArea());
+        }
+
+        private void install( VoiceArea va )
+        {
+            va.addVoiceAreaListener(this);
+            for (Module m : va)
+                install(m);
+        }
+
+        private void uninstall( VoiceArea va )
+        {
+            va.removeVoiceAreaListener(this);
+            for (Module m : va)
+                uninstall(m);
+        }
+        
+        private void install( Module m )
+        {
+            m.addModuleListener(this);
+            for (int i=0;i<m.getParameterCount();i++)
+                m.getParameter(i).addParameterListener(this);
+            for (int i=0;i<m.getCustomCount();i++)
+                m.getParameter(i).addParameterListener(this);
+        }
+
+        private void uninstall( Module m )
+        {
+            m.removeModuleListener(this);
+            for (int i=0;i<m.getParameterCount();i++)
+                m.getParameter(i).removeParameterListener(this);
+            for (int i=0;i<m.getCustomCount();i++)
+                m.getParameter(i).removeParameterListener(this);
+        }
+
+        /*public void connectorStateChanged( Event e )
+        {
+            history.setChanged(true);
+        }*/
+
+        public void headerValueChanged( Event e )
+        {
+            
+        }
+
+        public void moduleRenamed( Event e )
+        {
+            
+        }
+
+        public void moduleMoved( Event e )
+        {
+            sendMovedModule(e.getModule());
+        }
+
+        public void morphAssigned( Event e )
+        {
+            
+        }
+
+        public void morphDeassigned( Event e )
+        {
+            
+        }
+
+        public void morphKeyboardAssignmentChanged( Event e )
+        {
+            
+        }
+
+        public void morphValueChanged( Event e )
+        {
+            
+        }
+
+        public void parameterValueChanged( Event e )
+        {
+            //FIXME: can be custom param
+            sendParameterChanged(e.getParameter());
+        }
+
+        public void parameterMorphValueChanged( Event e )
+        {
+            
+        }
+
+        public void parameterKnobAssignmentChanged( Event e )
+        {
+            
+        }
+
+        public void parameterMorphAssignmentChanged( Event e )
+        {
+            
+        }
+
+        public void parameterMidiCtrlAssignmentChanged( Event e )
+        {
+
+        }
+
+        public void patchHeaderChanged( Event e )
+        {
+            
+        }
+
+        public void patchPropertyChanged( Event e )
+        {
+            if (Patch.NAME.equals(e.getPropertyName()))
             {
-                case ParameterEvent.PARAMETER_VALUE_CHANGED:
-                {
-                    sendParameterChanged(event);
-                }
-                break;
+                
             }
+            else if (Patch.NOTE.equals(e.getPropertyName()))
+            {
+                
+            }   
+            else
+            {
+                return ;
+            }
+        }
+
+        public void moduleAdded( Event e )
+        {
+            install(e.getModule());
+            sendNewModule(e.getModule());
+        }
+
+        public void moduleRemoved( Event e )
+        {
+            uninstall(e.getModule());
+            sendDeleteModule(e.getModule());
+        }
+
+        public void voiceAreaResized( Event e )
+        {
+            // nothing to send
+        }
+
+        public void cablesAdded( Event e )
+        {
+            sendNewCable(e.getVoiceArea(), e.getConnector1(), e.getConnector2());
+        }
+
+        public void cablesRemoved( Event e )
+        {
+            sendDeleteCable(e.getVoiceArea(), e.getConnector1(), e.getConnector2());
+        }
+
+        public void assignmentChanged( Event e )
+        {
+            
+        }
+
+        public void cableGraphUpdated( Event e )
+        {
+            // TODO Auto-generated method stub
+            
         }
         
     }
-    
+
 }

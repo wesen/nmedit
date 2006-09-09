@@ -31,6 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Receiver;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.jnmprotocol.IAmMessage;
@@ -347,8 +348,32 @@ public class NordModular extends AbstractSynthesizer
                 }
                 catch (MidiException e)
                 {
-                    System.err.println(e.getMessage()+" [ERROR:"+e.getError()+"]");
-                    e.printStackTrace();
+                    // TODO workaround until isFatal is implemented 
+                    //if (e.isFatal())
+                    if (e.getMessage().toLowerCase().contains("timed out"))
+                    {
+                        e.printStackTrace();
+                        try
+                        {
+                            setConnected(false);
+                        }
+                        catch (SynthException se)
+                        {
+                            se.printStackTrace();
+                        }
+                        // TODO better error handling - this does not belong here
+                        SwingUtilities.invokeLater(new Runnable(){
+                            public void run()
+                            {
+                                JOptionPane.showMessageDialog(null, 
+                                   "Communication timed out.",
+                                   "Communication timed out.", 
+                                   JOptionPane.WARNING_MESSAGE
+                                );
+                            }
+                        });
+                    }
+                    // else: don't show this message
                 }
                 catch (Exception e)
                 {
