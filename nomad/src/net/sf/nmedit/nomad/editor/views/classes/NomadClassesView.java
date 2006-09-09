@@ -38,7 +38,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.TransferHandler;
 
-import net.sf.nmedit.nomad.editor.views.visual.VisualEditor;
 import net.sf.nmedit.nomad.theme.UIFactory;
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
 
@@ -113,10 +112,6 @@ public class NomadClassesView extends JPanel {
 	        }
 	    }
 		
-	}
-	
-	public void setComponentDisplayEditor(VisualEditor editor) {
-		//classPreviewList.setDropTarget(editor.getEditorDropTarget());
 	}
 	
 	public void registerNomadComponentClass(Class nomadComponentClass) {

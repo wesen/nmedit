@@ -7,11 +7,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -21,12 +23,11 @@ import javax.swing.event.ListSelectionListener;
 import net.sf.nmedit.jmisc.xml.XMLFileWriter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.ModuleDescriptions;
+import net.sf.nmedit.jtheme.ComponentEditorView;
 import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 import net.sf.nmedit.nomad.editor.views.ModuleListView;
 import net.sf.nmedit.nomad.editor.views.WorkspacePanel;
 import net.sf.nmedit.nomad.editor.views.classes.NomadClassesView;
-import net.sf.nmedit.nomad.editor.views.property.NomadPropertyEditor;
-import net.sf.nmedit.nomad.editor.views.visual.VisualEditor;
 import net.sf.nmedit.nomad.main.action.ThemePluginSelector;
 import net.sf.nmedit.nomad.main.dialog.NomadTaskDialog;
 import net.sf.nmedit.nomad.main.dialog.TaskModel;
@@ -43,11 +44,11 @@ public class UIEditor extends JFrame implements ListSelectionListener {
 	private NomadEnvironment env = null;
 	private WorkspacePanel workspace = null;
 	private NomadClassesView classesView = null;
-	private NomadPropertyEditor propertyEditor = null;
-	private VisualEditor visualEditor = null;
     private DModule modified = null;
     private ThemePluginSelector tps;
     private ModuleListView listView;
+    
+    private ComponentEditorView ceView = null;
 
 	// constructor
 	
@@ -63,24 +64,16 @@ public class UIEditor extends JFrame implements ListSelectionListener {
 		
 		env = NomadEnvironment.sharedInstance();
 		env.setCachingEnabled(false);
-	//	env.loadAll();
-        /* TODO 
-		env.getToolbar().setAllowDragging(false);
-		env.getToolbar().addModuleButtonClickListener(new ModuleButtonClickListener());*/
 
 		// components
 		
 		classesView = new NomadClassesView();
 		classesView.setFactory(env.getFactory());
 
-		propertyEditor = new NomadPropertyEditor(this);
-		propertyEditor.setPreferredSize(new Dimension(200, 100));
-		propertyEditor.setMinimumSize(new Dimension(10, 100));
-
 		workspace = new WorkspacePanel();
 		workspace.setSize(new Dimension(250,400));
 
-		JSplitPane split = new JSplitPane( JSplitPane.VERTICAL_SPLIT, propertyEditor, classesView );
+		JSplitPane split = new JSplitPane( JSplitPane.VERTICAL_SPLIT, new JPanel() /*propertyEditor*/, classesView );
 		split.setDividerLocation(0.5);
 
 		getContentPane().setLayout(new BorderLayout());
@@ -163,8 +156,26 @@ public class UIEditor extends JFrame implements ListSelectionListener {
     	return modified;
     }
     
-    public void setModule(DModule module) {
+    public void setModule(DModule module) 
+    {
     	this.modified = module;
+        
+        if (ceView != null)
+        {
+            ceView.uninstallHook();
+            workspace.remove(ceView);
+        }
+        
+        if (module!=null)
+        {
+            JComponent c = env.getBuilder().compose(module);
+            ceView = new ComponentEditorView(env.getFactory().configuration, c);
+            workspace.add(ceView);
+            ceView.setPreferredSize(c.getSize());
+            ceView.setSize(c.getSize());
+        }
+        
+        /*
 		if (visualEditor!=null) {
 			// write back
 			env.getBuilder().rewriteDOM(visualEditor, visualEditor.getModuleInfo());
@@ -180,6 +191,7 @@ public class UIEditor extends JFrame implements ListSelectionListener {
 			visualEditor.setVisible(true);
 			workspace.add(visualEditor);
 		}
+        */
     }
     
 	void changeTheme(final ThemePluginProvider plugin) {
@@ -187,7 +199,7 @@ public class UIEditor extends JFrame implements ListSelectionListener {
 		setModule(null);
 		env.setFactory((UIFactory) plugin.getFactory());
 		classesView.setFactory(env.getFactory());
-		propertyEditor.setEditingPropertySet(null,null);
+		//propertyEditor.setEditingPropertySet(null,null);
 		setModule(current);
 	}
 
