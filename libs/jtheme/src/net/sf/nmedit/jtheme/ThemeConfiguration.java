@@ -105,9 +105,9 @@ public class ThemeConfiguration
         putValueType(vt.getClassType(), vt);
     }
     
-    public <T> ValueType<T> getValueType(Class<T> t)
+    public ValueType<?> getValueType(Class<?> t)
     {
-        return (ValueType<T>) valueTypes.get(t);
+        return valueTypes.get(t);
     }
 
     public <T> T getProperty(JComponent c, String propertyName)
