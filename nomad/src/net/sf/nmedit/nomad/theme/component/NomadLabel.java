@@ -33,15 +33,6 @@ import javax.swing.plaf.ComponentUI;
 
 import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 import net.sf.nmedit.nomad.theme.laf.LabelUI;
-import net.sf.nmedit.nomad.theme.property.BooleanValue;
-import net.sf.nmedit.nomad.theme.property.FontProperty;
-import net.sf.nmedit.nomad.theme.property.FontValue;
-import net.sf.nmedit.nomad.theme.property.Property;
-import net.sf.nmedit.nomad.theme.property.PropertySet;
-import net.sf.nmedit.nomad.theme.property.Value;
-import net.sf.nmedit.nomad.theme.property.editor.CheckBoxEditor;
-import net.sf.nmedit.nomad.theme.property.editor.Editor;
-import net.sf.nmedit.nomad.theme.property.editor.TextEditor;
 import net.sf.nmedit.nomad.util.NomadUtilities;
 
 
@@ -144,166 +135,12 @@ public class NomadLabel extends NomadComponent
     {
         return flagVertText;
     }
-    
-    public void registerProperties( PropertySet set )
+
+    public boolean getVertical()
     {
-        super.registerProperties( set );
-        set.add( new LabelTextProperty() );
-        set.add( new VerticalTextProperty() );
-        set.add( new LabelFontProperty() );
+        return isVertical();
     }
     
-    private static class LabelTextProperty extends Property
-    {
-
-        public LabelTextProperty()
-        {
-            super( "text" );
-        }
-
-        @Override
-        public Value decode( String value )
-        {
-            return new LabelTextValue( this, value );
-        }
-
-        @Override
-        public Value encode( NomadComponent component )
-        {
-            return new LabelTextValue( this, ( (NomadLabel) component )
-                    .getText() );
-        }
-
-        @Override
-        public Editor newEditor( NomadComponent component )
-        {
-            return new TextEditor( this, component );
-        }
-    }
-
-    private static class LabelTextValue extends Value
-    {
-
-        public LabelTextValue( Property property, String representation )
-        {
-            super( property, representation );
-        }
-
-        public void assignTo( NomadComponent component )
-        {
-            ( (NomadLabel) component ).setText( getRepresentation() );
-        }
-
-    }
-
-    private static class VerticalTextProperty extends Property
-    {
-
-        public VerticalTextProperty()
-        {
-            super( "vertical" );
-        }
-
-        @Override
-        public Value decode( String value )
-        {
-            return new VerticalTextValue( this, value );
-        }
-
-        @Override
-        public Value encode( NomadComponent component )
-        {
-            return new VerticalTextValue( this, ( (NomadLabel) component )
-                    .isVertical() );
-        }
-
-        @Override
-        public Editor newEditor( NomadComponent component )
-        {
-            CheckBoxEditor editor = new CheckBoxEditor( this, component );
-            editor.setCheckedValue( new VerticalTextValue(
-                    VerticalTextProperty.this, true ) );
-            editor.setUncheckedValue( new VerticalTextValue(
-                    VerticalTextProperty.this, false ) );
-            editor.setSelected( ( (NomadLabel) component ).isVertical() );
-            return editor;
-        }
-    }
-
-    private static class VerticalTextValue extends BooleanValue
-    {
-        public VerticalTextValue( Property property, boolean value )
-        {
-            super( property, value );
-            setDefaultState( getBooleanValue() == DEFAULT_VERTICAL );
-        }
-
-        public VerticalTextValue( Property property, String representation )
-        {
-            super( property, representation );
-            setDefaultState( getBooleanValue() == DEFAULT_VERTICAL );
-        }
-
-        public void assignTo( NomadComponent component )
-        {
-            ( (NomadLabel) component ).setVertical( getBooleanValue() );
-        }
-    }
-
-    private static class LabelFontProperty extends FontProperty
-    {
-
-        public LabelFontProperty()
-        {
-            super( "font" );
-        }
-
-        @Override
-        public FontValue encodeFont( Font font )
-        {
-            return new LabelFont( this, font );
-        }
-
-        @Override
-        public FontValue encodeFont( NomadComponent component )
-        {
-            return new LabelFont( this, component.getFont() );
-        }
-
-        @Override
-        public FontValue decodeFont( String value )
-        {
-            return new LabelFont( this, value );
-        }
-    }
-
-    private static class LabelFont extends FontValue
-    {
-        public LabelFont( Property property, Font font )
-        {
-            super( property, font );
-            setDefaultState( getFontValue() == NomadLabel.defaultLabelFont ); // TODO
-            // wrong,
-            // compare
-            // representation
-            // instead
-        }
-
-        public LabelFont( Property property, String representation )
-        {
-            super( property, representation );
-            setDefaultState( getFontValue() == NomadLabel.defaultLabelFont );
-        }
-
-        @Override
-        public void assignTo( NomadComponent component )
-        {
-            component.setFont( getFontValue() );
-            ( (NomadLabel) component ).fireTextUpdateEvent();
-        }
-
-    }
-
     public static Rectangle getStringBounds( JComponent component, String string )
     {
         return getStringBounds( component, string, component.getFont() );

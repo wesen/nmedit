@@ -33,7 +33,6 @@ import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 import net.sf.nmedit.nomad.patch.ui.ModuleSectionUI;
 import net.sf.nmedit.nomad.patch.ui.ModuleUI;
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
-import net.sf.nmedit.nomad.theme.property.PropertyUtils;
 import net.sf.nmedit.nomad.theme.xml.dom.ComponentNode;
 import net.sf.nmedit.nomad.theme.xml.dom.ModuleNode;
 import net.sf.nmedit.nomad.theme.xml.dom.ThemeNode;
@@ -84,9 +83,8 @@ public class ModuleBuilder
 
                 node.addComponentNode( compNode );
 
-                PropertyUtils.exportToDOM( compNode,
-                        uifactory.getProperties( comp ), comp );
-                compNode.compileProperties(uifactory);
+                /* FIXME:
+                PropertyUtils.exportToDOM( compNode,  uifactory.getProperties( comp ), comp ); */
             }
         }
     }
@@ -111,14 +109,11 @@ public class ModuleBuilder
                 // 'knob'
                 out.beginTagFinish( true );
 
-                for (int i = 0; i < compNode.getPropertyCount(); i++)
+                for (String name : compNode)
                 {
-                    String property = compNode.getPropertyName( i );
                     out.beginTagStart( "property" );
-                    out.addAttribute( "name", property );
-                    out
-                            .addAttribute( "value", compNode
-                                    .getProperty( property ) );
+                    out.addAttribute( "name", name );
+                    out.addAttribute( "value", compNode.getProperty( name ) );
                     out.beginTagFinish( false );
                 }
 
@@ -199,7 +194,8 @@ public class ModuleBuilder
                         .newComponentInstanceByClass( compClass );
 
                 // setup component
-                compNode.assignProperties( comp );
+                
+                compNode.assignProperties( this.uifactory, comp );
                 modulePane.add( comp );
             }
         }

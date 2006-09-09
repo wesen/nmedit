@@ -11,8 +11,6 @@ import javax.swing.border.Border;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
-import net.sf.nmedit.nomad.theme.property.ParameterProperty;
-import net.sf.nmedit.nomad.theme.property.PropertySet;
 import net.sf.nmedit.nomad.util.graphics.BackgroundRenderer;
 import net.sf.nmedit.nomad.util.graphics.LCDBackgroundRenderer;
 
@@ -52,15 +50,47 @@ public class VocoderBandDisplay extends NomadComponent {
 		paramLink = new VocoderParameterLink(this);
 	}
 
-	public void registerProperties(PropertySet set) {
-		super.registerProperties(set);
-		for (int i=0;i<NUM_BANDS;i++)
-			set.add(new ParameterProperty(i));
-	}
-	
-	public DParameter getDefinition(int band) {
-		return getParameterInfo("parameter#"+band);
-	}
+    public DParameter getBand1Spec() { return getDefinition(0); }
+    public DParameter getBand2Spec() { return getDefinition(1); }
+    public DParameter getBand3Spec() { return getDefinition(2); }
+    public DParameter getBand4Spec() { return getDefinition(3); }
+    public DParameter getBand5Spec() { return getDefinition(4); }
+    public DParameter getBand6Spec() { return getDefinition(5); }
+    public DParameter getBand7Spec() { return getDefinition(6); }
+    public DParameter getBand8Spec() { return getDefinition(7); }
+    public DParameter getBand9Spec() { return getDefinition(8); }
+    public DParameter getBand10Spec() { return getDefinition(9); }
+    public DParameter getBand11Spec() { return getDefinition(10); }
+    public DParameter getBand12Spec() { return getDefinition(11); }
+    public DParameter getBand13Spec() { return getDefinition(12); }
+    public DParameter getBand14Spec() { return getDefinition(13); }
+    public DParameter getBand15Spec() { return getDefinition(14); }
+    public DParameter getBand16Spec() { return getDefinition(15); }
+
+    public void setBand1Spec(DParameter p) {   setDefinition(0,p); }
+    public void setBand2Spec(DParameter p) {   setDefinition(1,p); }
+    public void setBand3Spec(DParameter p) {   setDefinition(2,p); }
+    public void setBand4Spec(DParameter p) {   setDefinition(3,p); }
+    public void setBand5Spec(DParameter p) {   setDefinition(4,p); }
+    public void setBand6Spec(DParameter p) {   setDefinition(5,p); }
+    public void setBand7Spec(DParameter p) {   setDefinition(6,p); }
+    public void setBand8Spec(DParameter p) {   setDefinition(7,p); }
+    public void setBand9Spec(DParameter p) {   setDefinition(8,p); }
+    public void setBand10Spec(DParameter p) {   setDefinition(9,p); }
+    public void setBand11Spec(DParameter p) {   setDefinition(10,p); }
+    public void setBand12Spec(DParameter p) {   setDefinition(11,p); }
+    public void setBand13Spec(DParameter p) {   setDefinition(12,p); }
+    public void setBand14Spec(DParameter p) {   setDefinition(13,p); }
+    public void setBand15Spec(DParameter p) {   setDefinition(14,p); }
+    public void setBand16Spec(DParameter p) {   setDefinition(15,p); }
+    
+    public DParameter getDefinition(int band) {
+        return getParameterInfo("parameter#"+band);
+    }
+
+    public void setDefinition(int band, DParameter p) {
+        setParameterInfo("parameter#"+band, p);
+    }
 	
 	public void setBackgroundRenderer(BackgroundRenderer renderer) {
 		if (this.renderer!=renderer) {

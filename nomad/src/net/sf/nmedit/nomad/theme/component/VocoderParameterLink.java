@@ -47,31 +47,36 @@ public class VocoderParameterLink implements ParameterListener {
 		return vbd;
 	}
 
-	public DParameter getParameterInfo(int band) {
-		return getVocoderBandDisplay().getDefinition(band);
-	}
-	
+    public DParameter getParameterInfo(int band) { return getVocoderBandDisplay().getDefinition(band); }
+
 	public void link() {
 		linkedModule = getVocoderBandDisplay().getModule();
 		if (linkedModule!=null) {
 			for (int i=VocoderBandDisplay.NUM_BANDS-1;i>=0;i--) {
-				pbands[i] = linkedModule.getParameter(getParameterInfo(i).getContextId());
-				if (pbands[i]!=null) {
-					getVocoderBandDisplay().setBand(i, pbands[i].getValue());
-					pbands[i].addParameterListener(this);
-					getVocoderBandDisplay().addBandChangeListener(broadcast);
-				}
+                DParameter p = getParameterInfo(i);
+                if (p!=null)
+                {
+    				pbands[i] = linkedModule.getParameter(p.getContextId());
+    				if (pbands[i]!=null) {
+    					getVocoderBandDisplay().setBand(i, pbands[i].getValue());
+    					pbands[i].addParameterListener(this);
+    				}
+                }
 			}
+            getVocoderBandDisplay().addBandChangeListener(broadcast);
 		}
 	}
 
 	public void unlink() {
 		if (linkedModule!=null) {
 			for (int i=VocoderBandDisplay.NUM_BANDS-1;i>=0;i--) {
-				pbands[i].removeParameterListener(this);
-				pbands[i] = null;
-				getVocoderBandDisplay().removeBandChangeListener(broadcast);
+                if (pbands[i]!=null)
+                {
+                    pbands[i].removeParameterListener(this);
+				    pbands[i] = null;
+                }
 			}
+            getVocoderBandDisplay().removeBandChangeListener(broadcast);
 		}
 	}
 

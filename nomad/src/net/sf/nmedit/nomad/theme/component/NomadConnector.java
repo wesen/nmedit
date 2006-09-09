@@ -31,8 +31,6 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DConnector;
 import net.sf.nmedit.nomad.patch.ui.ModuleUI;
 import net.sf.nmedit.nomad.theme.NomadClassicColors;
-import net.sf.nmedit.nomad.theme.property.ConnectorProperty;
-import net.sf.nmedit.nomad.theme.property.PropertySet;
 
 
 public class NomadConnector extends NomadComponent implements ConnectorListener {
@@ -68,13 +66,8 @@ public class NomadConnector extends NomadComponent implements ConnectorListener 
         
         super.processMouseEvent(event);
     }
-    
-	public void registerProperties(PropertySet set) {
-		super.registerProperties(set);
-		set.add(new ConnectorProperty());
-	}
-	
-	public void setConnectorInfo(DConnector connectorInfo) {
+
+	public void setConnectorSpec(DConnector connectorInfo) {
 		this.connectorInfo = connectorInfo;
 		if (connectorInfo!=null) {
 			setConnectorType(connectorInfo.isInput(), false);
@@ -82,7 +75,7 @@ public class NomadConnector extends NomadComponent implements ConnectorListener 
 		}
 	}
 	
-	public DConnector getConnectorInfo() {
+	public DConnector getConnectorSpec() {
 		return connectorInfo;
 	}
 	
@@ -120,7 +113,8 @@ public class NomadConnector extends NomadComponent implements ConnectorListener 
 	}
 
 	public void link(Module module) {
-		connector = module.getConnector(connectorInfo.getContextId());
+        if (connectorInfo!=null)
+            connector = module.getConnector(connectorInfo.getContextId());
 		if (connector!=null) {
 			this.setConnectedState(connector.isConnected());
             connector.setUI(this);

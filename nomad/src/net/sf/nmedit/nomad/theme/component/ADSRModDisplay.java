@@ -22,71 +22,10 @@
  */
 package net.sf.nmedit.nomad.theme.component;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
-import net.sf.nmedit.nomad.theme.property.ParameterProperty;
-import net.sf.nmedit.nomad.theme.property.PropertySet;
-
 public class ADSRModDisplay extends ADDisplay
 {
-
     public ADSRModDisplay()
     {
         configureADSR();
     }
-    private Parameter parS = null;
-    private Parameter parR = null;
-    private Parameter parInv = null;
-
-    public final static String IS = "parameter#2";
-    public final static String IR = "parameter#3";
-    public final static String IINV = "parameter#4";
-    
-    public void registerProperties(PropertySet set) {
-        super.registerProperties(set);
-        set.add(new ParameterProperty(2));
-        set.add(new ParameterProperty(3));
-        set.add(new ParameterProperty(4));
-    }
-
-    public void link(Module module) 
-    {
-        parS = module.getParameter(getParameterInfo(IS).getContextId());
-        if (parS!=null) parS.addParameterListener(this);
-        parR = module.getParameter(getParameterInfo(IR).getContextId());
-        if (parR!=null) parR.addParameterListener(this);
-        parInv = module.getParameter(getParameterInfo(IINV).getContextId());
-        if (parInv!=null) parInv.addParameterListener(this);
-        super.link(module);
-    }
-
-    public void unlink() {
-        if (parS!=null) parS.removeParameterListener(this);
-        if (parR!=null) parR.removeParameterListener(this);
-        if (parInv!=null) parInv.removeParameterListener(this);
-        parS = null;
-        parR = null;
-        parInv = null;
-        super.unlink();
-    }
-
-    public void parameterValueChanged( Event e )
-    {
-        super.parameterValueChanged(e);
-        Parameter p = e.getParameter();
-        if (parS==p) setSustain(getDoubleValue(p));
-        else if (parR==p) setRelease(getDoubleValue(p));
-        else if (parInv==p) setInverse(parInv.getValue()==1);
-    }
-
-    protected void updateValues()
-    {
-        if (parS!=null) setSustain(getDoubleValue(parS));
-        if (parR!=null) setRelease(getDoubleValue(parR));
-        if (parInv!=null) setInverse(parInv.getValue()==1);
-        super.updateValues();
-    }
-    
-
 }

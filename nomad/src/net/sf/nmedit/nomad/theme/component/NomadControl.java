@@ -31,8 +31,6 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
-import net.sf.nmedit.nomad.theme.property.ParameterProperty;
-import net.sf.nmedit.nomad.theme.property.PropertySet;
 import net.sf.nmedit.nomad.util.NomadUtilities;
 
 
@@ -68,11 +66,6 @@ public abstract class NomadControl extends NomadComponent implements ParameterLi
         enableEvents(FocusEvent.FOCUS_EVENT_MASK);
 	}
 
-	public void registerProperties(PropertySet set) {
-		super.registerProperties(set);
-		set.add(new ParameterProperty(0));
-	}
-    
     public void setParameterInfo(DParameter parameterInfo) 
     {
         setParameterInfo(PAR0,parameterInfo);
@@ -95,9 +88,15 @@ public abstract class NomadControl extends NomadComponent implements ParameterLi
         return parameter;
     }
     
-	public DParameter getParameterInfo() {
-		return getParameterInfo(PAR0);
-	}
+    public DParameter getParameterSpec() 
+    {
+        return getParameterInfo(PAR0);
+    }
+    
+    public void setParameterSpec(DParameter p0) 
+    {
+        setParameterInfo(PAR0, p0);
+    }
 	
 	public Double getMorphValue() {
 		return morphValue;
@@ -277,7 +276,8 @@ public abstract class NomadControl extends NomadComponent implements ParameterLi
 	public void link(Module module) {
 		//addValueChangeListener(broadcast);
 
-		parameter = module.getParameter(getParameterInfo(PAR0).getContextId());
+        if (getParameterInfo(PAR0)!=null)
+            parameter = module.getParameter(getParameterInfo(PAR0).getContextId());
 		if (parameter!=null) {
 			setValue(parameter.getValue());
 			parameter.addParameterListener(this);

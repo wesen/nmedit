@@ -22,27 +22,21 @@
  */
 package net.sf.nmedit.nomad.theme.xml.dom;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
+import net.sf.nmedit.jtheme.Property;
 import net.sf.nmedit.nomad.theme.UIFactory;
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
-import net.sf.nmedit.nomad.theme.property.Property;
-import net.sf.nmedit.nomad.theme.property.PropertySet;
-import net.sf.nmedit.nomad.theme.property.Value;
 
-
-public class ComponentNode /*implements Iterable<String>*/ {
+public class ComponentNode implements Iterable<String> {
 	
-	private ArrayList<Value> values;
-	private ArrayList<String> propertyNames ;
-	private HashMap<String, String> propertyMap ;
 	private String name;
+    private Map<String,String> properties = new HashMap<String,String>();
+    private Map<String,Object> compiled = new HashMap<String,Object>();
 	
 	public ComponentNode(String componentName) {
-        values = new ArrayList<Value>();
-		propertyNames = new ArrayList<String>(10);
-		propertyMap = new HashMap<String,String>();
 		name = componentName; 
 	}
 	
@@ -51,71 +45,47 @@ public class ComponentNode /*implements Iterable<String>*/ {
 	}
 	
 	public void putProperty(String name, String value) {
-		if (!propertyMap.containsKey(name))
-			propertyNames.add(name);
-		propertyMap.put(name, value);
+		if (value==null)
+        {
+            properties.remove(name);
+        }  else
+        {
+            properties.put(name, value);
+        }
+        compiled.remove(name);
 	}
 	
 	public void removeProperty(String name) {
-		propertyMap.remove(name);
-		propertyNames.remove(name);
+        putProperty(name, null);
 	}
 	
 	public String getProperty(String name) {
-		return propertyMap.get(name);
+		return properties.get(name);
 	}
 
 	public int getPropertyCount() {
-		return propertyNames.size();
+		return properties.size();
 	}
 
-	public String getPropertyName(int index) {
-		return propertyNames.get(index);
-	}
-	
-	public Value getPropertyC(int index) {
-		return values.get(index);
-	}
-	
-    
-	public int getCompiledPropertyCount() {
-		return values.size() ;
-	}
-	
-	public void compileProperties(UIFactory factory) {
-        values.clear() ;
-		PropertySet set = factory.getProperties(factory.getNomadComponentClass(getName()));
-		for(int i=0;i<propertyNames.size();i++) {
-			String name = propertyNames.get(i);
-			String value= propertyMap.get(name);
-			
-            Property p = set.get(name);
-            if (p!=null)
-            {
-                try
-                {
-    			Value pvalue = p.decode(value);
-                values.add(pvalue);
-                } catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-            else
-            {
-                System.err.println("Property '"+name+"' not found.");
-            }
-		}
-	}
-	
-	public void assignProperties(NomadComponent component) {
-		for (int i=values.size()-1;i>=0;i--)
+	public void assignProperties(UIFactory factory, NomadComponent component) {
+        Map<String,Property> pmap = factory.configuration.getProperties(component);
+        
+        for (String name : properties.keySet())
         {
-            values.get(i).assignTo(component);
-            /*Value v = values.get(i);
-            if (v!=null)
-                v.assignTo(component);*/
+            Property p = pmap.get(name);
+            try
+            {
+            factory.configuration.setPropertyString(component, name, getProperty(name));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
 	}
+
+    public Iterator<String> iterator()
+    {
+        return properties.keySet().iterator();
+    }
 	
 }

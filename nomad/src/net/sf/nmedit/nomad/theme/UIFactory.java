@@ -6,15 +6,18 @@ import java.util.HashMap;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.VoiceArea;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
+import net.sf.nmedit.jtheme.ThemeConfiguration;
 import net.sf.nmedit.nomad.patch.ui.ModuleSectionUI;
 import net.sf.nmedit.nomad.patch.ui.ModuleUI;
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
-import net.sf.nmedit.nomad.theme.property.PropertySet;
 import net.sf.nmedit.nomad.theme.xml.dom.ThemeNode;
 import net.sf.nmedit.nomad.util.graphics.ImageTracker;
 
 
 public abstract class UIFactory  {
+    
+    
+    public ThemeConfiguration configuration = new ThemeConfiguration();
 
 	private HashMap <String,Class<? extends NomadComponent>> 
 		componentClasses = new HashMap<String,Class<? extends NomadComponent>>();
@@ -25,37 +28,14 @@ public abstract class UIFactory  {
 	private ImageTracker imageTracker = 
 		new ImageTracker(ImageTracker.IMAGE_TRACKER_DISALLOW_REPLACE);
 
-	private HashMap<Class<? extends NomadComponent>, PropertySet>
-		properties = new HashMap<Class<? extends NomadComponent>, PropertySet>(); 
-	
 	public UIFactory() { }
 
 	public void installClass(Class<? extends NomadComponent> componentClass, String aliasName) {
 		NomadComponent c = newComponentInstanceByClass(componentClass);
 		
-		PropertySet set = new PropertySet();
-		c.registerProperties(set);
-		properties.put(componentClass, set);
-		
 		componentClasses.put(aliasName, componentClass);
 		componentClasses.put(componentClass.getName(), componentClass);
 		alias.put(componentClass, aliasName);
-	}
-	
-    /*
-	public void setComponentProperty(NomadComponent component, String property, String value) {
-		PropertySet set = properties.get(component.getClass());
-		Property p = set.get(property);
-        
-		p.setValue(component, value);
-	}*/
-	
-	public PropertySet getProperties(NomadComponent component) {
-		return properties.get(component.getClass());
-	}
-	
-	public PropertySet getProperties(Class<? extends NomadComponent> clazz) {
-		return properties.get(clazz);
 	}
 	
 	public Class<? extends NomadComponent> getNomadComponentClass(Object key) {
@@ -97,7 +77,6 @@ public abstract class UIFactory  {
         ThemeNode dom = new ThemeNode();
         InputStream in = getClass().getResourceAsStream(name);
         ThemeNode.importDocument( dom, in );
-        dom.compile( this );
         return dom;
     }
     

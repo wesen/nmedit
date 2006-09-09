@@ -32,8 +32,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
-import java.util.regex.Pattern;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.border.Border;
 
@@ -41,16 +41,8 @@ import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 import net.sf.nmedit.nomad.theme.NomadClassicColors;
 import net.sf.nmedit.nomad.theme.component.model.NomadButtonArrayBehaviour;
 import net.sf.nmedit.nomad.theme.component.model.NomadButtonArrayModel;
-import net.sf.nmedit.nomad.theme.property.BooleanValue;
-import net.sf.nmedit.nomad.theme.property.Property;
-import net.sf.nmedit.nomad.theme.property.PropertySet;
-import net.sf.nmedit.nomad.theme.property.Value;
-import net.sf.nmedit.nomad.theme.property.editor.CheckBoxEditor;
-import net.sf.nmedit.nomad.theme.property.editor.Editor;
-import net.sf.nmedit.nomad.theme.property.editor.TextEditor;
 import net.sf.nmedit.nomad.util.NomadUtilities;
 import net.sf.nmedit.nomad.util.graphics.ImageTracker;
-
 
 public class NomadButtonArray extends NomadControl implements NomadButtonArrayModel {
 
@@ -60,9 +52,6 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 	private boolean flagIsCylicDisplay = DEFAULT_CYCLIC;
 	private boolean flagLandscape = DEFAULT_LANDSCAPE;
 	//private ImageString[] labelList = new ImageString[6];
-	private final int FIELD_COUNT = 6;
-	private String[] ltext = new String[FIELD_COUNT];
-	private Image[] limage = new Image[FIELD_COUNT];
 	
 	private static MouseAdapter buttonArrayMouseListener = new MouseAdapter(){
 		public void mouseClicked(MouseEvent event) {
@@ -97,9 +86,6 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		setFont(defaultFont);
 		setFocusable(true);
 
-		Arrays.fill(ltext, null);
-		Arrays.fill(limage, null);
-
 		setSelectionBorder(DEFAULT_SEL_Border);
 		setDefaultBorder(DEFAULT_Border);
 		addMouseListener(buttonArrayMouseListener);
@@ -108,15 +94,6 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
         setMinValue(0);
         setMaxValue(3);
         setValue(0);
-	}
-
-	public void registerProperties(PropertySet set) {
-		super.registerProperties(set);
-		for (int i=FIELD_COUNT-1;i>=0;i--) {
-			set.add(new BtnTextProperty(i));
-		}
-		set.add(new OrientationProperty());
-		set.add(new CyclicProperty());
 	}
 
 	public void autoResize(boolean force) {
@@ -134,21 +111,22 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 	}
 
 	private Dimension getLabelSize(int index) {
-		Image img = limage[index];
+		Image img = images.get(index);
+        String s = buttons.get(index);
 		if (img!=null)
 			return new Dimension(img.getWidth(null),img.getHeight(null));
-		else if (ltext!=null) 
-			return NomadLabel
-				.getStringBounds(this, ltext[index])
-				.getSize();
+		else if (s!=null)
+        {
+			return NomadLabel.getStringBounds(this, s).getSize();
+        }
 		else
 			return new Dimension(0,0);
 	}
 	
 	private Dimension getMaxLabelSize() {
 		Dimension d = new Dimension(6,6);
-		for (int i=0;i<FIELD_COUNT;i++) {
-			Dimension c = getLabelSize(i);
+        for (int index : buttons.keySet()) {
+			Dimension c = getLabelSize(index);
 			d.width=Math.max(d.width,c.width);
 			d.height=Math.max(d.height,c.height);
 		}
@@ -163,63 +141,146 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		}
 	}
 
-	private Pattern btnNamePattern = Pattern.compile("btn#(\\d+)");
-
-	private static String encodeButtonName(int index) {
-		return "btn#"+index;
-	}
-	
-	public int decodeButtonIndex(String buttonName) {
-		if (btnNamePattern.matcher(buttonName).matches()) {
-			String[] btn = getName().split("#");
-			return Integer.parseInt(btn[1]);
-		} else {
-			return -1;
-		}
-	}
-	/*
-	private void setLabel(int index, String text) {
-        ltext[index] = text;
-        String key = NomadUtilities.extractKeyFromImageString(text);
-        ImageTracker itracker = NomadEnvironment.sharedInstance().getImageTracker();
-        if (key!=null&&itracker!=null)
-            limage[index]=itracker.getImage(key);
-	}*/
-    
-	/*
-	private ImageString newLabel(String label) {
-		ImageString istring = new ImageString(label);
-		if (getEnvironment()!=null)
-			istring.loadImage(getEnvironment().getImageTracker());
-		return istring;
-	}*/
-
 	public void setButton(int index, String label) {
-		if (0<=index && index<FIELD_COUNT) {
-			if (label.length()==0) {
-				ltext[index] = null;
-				limage[index] = null;
-			} else {
-				//setLabel(index, label);
-                ltext[index] = label;
+		if (0<=index) 
+        {
+            if (label==null)
+            {
+                buttons.remove(index);
+                images.remove(index);
+            }
+            else
+            {
+                buttons.put(index, label);
                 String key = NomadUtilities.extractKeyFromImageString(label);
                 ImageTracker itracker = NomadEnvironment.sharedInstance().getImageTracker();
                 if (key!=null&&itracker!=null)
-                    limage[index]=itracker.getImage(key);
+                    images.put(index,itracker.getImage(key));
+                else
+                    images.remove(index);
 			}
 			repaint();
 		}
 	}
 
-	public void removeButton(int index) {
-		if (0<=index && index<FIELD_COUNT) {
-			ltext[index] = null;
-			limage[index] = null;
-			repaint();
-		}
-	}
+    private Map<Integer,String> buttons = new HashMap<Integer,String>();
+    private Map<Integer,Image> images = new HashMap<Integer,Image>();
+    
+    public String getButtonConfiguration()
+    {
+        StringBuffer conf = new StringBuffer();
+        boolean first = true;
+        for (Integer index : buttons.keySet())
+        {
+            String s = buttons.get(index);
+            if (s!=null)
+            {
+                if (first) first = false;
+                else conf.append(";");
+                conf.append(index);
+                conf.append("=");
+                for (int i=0;i<s.length();i++)
+                {
+                    char c = s.charAt(i);
+                    conf.append(c);
+                    if (c==';')
+                        conf.append(";");
+                }
+            }
+        }
+        if (!first) // at least one key,value pair
+            conf.append(";");
+        return conf.toString();
+    }
+    
+    public void setButtonConfiguration(String s)
+    {
+        buttons.clear();
+        images.clear();
+        
+        int index = 0;
+        StringBuffer value = new StringBuffer();
+        int pos = 0;
+        ImageTracker itracker = NomadEnvironment.sharedInstance().getImageTracker();
+        
+        final int ST_NEW = 0;
+        final int ST_INDEX = 1;
+        final int ST_VALUE = 2;
+        final int ST_END = 3; 
+        
+        int state = ST_NEW;
+        
+        while (pos<s.length())
+        {
+            char c = s.charAt(pos);
+            switch (state)
+            {
+                case ST_END:
+                    if (c==';') // two times ';' (==';;') means one is escaped
+                    {
+                        state = ST_VALUE;
+                        value.append(c);
+                        break;
+                    }
+                    else
+                    {
+                        String txt = value.toString();
+                        value.setLength(0);
+                        Integer i = new Integer(index);
+                        
+                        buttons.put(i, txt);
 
-	public boolean isLandscape() {
+                        if (itracker!=null)
+                        {
+                            String key = NomadUtilities.extractKeyFromImageString(txt);
+                            if (key!=null)
+                                images.put(i,itracker.getImage(key));
+                        }
+                    }
+                    // fall into st_new
+                case ST_NEW:
+                    index = 0;
+                    state = ST_INDEX;
+                    // fall into ST_INDEX => no break
+                case ST_INDEX:
+                    if (Character.isDigit(c))
+                        index = (index*10) + (c-'0');
+                    else if (c=='=')
+                    {
+                        state = ST_VALUE;
+                    }
+                    else
+                        throw new RuntimeException("expected ([0-9]+|=) @"+pos);
+                    break;
+                case ST_VALUE:
+                    if (c==';')
+                        state=ST_END;
+                    else
+                        value.append(c);
+                    break;
+            }
+            pos++;
+        }
+        
+        if (value.length()>0)
+        {
+            // complete last
+            String txt = value.toString();
+            Integer i = new Integer(index);
+            
+            buttons.put(i, txt);
+
+            if (itracker!=null)
+            {
+                String key = NomadUtilities.extractKeyFromImageString(txt);
+                if (key!=null)
+                    images.put(i,itracker.getImage(key));
+            }
+        }
+        
+    }
+    
+	public boolean getLandscape() {
 		return flagLandscape;
 	}
 	
@@ -278,9 +339,9 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 			String text = "";
 			Image img = null;
 			
-			if (0<=i && i<FIELD_COUNT && ltext[i]!=null) {
-				img = limage[i];
-				text= ltext[i];
+			if (0<=i  && buttons.get(i)!=null) {
+				img = images.get(i);
+				text= buttons.get(i);
 			}
 			
 			Rectangle bounds;
@@ -323,9 +384,9 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 				String text = "";
 				Image img = null;
 				
-				if (0<=i && i<FIELD_COUNT && ltext[i]!=null) {
-					img = limage[i];
-					text= ltext[i];
+				if (0<=i&& buttons.get(i)!=null) {
+					img = images.get(i);
+					text= buttons.get(i);
 				}
 				
 				Rectangle bounds;
@@ -369,7 +430,7 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
 		}
 	}
     
-
+/*
     private static class BtnTextProperty extends Property {
 
         private int buttonIndex;
@@ -426,195 +487,18 @@ public class NomadButtonArray extends NomadControl implements NomadButtonArrayMo
         }
         
     }
+    */
     
-/*
-	private static class BtnTextProperty extends Property {
-		int index;
-		public BtnTextProperty(int index) {
-			this.index=index;
-			setName(NomadButtonArray.encodeButtonName(index));
-		}
-
-		public String getValue(NomadComponent component) {
-			return ((NomadButtonArray)component).ltext[index];
-		}
-
-		public void setValue(NomadComponent component, String value) {
-			if (0<=index && index<((NomadButtonArray)component).ltext.length) {
-				((NomadButtonArray)component).setButton(index, value);
-			}
-		}
-
-		public boolean isExportable(NomadComponent component) {
-			return ((NomadButtonArray)component).ltext[index]!=null;
-		}
-
-		public PropertyValue getValue(String value) {
-			return new StringValue(this, value);
-		}
-		
-	}
-*/
-    
-    private static class OrientationProperty extends Property
-    {
-
-        public OrientationProperty(  )
-        {
-            super( "landscape" );
-        }
-
-        @Override
-        public Value decode( String value )
-        {
-            return new OrientationValue(this, value);
-        }
-
-        @Override
-        public Value encode( NomadComponent component )
-        {
-            return new OrientationValue(this, ((NomadButtonArray) component).isLandscape());
-        }
-
-        @Override
-        public Editor newEditor( NomadComponent component )
-        {
-            CheckBoxEditor editor = new CheckBoxEditor(this, component);
-            editor.setCheckedValue(new OrientationValue(OrientationProperty.this, true));
-            editor.setUncheckedValue(new OrientationValue(OrientationProperty.this, false));
-            editor.setSelected( ((NomadButtonArray)component).isLandscape() );
-            return editor;
-        }
-        
-    }
-
-    private static class OrientationValue extends BooleanValue
-    {
-
-        public OrientationValue( Property property, boolean value )
-        {
-            super( property, value );
-        }
-
-        public OrientationValue( Property property, String representation )
-        {
-            super( property, representation );
-        }
-
-        @Override
-        public void assignTo( NomadComponent component )
-        {
-            ((NomadButtonArray) component).setLandscape(getBooleanValue());
-        }
-        
-    }
-    
-    /*
-	private static class OrientationProperty extends BooleanProperty {
-
-		public OrientationProperty() { setName("landscape"); }
-
-		public void setBoolean(NomadComponent component, boolean value) {
-			((NomadButtonArray)component).setLandscape(value);
-		}
-
-		public boolean getBoolean(NomadComponent component) {
-			return ((NomadButtonArray)component).isLandscape();
-		}
-
-		public boolean isInDefaultState(NomadComponent component) {
-			return ((NomadButtonArray)component).flagLandscape==DEFAULT_LANDSCAPE;
-		}
-
-		public PropertyValue getCurrentValue(NomadComponent component) {
-			return new BooleanValue(this, getBoolean(component));
-		}
-	}
-	*/
-    
-
-    private static class CyclicProperty extends Property
-    {
-
-        public CyclicProperty()
-        {
-            super( "cyclic" );
-        }
-
-        @Override
-        public Value decode( String value )
-        {
-            return new CyclicValue(this, value);
-        }
-
-        @Override
-        public Value encode( NomadComponent component )
-        {
-            return new CyclicValue(this, ((NomadButtonArray) component).isCylicDisplay());
-        }
-
-        @Override
-        public Editor newEditor( NomadComponent component )
-        {
-            CheckBoxEditor editor = new CheckBoxEditor(this, component);
-            editor.setCheckedValue(new CyclicValue(CyclicProperty.this, true));
-            editor.setUncheckedValue(new CyclicValue(CyclicProperty.this, false));
-            editor.setSelected( ((NomadButtonArray)component).isCylicDisplay() );
-            return editor;
-        }
-        
-    }
-
-    private static class CyclicValue extends BooleanValue
-    {
-
-        public CyclicValue( Property property, boolean value )
-        {
-            super( property, value );
-        }
-
-        public CyclicValue( Property property, String representation )
-        {
-            super( property, representation );
-        }
-
-        @Override
-        public void assignTo( NomadComponent component )
-        {
-            ((NomadButtonArray) component).setIsCylicDisplay(getBooleanValue());
-        }
-        
-    }
-    
-    /*
-	private static class CyclicProperty extends BooleanProperty {
-
-		public CyclicProperty() {
-			setName("cyclic");
-		}
-
-		public void setBoolean(NomadComponent component, boolean value) {
-			((NomadButtonArray)component).setIsCylicDisplay(value);
-		}
-
-		public boolean getBoolean(NomadComponent component) {
-			return ((NomadButtonArray)component).isCylicDisplay();
-		}
-
-		public boolean isInDefaultState(NomadComponent component) {
-			return ((NomadButtonArray)component).flagIsCylicDisplay==DEFAULT_CYCLIC;
-		}
-
-		public PropertyValue getCurrentValue(NomadComponent component) {
-			return new BooleanValue(this, getBoolean(component));
-		}
-	}
-*/
-	public boolean isCylicDisplay() {
+	public boolean getCyclic() {
 		return flagIsCylicDisplay;
 	}
 
-	public void setIsCylicDisplay(boolean isCylicDisplay) {
+	public void setCyclic(boolean isCylicDisplay) {
 		this.flagIsCylicDisplay = isCylicDisplay;
 	}
+
+    public boolean isLandscape()
+    {
+        return getLandscape();
+    }
 }

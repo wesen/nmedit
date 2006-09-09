@@ -31,12 +31,6 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
-import net.sf.nmedit.nomad.theme.property.IntegerProperty;
-import net.sf.nmedit.nomad.theme.property.IntegerValue;
-import net.sf.nmedit.nomad.theme.property.ParameterProperty;
-import net.sf.nmedit.nomad.theme.property.Property;
-import net.sf.nmedit.nomad.theme.property.PropertySet;
-import net.sf.nmedit.nomad.theme.property.Value;
 
 
 public class LFODisplay extends NomadDisplay implements ParameterListener
@@ -60,6 +54,19 @@ public class LFODisplay extends NomadDisplay implements ParameterListener
     
     public final static String IPHASE = "parameter#0";
     public final static String IWF = "parameter#1";
+    
+    public void setParameterSpec(DParameter p)
+    { setParameterInfo(IPHASE, p); }
+    
+    public DParameter getParameterSpec()
+    {  return getParameterInfo(IPHASE); }
+    
+    public void setWaveFormParameterSpec(DParameter p)
+    { setParameterInfo(IWF, p); }
+    
+    public DParameter getWaveFormParameterSpec()
+    {  return getParameterInfo(IWF); }
+    
     
     public void paintComponent(Graphics g)
     {
@@ -170,7 +177,7 @@ public class LFODisplay extends NomadDisplay implements ParameterListener
         return Math.max(0, Math.min(v, 1.0d));
     }
 
-    public void setWaveform( int v )
+    public void setWaveForm( int v )
     {
         if (this.vwf!=v)
         {
@@ -197,64 +204,13 @@ public class LFODisplay extends NomadDisplay implements ParameterListener
         repaint();
     }
 
-    public void registerProperties(PropertySet set) {
-        super.registerProperties(set);
-        set.add(new ParameterProperty(0));
-        set.add(new ParameterProperty(1));
-        set.add(new WaveFormProperty());
-    }
-    
-    private static class WaveFormProperty extends IntegerProperty
-    {
-
-        public WaveFormProperty( )
-        {
-            super( "waveform" );
-        }
-
-        @Override
-        public Value decode( String value )
-        {
-            return new WaveFormValue(this, value);
-        }
-
-        @Override
-        public Value encode( NomadComponent component )
-        {
-            if (component instanceof LFODisplay)
-                return new WaveFormValue(this, ((LFODisplay)component).getWaveForm());
-            return null;
-        }
-        
-    }
-    
-    private static class WaveFormValue extends IntegerValue
-    {
-        public WaveFormValue( Property property, int value )
-        {
-            super( property, value );
-        }
-
-        public WaveFormValue( Property property, String representation )
-        {
-            super( property, representation );
-        }
-
-        @Override
-        public void assignTo( NomadComponent component )
-        {
-            if (component instanceof LFODisplay)
-                ((LFODisplay)component).setWaveform(getIntegerValue());
-        }
-        
-    }
-    
     public int getWaveForm()
     {
         return vwf;
     }
 
     public void link(Module module) {
+        if (getParameterInfo(IPHASE)!=null)
         parPhase = module.getParameter(getParameterInfo(IPHASE).getContextId());
         if (parPhase!=null) parPhase.addParameterListener(this);
         DParameter info = getParameterInfo(IWF);
@@ -278,14 +234,14 @@ public class LFODisplay extends NomadDisplay implements ParameterListener
     protected void updateValues()
     {
         if (parPhase!=null) setPhase(getDoubleValue(parPhase));
-        if (parWave!=null) setWaveform(parWave.getValue()-parWave.getMinValue());
+        if (parWave!=null) setWaveForm(parWave.getValue()-parWave.getMinValue());
     }
     
     public void parameterValueChanged( Event e )
     {
         Parameter p = e.getParameter();
         if (parPhase==p) setPhase(getDoubleValue(p));
-        else if (parWave==p) setWaveform(p.getValue()-p.getMinValue());
+        else if (parWave==p) setWaveForm(p.getValue()-p.getMinValue());
     }
     public void parameterMorphValueChanged( Event e )
     { }

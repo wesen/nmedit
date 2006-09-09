@@ -33,8 +33,6 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
 import net.sf.nmedit.nomad.theme.NomadClassicColors;
-import net.sf.nmedit.nomad.theme.property.ParameterProperty;
-import net.sf.nmedit.nomad.theme.property.PropertySet;
 
 
 /**
@@ -61,16 +59,20 @@ public class NomadActiveLabel extends NomadLabel implements ParameterListener
         //setAutoResize( false );
         setBorder( defaultBorder );
     }
+
+    
+    public DParameter getParameterSpec()
+    {
+        return getParameterInfo(NomadControl.PAR0);
+    }    
+    public void setParameterSpec(DParameter p)
+    {
+        setParameterInfo(NomadControl.PAR0, p);
+    }
     
     protected void autoResize()
     {
         // ignore
-    }
-
-    public void registerProperties( PropertySet set )
-    {
-        super.registerProperties( set );
-        set.add( new ParameterProperty());
     }
 
     public void link( Module module )

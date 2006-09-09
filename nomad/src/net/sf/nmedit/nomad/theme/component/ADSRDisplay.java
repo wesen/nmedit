@@ -25,8 +25,7 @@ package net.sf.nmedit.nomad.theme.component;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
-import net.sf.nmedit.nomad.theme.property.ParameterProperty;
-import net.sf.nmedit.nomad.theme.property.PropertySet;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
 
 public class ADSRDisplay extends ADSRModDisplay
 {
@@ -34,12 +33,16 @@ public class ADSRDisplay extends ADSRModDisplay
     // attack type
     private Parameter parAT = null;
     public final static String IAT = "parameter#5";
-    
-    public void registerProperties(PropertySet set) {
-        super.registerProperties(set);
-        set.add(new ParameterProperty(5));
-    }
 
+    public DParameter getAttackTypeParameterSpec()
+    {
+        return getParameterInfo(IAT);
+    }
+    public void setAttackTypeParameterSpec(DParameter p)
+    {
+        setParameterInfo(IAT, p);
+    }
+    
     public void link(Module module) 
     {
         parAT = module.getParameter(getParameterInfo(IAT).getContextId());

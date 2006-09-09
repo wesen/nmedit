@@ -7,8 +7,6 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterListener;
-import net.sf.nmedit.nomad.theme.property.ParameterProperty;
-import net.sf.nmedit.nomad.theme.property.PropertySet;
 
 /* Copyright (C) 2006 Christian Schneider
  * 
@@ -100,12 +98,6 @@ public class ClipDisp extends NomadDisplay implements ParameterListener
 
     public final static String ICLIP = "parameter#0";
     public final static String ISYM = "parameter#1";
-
-    public void registerProperties(PropertySet set) {
-        super.registerProperties(set);
-        set.add(new ParameterProperty(0));
-        set.add(new ParameterProperty(1));
-    }
 
     public void link(Module module) {
         //addValueChangeListener(broadcast);

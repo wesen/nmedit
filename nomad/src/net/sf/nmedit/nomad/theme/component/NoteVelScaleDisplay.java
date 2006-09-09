@@ -30,8 +30,6 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ParameterListener;
-import net.sf.nmedit.nomad.theme.property.ParameterProperty;
-import net.sf.nmedit.nomad.theme.property.PropertySet;
 
 
 public class NoteVelScaleDisplay extends NomadDisplay implements ParameterListener 
@@ -94,13 +92,6 @@ public class NoteVelScaleDisplay extends NomadDisplay implements ParameterListen
     {
         this.vrGain = bounded(v);
         repaint();
-    }
-
-    public void registerProperties(PropertySet set) {
-        super.registerProperties(set);
-        set.add(new ParameterProperty(0));
-        set.add(new ParameterProperty(1));
-        set.add(new ParameterProperty(2));
     }
 
     public void link(Module module) {

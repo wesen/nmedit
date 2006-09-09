@@ -22,52 +22,12 @@
  */
 package net.sf.nmedit.nomad.theme.component;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Parameter;
-import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
-import net.sf.nmedit.nomad.theme.property.ParameterProperty;
-import net.sf.nmedit.nomad.theme.property.PropertySet;
-
 public class AHDDisplay extends ADDisplay
 {
 
-    private Parameter parH = null;
-    public final static String IH = "parameter#2";
-    
     public AHDDisplay()
     {
         configureAHD();
     }
 
-
-    public void registerProperties(PropertySet set) {
-        super.registerProperties(set);
-        set.add(new ParameterProperty(2));
-    }
-    public void link(Module module) 
-    {
-        parH = module.getParameter(getParameterInfo(IH).getContextId());
-        if (parH!=null) parH.addParameterListener(this);
-        super.link(module);
-    }
-
-    public void unlink() {
-        if (parH!=null) parH.removeParameterListener(this);
-        parH = null;
-        super.unlink();
-    }
-
-    public void parameterValueChanged( Event e )
-    {
-        super.parameterValueChanged(e);
-        Parameter p = e.getParameter();
-        if (parH==p) setHold(getDoubleValue(p));
-    }
-
-    protected void updateValues()
-    {
-        if (parH!=null) setHold(getDoubleValue(parH));
-        super.updateValues();
-    }
-    
 }

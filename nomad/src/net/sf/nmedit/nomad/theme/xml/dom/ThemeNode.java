@@ -27,9 +27,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import net.sf.nmedit.nomad.theme.UIFactory;
 import net.sf.nmedit.nomad.theme.xml.ThemeBuilder;
-
 
 public class ThemeNode implements Iterable<ModuleNode> {
 
@@ -76,13 +74,5 @@ public class ThemeNode implements Iterable<ModuleNode> {
             e.printStackTrace();
         }
     }
-	
-	public void compile(UIFactory f) {
-		for (ModuleNode m : this) {
-			for (ComponentNode c : m) {
-				c.compileProperties(f);
-			}
-		}
-	}
 
 }

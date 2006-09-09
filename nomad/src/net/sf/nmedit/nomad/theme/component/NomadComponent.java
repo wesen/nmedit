@@ -25,7 +25,6 @@ package net.sf.nmedit.nomad.theme.component;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.util.HashMap;
 
 import javax.swing.JComponent;
@@ -33,9 +32,6 @@ import javax.swing.JComponent;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DParameter;
 import net.sf.nmedit.nomad.patch.ui.ModuleUI;
-import net.sf.nmedit.nomad.theme.property.ComponentLocationProperty;
-import net.sf.nmedit.nomad.theme.property.ComponentSizeProperty;
-import net.sf.nmedit.nomad.theme.property.PropertySet;
 
 
 /**
@@ -134,12 +130,6 @@ public class NomadComponent extends JComponent {
     public boolean isSizePropertyEnabled() {
     	return sizePropertyEnabled;
     }
-    
-	public void registerProperties(PropertySet set) {
-		set.add(new ComponentLocationProperty());
-		if (sizePropertyEnabled)
-			set.add(new ComponentSizeProperty());
-	}
 
     public void repaint()
     {
