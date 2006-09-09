@@ -1,4 +1,4 @@
-<project name="nmcom" default="dist" basedir=".">
+<project name="nomad" default="dist" basedir=".">
 
 	<!-- ************************************************** -->
 	<!-- commands:                                          -->
@@ -160,7 +160,7 @@
 		<jar jarfile="${dist.nomad}/nomad.jar" basedir="${build.nomad}">
 	      <manifest> <!-- java -jar example.jar -->
 	        <attribute name="Main-class" value="net.sf.nmedit.nomad.core.nomad.Nomad"/>
-            <attribute name="Class-Path" value="./lib/xpp3_min-1.1.3_8.jar ./lib/forms-1.0.7.jar ./lib/looks-2.0.2.jar ./lib/jnmprotocol.jar ./lib/jpdl.jar ./lib/jpatch.jar ./lib/jsynth.jar ./lib/jpatch.nordmodular.jar ./lib/jsynth.nordmodular.jar ./lib/jmisc.jar ./lib/themes.jar"/>
+            <attribute name="Class-Path" value="./lib/xpp3_min-1.1.3_8.jar ./lib/forms-1.0.7.jar ./lib/looks-2.0.2.jar ./lib/jnmprotocol.jar ./lib/jpdl.jar ./lib/jpatch.jar ./lib/jsynth.jar ./lib/jpatch.nordmodular.jar ./lib/jsynth.nordmodular.jar ./lib/jmisc.jar ./lib/jtheme.jar ./lib/themes.jar"/>
 	      </manifest>
 		</jar> 
 	</target>
@@ -169,7 +169,7 @@
 		<jar jarfile="${dist.nomad}/editor.jar" basedir="${build.editor}">
 	      <manifest> <!-- java -jar example.jar -->
 	        <attribute name="Main-class" value="net.sf.nmedit.nomad.editor.NomadEditor" />
-            <attribute name="Class-Path" value="nomad.jar ./lib/xpp3_min-1.1.3_8.jar ./lib/forms-1.0.7.jar ./lib/looks-2.0.2.jar ./plugin/classictheme.jar ./lib/themes.jar"/>
+            <attribute name="Class-Path" value="nomad.jar ./lib/xpp3_min-1.1.3_8.jar ./lib/forms-1.0.7.jar ./lib/looks-2.0.2.jar ./plugin/classictheme.jar ./lib/jpatch.jar ./lib/jpatch.nordmodular.jar ./lib/jtheme.jar ./lib/themes.jar"/>
 	      </manifest>
 	    </jar>
 	</target>
@@ -191,6 +191,7 @@
 		<ant antfile="build.xml" dir="../libs/jpatch" target="dist"/>
 		<ant antfile="build.xml" dir="../libs/jpatch/devices/clavia/nordmodular" target="dist"/>
 		<ant antfile="build.xml" dir="../libs/jsynth/devices/clavia/nordmodular" target="dist"/>
+		<ant antfile="build.xml" dir="../libs/jtheme" target="dist"/>
 	</target>
 	
 	<target name="clean-libraries" description="cleaning libraries">
@@ -201,6 +202,7 @@
 		<ant antfile="build.xml" dir="../libs/jpatch" target="clean"/>
 		<ant antfile="build.xml" dir="../libs/jpatch/devices/clavia/nordmodular" target="clean"/>
 		<ant antfile="build.xml" dir="../libs/jsynth/devices/clavia/nordmodular" target="clean"/>
+		<ant antfile="build.xml" dir="../libs/jtheme" target="clean"/>
 	</target>
 	
 	<target name="install-libraries" description="installing libraries">
@@ -216,6 +218,9 @@
 	        </fileset>
 	        <fileset dir="../libs/jpatch/dist/lib/">
 	           <include name="jpatch.jar"/>
+	        </fileset>
+	        <fileset dir="../libs/jtheme/dist/lib/">
+	           <include name="jtheme.jar"/>
 	        </fileset>
 	        <fileset dir="../libs/jsynth/devices/clavia/nordmodular/dist/lib/">
 	           <include name="jsynth.nordmodular.jar"/>
@@ -237,6 +242,7 @@
 		<delete file="lib/jpdl.jar"/>
 		<delete file="lib/jsynth.jar"/>
 		<delete file="lib/jpatch.jar"/>
+		<delete file="lib/jtheme.jar"/>
 		<delete file="lib/jsynth.nordmodular.jar"/>
 		<delete file="lib/jpatch.nordmodular.jar"/>
 		<delete file="lib/jmisc.jar"/>
