@@ -446,11 +446,13 @@ private boolean dirty = false;
     public void setModule( Module module )
     {
         this.module = module;
-        nameLabel.setModule( module );
-
-        link( module );
-        Metrics.setModuleUILocation( this, module );
-        module.addModuleListener( this );
+        if (module!=null)
+        {
+            nameLabel.setModule( module );
+            link( module );
+            Metrics.setModuleUILocation( this, module );
+            module.addModuleListener( this );
+        }
     }
 
     public ModuleSectionUI getModuleSection()
