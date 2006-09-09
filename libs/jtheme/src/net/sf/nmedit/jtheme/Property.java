@@ -41,6 +41,11 @@ public class Property
         this.set = set;
     }
     
+    public Class<?> getPropertyClass()
+    {
+        return get.getReturnType();
+    }
+    
     public String getPropertyName()
     {
         return propertyName;
@@ -71,7 +76,7 @@ public class Property
         return null;
     }
     
-    public <T> void setValue(Object o, T value) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException
+    public void setValue(Object o, Object value) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException
     {
             set.invoke(o, new Object[]{value});
     }

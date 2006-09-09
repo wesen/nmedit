@@ -82,10 +82,17 @@ public class ThemeConfiguration
         aliasMap.remove(componentClazz);
         components.remove(componentClazz);
     }
-    
+
+    private Class<?> lastclass = null;
+    private Map<String,Property> lastmap = null;
     public Property getProperty(Class<? extends JComponent> c, String propertyName)
     {
-        return Utils.getProperties(c).get(propertyName);
+        if (lastclass!=c)
+        {
+            lastclass = c;
+            lastmap = Utils.getProperties(c);
+        }
+        return lastmap.get(propertyName);
     }
     
     public <T> void putValueType(Class<?super T> c, ValueType<T> vt)
@@ -123,7 +130,7 @@ public class ThemeConfiguration
     {
         Property p = getProperty(c.getClass(), propertyName);
         if (p==null)
-            throw new RuntimeException("class "+c.getClass()+" has no such property '"+propertyName+"'");
+            throw new RuntimeException(c.getClass()+" has no such property '"+propertyName+"'");
         
         ValueType<?> t = getValueType(p.getGetter().getReturnType());
         if (t==null)
@@ -136,7 +143,7 @@ public class ThemeConfiguration
     {
         Property p = getProperty(c.getClass(), propertyName);
         if (p==null)
-            throw new RuntimeException("class "+c.getClass()+" has no such property '"+propertyName+"'");
+            throw new RuntimeException(c.getClass()+" has no such property '"+propertyName+"'");
         
         ValueType<?> t = getValueType(p.getGetter().getReturnType());
         if (t==null)

@@ -23,13 +23,8 @@
 package net.sf.nmedit.jtheme;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class Utils
 {
@@ -55,213 +50,150 @@ public class Utils
         ;
     }
 
-    public static List<Method> getSettersList(Class<?> clazz)
+    private static String getterSetterMatch( Method getter, Method setter )
     {
-        List<Method> setters = new ArrayList<Method>();
-        
-        for (Method m : clazz.getMethods())
-        {
-            if (isSetter(m))
-                setters.add(m);
-        }
-        return setters;
-    }
-
-    public static List<Method> getGettersList(Class<?> clazz)
-    {
-        List<Method> getters = new ArrayList<Method>();
-        
-        for (Method m : clazz.getMethods())
-        {
-            if (isGetter(m))
-                getters.add(m);
-        }
-        return getters;
-    }
-    
-    public static Method[] getSetters(Class<?> clazz)
-    {
-        List<Method> setters = getSettersList(clazz);
-        return setters.toArray(new Method[setters.size()]);
-    }
-    
-    public static Method[] getGetters(Class<?> clazz)
-    {
-        List<Method> getters = getGettersList(clazz);
-        return getters.toArray(new Method[getters.size()]);
-    }
-
-    public static int commonSubstringScore(String a, String b)
-    { 
-        String sub =maxCommonSubsequence(a, b); 
-        int score =  sub == null ? 0 : sub.length();
-        if (score>0)
-        {
-            // score higher when both have same size
-            if (a.length()==b.length())
-                score+=1;
-        }
-
-        return score;
-    }
-    
-    private static String maxCommonSubsequence(String a, String b)
-    {
-        if (a.length()<b.length())
-        {
-            String c = a;
-            a = b;
-            b = c;
-        }
-        
-        /*
-        int score = 0;
-        for (int i=0;i<b.length()-1 && b.length()-i>score;i++)
-        {
-            for (int j=b.length()-i;j>score;j--)
-            {
-                if (a.contains(b.substring(i, i+j)))
-                    score = j;
-            }
-        }*/
-        
-        String s = null;
-        for (int i=0;i<b.length();i++)
-            if (a.endsWith(s=b.substring(i)))
-                break;
-        return s;
-    }
-    
-    public static int getterSetterMatch( Method getter, Method setter )
-    {
-        if (!isGetter(getter))
-            return 0;
-        if (!isSetter(setter))
-            return 0;
-
         Class<?> retType = getter.getReturnType();
         Class<?> setType = setter.getParameterTypes()[0];
         
-        if (!retType.equals(setType))
-            return 0;
-
+        if (!setType.isAssignableFrom(retType))
+            return null;
+        
+        String propertyName = null;
+        
         String gn = getter.getName();
         String sn = setter.getName();
-        if (gn.startsWith("set") || sn.startsWith("get"))
-            return 0;
-        /*
-        if ((!gn.startsWith("get")) || (!sn.startsWith("set")))
-            return 0;*/
-
-        return commonSubstringScore(gn, sn);
+        if (gn.startsWith("get") && sn.startsWith("set"))
+        {
+            gn = gn.substring(3);
+            sn = sn.substring(3);
+            if (gn.equals(sn))
+            {
+                return propertyName = gn;
+            }
+        }
+        
+        return propertyName;
     }
     
-    public static Map<Method, Method> getSettersParts(Class<?> clazz, Method[] getters)
+    private static Map<Class<?>,Map<String, Property>>
+        registeredProperties = new HashMap<Class<?>,Map<String,Property>>();
+    
+    public static Map<String,Property> getProperties( Class<?> c )
     {
-        Map<Method,Method> gsMap = new HashMap<Method, Method>(); // getters => setters
-        Set<Method> setters = new HashSet<Method>(getSettersList(clazz));
-
-        for (Method m : getters)
+        Map<String,Property> properties = registeredProperties.get(c);
+        if (properties==null)
         {
-            Method setter = null;
-            int score = 0;
-            for (Method s : setters)
+            properties = new HashMap<String,Property>();
+            addProperties(properties, c);
+            registeredProperties.put(c, properties);
+        }
+        return properties;
+    }
+
+    private static void addProperties( Map<String, Property> map, Class<?> c )
+    {
+        Method[] methods = c.getMethods();
+        for (int i=0;i<methods.length;i++)
+        {
+            Method m = methods[i];
+            if (m!=null)
             {
-                int nscore = getterSetterMatch(m, s); 
-                
-                if (nscore>score&&nscore>1)
+                methods[i] = null;
+
+                PropertyName am = m.getAnnotation(PropertyName.class);
+                if (am!=null)
                 {
-                    setter = s;
-                    score = nscore;
-                }
-            }
-            
-            if (score>0)
-            {
-                // now we have to check if there is not a better choice setter=>getter
-                boolean bestChoice = true;
-                for (Method g : getters)
-                    if ((g!=m)&&getterSetterMatch(g, setter)>score)
+                    Method g = null;
+                    Method s = null;
+    
+                    if (isGetter(m)) g = m; 
+                    else if (isSetter(m)) s = m; 
+                    else throw new RuntimeException("method "+m+" is neither a getter nor a setter");
+                    
+                    // find
+                    for (int j=i+1;j<methods.length;j++)
                     {
-                        // there is a better combination - we will wait
-                        bestChoice = false;
-                        break;
+                        Method m2 = methods[j];
+                        if (m2!=null)
+                        {
+                            PropertyName am2 = m.getAnnotation(PropertyName.class);
+                            if (am2.name().equals(am.name()))
+                            {
+                                // we found the second annotation
+                                if (g!=null)
+                                {
+                                    if (!isSetter(m2))
+                                        throw new RuntimeException("method "+m2+" is not a setter");
+                                    s = m2;
+                                }
+                                else if (s!=null)
+                                {
+                                    if (!isGetter(m2)) 
+                                        throw new RuntimeException("method "+m2+" is not a getter");
+                                    g = m2;
+                                }
+                                methods[j]=null;
+                                j = methods.length; // abort loop
+                                break;
+                            }
+                        }
                     }
-                
-                if (bestChoice)
+                    
+                    if (g==null||s==null)
+                        throw new RuntimeException("second annotation not found for method "+m);
+                    
+                    Property p = new Property(am.name().toLowerCase(), g, s);
+                    map.put(p.getPropertyName(), p);
+                }
+                else
                 {
-                    setters.remove(setter);
-                    gsMap.put(m, setter);
+                    Method g = null;
+                    Method s = null;
+                    String propertyName = null;
+    
+                    if (isGetter(m))
+                    {
+                        g = m;
+                        for (int j=i+1;j<methods.length;j++)
+                        {
+                            Method m2 = methods[j];
+                            if (m2!=null && isSetter(m2) && (propertyName=getterSetterMatch(g, m2))!=null
+                                    && m2.getAnnotation(PropertyName.class)==null)
+                            {
+                                s = m2;
+                                methods[j] = null;
+                                break ;
+                            }
+                        }
+                    }
+                    else if (isSetter(m))
+                    {
+                        int choice = -1;
+                        s = m;
+                        for (int j=i+1;j<methods.length;j++)
+                        {
+                            Method m2 = methods[j];
+                            if (m2!=null && isGetter(m2) && (propertyName=getterSetterMatch(m2, s))!=null
+                                    && m2.getAnnotation(PropertyName.class)==null)
+                            {
+                                g = m2;
+                                methods[j] = null;
+                                break ;
+                            }
+                        }
+
+                        if (choice>=0)
+                            methods[choice] = null;
+                    }
+                    
+                    if (propertyName!=null) // implies g!=null && s!=null
+                    {
+                        Property p = new Property(propertyName.toLowerCase(), g, s);
+                        map.put(p.getPropertyName(), p);
+                    }
                 }
             }
         }
-        
-        return gsMap;
     }
-    
-    private static Map<Class,Map<Method,Method>> ClassgsMap = new HashMap<Class,Map<Method,Method>>();
-    
-    public static Map<Method, Method> getGettersAndSetters(Class<?> clazz)
-    {
-        Map<Method,Method> gsMap = ClassgsMap.get(clazz);
-        if (gsMap!=null)
-            return gsMap;
-        
-        Method[] getters = getGetters(clazz);
-        gsMap = Collections.unmodifiableMap(Utils.getSettersParts(clazz, getters));
-        ClassgsMap.put(clazz, gsMap);
-        return gsMap;
-    }
-    /*
-    private static Map<String,Method[]> propertyAccess = new HashMap<String,Method[]>();
-    
-    private static Class[] NOARGS = new Class[0]; 
 
-    public static Method[] getPropertyAccess(Class<?> clazz, String propertyName)
-        throws SecurityException, NoSuchMethodException
-    {
-        String accessName = clazz.getName()+"#"+propertyName;
-        Method[] gs = propertyAccess.get(accessName);
-        if (gs!=null&&gs[0]!=null&&gs[1]!=null)
-            return gs;
-        
-        Map<Method,Method> gsMap = getGettersAndSetters(clazz);
-        Method g = clazz.getMethod("get"+propertyName, NOARGS);
-        
-    }*/
-    
-    private static Map<Class<?>, Map<String,Property>>
-    properties = new HashMap<Class<?>,Map<String,Property>>();
-    
-    public static Map<String, Property> getProperties(Class<?> clazz)
-    {
-        Map<String,Property> pmap = properties.get(clazz);
-        if (pmap!=null)
-            return pmap;
-
-        pmap = new HashMap<String, Property>();
-        Map<Method, Method> gs = getGettersAndSetters(clazz);
-        for (Method g : gs.keySet())
-        {
-            Method s = gs.get(g);
-            
-            String ng = g.getName();
-            String ns = s.getName();
-
-            if (ng.startsWith("get"))
-                ng = ng.substring(3);
-            else if (ng.startsWith("is"))
-                ng = ng.substring(2);
-            if (ns.startsWith("set"))
-                ns = ns.substring(3);
-            else if (ns.startsWith("has"))
-                ns = ns.substring(3);
-            String propertyName = maxCommonSubsequence(ng, ns);
-            propertyName = propertyName.toLowerCase();
-            pmap.put(propertyName, new Property(propertyName, g, s));
-        }
-        properties.put(clazz, pmap);
-        return Collections.unmodifiableMap(pmap);
-    }
-    
 }
