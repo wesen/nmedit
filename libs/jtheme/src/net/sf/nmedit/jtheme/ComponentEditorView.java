@@ -60,6 +60,11 @@ public class ComponentEditorView extends JComponent implements MouseListener, Mo
         setComponentPopupMenu(createPopup());
     }
     
+    public void uninstallHook()
+    {
+        componentHook.uninstallHook();
+    }
+    
     private JPopupMenu createPopup()
     {
         JPopupMenu pm = new JPopupMenu();
