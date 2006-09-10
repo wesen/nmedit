@@ -23,27 +23,23 @@
 package net.sf.nmedit.nomad.patch.ui.action;
 
 import java.awt.event.ActionEvent;
-import java.util.Collection;
 
 import net.sf.nmedit.nomad.patch.ui.ModuleUI;
+import net.sf.nmedit.nomad.patch.ui.drag.ModuleSelectionTool;
 
 public class RemoveModuleAction extends ModuleUIAction {
-
-    private Collection<ModuleUI> selection ;
 
 	public RemoveModuleAction(ModuleUI m) {
 		super(m);
 		putValue(NAME, "Delete Module(s)");
-        
-        selection = m.getModuleSection().getSelection();
-        if (!selection.contains(m))
-            selection.add(m);
 	}
 
 	public void actionPerformed(ActionEvent event) 
     {
-        for (ModuleUI m : selection)
-            m.removeModule();
+        ModuleSelectionTool tool=getModuleUI().getModuleSection().getSelected();
+        if (!tool.contains(getModuleUI()))
+            tool.add(getModuleUI());
+        tool.delete();
 	}
 
 }
