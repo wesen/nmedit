@@ -41,6 +41,7 @@ import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ModuleListener;
 import net.sf.nmedit.nomad.theme.component.NomadComponent;
@@ -57,7 +58,7 @@ public class CableDisplay extends ShapeDisplay2<Curve> {
     private CDEventHandler cdEventHandler = new CDEventHandler();
 
     public CableDisplay(ModuleSectionUI sectionUI) {
-        super(sectionUI, new CableRenderOp());
+        super(sectionUI, new CableRenderOp(sectionUI.getModuleSection().getPatch()));
         this.moduleSectionUI = sectionUI;
         moduleSectionUI.addContainerListener(cdEventHandler);
     }
@@ -253,10 +254,15 @@ public class CableDisplay extends ShapeDisplay2<Curve> {
         return tmp.toArray(new Cable[tmp.size()]);
     }
 
-    private static class CableRenderOp implements RenderOp
+    public static class CableRenderOp implements RenderOp
     {
         
-        CableRenderer painter = new CableRenderer();
+        CableRenderer painter;
+        
+        public CableRenderOp(Patch patch)
+        {
+            painter = new CableRenderer(patch);
+        }
 
         public void configure( Graphics2D g2, int optimization )
         {

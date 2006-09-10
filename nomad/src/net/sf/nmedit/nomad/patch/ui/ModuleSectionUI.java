@@ -26,67 +26,57 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
-import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Format;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.VoiceArea;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.Event;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.HeaderListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.VoiceAreaListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.nomad.core.nomad.NomadEnvironment;
 import net.sf.nmedit.nomad.main.background.BackgroundFactory;
-import net.sf.nmedit.nomad.main.ui.ModuleDragSource;
 import net.sf.nmedit.nomad.main.ui.NComponent;
+import net.sf.nmedit.nomad.patch.ui.action.ModuleDragSource;
+import net.sf.nmedit.nomad.patch.ui.action.ModuleSelectionSource;
+import net.sf.nmedit.nomad.patch.ui.action.ModuleSelectionSource.ModuleTransferData;
 import net.sf.nmedit.nomad.patch.ui.drag.CableDragAction;
-import net.sf.nmedit.nomad.patch.ui.drag.ModuleDragAction;
+import net.sf.nmedit.nomad.patch.ui.drag.ModuleSelectionTool;
 import net.sf.nmedit.nomad.patch.ui.drag.PaintAbleDragAction;
 import net.sf.nmedit.nomad.patch.ui.drag.SelectingDragAction;
 import net.sf.nmedit.nomad.theme.component.NomadConnector;
-import net.sf.nmedit.nomad.util.NomadUtilities;
 import net.sf.nmedit.nomad.util.graphics.shape.RenderOp;
 
-
-public class ModuleSectionUI extends NComponent implements
+public class ModuleSectionUI extends NComponent implements 
 //Scrollable,
-VoiceAreaListener{
+VoiceAreaListener, HeaderListener{
 
 	private VoiceArea moduleSection;
 	
 	public VoiceArea getModuleSection() {
 		return moduleSection;
 	}
-    
-	private final static int dropAction = DnDConstants.ACTION_COPY;
 
-	//public static final DataFlavor ModuleSectionGUIFlavor = new DataFlavor("nomad/ModuleSectionGUIFlavor", "Nomad ModuleSectionGUI");
-
-	//private JPopupMenu popup = null;
+    private final static int moduleDropAction = DnDConstants.ACTION_COPY;
 	private CableDisplay curvePanel = null;
-
-	private DragDropAction ddAction = new DragDropAction();
+    private DragDropAction ddAction = new DragDropAction();
 
     /*
      * TODO optimizations
@@ -106,17 +96,17 @@ VoiceAreaListener{
         
     }
 
-
+    
 	public ModuleSectionUI(VoiceArea moduleSection) {
         setAutoscrolls(true);
         this.moduleSection = moduleSection;
+        moduleSection.getPatch().getHeader().addHeaderListener(this);
         moduleSection.addVoiceAreaListener(this);
         curvePanel = new CableDisplay(this);
       //  patchUI = null;
         
         setOpaque(true);
         setDoubleBuffered(true);
-        new DropTarget(this, dropAction, ddAction, true);
   
         addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent event) {
@@ -153,7 +143,9 @@ VoiceAreaListener{
 
         setBackgroundB(BackgroundFactory.createMetallicBackground());
         moduleSectionResized();
-       
+        
+
+        new DropTarget(this, moduleDropAction, ddAction, true);
     }
 
 	private boolean adjustSize = true;
@@ -205,6 +197,12 @@ VoiceAreaListener{
         {
             curvePanel.paint(g);
         }
+        
+        if (dragBounds!=null)
+        {
+            g.setColor(Color.BLACK);
+            g.drawRect(dragBounds.x,dragBounds.y,dragBounds.width-1,dragBounds.height-1);
+        }
 
         if (dragAction!=null)
             dragAction.paint(g);
@@ -242,13 +240,69 @@ VoiceAreaListener{
             updateSize();
         }
     }
-
+    
+    private Rectangle dragBounds = null;
+    
     private class DragDropAction extends DropTargetAdapter {
+        
+        public void dragExit(DropTargetEvent e)
+        {
+            deleteRect();
+        }
+        
+        private void deleteRect()
+        {
+            if (dragBounds!=null) 
+            {
+                repaint(dragBounds.x, dragBounds.y, dragBounds.width, dragBounds.height);
+                dragBounds=null;
+            }   
+        }
 
-        public void dragOver(DropTargetDragEvent dtde) {
+        public void dragOver(DropTargetDragEvent dtde) 
+        {
+         
             // We will only accept the ModuleToolbarButton.ModuleToolbarButtonFlavor
-            if (dtde.getCurrentDataFlavorsAsList().contains(ModuleDragSource.ModuleInfoFlavor)) {
+            if (dtde.getCurrentDataFlavorsAsList().contains(ModuleDragSource.ModuleInfoFlavor)) 
+            {
                 dtde.acceptDrag(DnDConstants.ACTION_COPY);
+            }
+            else if (dtde.getCurrentDataFlavorsAsList().contains(ModuleSelectionSource.ModuleSelectionFlavor)) 
+            {
+                dtde.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
+                
+                Object data;
+                try
+                {
+                    data = dtde.getTransferable().getTransferData(ModuleSelectionSource.ModuleSelectionFlavor);
+                }
+                catch (Throwable e)
+                {
+                    return ;
+                }
+                if (data!=null && data instanceof ModuleTransferData)
+                {
+                    ModuleTransferData mtd = ((ModuleTransferData) data);
+                    Rectangle r = mtd.getData().getBounds(null);
+                   // Point tl = mtd.getData().getTopLeftPX();
+                    Point p = dtde.getLocation();
+                    Point o = mtd.getOrigin();
+                    
+                    /*
+                    o.x+=mtd.getModuleUI().getX();
+                    o.y+=mtd.getModuleUI().getY();*/
+                    p.x =p.x-o.x;
+                    p.y =p.y-o.y;
+
+                    r.x= p.x;
+                    r.y= p.y;
+
+                    if (dragBounds!=null) 
+                        repaint(dragBounds.x, dragBounds.y, dragBounds.width, dragBounds.height);
+                    dragBounds = r; 
+                    repaint(dragBounds.x, dragBounds.y, dragBounds.width, dragBounds.height);
+                    
+                }
             }
             else
             {
@@ -259,7 +313,6 @@ VoiceAreaListener{
         public void drop(DropTargetDropEvent dtde) {
             DataFlavor chosen = null;
             Object data = null;
-
             // We will only accept the ModuleToolbarButton.ModuleToolbarButtonFlavor
             if (dtde.isDataFlavorSupported(ModuleDragSource.ModuleInfoFlavor) 
                     && dtde.isLocalTransfer()) {
@@ -269,7 +322,7 @@ VoiceAreaListener{
                 
                 try {
                     // Get the data
-                    dtde.acceptDrop(dropAction);
+                    dtde.acceptDrop(moduleDropAction);
                     data = dtde.getTransferable().getTransferData(chosen);
                 }
                 catch (Throwable t) {
@@ -288,13 +341,60 @@ VoiceAreaListener{
                     moduleSection.add(mod);             
                 }
                 dtde.dropComplete(true);
+            } else if (dtde.isDataFlavorSupported(ModuleSelectionSource.ModuleSelectionFlavor) 
+                    && dtde.isLocalTransfer()) 
+            {
+                chosen = ModuleSelectionSource.ModuleSelectionFlavor;
+
+                
+                Transferable transfer = dtde.getTransferable();
+                try {
+                    // Get the data
+                    dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+                    data = transfer.getTransferData(chosen);
+                }
+                catch (Throwable t) {
+                    t.printStackTrace();
+                    dtde.dropComplete(false);
+                    return;
+                }
+                
+                if (data!=null && data instanceof ModuleTransferData) 
+                {
+                    // Cast the data and create a nice module.
+                    ModuleTransferData tdata = ((ModuleTransferData)data);
+                    ModuleSelectionTool tool = tdata.getData();
+                    Point p = dtde.getLocation();
+                    
+                    int action = dtde.getDropAction();
+                    
+                    if (tool==selection && ((action&DnDConstants.ACTION_MOVE)!=0))
+                    { 
+                        Point o = tdata.getOrigin();
+                        ModuleUI start = tdata.getModuleUI();
+                        o.x+=start.getX();
+                        o.y+=start.getY();
+                        
+                        selection.moveSelection(p.x-o.x, p.y-o.y);
+                    }
+                    else
+                    {
+                        tool.copyTo(moduleSection, ModuleUI.Metrics.getGridX(p.x), ModuleUI.Metrics.getGridY(p.y));
+                    }
+                    
+                }
+                dtde.dropComplete(true);
+                
             } else {
                 dtde.rejectDrop();      
                 dtde.dropComplete(false);
             }
+            deleteRect();
         }
 
     }
+    
+    private ModuleSelectionTool selection = new ModuleSelectionTool();
 
     private PaintAbleDragAction dragAction = null;
     
@@ -426,77 +526,13 @@ VoiceAreaListener{
         
         dragAction = cda;
     }
-    
-    public void createDragAction( ModuleUI moduleUI, MouseEvent event )
+
+    public Collection<ModuleUI> getSelectedModules()
     {
-        ModuleDragAction mda= new ModuleDragAction(moduleUI, event.getX(), event.getY())
-        {
-            public void dragged()
-            {
-                super.dragged();
-                repaintDirtyRegion();
-
-                Component c = getSource();
-                Rectangle bounds = new Rectangle( 
-                        SwingUtilities.convertPoint(getSource(), c.getX(),c.getY(),ModuleSectionUI.this),
-                        c.getSize());
-                bounds.x = Math.max( bounds.x, 0 );
-                bounds.y = Math.max( bounds.y, 0 );
-                NomadUtilities.enlarge( bounds, 20 );
-                //TODO 
-                //scrollRectToVisible( bounds );
-                
-            }
-            void repaintDirtyRegion()
-            {
-                Rectangle dirty = getDirtyRegion();
-                repaint(dirty.x, dirty.y, dirty.width, dirty.height);
-            }
-            public void stop()
-            {
-                moveModules();
-                dragAction = null;
-                repaintDirtyRegion();
-                super.stop();
-            }
-            private void moveModules()
-            {
-                moduleSection.beginUpdate();
-                
-                /*
-                for (Iterator<ModuleUI> iter = iterator();iter.hasNext();)
-                {
-                    ModuleUI m = iter.next();
-                    m.setLocationEx(getDeltaX()+m.getX(),getDeltaY()+m.getY());
-                }*/
-                
-                moveSelection(getModules(), getDeltaX(), getDeltaY());
-                moduleSection.endUpdate();
-            }
-            public void paint(Graphics g)
-            {
-                Graphics2D g2 = (Graphics2D) g;
-
-                g2.setColor(Color.BLUE);
-                super.paint(g);
-            }
-        };
-        mda.addModule(moduleUI);
-        
-        for (int i = getComponentCount()-1;i>=0;i--)
-        {
-            Component c = getComponent(i);
-            if (c instanceof ModuleUI)
-            {
-                ModuleUI m = (ModuleUI) c;
-                if (m.isSelected() && m!=moduleUI)
-                    mda.addModule(m);
-            }
-        }
-        
-        dragAction = mda;
+        return selection.getModuleUIs();
     }
     
+    /*
     public Collection<ModuleUI> getSelection()
     {
         Collection<ModuleUI> selection = new ArrayList<ModuleUI>();
@@ -513,40 +549,20 @@ VoiceAreaListener{
         }
         
         return selection;
-    }
+    }*/
     
     private void createSelectionAction(MouseEvent event)
     {
         dragAction = new SelectingDragAction(this, event.getX(), event.getY())
         {
-            Set<ModuleUI> all = new HashSet<ModuleUI>();
-            Set<ModuleUI> selection = new HashSet<ModuleUI>();
-            
             {
-                for (int i=getComponentCount()-1;i>=0;i--)
-                {
-                    Component c = getComponent(i);
-                    if (c instanceof ModuleUI)
-                    {
-                        ModuleUI m = (ModuleUI)c;
-                        if (m.isSelected())
-                            selection.add(m);
-                        all.add(m);
-                    }
-                }
+                selection.clear();
             }
             
             public void stop()
             {
                 if (getSelection().isEmpty())
-                {
-                    for (ModuleUI m : selection)
-                        m.setSelected(false);
-                }
-                
-                all.clear();
-                selection.clear();
-                
+                    selection.clear();
                 dragAction = null;
                 repaintDirtyRegion();
                 super.stop();
@@ -566,18 +582,18 @@ VoiceAreaListener{
                         iter.remove();
                     }
                 }
-                for (ModuleUI m : all)
+                for (Component c : getComponents())
                 {
-                    if (selRect.intersects(m.getX(), m.getY(), m.getWidth(), m.getHeight()))
-                    {
-                        if (!selection.contains(m))
+                    if (c instanceof ModuleUI)
+                    { 
+                        ModuleUI m  = (ModuleUI)c;
+                        if (selRect.intersects(m.getX(), m.getY(), m.getWidth(), m.getHeight()))
                         {
-                            m.setSelected(true);
-                            selection.add(m);
+                            if (!selection.contains(m))
+                                selection.add(m);
                         }
                     }
                 }
-                
                 repaintDirtyRegion();
             }
 
@@ -589,34 +605,6 @@ VoiceAreaListener{
         };
     }
     
-    private void moveSelection(ModuleUI [] movedModules, int dx, int dy)
-    {
-        final List<ModuleUI> moved = Arrays.asList(movedModules);
-        final List<Point> locations = new ArrayList<Point>(moved.size());
-        
-        Collections.sort(moved, new DescendingYOrder());
-        
-        for (ModuleUI module:moved)
-        {
-            locations.add(new Point(module.getX()+dx, module.getY()+dy));
-        }
-        for (int i=0;i<moved.size();i++)
-        {
-            Point dst = locations.get(i);
-            moved.get(i).setLocationEx(dst.x, dst.y);
-            
-        }
-    }
-
-    private static class DescendingYOrder implements Comparator<Component>
-    {
-        public int compare( Component o1, Component o2 )
-        {            
-            return o1.getY()-o2.getY();
-        }
-        
-    }
-
     public void moduleAdded( Event e )
     {
         ModuleUI ui = NomadEnvironment.sharedInstance().getTheme().buildModule(e.getModule());
@@ -624,23 +612,27 @@ VoiceAreaListener{
         e.getModule().setUI(ui);
         add(ui);
         
-            //Component c;
-            add(ui/*c=event.getModule().newUI(this)*/);
+        repaint(50, ui.getX(), ui.getY(), ui.getWidth(), ui.getHeight());
+        /*
             Rectangle r = ui.getBounds();
             RepaintManager.currentManager(this).addDirtyRegion(this, r.x, r.y, r.width, r.height);
+*/            
     }
 
     public void moduleRemoved( Event e )
     {
         ModuleUI m = (ModuleUI) e.getModule().getUI();
+        selection.remove(m); // if selected, remove from selection
         m.setModuleSectionUI(null);
-        Rectangle bounds = m.getBounds(); 
+        e.getModule().setUI(null);
+        m.unlink();
         remove(m);
+        repaint(50, m.getX(), m.getY(), m.getWidth(), m.getHeight());
+        /*
         if (isDisplayable())
             RepaintManager.currentManager(this).addDirtyRegion(this,
                 bounds.x, bounds.y, bounds.width, bounds.height
-            );
-        e.getModule().setUI(null);
+            );*/
     }
 
     public void voiceAreaResized( Event e )
@@ -675,4 +667,24 @@ VoiceAreaListener{
         }
         curvePanel.endUpdate();
     }
+    public ModuleSelectionTool getSelected()
+    {
+        return selection;
+    }
+    
+    public void headerValueChanged( Event e )
+    {
+        switch (e.getIndex())
+        {
+            case Format.HEADER_CABLE_VISIBILITY_BLUE:
+            case Format.HEADER_CABLE_VISIBILITY_RED:
+            case Format.HEADER_CABLE_VISIBILITY_YELLOW:
+            case Format.HEADER_CABLE_VISIBILITY_GRAY:
+            case Format.HEADER_CABLE_VISIBILITY_GREEN:
+            case Format.HEADER_CABLE_VISIBILITY_PURPLE:
+            case Format.HEADER_CABLE_VISIBILITY_WHITE:
+                repaint();
+        }
+    }
+
 }

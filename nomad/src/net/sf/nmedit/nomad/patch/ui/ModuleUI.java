@@ -16,7 +16,6 @@ import java.util.NoSuchElementException;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Connector;
@@ -26,6 +25,7 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ModuleListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.nomad.patch.ui.action.BreakCablesAction;
 import net.sf.nmedit.nomad.patch.ui.action.DisconnectCablesAction;
+import net.sf.nmedit.nomad.patch.ui.action.ModuleSelectionSource;
 import net.sf.nmedit.nomad.patch.ui.action.RemoveCablesAction;
 import net.sf.nmedit.nomad.patch.ui.action.RemoveModuleAction;
 import net.sf.nmedit.nomad.theme.NomadClassicColors;
@@ -77,9 +77,22 @@ public class ModuleUI extends JComponent implements ModuleListener
 
         public static Point getGridLocation( ModuleUI module )
         {
-            return new Point( Metrics.getGridX( module.getX() ), Metrics
-                    .getGridY( module.getY() ) );
+            return getGridLocation(module.getX(), module.getY());
         }
+
+        public static Point getGridLocation( int pxx, int pxy )
+        {
+            return new Point( Metrics.getGridX( pxx ), Metrics .getGridY( pxy ) );
+        }
+
+        public static Point getBestGridLocation(int pxx, int pxy)
+        {
+            Point l = getGridLocation(pxx, pxy);
+            if (pxx % Metrics.WIDTH - Metrics.WIDTH_DIV_2 >= 0) l.x++;
+            l.x = Math.max(0, l.x);
+            return l;
+        }
+        
 
         public static int getPixelX( int gridX )
         {
@@ -133,12 +146,7 @@ public class ModuleUI extends JComponent implements ModuleListener
                     if (event.getComponent() instanceof ModuleUI)   
                     {
                         ModuleUI m = (ModuleUI) event.getComponent();
-                        if (SwingUtilities.isLeftMouseButton( event ))
-                        {
-                            // dragging operation
-                            m.getModuleSection().createDragAction(ModuleUI.this, event);
-                        }
-                        else if (event.isPopupTrigger())
+                         if (event.isPopupTrigger())
                         {   // check if a popup should be shown
                             m.showPopup( event );
                         }
@@ -150,7 +158,34 @@ public class ModuleUI extends JComponent implements ModuleListener
         
         super.processMouseEvent(event);
     }
-    
+
+    public void buildDefaultPopup( JPopupMenu menu )
+    {
+        menu.add( new RemoveCablesAction( this ) );
+        menu.addSeparator();
+        menu.add( new RemoveModuleAction( this ) );
+    }
+
+    public void buildConnectorPopup( JPopupMenu menu, Connector c )
+    {
+        menu.add( new DisconnectCablesAction( this, c ) );
+        menu.add( new BreakCablesAction( this, c ) );
+    }
+
+    public void showPopup( MouseEvent event )
+    {
+        JPopupMenu menu = new JPopupMenu();
+        buildDefaultPopup( menu );
+        menu.show( event.getComponent(), event.getX(), event.getY() );
+    }
+
+    public void showConnectorPopup( MouseEvent event, Connector c )
+    {
+        JPopupMenu menu = new JPopupMenu();
+        buildConnectorPopup( menu, c );
+        buildDefaultPopup( menu );
+        menu.show( event.getComponent(), event.getX(), event.getY() );
+    }
     public boolean isSelected()
     {
         return selected;
@@ -175,9 +210,15 @@ public class ModuleUI extends JComponent implements ModuleListener
     }
     
     public void setLocationEx(int x, int y)
-    {
+    {        
         if (getX()==x && getY()==y)
             return;
+        
+        Point l = Metrics.getBestGridLocation(x, y);
+        getModule().setLocation(l);
+        Metrics.setModuleUILocation( this, getModule() );
+
+        /*
         
         setLocation(x,y);
         Point l = Metrics.getGridLocation( this );
@@ -188,12 +229,12 @@ public class ModuleUI extends JComponent implements ModuleListener
 
         getModule().setLocation( l );
         Metrics.setModuleUILocation( this, getModule() );
-        /*
-        m.getModuleSection().getModuleSection().rearangeModules(
-                m.getModule() );
-                
-        *
-        scrollTo( m );*/
+        
+        */
+        
+        //getModule().setLocation(x-(x%Metrics.WIDTH),y-(y%Metrics.HEIGHT));
+        
+        // scrollTo( m );
     }
     /*
     protected void processMouseMotionEvent(MouseEvent event)
@@ -266,7 +307,13 @@ public class ModuleUI extends JComponent implements ModuleListener
          * imageView.setImage( ( new ImageIcon(module.getDModule().getIcon())
          * ).getImage() ); add(imageView); }
          */
-    }
+        
+        
+        // move and copy
+
+        ModuleSelectionSource.install(this);
+        
+    } 
 
     public void setModuleSpec(DModule m)
     {
@@ -372,33 +419,6 @@ private boolean dirty = false;
         dirty=true;
     }
 
-    public void buildDefaultPopup( JPopupMenu menu )
-    {
-        menu.add( new RemoveCablesAction( this ) );
-        menu.addSeparator();
-        menu.add( new RemoveModuleAction( this ) );
-    }
-
-    public void buildConnectorPopup( JPopupMenu menu, Connector c )
-    {
-        menu.add( new DisconnectCablesAction( this, c ) );
-        menu.add( new BreakCablesAction( this, c ) );
-    }
-
-    public void showPopup( MouseEvent event )
-    {
-        JPopupMenu menu = new JPopupMenu();
-        buildDefaultPopup( menu );
-        menu.show( event.getComponent(), event.getX(), event.getY() );
-    }
-
-    public void showConnectorPopup( MouseEvent event, Connector c )
-    {
-        JPopupMenu menu = new JPopupMenu();
-        buildConnectorPopup( menu, c );
-        buildDefaultPopup( menu );
-        menu.show( event.getComponent(), event.getX(), event.getY() );
-    }
 /*
     public void setLocation( int x, int y )
     {
