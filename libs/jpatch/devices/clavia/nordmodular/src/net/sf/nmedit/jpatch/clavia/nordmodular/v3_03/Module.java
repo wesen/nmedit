@@ -33,16 +33,16 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.event.ModuleListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 
 
-public class Module 
+public class Module implements Cloneable
 {
 
-    private final DModule     definition;
+    private DModule     definition;
 
-    private final Connector[] connectorList;
+    private Connector[] connectorList;
 
-    private final Parameter[] parameterList;
+    private Parameter[] parameterList;
 
-    private final Custom[]    customList;
+    private Custom[]    customList;
 
     private VoiceArea         voiceArea;
 
@@ -58,8 +58,13 @@ public class Module
     
     public Module( DModule definition )
     {
-        this.index = -1;
         this.definition = definition;
+        init();
+    }
+    
+    private final void init()
+    {
+        this.index = -1;
         this.voiceArea = null;
         this.name = definition.getName();
         
@@ -73,9 +78,34 @@ public class Module
 
         customList = new Custom[definition.getCustomParamCount()];
         for (int i = definition.getCustomParamCount()-1; i >= 0; i--)
-            customList[i] = new Custom( definition.getCustomParam( i ) );
+            customList[i] = new Custom( definition.getCustomParam( i ) );   
     }
 
+    public Module clone()
+    {
+        try
+        {
+            Module copy = (Module) super.clone();
+            copy.definition = definition;
+            copy.name = name;
+            copy.x = x;
+            copy.y = y;
+            copy.index = index;
+            copy.init();
+
+            for (int i=getParameterCount()-1;i>=0;i--)
+                copy.getParameter(i).setValue(getParameter(i).getValue());
+            for (int i=getCustomCount()-1;i>=0;i--)
+                copy.getCustom(i).setValue(getCustom(i).getValue());
+            
+            return copy;
+        }
+        catch (CloneNotSupportedException e)
+        {
+            throw new InternalError(e.getMessage());
+        }
+    }
+    
     public void setIndex(int index)
     {
         if (voiceArea == null)
@@ -173,6 +203,9 @@ public class Module
 
     public void setLocation( int vx, int vy )
     {
+        vx = Math.max(0, vx);
+        vy = Math.max(0, vy);
+        
         if (( this.x != vx ) || ( this.y != vy ))
         {            
             this.x = vx;
@@ -187,6 +220,7 @@ public class Module
 
     void setYWithoutVANotification(int vy)
     {
+        vy = Math.max(0, vy);
         if (( this.y != vy ))
         {            
             this.y = vy;
