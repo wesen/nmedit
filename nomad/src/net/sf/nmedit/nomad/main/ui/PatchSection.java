@@ -25,7 +25,6 @@ package net.sf.nmedit.nomad.main.ui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -43,9 +42,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultStyledDocument;
 
 import net.sf.nmedit.jmisc.math.Math2;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch;
@@ -183,30 +179,6 @@ PatchListener
         return gp;
     }
     
-    private class LimitedText extends DefaultStyledDocument {
-        
-        private int maxCharacters;
-     
-        public LimitedText(int maxCharacters) 
-        {
-            this.maxCharacters = maxCharacters;
-        }
-     
-        public void insertString(int offs, String str, AttributeSet a) 
-            throws BadLocationException {
-     
-            //This rejects the entire insertion if it would make
-            //the contents too long. Another option would be
-            //to truncate the inserted string so the contents
-            //would be exactly maxCharacters in length.
-            if ((getLength() + str.length()) <= maxCharacters)
-                super.insertString(offs, str, a);
-            else
-                Toolkit.getDefaultToolkit().beep();
-        }
-    }
-
-
     public void setDocumentManager(DocumentManager dm)
     {
         if (this.documentManager!=dm)
