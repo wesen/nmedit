@@ -1,0 +1,34 @@
+Nomad - Nord Modular Editor
+---------------------------
+
+Copyright (C) 2006 Christian Schneider, Marcus Andersson
+
+http://nmedit.sf.net
+
+Version 0.2.2-pre
+-----------------
+
+Preview release
+
+new features / improvements:
+- new module icons
+- drag'n'drop between voice areas of the same and of different patches
+- copying selected modules
+- displays added: wavewrap, clip, ADSR, AD, ModEnv, AHD, noteVelScale
+- voice count (synth) displayed
+- DSP load display
+- cable visibility can be changed
+- file sidebar: find as you type
+
+bugs fixed:
+- 
+
+Version 0.2.1-pre
+-----------------
+
+Preview release
+
+Supports basic operations:
+- patch editing
+- patch up-/downloading
+- patch file import and export
