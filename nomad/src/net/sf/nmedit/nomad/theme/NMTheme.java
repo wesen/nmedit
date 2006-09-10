@@ -24,13 +24,10 @@ package net.sf.nmedit.nomad.theme;
 
 import java.io.InputStream;
 
-import javax.swing.JComponent;
-
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Module;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.VoiceArea;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.DModule;
 import net.sf.nmedit.jtheme.Theme;
-import net.sf.nmedit.jtheme.dom.ContainerNode;
 import net.sf.nmedit.jtheme.dom.ThemeDom;
 import net.sf.nmedit.nomad.patch.ui.ModuleSectionUI;
 import net.sf.nmedit.nomad.patch.ui.ModuleUI;
