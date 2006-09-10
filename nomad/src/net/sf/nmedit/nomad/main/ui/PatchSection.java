@@ -24,6 +24,7 @@ package net.sf.nmedit.nomad.main.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,10 +32,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractSpinnerModel;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
@@ -51,6 +55,7 @@ import net.sf.nmedit.jsynth.clavia.nordmodular.v3_03.Slot;
 import net.sf.nmedit.nomad.main.Nomad;
 import net.sf.nmedit.nomad.main.action.ShowNoteDialogAction;
 import net.sf.nmedit.nomad.patch.ui.PatchDocument;
+import net.sf.nmedit.nomad.theme.NomadClassicColors;
 import net.sf.nmedit.nomad.util.document.Document;
 import net.sf.nmedit.nomad.util.document.DocumentListener;
 import net.sf.nmedit.nomad.util.document.DocumentManager;
@@ -72,7 +77,11 @@ PatchListener
     private Patch patch = null;
     private Document document = null;
     private Nomad nomad;
-    private JLabel cyclesInfo ;
+    private JPanel dspPane;
+    private JProgressBar dspTotal;
+    private JProgressBar dspPoly;
+    
+    private CableToggler cableToggler = new CableToggler();
     
     public PatchSection( Nomad nomad, String title, ShowNoteDialogAction action )
     {
@@ -82,7 +91,7 @@ PatchListener
         pane.setLayout(new BoxLayout(pane, BoxLayout.X_AXIS));//new GridLayout(1, 0, 2, 2));
 
         pName = new JTextField(new LimitedText(16), "Name", 16);
-        pName.setMinimumSize(new Dimension(80, 20));
+        pName.setMinimumSize(new Dimension(80, 0));
         pName.addKeyListener(new KeyAdapter(){
             public void keyPressed( KeyEvent e )
             {
@@ -137,18 +146,42 @@ PatchListener
 
         pane.add(new JLabel("Name:"));
         pane.add(pName);
+        pane.add(Box.createHorizontalStrut(5));
         
         pane.add(new JLabel("Voices:"));
         pane.add(pVoices);
 
+        pane.add(Box.createHorizontalStrut(5));
         
-        cyclesInfo = new JLabel();
-        pane.add(cyclesInfo);
+        dspPane = new JPanel(new GridLayout(2, 1));
+        dspPane.setMinimumSize(new Dimension(40, 0));
+        dspPoly = createBar();
+        dspTotal = createBar();
+
+        dspPane.add(dspPoly);
+        dspPane.add(dspTotal);
+        
+        pane.add(dspPane);
+        pane.add(Box.createHorizontalStrut(5));
         
         pane.add(new JButton(action));
+        pane.add(Box.createHorizontalStrut(5));
+        pane.add(cableToggler);
         
         updateValues();
     } 
+    
+    private JProgressBar createBar()
+    {
+        GradientProgressBar gp = new GradientProgressBar();
+        gp.setBackground(NomadClassicColors.TEXT_DISPLAY_BACKGROUND);
+        gp.setForeground(Color.GREEN);
+        gp.setGradient(Color.RED);
+        gp.setEnabled(true);
+        gp.setMinimum(0);
+        gp.setMaximum(100);
+        return gp;
+    }
     
     private class LimitedText extends DefaultStyledDocument {
         
@@ -211,7 +244,7 @@ PatchListener
         
         if (documentManager==null)
         {
-            
+            cableToggler.setPatch(null);
             disableView();
             return;
         }
@@ -220,6 +253,7 @@ PatchListener
         PatchDocument doc = (PatchDocument) document;
         if (doc==null)
         {
+            cableToggler.setPatch(null);
             disableView();
             return;
         }
@@ -236,7 +270,8 @@ PatchListener
         
         if (patch!=null)
             patch.addPatchListener(this);
-        
+
+        cableToggler.setPatch(patch);
         updateCyclesInfo();
     }
     
@@ -244,7 +279,8 @@ PatchListener
     {
         if (patch==null)
         {
-            cyclesInfo.setText("Load:PVA: -  Total: - ");
+            dspPoly.setValue(0);
+            dspTotal.setValue(0);
         }
         else
         {
@@ -252,7 +288,9 @@ PatchListener
             double cva = patch.getCommonVoiceArea().getCyclesTotal();
             double total = Math2.roundTo(pva+cva, -2);
             pva = Math2.roundTo(pva, -2);
-            cyclesInfo.setText("Load:PVA:"+pva+"% Total:"+total+"%");
+
+            dspPoly.setValue((int)pva);
+            dspTotal.setValue((int)total);
         }
     }
     
