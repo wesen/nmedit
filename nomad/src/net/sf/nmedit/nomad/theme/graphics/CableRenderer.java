@@ -27,6 +27,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Header;
+import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Patch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.Signal;
 import net.sf.nmedit.nomad.patch.ui.Cable;
 import net.sf.nmedit.nomad.patch.ui.Curve;
@@ -42,9 +44,15 @@ public class CableRenderer
     public final static double shadowAlpha = 0.3;
     
     Configuration[] conf = new Configuration[7];
+    
+    private Patch patch = null;
+    private Header header = null;
 
-    public CableRenderer()
+    public CableRenderer(Patch p)
     {
+        this.patch = p;
+        if (patch!=null)
+            header = patch.getHeader();
         for (int i=0;i<conf.length;i++)
             conf[i] = new Configuration(Signal.bySignalID(i));
     }
@@ -61,9 +69,12 @@ public class CableRenderer
         {
             s = Signal.NONE;
         }
-        
-        Configuration conf = this.conf[s.getSignalID()] ;
-        paintWithShadow(g2, c, conf.c, conf.shadow);
+
+        if ((patch==null)||(patch!=null && header.isCableVisible(s)))
+        {
+            Configuration conf = this.conf[s.getSignalID()] ;
+            paintWithShadow(g2, c, conf.c, conf.shadow);
+        }
     }
 
     public void paintWithShadow(Graphics2D g2, Curve curve, Color fill, Color shadow) {
