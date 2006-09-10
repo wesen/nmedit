@@ -121,28 +121,6 @@ public class VoiceArea extends ModuleSet implements ModuleListener
         return patch;
     }
 
-    private int updateCount = 0;
-    
-    public void beginUpdate()
-    {
-        if (updateCount == 0)
-        {
-            // fire begin update
-        }
-        updateCount ++;
-    }
-
-    public void endUpdate()
-    {
-        if (updateCount<=0)
-            throw new IllegalStateException();
-        updateCount --;
-        if (updateCount==0)
-        {
-            // fire end update
-        }
-    }
-    
     public boolean add( Module m )
     {
         if (isPolyVoiceArea() && m.isCvaOnly())
@@ -166,8 +144,6 @@ public class VoiceArea extends ModuleSet implements ModuleListener
         
         if (super.add(m))
         {
-            beginUpdate();
-
             m.setVoiceArea( this );
             updateSize(m, ADD);
 
@@ -176,8 +152,6 @@ public class VoiceArea extends ModuleSet implements ModuleListener
             fireModuleAddedEvent(m);
             m.addModuleListener(this);
 
-            endUpdate();
-            
             return true;
         }
         else
