@@ -154,6 +154,12 @@ public abstract class NomadControl extends NomadComponent implements ParameterLi
             }
             else
             {
+                if (parameter!=null && parameter.getAssignedMorph()==null)
+                {
+                    parameter.getModule().getVoiceArea().getPatch().getMorphs().get(0)
+                    .add(parameter);
+                }
+                
                 // check range
                 double d = value + morphValue.doubleValue()*getRange();
                 d = Math.max(getMinValue(), Math.min(d, getMaxValue()));
