@@ -22,9 +22,8 @@
  */
 package net.sf.nmedit.nomad.main.ui;
 
-import java.awt.GridLayout;
-
 import javax.swing.Action;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 
@@ -41,7 +40,7 @@ public class FileSection extends HeaderSection implements DocumentListener
         super( title );
         nomad.getDocumentContainer().addListener(this);
         JComponent pane = getContentPane();
-        pane.setLayout(new GridLayout(1, 0));
+        pane.setLayout(new BoxLayout(pane, BoxLayout.X_AXIS));//new GridLayout(1, 0));
         pane.add(createButton(nc.fileNewAction));
         pane.add(createButton(nc.fileOpenAction));
         pane.add(createButton(nc.fileSaveAction));
