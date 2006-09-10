@@ -45,6 +45,8 @@ import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeNode;
@@ -58,10 +60,10 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.v3_03.spec.ModuleDescriptions;
 import net.sf.nmedit.nomad.main.Nomad;
 import net.sf.nmedit.nomad.main.resources.AppIcons;
 import net.sf.nmedit.nomad.main.ui.HeaderLabel;
-import net.sf.nmedit.nomad.main.ui.ModuleDragSource;
 import net.sf.nmedit.nomad.main.ui.fix.StripeEnabledTreeCellRenderer;
 import net.sf.nmedit.nomad.main.ui.fix.TreeStripes;
 import net.sf.nmedit.nomad.main.ui.fix.TreeStripesContainer;
+import net.sf.nmedit.nomad.patch.ui.action.ModuleDragSource;
 import net.sf.nmedit.nomad.util.NomadUtilities;
 import net.sf.nmedit.nomad.util.document.Document;
 import net.sf.nmedit.nomad.util.document.DocumentListener;
@@ -144,6 +146,28 @@ public class ModuleSidebar extends JPanel implements SwingConstants, Sidebar, Si
         top.add(prev, BorderLayout.CENTER);
         top.add(bar, BorderLayout.SOUTH);
         add(top, BorderLayout.NORTH);
+        
+        tree.addTreeSelectionListener(new TreeSelListener());
+    }
+    
+    private class TreeSelListener implements  TreeSelectionListener
+    {
+
+        boolean changed = false;
+        
+        public void valueChanged( TreeSelectionEvent e )
+        {
+            
+            changed = true;
+            
+            SwingUtilities.invokeLater(new Runnable(){
+                public void run(){
+                    if (changed)
+                        prev.setPreview(getSelectedModule());
+                    changed = false;
+                }});
+        }
+        
     }
     
     private class ExpandAllAction extends AbstractAction
