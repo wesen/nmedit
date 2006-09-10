@@ -25,6 +25,8 @@ package net.sf.nmedit.nomad.main.ui.sidebar;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -33,11 +35,14 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 import javax.swing.AbstractListModel;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -45,6 +50,8 @@ import javax.swing.event.ListDataListener;
 import net.sf.nmedit.nomad.core.application.Application;
 import net.sf.nmedit.nomad.main.Nomad;
 import net.sf.nmedit.nomad.main.resources.AppIcons;
+import net.sf.nmedit.nomad.main.ui.HeaderLabel;
+import net.sf.nmedit.nomad.main.ui.LimitedText;
 import net.sf.nmedit.nomad.main.ui.fix.StripeEnabledListCellRenderer;
 import net.sf.nmedit.nomad.main.ui.fix.TreeStripes;
 
@@ -86,6 +93,7 @@ public class PatchLibSidebar extends JPanel implements Sidebar, SidebarListener
     private File directory;
     private File[] files ;
     private JList listView;
+    private  JTextField tfFilter;
 
     public final static String KEY_CURRENT_DIRECTORY = "custom.patch.directory.default";
     
@@ -118,6 +126,19 @@ public class PatchLibSidebar extends JPanel implements Sidebar, SidebarListener
         setPreferredSize(new Dimension(200,0));
         setLayout(new BorderLayout());
         listView = new JList();
+        
+        tfFilter = new JTextField(new LimitedText(20), null, 20);
+        
+        JPanel top = new JPanel(new BorderLayout());
+        JLabel lblDescription = new HeaderLabel("Files");
+        lblDescription.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
+        top.add(lblDescription, BorderLayout.NORTH);
+        top.add(tfFilter, BorderLayout.CENTER);
+        
+        tfFilter.addKeyListener(new TextFieldListener());
+        
+        add(top, BorderLayout.NORTH);
+        
         add(new JScrollPane(listView), BorderLayout.CENTER);
 
         listView.setModel(new PatchFileListModel());
@@ -127,22 +148,71 @@ public class PatchLibSidebar extends JPanel implements Sidebar, SidebarListener
         setDirectory(getDefaultPatchDirectoryFile());
     }
     
+    private class TextFieldListener implements KeyListener, Runnable
+    {
+        
+        private boolean changed = false;
+        
+        public void keyTyped( KeyEvent e )
+        { }
+
+        public void keyPressed( KeyEvent e )
+        { }
+
+        public void keyReleased( KeyEvent e )
+        {
+            changed = true;
+            SwingUtilities.invokeLater(this);
+        }
+
+        public void run()
+        {
+            if (!changed)
+                return ;
+            
+            setFilterString(tfFilter.getText());
+            
+            changed = false;
+        }
+    }
+    
+    private String filterString = null;
+    
+    public void setFilterString(String filter)
+    {
+        if (filter!=null && filter.length()==0)
+            filter = null;
+        
+        if (filterString==filter)
+            return;
+        
+        if (filterString!=null && filterString.equals(filter))
+            return;
+        
+        filterString = filter;
+
+        updateFiles();
+    }
+    
     public File getDirectory()
     {
         return directory;
     }
     
+    private void updateFiles()
+    {
+        directory = directory.getAbsoluteFile();
+        files = directory.listFiles(new PatchFileFilter(filterString));
+        Arrays.<File>sort(files, new FileComparator());
+        fireModelChanged();
+    }
+    
     public void setDirectory(File dir)
     {
         if (dir==null) return;
-        dir = dir.getAbsoluteFile();
-        File[] list = dir.listFiles(new PatchFileFilter());
-        {
-            this.files = list;
-            this.directory = dir;
-            Arrays.<File>sort(files, new FileComparator());
-            fireModelChanged();
-        }
+        this.directory = dir;
+        
+        updateFiles();
     }
     
     protected void fireModelChanged() 
@@ -179,11 +249,26 @@ public class PatchLibSidebar extends JPanel implements Sidebar, SidebarListener
         
     }
     
-    private class PatchFileFilter implements FileFilter
+    private static class PatchFileFilter implements FileFilter
     {
+        private String filter;
+        
+        public PatchFileFilter(String filter)
+        {   this.filter = filter == null ? null : filter.toLowerCase(); }
+        
         public boolean accept( File pathname )
         {
-            return (pathname.isDirectory() || pathname.getName().toLowerCase().endsWith(".pch"));
+            if (pathname.isDirectory())
+                return true;
+            
+            String name = pathname.getName().toLowerCase();
+            if (!name.endsWith(".pch"))
+                return false;
+            
+            if (filter == null)
+                return true;
+            
+            return filter == null ? true : name.contains(filter);
         }
     }
     
