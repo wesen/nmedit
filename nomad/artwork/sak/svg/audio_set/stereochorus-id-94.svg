@@ -13,8 +13,8 @@
    id="svg4243"
    sodipodi:version="0.32"
    inkscape:version="0.43"
-   sodipodi:docbase="/home/sak/wip/nmedit/audio_set"
-   sodipodi:docname="stereochorus.svg">
+   sodipodi:docbase="/home/sak/wip/nmedit/icon_sets/audio_set"
+   sodipodi:docname="stereochorus-id-94.svg">
   <defs
      id="defs4245" />
   <sodipodi:namedview
@@ -31,8 +31,8 @@
      showgrid="true"
      inkscape:grid-bbox="true"
      inkscape:document-units="px"
-     inkscape:window-width="797"
-     inkscape:window-height="575"
+     inkscape:window-width="801"
+     inkscape:window-height="579"
      inkscape:window-x="373"
      inkscape:window-y="124"
      inkscape:guide-bbox="true"
@@ -87,31 +87,31 @@
        transform="matrix(1.029072,0,0,1.029173,-0.460554,-0.468232)" />
     <path
        sodipodi:type="arc"
-       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:0.81646073;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:0.91685992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="path4256"
        sodipodi:cx="9.0324259"
        sodipodi:cy="8.6794558"
        sodipodi:rx="5.0680695"
        sodipodi:ry="5.0680695"
        d="M 14.100495 8.6794558 A 5.0680695 5.0680695 0 1 1  3.9643564,8.6794558 A 5.0680695 5.0680695 0 1 1  14.100495 8.6794558 z"
-       transform="matrix(0.918599,0,0,0.909228,-0.252114,0.108398)" />
+       transform="matrix(0.728435,0,0,0.909228,1.420465,0.108398)" />
     <path
        sodipodi:type="arc"
-       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.63291967;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.99015129;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="path4258"
        sodipodi:cx="9.0324259"
        sodipodi:cy="8.6794558"
        sodipodi:rx="5.0680695"
        sodipodi:ry="5.0680695"
        d="M 14.100495 8.6794558 A 5.0680695 5.0680695 0 1 1  3.9643564,8.6794558 A 5.0680695 5.0680695 0 1 1  14.100495 8.6794558 z"
-       transform="matrix(0.508035,0,0,0.510484,3.409175,3.573061)" />
+       transform="matrix(0.34202,0,0,0.510484,4.910732,3.573061)" />
     <path
        style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 11.067085,4.045064 L 13.067085,7.045064 L 14.067085,7.045064 L 14.067085,9.045064 L 13.067085,9.045064 L 11.067085,12.045064 L 11.067085,4.045064 z "
+       d="M 10.375,4 L 12.375,7 L 13.375,7 L 13.375,9 L 12.375,9 L 10.375,12 L 10.375,4 z "
        id="path4252" />
     <path
        style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 5.0230411,4.045064 L 3.0230411,7.045064 L 2.0230411,7.045064 L 2.0230411,9.045064 L 3.0230411,9.045064 L 5.0230411,12.045064 L 5.0230411,4.045064 z "
+       d="M 5.5,4 L 3.5,7 L 2.5,7 L 2.5,9 L 3.5,9 L 5.5,12 L 5.5,4 z "
        id="path4254" />
   </g>
 </svg>

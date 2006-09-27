@@ -14,7 +14,7 @@
    sodipodi:version="0.32"
    inkscape:version="0.43"
    sodipodi:docname="2output-id-4.svg"
-   sodipodi:docbase="/home/sak/wip/nmedit/inout_set">
+   sodipodi:docbase="/home/sak/wip/nmedit/icon_sets/inout_set">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -69,7 +69,7 @@
        transform="matrix(1.029072,0,0,1.029071,-0.4637,-0.471326)" />
     <path
        style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 6.3687019,3.9937162 L 4.3687019,6.9937162 L 3.3687019,6.9937162 L 3.3687019,8.9937162 L 4.3687019,8.9937162 L 6.3687019,11.993716 L 6.3687019,3.9937162 z "
+       d="M 6.625,4 L 4.625,7 L 3.625,7 L 3.625,9 L 4.625,9 L 6.625,12 L 6.625,4 z "
        id="path4254" />
     <text
        xml:space="preserve"

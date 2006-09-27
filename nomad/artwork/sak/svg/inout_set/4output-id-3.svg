@@ -15,7 +15,7 @@
    sodipodi:version="0.32"
    inkscape:version="0.43"
    sodipodi:docname="4output-id-3.svg"
-   sodipodi:docbase="/home/sak/wip/nmedit/inout_set">
+   sodipodi:docbase="/home/sak/wip/nmedit/icon_sets/inout_set">
   <defs
      id="defs4">
     <linearGradient
@@ -118,7 +118,7 @@
        transform="matrix(1.029072,0,0,1.029071,-0.4637,-0.4543)" />
     <path
        style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 6.3687019,4.0107422 L 4.3687019,7.0107422 L 3.3687019,7.0107422 L 3.3687019,9.0107422 L 4.3687019,9.0107422 L 6.3687019,12.010742 L 6.3687019,4.0107422 z "
+       d="M 6.625,4.0000002 L 4.625,7.0000002 L 3.625,7.0000002 L 3.625,9.0000002 L 4.625,9.0000002 L 6.625,12 L 6.625,4.0000002 z "
        id="path4254" />
     <text
        xml:space="preserve"
