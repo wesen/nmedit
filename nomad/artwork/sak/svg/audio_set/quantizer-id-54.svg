@@ -13,8 +13,8 @@
    id="svg3079"
    sodipodi:version="0.32"
    inkscape:version="0.43"
-   sodipodi:docbase="/home/sak/wip/nmedit/audio_set"
-   sodipodi:docname="quantizer.svg">
+   sodipodi:docbase="/home/sak/wip/nmedit/icon_sets/audio_set"
+   sodipodi:docname="quantizer-id-54.svg">
   <defs
      id="defs3081" />
   <sodipodi:namedview
@@ -85,12 +85,12 @@
        d="M 15.45198 8.22896 A 7.2304454 7.2304454 0 1 1  0.99108934,8.22896 A 7.2304454 7.2304454 0 1 1  15.45198 8.22896 z"
        transform="matrix(1.029072,0,0,1.029071,-0.460554,-0.468185)" />
     <path
-       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 3.5,12.5 L 6.5,12.5 L 6.4821782,9.3571784 L 9.518317,9.3571784 L 9.518317,6.3210397 L 12.464356,6.3210397 L 12.5,3.5"
        id="path3092"
        sodipodi:nodetypes="ccccccc" />
     <path
-       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#ffffff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        d="M 12.5,3.5 C 12.5,3.5 3.5,3 3.5,12.5"
        id="path3112"
        sodipodi:nodetypes="cc" />
