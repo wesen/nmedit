@@ -9,10 +9,22 @@ public class PdlTester extends TestCase
 	System.out.println("");
     }
     
+    private String testpdl = null;
+    
+    public String getTestPdlFileName()
+    {
+        if (testpdl == null)
+        {
+            // get location of test.pdl
+            testpdl = getClass().getClassLoader().getResource("test.pdl").getFile();
+        }
+        return testpdl;
+    }
+    
     public void testDecode()
 	throws Exception
     {
-	Protocol p = new Protocol("test/test.pdl");
+	Protocol p = new Protocol(getTestPdlFileName());
 	p.useTracer(new TestTracer());
 	
 	BitStream stream = new BitStream();
@@ -47,7 +59,7 @@ public class PdlTester extends TestCase
     public void testEncode()
 	throws Exception
     {
-	Protocol p = new Protocol("test/test.pdl");
+	Protocol p = new Protocol(getTestPdlFileName());
 	p.useTracer(new TestTracer());
 	
 	BitStream bstream = new BitStream();
