@@ -214,6 +214,7 @@ public class ProtocolTester extends TestCase
 	    System.out.println("LightMessage: " +
 			       "slot:" + message.get("slot") + " " +	
 			       "pid:" + message.get("pid") + " " +
+			       "startIndex:" + message.get("startIndex") + " " +
 			       message.get("light0") +
 			       message.get("light1") +
 			       message.get("light2") +
@@ -234,6 +235,24 @@ public class ProtocolTester extends TestCase
 			       message.get("light17") +
 			       message.get("light18") +
 			       message.get("light19"));
+	}
+
+	public void messageReceived(MeterMessage message)
+	{
+	    System.out.println("MeterMessage: " +
+			       "slot:" + message.get("slot") + " " +	
+			       "pid:" + message.get("pid") + " " +
+			       "startIndex:" + message.get("startIndex") + " " +
+			       message.get("b0") + " " +
+			       message.get("a0") + " " +
+			       message.get("b1") + " " +
+			       message.get("a1") + " " +
+			       message.get("b2") + " " +
+			       message.get("a2") + " " +
+			       message.get("b3") + " " +
+			       message.get("a3") + " " +
+			       message.get("b4") + " " +
+			       message.get("a4"));
 	}
 
 	public void messageReceived(PatchMessage message)

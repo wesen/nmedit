@@ -102,6 +102,9 @@ public abstract class MidiMessage
 		if (packet.contains("Lights")) {
 		    return new LightMessage(packet);
 		}
+		if (packet.contains("Meters")) {
+		    return new MeterMessage(packet);
+		}
 		if (packet.contains("KnobChange")) {
 		    return new ParameterMessage(packet);
 		}

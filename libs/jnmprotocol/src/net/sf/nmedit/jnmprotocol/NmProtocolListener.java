@@ -25,6 +25,7 @@ public abstract class NmProtocolListener
 
     public void messageReceived(IAmMessage message) {}
     public void messageReceived(LightMessage message) {}
+    public void messageReceived(MeterMessage message) {}
     public void messageReceived(PatchMessage message) {}
     public void messageReceived(AckMessage message) {}
     public void messageReceived(PatchListMessage message) {}
