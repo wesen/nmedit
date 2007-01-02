@@ -33,6 +33,23 @@ import static org.junit.Assert.*;
 public class BitStreamTest
 {
 
+    @Test
+    public void testZeroBitCase()
+    {
+        BitStream bs;
+        
+        // must not throw an exception
+        
+        bs = new BitStream();
+        bs.getInt(0);
+        bs.append(0, 0);
+        
+        bs = BitStream.wrap(new byte[10]);
+        bs.setPosition(bs.getSize());
+        bs.getInt(0);
+        bs.append(0, 0);
+    }
+    
     /**
      * Test for {@link BitStream#unsignedByte(byte)}.
      */
@@ -383,6 +400,26 @@ public class BitStreamTest
             BitStream bs = BitStream.wrap(new int[2], i);
             assertTrue(bs.isAvailable(i));
             assertFalse(bs.isAvailable(i+1));
+        }
+        
+        {
+            final int start = 1;
+            for (int i=start;i<=10;i++)
+            {
+                BitStream bs = BitStream.wrap(new byte[10], start, i);
+                assertTrue(bs.isAvailable((i-start)*8));
+                assertFalse(bs.isAvailable(((i-start)*8)+1));
+            }
+        }
+        
+        
+        {
+            byte[] data = new byte[10];
+            BitStream bs = BitStream.wrap(data);
+            assertTrue(bs.getSize() == data.length*8);
+            assertTrue(bs.isAvailable(bs.getSize()));
+            assertTrue(bs.isAvailable(data.length*8));
+            assertFalse(bs.isAvailable((data.length*8)+1));
         }
     }
 
