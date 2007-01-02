@@ -46,9 +46,9 @@ import java.util.Arrays;
 public class BitStream implements Cloneable
 {
     // empty byte[] array
-    private static final byte[] EMPTY_BYTES = new byte[0];
+    static final byte[] EMPTY_BYTES = new byte[0];
     // empty int[] array
-    private static final int[] EMPTY_INTS = new int[0];
+    static final int[] EMPTY_INTS = new int[0];
     // write position/number of written bits
     private int size;
     // read position
@@ -91,6 +91,7 @@ public class BitStream implements Cloneable
         
         this.data = data;
         this.size = bitcount;
+        this.position = 0;
     }
 
     // ****** wrapping functions ******
@@ -172,6 +173,7 @@ public class BitStream implements Cloneable
      */
     public final int getInt(int bitcount)
     {
+        if (bitcount == 0) return 0;
         // ensure bits in range [0..32]
         ensureBitRange0to32(bitcount);
         // ensure bits available
@@ -228,14 +230,13 @@ public class BitStream implements Cloneable
      */
     public final void append( int value, int bitcount )
     {   
+        if (bitcount == 0) return ;
         // ensure bits in range [0..32]
         ensureBitRange0to32(bitcount);
         // ensure only specified number of bits are set
         value = unsetbits(value, bitcount);
         // calculate remaining bits in current array field
         int remaining = 32-bitsof(size);
-        // number of bits of left shift operation 
-        int lshift = remaining-bitcount;
         // get array index
         int idx = indexof(size);
         // ensure array is big enough
@@ -245,6 +246,8 @@ public class BitStream implements Cloneable
             System.arraycopy(data, 0, expanded, 0, data.length);
             data = expanded;   
         }
+        // number of bits of left shift operation 
+        int lshift = remaining-bitcount;
         // store bits
         if (lshift>=0)
         {
@@ -525,6 +528,11 @@ public class BitStream implements Cloneable
     static final int unsetbits(int value, int bitcount)
     {
         return (bitcount<32) ? (value & ~(0xFFFFFFFF << bitcount)) : value;
+    }
+
+    public int remaining()
+    {
+        return Math.max(0, size-position);
     }
 
 }
