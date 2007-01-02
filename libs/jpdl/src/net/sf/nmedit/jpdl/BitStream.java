@@ -28,6 +28,10 @@ import java.util.Arrays;
  * A stream for bitwise writing and reading.
  * 
  * <h1>History</h1>
+ * <h3>2007-01-02</h3>
+ * <ul>
+ *   <li>getInt(0) and append(data, 0) cases are now working</li>
+ * </ul>
  * <h3>2006-12-18</h3>
  * <ul>
  *   <li>simpler and more readable getInt()/append() implementation</li>
