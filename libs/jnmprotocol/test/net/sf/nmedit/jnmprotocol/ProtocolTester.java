@@ -2,20 +2,40 @@ package net.sf.nmedit.jnmprotocol;
 
 import junit.framework.*;
 import javax.sound.midi.*;
+
+import net.sf.nmedit.jnmprotocol.utils.NmLookup;
 import net.sf.nmedit.jpdl.*;
 
 public class ProtocolTester extends TestCase
 {
     static private int pid0;
     
+    MidiDevice.Info[] nmDevice = new MidiDevice.Info[0];
+    MidiDriver nmDriver; 
+    
     protected void setUp()
     {
+        nmDevice = NmLookup.lookup(ProtocolTesterHelper.getHardwareDevices(), 1,
+                1000 /* 1 second timeout for each midi device pair*/
+               );
+        if (nmDevice.length != 2)
+            throw new RuntimeException("Nord Modular device not available");
+        
+        nmDriver = new MidiDriver(nmDevice[0], nmDevice[1]);
+    }
+    
+    private NmProtocol createProtocol(MidiDriver driver, MessageHandler messageHandler)
+    {
+        NmProtocol protocol = new NmProtocolST();
+        protocol.getTransmitter().setReceiver(driver.getReceiver());
+        driver.getTransmitter().setReceiver(protocol.getReceiver());
+        protocol.setMessageHandler(messageHandler);
+        return protocol;
     }
     
     public void testMidiDriver()
 	throws Exception
     {
-	MidiDriver md = new MidiDriver();
 
 	MidiDevice.Info[] info = MidiSystem.getMidiDeviceInfo();
 	
@@ -29,17 +49,28 @@ public class ProtocolTester extends TestCase
 	    System.out.println("Transmitters: " + MidiSystem.getMidiDevice(info[i]).getMaxTransmitters());
 	}
 
-	md.connect(info[0], info[1]);
-	for (int i = 0; i < 10; i++) {
-	    System.out.print("" + i + ":");
-	    byte[] data = md.receive();
-	    for (int j = 0; j < data.length; j++) {
-		System.out.print(" " + data[j]);
-	    }
-	    System.out.println("");
-	    Thread.sleep(100);
-	}
-	md.disconnect();
+    info = nmDevice.length > 0 ? nmDevice : ProtocolTesterHelper.getMidiDevicePair();
+
+    nmDriver.connect();
+    
+    try
+    {
+        /*
+    	for (int i = 0; i < 10; i++) {
+    	    System.out.print("" + i + ":");
+    	    byte[] data = md.receive();
+    	    for (int j = 0; j < data.length; j++) {
+    		System.out.print(" " + data[j]);
+    	    }
+    	    System.out.println("");
+    	    Thread.sleep(100);
+    	}
+        */
+    }
+    finally
+    {
+        nmDriver.disconnect();
+    }
     }
 
     public void testNewModuleMessage()
@@ -104,11 +135,10 @@ public class ProtocolTester extends TestCase
 	throws Exception
     {
 	try {
-	    MidiDriver md = new MidiDriver();
-	    MidiDevice.Info[] info = MidiSystem.getMidiDeviceInfo();
-	    md.connect(info[0], info[1]);
-	    NmProtocol p = new NmProtocol(md);
-	    p.addListener(new Listener(p));
+        nmDriver.connect();
+        MessageMulticaster multicaster = new MessageMulticaster();
+	    NmProtocol p = createProtocol(nmDriver, multicaster);
+        multicaster.addProtocolListener(new Listener(p, multicaster));
 	    p.send(new IAmMessage());
 	    p.send(new RequestPatchMessage());
 	    int n = 0;
@@ -117,7 +147,7 @@ public class ProtocolTester extends TestCase
 		p.heartbeat();
 		Thread.sleep(10);
 	    }
-	    pid0 = p.getActivePid(0);
+	    pid0 = multicaster.getActivePid(0);
 	}
 	catch (MidiException me) {
 	    me.printStackTrace();
@@ -126,6 +156,10 @@ public class ProtocolTester extends TestCase
 	catch (Throwable e) {
 	    e.printStackTrace();
 	}
+    finally
+    {
+        nmDriver.disconnect();
+    }
     }
 
     public void testModuleMessages()
@@ -133,12 +167,11 @@ public class ProtocolTester extends TestCase
     {
 	System.out.println("testModuleMessages: " + pid0);
 	try {
-	    MidiDriver md = new MidiDriver();
-	    MidiDevice.Info[] info = MidiSystem.getMidiDeviceInfo();
-	    md.connect(info[0], info[1]);
-	    NmProtocol p = new NmProtocol(md);
+        nmDriver.connect();
+        MessageMulticaster multicaster = new MessageMulticaster();
+        NmProtocol p = createProtocol(nmDriver, multicaster);
 	    //MidiMessage.usePdlFile("/midi.pdl", new TestTracer());
-	    p.addListener(new Listener(p));
+        multicaster.addProtocolListener(new Listener(p, multicaster));
 	    MoveModuleMessage mm = new MoveModuleMessage();
 	    mm.set("pid", pid0);
 	    mm.moveModule(1, 10, 40, 40);
@@ -175,6 +208,10 @@ public class ProtocolTester extends TestCase
 	catch (Throwable e) {
 	    e.printStackTrace();
 	}
+    finally
+    {
+        nmDriver.disconnect();
+    }
     }
 
     class TestTracer implements net.sf.nmedit.jpdl.Tracer
@@ -188,10 +225,12 @@ public class ProtocolTester extends TestCase
     class Listener extends NmProtocolListener
     {
 	private NmProtocol p;
+    private MessageMulticaster multicaster;
 
-	public Listener(NmProtocol p)
+	public Listener(NmProtocol p, MessageMulticaster multicaster)
 	{
 	    this.p = p;
+        this.multicaster = multicaster;
 	}
 
 	public void messageReceived(IAmMessage message)
@@ -270,7 +309,7 @@ public class ProtocolTester extends TestCase
 
 	    try {
 		GetPatchMessage gpm = new GetPatchMessage();
-		gpm.set("pid", p.getActivePid(0));
+		gpm.set("pid", multicaster.getActivePid(0));
 		p.send(gpm);
 	    }
 	    catch (MidiException me) {
