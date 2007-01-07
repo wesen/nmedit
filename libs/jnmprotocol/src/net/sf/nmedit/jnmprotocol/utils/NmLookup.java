@@ -48,12 +48,8 @@ public class NmLookup
             int index = 1;
             for (int i=0;i<devices.length;i+=2)
             {
-                System.out.print(index+":");
-                print(devices[i]);
-                System.out.println();
-                System.out.print(index+":");
-                print(devices[i+1]);
-                System.out.println();
+                System.out.println(index+":"+toString(devices[i]));
+                System.out.println(index+":"+toString(devices[i+1]));
                 index++;
             }
         }
@@ -62,11 +58,11 @@ public class NmLookup
             System.out.println("Nord Modular not detected.");
         }
     }
-    
-    private static void print(MidiDevice.Info info)
+
+    private static String toString(MidiDevice.Info info)
     {
-        System.out.print("[name="+info.getName()+",vendor"+info.getVendor()+",description="+info.getDescription()
-                +",version="+info.getVersion());
+        return info.getName()+" "+info.getVendor()+" "+info.getDescription()
+                +" "+info.getVersion();
     }
     
     private static boolean isAvailable(int max)
@@ -104,18 +100,28 @@ public class NmLookup
         MidiDevice.Info receiver = iterR.next();
         MidiDevice.Info transmitter = iterT.next();
         
+        int index = 1;
+        
+        System.out.println("looking up nord modular:");
         while (maxDevices > 0 || maxDevices <= 0)
         {
-            
             MidiDriver driver = new MidiDriver(transmitter, receiver);
             
             try
             {
+                System.out.println(index+":in :"+toString(transmitter));
+                System.out.println(index+":out:"+toString(receiver));
                 if (isNordModular(driver, timeout))
                 {
+                    System.out.println(index+":found");
                     maxDevices --;
                     return new MidiDevice.Info[] {transmitter, receiver};
                 }
+                else
+                {
+                    System.out.println(index+":not found");
+                }
+                index ++;
             }
             catch (Exception e)
             {
@@ -132,7 +138,6 @@ public class NmLookup
             }
             transmitter = iterT.next();
         }
-        
 
         return new MidiDevice.Info[0]; // no devices
     }

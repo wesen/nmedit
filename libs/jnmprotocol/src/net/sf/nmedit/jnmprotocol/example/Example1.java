@@ -23,7 +23,6 @@
 package net.sf.nmedit.jnmprotocol.example;
 
 import javax.sound.midi.MidiDevice;
-import javax.sound.midi.MidiDevice.Info;
 
 import net.sf.nmedit.jnmprotocol.DebugProtocol;
 import net.sf.nmedit.jnmprotocol.IAmMessage;
@@ -61,9 +60,6 @@ public class Example1 implements MessageHandler
         
         if (midiDevList.length != 2)
             throw new RuntimeException("Nord Modular not found.");
-        System.out.println("Nord Modular found:");
-        System.out.print("in:"+info2str(midiDevList[0]));
-        System.out.print("out:"+info2str(midiDevList[1]));
         
         driver = new MidiDriver(midiDevList[0], midiDevList[1]);
         driver.connect();
@@ -138,9 +134,4 @@ public class Example1 implements MessageHandler
         System.out.println("shutdown");
     }
 
-    
-    private String info2str( Info info )
-    {
-        return info.getName()+","+info.getVendor()+","+info.getDescription()+",";
-    }
 }
