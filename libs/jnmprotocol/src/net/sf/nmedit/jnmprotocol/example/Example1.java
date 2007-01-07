@@ -34,7 +34,6 @@ import net.sf.nmedit.jnmprotocol.NmProtocol;
 import net.sf.nmedit.jnmprotocol.NmProtocolMT;
 import net.sf.nmedit.jnmprotocol.NmProtocolST;
 import net.sf.nmedit.jnmprotocol.ProtocolDebug;
-import net.sf.nmedit.jnmprotocol.ProtocolTesterHelper;
 import net.sf.nmedit.jnmprotocol.utils.NmLookup;
 import net.sf.nmedit.jnmprotocol.utils.ProtocolRunner;
 import net.sf.nmedit.jnmprotocol.utils.ProtocolThreadExecutionPolicy;
@@ -58,7 +57,7 @@ public class Example1 implements MessageHandler
     public void example() throws Exception
     {
         // lookup the midi device connected to the nord modular
-        MidiDevice.Info[] midiDevList = NmLookup.lookup(ProtocolTesterHelper.getHardwareDevices(), 1, 600);
+        MidiDevice.Info[] midiDevList = NmLookup.lookup(NmLookup.getHardwareDevices(), 1, 600);
         
         if (midiDevList.length != 2)
             throw new RuntimeException("Nord Modular not found.");

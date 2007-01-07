@@ -15,7 +15,7 @@ public class ProtocolTester extends TestCase
     
     protected void setUp()
     {
-        nmDevice = NmLookup.lookup(ProtocolTesterHelper.getHardwareDevices(), 1,
+        nmDevice = NmLookup.lookup(NmLookup.getHardwareDevices(), 1,
                 1000 /* 1 second timeout for each midi device pair*/
                );
         if (nmDevice.length != 2)
@@ -48,8 +48,6 @@ public class ProtocolTester extends TestCase
 	    System.out.println("Receivers: " + MidiSystem.getMidiDevice(info[i]).getMaxReceivers());
 	    System.out.println("Transmitters: " + MidiSystem.getMidiDevice(info[i]).getMaxTransmitters());
 	}
-
-    info = nmDevice.length > 0 ? nmDevice : ProtocolTesterHelper.getMidiDevicePair();
 
     nmDriver.connect();
     

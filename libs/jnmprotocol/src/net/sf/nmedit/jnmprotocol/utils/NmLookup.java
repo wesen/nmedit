@@ -26,21 +26,21 @@ import java.util.List;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Sequencer;
+import javax.sound.midi.Synthesizer;
 
 import net.sf.nmedit.jnmprotocol.IAmMessage;
 import net.sf.nmedit.jnmprotocol.MessageHandler;
 import net.sf.nmedit.jnmprotocol.MidiDriver;
 import net.sf.nmedit.jnmprotocol.MidiMessage;
 import net.sf.nmedit.jnmprotocol.NmProtocolST;
-import net.sf.nmedit.jnmprotocol.ProtocolTesterHelper;
 
 public class NmLookup
 {
     
     public static void main(String[] args)
     {
-        MidiDevice.Info[] devices = lookup(ProtocolTesterHelper.getHardwareDevices(), 0,
-                600);
+        MidiDevice.Info[] devices = lookup(getHardwareDevices(), 0, 600);
 
         if (devices.length>0)
         {
@@ -192,6 +192,79 @@ public class NmLookup
         return acceptor.isAccepted();
     }
 
+    private static boolean available(int count)
+    {
+        return count == -1 || count > 0;
+    }
+    
+    public static MidiDevice.Info[] getMidiDevicePair() throws MidiUnavailableException
+    {
+        // return MidiSystem.getMidiDeviceInfo();
+        
+        MidiDevice.Info[] pair = new MidiDevice.Info[] {
+                getFirstInputDevice(), getFirstOutputDevice()
+        };
+        return pair;
+    }
+    
+    public static MidiDevice.Info getFirstInputDevice() throws MidiUnavailableException
+    {
+        MidiDevice.Info[] hwlist = getHardwareDevices();
+        
+        for (int i=0;i<hwlist.length;i++)
+        {
+            MidiDevice.Info info = hwlist[i];
+            MidiDevice device = MidiSystem.getMidiDevice(info);
+            
+            if (available(device.getMaxTransmitters()))
+                return info;
+        }
+        return null;
+    }
+    
+    public static MidiDevice.Info getFirstOutputDevice() throws MidiUnavailableException
+    {
+        MidiDevice.Info[] hwlist = getHardwareDevices();
+        
+        for (int i=0;i<hwlist.length;i++)
+        {
+            MidiDevice.Info info = hwlist[i];
+            MidiDevice device = MidiSystem.getMidiDevice(info);
+
+            if (available(device.getMaxReceivers()))
+                return info;
+        }
+        return null;
+    }
+
+    public static MidiDevice.Info[] getHardwareDevices()
+    {
+        MidiDevice.Info[] infoList = MidiSystem.getMidiDeviceInfo();
+        List<MidiDevice.Info> hwList = new ArrayList<MidiDevice.Info>();
+        
+        for (int i=0;i<infoList.length;i++)
+        {
+            MidiDevice.Info candidateInfo = infoList[i];
+            try
+            {
+                MidiDevice candidate = MidiSystem.getMidiDevice(candidateInfo);
+                if (isHardwareDevice(candidate))
+                    hwList.add(candidateInfo);
+            }
+            catch (MidiUnavailableException e)
+            {
+                // ignore
+            }
+        }
+        
+        return hwList.toArray(new MidiDevice.Info[hwList.size()]);
+    }
+
+    public static boolean isHardwareDevice( MidiDevice dev )
+    {
+        return !(dev instanceof Sequencer || dev instanceof Synthesizer);
+    }
+
     private static class IAmAcceptor implements MessageHandler
     {
         
@@ -208,5 +281,5 @@ public class NmLookup
         }
         
     }
-    
+
 }
