@@ -11,10 +11,13 @@ public class ProtocolTester extends TestCase
     static private int pid0;
     
     MidiDevice.Info[] nmDevice = new MidiDevice.Info[0];
-    MidiDriver nmDriver; 
+    static MidiDriver nmDriver = null; 
     
     protected void setUp()
     {
+        if (nmDriver != null)
+            return;
+        
         nmDevice = NmLookup.lookup(NmLookup.getHardwareDevices(), 1,
                 1000 /* 1 second timeout for each midi device pair*/
                );
