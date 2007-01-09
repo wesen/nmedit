@@ -28,53 +28,39 @@ public final class ProtocolDebug
 {
 
     public static final boolean LevelMessages = true;
-    public static final boolean LevelThread = true;
+    public static final boolean LevelThread = false;
     
     public static final boolean TraceSendProtocolMessage    = LevelMessages;
     public static final boolean TraceReceiveProtocolMessage = LevelMessages;
     public static final boolean TraceDebugReceiver          = LevelMessages;
     
     public static final boolean TraceWorkAvailableSignal    = LevelThread;
-    public static final boolean TraceHeartbeats             = LevelThread;
+    public static final boolean TraceHeartbeats             = LevelThread | true;
     public static final boolean TraceAwaitWorkSignal        = LevelThread;
 
     public static final boolean TraceObjects = true;
 
-    private static PrintStream printStream = null;
-    
-    public static PrintStream getPrintStream()
-    {
-        return printStream;
-    }
-    
-    public static void setPrintStream(PrintStream out)
-    {
-        printStream = out;
-    }
-    
-    public static void trace( Object sender, String message )
+    public static void trace( PrintStream out, Object sender, String message )
     {
         if (TraceObjects)
-            trace("@"+sender+":"+message);
+            trace(out, "@"+sender+":"+message);
         else
-            trace(message);
+            trace(out, message);
     }
 
-    public static void trace( String message )
+    public static void trace( PrintStream out, String message )
     {
-        PrintStream ps = getPrintStream();
-        if (ps!=null)
-            ps.println(message);
+        out.println(message);
     }
 
-    public static void traceException( Object sender, String method, Throwable e )
+    public static void traceException( PrintStream out, Object sender, String method, Throwable e )
     {
         StringWriter sw = new StringWriter();
         sw.write(method+":an exception occured \n");
         PrintWriter pw = new PrintWriter(sw);
         e.printStackTrace(pw);
         pw.flush();
-        trace(sender, sw.toString());
+        trace(out, sender, sw.toString());
     }
 
 }

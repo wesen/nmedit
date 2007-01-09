@@ -20,6 +20,8 @@
 package net.sf.nmedit.jnmprotocol;
 
 
+import java.io.PrintStream;
+
 import javax.sound.midi.Receiver;
 import javax.sound.midi.Transmitter;
 
@@ -32,12 +34,19 @@ public class DebugProtocol implements NmProtocol
     private Receiver debugReceiver;
     private Transmitter debugTransmitter;
     private DebugMessageHandler debugMessageHandler;
+    private PrintStream debugOut;
 
     public DebugProtocol(NmProtocol protocol)
     {
+        this(System.out, protocol);
+    }
+    
+    public DebugProtocol(PrintStream debugOut, NmProtocol protocol)
+    {
+        this.debugOut = debugOut;
         this.protocol = protocol;
-        this.debugReceiver = new DebugReceiver("incoming::", protocol.getReceiver());
-        this.debugTransmitter = new DebugTransmitter(protocol.getTransmitter());
+        this.debugReceiver = new DebugReceiver(debugOut, "incoming::", protocol.getReceiver());
+        this.debugTransmitter = new DebugTransmitter(debugOut, protocol.getTransmitter());
         this.debugMessageHandler = new DebugMessageHandler(protocol.getMessageHandler());
         protocol.setMessageHandler(debugMessageHandler);
     }
@@ -60,7 +69,7 @@ public class DebugProtocol implements NmProtocol
     public void send( MidiMessage midiMessage ) throws Exception
     {
         if (ProtocolDebug.TraceSendProtocolMessage)
-            ProtocolDebug.trace(protocol, "sending "+midiMessage);
+            ProtocolDebug.trace(debugOut, protocol, "sending "+midiMessage);
         
         try
         {
@@ -68,7 +77,7 @@ public class DebugProtocol implements NmProtocol
         }
         catch (Exception e)
         {
-            ProtocolDebug.traceException(protocol, "send("+midiMessage+")", e);
+            ProtocolDebug.traceException(debugOut, protocol, "send("+midiMessage+")", e);
             throw e;
         }
     }
@@ -90,7 +99,7 @@ public class DebugProtocol implements NmProtocol
             {
                 if (firstCall)
                 {
-                    ProtocolDebug.trace(protocol, "heartbeat() (first call)");   
+                    ProtocolDebug.trace(debugOut, protocol, "heartbeat() (first call)");   
                     heartbeatTraceTime = System.currentTimeMillis();
                     firstCall = false;
                 }
@@ -99,7 +108,7 @@ public class DebugProtocol implements NmProtocol
                 if (time >= 1000)
                 {
                     heartbeatTraceTime += 1000;
-                    ProtocolDebug.trace(protocol, "heartbeat() "+heartbeatTrace+" calls/"+Math.round(time/10d)/100d+"s");
+                    ProtocolDebug.trace(debugOut, protocol, "heartbeat() "+heartbeatTrace+" calls/"+Math.round(time/10d)/100d+"s");
                     heartbeatTrace = 0;
                 }
             }
@@ -111,7 +120,7 @@ public class DebugProtocol implements NmProtocol
         }
         catch (Exception e)
         {
-            ProtocolDebug.traceException(protocol, "heartbeat()", e);
+            ProtocolDebug.traceException(debugOut, protocol, "heartbeat()", e);
             throw e;
         }
     }
@@ -139,7 +148,7 @@ public class DebugProtocol implements NmProtocol
                 if (timeout == 0 || System.currentTimeMillis()-lastWorkSignalTime >= 1000)
                 {
                     String t = timeout == 0 ? "forever" : Long.toString(timeout);
-                    ProtocolDebug.trace(protocol, "awaiting work signal (timeout="+t+") "+awaitWorkSignalCount+" more");
+                    ProtocolDebug.trace(debugOut, protocol, "awaiting work signal (timeout="+t+") "+awaitWorkSignalCount+" more");
                 }
                 lastWorkSignalTime = System.currentTimeMillis();
             }
@@ -167,9 +176,11 @@ public class DebugProtocol implements NmProtocol
 
         private Receiver receiver;
         private Transmitter transmitter;
+        private PrintStream debugOut;
 
-        public DebugTransmitter( Transmitter t )
+        public DebugTransmitter( PrintStream debugOut, Transmitter t )
         {
+            this.debugOut = debugOut;
             this.transmitter = t;
         }
 
@@ -182,7 +193,7 @@ public class DebugProtocol implements NmProtocol
 
         protected Receiver wrap( Receiver r )
         {
-            return new DebugReceiver("sending::", r);
+            return new DebugReceiver(debugOut, "sending::", r);
         }
 
         public Transmitter getWrappedTransmitter()
@@ -240,7 +251,7 @@ public class DebugProtocol implements NmProtocol
         public void processMessage( MidiMessage message )
         {
             if (ProtocolDebug.TraceReceiveProtocolMessage)
-                ProtocolDebug.trace(protocol, "received "+message);
+                ProtocolDebug.trace(debugOut, protocol, "received "+message);
             
             messageHandler.processMessage(message);
         }

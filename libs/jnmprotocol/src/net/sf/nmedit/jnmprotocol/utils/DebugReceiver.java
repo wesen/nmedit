@@ -19,6 +19,8 @@
 
 package net.sf.nmedit.jnmprotocol.utils;
 
+import java.io.PrintStream;
+
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.Receiver;
 
@@ -30,21 +32,23 @@ public final class DebugReceiver implements Receiver
     private final Receiver receiver;
     private final boolean traceAlways;
     private String debugMessagePrefix;
+    private PrintStream debugOut;
 
-    public DebugReceiver(String debugMessagePrefix, Receiver receiver)
+    public DebugReceiver(PrintStream debugOut, String debugMessagePrefix, Receiver receiver)
     {
-        this(debugMessagePrefix, receiver, false);
+        this(debugOut, debugMessagePrefix, receiver, false);
     }
     
-    public DebugReceiver(String debugMessagePrefix, Receiver receiver, boolean traceAlways)
+    public DebugReceiver(PrintStream debugOut, String debugMessagePrefix, Receiver receiver, boolean traceAlways)
     {
+        this.debugOut = debugOut;
         this.debugMessagePrefix = debugMessagePrefix;
         this.receiver = receiver;
         this.traceAlways = traceAlways;
         
         if (isTracingEnabled())
         {
-            ProtocolDebug.trace(getClass().getName()+" for "+receiver);
+            ProtocolDebug.trace(debugOut, getClass().getName()+" for "+receiver);
         }
     }
     
@@ -57,7 +61,7 @@ public final class DebugReceiver implements Receiver
     {
         if (isTracingEnabled())
         {
-            ProtocolDebug.trace(receiver, debugMessagePrefix+"send(message,timeStamp)"
+            ProtocolDebug.trace(debugOut, receiver, debugMessagePrefix+"send(message,timeStamp)"
             +"="+message.getClass().getName()
             +"("+net.sf.nmedit.jnmprotocol.utils.StringUtils.toHexadecimal(message.getMessage())
             +","+timeStamp+")");
@@ -71,7 +75,7 @@ public final class DebugReceiver implements Receiver
         {
             if (isTracingEnabled())
             {
-                ProtocolDebug.traceException(receiver, "send()", e);
+                ProtocolDebug.traceException(debugOut, receiver, "send()", e);
             }
             throw e;
         }
@@ -81,7 +85,7 @@ public final class DebugReceiver implements Receiver
     {
         if (isTracingEnabled())
         {
-            ProtocolDebug.trace(receiver, "close()");
+            ProtocolDebug.trace(debugOut, receiver, "close()");
         }
         try
         {
@@ -91,7 +95,7 @@ public final class DebugReceiver implements Receiver
         {
             if (isTracingEnabled())
             {
-                ProtocolDebug.traceException(receiver, "close()", e);
+                ProtocolDebug.traceException(debugOut, receiver, "close()", e);
             }
             throw e;
         }

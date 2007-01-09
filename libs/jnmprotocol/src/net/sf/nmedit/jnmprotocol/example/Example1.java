@@ -64,9 +64,6 @@ public class Example1 implements MessageHandler
         driver = new MidiDriver(midiDevList[0], midiDevList[1]);
         driver.connect();
         
-        // setup debug messages print stream
-        ProtocolDebug.setPrintStream(System.out);
-        
         // create NmProtocol
         protocol = new DebugProtocol(new NmProtocolMT(new NmProtocolST()));
         protocol.setMessageHandler(this);
