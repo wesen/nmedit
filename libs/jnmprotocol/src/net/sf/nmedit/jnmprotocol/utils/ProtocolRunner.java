@@ -24,10 +24,27 @@ import net.sf.nmedit.jnmprotocol.NmProtocol;
 public class ProtocolRunner implements Runnable
 {
 
+    public static class ProtocolErrorHandler
+    {
+        public void handleError(Throwable t) throws Throwable
+        {
+            throw t;
+        }
+    }
+    
     private NmProtocol protocol;
+    private ProtocolErrorHandler errorHandler;
 
     public ProtocolRunner(NmProtocol protocol)
     {
+        this(protocol, null);
+    }
+
+    public ProtocolRunner(NmProtocol protocol, ProtocolErrorHandler errorHandler)
+    {
+        this.errorHandler = errorHandler;
+        if (errorHandler == null)
+            this.errorHandler = new ProtocolErrorHandler();
         this.protocol = protocol;
     }
     
@@ -42,10 +59,19 @@ public class ProtocolRunner implements Runnable
         {
             protocol.heartbeat();
         }
-        catch (Exception e)
+        catch (Throwable t)
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            try
+            {
+                errorHandler.handleError(t);
+            }
+            catch (Throwable notIgnorableT)
+            {
+                if (notIgnorableT instanceof RuntimeException)
+                    throw (RuntimeException) notIgnorableT;
+                else
+                    throw new RuntimeException(notIgnorableT);
+            }
         }
     }
 
