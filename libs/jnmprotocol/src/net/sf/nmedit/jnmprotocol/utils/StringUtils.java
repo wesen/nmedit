@@ -23,27 +23,54 @@ package net.sf.nmedit.jnmprotocol.utils;
 public class StringUtils
 {
 
-    public static String asHex( byte[] b )
+    public static String toText( byte[] b)
+    {
+        if (b.length == 0)
+            return "";
+        
+        boolean invalid = false;
+        
+        StringBuilder sb = new StringBuilder();
+        for (int i=0;i<b.length;i++)
+        {
+            char c = (char)b[i];
+            if (Character.isLetter(c)
+                ||Character.isDigit(c)
+                ||Character.isSpaceChar(c))
+            {
+                if (invalid)
+                    sb.append("...");
+                sb.append(c);
+                invalid = false;
+            }
+            else
+            {
+                invalid = true;
+            }
+        }
+        return sb.toString();
+    }
+    
+    public static String toHexadecimal( byte[] b )
     {
         if (b.length == 0)
             return "[]";
         
         StringBuilder sb = new StringBuilder(b.length*3+1);
         sb.append('[');
-        sb.append(asHex(b[0]));
+        sb.append(toHexadecimal(b[0]));
         for (int i=1;i<b.length;i++)
         {
             sb.append(' ');
-            sb.append(asHex(b[i]));
+            sb.append(toHexadecimal(b[i]));
         }
         sb.append(']');
         return sb.toString();
     }
 
-    private static String asHex(byte b)
+    private static String toHexadecimal(byte b)
     {
         int unsignedbyte = (int)(b&0xFF);
-        
         return (unsignedbyte<=0xF ? "0" : "") + Integer.toHexString(unsignedbyte).toUpperCase();
     }
 
