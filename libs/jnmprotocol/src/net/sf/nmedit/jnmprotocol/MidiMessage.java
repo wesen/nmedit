@@ -20,6 +20,8 @@
 package net.sf.nmedit.jnmprotocol;
 
 import java.util.*;
+
+import net.sf.nmedit.jnmprotocol.utils.StringUtils;
 import net.sf.nmedit.jpdl.*;
 
 public abstract class MidiMessage
@@ -132,10 +134,9 @@ public abstract class MidiMessage
 	    error = " parse failed: ";
 	}
 	
-	while (bitStream.isAvailable(8)) {
-	    error += " " + bitStream.getInt(8);
-	}
-
+    byte[] message =  bitStream.toByteArray();
+    error += StringUtils.toHexadecimal(message)+" ("+StringUtils.toText(message)+")";
+    
 	throw new MidiException(error, 0);
     }
 
@@ -263,6 +264,38 @@ public abstract class MidiMessage
 	    }
 	}
 	return result;
+    }
+    
+    private transient String toStringValue;
+    public String toString()
+    {
+        if (toStringValue == null)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.append(getClass().getName());
+            sb.append("[");
+            
+            Iterator params = parameters.listIterator();
+            
+            if (params.hasNext())
+            {
+                String param = (String) params.next();
+                sb.append(param);
+                sb.append("="+get(param));
+            }
+            
+            while (params.hasNext())
+            {
+                sb.append(",");
+                String param = (String) params.next();
+                sb.append(param);
+                sb.append("="+get(param));
+            }
+            
+            sb.append("]");
+            toStringValue = sb.toString();
+        }
+        return toStringValue;
     }
     
     protected boolean isreply;
