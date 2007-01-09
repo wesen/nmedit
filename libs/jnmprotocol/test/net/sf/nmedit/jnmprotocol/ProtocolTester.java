@@ -26,7 +26,12 @@ public class ProtocolTester extends TestCase
     
     private NmProtocol createProtocol(MidiDriver driver, MessageHandler messageHandler)
     {
-        NmProtocol protocol = new NmProtocolST();
+        return configureProtocol(new NmProtocolST(), driver, messageHandler);
+    }
+    
+    private NmProtocol configureProtocol(NmProtocol protocol,
+            MidiDriver driver, MessageHandler messageHandler)
+    {
         protocol.getTransmitter().setReceiver(driver.getReceiver());
         driver.getTransmitter().setReceiver(protocol.getReceiver());
         protocol.setMessageHandler(messageHandler);
@@ -212,6 +217,96 @@ public class ProtocolTester extends TestCase
     }
     }
 
+    public void testGetPatchListMessage() throws Exception
+    {
+        System.out.println("test get patch message");
+        nmDriver.connect();
+        try
+        {
+            NmProtocol protocol = configureProtocol(new DebugProtocol(new NmProtocolST()), nmDriver, null);
+            MessageAcceptor acceptor = new MessageAcceptor(protocol, GetPatchListMessage.class);
+            protocol.setMessageHandler(acceptor);
+            
+            protocol.send(new IAmMessage());
+            
+            GetPatchListMessage gpl = new GetPatchListMessage();
+            gpl.set("section", 0);
+            gpl.set("position", 0);
+            protocol.send(gpl);
+            
+            // returns if the message is received or otherwise throws an exception
+            acceptor.waitUntilAccepted(3000);
+            // everything is ok
+            System.out.println("success");
+        }
+        catch (Exception e)
+        {
+            System.out.println("failed");
+            throw e;
+        }
+        finally
+        {
+            nmDriver.disconnect();
+        }
+        
+    }
+    
+    private static class MessageAcceptor implements MessageHandler
+    {
+        private final Class<? extends MidiMessage> messageClass;
+        private final NmProtocol protocol;
+        private MidiMessage acceptedMessage = null;
+
+        public MessageAcceptor(NmProtocol protocol, Class<? extends MidiMessage> messageClass)
+        {
+            this.protocol = protocol;
+            this.messageClass = messageClass;
+        }
+
+        public void processMessage( MidiMessage message )
+        {
+            if (message.getClass().equals(messageClass) && !accepted())
+            {
+                this.acceptedMessage = message;
+            }
+        }
+        
+        public boolean accepted()
+        {
+            return acceptedMessage != null;
+        }
+        
+        public void waitUntilAccepted(final long timeout)
+            throws Exception
+        {
+            final long threshold = System.currentTimeMillis()+timeout;
+            
+            while(!accepted())
+            {
+                if (System.currentTimeMillis()>threshold)
+                    throw new InterruptedException("timeout: "+timeout);
+                
+                try
+                {
+                    protocol.heartbeat();
+                }
+                catch (Exception e1)
+                {
+                    throw e1;
+                }
+                
+                try
+                {
+                    protocol.awaitWorkSignal(100);
+                }
+                catch (InterruptedException e)
+                {
+                    // ignore
+                }
+            }
+        }
+    }
+    
     class TestTracer implements net.sf.nmedit.jpdl.Tracer
     {
 	public void trace(String message)
