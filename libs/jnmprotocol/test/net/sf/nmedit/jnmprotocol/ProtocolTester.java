@@ -3,6 +3,7 @@ package net.sf.nmedit.jnmprotocol;
 import junit.framework.*;
 import javax.sound.midi.*;
 
+import net.sf.nmedit.jnmprotocol.helper.GetPatchMessageReplyAcceptor;
 import net.sf.nmedit.jnmprotocol.utils.NmLookup;
 import net.sf.nmedit.jpdl.*;
 
@@ -220,9 +221,53 @@ public class ProtocolTester extends TestCase
     }
     }
 
+    /**
+     * Tests if each of the 13 PatchMessages is received
+     */
+    public void testGetPatchMessage() throws Exception
+    {        
+        System.out.println("test GetPatchMessage");
+        try
+        {
+            nmDriver.connect();
+            
+            MessageMulticaster multicaster = new MessageMulticaster();
+            NmProtocol protocol = new DebugProtocol(new NmProtocolST());
+            GetPatchMessageReplyAcceptor acceptor = new GetPatchMessageReplyAcceptor(protocol);
+            configureProtocol(protocol, nmDriver, multicaster);
+            multicaster.addProtocolListener(acceptor);
+            
+            acceptor.sendInitialMessage();
+            
+            long timeout = System.currentTimeMillis()+10*1000;
+            while (System.currentTimeMillis()<timeout && !acceptor.accepted())
+            {
+                protocol.heartbeat();
+                try
+                {
+                    protocol.awaitWorkSignal(1000);
+                }
+                catch (InterruptedException e)
+                {
+                    // ignore
+                }
+            }
+            
+            assertFalse("replies expected (PatchMessages:"+acceptor.getPatchMessageReplyCount()+", expected 13)", !acceptor.accepted());            
+        }
+        finally
+        {
+            nmDriver.disconnect();
+        }
+    }
+
+
+    /**
+     * Tests if the PatchListMessage is received
+     */
     public void testGetPatchListMessage() throws Exception
     {
-        System.out.println("test get patch message");
+        System.out.println("test GetPatchListMessage");
         nmDriver.connect();
         try
         {
