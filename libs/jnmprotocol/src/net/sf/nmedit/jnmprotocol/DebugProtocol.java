@@ -45,7 +45,7 @@ public class DebugProtocol implements NmProtocol
     {
         this.debugOut = debugOut;
         this.protocol = protocol;
-        this.debugReceiver = new DebugReceiver(debugOut, "incoming::", protocol.getReceiver());
+        this.debugReceiver = new DebugReceiver(debugOut, "in@", protocol.getReceiver());
         this.debugTransmitter = new DebugTransmitter(debugOut, protocol.getTransmitter());
         this.debugMessageHandler = new DebugMessageHandler(protocol.getMessageHandler());
         protocol.setMessageHandler(debugMessageHandler);
@@ -193,7 +193,7 @@ public class DebugProtocol implements NmProtocol
 
         protected Receiver wrap( Receiver r )
         {
-            return new DebugReceiver(debugOut, "sending::", r);
+            return new DebugReceiver(debugOut, "out@", r);
         }
 
         public Transmitter getWrappedTransmitter()
@@ -253,7 +253,8 @@ public class DebugProtocol implements NmProtocol
             if (ProtocolDebug.TraceReceiveProtocolMessage)
                 ProtocolDebug.trace(debugOut, protocol, "received "+message);
             
-            messageHandler.processMessage(message);
+            if (messageHandler != null)
+                messageHandler.processMessage(message);
         }
         
     }
