@@ -190,7 +190,9 @@ public abstract class MidiMessage
     {
 	for (Iterator i = parameters.iterator(); i.hasNext(); ) {
 	    String name = (String)i.next();
-	    set(name, packet.getVariable((String)paths.get(name)));
+	    if (paths.get(name) != null) {
+		set(name, packet.getVariable((String)paths.get(name)));
+	    }
 	}	
     }
 

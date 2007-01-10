@@ -37,6 +37,8 @@ public class PatchListMessage extends MidiMessage
 
 	names = new LinkedList();
 
+	addParameter("section", null);
+	addParameter("position", null);
 	set("cc", 0x17);
 	set("slot", 0);
 
