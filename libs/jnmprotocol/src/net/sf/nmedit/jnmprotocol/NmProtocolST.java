@@ -28,6 +28,7 @@ import javax.sound.midi.SysexMessage;
 import javax.sound.midi.Transmitter;
 
 import net.sf.nmedit.jnmprotocol.utils.QueueBuffer;
+import net.sf.nmedit.jnmprotocol.utils.StringUtils;
 import net.sf.nmedit.jpdl.BitStream;
 
 /**
@@ -177,7 +178,8 @@ public class NmProtocolST implements NmProtocol
                     }
                     else 
                     {
-                        throw new MidiException("Unexpected reply message received.", 0);
+                        throw new MidiException("Unexpected reply message received: "
+                                +StringUtils.toHexadecimal(receiveBytes), 0);
                     }
                 }
                 // process message
