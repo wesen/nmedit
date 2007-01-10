@@ -61,9 +61,9 @@ public final class DebugReceiver implements Receiver
     {
         if (isTracingEnabled())
         {
-            ProtocolDebug.trace(debugOut, receiver, debugMessagePrefix+"send(message,timeStamp)"
-            +"="+message.getClass().getName()
-            +"("+net.sf.nmedit.jnmprotocol.utils.StringUtils.toHexadecimal(message.getMessage())
+            ProtocolDebug.trace(debugOut, receiver, debugMessagePrefix+"send"
+            +"("+message.getClass().getName()
+            +net.sf.nmedit.jnmprotocol.utils.StringUtils.toHexadecimal(message.getMessage())
             +","+timeStamp+")");
         }
         
