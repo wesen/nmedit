@@ -298,20 +298,20 @@ SEQZoom % 1 :=
 	;
 
 PatchListResponse % 1 :=
-	?PatchList$data ?PatchListEnd$end
+	unknown:8 0x16:8 0x01:8 kind:8
+	#kind=0x03 => PatchList$data
+	#kind=0x04 => PatchListEnd$end
+	0:1 checksum:7
 	;
 	
 PatchList % 1 :=
-	0x05:8 0x16:8 0x01:8 0x03:8
 	0:1 section:7 0:1 position:7
 	?StringList$names
 	0:5 stop:3
-	0:1 checksum:7
 	;
 
 PatchListEnd % 1 :=
-	0x05:8 0x16:8 0x01:8 0x04:8
-	0:1 checksum:7
+	0:0
 	;
 
 StringList % 1 :=
