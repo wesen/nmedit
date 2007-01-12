@@ -37,6 +37,8 @@ public class PatchListMessage extends MidiMessage
 
 	names = new LinkedList();
 
+	addParameter("unknown", "data:patchList:unknown");
+	addParameter("kind", "data:patchList:kind");
 	addParameter("section", null);
 	addParameter("position", null);
 	set("cc", 0x17);

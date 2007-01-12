@@ -176,11 +176,6 @@ public class NmProtocolST implements NmProtocol
                         sendQueue.remove();
                         timeout = 0;
                     }
-                    else 
-                    {
-                        throw new MidiException("Unexpected reply message received: "
-                                +StringUtils.toHexadecimal(receiveBytes), 0);
-                    }
                 }
                 // process message
                 processMessage(midiMessage);
