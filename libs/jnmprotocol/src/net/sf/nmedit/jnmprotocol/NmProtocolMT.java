@@ -102,6 +102,7 @@ public class NmProtocolMT implements NmProtocol
         {
             protocol.heartbeat();
         }
+
         messageHandlerMT.processMessages();
     }
 
@@ -167,6 +168,7 @@ public class NmProtocolMT implements NmProtocol
         {
             if ((!processingMessages) && hasMessages())
             {
+                processingMessages = true;
                 if (EventQueue.isDispatchThread())
                 {
                     run();
@@ -180,7 +182,6 @@ public class NmProtocolMT implements NmProtocol
 
         public void run()
         {
-            processingMessages = true;
             try
             {
                 MidiMessage message;
