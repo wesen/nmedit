@@ -107,7 +107,7 @@ public class DebugProtocol implements NmProtocol
                 long time = System.currentTimeMillis()-heartbeatTraceTime;
                 if (time >= 1000)
                 {
-                    heartbeatTraceTime += 1000;
+                    heartbeatTraceTime = System.currentTimeMillis();
                     ProtocolDebug.trace(debugOut, protocol, "heartbeat() "+heartbeatTrace+" calls/"+Math.round(time/10d)/100d+"s");
                     heartbeatTrace = 0;
                 }
