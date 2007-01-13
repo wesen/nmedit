@@ -22,6 +22,27 @@ package net.sf.nmedit.jnmprotocol;
 import java.util.*;
 import net.sf.nmedit.jpdl.*;
 
+/**
+ * A message containing the names of consecutive patches
+ * stored in the synthesizer.
+ * 
+ * The message has two parameters section and position
+ * describing the location of the first patch.
+ * 
+ * Subsequent patches are at the next position (position+1).
+ * 
+ * If the patch name starts with the byte 0x01 then the second
+ * byte (supplementary value) contains the absolute position
+ * (position=getSupplementaryValue(name)), in the current section.
+ * 
+ * If the patch name starts with the byte 0x02 then the current
+ * location is unused, thus the patch name does not exist.
+ * 
+ * If the patch name starts with the byte 0x03 then the 
+ * second byte (supplementary value) contains the section
+ * of the next patch name. (section=getSupplementaryValue(name),
+ * position=0)
+ */
 public class PatchListMessage extends MidiMessage
 {
     private LinkedList names;
@@ -29,7 +50,7 @@ public class PatchListMessage extends MidiMessage
 
     public static final char END_OF_SECTION = 3;
     public static final char EMPTY_POSITION = 2;
-    public static final char EMPTY_SEQUENCE = 2;
+    public static final char EMPTY_SEQUENCE = 1;
 
     public PatchListMessage()
 	throws Exception
@@ -102,23 +123,50 @@ public class PatchListMessage extends MidiMessage
 	return endoflist;
     }
     
-    public boolean isEndOfSection(String name)
+    /**
+     * Returns true if the specified name describes the section
+     * of the next patch name.
+     */
+    public static boolean isEndOfSection(String name)
     {
-	return name.charAt(0) == END_OF_SECTION;
+	return name.length() == 2 && name.charAt(0) == END_OF_SECTION;
     }
 
-    public boolean isEmptyPosition(String name)
+    /**
+     * Returns true if the patch name describes an unused location.
+     */
+    public static boolean isEmptyPosition(String name)
     {
-	return name.charAt(0) == EMPTY_POSITION;
+	return name.length() == 1 && name.charAt(0) == EMPTY_POSITION;
     }
 
-    public boolean isEmptySequence(String name)
+    /**
+     * Returns true if the patch name contains info about the position.
+     */
+    public static boolean hasGapBefore(String name)
     {
-	return name.charAt(0) == EMPTY_SEQUENCE;
+	return name.length() >= 2 && name.charAt(0) == EMPTY_SEQUENCE;
+    }
+    
+    /**
+     * Removes the gap info from the specified name.
+     * Use this only if hasGapBefore(name) returns true.
+     */
+    public static String removeGapInfoFromName(String name)
+    {
+        return name.substring(2);
     }
 
-    public int getEmptyGap(String name)
+    /**
+     * Returns the supplementary value.
+     * The supplementary value is stored in the second character.
+     * @throws IllegalArgumentException if isEndOfSection(name) and hasGapBefore(name) is false
+     */
+    public static int getSupplementaryValue(String name)
     {
+        if (!(isEndOfSection(name)||hasGapBefore(name)))
+          throw new IllegalArgumentException("no supplementary value:"+name);
 	return (int)name.charAt(1);
     }
+    
 }
