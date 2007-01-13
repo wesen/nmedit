@@ -28,7 +28,6 @@ import javax.sound.midi.SysexMessage;
 import javax.sound.midi.Transmitter;
 
 import net.sf.nmedit.jnmprotocol.utils.QueueBuffer;
-import net.sf.nmedit.jnmprotocol.utils.StringUtils;
 import net.sf.nmedit.jpdl.BitStream;
 
 /**
@@ -115,7 +114,7 @@ public class NmProtocolST implements NmProtocol
             }
         }
     }
-    
+
     /**
      * Sends the specified sysex message to the transmitter (output).
      */
