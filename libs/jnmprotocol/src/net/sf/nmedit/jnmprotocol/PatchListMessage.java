@@ -29,6 +29,7 @@ public class PatchListMessage extends MidiMessage
 
     public static final char END_OF_SECTION = 3;
     public static final char EMPTY_POSITION = 2;
+    public static final char EMPTY_SEQUENCE = 2;
 
     public PatchListMessage()
 	throws Exception
@@ -109,5 +110,15 @@ public class PatchListMessage extends MidiMessage
     public boolean isEmptyPosition(String name)
     {
 	return name.charAt(0) == EMPTY_POSITION;
+    }
+
+    public boolean isEmptySequence(String name)
+    {
+	return name.charAt(0) == EMPTY_SEQUENCE;
+    }
+
+    public int getEmptyGap(String name)
+    {
+	return (int)name.charAt(1);
     }
 }
