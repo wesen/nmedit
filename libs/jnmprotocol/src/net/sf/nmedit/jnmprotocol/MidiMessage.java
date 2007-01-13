@@ -257,15 +257,15 @@ public abstract class MidiMessage
     
     protected String extractName(Packet name)
     {
-	String result = "";
 	List chars = name.getVariableList("chars");
+    StringBuilder sbuilder = new StringBuilder(chars.size()); 
 	for (Iterator i = chars.iterator(); i.hasNext(); ) {
 	    int data = ((Integer)i.next()).intValue();
 	    if (data != 0) {
-		result += (char)data;
+            sbuilder.append((char)data);
 	    }
 	}
-	return result;
+	return sbuilder.toString();
     }
     
     private transient String toStringValue;
@@ -277,7 +277,7 @@ public abstract class MidiMessage
             sb.append(getClass().getName());
             sb.append("[");
             
-            Iterator params = parameters.listIterator();
+            Iterator params = parameters.iterator();
             
             if (params.hasNext())
             {
