@@ -1,15 +1,16 @@
 package net.sf.nmedit.jnmprotocol;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
-import junit.framework.*;
-import javax.sound.midi.*;
+import javax.sound.midi.MidiDevice;
+import javax.sound.midi.MidiSystem;
 
+import junit.framework.Assert;
+import junit.framework.TestCase;
 import net.sf.nmedit.jnmprotocol.helper.GetPatchMessageReplyAcceptor;
-import net.sf.nmedit.jnmprotocol.utils.NmCharacter;
 import net.sf.nmedit.jnmprotocol.utils.NmLookup;
-import net.sf.nmedit.jpdl.*;
+import net.sf.nmedit.jnmprotocol.utils.PatchList;
+import net.sf.nmedit.jpdl.BitStream;
 
 public class ProtocolTester extends TestCase
 {
@@ -280,30 +281,47 @@ public class ProtocolTester extends TestCase
             
             protocol.send(new IAmMessage());
             
-            for (int section = 0;section<9;section++)
+            int section = 0;
+            int position = 0;
+            
+            do
             {
-                for (int position=0;position<99;)
+                GetPatchListMessage gpl = new GetPatchListMessage();
+                gpl.set("section", section);
+                gpl.set("position", position);
+                protocol.send(gpl);
+                // returns if the message is received or otherwise throws an exception
+                acceptor.waitUntilAccepted(3000);
+                // everything is ok
+                
+                System.out.print("section("+section+"),position("+position+")=");
+                PatchList patchList = PatchList.createPatchList((PatchListMessage)acceptor.getMessage());
+                int pos=0;
+                for (;pos<patchList.size();pos++)
                 {
-                    GetPatchListMessage gpl = new GetPatchListMessage();
-                    gpl.set("section", section);
-                    gpl.set("position", position);
-                    protocol.send(gpl);
-                    // returns if the message is received or otherwise throws an exception
-                    acceptor.waitUntilAccepted(3000);
-                    // everything is ok
-                    System.out.print("section("+section+"),position("+position+")=");
-                    
-                    String names[] = getNames((PatchListMessage)acceptor.getMessage());
-                    
-                    if (names.length<=0)
+                    System.out.print(patchList.getDisplayPosition(pos)+":'"+patchList.getName(pos)+"',");
+                    if (patchList.isLastInSection(pos))
                         break;
-                    else
-                        position += names.length;
-                    
-                    System.out.println(getNameList(names));
-                    acceptor.reset();
                 }
-            }
+                System.out.println();
+
+                if (pos<patchList.size()-1)
+                {
+                    // gap
+                    section = patchList.getSection(pos+1);
+                    position = patchList.getPosition(pos+1);
+                }
+                else if (patchList.hasNextLocation())
+                {
+                    section = patchList.getNextSection();
+                    position = patchList.getNextPosition();
+                }
+                else 
+                {
+                    section = -1;
+                }
+                acceptor.reset();
+            } while (section>=0 && position>=0);
             System.out.println("success");
         }
         catch (Exception e)
@@ -388,57 +406,7 @@ public class ProtocolTester extends TestCase
     
     public static String[] getNames(PatchListMessage message)
     {
-        List<String> names = new ArrayList<String>(20);
-        for (Object o : message.getNames())
-        {
-            String name = (String) o;
-            String hexStr = "";
-            if (!NmCharacter.isValid(name))
-            {
-                int len = name.length();
-                boolean hex=false;
-                for (int i=0;i<len;i++)
-                {
-                    char c = name.charAt(i);
-                    if (NmCharacter.isCharacter(c))
-                    {
-                        if (hex)
-                            hexStr+=" ";
-                        hexStr+=c;
-                        hex = false;
-                    }
-                    else
-                    {
-                        if (!hex)
-                            hexStr+=" ";
-                        hexStr+="0x";
-                        hexStr+=Integer.toHexString((int)c).toUpperCase();
-                        hexStr+=" ";
-                        hex = true;
-                    }
-                }
-                name="invalid( "+hexStr+")";
-            }
-            names.add(name);
-        }
-        return names.toArray(new String[names.size()]);
-    }
-    
-    public static String getNameList(String[] names)
-    {
-        StringBuilder nameList = new StringBuilder();
-        nameList.append("names[");
-        if (names.length>0)
-        {
-            nameList.append(names[0]);
-            for (int i=1;i<names.length;i++)
-            {
-                nameList.append(",");
-                nameList.append(names[i]);
-            }
-        }
-        nameList.append("]");
-        return nameList.toString();
+        return PatchList.createPatchList(message).getNames();
     }
     
     class TestTracer implements net.sf.nmedit.jpdl.Tracer
@@ -501,7 +469,7 @@ public class ProtocolTester extends TestCase
 	public void messageReceived(PatchListMessage message)
 	{
         System.out.println(message);
-        System.out.println(getNameList(getNames(message)));
+        System.out.println("names="+Arrays.toString(getNames(message)));
 	}
 	
 	public void messageReceived(NewPatchInSlotMessage message)
