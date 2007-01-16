@@ -45,12 +45,9 @@ import net.sf.nmedit.jpdl.*;
  */
 public class PatchListMessage extends MidiMessage
 {
-    private LinkedList names;
-    private boolean endoflist;
-
-    public static final char END_OF_SECTION = 3;
-    public static final char EMPTY_POSITION = 2;
-    public static final char EMPTY_SEQUENCE = 1;
+    private LinkedList<PatchListEntry> names;
+    private int nextPosition;
+    private int nextSection;
 
     public PatchListMessage()
 	throws Exception
@@ -59,11 +56,7 @@ public class PatchListMessage extends MidiMessage
 
 	names = new LinkedList();
 
-	addParameter("unknown", "data:patchList:unknown");
-	addParameter("kind", "data:patchList:kind");
-	addParameter("section", null);
-	addParameter("position", null);
-	set("cc", 0x17);
+	set("cc", 0x16);
 	set("slot", 0);
 
 	isreply = true;
@@ -75,28 +68,44 @@ public class PatchListMessage extends MidiMessage
 	this();
 	setAll(packet);
 	
-	Packet patchList = packet.getPacket("data:patchList:data");
+	int section = 0;
+	int position = 0;
+	Packet entry = packet.getPacket("data:patchList:data");
 	
-	if (patchList != null) {
-	    set("section", patchList.getVariable("section"));
-	    set("position", patchList.getVariable("position"));
-
-	    Packet list = patchList.getPacket("names");
-	    while (list != null) {
-		String name = "" + (char)list.getVariable("first");
-		if (name.charAt(0) != 0x02) {
-		    name += extractName(list.getPacket("name"));
+	while (entry != null) {
+	    Packet cmd = entry.getPacket("cmd");
+	    if (cmd != null) {
+		if (cmd.contains("NextPosition")) {
+		    position = cmd.getVariable("nextposition:position");
 		}
-		names.add(name);
-		list = list.getPacket("next");
+		else if (cmd.contains("EmptyPosition")) {
+		    position++;
+		}
+		else if (cmd.contains("NextSection")) {
+		    section = cmd.getVariable("nextsection:section");
+		    position = cmd.getVariable("nextsection:position");
+		}
 	    }
-	    endoflist = false;
+	    names.add(new PatchListEntry(extractName(entry.getPacket("name")),
+					 section,
+					 position));
+		    
+	    position++;
+	    entry = entry.getPacket("next");
 	}
-	else {
-	    set("section", 0);
-	    set("position", 0);
-	    endoflist = true;
+	if (packet.getVariable("data:patchList:endmarker") == 4) {
+	    section = -1;
+	    position = -1;
 	}
+	if (position == 99) {
+	    position = 0;
+	    section++;
+	}
+	if (section == 9) {
+	    section = -1;
+	}
+	nextPosition = position;
+	nextSection = section;
     }
 
     public List getBitStream()
@@ -113,60 +122,21 @@ public class PatchListMessage extends MidiMessage
 	listener.messageReceived(this);
     }
 
-    public List getNames()
+    /** If list is empty, it means all patch names has been sent from
+     * the synth.
+     */
+    public List<PatchListEntry> getEntries()
     {
 	return names;
     }
 
-    public boolean isEndOfList()
+    public int getNextSection()
     {
-	return endoflist;
+	return nextSection;
     }
     
-    /**
-     * Returns true if the specified name describes the section
-     * of the next patch name.
-     */
-    public static boolean isEndOfSection(String name)
+    public int getNextPosition()
     {
-	return name.length() == 2 && name.charAt(0) == END_OF_SECTION;
+	return nextPosition;
     }
-
-    /**
-     * Returns true if the patch name describes an unused location.
-     */
-    public static boolean isEmptyPosition(String name)
-    {
-	return name.length() == 1 && name.charAt(0) == EMPTY_POSITION;
-    }
-
-    /**
-     * Returns true if the patch name contains info about the position.
-     */
-    public static boolean hasGapBefore(String name)
-    {
-	return name.length() >= 2 && name.charAt(0) == EMPTY_SEQUENCE;
-    }
-    
-    /**
-     * Removes the gap info from the specified name.
-     * Use this only if hasGapBefore(name) returns true.
-     */
-    public static String removeGapInfoFromName(String name)
-    {
-        return name.substring(2);
-    }
-
-    /**
-     * Returns the supplementary value.
-     * The supplementary value is stored in the second character.
-     * @throws IllegalArgumentException if isEndOfSection(name) and hasGapBefore(name) is false
-     */
-    public static int getSupplementaryValue(String name)
-    {
-        if (!(isEndOfSection(name)||hasGapBefore(name)))
-          throw new IllegalArgumentException("no supplementary value:"+name);
-	return (int)name.charAt(1);
-    }
-    
 }

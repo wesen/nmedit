@@ -1,6 +1,7 @@
 package net.sf.nmedit.jnmprotocol;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
@@ -9,7 +10,6 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 import net.sf.nmedit.jnmprotocol.helper.GetPatchMessageReplyAcceptor;
 import net.sf.nmedit.jnmprotocol.utils.NmLookup;
-import net.sf.nmedit.jnmprotocol.utils.PatchList;
 import net.sf.nmedit.jpdl.BitStream;
 
 public class ProtocolTester extends TestCase
@@ -295,37 +295,24 @@ public class ProtocolTester extends TestCase
                 // everything is ok
                 
                 System.out.print("section("+section+"),position("+position+")=");
-                PatchList patchList = PatchList.createPatchList((PatchListMessage)acceptor.getMessage());
-                int pos=0;
-                for (;pos<patchList.size();pos++)
-                {
-                    System.out.print(patchList.getDisplayPosition(pos)+":'"+patchList.getName(pos)+"',");
-                    if (patchList.isLastInSection(pos))
-                        break;
-                }
-                System.out.println();
+                PatchListMessage patchListMessage = 
+		    (PatchListMessage)acceptor.getMessage();
+		for (Iterator<PatchListEntry> i =
+			 patchListMessage.getEntries().iterator();
+		     i.hasNext(); ) {
+		    System.out.print("" + i.next() + ", ");
+		}
+		System.out.println();
+		section = patchListMessage.getNextSection();
+		position = patchListMessage.getNextPosition();
 
-                if (pos<patchList.size()-1)
-                {
-                    // gap
-                    section = patchList.getSection(pos+1);
-                    position = patchList.getPosition(pos+1);
-                }
-                else if (patchList.hasNextLocation())
-                {
-                    section = patchList.getNextSection();
-                    position = patchList.getNextPosition();
-                }
-                else 
-                {
-                    section = -1;
-                }
                 acceptor.reset();
             } while (section>=0 && position>=0);
             System.out.println("success");
         }
         catch (Exception e)
         {
+	    e.printStackTrace();
             System.out.println("failed");
             throw e;
         }
@@ -404,11 +391,6 @@ public class ProtocolTester extends TestCase
         }
     }
     
-    public static String[] getNames(PatchListMessage message)
-    {
-        return PatchList.createPatchList(message).getNames();
-    }
-    
     class TestTracer implements net.sf.nmedit.jpdl.Tracer
     {
 	public void trace(String message)
@@ -468,8 +450,12 @@ public class ProtocolTester extends TestCase
 
 	public void messageReceived(PatchListMessage message)
 	{
-        System.out.println(message);
-        System.out.println("names="+Arrays.toString(getNames(message)));
+	    System.out.println(message);
+	    for (Iterator<PatchListEntry> i = message.getEntries().iterator();
+		 i.hasNext(); ) {
+		System.out.print("" + i.next() + ", ");
+	    }
+	    System.out.println();
 	}
 	
 	public void messageReceived(NewPatchInSlotMessage message)
