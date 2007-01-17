@@ -72,18 +72,17 @@ public class MessageMulticaster implements MessageHandler
             tempList = listeners;
         }
 
-        for (int i=0;i<listeners.length;i++)
+        try
         {
-            try
+            for (int i=0;i<listeners.length;i++)
             {
                 message.notifyListener(listeners[i]);
             }
-            catch (Exception e)
-            {
-                // TODO notifyListener should not throw an exception
-                // no op
-                e.printStackTrace();
-            }
+        }
+        catch (Exception e)
+        {   
+            // TODO notifyListener should not throw an exception ???
+            throw new RuntimeException(e);
         }
     }
 
