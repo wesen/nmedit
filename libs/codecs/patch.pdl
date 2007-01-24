@@ -18,6 +18,7 @@ Section % 8 :=
 	#type=91 => CustomDump$data
 	#type=90 => NameDump$data
 	#type=48 => SingleModule$data
+	#type=5 => SynthSettings$data
 	;
 
 PatchName % 1 :=
@@ -30,7 +31,7 @@ PatchName2 % 1 :=
 
 Header % 1 :=
 	krangemin:7 krangemax:7 vrangemin:7 vrangemax:7
-	brange:5 ptime:7 portamento:1 unknown1:1 voices:5
+	brange:5 ptime:7 portamento:1 pedalMode:1 voices:5
 	unknown2:2 sspos:12 octave:3
 	red:1 blue:1 yellow:1 gray:1 green:1 purple:1 white:1
 	cretrigger:1 pretrigger:1 unknown3:4 unknown4:3
@@ -702,3 +703,45 @@ String % 1 :=
 SingleModule % 1 :=
 	type:8 section:8 index:8 xpos:8 ypos:8 String$name
 	;
+
+SynthSettings % 1 :=
+	midiClockSource:1
+	midiVelScaleMin:7
+	ledsActive:1
+	midiVelScaleMax:7
+	midiClockBpm:8
+	local:1
+	keyboardMode:1
+	pedalPolarity:1
+	globalSync:5
+	masterTune:8
+	programChangeSend:2
+	knobMode:1
+	unknown1:5
+	unknown2:7
+	unknown3:7
+	unknown4:7
+	unknown5:7
+	unknown6:7
+	unknown7:7
+	unknown8:7
+	unknown9:7
+	unknown10:7
+	unknown11:4
+	midiChannelsSlotA:5
+	unknown12:5
+	unknown13:6
+	midiChannelsSlotB:5
+	unknown14:3
+	unknown15:7
+	unknown16:1
+	midiChannelsSlotC:5
+	unknown14:1
+	unknown15:7
+	unknown16:3
+	midiChannelsSlotD:5
+	;
+	
+	
+	
+	
