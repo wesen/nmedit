@@ -19,18 +19,30 @@
 
 package net.sf.nmedit.jpdl;
 
+import java.io.Reader;
 import java.util.*;
 
 public class Protocol
 {
+    
     public Protocol(String filename)
-	throws Exception
+    throws Exception
     {
-	tracer = null;
-	
-	PdlParse parser = new PdlParse();
-	parser.init(filename, this);
-	parser.yyparse();
+    tracer = null;
+    
+    PdlParse parser = new PdlParse();
+    parser.init(filename, this);
+    parser.yyparse();
+    }
+
+    public Protocol(Reader reader)
+    throws Exception
+    {
+    tracer = null;
+    
+    PdlParse parser = new PdlParse();
+    parser.init(reader, this);
+    parser.yyparse();
     }
 
     public PacketParser newPacketParser(String name, int padding)
