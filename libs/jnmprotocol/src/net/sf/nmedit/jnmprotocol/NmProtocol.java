@@ -48,7 +48,7 @@ public interface NmProtocol
      * @throws Exception TODO documentation
      * @see #getMessageHandler()
      */
-    void heartbeat() throws Exception;
+    void heartbeat() throws MidiException;
     
 
     /**

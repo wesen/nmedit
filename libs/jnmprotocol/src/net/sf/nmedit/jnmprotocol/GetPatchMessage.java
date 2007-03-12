@@ -25,7 +25,6 @@ import net.sf.nmedit.jpdl.*;
 public class GetPatchMessage extends MidiMessage
 {
     public GetPatchMessage()
-	throws Exception
     {
 	super();
 

@@ -25,7 +25,6 @@ import net.sf.nmedit.jpdl.*;
 public class NewPatchInSlotMessage extends MidiMessage
 {
     public NewPatchInSlotMessage()
-	throws Exception
     {
 	super();
 
@@ -33,7 +32,6 @@ public class NewPatchInSlotMessage extends MidiMessage
     }
 
     NewPatchInSlotMessage(Packet packet)
-	throws Exception
     {
 	this();
 	setAll(packet);

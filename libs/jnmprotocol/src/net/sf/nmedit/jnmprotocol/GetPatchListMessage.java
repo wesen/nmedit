@@ -25,7 +25,6 @@ import net.sf.nmedit.jpdl.*;
 public class GetPatchListMessage extends MidiMessage
 {
     public GetPatchListMessage()
-	throws Exception
     {
 	super();
 
@@ -41,7 +40,7 @@ public class GetPatchListMessage extends MidiMessage
     }
 
     GetPatchListMessage(Packet packet)
-	throws Exception
+	throws MidiException
     {
 	throw new MidiException
 	    ("GetPatchListMessage(Packet packet) not implemented", 0);

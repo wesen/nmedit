@@ -50,7 +50,6 @@ public class PatchListMessage extends MidiMessage
     private int nextSection;
 
     public PatchListMessage()
-	throws Exception
     {
 	super();
 
@@ -63,7 +62,6 @@ public class PatchListMessage extends MidiMessage
     }
 
     PatchListMessage(Packet packet)
-	throws Exception
     {
 	this();
 	setAll(packet);

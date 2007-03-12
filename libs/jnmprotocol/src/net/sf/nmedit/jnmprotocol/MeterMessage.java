@@ -25,7 +25,6 @@ import net.sf.nmedit.jpdl.*;
 public class MeterMessage extends MidiMessage
 {
     public MeterMessage()
-	throws Exception
     {
 	super();
 
@@ -44,7 +43,6 @@ public class MeterMessage extends MidiMessage
     }
 
     MeterMessage(Packet packet)
-	throws Exception
     {
 	this();
 	setAll(packet);

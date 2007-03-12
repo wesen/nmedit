@@ -26,24 +26,7 @@ import net.sf.nmedit.jpdl.*;
 
 public abstract class MidiMessage
 {
-    static {
-	try {
-	    usePdlFile("/midi.pdl", null);
-	}
-	catch (Exception e) {
-	    System.out.println("MidiMessage: /midi.pdl not found.");
-	}
-    }
 
-    public static void usePdlFile(String filename, Tracer tracer)
-	throws Exception
-    {
-	pdlFile = filename;
-	protocol = new Protocol(pdlFile);
-	packetParser = protocol.getPacketParser("Sysex");
-	protocol.useTracer(tracer);
-    }
-    
     public static int calculateChecksum(BitStream bitStream)
     {
 	int checksum = 0;
@@ -75,11 +58,14 @@ public abstract class MidiMessage
     }
 
     public static MidiMessage create(BitStream bitStream)
-	throws Exception
+        throws MidiException
     {
 	String error;
 	Packet packet = new Packet();
-	boolean success = packetParser.parse(bitStream, packet);
+	boolean success = 
+	    PDLData
+        .getMidiSysexParser()
+        .parse(bitStream, packet);
 	bitStream.setPosition(0);
 	
 	if (success) {
@@ -206,9 +192,8 @@ public abstract class MidiMessage
 
 	return intStream;
     }
-    
+
     protected MidiMessage()
-	throws Exception
     {
 	parameters = new LinkedList();
 	paths = new HashMap();
@@ -216,11 +201,6 @@ public abstract class MidiMessage
 	expectsreply = false;
 	isreply = false;
 	
-	if (protocol == null) {
-	    protocol = new Protocol(pdlFile);
-	    packetParser = protocol.getPacketParser("Sysex");
-	}
-
 	addParameter("cc", "cc");
 	addParameter("slot", "slot");
 	set("slot", 0);
@@ -230,8 +210,10 @@ public abstract class MidiMessage
 	throws Exception
     {
 	BitStream bitStream = new BitStream();
-	boolean success = packetParser.generate(intStream, bitStream);
-	
+	boolean success = PDLData
+        .getMidiSysexParser()
+        .generate(intStream, bitStream);
+
 	if (!success || intStream.isAvailable(1)) {
 	    throw new MidiException("Information mismatch in generate.",
 				    intStream.getSize() - intStream.getPosition());
@@ -307,7 +289,4 @@ public abstract class MidiMessage
     private HashMap paths;
     private HashMap values;
 
-    private static Protocol protocol;
-    private static String pdlFile;
-    private static PacketParser packetParser;
 }

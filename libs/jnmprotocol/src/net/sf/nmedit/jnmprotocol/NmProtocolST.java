@@ -134,7 +134,7 @@ public class NmProtocolST implements NmProtocol
         sendMessage(sm);
     }
 
-    public void heartbeat() throws Exception
+    public void heartbeat() throws MidiException 
     {
         // check for timeout
         if (timeout != 0 && time() > timeout) 

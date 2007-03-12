@@ -27,7 +27,6 @@ public class DeleteCableMessage extends MidiMessage
     private IntStream intStream;
     
     public DeleteCableMessage()
-	throws Exception
     {
 	super();
 	

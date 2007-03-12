@@ -25,7 +25,6 @@ import net.sf.nmedit.jpdl.*;
 public class ParameterMessage extends MidiMessage
 {
     public ParameterMessage()
-	throws Exception
     {
 	super();
 
@@ -40,7 +39,6 @@ public class ParameterMessage extends MidiMessage
     }
 
     ParameterMessage(Packet packet)
-	throws Exception
     {
 	this();
 	setAll(packet);

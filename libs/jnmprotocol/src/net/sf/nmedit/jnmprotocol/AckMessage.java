@@ -25,7 +25,6 @@ import net.sf.nmedit.jpdl.*;
 public class AckMessage extends MidiMessage
 {
     public AckMessage()
-	throws Exception
     {
 	super();
 
@@ -39,7 +38,6 @@ public class AckMessage extends MidiMessage
     }
 
     AckMessage(Packet packet)
-	throws Exception
     {
 	this();
 	setAll(packet);

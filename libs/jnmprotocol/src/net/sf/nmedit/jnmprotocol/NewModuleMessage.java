@@ -24,32 +24,10 @@ import net.sf.nmedit.jpdl.*;
 
 public class NewModuleMessage extends MidiMessage
 {
-    static {
-	try {
-	    usePdlFile("/patch.pdl", null);
-	}
-	catch (Exception e) {
-	    System.out.println("NewModuleMessage: /patch.pdl not found.");
-	}
-    }
 
-    private static Protocol protocol;
-    private static String pdlFile;
-    private static PacketParser packetParser;
-
-    public static void usePdlFile(String filename, Tracer tracer)
-	throws Exception
-    {
-	pdlFile = filename;
-	protocol = new Protocol(pdlFile);
-	packetParser = protocol.getPacketParser("Patch");
-	protocol.useTracer(tracer);
-    }
-    
     private IntStream intStream;
 
     public NewModuleMessage()
-	throws Exception
     {
 	super();
 	
@@ -130,7 +108,7 @@ public class NewModuleMessage extends MidiMessage
 
 	// Encode patch data
 	BitStream patchStream = new BitStream();
-	boolean success = packetParser.generate(patchData, patchStream);
+	boolean success = PDLData.getPatchParser().generate(patchData, patchStream);
 	
 	if (!success || patchData.isAvailable(1)) {
 	    throw new MidiException("Information mismatch in generate.",

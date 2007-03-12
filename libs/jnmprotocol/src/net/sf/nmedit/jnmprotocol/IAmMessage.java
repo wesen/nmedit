@@ -28,7 +28,6 @@ public class IAmMessage extends MidiMessage
     public static final int MODULAR = 1;
 
     public IAmMessage()
-	throws Exception
     {
 	super();
 
@@ -45,7 +44,6 @@ public class IAmMessage extends MidiMessage
     }
 
     IAmMessage(Packet packet)
-	throws Exception
     {
 	this();
 	setAll(packet);

@@ -27,7 +27,6 @@ public class MoveModuleMessage extends MidiMessage
     private IntStream intStream;
     
     public MoveModuleMessage()
-	throws Exception
     {
 	super();
 

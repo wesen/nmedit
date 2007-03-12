@@ -28,7 +28,6 @@ public class PatchMessage extends MidiMessage
     private LinkedList bitStreamList;
     
     public PatchMessage()
-	throws Exception
     {
 	super();
 
@@ -44,7 +43,6 @@ public class PatchMessage extends MidiMessage
     }
 
     public PatchMessage(Packet packet)
-	throws Exception
     {
 	this();
 	setAll(packet);

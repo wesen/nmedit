@@ -27,7 +27,6 @@ public class DeleteModuleMessage extends MidiMessage
     private IntStream intStream;
     
     public DeleteModuleMessage()
-	throws Exception
     {
 	super();
 	

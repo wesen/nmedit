@@ -25,7 +25,6 @@ import net.sf.nmedit.jpdl.*;
 public class ErrorMessage extends MidiMessage
 {
     public ErrorMessage()
-	throws Exception
     {
 	super();
 
@@ -40,7 +39,6 @@ public class ErrorMessage extends MidiMessage
     }
 
     ErrorMessage(Packet packet)
-	throws Exception
     {
 	this();
 	setAll(packet);

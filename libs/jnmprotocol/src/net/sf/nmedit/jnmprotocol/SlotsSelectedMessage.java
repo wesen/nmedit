@@ -25,7 +25,6 @@ import net.sf.nmedit.jpdl.*;
 public class SlotsSelectedMessage extends MidiMessage
 {
     public SlotsSelectedMessage()
-	throws Exception
     {
 	super();
 
@@ -40,7 +39,6 @@ public class SlotsSelectedMessage extends MidiMessage
     }
 
     SlotsSelectedMessage(Packet packet)
-	throws Exception
     {
 	this();
 	setAll(packet);

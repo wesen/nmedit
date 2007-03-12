@@ -91,7 +91,7 @@ public class DebugProtocol implements NmProtocol
     private long heartbeatTraceTime = System.currentTimeMillis();
     private boolean firstCall = true;
     
-    public void heartbeat() throws Exception
+    public void heartbeat() throws MidiException
     {
         if (ProtocolDebug.TraceHeartbeats)
         {
@@ -118,7 +118,7 @@ public class DebugProtocol implements NmProtocol
         {
             protocol.heartbeat();
         }
-        catch (Exception e)
+        catch (MidiException e)
         {
             ProtocolDebug.traceException(debugOut, protocol, "heartbeat()", e);
             throw e;

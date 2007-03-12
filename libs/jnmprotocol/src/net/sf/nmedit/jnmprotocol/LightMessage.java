@@ -25,7 +25,6 @@ import net.sf.nmedit.jpdl.*;
 public class LightMessage extends MidiMessage
 {
     public LightMessage()
-	throws Exception
     {
 	super();
 
@@ -54,7 +53,6 @@ public class LightMessage extends MidiMessage
     }
 
     LightMessage(Packet packet)
-	throws Exception
     {
 	this();
 	setAll(packet);

@@ -96,7 +96,7 @@ public class NmProtocolMT implements NmProtocol
         messageHandlerMT.setMessageHandler(handler);
     }
 
-    public void heartbeat() throws Exception
+    public void heartbeat() throws MidiException 
     {
         synchronized (threadLock)
         {

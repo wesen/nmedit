@@ -35,10 +35,10 @@ public final class ProtocolDebug
     public static final boolean TraceDebugReceiver          = LevelMessages;
     
     public static final boolean TraceWorkAvailableSignal    = LevelThread;
-    public static final boolean TraceHeartbeats             = LevelThread | true;
+    public static final boolean TraceHeartbeats             = LevelThread & false;
     public static final boolean TraceAwaitWorkSignal        = LevelThread;
 
-    public static final boolean TraceObjects = true;
+    public static final boolean TraceObjects = false;
 
     public static void trace( PrintStream out, Object sender, String message )
     {

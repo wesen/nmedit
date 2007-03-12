@@ -25,7 +25,6 @@ import net.sf.nmedit.jpdl.*;
 public class VoiceCountMessage extends MidiMessage
 {
     public VoiceCountMessage()
-	throws Exception
     {
 	super();
 
@@ -36,7 +35,6 @@ public class VoiceCountMessage extends MidiMessage
     }
 
     VoiceCountMessage(Packet packet)
-	throws Exception
     {
 	this();
 	setAll(packet);

@@ -27,7 +27,6 @@ public class NewCableMessage extends MidiMessage
     private IntStream intStream;
     
     public NewCableMessage()
-	throws Exception
     {
 	super();
 	
