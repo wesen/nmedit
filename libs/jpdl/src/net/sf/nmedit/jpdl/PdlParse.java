@@ -286,7 +286,7 @@ public void yyerror(String s)
 }
 
 public void init(String filename, Protocol p)
-  throws Exception
+  throws java.io.IOException
 {
   protocol = p;
   
@@ -302,7 +302,19 @@ public void init(String filename, Protocol p)
   }
   yylex = new PdlLex(reader, this);
 }
-//#line 242 "PdlParse.java"
+
+public void init(java.io.Reader reader, Protocol p)
+  throws java.io.IOException
+{
+  protocol = p;
+  
+  if (this.reader != null) {
+    this.reader.close();
+  }
+  this.reader = reader;
+  yylex = new PdlLex(reader, this);
+}
+//#line 254 "PdlParse.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -493,7 +505,7 @@ case 16:
 { packetParser.addConstantMatcher(val_peek(2).ival, val_peek(0).ival,
                                           condition, optional); }
 break;
-//#line 428 "PdlParse.java"
+//#line 440 "PdlParse.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

@@ -119,7 +119,7 @@ public void yyerror(String s)
 }
 
 public void init(String filename, Protocol p)
-  throws Exception
+  throws java.io.IOException
 {
   protocol = p;
   
@@ -133,5 +133,17 @@ public void init(String filename, Protocol p)
   else {
     reader = new java.io.FileReader(filename);
   }
+  yylex = new PdlLex(reader, this);
+}
+
+public void init(java.io.Reader reader, Protocol p)
+  throws java.io.IOException
+{
+  protocol = p;
+  
+  if (this.reader != null) {
+    this.reader.close();
+  }
+  this.reader = reader;
   yylex = new PdlLex(reader, this);
 }

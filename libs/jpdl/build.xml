@@ -42,6 +42,11 @@
   <target name="compile-test" depends="init"
           description="compile the test source">
     <javac srcdir="${test}" destdir="${build}" debug="true"/>
+    <copy todir="${build}">
+      <fileset dir="test">
+        <include name="test.pdl"/>
+      </fileset>
+    </copy>
   </target>
 
   <target name="test" depends="compile, compile-test"
