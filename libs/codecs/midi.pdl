@@ -111,10 +111,17 @@ ACK % 1 :=
 	#type=0x7f => 0:0
 	#type=0x36 => ACKChecksum$checksum
 	#type=0x13 => PatchListResponse$patchList
+	#type=0x15 => PatchListResponse$patchList
+	#type=0x38 => PatchLoadResponse$patchLoad
 	;
 
 ACKChecksum % 1 :=
 	0:1 checksum:7
+	;
+
+PatchLoadResponse % 1 :=
+	0:1 unknown1:7 0:1 unknown2:7 0:1 unknown3:7 0:1 unknown4:7
+	0:1 unknown5:7 0:1 unknown6:7 0:1 checksum:7
 	;
 
 PatchHandling % 1 :=
@@ -298,7 +305,7 @@ SEQZoom % 1 :=
 	;
 
 PatchListResponse % 1 :=
-	unknown:8 0x16:8 0x01:8
+	unknown1:8 unknown2:8 unknown3:8
 	?StringList$data
 	0:1 endmarker:7
 	0:1 checksum:7

@@ -35,4 +35,5 @@ public abstract class NmProtocolListener
     public void messageReceived(SlotActivatedMessage message) {}
     public void messageReceived(ParameterMessage message) {}
     public void messageReceived(ErrorMessage message) {}
+    public void messageReceived(SynthSettingsMessage message) {}
 }

@@ -320,9 +320,156 @@ public class ProtocolTester extends TestCase
         {
             nmDriver.disconnect();
         }
-        
+
     }
+
+    public void testLoadPatchMessage()
+	throws Exception
+    {
+        System.out.println("test LoadPatchMessage");
+	try {
+	    nmDriver.connect();
+	    MessageMulticaster multicaster = new MessageMulticaster();
+	    NmProtocol p = createProtocol(nmDriver, multicaster);
+	    multicaster.addProtocolListener(new Listener(p, multicaster));
+
+	    LoadPatchMessage lpm = new LoadPatchMessage();
+	    lpm.set("loadslot", 0);
+	    lpm.set("section", 0);
+	    lpm.set("position", 0);
+	    p.send(lpm);
+
+	    lpm.set("loadslot", 1);
+	    lpm.set("section", 1);
+	    lpm.set("position", 1);
+	    p.send(lpm);
+
+	    lpm.set("loadslot", 2);
+	    lpm.set("section", 2);
+	    lpm.set("position", 2);
+	    p.send(lpm);
+
+	    lpm.set("loadslot", 3);
+	    lpm.set("section", 3);
+	    lpm.set("position", 3);
+	    p.send(lpm);
+
+	    int n = 0;
+	    while(n < 400) {
+		n++;
+		p.heartbeat();
+		Thread.sleep(10);
+	    }
+        }
+        catch (Exception e)
+        {
+	    e.printStackTrace();
+            System.out.println("failed");
+            throw e;
+        }
+        finally
+        {
+            nmDriver.disconnect();
+        }
+    }
+
     
+    public void testStorePatchMessage()
+	throws Exception
+    {
+        System.out.println("test StorePatchMessage");
+	try {
+	    nmDriver.connect();
+	    MessageMulticaster multicaster = new MessageMulticaster();
+	    NmProtocol p = createProtocol(nmDriver, multicaster);
+	    multicaster.addProtocolListener(new Listener(p, multicaster));
+
+	    StorePatchMessage lpm = new StorePatchMessage();
+	    lpm.set("storeslot", 0);
+	    lpm.set("section", 8);
+	    lpm.set("position", 95);
+	    p.send(lpm);
+
+	    lpm.set("storeslot", 1);
+	    lpm.set("section", 8);
+	    lpm.set("position", 96);
+	    p.send(lpm);
+
+	    lpm.set("storeslot", 2);
+	    lpm.set("section", 8);
+	    lpm.set("position", 97);
+	    p.send(lpm);
+
+	    lpm.set("storeslot", 3);
+	    lpm.set("section", 8);
+	    lpm.set("position", 98);
+	    p.send(lpm);
+
+	    int n = 0;
+	    while(n < 400) {
+		n++;
+		p.heartbeat();
+		Thread.sleep(10);
+	    }
+        }
+        catch (Exception e)
+        {
+	    e.printStackTrace();
+            System.out.println("failed");
+            throw e;
+        }
+        finally
+        {
+            nmDriver.disconnect();
+        }
+    }
+
+    
+    public void testDeletePatchMessage()
+	throws Exception
+    {
+        System.out.println("test DeletePatchMessage");
+	try {
+	    nmDriver.connect();
+	    MessageMulticaster multicaster = new MessageMulticaster();
+	    NmProtocol p = createProtocol(nmDriver, multicaster);
+	    multicaster.addProtocolListener(new Listener(p, multicaster));
+
+	    DeletePatchMessage lpm = new DeletePatchMessage();
+	    lpm.set("section", 8);
+	    lpm.set("position", 95);
+	    p.send(lpm);
+
+	    lpm.set("section", 8);
+	    lpm.set("position", 96);
+	    p.send(lpm);
+
+	    lpm.set("section", 8);
+	    lpm.set("position", 97);
+	    p.send(lpm);
+
+	    lpm.set("section", 8);
+	    lpm.set("position", 98);
+	    p.send(lpm);
+
+	    int n = 0;
+	    while(n < 400) {
+		n++;
+		p.heartbeat();
+		Thread.sleep(10);
+	    }
+        }
+        catch (Exception e)
+        {
+	    e.printStackTrace();
+            System.out.println("failed");
+            throw e;
+        }
+        finally
+        {
+            nmDriver.disconnect();
+        }
+    }
 
     
     private static class MessageAcceptor implements MessageHandler

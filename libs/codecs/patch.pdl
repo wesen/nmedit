@@ -18,7 +18,7 @@ Section % 8 :=
 	#type=91 => CustomDump$data
 	#type=90 => NameDump$data
 	#type=48 => SingleModule$data
-	#type=5 => SynthSettings$data
+	#type=3 => SynthSettings$data
 	;
 
 PatchName % 1 :=
@@ -717,31 +717,18 @@ SynthSettings % 1 :=
 	masterTune:8
 	programChangeSend:2
 	knobMode:1
-	unknown1:5
-	unknown2:7
-	unknown3:7
-	unknown4:7
-	unknown5:7
-	unknown6:7
-	unknown7:7
-	unknown8:7
-	unknown9:7
-	unknown10:7
-	unknown11:4
+	0:5
+	String$name
+	0:3
 	midiChannelsSlotA:5
-	unknown12:5
-	unknown13:6
+	27:8
+	0:3
 	midiChannelsSlotB:5
-	unknown14:3
-	unknown15:7
-	unknown16:1
+	27:8
+	0:3
 	midiChannelsSlotC:5
-	unknown14:1
-	unknown15:7
-	unknown16:3
+	27:8
+	0:3
 	midiChannelsSlotD:5
+	27:8
 	;
-	
-	
-	
-	
