@@ -16,33 +16,11 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+package net.sf.nmedit.jsynth.event;
 
-/*
- * Created on Jan 2, 2007
- */
-package net.sf.nmedit.jsynth;
+import java.util.EventListener;
 
-public class SynthException extends Exception
+public interface SynthListener extends EventListener
 {
-
-    public SynthException()
-    {
-        super();
-    }
-
-    public SynthException( String message )
-    {
-        super( message );
-    }
-
-    public SynthException( String message, Throwable cause )
-    {
-        super( message, cause );
-    }
-
-    public SynthException( Throwable cause )
-    {
-        super( cause );
-    }
 
 }

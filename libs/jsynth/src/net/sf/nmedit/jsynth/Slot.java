@@ -18,31 +18,36 @@
  */
 
 /*
- * Created on Jan 2, 2007
+ * Created on Dec 29, 2006
  */
 package net.sf.nmedit.jsynth;
 
-public class SynthException extends Exception
+import java.beans.PropertyChangeListener;
+
+import net.sf.nmedit.jsynth.event.SlotListener;
+import net.sf.nmedit.jsynth.worker.SendPatchWorker;
+
+public interface Slot
 {
 
-    public SynthException()
-    {
-        super();
-    }
+    Synthesizer getSynthesizer();
+    
+    public int getSlotIndex();
 
-    public SynthException( String message )
-    {
-        super( message );
-    }
+    String getName();
+    
+    String getPatchName();
+    
+    SendPatchWorker createSendPatchWorker();
+    
+   //Object getPatch();
+    
+    void addSlotListener(SlotListener l);
+    void removeSlotListener(SlotListener l);
 
-    public SynthException( String message, Throwable cause )
-    {
-        super( message, cause );
-    }
-
-    public SynthException( Throwable cause )
-    {
-        super( cause );
-    }
-
+    void addPropertyChangeListener(PropertyChangeListener l);
+    void addPropertyChangeListener(String propertyName, PropertyChangeListener l);
+    void removePropertyChangeListener(PropertyChangeListener l);
+    void removePropertyChangeListener(String propertyName, PropertyChangeListener l);
+    
 }

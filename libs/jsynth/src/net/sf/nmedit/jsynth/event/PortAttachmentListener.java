@@ -18,13 +18,15 @@
  */
 
 /*
- * Created on Jun 18, 2006
+ * Created on Jan 2, 2007
  */
 package net.sf.nmedit.jsynth.event;
 
-public interface SynthStateListener 
+import java.util.EventListener;
+
+public interface PortAttachmentListener extends EventListener
 {
-    
-    void synthStateChanged(SynthStateChangeEvent e);
+
+    void plugAttachmentChanged( PortAttachmentEvent e );
     
 }

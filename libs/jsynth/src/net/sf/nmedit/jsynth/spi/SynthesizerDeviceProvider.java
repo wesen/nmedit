@@ -22,13 +22,11 @@
  */
 package net.sf.nmedit.jsynth.spi;
 
-import net.sf.nmedit.jsynth.Synthesizer;
-
 public interface SynthesizerDeviceProvider
 {
-
+/*
     public Synthesizer.Info getInfo();
     
     public Synthesizer createSynthesizer();
-    
+  */  
 }

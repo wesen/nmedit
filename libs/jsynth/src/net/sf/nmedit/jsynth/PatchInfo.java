@@ -15,28 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */package net.sf.nmedit.jsynth;
 
-/*
- * Created on Jun 18, 2006
- */
-package net.sf.nmedit.jsynth.event;
-
-import net.sf.nmedit.jsynth.Synthesizer;
-
-public class SynthStateChangeEvent
+public interface PatchInfo
 {
 
-    private Synthesizer synth;
-
-    public SynthStateChangeEvent(Synthesizer synth)
-    {
-        this.synth = synth;
-    }
-
-    public Synthesizer getSynthesizer()
-    {
-        return synth;
-    }
+    String getPatchName();
+    
+    int getSlotIndex();
+    int getBankIndex();
+    int getBankPosition();
+    
+    boolean isEmpty();
     
 }

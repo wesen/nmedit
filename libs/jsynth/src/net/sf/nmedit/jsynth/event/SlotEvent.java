@@ -16,33 +16,21 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+package net.sf.nmedit.jsynth.event;
 
-/*
- * Created on Jan 2, 2007
- */
-package net.sf.nmedit.jsynth;
+import net.sf.nmedit.jsynth.Slot;
 
-public class SynthException extends Exception
+public class SlotEvent extends SynthesizerEvent
 {
 
-    public SynthException()
+    public SlotEvent(int id, Slot slot)
     {
-        super();
+        super(slot.getSynthesizer(), id, slot);
     }
-
-    public SynthException( String message )
+    
+    public Slot getSlot()
     {
-        super( message );
-    }
-
-    public SynthException( String message, Throwable cause )
-    {
-        super( message, cause );
-    }
-
-    public SynthException( Throwable cause )
-    {
-        super( cause );
+        return (Slot) arg;
     }
 
 }

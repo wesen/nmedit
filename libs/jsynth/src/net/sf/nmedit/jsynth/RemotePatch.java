@@ -22,27 +22,21 @@
  */
 package net.sf.nmedit.jsynth;
 
-public class SynthException extends Exception
+public interface RemotePatch
 {
 
-    public SynthException()
-    {
-        super();
-    }
-
-    public SynthException( String message )
-    {
-        super( message );
-    }
-
-    public SynthException( String message, Throwable cause )
-    {
-        super( message, cause );
-    }
-
-    public SynthException( Throwable cause )
-    {
-        super( cause );
-    }
-
+    Slot getSlot();
+    
+    void setSlot(Slot slot);
+    
+    Bank getBank();
+    
+    int getBankIndex();
+    
+    void setBank(Bank bank, int bankIndex);
+    
+    String getName();
+    
+    Object getPatch();
+    
 }

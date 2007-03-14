@@ -22,15 +22,10 @@
  */
 package net.sf.nmedit.jsynth.spi;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import net.sf.nmedit.jsynth.Synthesizer;
-import sun.misc.Service;
 
 public class SynthesizerDeviceManager
 {
-
+/*
     public static Synthesizer.Info[] getSynthesizerInfo()
     {
         java.util.List<Synthesizer.Info> infoList = new ArrayList<Synthesizer.Info>();
@@ -78,5 +73,5 @@ public class SynthesizerDeviceManager
         
         return null; // not found
     }
-
+*/
 }

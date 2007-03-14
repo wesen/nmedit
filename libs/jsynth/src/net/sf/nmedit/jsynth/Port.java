@@ -18,31 +18,26 @@
  */
 
 /*
- * Created on Jan 2, 2007
+ * Created on Dec 29, 2006
  */
 package net.sf.nmedit.jsynth;
 
-public class SynthException extends Exception
+import net.sf.nmedit.jsynth.event.PortAttachmentListener;
+
+public interface Port
 {
 
-    public SynthException()
-    {
-        super();
-    }
+    String getName();
 
-    public SynthException( String message )
-    {
-        super( message );
-    }
+    boolean isPluggable(Plug p);
 
-    public SynthException( String message, Throwable cause )
-    {
-        super( message, cause );
-    }
+    Plug getPlug();
+    
+    void setPlug(Plug p) throws SynthException;
+    
+    Synthesizer getSynthesizer();
 
-    public SynthException( Throwable cause )
-    {
-        super( cause );
-    }
-
+    void addPortAttachmentListener(PortAttachmentListener l);
+    void removePortAttachmentListener(PortAttachmentListener l);
+    
 }

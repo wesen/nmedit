@@ -22,27 +22,12 @@
  */
 package net.sf.nmedit.jsynth;
 
-public class SynthException extends Exception
+public interface Plug
 {
 
-    public SynthException()
-    {
-        super();
-    }
-
-    public SynthException( String message )
-    {
-        super( message );
-    }
-
-    public SynthException( String message, Throwable cause )
-    {
-        super( message, cause );
-    }
-
-    public SynthException( Throwable cause )
-    {
-        super( cause );
-    }
-
+    String getName();
+    String getDescription();
+    String getVendor();
+    String getVersion();
+    
 }

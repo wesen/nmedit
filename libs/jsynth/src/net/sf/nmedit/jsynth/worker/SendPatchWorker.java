@@ -16,33 +16,17 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+package net.sf.nmedit.jsynth.worker;
 
-/*
- * Created on Jan 2, 2007
- */
-package net.sf.nmedit.jsynth;
+import net.sf.nmedit.jsynth.SynthException;
 
-public class SynthException extends Exception
+public interface SendPatchWorker extends Worker
 {
 
-    public SynthException()
-    {
-        super();
-    }
-
-    public SynthException( String message )
-    {
-        super( message );
-    }
-
-    public SynthException( String message, Throwable cause )
-    {
-        super( message, cause );
-    }
-
-    public SynthException( Throwable cause )
-    {
-        super( cause );
-    }
+    void setPatch(Object patch)
+        throws SynthException;
+    
+    void send()
+        throws SynthException;
 
 }

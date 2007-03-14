@@ -20,29 +20,23 @@
 /*
  * Created on Jan 2, 2007
  */
-package net.sf.nmedit.jsynth;
+package net.sf.nmedit.jsynth.midi;
 
-public class SynthException extends Exception
+import javax.sound.midi.MidiDevice;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+
+public class MidiUtils
 {
 
-    public SynthException()
+    public static boolean isHardwareDevice(MidiDevice device)
     {
-        super();
+        return ( ! (device instanceof javax.sound.midi.Sequencer) && ! (device instanceof javax.sound.midi.Synthesizer)) ;
     }
-
-    public SynthException( String message )
+    
+    public static boolean isHardwareDevice(MidiDevice.Info devInfo) throws MidiUnavailableException
     {
-        super( message );
-    }
-
-    public SynthException( String message, Throwable cause )
-    {
-        super( message, cause );
-    }
-
-    public SynthException( Throwable cause )
-    {
-        super( cause );
+        return isHardwareDevice(MidiSystem.getMidiDevice(devInfo));
     }
 
 }

@@ -20,29 +20,45 @@
 /*
  * Created on Jan 2, 2007
  */
-package net.sf.nmedit.jsynth;
+package net.sf.nmedit.jsynth.event;
 
-public class SynthException extends Exception
+import java.awt.Event;
+
+import net.sf.nmedit.jsynth.Plug;
+import net.sf.nmedit.jsynth.Port;
+import net.sf.nmedit.jsynth.Synthesizer;
+
+public class PortAttachmentEvent extends Event
 {
 
-    public SynthException()
+    private Plug oldPlug;
+    private Plug newPlug;
+
+    public PortAttachmentEvent( Port target, Plug oldPlug, Plug newPlug)
     {
-        super();
+        super( target, 0, null );
+        this.oldPlug = oldPlug;
+        this.newPlug = newPlug;
     }
 
-    public SynthException( String message )
+    public Synthesizer getSynthesizer()
     {
-        super( message );
+        return getPort().getSynthesizer();
     }
-
-    public SynthException( String message, Throwable cause )
+    
+    public Port getPort()
     {
-        super( message, cause );
+        return (Port) target;
     }
-
-    public SynthException( Throwable cause )
+    
+    public Plug getOldPlug()
     {
-        super( cause );
+        return oldPlug;
     }
-
+    
+    public Plug getNewPlug()
+    {
+        return newPlug;
+    }
+    
 }

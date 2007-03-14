@@ -18,31 +18,13 @@
  */
 
 /*
- * Created on Jan 2, 2007
+ * Created on Dec 29, 2006
  */
-package net.sf.nmedit.jsynth;
+package net.sf.nmedit.jsynth.event;
 
-public class SynthException extends Exception
+public interface SynthesizerStateListener extends SynthListener
 {
 
-    public SynthException()
-    {
-        super();
-    }
-
-    public SynthException( String message )
-    {
-        super( message );
-    }
-
-    public SynthException( String message, Throwable cause )
-    {
-        super( message, cause );
-    }
-
-    public SynthException( Throwable cause )
-    {
-        super( cause );
-    }
-
+    void synthConnectionStateChanged(SynthesizerEvent e);
+    
 }

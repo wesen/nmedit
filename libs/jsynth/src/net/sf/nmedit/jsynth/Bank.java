@@ -18,31 +18,29 @@
  */
 
 /*
- * Created on Jan 2, 2007
+ * Created on Dec 29, 2006
  */
 package net.sf.nmedit.jsynth;
 
-public class SynthException extends Exception
+import net.sf.nmedit.jsynth.worker.SendPatchWorker;
+
+public interface Bank<S extends Synthesizer>
 {
 
-    public SynthException()
-    {
-        super();
-    }
+    String getName();
+    int getPatchCount();
+    int getBankIndex();
+    S getSynthesizer();
+    
+    SendPatchWorker createSendPatchWorker(int position);
+    
+    /*
+    void requestPatchInfo(int start, int end)
+        throws SynthException;
 
-    public SynthException( String message )
-    {
-        super( message );
-    }
-
-    public SynthException( String message, Throwable cause )
-    {
-        super( message, cause );
-    }
-
-    public SynthException( Throwable cause )
-    {
-        super( cause );
-    }
-
+    boolean isPatchInfoAvailable(int index);
+    boolean isPatchInfoAvailable(int start, int end);
+    PatchInfo getPatchInfo(int index);
+    
+    */
 }
