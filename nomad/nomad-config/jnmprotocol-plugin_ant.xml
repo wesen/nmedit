@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="jnmprotocol-plugin" basedir="." default="info">
+
+	<!--
+	note: jnmprotocol is not it's own plugin, but belongs to
+	the nordmodular plugin
+	-->
+	
+    <!-- the base path -->
+    <property name="base-path" value="../../"/>
+    <!-- the path to the referenced project -->
+    <property name="build-path" value="${base-path}/libs/jnmprotocol/"/>
+    <property name="codec-path" value="${base-path}/libs/codecs/"/>
+    <!-- the referenced ant build file -->
+    <property name="build-file" value="${build-path}/build.xml"/>
+    <!-- the ant target of the referenced build file -->
+    <property name="build-target" value="dist"/>
+    <!-- name of the plugin folder -->
+    <property name="plugin-name" value="net.sf.nmedit.nordmodular" />
+    <!-- path to the plugin folder -->
+    <property name="plugin-path" value="${base-path}/nomad/nomad-source/plugins/${plugin-name}/" />
+
+    <!-- 
+         target info:   default target
+         description:   prints supported targets, build will fail if no target is specified
+    -->
+    <target name="info" description="info">
+<fail>
+No target specified.
+  Following targets are available:
+  compile - compiles the referenced library
+  install - installs the referenced library in the plugin folder (depends on compile)
+  uninstall - uninstalls the library from the plugin folder
+  reverse-clean - calls the clean target in the the referenced library
+</fail>
+    </target>
+  
+    <!-- 
+           compiles the referenced library
+    -->
+    <target name="compile" description="compile library">
+      <echo>compiling library</echo>
+      <ant antfile="${build-file}" dir="${build-path}" target="${build-target}" />
+    </target>
+
+    <!-- 
+            installs the referenced library
+    -->
+    <target name="install" description="install libarary" depends="compile">
+      <echo>installing library</echo>
+      <copy file="${build-path}/dist/lib/jnmprotocol.jar" todir="${plugin-path}/lib/" overwrite="true" />
+      <copy file="${codec-path}/midi.pdl" todir="${plugin-path}/codecs/" overwrite="true" />
+      <copy file="${codec-path}/patch.pdl" todir="${plugin-path}/codecs/" overwrite="true" />
+    </target>
+
+    <!-- 
+            uninstalls the referenced library
+    -->
+    <target name="uninstall" description="uninstall libarary">
+      <echo>uninstalling library</echo>
+      <delete file="${plugin-path}/lib/jnmprotocol.jar" />
+      <delete dir="${plugin-path}/codecs" />
+    </target>
+
+    <!-- 
+            calls the clean target in the the referenced library
+    -->
+    <target name="reverse-clean" description="reverse-clean">
+      <echo>reverse-cleaning library</echo>
+      <ant antfile="${build-file}" dir="${build-path}" target="clean" />
+    </target>
+
+</project>

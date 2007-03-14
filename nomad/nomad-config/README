@@ -1,0 +1,3 @@
+The nomad-config files contains a set of ant built scripts which are used to build the
+required libraries in nomad/../libs/* and to install them in the corresponding nomad plugin
+folder.

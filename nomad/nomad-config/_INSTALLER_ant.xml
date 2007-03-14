@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="plugin-installer" basedir="." default="info">
+
+
+    <!-- 
+         target info:   default target
+         description:   prints supported targets, build will fail if no target is specified
+    -->
+    <target name="info" description="info">
+<fail>
+No target specified.
+  Following targets are available:
+  install - installs plugin files
+  uninstall - uninstalls plugin files
+  reverse-clean - calls the clean target in the the referenced libraries
+</fail>
+    </target>
+
+    <!-- 
+           installs the plugin files
+    -->
+    <target name="install" description="install plugin files">
+      <echo>installing plugin files...</echo>
+      <echo>installing external libraries</echo>
+      <ant antfile="./commons-logging_ant.xml" dir="." target="install" />
+      <ant antfile="./log4j-logging_ant.xml" dir="." target="install" />
+      <ant antfile="./cssparser-plugin_ant.xml" dir="." target="install" />
+      <ant antfile="./jdom-plugin_ant.xml" dir="." target="install" />
+      <ant antfile="./sac-plugin_ant.xml" dir="." target="install" />
+      <ant antfile="./xerces-plugin_ant.xml" dir="." target="install" />
+      <ant antfile="./batik-plugin_ant.xml" dir="." target="install" />
+
+      <echo>compiling/installing project libraries</echo>
+      <ant antfile="./jpdl-plugin_ant.xml" dir="." target="install" />
+      <ant antfile="./jnmprotocol-plugin_ant.xml" dir="." target="install" />
+      <ant antfile="./nmutils-plugin_ant.xml" dir="." target="install" />
+      <ant antfile="./jpatch-plugin_ant.xml" dir="." target="install" />
+      <ant antfile="./jtheme-plugin_ant.xml" dir="." target="install" />
+      <ant antfile="./jsynth-plugin_ant.xml" dir="." target="install" />
+      <ant antfile="./nordmodular-plugin_ant.xml" dir="." target="install" />
+    </target>
+
+    <!-- 
+           uninstalls the plugin files
+    -->
+    <target name="uninstall" description="uninstall plugin files">
+      <echo>uninstalling plugin files...</echo>
+      <echo>uninstalling external libraries</echo>
+      <ant antfile="./commons-logging_ant.xml" dir="." target="uninstall" />
+      <ant antfile="./log4j-logging_ant.xml" dir="." target="uninstall" />
+      <ant antfile="./batik-plugin_ant.xml" dir="." target="uninstall" />
+      <ant antfile="./cssparser-plugin_ant.xml" dir="." target="uninstall" />
+      <ant antfile="./jdom-plugin_ant.xml" dir="." target="uninstall" />
+      <ant antfile="./sac-plugin_ant.xml" dir="." target="uninstall" />
+      <ant antfile="./xerces-plugin_ant.xml" dir="." target="uninstall" />
+
+      <echo>uninstalling project libraries</echo>
+      <ant antfile="./jpdl-plugin_ant.xml" dir="." target="uninstall" />
+      <ant antfile="./jnmprotocol-plugin_ant.xml" dir="." target="uninstall" />
+      <ant antfile="./nmutils-plugin_ant.xml" dir="." target="uninstall" />
+      <ant antfile="./jpatch-plugin_ant.xml" dir="." target="uninstall" />
+      <ant antfile="./jtheme-plugin_ant.xml" dir="." target="uninstall" />
+      <ant antfile="./jsynth-plugin_ant.xml" dir="." target="uninstall" />
+      <ant antfile="./nordmodular-plugin_ant.xml" dir="." target="uninstall" />
+    </target>
+
+    <!-- 
+            calls the clean target in the the referenced libraries
+    -->
+    <target name="reverse-clean" description="reverse-clean">
+      <echo>reverse-cleaning libraries...</echo>
+      <ant antfile="./jpdl-plugin_ant.xml" dir="." target="reverse-clean" />
+      <ant antfile="./jnmprotocol-plugin_ant.xml" dir="." target="reverse-clean" />
+      <ant antfile="./nmutils-plugin_ant.xml" dir="." target="reverse-clean" />
+      <ant antfile="./jpatch-plugin_ant.xml" dir="." target="reverse-clean" />
+      <ant antfile="./jtheme-plugin_ant.xml" dir="." target="reverse-clean" />
+      <ant antfile="./nordmodular-plugin_ant.xml" dir="." target="reverse-clean" />
+      <ant antfile="./jsynth-plugin_ant.xml" dir="." target="reverse-clean" />
+    </target>
+
+</project>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<entry entryPoint="MainWindow.menu"
+	xmlns="http://nmedit.sf.net/MenuLayout"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../../data/MenuLayout.xsd"
+	xsi:schemaLocation="http://nmedit.sf.net/MenuLayout ../../data/MenuLayout.xsd">
+	<entry entryPoint="file" >
+		<entry entryPoint="new">
+			<entry entryPoint="file" />
+			<entry entryPoint="location" />
+			<entry entryPoint="device" />
+		</entry>
+		<entry entryPoint="open" />
+		<entry entryPoint="close" flat="true">
+			<entry entryPoint="close" />
+			<entry entryPoint="closeall" />
+		</entry>
+		<entry entryPoint="save" flat="true">
+			<entry entryPoint="save" />
+			<entry entryPoint="saveas" />
+			<entry entryPoint="saveall" />
+		</entry>
+		<entry entryPoint="ie" flat="true">
+			<entry entryPoint="import" />
+			<entry entryPoint="export" />
+		</entry>
+		<entry entryPoint="properties" />
+		<entry entryPoint="exit" />
+	</entry>
+	<entry entryPoint="locale">
+		<entry entryPoint="switch" />
+	</entry>
+</entry>
