@@ -14,15 +14,39 @@
       <classpath>
         <pathelement path="."/>
         <pathelement location="../jpatch/dist/lib/jpatch.jar"/>
-        <pathelement location="../jpatch/devices/clavia/nordmodular/dist/lib/jpatch.nordmodular.jar"/>
-        <pathelement location="../jmisc/dist/lib/jmisc.jar"/>
+        <pathelement location="../nmutils/dist/lib/nmutils.jar"/>
+        <pathelement location="../java_depencies/cssparser/cssparser.jar"/>
+        <pathelement location="../java_depencies/jdom/jdom.jar"/>
+        <pathelement location="../java_depencies/sac/sac.jar"/>
+        
+        <pathelement location="../java_depencies/batik/batik-transcoder.jar"/>
+        <pathelement location="../java_depencies/batik/batik-dom.jar"/>
+        <pathelement location="../java_depencies/batik/batik-css.jar"/>
+        <pathelement location="../java_depencies/batik/batik-parser.jar"/>
+        <pathelement location="../java_depencies/batik/batik-svg-dom.jar"/>
+        <pathelement location="../java_depencies/batik/batik-svggen.jar"/>
+        <pathelement location="../java_depencies/batik/batik-util.jar"/>
+        <pathelement location="../java_depencies/batik/batik-xml.jar"/>
+        <pathelement location="../java_depencies/batik/batik-ext.jar"/>
+        <pathelement location="../java_depencies/batik/batik-gvt.jar"/>
+        <pathelement location="../java_depencies/batik/batik-rasterizer.jar"/>
       </classpath>
 	</javac>
+	<copy todir="${build}">
+	 <fileset dir="${src}">
+	  <include name="**/*.png" />
+	 </fileset>
+	</copy>
   </target>
 
   <target name="dist" depends="compile" description="generate the distribution">
     <mkdir dir="${dist}/lib"/>
-    <jar jarfile="${dist}/lib/jtheme.jar" basedir="${build}"/>
+    <jar jarfile="${dist}/lib/jtheme.jar">
+	 <fileset dir="${build}">
+	  <include name="**/*.class" />
+	  <include name="**/*.png" />
+	 </fileset>
+    </jar>
   </target>
 
   <target name="clean"
