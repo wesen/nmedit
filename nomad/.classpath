@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" output="nomad-source/bin" path="nomad-source/net.sf.nmedit.nomad.boot.splash/src"/>
+	<classpathentry kind="src" output="nomad-source/plugins/net.sf.nmedit.jsynth/classes" path="nomad-source/plugins/net.sf.nmedit.jsynth/src"/>
+	<classpathentry kind="src" output="nomad-source/plugins/net.sf.nmedit.nomad.core/classes" path="nomad-source/plugins/net.sf.nmedit.nomad.core/src"/>
+	<classpathentry kind="src" output="nomad-source/plugins/net.sf.nmedit.nordmodular/classes" path="nomad-source/plugins/net.sf.nmedit.nordmodular/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/forms-1.0.7.jar"/>
-	<classpathentry kind="lib" path="lib/jnmprotocol.jar"/>
-	<classpathentry kind="lib" path="lib/jpdl.jar"/>
-	<classpathentry kind="lib" path="lib/looks-2.0.2.jar"/>
-	<classpathentry kind="lib" path="lib/xpp3_min-1.1.3.4.H.jar"/>
-	<classpathentry kind="lib" path="lib/xpp3_xpath-1.1.3.4.H.jar"/>
-	<classpathentry kind="lib" path="lib/xpp3-1.1.3.4.H.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nmlibs"/>
+	<classpathentry kind="lib" path="nomad-source/libs/jpf.jar"/>
+	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.nomad.core/lib/forms-1.0.7.jar"/>
+	<classpathentry kind="lib" path="nomad-source/libs/jpf-boot.jar"/>
+	<classpathentry kind="lib" path="nomad-source/libs/commons-logging.jar"/>
+	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.nomad.core/lib/looks-2.1.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

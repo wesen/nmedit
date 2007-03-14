@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 0.4" "http://jpf.sourceforge.net/plugin_0_4.dtd">
+<plugin id="org.jdom" version="1.x.cvs">
+	<requires>
+		<import plugin-id="org.apache.xerces" />
+	</requires>
+	<runtime>
+		<library id="jdom" path="lib/jdom.jar" type="code">
+		<export prefix="*"/>
+		</library>
+	</runtime>
+</plugin>

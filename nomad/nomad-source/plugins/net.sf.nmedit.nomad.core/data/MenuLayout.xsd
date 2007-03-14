@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<schema 
+	targetNamespace="http://nmedit.sf.net/MenuLayout"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:ml="http://nmedit.sf.net/MenuLayout">
+
+<annotation>
+    <documentation xml:lang="EN">
+		Menu layout schema.
+    </documentation>
+</annotation>
+
+<simpleType name="iconType">
+  <restriction base="string">
+    <enumeration value="enabledIcon"/>
+    <enumeration value="disabledIcon"/>
+  </restriction>
+</simpleType>
+
+<element name="icon">
+  <complexType>
+    <attribute name="type" type="ml:iconType" default="enabledIcon"/>
+    <attribute name="src" type="anyURI" use="required" />
+  </complexType>
+</element>
+
+<element name="entry">
+  <complexType>
+	<sequence>
+      <element ref="ml:icon" minOccurs="0" maxOccurs="unbounded"/>
+      <element ref="ml:layout" minOccurs="0" maxOccurs="1"/>
+      <element ref="ml:entry"  minOccurs="0" maxOccurs="unbounded"/>
+	</sequence>
+    <attribute name="entryPoint" type="NMTOKEN" />
+    <attribute name="flat" type="boolean" default="false" />
+  </complexType>
+</element>
+
+</schema>

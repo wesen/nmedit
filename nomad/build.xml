@@ -1,295 +1,78 @@
-<project name="nomad" default="dist" basedir=".">
+<project name="nomad" default="info" basedir=".">
 
-	<!-- ************************************************** -->
-	<!-- commands:                                          -->
-	<!--   1. ant        - build project                    -->
-	<!--   2. ant nomad  - run nomad                        -->
-	<!--   3. ant editor - run editor                       -->
-	<!--   x. ant clean  - clean built files                -->
-	<!-- ************************************************** -->
+  <property name="libs-path" value="../libs/" />
+  <property name="installer-script-path" value="nomad-config/" />
+  <property name="installer-script" value="_INSTALLER_ant.xml" />
+
+  <property name="nomad-source" value="./nomad-source/" />
+  <property name="nomad-dist" value="./nomad-dist/" />
 	
-	<description>
-		Nomad Ant-script
-	</description>
-	
-	<!-- ************************************************** -->
-	<!-- set global properties for this build               -->
-	<!-- ************************************************** -->
+  <target name="check-libs-path">
+      <condition property="libs-path.exists"><available file="${libs-path}"/></condition>
+  </target>
+  <target name="validate-libs-path" depends="check-libs-path" unless="libs-path.exists">
+      <fail>The path '${libs-path}' does not exist. Please checkout the directory and it's contents from CVS.</fail>
+  </target>
 
-	<!-- folder containing source-package org.nomad.* -->
-	<property name="source.nomad" location="src/net/sf/nmedit/nomad" />
-	<property name="source.editor" location="${source.nomad}/editor" />
-	<!-- folder containing external libraries (i.e. xml parser) -->
-	<property name="source.libraries" location="lib" />
-	<!-- folder containing data loaded at runtime, like images, xml configuration -->
-	<property name="source.data" location="src/data" />
-	<property name="source.conf" location="src/conf" />
-	<!-- folder containing plugins -->
-	<property name="source.themes" location="themes/src" />
-	
-	<!-- temporary build directories -->
-	<property name="ant.build" location="ant.build" />
-	<property name="build.nomad" location="${ant.build}/nomad" />
-	<property name="build.editor" location="${ant.build}/editor" />
-	<property name="build.themes" location="${ant.build}/themes" />
-	
-	<!-- distribution directory -->
-	<property name="ant.dist" location="ant.dist" />
-	<!-- current build directory -->
-	<property name="dist.current" location="${ant.dist}" />
+  <target name="info" description="build script info" depends="validate-libs-path" >
+<fail>
+(no target specified)
+Nomad ANT build script (http://nmedit.sourcecforge.net/)
+Following targets are available:
+  [nomad]
+  build     - builds nomad (not implemented)
+  dist      - distributes nomad (not implemented)
+  clean     - cleans the build/dist files (not implemented)
 
-	<property name="dist.nomad" location="${dist.current}/nomad" />
-	<property name="dist.libraries" location="${dist.nomad}/lib" />
-	<property name="dist.themes" location="${dist.libraries}" />
-	<property name="dist.data" location="${dist.nomad}/data" />
-	<property name="dist.conf" location="${dist.nomad}/conf" />
+  note: you have to call the configure target one-time before
+        you can build / run nomad
 
-	<!-- ************************************************** -->
-	<!-- initial setup                                      -->
-	<!-- ************************************************** -->
+  [project]
+  configure - configures the project
+              You should call this after you checked out the
+              project from CVS the first time. Amongst other
+              things it will compile the libraries located
+              in ../libs/ and install them in the plugin
+              folders of nomad
+  revert    - uninstalls libraries/resources which were
+              installed using configure
+  clean-libs - calls the clean target (or equivalent) in the
+              libraries located in ../libs/
+Note:
+  If you checked out the project from CVS the first time you should run the configure target.
+  It will install the required libraries in the corresponding locations of the nomad-source directory.
+</fail>
+  </target>
 
-	<target name="init">
-		<!-- Create the time stamp -->
-		<tstamp />
-		<!-- Create the build directory structure used by compile -->
-		<mkdir dir="${build.nomad}"/>
-		<mkdir dir="${build.editor}"/>
-		<mkdir dir="${build.themes}"/>
-	</target>
+  <target name="configure" description="configure project" depends="validate-libs-path">
+      <ant antfile="${installer-script}" dir="${installer-script-path}" target="install" />
+  </target>
+  
+  <target name="revert" description="reverts 'configure'">
+    <!--
+      <fail>TODO disabled for safety reasons</fail>-->
+      	
+      <ant antfile="${installer-script}" dir="${installer-script-path}" target="uninstall" />
+      	
+  </target>
+  
+  <target name="clean-libs" description="clean-libs">
+    <!--
+    <fail>TODO disabled for safety reasons</fail>
+  	-->
+      <ant antfile="${installer-script}" dir="${installer-script-path}" target="reverse-clean" />
+      
+  </target>
+  
+  <!-- building nomad -->
 
-	<!-- ************************************************** -->
-	<!-- compilation                                        -->
-	<!-- ************************************************** -->
-	
-	<target name="install.resources" depends="init" description="Install resource files">
-		<!-- copy data -->
-		<copy todir="${dist.data}/images/icons/app" taskname="Copying resources">
-			<fileset dir="${source.data}/images/icons/app"  casesensitive="yes">
-			</fileset>
-		</copy>
-		<copy todir="${dist.data}/images/single" taskname="Copying resources">
-			<fileset dir="${source.data}/images/single"  casesensitive="yes">
-			</fileset>
-		</copy>
-		<copy todir="${dist.data}/images/slice" taskname="Copying resources">
-			<fileset dir="${source.data}/images/slice"  casesensitive="yes">
-			</fileset>
-		</copy>
-		<copy todir="${dist.data}/images" taskname="Copying resources">
-			<fileset dir="${source.data}/images"  casesensitive="yes">
-	        <include name="splash.jpg"/>
-			</fileset>
-		</copy>
-		<copy todir="${dist.data}/patch" taskname="Copying resources">
-	      <fileset dir="${source.data}/patch">
-	        <include name="example.pch"/>
-	      </fileset>
-		</copy>
-		<copy todir="${dist.conf}" taskname="Copying resources">
-			<fileset dir="${source.conf}"  casesensitive="yes">
-			</fileset>
-		</copy>
-
-		<!-- copy libraries -->
-		<copy todir="${dist.libraries}" taskname="Copying libraries">
-			<fileset dir="${source.libraries}"  casesensitive="yes">
-			</fileset>
-		</copy>
-		
-	    <copy todir="${dist.nomad}">
-	      <fileset dir="src">
-	        <include name="gpl.txt"/>
-	        <include name="README.txt"/>
-	      </fileset>
-	    </copy>
-	</target>
-
-	<target name="compile.nomad" depends="install.resources" description="Compiling nomad">
-		<javac srcdir="${source.nomad}" destdir="${build.nomad}" optimize="on">
-			<compilerarg value="-Xlint:all,-serial" />
-			<exclude name="editor/**"/>
-			<classpath>
-				<pathelement path="${java.class.path}"/>
-				<!-- we need the libraries on the classpath -->
-			    <fileset dir="${dist.libraries}">
-			    	<include name="**/*.jar"/>
-				</fileset>
-			</classpath>
-		</javac>
-	</target>
-
-	<target name="compile.editor" depends="compile.nomad" description="Compiling editor">
-		<javac srcdir="${source.editor}" destdir="${build.editor}">
-			<compilerarg value="-Xlint:all,-serial" />
-			<classpath>
-				<pathelement path="${java.class.path}" />
-				<!-- we need the libraries on the classpath -->
-				<pathelement location="${build.nomad}" />
-			    <fileset dir="${dist.libraries}">
-			    	<include name="**/*.jar"/>
-				</fileset>
-			</classpath>
-		</javac>
-	</target>
-
-	<target name="compile.themes" depends="install.resources,compile.nomad" description="Compiling themes">
-			<echo message="Building themes" />
-			<javac srcdir="${source.themes}" destdir="${build.themes}">
-				<compilerarg value="-Xlint:all,-serial" />
-				<classpath>
-					<pathelement path="${java.class.path}" />
-					<!-- we need the libraries on the classpath -->
-					<pathelement location="${build.nomad}" />
-				    <fileset dir="${dist.libraries}">
-				    	<include name="**/*.jar"/>
-					</fileset>
-				</classpath>
-			</javac>
-			<copy todir="${build.themes}" >
-				<fileset dir="${source.themes}" includes="**/*.xml" />
-				<fileset dir="${source.themes}" includes="**/*.jpg" />
-				<fileset dir="${source.themes}" includes="META-INF/services/net.sf.nmedit.nomad.theme.plugin.ThemePluginProvider" />
-			</copy>			
-	</target>
-
-	<!-- ************************************************** -->
-	<!-- generate jar files                                 -->
-	<!-- ************************************************** -->
-
-	<target name="dist.nomad" depends="compile.nomad" description="Building jar for Nomad">
-		<jar jarfile="${dist.nomad}/nomad.jar" basedir="${build.nomad}">
-	      <manifest> <!-- java -jar example.jar -->
-	        <attribute name="Main-class" value="net.sf.nmedit.nomad.core.nomad.Nomad"/>
-            <attribute name="Class-Path" value="./lib/xpp3_min-1.1.3_8.jar ./lib/forms-1.0.7.jar ./lib/looks-2.0.2.jar ./lib/jnmprotocol.jar ./lib/jpdl.jar ./lib/jpatch.jar ./lib/jsynth.jar ./lib/jpatch.nordmodular.jar ./lib/jsynth.nordmodular.jar ./lib/jmisc.jar ./lib/jtheme.jar ./lib/themes.jar"/>
-	      </manifest>
-		</jar> 
-	</target>
-
-	<target name="dist.editor" depends="compile.editor" description="Building jar for editor">
-		<jar jarfile="${dist.nomad}/editor.jar" basedir="${build.editor}">
-	      <manifest> <!-- java -jar example.jar -->
-	        <attribute name="Main-class" value="net.sf.nmedit.nomad.editor.NomadEditor" />
-            <attribute name="Class-Path" value="nomad.jar ./lib/xpp3_min-1.1.3_8.jar ./lib/forms-1.0.7.jar ./lib/looks-2.0.2.jar ./plugin/classictheme.jar ./lib/jpatch.jar ./lib/jpatch.nordmodular.jar ./lib/jtheme.jar ./lib/themes.jar"/>
-	      </manifest>
-	    </jar>
-	</target>
-
-	<target name="dist.themes" depends="compile.themes" description="Building jar(s) for themes">
-		<mkdir dir="${dist.themes}"/>
-        <jar jarfile="${dist.themes}/themes.jar" basedir="${build.themes}"></jar>
-	</target>
-
-	<!-- ************************************************** -->
-	<!-- build/install libraries                            -->
-	<!-- ************************************************** -->
-
-	<target name="build-libraries" description="building libraries">
-		<ant antfile="build.xml" dir="../libs/jpdl" target="dist"/>
-		<ant antfile="build.xml" dir="../libs/jnmprotocol" target="dist"/>
-		<ant antfile="build.xml" dir="../libs/jmisc" target="dist"/>
-		<ant antfile="build.xml" dir="../libs/jsynth" target="dist"/>
-		<ant antfile="build.xml" dir="../libs/jpatch" target="dist"/>
-		<ant antfile="build.xml" dir="../libs/jpatch/devices/clavia/nordmodular" target="dist"/>
-		<ant antfile="build.xml" dir="../libs/jsynth/devices/clavia/nordmodular" target="dist"/>
-		<ant antfile="build.xml" dir="../libs/jtheme" target="dist"/>
-	</target>
-	
-	<target name="clean-libraries" description="cleaning libraries">
-		<ant antfile="build.xml" dir="../libs/jpdl" target="clean"/>
-		<ant antfile="build.xml" dir="../libs/jnmprotocol" target="clean"/>
-		<ant antfile="build.xml" dir="../libs/jmisc" target="clean"/>
-		<ant antfile="build.xml" dir="../libs/jsynth" target="clean"/>
-		<ant antfile="build.xml" dir="../libs/jpatch" target="clean"/>
-		<ant antfile="build.xml" dir="../libs/jpatch/devices/clavia/nordmodular" target="clean"/>
-		<ant antfile="build.xml" dir="../libs/jsynth/devices/clavia/nordmodular" target="clean"/>
-		<ant antfile="build.xml" dir="../libs/jtheme" target="clean"/>
-	</target>
-	
-	<target name="install-libraries" description="installing libraries">
-	    <copy todir="lib">
-	        <fileset dir="../libs/jnmprotocol/dist/lib/">
-	           <include name="jnmprotocol.jar"/>
-	        </fileset>
-	        <fileset dir="../libs/jpdl/dist/lib/">
-	           <include name="jpdl.jar"/>
-	        </fileset>
-	        <fileset dir="../libs/jsynth/dist/lib/">
-	           <include name="jsynth.jar"/>
-	        </fileset>
-	        <fileset dir="../libs/jpatch/dist/lib/">
-	           <include name="jpatch.jar"/>
-	        </fileset>
-	        <fileset dir="../libs/jtheme/dist/lib/">
-	           <include name="jtheme.jar"/>
-	        </fileset>
-	        <fileset dir="../libs/jsynth/devices/clavia/nordmodular/dist/lib/">
-	           <include name="jsynth.nordmodular.jar"/>
-	        </fileset>
-	        <fileset dir="../libs/jpatch/devices/clavia/nordmodular/dist/lib/">
-	           <include name="jpatch.nordmodular.jar"/>
-	        </fileset>
-	        <fileset dir="../libs/jmisc/dist/lib/">
-	           <include name="jmisc.jar"/>
-	        </fileset>
-	        <fileset dir="../libs/jmisc/lib/">
-	           <include name="xpp3_min-1.1.3_8.jar"/>
-	        </fileset>
-		</copy>
-	</target>
-	
-	<target name="uninstall-libraries" description="uninstalling libraries">
-		<delete file="lib/jnmprotocol.jar" />
-		<delete file="lib/jpdl.jar"/>
-		<delete file="lib/jsynth.jar"/>
-		<delete file="lib/jpatch.jar"/>
-		<delete file="lib/jtheme.jar"/>
-		<delete file="lib/jsynth.nordmodular.jar"/>
-		<delete file="lib/jpatch.nordmodular.jar"/>
-		<delete file="lib/jmisc.jar"/>
-		<delete file="lib/xpp3_min-1.1.3_8.jar"/>
-	</target>
-	
-	<!-- ************************************************** -->
-	<!-- default target (dist)                              -->
-	<!-- ************************************************** -->
-
-	<target name="dist" >
-		<antcall target="dist.nomad" />
-		<antcall target="dist.editor" />
-
-		<!-- support for jar-plugins is not ready yet
-			<antcall target="dist.plugin" /> 
-		-->
-		<antcall target="dist.themes" /> 
-	</target>
-
-	<!-- ************************************************** -->
-	<!-- clean up                                           -->
-	<!-- ************************************************** -->
-
-	<target name="clean" description="Clean up">
-		<delete dir="${ant.build}" />
-		<delete dir="${ant.dist}" />
-	</target>
-
-	<!-- ************************************************** -->
-	<!-- run nomad                                          -->
-	<!-- ************************************************** -->
-	
-    <target name="nomad" >
-		<java jar="${dist.nomad}/nomad.jar" fork="true" dir="${dist.nomad}" />
-	</target>
-
-	<target name="run" depends="nomad">
-		
-	</target>
-	
-	<!-- ************************************************** -->
-	<!-- run nomad                                          -->
-	<!-- ************************************************** -->
-	
-	<target name="editor" >
-		<java jar="${dist.nomad}/editor.jar" fork="true" dir="${dist.nomad}" />
-	</target>
-
+	<!--
+  <target name="clean-nomad">
+  	<delete dir="${nomad-dist}" />
+    <ant antfile="${nomad-source}/plugins/net.sf.nmedit.nomad.core/build.xml" dir="${nomad-source}/plugins/net.sf.nmedit.nomad.core/" target="clean" />
+    <ant antfile="${nomad-source}/plugins/net.sf.nmedit.jsynth/build.xml" dir="${nomad-source}/plugins/net.sf.nmedit.jsynth/" target="clean" />
+    <ant antfile="${nomad-source}/plugins/net.sf.nmedit.jsynth/build.xml" dir="${nomad-source}/plugins/net.sf.nmedit.nordmodular/" target="clean" />
+  </target>
+	-->
 </project>
+

@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 0.4" "http://jpf.sourceforge.net/plugin_0_4.dtd">
+<plugin id="net.sf.nmedit.jtheme" version="0.1">
+  	<requires>
+		<import plugin-id="org.w3.sac"  />
+		<import plugin-id="org.apache.xmlgraphics.batik"  />
+		<import plugin-id="net.sf.cssparser"  />
+		<import plugin-id="org.jdom"  />
+		<import plugin-id="net.sf.nmedit.nmutils"  />  
+		<import plugin-id="net.sf.nmedit.jpatch"  />  
+		<import plugin-id="org.apache.xerces" />
+	</requires>
+	<runtime>
+		<!--	   
+		<library id="jtheme" path="lib/jtheme.jar" type="code" >
+		<export prefix="*"/>
+		</library>
+		 -->
+		<library id="jtheme-classes" path="../../../../libs/jtheme/bin/" type="code">
+			<export prefix="*"/>
+		</library>
+
+	</runtime>
+</plugin>

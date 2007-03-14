@@ -1,0 +1,65 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 0.4" "http://jpf.sourceforge.net/plugin_0_4.dtd">
+<plugin id="org.apache.xmlgraphics.batik" version="1.6">
+  	<requires>
+		<import plugin-id="org.w3.sac"  />
+		<import plugin-id="org.apache.xerces"  /> 
+	</requires>
+	<runtime><!--
+		<library id="xerces" path="lib/xerces_2_5_0.jar" type="code" >
+		<export prefix="*"/>
+		</library>
+		<library id="xml-apis" path="lib/xml-apis.jar" type="code" >
+		<export prefix="*"/>
+		</library> -->
+		<library id="batik-bridge" path="lib/batik-bridge.jar" type="code" >
+		<export prefix="*"/>
+		</library>
+		<library id="batik-css" path="lib/batik-css.jar" type="code" >
+		<export prefix="*"/>
+		</library>
+		<library id="batik-awt-util" path="lib/batik-awt-util.jar" type="code" >
+		<export prefix="*"/>
+		</library>
+		<library id="batik-dom" path="lib/batik-dom.jar" type="code" >
+		<export prefix="*"/>
+		</library>
+		<library id="batik-swing" path="lib/batik-swing.jar" type="code" >
+		<export prefix="*"/>
+		</library>
+		<library id="batik-script" path="lib/batik-script.jar" type="code" >
+		<export prefix="*"/>
+		</library>
+		
+		<library id="batik-ext" path="lib/batik-ext.jar" type="code">
+		<!-- export conflicts with cssparser (org.w3.css.sac) -->
+		</library>
+		<library id="batik-gvt" path="lib/batik-gvt.jar" type="code" >
+		<export prefix="*"/>
+		</library>
+		<library id="batik-parser" path="lib/batik-parser.jar" type="code" >
+		<export prefix="*"/>
+		</library>
+		<library id="batik-rasterizer" path="lib/batik-rasterizer.jar" type="code" >
+		<export prefix="*"/>
+		</library>
+		<library id="batik-svg-dom" path="lib/batik-svg-dom.jar" type="code" >
+		<export prefix="*"/>
+		</library>
+		<library id="batik-svggen" path="lib/batik-svggen.jar" type="code" >
+		<export prefix="*"/>
+		</library>
+		<library id="batik-transcoder" path="lib/batik-transcoder.jar" type="code">
+		<export prefix="*"/>
+		</library>
+		<library id="batik-util" path="lib/batik-util.jar" type="code" >
+		<export prefix="*"/>
+		</library>
+		<library id="batik-xml" path="lib/batik-xml.jar" type="code">
+		<export prefix="*"/>
+		</library>
+		<library id="batik-extension" path="lib/batik-extension.jar" type="code">
+		<export prefix="*"/>
+		</library>
+	</runtime>
+</plugin>

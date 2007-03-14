@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 0.4" "http://jpf.sourceforge.net/plugin_0_4.dtd">
+<plugin id="net.sf.nmedit.nordmodular" version="0.1"
+  class="net.sf.nmedit.nordmodular.CorePlugin">
+	<requires>
+		<import plugin-id="net.sf.nmedit.nomad.core"  />
+		<import plugin-id="net.sf.nmedit.jsynth" />
+		<import plugin-id="net.sf.nmedit.jpatch" />
+		<import plugin-id="net.sf.nmedit.jtheme" />
+		<import plugin-id="net.sf.nmedit.nmutils" />
+		<import plugin-id="net.sf.nmedit.jpdl" />
+		<import plugin-id="org.apache.xerces" />
+		<import plugin-id="net.sf.cssparser"  />
+		<import plugin-id="org.w3.sac"  />
+		<import plugin-id="org.apache.xmlgraphics.batik" />
+	</requires>
+	<runtime>
+		<library id="core" path="classes/" type="code">
+			<export prefix="*"/>
+		</library>
+		<library type="resources" path="data/" id="data">
+			<export prefix="*"/>
+		</library> <!--
+		<library type="resources" path="codecs/" id="codecs">
+			<export prefix="*.pdl"/>
+		</library> -->
+		<library id="nordmodular" path="lib/nordmodular.jar" type="code" >
+		<export prefix="*"/>
+		</library>
+		<library id="jnmprotocol" path="lib/jnmprotocol.jar" type="code" >
+		<export prefix="*"/>
+		</library>
+	</runtime>
+	<extension plugin-id="net.sf.nmedit.nomad.core"
+	  point-id="Service" id="NordModularFileService">
+		<parameter id="class" value="net.sf.nmedit.nordmodular.NmFileService"/>
+		<parameter id="service" value="net.sf.nmedit.nomad.core.service.fileService.FileService"/>
+		<parameter id="description" value="Nord Modular patch 3.0"/>
+	</extension>
+	<extension plugin-id="net.sf.nmedit.nomad.core"
+	  point-id="Service" id="NordModularInstaller">
+		<parameter id="class" value="net.sf.nmedit.nordmodular.Installer"/>
+		<parameter id="service" value="net.sf.nmedit.nomad.core.service.initService.InitService"/>
+		<parameter id="description" value="Nord Modular plugin installer"/>
+	</extension>
+	<extension plugin-id="net.sf.nmedit.nomad.core"
+	  point-id="Service" id="NewNordModular">
+		<parameter id="class" value="net.sf.nmedit.nordmodular.NewNordModularService"/>
+		<parameter id="service" value="net.sf.nmedit.nomad.core.service.synthService.NewSynthService"/>
+		<parameter id="description" value="Nord Modular factory"/>
+	</extension>
+	<extension plugin-id="net.sf.nmedit.nomad.core"
+	  point-id="Service" id="NewMicroModular">
+		<parameter id="class" value="net.sf.nmedit.nordmodular.NewMicroModularService"/>
+		<parameter id="service" value="net.sf.nmedit.nomad.core.service.synthService.NewSynthService"/>
+		<parameter id="description" value="Micro Modular factory"/>
+	</extension>
+</plugin>

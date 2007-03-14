@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 0.4" "http://jpf.sourceforge.net/plugin_0_4.dtd">
+<plugin id="net.sf.nmedit.nmutils" version="0.1">
+	<runtime>
+		<library id="nmutils" path="lib/nmutils.jar" type="code">
+		<export prefix="*"/>
+		</library>
+	</runtime>
+</plugin>

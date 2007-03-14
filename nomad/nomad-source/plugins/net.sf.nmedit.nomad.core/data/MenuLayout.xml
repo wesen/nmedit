@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE entry [
+	<!ENTITY ipath "icons/">
+	<!ENTITY etool "&ipath;etool16">
+	<!ENTITY dtool "&ipath;dtool16">
+]>
+<entry entryPoint="nomad"
+	xmlns="http://nmedit.sf.net/MenuLayout"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	
+  <entry entryPoint="menu" >
+	<entry entryPoint="file" >
+		<entry entryPoint="new">
+			<entry entryPoint="global" flat="true">
+				<entry entryPoint="location">
+					<icon type="enabledIcon" src="&etool;/new_wiz.gif" />
+					<icon type="disabledIcon" src="&dtool;/new_wiz.gif" />
+				</entry>
+				<entry entryPoint="synth">
+					<icon type="enabledIcon" src="&etool;/new_wiz.gif" />
+					<icon type="disabledIcon" src="&dtool;/new_wiz.gif" />
+				</entry>
+			</entry>
+		</entry>
+		<entry entryPoint="open" />
+		<entry entryPoint="close" flat="true">
+			<entry entryPoint="close" />
+			<entry entryPoint="closeall" />
+		</entry>
+		<entry entryPoint="save" flat="true">
+			<entry entryPoint="save">
+				<icon type="enabledIcon" src="&etool;/save_edit.gif" />
+				<icon type="disabledIcon" src="&dtool;/save_edit.gif" />
+			</entry>
+			<entry entryPoint="saveas">
+				<icon type="enabledIcon" src="&etool;/saveas_edit.gif" />
+				<icon type="disabledIcon" src="&dtool;/saveas_edit.gif" />
+			</entry>
+			<entry entryPoint="saveall">
+				<icon type="enabledIcon" src="&etool;/saveall_edit.gif" />
+				<icon type="disabledIcon" src="&dtool;/saveall_edit.gif" />
+			</entry>
+		</entry>
+		<entry entryPoint="ie" flat="true">
+			<entry entryPoint="import">
+				<icon type="enabledIcon" src="&etool;/import_wiz.gif" />
+				<icon type="disabledIcon" src="&dtool;/import_wiz.gif" />
+			</entry>
+			<entry entryPoint="export">
+				<icon type="enabledIcon" src="&etool;/export_wiz.gif" />
+				<icon type="disabledIcon" src="&dtool;/export_wiz.gif" />
+			</entry>
+		</entry>
+		<entry entryPoint="properties" />
+		<entry entryPoint="exit" />
+	</entry>
+	<entry entryPoint="edit">
+		<entry entryPoint="history" flat="true">
+			<entry entryPoint="undo">
+				<icon type="enabledIcon" src="&etool;/undo_edit.gif"/>
+				<icon type="disabledIcon" src="&dtool;/undo_edit.gif"/>
+			</entry>
+			<entry entryPoint="redo">
+				<icon type="enabledIcon" src="&etool;/redo_edit.gif" />
+				<icon type="disabledIcon" src="&dtool;/redo_edit.gif" />
+			</entry>
+		</entry>
+		<entry entryPoint="edit" flat="true">
+			<entry entryPoint="cut">
+				<icon type="enabledIcon" src="&etool;/cut_edit.gif" />
+				<icon type="disabledIcon" src="&dtool;/cut_edit.gif" />
+			</entry>
+			<entry entryPoint="copy">
+				<icon type="enabledIcon" src="&etool;/copy_edit.gif" />
+				<icon type="disabledIcon" src="&dtool;/copy_edit.gif" />
+			</entry>
+			<entry entryPoint="paste">
+				<icon type="enabledIcon" src="&etool;/paste_edit.gif" />
+				<icon type="disabledIcon" src="&dtool;/paste_edit.gif" />
+			</entry>
+		</entry>
+		<entry entryPoint="app" flat="true">
+			<entry entryPoint="preferences" />
+		</entry>
+	</entry>
+	<entry entryPoint="synth">
+		<entry entryPoint="new" />
+		<entry entryPoint="setup" />
+	</entry>
+	<entry entryPoint="patch">
+		<entry entryPoint="notes" />
+		<entry entryPoint="settings" />
+	</entry>
+	<entry entryPoint="help">
+		<entry entryPoint="plugins">
+			<icon type="enabledIcon" src="&etool;/help_contents.gif" />
+			<icon type="disabledIcon" src="&dtool;/help_contents.gif" />
+		</entry>
+		<entry entryPoint="license">
+			<icon type="enabledIcon" src="&etool;/help_contents.gif" />
+			<icon type="disabledIcon" src="&dtool;/help_contents.gif" />
+		</entry>
+		<entry entryPoint="about">
+			<icon type="enabledIcon" src="&etool;/help_contents.gif" />
+			<icon type="disabledIcon" src="&dtool;/help_contents.gif" />
+		</entry>
+	</entry>
+  </entry> <!-- end of menu -->
+
+  <entry entryPoint="explorer">
+    <entry entryPoint="synth">
+      <entry entryPoint="control" flat="true">
+        <entry entryPoint="connect" />
+        <entry entryPoint="disconnect" />
+      </entry>
+      <entry entryPoint="settings" />
+    </entry>
+  </entry>
+</entry>
