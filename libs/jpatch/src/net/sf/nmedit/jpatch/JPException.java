@@ -18,17 +18,48 @@
  */
 
 /*
- * Created on Nov 30, 2006
+ * Created on Dec 1, 2006
  */
 package net.sf.nmedit.jpatch;
 
-public interface Patch
+/**
+ * The exception class used in the JPatch API. 
+ * 
+ * @author Christian Schneider
+ */
+public class JPException extends Exception
 {
 
-    ModuleContainer getModuleContainer();
-    
-    String getName();
-    
-    String getVersion();
-    
+    /**
+     * @see Exception#Exception()
+     */
+    public JPException()
+    {
+        super();
+    }
+
+    /**
+     * @see Exception#Exception(java.lang.String)
+     */
+    public JPException( String message )
+    {
+        super( message );
+    }
+
+    /**
+     * @see Exception#Exception(java.lang.String, java.lang.Throwable)
+     */
+    public JPException( String message, Throwable cause )
+    {
+        super( message, cause );
+    }
+
+    /**
+     * @see Exception#Exception(java.lang.Throwable)
+     */
+    public JPException( Throwable cause )
+    {
+        super( cause );
+    }
+
 }

@@ -18,17 +18,35 @@
  */
 
 /*
- * Created on Nov 30, 2006
+ * Created on Dec 11, 2006
  */
 package net.sf.nmedit.jpatch;
 
-public interface Patch
+public abstract class DefaultParameter extends AbstractParameter
 {
+    
+    private int value;
+    
+    protected void initValue()
+    {
+        value = getDefaultValue();
+    }
 
-    ModuleContainer getModuleContainer();
-    
-    String getName();
-    
-    String getVersion();
-    
+    @Override
+    public int getValue()
+    {
+        return value;
+    }
+
+    @Override
+    public void setValue( int value )
+    {
+        value = Math.max(getMinValue(), Math.min(value, getMaxValue()));
+        if (this.value != value)
+        {
+            this.value = value;
+            fireParameterValueChanged();
+        }
+    }
+
 }

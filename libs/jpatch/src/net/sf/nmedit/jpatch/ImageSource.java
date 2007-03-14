@@ -18,17 +18,37 @@
  */
 
 /*
- * Created on Nov 30, 2006
+ * Created on Dec 12, 2006
  */
 package net.sf.nmedit.jpatch;
 
-public interface Patch
+public class ImageSource
 {
 
-    ModuleContainer getModuleContainer();
+    private String src;
+    private int width;
+    private int height;
+
+    public ImageSource(String src, int width, int height)
+    {
+        this.src = src;
+        this.width = width;
+        this.height = height;
+    }
+
+    public String getSource()
+    {
+        return src;
+    }
     
-    String getName();
+    public int getWidth()
+    {
+        return width;
+    }
     
-    String getVersion();
-    
+    public int getHeight()
+    {
+        return height;
+    }
+
 }

@@ -18,17 +18,15 @@
  */
 
 /*
- * Created on Nov 30, 2006
+ * Created on Dec 10, 2006
  */
-package net.sf.nmedit.jpatch;
+package net.sf.nmedit.jpatch.spec.formatter;
 
-public interface Patch
+import net.sf.nmedit.jpatch.Parameter;
+
+public interface Formatter
 {
 
-    ModuleContainer getModuleContainer();
-    
-    String getName();
-    
-    String getVersion();
+    String getString(Parameter parameter, int value);
     
 }

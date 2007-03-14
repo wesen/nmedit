@@ -18,17 +18,43 @@
  */
 
 /*
- * Created on Nov 30, 2006
+ * Created on Dec 10, 2006
  */
-package net.sf.nmedit.jpatch;
+package net.sf.nmedit.jpatch.spec;
 
-public interface Patch
+import java.util.HashMap;
+import java.util.Map;
+
+public class BasedDescriptor
 {
+    
+    private Map<String, Object> attributes = null;
 
-    ModuleContainer getModuleContainer();
-    
-    String getName();
-    
-    String getVersion();
-    
+    public void putAttribute(String name, Object value)
+    {
+        if (attributes == null)
+            attributes = createAttributeMap();
+        attributes.put(name, value);
+    }
+
+    private Map<String, Object> createAttributeMap()
+    {
+        return new HashMap<String, Object>();
+    }
+
+    public Object getAttribute( String name )
+    {
+        return attributes != null ? attributes.get(name) : null;
+    }
+
+    public Object[] getAttributes()
+    {
+        return attributes.values().toArray();
+    }
+
+    public int getAttributeCount()
+    {
+        return attributes.size();
+    }
+
 }

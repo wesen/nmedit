@@ -18,17 +18,46 @@
  */
 
 /*
- * Created on Nov 30, 2006
+ * Created on Dec 2, 2006
  */
 package net.sf.nmedit.jpatch;
 
-public interface Patch
+/** 
+ * An exception that indicates that a descriptor was invalid (or incompatible).
+ */
+public class InvalidDescriptorException extends JPException
 {
 
-    ModuleContainer getModuleContainer();
+    private Descriptor descriptor = null;
     
-    String getName();
+    public InvalidDescriptorException(Descriptor descriptor)
+    {
+        super("invalid descriptor "+descriptor);
+    }
     
-    String getVersion();
-    
+    public Descriptor getDescriptor()
+    {
+        return descriptor;
+    }
+
+    public InvalidDescriptorException()
+    {
+        super();
+    }
+
+    public InvalidDescriptorException( String message )
+    {
+        super( message );
+    }
+
+    public InvalidDescriptorException( String message, Throwable cause )
+    {
+        super( message, cause );
+    }
+
+    public InvalidDescriptorException( Throwable cause )
+    {
+        super( cause );
+    }
+
 }

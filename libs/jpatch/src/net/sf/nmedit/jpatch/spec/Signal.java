@@ -18,17 +18,41 @@
  */
 
 /*
- * Created on Nov 30, 2006
+ * Created on Dec 10, 2006
  */
-package net.sf.nmedit.jpatch;
+package net.sf.nmedit.jpatch.spec;
 
-public interface Patch
+import java.util.Iterator;
+
+public class Signal extends Type
 {
+    
+    private transient String asString;
 
-    ModuleContainer getModuleContainer();
+    public Signal()
+    {
+        super("signal");
+    }
     
-    String getName();
-    
-    String getVersion();
-    
+    public String toString()
+    {
+        if (asString != null)
+            return asString;
+        
+        StringBuilder sb = new StringBuilder("Signal[");
+        Iterator<String> iter = values();
+        
+        while (iter.hasNext())
+        {
+            String n = iter.next();
+            sb.append(n);
+            sb.append("=");
+            sb.append(getKey(n));
+            if (iter.hasNext())
+                sb.append(",");
+        }
+        sb.append("]");
+        return asString = sb.toString();
+    }
+
 }

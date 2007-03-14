@@ -22,13 +22,22 @@
  */
 package net.sf.nmedit.jpatch;
 
-public interface Patch
+/**
+ * @author Christian Schneider
+ */
+public interface Component
 {
 
-    ModuleContainer getModuleContainer();
-    
+    /**
+     * Returns the name of this component.
+     * @return the name of this component
+     */
     String getName();
     
-    String getVersion();
-    
+    /**
+     * Returns the descriptor of this component.
+     * @return the descriptor of this component
+     */
+    ComponentDescriptor getDescriptor();
+
 }

@@ -20,15 +20,40 @@
 /*
  * Created on Nov 30, 2006
  */
-package net.sf.nmedit.jpatch;
+package net.sf.nmedit.jpatch.event;
 
-public interface Patch
+import net.sf.nmedit.jpatch.Connector;
+
+public class ConnectorStateEvent extends JPatchEvent
 {
 
-    ModuleContainer getModuleContainer();
+    private Connector c;
+
+    protected ConnectorStateEvent(  Object target, long when, int id, int x, int y, int key,
+            int modifiers, Object arg )
+    {
+        super( target, when, id, x, y, key, modifiers, arg );
+    }
+
+    protected ConnectorStateEvent( Object target, long when, int id, int x, int y, int key,
+            int modifiers )
+    {
+        super( target, when, id, x, y, key, modifiers );
+    }
+
+    protected ConnectorStateEvent( Object target, int id, Object arg )
+    {
+        super( target, id, arg );
+    }
     
-    String getName();
+    public ConnectorStateEvent(Connector c)
+    {
+        this(c, 0, null);
+    }
     
-    String getVersion();
+    public Connector getConnector()
+    {
+        return c;
+    }
     
 }

@@ -22,13 +22,29 @@
  */
 package net.sf.nmedit.jpatch;
 
-public interface Patch
+/**
+ * Describes the properties of a connector.
+ * 
+ * @author Christian Schneider
+ */
+public interface ConnectorDescriptor extends CompositeDescriptor
 {
 
-    ModuleContainer getModuleContainer();
+    /**
+     * Returns <code>true</code> if the described component is an output. 
+     * @return <code>true</code> if the described component is an output.
+     */
+    boolean isOutput();
     
-    String getName();
+    int getSignalId();
+
+    /**
+     * @see Descriptor#getSourceDescriptor()
+     */
+    ConnectorDescriptor getSourceDescriptor();
     
-    String getVersion();
+    int getIndex();
+    
+    String getConnectorClass();
     
 }

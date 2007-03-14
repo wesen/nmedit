@@ -22,13 +22,23 @@
  */
 package net.sf.nmedit.jpatch;
 
-public interface Patch
+/**
+ * Composites are the parts a module consists of (but not the module itself) .
+ * 
+ * @author Christian Schneider
+ */
+public interface Composite extends Component
 {
 
-    ModuleContainer getModuleContainer();
+    /**
+     * Returns the module which this composite completes.
+     * @return the module which this composite completes
+     */
+    Module getOwner();
     
-    String getName();
-    
-    String getVersion();
+    /**
+     * @see Component#getDescriptor()
+     */
+    CompositeDescriptor getDescriptor();
     
 }

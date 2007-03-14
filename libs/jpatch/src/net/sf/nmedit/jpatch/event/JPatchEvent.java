@@ -20,15 +20,32 @@
 /*
  * Created on Nov 30, 2006
  */
-package net.sf.nmedit.jpatch;
+package net.sf.nmedit.jpatch.event;
 
-public interface Patch
+import java.awt.Event;
+
+public class JPatchEvent extends Event
 {
 
-    ModuleContainer getModuleContainer();
-    
-    String getName();
-    
-    String getVersion();
-    
+    protected JPatchEvent( Object target, long when, int id, int x, int y, int key,
+            int modifiers, Object arg )
+    {
+        super( target, when, id, x, y, key, modifiers, arg );
+    }
+
+    protected JPatchEvent( Object target, long when, int id, int x, int y, int key,
+            int modifiers )
+    {
+        super( target, when, id, x, y, key, modifiers );
+    }
+
+    protected JPatchEvent( Object target, int id, Object arg )
+    {
+        super( target, id, arg );
+    }
+
+    public int getId()
+    {
+        return id;
+    }
 }

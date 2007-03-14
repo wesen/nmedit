@@ -18,17 +18,11 @@
  */
 
 /*
- * Created on Nov 30, 2006
+ * Created on Dec 3, 2006
  */
 package net.sf.nmedit.jpatch;
 
-public interface Patch
+public interface Annotation
 {
 
-    ModuleContainer getModuleContainer();
-    
-    String getName();
-    
-    String getVersion();
-    
 }

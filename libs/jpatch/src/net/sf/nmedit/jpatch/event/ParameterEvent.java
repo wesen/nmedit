@@ -20,15 +20,29 @@
 /*
  * Created on Nov 30, 2006
  */
-package net.sf.nmedit.jpatch;
+package net.sf.nmedit.jpatch.event;
 
-public interface Patch
+import net.sf.nmedit.jpatch.Module;
+import net.sf.nmedit.jpatch.Parameter;
+
+public class ParameterEvent extends JPatchEvent
 {
 
-    ModuleContainer getModuleContainer();
+    public static final int VALUE_CHANGED = 0;
+
+    public ParameterEvent(Parameter parameter, int id)
+    {
+        super(parameter, id, null);
+    }
     
-    String getName();
+    public Module getModule()
+    {
+        return getParameter().getOwner();
+    }
     
-    String getVersion();
-    
+    public Parameter getParameter()
+    {
+        return (Parameter) target;
+    }
+
 }

@@ -16,19 +16,16 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-/*
- * Created on Nov 30, 2006
- */
 package net.sf.nmedit.jpatch;
 
-public interface Patch
+import java.awt.Color;
+
+public interface Signal
 {
 
-    ModuleContainer getModuleContainer();
-    
-    String getName();
-    
-    String getVersion();
+    int getSignalID();
+
+    Color getColor();
     
 }
+

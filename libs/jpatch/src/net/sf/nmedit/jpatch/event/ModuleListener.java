@@ -20,15 +20,13 @@
 /*
  * Created on Nov 30, 2006
  */
-package net.sf.nmedit.jpatch;
+package net.sf.nmedit.jpatch.event;
 
-public interface Patch
+import java.util.EventListener;
+
+public interface ModuleListener extends EventListener
 {
 
-    ModuleContainer getModuleContainer();
-    
-    String getName();
-    
-    String getVersion();
+    void moduleMoved(ModuleEvent e);
     
 }

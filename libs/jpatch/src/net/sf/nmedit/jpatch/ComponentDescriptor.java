@@ -22,13 +22,28 @@
  */
 package net.sf.nmedit.jpatch;
 
-public interface Patch
+/**
+ * Describes the properties at the component level.
+ * 
+ * @see net.sf.nmedit.jpatch.Component
+ * @author Christian Schneider
+ */
+public interface ComponentDescriptor extends Descriptor
 {
 
-    ModuleContainer getModuleContainer();
+    /**
+     * Returns the name of the described component.
+     * @return the name of the described component
+     */
+    String getComponentName();
+
+    /**
+     * @see Descriptor#getSourceDescriptor()
+     */
+    ComponentDescriptor getSourceDescriptor();
     
-    String getName();
-    
-    String getVersion();
+    Object getAttribute(String name);
+    Object[] getAttributes();
+    int getAttributeCount();
     
 }

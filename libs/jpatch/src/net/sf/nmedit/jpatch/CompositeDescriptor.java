@@ -18,17 +18,29 @@
  */
 
 /*
- * Created on Nov 30, 2006
+ * Created on Dec 2, 2006
  */
 package net.sf.nmedit.jpatch;
 
-public interface Patch
+/**
+ * Describes the properties at the composite level.
+ * 
+ * Composites are the components {@link net.sf.nmedit.jpatch.Module}s consist of. 
+ *  
+ * @author Christian Schneider
+ */
+public interface CompositeDescriptor extends ComponentDescriptor
 {
 
-    ModuleContainer getModuleContainer();
-    
-    String getName();
-    
-    String getVersion();
+    /**
+     * Returns the module descriptor this component is part of. 
+     * @return the module descriptor
+     */
+    ModuleDescriptor getModuleDescriptor();
+
+    /**
+     * @see Descriptor#getSourceDescriptor()
+     */
+    CompositeDescriptor getSourceDescriptor();
     
 }

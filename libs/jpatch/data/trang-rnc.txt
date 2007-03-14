@@ -1,0 +1,2 @@
+# jing -c -e utf8  patch.rnc
+trang -I rnc -O xsd  ModuleDescriptions.rnc ModuleDescriptions.xsd

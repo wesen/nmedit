@@ -18,17 +18,16 @@
  */
 
 /*
- * Created on Nov 30, 2006
+ * Created on Dec 2, 2006
  */
 package net.sf.nmedit.jpatch;
 
-public interface Patch
+public abstract class AbstractComponent implements Component
 {
 
-    ModuleContainer getModuleContainer();
-    
-    String getName();
-    
-    String getVersion();
-    
+    public String getName()
+    {
+        return getDescriptor().getComponentName();
+    }
+
 }
