@@ -10,7 +10,12 @@
   </target>
 
   <target name="compile" depends="init" description="compile the source">
-    <javac srcdir="${src}" destdir="${build}" debug="true"/>
+    <javac srcdir="${src}" destdir="${build}" debug="true">
+      <classpath>
+        <pathelement path="."/>
+        <pathelement location="../nmutils/dist/lib/nmutils.jar"/>
+      </classpath>
+	</javac>
   </target>
 
   <target name="dist" depends="compile" description="generate the distribution">
