@@ -177,4 +177,9 @@ public class JTModuleContainer extends JTBaseComponent
         return dim;
     }
 
+    public boolean isDnDAllowed()
+    {
+        return getContext().isDnDAllowed();
+    }
+
 }

@@ -381,7 +381,9 @@ public class JTModuleContainerUI extends ComponentUI
         public DnDHandler(JTModuleContainerUI jtcUI)
         {
             this.jtcUI = jtcUI;
-            install();
+            
+            if (jtcUI.getModuleContainer().isDnDAllowed())
+                install();
         }
         
         public JTModuleContainer getModuleContainer()

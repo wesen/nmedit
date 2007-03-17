@@ -199,4 +199,9 @@ public abstract class JTContext
         }
     }
 
+    public boolean isDnDAllowed()
+    {
+        return false;
+    }
+
 }

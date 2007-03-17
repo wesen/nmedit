@@ -36,16 +36,23 @@ public abstract class JTCustomContext extends JTContext
     private UIDefaults uiDefaults;
     private Set<Class> componentClasses = new HashSet<Class>();
     private Map<String,Class> classMap = new HashMap<String,Class>();
+    private boolean dndAllowed = false;
     
-    protected JTCustomContext(boolean hasModuleContainerOverlay)
+    protected JTCustomContext(boolean hasModuleContainerOverlay, boolean dndAllowed)
     {
         this.hasModuleContainerOverlay = hasModuleContainerOverlay;
+        this.dndAllowed = dndAllowed;
         
         uiDefaults = new UIDefaults();
         
         installComponentClasses();
         setDefaults(uiDefaults);
         installComponentClassMap();
+    }
+    
+    public boolean isDnDAllowed()
+    {
+        return dndAllowed;
     }
     
     protected abstract void installComponentClasses();
