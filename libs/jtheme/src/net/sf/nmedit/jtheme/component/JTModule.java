@@ -46,6 +46,7 @@ public class JTModule extends JTComponent
     public JTModule(JTContext context)
     {
         super(context);
+        setOpaque(true);
     }
     
     public void setSelected(boolean selected)
