@@ -37,12 +37,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import net.sf.nmedit.jsynth.Plug;
 import net.sf.nmedit.jsynth.Port;
 import net.sf.nmedit.jsynth.Slot;
+import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.Synthesizer;
 import net.sf.nmedit.jsynth.event.PortAttachmentEvent;
 import net.sf.nmedit.jsynth.event.PortAttachmentListener;
@@ -58,6 +56,9 @@ import net.sf.nmedit.nomad.core.swing.explorer.ContainerNode;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 import net.sf.nmedit.nomad.core.swing.explorer.LeafNode;
 import net.sf.nmedit.nomad.core.swing.explorer.TreeContext;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class SynthDeviceContext extends ContainerNode
     implements TreeContext, SynthesizerStateListener,
@@ -258,6 +259,32 @@ public class SynthDeviceContext extends ContainerNode
     
     public void processEvent(Event event)
     {
+        // TODO there have to be different types of events
+        
+        TreePath path = etree.getSelectionPath();
+        if (path != null)
+        {
+            Object last = path.getLastPathComponent();
+            if (last instanceof TreeNode)
+            {
+                processEvent(event, path, (TreeNode) last);
+            }
+        }
+        
+    }
+
+    protected void processEvent(Event event, TreePath path, TreeNode node)
+    {
+        if (node instanceof SlotLeaf && slotsRoot.contains(node))
+        {
+            SlotLeaf s = (SlotLeaf) node;
+            processEvent(event, s.getSlot());
+        }
+    }
+
+    protected void processEvent(Event event, Slot slot)
+    {
+        // TODO 
     }
 
     public void slotAdded(SlotEvent e)
@@ -589,7 +616,7 @@ public class SynthDeviceContext extends ContainerNode
                 if (CONNECT_KEY.equals(actionCommand))
                 {
                     Synthesizer synth = context.getSynth();
-                    if (synth != null) synth.setConnected(true);
+                    if (synth != null) context.connect();
                     return;
                 }
                 if (DISCONNECT_KEY.equals(actionCommand))
@@ -600,7 +627,9 @@ public class SynthDeviceContext extends ContainerNode
                 }
                 if (SETTINGS_KEY.equals(actionCommand))
                 {
-                    // TODO
+                    Synthesizer synth = context.getSynth();
+                    if (synth != null) context.showSettings();
+                    return;
                 }
             }
             catch (Exception e)
@@ -613,6 +642,46 @@ public class SynthDeviceContext extends ContainerNode
                 showError(e);
             }
         }
+    
+    }
+
+    protected void connect()
+    {
+        boolean plugsNotConfigured = false;
+        for (Port port: synth.getPorts())
+        {
+            if (port.getPlug() == null)
+            {
+                plugsNotConfigured = true;
+                break;
+            }
+        }
+        
+        boolean connect = true;
+        
+        if (plugsNotConfigured)
+            connect = showSettings();
+        
+        if (connect)
+        {
+            try
+            {
+                synth.setConnected(true);
+            }
+            catch (SynthException e)
+            {
+                Log log = LogFactory.getLog(SynthDeviceContext.class);
+                if (log.isWarnEnabled())
+                {
+                    log.warn("trying to connect to "+synth, e);
+                }
+            }
+        }
+    }
+    
+    protected boolean showSettings()
+    {
+        throw new UnsupportedOperationException();
         
     }
     

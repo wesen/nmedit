@@ -27,6 +27,8 @@ public interface FileService extends Service
 
     FSFileFilter getFileFilter();
     
+    boolean isOpenFileOperationSupported();
+    
     void open(File file);
     
     boolean isNewFileOperationSupported();
@@ -34,6 +36,8 @@ public interface FileService extends Service
     void newFile();
 
     String getName();
+
+    String getDescription();
     
 }
 

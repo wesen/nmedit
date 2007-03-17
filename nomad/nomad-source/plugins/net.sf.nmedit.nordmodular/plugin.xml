@@ -20,10 +20,10 @@
 		</library>
 		<library type="resources" path="data/" id="data">
 			<export prefix="*"/>
-		</library> <!--
+		</library> 
 		<library type="resources" path="codecs/" id="codecs">
 			<export prefix="*.pdl"/>
-		</library> -->
+		</library> 
 		<library id="nordmodular" path="lib/nordmodular.jar" type="code" >
 		<export prefix="*"/>
 		</library>

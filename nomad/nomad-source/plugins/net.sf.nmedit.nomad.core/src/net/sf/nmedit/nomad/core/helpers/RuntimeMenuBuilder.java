@@ -74,7 +74,7 @@ public class RuntimeMenuBuilder
                     MLEntry entry = new MLEntry(uniqueKey(root));
                     
                     entry.putValue(MLEntry.NAME, service.getName());
-                    entry.putValue(MLEntry.SHORT_DESCRIPTION, service.getFileFilter().getDescription());
+                    entry.putValue(MLEntry.SHORT_DESCRIPTION, service.getDescription());
                     
                     entry.addActionListener(new FileNewBridge(service));
                     root.add(0, entry);

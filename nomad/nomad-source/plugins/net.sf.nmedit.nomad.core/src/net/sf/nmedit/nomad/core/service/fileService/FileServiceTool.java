@@ -35,7 +35,8 @@ public class FileServiceTool
          i.hasNext();)
         {
             FileService service = i.next();
-            chooser.addChoosableFileFilter(service.getFileFilter());
+            if (service.isOpenFileOperationSupported())
+                chooser.addChoosableFileFilter(service.getFileFilter());
         }
     }
 

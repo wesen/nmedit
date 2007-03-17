@@ -19,7 +19,9 @@
 package net.sf.nmedit.nordmodular;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
+import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
+import net.sf.nmedit.jsynth.midi.MidiPlug;
 import net.sf.nmedit.jsynth.nomad.SynthDeviceContext;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.service.Service;
@@ -78,14 +80,28 @@ public abstract class AbstractNewNordService
         et.getRoot().add(sdc);
         et.fireRootChanged();
     }
+
+    public void newSynth(int maxSlotCount)
+    {
+        newSynth(maxSlotCount, getSynthName(), null, null);
+    }
     
-    protected void newSynth(int maxSlotCount)
+    public static void newSynth(int maxSlotCount, String name, MidiPlug input, MidiPlug output)
     {
         ExplorerTree etree = Nomad.sharedInstance().getExplorer();
         NM1ModuleDescriptions d = Nordmodular.sharedContext().getModuleDescriptions();        
-        NordModular nm = new NordModular(d);
-        nm.setMaxSlotCount(maxSlotCount);
-        etree.addRootNode(new NMSynthDeviceContext(etree, nm, getSynthName()));
+        NordModular synth = new NordModular(d, false);
+        synth.setMaxSlotCount(maxSlotCount);
+        try
+        {
+            synth.getPCInPort().setPlug(input);
+            synth.getPCOutPort().setPlug(output);
+        }
+        catch (SynthException e)
+        {
+            // ignore - should not happen
+        }
+        etree.addRootNode(new NMSynthDeviceContext(etree, synth, name));
     }
     
 }

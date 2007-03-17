@@ -23,7 +23,6 @@
 package net.sf.nmedit.nomad.core;
 
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.beans.PropertyChangeEvent;
@@ -36,7 +35,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Properties;
@@ -44,8 +42,8 @@ import java.util.ResourceBundle;
 
 import javax.swing.JFrame;
 import javax.swing.LookAndFeel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.MetalTheme;
@@ -67,7 +65,6 @@ import org.java.plugin.boot.Boot;
 import org.java.plugin.boot.SplashHandler;
 import org.java.plugin.registry.PluginDescriptor;
 
-import com.jgoodies.looks.FontPolicies;
 import com.jgoodies.looks.Options;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 
@@ -156,17 +153,30 @@ public class NomadLoader
         
         JPFServiceInstallerTool.activateAllServices(plugin);
         
-        for (Iterator<InitService> i=ServiceRegistry.getServices(InitService.class); i.hasNext();)
-        {
-            i.next().initService();
-        }
-        
         //}};
 
        // SwingUtilities.invokeLater(run);
 
         Nomad nomad = new Nomad(plugin,menuLayout);
         getPreferredWindowBounds(nomad.getWindow(), nomadProperties);
+        
+
+        Runnable run = new Runnable(){public void run(){
+        for (Iterator<InitService> i=ServiceRegistry.getServices(InitService.class); i.hasNext();)
+        {
+            try
+            {
+                i.next().init();
+            }
+            catch (Throwable t)
+            {
+                t.printStackTrace();
+            }
+        }
+        }};
+
+        SwingUtilities.invokeLater(run);
+
         return nomad;
     }
     

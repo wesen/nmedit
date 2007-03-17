@@ -32,7 +32,7 @@ public class RootNode implements TreeNode
 {
 
     /** array of children, may be null if this node has no children */
-    protected Vector children;
+    protected Vector<TreeNode> children;
 
     public RootNode()
     {
@@ -81,7 +81,7 @@ public class RootNode implements TreeNode
             throw new IllegalArgumentException("parent must be the root node");
     }
         if (children == null) {
-        children = new Vector();
+        children = new Vector<TreeNode>();
         }
         children.insertElementAt(newChild, childIndex);
     }
@@ -97,7 +97,7 @@ public class RootNode implements TreeNode
      *              <code>childIndex</code> is out of bounds
      */
     public void remove(int childIndex) {
-        TreeNode child = (TreeNode)getChildAt(childIndex);
+        TreeNode child = getChildAt(childIndex);
         children.removeElementAt(childIndex);
      //TODO   child.setParent(null);
     }
@@ -162,7 +162,7 @@ public class RootNode implements TreeNode
      *
      * @return  an Enumeration of this node's children
      */
-    public Enumeration children() {
+    public Enumeration<TreeNode> children() {
     if (children == null) {
         return DefaultMutableTreeNode.EMPTY_ENUMERATION;
     } else {

@@ -51,7 +51,7 @@ public class PatchDocument implements Document
         return uri;
     }
 
-    public JTPatch getComponent()
+    public JTNMPatch getComponent()
     {
         return jtpatch;
     }

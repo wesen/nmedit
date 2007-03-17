@@ -22,9 +22,9 @@ import java.awt.Event;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.sound.midi.MidiDevice.Info;
+import javax.sound.midi.MidiDevice;
 
-import net.sf.nmedit.jnmprotocol.utils.NmLookup;
+import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NmSlot;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
@@ -33,7 +33,10 @@ import net.sf.nmedit.jsynth.event.SlotListener;
 import net.sf.nmedit.jsynth.event.SlotManagerListener;
 import net.sf.nmedit.jsynth.midi.MidiPlug;
 import net.sf.nmedit.jsynth.nomad.SynthDeviceContext;
+import net.sf.nmedit.jsynth.worker.RequestPatchWorker;
 import net.sf.nmedit.nomad.core.Nomad;
+import net.sf.nmedit.nomad.core.forms.NomadMidiDialog;
+import net.sf.nmedit.nomad.core.forms.NomadMidiDialogFrmHandler;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 
 public class NMSynthDeviceContext extends SynthDeviceContext 
@@ -54,54 +57,6 @@ public class NMSynthDeviceContext extends SynthDeviceContext
         return (NordModular) super.getSynth();
     }
 
-    private void initPorts() throws SynthException
-    {
-        
-        Info[] info = NmLookup.lookup(NmLookup.getHardwareDevices(), 1, 1000);
-
-        if (info.length<2)
-            return;
-        getSynthesizer().getPCInPort().setPlug(new MidiPlug(info[0]));
-        getSynthesizer().getPCOutPort().setPlug(new MidiPlug(info[1]));
-    }
-    
-    public void processEvent(Event event)
-    {
-        
-        if (!getSynthesizer().isConnected())
-        {
-            try
-            {
-                initPorts();
-                getSynthesizer().setConnected(true);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-                return;
-            }
-        }
-        
-        System.out.println(event);
-        
-        /*
-        if (event instanceof ContextEvent)
-        {
-            ContextEvent ce = (ContextEvent) event;
-          
-            if (ce.getNode() == this )
-            {
-                switch (ce.getId())
-                {
-                    case ExplorerTree.ACTION_OPEN:
-                        setState(State.RUNNING);
-                        break;
-                }
-            }
-            
-        }*/
-    }
-    
     private static class PatchOpener implements SlotManagerListener,
         SlotListener
     {
@@ -183,5 +138,62 @@ public class NMSynthDeviceContext extends SynthDeviceContext
         
     }
 
+    protected boolean showSettings()
+    {
+        NordModular synth = getSynthesizer();
+
+        MidiPlug inPlug = synth.getPCInPort().getPlug();
+        MidiDevice.Info in = inPlug != null ? inPlug.getDeviceInfo() : null;
+
+        MidiPlug outPlug = synth.getPCOutPort().getPlug();
+        MidiDevice.Info out = outPlug != null ? outPlug.getDeviceInfo() : null;
+        
+        NomadMidiDialog dialog = new NomadMidiDialog(Nomad.sharedInstance().getWindow(), "MIDI");
+        NomadMidiDialogFrmHandler form = dialog.getForm();
+        form.setPreviousInput(in);
+        form.setPreviousOutput(out);
+        
+        dialog.setModal(true);
+        if (dialog.showDialog() == NomadMidiDialog.APPROVE_OPTION)
+        {
+
+            in = form.getSelectedInput();
+            out = form.getSelectedOutput();
+
+            if (in == null || out == null)
+                return false;
+            
+            try
+            {
+                synth.getPCInPort().setPlug(new MidiPlug(in));
+                synth.getPCOutPort().setPlug(new MidiPlug(out));
+            }
+            catch (SynthException e)
+            {
+                // TODO Auto-generated catch block
+                
+                return false;
+            }
+            return true;
+        }
+        
+        return false;
+    }
+    
+
+    protected void processEvent(Event event, Slot slot)
+    {
+        RequestPatchWorker worker = slot.createRequestPatchWorker(); 
+        try
+        {
+            worker.requestPatch();
+        }
+        catch (SynthException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    
 }
 

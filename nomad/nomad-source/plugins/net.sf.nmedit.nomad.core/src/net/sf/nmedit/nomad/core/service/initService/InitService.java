@@ -23,7 +23,8 @@ import net.sf.nmedit.nomad.core.service.Service;
 public interface InitService extends Service
 {
 
-    void initService();
+    void init();
+    void shutdown();
     
 }
 

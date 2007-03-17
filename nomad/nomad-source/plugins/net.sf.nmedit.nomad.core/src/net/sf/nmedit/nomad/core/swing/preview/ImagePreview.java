@@ -20,7 +20,7 @@
 /*
  * Created on Jun 29, 2006
  */
-package net.sf.nmedit.nomad.core.main.ui.sidebar;
+package net.sf.nmedit.nomad.core.swing.preview;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -33,9 +33,11 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import net.sf.nmedit.nmutils.graphics.GraphicsToolkit;
+
 public class ImagePreview extends JPanel
 {
-    /*
+   
     private Image original = null;
     private BufferedImage scaled = null;
     private boolean autoResizeH = false;
@@ -233,5 +235,5 @@ public class ImagePreview extends JPanel
             updateScaledImage();
         }
     }
-    */
+
 }

@@ -34,6 +34,7 @@ public class CorePlugin extends Plugin
         PDLData.setSource(loader, "/midi.pdl", "/patch.pdl");
         
         Nordmodular.sharedContext();
+
     }
 
     @Override

@@ -35,10 +35,17 @@ import net.sf.nmedit.nomad.core.service.fileService.FileService;
 
 public class NmFileService implements FileService
 {
+    
+    private static final String PATCH_DESCRIPTION ="Nord Modular patch 3.0 (*.pch)";
 
     public FSFileFilter getFileFilter()
     {
         return new NmFileFilter(this);
+    }
+    
+    public String getDescription()
+    {
+        return PATCH_DESCRIPTION;
     }
 
     public void open(File file)
@@ -105,7 +112,7 @@ public class NmFileService implements FileService
         @Override
         public String getDescription()
         {
-            return "Nord Modular patch 3.0 (*.pch)";
+            return PATCH_DESCRIPTION;
         }
         
     }
@@ -148,6 +155,11 @@ public class NmFileService implements FileService
     public String getName()
     {
         return "Nord Modular patch 3.0";
+    }
+
+    public boolean isOpenFileOperationSupported()
+    {
+        return true;
     }
 
 }

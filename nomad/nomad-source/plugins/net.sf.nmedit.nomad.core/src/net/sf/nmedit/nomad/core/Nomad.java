@@ -30,6 +30,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 
 import javax.swing.JDialog;
@@ -49,8 +50,10 @@ import net.sf.nmedit.nomad.core.i18n.LocaleConfiguration;
 import net.sf.nmedit.nomad.core.jpf.JPFPluginDialog;
 import net.sf.nmedit.nomad.core.menulayout.MenuBuilder;
 import net.sf.nmedit.nomad.core.menulayout.MenuLayout;
+import net.sf.nmedit.nomad.core.service.ServiceRegistry;
 import net.sf.nmedit.nomad.core.service.fileService.FileService;
 import net.sf.nmedit.nomad.core.service.fileService.FileServiceTool;
+import net.sf.nmedit.nomad.core.service.initService.InitService;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 import net.sf.nmedit.nomad.core.util.document.DefaultDocumentManager;
 
@@ -235,8 +238,22 @@ public class Nomad
     private void stop()
     {
         stopped = true;
-        
+        getWindow().setVisible(false);
+
+        for (Iterator<InitService> i=ServiceRegistry.getServices(InitService.class); i.hasNext();)
+        {
+            try
+            {
+                i.next().shutdown();
+            }
+            catch (Throwable t)
+            {
+                t.printStackTrace();
+            }
+        }
         shutDownPlugin();
+        getPluginManager().shutdown();
+        System.exit(0);
     }
     
     private void shutDownPlugin()
@@ -250,18 +267,14 @@ public class Nomad
         }
         catch (Exception e)
         {
-            log.warn(e);
+          //  log.warn(e);
+            e.printStackTrace();
         }
     }
     
     public void handleExit()
     {
-        if (askStopApplication())
-        {
-            getWindow().setVisible(false);
-            getPluginManager().shutdown();
-            System.exit(0);
-        }
+        askStopApplication();
     }
 
     private static class ExitHandler extends WindowAdapter implements ActionListener, ExitListener

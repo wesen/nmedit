@@ -137,5 +137,10 @@ public class ContainerNode implements ETreeNode
         children.clear();
     }
 
+    public boolean contains(Object node)
+    {
+        return children.contains(node);
+    }
+
 }
 

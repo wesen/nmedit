@@ -20,27 +20,38 @@ package net.sf.nmedit.nomad.core.forms;
 
 import java.awt.BorderLayout;
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GraphicsConfiguration;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.Window;
-import java.awt.Dialog.ModalityType;
-import java.io.IOException;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.net.URL;
 
-import javax.imageio.ImageIO;
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JOptionPane;
-import javax.swing.JWindow;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+
+import net.sf.nmedit.nomad.core.misc.NMUtilities;
 
 public class NomadMidiDialog extends NomadJDialog
 {
+
+    public final static int CANCEL_OPTION = 0;
+    public final static int APPROVE_OPTION = 1;
     
     private NomadMidiDialogFrmHandler form;
+    private int result = CANCEL_OPTION;
 
     public NomadMidiDialog()
     {
@@ -140,15 +151,43 @@ public class NomadMidiDialog extends NomadJDialog
         super(owner, title, modalityType, gc);
         initDialog();
     }
+    
+    public NomadMidiDialogFrmHandler getForm()
+    {
+        return form;
+    }
 
     private void initDialog()
     {
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        
         form = new NomadMidiDialogFrmHandler();
         form.setBorder(BorderFactory.createEmptyBorder(6, 10, 6, 10));
+
+        JPanel panOptions = new JPanel();
+        panOptions.setLayout(new BoxLayout(panOptions, BoxLayout.X_AXIS));
+        panOptions.add(Box.createGlue());
+        JButton btnCancel = new JButton(new Option(CANCEL_OPTION, "Cancel"));
+        Option okOption = new Option(APPROVE_OPTION, "Ok");
+        JButton btnOk = new JButton(okOption);
+        
+
+        btnCancel.setDefaultCapable(true);
+        btnOk.setDefaultCapable(false);
+        getRootPane().setDefaultButton(btnCancel);
+        
+        panOptions.add(btnOk);
+        panOptions.add(Box.createHorizontalStrut(4));
+        panOptions.add(btnCancel);
+        panOptions.setBorder(BorderFactory.createEmptyBorder(6, 10, 6, 10));
+        
+        (new OptionToggler(okOption)).update();
         
         getContentPane().setLayout(new BorderLayout());
         createTitlePane("MIDI", loadIcon("midi-ill.png"));
         getContentPane().add(form, BorderLayout.CENTER);
+        
+        getContentPane().add(panOptions, BorderLayout.SOUTH);
     }
 
     private Icon loadIcon(String source)
@@ -163,20 +202,77 @@ public class NomadMidiDialog extends NomadJDialog
             return null;
         return new ImageIcon(image);
     }
-
-    public static void main(String[] args)
+    
+    public int showDialog()
     {
-        NomadMidiDialog.showMidiDialog(null, "Midi");
+        pack();
+        Rectangle b = getBounds();        
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        NMUtilities.fitRectangle(b, screen);
+        NMUtilities.centerRectangle(b, screen);
+        setBounds(b);
+        setVisible(true);
+        return result;
     }
 
-    public static int showMidiDialog(Window owner, String title)
+    protected void setResult(int result)
     {
-        NomadMidiDialog dlg = new NomadMidiDialog(owner, title);
-        /*
-        JOptionPane.showConfirmDialog(parentComponent, message)
-        */
-        dlg.setVisible(true);
-        return 0;
+        this.result = result;
+        dispose();
+    }
+        
+    private class OptionToggler implements PropertyChangeListener
+    {
+        private Option[] options;
+        
+        public OptionToggler(Option ... options)
+        {
+            this.options = options;
+
+            form.addPropertyChangeListener(NomadMidiDialogFrmHandler.INPUT_DEVICE_PROPERTY, this);
+            form.addPropertyChangeListener(NomadMidiDialogFrmHandler.OUTPUT_DEVICE_PROPERTY, this);
+        }
+
+        public void propertyChange(PropertyChangeEvent evt)
+        {
+            update(); 
+        }
+
+        public void update()
+        {
+            setOptionsEnabled(isValidConfiguration());
+        }
+        
+        private void setOptionsEnabled(boolean enabled)
+        {
+            for (Option o: options)
+                o.setEnabled(enabled);
+        }
+
+        private boolean isValidConfiguration()
+        {
+            return form.getSelectedInput() != null &
+            form.getSelectedOutput() != null;
+        }
+        
     }
     
+    private class Option extends AbstractAction
+    {
+    
+        private int result;
+
+        public Option(int result, String name)
+        {
+            putValue(NAME, name);
+            this.result = result;
+        }
+        
+        public void actionPerformed(ActionEvent e)
+        {
+            NomadMidiDialog.this.setResult(result);
+        }
+            
+    }
+
 }
