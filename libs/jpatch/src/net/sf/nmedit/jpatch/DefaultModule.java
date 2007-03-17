@@ -55,6 +55,7 @@ public class DefaultModule implements Module
         {
             this.mod = mod;
             this.pd = pd;
+            initValue();
         }
         
         public ParameterDescriptor getDescriptor()
