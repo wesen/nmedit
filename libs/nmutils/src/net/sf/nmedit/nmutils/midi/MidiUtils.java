@@ -27,6 +27,25 @@ import javax.sound.midi.MidiUnavailableException;
 public class MidiUtils
 {
 
+    private static boolean eq(String s, String compare)
+    {
+        return compare == null || compare.equals(s);
+    }
+
+    public static boolean equals(MidiDevice.Info info, String name, String vendor, 
+            String version, String description)
+    {
+        return eq(info.getName(), name)
+            && eq(info.getVendor(), vendor)
+            && eq(info.getVersion(), version)
+            && eq(info.getDescription(), description);
+    }
+
+    public static boolean equals(MidiDevice.Info a, MidiDevice.Info b)
+    {
+        return equals(a, b.getName(), b.getVendor(), b.getVersion(), b.getDescription());
+    }
+    
     public static void collectMidiDeviceInfo(Collection<MidiDevice.Info> c,
             boolean hardware, boolean software, boolean inputs, boolean outputs,
             boolean onlyAvailable) 
