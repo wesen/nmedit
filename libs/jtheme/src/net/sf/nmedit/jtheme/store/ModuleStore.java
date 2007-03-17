@@ -107,7 +107,7 @@ public class ModuleStore extends DefaultStore implements Iterable<Store>
         {
             Store store = childStore.get(i);
             
-            if ((!store.isReducible()) || (store.isReducible() && addReducible))
+            if ((!store.isReducible()) || ((store.isReducible() && addReducible)))
             {
                 JTComponent child = store.createComponent(context, module);
                 if (child != null)
@@ -133,9 +133,8 @@ public class ModuleStore extends DefaultStore implements Iterable<Store>
       throws JTException
     {
         JTModule jtmodule = (JTModule) component;
-        
-        
-        // jtmodule.setModule(module);
+        if (module != null)
+            jtmodule.setModule(module);
     }
 
     public void add(Store child)
