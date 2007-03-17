@@ -34,6 +34,7 @@ public class TextDisplayStore extends ControlStore
 {
 
     private CSSStyleDeclaration styleDecl;
+    private Color fill;
 
     protected TextDisplayStore(Element element, CSSStyleDeclaration styleDecl)
     {
@@ -63,13 +64,18 @@ public class TextDisplayStore extends ControlStore
     {
         if (styleDecl == null) return;
 
-        Color fill = CSSUtils.getColor(styleDecl, "fill");
+        if (fill == null)
+            fill = CSSUtils.getColor(styleDecl, "fill");
+        
         if (fill != null)
         {
             component.setBackground(fill);
             Color inverse = new Color(0xFF-fill.getRed(), 0xFF-fill.getGreen(), 0xFF-fill.getBlue());
             component.setForeground(inverse);
         }
+        
+        if (CSSUtils.isBorderNone(styleDecl, "border", false))
+            component.setBorder(null);
     }
     
     protected void link2(JTContext context, JTComponent component, Module module, Parameter parameter)
