@@ -19,7 +19,6 @@
           method="xml" 
           doctype-public="-//W3C//DTD SVG 1.0//EN" 
           doctype-system="http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd" 
-          
           encoding="ISO-8859-1" 
           media-type="image/svg+xml" 
           version="1.0" 
@@ -44,7 +43,7 @@
       </xsl:when>
       <xsl:otherwise>
 		  <xsl:attribute name="height">
-		  	<xsl:value-of select="$totalHeight" />
+		  	<xsl:value-of select="($totalHeight)" />
 		  </xsl:attribute>
       </xsl:otherwise>
     </xsl:choose>
@@ -52,7 +51,7 @@
       
 <xsl:template match="/">
 
-<svg>
+<svg xmlns:xlink="http://www.w3.org/1999/xlink">
 
   <xsl:attribute name="version">1.0</xsl:attribute>
   <xsl:attribute name="width">
@@ -126,16 +125,24 @@
        <xsl:otherwise><xsl:value-of select="$fixCSS1" /></xsl:otherwise>
      </xsl:choose>
    </xsl:variable>
-   
    <xsl:variable name="fixCSS3">
      <xsl:choose>
-       <xsl:when test="contains($fixCSS2,'textDisplay')">
-         <xsl:value-of select="concat(substring-before($fixCSS2, 'textDisplay'),'.textDisplay',substring-after($fixCSS2,'textDisplay'))" />
+       <xsl:when test="contains($fixCSS2,'label')">
+         <xsl:value-of select="concat(substring-before($fixCSS2, 'label'),'.label',substring-after($fixCSS1,'label'))" />
        </xsl:when>
        <xsl:otherwise><xsl:value-of select="$fixCSS2" /></xsl:otherwise>
      </xsl:choose>
    </xsl:variable>
-   <xsl:value-of select="$fixCSS3" /> 
+   
+   <xsl:variable name="fixCSS4">
+     <xsl:choose>
+       <xsl:when test="contains($fixCSS3,'textDisplay')">
+         <xsl:value-of select="concat(substring-before($fixCSS3, 'textDisplay'),'.textDisplay',substring-after($fixCSS3,'textDisplay'))" />
+       </xsl:when>
+       <xsl:otherwise><xsl:value-of select="$fixCSS3" /></xsl:otherwise>
+     </xsl:choose>
+   </xsl:variable>
+   <xsl:value-of select="$fixCSS4" /> 
   </style>
    <radialGradient id = "knobFill" cx = "75%" cy = "75%" r = "100%">
       <stop stop-color = "#DDDDDD" offset = "0%"/>
@@ -160,7 +167,7 @@
   <xsl:param name="pos" />
   <xsl:param name="y" />
   
-  <xsl:if test="$pos&lt;count($moduleList)">
+  <xsl:if test="$pos&lt;=count($moduleList)">
     <xsl:variable name="module" select="$moduleList[$pos]" />
     <g transform="translate(0,{$y})">
       <xsl:apply-templates select="$module" />
@@ -186,14 +193,6 @@
         <xsl:value-of select="@width" />
       </xsl:attribute>
       
-      <xsl:choose>
-        <xsl:when test="string-length(@class)&gt;0">
-          <xsl:attribute name="class"><xsl:value-of select="@class"/></xsl:attribute>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:attribute name="class">module</xsl:attribute>
-        </xsl:otherwise>
-      </xsl:choose>
       <xsl:attribute name="height">
         <xsl:value-of select="@height" />
       </xsl:attribute>
@@ -208,6 +207,14 @@
 	        <xsl:value-of select="'#DDDDDD'" />
 	      </xsl:attribute>
       </xsl:if>
+      <xsl:choose>
+        <xsl:when test="string-length(@class)&gt;0">
+          <xsl:attribute name="class"><xsl:value-of select="@class"/></xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="class">module</xsl:attribute>
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:if test="string-length(@style)&gt;0">
 	      <xsl:attribute name="style">
 	        <xsl:value-of select="@style" />
@@ -268,10 +275,20 @@
 </xsl:template>
 
 <xsl:template match="label">
-	<text x="{@x}" y="{@y}" style="{@style}">
-	<!-- <tspan  alignment-baseline="middle"> -->
+	<text>
+      <xsl:attribute name="x"><xsl:value-of select="@x" /></xsl:attribute>
+      <xsl:attribute name="y"><xsl:value-of select="@y" /></xsl:attribute>
+      <xsl:attribute name="style"><xsl:value-of select="@style" /></xsl:attribute>
+      <xsl:choose>
+        <xsl:when test="string-length(@class)&gt;0">
+          <xsl:attribute name="class"><xsl:value-of select="@class"/></xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="class">label</xsl:attribute>
+        </xsl:otherwise>
+      </xsl:choose>
+	
 	  <xsl:apply-templates />
-<!--    </tspan> -->
 	</text>
 </xsl:template>
 
@@ -308,9 +325,20 @@
 
 <xsl:template match="image">
   <xsl:choose>
-    <xsl:when test="string-length(@src)&gt;0">
-	  <image x="{@x}" y="{@y}" width="{@width}" height="{@height}"
-	     xlink:href="{@src}" />
+    <xsl:when test="string-length(@xlink:href)&gt;0">
+      <xsl:choose>
+        <xsl:when test="starts-with(@xlink:href, 'url(#')">    
+	        <xsl:variable name="imgid" select="substring-before(substring-after(@xlink:href, 'url(#'), ')')" />
+        	<xsl:variable name="href" select="/modules/defs/image[@id=$imgid]/@xlink:href" />
+        	
+			<image x="{@x}" y="{@y}" width="{@width}" height="{@height}" xlink:href="{$href}" />
+			
+        </xsl:when>
+        <xsl:otherwise>
+		  <image x="{@x}" y="{@y}" width="{@width}" height="{@height}"
+		     xlink:href="{@xlink:href}" />
+	     </xsl:otherwise>
+	  </xsl:choose>
     </xsl:when>
     <xsl:otherwise>
       <g transform="translate({@x},{@y})">
