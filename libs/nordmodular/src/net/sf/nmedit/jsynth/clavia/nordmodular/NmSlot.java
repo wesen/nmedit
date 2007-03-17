@@ -22,20 +22,17 @@
  */
 package net.sf.nmedit.jsynth.clavia.nordmodular;
 
-import java.beans.PropertyChangeListener;
-
-import javax.swing.event.EventListenerList;
-import javax.swing.event.SwingPropertyChangeSupport;
-
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
+import net.sf.nmedit.jsynth.AbstractSlot;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SynthException;
+import net.sf.nmedit.jsynth.clavia.nordmodular.worker.ReqPatchWorker;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.SetPatchWorker;
-import net.sf.nmedit.jsynth.event.SlotEvent;
-import net.sf.nmedit.jsynth.event.SlotListener;
+import net.sf.nmedit.jsynth.worker.RequestPatchWorker;
 import net.sf.nmedit.jsynth.worker.SendPatchWorker;
+import net.sf.nmedit.jsynth.worker.StorePatchWorker;
 
-public class NmSlot implements Slot
+public class NmSlot extends AbstractSlot implements Slot
 {
 
     public static final String PROPERTY_VOICECOUNT = "voicecount";
@@ -50,9 +47,6 @@ public class NmSlot implements Slot
     private NMPatch patch;
     private int voiceCount = 0;
 
-    private EventListenerList listenerList;
-    private SwingPropertyChangeSupport changeSupport = new SwingPropertyChangeSupport(this, true);
-    
     private boolean activated = false;
     private boolean enabled = false;
     
@@ -156,7 +150,13 @@ public class NmSlot implements Slot
             firePatchIdChange(oldValue, newValue);
         }
     }
+    
 
+    public RequestPatchWorker createRequestPatchWorker()
+    {
+        return new ReqPatchWorker(synth, getSlotId(), patch!=null);
+    }
+    
     public NMPatch getPatch()
     {
         return patch;
@@ -176,6 +176,15 @@ public class NmSlot implements Slot
         return slotId;
     }
 
+    public StorePatchWorker createStorePatchWorker()
+    {
+  //TODO
+        return new 
+        net.sf.nmedit.jsynth
+        .clavia.nordmodular
+        .worker.StorePatchWorker(this, 0, 0);
+    }
+ 
     public SendPatchWorker createSendPatchWorker()
     {
         return new SendPatchToSlotPatchWorker(this);
@@ -235,40 +244,6 @@ public class NmSlot implements Slot
 
     }
 
-    public void addSlotListener(SlotListener l)
-    {
-        if (listenerList == null)
-            listenerList = new EventListenerList();
-        listenerList.add(SlotListener.class, l);
-    }
-
-    public void removeSlotListener(SlotListener l)
-    {
-        if (listenerList == null)
-            return;
-        listenerList.remove(SlotListener.class, l);
-        if (listenerList.getListenerCount() == 0)
-            listenerList = null;
-    }
-    
-    protected void fireNewPatchInSlotEvent()
-    {
-        if (listenerList == null)
-            return;
-        
-        SlotListener[] list = listenerList.getListeners(SlotListener.class);
- 
-        if (list.length == 0)
-            return;
-        
-        SlotEvent e = new SlotEvent(SlotEvent.SYNTH_SLOT_NEWPATCH, this);
-        
-        for (int i=0;i<list.length;i++)
-        {
-            list[i].newPatchInSlot(e);
-        }
-    }
-
     protected void fireVoiceCountChange(int oldVoiceCount, int newVoiceCount)
     {
         changeSupport.firePropertyChange(PROPERTY_VOICECOUNT, oldVoiceCount, newVoiceCount);
@@ -289,24 +264,4 @@ public class NmSlot implements Slot
         changeSupport.firePropertyChange(PROPERTY_PATCH_ID,  oldPid, newPid);
     }
     
-    public void addPropertyChangeListener(PropertyChangeListener l)
-    {
-        changeSupport.addPropertyChangeListener(l);
-    }
-
-    public void addPropertyChangeListener(String propertyName, PropertyChangeListener l)
-    {
-        changeSupport.addPropertyChangeListener(propertyName, l);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener l)
-    {
-        changeSupport.removePropertyChangeListener(l);
-    }
-
-    public void removePropertyChangeListener(String propertyName, PropertyChangeListener l)
-    {
-        changeSupport.removePropertyChangeListener(propertyName, l);
-    }
- 
 }

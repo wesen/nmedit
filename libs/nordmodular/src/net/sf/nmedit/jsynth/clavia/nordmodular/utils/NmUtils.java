@@ -99,18 +99,9 @@ public class NmUtils
     
     public static MidiMessage createRequestPatchMessage(int slotId) 
     {
-        try
-        {
-            RequestPatchMessage msg = new RequestPatchMessage();
-            msg.set("slot", slotId);    
-            return msg;
-        }
-        catch (Exception e)
-        {
-            InternalError ie = new InternalError();
-            ie.initCause(e);
-            throw ie;
-        }
+        RequestPatchMessage msg = new RequestPatchMessage();
+        msg.set("slot", slotId);    
+        return msg;
     }
 
     public static MidiMessage createGetPatchMessage(int slot, int pid) throws Exception

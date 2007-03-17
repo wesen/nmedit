@@ -42,6 +42,7 @@ import net.sf.nmedit.jnmprotocol.utils.ProtocolRunner.ProtocolErrorHandler;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
 import net.sf.nmedit.jsynth.AbstractSynthesizer;
 import net.sf.nmedit.jsynth.Bank;
+import net.sf.nmedit.jsynth.MidiPortSupport;
 import net.sf.nmedit.jsynth.SlotManager;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.Synthesizer;
@@ -51,14 +52,12 @@ import net.sf.nmedit.jsynth.midi.MidiPort;
 public class NordModular extends AbstractSynthesizer implements Synthesizer
 {
 
-    private MidiPort pcin;
-    private MidiPort pcout;
     private NmProtocol protocol;
     private StoppableThread protocolThread;
     private boolean connected = false;
     private MessageMulticaster multicaster;
     private MidiDriver midiDriver;
-    private MidiPort[] ports;
+    private MidiPortSupport midiports;
     private boolean ignoreErrors = false;
     private Scheduler scheduler;
     private NmMessageHandler messageHander;
@@ -102,9 +101,8 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer
         this.moduleDescriptions = moduleDescriptions;
         slotManager = new NmSlotManager(this);
         
-        pcin = new MidiPort(this, MidiPort.Type.RECEIVER, "PC-In");
-        pcout = new MidiPort(this, MidiPort.Type.TRANSMITTER, "PC-Out");
-        ports = new MidiPort[] {pcin, pcout};
+        midiports = new MidiPortSupport(this, "pc-in", "pc-out");
+        
         multicaster = new MessageMulticaster();
         protocol = new SchedulingProtocolMT(new NmProtocolST());
         
@@ -161,15 +159,18 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer
     {
         return "Nord Modular";
     }
+
+    private MidiDriver createMidiDriver() throws SynthException
+    {
+        midiports.validatePlugs();
+        
+        return new MidiDriver(midiports.getInPlug().getDeviceInfo(),
+                midiports.getOutPlug().getDeviceInfo());
+    }
     
     private void connect() throws SynthException
     {
-        if (pcin.getPlug() == null)
-            throw new SynthException(pcin+" not configured");
-        if (pcout.getPlug() == null)
-            throw new SynthException(pcout+" not configured");
-
-        midiDriver = new MidiDriver(pcin.getPlug().getDeviceInfo(), pcout.getPlug().getDeviceInfo());
+        midiDriver = createMidiDriver();
         try
         {
             midiDriver.connect();
@@ -408,17 +409,17 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer
 
     public MidiPort[] getPorts()
     {
-        return ports.clone();
+        return midiports.toArray();
     }
     
     public MidiPort getPCInPort()
     {
-        return pcin;
+        return midiports.getInPort();
     }
     
     public MidiPort getPCOutPort()
     {
-        return pcout;
+        return midiports.getOutPort();
     }
     
     public Bank[] getBanks()
@@ -428,7 +429,7 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer
 
     public MidiPort getPort( int index )
     {
-        return ports[index];
+        return midiports.getPort(index);
     }
 
     public Bank getBank( int index )
@@ -443,7 +444,7 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer
 
     public int getPortCount()
     {
-        return ports.length;
+        return midiports.getPortCount();
     }
 
     public int getBankCount()

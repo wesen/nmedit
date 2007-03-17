@@ -140,7 +140,7 @@ public class NmMessageHandler extends NmProtocolListener
         synth.getScheduler().offer(worker);
     }
     
-    private void requestPatch(int slotId)
+    public static void requestPatch(NordModular synth, int slotId)
     {
         synth.getScheduler().offer(new ScheduledMessage(synth, 
                 NmUtils.createRequestPatchMessage(slotId)));
@@ -265,7 +265,7 @@ public class NmMessageHandler extends NmProtocolListener
                 // enabled
                 // TODO should we call request patch first to get the pid ?
                 //getPatch(slot.getSlotId(), 0);
-                requestPatch(slot.getSlotId());
+                requestPatch(synth, slot.getSlotId());
             }
             else
             {
