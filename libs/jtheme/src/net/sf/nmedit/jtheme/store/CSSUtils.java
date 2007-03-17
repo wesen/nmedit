@@ -32,6 +32,7 @@ import org.w3c.dom.css.CSSStyleDeclaration;
 import org.w3c.dom.css.CSSStyleRule;
 import org.w3c.dom.css.CSSStyleSheet;
 import org.w3c.dom.css.CSSValue;
+import org.w3c.dom.css.CSSValueList;
 import org.w3c.dom.css.RGBColor;
 
 import com.steadystate.css.dom.CSSStyleDeclarationImpl;
@@ -56,6 +57,48 @@ public class CSSUtils
         }
         
         return alt;
+    }
+
+    public static boolean isBorderNone(CSSStyleDeclaration style, String name, boolean defaultValue)
+    {
+        CSSValue cssv = style.getPropertyCSSValue(name);
+        
+        if (cssv == null)
+            return defaultValue;
+        
+
+        if (cssv.getCssValueType() == CSSValue.CSS_PRIMITIVE_VALUE)
+        {
+            CSSPrimitiveValue prim = (CSSPrimitiveValue) cssv;
+
+            if (prim.getPrimitiveType() == CSSPrimitiveValue.CSS_IDENT)
+            {
+                if (prim.getCssText().equals("none"))
+                    return true;
+            }
+        }
+        
+        if (cssv!=null && cssv.getCssValueType() == CSSValue.CSS_VALUE_LIST)
+        {
+            CSSValueList vlBorder = (CSSValueList) cssv;
+            
+            for (int i=0;i<vlBorder.getLength();i++)
+            {
+                CSSValue item = vlBorder.item(i);
+                
+                if (item.getCssValueType() == CSSValue.CSS_PRIMITIVE_VALUE)
+                {
+                    CSSPrimitiveValue prim = (CSSPrimitiveValue) item;
+                    
+                    if (prim.getPrimitiveType() == CSSPrimitiveValue.CSS_IDENT)
+                    {
+                        if (prim.getStringValue().equals("none"))
+                            return true;
+                    }
+                }
+            }
+        }
+        return defaultValue;
     }
 
     public static Color getColor(CSSStyleDeclaration style, String name)
