@@ -1,9 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 0.4" "http://jpf.sourceforge.net/plugin_0_4.dtd">
 <plugin id="net.sf.nmedit.jpdl" version="0.3">
-	<requires>
-		<import plugin-id="net.sf.nmedit.jnmprotocol"  />
-	</requires>
 	<runtime>
 		<library id="jpdl" path="lib/jpdl.jar" type="code">
 		<export prefix="*"/>
