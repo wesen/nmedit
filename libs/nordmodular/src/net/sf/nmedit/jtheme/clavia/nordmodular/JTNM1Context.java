@@ -57,9 +57,14 @@ public class JTNM1Context extends JTCustomContext
 
     public JTNM1Context()
     {
-        super(true);
+        super(true, true);
     }
-     
+
+    public JTNM1Context(boolean hasModuleContainerOverlay, boolean dndAllowed)
+    {
+        super(hasModuleContainerOverlay, dndAllowed);
+    }
+    
     protected void installComponentClassMap()
     {
         installComponentType(TYPE_MODULE, JTModule.class);
