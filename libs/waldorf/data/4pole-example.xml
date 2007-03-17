@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xml" href="./ModuleDescriptions2html.xsl"?>
+<ModuleDescriptions version="1.3"
+  xmlns="http://nmedit.sf.net/ns/ModuleDescriptions"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<header>
+  <vendor url="http://nmedit.sf.net">NMedit Project</vendor>
+  <device>
+    <model>miniWORKS 4pole</model>
+    <vendor url="http://www.waldorfmusic.de/">Waldorf Music</vendor>
+    <version type="os-version">1.0</version>
+  </device>
+  <property name="Author">Christian Schneider</property>
+</header>
+<annotation>
+  <section>
+	  <title>About</title>
+	  This file is an example for the ModuleDescriptions XML format and belongs to the tutorial
+	  available at <link href="http://nmedit.sf.net">http://nmedit.sf.net</link>.
+	  The file describes the parameters of the Waldorf MiniWorks 4pole Filter.
+  </section>
+  <section>
+    <title>License</title>
+    <pre><code><![CDATA[<!-- here could be the license in preformattet text -->]]></code></pre>
+  </section>
+  <section>
+    <title>Misc</title>
+    This is some  <code>inline code</code> that should be rendered in an appropriate
+    font (monospace).
+    A mail adress: <mail mailto="someone@somewhere.net">someone@somewhere.net</mail>.
+    A simple list:
+    <list>
+      <item>one</item>
+      <item>two</item>
+      <item>three</item>
+    </list>
+  </section>
+
+</annotation>
+<defs>
+  <def-signal>
+    <signal key="0" type="control" />
+    <signal key="1" type="midi" />
+  </def-signal>
+
+  <def-type name="tmLFOShape" >
+    <enumeration key="0" value="sin"/>
+    <enumeration key="1" value="tri"/>
+    <enumeration key="2" value="saw"/>
+    <enumeration key="3" value="pls"/>
+    <enumeration key="4" value="S-H"/>
+  </def-type>
+  <def-type name="tmTriggerSource" >
+    <enumeration key="0" value="Audio"/>
+    <enumeration key="1" value="MIDI"/>
+    <enumeration key="2" value="All"/>
+  </def-type>
+  <def-type name="tmTriggerMode" >
+    <enumeration key="0" value="Multi"/>
+    <enumeration key="1" value="Single"/>
+  </def-type>
+  <def-type name="tmModulationSource" >
+    <enumeration key="0" value="off"/>
+    <enumeration key="1" value="LFO"/>
+    <enumeration key="2" value="LFO * ModW."/>
+    <enumeration key="3" value="LFO * Aftertouch"/>
+    <enumeration key="4" value="LFO * VCA Env"/>
+    <enumeration key="5" value="VCF Env"/>
+    <enumeration key="6" value="VCA Env"/>
+    <enumeration key="7" value="Signal Env"/>
+    <enumeration key="8" value="Vel * VCA Env"/>
+    <enumeration key="9" value="Velocity"/>
+    <enumeration key="10" value="Keytrack"/>
+    <enumeration key="11" value="Pitch Bend"/>
+    <enumeration key="12" value="Modwheel"/>
+    <enumeration key="13" value="Aftertouch"/>
+    <enumeration key="14" value="Breath Ctr."/>
+    <enumeration key="15" value="Foot Ctr."/>
+  </def-type>
+</defs>
+<body>
+
+<module name="miniworks4Pole" index="0" id="main">
+
+  <!-- LFO envelope -->
+  <parameter key="16" name="Speed"  index="0">
+    <attribute name="controller" type="integer" value="24" />
+  </parameter>
+  <parameter key="17" name="Speed Mod. Amount" formatter="offset(-64)" defaultValue="64" index="1">
+    <attribute name="controller" type="integer" value="26" />
+  </parameter>
+  <parameter key="18" name="Shape" maxValue="4" formatter="type('tmLFOShape')"  index="2">
+    <attribute name="controller" type="integer" value="25" />
+  </parameter>
+  <parameter key="19" name="Speed Modulation Source" maxValue="15"  index="3" formatter="type('tmModulationSource')" >
+    <attribute name="controller" type="integer" value="27" />
+  </parameter>
+  <!-- /LFO -->
+      
+  <!-- vcf envelope -->
+  <parameter key="6" name="Attack" index="4">
+    <attribute name="controller" type="integer" value="14" />
+  </parameter>
+  <parameter key="7" name="Decay"  index="5">
+    <attribute name="controller" type="integer" value="15" />
+  </parameter>
+  <parameter key="8" name="Sustain" defaultValue="127" index="6">
+    <attribute name="controller" type="integer" value="16" />
+  </parameter>
+  <parameter key="9" name="Release"  index="7">
+    <attribute name="controller" type="integer" value="17" />
+  </parameter>
+  <parameter key="14" name="VCF Envelope Cutoff Amount" defaultValue="64" formatter="offset(-64)"  index="8" >
+    <attribute name="controller" type="integer" value="22" />
+  </parameter>
+  <!-- /vcf -->
+
+  <!-- vca envelope -->
+  <parameter key="10" name="Attack"  index="9">
+    <attribute name="controller" type="integer" value="18" />
+  </parameter>
+  <parameter key="11" name="Decay"  index="10">
+    <attribute name="controller" type="integer" value="19" />
+  </parameter>
+  <parameter key="12" name="Sustain" defaultValue="127" index="11">
+    <attribute name="controller" type="integer" value="20" />
+  </parameter>
+  <parameter key="13" name="Release"  index="12">
+    <attribute name="controller" type="integer" value="21" />
+  </parameter>
+  <parameter key="15" name="VCA Envelope Volume Amount" formatter="offset(-64)" defaultValue="64" index="13">
+    <attribute name="controller" type="integer" value="23" />
+  </parameter>
+  <!-- /vca -->
+  
+  <parameter key="20" name="Cutoff Modulation Amount" formatter="offset(-64)"  index="14" defaultValue="64" >
+    <attribute name="controller" type="integer" value="70" />
+  </parameter>
+  <parameter key="21" name="Resonance Modulation Amount" formatter="offset(-64)"  index="15" defaultValue="64" >
+    <attribute name="controller" type="integer" value="72" />
+  </parameter>
+  <parameter key="24" name="Cutoff Modulation Source" maxValue="15" index="16" formatter="type('tmModulationSource')" >
+    <attribute name="controller" type="integer" value="71" />
+  </parameter>
+  <parameter key="25" name="Resonance Modulation Source" maxValue="15" index="17" formatter="type('tmModulationSource')" >
+    <attribute name="controller" type="integer" value="73" />
+  </parameter>
+  <parameter key="28" name="Cutoff"  index="18">
+    <attribute name="controller" type="integer" value="78" />
+  </parameter>
+  <parameter key="29" name="Resonance"  index="19">
+    <attribute name="controller" type="integer" value="79" />
+  </parameter>
+
+  <parameter key="22" name="Volume Modulation Amount" formatter="offset(-64)"  index="20">
+    <attribute name="controller" type="integer" value="74" />
+  </parameter>
+  <parameter key="26" name="Volume Modulation Source" maxValue="15"  index="21" formatter="type('tmModulationSource')" >
+    <attribute name="controller" type="integer" value="43" />
+  </parameter>
+  <parameter key="30" name="Volume" index="22" defaultValue="64">
+    <attribute name="controller" type="integer" value="9" />
+  </parameter>
+
+  <parameter key="23" name="Panning Modulation Amount" formatter="offset(-64)"  index="23">
+    <attribute name="controller" type="integer" value="76" />
+  </parameter>
+  <parameter key="27" name="Panning Modulation Source" maxValue="15" index="24" formatter="type('tmModulationSource')" >
+    <attribute name="controller" type="integer" value="45" />
+  </parameter>
+  <parameter key="31" name="Panning"  index="25"  formatter="offset(-64)" defaultValue="64"  >
+    <attribute name="controller" type="integer" value="10" />
+  </parameter>
+
+  <parameter key="32" name="Gate Time" format-id="GateTimeFormatter"  index="26">
+    <attribute name="controller" type="integer" value="80" />
+  </parameter>
+  <parameter key="33" name="Trigger Source" maxValue="2" formatter="type('tmTriggerSource')"  index="27">
+    <attribute name="controller" type="integer" value="81" />
+  </parameter>
+  <parameter key="34" name="Trigger Mode" maxValue="1" formatter="type('tmTriggerMode')"  index="28">
+    <attribute name="controller" type="integer" value="82" />
+  </parameter>
+
+</module>
+
+<module category="External" name="External" index="1">
+  <comment>
+	  Module containing only output connectors.
+  </comment>
+  <connector type="output" key="7" name="Signal Env" index="0" />
+  <connector type="output" key="9" name="Velocity" index="1" />
+  <connector type="output" key="10" name="Keytrack" index="2" />
+  <connector type="output" key="11" name="Pitch Bend" index="3" />
+  <connector type="output" key="12" name="Modwheel" index="4" />
+  <connector type="output" key="13" name="Aftertouch" index="5" />
+  <connector type="output" key="14" name="Breath Ctr." index="6" />
+  <connector type="output" key="15" name="Foot Ctr." index="7" />
+</module>
+
+<module category="LFO" name="LFO" index="2">
+  <parameter key="16" name="Speed"  index="0" />
+  <parameter key="17" name="Speed Mod. Amount" formatter="offset(-64)" index="1"/>
+  <parameter key="18" name="Shape" maxValue="4" formatter="type('tmLFOShape')"  index="2"/>
+  <parameter key="19" name="Speed Modulation Source" maxValue="15"  index="3"
+    formatter="type('tmModulationSource')">
+    <attribute type="boolean" name="has-replacement" value="yes" />
+	<comment>
+		This parameter will be replaced.
+	</comment>
+  </parameter>
+
+  <connector type="input" key="19" name="Speed Modulation Source" index="0">
+    <comment>Replacement for 'Speed Modulation Source' parameter</comment>
+  </connector>
+
+  <connector type="output" key="1" name="LFO"  index="1"/>
+  <connector type="output" key="2" name="LFO * ModW."  index="2"/>
+  <connector type="output" key="3" name="LFO * Aftertouch"  index="3"/>
+  <connector type="output" key="4" name="LFO * VCA Env"  index="4"/>
+</module>
+
+<module category="Envelope" name="VCF Envelope" index="3">
+  <parameter key="6" name="Attack" index="0" />
+  <parameter key="7" name="Decay"  index="1"/>
+  <parameter key="8" name="Sustain"  index="2"/>
+  <parameter key="9" name="Release"  index="3" />
+  <parameter key="14" name="VCF Envlope Cutoff Amount" formatter="offset(-64)"  index="4" />
+
+  <connector type="output" key="5" name="VCF Env"  index="0"/>
+</module>
+
+<module category="Envelope" name="VCA Envelope" index="4">
+  <parameter key="10" name="Attack"  index="0"/>
+  <parameter key="11" name="Decay"  index="1"/>	
+  <parameter key="12" name="Sustain"  index="2"/>
+  <parameter key="13" name="Release"  index="3"/>
+  <parameter key="15" name="VCA Envlope Volume Amount" formatter="offset(-64)"  index="4"/>
+
+  <connector type="output" key="6" name="VCA Env"  index="0" />
+  <connector type="output" key="8" name="Vel * VCA Env"  index="1" />
+</module>
+
+<module category="Filter" name="Filter" index="5">
+  <parameter key="20" name="Cutoff Modulation Amount" formatter="offset(-64)"  index="0"/>
+  <parameter key="21" name="Resonance Modulation Amount" formatter="offset(-64)"  index="1"/>
+  <parameter key="24" name="Cutoff Modulation Source" maxValue="15" index="2"
+    formatter="type('tmModulationSource')">
+    <attribute type="boolean" name="has-replacement" value="yes" />
+  </parameter>
+  <parameter key="25" name="Resonance Modulation Source" maxValue="15" index="3"
+    formatter="type('tmModulationSource')">
+    <attribute type="boolean" name="has-replacement" value="yes" />
+  </parameter>
+  <parameter key="28" name="Cutoff"  index="4"/>
+  <parameter key="29" name="Resonance"  index="5"/>
+
+  <connector type="input" key="24" name="Cutoff Modulation Source" index="0">
+    <comment>Replacement for parameter</comment>
+  </connector>
+  <connector type="input" key="25" name="Resonance Modulation Source" index="1">
+    <comment>Replacement for parameter</comment>
+  </connector>
+</module>
+
+<module category="Audio" name="Amp"  index="6">
+  <parameter key="22" name="Volume Modulation Amount" formatter="offset(-64)"  index="0"/>
+  <parameter key="26" name="Volume Modulation Source" maxValue="15"  index="1" formatter="type('tmModulationSource')" >
+    <attribute type="boolean" name="has-replacement" value="yes" />
+  </parameter>
+  <parameter key="30" name="Volume" index="2" />
+
+  <parameter key="23" name="Panning Modulation Amount" formatter="offset(-64)"  index="3"/>
+  <parameter key="27" name="Panning Modulation Source" maxValue="15" index="4" formatter="type('tmModulationSource')" >
+    <attribute type="boolean" name="has-replacement" value="yes" />
+  </parameter>
+  <parameter key="31" name="Panning"  index="5"/>
+
+  <connector type="input" key="26" name="Volume Modulation Source" index="0">
+    <comment>Replacement for parameter</comment>
+  </connector>
+  <connector type="input" key="27" name="Panning Modulation Source" index="1">
+    <comment>Replacement for parameter</comment>
+  </connector>
+</module>
+
+<module category="Settings" name="Settings"  index="7">
+  <parameter key="32" name="Gate Time" format-id="GateTimeFormatter"  index="0"/>
+  <parameter key="33" name="Trigger Source" maxValue="2" formatter="type('tmTriggerSource')"  index="1"/>
+  <parameter key="34" name="Trigger Mode" maxValue="1" formatter="type('tmTriggerMode')"  index="2"/>
+</module>
+</body>
+</ModuleDescriptions>

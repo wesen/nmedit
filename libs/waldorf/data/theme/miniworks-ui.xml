@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet version="1.0" href="module2svg.xsl" type="text/xsl"?>
+<modules xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <style type="text/css">
+  <![CDATA[
+  text{fill:#FFF; font-size:10px;}
+  textDisplay { fill:#000; border:none; }
+  module { fill:#334170; }
+  label { fill:#FFF; }
+  ]]>
+  </style>
+<defs>
+  <image id="labelbg" xlink:href="./labelbg.svg" />
+  <image id="orangeborder" xlink:href="./orangeborder.svg" />
+  
+</defs>
+	<module id="main" width="660" height="300">
+	  <name>miniWORKS 4pole</name>
+	  <select-module id="mw" />
+
+<!-- cutoff, resonance, volume, panning -->
+
+	  <image x="19" y="5" width="238" height="14" xlink:href="url(#labelbg)" />
+	
+	  <textDisplay x="26" y="6" width="40" height="12" >
+		<parameter index="18" alt="cutoff" />
+      </textDisplay>
+	  <knob style="fill:#F00;" id="cCutoff" x="34" y="24" size="22">
+	    <parameter index="18" />
+	  </knob>
+	  <label x="30" y="60" id="lblCutoff" for="cCutoff">Cutoff</label>
+		
+	  <textDisplay x="86" y="6" width="40" height="12" >
+	    <parameter index="19" alt="resonance" />
+      </textDisplay>
+	  <knob x="94" y="24" size="22" id="cResonance">
+	    <parameter index="19" alt="resonance" />
+	  </knob>
+	  <label x="80" y="60" for="cResonance">Resonance</label>
+
+	  <textDisplay x="146" y="6" width="40" height="12" >
+	    <parameter index="22" alt="volume" />
+      </textDisplay>
+	  <knob x="154" y="24" size="22" id="cVolume">
+	    <parameter index="22" alt="volume" />
+	  </knob>
+	  <label x="150" y="60" for="cVolume">Volume</label>
+
+	  <textDisplay x="206" y="6" width="40" height="12" >
+	    <parameter index="25" alt="cPanning" />
+      </textDisplay>
+	  <knob x="214" y="24" size="22" id="cPanning" >
+	    <parameter index="25" alt="cPanning" />
+      </knob>
+	  <label x="210" y="60" for="cPanning">Panning</label>
+	  
+<!-- vcf -->
+	  
+	  <image x="19" y="67" width="238" height="14" xlink:href="url(#labelbg)" />
+	  
+	  <image x="2" y="110" width="280" height="18" alt="VCF Rect" xlink:href="url(#orangeborder)" />
+	  
+	  <label style="fill:#4f5171" x="6" y="124">VCF</label>
+	  
+	  <textDisplay x="26" y="68" width="40" height="12" >
+	    <parameter index="4" alt="attack" />
+      </textDisplay>
+	  <label x="30" y="124">Attack</label>
+	  <knob x="34" y="84" size="22">
+	    <parameter index="4" alt="attack" />
+	  </knob>
+	  
+	  <textDisplay x="86" y="68" width="40" height="12" >
+	    <parameter index="5" alt="decay" />
+      </textDisplay>
+	  <label x="80" y="124">Decay</label>
+	  <knob x="94" y="84" size="22" >
+	    <parameter index="5" alt="decay" />
+	  </knob>
+
+	  <textDisplay x="146" y="68" width="40" height="12" >
+	    <parameter index="6" alt="sustain" />
+      </textDisplay>
+	  <label x="150" y="124" >Sustain</label>
+	  <knob x="154" y="84" size="22" >
+	    <parameter index="6" alt="sustain" />
+	  </knob>
+
+	  <textDisplay x="206" y="68" width="40" height="12" >
+	    <parameter index="7" alt="release" />
+      </textDisplay>
+	  <label x="210" y="124" >Release</label>
+	  <knob x="214" y="84" size="22">
+	    <parameter index="7" alt="release" />
+	  </knob>
+	  
+	  <adsr-envelope x="270" y="68" width="80" height="38">
+	     <title>VCF Envelope</title>
+	     <attack index="4" />
+	     <decay index="5" />
+	     <sustain index="6" />
+	     <release index="7" />
+	  </adsr-envelope>
+	  
+<!-- vca -->
+	  
+	  <image x="2" y="178" width="280" height="18" alt="VCA Rect" xlink:href="url(#orangeborder)" />
+
+	  <image x="19" y="135" width="238" height="14" xlink:href="url(#labelbg)" />
+	  
+	  <label style="fill:#4f5171" x="4" y="192">VCA</label>
+	
+	  <textDisplay x="26" y="136" width="40" height="12" >
+	    <parameter index="9" alt="attack" />
+      </textDisplay>
+	  <label x="30" y="192">Attack</label>
+	  <knob x="34" y="152" size="22">
+	    <parameter index="9" alt="attack" />
+	  </knob>
+	  
+	  <textDisplay x="86" y="136" width="40" height="12" >
+	    <parameter index="10" alt="decay" />
+      </textDisplay>
+	  <label x="80" y="192">Decay</label>
+	  <knob x="94" y="152" size="22" >
+	    <parameter index="10" alt="decay" />
+	  </knob>
+
+	  <textDisplay x="146" y="136" width="40" height="12" >
+	    <parameter index="11" alt="sustain" />
+      </textDisplay>
+	  <label x="150" y="192" >Sustain</label>
+	  <knob x="154" y="152" size="22">
+	    <parameter index="11" alt="sustain" />
+	  </knob>
+
+	  <textDisplay x="206" y="136" width="40" height="12" >
+	    <parameter index="12" alt="release" />
+      </textDisplay>
+	  <label x="210" y="192" >Release</label>
+	  <knob x="214" y="152" size="22">
+	    <parameter index="12" alt="release" />
+	  </knob>
+	  
+	  <adsr-envelope x="270" y="138" width="80" height="38">
+	     <title>VCA Envelope</title>
+	     <attack index="9" />
+	     <decay index="10" />
+	     <sustain index="11" />
+	     <release index="12" />
+	  </adsr-envelope>
+	  
+<!-- lfo -->
+
+	  <image x="400" y="48" width="280" height="18" alt="lfo Rect" xlink:href="url(#orangeborder)" />
+
+	  <label style="fill:#4f5171" x="402" y="62">LFO</label>
+	
+	  <image x="476" y="5" width="178" height="14" xlink:href="url(#labelbg)" />
+	
+	  <button x="428" y="26" width="24" height="20" cyclic="true" landscape="false" >
+			<parameter index="2" alt="lfo shape" />
+			<btn index="0">sin</btn>
+			<btn index="1">tri</btn>
+			<btn index="2">saw</btn>
+			<btn index="3">pls</btn>
+			<btn index="4">S-H</btn>
+      </button>
+	  <label x="428" y="62">Shape</label>
+	
+	  <textDisplay x="488" y="6" width="40" height="12" >
+	    <parameter index="0" alt="LFO Speed" />
+      </textDisplay>
+	  <knob x="488" y="24" size="22">
+	    <parameter index="0" alt="LFO Speed" />
+	  </knob>
+	  <label x="488" y="62">Speed</label>
+	  
+	  <textDisplay x="548" y="6" width="40" height="12" >
+	    <parameter index="1" alt="Speed Mod. Amount" />
+      </textDisplay>
+	  <knob x="548" y="24" size="22">
+	    <parameter index="1" alt="Speed Mod. Amount" />
+	  </knob>
+	  <label x="548" y="62">Mod.Amt</label>
+	  
+	  <textDisplay x="600" y="6" width="50" height="12" >
+	    <parameter index="3" alt="Speed Mod. Source" />
+      </textDisplay>
+	  <knob x="608" y="24" size="22">
+	    <parameter index="3" alt="Speed Mod. Source" />
+	  </knob>
+	  <label x="608" y="62">Mod.Src</label>
+	  
+	  
+<!-- C/R mod/src -->
+
+	  <image x="420" y="67" width="238" height="14" xlink:href="url(#labelbg)" />
+	  
+	  <image x="400" y="110" width="280" height="18" alt="cr Rect" xlink:href="url(#orangeborder)" />
+	  
+	  <label style="fill:#4f5171" x="402" y="124">Mod</label>
+	
+	  <textDisplay x="428" y="68" width="40" height="12" >
+	    <parameter index="14" alt="Cutoff Mod. Amount" />
+      </textDisplay>
+	  <knob x="428" y="84" size="22">
+	    <parameter index="14" alt="Cutoff Mod. Amount" />
+	  </knob>
+	  <label x="428" y="124">C.Amt</label>
+	
+	  <textDisplay x="488" y="68" width="40" height="12" >
+	    <parameter index="16" alt="Cutoff Mod. Src" />
+      </textDisplay>
+	  <knob x="488" y="84" size="22">
+	    <parameter index="16" alt="Cutoff Mod. Src" />
+	  </knob>
+	  <label x="488" y="124">C.Src</label>
+	  
+	  <textDisplay x="548" y="68" width="40" height="12" >
+	    <parameter index="15" alt="Res Mod. Amount" />
+      </textDisplay>
+	  <knob x="548" y="84" size="22">
+	    <parameter index="15" alt="Res Mod. Amount" />
+	  </knob>
+	  <label x="548" y="124">R.Amt</label>
+	  
+	  <textDisplay x="600" y="68" width="50" height="12" >
+	    <parameter index="17" alt="Res Mod. Src" />
+      </textDisplay>
+	  <knob x="608" y="84" size="22">
+	    <parameter index="17" alt="Res Mod. Src" />
+	  </knob>
+	  <label x="608" y="124">R.Src</label>
+	  
+	  
+<!-- Vol/Pan mod/src -->
+
+	  <image x="420" y="135" width="238" height="14" xlink:href="url(#labelbg)" />
+	  
+	  <image x="400" y="178" width="280" height="18" alt="cr Rect" xlink:href="url(#orangeborder)" />
+	  
+	  <label style="fill:#4f5171" x="402" y="192">Mod</label>
+	
+	  <textDisplay x="428" y="136" width="40" height="12" >
+	    <parameter index="20" alt="Volume Mod. Amount" />
+      </textDisplay>
+	  <knob x="428" y="152" size="22">
+	    <parameter index="20" alt="Volume Mod. Amount" />
+	  </knob>
+	  <label x="428" y="192">Vol.Amt</label>
+	
+	  <textDisplay x="488" y="136" width="40" height="12" >
+	    <parameter index="21" alt="Volume Mod. Src" />
+      </textDisplay>
+	  <knob x="488" y="152" size="22">
+	    <parameter index="21" alt="Volume Mod. Src" />
+	  </knob>
+	  <label x="488" y="192">Vol.Src</label>
+	  
+	  <textDisplay x="548" y="136" width="40" height="12" >
+	    <parameter index="23" alt="Pan Mod. Amount" />
+      </textDisplay>
+	  <knob x="548" y="152" size="22">
+	    <parameter index="23" alt="Pan Mod. Amount" />
+	  </knob>
+	  <label x="548" y="192">Pan.Amt</label>
+	  
+	  <textDisplay x="600" y="136" width="50" height="12" >
+	    <parameter index="24" alt="Pan Mod. Src" />
+      </textDisplay>
+	  <knob x="608" y="152" size="22">
+	    <parameter index="24" alt="Pan Mod. Src" />
+	  </knob>
+	  <label x="608" y="192">Pan.Src</label>
+	  
+	  
+	  
+<!-- VCFEnvCutoff/CVAEnvVol,... -->
+
+	  <image x="19" y="203" width="238" height="14" xlink:href="url(#labelbg)" />
+	  
+	  <image x="2" y="246" width="280" height="18" alt="cr Rect" xlink:href="url(#orangeborder)" />
+	  
+	  <label style="fill:#4f5171" x="4" y="260">???</label>
+	
+	  <textDisplay x="26" y="204" width="40" height="12" >
+	    <parameter index="8" alt="VCF Env Cutoff" />
+      </textDisplay>
+	  <knob x="34" y="220" size="22">
+	    <parameter index="8" alt="VCF Env Cutoff" />
+	  </knob>
+	  <label x="30" y="260">VCF Env Cutoff</label>
+	
+	  <textDisplay x="86" y="204" width="40" height="12" >
+	    <parameter index="13" alt="VCA Env Vol" />
+      </textDisplay>
+	  <knob x="94" y="220" size="22">
+	    <parameter index="13" alt="VCA Env Vol" />
+	  </knob>
+	  <label x="80" y="260">VCA Env Vol</label>
+	  
+<!-- sys... -->
+
+	  <image x="420" y="203" width="238" height="14" xlink:href="url(#labelbg)" />
+	  
+	  <image x="400" y="246" width="280" height="18" alt="cr Rect" xlink:href="url(#orangeborder)" />
+	  
+	  <label style="fill:#4f5171" x="402" y="260">Sys</label>
+	
+	  <textDisplay x="428" y="204" width="40" height="12" >
+	    <parameter index="26" alt="Gate Time" />
+      </textDisplay>
+	  <knob x="428" y="220" size="22">
+	    <parameter index="26" alt="Gate Time" />
+	  </knob>
+	  <label x="428" y="260">GateTime</label>
+	  
+	  <textDisplay x="488" y="204" width="50" height="12" >
+	    <parameter index="27" alt="Trigger Source" />
+      </textDisplay>
+	  <knob x="488" y="220" size="22">
+	    <parameter index="27" alt="Trigger Source" />
+	  </knob>
+	  <label x="488" y="260">Trigger Source</label>
+	  
+	  
+	  <textDisplay x="548" y="204" width="50" height="12" >
+	    <parameter index="28" alt="Trigger Mode" />
+      </textDisplay>
+	  <knob x="548" y="220" size="22">
+	    <parameter index="28" alt="Trigger Mode" />
+	  </knob>
+	  <label x="548" y="260">Trigger Mode</label>
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+<!-- logos -->	  
+	  
+	  <image xlink:href="waldorf-logo.png" x="260" y="260" width="126" height="21" />
+	  
+	  <image x="270" y="4">
+	  <svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.0"
+   width="160"
+   height="20"
+   id="svg2">
+  <defs
+     id="defs4" />
+  <g
+     id="layer1">
+    <text
+       x="166.99904"
+       y="12.638893"
+       transform="scale(0.77393,1.292107)"
+       style="font-size:14.00000572px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Arial"
+       id="text1315"
+       xml:space="preserve"><tspan
+         x="166.99904"
+         y="12.638893"
+         style="font-size:14.00000572px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:Arial"
+         id="tspan1317">pole</tspan></text>
+    <text
+       x="119.42429"
+       y="17.527184"
+       style="font-size:18px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Arial"
+       id="text1319"
+       xml:space="preserve"><tspan
+         x="119.42429"
+         y="17.527184"
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:Arial"
+         id="tspan1321">4</tspan></text>
+    <rect
+       width="114.99999"
+       height="16.999996"
+       x="0.50000012"
+       y="2.500006"
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#fb9f0f;stroke-width:1.00000024;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1323" />
+    <rect
+       width="43.000004"
+       height="17"
+       x="0.49999988"
+       y="2.5000029"
+       style="opacity:1;fill:#fb9f0f;fill-opacity:1;fill-rule:nonzero;stroke:#fb9f0f;stroke-width:0.99999952;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect2198" />
+    <text
+       x="7.4205465"
+       y="18.224804"
+       style="font-size:18px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Arial"
+       id="text1307"
+       xml:space="preserve"><tspan
+         x="7.4205465"
+         y="18.224804"
+         style="font-size:18px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Arial"
+         id="tspan1309">mini</tspan></text>
+    <text
+       x="47.223438"
+       y="17.053217"
+       style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Times New Roman"
+       id="text1311"
+       xml:space="preserve"><tspan
+         x="47.223438"
+         y="17.053217"
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:Times New Roman"
+         id="tspan1313">WORKS</tspan></text>
+    <path
+       d="M 118.50004,2.4999999 L 149.50005,2.4999999"
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#fb9f0f;stroke-width:1.00000036px;stroke-linecap:square;stroke-linejoin:miter;stroke-opacity:1"
+       id="path2202" />
+    <path
+       d="M 118.49999,19.5 L 149.49999,19.5"
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#fb9f0f;stroke-width:1;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path2204" />
+  </g>
+</svg>
+	  
+	  </image>
+	  
+	</module>
+	
+</modules>

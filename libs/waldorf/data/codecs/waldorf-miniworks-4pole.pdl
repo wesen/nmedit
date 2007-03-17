@@ -1,0 +1,81 @@
+
+Message % 8 :=
+  messageType:8
+  #messageType=0xb0 => ControlChange$data
+  #messageType=0xc0 => BankChange$data
+  #messageType=0xf0 => Sysex$data
+  #messageType=0xfe => AliveSignal$data
+  ;
+
+BankChange % 8 :=
+  bank:8
+  ;  
+  
+ControlChange % 8 :=
+  controller:8 value:8
+  ;
+
+Sysex % 8 :=
+  0x3e:8 0x04:8 deviveId:8 dumpType:8 
+  #dumpType=0x00 => ProgramDump$data
+  #dumpType=0x01 => ProgramBulkDump$data
+  #dumpType=0x08 => AllDump$data
+  #dumpType=0x40 => ProgramDumpRequest$data
+  #dumpType=0x41 => ProgramBulkDumpRequest$data
+  #dumpType=0x48 => AllDumpRequest$data
+  0xf7:8
+  ;
+
+ProgramDump % 8 :=
+  ProgramNumber:8
+  VCFEnvelopeAttack:8
+  VCFEnvelopeDecay:8
+  VCFEnvelopeSustain:8
+  VCFEnvelopeRelease:8
+  VCAEnvelopeAttack:8
+  VCAEnvelopeDecay:8
+  VCAEnvelopeSustain:8
+  VCAEnvelopeRelease:8
+  VCFEnvlopeCutoffAmount:8
+  VCAEnvlopeVolumeAmount:8
+  LFOSpeed:8
+  LFOSpeedModAmount:8
+  LFOShape:8
+  LFOSpeedModulationSource:8
+  CutoffModulationAmount:8
+  ResonanceModulationAmount:8
+  VolumeModulationAmount:8
+  PanningModulationAmount:8
+  CutoffModulationSource:8
+  ResonanceModulationSource:8
+  VolumeModulationSource:8
+  PanningModulationSource:8
+  Cutoff:8
+  Resonance:8
+  Volume:8
+  Panning:8
+  GateTime:8
+  TriggerSource:8
+  TriggerMode:8
+  CHK:8
+  ;
+
+ProgramBulkDump % 8 :=
+  ;
+
+AllDump % 8 :=
+  ;
+
+AliveSignal % 8 :=
+  ;
+
+ProgramDumpRequest % 8 :=
+  ProgramNo:8
+  ;
+
+ProgramBulkDumpRequest % 8 :=
+  ProgramNo:8
+  ;
+
+AllDumpRequest % 8 :=
+  ;

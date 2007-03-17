@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.0"
+   width="160"
+   height="20"
+   id="svg2">
+  <defs
+     id="defs4" />
+  <g
+     id="layer1">
+    <text
+       x="166.99904"
+       y="12.638893"
+       transform="scale(0.77393,1.292107)"
+       style="font-size:14.00000572px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Arial"
+       id="text1315"
+       xml:space="preserve"><tspan
+         x="166.99904"
+         y="12.638893"
+         style="font-size:14.00000572px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:Arial"
+         id="tspan1317">pole</tspan></text>
+    <text
+       x="119.42429"
+       y="17.527184"
+       style="font-size:18px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Arial"
+       id="text1319"
+       xml:space="preserve"><tspan
+         x="119.42429"
+         y="17.527184"
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:Arial"
+         id="tspan1321">4</tspan></text>
+    <rect
+       width="114.99999"
+       height="16.999996"
+       x="0.50000012"
+       y="2.500006"
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#fb9f0f;stroke-width:1.00000024;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1323" />
+    <rect
+       width="43.000004"
+       height="17"
+       x="0.49999988"
+       y="2.5000029"
+       style="opacity:1;fill:#fb9f0f;fill-opacity:1;fill-rule:nonzero;stroke:#fb9f0f;stroke-width:0.99999952;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect2198" />
+    <text
+       x="7.4205465"
+       y="18.224804"
+       style="font-size:18px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Arial"
+       id="text1307"
+       xml:space="preserve"><tspan
+         x="7.4205465"
+         y="18.224804"
+         style="font-size:18px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Arial"
+         id="tspan1309">mini</tspan></text>
+    <text
+       x="47.223438"
+       y="17.053217"
+       style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Times New Roman"
+       id="text1311"
+       xml:space="preserve"><tspan
+         x="47.223438"
+         y="17.053217"
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:Times New Roman"
+         id="tspan1313">WORKS</tspan></text>
+    <path
+       d="M 118.50004,2.4999999 L 149.50005,2.4999999"
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#fb9f0f;stroke-width:1.00000036px;stroke-linecap:square;stroke-linejoin:miter;stroke-opacity:1"
+       id="path2202" />
+    <path
+       d="M 118.49999,19.5 L 149.49999,19.5"
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#fb9f0f;stroke-width:1;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path2204" />
+  </g>
+</svg>
