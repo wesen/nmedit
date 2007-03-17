@@ -196,7 +196,7 @@ public abstract class ImageResource implements Resource
                     // ignore
                 }
             }
-            return false;
+            return bytes != null;
         }
         
         public Image getImage(int prefWidth, int prefHeight)
@@ -208,7 +208,7 @@ public abstract class ImageResource implements Resource
             
             if (!ensureBytesAvailable())
                 return null;
-            
+
             cachedImage = svg2image(new InputStreamReader(new ByteArrayInputStream(bytes)), prefWidth, prefHeight);
             
             ciw = prefWidth;
