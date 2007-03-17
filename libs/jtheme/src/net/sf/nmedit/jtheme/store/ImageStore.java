@@ -141,9 +141,10 @@ public class ImageStore extends DefaultStore
                     DefaultStorageContext dsc = (DefaultStorageContext) context;
                     ImageResource ir = dsc.getImageResourceById(id);
 
+
                     svgw = getIntAtt("width", -1);
                     svgh = getIntAtt("height", -1);
-                    
+
                     image = ir.getImage(svgw, svgh);
                 }
                 return;
@@ -167,7 +168,7 @@ public class ImageStore extends DefaultStore
     {
         svgw = getIntAtt(svg, "width", -1);
         svgh = getIntAtt(svg, "height", -1);
-        
+
         // fix namespace attribute
         image = svgElement2img(svg);
     }

@@ -162,7 +162,7 @@ public class DefaultStorageContext extends StorageContext
         
         ImageResource is =
         ImageStore.getImageResource(this, element);
-        
+
         imageResourceMap.put(id, is);
     }
     
