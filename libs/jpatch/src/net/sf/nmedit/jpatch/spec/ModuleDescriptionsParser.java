@@ -66,7 +66,21 @@ public class ModuleDescriptionsParser
         
         DocumentHandler handler = new DocumentHandler(descriptions);
         
-        parser.parse(in, handler);
+        try
+        {
+            parser.parse(in, handler);
+        }
+        catch (SAXException e)
+        {
+            Locator l = handler.locator;
+            if (l == null)
+                throw e;
+            
+            SAXException se = new SAXException("error in line:col="+l.getLineNumber()+":"+l.getColumnNumber());
+            se.initCause(e);
+            
+            throw se;
+        }
     }
     private static class DocumentHandler extends DefaultHandler 
     {
