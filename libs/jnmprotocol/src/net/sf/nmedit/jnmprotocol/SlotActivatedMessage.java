@@ -31,7 +31,8 @@ public class SlotActivatedMessage extends MidiMessage
 	addParameter("pid", "data:pid");
 	addParameter("sc", "data:sc");
 	addParameter("activeSlot", "data:data:slot");
-	set("cc", 0x14);
+	set("cc", 0x17);
+	set("pid", 0x41);
 	set("sc", 0x09);
     }
 

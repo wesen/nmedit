@@ -472,6 +472,43 @@ public class ProtocolTester extends TestCase
     }
 
     
+    public void testSlotsSelectedMessage()
+	throws Exception
+    {
+        System.out.println("test SlotsSelectedMessage");
+	try {
+	    nmDriver.connect();
+	    MessageMulticaster multicaster = new MessageMulticaster();
+	    NmProtocol p = createProtocol(nmDriver, multicaster);
+	    multicaster.addProtocolListener(new Listener(p, multicaster));
+
+	    SlotsSelectedMessage lpm = new SlotsSelectedMessage();
+	    lpm.set("slot0Selected", 0);
+	    lpm.set("slot1Selected", 1);
+	    lpm.set("slot2Selected", 0);
+	    lpm.set("slot3Selected", 1);
+	    p.send(lpm);
+
+	    int n = 0;
+	    while(n < 100) {
+		n++;
+		p.heartbeat();
+		Thread.sleep(10);
+	    }
+        }
+        catch (Exception e)
+        {
+	    e.printStackTrace();
+            System.out.println("failed");
+            throw e;
+        }
+        finally
+        {
+            nmDriver.disconnect();
+        }
+    }
+
+    
     private static class MessageAcceptor implements MessageHandler
     {
         private final Class<? extends MidiMessage> messageClass;

@@ -34,7 +34,8 @@ public class SlotsSelectedMessage extends MidiMessage
 	addParameter("slot1Selected", "data:data:slot1");
 	addParameter("slot2Selected", "data:data:slot2");
 	addParameter("slot3Selected", "data:data:slot3");
-	set("cc", 0x14);
+	set("cc", 0x17);
+	set("pid", 0x41);
 	set("sc", 0x07);
     }
 
