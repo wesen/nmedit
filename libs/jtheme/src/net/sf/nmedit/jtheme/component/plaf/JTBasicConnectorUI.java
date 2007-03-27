@@ -33,6 +33,7 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
+import net.sf.nmedit.jpatch.Connector;
 import net.sf.nmedit.jpatch.Signal;
 import net.sf.nmedit.jtheme.JTCursor;
 import net.sf.nmedit.jtheme.cable.Cable;
@@ -329,10 +330,19 @@ public class JTBasicConnectorUI extends JTConnectorUI
             {
                 if (dragCreate)
                 {
-                    Cable cable = cableManager.createCable(c, target);
-                 
-                    cableManager.add(cable);
-                    cableManager.notifyRepaintManager();
+                    Connector a = c.getConnector();
+                    Connector b = target.getConnector();
+                    if (a == null && b == null)
+                    {
+                        Cable cable = cableManager.createCable(c, target);
+                     
+                        cableManager.add(cable);
+                        cableManager.notifyRepaintManager();
+                    }
+                    else if (a != null && b != null)
+                    {
+                        a.getConnectionManager().connect(a, b);
+                    }
                 }
             }
         }
