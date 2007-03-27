@@ -34,8 +34,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
@@ -249,6 +247,8 @@ public class JTBasicButtonControlUI extends JTButtonControlUI
             cyclic = btn.isCyclic();
             compute = true;
         }
+        
+        compute |= buttonRect == null;
         
         return compute;
     }
@@ -652,7 +652,7 @@ public class JTBasicButtonControlUI extends JTButtonControlUI
     
     protected static class BasicButtonListener
       implements MouseListener, FocusListener,
-      MouseMotionListener, MouseWheelListener,
+      MouseMotionListener, 
       ChangeListener, KeyListener
     {
 
@@ -677,7 +677,6 @@ public class JTBasicButtonControlUI extends JTButtonControlUI
         {
             installMouseListener(c, install);
             installMouseMotionListener(c, install);
-            installMouseWheelListener(c, install);
             installFocusListener(c, install);
             installChangeListener(c, install);
             installKeyListener(c, install);
@@ -721,12 +720,6 @@ public class JTBasicButtonControlUI extends JTButtonControlUI
             
             if (install) c.addFocusListener(this);
             else c.removeFocusListener(this);
-        }
-
-        public void installMouseWheelListener(JTButtonControl c, boolean install)
-        {
-            if (install) c.addMouseWheelListener(this);
-            else c.removeMouseWheelListener(this);
         }
 
         public void stateChanged(ChangeEvent e)
@@ -800,12 +793,6 @@ public class JTBasicButtonControlUI extends JTButtonControlUI
         public void mouseMoved(MouseEvent e)
         {
             ui.setHoverIndex(ui.buttonForLocation(e.getX(), e.getY()));
-        }
-
-        public void mouseWheelMoved(MouseWheelEvent e)
-        {
-            // TODO Auto-generated method stub
-            
         }
 
         public void keyPressed(KeyEvent e)
