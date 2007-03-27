@@ -38,6 +38,7 @@ import org.w3c.dom.css.RGBColor;
 import com.steadystate.css.dom.CSSStyleDeclarationImpl;
 import com.steadystate.css.dom.CSSStyleSheetImpl;
 import com.steadystate.css.parser.CSSOMParser;
+import com.steadystate.css.parser.SACParserCSS2;
 
 public class CSSUtils
 {
@@ -158,7 +159,7 @@ public class CSSUtils
         {
             String style = "{"+styleAtt.getValue()+"}";
             
-            CSSOMParser cssParser = new CSSOMParser();
+            CSSOMParser cssParser = CSSUtils.makeParser();
             cssParser.setParentStyleSheet((CSSStyleSheetImpl) parent);
         
             try
@@ -172,6 +173,21 @@ public class CSSUtils
         }
         
         return null;
+    }
+
+    
+    private static transient SACParserCSS2 cssParser;
+    
+    private static SACParserCSS2 getCSSParser()
+    {
+        if (cssParser == null)
+            cssParser = new SACParserCSS2();
+        return cssParser;
+    }
+    
+    public static CSSOMParser makeParser()
+    {
+        return new CSSOMParser(getCSSParser());
     }
 
     public static CSSStyleDeclaration getStyleDeclaration(CSSStyleSheet styleSheet, String name)

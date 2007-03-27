@@ -38,6 +38,7 @@ import org.w3c.dom.css.CSSStyleSheet;
 import org.xml.sax.InputSource;
 
 import com.steadystate.css.parser.CSSOMParser;
+import com.steadystate.css.parser.SACParserCSS2;
 
 public class DefaultStorageContext extends StorageContext
 {
@@ -186,7 +187,7 @@ public class DefaultStorageContext extends StorageContext
     
     private void buildCssFromString(String cssText) throws JTException
     {
-        CSSOMParser cssParser = new CSSOMParser();
+        CSSOMParser cssParser = CSSUtils.makeParser();
         try
         {
             // TODO set uri ???
