@@ -26,12 +26,19 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 
 import javax.swing.border.Border;
 
+import net.sf.nmedit.jpatch.Module;
+import net.sf.nmedit.jpatch.ModuleContainer;
+import net.sf.nmedit.jpatch.event.ModuleContainerEvent;
+import net.sf.nmedit.jpatch.event.ModuleContainerListener;
 import net.sf.nmedit.jtheme.JTContext;
+import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.plaf.JTModuleContainerUI;
+import net.sf.nmedit.jtheme.store.ModuleStore;
 
 public class JTModuleContainer extends JTBaseComponent
 {
@@ -41,6 +48,8 @@ public class JTModuleContainer extends JTBaseComponent
     private boolean optimizedDrawing;
     private JTCableManager cableManager;
     private JTPatch patchContainer;
+    private ModuleContainer moduleContainer;
+    private ContentSynchronisation cs;
 
     public JTModuleContainer(JTContext context, JTCableManager cableManager)
     {
@@ -49,6 +58,117 @@ public class JTModuleContainer extends JTBaseComponent
         optimizedDrawing = true;// does not work: !context.hasModuleContainerOverlay();
                                 // we have to overwrite boolean isPaintingOrigin() which is package private 
         setCableManager(cableManager);
+        
+        cs = createContentSynchronisation();
+        if (cs != null)
+            cs.install();
+    }
+    
+    protected ContentSynchronisation createContentSynchronisation()
+    {
+        return new ContentSynchronisation();
+    }
+    
+    protected class ContentSynchronisation implements ModuleContainerListener
+    {
+        private ModuleContainer mc;
+        private boolean oneUpdate = false;
+        
+        public void install()
+        {
+           // no op
+        }
+
+        public void update()
+        {
+            setInstalledContainer(moduleContainer);
+        }
+
+        private void setInstalledContainer(ModuleContainer moduleContainer)
+        {
+            if (this.mc != null)
+                uninstall(this.mc);
+            this.mc = moduleContainer;
+            if (this.mc != null)
+                install(this.mc);
+        }
+
+        protected void install(ModuleContainer mc)
+        {
+            mc.addModuleContainerListener(this);
+        }
+
+        protected void uninstall(ModuleContainer mc)
+        {
+            mc.removeModuleContainerListener(this);
+        }
+
+        public void moduleAdded(ModuleContainerEvent e)
+        {
+            createUIFor(e.getModule());
+        }
+
+        public void moduleRemoved(ModuleContainerEvent e)
+        {
+            removeUI(e.getModule());
+        }
+
+        private void createUIFor(Module module)
+        {
+            String ID = ""+module.getDescriptor().getIndex();
+            ModuleStore ms = getContext().getStorageContext().getModuleStoreById(ID);
+            
+            try
+            {
+                JTModule mui = ms.createModule(getContext(), module);
+                mui.setLocation(module.getScreenLocation());
+                add(mui);
+                
+                // TODO revalidate/repaint container
+                mui.repaint();
+            }
+            catch (JTException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        public void removeUI(Module module)
+        {
+            Component[] components = JTModuleContainer.this.getComponents();
+            for (int i=components.length-1;i>=0;i--)
+            {
+                Component c = components[i];
+                if (c instanceof JTModule)
+                {
+                    JTModule mui = (JTModule) c;
+                    if (mui.getModule() == module)
+                    {
+                        Rectangle bounds = mui.getBounds();
+                        remove(mui);
+                        
+                        // TODO revalidate/repaint
+                        repaint(bounds);
+                        
+                        break;
+                    }
+                }
+            }
+        }
+
+    }
+    
+    public void setModuleContainer(ModuleContainer mc)
+    {
+        this.moduleContainer = mc;
+        
+        if (cs != null)
+            cs.update();
+    }
+    
+    public ModuleContainer getModuleContainer()
+    {
+        return moduleContainer;
     }
     
     public JTPatch getPatchContainer()
