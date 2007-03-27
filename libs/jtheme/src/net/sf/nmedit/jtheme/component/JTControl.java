@@ -25,7 +25,6 @@ package net.sf.nmedit.jtheme.component;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.EventListenerList;
 
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.plaf.JTControlUI;
@@ -34,8 +33,6 @@ public abstract class JTControl extends JTComponent implements ChangeListener
 {
 
     private JTControlAdapter adapter;
-    private EventListenerList eventListeners;
-    private transient ChangeListener[] changeListeners;
 
     public JTControl(JTContext context)
     {
@@ -54,37 +51,32 @@ public abstract class JTControl extends JTComponent implements ChangeListener
     
     public void addChangeListener(ChangeListener l)
     {
-        if (eventListeners == null)
-            eventListeners = new EventListenerList();
-        
-        eventListeners.add(ChangeListener.class, l);
-        changeListeners = null;
+        listenerList.add(ChangeListener.class, l);
     }
     
     public void removeChangeListener(ChangeListener l)
     {
-        if (eventListeners != null)
-            eventListeners.remove(ChangeListener.class, l);
-        changeListeners = null;
+        listenerList.remove(ChangeListener.class, l);
     }
+    
+    protected transient ChangeEvent changeEvent; // this is source
     
     protected void fireStateChanged()
     {
         repaint();
         
-        if (eventListeners == null)
-            return;
-        
-        changeListeners = eventListeners.getListeners(ChangeListener.class);
-        if (changeListeners.length>0)
-        {
-            ChangeEvent e = new ChangeEvent(this);
-            for (int i=0;i<changeListeners.length;i++)
-            {
-                changeListeners[i].stateChanged(e);
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        for (int i = listeners.length-2; i>=0; i-=2) {
+            if (listeners[i]==ChangeEvent.class) {
+                // Lazily create the event:
+                if (changeEvent == null)
+                    changeEvent = new ChangeEvent(this);
+                ((ChangeListener)listeners[i+1]).stateChanged(changeEvent);
             }
         }
-        
     }
     
     public void stateChanged(ChangeEvent e)

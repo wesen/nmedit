@@ -44,7 +44,6 @@ import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.EventListenerList;
 
 import net.sf.nmedit.jtheme.editor.misc.RectangularPattern;
 
@@ -55,7 +54,6 @@ public class ComponentView extends JComponent
     private ComponentSink sink;
     private ComponentListener viewListener;
     private ComponentSelector selector;
-    private EventListenerList listenerList = new EventListenerList();
     
     public ComponentView()
     {
