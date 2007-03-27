@@ -40,6 +40,7 @@ import net.sf.nmedit.jtheme.component.JTLabel;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.JTSlider;
 import net.sf.nmedit.jtheme.component.plaf.JTModuleContainerUI;
+import net.sf.nmedit.jtheme.store.StorageContext;
 
 public abstract class JTContext
 {
@@ -62,6 +63,8 @@ public abstract class JTContext
     public abstract Class[] getComponentClasses();
     
     public abstract JTBuilder getBuilder();
+    
+    public abstract StorageContext getStorageContext();
 
     public static final String TYPE_KNOB = "knob";
     public static final String TYPE_SLIDER = "slider";
