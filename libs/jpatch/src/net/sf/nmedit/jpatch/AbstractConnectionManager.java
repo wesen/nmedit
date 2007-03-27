@@ -332,9 +332,9 @@ public abstract class AbstractConnectionManager implements ConnectionManager
         Object[] listenerList = eventListeners.getListenerList();
         for (int i=listenerList.length-2;i>=0;i-=2)
         {
-            if (listenerList[i+1]==ConnectionListener.class)
+            if (listenerList[i]==ConnectionListener.class)
             {
-                ((ConnectionListener) listenerList[i]).connectionAdded(e);
+                ((ConnectionListener) listenerList[i+1]).connectionAdded(e);
             }
         }
     }
@@ -344,9 +344,9 @@ public abstract class AbstractConnectionManager implements ConnectionManager
         Object[] listenerList = eventListeners.getListenerList();
         for (int i=listenerList.length-2;i>=0;i-=2)
         {
-            if (listenerList[i+1]==ConnectionListener.class)
+            if (listenerList[i]==ConnectionListener.class)
             {
-                ((ConnectionListener) listenerList[i]).connectionAdded(e);
+                ((ConnectionListener) listenerList[i+1]).connectionRemoved(e);
             }
         }
     }
