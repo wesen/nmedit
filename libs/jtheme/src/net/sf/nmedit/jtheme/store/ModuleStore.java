@@ -85,6 +85,8 @@ public class ModuleStore extends DefaultStore implements Iterable<Store>
         jtmodule.setModule(module);
         
         createChildren(context, jtmodule, module, addReducible);
+        if (staticLayerBackingStore != null)
+            jtmodule.setStaticLayerBackingStore(staticLayerBackingStore);
         
         return jtmodule;
     }
