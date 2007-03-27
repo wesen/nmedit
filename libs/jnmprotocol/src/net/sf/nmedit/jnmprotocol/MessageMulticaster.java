@@ -79,11 +79,22 @@ public class MessageMulticaster implements MessageHandler
                 message.notifyListener(listeners[i]);
             }
         }
+        catch (RuntimeException e)
+        {
+            throw e; // rethrow exception
+        }
         catch (Exception e)
         {   
+            // processMessage() does not allow the throw cause Exception
+            // so we cast it to RuntimeException
+            
             // TODO notifyListener should not throw an exception ???
             throw new RuntimeException(e);
         }
+        
+        // if the message is an ErrorMessage throw a RuntimeException
+        if (message instanceof ErrorMessage)
+            throw new RuntimeException(message.toString());
     }
 
 }
