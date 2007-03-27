@@ -3252,7 +3252,8 @@ label{fill:#000;}
 		<filter-e-display x="192" y="2" width="55" height="35">
 			<cutoff class="parameter" index="3" alt="frequency" />
 			<resonance class="parameter" index="6" alt="resonance" />
-			<type class="parameter" index="7" alt="slope" />
+			<type class="parameter" index="0" alt="type" />
+			<slope class="parameter" index="7" alt="slope" />
 	    </filter-e-display>
 	</module>
 	<module id="8" width="255" height="90">

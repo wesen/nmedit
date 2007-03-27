@@ -36,12 +36,13 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
     private JTControlAdapter cutoffAdapter;
     private JTControlAdapter resonanceAdapter;
     private JTControlAdapter typeAdapter;
+    private JTControlAdapter slopeAdapter;
 
     public JTFilterEDisplay(JTContext context)
     {
         super(context);
         
-        filterE = new FilterE();
+        filterE = new FilterE();        
     }
 
     protected void paintDynamicLayer(Graphics2D g)
@@ -72,6 +73,11 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
         return filterE.getType();
     }
     
+    public int getSlope()
+    {
+        return filterE.getSlope();
+    }
+    
     public void setCutoff(float value)
     {
         if (getCutoff() != value)
@@ -99,6 +105,15 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
         }
     }
     
+    public void setSlope(int value)
+    {
+        if (getSlope() != value)
+        {
+            filterE.setSlope(value);
+            repaint();
+        }
+    }
+    
     public JTControlAdapter getCutoffAdapter()
     {
         return cutoffAdapter;
@@ -112,6 +127,11 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
     public JTControlAdapter getTypeAdapter()
     {
         return typeAdapter;
+    }
+    
+    public JTControlAdapter getSlopeAdapter()
+    {
+        return slopeAdapter;
     }
 
     public void setCutoffAdapter(JTControlAdapter adapter)
@@ -161,6 +181,22 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
             updateType();
         }
     }
+    
+    public void setSlopeAdapter(JTControlAdapter adapter)
+    {
+        JTControlAdapter oldAdapter = this.slopeAdapter;
+        
+        if (oldAdapter != adapter)
+        {
+            if (oldAdapter != null)
+                oldAdapter.setChangeListener(null);
+            this.slopeAdapter = adapter;
+            if (adapter != null)
+                adapter.setChangeListener(this);
+            
+            updateSlope();
+        }
+    }
 
     protected void updateCutoff()
     {
@@ -177,7 +213,14 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
     protected void updateType()
     {
         if (typeAdapter != null)
-            setType(typeAdapter.getValue()-typeAdapter.getMinValue());
+            setType(typeAdapter.getValue());
+    }
+    
+    protected void updateSlope()
+    {
+    	if (slopeAdapter != null){    		
+    		setSlope(slopeAdapter.getValue());
+    	}
     }
 
     public void stateChanged(ChangeEvent e)
@@ -195,6 +238,12 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
         if (e.getSource() == typeAdapter)
         {
             updateType();
+            return;
+        }
+        
+        if (e.getSource() == slopeAdapter)
+        {
+            updateSlope();
             return;
         }
     }

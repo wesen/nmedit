@@ -23,11 +23,15 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 
 public class FilterE extends Curve {
-	int type =1; // 
+	int type =2; // 
 	float cutOff =0.5f;
 	
-	float resAmplitude = 0.4f;
-	float resonance= resAmplitude; //compirsed between 0 and res
+	float resAmplitude = 0.4f;			
+	float resonance = 0;
+	
+	int slope = 0; // 0 = 12 db, 1 = 24 db
+	
+
 	public FilterE(){
 		super(7);
 		
@@ -53,105 +57,129 @@ public class FilterE extends Curve {
         return new FilterIterator(at,points,bounds);
     }
 	
-	
-	
 	private void update()
 	{
 		switch(type){
 		//high pass
-			case 0:
-				points[1].setLocation(cutOff-0.2f, 1.1f);
-				//angle going from 70 to 0 with resonance going from 0 to resAmplitude
+			case 1:
+				points[1].setLocation(cutOff-0.5f+slope*0.25f, 1.1f);
 				
-				points[2].setLocation(cutOff,this.resonance);
+				points[2].setLocation(cutOff,resAmplitude - resonance*resAmplitude*.5f);
 				points[2].setPoint_type(PathIterator.SEG_CUBICTO);
 				points[2].setCurve_type(EXP);
-				//angle going from 180 to 100 with resonance going from 1 to resAmplitude/2
-				float angle = 180f+ (this.resonance - resAmplitude)/resAmplitude*160f;	
-				points[2].setBezier(points[1].getX(),points[1].getY(),0.1f,0.05f,-70,angle);
+
+				
+				float angleSlope = -70+40*slope;						 									
+				float angle = 180f  - 80f* resonance; 
+				points[2].setBezier(points[1].getX(),points[1].getY(),0.05f,0.2f+0.1f*resonance,angleSlope,angle);
 								
-				points[3].setLocation(cutOff+0.2f,resAmplitude*2-this.resonance);
+				points[3].setLocation(cutOff+0.1f+slope*.15f,resAmplitude + resAmplitude*.5f*resonance);
 				points[3].setPoint_type(PathIterator.SEG_CUBICTO);
 				points[3].setCurve_type(EXP);
-//				angle going from 0 to 70? with resonance going from 1 to resAmplitude/2
-				angle =  (resAmplitude - this.resonance)/resAmplitude*140f;			 							
-				points[3].setBezier(points[2].getX(),points[2].getY(),0.1f,0.05f,angle,180f);
+
+				angle =  80f * resonance;		 							
+				points[3].setBezier(points[2].getX(),points[2].getY(),0.05f*resonance,0.05f+0.05f*resonance,angle,180f);
 				
-				points[4].setLocation(1.5f,resAmplitude*2-this.resonance);
+				points[4].setLocation(1.5f,resAmplitude + resAmplitude*.5f*resonance);
 				points[4].setPoint_type(PathIterator.SEG_LINETO);
 				points[4].setCurve_type(LIN);
 				
 				points[5].setLocation(1.1f,1.1f);
+				points[6].setLocation(-0.1f,1.1f);
 				break;
 			//low pass
-			case 1:												
-				points[1].setLocation(-0.3f,resAmplitude*2-this.resonance);
-				points[2].setLocation(-0.2f+cutOff,resAmplitude*2-this.resonance);
+			case 3:				
+				points[1].setLocation(-0.3f,resAmplitude + resAmplitude*.5f*resonance);
+				points[2].setLocation(-0.1f+cutOff-slope*.15f,resAmplitude + resAmplitude*.5f*resonance);
 				points[2].setPoint_type(PathIterator.SEG_LINETO);
 				points[2].setCurve_type(LIN);
 				
-				points[3].setLocation(cutOff,this.resonance);
+				points[3].setLocation(cutOff,resAmplitude - resonance*resAmplitude*.5f);
 				points[3].setPoint_type(PathIterator.SEG_CUBICTO);
 				points[3].setCurve_type(EXP);
-				//angle going from 180 to 100 with resonance going from 1 to resAmplitude/2
-				angle = 180f+ (this.resonance - resAmplitude)/resAmplitude*160f;
-				points[3].setBezier(points[2].getX(),points[2].getY(),0.1f,0.05f,0f,angle);
+
+				angle = 180f - 80f*resonance; 
+				points[3].setBezier(points[2].getX(),points[2].getY(),0.05f+0.05f*resonance,0.05f*resonance,0f,angle);
 				
-				points[4].setLocation(0.3f+cutOff, 1.1f);
+				points[4].setLocation(0.5f+cutOff-slope*0.25f, 1.1f );
 				points[4].setPoint_type(PathIterator.SEG_CUBICTO);		
 				points[4].setCurve_type(LOG);
-//				angle going from 70 to 0 with resonance going from 1 to resAmplitude/2
-				angle = (resAmplitude - this.resonance )/resAmplitude*140f;
-				//angle going from 0 to 70 with resonance going from 0 to resAmplitude						 		
-				points[4].setBezier(points[3].getX(),points[3].getY(),0.1f,0.1f,angle,-110);
+				angle = (85f-15f*slope)*resonance;
+				
+				angleSlope = -150+40*slope;						 		
+				points[4].setBezier(points[3].getX(),points[3].getY(),0.2f+0.1f*resonance,0.05f,angle,angleSlope);
+				points[5].setLocation(1.1f,1.1f);
+				points[6].setLocation(-0.1f,1.1f);
 				break;
 			//band pass
 			case 2:
+				//compute left end of the curve
+				float cut;
+				if(slope == 0)
+				{
+					cut = -0.65f+cutOff+0.12f*resonance;
+				} else
+				{
+					cut = -0.45f+ cutOff;
+				}
+				
 				points[1].setLocation(-0.1f,1.1f);
-				points[2].setLocation(-0.45f+cutOff,1.1f);
+				points[2].setLocation(cut,1.1f);
 				points[2].setPoint_type(PathIterator.SEG_LINETO);
 				points[2].setCurve_type(LIN);
-				
-				float l = 0.25f;
-				points[3].setLocation(cutOff,this.resonance);
+								
+				points[3].setLocation(cutOff,resAmplitude - resonance*resAmplitude*.5f);
 				points[3].setPoint_type(PathIterator.SEG_CUBICTO);
 				points[3].setCurve_type(EXP);
-				angle = -70 + (this.resonance - resAmplitude)/resAmplitude*40f;
-//				angle going from 180 to 100 with resonance going from 1 to resAmplitude/2				
-				float angle2 = 180f+ (this.resonance - resAmplitude)/resAmplitude*160f;
-				points[3].setBezier(points[2].getX(),points[2].getY(),l,l,angle,angle2);
 				
-				points[4].setLocation(0.45f+cutOff, 1.1f);
+				float l = 0.25f; 
+				float l2 = slope == 1 ? 0.25f : 0.25f+0.15f*resonance;
+				angle = -50f - 20f*resonance - 20*slope;				
+				float angle2 = 180f - 80f*resonance;
+				points[3].setBezier(points[2].getX(),points[2].getY(),l,l2,angle,angle2);
+				
+				// curve is symetric w.r.t. cutoff = 0.5.
+				points[4].setLocation(1-cut, 1.1f);
 				points[4].setPoint_type(PathIterator.SEG_CUBICTO);
 				points[4].setCurve_type(EXP);
-				//angle going from 0 to 80 with resonance going from 1 to resAmplitude/2
-				angle = (this.resonance - resAmplitude)/resAmplitude*-160f;
-				angle2 = -110 - (this.resonance - resAmplitude)/resAmplitude*40f;
-				points[4].setBezier(points[3].getX(),points[3].getY(),l,l,angle,angle2);
+								
+				points[4].setBezier(points[3].getX(),points[3].getY(),l2,l,180 - angle2, 180 - angle);
+
+				points[5].setLocation(1.1f,1.1f);
+				points[6].setLocation(-0.1f,1.1f);
 				break;
-			case 3:
-				points[1].setLocation(-0.1f,resAmplitude);
-				points[2].setLocation(-0.45f+cutOff,resAmplitude);
+			// band reject
+			case 0:
+				points[1].setLocation(-0.5f,resAmplitude + resAmplitude*.25f*resonance);
+				points[2].setLocation(-0.45f+(0.15f-0.1f*slope)*resonance+cutOff-slope*0.05f,resAmplitude + resAmplitude*.25f*resonance);
 				points[2].setPoint_type(PathIterator.SEG_LINETO);
 				points[2].setCurve_type(LIN);
 				
-				l = 0.25f;
-				points[3].setLocation(cutOff,1 + resAmplitude - this.resonance);
+				l = 0.2f;
+				float res;
+				if(slope == 1){
+					l = 0.2f;
+					l2 = 0.2f;
+					res = 1 + resAmplitude/2*(1- resonance);
+				} else{
+					l = 0.1f;
+					l2 = 0.5f;
+					res = 1;
+				}
+				 
+				 
+				points[3].setLocation(cutOff,res);
 				points[3].setPoint_type(PathIterator.SEG_CUBICTO);
 				points[3].setCurve_type(EXP);
-				angle = -70 + (this.resonance - resAmplitude)/resAmplitude*40f;
-//				angle going from 180 to 100 with resonance going from 1 to resAmplitude/2				
-				angle2 = 180f+ (this.resonance - resAmplitude)/resAmplitude*160f;
-				points[3].setBezier(points[2].getX(),points[2].getY(),l,l,0,-90);
 				
-				points[4].setLocation(0.45f+cutOff, resAmplitude);
+				points[3].setBezier(points[2].getX(),points[2].getY(),l,l2,0,-90);
+				
+				points[4].setLocation(0.45f-(0.15f-0.1f*slope)*resonance+cutOff+slope*0.05f, resAmplitude + resAmplitude*.25f*resonance);
 				points[4].setPoint_type(PathIterator.SEG_CUBICTO);
 				points[4].setCurve_type(EXP);
-				//angle going from 0 to 80 with resonance going from 1 to resAmplitude/2
-				angle = (this.resonance - resAmplitude)/resAmplitude*-160f;
-				angle2 = -110 - (this.resonance - resAmplitude)/resAmplitude*40f;
-				points[4].setBezier(points[3].getX(),points[3].getY(),l,l,-90,180);
-				points[5].setLocation(1.1f,resAmplitude);
+				
+				points[4].setBezier(points[3].getX(),points[3].getY(),l2,l,-90,180);
+				points[5].setLocation(1.1f,resAmplitude + resAmplitude*.25f*resonance);
 				points[6].setLocation(1.1f,1.1f);
 				break;
 				
@@ -159,13 +187,11 @@ public class FilterE extends Curve {
 	}
 	
 	public float getResonance() {		
-		return (this.resonance -resAmplitude) * 2/resAmplitude;
+		return resonance;
 	}
 	
-	public void setResonance(float resonance) {
-		// this.resonance goes from resAmplitute to resAmplitude/2 when resonance goes from 0 to 1
-		this.resonance = resAmplitude  - resonance*resAmplitude*0.5f;
-		
+	public void setResonance(float resonance) {		
+		this.resonance = resonance;
 		update();				
 	}
 	
@@ -191,4 +217,12 @@ public class FilterE extends Curve {
 		
 	}
 		
+	public int getSlope() {
+		return slope;
+	}
+
+	public void setSlope(int slope) {
+		this.slope = slope;
+		update();
+	}
 }

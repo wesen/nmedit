@@ -94,6 +94,7 @@ public final class ParameterDescriptorHelper
         }
         catch (InvalidDescriptorException e)
         {
+        	System.out.println(e);
             return null;
         }
     }

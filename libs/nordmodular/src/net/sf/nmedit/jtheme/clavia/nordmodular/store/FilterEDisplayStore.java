@@ -37,6 +37,7 @@ public class FilterEDisplayStore extends ControlStore
 
     protected ParameterDescriptorHelper resonanceParameterHelper;
     protected ParameterDescriptorHelper typeParameterHelper;
+    protected ParameterDescriptorHelper slopeParameterHelper;
     
     protected FilterEDisplayStore(Element element)
     {
@@ -53,6 +54,8 @@ public class FilterEDisplayStore extends ControlStore
         parameterDescriptorHelper = ParameterDescriptorHelper.createHelper(element.getChild("cutoff"));
         resonanceParameterHelper = ParameterDescriptorHelper.createHelper(element.getChild("resonance"));
         typeParameterHelper = ParameterDescriptorHelper.createHelper(element.getChild("type"));
+        slopeParameterHelper = ParameterDescriptorHelper.createHelper(element.getChild("slope"));
+        
     }
 
     @Override
@@ -70,6 +73,7 @@ public class FilterEDisplayStore extends ControlStore
         Parameter cutoff = parameterDescriptorHelper.lookup(module);
         Parameter resonance = resonanceParameterHelper.lookup(module);
         Parameter type = typeParameterHelper.lookup(module);
+        Parameter slope = slopeParameterHelper.lookup(module);
         
         JTFilterEDisplay disp = (JTFilterEDisplay) component;
         
@@ -79,6 +83,9 @@ public class FilterEDisplayStore extends ControlStore
             disp.setResonanceAdapter(new JTParameterControlAdapter(resonance));
         if (type != null)
             disp.setTypeAdapter(new JTParameterControlAdapter(type));
+        if (slope != null)
+            disp.setSlopeAdapter(new JTParameterControlAdapter(slope));
+                   
     }
     
     protected void link2(JTContext context, JTComponent component, Module module, Parameter parameter)

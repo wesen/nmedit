@@ -69,9 +69,9 @@ import java.awt.geom.PathIterator;
         
         private void exp(float srcX, float srcY, float destX, float destY, float coords[])
         {
-            coords[0] = (destX-srcX)/2+srcX; // ctrl 1
-            coords[1] = srcY - (destY-srcY)*-.3f;
-            coords[2] = destX-(destX-srcX)*.3f; // ctrl 2
+        	coords[0] = (destX-srcX)/2+srcX; // ctrl 1
+            coords[1] = srcY;
+            coords[2] = destX; // ctrl 2
             coords[3] = (destY-srcY)/2+srcY;
             coords[4] = destX; // destination
             coords[5] = destY;
@@ -79,7 +79,7 @@ import java.awt.geom.PathIterator;
         
         private void log(float srcX, float srcY, float destX, float destY, float coords[])
         {
-            coords[0] = srcX; // ctrl 1
+        	coords[0] = srcX; // ctrl 1
             coords[1] = (srcY-destY)/2+destY;
             coords[2] = (destX-srcX)/2+srcX; // ctrl 2
             coords[3] = destY;
