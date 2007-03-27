@@ -5,6 +5,8 @@ Message % 8 :=
   #messageType=0xc0 => BankChange$data
   #messageType=0xf0 => Sysex$data
   #messageType=0xfe => AliveSignal$data
+  #messageType=0x80 => NoteOff$data
+  #messageType=0x90 => NoteOn$data
   ;
 
 BankChange % 8 :=
@@ -67,6 +69,14 @@ AllDump % 8 :=
   ;
 
 AliveSignal % 8 :=
+  ;
+
+NoteOn % 8 :=
+  note:8 velocity:8
+  ;
+
+NoteOff % 8 :=
+  note:8 release:8
   ;
 
 ProgramDumpRequest % 8 :=
