@@ -40,10 +40,21 @@ public class ModuleDescriptions implements Iterable<ModuleDescriptor>
     private Map<String,Type> types = new HashMap<String, Type>();
     private FormatterRegistry formatterRegistry = new FormatterRegistry();
     private ArrayMap<ModuleDescriptor> moduleMap = new ArrayMap<ModuleDescriptor>();
+    private ClassLoader loader;
     
     public ModuleDescriptions()
     {
         formatterRegistry.install(new FICType(this));
+    }
+    
+    public ClassLoader getModuleDescriptionsClassLoader()
+    {
+        return loader;
+    }
+    
+    public void setModuleDescriptionsClassLoader(ClassLoader loader)
+    {
+        this.loader = loader;
     }
 
     public Signal getDefinedSignals()
