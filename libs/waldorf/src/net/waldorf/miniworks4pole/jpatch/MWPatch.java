@@ -1,3 +1,21 @@
+/* Copyright (C) 2006 Christian Schneider
+ * 
+ * This file is part of Nomad.
+ * 
+ * Nomad is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * Nomad is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Nomad; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package net.waldorf.miniworks4pole.jpatch;
 
 import java.util.Iterator;
@@ -19,11 +37,17 @@ public class MWPatch implements Patch
     
     private ModuleDescriptions moduleDescriptions;
     private MWContainer container;
+    private int programNumber = -1;
 
     public MWPatch(ModuleDescriptions moduleDescriptions)
     {
         this.moduleDescriptions = moduleDescriptions;
         container = new MWContainer(this, new DefaultModule(moduleDescriptions.get(0)));
+    }
+
+    public void setProgramNumber(int programNumber)
+    {
+        this.programNumber = programNumber;
     }
 
     public DefaultModule getMiniworksModule()
@@ -38,7 +62,7 @@ public class MWPatch implements Patch
 
     public String getName()
     {
-        return null;
+        return (programNumber>=1&&programNumber<40)? "P."+programNumber:"P.?";
     }
 
     public String getVersion()
