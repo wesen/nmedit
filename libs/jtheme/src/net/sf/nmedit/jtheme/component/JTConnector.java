@@ -27,11 +27,13 @@ import java.awt.Container;
 import net.sf.nmedit.jpatch.Connector;
 import net.sf.nmedit.jpatch.ConnectorDescriptor;
 import net.sf.nmedit.jpatch.Signal;
+import net.sf.nmedit.jpatch.event.ConnectorListener;
+import net.sf.nmedit.jpatch.event.ConnectorStateEvent;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.plaf.JTConnectorUI;
 
-public class JTConnector extends JTComponent
+public class JTConnector extends JTComponent implements ConnectorListener
 {
  
     public static final String uiClassID = "connector";
@@ -69,12 +71,19 @@ public class JTConnector extends JTComponent
     {
         if (this.connector != c)
         {
+            if (this.connector != null)
+                this.connector.removeConnectorListener(this);
+            
             this.connector = c;
             
             if (c != null)
+            {
+                c.addConnectorListener(this);
                 setConnectorDescriptor(c.getDescriptor());
+            }
             else
                 setConnectorDescriptor(null);
+            repaint();
         }
     }
     
@@ -85,7 +94,13 @@ public class JTConnector extends JTComponent
 
     public void setConnectorDescriptor(ConnectorDescriptor descriptor)
     {
+        setToolTipText(null);
         this.connectorDescriptor = descriptor;
+       
+        if (descriptor != null)
+        {
+            setToolTipText(descriptor.getComponentName());
+        }
     }
     
     public ConnectorDescriptor getConnectorDescriptor()
@@ -123,6 +138,11 @@ public class JTConnector extends JTComponent
             }
         }
         return null;
+    }
+
+    public void connectorStateChanged(ConnectorStateEvent e)
+    {
+        repaint();
     }
     
 }
