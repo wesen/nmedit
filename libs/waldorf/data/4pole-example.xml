@@ -84,101 +84,130 @@
 
   <!-- LFO envelope -->
   <parameter key="16" name="Speed"  index="0">
+    <attribute name="message-id" value="LFOSpeed" />
     <attribute name="controller" type="integer" value="24" />
   </parameter>
   <parameter key="17" name="Speed Mod. Amount" formatter="offset(-64)" defaultValue="64" index="1">
+    <attribute name="message-id" value="LFOSpeedModAmount" />
     <attribute name="controller" type="integer" value="26" />
   </parameter>
   <parameter key="18" name="Shape" maxValue="4" formatter="type('tmLFOShape')"  index="2">
+    <attribute name="message-id" value="LFOShape" />
     <attribute name="controller" type="integer" value="25" />
   </parameter>
   <parameter key="19" name="Speed Modulation Source" maxValue="15"  index="3" formatter="type('tmModulationSource')" >
+    <attribute name="message-id" value="LFOSpeedModulationSource" />
     <attribute name="controller" type="integer" value="27" />
   </parameter>
   <!-- /LFO -->
       
   <!-- vcf envelope -->
   <parameter key="6" name="Attack" index="4">
+    <attribute name="message-id" value="VCFEnvelopeAttack" />
     <attribute name="controller" type="integer" value="14" />
   </parameter>
   <parameter key="7" name="Decay"  index="5">
+    <attribute name="message-id" value="VCFEnvelopeDecay" />
     <attribute name="controller" type="integer" value="15" />
   </parameter>
   <parameter key="8" name="Sustain" defaultValue="127" index="6">
+    <attribute name="message-id" value="VCFEnvelopeSustain" />
     <attribute name="controller" type="integer" value="16" />
   </parameter>
   <parameter key="9" name="Release"  index="7">
+    <attribute name="message-id" value="VCFEnvelopeRelease" />
     <attribute name="controller" type="integer" value="17" />
   </parameter>
   <parameter key="14" name="VCF Envelope Cutoff Amount" defaultValue="64" formatter="offset(-64)"  index="8" >
+    <attribute name="message-id" value="VCFEnvlopeCutoffAmount" />
     <attribute name="controller" type="integer" value="22" />
   </parameter>
   <!-- /vcf -->
 
   <!-- vca envelope -->
   <parameter key="10" name="Attack"  index="9">
+    <attribute name="message-id" value="VCAEnvelopeAttack" />
     <attribute name="controller" type="integer" value="18" />
   </parameter>
   <parameter key="11" name="Decay"  index="10">
+    <attribute name="message-id" value="VCAEnvelopeDecay" />
     <attribute name="controller" type="integer" value="19" />
   </parameter>
   <parameter key="12" name="Sustain" defaultValue="127" index="11">
+    <attribute name="message-id" value="VCAEnvelopeSustain" />
     <attribute name="controller" type="integer" value="20" />
   </parameter>
   <parameter key="13" name="Release"  index="12">
+    <attribute name="message-id" value="VCAEnvelopeRelease" />
     <attribute name="controller" type="integer" value="21" />
   </parameter>
   <parameter key="15" name="VCA Envelope Volume Amount" formatter="offset(-64)" defaultValue="64" index="13">
+    <attribute name="message-id" value="VCAEnvlopeVolumeAmount" />
     <attribute name="controller" type="integer" value="23" />
   </parameter>
   <!-- /vca -->
-  
+        
   <parameter key="20" name="Cutoff Modulation Amount" formatter="offset(-64)"  index="14" defaultValue="64" >
+    <attribute name="message-id" value="CutoffModulationAmount" />
     <attribute name="controller" type="integer" value="70" />
   </parameter>
   <parameter key="21" name="Resonance Modulation Amount" formatter="offset(-64)"  index="15" defaultValue="64" >
+    <attribute name="message-id" value="ResonanceModulationAmount" />
     <attribute name="controller" type="integer" value="72" />
   </parameter>
   <parameter key="24" name="Cutoff Modulation Source" maxValue="15" index="16" formatter="type('tmModulationSource')" >
+    <attribute name="message-id" value="CutoffModulationSource" />
     <attribute name="controller" type="integer" value="71" />
   </parameter>
   <parameter key="25" name="Resonance Modulation Source" maxValue="15" index="17" formatter="type('tmModulationSource')" >
+    <attribute name="message-id" value="ResonanceModulationSource" />
     <attribute name="controller" type="integer" value="73" />
   </parameter>
   <parameter key="28" name="Cutoff"  index="18">
+    <attribute name="message-id" value="Cutoff" />
     <attribute name="controller" type="integer" value="78" />
   </parameter>
   <parameter key="29" name="Resonance"  index="19">
+    <attribute name="message-id" value="Resonance" />
     <attribute name="controller" type="integer" value="79" />
   </parameter>
 
   <parameter key="22" name="Volume Modulation Amount" formatter="offset(-64)"  index="20">
+    <attribute name="message-id" value="VolumeModulationAmount" />
     <attribute name="controller" type="integer" value="74" />
   </parameter>
   <parameter key="26" name="Volume Modulation Source" maxValue="15"  index="21" formatter="type('tmModulationSource')" >
+    <attribute name="message-id" value="VolumeModulationSource" />
     <attribute name="controller" type="integer" value="43" />
   </parameter>
   <parameter key="30" name="Volume" index="22" defaultValue="64">
+    <attribute name="message-id" value="Volume" />
     <attribute name="controller" type="integer" value="9" />
   </parameter>
 
   <parameter key="23" name="Panning Modulation Amount" formatter="offset(-64)"  index="23">
+    <attribute name="message-id" value="PanningModulationAmount" />
     <attribute name="controller" type="integer" value="76" />
   </parameter>
   <parameter key="27" name="Panning Modulation Source" maxValue="15" index="24" formatter="type('tmModulationSource')" >
+    <attribute name="message-id" value="PanningModulationSource" />
     <attribute name="controller" type="integer" value="45" />
   </parameter>
   <parameter key="31" name="Panning"  index="25"  formatter="offset(-64)" defaultValue="64"  >
+    <attribute name="message-id" value="Panning" />
     <attribute name="controller" type="integer" value="10" />
   </parameter>
 
   <parameter key="32" name="Gate Time" format-id="GateTimeFormatter"  index="26">
+    <attribute name="message-id" value="GateTime" />
     <attribute name="controller" type="integer" value="80" />
   </parameter>
   <parameter key="33" name="Trigger Source" maxValue="2" formatter="type('tmTriggerSource')"  index="27">
+    <attribute name="message-id" value="TriggerSource" />
     <attribute name="controller" type="integer" value="81" />
   </parameter>
   <parameter key="34" name="Trigger Mode" maxValue="1" formatter="type('tmTriggerMode')"  index="28">
+    <attribute name="message-id" value="TriggerMode" />
     <attribute name="controller" type="integer" value="82" />
   </parameter>
 
