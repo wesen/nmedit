@@ -44,7 +44,7 @@ import javax.swing.event.ChangeListener;
 
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTControl;
-import net.sf.nmedit.jtheme.component.swing.JTLazyActionMap;
+import net.sf.nmedit.nmutils.swing.NMLazyActionMap;
 
 public abstract class JTBasicControlUI extends JTControlUI
 {
@@ -180,7 +180,7 @@ public abstract class JTBasicControlUI extends JTControlUI
         protected double pressedValue;
         protected int pressedModifier;
 
-        public static void loadActionMap(JTLazyActionMap map) 
+        public static void loadActionMap(NMLazyActionMap map) 
         {  
             map.put(new Actions(INCREASE));
             map.put(new Actions(DECREASE));
@@ -241,7 +241,7 @@ public abstract class JTBasicControlUI extends JTControlUI
         
         public void installKeyboardActions( JTControl control )
         {
-            JTLazyActionMap.installLazyActionMap(control.getContext().getUIDefaults(), 
+            NMLazyActionMap.installLazyActionMap(control.getContext().getUIDefaults(), 
                     control, BasicControlListener.class, knobActionMapKey);
 
             InputMap im = createInputMapWhenFocused();
