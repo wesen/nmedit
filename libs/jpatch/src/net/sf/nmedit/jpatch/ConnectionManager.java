@@ -157,14 +157,14 @@ public interface ConnectionManager
      * @param a
      * @param b
      */
-    void connect(Connector a, Connector b);
+    boolean connect(Connector a, Connector b);
 
     /**
      * Removes a direct connection between the specified connectors.
      * @param a
      * @param b
      */
-    void disconnect(Connector a, Connector b);
+    boolean disconnect(Connector a, Connector b);
     
     /**
      * Adds a connection listener which want's to be notified when connections are created or removed

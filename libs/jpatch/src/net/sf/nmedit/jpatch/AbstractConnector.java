@@ -110,14 +110,14 @@ public abstract class AbstractConnector extends AbstractComponent implements Con
         return getConnectionManager().isConnected(this, c);
     }
 
-    public void connectWith( Connector c ) 
+    public boolean connectWith( Connector c ) 
     {
-        getConnectionManager().connect(this, c);
+        return getConnectionManager().connect(this, c);
     }
 
-    public void disconnectFrom( Connector c ) 
+    public boolean disconnectFrom( Connector c ) 
     {
-        getConnectionManager().disconnect(this, c);
+        return getConnectionManager().disconnect(this, c);
     }
 
 }

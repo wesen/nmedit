@@ -109,13 +109,13 @@ public interface Connector extends Composite
      * Same as <code>getConnectionManager().connect(this, c);</code>
      * @see ConnectionManager#connect(Connector, Connector)
      */
-    void connectWith(Connector c);
+    boolean connectWith(Connector c);
 
     /**
      * Same as <code>getConnectionManager().disconnect(this, c);</code>
      * @see ConnectionManager#disconnect(Connector, Connector)
      */
-    void disconnectFrom(Connector c);
+    boolean disconnectFrom(Connector c);
     
     /**
      * Returns the source/parent connector
