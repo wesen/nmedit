@@ -1,3 +1,21 @@
+/* Copyright (C) 2006 Christian Schneider
+ * 
+ * This file is part of Nomad.
+ * 
+ * Nomad is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * Nomad is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Nomad; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package net.waldorf.miniworks4pole.jsynth;
 
 import javax.sound.midi.MidiUnavailableException;
@@ -13,6 +31,7 @@ import net.sf.nmedit.jsynth.SlotManager;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 import net.sf.nmedit.jsynth.midi.MidiPort;
+import net.sf.nmedit.jsynth.worker.RequestPatchWorker;
 import net.waldorf.miniworks4pole.jprotocol.MWListenerSupport;
 import net.waldorf.miniworks4pole.jprotocol.MiniworksMidiMessage;
 import net.waldorf.miniworks4pole.jprotocol.WProtocol;
@@ -153,6 +172,10 @@ public class Miniworks4Pole extends AbstractSynthesizer
         
         fireSynthesizerStateChanged();
         slotManager.setSlots(new MWSlot[]{new MWSlot(this)});
+        
+        RequestPatchWorker worker = slotManager.getSlot(0).createRequestPatchWorker();
+        
+        worker.requestPatch();
     }
     
     private void disconnect()
