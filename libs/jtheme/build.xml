@@ -19,7 +19,11 @@
         <pathelement location="../java_depencies/jdom/jdom.jar"/>
         <pathelement location="../java_depencies/sac/sac.jar"/>
         
-        <pathelement location="../java_depencies/batik/batik-transcoder.jar"/>
+        <pathelement location="../java_depencies/commons-logging/commons-logging.jar"/>
+
+      	<pathelement location="../java_depencies/jdom/jdom.jar"/>
+      	
+      	<pathelement location="../java_depencies/batik/batik-transcoder.jar"/>
         <pathelement location="../java_depencies/batik/batik-dom.jar"/>
         <pathelement location="../java_depencies/batik/batik-css.jar"/>
         <pathelement location="../java_depencies/batik/batik-parser.jar"/>
