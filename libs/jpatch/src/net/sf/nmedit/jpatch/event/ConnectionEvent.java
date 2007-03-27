@@ -76,4 +76,9 @@ public class ConnectionEvent extends JPatchEvent
         this.destination = destination;
     }
     
+    public String toString()
+    {
+        return getClass().getName()+"[id="+id+",src="+source+",dst="+destination+"]";
+    }
+    
 }
