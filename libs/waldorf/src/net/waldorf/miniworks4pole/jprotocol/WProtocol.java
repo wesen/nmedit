@@ -126,6 +126,12 @@ public class WProtocol //extends NmProtocolST
             {
                 return new MiniworksMidiMessage(data, MiniworksMidiMessage.MESSAGE_TYPE_ALIVE, -1,bdata);
             }
+            case MiniworksMidiMessage.NOTE_ON:
+                // no op TODO trigger LEDS
+                return null;
+            case MiniworksMidiMessage.NOTE_OFF:
+                // no op
+                return null;
             default:
                 throw new SynthException("unknown packet: "+data+" (name="+data.getName()+")");
         }

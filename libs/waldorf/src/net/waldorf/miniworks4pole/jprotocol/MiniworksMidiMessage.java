@@ -33,6 +33,8 @@ public class MiniworksMidiMessage
     public static final int MESSAGE_TYPE_CONTROLCHANGE = 0xB0;
     public static final int MESSAGE_TYPE_SYSEX = 0xF0;
     public static final int MESSAGE_TYPE_ALIVE = 0xFE;
+    public static final int NOTE_OFF = 0x80;
+    public static final int NOTE_ON = 0x90;
 
     // message type SYSEX: dump types
     public static final int DUMP_TYPE_PROGRAM_DUMP = 0x00;
@@ -215,7 +217,7 @@ public class MiniworksMidiMessage
             bs.append(0x3E, 8);
             bs.append(0x04, 8);
             bs.append(deviceId, 8);
-            bs.append(dumpType, 8); 
+            bs.append(dumpType, 8);
             if (dumpType != DUMP_TYPE_ALL_DUMP)
                 bs.append(programNo, 8);
             bs.append(0xF7, 8);
