@@ -60,12 +60,16 @@ import javax.swing.UIDefaults;
 import javax.swing.plaf.ComponentUI;
 
 import net.sf.nmedit.jpatch.ConnectionManager;
+import net.sf.nmedit.jpatch.InvalidDescriptorException;
 import net.sf.nmedit.jpatch.Module;
+import net.sf.nmedit.jpatch.ModuleContainer;
+import net.sf.nmedit.jpatch.ModuleDescriptor;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
+import net.sf.nmedit.jtheme.dnd.JTDragDrop;
 
 public class JTModuleContainerUI extends ComponentUI
 {
@@ -476,9 +480,36 @@ public class JTModuleContainerUI extends ComponentUI
 
             component.removeMouseListener(this);
         }
+        
+        protected JTModuleContainer getContainer()
+        {
+            return getModuleContainer();
+        }
 
+        protected boolean isMDDropOk(int action, Transferable t)
+        {
+            return
+            (action & DnDConstants.ACTION_COPY) >0
+            && getContainer().getModuleContainer() != null
+            && JTDragDrop.isModuleDescriptorFlavorSupported(t);
+        }
+        
         public void dragEnter(DropTargetDragEvent dtde)
         {
+            if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable()))
+            {
+                dtde.acceptDrag(DnDConstants.ACTION_COPY);
+                return;
+            }
+            
+            if (dtde.getTransferable().isDataFlavorSupported(ModuleSelectionFlavor))
+            {
+                dtde.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
+                return;
+            }
+                
+            dtde.rejectDrag();
+            
             // no op
             //dragOver(dtde);
         }
@@ -490,6 +521,12 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void dragOver(DropTargetDragEvent dtde)
         {
+            if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable()))
+            {
+                dtde.acceptDrag(DnDConstants.ACTION_COPY);
+                return ;
+            }
+            
             /*if (dtde.getCurrentDataFlavorsAsList().contains(ModuleDragSource.ModuleInfoFlavor))
             {
                 dtde.acceptDrag(DnDConstants.ACTION_COPY);
@@ -577,6 +614,36 @@ public class JTModuleContainerUI extends ComponentUI
                 }
                 dtde.dropComplete(true);
             } else  */
+            
+
+            if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable()))
+            {
+                ModuleContainer mc = getModuleContainer().getModuleContainer();
+                ModuleDescriptor md = JTDragDrop.getModuleDescriptor(dtde.getTransferable());
+                if (md == null || mc == null)
+                {
+                    dtde.rejectDrop();
+                    return;
+                }
+                
+                Module module;
+                try
+                {
+                    module = mc.createModule(md);
+                }
+                catch (InvalidDescriptorException e)
+                {
+                    e.printStackTrace();
+                    dtde.rejectDrop();
+                    return;
+                }
+
+                module.setScreenLocation(dtde.getLocation());
+                mc.add(module);
+                
+                dtde.acceptDrop(DnDConstants.ACTION_COPY);
+                return;
+            }
             
             if (dtde.isDataFlavorSupported(DnDHandler.ModuleSelectionFlavor)
                     && dtde.isLocalTransfer())
@@ -689,7 +756,20 @@ public class JTModuleContainerUI extends ComponentUI
             JTModule[] modules = tdata.getModules();
             for (JTModule module: modules)
             {
-                module.setLocation(module.getX()+p.x, module.getY()+p.y);
+                
+                int x = module.getX()+p.x;
+                int y = module.getY()+p.y;
+                
+                Module internal = module.getModule();
+                if (internal != null)
+                {
+                    internal.setScreenLocation(x, y);
+                    module.setLocation(internal.getScreenLocation());
+                }
+                else
+                {
+                    module.setLocation(x, y);
+                }
             }
             
             JTCableManager cman =
@@ -722,6 +802,19 @@ public class JTModuleContainerUI extends ComponentUI
         public void dropActionChanged(DropTargetDragEvent dtde)
         {
             // no op
+            if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable()))
+            {
+                dtde.acceptDrag(DnDConstants.ACTION_COPY);
+                return;
+            }
+            
+            if (dtde.getTransferable().isDataFlavorSupported(ModuleSelectionFlavor))
+            {
+                dtde.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
+                return;
+            }
+            
+            dtde.rejectDrag();
         }
 
         protected Set<JTModule> selectionSet = new HashSet<JTModule>();
