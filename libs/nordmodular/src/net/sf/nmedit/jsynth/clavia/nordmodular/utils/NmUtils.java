@@ -45,6 +45,8 @@ import net.sf.nmedit.jnmprotocol.PatchListEntry;
 import net.sf.nmedit.jnmprotocol.PatchListMessage;
 import net.sf.nmedit.jnmprotocol.PatchMessage;
 import net.sf.nmedit.jnmprotocol.RequestPatchMessage;
+import net.sf.nmedit.jnmprotocol.SlotActivatedMessage;
+import net.sf.nmedit.jnmprotocol.SlotsSelectedMessage;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Format;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMConnector;
@@ -96,6 +98,24 @@ public class NmUtils
     {        
         return Integer.toString(((section+1)*100)+(position+1));
     }
+    public static SlotActivatedMessage 
+        createSlotsActivatedMessage(int slot)
+    {
+        SlotActivatedMessage message = new SlotActivatedMessage();
+        message.set("activeSlot", slot);
+        return message;
+    }
+    
+    public static SlotsSelectedMessage createSlotsSelectedMessage(
+            boolean slot0, boolean slot1, boolean slot2, boolean slot3)
+    {
+        SlotsSelectedMessage message = new SlotsSelectedMessage();
+        message.set("slot0Selected", slot0?1:0);
+        message.set("slot1Selected", slot1?1:0);
+        message.set("slot2Selected", slot2?1:0);
+        message.set("slot3Selected", slot3?1:0);
+        return message;
+    }
     
     public static MidiMessage createRequestPatchMessage(int slotId) 
     {
@@ -112,7 +132,7 @@ public class NmUtils
         return msg;
     }
     
-    public MidiMessage createNewModuleMessage(int pid, NMModule module) throws Exception
+    public static MidiMessage createNewModuleMessage(int pid, NMModule module) throws Exception
     {
         NewModuleMessage msg = new NewModuleMessage();
         msg.set("pid", pid);
@@ -155,11 +175,19 @@ public class NmUtils
     {
         // get message instance
         DeleteCableMessage msg = new DeleteCableMessage();
+        msg.set("slot", slotId);
+        msg.set("pid", pId);
 
         // get data
         NMConnector src = a;
         NMConnector dst = b;
 
+        if (dst.isOutput())
+        {
+            src = b; // swap
+            dst = a;
+        }
+        
         // set data
         msg.deleteCable
         (
@@ -167,11 +195,11 @@ public class NmUtils
                 
             dst.getModule().getIndex(), 
             Format.getOutputID(dst.isOutput()),
-            dst.getID(),
+            dst.getDescriptor().getIndex(),
             
             src.getModule().getIndex(), 
             Format.getOutputID(src.isOutput()),
-            src.getID()
+            src.getDescriptor().getIndex()
         );
         
         return msg;
@@ -187,6 +215,13 @@ public class NmUtils
         // get data
         NMConnector src = a;
         NMConnector dst = b;
+        
+        if (dst.isOutput())
+        {
+            src = b; // swap
+            dst = a;
+        }
+        
         int color = src.getConnectionColor().getSignalID();
         
         // set data
@@ -197,11 +232,11 @@ public class NmUtils
             
             dst.getModule().getIndex(), 
             Format.getOutputID(dst.isOutput()),
-            dst.getID(),
+            dst.getDescriptor().getIndex(),
             
             src.getModule().getIndex(), 
             Format.getOutputID(src.isOutput()),
-            src.getID()
+            src.getDescriptor().getIndex()
         );
         
         return msg;
