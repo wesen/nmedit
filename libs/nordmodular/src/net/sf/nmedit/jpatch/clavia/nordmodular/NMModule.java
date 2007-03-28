@@ -72,9 +72,9 @@ public class NMModule implements Cloneable, Module
 
     private String            name;
 
-    private int               x;
+    private int               x = 0;
 
-    private int               y;
+    private int               y = 0;
 
     private int               index;
     
@@ -532,12 +532,17 @@ public class NMModule implements Cloneable, Module
 
     public void setScreenLocation( int x, int y )
     {
-        setLocation(x/255, y/15);
+        // x/255, y/15
+        int ix = (x+255/2)/255;
+        int iy = y/15;
+        
+        
+        setLocation(ix, iy);
     }
 
     public void setScreenLocation( Point location )
     {
-        setLocation(location.x, location.y);
+        setScreenLocation(location.x, location.y);
     }
 
     public Point getScreenLocation()
