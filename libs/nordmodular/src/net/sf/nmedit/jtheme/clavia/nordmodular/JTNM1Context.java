@@ -49,15 +49,24 @@ import net.sf.nmedit.jtheme.component.plaf.JTLabelUI;
 import net.sf.nmedit.jtheme.component.plaf.JTModuleContainerUI;
 import net.sf.nmedit.jtheme.component.plaf.JTModuleUI;
 import net.sf.nmedit.jtheme.component.plaf.JTTextDisplayUI;
+import net.sf.nmedit.jtheme.store.StorageContext;
 
 public class JTNM1Context extends JTCustomContext
 {
 
     public static final Color GRAPH_DISPLAY_LINE = new Color(0xC0C0C0);
+    
+    private StorageContext stc;
 
-    public JTNM1Context()
+    public JTNM1Context(StorageContext stc)
     {
         super(true, true);
+        this.stc = stc;
+    }
+    
+    public StorageContext getStorageContext()
+    {
+        return stc;
     }
 
     public JTNM1Context(boolean hasModuleContainerOverlay, boolean dndAllowed)
@@ -157,58 +166,5 @@ public class JTNM1Context extends JTCustomContext
         uidefaults.put(JTNM1SliderUI.borderKey, new BorderUIResource(JTNM1BorderFactory.createNordEditor311Border()));
     }
 
-/*
- * 
-
-    private void installComponents()
-    {
-        UIContext.put(ClassicConnectorUI.class, NConnector.uiClassID);
-        
-        
-        putComponentClass(NomadActiveLabel.class,"display.text");
-        putComponentClass(NomadButtonArray.class,"button");
-        putComponentClass(NomadConnector.class,"connector");
-        putComponentClass(Knob2.class,"knob");
-        putComponentClass(NLabel.class,"label");
-        
-        putComponentClass(NomadResetButton.class,"knob.reset");
-        putComponentClass(Slider.class,"slider");
-        putComponentClass(VocoderBandDisplay.class,"display.vocoder");
-        putComponentClass(NomadVocoderController.class,"display.vocoder.controller");
-        putComponentClass(AudioLevelDisplay.class,"display.audiolevel");
-        putComponentClass(GroupDecoration.class,"border.groupbox");
-        putComponentClass(WaveWrapDisp.class,"WaveWrapDisplay");
-        putComponentClass(ClipDisp.class,"ClipDisplay");
-
-        putComponentClass(ADDisplay.class,"ADDisplay");
-        putComponentClass(AHDDisplay.class,"AHDDisplay");
-        putComponentClass(ADSRModDisplay.class,"ADSRModDisplay");
-        putComponentClass(ADSRDisplay.class,"ADSRDisplay");
-        putComponentClass(LFODisplay.class,"LFODisplay");
-        putComponentClass(LightDisplay.class,"light");
-        
-        putComponentClass(NoteVelScaleDisplay.class,"NoteVelScaleDisplay");
-
-    }
-
-    public void init()
-    {
-        InputStream in =  getClass().getClassLoader().getResourceAsStream("theme.xml");
-        if (in != null)
-        {
-            in = new BufferedInputStream(in);
-            init(in);
-            try
-            {
-            in.close();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-    
- * */
 }
 
