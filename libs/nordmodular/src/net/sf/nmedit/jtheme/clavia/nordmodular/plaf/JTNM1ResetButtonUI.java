@@ -32,7 +32,7 @@ import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTControl;
 import net.sf.nmedit.jtheme.component.plaf.JTBasicControlUI;
 import net.sf.nmedit.jtheme.component.plaf.JTControlUI;
-import net.sf.nmedit.jtheme.component.swing.JTLazyActionMap;
+import net.sf.nmedit.nmutils.swing.NMLazyActionMap;
 
 public class JTNM1ResetButtonUI extends JTBasicControlUI
 {
@@ -119,7 +119,7 @@ public class JTNM1ResetButtonUI extends JTBasicControlUI
             super(control);
         }
 
-        public static void loadActionMap(JTLazyActionMap map) 
+        public static void loadActionMap(NMLazyActionMap map) 
         {  
             map.put(new Actions(DEFAULTVALUE));
         }
