@@ -38,6 +38,7 @@ import javax.swing.tree.TreeNode;
 
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
 import net.sf.nmedit.jsynth.midi.MidiPlug;
+import net.sf.nmedit.jtheme.ModulePane;
 import net.sf.nmedit.nmutils.midi.MidiID;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.jpf.TempDir;
@@ -49,13 +50,8 @@ import org.java.plugin.PluginManager;
 public class Installer implements InitService
 {
 
-    public void initService()
-    {
-
-       // TempDir temp = new TempDir(this);
-        
-    }
-
+    // TempDir temp = new TempDir(this);
+     
     public Class<? extends Service> getServiceClass()
     {
         return InitService.class;
@@ -64,6 +60,10 @@ public class Installer implements InitService
     public void init()
     {
         readSynthConfiguration();
+        
+        ModulePane pane = ModulePane.getSharedInstance();
+        pane.setModules(Nordmodular.sharedContext().getModuleDescriptions());
+        pane.setTheme(Nordmodular.sharedContext().getContext());
     }
 
     public void shutdown()
