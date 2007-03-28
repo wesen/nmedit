@@ -13,8 +13,7 @@
 		<entry entryPoint="new">
 			<entry entryPoint="global" flat="true">
 				<entry entryPoint="location">
-					<icon type="enabledIcon" src="&etool;/new_wiz.gif" />
-					<icon type="disabledIcon" src="&dtool;/new_wiz.gif" />
+					<icon type="enabledIcon" src="&etool;/newfolder_wiz.gif" />
 				</entry>
 				<entry entryPoint="synth">
 					<icon type="enabledIcon" src="&etool;/new_wiz.gif" />
@@ -93,8 +92,7 @@
 	</entry>
 	<entry entryPoint="help">
 		<entry entryPoint="plugins">
-			<icon type="enabledIcon" src="&etool;/help_contents.gif" />
-			<icon type="disabledIcon" src="&dtool;/help_contents.gif" />
+			<icon type="enabledIcon" src="&etool;/plugin.gif" />
 		</entry>
 		<entry entryPoint="license">
 			<icon type="enabledIcon" src="&etool;/help_contents.gif" />
@@ -114,6 +112,9 @@
         <entry entryPoint="disconnect" />
       </entry>
       <entry entryPoint="settings" />
+      <entry entryPoint="general" flat="true">
+        <entry entryPoint="remove" />
+      </entry>
     </entry>
   </entry>
 </entry>
