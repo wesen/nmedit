@@ -84,13 +84,13 @@ public class SynthDeviceContext extends ContainerNode
     private static final Icon iconStopped = getIcon("synth-st-stopped.png");
     private static final Icon iconWarnings = getIcon("synth-st-warnings.png");
 
-    private ExplorerTree etree;
+    protected ExplorerTree etree;
     private State state = State.STOPPED;
     private Synthesizer synth;
     private boolean warn = false;
     
-    private ContainerNode slotsRoot;
-    private ContainerNode portsRoot;
+    protected ContainerNode slotsRoot;
+    protected ContainerNode portsRoot;
     private EventHandler eventHandler;
 
     public SynthDeviceContext(ExplorerTree etree, String title)
@@ -106,7 +106,28 @@ public class SynthDeviceContext extends ContainerNode
         eventHandler = createEventHandler();
         eventHandler.install();
     }
-    
+
+    public void removeContext()
+    {
+        eventHandler.uninstall();
+        if (synth != null)
+        {
+            try
+            {
+                synth.setConnected(false);
+            }
+            catch (SynthException e)
+            {
+                //e.printStackTrace();
+            }
+        }
+        if (etree.getRoot().getIndex(this)>=0)
+        {
+            etree.getRoot().remove(this);
+            etree.fireRootChanged();
+        }
+    }
+
     public ExplorerTree getTree()
     {
         return etree;
@@ -371,7 +392,7 @@ public class SynthDeviceContext extends ContainerNode
         
     }
     
-    private class SlotLeaf extends LeafNode implements SlotListener
+    protected class SlotLeaf extends LeafNode implements SlotListener
     {
 
         private Slot slot;
@@ -416,12 +437,23 @@ public class SynthDeviceContext extends ContainerNode
         
     }
 
+    protected ContainerNode getSlotNodeContainer()
+    {
+        return slotsRoot;
+    }
+
+    protected ContainerNode getPortNodeContainer()
+    {
+        return portsRoot;
+    }
+    
     public static final String EXPLORER_SYNTH_KEY = "nomad.explorer.synth";
     public static final String CONNECT_KEY = EXPLORER_SYNTH_KEY+".control.connect";
     public static final String DISCONNECT_KEY = EXPLORER_SYNTH_KEY+".control.disconnect";
     public static final String SETTINGS_KEY = EXPLORER_SYNTH_KEY+".settings";
+    public static final String REMOVE_KEY = EXPLORER_SYNTH_KEY+".general.remove";
     
-    private static class EventHandler implements MouseListener,
+    protected static class EventHandler implements MouseListener,
       SynthesizerStateListener, ActionListener
     {
 
@@ -433,6 +465,16 @@ public class SynthDeviceContext extends ContainerNode
         public EventHandler(SynthDeviceContext context)
         {
             this.context = context;
+        }
+
+        protected ContainerNode getSlotNodeContainer()
+        {
+            return context.slotsRoot;
+        }
+
+        protected ContainerNode getPortNodeContainer()
+        {
+            return context.portsRoot;
         }
         
         public void synthChanged(Synthesizer oldValue, Synthesizer newValue)
@@ -475,24 +517,18 @@ public class SynthDeviceContext extends ContainerNode
             if (synth != null)
                 uninstall(synth);
         }
-        
-        protected boolean isMouseOver(TreeNode node, int x, int y)
+
+        public JPopupMenu getSlotPopup(SlotLeaf leaf)
         {
-            ExplorerTree tree = context.getTree();
-            TreePath path = tree.getPathForLocation(x, y);
-            
-            if (path == null)
-                return false;
-            
-            return node == path.getLastPathComponent();
+            return null;
         }
 
-        protected boolean isMouseOver(TreeNode node, MouseEvent e)
+        public JPopupMenu getPortPopup(PortLeaf leaf)
         {
-            return isMouseOver(node, e.getX(), e.getY());
+            return null;
         }
-        
-        protected JPopupMenu getPopUp()
+
+        protected JPopupMenu getSynthNodePopup()
         {
             if (popup != null)
                 return popup;
@@ -507,10 +543,12 @@ public class SynthDeviceContext extends ContainerNode
                 installActionCommand(CONNECT_KEY);
                 installActionCommand(DISCONNECT_KEY);
                 installActionCommand(SETTINGS_KEY);
+                installActionCommand(REMOVE_KEY);
                 
                 installMenuActionListeners();
                 
                 updateMenu();
+                menuBuilder.getEntry(REMOVE_KEY).setEnabled(true);
             }
             popup = menuBuilder.createPopup(EXPLORER_SYNTH_KEY);
             return popup;
@@ -527,17 +565,6 @@ public class SynthDeviceContext extends ContainerNode
         
         public void mouseClicked(MouseEvent e)
         {
-            if (SwingUtilities.isRightMouseButton(e)
-                    && isMouseOver(context, e))
-            {
-                // create & show popup menu
-         
-                JPopupMenu menu = getPopUp();
-                if (menu == null)
-                    return;
-                
-                menu.show(context.getTree(), e.getX(), e.getY());
-            }
         }
 
         public void mouseEntered(MouseEvent e)
@@ -554,8 +581,17 @@ public class SynthDeviceContext extends ContainerNode
 
         public void mousePressed(MouseEvent e)
         {
-            // TODO Auto-generated method stub
+            TreePath path = context.getTree().getSelectionPath();
+            if (path == null)
+                return;
             
+            Object o = path.getLastPathComponent();
+            if (o instanceof TreeNode)
+            {
+                TreeNode node = (TreeNode) o;
+                if (SwingUtilities.isRightMouseButton(e))
+                    context.showContextMenu(e, node);
+            }
         }
 
         public void mouseReleased(MouseEvent e)
@@ -588,6 +624,7 @@ public class SynthDeviceContext extends ContainerNode
             menuBuilder.getEntry(CONNECT_KEY).addActionListener(this);
             menuBuilder.getEntry(DISCONNECT_KEY).addActionListener(this);
             menuBuilder.getEntry(SETTINGS_KEY).addActionListener(this);
+            menuBuilder.getEntry(REMOVE_KEY).addActionListener(this);
         }
 
         public void actionPerformed(ActionEvent e)
@@ -629,6 +666,11 @@ public class SynthDeviceContext extends ContainerNode
                 {
                     Synthesizer synth = context.getSynth();
                     if (synth != null) context.showSettings();
+                    return;
+                }
+                if (REMOVE_KEY.equals(actionCommand))
+                {
+                    context.removeContext();
                     return;
                 }
             }
@@ -679,6 +721,28 @@ public class SynthDeviceContext extends ContainerNode
         }
     }
     
+    protected void showContextMenu(MouseEvent e, TreeNode node)
+    {
+        JPopupMenu popup = null;
+        if (node == this)
+        {
+            popup = eventHandler.getSynthNodePopup();
+        }
+        else if (slotsRoot.contains(node) && node instanceof SlotLeaf)
+        {
+            popup = eventHandler.getSlotPopup((SlotLeaf) node);
+        }
+        else if (portsRoot.contains(node) && node instanceof PortLeaf)
+        {
+            popup = eventHandler.getPortPopup((PortLeaf) node);
+        }
+        
+        if (popup != null)
+        {
+            popup.show(getTree(), e.getX(), e.getY());
+        }
+    }
+
     protected boolean showSettings()
     {
         throw new UnsupportedOperationException();
