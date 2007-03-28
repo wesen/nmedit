@@ -240,12 +240,11 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer
                 }
             }
             
-            final IAmMessage iam = acceptor.getIAMMessage();
-            final int vlow = iam.get("versionLow");
-            final int vhigh = iam.get("versionHigh");
-            if (vhigh!=3 || vlow!=3)
-                throw new SynthException("Unsupported firmware version: "+vhigh+"."+vlow+" ("+iam+")");
-
+            if (!acceptor.validateVersion(3, 3))
+            {
+                throw new SynthException("Unsupported firmware version: "
+                        +acceptor.getVersionHigh()+"."+acceptor.getVersionLow()+" ("+acceptor.getIAMMessage()+")");
+            }
             setConnectedFlag(true);
         }
         catch (SynthException e)
@@ -350,7 +349,27 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer
         public void messageReceived(IAmMessage message) 
         {
             this.iamMessage = message;
-        }        
+        }
+        
+        public int getVersionLow()
+        {
+            if (iamMessage==null)
+                return -1;
+            return iamMessage.get("versionLow");
+        }
+        
+        public int getVersionHigh()
+        {
+            if (iamMessage==null)
+                return -1;
+            return iamMessage.get("versionHigh");
+        }
+        
+        public boolean validateVersion(int versionHigh, int versionLow)
+        {
+            return versionHigh == getVersionHigh()
+            && versionLow == getVersionLow();
+        }
         
     }
     
@@ -457,7 +476,7 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer
         return slotManager.getSlotCount();
     }
 
-    public SlotManager getSlotManager()
+    public SlotManager<NmSlot> getSlotManager()
     {
         return slotManager;
     }
