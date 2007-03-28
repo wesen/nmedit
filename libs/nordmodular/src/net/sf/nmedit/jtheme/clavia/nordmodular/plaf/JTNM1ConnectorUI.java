@@ -68,8 +68,10 @@ public class JTNM1ConnectorUI extends JTBasicConnectorUI
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         int size = getSize(c);
         
+        Color signalColor = signal == null ? Color.BLACK : signal.getColor();
+        
         //Color outline = c.hasFocus() ? Color.BLUE : Color.BLACK;
-        g.setColor(signal.getColor());
+        g.setColor(signalColor);
         
         Paint holeGradient = getHoleGradient(size);
         int cxy = (int)(size/(2.0));
@@ -80,7 +82,7 @@ public class JTNM1ConnectorUI extends JTBasicConnectorUI
             g.fillRect(0, 0, size, size);
 
             if (connected)
-                g.setPaint(signal.getColor());
+                g.setPaint(signalColor);
             else
             g.setPaint(holeGradient);
             g.fillOval( cxy-crad, cxy-crad, crad*2, crad*2 );
@@ -90,7 +92,7 @@ public class JTNM1ConnectorUI extends JTBasicConnectorUI
 
             if (focused)
             {
-                g.setColor(signal.getColor().brighter());
+                g.setColor(signalColor.brighter());
                 g.drawRect(0, 0, size-1, size-1);
             }
         }
@@ -99,7 +101,7 @@ public class JTNM1ConnectorUI extends JTBasicConnectorUI
             g.fillOval(0, 0, size, size);
 
             if (connected)
-                g.setPaint(signal.getColor());
+                g.setPaint(signalColor);
             else
                 g.setPaint(holeGradient);
             g.fillOval( cxy-crad, cxy-crad, crad*2, crad*2 );
@@ -109,7 +111,7 @@ public class JTNM1ConnectorUI extends JTBasicConnectorUI
             
             if (focused)
             {
-                g.setColor(signal.getColor().brighter());
+                g.setColor(signalColor.brighter());
                 g.drawOval(0, 0, size-1, size-1);
             }
         }
