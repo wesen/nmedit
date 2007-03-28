@@ -1,6 +1,12 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 0.4" "http://jpf.sourceforge.net/plugin_0_4.dtd">
 <plugin id="org.jdom" version="1.x.cvs">
+    <attributes>
+		<attribute id="description" value="JDOM" />
+		<attribute id="plugin-vendor" value="http://nmedit.sf.net/" />
+		<attribute id="vendor" value="http://www.jdom.org/" />
+		<attribute id="license-location" value="lib/LICENSE_jdom.txt" />
+	</attributes>
 	<requires>
 		<import plugin-id="org.apache.xerces" />
 	</requires>

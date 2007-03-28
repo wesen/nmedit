@@ -15,6 +15,9 @@ javax.swing.plaf.metal.MetalTheme=com.jgoodies.looks.plastic.theme.DesertBlue
 		<attribute id="javax.swing.LookAndFeel" value="com.jgoodies.looks.plastic.PlasticXPLookAndFeel" />
 		<attribute id="javax.swing.plaf.metal.MetalTheme" value="com.jgoodies.looks.plastic.theme.DesertBluer" />
 		<attribute id="icon" value="data/icons/nomad-icon.png" />
+		<attribute id="description" value="Nomad Modular Editor" />
+		<attribute id="vendor" value="http://nmedit.sf.net/" />
+		<attribute id="license" value="GPL 2" />
 	</attributes>
 	
 	<requires>
@@ -43,4 +46,10 @@ javax.swing.plaf.metal.MetalTheme=com.jgoodies.looks.plastic.theme.DesertBlue
 		<parameter-def id="service" />
 		<parameter-def id="description" multiplicity="none-or-one"/>
 	</extension-point>
+	<extension plugin-id="net.sf.nmedit.nomad.core"
+	  point-id="Service" id="ExplorerLocationMemory">
+		<parameter id="class" value="net.sf.nmedit.nomad.core.service.initService.ExplorerLocationMemory"/>
+		<parameter id="service" value="net.sf.nmedit.nomad.core.service.initService.InitService"/>
+		<parameter id="description" value="remembers explorer locations"/>
+	</extension>
 </plugin>

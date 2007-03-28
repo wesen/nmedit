@@ -1,6 +1,12 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 0.4" "http://jpf.sourceforge.net/plugin_0_4.dtd">
 <plugin id="org.apache.xmlgraphics.batik" version="1.6">
+    <attributes>
+		<attribute id="description" value="Batik SVG Toolkit" />
+		<attribute id="plugin-vendor" value="http://nmedit.sf.net/" />
+		<attribute id="vendor" value="http://xmlgraphics.apache.org/batik/" />
+		<attribute id="license-location" value="lib/LICENSE_batik" />
+	</attributes>
   	<requires>
 		<import plugin-id="org.w3.sac"  />
 		<import plugin-id="org.apache.xerces"  /> 

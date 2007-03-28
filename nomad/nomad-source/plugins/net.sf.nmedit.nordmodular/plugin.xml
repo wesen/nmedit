@@ -2,6 +2,10 @@
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 0.4" "http://jpf.sourceforge.net/plugin_0_4.dtd">
 <plugin id="net.sf.nmedit.nordmodular" version="0.1"
   class="net.sf.nmedit.nordmodular.CorePlugin">
+    <attributes>
+		<attribute id="description" value="Nord Modular / Micro Modular Editor" />
+		<attribute id="vendor" value="http://nmedit.sf.net/" />
+	</attributes>
 	<requires>
 		<import plugin-id="net.sf.nmedit.nomad.core"  />
 		<import plugin-id="net.sf.nmedit.jsynth" />
@@ -10,9 +14,6 @@
 		<import plugin-id="net.sf.nmedit.nmutils" />
 		<import plugin-id="net.sf.nmedit.jpdl" />
 		<import plugin-id="org.apache.xerces" />
-		<import plugin-id="net.sf.cssparser"  />
-		<import plugin-id="org.w3.sac"  />
-		<import plugin-id="org.apache.xmlgraphics.batik" />
 	</requires>
 	<runtime>
 		<library id="core" path="classes/" type="code">
@@ -24,6 +25,10 @@
 		<library type="resources" path="codecs/" id="codecs">
 			<export prefix="*.pdl"/>
 		</library> 
+		<!--
+		<library id="jtheme-classes" path="../../../../libs/nordmodular/bin/" type="code">
+			<export prefix="*"/>
+		</library> -->
 		<library id="nordmodular" path="lib/nordmodular.jar" type="code" >
 		<export prefix="*"/>
 		</library>

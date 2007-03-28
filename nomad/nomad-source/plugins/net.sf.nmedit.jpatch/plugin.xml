@@ -1,6 +1,10 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 0.4" "http://jpf.sourceforge.net/plugin_0_4.dtd">
 <plugin id="net.sf.nmedit.jpatch" version="0.1">
+     <attributes>
+		<attribute id="description" value="Patch API" />
+		<attribute id="vendor" value="http://nmedit.sf.net/" />
+	</attributes>
 	<requires>
 		<import plugin-id="net.sf.nmedit.nmutils" />
 	</requires>

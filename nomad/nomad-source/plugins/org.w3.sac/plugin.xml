@@ -1,9 +1,13 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 0.4" "http://jpf.sourceforge.net/plugin_0_4.dtd">
-<plugin id="org.w3.sac" version="1.3">
-	<requires>
-		<import plugin-id="net.sf.cssparser"  />
-	</requires>
+<plugin id="org.w3.sac" version="1.3">	
+    <attributes>
+		<attribute id="icon" value="data/icons/w3logo.png" />
+		<attribute id="description" value="SAC: The Simple API for CSS" />
+		<attribute id="plugin-vendor" value="http://nmedit.sf.net/" />
+		<attribute id="vendor" value="http://www.w3.org/Style/CSS/SAC/" />
+		<attribute id="license-location" value="lib/COPYRIGHT_sac.html" />
+	</attributes>
 	<runtime>
 		<library id="sac" path="lib/sac.jar" type="code">
 		<export prefix="*"/>

@@ -1,6 +1,10 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 0.4" "http://jpf.sourceforge.net/plugin_0_4.dtd">
-<plugin id="net.sf.nmedit.jtheme" version="0.1">
+<plugin id="net.sf.nmedit.jtheme" version="0.1" class="net.sf.nmedit.jtheme.CorePlugin">
+    <attributes>
+		<attribute id="description" value="JTheme UI Builder" />
+		<attribute id="vendor" value="http://nmedit.sf.net/" />
+	</attributes>
   	<requires>
 		<import plugin-id="org.w3.sac"  />
 		<import plugin-id="org.apache.xmlgraphics.batik"  />
@@ -9,16 +13,29 @@
 		<import plugin-id="net.sf.nmedit.nmutils"  />  
 		<import plugin-id="net.sf.nmedit.jpatch"  />  
 		<import plugin-id="org.apache.xerces" />
+		<import plugin-id="net.sf.nmedit.nomad.core"  />  
 	</requires>
 	<runtime>
-		<!--	   
 		<library id="jtheme" path="lib/jtheme.jar" type="code" >
 		<export prefix="*"/>
 		</library>
-		 -->
+		<!--	   
 		<library id="jtheme-classes" path="../../../../libs/jtheme/bin/" type="code">
+			<export prefix="*"/>
+		</library>
+		 -->
+		<library id="additional-classes" path="./classes/" type="code">
+			<export prefix="*"/>
+		</library>
+		<library id="data" path="./data/" type="resources">
 			<export prefix="*"/>
 		</library>
 
 	</runtime>
+	<extension plugin-id="net.sf.nmedit.nomad.core"
+	  point-id="Service" id="ModulePaneInstaller">
+		<parameter id="class" value="net.sf.nmedit.jtheme.InstallerService"/>
+		<parameter id="service" value="net.sf.nmedit.nomad.core.service.initService.InitService"/>
+		<parameter id="description" value="Module Pane Installer"/>
+	</extension>
 </plugin>
