@@ -47,9 +47,11 @@ import net.sf.nmedit.jsynth.clavia.nordmodular.worker.ScheduledMessage;
 import net.sf.nmedit.jsynth.event.SlotEvent;
 import net.sf.nmedit.jsynth.event.SlotListener;
 import net.sf.nmedit.jsynth.event.SlotManagerListener;
+import net.sf.nmedit.jsynth.event.SynthesizerEvent;
+import net.sf.nmedit.jsynth.event.SynthesizerStateListener;
 
 public class NmMessageHandler extends NmProtocolListener
-    implements SlotManagerListener, PropertyChangeListener, SlotListener
+    implements SlotManagerListener, PropertyChangeListener, SlotListener, SynthesizerStateListener
 {
 
     private NordModular synth;
@@ -57,6 +59,7 @@ public class NmMessageHandler extends NmProtocolListener
     public NmMessageHandler(NordModular synth)
     {
         this.synth = synth;
+        synth.addSynthesizerStateListener(this);
         synth.getSlotManager().addSlotManagerListener(this);
     }
     
@@ -155,6 +158,9 @@ public class NmMessageHandler extends NmProtocolListener
         }
     }
     
+    // slot selected => led on
+    // slot activated => led blinking
+    
     public void messageReceived(SlotsSelectedMessage message) 
     {
         for (int i=0;i<synth.getSlotCount();i++)
@@ -229,7 +235,7 @@ public class NmMessageHandler extends NmProtocolListener
     
     public void messageReceived(ErrorMessage message) 
     {
-        throw new RuntimeException(message.toString());
+        // no op
     }
 
     public void slotAdded(SlotEvent e)
@@ -306,5 +312,15 @@ public class NmMessageHandler extends NmProtocolListener
     }
     
     private NmPatchSynchronizer[] synchronizerList = new NmPatchSynchronizer[4];
+
+    public void synthConnectionStateChanged(SynthesizerEvent e)
+    {
+        if (synth.isConnected())
+        {
+            // reply will update the slot.enabled properties
+            for (int i=0;i<synth.getSlotCount();i++)
+                NmMessageHandler.requestPatch(synth, i);
+        }
+    }
 
 }

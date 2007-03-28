@@ -22,11 +22,15 @@
  */
 package net.sf.nmedit.jsynth.clavia.nordmodular;
 
+import net.sf.nmedit.jnmprotocol.MidiMessage;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jsynth.AbstractSlot;
 import net.sf.nmedit.jsynth.Slot;
+import net.sf.nmedit.jsynth.SlotManager;
 import net.sf.nmedit.jsynth.SynthException;
+import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.ReqPatchWorker;
+import net.sf.nmedit.jsynth.clavia.nordmodular.worker.ScheduledMessage;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.SetPatchWorker;
 import net.sf.nmedit.jsynth.worker.RequestPatchWorker;
 import net.sf.nmedit.jsynth.worker.SendPatchWorker;
@@ -90,7 +94,7 @@ public class NmSlot extends AbstractSlot implements Slot
         }
     }
     
-    void setActivated(boolean activated)
+    public void setActivated(boolean activated)
     {
         boolean oldValue = this.activated;
         boolean newValue = activated;
@@ -99,6 +103,38 @@ public class NmSlot extends AbstractSlot implements Slot
         {
             this.activated = activated;
             fireActiveSlotChange(oldValue, newValue);
+        }
+    }
+
+    public void requestEnableSlot(boolean enable)
+    {
+        // enable == selected
+        
+        if (isEnabled() == enable)
+            return;
+        
+        boolean[] selection = new boolean[]{false, false, false, false};
+        SlotManager<NmSlot> manager = synth.getSlotManager();
+        for (int i=Math.min(manager.getSlotCount(), 4)-1;i>=0;i--)
+            selection[i] = manager.getSlot(i).isEnabled();
+        selection[getSlotIndex()] = enable;
+
+        MidiMessage message = NmUtils.createSlotsSelectedMessage(
+                selection[0], selection[1], 
+                selection[2], selection[3]);
+        
+        synth.getScheduler().offer(new ScheduledMessage(synth, message));
+    }
+
+    public void requestSelectSlot()
+    {
+        // select == activated
+        
+        if (!isActivated())
+        {
+            synth.getScheduler().offer(new ScheduledMessage(synth, 
+                    NmUtils.createSlotsActivatedMessage(getSlotId())
+            ));
         }
     }
     
@@ -147,6 +183,7 @@ public class NmSlot extends AbstractSlot implements Slot
         if (oldValue != newValue)
         {
             this.patchId = pid;
+            setEnabled(pid>0);//this is wrong:pid=0 is valid
             firePatchIdChange(oldValue, newValue);
         }
     }
@@ -263,5 +300,5 @@ public class NmSlot extends AbstractSlot implements Slot
     {
         changeSupport.firePropertyChange(PROPERTY_PATCH_ID,  oldPid, newPid);
     }
-    
+
 }
