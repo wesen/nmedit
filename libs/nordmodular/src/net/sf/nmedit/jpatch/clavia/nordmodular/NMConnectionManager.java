@@ -110,14 +110,14 @@ public class NMConnectionManager extends AbstractConnectionManager implements Co
         return a.isConnectedWith(b);
     }
 
-    public void connect( Connector a, Connector b )
+    public boolean connect( Connector a, Connector b )
     {
-        a.canConnectWith(b);
+        return a.connectWith(b);
     }
 
-    public void disconnect( Connector a, Connector b )
+    public boolean disconnect( Connector a, Connector b )
     {
-        a.disconnectFrom(b);
+        return a.disconnectFrom(b);
     }
     
 }

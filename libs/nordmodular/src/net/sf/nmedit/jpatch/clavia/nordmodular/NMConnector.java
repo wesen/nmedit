@@ -225,15 +225,15 @@ public class NMConnector extends AbstractConnector implements Connector
      * @return <code>true</code> when the connectors became connected
      * @see #connect(NMConnector, NMConnector)
      */
-    public void connectWith( Connector c )
+    public boolean connectWith( Connector c )
     {
-        connect( this, (NMConnector) c, null );
+        return NMConnector.connect( this, (NMConnector) c, null );
     }
 
     // overwrites  color
-    public void connectWith( NMConnector c, Signal color )
+    public boolean connectWith( NMConnector c, Signal color )
     {
-        connect( this, c, color );
+        return NMConnector.connect( this, c, color );
     }
 
     /**
@@ -247,9 +247,9 @@ public class NMConnector extends AbstractConnector implements Connector
      * @return <code>true</code> if the link was removed
      * @see #disconnect(NMConnector, NMConnector)
      */
-    public void disconnectFrom( Connector c )
+    public boolean disconnectFrom( Connector c )
     {
-        disconnect( this, (NMConnector) c );
+        return disconnect( this, (NMConnector) c );
     }
     
     private static NMConnector connectHelper(NMConnector a, NMConnector b, Signal color)
@@ -440,6 +440,7 @@ public class NMConnector extends AbstractConnector implements Connector
                 va.getConnectionManager().updateGraph( a );
             }
         }
+        
         return true;
     }
     
@@ -562,15 +563,6 @@ public class NMConnector extends AbstractConnector implements Connector
     }
 
     /**
-     * @see DConnector#getId()
-     */
-    public int getID()
-    {
-        return -1;
-        // return getDescriptor().get
-    }
-
-    /**
      * Returns the signal of the connection this connector is part of.
      * 
      * @return the signal of the connection
@@ -578,6 +570,11 @@ public class NMConnector extends AbstractConnector implements Connector
     public Signal getConnectionColor()
     {
         return graph.getColor();
+    }
+    
+    public void setConnectionColor(Signal s)
+    {
+        graph.setColor(s);
     }
 
     /**
@@ -734,7 +731,11 @@ public class NMConnector extends AbstractConnector implements Connector
     
     public net.sf.nmedit.jpatch.Signal getSignal()
     {
-        return Signal.bySignalID(getSignalId());
+        if (isOutput())
+            return getDefaultSignal();
+        
+        NMConnector out = getOutput();
+        return out != null ? out.getSignal() : getDefaultSignal();
     }
     
 }
