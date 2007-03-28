@@ -20,9 +20,10 @@ package net.sf.nmedit.nomad.core.helpers;
 
 import net.sf.nmedit.nomad.core.menulayout.MLEntry;
 import net.sf.nmedit.nomad.core.menulayout.MenuLayout;
-import net.sf.nmedit.nomad.core.util.document.Document;
-import net.sf.nmedit.nomad.core.util.document.DocumentListener;
-import net.sf.nmedit.nomad.core.util.document.DocumentManager;
+import net.sf.nmedit.nomad.core.swing.document.Document;
+import net.sf.nmedit.nomad.core.swing.document.DocumentEvent;
+import net.sf.nmedit.nomad.core.swing.document.DocumentListener;
+import net.sf.nmedit.nomad.core.swing.document.DocumentManager;
 
 public class DocumentActionActivator
     implements DocumentListener
@@ -42,21 +43,21 @@ public class DocumentActionActivator
         setSelected(documents.getSelection());
     }
     
-    public void documentAdded(Document document)
+    public void documentAdded(DocumentEvent e)
     {
         if (selected == null)
-            setSelected(document);
+            setSelected(e.getDocument());
     }
 
-    public void documentRemoved(Document document)
+    public void documentRemoved(DocumentEvent e)
     {
-        if (selected == document)
+        if (selected == e.getDocument())
             setSelected(null);
     }
 
-    public void documentSelected(Document document)
+    public void documentSelected(DocumentEvent e)
     {
-        setSelected(document);
+        setSelected(e.getDocument());
     }
     
     private void setSelected(Document d)

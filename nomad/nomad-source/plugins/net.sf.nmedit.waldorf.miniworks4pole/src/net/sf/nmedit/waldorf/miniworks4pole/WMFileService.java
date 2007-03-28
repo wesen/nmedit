@@ -20,6 +20,8 @@ package net.sf.nmedit.waldorf.miniworks4pole;
 
 import java.io.File;
 
+import javax.swing.Icon;
+
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.service.Service;
 import net.sf.nmedit.nomad.core.service.fileService.FSFileFilter;
@@ -83,6 +85,11 @@ public class WMFileService implements FileService
     public String getDescription()
     {
         return "";
+    }
+
+    public Icon getIcon()
+    {
+        return null;
     }
 
 }

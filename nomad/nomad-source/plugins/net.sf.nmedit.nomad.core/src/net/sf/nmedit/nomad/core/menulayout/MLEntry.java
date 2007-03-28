@@ -368,8 +368,6 @@ public class MLEntry extends AbstractAction
 
     private static void cloneTree(MLEntry clone, MLEntry entry)
     {
-        System.out.println("cloning: "+entry);
-        
         cloneSettings(clone, entry);
         
         List<MLEntry> l = entry.entryList;

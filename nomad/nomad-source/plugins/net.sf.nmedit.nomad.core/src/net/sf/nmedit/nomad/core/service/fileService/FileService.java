@@ -20,6 +20,8 @@ package net.sf.nmedit.nomad.core.service.fileService;
 
 import java.io.File;
 
+import javax.swing.Icon;
+
 import net.sf.nmedit.nomad.core.service.Service;
 
 public interface FileService extends Service
@@ -38,6 +40,8 @@ public interface FileService extends Service
     String getName();
 
     String getDescription();
+
+    Icon getIcon();
     
 }
 

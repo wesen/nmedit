@@ -18,42 +18,22 @@
  */
 
 /*
- * Created on Nov 11, 2006
+ * Created on May 13, 2006
  */
-package net.sf.nmedit.nomad.core.swing;
+package net.sf.nmedit.nomad.core.swing.document;
 
-import javax.swing.Icon;
-
-public class JTab
+public interface DocumentManager
 {
-
-    private String title;
-    private Icon icon;
-
-    public JTab(Icon icon, String title)
-    {
-        this.icon = icon;
-        this.title = title;
-    }
-
-    public String getTitle()
-    {
-        return title;
-    }
-
-    public void setTitle(String t)
-    {
-        this.title = t;
-    }
+    boolean add(Document d);
+    boolean remove(Document d);
+    boolean contains(Document d);
     
-    public Icon getIcon()
-    {
-        return icon;
-    }
-
-    public Icon getDisabledIcon()
-    {
-        return null;
-    }
+    int getDocumentCount();
+    Document[] getDocuments();
+    
+    Document getSelection();
+    void setSelection(Document d);
+    void addListener(DocumentListener l);
+    void removeListener(DocumentListener l);
     
 }

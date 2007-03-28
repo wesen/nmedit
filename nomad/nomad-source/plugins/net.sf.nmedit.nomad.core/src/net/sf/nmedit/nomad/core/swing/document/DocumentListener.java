@@ -18,14 +18,17 @@
  */
 
 /*
- * Created on Apr 29, 2006
+ * Created on May 24, 2006
  */
-package net.sf.nmedit.nomad.core.util.document;
+package net.sf.nmedit.nomad.core.swing.document;
 
-import javax.swing.JComponent;
+import java.util.EventListener;
 
-public interface Document
+public interface DocumentListener extends EventListener
 {
-    public String getTitle();
-    public JComponent getComponent();
+
+    void documentSelected(DocumentEvent e);
+    void documentRemoved(DocumentEvent e);
+    void documentAdded(DocumentEvent e);
+    
 }

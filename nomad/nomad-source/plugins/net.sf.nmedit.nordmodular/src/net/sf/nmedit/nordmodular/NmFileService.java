@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
+import javax.swing.Icon;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -160,6 +162,11 @@ public class NmFileService implements FileService
     public boolean isOpenFileOperationSupported()
     {
         return true;
+    }
+
+    public Icon getIcon()
+    {
+        return PatchDocument.pchIcon;
     }
 
 }

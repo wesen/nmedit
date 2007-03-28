@@ -29,14 +29,14 @@ import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
+import javax.swing.plaf.TreeUI;
 import javax.swing.plaf.metal.MetalTreeUI;
 import javax.swing.tree.TreePath;
 
@@ -65,7 +65,6 @@ public class ExplorerTreeUI extends MetalTreeUI
      
     public final static Color defaultSelectionBackground = Color.decode("#A8A8A8");
     private Color backgroundSelectionColor = null;
-    private SelectionFix sf = new SelectionFix();
 
     public void installUI( JComponent c ) 
     {
@@ -122,41 +121,18 @@ public class ExplorerTreeUI extends MetalTreeUI
                 hasBeenExpanded, isLeaf);
     }
 
-    private MouseListener eventRedirector = new MouseAdapter()
-    {
-        public void mousePressed(MouseEvent e)
-        {
-            if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount()==2)
-            {
-                TreePath path = tree.getPathForLocation(e.getX(), e.getY());
-                if (path != null)
-                {
-                    Object tnode = path.getLastPathComponent();
-                    if (tnode instanceof ETreeNode)
-                    {
-                        ETreeNode etn = (ETreeNode) tnode;
-                        ContextEvent event = new ContextEvent((ExplorerTree)tree, ExplorerTree.ACTION_OPEN, etn);
-                        etn.processEvent(event);
-                    }
-                }
-            }
-        }
-    };
-    
     ExpandControlHoverEffect eche = new ExpandControlHoverEffect();
     protected void installListeners() 
     {
         super.installListeners();
-        tree.addMouseListener(eventRedirector);
-        tree.addMouseListener(sf);
+        tree.addMouseListener(eche);
         tree.addMouseMotionListener(eche);
     }
 
     protected void uninstallListeners() 
     {
-        tree.removeMouseListener(eventRedirector);
         tree.removeMouseMotionListener(eche);
-        tree.removeMouseListener(sf);
+        tree.removeMouseListener(eche);
         super.uninstallListeners();
     }
 
@@ -192,75 +168,129 @@ public class ExplorerTreeUI extends MetalTreeUI
         }*/
     }
 
+    
+    public Rectangle getPathBounds(JTree tree, TreePath path) {
+    if(tree != null && treeState != null) {
+        Insets           i = tree.getInsets();
+        Rectangle        bounds = treeState.getBounds(path, null);
+
+        if(bounds != null && i != null) {
+        bounds.x += i.left;
+        bounds.y += i.top;
+        // we use the full row width instead of only the label bounds
+        bounds.width = tree.getWidth()-i.right-bounds.x;
+        }
+        return bounds;
+    }
+    return null;
+    }
+    
+    public TreePath getClosestPathForLocation(JTree tree, int x, int y)
+    {   
+        return super.getClosestPathForLocation(tree, x, y);
+    }
+
     int hoveredRow = -1;
     int hovx = 0;
     int hovy = 0;
-    private class ExpandControlHoverEffect extends MouseMotionAdapter
-    {
-        public void mouseMoved(MouseEvent e)
-        {
-            int lastRow = hoveredRow;
-            TreePath tp = 
-                getClosestPathForLocation(tree, e.getX(), e.getY());
-            if (tp == null)
-                return ;
-            
-            int row = tree.getUI().getRowForPath(tree,tp);
-            if (ExplorerTreeUI.this.isLocationInExpandControl(
-                    row, tp.getPathCount()-1, e.getX(), e.getY()
-            ))
-            {
-                hoveredRow = row;
-            }
-            else
-            {
-                hoveredRow=-1;
-            }
-
-            if (hoveredRow!=lastRow)
-            {
-                tree.repaint(hovx-15, hovy-15,30,30);
-                tree.repaint(e.getX()-15, e.getY()-15,30,30);
-
-                hovx = e.getX();
-                hovy = e.getY();
-            }
-        }
-    }
     
-    private static class SelectionFix extends MouseAdapter
+    private static class ExpandControlHoverEffect extends MouseAdapter
+        implements MouseMotionListener
     {
         public void mousePressed(MouseEvent e)
         {
             Component c = e.getComponent();
-            if (c instanceof JTree)
+            if (!(c instanceof JTree)) return;
+            JTree tree = (JTree) c;
+            TreeUI treeUI = tree.getUI();
+            
+            if (SwingUtilities.isRightMouseButton(e) && treeUI != null)
             {
-                JTree tree = (JTree)c;
-                
-                
-                if (tree.getPathForLocation(e.getX(), e.getY())==null)
+                // selection also by right click 
+                TreePath tp = treeUI.getClosestPathForLocation(tree, e.getX(), e.getY());
+                if (tp != null)
+                    tree.setSelectionPath(tp);
+                if (!tree.hasFocus())
+                    tree.requestFocus();
+            }
+
+            // event redirection
+            if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount()==2)
+            {
+                TreePath path = tree.getPathForLocation(e.getX(), e.getY());
+                if (path != null)
                 {
-                    TreePath tp = tree.getUI().getClosestPathForLocation(tree, e.getX(), e.getY());
-                    if (tp!=null)
+                    Object tnode = path.getLastPathComponent();
+                    if (tnode instanceof ETreeNode)
                     {
-                        Rectangle bounds = tree.getPathBounds(tp);
-                        if (e.getY()<bounds.y+bounds.height)
+                        ETreeNode etn = (ETreeNode) tnode;
+                        ContextEvent event = new ContextEvent((ExplorerTree)tree, ExplorerTree.ACTION_OPEN, etn);
+                        etn.processEvent(event);
+                    }
+                }
+            }
+            
+            // selection fix
+            if (tree.getPathForLocation(e.getX(), e.getY())==null)
+            {
+                TreePath tp = tree.getUI().getClosestPathForLocation(tree, e.getX(), e.getY());
+                if (tp!=null)
+                {
+                    Rectangle bounds = tree.getPathBounds(tp);
+                    if (e.getY()<bounds.y+bounds.height)
+                    {
+                        tree.setSelectionPath(tp);
+
+                        if (e.getClickCount()>=2)
                         {
-                            tree.setSelectionPath(tp);
-    
-                            if (e.getClickCount()>=2)
-                            {
-                                if (tree.isExpanded(tp))
-                                    tree.collapsePath(tp);
-                                else
-                                    tree.expandPath(tp);
-                            }
+                            if (tree.isExpanded(tp))
+                                tree.collapsePath(tp);
+                            else
+                                tree.expandPath(tp);
                         }
                     }
                 }
-            }   
+            }
+        }
+        
+        // ExpandControlHoverEffect
+        public void mouseMoved(MouseEvent e)
+        {
+            Component c = e.getComponent();
+            if (!(c instanceof JTree)) return;
+            JTree tree = (JTree) c;
+            TreeUI treeUI = tree.getUI();
+            if (!(treeUI instanceof ExplorerTreeUI)) return;
+            ExplorerTreeUI etUI = (ExplorerTreeUI) treeUI;
+            
+            int lastRow = etUI.hoveredRow;
+            TreePath tp = 
+                etUI.getClosestPathForLocation(tree, e.getX(), e.getY());
+            if (tp == null)
+                return ;
+            
+            int row = tree.getUI().getRowForPath(tree,tp);
+            if (etUI.isLocationInExpandControl(
+                    row, tp.getPathCount()-1, e.getX(), e.getY()
+            ))
+            {
+                etUI.hoveredRow = row;
+            }
+            else
+            {
+                etUI.hoveredRow=-1;
+            }
+
+            if (etUI.hoveredRow!=lastRow)
+            {
+                tree.repaint(etUI.hovx-15, etUI.hovy-15,30,30);
+                tree.repaint(e.getX()-15, e.getY()-15,30,30);
+
+                etUI.hovx = e.getX();
+                etUI.hovy = e.getY();
+            }
         }
     }
-
+    
 
 }

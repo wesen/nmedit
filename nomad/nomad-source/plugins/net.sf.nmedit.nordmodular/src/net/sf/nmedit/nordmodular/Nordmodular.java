@@ -18,6 +18,8 @@
  */
 package net.sf.nmedit.nordmodular;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -28,7 +30,6 @@ import net.sf.nmedit.jtheme.clavia.nordmodular.JTNM1Context;
 import net.sf.nmedit.jtheme.clavia.nordmodular.NMStorageContext;
 import net.sf.nmedit.jtheme.store.DefaultStorageContext;
 import net.sf.nmedit.jtheme.util.RelativeClassLoader;
-import net.sf.nmedit.nmutils.Timer;
 
 public class Nordmodular
 {
@@ -69,24 +70,21 @@ public class Nordmodular
     {
         InputStream source;
         
-        Timer timer = new Timer();
+        URL mdURL = getClass().getClassLoader().getResource("module-descriptions/modules.xml");
         
-        timer.reset();
         
         NM1ModuleDescriptions descriptions;
-        source = getResourceAsStream("module-descriptions/modules.xml");
+        source = new FileInputStream(new File(mdURL.toURI()));
         try
         {
             descriptions = NM1ModuleDescriptions.parse(source);
+            descriptions.setModuleDescriptionsClassLoader(getRelativeClassLoader(mdURL));
         }
         finally
         {
             source.close();
         }
         
-        System.out.println("descriptions: "+timer);
-        
-        timer.reset();
         DefaultStorageContext storageContext;
         final String ct = "classic-theme/";
         final String ctf = ct+"classic-theme.xml";
@@ -95,26 +93,28 @@ public class Nordmodular
         {
             URL relative = getClass().getClassLoader().getResource(ctf);
             
-            String r = relative.getPath();
-            r = r.substring(0, r.lastIndexOf("/"))+"/";
-            
-            RelativeClassLoader rcl = new RelativeClassLoader(r, getClass().getClassLoader());
-            
-            storageContext = new NMStorageContext(rcl);
+            storageContext = new NMStorageContext(getRelativeClassLoader(relative));
             storageContext.parseStore(new InputSource(source));
         }
         finally
         {
             source.close();
         }
-        System.out.println("theme: "+timer);
         
-        JTNM1Context jtcontext = new JTNM1Context();
+        JTNM1Context jtcontext = new JTNM1Context(storageContext);
         
         jtcontext.setUIDefaultsClassLoader(getClass().getClassLoader());
         
         context = new NMContext(descriptions, jtcontext, storageContext);
     }
     
+    private RelativeClassLoader getRelativeClassLoader(URL url)
+    {
+        String r = url.getPath();
+        r = r.substring(0, r.lastIndexOf("/"))+"/";
+        return new RelativeClassLoader(r, getClass().getClassLoader());
+    }
+    
 }
+
 

@@ -22,7 +22,14 @@
  */
 package net.sf.nmedit.nomad.core.swing.explorer;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -38,6 +45,7 @@ public class ExplorerTree extends JTree
     {
         setModel(new DefaultTreeModel(root, true));
         setUI(new ExplorerTreeUI());
+        setFocusable(true);
     }
 
     public void addRootNode(TreeNode node)
@@ -91,7 +99,124 @@ public class ExplorerTree extends JTree
     {
         fireNodeStructureChanged(getRoot());
     }
+
+    public Action createExpandAllAction()
+    {
+        return new ExpandAllAction(this);
+    }
+
+    public Action createCollapseAllAction()
+    {
+        return new CollapseAllAction(this);
+    }
     
+    private static ImageIcon getImage(String name)
+    {
+        return new ImageIcon(ExplorerTree.class.getResource(name));
+    }
+    
+    private static class ExpandAllAction extends AbstractAction implements Runnable
+    {
+        private ExplorerTree tree;
+
+        public ExpandAllAction(ExplorerTree tree)
+        {
+            this.tree = tree;
+            putValue(SHORT_DESCRIPTION, "expand all");
+            putValue(SMALL_ICON, getImage("/swing/browser/expandall.gif"));
+        }
+
+        public void actionPerformed(ActionEvent e)
+        {
+            setEnabled(false);
+            SwingUtilities.invokeLater(this);
+        }
+
+        public void run()
+        {
+            try
+            {
+                tree.expandAll();
+            }
+            finally
+            {
+                setEnabled(true);
+            }
+        }
+    }
+    
+    
+    private static class CollapseAllAction extends AbstractAction implements Runnable 
+    {
+        private ExplorerTree tree;
+
+        public CollapseAllAction(ExplorerTree tree)
+        {
+            this.tree = tree;
+            putValue(SHORT_DESCRIPTION, "collapse all");
+            putValue(SMALL_ICON, getImage("/swing/browser/collapseall.gif"));
+        }
+
+        public void actionPerformed(ActionEvent e)
+        {
+            setEnabled(false);
+            SwingUtilities.invokeLater(this);
+        }
+
+        public void run()
+        {
+            try
+            {
+                tree.collapseAll();
+            }
+            finally
+            {
+                setEnabled(true);
+            }
+        }
+    }
+
+
+    public void expandAll()
+    {
+        int i = 0;
+        while( i < getRowCount() ) expandRow( i++ );
+    }
+    
+    public void collapseAll()
+    {
+        int i = getRowCount()-1;
+        while( i >= 0 ) 
+        {
+            collapseRow( i-- );
+        }
+    }
+
+    public boolean isPopupTrigger(MouseEvent e, TreeNode treeNode, 
+            boolean exactNodeLocation)
+    {
+        if (SwingUtilities.isRightMouseButton(e))
+        {            
+            TreePath path = getPathForLocation(e.getX(), e.getY());
+            if (path == null)
+                return false;
+            
+            if (path.getLastPathComponent() == treeNode)
+                return true;
+            
+            if (exactNodeLocation)
+                return false;
+            
+            path = path.getParentPath();
+            while (path != null)
+            {
+                if (path.getLastPathComponent() == treeNode)
+                    return true;
+                path = path.getParentPath();
+            }
+        }
+        return false;
+    }
     
     
   /*

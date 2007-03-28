@@ -18,34 +18,17 @@
  */
 
 /*
- * Created on May 24, 2006
+ * Created on Apr 29, 2006
  */
-package net.sf.nmedit.nomad.core.util.document;
+package net.sf.nmedit.nomad.core.swing.document;
 
-public class DocumentEvent
+import javax.swing.Icon;
+import javax.swing.JComponent;
+
+public interface Document
 {
-
-    public final static int DOCUMENT_ADDED      = 0;
-    public final static int DOCUMENT_REMOVED    = 1;
-    public final static int DOCUMENT_SELECTED   = 2;
-    
-    private final int ID;
-    private Document document;
-
-    public DocumentEvent(int ID, Document document)
-    {
-        this.ID = ID;
-        this.document = document;
-    }
-    
-    public int getID()
-    {
-        return ID;
-    }
-    
-    public Document getDocument()
-    {
-        return document;
-    }
-
+    public String getTitle();
+    public JComponent getComponent();
+    Icon getIcon();
+    void dispose();
 }

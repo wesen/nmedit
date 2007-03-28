@@ -19,10 +19,13 @@
 package net.sf.nmedit.nordmodular;
 
 import java.awt.Event;
+import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.sound.midi.MidiDevice;
+import javax.swing.AbstractAction;
+import javax.swing.JPopupMenu;
 
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SynthException;
@@ -57,6 +60,99 @@ public class NMSynthDeviceContext extends SynthDeviceContext
         return (NordModular) super.getSynth();
     }
 
+    protected EventHandler createEventHandler()
+    {
+        return new NMEventHandler(this);
+    }
+
+    private static class NMEventHandler extends EventHandler
+    {
+
+        public NMEventHandler(SynthDeviceContext context)
+        {
+            super(context);
+        }
+        
+        public JPopupMenu getSlotPopup(SlotLeaf leaf)
+        {
+            JPopupMenu menu = new JPopupMenu();
+
+            menu.add(new SlotAction(leaf, SlotAction.OPEN_PATCH));
+            menu.add(new SlotAction(leaf, SlotAction.NEW_PATCH));
+            menu.addSeparator();
+            menu.add(new SlotAction(leaf, SlotAction.ENABLE_DISABLE_SLOT));
+            menu.add(new SlotAction(leaf, SlotAction.SELECT_SLOT));
+            
+            return menu;
+            
+        }
+        
+    }
+    
+
+    private static class SlotAction extends AbstractAction
+    {
+
+        public static final String OPEN_PATCH = "open.patch";
+        public static final String NEW_PATCH = "new.patch";
+        public static final String ENABLE_DISABLE_SLOT = "EnableDisable";
+        public static final String SELECT_SLOT = "select";
+        
+        private SlotLeaf leaf;
+        private NmSlot slot;
+        
+        public SlotAction(SlotLeaf leaf, String command)
+        {
+            this.leaf = leaf;
+            this.slot = (NmSlot) leaf.getSlot();
+            
+            putValue(ACTION_COMMAND_KEY, command);
+            if (command == OPEN_PATCH)
+            {
+                putValue(NAME, "Open Patch");
+            }
+            else if (command == NEW_PATCH)
+            {
+                putValue(NAME, "New Patch");
+                setEnabled(false);
+            }
+            else if (command == ENABLE_DISABLE_SLOT)
+            {
+                putValue(NAME, slot.isEnabled() ? "Disable Slot" : "Enable Slot");
+            }
+            else if (command == SELECT_SLOT)
+            {
+                putValue(NAME, "Select");
+                setEnabled(slot.isEnabled());
+            }
+        }
+
+        public void actionPerformed(ActionEvent e)
+        {
+            if (!isEnabled()) return;
+            
+            String cmd = e.getActionCommand();
+            if (cmd == OPEN_PATCH)
+            {
+                try
+                {
+                    slot.createRequestPatchWorker().requestPatch();
+                }
+                catch (SynthException e1)
+                {
+                    e1.printStackTrace();
+                }
+            }
+            else if (cmd == NEW_PATCH);
+            else if (cmd == ENABLE_DISABLE_SLOT)
+                slot.requestEnableSlot(!slot.isEnabled());
+            else if (cmd == SELECT_SLOT)
+                slot.requestSelectSlot();
+        }
+        
+    }
+    
+    
     private static class PatchOpener implements SlotManagerListener,
         SlotListener
     {

@@ -21,12 +21,17 @@ package net.sf.nmedit.nordmodular;
 import java.io.File;
 import java.net.URI;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTNMPatch;
-import net.sf.nmedit.jtheme.component.JTPatch;
-import net.sf.nmedit.nomad.core.util.document.Document;
+import net.sf.nmedit.nomad.core.swing.document.Document;
 
 public class PatchDocument implements Document
 {
+    
+    public static Icon pchIcon = new ImageIcon(
+            PatchDocument.class.getResource("/icons/patch_file_icon16.png"));
     
     private JTNMPatch jtpatch;
     private URI uri;
@@ -58,9 +63,18 @@ public class PatchDocument implements Document
 
     public String getTitle()
     {
-        System.out.println("getTitle: "+jtpatch.getPatch().getName());
-        
         return jtpatch.getPatch().getName();
+    }
+
+    public Icon getIcon()
+    {
+        return pchIcon;
+    }
+
+    public void dispose()
+    {
+        if (jtpatch != null)
+            jtpatch.dispose();
     }
 
 }

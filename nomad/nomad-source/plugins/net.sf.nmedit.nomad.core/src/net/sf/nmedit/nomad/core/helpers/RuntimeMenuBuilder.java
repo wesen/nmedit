@@ -23,6 +23,9 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Iterator;
 
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 
@@ -40,12 +43,31 @@ public class RuntimeMenuBuilder
     private final static String SYNTH_ROOT_KEY = "nomad.menu.file.new.global.synth";
     private final static String NEW_LOCATION_ROOT_KEY = "nomad.menu.file.new.global.location";
     
+    private static transient Icon newFileIcon;
+    
+    private static Icon getNewFileIcon()
+    {
+        if (newFileIcon == null)
+            newFileIcon = getIcon("/icons/etool16/new_untitled_text_file.gif");
+        return newFileIcon;
+    }
+    
+    private static ImageIcon getIcon(String name)
+    {
+        return new ImageIcon(RuntimeMenuBuilder.class.getResource(name));
+    }
+    
     private static MLEntry getEntry(MenuLayout layout, String key)
     {
         MLEntry entry = layout.getEntry(key);
         if (entry == null)
             throw new RuntimeException("Could not find menu entry: "+key);
         return entry;
+    }
+    
+    public static Action getNewLocationAction(MenuLayout layout)
+    {
+        return layout.getEntry(NEW_LOCATION_ROOT_KEY);
     }
     
     public static void buildNewMenuEntries(MenuLayout layout)
@@ -65,6 +87,8 @@ public class RuntimeMenuBuilder
 
             Iterator<FileService> iter = ServiceRegistry.getServices(FileService.class);
             
+            Icon newFileIcon = getNewFileIcon();
+            
             while (iter.hasNext())
             {
                 FileService service = iter.next();
@@ -75,6 +99,10 @@ public class RuntimeMenuBuilder
                     
                     entry.putValue(MLEntry.NAME, service.getName());
                     entry.putValue(MLEntry.SHORT_DESCRIPTION, service.getDescription());
+                    Icon icon = service.getIcon();
+                    if (icon == null)
+                        icon = newFileIcon;
+                    entry.putValue(MLEntry.SMALL_ICON, icon);
                     
                     entry.addActionListener(new FileNewBridge(service));
                     root.add(0, entry);

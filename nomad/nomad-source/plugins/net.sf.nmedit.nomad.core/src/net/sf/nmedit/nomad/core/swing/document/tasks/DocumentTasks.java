@@ -20,11 +20,11 @@
 /*
  * Created on Jun 1, 2006
  */
-package net.sf.nmedit.nomad.core.util.document.tasks;
+package net.sf.nmedit.nomad.core.swing.document.tasks;
 
 import java.io.File;
 
-import net.sf.nmedit.nomad.core.util.document.Document;
+import net.sf.nmedit.nomad.core.swing.document.Document;
 
 public interface DocumentTasks
 {

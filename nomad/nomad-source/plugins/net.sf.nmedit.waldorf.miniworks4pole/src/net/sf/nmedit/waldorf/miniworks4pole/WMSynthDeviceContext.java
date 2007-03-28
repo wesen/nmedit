@@ -62,10 +62,11 @@ public class WMSynthDeviceContext extends SynthDeviceContext
         
         if (getSynth().isConnected())
         {
+            /*
             ((MWSlot)getSynth().getSlot(0))
             .setPatch(MWData.createPatch());
             
-            System.out.println(((MWSlot)getSynth().getSlot(0)).getPatch());
+            System.out.println(((MWSlot)getSynth().getSlot(0)).getPatch());*/
         }
     }
     

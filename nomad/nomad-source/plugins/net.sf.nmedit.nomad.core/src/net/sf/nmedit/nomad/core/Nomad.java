@@ -33,6 +33,8 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
+import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -40,22 +42,24 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
 
 import net.sf.nmedit.nomad.core.NomadLoader.LocaleHandler;
 import net.sf.nmedit.nomad.core.forms.NomadMidiDialogFrmHandler;
 import net.sf.nmedit.nomad.core.helpers.DocumentActionActivator;
 import net.sf.nmedit.nomad.core.helpers.RuntimeMenuBuilder;
 import net.sf.nmedit.nomad.core.i18n.LocaleConfiguration;
-import net.sf.nmedit.nomad.core.jpf.JPFPluginDialog;
+import net.sf.nmedit.nomad.core.jpf.PluginView;
 import net.sf.nmedit.nomad.core.menulayout.MenuBuilder;
 import net.sf.nmedit.nomad.core.menulayout.MenuLayout;
 import net.sf.nmedit.nomad.core.service.ServiceRegistry;
 import net.sf.nmedit.nomad.core.service.fileService.FileService;
 import net.sf.nmedit.nomad.core.service.fileService.FileServiceTool;
 import net.sf.nmedit.nomad.core.service.initService.InitService;
+import net.sf.nmedit.nomad.core.swing.ButtonBarBuilder;
+import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
-import net.sf.nmedit.nomad.core.util.document.DefaultDocumentManager;
+import net.sf.nmedit.nomad.core.swing.tabs.JTabbedPane2;
+import net.sf.nmedit.nomad.core.utils.ClonedAction;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -75,6 +79,7 @@ public class Nomad
     private MenuLayout menuLayout;
     private MenuBuilder menuBuilder;
     private ExplorerTree explorerTree;
+    private JTabbedPane2 toolPane;
     
     public DefaultDocumentManager getDocumentManager()
     {
@@ -134,17 +139,14 @@ public class Nomad
         
         this.menuLayout = menuLayout;
 
-        MenuLayout.disableGhosts(menuLayout);
-        
         menuLayout.getEntry("nomad.menu.help.plugins")
         .addActionListener(new ActionListener(){
 
             public void actionPerformed(ActionEvent e)
             {
-                JPFPluginDialog pd = new JPFPluginDialog(Nomad.sharedInstance().getWindow());
-                
-                pd.setBounds(0, 0, 300, 300);
-                pd.setVisible(true);
+                PluginView view = new PluginView();
+                Nomad.sharedInstance().getDocumentManager()
+                .add(view);
             }});
 
         menuLayout.getEntry("nomad.menu.synth.setup")
@@ -160,7 +162,10 @@ public class Nomad
                 dialog.setVisible(true);
             }});
 
+        MenuLayout.disableGhosts(menuLayout);
+        
         setupUI();
+        
     }
     
     public ExplorerTree getExplorer()
@@ -182,10 +187,25 @@ public class Nomad
         explorerTree = new ExplorerTree();
         explorerTree.setFont(new Font("Arial", Font.PLAIN, 11));
         JScrollPane explorerTreeScroller = new JScrollPane(explorerTree);
-        JTabbedPane left = new JTabbedPane();
+        toolPane = new JTabbedPane2();
+        toolPane.setCloseActionEnabled(false);
         
-        left.addTab("Explorer", explorerTreeScroller);
-        left.addTab("Modules", new JPanel());
+        JPanel explorerPane = new JPanel();
+        explorerPane.setLayout(new BorderLayout());
+        
+        ButtonBarBuilder ebuttonBar = new ButtonBarBuilder();
+        
+        Action newLocAction = new ClonedAction(RuntimeMenuBuilder.getNewLocationAction(menuLayout));
+        newLocAction.putValue(Action.NAME, null);
+        
+        ebuttonBar.add(newLocAction);
+        ebuttonBar.addBox();
+        ebuttonBar.addFlatButton(explorerTree.createCollapseAllAction());
+        
+        explorerPane.add(ebuttonBar.getContainer(), BorderLayout.NORTH);
+        explorerPane.add(explorerTreeScroller, BorderLayout.CENTER);
+        
+        toolPane.addTab("Explorer", getImage("/icons/eview16/filenav_nav.gif"), explorerPane);
   /*      
         left.setMinimumSize(new Dimension(200,110));
         left.setPreferredSize(new Dimension(200,110));
@@ -198,13 +218,23 @@ public class Nomad
         splitLR.setResizeWeight(0);
         splitLR.setDividerLocation(200);
         splitLR.setRightComponent(pageContainer);
-        splitLR.setLeftComponent(left);
+        splitLR.setLeftComponent(toolPane);
                 
         contentPane.setLayout(new BorderLayout());
        contentPane.add(splitLR, BorderLayout.CENTER);
 
     }
+    
+    private ImageIcon getImage(String name)
+    {
+        return new ImageIcon(getClass().getResource(name));
+    }
 
+    public JTabbedPane2 getToolPane()
+    {
+        return toolPane;
+    }
+    
     public NomadPlugin getCorePlugin()
     {
         return pluginInstance;
