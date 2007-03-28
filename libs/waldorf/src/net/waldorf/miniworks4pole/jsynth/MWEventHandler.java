@@ -1,8 +1,27 @@
+/* Copyright (C) 2006 Christian Schneider
+ * 
+ * This file is part of Nomad.
+ * 
+ * Nomad is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * Nomad is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Nomad; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package net.waldorf.miniworks4pole.jsynth;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sf.nmedit.jpatch.DefaultModule;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
 import net.sf.nmedit.jpatch.Module;
 import net.sf.nmedit.jpatch.ModuleDescriptor;
@@ -13,6 +32,7 @@ import net.sf.nmedit.jpatch.event.ModuleContainerEvent;
 import net.sf.nmedit.jpatch.event.ModuleContainerListener;
 import net.sf.nmedit.jpatch.event.ParameterEvent;
 import net.sf.nmedit.jpatch.event.ParameterValueChangeListener;
+import net.sf.nmedit.jpdl.Packet;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.event.SlotEvent;
 import net.sf.nmedit.jsynth.event.SlotListener;
@@ -167,18 +187,57 @@ public class MWEventHandler extends MWMidiListener
     
     public void bankChangeMessage(MiniworksMidiMessage message) 
     {
+        //System.out.println("bankChangeMessage(bank="+message.getBank());
         synth.send(MiniworksMidiMessage.createProgramDumpRequestMessage(1, message.getBank()));
     };
     
     public void programDumpMessage(MiniworksMidiMessage message)
     {
-       // MWPatch patch = new MWPatch(synth.getModuleDescriptions());
-      // synth.getSlot(0).setPatch(patch);
+        //System.out.println("programDumpMessage");
+        Packet pack = message.getPacket().getPacket("data");
+        //System.out.println(pack.getName());
+        
+        int programNumber = pack.getVariable("ProgramNumber");
+        
+        /*for (Object o: pack.getAllVariables())
+            System.out.println(o);*/
+
+        MWPatch patch = new MWPatch(synth.getModuleDescriptions());
+        
+        patch.setProgramNumber(programNumber);
+        
+        byte[] data = message.getData();
+        System.out.println(data);
+        
+        DefaultModule module = patch.getMiniworksModule();
+        for (int i=0;i<module.getParameterCount();i++)
+        {
+            ParameterDescriptor pd = module.getDescriptor().getParameter(i); 
+            try
+            {
+                Parameter p = module.getParameter(pd);
+                int value = pack.getVariable((String) pd.getAttribute("message-id"));
+                p.setValue(value);
+                
+            }
+            catch (InvalidDescriptorException e)
+            {
+                // no op
+            }
+        }
+        
+        synth.getSlot(0).setPatch(patch);
         // TODO
         
     };
-    public void programBulkDumpMessage(MiniworksMidiMessage message) {};
-    public void allDumpMessage(MiniworksMidiMessage message) {}
+    public void programBulkDumpMessage(MiniworksMidiMessage message) {
+        
+        System.out.println("programBulkDumpMessage");
+        
+    };
+    public void allDumpMessage(MiniworksMidiMessage message) {
+        System.out.println("allDumpMessage");
+        }
 
     public void slotAdded(SlotEvent e)
     {

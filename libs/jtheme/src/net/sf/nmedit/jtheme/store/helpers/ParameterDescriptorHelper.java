@@ -24,6 +24,8 @@ import net.sf.nmedit.jpatch.ModuleDescriptor;
 import net.sf.nmedit.jpatch.Parameter;
 import net.sf.nmedit.jpatch.ParameterDescriptor;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
@@ -94,7 +96,12 @@ public final class ParameterDescriptorHelper
         }
         catch (InvalidDescriptorException e)
         {
-        	System.out.println(e);
+            Log log = LogFactory.getLog(getClass());
+            if (log.isDebugEnabled())
+            {
+                log.debug("Parameter not found in module: "+module+" descriptor:"+this, e);
+            }
+            
             return null;
         }
     }

@@ -91,9 +91,9 @@ public class JTPatchSettingsBar extends JPanel implements ModuleContainerListene
         setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
         
         pName = new JTextField(new LimitedText(16), "Name", 16);
-
+/*
         pName.setPreferredSize(new Dimension(200, 20));
-        pName.setMinimumSize(new Dimension(80, 0));
+        pName.setMinimumSize(new Dimension(80, 0));*/
         pName.setToolTipText("Patch Name");
         pName.setFont(smallFont);
         pName.addKeyListener(new KeyAdapter(){
@@ -155,6 +155,7 @@ public class JTPatchSettingsBar extends JPanel implements ModuleContainerListene
         l.setFont(smallFont);
         pane.add(l);
         pane.add(pName);
+        pane.add(Box.createHorizontalGlue());
         pane.add(Box.createHorizontalStrut(5));
         l = new JLabel("Voices:");
         l.setLabelFor(pVoices);
@@ -358,6 +359,11 @@ public class JTPatchSettingsBar extends JPanel implements ModuleContainerListene
     public void moduleRemoved(ModuleContainerEvent e)
     {
         updateCyclesInfo();
+    }
+
+    public void dispose()
+    {
+        // TODO uninstall listeners 
     }
 
 /*
