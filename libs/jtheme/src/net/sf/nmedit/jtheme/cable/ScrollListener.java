@@ -125,6 +125,7 @@ public class ScrollListener implements PropertyChangeListener, AdjustmentListene
         Rectangle visibleRect = getCachedRectangle();
         view.computeVisibleRect(visibleRect);
         cableManager.setVisibleRegion(visibleRect);
+        cableManager.notifyRepaintManager();
     }
     
 }

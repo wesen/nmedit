@@ -172,7 +172,12 @@ public class JTComponent extends JTBaseComponent
      */
     public void setOpaque(boolean isOpaque)
     {
-        super.setOpaque(isOpaque || staticLayerBackingStore!=null);
+        super.setOpaque(opacityOverwrite(isOpaque));
+    }
+    
+    protected boolean opacityOverwrite(boolean isOpaque)
+    {
+        return isOpaque || staticLayerBackingStore!=null;
     }
     
     /**
@@ -405,7 +410,7 @@ public class JTComponent extends JTBaseComponent
      * Paints the static layer of this component. Uses
      * the static layer backing store image instead if available.
      */
-    protected final void paintStaticLayerOrBackingStore(Graphics2D g2)
+    protected void paintStaticLayerOrBackingStore(Graphics2D g2)
     {
         if (hasStaticLayerBackingStore())
         {

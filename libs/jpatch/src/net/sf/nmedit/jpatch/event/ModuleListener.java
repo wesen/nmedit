@@ -28,5 +28,7 @@ public interface ModuleListener extends EventListener
 {
 
     void moduleMoved(ModuleEvent e);
+
+    void moduleRenamed(ModuleEvent e);
     
 }

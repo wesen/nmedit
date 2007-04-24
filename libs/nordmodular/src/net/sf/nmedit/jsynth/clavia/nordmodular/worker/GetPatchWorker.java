@@ -20,6 +20,7 @@
 import net.sf.nmedit.jnmprotocol.NmProtocolListener;
 import net.sf.nmedit.jnmprotocol.PatchMessage;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
+import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.ParseException;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchBuilder;
 import net.sf.nmedit.jsynth.SynthException;
@@ -85,7 +86,9 @@ public class GetPatchWorker extends NmProtocolListener implements ScheduledWorke
         
         NmSlot slot = synth.getSlot(slotId);
         slot.setPatchId(patchId);
-        slot.setPatch(patchBuilder.getPatch());
+        NMPatch patch = patchBuilder.getPatch();
+        patch.getHistory().setEnabled(true);
+        slot.setPatch(patch);
     }
 
     private void sendGetPatchMessage() throws SynthException

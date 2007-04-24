@@ -22,7 +22,7 @@
  */
 package net.sf.nmedit.jpatch;
 
-import java.util.Iterator;
+import java.util.Collection;
 
 import net.sf.nmedit.jpatch.event.ConnectorListener;
 
@@ -66,6 +66,7 @@ public interface Connector extends Composite
     /**
      * Same as <code>getConnectionManager().getOutput(this);</code>
      * @see ConnectionManager#getOutput(Connector)
+     * @deprecated use getSource() instead
      */
     Connector getOutput();
     
@@ -79,7 +80,7 @@ public interface Connector extends Composite
      * Same as <code>getConnectionManager().bfsSearch(this);</code>
      * @see ConnectionManager#bfsSearch(Connector)
      */
-    Iterator<Connector> bfsSearch();
+    //Iterator<Connector> bfsSearch();
 
     /**
      * Same as <code>getConnectionManager().disconnect(this);</code>
@@ -109,7 +110,7 @@ public interface Connector extends Composite
      * Same as <code>getConnectionManager().connect(this, c);</code>
      * @see ConnectionManager#connect(Connector, Connector)
      */
-    boolean connectWith(Connector c);
+    Connection connectWith(Connector c);
 
     /**
      * Same as <code>getConnectionManager().disconnect(this, c);</code>
@@ -123,26 +124,20 @@ public interface Connector extends Composite
      */
     Connector getSource();
     
-    /**
-     * Returns the number of child connectors
-     * @return
-     */
-    int getChildConnectorCount();
-    
-    /**
-     * Returns the child connector at the specified index
-     * @param index
-     * @return
-     */
-    Connector getChildConnector(int index);
+    Connector getParent();
     
     /**
      * Returns all child connectors
      * @return
      */
-    Connector[] getChildren();
+    Collection<? extends Connector> getChildren();
     
     void addConnectorListener(ConnectorListener l);
     void removeConnectorListener(ConnectorListener l);
+    
+    boolean canBreakConnection();
+    boolean breakConnection();
+
+    void updateConnectedState();
     
 }

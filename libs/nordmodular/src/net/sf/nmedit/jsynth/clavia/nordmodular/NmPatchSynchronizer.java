@@ -19,9 +19,7 @@
 package net.sf.nmedit.jsynth.clavia.nordmodular;
 
 import net.sf.nmedit.jnmprotocol.MidiMessage;
-import net.sf.nmedit.jpatch.InvalidDescriptorException;
-import net.sf.nmedit.jpatch.Module;
-import net.sf.nmedit.jpatch.ModuleDescriptor;
+import net.sf.nmedit.jpatch.AllEventsListener;
 import net.sf.nmedit.jpatch.Parameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMConnector;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMModule;
@@ -29,17 +27,13 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.NMParameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
 import net.sf.nmedit.jpatch.event.ConnectionEvent;
-import net.sf.nmedit.jpatch.event.ConnectionListener;
 import net.sf.nmedit.jpatch.event.ModuleContainerEvent;
-import net.sf.nmedit.jpatch.event.ModuleContainerListener;
 import net.sf.nmedit.jpatch.event.ModuleEvent;
-import net.sf.nmedit.jpatch.event.ModuleListener;
 import net.sf.nmedit.jpatch.event.ParameterEvent;
-import net.sf.nmedit.jpatch.event.ParameterValueChangeListener;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 
-public class NmPatchSynchronizer
+public class NmPatchSynchronizer extends AllEventsListener 
 {
 
     private NordModular synth;
@@ -47,11 +41,12 @@ public class NmPatchSynchronizer
     private NmSlot slot;
     private boolean installed;
 
-    private VoiceAreaSynchronizer commonVaSync;
-    private VoiceAreaSynchronizer polyVaSync;
-
     public NmPatchSynchronizer(NordModular synth, NMPatch patch, NmSlot slot)
     {
+        listenConnections = true;
+        listenModules = true;
+        listenParameters = true;
+        
         this.synth = synth;
         this.patch = patch;
         this.slot = slot;
@@ -76,12 +71,9 @@ public class NmPatchSynchronizer
     {
         if (!installed)
             return;
-        
-        commonVaSync.uninstall();
-        polyVaSync.uninstall();
-        
-        commonVaSync = null;
-        polyVaSync = null;
+
+        uninstallModuleContainer(patch.getPolyVoiceArea());
+        uninstallModuleContainer(patch.getCommonVoiceArea());
     }
     
     public void install()
@@ -89,189 +81,116 @@ public class NmPatchSynchronizer
         if (installed)
             return;
 
-        commonVaSync = new VoiceAreaSynchronizer(patch.getCommonVoiceArea());
-        polyVaSync = new VoiceAreaSynchronizer(patch.getPolyVoiceArea());
+        installModuleContainer(patch.getPolyVoiceArea());
+        installModuleContainer(patch.getCommonVoiceArea());
     }
 
-    private class VoiceAreaSynchronizer
-        implements ModuleContainerListener, ModuleListener, 
-        ParameterValueChangeListener, ConnectionListener
+    public void moduleAdded(ModuleContainerEvent e)
     {
-        
-        private VoiceArea va;
-        
-        public VoiceAreaSynchronizer(VoiceArea va)
+        super.moduleAdded(e);
+        NMModule module = (NMModule) e.getModule();            
+        try
         {
-            this.va = va;
-            install();
+            synth.getProtocol().send(NmUtils.createNewModuleMessage(slot.getPatchId(), module));
         }
-
-        public void install()
+        catch (Exception er)
         {
-            va.getConnectionManager().addConnectionListener(this);
-            va.addModuleContainerListener(this);
-            for (Module m: va)
-                install(m);
+            // TODO handle error
         }
-
-        public void uninstall()
-        {
-            va.getConnectionManager().removeConnectionListener(this);
-            va.removeModuleContainerListener(this);
-            for (Module m: va)
-                uninstall(m);
-        }
-
-        private void install(Module m)
-        {
-            m.addModuleListener(this);
-            ModuleDescriptor md = m.getDescriptor();
-            for (int i=0;i<md.getParameterCount();i++)
-            {
-                try
-                {
-                    Parameter p = m.getParameter(md.getParameterDescriptor(i));
-                    install(p);
-                }
-                catch (InvalidDescriptorException e)
-                {
-                    // TODO
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        private void uninstall(Module m)
-        {
-            m.removeModuleListener(this);
-            ModuleDescriptor md = m.getDescriptor();
-            for (int i=0;i<md.getParameterCount();i++)
-            {
-                try
-                {
-                    Parameter p = m.getParameter(md.getParameterDescriptor(i));
-                    uninstall(p);
-                }
-                catch (InvalidDescriptorException e)
-                {
-                    // TODO
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        private void install(Parameter p)
-        {
-            p.addParameterValueChangeListener(this);
-        }
-
-        private void uninstall(Parameter p)
-        {
-            p.removeParameterValueChangeListener(this);
-        }
-        
-        public void moduleAdded(ModuleContainerEvent e)
-        {
-            NMModule module = (NMModule) e.getModule();
-            
-            install(module);
-            
-            try
-            {
-                synth.getProtocol().send(NmUtils.createNewModuleMessage(slot.getPatchId(), module));
-            }
-            catch (Exception er)
-            {
-                // TODO handle error
-            }
-        }
-
-        public void moduleRemoved(ModuleContainerEvent e)
-        {
-            NMModule module = (NMModule) e.getModule();
-            
-            uninstall(module);
-            try
-            {
-            synth.getProtocol().send(NmUtils.createDeleteModuleMessage(slot.getPatchId(), module));
-            }
-            catch (Exception er)
-            {
-                // TODO handle error
-            }
-        }
-
-        public void moduleMoved(ModuleEvent e)
-        {
-            try
-            {
-                MidiMessage message =
-                    NmUtils.createMoveModuleMessage((NMModule)e.getModule(), slot.getSlotIndex(), 
-                        slot.getPatchId());
-                
-                // TODO if (synth.isConnected())
-                synth.getProtocol().send(message);
-            }
-            catch (Exception e1)
-            {
-                e1.printStackTrace();
-            }
-        }
-
-        public void parameterValueChanged(ParameterEvent e)
-        {
-            Parameter parameter = e.getParameter();
-
-            try
-            {
-                MidiMessage message =
-                    NmUtils.createParameterChangedMessage((NMParameter) parameter, 
-                            slot.getSlotIndex(), slot.getPatchId());
-
-                // TODO if (synth.isConnected())
-                synth.getProtocol().send(message);
-            }
-            catch (Exception e1)
-            {
-                e1.printStackTrace();
-            }
-        }
-
-        public void connectionAdded(ConnectionEvent e)
-        {
-            try
-            {
-                MidiMessage message =
-                NmUtils.createNewCableMessage(va, 
-                        (NMConnector) e.getSource(), 
-                        (NMConnector) e.getDestination(),
-                        slot.getSlotId(), slot.getPatchId());
-                        
-                synth.getProtocol().send(message);
-            }
-            catch (Exception e1)
-            {
-                e1.printStackTrace();
-            }
-        }
-
-        public void connectionRemoved(ConnectionEvent e)
-        {
-            try
-            {
-                synth.getProtocol().send(
-                        NmUtils.createDeleteCableMessage(va, 
-                                (NMConnector) e.getSource(), 
-                                (NMConnector) e.getDestination(),
-                        slot.getSlotId(), slot.getPatchId()
-                ));
-            }
-            catch (Exception e1)
-            {
-                e1.printStackTrace();
-            }
-        }
-        
     }
-    
+
+    public void moduleRemoved(ModuleContainerEvent e)
+    {
+        super.moduleRemoved(e);
+        NMModule module = (NMModule) e.getModule();
+        try
+        {
+        synth.getProtocol().send(NmUtils.createDeleteModuleMessage(slot.getPatchId(), module));
+        }
+        catch (Exception er)
+        {
+            // TODO handle error
+        }
+    }
+
+    public void moduleRenamed(ModuleEvent e)
+    {
+        // NmUtils.create
+    }
+
+    public void moduleMoved(ModuleEvent e)
+    {
+        try
+        {
+            MidiMessage message =
+                NmUtils.createMoveModuleMessage((NMModule)e.getModule(), slot.getSlotIndex(), 
+                    slot.getPatchId());
+            
+            // TODO if (synth.isConnected())
+            synth.getProtocol().send(message);
+        }
+        catch (Exception e1)
+        {
+            e1.printStackTrace();
+        }
+    }
+
+    public void parameterValueChanged(ParameterEvent e)
+    {
+        Parameter parameter = e.getParameter();
+
+        try
+        {
+            MidiMessage message =
+                NmUtils.createParameterChangedMessage((NMParameter) parameter, 
+                        slot.getSlotIndex(), slot.getPatchId());
+
+            // TODO if (synth.isConnected())
+            synth.getProtocol().send(message);
+        }
+        catch (Exception e1)
+        {
+            e1.printStackTrace();
+        }
+    }
+
+    public void connectionAdded(ConnectionEvent e)
+    {
+        try
+        {
+            VoiceArea va = (VoiceArea) e.getConnectionManager().getTarget();
+            
+            MidiMessage message =
+            NmUtils.createNewCableMessage(va, 
+                    (NMConnector) e.getSource(), 
+                    (NMConnector) e.getDestination(),
+                    slot.getSlotId(), slot.getPatchId());
+                    
+            synth.getProtocol().send(message);
+        }
+        catch (Exception e1)
+        {
+            e1.printStackTrace();
+        }
+    }
+
+    public void connectionRemoved(ConnectionEvent e)
+    {
+        try
+        {
+            VoiceArea va = (VoiceArea) e.getConnectionManager().getTarget();
+            
+            synth.getProtocol().send(
+                    NmUtils.createDeleteCableMessage(va, 
+                            (NMConnector) e.getSource(), 
+                            (NMConnector) e.getDestination(),
+                    slot.getSlotId(), slot.getPatchId()
+            ));
+        }
+        catch (Exception e1)
+        {
+            e1.printStackTrace();
+        }
+    }
+   
 }

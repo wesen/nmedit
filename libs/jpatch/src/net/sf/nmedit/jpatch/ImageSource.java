@@ -51,4 +51,10 @@ public class ImageSource
         return height;
     }
 
+    public String toString()
+    {
+        return getClass().getName()+"[src="+src+",width="
+            +width+",height="+height+"]";
+    }
+    
 }

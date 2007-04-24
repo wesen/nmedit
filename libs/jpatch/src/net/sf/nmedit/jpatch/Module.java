@@ -107,11 +107,19 @@ public interface Module extends Component, ModuleContainer
     void setScreenLocation(Point location);
     
     Point getScreenLocation();
-    
+
     int getScreenX();
     int getScreenY();
 
     void addModuleListener(ModuleListener l);
     void removeModuleListener(ModuleListener l);
+
+    String getTitle();
+    
+    void setTitle(String title);
+    
+    int getUniqueId();
+
+    void setUniqueId(int uniqueId);
     
 }

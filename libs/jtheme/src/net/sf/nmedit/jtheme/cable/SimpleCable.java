@@ -25,6 +25,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 
 import net.sf.nmedit.jpatch.Connector;
+import net.sf.nmedit.jpatch.Module;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTConnector;
 
@@ -162,6 +163,28 @@ public class SimpleCable implements Cable
     public Point getStop()
     {
         return getCableGeometrie().getStop();
+    }
+
+    public boolean contains(Connector c)
+    {
+        return getDestination() == c || getSource() == c;
+    }
+
+    public boolean contains(Module m)
+    {
+        return getDestinationModule() == m || getSourceModule() == m;
+    }
+
+    public Module getDestinationModule()
+    {
+        Connector c = getDestination();
+        return c == null ? null : c.getOwner();
+    }
+
+    public Module getSourceModule()
+    {
+        Connector c = getSource();
+        return c == null ? null : c.getOwner();
     }
 
 }

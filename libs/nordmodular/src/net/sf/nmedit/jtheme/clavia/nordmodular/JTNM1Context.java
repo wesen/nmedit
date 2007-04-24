@@ -33,6 +33,7 @@ import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.JTNM1ConnectorUI;
 import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.JTNM1KnobUI;
 import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.JTNM1ResetButtonUI;
 import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.JTNM1SliderUI;
+import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.NoteSeqEditorUI;
 import net.sf.nmedit.jtheme.component.JTButtonControl;
 import net.sf.nmedit.jtheme.component.JTConnector;
 import net.sf.nmedit.jtheme.component.JTDisplay;
@@ -112,6 +113,7 @@ public class JTNM1Context extends JTCustomContext
         installComponentClass(JTPhaserDisplay.class);
         installComponentClass(JTFilterEDisplay.class);
         installComponentClass(JTFilterFDisplay.class);
+        installComponentClass(NMNoteSeqEditor.class);
     }
 
     @Override
@@ -141,6 +143,7 @@ public class JTNM1Context extends JTCustomContext
         uidefaults.put(JTPhaserDisplay.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(JTFilterEDisplay.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(JTFilterFDisplay.uiClassID, JTDisplayUI.class.getName());
+        uidefaults.put(LFODisplay.uiClassID, JTDisplayUI.class.getName());
 
         uidefaults.put(NoteVelScaleDisplay.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(ADDisplay.uiClassID, JTDisplayUI.class.getName());
@@ -164,6 +167,8 @@ public class JTNM1Context extends JTCustomContext
         uidefaults.put(JTNM1SliderUI.sliderGripColorKey, new ColorUIResource(0xC4C4C4));
         uidefaults.put(JTNM1SliderUI.sliderBackgroundColorKey, new ColorUIResource(0xDCDCDE));
         uidefaults.put(JTNM1SliderUI.borderKey, new BorderUIResource(JTNM1BorderFactory.createNordEditor311Border()));
+        
+        uidefaults.put(NMNoteSeqEditor.uiClassID, NoteSeqEditorUI.class.getName());
     }
 
 }

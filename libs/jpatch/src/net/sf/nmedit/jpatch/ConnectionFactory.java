@@ -16,23 +16,11 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-/*
- * Created on Nov 30, 2006
- */
 package net.sf.nmedit.jpatch;
 
-import net.sf.nmedit.jpatch.history.History;
-
-public interface Patch
+public interface ConnectionFactory
 {
 
-    ModuleContainer getModuleContainer();
-    
-    String getName();
-    
-    String getVersion();
-
-    History getHistory();
+    Connection create(Connector a, Connector b);
     
 }

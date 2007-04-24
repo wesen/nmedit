@@ -19,6 +19,7 @@
 package net.sf.nmedit.test;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -47,9 +48,13 @@ import org.xml.sax.InputSource;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
+import net.sf.nmedit.jpatch.history.History;
+import net.sf.nmedit.jpatch.transformation.Transformations;
+import net.sf.nmedit.jpatch.transformation.impl.TransformationsBuilder;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTNM1Context;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTNMPatch;
+import net.sf.nmedit.jtheme.clavia.nordmodular.NMStorageContext;
 import net.sf.nmedit.jtheme.store.DefaultStorageContext;
 import net.sf.nmedit.jtheme.util.RelativeClassLoader;
 
@@ -76,6 +81,8 @@ public class UITest
         public static final String FileClose= "Close";
         public static final String UIUpdate = "Update UI";
         public static final String Exit = "Exit";
+        public static final String FileUndo = "Undo";
+        public static final String FileRedo = "Redo";
         
         public UITestAction(String command)
         {
@@ -91,6 +98,10 @@ public class UITest
                 UITest.fileClose();
             else if (e.getActionCommand() == UIUpdate)
                 UITest.updateUI();
+            else if (e.getActionCommand() == FileUndo)
+                UITest.fileUndo(true);
+            else if (e.getActionCommand() == FileRedo)
+                UITest.fileUndo(false);
             else if (e.getActionCommand() == Exit)
             {
                 if (JOptionPane.showConfirmDialog(frame, "Do you want to exit ?", "Exit?", 
@@ -136,6 +147,10 @@ public class UITest
         mnfile.addSeparator();
         mnfile.add(new UITestAction(UITestAction.Exit));
         mnbar.add(mnfile);
+        JMenu mnpatch = new JMenu("Patch");
+        mnpatch.add(new UITestAction(UITestAction.FileUndo));
+        mnpatch.add(new UITestAction(UITestAction.FileRedo));
+        mnbar.add(mnpatch);
         frame.setJMenuBar(mnbar);
         
         // content
@@ -187,6 +202,7 @@ public class UITest
         {
             in = new BufferedInputStream(new FileInputStream(file));
             patch = NmUtils.parsePatch(modules, in);
+            patch.getHistory().setEnabled(true);
         }
         catch (Exception e)
         {
@@ -230,16 +246,55 @@ public class UITest
         files.remove(index);
         tabbedPane.removeTabAt(index);
     }
-    
+
+    public static void fileUndo(boolean undo)
+    {
+        Component c = tabbedPane.getSelectedComponent();
+        if (c==null) return;
+
+        JTNMPatch jtpc = (JTNMPatch) c;
+        
+        NMPatch patch = jtpc.getPatch();
+        History history = patch.getHistory();
+        if (undo) history.undo();
+        else history.redo();
+    }
+
     static void updateUI()
     {
         createFrame(); // create a new frame
         createModuleDescriptions();
+        createTransformations();
         createUIContext(); // create ui context
         syncOpenFiles(); // reopen files 
 
         // show frame
         frame.setVisible(true);
+    }
+
+    static void createTransformations()
+    {
+        try
+        {
+            createTransformationsE();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    static void createTransformationsE() throws Exception
+    {
+        
+        InputSource is = new InputSource(new FileInputStream("/home/christian/CVS-Arbeitsbereich/nmedit/libs/nordmodular/data/module-descriptions/transformations.xml"));
+        
+        Transformations t = TransformationsBuilder.build(is, modules);
+       
+        modules.setTransformations(t);
+        
+        System.out.println("transformations: "+t);
+        
     }
 
     private static void createModuleDescriptions()
@@ -269,8 +324,22 @@ public class UITest
         {
             close(in);
         }
+
+        ClassLoader loader = UITest.class.getClassLoader();
+        File f;
+        try
+        {
+            f = (new File(moduleURL.toURI())).getParentFile();
+            loader = new RelativeClassLoader(f, loader);
+        }
+        catch (URISyntaxException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         
-        modules.setModuleDescriptionsClassLoader(UITest.class.getClassLoader());
+        modules.setModuleDescriptionsClassLoader(loader);
+        
     }
 
     static void createUIContext()
@@ -289,7 +358,7 @@ public class UITest
         }
         RelativeClassLoader relLoader = new RelativeClassLoader(classicThemeFile.getParent());
         
-        DefaultStorageContext dsc = new DefaultStorageContext(relLoader);
+        DefaultStorageContext dsc = new NMStorageContext(relLoader);
         
         InputStream in = null;
         try

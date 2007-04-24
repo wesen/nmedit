@@ -20,10 +20,12 @@ package net.sf.nmedit.jtheme.cable;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.util.Collection;
 import java.util.Iterator;
 
 import javax.swing.JComponent;
 
+import net.sf.nmedit.jpatch.Module;
 import net.sf.nmedit.jtheme.component.JTConnector;
 
 public interface JTCableManager extends Iterable<Cable>
@@ -41,7 +43,10 @@ public interface JTCableManager extends Iterable<Cable>
     
     boolean hasDirtyRegion();
 
-    Iterator<Cable> getVisible();
+    void getVisible(Collection<Cable> c);
+    void getCables(Collection<Cable> c, Module module);
+    void getCables(Collection<Cable> c, Collection<? extends Module> modules);
+
     Iterator<Cable> getCables();
 
     Rectangle getCoveredArea();

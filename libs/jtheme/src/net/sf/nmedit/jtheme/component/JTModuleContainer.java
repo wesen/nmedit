@@ -40,7 +40,7 @@ import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.plaf.JTModuleContainerUI;
 import net.sf.nmedit.jtheme.store.ModuleStore;
 
-public class JTModuleContainer extends JTBaseComponent
+public class JTModuleContainer extends JTBaseComponent 
 {
     
     public static final String uiClassId = "ModuleContainerUI";

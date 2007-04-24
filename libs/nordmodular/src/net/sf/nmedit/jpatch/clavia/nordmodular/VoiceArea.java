@@ -27,19 +27,78 @@ import java.util.Iterator;
 import javax.swing.event.EventListenerList;
 
 import net.sf.nmedit.jpatch.ComponentDescriptor;
+import net.sf.nmedit.jpatch.Connection;
+import net.sf.nmedit.jpatch.ConnectionFactory;
+import net.sf.nmedit.jpatch.ConnectionManager;
+import net.sf.nmedit.jpatch.ConnectionManagerImpl;
+import net.sf.nmedit.jpatch.Connector;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
 import net.sf.nmedit.jpatch.Module;
 import net.sf.nmedit.jpatch.ModuleContainer;
 import net.sf.nmedit.jpatch.ModuleDescriptor;
+import net.sf.nmedit.jpatch.MoveOperation;
 import net.sf.nmedit.jpatch.event.ModuleContainerEvent;
 import net.sf.nmedit.jpatch.event.ModuleContainerListener;
-import net.sf.nmedit.jpatch.event.ModuleEvent;
-import net.sf.nmedit.jpatch.event.ModuleListener;
 import net.sf.nmedit.jpatch.spec.DefaultModuleDescriptor;
 import net.sf.nmedit.nmutils.collections.ArrayMap;
 
-public class VoiceArea implements ModuleContainer, ModuleListener
+public class VoiceArea implements ModuleContainer
 {
+    
+    private static class SimpleConnection implements Connection
+    {
+        
+        private Connector a;        
+        private Connector b;
+
+        public SimpleConnection(Connector a, Connector b)
+        {
+            this.a = a;
+            this.b = b;
+        }
+
+        public boolean contains(Connector c)
+        {
+            return c==a||c==b;
+        }
+        
+        public boolean contains(Module m)
+        {
+            return getDestinationModule()==m || getSourceModule() == m;
+        }
+
+        public Connector getDestination()
+        {
+            return a;
+        }
+
+        public Module getDestinationModule()
+        {
+            return getDestination().getOwner();
+        }
+
+        public Connector getSource()
+        {
+            return b;
+        }
+
+        public Module getSourceModule()
+        {
+            return getSource().getOwner();
+        }
+        
+    }
+    
+    private static class ConnectionFactoryImpl implements ConnectionFactory
+    {
+        static ConnectionFactoryImpl instance = new ConnectionFactoryImpl();
+
+        public Connection create(Connector a, Connector b)
+        {
+            return new SimpleConnection(a, b);
+        }
+        
+    }
 
     public static final int UPDATE =-1;
     public static final int MOVE = 0;
@@ -49,7 +108,7 @@ public class VoiceArea implements ModuleContainer, ModuleListener
     private int impWidth;
     private int impHeight;
     private NMPatch patch;
-    private NMConnectionManager connectionManager = new NMConnectionManager(this);
+    private ConnectionManager connectionManager = new ConnectionManagerImpl(this, ConnectionFactoryImpl.instance);
     private ArrayMap<NMModule> modules ;
     
     private static final String ATTRIBUTE_CYCLES = "cycles";
@@ -112,7 +171,7 @@ public class VoiceArea implements ModuleContainer, ModuleListener
         unregisterCycles(((Double)module.getDescriptor().getAttribute(ATTRIBUTE_CYCLES)).doubleValue());
     }
     
-    public NMConnectionManager getConnectionManager()
+    public ConnectionManager getConnectionManager()
     {
         return connectionManager;
     }
@@ -167,7 +226,6 @@ public class VoiceArea implements ModuleContainer, ModuleListener
         updateSize(m, ADD);
 
         fireModuleAdded(m);
-        m.addModuleListener(this);
         
         registerCycles(m);
         return true;
@@ -175,17 +233,24 @@ public class VoiceArea implements ModuleContainer, ModuleListener
 
     public boolean remove( NMModule m )
     {
-        if (modules.get(m.getIndex())!=m)
-            return false;
-        modules.remove(m.getIndex());
-
-        m.makeUseless();
-        m.removeModuleListener(this);  
-        updateSize(m, REMOVE);
-        fireModuleRemoved(m);
-        m.setVoiceArea(null);
-        unregisterCycles(m);
-        return true;
+        getPatch().getHistory().beginRecord();
+        try
+        {  
+            if (modules.get(m.getIndex())!=m)
+                return false;
+            modules.remove(m.getIndex());
+    
+            m.makeUseless();
+            updateSize(m, REMOVE);
+            fireModuleRemoved(m);
+            m.setVoiceArea(null);
+            unregisterCycles(m);
+            return true;
+        }
+        finally
+        {
+            getPatch().getHistory().endRecord();
+        }
     }
 
     /*
@@ -490,12 +555,6 @@ public class VoiceArea implements ModuleContainer, ModuleListener
         return null;
     }
 
-    public void moduleMoved( ModuleEvent e )
-    {
-        // TODO Auto-generated method stub
-        
-    }
-
     public Iterator<Module> iterator()
     {
         return new Iterator<Module>()
@@ -532,6 +591,10 @@ public class VoiceArea implements ModuleContainer, ModuleListener
         +"[modules="+getModuleCount()+"]";
             
     }
-    
+
+    public MoveOperation createMoveOperation()
+    {
+        return new NMMoveOperation(this);
+    }
 
 }

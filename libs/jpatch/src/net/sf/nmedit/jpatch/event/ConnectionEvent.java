@@ -23,6 +23,7 @@
 package net.sf.nmedit.jpatch.event;
 
 import net.sf.nmedit.jpatch.Connection;
+import net.sf.nmedit.jpatch.ConnectionManager;
 import net.sf.nmedit.jpatch.Connector;
 
 public class ConnectionEvent extends JPatchEvent
@@ -48,18 +49,23 @@ public class ConnectionEvent extends JPatchEvent
         super( target, id, arg );
     }
     
-    public ConnectionEvent(Connection c)
+    public ConnectionEvent(ConnectionManager cm, Connection c)
     {
-        this(c.getSource(), c.getDestination());
+        this(cm, c.getSource(), c.getDestination());
     }
     
-    public ConnectionEvent(Connector source, Connector destination)
+    public ConnectionEvent(ConnectionManager cm, Connector source, Connector destination)
     {
-        this(null, 0, null);
+        this(cm, 0, null);
         this.source = source;
         this.destination = destination;
     }
 
+    public ConnectionManager getConnectionManager()
+    {
+        return (ConnectionManager) target;
+    }
+    
     public Connector getSource()
     {
         return source;

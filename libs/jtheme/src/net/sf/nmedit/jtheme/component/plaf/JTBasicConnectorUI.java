@@ -18,9 +18,10 @@
  */
 package net.sf.nmedit.jtheme.component.plaf;
 
-import java.awt.Component;
 import java.awt.Graphics2D;
+import java.awt.Component;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -28,18 +29,22 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
+import net.sf.nmedit.jpatch.Connection;
+import net.sf.nmedit.jpatch.ConnectionManager;
 import net.sf.nmedit.jpatch.Connector;
 import net.sf.nmedit.jpatch.Signal;
+import net.sf.nmedit.jpatch.history.History;
 import net.sf.nmedit.jtheme.JTCursor;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.DragCable;
-import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.JTComponent;
+import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.JTConnector;
 
 public class JTBasicConnectorUI extends JTConnectorUI
@@ -187,7 +192,20 @@ public class JTBasicConnectorUI extends JTConnectorUI
 
         public void mouseDragged(MouseEvent e)
         {
-            updateDragLocation((JTConnector) e.getComponent(), e.getX(), e.getY());
+            JTConnector c = (JTConnector) e.getComponent();
+            
+            if (pressClickCount == 1)
+            {
+                if (!isDragging())
+                    startDragNewCable(c, e.getX(), e.getY());
+            }
+            else if (pressClickCount == 2)
+            {
+                if (!isDragging())
+                startDragCurrentCables(c, e.getX(), e.getY());
+            }
+            
+            updateDragLocation(c, e.getX(), e.getY());
         }
 
         public void mouseMoved(MouseEvent e)
@@ -198,8 +216,6 @@ public class JTBasicConnectorUI extends JTConnectorUI
 
         public void mouseClicked(MouseEvent e)
         {
-            // TODO Auto-generated method stub
-            
         }
 
         public void mouseEntered(MouseEvent e)
@@ -213,26 +229,21 @@ public class JTBasicConnectorUI extends JTConnectorUI
             // TODO Auto-generated method stub
             
         }
-
+        
+        private int pressClickCount = 0;
+        
         public void mousePressed(MouseEvent e)
         {
+            pressClickCount = 0;
+            
             JTConnector c = (JTConnector) e.getComponent();
             if (!c.hasFocus())
                 c.requestFocus();
 
             if (!SwingUtilities.isLeftMouseButton(e))
                 return ;
-            
-            int clicks = e.getClickCount();
-            if (clicks == 1)
-            {
-                startDragNewCable(c, e.getX(), e.getY());
-            }
-            else if (clicks == 2)
-            {
-                startDragCurrentCables(c, e.getX(), e.getY());
-            }
-            
+        
+            pressClickCount = e.getClickCount();
         }
 
         public void mouseReleased(MouseEvent e)
@@ -286,8 +297,34 @@ public class JTBasicConnectorUI extends JTConnectorUI
 
             Point stop = SwingUtilities.convertPoint(c, new Point(x, y), cableManager.getView()); 
             JTConnector target = findConnectorAt(c, stop.x, stop.y);
+            
             if (target != null)
                 DragCable.setLocation(stop, target);
+            
+            if (connectedCables != null)
+            {
+                for (Cable cable:connectedCables)
+                {
+                    Point cstart = cable.getStart();
+                    Point cstop = cable.getStop();
+                    
+                    if (cable.getSource() != c)
+                        cstart.setLocation(stop);
+                    else
+                        cstop.setLocation(stop);
+                    
+                    cableManager.markDirty(cable);
+                    cable.setEndPoints(cstart, cstop);
+                    cableManager.markDirty(cable);
+                }
+
+               // cableManager.markCompletelyDirty();
+                cableManager.notifyRepaintManager();
+                
+                scrollToVisible(cableManager.getView(), c, x, y);
+                
+                return;
+            }
             
             for (int i=cables.length-1;i>=0;i--)
             {
@@ -297,23 +334,93 @@ public class JTBasicConnectorUI extends JTConnectorUI
                 cableManager.markDirty(cable);
             }
             
-            cableManager.markCompletelyDirty();
+            //cableManager.markCompletelyDirty();
             cableManager.notifyRepaintManager();
+            
+            scrollToVisible(cableManager.getView(), c, x, y);
         }
+        
+        private void scrollToVisible(JComponent view, JComponent c, int x, int y)
+        {
+            Point p = new Point(x, y);
+            
+            p = SwingUtilities.convertPoint(c, p, view);
+            
+            Rectangle r = new Rectangle(p.x-10, p.y-10, 20, 20);
+            
+            SwingUtilities.computeIntersection(0, 0, view.getWidth(), view.getHeight(), r);
+            
+            view.scrollRectToVisible(r);
+        }
+        
+        private transient Cable[] connectedCables;
         
         public void startDragCurrentCables(JTConnector c, int x, int y)
         {
-            // TODO Auto-generated method stub
-            
+            connectedCables = getConnectedCables(c);
+            if (connectedCables.length>0)
+                dragSource = c;
         }
         
         public void stopDrag(JTConnector c, int x, int y)
         {
             if (!isDragging())
                 return ;
+            
             dragSource = null;
 
             JTCableManager cableManager = c.getCableManager();
+
+            Point stop = SwingUtilities.convertPoint(c, new Point(x, y), cableManager.getView());
+            JTConnector target = findConnectorAt(c, stop.x, stop.y);
+            
+            if (connectedCables != null)
+            {
+                ConnectionManager cm =
+                    c.getConnector().getConnectionManager();
+
+                for (Cable cable: connectedCables)
+                {
+                    cableManager.markDirty(cable);
+                    cable.updateEndPoints();
+                    cableManager.markDirty(cable);
+                }
+                
+                
+                History history = 
+                    c.getConnector().getOwner().getPatch().getHistory();
+                
+                try
+                {
+                    if (history != null)
+                        history.beginRecord();
+                    
+                    
+                    if (target != null)
+                    {
+                        Collection<Connection> cc = cm.getConnections(c.getConnector());
+                        cm.removeAll(cc);
+    
+                        for (Connection con: cc)
+                        {
+                            Connector b = con.getDestination();
+                            if (c.getConnector() == b) b = con.getSource();
+                            
+                            b.connectWith(target.getConnector());
+                        }
+                    }
+                    
+                }
+                finally
+                {
+                    if (history != null)
+                        history.endRecord();
+                }
+
+                cableManager.notifyRepaintManager();
+                connectedCables = null;
+                return;
+            }
 
             if (cableManager != null)
             {
@@ -322,9 +429,6 @@ public class JTBasicConnectorUI extends JTConnectorUI
                 cableManager.notifyRepaintManager();
             }
             cables = NO_CABLES;
-
-            Point stop = SwingUtilities.convertPoint(c, new Point(x, y), cableManager.getView()); 
-            JTConnector target = findConnectorAt(c, stop.x, stop.y);
 
             if (target != null)
             {

@@ -27,6 +27,9 @@ import java.util.Map;
 
 import net.sf.nmedit.jpatch.ModuleContainer;
 import net.sf.nmedit.jpatch.Patch;
+import net.sf.nmedit.jpatch.history.History;
+import net.sf.nmedit.jpatch.history.HistoryImpl;
+import net.sf.nmedit.jpatch.history.Synchronizer;
 import net.sf.nmedit.jpatch.spec.ModuleDescriptions;
 import net.sf.nmedit.jsynth.Slot;
 
@@ -76,6 +79,8 @@ public class NMPatch implements Patch
      */
     private MorphSection morphSection;
     
+    private History history;
+    
     /**
      * A set of notes. The hashcode of the note class is equal to the note number.
      * This assures that no duplicate notes are in the set.
@@ -113,6 +118,17 @@ public class NMPatch implements Patch
         commonVoiceArea = new VoiceArea(this);
         
         setProperty(VERSION, "Nord Modular patch 3.0");
+        
+        HistoryImpl hi = new HistoryImpl();
+        history = hi;
+        Synchronizer synch = new Synchronizer(hi);
+        synch.installModuleContainer(polyVoiceArea);
+        synch.installModuleContainer(commonVoiceArea);
+    }
+    
+    public History getHistory()
+    {
+        return history;
     }
 
     public Slot getSlot()

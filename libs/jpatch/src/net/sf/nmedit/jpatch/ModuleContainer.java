@@ -22,6 +22,8 @@
  */
 package net.sf.nmedit.jpatch;
 
+import java.util.Collection;
+
 import net.sf.nmedit.jpatch.event.ModuleContainerListener;
 
 /**
@@ -32,6 +34,11 @@ import net.sf.nmedit.jpatch.event.ModuleContainerListener;
 public interface ModuleContainer extends Component, Iterable<Module>
 {
 
+    /**
+     * @throws UnsupportedOperationException if the operation is not supported
+     */
+    MoveOperation createMoveOperation();
+    
     /**
      * Returns the patch this module container belongs to. 
      * @return the patch this module container belongs to.

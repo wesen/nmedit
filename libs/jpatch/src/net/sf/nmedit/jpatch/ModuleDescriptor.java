@@ -24,6 +24,8 @@ package net.sf.nmedit.jpatch;
 
 import java.util.Iterator;
 
+import net.sf.nmedit.jpatch.spec.ModuleDescriptions;
+
 /**
  * Returns the descriptor of a module.
  * 
@@ -67,14 +69,15 @@ public interface ModuleDescriptor extends ComponentDescriptor
      * @see Descriptor#getSourceDescriptor()
      */
     ModuleDescriptor getSourceDescriptor();
-
+    ModuleDescriptions getModuleDescriptions();
+    
     String getCategory();
 
     String getDisplayName();
     
     ImageSource getImage(String key);
     Iterator<ImageSource> getImages();
-    
+
     ParameterDescriptor[] getParameterDescriptorList(String parameterClass);
     ConnectorDescriptor[] getConnectorDescriptorList(String connectorClass);
 

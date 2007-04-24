@@ -32,7 +32,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import net.sf.nmedit.jtheme.cable.CableRenderer;
-import net.sf.nmedit.jtheme.cable.JTDefaultCableManager;
+import net.sf.nmedit.jtheme.cable.JTCableManagerImpl;
 import net.sf.nmedit.jtheme.cable.ShadowCableRenderer;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTKnob;
@@ -153,7 +153,9 @@ public abstract class JTContext
         }
         catch (Throwable t)
         {
-            throw new JTException(t);
+            JTException e = new JTException("could not create instance of "+clazz);
+            e.initCause(t);
+            throw e;
         }
         
         return component;
@@ -188,7 +190,7 @@ public abstract class JTContext
     public JTModuleContainer createModuleContainer() throws JTException
     {
         JTModuleContainer moduleContainer = new JTModuleContainer(this, 
-                new JTDefaultCableManager(getCableRenderer()));
+                new JTCableManagerImpl(getCableRenderer()));
         installUI(moduleContainer);
         return moduleContainer;
     }

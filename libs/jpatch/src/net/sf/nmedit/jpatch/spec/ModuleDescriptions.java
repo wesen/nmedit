@@ -31,6 +31,7 @@ import java.util.Map;
 import net.sf.nmedit.jpatch.ModuleDescriptor;
 import net.sf.nmedit.jpatch.spec.formatter.FICType;
 import net.sf.nmedit.jpatch.spec.formatter.FormatterRegistry;
+import net.sf.nmedit.jpatch.transformation.Transformations;
 import net.sf.nmedit.nmutils.collections.ArrayMap;
 
 public class ModuleDescriptions implements Iterable<ModuleDescriptor>
@@ -41,14 +42,23 @@ public class ModuleDescriptions implements Iterable<ModuleDescriptor>
     private FormatterRegistry formatterRegistry = new FormatterRegistry();
     private ArrayMap<ModuleDescriptor> moduleMap = new ArrayMap<ModuleDescriptor>();
     private ClassLoader loader;
+    protected Transformations transformations;
     
     public ModuleDescriptions()
     {
         formatterRegistry.install(new FICType(this));
     }
     
+    public Transformations getTransformations()
+    {
+        return transformations;
+    }
+    
     public ClassLoader getModuleDescriptionsClassLoader()
     {
+        if (loader == null)
+            return getClass().getClassLoader();
+        
         return loader;
     }
     

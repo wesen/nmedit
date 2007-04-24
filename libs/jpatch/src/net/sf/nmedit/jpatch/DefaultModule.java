@@ -19,6 +19,7 @@
 package net.sf.nmedit.jpatch;
 
 import java.awt.Point;
+import java.util.Collection;
 import java.util.Iterator;
 
 import net.sf.nmedit.jpatch.event.ModuleContainerListener;
@@ -219,6 +220,45 @@ public class DefaultModule implements Module
     public Iterator<Module> iterator()
     {
         throw new UnsupportedOperationException();
+    }
+
+    public MoveOperation createMoveOperation()
+    {
+        throw new UnsupportedOperationException("operation 'move' not supported");
+    }
+
+    public String getTitle()
+    {
+        return moduleDescriptor.getDisplayName();
+    }
+
+    public void setTitle(String title)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public int getUniqueId()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    public void setUniqueId(int uniqueId)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void listUnusedModules(Collection<Module> modules)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public Module[] listUnusedModules()
+    {
+        return new Module[0];
     }
 
 }

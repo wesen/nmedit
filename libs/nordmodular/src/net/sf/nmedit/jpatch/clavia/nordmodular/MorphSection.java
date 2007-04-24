@@ -32,6 +32,7 @@ import net.sf.nmedit.jpatch.InvalidDescriptorException;
 import net.sf.nmedit.jpatch.Module;
 import net.sf.nmedit.jpatch.ModuleContainer;
 import net.sf.nmedit.jpatch.ModuleDescriptor;
+import net.sf.nmedit.jpatch.MoveOperation;
 import net.sf.nmedit.jpatch.Parameter;
 import net.sf.nmedit.jpatch.ParameterDescriptor;
 import net.sf.nmedit.jpatch.Patch;
@@ -50,7 +51,7 @@ public class MorphSection implements Module
     public MorphSection(NMPatch patch)
     {
         this.patch = patch;
-        descriptor = MorphSectionDescriptor.getInstance();
+        descriptor = MorphSectionDescriptor.getInstance(patch.getModules());
         
         morphs = new Morph[4];
         keyboard = new MorphKBAssignment[4];
@@ -221,6 +222,33 @@ public class MorphSection implements Module
     {
         // TODO Auto-generated method stub
         return 4;
+    }
+
+    public MoveOperation createMoveOperation()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    public String getTitle()
+    {
+        return getName();
+    }
+
+    public void setTitle(String title)
+    {
+        throw new UnsupportedOperationException(); 
+    }
+
+    public int getUniqueId()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    public void setUniqueId(int uniqueId)
+    {
+        // TODO Auto-generated method stub
+        
     }
 
 }

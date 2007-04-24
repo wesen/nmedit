@@ -40,7 +40,6 @@ import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.jpatch.Connection;
 import net.sf.nmedit.jpatch.Connector;
-import net.sf.nmedit.jpatch.LightweightIterator;
 import net.sf.nmedit.jpatch.Module;
 import net.sf.nmedit.jpatch.Signal;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMConnector;
@@ -88,7 +87,7 @@ public class JTNMPatch extends JTPatch
     
     protected static class ModuleAction extends AbstractAction
     {
-        public static final String REMOVE = "remove";
+        public static final String DELETE = "remove";
         public static final String RENAME = "rename";
         public static final String HELP = "help";
         public static final String COLOR_DEFAULT = "color.default";
@@ -102,7 +101,7 @@ public class JTNMPatch extends JTPatch
         public static JPopupMenu createPopup(JTModule module)
         {
             JPopupMenu popup = new JPopupMenu();
-            popup.add(new ModuleAction(REMOVE, module));
+            popup.add(new ModuleAction(DELETE, module));
             popup.add(new ModuleAction(RENAME, module));
             popup.addSeparator();
             JMenu colorMenu = new JMenu("Color");
@@ -122,9 +121,9 @@ public class JTNMPatch extends JTPatch
             this.module = module;
             putValue(ACTION_COMMAND_KEY, action);
 
-            if (action == REMOVE)
+            if (action == DELETE)
             {
-                putValue(NAME, "Remove");
+                putValue(NAME, "Delete");
             }
             else if (action == RENAME)
             {
@@ -152,7 +151,7 @@ public class JTNMPatch extends JTPatch
                 return;
             
             String command = e.getActionCommand();
-            if (command == REMOVE)
+            if (command == DELETE)
                 removeModule();
             else if (command == RENAME)
                 throw new UnsupportedOperationException("command not supported: "+command);
@@ -211,7 +210,6 @@ public class JTNMPatch extends JTPatch
         private static void removeModule(JTModule m)
         {
             Module nm = m.getModule();
-            nm.removeConnections();
             nm.getParent().remove(nm);
         }
         
@@ -260,7 +258,10 @@ public class JTNMPatch extends JTPatch
 
             putValue(NAME, action);
             
-            if (action == DISCONNECT);
+            if (action == DISCONNECT)
+            {
+                setEnabled(connector.isConnected());
+            }
             else 
             {
                 net.sf.nmedit.jpatch.clavia.nordmodular.Signal s = toSignal(action);
@@ -346,7 +347,7 @@ public class JTNMPatch extends JTPatch
         {
             if (connector == null) return;
             Connector c = connector.getConnector();
-            if (c != null) ((NMConnector)c).breakCable();
+            if (c != null) ((NMConnector)c).breakConnection();
         }
 
         private void disconnectCables()
@@ -616,12 +617,9 @@ public class JTNMPatch extends JTPatch
         cont.setSize(new Dimension(width, height));
         
         JTCableManager cm = cont.getCableManager();
-        LightweightIterator<Connection> lwiter =
-        va.getConnectionManager().getConnections();
-        while (lwiter.hasNext())
+        
+        for (Connection c: va.getConnectionManager())
         {
-            Connection c = lwiter.next();
-
             JTConnector con1 = find(cont, c.getSource());
             JTConnector con2 = find(cont, c.getDestination());
             

@@ -291,7 +291,7 @@ public class ModuleDescriptionsParser
                         
                         int index = Integer.parseInt(attributes.getValue("index"));
                         
-                        moduled = new DefaultModuleDescriptor(name, index);
+                        moduled = new DefaultModuleDescriptor(moduleDescriptions, name, index);
                         moduled.setCategory(attributes.getValue("category"));
                         moduled.setModuleClass(attributes.getValue("class"));
                         
@@ -459,14 +459,14 @@ public class ModuleDescriptionsParser
                             break;
                     }
                     
-                    
-                    
                     if (parameterd != null)
                         parameterd.putAttribute(name, value);
                     else if (connectord != null)
                         connectord.putAttribute(name, value);
                     else if (moduled != null)
+                    {
                         moduled.putAttribute(name, value);
+                    }
                     else
                     {
                         throw new SAXException("attribute not associated with (module|parameter|connector)");

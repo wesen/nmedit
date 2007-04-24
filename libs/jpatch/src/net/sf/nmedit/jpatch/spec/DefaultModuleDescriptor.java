@@ -45,14 +45,21 @@ public class DefaultModuleDescriptor extends BasedDescriptor implements ModuleDe
     private String displayName;
     private int index;
     private Map<String,ImageSource> images = null;
+    private ModuleDescriptions md;
 
-    public DefaultModuleDescriptor(String name, int index)
+    public DefaultModuleDescriptor(ModuleDescriptions md, String name, int index)
     {
+        this.md = md;
         this.name = name;
         this.displayName = name;
         this.index = index;
     }
 
+    public ModuleDescriptions getModuleDescriptions()
+    {
+        return md;
+    }
+    
     void setConnectors(ConnectorDescriptor[] connectors)
     {
         this.connectors = connectors;

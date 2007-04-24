@@ -234,8 +234,7 @@ public class PatchBuilder implements PContentHandler
             emitwarning("Already connected: "+csrc+", "+cdst);
         else
         {
-            csrc.connectWith(cdst, signal);
-            if (!cdst.isConnectedWith(csrc))
+            if (csrc.connectWith(cdst/*, signal*/)==null) // TODO signal
                 emiterror("Could not connect: "+csrc+", "+cdst);
         }
     }
@@ -398,7 +397,7 @@ public class PatchBuilder implements PContentHandler
         {}
         if (module != null)
         {
-            module.setName(moduleName);
+            module.setTitle(moduleName);
         }
         else
         {

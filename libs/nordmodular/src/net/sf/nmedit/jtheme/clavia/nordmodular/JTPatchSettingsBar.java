@@ -50,8 +50,8 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.event.ModuleContainerEvent;
 import net.sf.nmedit.jpatch.event.ModuleContainerListener;
 import net.sf.nmedit.jtheme.clavia.nordmodular.misc.GradientProgressBar;
-import net.sf.nmedit.jtheme.clavia.nordmodular.misc.LimitedText;
 import net.sf.nmedit.nmutils.math.Math2;
+import net.sf.nmedit.nmutils.swing.LimitedText;
 
 public class JTPatchSettingsBar extends JPanel implements ModuleContainerListener 
 

@@ -321,7 +321,10 @@ public class NmUtils
         PatchBuilder builder = new PatchBuilder(parser, modules);
         parser.setContentHandler(builder);
         parser.parse();
-        return builder.getPatch();
+        
+        NMPatch patch = builder.getPatch();
+        patch.getHistory().setEnabled(true);
+        return patch;
     }
 
     public static PatchBuilder parsePatchMessage(PatchMessage message, NM1ModuleDescriptions modules) throws ParseException

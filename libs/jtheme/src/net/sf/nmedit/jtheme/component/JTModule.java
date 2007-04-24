@@ -37,9 +37,8 @@ import net.sf.nmedit.jtheme.component.plaf.JTModuleUI;
 
 public class JTModule extends JTComponent
 {
-    
-    public static final String uiClassID = "JTModuleUI";
 
+    public static final String uiClassID = "JTModuleUI";
     private Module module;
     private boolean selected = false;
     
@@ -195,7 +194,14 @@ public class JTModule extends JTComponent
 
     public void setModule(Module module)
     {
-        this.module = module;
+        Module oldModule = this.module;
+        
+        if (oldModule != module)
+        {
+            this.module = module;
+            if (ui != null)
+                getUI().moduleChanged(this, oldModule, module);
+        }
     }
     
     public Module getModule()

@@ -63,5 +63,7 @@ public interface Connection
      * @return
      */
     boolean contains(Connector c);
+
+    boolean contains(Module m);
     
 }

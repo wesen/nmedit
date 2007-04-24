@@ -26,6 +26,9 @@ import java.awt.EventQueue;
 
 import javax.sound.midi.MidiUnavailableException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.sf.nmedit.jnmprotocol.DebugProtocol;
 import net.sf.nmedit.jnmprotocol.IAmMessage;
 import net.sf.nmedit.jnmprotocol.MessageMulticaster;
@@ -42,6 +45,7 @@ import net.sf.nmedit.jnmprotocol.utils.ProtocolRunner.ProtocolErrorHandler;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
 import net.sf.nmedit.jsynth.AbstractSynthesizer;
 import net.sf.nmedit.jsynth.Bank;
+import net.sf.nmedit.jsynth.DefaultMidiPorts;
 import net.sf.nmedit.jsynth.MidiPortSupport;
 import net.sf.nmedit.jsynth.SlotManager;
 import net.sf.nmedit.jsynth.SynthException;
@@ -49,7 +53,7 @@ import net.sf.nmedit.jsynth.Synthesizer;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.Scheduler;
 import net.sf.nmedit.jsynth.midi.MidiPort;
 
-public class NordModular extends AbstractSynthesizer implements Synthesizer
+public class NordModular extends AbstractSynthesizer implements Synthesizer, DefaultMidiPorts
 {
 
     private NmProtocol protocol;
@@ -227,7 +231,11 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer
                 }
                 catch (Exception e1)
                 {
-                    e1.printStackTrace();
+                    Log log = LogFactory.getLog(getClass());
+                    if (log.isWarnEnabled())
+                    {
+                        log.warn("protocol.heartbeat() caused an exception while waiting on IAMMessage", e1);
+                    }
                 }
                 
                 try
@@ -484,6 +492,16 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer
     NmSlotManager getNmSlotManager()
     {
         return slotManager;
+    }
+
+    public MidiPort getDefaultMidiInPort()
+    {
+        return getPCInPort();
+    }
+
+    public MidiPort getDefaultMidiOutPort()
+    {
+        return getPCOutPort();
     }
 
 }

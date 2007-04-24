@@ -18,6 +18,7 @@
  */
 package net.waldorf.miniworks4pole.jpatch;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 import net.sf.nmedit.jpatch.ComponentDescriptor;
@@ -27,8 +28,10 @@ import net.sf.nmedit.jpatch.InvalidDescriptorException;
 import net.sf.nmedit.jpatch.Module;
 import net.sf.nmedit.jpatch.ModuleContainer;
 import net.sf.nmedit.jpatch.ModuleDescriptor;
+import net.sf.nmedit.jpatch.MoveOperation;
 import net.sf.nmedit.jpatch.Patch;
 import net.sf.nmedit.jpatch.event.ModuleContainerListener;
+import net.sf.nmedit.jpatch.history.History;
 import net.sf.nmedit.jpatch.spec.ModuleDescriptions;
 import net.sf.nmedit.nmutils.iterator.ArrayIterator;
 
@@ -143,7 +146,30 @@ public class MWPatch implements Patch
         {
             return new ArrayIterator<Module>(new Module[]{miniworks});
         }
+
+        public MoveOperation createMoveOperation()
+        {
+            throw new UnsupportedOperationException("operation 'move' not supported");
+        }
+
+        public void listUnusedModules(Collection<Module> modules)
+        {
+            // TODO Auto-generated method stub
+            
+        }
+
+        public Module[] listUnusedModules()
+        {
+            // TODO Auto-generated method stub
+            return null;
+        }
         
+    }
+
+    public History getHistory()
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
     
 }

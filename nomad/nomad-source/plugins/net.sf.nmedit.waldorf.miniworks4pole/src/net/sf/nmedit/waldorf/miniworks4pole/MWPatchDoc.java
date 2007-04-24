@@ -59,4 +59,10 @@ public class MWPatchDoc implements Document
         jtpatch = null;
     }
 
+    public <T> T getFeature(Class<T> featureClass)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

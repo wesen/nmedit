@@ -16,23 +16,42 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-/*
- * Created on Nov 30, 2006
- */
 package net.sf.nmedit.jpatch;
 
-import net.sf.nmedit.jpatch.history.History;
+import java.awt.Point;
+import java.util.Collection;
 
-public interface Patch
+public interface MoveOperation extends Iterable<Module>
 {
 
-    ModuleContainer getModuleContainer();
+    boolean add(Module module);
     
-    String getName();
+    boolean remove(Object o);
     
-    String getVersion();
+    int size();
+    
+    boolean isEmpty();
+    
+    boolean contains(Object o);
+    
+    Module[] toArray();
+   
+    Collection<? extends Module> toCollection();
+    
+    void addAll(Collection<? extends Module> modules);
+    
+    <T extends Module> void addAll(T[] modules);
 
-    History getHistory();
+    void setScreenOffset(Point offset);
+
+    void setScreenOffset(int x, int y);
+    
+    Point getScreenOffset();
+    
+    Point getScreenOffset(Point dst);
+    
+    void move();
+    
+    Collection<? extends Module> getMovedModules();
     
 }

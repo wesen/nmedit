@@ -22,7 +22,7 @@
  */
 package net.sf.nmedit.jpatch;
 
-import java.util.Iterator;
+import java.util.Collection;
 
 import javax.swing.event.EventListenerList;
 
@@ -32,52 +32,77 @@ import net.sf.nmedit.jpatch.event.ConnectorStateEvent;
 public abstract class AbstractConnector extends AbstractComponent implements Connector
 {
     
-    private EventListenerList eventListenerList = null;
-    private transient ConnectorStateEvent cse = null;
+    protected EventListenerList eventListenerList = new EventListenerList();
+    private boolean connectedStateMemory = false;
     
     public void addConnectorListener(ConnectorListener l)
     {
-        if (eventListenerList == null)
-            eventListenerList = new EventListenerList();
         eventListenerList.add(ConnectorListener.class, l);
     }
     
     public void removeConnectorListener(ConnectorListener l)
     {
-        if (eventListenerList != null)
-            eventListenerList.remove(ConnectorListener.class, l);   
+        eventListenerList.remove(ConnectorListener.class, l);   
+    }
+    
+    public boolean canBreakConnection()
+    {
+        return getSource() != null;
+    }
+
+    /**
+     * Removes the link that heads from the connector towards the output
+     * connector that belongs to the same connection. If this connector is an
+     * output connector or if there is no connection with an output connector,
+     * the break operation is not feasible. <img
+     * src="doc-files/cable-op-break.png" width="528" height="223" alt="An
+     * illustration of the break operation." />
+     * 
+     * @return <code>true</code> if the connection changed
+     */
+    public boolean breakConnection()
+    {
+        Connector source = getSource();
+        
+        return (source != null) && disconnectFrom( source );
+    }
+
+    public void updateConnectedState()
+    {
+        boolean isConnected = isConnected();
+        if (connectedStateMemory != isConnected)
+        {
+            connectedStateMemory = isConnected;
+            fireConnectorStateChanged();
+        }
     }
     
     protected void fireConnectorStateChanged()
     {
-        if (eventListenerList != null)
+        ConnectorStateEvent cse = null;
+        Object[] list = eventListenerList.getListenerList();
+        for (int i=list.length-2;i>=0;i-=2)
         {
-            Object[] list = eventListenerList.getListenerList();
-            for (int i=list.length-2;i>=0;i-=2)
+            if (list[i]==ConnectorListener.class)
             {
-                if (list[i]==ConnectorListener.class)
-                {
-                    if (cse == null)
-                        cse = new ConnectorStateEvent(this);
-                    ((ConnectorListener)list[i+1]).connectorStateChanged(cse);
-                }
+                if (cse == null)
+                    cse = new ConnectorStateEvent(this);
+                ((ConnectorListener)list[i+1]).connectorStateChanged(cse);
             }
         }
     }
 
+    /**
+     * @deprecated
+     */
     public Connector getOutput()
     {
-        return getConnectionManager().getOutput(this);
+        return getSource();
     }
 
     public Connector getRoot()
     {
         return getConnectionManager().getRoot(this);
-    }
-
-    public Iterator<Connector> bfsSearch()
-    {
-        return getConnectionManager().bfsSearch(this);
     }
 
     public void disconnect()
@@ -102,7 +127,7 @@ public abstract class AbstractConnector extends AbstractComponent implements Con
 
     public boolean canDisconnectFrom( Connector c )
     {
-        return getConnectionManager().canDisconnect(this, c);
+        return getConnectionManager().isConnected(this, c);
     }
 
     public boolean isConnectedWith( Connector c )
@@ -110,7 +135,7 @@ public abstract class AbstractConnector extends AbstractComponent implements Con
         return getConnectionManager().isConnected(this, c);
     }
 
-    public boolean connectWith( Connector c ) 
+    public Connection connectWith( Connector c ) 
     {
         return getConnectionManager().connect(this, c);
     }
@@ -118,6 +143,21 @@ public abstract class AbstractConnector extends AbstractComponent implements Con
     public boolean disconnectFrom( Connector c ) 
     {
         return getConnectionManager().disconnect(this, c);
+    }
+
+    public Connector getSource() 
+    {
+        return getConnectionManager().getSource(this);
+    }
+
+    public Connector getParent() 
+    {
+        return getConnectionManager().getParent(this);
+    }
+    
+    public Collection<? extends Connector> getChildren()
+    {
+        return getConnectionManager().getChildConnectors(this);
     }
 
 }

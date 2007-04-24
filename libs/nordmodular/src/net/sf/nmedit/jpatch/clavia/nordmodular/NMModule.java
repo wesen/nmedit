@@ -35,9 +35,9 @@ import net.sf.nmedit.jpatch.ConnectionManager;
 import net.sf.nmedit.jpatch.Connector;
 import net.sf.nmedit.jpatch.ConnectorDescriptor;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
-import net.sf.nmedit.jpatch.LightweightIterator;
 import net.sf.nmedit.jpatch.Module;
 import net.sf.nmedit.jpatch.ModuleDescriptor;
+import net.sf.nmedit.jpatch.MoveOperation;
 import net.sf.nmedit.jpatch.Parameter;
 import net.sf.nmedit.jpatch.ParameterDescriptor;
 import net.sf.nmedit.jpatch.event.ModuleContainerListener;
@@ -70,8 +70,6 @@ public class NMModule implements Cloneable, Module
     
     private VoiceArea         voiceArea;
 
-    private String            name;
-
     private int               x = 0;
 
     private int               y = 0;
@@ -79,6 +77,7 @@ public class NMModule implements Cloneable, Module
     private int               index;
     
     private int height;
+    private String title;
     
     //private ModuleUI ui;
     
@@ -100,7 +99,7 @@ public class NMModule implements Cloneable, Module
         
         this.index = -1;
         this.voiceArea = null;
-        this.name = ds.getComponentName();
+        this.title = getName();
         
         connectorList = new NMConnector[ds.getConnectorCount()];
         for (int i = ds.getConnectorCount()-1; i >= 0; i--)
@@ -153,7 +152,7 @@ public class NMModule implements Cloneable, Module
         {
             NMModule copy = (NMModule) super.clone();
             copy.descriptor = descriptor;
-            copy.name = name;
+            copy.setTitle(getTitle());
             copy.x = x;
             copy.y = y;
             copy.index = index;
@@ -239,16 +238,20 @@ public class NMModule implements Cloneable, Module
         
         if (( this.x != vx ) || ( this.y != vy ))
         {            
+            int oldX = this.x;
+            int oldY = this.y;
+            
             this.x = vx;
             this.y = vy;
 
             if (voiceArea!=null)
                 voiceArea.updateSize(this, VoiceArea.MOVE);
 
-            fireLocationChanged();
+            fireLocationChanged(NMModuleMetrics.computeScreenX(oldX),
+                    NMModuleMetrics.computeScreenY(oldY));
         }
     }
-
+/*
     void setYWithoutVANotification(int vy)
     {
         vy = Math.max(0, vy);
@@ -258,7 +261,7 @@ public class NMModule implements Cloneable, Module
 
             fireLocationChanged();
         }
-    }
+    }*/
     
     public int getX()
     {
@@ -324,18 +327,24 @@ public class NMModule implements Cloneable, Module
     {
         return connectorList[index];
     }
-
+    
     public String getName()
     {
-        return name;
+        return descriptor.getDisplayName();
     }
 
-    public void setName( String name )
+    public String getTitle()
     {
-        if (this.name!=name)
+        return title;
+    }
+
+    public void setTitle( String title )
+    {
+        if (this.title!=title && (!this.title.equals(title)))
         {
-            this.name = name;
-            // fireModuleRenamedEvent();
+            String oldTitle = this.title;
+            this.title = title;
+            fireModuleRenamedEvent(oldTitle);
         }
     }
 
@@ -438,7 +447,7 @@ public class NMModule implements Cloneable, Module
         VoiceArea va = getParent();
         if (va != null)
         {
-            return va.getConnectionManager().getConnections(this).hasNext();
+            return !va.getConnectionManager().getConnections(this).isEmpty();
         }
         return false;
     }
@@ -448,10 +457,8 @@ public class NMModule implements Cloneable, Module
         VoiceArea va = getParent();
         if (va != null)
         {
-            LightweightIterator<Connection> iter = va.getConnectionManager().getConnections(this);
-            while (iter.hasNext())
+            for (Connection c:va.getConnectionManager().getConnections(this))
             {
-                Connection c = iter.next();
                 if (c.getDestinationModule()!=this || c.getSourceModule()!=this)
                     return true;
             }
@@ -464,11 +471,16 @@ public class NMModule implements Cloneable, Module
         VoiceArea va = getParent();
         if (va!=null)
         {
-            LightweightIterator<Connection> li = va.getConnectionManager().getConnections();
-            while (li.hasNext())
+            ConnectionManager cm = va.getConnectionManager();
+            
+            getPatch().getHistory().beginRecord();
+            try
             {
-                li.next();
-                li.remove();
+                cm.removeAll(cm.getConnections(this));
+            }
+            finally
+            {
+                getPatch().getHistory().endRecord();
             }
         }
     }
@@ -532,12 +544,7 @@ public class NMModule implements Cloneable, Module
 
     public void setScreenLocation( int x, int y )
     {
-        // x/255, y/15
-        int ix = (x+255/2)/255;
-        int iy = y/15;
-        
-        
-        setLocation(ix, iy);
+        setLocation(NMModuleMetrics.computeInternalLocation(x, y));
     }
 
     public void setScreenLocation( Point location )
@@ -552,12 +559,12 @@ public class NMModule implements Cloneable, Module
 
     public int getScreenX()
     {
-        return getX()*255;
+        return NMModuleMetrics.computeScreenX(getX());
     }
 
     public int getScreenY()
     {
-        return getY()*15;
+        return NMModuleMetrics.computeScreenY(getY());
     }
     
     private EventListenerList eventListeners = null;
@@ -582,21 +589,65 @@ public class NMModule implements Cloneable, Module
             mevent = new ModuleEvent(this);
         return mevent;
     }
-    
-    protected void fireLocationChanged()
+
+    protected void fireLocationChanged(int oldScreenX, int oldScreenY)
     {
         if (eventListeners!=null)
         {
+            ModuleEvent e = null;
+            
             Object[] listeners = eventListeners.getListenerList();
             for (int i=listeners.length-2;i>=0;i-=2)
             {
                 if (listeners[i]==ModuleListener.class)
                 {
-                    ModuleEvent e = getModuleEvent();
+                    if (e == null)
+                    {
+                        e = getModuleEvent();
+                        e.moduleMoved(oldScreenX, oldScreenY);
+                    }
                     ((ModuleListener)listeners[i+1]).moduleMoved(e);
                 }
             }
         }
+    }
+
+    protected void fireModuleRenamedEvent(String oldTitle)
+    {
+        if (eventListeners!=null)
+        {
+            ModuleEvent e = null;
+            
+            Object[] listeners = eventListeners.getListenerList();
+            for (int i=listeners.length-2;i>=0;i-=2)
+            {
+                if (listeners[i]==ModuleListener.class)
+                {
+                    if (e == null)
+                    {
+                        e = getModuleEvent();
+                        e.moduleRenamed(oldTitle);
+                    }
+                    
+                    ((ModuleListener)listeners[i+1]).moduleRenamed(e);
+                }
+            }
+        }
+    }
+
+    public MoveOperation createMoveOperation()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    public int getUniqueId()
+    {
+        return getIndex();
+    }
+
+    public void setUniqueId(int id)
+    {
+        setIndex(id);
     }
 
 }

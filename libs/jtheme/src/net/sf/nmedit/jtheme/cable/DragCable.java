@@ -25,6 +25,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 
 import net.sf.nmedit.jpatch.Connector;
+import net.sf.nmedit.jpatch.Module;
 import net.sf.nmedit.jtheme.component.JTConnector;
 
 public class DragCable implements Cable
@@ -179,6 +180,28 @@ public class DragCable implements Cable
     public void setEndPoints(Point p1, Point p2)
     {
         setEndPoints(p1.x, p1.y, p2.x, p2.y);
+    }
+
+    public boolean contains(Connector c)
+    {
+        return getDestination() == c || getSource() == c;
+    }
+
+    public boolean contains(Module m)
+    {
+        return getDestinationModule() == m || getSourceModule() == m;
+    }
+
+    public Module getDestinationModule()
+    {
+        Connector c = getDestination();
+        return c == null ? null : c.getOwner();
+    }
+
+    public Module getSourceModule()
+    {
+        Connector c = getSource();
+        return c == null ? null : c.getOwner();
     }
 
 }

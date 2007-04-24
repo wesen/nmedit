@@ -28,6 +28,7 @@ import net.sf.nmedit.jpatch.ConnectorDescriptor;
 import net.sf.nmedit.jpatch.ImageSource;
 import net.sf.nmedit.jpatch.ModuleDescriptor;
 import net.sf.nmedit.jpatch.ParameterDescriptor;
+import net.sf.nmedit.jpatch.spec.ModuleDescriptions;
 import net.sf.nmedit.nmutils.collections.EmptyIterator;
 
 public class MorphSectionDescriptor implements ModuleDescriptor
@@ -35,16 +36,20 @@ public class MorphSectionDescriptor implements ModuleDescriptor
     
     private MorphDescriptor[] morphs = new MorphDescriptor[4];
     private MorphKBAssignmentDescriptor[] kbassign = new MorphKBAssignmentDescriptor[4];
-    
-    private static final MorphSectionDescriptor instance = new MorphSectionDescriptor();
+    private ModuleDescriptions md;
+ 
+    private static MorphSectionDescriptor instance;
 
-    public static MorphSectionDescriptor getInstance()
+    public static MorphSectionDescriptor getInstance(ModuleDescriptions md)
     {
+        if (instance == null)
+            instance = new MorphSectionDescriptor(md);
         return instance;
     }
 
-    public MorphSectionDescriptor()
+    public MorphSectionDescriptor(ModuleDescriptions md)
     {
+        this.md = md;
         for (int i=0;i<4;i++)
         {
             morphs[i] = new MorphDescriptor(this, i);
@@ -52,9 +57,24 @@ public class MorphSectionDescriptor implements ModuleDescriptor
         }
     }
     
+    public ModuleDescriptions getModuleDescriptions()
+    {
+        return md;
+    }
+    
     public int getConnectorCount()
     {
         return 0;
+    }
+    
+    public ImageSource get16x16Icon()
+    {
+        return getImage("icon16x16");
+    }
+    
+    public ImageSource get32x32Icon()
+    {
+        return getImage("icon32x32");
     }
 
     public ConnectorDescriptor getConnectorDescriptor( int index )

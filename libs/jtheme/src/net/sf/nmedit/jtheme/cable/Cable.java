@@ -20,10 +20,11 @@ package net.sf.nmedit.jtheme.cable;
 
 import java.awt.Color;
 
+import net.sf.nmedit.jpatch.Connection;
 import net.sf.nmedit.jpatch.Connector;
 import net.sf.nmedit.jtheme.component.JTConnector;
 
-public interface Cable extends CableGeometrie
+public interface Cable extends CableGeometrie, Connection
 {
 
     JTConnector getSourceComponent();

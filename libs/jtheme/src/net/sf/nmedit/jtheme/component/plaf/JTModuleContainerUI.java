@@ -45,31 +45,38 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
+import java.awt.event.ActionEvent;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
 
+import javax.swing.AbstractAction;
 import javax.swing.JComponent;
+import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.plaf.ComponentUI;
 
-import net.sf.nmedit.jpatch.ConnectionManager;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
 import net.sf.nmedit.jpatch.Module;
 import net.sf.nmedit.jpatch.ModuleContainer;
 import net.sf.nmedit.jpatch.ModuleDescriptor;
+import net.sf.nmedit.jpatch.MoveOperation;
+import net.sf.nmedit.jpatch.history.History;
+import net.sf.nmedit.jpatch.utils.PatchUtils;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.dnd.JTDragDrop;
+import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
 
 public class JTModuleContainerUI extends ComponentUI
 {
@@ -95,6 +102,63 @@ public class JTModuleContainerUI extends ComponentUI
     {
         return jtc;
     }
+
+    public void createPopupMenu(JTModuleContainer mc, MouseEvent e)
+    {
+        JPopupMenu popup = new JPopupMenu();
+        popup.add(new ContainerAction(ContainerAction.DELETE_UNUSED));
+        popup.show(mc, e.getX(), e.getY());
+    }
+    
+    protected class ContainerAction extends AbstractAction
+    {
+        
+        public static final String DELETE_UNUSED = "delete.unused";
+
+        public ContainerAction(String command)
+        {
+            if (command == DELETE_UNUSED)
+            {
+                putValue(NAME, "Delete Unused Modules");
+                putValue(ACTION_COMMAND_KEY, command);
+                ModuleContainer t = getTarget();
+                setEnabled(t != null && PatchUtils.hasUnusedModules(t));
+            }
+        }
+        
+        protected ModuleContainer getTarget()
+        {
+            return getModuleContainer().getModuleContainer();
+        }
+        
+        public void actionPerformed(ActionEvent e)
+        {
+            if (isEnabled())
+            {
+                if (getValue(ACTION_COMMAND_KEY)==DELETE_UNUSED)
+                {
+                    ModuleContainer mc = getTarget();
+                    if (mc != null)
+                    {
+                        History history = mc.getPatch().getHistory();
+                        try
+                        {
+                            if (history != null)
+                                history.beginRecord();
+                        
+                            while (PatchUtils.removeUnusedModules(mc)>0);
+                        } 
+                        finally
+                        {
+                            if (history != null)
+                                history.endRecord();
+                        }
+                    }
+                }
+            }
+        }
+        
+    }
     
     public void installUI(JComponent c) 
     {
@@ -112,22 +176,17 @@ public class JTModuleContainerUI extends ComponentUI
         
         // System.out.println(DnDAllowedKey+": "+defaults.getBoolean(DnDAllowedKey));
         
-        if (defaults.getBoolean(DnDAllowedKey))
-        {
-            installDnDHandler(jtc);
-        }
+        boolean dndAllowed = defaults.getBoolean(DnDAllowedKey); 
+        installEventHandler(jtc, dndAllowed);
     }
 
     public void uninstallUI(JComponent c) 
     {
         JTModuleContainer jtc = (JTModuleContainer) c;
         JTContext context = jtc.getContext();
-        UIDefaults defaults = context.getUIDefaults();
+        // UIDefaults defaults = context.getUIDefaults();
         
-        if (defaults.getBoolean(DnDAllowedKey))
-        {
-            uninstallDnDHandler(jtc);
-        }
+        uninstallEventHandler(jtc);
     }
 
     public void update(Graphics g, JComponent c) 
@@ -246,35 +305,35 @@ public class JTModuleContainerUI extends ComponentUI
         }
     }
     
-    private void installDnDHandler(JTModuleContainer jtc)
+    private void installEventHandler(JTModuleContainer jtc, boolean dndAllowed)
     {
-        createDndHandler(jtc);
+        createEventHandler(jtc, dndAllowed);
     }
 
-    private void uninstallDnDHandler(JTModuleContainer jtc)
+    private void uninstallEventHandler(JTModuleContainer jtc)
     {
-        DnDHandler handler = lookupDndHandler(jtc);
+        EventHandler handler = lookupEventHandler(jtc);
         if (handler != null) 
             handler.uninstall();
     }
     
-    protected Object DndHandlerKey()
+    protected Object EventHandlerKey()
     {
         return "JTModuleContainerDnDHandler";
     }
 
-    protected DnDHandler createDndHandler(JTModuleContainer jtc)
+    protected EventHandler createEventHandler(JTModuleContainer jtc, boolean dndAllowed)
     {
-        DnDHandler handler = new DnDHandler(this);
-        jtc.putClientProperty(DndHandlerKey(), handler);
+        EventHandler handler = new EventHandler(this, dndAllowed);
+        jtc.putClientProperty(EventHandlerKey(), handler);
         return handler;
     }
     
-    protected DnDHandler lookupDndHandler(JTModuleContainer jtc)
+    protected EventHandler lookupEventHandler(JTModuleContainer jtc)
     {
-        Object obj = jtc.getClientProperty(DndHandlerKey());
-        if (obj != null && (obj instanceof DnDHandler))
-            return (DnDHandler) obj;
+        Object obj = jtc.getClientProperty(EventHandlerKey());
+        if (obj != null && (obj instanceof EventHandler))
+            return (EventHandler) obj;
         return null;
     }
     
@@ -289,10 +348,10 @@ public class JTModuleContainerUI extends ComponentUI
     
     protected static class ModuleTransferDataWrapper implements ModuleTransferData
     {
-        private DnDHandler delegate;
+        private EventHandler delegate;
         private Point dragStartLocation;
 
-        public ModuleTransferDataWrapper(DnDHandler delegate, Point dragStartLocation)
+        public ModuleTransferDataWrapper(EventHandler delegate, Point dragStartLocation)
         {
             this.delegate = delegate;
             this.dragStartLocation = dragStartLocation;
@@ -363,27 +422,29 @@ public class JTModuleContainerUI extends ComponentUI
 
         public DataFlavor[] getTransferDataFlavors()
         {
-            DataFlavor[] flavors = {DnDHandler.ModuleSelectionFlavor};
+            DataFlavor[] flavors = {EventHandler.ModuleSelectionFlavor};
             return flavors;
         }
 
         public boolean isDataFlavorSupported(DataFlavor flavor)
         {
             // DropTarget gives his flavors. DropSource looks if it can be dropped on the target.
-            return flavor != null && flavor.equals(DnDHandler.ModuleSelectionFlavor);
+            return flavor != null && flavor.equals(EventHandler.ModuleSelectionFlavor);
         }
     }
     
-    public static class DnDHandler
+    public static class EventHandler
       implements ContainerListener, 
       DropTargetListener, DragGestureListener, DragSourceListener,
       MouseListener
     {
 
         private JTModuleContainerUI jtcUI;
+        private boolean dndAllowed;
 
-        public DnDHandler(JTModuleContainerUI jtcUI)
+        public EventHandler(JTModuleContainerUI jtcUI, boolean dndAllowed)
         {
+            this.dndAllowed = dndAllowed;
             this.jtcUI = jtcUI;
             
             if (jtcUI.getModuleContainer().isDnDAllowed())
@@ -400,11 +461,14 @@ public class JTModuleContainerUI extends ComponentUI
             JTModuleContainer jtc = getModuleContainer();
             installAtModuleContainer(jtc);
             
-            for (int i=jtc.getComponentCount()-1;i>=0;i--)
+            if (dndAllowed)
             {
-                Component component = jtc.getComponent(i);
-                if (installsAtChild(component))
-                    installAtChild(component);
+                for (int i=jtc.getComponentCount()-1;i>=0;i--)
+                {
+                    Component component = jtc.getComponent(i);
+                    if (installsAtChild(component))
+                        installAtChild(component);
+                }   
             }
         }
         
@@ -417,12 +481,15 @@ public class JTModuleContainerUI extends ComponentUI
         {
             JTModuleContainer jtc = getModuleContainer();
             uninstallAtModuleContainer(jtc);
-            
-            for (int i=jtc.getComponentCount()-1;i>=0;i--)
+
+            if (dndAllowed)
             {
-                Component component = jtc.getComponent(i);
-                if (installsAtChild(component))
-                    uninstallAtChild(component);
+                for (int i=jtc.getComponentCount()-1;i>=0;i--)
+                {
+                    Component component = jtc.getComponent(i);
+                    if (installsAtChild(component))
+                        uninstallAtChild(component);
+                }
             }
         }
 
@@ -453,17 +520,22 @@ public class JTModuleContainerUI extends ComponentUI
         
         protected void installAtModuleContainer(JTModuleContainer jtc)
         {
-            jtc.addContainerListener(this);
             jtc.addMouseListener(this);
-            dropTargetListener = createDropTargetListener();
-            moduleContainerDropTarget = new DropTarget(jtc, dndActions, dropTargetListener, true);
+            if (dndAllowed)
+            {
+                jtc.addContainerListener(this);
+                dropTargetListener = createDropTargetListener();
+                moduleContainerDropTarget = new DropTarget(jtc, dndActions, dropTargetListener, true);
+            }
         }
 
         protected void uninstallAtModuleContainer(JTModuleContainer jtc)
         {
-            // TODO
-            jtc.removeContainerListener(this);
             jtc.removeMouseListener(this);
+            if (dndAllowed)
+            {
+                jtc.removeContainerListener(this);
+            }
         }
         
         protected void installAtChild(Component component)
@@ -532,14 +604,14 @@ public class JTModuleContainerUI extends ComponentUI
                 dtde.acceptDrag(DnDConstants.ACTION_COPY);
             }
             else*/
-            if (dtde.getCurrentDataFlavorsAsList().contains(DnDHandler.ModuleSelectionFlavor))
+            if (dtde.getCurrentDataFlavorsAsList().contains(EventHandler.ModuleSelectionFlavor))
             {
                 dtde.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
 
                 ModuleTransferData data;
                 try
                 {
-                    data = (ModuleTransferData) dtde.getTransferable().getTransferData(DnDHandler.ModuleSelectionFlavor);
+                    data = (ModuleTransferData) dtde.getTransferable().getTransferData(EventHandler.ModuleSelectionFlavor);
 
                     if (data!=null)
                     {
@@ -645,10 +717,10 @@ public class JTModuleContainerUI extends ComponentUI
                 return;
             }
             
-            if (dtde.isDataFlavorSupported(DnDHandler.ModuleSelectionFlavor)
+            if (dtde.isDataFlavorSupported(EventHandler.ModuleSelectionFlavor)
                     && dtde.isLocalTransfer())
             {
-                chosen = DnDHandler.ModuleSelectionFlavor;
+                chosen = EventHandler.ModuleSelectionFlavor;
 
 
                 Transferable transfer = dtde.getTransferable();
@@ -753,50 +825,54 @@ public class JTModuleContainerUI extends ComponentUI
             p.x = p.x-o.x;
             p.y = p.y-o.y;
             
+            JTModuleContainer jtmc = getModuleContainer();
+            ModuleContainer mc = jtmc.getModuleContainer();
+            
+            MoveOperation moveop = mc.createMoveOperation();
+
             JTModule[] modules = tdata.getModules();
-            for (JTModule module: modules)
+            for (JTModule jtmodule: modules)
+                moveop.add(jtmodule.getModule());
+            
+            moveop.setScreenOffset(p.x, p.y);
+            
+            moveop.move();
+            
+            Collection<? extends Module> moved = moveop.getMovedModules();
+                        
+            int maxx = 0;
+            int maxy = 0;
+            
+            for (JTModule jtmodule: NmSwingUtilities.getChildren(JTModule.class, jtmc))
             {
-                
-                int x = module.getX()+p.x;
-                int y = module.getY()+p.y;
-                
-                Module internal = module.getModule();
-                if (internal != null)
+                Module module = jtmodule.getModule();
+                if (moved.contains(module))
                 {
-                    internal.setScreenLocation(x, y);
-                    module.setLocation(internal.getScreenLocation());
-                }
-                else
-                {
-                    module.setLocation(x, y);
+                    jtmodule.setLocation(module.getScreenLocation());
+
+                    maxx = Math.max(jtmodule.getX(), maxx)+jtmodule.getWidth();
+                    maxy = Math.max(jtmodule.getY(), maxy)+jtmodule.getHeight();
                 }
             }
             
-            JTCableManager cman =
-            getModuleContainer().getCableManager();
+            jtmc.setPreferredSize(new Dimension(maxx, maxy));
             
-            ConnectionManager cm = null;
+            JTCableManager cman = jtmc.getCableManager();
+                      
+            //ConnectionManager cm = jtmc.getModuleContainer().getConnectionManager();
             
             // TODO faster search of cables 
-            for (Iterator<Cable> i=cman.getVisible(); i.hasNext();)
-            {
-                Cable cable = i.next();
-                
-                for (int j=0;j<modules.length;j++)
-                {
-                    Module module = modules[j].getModule();
-                    if (cm == null)
-                        cm = module.getParent().getConnectionManager();
-                    
-                    if (cm.isConnected(cable.getSource()) || cm.isConnected(cable.getDestination()))
-                    {
-                        cman.update(cable);
-                        break;
-                    }
-                }
+            
+            Collection<Cable> cables = new LinkedList<Cable>();
+            cman.getCables(cables, moved);
+            
+            for (Cable cable: cables)
+            {   
+                cman.update(cable);
             }
             
-            cman.notifyRepaintManager();
+            if (!cables.isEmpty())
+                cman.notifyRepaintManager();
         }
 
         public void dropActionChanged(DropTargetDragEvent dtde)
@@ -981,10 +1057,13 @@ public class JTModuleContainerUI extends ComponentUI
         
         public void mouseClicked(MouseEvent e)
         {
-            if (e.getComponent() == getModuleContainer())
-                mouseClickedAtModuleContainer(e);
-            else if (e.getComponent() instanceof JTModule)
-                mouseClickedAtModule(e);
+            if (dndAllowed)
+            {
+                if (e.getComponent() == getModuleContainer())
+                    mouseClickedAtModuleContainer(e);
+                else if (e.getComponent() instanceof JTModule)
+                    mouseClickedAtModule(e);
+            }
         }
 
         public void mouseEntered(MouseEvent e)
@@ -999,7 +1078,11 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void mousePressed(MouseEvent e)
         {
-            // no op
+            JTModuleContainer mc = jtcUI.getModuleContainer();
+            if (SwingUtilities.isRightMouseButton(e) && e.getComponent() == mc)
+            {
+                jtcUI.createPopupMenu(mc, e);
+            }
         }
 
         public void mouseReleased(MouseEvent e)
@@ -1007,357 +1090,6 @@ public class JTModuleContainerUI extends ComponentUI
             // no op
         }
         
-        /*
-         * 
-        private final static int moduleDropAction = DnDConstants.ACTION_COPY;
-        private CableDisplay curvePanel = null;
-        private DragDropAction ddAction = new DragDropAction();
-        {
-            this = container
-             new DropTarget(this, moduleDropAction, ddAction, true);
-        }
-        private class DragDropAction extends DropTargetAdapter {
-            247 
-            248         public void dragExit(DropTargetEvent e)
-            249         {
-            250             deleteRect();
-            251         }
-            252 
-            253         private void deleteRect()
-            254         {
-            255             if (dragBounds!=null)
-            256             {
-            257                 repaint(dragBounds.x, dragBounds.y, dragBounds.width, dragBounds.height);
-            258                 dragBounds=null;
-            259             }
-            260         }
-            261 
-            262         public void dragOver(DropTargetDragEvent dtde)
-            263         {
-            264 
-            265             // We will only accept the ModuleToolbarButton.ModuleToolbarButtonFlavor
-            266             if (dtde.getCurrentDataFlavorsAsList().contains(ModuleDragSource.ModuleInfoFlavor))
-            267             {
-            268                 dtde.acceptDrag(DnDConstants.ACTION_COPY);
-            269             }
-            270             else if (dtde.getCurrentDataFlavorsAsList().contains(ModuleSelectionSource.ModuleSelectionFlavor))
-            271             {
-            272                 dtde.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
-            273 
-            274                 Object data;
-            275                 try
-            276                 {
-            277                     data = dtde.getTransferable().getTransferData(ModuleSelectionSource.ModuleSelectionFlavor);
-            278                 }
-            279                 catch (Throwable e)
-            280                 {
-            281                     return ;
-            282                 }
-            283                 if (data!=null && data instanceof ModuleTransferData)
-            284                 {
-            285                     ModuleTransferData mtd = ((ModuleTransferData) data);
-            286                     Rectangle r = mtd.getData().getBounds(null);
-            287                    // Point tl = mtd.getData().getTopLeftPX();
-            288                     Point p = dtde.getLocation();
-            289                     Point o = mtd.getOrigin();
-            290 
-            291                     
-            292                 //    o.x+=mtd.getModuleUI().getX();
-            293                   //  o.y+=mtd.getModuleUI().getY();
-            294                     p.x =p.x-o.x;
-            295                     p.y =p.y-o.y;
-            296 
-            297                     r.x= p.x;
-            298                     r.y= p.y;
-            299 
-            300                     if (dragBounds!=null)
-            301                         repaint(dragBounds.x, dragBounds.y, dragBounds.width, dragBounds.height);
-            302                     dragBounds = r;
-            303                     repaint(dragBounds.x, dragBounds.y, dragBounds.width, dragBounds.height);
-            304 
-            305                 }
-            306             }
-            307             else
-            308             {
-            309                 dtde.rejectDrag();
-            310             }
-            311         }
-            312 
-            313         public void drop(DropTargetDropEvent dtde) {
-            314             DataFlavor chosen = null;
-            315             Object data = null;
-            316             // We will only accept the ModuleToolbarButton.ModuleToolbarButtonFlavor
-            317             if (dtde.isDataFlavorSupported(ModuleDragSource.ModuleInfoFlavor)
-            318                     && dtde.isLocalTransfer()) {
-            319 
-            320                 // If there were more sourceFlavors, specify which one you like
-            321                 chosen = ModuleDragSource.ModuleInfoFlavor;
-            322 
-            323                 try {
-            324                     // Get the data
-            325                     dtde.acceptDrop(moduleDropAction);
-            326                     data = dtde.getTransferable().getTransferData(chosen);
-            327                 }
-            328                 catch (Throwable t) {
-            329                     t.printStackTrace();
-            330                     dtde.dropComplete(false);
-            331                     return;
-            332                 }
-            333 
-            334                 if (data!=null && data instanceof DModule) {
-            335                     // Cast the data and create a nice module.
-            336                     DModule info = ((DModule)data);
-            337                     Point p = dtde.getLocation();
-            338                     Module mod = new Module(info);
-            339                     mod.setLocation(ModuleUI.Metrics.getGridX(p.x),ModuleUI.Metrics.getGridY((p.y - ModuleUI.Metrics.HEIGHT)) );
-            340 
-            341                     moduleSection.add(mod);
-            342                 }
-            343                 dtde.dropComplete(true);
-            344             } else if (dtde.isDataFlavorSupported(ModuleSelectionSource.ModuleSelectionFlavor)
-            345                     && dtde.isLocalTransfer())
-            346             {
-            347                 chosen = ModuleSelectionSource.ModuleSelectionFlavor;
-            348 
-            349 
-            350                 Transferable transfer = dtde.getTransferable();
-            351                 try {
-            352                     // Get the data
-            353                     dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
-            354                     data = transfer.getTransferData(chosen);
-            355                 }
-            356                 catch (Throwable t) {
-            357                     t.printStackTrace();
-            358                     dtde.dropComplete(false);
-            359                     return;
-            360                 }
-            361 
-            362                 if (data!=null && data instanceof ModuleTransferData)
-            363                 {
-            364                     // Cast the data and create a nice module.
-            365                     ModuleTransferData tdata = ((ModuleTransferData)data);
-            366                     ModuleSelectionTool tool = tdata.getData();
-            367                     Point p = dtde.getLocation();
-            368 
-            369                     int action = dtde.getDropAction();
-            370 
-            371                     if (tool==selection && ((action&DnDConstants.ACTION_MOVE)!=0))
-            372                     {
-            373                         Point o = tdata.getOrigin();
-            374                         ModuleUI start = tdata.getModuleUI();
-            375                         o.x+=start.getX();
-            376                         o.y+=start.getY();
-            377 
-            378                         selection.moveSelection(p.x-o.x, p.y-o.y);
-            379                     }
-            380                     else
-            381                     {
-            382                         tool.copyTo(moduleSection, ModuleUI.Metrics.getGridX(p.x), ModuleUI.Metrics.getGridY(p.y));
-            383                     }
-            384 
-            385                 }
-            386                 dtde.dropComplete(true);
-            387 
-            388             } else {
-            389                 dtde.rejectDrop();
-            390                 dtde.dropComplete(false);
-            391             }
-            392             deleteRect();
-            393         }
-            394 
-            395     }
-            396 
-            397     private ModuleSelectionTool selection = new ModuleSelectionTool();
-            398 
-            399     private PaintAbleDragAction dragAction = null;
-            400 
-            401     public void createDragAction( NomadConnector nc, MouseEvent event )
-            402     {
-            403         if (nc.getConnector()==null)
-            404             return;
-            405 
-            406         if (event.getClickCount()==2)
-            407             moveCableAction(nc, event);
-            408         else
-            409             createCableAction(nc, event);
-            410     }
-            411 
-            412     public void createCableAction( NomadConnector nc, MouseEvent event )
-            413     {
-            414         CableDragAction cda = new CableDragAction(nc, event.getX(), event.getY(),
-            415                 curvePanel, RenderOp.OPTIMIZE_SPEED)
-            416         {
-            417             Curve curve = new Curve();
-            418 
-            419             {
-            420                 curve.setCurve(getStartConnectorLocation(), getStartConnectorLocation());
-            421                 add(curve);
-            422             }
-            423 
-            424             public void dragged()
-            425             {
-            426                 super.dragged();
-            427                 curve.setP2(getDeltaStartConnectorLocation());
-            428                 repaintDirtyRegion();
-            429             }
-            430 
-            431             public void stop()
-            432             {
-            433                 NomadConnector du = getDownUnder();
-            434                 if (du!=null && du.getConnector()!=null && getStart().getConnector()!=null)
-            435                 {
-            436                     du.getConnector().connect(getStart().getConnector());
-            437                 }
-            438 
-            439                 dragAction = null;
-            440                 repaintDirtyRegion();
-            441                 super.stop();
-            442             }
-            443 
-            444             private void repaintDirtyRegion()
-            445             {
-            446                 Rectangle bounds = getDirtyRegion();
-            447                 repaint(bounds.x-2, bounds.y-2, bounds.width+5, bounds.height+5);
-            448             }
-            449         };
-            450 
-            451         dragAction = cda;
-            452     }
-            453 
-            454     public void moveCableAction( NomadConnector nc, MouseEvent event )
-            455     {
-            456         CableDragAction cda = new CableDragAction(nc, event.getX(), event.getY(),
-            457                 curvePanel, RenderOp.OPTIMIZE_SPEED)
-            458         {
-            459             {
-            460                 Connector c = getStart().getConnector();
-            461                 curvePanel.beginUpdate();
-            462                 for(Cable cable : getCables(c)) {
-            463                     if (cable.getC1()!=c)
-            464                         cable.swapConnectors();
-            465                     add(cable);
-            466                     curvePanel.remove(cable);
-            467                 }
-            468                 curvePanel.endUpdate();
-            469                 c.disconnectCables();
-            470             }
-            471 
-            472             protected void escape()
-            473             {
-            474                 curvePanel.beginUpdate();
-            475                 for (Curve curve : curveList)
-            476                 {
-            477                     Cable cable = (Cable) curve;
-            478                     cable.getC1().connect(cable.getC2()); // put cables back
-            479                 }
-            480                 curvePanel.endUpdate();
-            481 
-            482                 dragAction = null;
-            483                 uninstall();
-            484                 super.escape();
-            485             }
-            486 
-            487             public void dragged()
-            488             {
-            489                 // before super.dragged so that the dirty bounds are exact
-            490 
-            491                 int ax = getAbsoluteX();
-            492                 int ay = getAbsoluteY();
-            493                 for (Curve curve:curveList)
-            494                 {
-            495                     curve.setP1(ax,ay);
-            496                 }
-            497 
-            498                 super.dragged();
-            499                 repaintDirtyRegion();
-            500             }
-            501 
-            502             public void stop()
-            503             {
-            504                 NomadConnector stop = getDownUnder();
-            505 
-            506                 if (stop==null || stop.getConnector()==null) {
-            507                     // remove all : below
-            508                 } else {
-            509                     for (Curve curve : curveList) {
-            510                         Cable cable = (Cable) curve;
-            511                         cable.getC2().connect(stop.getConnector());
-            512                     }
-            513                 }
-            514 
-            515                 dragAction = null;
-            516                 repaintDirtyRegion();
-            517                 super.stop();
-            518             }
-            519 
-            520             private void repaintDirtyRegion()
-            521             {
-            522                 Rectangle bounds = getDirtyRegion();
-            523                 repaint(bounds.x-2, bounds.y-2, bounds.width+5, bounds.height+5);
-            524             }
-            525         };
-            526 
-            527         dragAction = cda;
-            528     }
-            529 
-            530     public Collection<ModuleUI> getSelectedModules()
-            531     {
-            532         return selection.getModuleUIs();
-            533     }
-            534 
-            554     private void createSelectionAction(MouseEvent event)
-            555     {
-            556         dragAction = new SelectingDragAction(this, event.getX(), event.getY())
-            557         {
-            558             {
-            559                 selection.clear();
-            560             }
-            561 
-            562             public void stop()
-            563             {
-            564                 if (getSelection().isEmpty())
-            565                     selection.clear();
-            566                 dragAction = null;
-            567                 repaintDirtyRegion();
-            568                 super.stop();
-            569             }
-            570             public void dragged()
-            571             {
-            572                 super.dragged();
-            573 
-            574                 Rectangle selRect = getSelection();
-            575 
-            576                 for (Iterator<ModuleUI> iter = selection.iterator();iter.hasNext();)
-            577                 {
-            578                     ModuleUI m = iter.next();
-            579                     if (!selRect.intersects(m.getX(), m.getY(), m.getWidth(), m.getHeight()))
-            580                     {
-            581                         m.setSelected(false);
-            582                         iter.remove();
-            583                     }
-            584                 }
-            585                 for (Component c : getComponents())
-            586                 {
-            587                     if (c instanceof ModuleUI)
-            588                     {
-            589                         ModuleUI m  = (ModuleUI)c;
-            590                         if (selRect.intersects(m.getX(), m.getY(), m.getWidth(), m.getHeight()))
-            591                         {
-            592                             if (!selection.contains(m))
-            593                                 selection.add(m);
-            594                         }
-            595                     }
-            596                 }
-            597                 repaintDirtyRegion();
-            598             }
-            599 
-            600             void repaintDirtyRegion()
-            601             {
-            602                 Rectangle dirty = getDirtyRegion();
-            603                 repaint(dirty.x, dirty.y, dirty.width, dirty.height);
-            604             }
-            605         };
-            606     }*/
     }
     
 }

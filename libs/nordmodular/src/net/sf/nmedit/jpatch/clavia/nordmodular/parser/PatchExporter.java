@@ -372,7 +372,7 @@ public class PatchExporter
         for (Module mm : voiceArea)
         {
             NMModule m = (NMModule)mm;
-            handler.moduleNameDump(m.getIndex(), m.getName());
+            handler.moduleNameDump(m.getIndex(), m.getTitle());
         }
         handler.endSection(PParser.INAMEDUMP);
     }
@@ -408,11 +408,9 @@ public class PatchExporter
         if (!sortCables)
         {
             int[] record = getRecord(rsize);
-            Iterator<Connection> iter = voiceArea.getConnectionManager().getConnections();
             
-            while (iter.hasNext())
+            for(Connection c: voiceArea.getConnectionManager())
             {
-                Connection c = iter.next();
                 getConnectionRecord(record, c);
                 handler.cableDump(record);   
             }
@@ -422,10 +420,8 @@ public class PatchExporter
             List<int[]> cables = new ArrayList<int[]>(100);
 
             {
-                Iterator<Connection> iter = voiceArea.getConnectionManager().getConnections();
-                while (iter.hasNext())
+                for (Connection c: voiceArea.getConnectionManager())
                 {
-                    Connection c = iter.next();
                     int[] r = new int[rsize];
                     getConnectionRecord(r, c);
                     

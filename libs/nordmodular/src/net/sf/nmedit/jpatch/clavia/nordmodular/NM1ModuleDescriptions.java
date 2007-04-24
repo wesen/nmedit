@@ -58,6 +58,7 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.Timbre;
 import net.sf.nmedit.jpatch.spec.ModuleDescriptions;
 import net.sf.nmedit.jpatch.spec.ModuleDescriptionsParser;
 import net.sf.nmedit.jpatch.spec.formatter.FormatterRegistry;
+import net.sf.nmedit.jpatch.transformation.Transformations;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -116,6 +117,11 @@ public class NM1ModuleDescriptions extends ModuleDescriptions
         registry.putFormatter("pattern-step", new PatternStep());
         registry.putFormatter("expander-gate", new ExpanderGate());
         registry.putFormatter("expander-hold", new ExpanderHold());
+    }
+
+    public void setTransformations(Transformations t)
+    {
+        this.transformations = t;
     }
 
 }

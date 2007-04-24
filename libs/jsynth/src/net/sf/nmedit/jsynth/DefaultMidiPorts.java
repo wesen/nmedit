@@ -16,23 +16,14 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+package net.sf.nmedit.jsynth;
 
-/*
- * Created on Nov 30, 2006
- */
-package net.sf.nmedit.jpatch;
+import net.sf.nmedit.jsynth.midi.MidiPort;
 
-import net.sf.nmedit.jpatch.history.History;
-
-public interface Patch
+public interface DefaultMidiPorts
 {
 
-    ModuleContainer getModuleContainer();
-    
-    String getName();
-    
-    String getVersion();
-
-    History getHistory();
+    MidiPort getDefaultMidiInPort();
+    MidiPort getDefaultMidiOutPort();
     
 }

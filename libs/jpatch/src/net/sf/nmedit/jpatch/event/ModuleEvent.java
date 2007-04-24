@@ -29,6 +29,11 @@ import net.sf.nmedit.jpatch.Module;
 public class ModuleEvent extends Event
 {
 
+    public static final int MODULE_MOVED = 100;
+    public static final int MODULE_RENAMED = 101;
+    
+    private String oldName;
+
     protected ModuleEvent( Object target, long when, int id, int x, int y, int key,
             int modifiers, Object arg )
     {
@@ -59,6 +64,34 @@ public class ModuleEvent extends Event
     public Module getModule()
     {
         return (Module) target;
+    }
+    
+    public void moduleRenamed(String oldName)
+    {
+        this.id = MODULE_RENAMED;
+        this.oldName = oldName;
+    }
+    
+    public String getOldName()
+    {
+        return oldName;
+    }
+
+    public void moduleMoved(int oldScreenX, int oldScreenY)
+    {
+        this.id = MODULE_MOVED;
+        this.x = oldScreenX;
+        this.y = oldScreenY;
+    }
+    
+    public int getOldScreenX()
+    {
+        return x;
+    }
+    
+    public int getOldScreenY()
+    {
+        return y;
     }
     
 }

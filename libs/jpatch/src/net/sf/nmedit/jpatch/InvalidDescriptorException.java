@@ -25,7 +25,7 @@ package net.sf.nmedit.jpatch;
 /** 
  * An exception that indicates that a descriptor was invalid (or incompatible).
  */
-public class InvalidDescriptorException extends JPException
+public class InvalidDescriptorException extends JPRuntimeException
 {
 
     private Descriptor descriptor = null;
