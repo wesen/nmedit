@@ -16,31 +16,41 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-/*
- * Created on Dec 21, 2006
- */
-package net.sf.nmedit.nmutils.collections;
+package net.sf.nmedit.nmutils.iterator;
 
 import java.util.Iterator;
 
-public class Counter
+public class CompoundIterator<T> implements Iterator<T>
 {
 
-    public static int countIterator(Iterator<?> i)
-    {
-        int count = 0;
-        while (i.hasNext())
-        {
-            count ++;
-            i.next();
-        }
-        return count;
-    }
+    protected Iterator<T> iter;
+    protected Iterator<T> b; 
+    protected Iterator<T> removable;
     
-    public static int countIterable(Iterable<?> i)
+    public CompoundIterator(Iterator<T> a, Iterator<T> b)
     {
-        return countIterator(i.iterator());
+        this.iter = a;
+        this.removable = a;
+        this.b = b;
     }
-    
+
+    public boolean hasNext()
+    {   
+        return iter.hasNext();
+    }
+
+    public T next()
+    {
+        T next = iter.next();
+        if (iter != b && !iter.hasNext())
+            removable = iter = b;
+        
+        return next;
+    }
+
+    public void remove()
+    {
+        removable.remove();
+    }
+
 }

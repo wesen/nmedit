@@ -24,26 +24,38 @@ public class ArrayIterator<T> implements Iterator<T>
 {
     
     protected T[] array;
-    private int index = 0;
-    private int removeIndex = -1;
+    
+    private int start;
+    private int removeIndex;
+
+    private int end;
+    
 
     public ArrayIterator(T[] array)
     {
+        this(array, 0, array.length);
+    }
+
+    public ArrayIterator(T[] array, int start, int end)
+    {
+        this.start = start;
+        this.end = end;
         this.array = array;
+        this.removeIndex = -1;
     }
 
     public boolean hasNext()
     {
-        return index<array.length;
+        return start<end;
     }
-
+    
     public T next()
     {
         if (!hasNext())
             throw new NoSuchElementException();
 
-        removeIndex = index;
-        return array[index++];
+        removeIndex = start++;
+        return array[removeIndex];
     }
 
     public void remove()
@@ -60,5 +72,5 @@ public class ArrayIterator<T> implements Iterator<T>
     {
         throw new UnsupportedOperationException();
     }
-
+    
 }

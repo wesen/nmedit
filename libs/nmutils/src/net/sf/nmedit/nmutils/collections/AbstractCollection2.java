@@ -16,31 +16,23 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-/*
- * Created on Dec 21, 2006
- */
 package net.sf.nmedit.nmutils.collections;
 
-import java.util.Iterator;
+import java.util.AbstractCollection;
 
-public class Counter
+public abstract class AbstractCollection2<T> extends AbstractCollection<T>
 {
 
-    public static int countIterator(Iterator<?> i)
+    @Override
+    public boolean isEmpty()
     {
-        int count = 0;
-        while (i.hasNext())
-        {
-            count ++;
-            i.next();
-        }
-        return count;
+        return !iterator().hasNext();
     }
-    
-    public static int countIterable(Iterable<?> i)
+
+    @Override
+    public int size()
     {
-        return countIterator(i.iterator());
+        return Counter.countIterable(this);
     }
-    
+
 }

@@ -16,31 +16,48 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-/*
- * Created on Dec 21, 2006
- */
-package net.sf.nmedit.nmutils.collections;
+package net.sf.nmedit.nmutils.iterator;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class Counter
+public class SingleElementIterator<T> implements Iterator<T>
 {
-
-    public static int countIterator(Iterator<?> i)
-    {
-        int count = 0;
-        while (i.hasNext())
-        {
-            count ++;
-            i.next();
-        }
-        return count;
-    }
     
-    public static int countIterable(Iterable<?> i)
+    protected T element;
+    protected T next;
+    protected T removable;
+
+    public SingleElementIterator(T element)
     {
-        return countIterator(i.iterator());
+        this.next = this.element = element;
+    }
+
+    public boolean hasNext()
+    {
+        return next != null;
+    }
+
+    public T next()
+    {
+        if (!hasNext())
+            throw new NoSuchElementException();
+        
+        removable = next;
+        next = null;
+        return removable;
+    }
+
+    public void remove()
+    {
+        if (removable == null)
+            throw new IllegalStateException();
+        remove(removable);
+    }
+
+    protected void remove(T removable)
+    {
+        throw new UnsupportedOperationException();
     }
     
 }

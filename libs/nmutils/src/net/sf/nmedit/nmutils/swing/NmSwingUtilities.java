@@ -18,7 +18,11 @@
  */
 package net.sf.nmedit.nmutils.swing;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import gnu.classpath.javax.swing.plaf.basic.BasicGraphicsUtils;
 
@@ -39,5 +43,23 @@ public class NmSwingUtilities
         BasicGraphicsUtils.
         drawStringUnderlineCharAt(g, text, underlinedIndex, x, y);
     }
+
+    
+    public static <T extends Component> Collection<? extends T> getChildren(Class<T> clazz, Container parent)
+    {
+        Collection<T> dst = new ArrayList<T>(parent.getComponentCount());
+        addChildren(clazz, dst, parent);
+        return dst;
+    }
+    
+    public static <T extends Component> void addChildren(Class<T> clazz, Collection<? super T> dst, Container parent)
+    {
+        for (Component c: parent.getComponents())
+        {
+            if (clazz.isInstance(c))
+                dst.add(clazz.cast(c));
+        }
+    }
+    
 }
 

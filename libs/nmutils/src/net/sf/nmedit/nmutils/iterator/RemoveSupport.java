@@ -16,31 +16,41 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-/*
- * Created on Dec 21, 2006
- */
-package net.sf.nmedit.nmutils.collections;
+package net.sf.nmedit.nmutils.iterator;
 
 import java.util.Iterator;
 
-public class Counter
+public abstract class RemoveSupport<T> implements Iterator<T> 
 {
+    
+    private Iterator<T> iter;
+    private T removable;
 
-    public static int countIterator(Iterator<?> i)
+    public RemoveSupport(Iterator<T> iter)
     {
-        int count = 0;
-        while (i.hasNext())
-        {
-            count ++;
-            i.next();
-        }
-        return count;
+        this.iter = iter;
+        this.removable = null;
+    }
+
+    public boolean hasNext()
+    {
+        return iter.hasNext();
+    }
+
+    public T next()
+    {
+        return removable = iter.next();
+    }
+
+    public void remove()
+    {
+        if (removable == null)
+            throw new IllegalStateException();
+        T r = removable;
+        removable = null;
+        remove(r);
     }
     
-    public static int countIterable(Iterable<?> i)
-    {
-        return countIterator(i.iterator());
-    }
+    protected abstract void remove(T element);
     
 }
