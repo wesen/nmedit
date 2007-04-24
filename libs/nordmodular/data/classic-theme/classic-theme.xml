@@ -649,7 +649,7 @@ label{fill:#000;}
 		</button>
 		<label x="1" y="31" >Trig</label>
 		<light x="7" y="48" width="7" height="7" >
-<light>light.58.0</light>
+			<light>light.58.0</light>
 		</light>
 		<label x="4" y="68" >Vel</label>
 		<label x="1" y="114" >Pitch</label>
@@ -1311,9 +1311,9 @@ label{fill:#000;}
 			<parameter class="parameter" index="5" alt="rate kbt" />
 		</resetButton>
 		<LFODisplay x="200" y="7" width="46" height="20" >
-			<parameter class="parameter" index="6" alt="phase" />
-<waveform>2</waveform>
-			<parameter target="waveform" class="parameter" index="2" alt="waveform" />
+			<phase class="parameter" index="6" alt="phase" />
+			<shape class="parameter" index="2" alt="waveform" />
+			<waveform value="2" />
 		</LFODisplay>
 	</module>
 	<module id="115" width="255" height="60">
@@ -1851,8 +1851,8 @@ label{fill:#000;}
 			<parameter class="parameter" index="7" alt="PW" />
 		</resetButton>
 		<LFODisplay x="200" y="7" width="46" height="20" >
-			<parameter class="parameter" index="2" alt="phase" />
-<waveform>4</waveform>
+			<phase class="parameter" index="2" alt="phase" />
+			<waveform value="4" />
 		</LFODisplay>
 	</module>
 	<module id="5" width="255" height="45">
@@ -2234,9 +2234,9 @@ label{fill:#000;}
 			<btn index="1">M</btn>
 		</button>
 		<LFODisplay x="200" y="7" width="46" height="20" >
-			<parameter class="parameter" index="1" alt="phase" />
-<waveform>2</waveform>
-			<parameter target="waveform" class="parameter" index="2" alt="waveform" />
+			<phase class="parameter" index="1" alt="phase" />
+			<shape class="parameter" index="2" alt="waveform" />
+			<waveform value="2" />
 		</LFODisplay>
 	</module>
 	<module id="73" width="255" height="30">
@@ -3848,87 +3848,62 @@ label{fill:#000;}
 	</module>
 	<module id="90" width="255" height="135">
 		<name>NoteSeqB</name>
-		<connector x="5" y="65" size="13" class="cCONTROL" >
+		
+		<connector x="3" y="20" size="13" class="cCONTROL" >
 			<connector index="0" type="input" alt="clock" />
 		</connector>
-		<connector x="23" y="65" size="13" class="cLOGIC" >
+		<connector x="3" y="30" size="13" class="cLOGIC" >
 			<connector index="1" type="input" alt="reset" />
 		</connector>
-		<connector x="41" y="65" size="13" class="cCONTROL" >
-			<connector index="0" type="input" alt="clock" />
+		<connector x="3" y="40" size="13" class="cLOGIC" >
+			<connector index="1" type="output" alt="sync" />
 		</connector>
-		<connector x="59" y="65" size="13" class="cLOGIC" >
-			<connector index="1" type="input" alt="reset" />
-		</connector>
-		<connector x="77" y="65" size="13" class="cLOGIC" >
+		
+		<connector x="240" y="95" size="13" class="cLOGIC" >
 			<connector index="2" type="output" alt="link" />
 		</connector>
-		<connector x="95" y="65" size="13" class="cLOGIC" >
+		<connector x="240" y="105" size="13" class="cLOGIC" >
 			<connector index="3" type="output" alt="gclk" />
 		</connector>
-		<knob x="5" y="5" size="21" >
-			<parameter class="parameter" index="0" alt="note 1" />
-		</knob>
-		<knob x="25" y="5" size="21" >
-			<parameter class="parameter" index="1" alt="note 2" />
-		</knob>
-		<knob x="45" y="5" size="21" >
-			<parameter class="parameter" index="2" alt="note 3" />
-		</knob>
-		<knob x="65" y="5" size="21" >
-			<parameter class="parameter" index="3" alt="note 4" />
-		</knob>
-		<knob x="5" y="17" size="21" >
-			<parameter class="parameter" index="4" alt="note 5" />
-		</knob>
-		<knob x="25" y="17" size="21" >
-			<parameter class="parameter" index="5" alt="note 6" />
-		</knob>
-		<knob x="45" y="17" size="21" >
-			<parameter class="parameter" index="6" alt="note 7" />
-		</knob>
-		<knob x="65" y="17" size="21" >
-			<parameter class="parameter" index="7" alt="note 8" />
-		</knob>
-		<knob x="5" y="29" size="21" >
-			<parameter class="parameter" index="8" alt="note 9" />
-		</knob>
-		<knob x="25" y="29" size="21" >
-			<parameter class="parameter" index="9" alt="note 10" />
-		</knob>
-		<knob x="45" y="29" size="21" >
-			<parameter class="parameter" index="10" alt="note 11" />
-		</knob>
-		<knob x="65" y="29" size="21" >
-			<parameter class="parameter" index="11" alt="note 12" />
-		</knob>
-		<knob x="5" y="41" size="21" >
-			<parameter class="parameter" index="12" alt="note 13" />
-		</knob>
-		<knob x="25" y="41" size="21" >
-			<parameter class="parameter" index="13" alt="note 14" />
-		</knob>
-		<knob x="45" y="41" size="21" >
-			<parameter class="parameter" index="14" alt="note 15" />
-		</knob>
-		<knob x="65" y="41" size="21" >
-			<parameter class="parameter" index="15" alt="note 16" />
-		</knob>
-		<knob x="5" y="53" size="21" >
+		<connector x="240" y="115" size="13" class="cCONTROL" >
+			<connector index="0" type="output" alt="out" />
+		</connector>
+
+		<knob x="5" y="10" size="21" >
 			<parameter class="parameter" index="16" alt="step" />
 		</knob>
-		<knob x="25" y="53" size="21" >
+		<knob x="25" y="10" size="21" >
 			<parameter class="parameter" index="17" alt="currentstep" />
 		</knob>
-		<button x="45" y="53" width="34" height="19" cyclic="true" landscape="false" >
+		<button x="45" y="10" width="34" height="19" cyclic="true" landscape="false" >
 			<parameter class="parameter" index="18" alt="record" />
 		</button>
-		<button x="65" y="53" width="34" height="19" cyclic="true" landscape="false" >
+		<button x="65" y="10" width="34" height="19" cyclic="true" landscape="false" >
 			<parameter class="parameter" index="19" alt="play" />
 		</button>
-		<button x="5" y="65" width="34" height="19" cyclic="true" landscape="false" >
+		<button x="5" y="15" width="34" height="19" cyclic="true" landscape="false" >
 			<parameter class="parameter" index="20" alt="loop" />
 		</button>
+		
+		<note-seq-editor x="24" y="39" width="204" height="72">
+			<step1 class="parameter" index="0" alt="note 1" />
+			<step2 class="parameter" index="1" alt="note 2" />
+			<step3 class="parameter" index="2" alt="note 3" />
+			<step4 class="parameter" index="3" alt="note 4" />
+			<step5 class="parameter" index="4" alt="note 5" />
+			<step6 class="parameter" index="5" alt="note 6" />
+			<step7 class="parameter" index="6" alt="note 7" />
+			<step8 class="parameter" index="7" alt="note 8" />
+			<step9 class="parameter" index="8" alt="note 9" />
+			<step10 class="parameter" index="9" alt="note 10" />
+			<step11 class="parameter" index="10" alt="note 11" />
+			<step12 class="parameter" index="11" alt="note 12" />
+			<step13 class="parameter" index="12" alt="note 13" />
+			<step14 class="parameter" index="13" alt="note 14" />
+			<step15 class="parameter" index="14" alt="note 15" />
+			<step16 class="parameter" index="15" alt="note 16" />
+		</note-seq-editor>
+		
 	</module>
 	<module id="111" width="255" height="30">
 		<name>LevMult</name>
@@ -4104,6 +4079,57 @@ label{fill:#000;}
 		<label x="181" y="31" >14</label>
 		<label x="192" y="31" >15</label>
 		<label x="204" y="31" >16</label>
+		
+		<slider x="24" y="39" width="11" height="50" orientation="vertical" >
+			<parameter class="parameter" index="0" alt="xy" />
+		</slider>
+		<slider x="36" y="39" width="11" height="50" orientation="vertical" >
+			<parameter class="parameter" index="1" alt="xy" />
+		</slider>
+		<slider x="48" y="39" width="11" height="50" orientation="vertical" >
+			<parameter class="parameter" index="2" alt="xy" />
+		</slider>
+		<slider x="60" y="39" width="11" height="50" orientation="vertical" >
+			<parameter class="parameter" index="3" alt="xy" />
+		</slider>
+		<slider x="72" y="39" width="11" height="50" orientation="vertical" >
+			<parameter class="parameter" index="4" alt="xy" />
+		</slider>
+		<slider x="84" y="39" width="11" height="50" orientation="vertical" >
+			<parameter class="parameter" index="5" alt="xy" />
+		</slider>
+		<slider x="96" y="39" width="11" height="50" orientation="vertical" >
+			<parameter class="parameter" index="6" alt="xy" />
+		</slider>
+		<slider x="108" y="39" width="11" height="50" orientation="vertical" >
+			<parameter class="parameter" index="7" alt="xy" />
+		</slider>
+		<slider x="120" y="39" width="11" height="50" orientation="vertical" >
+			<parameter class="parameter" index="8" alt="xy" />
+		</slider>
+		<slider x="132" y="39" width="11" height="50" orientation="vertical" >
+			<parameter class="parameter" index="9" alt="xy" />
+		</slider>
+		<slider x="144" y="39" width="11" height="50" orientation="vertical" >
+			<parameter class="parameter" index="10" alt="xy" />
+		</slider>
+		<slider x="156" y="39" width="11" height="50" orientation="vertical" >
+			<parameter class="parameter" index="11" alt="xy" />
+		</slider>
+		<slider x="168" y="39" width="11" height="50" orientation="vertical" >
+			<parameter class="parameter" index="12" alt="xy" />
+		</slider>
+		<slider x="180" y="39" width="11" height="50" orientation="vertical" >
+			<parameter class="parameter" index="13" alt="xy" />
+		</slider>
+		<slider x="192" y="39" width="11" height="50" orientation="vertical" >
+			<parameter class="parameter" index="14" alt="xy" />
+		</slider>
+		<slider x="204" y="39" width="11" height="50" orientation="vertical" >
+			<parameter class="parameter" index="15" alt="xy" />
+		</slider>
+		
+		
 	</module>
 	<module id="39" width="255" height="30">
 		<name>Smooth</name>
