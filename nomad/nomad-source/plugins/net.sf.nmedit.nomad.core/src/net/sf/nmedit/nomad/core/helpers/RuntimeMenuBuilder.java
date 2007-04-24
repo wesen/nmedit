@@ -35,6 +35,7 @@ import net.sf.nmedit.nomad.core.menulayout.MenuLayout;
 import net.sf.nmedit.nomad.core.service.ServiceRegistry;
 import net.sf.nmedit.nomad.core.service.fileService.FileService;
 import net.sf.nmedit.nomad.core.service.synthService.NewSynthService;
+import net.sf.nmedit.nomad.core.swing.ExtensionFilter;
 import net.sf.nmedit.nomad.core.swing.explorer.FileContext;
 
 public class RuntimeMenuBuilder
@@ -85,9 +86,9 @@ public class RuntimeMenuBuilder
             
             MLEntry root = getEntry(layout, FILE_NEW_ROOT_KEY);
 
-            Iterator<FileService> iter = ServiceRegistry.getServices(FileService.class);
-            
             Icon newFileIcon = getNewFileIcon();
+            
+            Iterator<FileService> iter = ServiceRegistry.getServices(FileService.class);
             
             while (iter.hasNext())
             {
@@ -194,7 +195,33 @@ public class RuntimeMenuBuilder
 
         public void actionPerformed(ActionEvent e)
         {
-            File location = chooseLocation();
+            File location;
+            JFileChooser chooser = new JFileChooser();
+            chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            chooser.setMultiSelectionEnabled(false);
+            ExtensionFilter filter = null;
+            
+            Iterator<FileService> iter = ServiceRegistry.getServices(FileService.class);
+            
+            while (iter.hasNext())
+            {
+                FileService service = iter.next();
+                if (service.isOpenFileOperationSupported())
+                {
+                    chooser.addChoosableFileFilter(service.getFileFilter());
+                }
+            }
+            
+            if (chooser.showOpenDialog(Nomad.sharedInstance().getWindow())
+                    == JFileChooser.APPROVE_OPTION)
+            {
+                location = chooser.getSelectedFile();
+                
+                javax.swing.filechooser.FileFilter f = chooser.getFileFilter();
+                if (f instanceof ExtensionFilter)
+                    filter = (ExtensionFilter) f;
+            }
+            else return;
             
             if (location == null)
                 return;
@@ -205,24 +232,10 @@ public class RuntimeMenuBuilder
             Nomad n = Nomad.sharedInstance();
             
             FileContext c = new FileContext(n.getExplorer(), location);
+            c.setFileFilter( filter );
             
             n.getExplorer().addRootNode(c);
             
-        }
-        
-        private File chooseLocation()
-        {
-            JFileChooser chooser = new JFileChooser();
-            chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            chooser.setMultiSelectionEnabled(false);
-            
-            if (chooser.showOpenDialog(Nomad.sharedInstance().getWindow())
-                    == JFileChooser.APPROVE_OPTION)
-            {
-                return chooser.getSelectedFile();
-            }
-            
-            return null;
         }
         
     }

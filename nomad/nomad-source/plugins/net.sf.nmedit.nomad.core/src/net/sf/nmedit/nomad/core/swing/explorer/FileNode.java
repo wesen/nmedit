@@ -23,18 +23,22 @@
 package net.sf.nmedit.nomad.core.swing.explorer;
 
 import java.awt.Event;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
 import javax.swing.Icon;
+import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 import net.sf.nmedit.nmutils.FileSort;
+import net.sf.nmedit.nomad.core.Nomad;
 
-public class FileNode implements ETreeNode
+public class FileNode implements ETreeNode, MouseListener
 {
 
     private final static TreeNode[] EMPTY = new TreeNode[0];
@@ -167,5 +171,45 @@ public class FileNode implements ETreeNode
     {
         return file.isFile() ? ExplorerTreeUI.DefaultFileIcon : ExplorerTreeUI.DefaultFolderIcon; 
     }
+
+    public String getToolTipText()
+    {
+        File f = getFile();
+        return f.getAbsolutePath();
+    }
+    
+    public void processEvent(MouseEvent e)
+    {
+        EventDispatcher.dispatchEvent(this, e);
+    }
+
+    public void mouseClicked(MouseEvent e)
+    {
+        // no op
+    }
+
+    public void mouseEntered(MouseEvent e)
+    {
+        // no op
+    }
+
+    public void mouseExited(MouseEvent e)
+    {
+        // no op
+    }
+
+    public void mousePressed(MouseEvent e)
+    {
+        if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount()==2)
+        {
+            Nomad.sharedInstance().openOrSelect(file);
+        }
+    }
+
+    public void mouseReleased(MouseEvent e)
+    {
+        // no op
+    }
+
     
 }

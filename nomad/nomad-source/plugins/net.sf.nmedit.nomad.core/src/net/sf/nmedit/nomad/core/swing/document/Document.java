@@ -31,4 +31,7 @@ public interface Document
     public JComponent getComponent();
     Icon getIcon();
     void dispose();
+    
+    <T> T getFeature(Class<T> featureClass);
+    
 }

@@ -16,27 +16,35 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-/*
- * Created on Oct 29, 2006
- */
 package net.sf.nmedit.nomad.core.swing.explorer;
 
-import java.awt.Event;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-import javax.swing.Icon;
-import javax.swing.tree.TreeNode;
-
-public interface ETreeNode extends TreeNode
+public class EventDispatcher
 {
 
-    Icon getIcon();
-    void notifyDropChildren();
-    
-    public void processEvent(Event event);
-    
-    String getToolTipText();
-    void processEvent(MouseEvent e);
+    public static void dispatchEvent(MouseListener l, MouseEvent e)
+    {
+        switch (e.getID())
+        {
+            case MouseEvent.MOUSE_CLICKED:
+                l.mouseClicked(e);
+                break;
+            case MouseEvent.MOUSE_EXITED:
+                l.mouseExited(e);
+                break;
+            case MouseEvent.MOUSE_ENTERED:
+                l.mouseEntered(e);
+                break;
+            case MouseEvent.MOUSE_PRESSED:
+                l.mousePressed(e);
+                break;
+            case MouseEvent.MOUSE_RELEASED:
+                l.mouseReleased(e);
+                break;
+
+        }
+    }
     
 }

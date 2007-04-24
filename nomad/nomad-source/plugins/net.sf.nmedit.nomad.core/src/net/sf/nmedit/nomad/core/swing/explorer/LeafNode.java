@@ -23,6 +23,7 @@
 package net.sf.nmedit.nomad.core.swing.explorer;
 
 import java.awt.Event;
+import java.awt.event.MouseEvent;
 import java.util.Enumeration;
 
 import javax.swing.Icon;
@@ -117,6 +118,18 @@ public class LeafNode implements ETreeNode
     public String toString()
     {
         return text;
+    }
+
+    public String getToolTipText()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public void processEvent(MouseEvent e)
+    {
+        // TODO Auto-generated method stub
+        
     }
     
 }

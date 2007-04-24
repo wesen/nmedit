@@ -105,6 +105,12 @@ public class NomadMidiDialogFrmHandler extends NomadMidiDialogFrm implements Ite
         return currentText;
     }
     
+    public boolean isSelectionDifferent()
+    {
+        return getPreviousOutput() != getSelectedOutput()
+        || getPreviousInput() != getSelectedInput();
+    }
+    
     public void setListPreviousIfUnavailable(boolean enable)
     {
         this.listPreviousIfUnavailable = enable;
@@ -143,7 +149,7 @@ public class NomadMidiDialogFrmHandler extends NomadMidiDialogFrm implements Ite
         if ((!internalSelectedOutputSet) && (internalSelectedOutput==null))
         {
             internalSelectedOutputSet = true;
-            setInternalSelectedOutput(previousInput);
+            setInternalSelectedOutput(previousOutput);
         }
     }
     
@@ -236,6 +242,11 @@ public class NomadMidiDialogFrmHandler extends NomadMidiDialogFrm implements Ite
         checkItemCount(form.m_cbOutDevices);
         updateLabels(true);
         updateLabels(false);
+
+        if (getPreviousInput() == null ^ form.m_cbInDevices.getItemCount()==0)
+            firePropertyChange(INPUT_DEVICE_PROPERTY, getPreviousInput(), null);
+        if (getPreviousOutput() == null ^ form.m_cbOutDevices.getItemCount()==0)
+            firePropertyChange(OUTPUT_DEVICE_PROPERTY, getPreviousOutput(), null);
     }
     
     private MidiDevice.Info getSelectedInfo(JComboBox cb)
@@ -268,17 +279,17 @@ public class NomadMidiDialogFrmHandler extends NomadMidiDialogFrm implements Ite
         
         if (inputs)
         {
-            checkAdd(c, previousInput);
+            checkAdd(c, previousInput, inputs);
         }
         else
         {
-            checkAdd(c, previousOutput);
+            checkAdd(c, previousOutput, !inputs);
         }
         
         return c;
     }
 
-    private void checkAdd(Vector<MidiDevice.Info> c, MidiDevice.Info info)
+    private void checkAdd(Vector<MidiDevice.Info> c, MidiDevice.Info info, boolean input)
     {
         // info is null or already in the list
         if (info == null || c.contains(info))
@@ -289,10 +300,21 @@ public class NomadMidiDialogFrmHandler extends NomadMidiDialogFrm implements Ite
         {
             try
             {
-                if (!MidiUtils.isInputDeviceAvailable(info))
+                if (input)
                 {
-                    // not available
-                    c.add(info);
+                    if (!MidiUtils.isInputDeviceAvailable(info))
+                    {
+                        // not available
+                        c.add(info);
+                    }
+                }
+                else
+                {
+                    if (!MidiUtils.isOutputDeviceAvailable(info))
+                    {
+                        // not available
+                        c.add(info);
+                    }
                 }
             }
             catch (MidiUnavailableException e)

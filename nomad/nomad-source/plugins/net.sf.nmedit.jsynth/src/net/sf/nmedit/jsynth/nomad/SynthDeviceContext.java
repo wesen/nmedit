@@ -22,15 +22,21 @@
  */
 package net.sf.nmedit.jsynth.nomad;
 
+import java.awt.Dimension;
 import java.awt.Event;
+import java.awt.BorderLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
 
+import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
@@ -50,9 +56,11 @@ import net.sf.nmedit.jsynth.event.SlotManagerListener;
 import net.sf.nmedit.jsynth.event.SynthesizerEvent;
 import net.sf.nmedit.jsynth.event.SynthesizerStateListener;
 import net.sf.nmedit.nomad.core.Nomad;
+import net.sf.nmedit.nomad.core.forms.ExceptionDialog;
 import net.sf.nmedit.nomad.core.menulayout.MLEntry;
 import net.sf.nmedit.nomad.core.menulayout.MenuBuilder;
 import net.sf.nmedit.nomad.core.swing.explorer.ContainerNode;
+import net.sf.nmedit.nomad.core.swing.explorer.EventDispatcher;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 import net.sf.nmedit.nomad.core.swing.explorer.LeafNode;
 import net.sf.nmedit.nomad.core.swing.explorer.TreeContext;
@@ -91,6 +99,7 @@ public class SynthDeviceContext extends ContainerNode
     
     protected ContainerNode slotsRoot;
     protected ContainerNode portsRoot;
+    //protected ContainerNode banksRoot;
     private EventHandler eventHandler;
 
     public SynthDeviceContext(ExplorerTree etree, String title)
@@ -100,6 +109,7 @@ public class SynthDeviceContext extends ContainerNode
         setIcon(iconStopped);
         portsRoot = new ContainerNode(this, "Ports");
         slotsRoot = new ContainerNode(this, "Slots");
+      //  banksRoot = new ContainerNode(this, "Banks");
         
         addChild(portsRoot);
         
@@ -355,6 +365,7 @@ public class SynthDeviceContext extends ContainerNode
     private class PortLeaf extends LeafNode implements PortAttachmentListener 
     {
         private Port port;
+        private transient String tooltip;
 
         public PortLeaf(TreeNode parent, Port port)
         {
@@ -385,9 +396,38 @@ public class SynthDeviceContext extends ContainerNode
             etree.fireNodeChanged(this);
         }
 
+        public void update()
+        {
+            tooltip = null;
+            updatePortText();
+        }
+
         public void plugAttachmentChanged(PortAttachmentEvent e)
         {
-            updatePortText();
+            update();
+        }
+        
+        public String getToolTipText()
+        {
+            if (tooltip == null)
+            {
+                Plug p = port.getPlug();
+
+                tooltip = "<html><body>";
+                tooltip += "<b>"+port.getName()+"</b><br />";
+                if (p != null)
+                {
+                    tooltip += "<table>";
+                    tooltip += "<tr><td>name</td><td>"+p.getName()+"</td></tr>";
+                    tooltip += "<tr><td>description</td><td>"+p.getDescription()+"</td></tr>";
+                    tooltip += "<tr><td>version</td><td>"+p.getVersion()+"</td></tr>";
+                    tooltip += "<tr><td>vendor</td><td>"+p.getVendor()+"</td></tr>";
+                    tooltip += "</table>";
+                }
+                tooltip += "</body></html>";
+            }
+            
+            return tooltip;
         }
         
     }
@@ -453,6 +493,13 @@ public class SynthDeviceContext extends ContainerNode
     public static final String SETTINGS_KEY = EXPLORER_SYNTH_KEY+".settings";
     public static final String REMOVE_KEY = EXPLORER_SYNTH_KEY+".general.remove";
     
+
+    public void processEvent(MouseEvent e)
+    {
+        if (eventHandler!=null)
+            EventDispatcher.dispatchEvent(eventHandler, e);
+    }
+
     protected static class EventHandler implements MouseListener,
       SynthesizerStateListener, ActionListener
     {
@@ -500,18 +547,12 @@ public class SynthDeviceContext extends ContainerNode
         public void install()
         {
             if (installed) return;
-            
-            ExplorerTree tree = context.getTree();
-            
-            tree.addMouseListener(this);
         }
         
         public void uninstall()
         {
             if (!installed) return;   
             ExplorerTree tree = context.getTree();
-            
-            tree.removeMouseListener(this);
             
             Synthesizer synth = context.getSynth();
             if (synth != null)
@@ -603,6 +644,10 @@ public class SynthDeviceContext extends ContainerNode
         public void synthConnectionStateChanged(SynthesizerEvent e)
         {
             updateMenu();
+            
+            ContainerNode cn = context.portsRoot;
+            for (int i=cn.getChildCount()-1;i>=0;i--)
+                ((PortLeaf)cn.getChildAt(i)).update();
         }
 
         public void updateMenu()
@@ -687,25 +732,30 @@ public class SynthDeviceContext extends ContainerNode
     
     }
 
-    protected void connect()
+    protected boolean arePlugsConfigured()
     {
-        boolean plugsNotConfigured = false;
         for (Port port: synth.getPorts())
         {
             if (port.getPlug() == null)
             {
-                plugsNotConfigured = true;
-                break;
+                return false;
             }
         }
-        
+        return true;
+    }
+    
+    protected void connect()
+    {
         boolean connect = true;
         
-        if (plugsNotConfigured)
+        if (!arePlugsConfigured())
             connect = showSettings();
         
         if (connect)
         {
+            if (!arePlugsConfigured())
+                return;
+            
             try
             {
                 synth.setConnected(true);
@@ -717,6 +767,9 @@ public class SynthDeviceContext extends ContainerNode
                 {
                     log.warn("trying to connect to "+synth, e);
                 }
+                ExceptionDialog.showErrorDialog(etree, e,
+                        synth.getDeviceName()+", connect"
+                        , e);
             }
         }
     }
@@ -745,8 +798,34 @@ public class SynthDeviceContext extends ContainerNode
 
     protected boolean showSettings()
     {
-        throw new UnsupportedOperationException();
+        SynthPropertiesDialog spd = new SynthPropertiesDialog(synth);
         
+        spd.addSynthInfo();
+        spd.addPortSettings();
+        spd.addSynthSettings();
+        spd.setSelectedPath("connection");
+        
+        final JDialog d = new JDialog(Nomad.sharedInstance().getWindow(), "Properties for "+synth.getDeviceName());
+        d.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+        Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension ds = new Dimension(ss.width/2, ss.height*2/5);
+        
+        d.getContentPane().setLayout(new BorderLayout());
+        d.getContentPane().add(spd);
+        d.setBounds((ss.width-ds.width)/2, (ss.height-ds.height)/2, ds.width, ds.height);
+        d.setVisible(true);
+        
+        spd.addButton(new AbstractAction(){
+            {
+                putValue(NAME, "Close");
+            }
+            public void actionPerformed(ActionEvent e)
+            {
+                d.dispose();
+            }});
+        
+        return true;
     }
     
     private static void showError(Exception e)

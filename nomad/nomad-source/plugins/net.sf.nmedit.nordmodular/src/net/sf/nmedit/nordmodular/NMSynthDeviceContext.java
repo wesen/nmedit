@@ -234,7 +234,7 @@ public class NMSynthDeviceContext extends SynthDeviceContext
         
     }
 
-    protected boolean showSettings()
+    protected boolean showSettings2()
     {
         NordModular synth = getSynthesizer();
 

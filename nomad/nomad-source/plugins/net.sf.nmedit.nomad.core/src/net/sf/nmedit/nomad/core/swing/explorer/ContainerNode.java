@@ -19,6 +19,7 @@
 package net.sf.nmedit.nomad.core.swing.explorer;
 
 import java.awt.Event;
+import java.awt.event.MouseEvent;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -140,6 +141,17 @@ public class ContainerNode implements ETreeNode
     public boolean contains(Object node)
     {
         return children.contains(node);
+    }
+
+    public String getToolTipText()
+    {
+        return null;
+    }
+
+    public void processEvent(MouseEvent e)
+    {
+        // TODO Auto-generated method stub
+        
     }
 
 }

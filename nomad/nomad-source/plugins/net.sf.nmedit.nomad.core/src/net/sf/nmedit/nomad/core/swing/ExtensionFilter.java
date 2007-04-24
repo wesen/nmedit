@@ -25,15 +25,17 @@ package net.sf.nmedit.nomad.core.swing;
 import java.io.File;
 import java.io.FileFilter;
 
-public class ExtensionFilter implements FileFilter
+public class ExtensionFilter extends javax.swing.filechooser.FileFilter implements FileFilter
 {
 
     private String extension;
     private String suffix;
     private boolean ignoreHidden;
+    private String description;
     
-    public ExtensionFilter(String extension, boolean ignoreHidden)
+    public ExtensionFilter(String description, String extension, boolean ignoreHidden)
     {
+        this.description = description;
         this.extension = extension;
         this.suffix = "."+extension.toLowerCase();
         this.ignoreHidden = ignoreHidden;
@@ -52,6 +54,12 @@ public class ExtensionFilter implements FileFilter
     public String getExtension()
     {
         return extension;
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return description;
     }
 
 }

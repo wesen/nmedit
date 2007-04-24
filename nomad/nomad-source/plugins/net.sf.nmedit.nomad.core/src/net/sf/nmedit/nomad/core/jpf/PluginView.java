@@ -297,6 +297,12 @@ public class PluginView implements Document
         {
             lazyComponent = null;
         }
+
+        public <T> T getFeature(Class<T> featureClass)
+        {
+            // TODO Auto-generated method stub
+            return null;
+        }
         
     }
 
@@ -496,6 +502,12 @@ public class PluginView implements Document
     public void dispose()
     {
         // no op
+    }
+
+    public <T> T getFeature(Class<T> featureClass)
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
     
 }

@@ -27,8 +27,8 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Rectangle;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.Icon;
@@ -42,7 +42,6 @@ import javax.swing.tree.TreePath;
 
 import net.sf.nmedit.nomad.core.swing.explorer.helpers.ExplorerCellRenderer;
 import net.sf.nmedit.nomad.core.swing.explorer.helpers.TreeDynamicTreeExpansion;
-import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 
 public class ExplorerTreeUI extends MetalTreeUI
 {
@@ -65,12 +64,17 @@ public class ExplorerTreeUI extends MetalTreeUI
      
     public final static Color defaultSelectionBackground = Color.decode("#A8A8A8");
     private Color backgroundSelectionColor = null;
+    private Color alternatingRowColor = null;
 
     public void installUI( JComponent c ) 
     {
         JTree tree = (JTree) c;
         tree.putClientProperty("JTree.lineStyle", "None");
         super.installUI( c );
+        
+        c.setBackground(Color.WHITE);
+        alternatingRowColor = new Color(0xF0F0FF);
+        
         tree.setRootVisible(false);
         ExplorerCellRenderer tcr = new ExplorerCellRenderer();
         tree.setCellRenderer(tcr);
@@ -97,13 +101,14 @@ public class ExplorerTreeUI extends MetalTreeUI
                 int row, boolean isExpanded,
                 boolean hasBeenExpanded, boolean isLeaf) 
     {
+
         // Don't paint the renderer if editing this row.
         if(editingComponent != null && editingRow == row)
             return;
-    
+
+        int h = tree.getRowHeight();
         if (tree.isRowSelected(row))
         {
-            int h = tree.getRowHeight();
             g.setColor(backgroundSelectionColor);
             g.fillRect(clipBounds.x, h*row, clipBounds.width, h );
             
@@ -111,14 +116,45 @@ public class ExplorerTreeUI extends MetalTreeUI
             /*if(shouldPaintExpandControl(path, row, isExpanded,
                         hasBeenExpanded, isLeaf)) {
                         */
-            paintExpandControl(g, bounds, insets, bounds,
-                       path, row, isExpanded,
-                       hasBeenExpanded, isLeaf);
   //          }
         }
+        else if (alternatingRowColor != null && row%2==0)
+        {
+            g.setColor(alternatingRowColor);
+            g.fillRect(clipBounds.x, h*row, clipBounds.width, h );
+        }
+        paintExpandControl(g, bounds, insets, bounds,
+                path, row, isExpanded,
+                hasBeenExpanded, isLeaf);
         
         super.paintRow(g, clipBounds, insets, bounds, path, row, isExpanded,
                 hasBeenExpanded, isLeaf);
+    }
+    
+    public void paint(Graphics g, JComponent c)
+    {
+        super.paint(g, c);
+
+        Insets i = tree.getInsets();
+        int rc = getRowCount(tree);
+        int rh = getRowHeight();
+        
+        if (rh < 1)
+            return;
+        
+        if (rc%2==1)
+            rc++;
+        
+        int y = i.top + rc*rh;
+        int bottom = tree.getHeight()-i.bottom;
+
+        g.setColor(alternatingRowColor);
+        int r = tree.getWidth()-i.left-i.right;
+        while (y<bottom)
+        {
+            g.fillRect(i.left, y, tree.getWidth(), rh);
+            y+=rh*2;
+        }
     }
 
     ExpandControlHoverEffect eche = new ExpandControlHoverEffect();
@@ -194,11 +230,13 @@ public class ExplorerTreeUI extends MetalTreeUI
     int hovx = 0;
     int hovy = 0;
     
-    private static class ExpandControlHoverEffect extends MouseAdapter
-        implements MouseMotionListener
+    private static class ExpandControlHoverEffect
+        implements MouseMotionListener, MouseListener
     {
         public void mousePressed(MouseEvent e)
         {
+            forwardMouseEvent(e);
+            
             Component c = e.getComponent();
             if (!(c instanceof JTree)) return;
             JTree tree = (JTree) c;
@@ -251,6 +289,7 @@ public class ExplorerTreeUI extends MetalTreeUI
                     }
                 }
             }
+            
         }
         
         // ExpandControlHoverEffect
@@ -288,6 +327,50 @@ public class ExplorerTreeUI extends MetalTreeUI
 
                 etUI.hovx = e.getX();
                 etUI.hovy = e.getY();
+            }
+        }
+
+        public void mouseDragged(MouseEvent e)
+        {
+            // TODO Auto-generated method stub
+            
+        }
+
+        public void mouseClicked(MouseEvent e)
+        {
+            forwardMouseEvent(e);
+        }
+
+        public void mouseReleased(MouseEvent e)
+        {
+            forwardMouseEvent(e);
+        }
+
+        public void mouseEntered(MouseEvent e)
+        {
+            forwardMouseEvent(e);
+        }
+
+        public void mouseExited(MouseEvent e)
+        {
+            forwardMouseEvent(e);
+        }
+
+        public void forwardMouseEvent(MouseEvent e)
+        {
+            Component c = e.getComponent();
+            if (!(c instanceof ExplorerTree))
+                return;
+            
+            ExplorerTree tree = (ExplorerTree) c;
+            TreePath tp = tree.getPathForLocation(e.getX(), e.getY());
+            if (tp == null)
+                return;
+            Object o = tp.getLastPathComponent();
+            
+            if (o instanceof ETreeNode)
+            {
+                ((ETreeNode)o).processEvent(e);
             }
         }
     }

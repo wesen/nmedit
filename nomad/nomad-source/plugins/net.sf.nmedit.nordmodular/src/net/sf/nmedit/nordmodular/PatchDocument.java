@@ -26,6 +26,7 @@ import javax.swing.ImageIcon;
 
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTNMPatch;
 import net.sf.nmedit.nomad.core.swing.document.Document;
+import net.sf.nmedit.nomad.core.swing.document.HistoryFeature;
 
 public class PatchDocument implements Document
 {
@@ -35,6 +36,7 @@ public class PatchDocument implements Document
     
     private JTNMPatch jtpatch;
     private URI uri;
+    private HistoryFeature historyFeature;
 
     public PatchDocument(JTNMPatch patch)
     {
@@ -75,6 +77,19 @@ public class PatchDocument implements Document
     {
         if (jtpatch != null)
             jtpatch.dispose();
+    }
+
+    public <T> T getFeature(Class<T> featureClass)
+    {
+        if (HistoryFeature.class.equals(featureClass))
+        {
+            if (historyFeature == null)
+                historyFeature = new PatchHistoryFeature(this, jtpatch.getPatch().getHistory());
+            
+            return featureClass.cast(historyFeature);
+        }
+        
+        return null;
     }
 
 }

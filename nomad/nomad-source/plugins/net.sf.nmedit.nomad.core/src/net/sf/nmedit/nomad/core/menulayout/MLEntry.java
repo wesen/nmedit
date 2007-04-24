@@ -33,6 +33,7 @@ import java.util.Queue;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
 import javax.swing.event.EventListenerList;
 
 import net.sf.nmedit.nmutils.iterator.BFSIterator;
@@ -96,6 +97,11 @@ public class MLEntry extends AbstractAction
     public MLEntry getParent()
     {
         return parent;
+    }
+    
+    public boolean isInstalled(JMenuItem item)
+    {
+        return item.getAction() == this;
     }
     
     /**

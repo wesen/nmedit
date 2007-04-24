@@ -16,27 +16,25 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+package net.sf.nmedit.nomad.core.swing.document;
 
-/*
- * Created on Oct 29, 2006
- */
-package net.sf.nmedit.nomad.core.swing.explorer;
+import javax.swing.event.ChangeListener;
 
-import java.awt.Event;
-import java.awt.event.MouseEvent;
-
-import javax.swing.Icon;
-import javax.swing.tree.TreeNode;
-
-public interface ETreeNode extends TreeNode
+public interface HistoryFeature
 {
 
-    Icon getIcon();
-    void notifyDropChildren();
+    boolean canUndo();
     
-    public void processEvent(Event event);
+    boolean canRedo();
     
-    String getToolTipText();
-    void processEvent(MouseEvent e);
+    void undo();
+    
+    void redo();
+    
+    boolean isChanged();
+    
+    void addChangeListener(ChangeListener l);
+    
+    void removeChangeListener(ChangeListener l);
     
 }

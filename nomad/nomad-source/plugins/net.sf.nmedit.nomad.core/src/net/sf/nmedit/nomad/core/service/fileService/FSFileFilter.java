@@ -18,18 +18,22 @@
  */
 package net.sf.nmedit.nomad.core.service.fileService;
 
-import javax.swing.filechooser.FileFilter;
-
 import net.sf.nmedit.nomad.core.service.ServiceAgent;
-import net.sf.nmedit.nomad.core.service.fileService.FileService;
+import net.sf.nmedit.nomad.core.swing.ExtensionFilter;
 
-public abstract class FSFileFilter extends FileFilter implements ServiceAgent
+public class FSFileFilter extends ExtensionFilter implements ServiceAgent
 {
 
     private FileService service;
 
-    public FSFileFilter(FileService service)
+    public FSFileFilter(FileService service, String fileExtension)
     {
+        this(service, fileExtension, true);
+    }
+
+    public FSFileFilter(FileService service, String fileExtension, boolean ignoreHidden)
+    {
+        super(service.getDescription(), fileExtension, ignoreHidden);
         this.service = service;
     }
     

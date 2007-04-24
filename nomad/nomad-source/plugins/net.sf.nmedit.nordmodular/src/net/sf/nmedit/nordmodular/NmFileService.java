@@ -42,7 +42,7 @@ public class NmFileService implements FileService
 
     public FSFileFilter getFileFilter()
     {
-        return new NmFileFilter(this);
+        return new FSFileFilter(this, "pch");
     }
     
     public String getDescription()
@@ -76,7 +76,7 @@ public class NmFileService implements FileService
             Log log = LogFactory.getLog(getClass());
             if (log.isWarnEnabled())
             {
-                log.warn(e);
+                log.warn("open failed: "+file, e);
             }
             return;
         }
@@ -95,28 +95,6 @@ public class NmFileService implements FileService
             Nordmodular.sharedContext();
             
         return new JTNMPatch(nmc.getStorageContext(), nmc.getContext(), patch);
-    }
-    
-    private static class NmFileFilter extends FSFileFilter
-    {
-
-        public NmFileFilter(FileService service)
-        {
-            super(service);
-        }
-
-        @Override
-        public boolean accept(File f)
-        {
-            return f.isDirectory() || f.getName().toLowerCase().endsWith(".pch");
-        }
-
-        @Override
-        public String getDescription()
-        {
-            return PATCH_DESCRIPTION;
-        }
-        
     }
 
     public Class<? extends Service> getServiceClass()
@@ -137,7 +115,7 @@ public class NmFileService implements FileService
         try
         {
             NMPatch patch = new NMPatch(nmc.getModuleDescriptions());
-            
+            patch.getHistory().setEnabled(true);
             PatchDocument pd = createPatchDoc(patch);
             Nomad.sharedInstance()
             .getDocumentManager()

@@ -56,6 +56,9 @@ public class DefaultDocumentManager extends JTabbedPane2 implements DocumentMana
 
     protected void fireDocumentAdded(Document doc)
     {
+        if (getDocumentCount()==1)
+            setSelection(doc);
+        
         DocumentEvent documentEvent = null;
         
         // Guaranteed to return a non-null array
@@ -75,6 +78,9 @@ public class DefaultDocumentManager extends JTabbedPane2 implements DocumentMana
 
     protected void fireDocumentRemoved(Document doc)
     {
+        if (getDocumentCount()==0)
+            setSelection(null);
+        
         DocumentEvent documentEvent = null;
         
         // Guaranteed to return a non-null array
@@ -189,7 +195,7 @@ public class DefaultDocumentManager extends JTabbedPane2 implements DocumentMana
 
     public void setSelection( Document d )
     {
-        container.setSelectedComponent(d.getComponent());
+        container.setSelectedComponent(d==null?null:d.getComponent());
     }
 
     private class TabChangeListener implements ChangeListener

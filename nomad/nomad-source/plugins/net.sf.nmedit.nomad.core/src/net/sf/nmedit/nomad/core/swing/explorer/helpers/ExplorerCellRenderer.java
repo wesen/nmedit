@@ -22,6 +22,7 @@
  */
 package net.sf.nmedit.nomad.core.swing.explorer.helpers;
 
+import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.Icon;
@@ -38,28 +39,62 @@ public class ExplorerCellRenderer extends DefaultTreeCellRenderer
     {
         setBackgroundSelectionColor(ExplorerTreeUI.defaultSelectionBackground);
     }
+    
+    public void setBackgroundNonSelectionColor(Color newColor) 
+    {
+        super.setBackgroundNonSelectionColor(null);
+    }
 
+    public Color getBackgroundNonSelectionColor()
+    {
+        return null;
+    }
+
+    public Color getBackground()
+    {
+        return null;
+    }
+    
+    private transient ETreeNode node ;
+    
     public Component getTreeCellRendererComponent(JTree tree, Object value,
                           boolean sel,
                           boolean expanded,
                           boolean leaf, int row,
                           boolean hasFocus) {
+        
+        node = null;
+
         super.getTreeCellRendererComponent(tree, value, sel, 
                 expanded, leaf, row, false&hasFocus);
+        
            if (value instanceof ETreeNode)
            {
                ETreeNode entry = (ETreeNode) value;
-                if (entry != null)
-                {
+               node = entry;
+               if (entry != null)
+               {
                     Icon icon = entry.getIcon();
                     if (icon != null)
                     {
                         setIcon(icon);
                     }
-                }
+               }
            }
+           
         //setText(entry == null ? null : entry.getName());
         return this;
+    }
+    
+    public String getToolTipText()
+    {
+        String tip = null;
+        if (node != null)
+            tip = node.getToolTipText();
+        if (tip == null)
+            tip = super.getToolTipText();
+        
+        return tip;
     }
 
 }

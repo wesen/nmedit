@@ -40,6 +40,7 @@ import org.java.plugin.PluginManager;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.jpf.TempDir;
 import net.sf.nmedit.nomad.core.service.Service;
+import net.sf.nmedit.nomad.core.swing.ExtensionFilter;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 import net.sf.nmedit.nomad.core.swing.explorer.FileContext;
 
@@ -143,9 +144,10 @@ public class ExplorerLocationMemory implements InitService
             p.put("location."+i+".path", fc.getFile().getPath());
             
             FileFilter ff = fc.getFileFilter();
-            if (ff != null)
+            if (ff != null && ff instanceof ExtensionFilter)
             {
-            // TODO    p.put("location."+i+".filter", ff.);
+                ExtensionFilter ef = (ExtensionFilter) ff;
+                p.put("location."+i+".filter", ef.getExtension());
             }
         }
     }
@@ -172,8 +174,13 @@ public class ExplorerLocationMemory implements InitService
             
             if (path != null)
             {
-                String filter = p.getProperty("location."+i+".filter");
                 FileContext fc = new FileContext(tree, new File(path));
+                
+
+                String filter = p.getProperty("location."+i+".filter");
+                if (filter != null)
+                    fc.setFileFilter(new ExtensionFilter("?", filter, true));
+                
                 tree.addRootNode(fc);
             }
         }

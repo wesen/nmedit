@@ -30,6 +30,7 @@ import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -46,6 +47,8 @@ public class ExplorerTree extends JTree
         setModel(new DefaultTreeModel(root, true));
         setUI(new ExplorerTreeUI());
         setFocusable(true);
+        
+        ToolTipManager.sharedInstance().registerComponent(this);
     }
 
     public void addRootNode(TreeNode node)

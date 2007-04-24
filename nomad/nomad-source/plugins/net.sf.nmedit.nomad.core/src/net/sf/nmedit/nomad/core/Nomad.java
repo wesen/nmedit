@@ -221,8 +221,15 @@ public class Nomad
         splitLR.setLeftComponent(toolPane);
                 
         contentPane.setLayout(new BorderLayout());
-       contentPane.add(splitLR, BorderLayout.CENTER);
-
+        contentPane.add(splitLR, BorderLayout.CENTER);
+/*
+ * 
+        JToolBar toolbar = new JToolBar();
+        toolbar.setFloatable(false);
+        contentPane.add(toolbar, BorderLayout.NORTH);
+        
+        JButton btn = new JButton(getImage("/icons/etool16/new_untitled_text_file.gif"));
+        toolbar.add(btn);*/
     }
     
     private ImageIcon getImage(String name)
@@ -334,6 +341,32 @@ public class Nomad
     public MenuBuilder getMenuBuilder()
     {
         return menuBuilder;
+    }
+
+    public void openOrSelect(File file)
+    {
+        if (file.isDirectory())
+            return;
+        
+        String name = file.getName();
+        
+        Iterator<FileService> iter = ServiceRegistry.getServices(FileService.class);
+        while (iter.hasNext())
+        {
+            FileService fs = iter.next();
+            if (fs.isOpenFileOperationSupported())
+            {
+                if (fs.getFileFilter().accept(file))
+                {
+                    int count = pageContainer.getDocumentCount();
+                    
+                    fs.open(file);
+                    if (pageContainer.getDocumentCount()>count)
+                        pageContainer.setSelectedIndex(pageContainer.getDocumentCount()-1);
+                    return;
+                }
+            }
+        }
     }
     
 }

@@ -9,6 +9,11 @@
 		<import plugin-id="net.sf.nmedit.nmutils" />
 	</requires>
 	<runtime>
+		<!--	   
+		<library id="jpatch-classes" path="../../../../libs/jpatch/bin/" type="code">
+			<export prefix="*"/>
+		</library>
+		 -->
 		<library id="jpatch" path="lib/jpatch.jar" type="code" >
 		<export prefix="*"/>
 		</library>

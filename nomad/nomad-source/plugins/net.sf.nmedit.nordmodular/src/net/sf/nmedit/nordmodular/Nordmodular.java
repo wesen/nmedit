@@ -23,9 +23,13 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.xml.sax.InputSource;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
+import net.sf.nmedit.jpatch.transformation.Transformations;
+import net.sf.nmedit.jpatch.transformation.impl.TransformationsBuilder;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTNM1Context;
 import net.sf.nmedit.jtheme.clavia.nordmodular.NMStorageContext;
 import net.sf.nmedit.jtheme.store.DefaultStorageContext;
@@ -50,9 +54,14 @@ public class Nordmodular
             {
                 nm.init();
             }
-            catch (Exception e) {
-                // TODO: handle exception
-                e.printStackTrace();
+            catch (Exception e) 
+            {
+                Log log = LogFactory.getLog(Nordmodular.class);
+                if (log.isWarnEnabled())
+                {
+                    //TODO: handle exception
+                    log.warn("init() failed", e);
+                }
             }
         }
         return nm.context;
@@ -79,6 +88,19 @@ public class Nordmodular
         {
             descriptions = NM1ModuleDescriptions.parse(source);
             descriptions.setModuleDescriptionsClassLoader(getRelativeClassLoader(mdURL));
+        }
+        finally
+        {
+            source.close();
+        }
+        URL transURL = getClass().getClassLoader().getResource("module-descriptions/transformations.xml");
+        
+        source = new FileInputStream(new File(transURL.toURI()));
+        try
+        {
+            Transformations t = 
+                TransformationsBuilder.build(new InputSource(source), descriptions);
+            descriptions.setTransformations(t);
         }
         finally
         {
