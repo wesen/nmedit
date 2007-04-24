@@ -20,6 +20,9 @@ package net.sf.nmedit.nomad.core.swing.tabs;
 
 import java.awt.event.MouseEvent;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.DefaultSingleSelectionModel;
@@ -38,6 +41,7 @@ public class JTabBar<T> extends JComponent
     public static String uiClassID = "TabBarUI";
     
     private Vector<Tab> tabs = new Vector<Tab>();
+    
     private boolean tipRegistered;
     
     // The default selection model
@@ -47,6 +51,8 @@ public class JTabBar<T> extends JComponent
     // source is always this
     protected transient ChangeEvent changeEvent = null;
     private boolean closeActionEnabled = true;
+    
+    private int recentSelectionCounter = 0;
     
     public JTabBar()
     {
@@ -109,7 +115,57 @@ public class JTabBar<T> extends JComponent
         public void stateChanged(ChangeEvent e) 
         {
             fireStateChanged();
+            updateRecentSelectionIndex(getSelectedIndex());
         }       
+    }
+    
+    protected void updateRecentSelectionIndex(int tabIndex)
+    {
+        if (tabIndex<0 || tabIndex>=getTabCount())
+            return;
+        
+        Tab tab = tabs.get(tabIndex);
+        tab.recentlySelected = recentSelectionCounter++;
+        
+        if (recentSelectionCounter == Integer.MAX_VALUE)
+        {
+            List<Tab> order = new ArrayList<Tab>(tabs.size());
+            order.addAll(tabs);
+            Collections.<Tab>sort(order);
+            
+            recentSelectionCounter = 0;
+            for (Tab t: order)
+                t.recentlySelected = recentSelectionCounter++;
+        }
+    }
+    
+    protected int getPreviousSelection(int tabIndex)
+    {
+        if (tabIndex<0 || tabIndex>=getTabCount())
+            return -1;
+        
+        Tab tab = tabs.get(tabIndex);
+        
+        int recentIndex = -1;
+        int recentValue = -1;
+        
+        // find tab t with the max(t.recentValue) and
+        // t.recentValue < tab.recentValue
+        for (int i=tabs.size()-1;i>=0;i--)
+        {
+            if (i != tabIndex)
+            {
+                Tab t = tabs.get(i);
+                if (t.recentlySelected<tab.recentlySelected 
+                    && recentValue < t.recentlySelected)
+                {
+                    recentIndex = i;
+                    recentValue = t.recentlySelected;
+                }
+            }
+        }
+        
+        return recentIndex;
     }
 
     public void addChangeListener(ChangeListener l) {
@@ -359,6 +415,13 @@ public class JTabBar<T> extends JComponent
 
      public void setSelectedItem(T item) 
      {
+         if (item == null)
+         {
+             if (getTabCount()==0)
+                 setSelectedIndexImpl(-1);
+             return;
+         }
+         
          int index = indexOfItem(item);
          if (index != -1) 
          {
@@ -450,11 +513,20 @@ public class JTabBar<T> extends JComponent
          checkIndex(index);
 
          int selected = getSelectedIndex();
+         int previouslySelected = getPreviousSelection(selected);
      
          T item = tabs.remove(index).item;
 
+         if (previouslySelected>selected && previouslySelected>0)
+         {
+             setSelectedIndexImpl(previouslySelected-1);
+         }
+         else if (previouslySelected>= 0 && previouslySelected<selected)
+         {
+             setSelectedIndexImpl(previouslySelected);
+         }
          /* if the selected tab is after the removal */
-         if (selected > index) {
+         else if (selected > index) {
              setSelectedIndexImpl(selected - 1);
 
          /* if the selected tab is the last tab */
@@ -464,6 +536,9 @@ public class JTabBar<T> extends JComponent
          } else if (index == selected) {
              fireStateChanged();
          }
+         
+         if (tabs.isEmpty())
+             recentSelectionCounter = 0;
 
          revalidate();
          repaint();
@@ -550,7 +625,7 @@ public class JTabBar<T> extends JComponent
         }
     }
 
-    private class Tab 
+    private class Tab implements Comparable<Tab>
     {
         String title;
         Icon icon;
@@ -562,6 +637,7 @@ public class JTabBar<T> extends JComponent
         boolean needsUIUpdate;
         int mnemonic = -1;
         int mnemonicIndex = -1;
+        int recentlySelected = 0;
 
         Tab(JTabBar parent, 
              String title, Icon icon, Icon disabledIcon, T item, String tip) {
@@ -612,6 +688,16 @@ public class JTabBar<T> extends JComponent
             setDisplayedMnemonicIndex(findDisplayedMnemonicIndex(title, mnemonic));
         }
 
+        public int compareTo(Tab o)
+        {
+            if (recentlySelected<o.recentlySelected)
+                return -1;
+            else if (recentlySelected==o.recentlySelected)
+                return 0;
+            else
+                return 1;
+        }
+
     }
 
     public void askRemove(int index)
@@ -624,5 +710,4 @@ public class JTabBar<T> extends JComponent
         firePropertyChange("show-context-menu", e, tabIndex);
     }
 
-    
 }
