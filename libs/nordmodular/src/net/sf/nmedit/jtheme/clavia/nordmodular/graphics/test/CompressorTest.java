@@ -1,4 +1,4 @@
-/* Copyright (C) 2006 Julien Pauty
+/* Copyright (C) 2007 Julien Pauty
  * 
  * This file is part of Nomad.
  * 
@@ -17,10 +17,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/*
- * Created on Nov 27, 2006
- */
-package net.sf.nmedit.jtheme.clavia.nordmodular.graphics;
+package net.sf.nmedit.jtheme.clavia.nordmodular.graphics.test;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -42,21 +39,26 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public class EnvelopeTest
+import net.sf.nmedit.jtheme.clavia.nordmodular.graphics.Compressor;
+
+
+
+
+public class CompressorTest
 {
 
     public static void main( String[] args )
     {
         JFrame f = new JFrame("Envelope test");
-        f.setBounds(30,30,300,600);
+        f.setBounds(30,30,300,300);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.getContentPane().setLayout(new BorderLayout());
         f.getContentPane().add(createENV(),BorderLayout.CENTER);
         f.setVisible(true);
     }
 
-    // the envelope
-    static Envelope.ADSREnvelope sh = new Envelope.ADSREnvelope();
+    // the eq
+    static Compressor sh = new Compressor();
     static JComponent pp;
     static boolean doFill = false;
     static JComponent createENV()
@@ -73,34 +75,35 @@ public class EnvelopeTest
         panC.setLayout(new GridLayout(0, 1));
         panC.add(new JLabel("time:"));
         
-        panC.add(lblPan(1,new AttackChanger()));
-        panC.add(lblPan(2,new DecayChanger()));
-        panC.add(lblPan(3,new SustainChanger()));
-        panC.add(lblPan(4,new ReleaseChanger()));
+        panC.add(lblPan(1,new ThresholdChanger()));
+       panC.add(lblPan(2,new RatioChanger()));
+       panC.add(lblPan(3,new RefLevelChanger()));
+       panC.add(lblPan(4,new LimiterChanger()));
+//        panC.add(lblPan(4,new ReleaseChanger()));
 
         
-        panC.add(new JLabel("curve:"));
-        for (int i=0;i<sh.getSegmentCount()-1;i++)
-                panC.add(lblPan(i,new CurveTypeChange(i)));
-
-        JCheckBox cb = new JCheckBox("inverse");
-        panC.add(cb);
-        cb.addActionListener(new ActionListener(){
-
-            public void actionPerformed( ActionEvent e )
-            {
-                sh.setIsInverse( ((JCheckBox)e.getSource()).isSelected());
-                pp.repaint();
-            }});
-        JCheckBox cf = new JCheckBox("fill");
-        panC.add(cf);
-        cf.addActionListener(new ActionListener(){
-
-            public void actionPerformed( ActionEvent e )
-            {
-                doFill = ((JCheckBox)e.getSource()).isSelected();
-                pp.repaint();
-            }});
+//        panC.add(new JLabel("curve:"));
+//        for (int i=0;i<sh.getSegmentCount()-1;i++)
+//                panC.add(lblPan(i,new CurveTypeChange(i)));
+//
+//        JCheckBox cb = new JCheckBox("inverse");
+//        panC.add(cb);
+//        cb.addActionListener(new ActionListener(){
+//
+//            public void actionPerformed( ActionEvent e )
+//            {
+//                sh.setIsInverse( ((JCheckBox)e.getSource()).isSelected());
+//                pp.repaint();
+//            }});
+//        JCheckBox cf = new JCheckBox("fill");
+//        panC.add(cf);
+//        cf.addActionListener(new ActionListener(){
+//
+//            public void actionPerformed( ActionEvent e )
+//            {
+//                doFill = ((JCheckBox)e.getSource()).isSelected();
+//                pp.repaint();
+//            }});
         
         return pan;
     }
@@ -127,13 +130,16 @@ public class EnvelopeTest
 
             sh.setBounds(0, 0, getWidth(), getHeight());
 
-            if (doFill)
+            /*if (doFill)
             {
-                sh.setFillEnabled(true);
-                g2.setColor(fillColor);
-                g2.fill(sh);
-            }
-            sh.setFillEnabled(false);
+                //sh.setFillEnabled(true);
+                g2.setColor(fillColor);      
+            	g2.fill(sh);
+            }*/
+//            sh.setFillEnabled(false);
+            g2.setColor(Color.decode("#B0B0B0"));
+            g2.drawLine(0, getHeight(), getWidth(), 0);            g2.drawLine(-1, (int)((1-sh.getRefLevel())*getHeight()), getWidth()+1, (int)((1-sh.getRefLevel())*getHeight()));
+            g2.drawLine((int)((sh.getRefLevel())*getWidth()), -1, (int)((sh.getRefLevel())*getWidth()), getHeight()+1);
             g2.setColor(getForeground());
             g2.draw(sh);
         }
@@ -149,88 +155,69 @@ public class EnvelopeTest
         return p;
     }
     
-    static class CurveTypeChange extends JComboBox implements ActionListener
+      
+    
+    static class ThresholdChanger extends JSlider implements ChangeListener
     {
-        final static String[] curveTypes = new String[]{"Lin", "Exp", "Log"};
-        
-        private int index;
-
-        public CurveTypeChange(int index)
+        public ThresholdChanger()
         {
-            super(curveTypes);
-            this.index = index+1;
-            setSelectedIndex(sh.getCurveType(index));
-            addActionListener(this);
+        	super(JSlider.HORIZONTAL, 0,100, 0);
+            setValue((int)(sh.getThreshold()*100));
+            addChangeListener(this);
         }
-        public void actionPerformed( ActionEvent e )
+        public void stateChanged( ChangeEvent e )
         {
-            sh.setCurveType(index, getSelectedIndex());        
+            sh.setThreshold(getValue()/100f);
+            pp.repaint();
+        }
+    }
+//    
+    static class RatioChanger extends JSlider implements ChangeListener
+    {
+        public RatioChanger()
+        {
+        	super(JSlider.HORIZONTAL,1,80, 0);
+            setValue((int)(sh.getRatio()-1));
+            addChangeListener(this);
+        }
+        public void stateChanged( ChangeEvent e )
+        {
+            sh.setRatio(getValue()+1);
+            pp.repaint();
+        }
+    }
+//    
+    static class LimiterChanger extends JSlider implements ChangeListener
+    {
+        public LimiterChanger()
+        {
+        	super(JSlider.HORIZONTAL, 0,24, 0);
+            setValue((int)(sh.getLimiter()));
+            addChangeListener(this);
+        }
+        public void stateChanged( ChangeEvent e )
+        {
+            sh.setLimiter(getValue());
             pp.repaint();
         }
     }
     
-    static class AttackChanger extends JSlider implements ChangeListener
+    static class RefLevelChanger extends JSlider implements ChangeListener
     {
-    
-        public AttackChanger()
+        public RefLevelChanger()
         {
-        	super(JSlider.HORIZONTAL, 0,127, 0);
-        	
-            setValue((int)(sh.getAttackTime()));
+        	super(JSlider.HORIZONTAL, 0,100, 0);
+            setValue((int)(sh.getRefLevel()*100));
             addChangeListener(this);
         }
         public void stateChanged( ChangeEvent e )
         {
-            sh.setAttackTime(getValue());
-            pp.repaint();
-        }
-    }
-    
-    static class DecayChanger extends JSlider implements ChangeListener
-    {
-        public DecayChanger()
-        {
-        	super(JSlider.HORIZONTAL, 0,127, 0);            
-            setValue((int)(sh.getDecayTime()));
-            addChangeListener(this);
-        }
-        public void stateChanged( ChangeEvent e )
-        {
-            sh.setDecayTime(getValue());
-            pp.repaint();
-        }
-    }
-    
-    static class SustainChanger extends JSlider implements ChangeListener
-    {
-        private int index;
-
-        public SustainChanger()
-        {
-        	super(JSlider.HORIZONTAL, 0,127, 0);
-            setValue((int)(sh.getSustainValue()));
-            addChangeListener(this);
-        }
-        
-        public void stateChanged( ChangeEvent e )
-        {
-            sh.setSustainValue(getValue());
-            pp.repaint();
-        }
-    } 
-    
-    static class ReleaseChanger extends JSlider implements ChangeListener
-    {
-        public ReleaseChanger()
-        {
-        	super(JSlider.HORIZONTAL, 0,127, 0);
-            setValue((int)(sh.getReleaseTime()));
-            addChangeListener(this);
-        }
-        public void stateChanged( ChangeEvent e )
-        {
-            sh.setReleaseTime(getValue());
+            sh.setRefLevel(getValue()/100f);
             pp.repaint();
         }
     }
 }
+
+
+
+
