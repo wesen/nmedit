@@ -102,7 +102,7 @@ public class MidiPort extends AbstractPort implements Port
 
     public void setPlug( Plug p ) throws SynthException
     {
-        if (!isPluggable(p))
+        if (p!= null && !isPluggable(p))
             throw new SynthException("Invalid plug "+p+" for "+this+".");
         
         if (mplug != p)
@@ -111,7 +111,7 @@ public class MidiPort extends AbstractPort implements Port
                 throw new SynthException("Cannot assign "+p+" to "+this+" while synthesizer is connected.");
             
             MidiPlug oldPlug = mplug;
-            MidiPlug newPlug = (MidiPlug) p;
+            MidiPlug newPlug = p == null ? null : (MidiPlug) p;
             
             mplug = newPlug;
             firePlugAttached(oldPlug, newPlug);
