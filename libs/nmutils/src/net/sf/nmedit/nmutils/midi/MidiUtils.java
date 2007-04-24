@@ -153,12 +153,29 @@ public class MidiUtils
 
     public static boolean isInputDevice(MidiDevice.Info deviceInfo) throws MidiUnavailableException
     {
-        return isInputDevice(MidiSystem.getMidiDevice(deviceInfo));
+        return isInputDevice(getMidiDevice(deviceInfo));
     }
 
     public static boolean isOutputDevice(MidiDevice.Info deviceInfo) throws MidiUnavailableException
     {
-        return isOutputDevice(MidiSystem.getMidiDevice(deviceInfo));
+        return isOutputDevice(getMidiDevice(deviceInfo));
+    }
+    
+    public static MidiDevice getMidiDevice(MidiDevice.Info deviceInfo) throws MidiUnavailableException
+    {
+        try
+        {
+            return MidiSystem.getMidiDevice(deviceInfo);
+        }
+        catch (IllegalArgumentException e)
+        {
+            // the device does not exist anymore - 
+            // this seems to be a bug because MidiUnavailableException should
+            // be thrown instead
+            MidiUnavailableException m = new MidiUnavailableException();
+            m.initCause(e);
+            throw m;
+        }
     }
 
     public static boolean isInputDevice(MidiDevice device) 
@@ -173,12 +190,12 @@ public class MidiUtils
 
     public static boolean isInputDeviceAvailable(MidiDevice.Info deviceInfo) throws MidiUnavailableException
     {
-        return isInputDeviceAvailable(MidiSystem.getMidiDevice(deviceInfo));
+        return isInputDeviceAvailable(getMidiDevice(deviceInfo));
     }
 
     public static boolean isOutputDeviceAvailable(MidiDevice.Info deviceInfo) throws MidiUnavailableException
     {
-        return isOutputDeviceAvailable(MidiSystem.getMidiDevice(deviceInfo));
+        return isOutputDeviceAvailable(getMidiDevice(deviceInfo));
     }
 
     public static boolean isInputDeviceAvailable(MidiDevice device) 
@@ -194,25 +211,25 @@ public class MidiUtils
     public static boolean isHardwareDevice(MidiDevice.Info deviceInfo) 
         throws MidiUnavailableException
     {
-        return isHardwareDevice(MidiSystem.getMidiDevice(deviceInfo));        
+        return isHardwareDevice(getMidiDevice(deviceInfo));        
     }
 
     public static boolean isSoftwareDevice(MidiDevice.Info deviceInfo) 
         throws MidiUnavailableException
     {
-        return isSoftwareDevice(MidiSystem.getMidiDevice(deviceInfo));
+        return isSoftwareDevice(getMidiDevice(deviceInfo));
     }
     
     public static boolean allowsReceivers(MidiDevice.Info deviceInfo) 
         throws MidiUnavailableException
     {
-        return allowsReceivers(MidiSystem.getMidiDevice(deviceInfo));
+        return allowsReceivers(getMidiDevice(deviceInfo));
     }
     
     public static boolean allowsTransmitters(MidiDevice.Info deviceInfo) 
         throws MidiUnavailableException
     {
-        return allowsTransmitters(MidiSystem.getMidiDevice(deviceInfo));
+        return allowsTransmitters(getMidiDevice(deviceInfo));
     }
 
     public static boolean hasAvailableReceivers(MidiDevice device)
@@ -251,7 +268,7 @@ public class MidiUtils
     {
         try
         {
-            return MidiSystem.getMidiDevice(deviceInfo);
+            return getMidiDevice(deviceInfo);
         }
         catch (MidiUnavailableException e)
         {
