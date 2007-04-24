@@ -1,0 +1,305 @@
+<transformations version="1.0">
+
+<group>
+	<!-- Sequencer -->
+	
+	<module index="15">
+		<!-- NoteSeqA -->
+		<connector index="0" type="input" variable="clock-in" />
+		<connector index="1" type="input" variable="reset-in" />
+		
+		<connector index="0" type="output" variable="sequence-out" />
+		<connector index="1" type="output" variable="sync-out" />
+		<connector index="2" type="output" variable="link-out" />
+		<connector index="3" type="output" variable="gclink-out" />
+		
+		<parameter index="0" class="parameter" variable="step-1" />
+		<parameter index="1" class="parameter" variable="step-2" />
+		<parameter index="2" class="parameter" variable="step-3" />
+		<parameter index="3" class="parameter" variable="step-4" />
+		
+		<parameter index="4" class="parameter" variable="step-5" />
+		<parameter index="5" class="parameter" variable="step-6" />
+		<parameter index="6" class="parameter" variable="step-7" />
+		<parameter index="7" class="parameter" variable="step-8" />
+		
+		<parameter index="8" class="parameter" variable="step-9" />
+		<parameter index="9" class="parameter" variable="step-10" />
+		<parameter index="10" class="parameter" variable="step-11" />
+		<parameter index="11" class="parameter" variable="step-12" />
+		
+		<parameter index="12" class="parameter" variable="step-13" />
+		<parameter index="13" class="parameter" variable="step-14" />
+		<parameter index="14" class="parameter" variable="step-15" />
+		<parameter index="15" class="parameter" variable="step-16" />
+	</module>
+	
+	<module index="90">
+		<!-- NoteSeqB -->
+		<connector index="0" type="input" variable="clock-in" />
+		<connector index="1" type="input" variable="reset-in" />
+		
+		<connector index="0" type="output" variable="sequence-out" />
+		<connector index="1" type="output" variable="sync-out" />
+		<connector index="2" type="output" variable="link-out" />
+		<connector index="3" type="output" variable="gclink-out" />
+		
+		<parameter index="0" class="parameter" variable="step-1" />
+		<parameter index="1" class="parameter" variable="step-2" />
+		<parameter index="2" class="parameter" variable="step-3" />
+		<parameter index="3" class="parameter" variable="step-4" />
+		
+		<parameter index="4" class="parameter" variable="step-5" />
+		<parameter index="5" class="parameter" variable="step-6" />
+		<parameter index="6" class="parameter" variable="step-7" />
+		<parameter index="7" class="parameter" variable="step-8" />
+		
+		<parameter index="8" class="parameter" variable="step-9" />
+		<parameter index="9" class="parameter" variable="step-10" />
+		<parameter index="10" class="parameter" variable="step-11" />
+		<parameter index="11" class="parameter" variable="step-12" />
+		
+		<parameter index="12" class="parameter" variable="step-13" />
+		<parameter index="13" class="parameter" variable="step-14" />
+		<parameter index="14" class="parameter" variable="step-15" />
+		<parameter index="15" class="parameter" variable="step-16" />
+	</module>
+	
+	<module index="91">
+		<!-- CtrlSeq -->
+		
+		<connector index="0" type="input" variable="clock-in" />
+		<connector index="1" type="input" variable="reset-in" />
+		
+		<connector index="0" type="output" variable="sequence-out" />
+		<connector index="1" type="output" variable="sync-out" />
+		<connector index="2" type="output" variable="link-out" />
+		
+		<parameter index="0" class="parameter" variable="step-1" />
+		<parameter index="1" class="parameter" variable="step-2" />
+		<parameter index="2" class="parameter" variable="step-3" />
+		<parameter index="3" class="parameter" variable="step-4" />
+		
+		<parameter index="4" class="parameter" variable="step-5" />
+		<parameter index="5" class="parameter" variable="step-6" />
+		<parameter index="6" class="parameter" variable="step-7" />
+		<parameter index="7" class="parameter" variable="step-8" />
+		
+		<parameter index="8" class="parameter" variable="step-9" />
+		<parameter index="9" class="parameter" variable="step-10" />
+		<parameter index="10" class="parameter" variable="step-11" />
+		<parameter index="11" class="parameter" variable="step-12" />
+		
+		<parameter index="12" class="parameter" variable="step-13" />
+		<parameter index="13" class="parameter" variable="step-14" />
+		<parameter index="14" class="parameter" variable="step-15" />
+		<parameter index="15" class="parameter" variable="step-16" />
+	</module>
+	
+	
+	<module index="17">
+		<!-- EventSeq -->
+		
+		<connector index="0" type="input" variable="clock-in" />
+		<connector index="1" type="input" variable="reset-in" />
+		
+		<connector index="0" type="output" variable="sequence-out" />
+		<connector index="2" type="output" variable="sync-out" />
+		<connector index="3" type="output" variable="link-out" />
+		
+		<parameter index="4" class="parameter" variable="step-1" />
+		<parameter index="5" class="parameter" variable="step-2" />
+		<parameter index="6" class="parameter" variable="step-3" />
+		<parameter index="7" class="parameter" variable="step-4" />
+		
+		<parameter index="8" class="parameter" variable="step-5" />
+		<parameter index="9" class="parameter" variable="step-6" />
+		<parameter index="10" class="parameter" variable="step-7" />
+		<parameter index="11" class="parameter" variable="step-8" />
+		
+		<parameter index="12" class="parameter" variable="step-9" />
+		<parameter index="13" class="parameter" variable="step-10" />
+		<parameter index="14" class="parameter" variable="step-11" />
+		<parameter index="15" class="parameter" variable="step-12" />
+		
+		<parameter index="16" class="parameter" variable="step-13" />
+		<parameter index="17" class="parameter" variable="step-14" />
+		<parameter index="18" class="parameter" variable="step-15" />
+		<parameter index="19" class="parameter" variable="step-16" />
+	</module>
+	
+</group>
+
+<group>
+	<!-- In/Out: output modules -->
+
+	<module index="3">
+		<!-- 4Output -->
+		<connector index="0" type="input" variable="audio-in-1" />
+		<connector index="1" type="input" variable="audio-in-2" />
+		<connector index="2" type="input" variable="audio-in-3" />
+		<connector index="3" type="input" variable="audio-in-4" />
+		
+		<parameter index="0" class="parameter" variable="level" />
+	</module>
+
+	<module index="4">
+		<!-- 2Output -->
+		<connector index="0" type="input" variable="audio-in-1" />
+		<connector index="1" type="input" variable="audio-in-2" />
+		
+		<parameter index="0" class="parameter" variable="level" />
+		<parameter index="2" class="parameter" variable="mute" />
+	</module>
+
+	<module index="5">
+		<!-- 1Output -->
+		<connector index="0" type="input" variable="audio-in-1" />
+		
+		<parameter index="0" class="parameter" variable="level" />
+		<parameter index="2" class="parameter" variable="mute" />
+	</module>
+
+	<module index="79">
+		<!-- 4-1Switch -->
+		<connector index="0" type="input" variable="audio-in-1" />
+		<connector index="1" type="input" variable="audio-in-2" />
+		<connector index="2" type="input" variable="audio-in-3" />
+		<connector index="3" type="input" variable="audio-in-4" />
+		
+		<parameter index="5" class="parameter" variable="mute" />
+	</module>
+</group>
+
+<group>
+	<!-- Mixer -->
+	<module index="19">
+		<!-- mixer 3 -->
+		<connector index="0" type="output" variable="audio-out" />
+		
+		<connector index="0" type="input" variable="audio-in-1" />
+		<connector index="1" type="input" variable="audio-in-2" />
+		<connector index="2" type="input" variable="audio-in-3" />
+		
+		<parameter index="0" class="parameter" variable="level-in-1" />
+		<parameter index="1" class="parameter" variable="level-in-2" />
+		<parameter index="2" class="parameter" variable="level-in-3" />
+	</module>
+	
+	<module index="40">
+		<!-- mixer 8 -->
+		<connector index="0" type="output" variable="audio-out" />
+		
+		<connector index="0" type="input" variable="audio-in-1" />
+		<connector index="1" type="input" variable="audio-in-2" />
+		<connector index="2" type="input" variable="audio-in-3" />
+		<connector index="3" type="input" variable="audio-in-4" />
+		
+		<parameter index="0" class="parameter" variable="level-in-1" />
+		<parameter index="1" class="parameter" variable="level-in-2" />
+		<parameter index="2" class="parameter" variable="level-in-3" />
+		<parameter index="3" class="parameter" variable="level-in-4" />
+	</module>
+	
+	<module index="79">
+		<!-- 4-1Switch -->
+		<connector index="0" type="output" variable="audio-out" />
+		
+		<connector index="0" type="input" variable="audio-in-1" />
+		<connector index="1" type="input" variable="audio-in-2" />
+		<connector index="2" type="input" variable="audio-in-3" />
+		<connector index="3" type="input" variable="audio-in-4" />
+		
+		<parameter index="1" class="parameter" variable="level-in-1" />
+		<parameter index="2" class="parameter" variable="level-in-2" />
+		<parameter index="3" class="parameter" variable="level-in-3" />
+		<parameter index="4" class="parameter" variable="level-in-4" />
+		
+		<parameter index="5" class="parameter" variable="mute" />
+	</module>
+	
+</group>
+
+<group>
+	<!-- oscillators -->
+	<module index="97">
+		<!-- master osc -->
+		<parameter index="0" class="parameter" variable="freq" />
+		
+	</module>
+
+	<module index="7">
+		<!-- osc a -->
+		<parameter index="0" class="custom" variable="freqdisplayunits" />
+		
+		<parameter index="0" class="parameter" variable="freq" />
+		<parameter index="1" class="parameter" variable="freq-fine" />
+		<parameter index="2" class="parameter" variable="freq-kbt" />
+		<parameter index="3" class="parameter" variable="pulse-width" />
+		<parameter index="4" class="parameter" variable="freq-waveform" />
+		<parameter index="5" class="parameter" variable="pitch1-mod" />
+		<parameter index="6" class="parameter" variable="pitch2-mod" />
+		<parameter index="7" class="parameter" variable="fma-mod" />
+		<parameter index="8" class="parameter" variable="pulse-width-mod" />
+		<parameter index="9" class="parameter" variable="mute" />
+		
+		<connector index="0" type="input" variable="sync" />
+		<connector index="1" type="input" variable="fma" />
+		<connector index="2" type="input" variable="pitch1" />
+		<connector index="3" type="input" variable="pitch2" />
+		<connector index="4" type="input" variable="pwmod" />
+		
+		<connector index="0" type="output" variable="audio-out" />
+		<connector index="1" type="output" variable="master-slave" />
+	</module>
+
+	<module index="8">
+		<!-- osc b -->
+		<parameter index="0" class="custom" variable="freqdisplayunits" />
+		
+		<parameter index="0" class="parameter" variable="freq" />
+		<parameter index="1" class="parameter" variable="freq-fine" />
+		<parameter index="2" class="parameter" variable="freq-kbt" />
+		<parameter index="3" class="parameter" variable="freq-waveform" />
+		<parameter index="4" class="parameter" variable="pitch1-mod" />
+		<parameter index="5" class="parameter" variable="pitch2-mod" />
+		<parameter index="6" class="parameter" variable="fma-mod" />
+		<parameter index="7" class="parameter" variable="pulse-width-mod" />
+		<parameter index="8" class="parameter" variable="mute" />
+		
+		<connector index="0" type="input" variable="fma" />
+		<connector index="1" type="input" variable="pitch1" />
+		<connector index="2" type="input" variable="pitch2" />
+		<connector index="3" type="input" variable="pwmod" />
+		
+		<connector index="0" type="output" variable="audio-out" />
+		<connector index="1" type="output" variable="master-slave" />
+	</module>
+	
+
+	<module index="9">
+		<!-- osc c -->
+		<parameter index="0" class="custom" variable="freqdisplayunits" />
+		
+		<parameter index="0" class="parameter" variable="freq" />
+		<parameter index="1" class="parameter" variable="freq-fine" />
+		<parameter index="2" class="parameter" variable="freq-kbt" />
+		<parameter index="3" class="parameter" variable="pitch1-mod" />
+		<parameter index="4" class="parameter" variable="fma-mod" />
+		<parameter index="5" class="parameter" variable="mute" />
+		
+		<connector index="0" type="input" variable="fma" />
+		<connector index="1" type="input" variable="pitch1" />
+		<connector index="2" type="input" variable="amplitude-mod" />
+		
+		<connector index="0" type="output" variable="audio-out" />
+		<connector index="1" type="output" variable="master-slave" />
+	</module>
+
+	<module index="31">
+		<!-- noise -->
+		<connector index="0" type="output" variable="audio-out" />
+	</module>
+</group>
+
+</transformations>
