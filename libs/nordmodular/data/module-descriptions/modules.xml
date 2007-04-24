@@ -1055,6 +1055,7 @@
     <attribute name="zero-page" type="double" value="3.0" />
     <attribute name="height" type="integer" value="2" />
     <attribute name="limit" type="integer" value="1" />
+    <attribute name="background" value="#a1d0ed" />
   </module>
   <module index="2" name="AudioIn" category="In/Out">
     <image type="screenshot" src="img/modules/module-2.png" width="256" height="30" />
@@ -1070,6 +1071,7 @@
     <attribute name="dyn-mem" type="double" value="1.0" />
     <attribute name="zero-page" type="double" value="2.0" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#a1d0ed" />
   </module>
   <module index="3" name="4Output" category="In/Out">
     <image type="screenshot" src="img/modules/module-3.png" width="256" height="45" />
@@ -1090,6 +1092,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.0" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#a1d0ed" />
   </module>
   <module index="4" name="2Output" category="In/Out">
     <image type="screenshot" src="img/modules/module-4.png" width="256" height="45" />
@@ -1112,6 +1115,7 @@
     <attribute name="dyn-mem" type="double" value="0.375" />
     <attribute name="zero-page" type="double" value="0.0" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#a1d0ed" />
   </module>
   <module index="5" name="1Output" category="In/Out">
     <image type="screenshot" src="img/modules/module-5.png" width="256" height="45" />
@@ -1133,6 +1137,7 @@
     <attribute name="dyn-mem" type="double" value="0.375" />
     <attribute name="zero-page" type="double" value="0.0" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#a1d0ed" />
   </module>
   <module index="7" name="OscA" category="Osc">
     <image type="screenshot" src="img/modules/module-7.png" width="256" height="90" />
@@ -1178,6 +1183,7 @@
     <attribute name="dyn-mem" type="double" value="0.375" />
     <attribute name="zero-page" type="double" value="1.75" />
     <attribute name="height" type="integer" value="6" />
+    <attribute name="background" value="#87ae99" />
   </module>
   <module index="8" name="OscB" category="Osc">
     <image type="screenshot" src="img/modules/module-8.png" width="256" height="90" />
@@ -1220,6 +1226,7 @@
     <attribute name="dyn-mem" type="double" value="0.6875" />
     <attribute name="zero-page" type="double" value="1.75" />
     <attribute name="height" type="integer" value="6" />
+    <attribute name="background" value="#87ae99" />
   </module>
   <module index="9" name="OscC" category="Osc">
     <image type="screenshot" src="img/modules/module-9.png" width="256" height="60" />
@@ -1255,6 +1262,7 @@
     <attribute name="dyn-mem" type="double" value="0.53125" />
     <attribute name="zero-page" type="double" value="1.75" />
     <attribute name="height" type="integer" value="4" />
+    <attribute name="background" value="#87ae99" />
   </module>
   <module index="10" name="OscSlvB" category="Osc">
     <image type="screenshot" src="img/modules/module-10.png" width="256" height="45" />
@@ -1286,6 +1294,7 @@
     <attribute name="dyn-mem" type="double" value="0.5" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#87ae99" />
   </module>
   <module index="11" name="OscSlvC" category="Osc">
     <image type="screenshot" src="img/modules/module-11.png" width="256" height="45" />
@@ -1315,6 +1324,7 @@
     <attribute name="dyn-mem" type="double" value="0.5" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#87ae99" />
   </module>
   <module index="12" name="OscSlvD" category="Osc">
     <image type="screenshot" src="img/modules/module-12.png" width="256" height="45" />
@@ -1344,6 +1354,7 @@
     <attribute name="dyn-mem" type="double" value="0.4375" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#87ae99" />
   </module>
   <module index="13" name="OscSlvE" category="Osc">
     <image type="screenshot" src="img/modules/module-13.png" width="256" height="45" />
@@ -1374,6 +1385,7 @@
     <attribute name="dyn-mem" type="double" value="0.4375" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#87ae99" />
   </module>
   <module index="14" name="OscSlvA" category="Osc">
     <image type="screenshot" src="img/modules/module-14.png" width="256" height="60" />
@@ -1407,6 +1419,7 @@
     <attribute name="dyn-mem" type="double" value="0.5" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="4" />
+    <attribute name="background" value="#87ae99" />
   </module>
   <module index="15" name="NoteSeqA" category="Seq">
     <image type="screenshot" src="img/modules/module-15.png" width="256" height="105" />
@@ -1469,6 +1482,7 @@
     <attribute name="dyn-mem" type="double" value="1.25" />
     <attribute name="zero-page" type="double" value="3.5" />
     <attribute name="height" type="integer" value="7" />
+    <attribute name="background" value="#e5babf" />
   </module>
   <module index="16" name="PortamentoB" category="Ctrl">
     <image type="screenshot" src="img/modules/module-16.png" width="256" height="30" />
@@ -1488,6 +1502,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#abbe89" />
   </module>
   <module index="17" name="EventSeq" category="Seq">
     <image type="screenshot" src="img/modules/module-17.png" width="256" height="75" />
@@ -1580,6 +1595,7 @@
     <attribute name="dyn-mem" type="double" value="2.0" />
     <attribute name="zero-page" type="double" value="3.5" />
     <attribute name="height" type="integer" value="5" />
+    <attribute name="background" value="#e5babf" />
   </module>
   <module index="18" name="X-Fade" category="Mixer">
     <image type="screenshot" src="img/modules/module-18.png" width="256" height="45" />
@@ -1626,6 +1642,7 @@
     <attribute name="dyn-mem" type="double" value="0.375" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#6CB5C0" />
   </module>
   <module index="20" name="ADSR" category="Env">
     <image type="screenshot" src="img/modules/module-20.png" width="256" height="75" />
@@ -1658,6 +1675,7 @@
     <attribute name="dyn-mem" type="double" value="0.53125" />
     <attribute name="zero-page" type="double" value="1.75" />
     <attribute name="height" type="integer" value="5" />
+    <attribute name="background" value="#f6e2b8" />
   </module>
   <module index="21" name="Compressor" category="Audio">
     <image type="screenshot" src="img/modules/module-21.png" width="256" height="105" />
@@ -1695,6 +1713,7 @@
     <attribute name="dyn-mem" type="double" value="0.6875" />
     <attribute name="zero-page" type="double" value="1.75" />
     <attribute name="height" type="integer" value="7" />
+    <attribute name="background" value="#eda0a4" />
   </module>
   <module index="22" name="PartialGen" category="Ctrl">
     <image type="screenshot" src="img/modules/module-22.png" width="256" height="30" />
@@ -1713,6 +1732,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#abbe89" />
   </module>
   <module index="23" name="Mod-Env" category="Env">
     <image type="screenshot" src="img/modules/module-23.png" width="256" height="90" />
@@ -1755,6 +1775,7 @@
     <attribute name="dyn-mem" type="double" value="0.6875" />
     <attribute name="zero-page" type="double" value="1.75" />
     <attribute name="height" type="integer" value="6" />
+    <attribute name="background" value="#f6e2b8" />
   </module>
   <module index="24" name="LFOA" category="LFO">
     <image type="screenshot" src="img/modules/module-24.png" width="256" height="75" />
@@ -1789,6 +1810,7 @@
     <attribute name="dyn-mem" type="double" value="0.625" />
     <attribute name="zero-page" type="double" value="1.75" />
     <attribute name="height" type="integer" value="5" />
+    <attribute name="background" value="#e6c2df" />
   </module>
   <module index="25" name="LFOB" category="LFO">
     <image type="screenshot" src="img/modules/module-25.png" width="256" height="75" />
@@ -1824,6 +1846,7 @@
     <attribute name="dyn-mem" type="double" value="0.625" />
     <attribute name="zero-page" type="double" value="1.75" />
     <attribute name="height" type="integer" value="5" />
+    <attribute name="background" value="#e6c2df" />
   </module>
   <module index="26" name="LFOC" category="LFO">
     <image type="screenshot" src="img/modules/module-26.png" width="256" height="60" />
@@ -1853,6 +1876,7 @@
     <attribute name="dyn-mem" type="double" value="0.5" />
     <attribute name="zero-page" type="double" value="1.75" />
     <attribute name="height" type="integer" value="4" />
+    <attribute name="background" value="#e6c2df" />
   </module>
   <module index="27" name="LFOSlvB" category="LFO">
     <image type="screenshot" src="img/modules/module-27.png" width="256" height="30" />
@@ -1875,6 +1899,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#e6c2df" />
   </module>
   <module index="28" name="LFOSlvC" category="LFO">
     <image type="screenshot" src="img/modules/module-28.png" width="256" height="30" />
@@ -1897,6 +1922,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#e6c2df" />
   </module>
   <module index="29" name="LFOSlvD" category="LFO">
     <image type="screenshot" src="img/modules/module-29.png" width="256" height="30" />
@@ -1919,6 +1945,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#e6c2df" />
   </module>
   <module index="30" name="LFOSlvE" category="LFO">
     <image type="screenshot" src="img/modules/module-30.png" width="256" height="30" />
@@ -1941,6 +1968,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.90625" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#e6c2df" />
   </module>
   <module index="31" name="Noise" category="Osc">
     <image type="screenshot" src="img/modules/module-31.png" width="256" height="30" />
@@ -1958,6 +1986,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#87ae99" />
   </module>
   <module index="32" name="FilterBank" category="Filter">
     <image type="screenshot" src="img/modules/module-32.png" width="256" height="105" />
@@ -2004,6 +2033,7 @@
     <attribute name="dyn-mem" type="double" value="0.96875" />
     <attribute name="zero-page" type="double" value="0.90625" />
     <attribute name="height" type="integer" value="7" />
+    <attribute name="background" value="#b1a1c3" />
   </module>
   <module index="33" name="ClkRndGen" category="LFO">
     <image type="screenshot" src="img/modules/module-33.png" width="256" height="30" />
@@ -2024,6 +2054,7 @@
     <attribute name="dyn-mem" type="double" value="0.34375" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#e6c2df" />
   </module>
   <module index="34" name="RndStepGen" category="LFO">
     <image type="screenshot" src="img/modules/module-34.png" width="256" height="30" />
@@ -2046,6 +2077,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#e6c2df" />
   </module>
   <module index="35" name="RndPulsGen" category="LFO">
     <image type="screenshot" src="img/modules/module-35.png" width="256" height="30" />
@@ -2063,6 +2095,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#e6c2df" />
   </module>
   <module index="36" name="PosEdgeDelay" category="Logic">
     <image type="screenshot" src="img/modules/module-36.png" width="256" height="30" />
@@ -2081,6 +2114,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#fc8642" />
   </module>
   <module index="37" name="LogicDelay" category="Logic">
     <image type="screenshot" src="img/modules/module-37.png" width="256" height="30" />
@@ -2099,6 +2133,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#fc8642" />
   </module>
   <module index="38" name="Pulse" category="Logic">
     <image type="screenshot" src="img/modules/module-38.png" width="256" height="30" />
@@ -2117,6 +2152,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#fc8642" />
   </module>
   <module index="39" name="Smooth" category="Ctrl">
     <image type="screenshot" src="img/modules/module-39.png" width="256" height="30" />
@@ -2135,6 +2171,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#abbe89" />
   </module>
   <module index="40" name="Mixer" category="Mixer">
     <image type="screenshot" src="img/modules/module-40.png" width="256" height="60" />
@@ -2176,6 +2213,7 @@
     <attribute name="dyn-mem" type="double" value="0.6875" />
     <attribute name="zero-page" type="double" value="0.90625" />
     <attribute name="height" type="integer" value="4" />
+    <attribute name="background" value="#6CB5C0" />
   </module>
   <module index="43" name="Constant" category="Ctrl">
     <image type="screenshot" src="img/modules/module-43.png" width="256" height="30" />
@@ -2195,6 +2233,7 @@
     <attribute name="dyn-mem" type="double" value="0.34375" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#abbe89" />
   </module>
   <module index="44" name="GainControl" category="Mixer">
     <image type="screenshot" src="img/modules/module-44.png" width="256" height="30" />
@@ -2214,6 +2253,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#6CB5C0" />
   </module>
   <module index="45" name="VocalFilter" category="Filter">
     <image type="screenshot" src="img/modules/module-45.png" width="256" height="75" />
@@ -2250,6 +2290,7 @@
     <attribute name="dyn-mem" type="double" value="0.6875" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="5" />
+    <attribute name="background" value="#b1a1c3" />
   </module>
   <module index="46" name="AHD" category="Env">
     <image type="screenshot" src="img/modules/module-46.png" width="256" height="75" />
@@ -2284,6 +2325,7 @@
     <attribute name="dyn-mem" type="double" value="0.53125" />
     <attribute name="zero-page" type="double" value="1.75" />
     <attribute name="height" type="integer" value="5" />
+    <attribute name="background" value="#f6e2b8" />
   </module>
   <module index="47" name="Pan" category="Mixer">
     <image type="screenshot" src="img/modules/module-47.png" width="256" height="45" />
@@ -2306,6 +2348,7 @@
     <attribute name="dyn-mem" type="double" value="0.34375" />
     <attribute name="zero-page" type="double" value="1.75" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#6CB5C0" />
   </module>
   <module index="48" name="PortamentoA" category="Ctrl">
     <image type="screenshot" src="img/modules/module-48.png" width="256" height="30" />
@@ -2325,6 +2368,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#abbe89" />
   </module>
   <module index="49" name="FilterD" category="Filter">
     <image type="screenshot" src="img/modules/module-49.png" width="256" height="75" />
@@ -2356,6 +2400,7 @@
     <attribute name="dyn-mem" type="double" value="0.4375" />
     <attribute name="zero-page" type="double" value="2.625" />
     <attribute name="height" type="integer" value="5" />
+    <attribute name="background" value="#b1a1c3" />
   </module>
   <module index="50" name="FilterC" category="Filter">
     <image type="screenshot" src="img/modules/module-50.png" width="256" height="60" />
@@ -2384,6 +2429,7 @@
     <attribute name="dyn-mem" type="double" value="0.40625" />
     <attribute name="zero-page" type="double" value="2.625" />
     <attribute name="height" type="integer" value="4" />
+    <attribute name="background" value="#b1a1c3" />
   </module>
   <module index="51" name="FilterE" category="Filter">
     <image type="screenshot" src="img/modules/module-51.png" width="256" height="90" />
@@ -2427,6 +2473,7 @@
     <attribute name="dyn-mem" type="double" value="0.75" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="6" />
+    <attribute name="background" value="#b1a1c3" />
   </module>
   <module index="52" name="Multi-Env" category="Env">
     <image type="screenshot" src="img/modules/module-52.png" width="256" height="105" />
@@ -2468,6 +2515,7 @@
     <attribute name="dyn-mem" type="double" value="0.78125" />
     <attribute name="zero-page" type="double" value="1.75" />
     <attribute name="height" type="integer" value="7" />
+    <attribute name="background" value="#f6e2b8" />
   </module>
   <module index="53" name="Sample&amp;Hold" category="Audio">
     <image type="screenshot" src="img/modules/module-53.png" width="256" height="30" />
@@ -2484,6 +2532,7 @@
     <attribute name="dyn-mem" type="double" value="0.25" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#eda0a4" />
   </module>
   <module index="54" name="Quantizer" category="Audio">
     <image type="screenshot" src="img/modules/module-54.png" width="256" height="30" />
@@ -2502,6 +2551,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#eda0a4" />
   </module>
   <module index="57" name="InvLevShift" category="Audio">
     <image type="screenshot" src="img/modules/module-57.png" width="256" height="30" />
@@ -2522,6 +2572,7 @@
     <attribute name="dyn-mem" type="double" value="0.34375" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#eda0a4" />
   </module>
   <module index="58" name="DrumSynth" category="Osc">
     <image type="screenshot" src="img/modules/module-58.png" width="256" height="135" />
@@ -2572,6 +2623,7 @@
     <attribute name="dyn-mem" type="double" value="1.03125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="9" />
+    <attribute name="background" value="#87ae99" />
   </module>
   <module index="59" name="CompareLev" category="Logic">
     <image type="screenshot" src="img/modules/module-59.png" width="256" height="30" />
@@ -2590,6 +2642,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#fc8642" />
   </module>
   <module index="61" name="Clip" category="Audio">
     <image type="screenshot" src="img/modules/module-61.png" width="256" height="45" />
@@ -2613,6 +2666,7 @@
     <attribute name="dyn-mem" type="double" value="0.375" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#eda0a4" />
   </module>
   <module index="62" name="Overdrive" category="Audio">
     <image type="screenshot" src="img/modules/module-62.png" width="256" height="45" />
@@ -2634,6 +2688,7 @@
     <attribute name="dyn-mem" type="double" value="0.34375" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#eda0a4" />
   </module>
   <module index="63" name="KeyboardPatch" category="In/Out">
     <image type="screenshot" src="img/modules/module-63.png" width="256" height="45" />
@@ -2652,6 +2707,7 @@
     <attribute name="zero-page" type="double" value="4.0" />
     <attribute name="height" type="integer" value="3" />
     <attribute name="limit" type="integer" value="1" />
+    <attribute name="background" value="#a1d0ed" />
   </module>
   <module index="64" name="NegEdgeDelay" category="Logic">
     <image type="screenshot" src="img/modules/module-64.png" width="256" height="30" />
@@ -2670,6 +2726,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#fc8642" />
   </module>
   <module index="65" name="MIDIGlobal" category="In/Out">
     <image type="screenshot" src="img/modules/module-65.png" width="256" height="30" />
@@ -2687,6 +2744,7 @@
     <attribute name="zero-page" type="double" value="1.0" />
     <attribute name="height" type="integer" value="2" />
     <attribute name="limit" type="integer" value="1" />
+    <attribute name="background" value="#a1d0ed" />
   </module>
   <module index="66" name="ControlMixer" category="Ctrl">
     <image type="screenshot" src="img/modules/module-66.png" width="256" height="30" />
@@ -2714,6 +2772,7 @@
     <attribute name="dyn-mem" type="double" value="0.46875" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#abbe89" />
   </module>
   <module index="67" name="NoteDetect" category="In/Out">
     <image type="screenshot" src="img/modules/module-67.png" width="256" height="30" />
@@ -2733,6 +2792,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="2.65625" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#a1d0ed" />
   </module>
   <module index="68" name="ClkGen" category="LFO">
     <image type="screenshot" src="img/modules/module-68.png" width="256" height="45" />
@@ -2756,6 +2816,7 @@
     <attribute name="dyn-mem" type="double" value="0.34375" />
     <attribute name="zero-page" type="double" value="3.53125" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#e6c2df" />
   </module>
   <module index="69" name="ClkDiv" category="Logic">
     <image type="screenshot" src="img/modules/module-69.png" width="256" height="30" />
@@ -2775,6 +2836,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#fc8642" />
   </module>
   <module index="70" name="LogicInv" category="Logic">
     <image type="screenshot" src="img/modules/module-70.png" width="256" height="30" />
@@ -2790,6 +2852,7 @@
     <attribute name="dyn-mem" type="double" value="0.25" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#fc8642" />
   </module>
   <module index="71" name="EnvFollower" category="Env">
     <image type="screenshot" src="img/modules/module-71.png" width="256" height="45" />
@@ -2810,6 +2873,7 @@
     <attribute name="dyn-mem" type="double" value="0.34375" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#f6e2b8" />
   </module>
   <module index="72" name="NoteScaler" category="Ctrl">
     <image type="screenshot" src="img/modules/module-72.png" width="256" height="30" />
@@ -2828,6 +2892,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#abbe89" />
   </module>
   <module index="73" name="LogicProc" category="Logic">
     <image type="screenshot" src="img/modules/module-73.png" width="256" height="30" />
@@ -2847,6 +2912,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#fc8642" />
   </module>
   <module index="74" name="WaveWrap" category="Audio">
     <image type="screenshot" src="img/modules/module-74.png" width="256" height="45" />
@@ -2868,6 +2934,7 @@
     <attribute name="dyn-mem" type="double" value="0.34275" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#eda0a4" />
   </module>
   <module index="75" name="NoteQuant" category="Ctrl">
     <image type="screenshot" src="img/modules/module-75.png" width="256" height="30" />
@@ -2888,6 +2955,7 @@
     <attribute name="dyn-mem" type="double" value="0.34375" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#abbe89" />
   </module>
   <module index="76" name="OnOff" category="Mixer">
     <image type="screenshot" src="img/modules/module-76.png" width="256" height="30" />
@@ -2906,6 +2974,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#6CB5C0" />
   </module>
   <module index="77" name="ClkDivFix" category="Logic">
     <image type="screenshot" src="img/modules/module-77.png" width="256" height="30" />
@@ -2924,6 +2993,7 @@
     <attribute name="dyn-mem" type="double" value="0.25" />
     <attribute name="zero-page" type="double" value="2.625" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#fc8642" />
   </module>
   <module index="78" name="Delay" category="Audio">
     <image type="screenshot" src="img/modules/module-78.png" width="256" height="45" />
@@ -2946,6 +3016,7 @@
     <attribute name="dyn-mem" type="double" value="0.34375" />
     <attribute name="zero-page" type="double" value="1.75" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#eda0a4" />
   </module>
   <module index="79" name="4-1Switch" category="Mixer">
     <image type="screenshot" src="img/modules/module-79.png" width="256" height="45" />
@@ -2977,6 +3048,7 @@
     <attribute name="dyn-mem" type="double" value="0.53125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#6CB5C0" />
   </module>
   <module index="80" name="LFOSlvA" category="LFO">
     <image type="screenshot" src="img/modules/module-80.png" width="256" height="60" />
@@ -3008,6 +3080,7 @@
     <attribute name="dyn-mem" type="double" value="0.5" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="4" />
+    <attribute name="background" value="#e6c2df" />
   </module>
   <module index="81" name="Amplifier" category="Mixer">
     <image type="screenshot" src="img/modules/module-81.png" width="256" height="29" />
@@ -3026,6 +3099,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#6CB5C0" />
   </module>
   <module index="82" name="Diode" category="Audio">
     <image type="screenshot" src="img/modules/module-82.png" width="256" height="30" />
@@ -3044,6 +3118,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#eda0a4" />
   </module>
   <module index="83" name="Shaper" category="Audio">
     <image type="screenshot" src="img/modules/module-83.png" width="256" height="30" />
@@ -3062,6 +3137,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#eda0a4" />
   </module>
   <module index="84" name="AD" category="Env">
     <image type="screenshot" src="img/modules/module-84.png" width="256" height="45" />
@@ -3087,6 +3163,7 @@
     <attribute name="dyn-mem" type="double" value="0.375" />
     <attribute name="zero-page" type="double" value="1.75" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#f6e2b8" />
   </module>
   <module index="85" name="OscSlvFM" category="Osc">
     <image type="screenshot" src="img/modules/module-85.png" width="256" height="45" />
@@ -3119,6 +3196,7 @@
     <attribute name="dyn-mem" type="double" value="0.5" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#87ae99" />
   </module>
   <module index="86" name="FilterA" category="Filter">
     <image type="screenshot" src="img/modules/module-86.png" width="256" height="30" />
@@ -3137,6 +3215,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#b1a1c3" />
   </module>
   <module index="87" name="FilterB" category="Filter">
     <image type="screenshot" src="img/modules/module-87.png" width="256" height="30" />
@@ -3155,6 +3234,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#b1a1c3" />
   </module>
   <module index="88" name="1-4Switch" category="Mixer">
     <image type="screenshot" src="img/modules/module-88.png" width="256" height="45" />
@@ -3180,6 +3260,7 @@
     <attribute name="dyn-mem" type="double" value="0.375" />
     <attribute name="zero-page" type="double" value="3.5" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#6CB5C0" />
   </module>
   <module index="89" name="CompareAB" category="Logic">
     <image type="screenshot" src="img/modules/module-89.png" width="256" height="30" />
@@ -3196,6 +3277,7 @@
     <attribute name="dyn-mem" type="double" value="0.25" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#fc8642" />
   </module>
   <module index="90" name="NoteSeqB" category="Seq">
     <image type="screenshot" src="img/modules/module-90.png" width="256" height="135" />
@@ -3265,6 +3347,7 @@
     <attribute name="dyn-mem" type="double" value="1.28125" />
     <attribute name="zero-page" type="double" value="3.5" />
     <attribute name="height" type="integer" value="9" />
+    <attribute name="background" value="#e5babf" />
   </module>
   <module index="91" name="CtrlSeq" category="Seq">
     <image type="screenshot" src="img/modules/module-91.png" width="256" height="105" />
@@ -3322,6 +3405,7 @@
     <attribute name="dyn-mem" type="double" value="1.15625" />
     <attribute name="zero-page" type="double" value="2.625" />
     <attribute name="height" type="integer" value="7" />
+    <attribute name="background" value="#e5babf" />
   </module>
   <module index="92" name="FilterF" category="Filter">
     <image type="screenshot" src="img/modules/module-92.png" width="256" height="90" />
@@ -3358,6 +3442,7 @@
     <attribute name="dyn-mem" type="double" value="0.59375" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="6" />
+    <attribute name="background" value="#b1a1c3" />
   </module>
   <module index="94" name="StereoChorus" category="Audio">
     <image type="screenshot" src="img/modules/module-94.png" width="256" height="45" />
@@ -3381,6 +3466,7 @@
     <attribute name="dyn-mem" type="double" value="0.375" />
     <attribute name="zero-page" type="double" value="1.75" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#eda0a4" />
   </module>
   <module index="95" name="PercOsc" category="Osc">
     <image type="screenshot" src="img/modules/module-95.png" width="256" height="60" />
@@ -3417,6 +3503,7 @@
     <attribute name="dyn-mem" type="double" value="0.59375" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="4" />
+    <attribute name="background" value="#87ae99" />
   </module>
   <module index="96" name="FormantOsc" category="Osc">
     <image type="screenshot" src="img/modules/module-96.png" width="256" height="60" />
@@ -3454,6 +3541,7 @@
     <attribute name="dyn-mem" type="double" value="0.59375" />
     <attribute name="zero-page" type="double" value="1.75" />
     <attribute name="height" type="integer" value="4" />
+    <attribute name="background" value="#87ae99" />
   </module>
   <module index="97" name="MasterOsc" category="Osc">
     <image type="screenshot" src="img/modules/module-97.png" width="256" height="45" />
@@ -3485,6 +3573,7 @@
     <attribute name="dyn-mem" type="double" value="0.5" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#87ae99" />
   </module>
   <module index="98" name="KeyQuant" category="Ctrl">
     <image type="screenshot" src="img/modules/module-98.png" width="256" height="60" />
@@ -3529,6 +3618,7 @@
     <attribute name="dyn-mem" type="double" value="0.90625" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="4" />
+    <attribute name="background" value="#abbe89" />
   </module>
   <module index="99" name="PatternGen" category="LFO">
     <image type="screenshot" src="img/modules/module-99.png" width="256" height="60" />
@@ -3557,6 +3647,7 @@
     <attribute name="dyn-mem" type="double" value="0.46875" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="4" />
+    <attribute name="background" value="#e6c2df" />
   </module>
   <module index="100" name="KeybSplit" category="In/Out">
     <image type="screenshot" src="img/modules/module-100.png" width="256" height="45" />
@@ -3581,6 +3672,7 @@
     <attribute name="dyn-mem" type="double" value="1.0" />
     <attribute name="zero-page" type="double" value="3.0" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#a1d0ed" />
   </module>
   <module index="102" name="Phaser" category="Audio">
     <image type="screenshot" src="img/modules/module-102.png" width="256" height="105" />
@@ -3621,6 +3713,7 @@
     <attribute name="dyn-mem" type="double" value="0.78125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="7" />
+    <attribute name="background" value="#eda0a4" />
   </module>
   <module index="103" name="EqMid" category="Filter">
     <image type="screenshot" src="img/modules/module-103.png" width="256" height="60" />
@@ -3647,6 +3740,7 @@
     <attribute name="dyn-mem" type="double" value="0.46875" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="4" />
+    <attribute name="background" value="#b1a1c3" />
   </module>
   <module index="104" name="EqShelving" category="Filter">
     <image type="screenshot" src="img/modules/module-104.png" width="256" height="60" />
@@ -3673,6 +3767,7 @@
     <attribute name="dyn-mem" type="double" value="0.46875" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="4" />
+    <attribute name="background" value="#b1a1c3" />
   </module>
   <module index="105" name="Expander" category="Audio">
     <image type="screenshot" src="img/modules/module-105.png" width="256" height="105" />
@@ -3710,6 +3805,7 @@
     <attribute name="dyn-mem" type="double" value="0.6875" />
     <attribute name="zero-page" type="double" value="1.75" />
     <attribute name="height" type="integer" value="7" />
+    <attribute name="background" value="#eda0a4" />
   </module>
   <module index="106" name="OscSineBank" category="Osc">
     <image type="screenshot" src="img/modules/module-106.png" width="256" height="150" />
@@ -3782,6 +3878,7 @@
     <attribute name="dyn-mem" type="double" value="1.40625" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="10" />
+    <attribute name="background" value="#87ae99" />
   </module>
   <module index="107" name="SpectralOsc" category="Osc">
     <image type="screenshot" src="img/modules/module-107.png" width="256" height="75" />
@@ -3826,6 +3923,7 @@
     <attribute name="dyn-mem" type="double" value="0.75" />
     <attribute name="zero-page" type="double" value="1.75" />
     <attribute name="height" type="integer" value="5" />
+    <attribute name="background" value="#87ae99" />
   </module>
   <module index="108" name="Vocoder" category="Filter">
     <image type="screenshot" src="img/modules/module-108.png" width="256" height="120" />
@@ -3881,6 +3979,7 @@
     <attribute name="dyn-mem" type="double" value="15.0" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="8" />
+    <attribute name="background" value="#b1a1c3" />
   </module>
   <module index="110" name="RandomGen" category="LFO">
     <image type="screenshot" src="img/modules/module-110.png" width="256" height="30" />
@@ -3903,6 +4002,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#e6c2df" />
   </module>
   <module index="111" name="LevMult" category="Mixer">
     <image type="screenshot" src="img/modules/module-111.png" width="256" height="30" />
@@ -3923,6 +4023,7 @@
     <attribute name="dyn-mem" type="double" value="0.34375" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#6CB5C0" />
   </module>
   <module index="112" name="LevAdd" category="Mixer">
     <image type="screenshot" src="img/modules/module-112.png" width="256" height="30" />
@@ -3943,6 +4044,7 @@
     <attribute name="dyn-mem" type="double" value="0.34375" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#6CB5C0" />
   </module>
   <module index="113" name="1to2Fade" category="Mixer">
     <image type="screenshot" src="img/modules/module-113.png" width="256" height="30" />
@@ -3962,6 +4064,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="1.75" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#6CB5C0" />
   </module>
   <module index="114" name="2to1Fade" category="Mixer">
     <image type="screenshot" src="img/modules/module-114.png" width="256" height="30" />
@@ -3981,6 +4084,7 @@
     <attribute name="dyn-mem" type="double" value="0.28125" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
+    <attribute name="background" value="#6CB5C0" />
   </module>
   <module index="115" name="NoteVelScal" category="Ctrl">
     <image type="screenshot" src="img/modules/module-115.png" width="256" height="60" />
@@ -4006,6 +4110,7 @@
     <attribute name="dyn-mem" type="double" value="0.4375" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="4" />
+    <attribute name="background" value="#abbe89" />
   </module>
   <module index="117" name="RingMod" category="Audio">
     <image type="screenshot" src="img/modules/module-117.png" width="256" height="45" />
@@ -4028,6 +4133,7 @@
     <attribute name="dyn-mem" type="double" value="0.34375" />
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#eda0a4" />
   </module>
   <module index="118" name="Digitizer" category="Audio">
     <image type="screenshot" src="img/modules/module-118.png" width="256" height="45" />
@@ -4055,6 +4161,7 @@
     <attribute name="dyn-mem" type="double" value="0.46875" />
     <attribute name="zero-page" type="double" value="0.4375" />
     <attribute name="height" type="integer" value="3" />
+    <attribute name="background" value="#eda0a4" />
   </module>
   <module index="127" name="PolyAreaIn" category="In/Out">
     <image type="screenshot" src="img/modules/module-127.png" width="256" height="30" />
@@ -4075,6 +4182,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="cva-only" type="boolean" value="yes" />
     <attribute name="limit" type="integer" value="1" />
+    <attribute name="background" value="#a1d0ed" />
   </module>
 </body>
 </ModuleDescriptions>
