@@ -55,10 +55,14 @@ import net.sf.nmedit.jtheme.store.StorageContext;
 public class JTNM1Context extends JTCustomContext
 {
 
+    public static final String DISPLAY_SHAPE_FILL_COLOR_KEY = "display.shape.fill";
+    public static final String DISPLAY_SHAPE_OUTLINE_COLOR_KEY = "display.shape.outline";
+    public static final String DISPLAY_AXIS_COLOR_KEY = "display.axis";
+
     public static final Color GRAPH_DISPLAY_LINE = new Color(0xC0C0C0);
     public static final Color GRAPH_DISPLAY_FILL = new Color(0xC0D0C0);
     public static final Color GRAPH_DISPLAY_FILL_LINE = new Color(0x000000);
-    
+
     private StorageContext stc;
 
     public JTNM1Context(StorageContext stc)
@@ -122,7 +126,11 @@ public class JTNM1Context extends JTCustomContext
     protected void setDefaults(UIDefaults uidefaults)
     {
         FontUIResource baseFont = new FontUIResource("SansSerif", Font.PLAIN, 9);
-        
+
+        uidefaults.put(DISPLAY_AXIS_COLOR_KEY, new ColorUIResource(0x000000));
+        uidefaults.put(DISPLAY_SHAPE_FILL_COLOR_KEY, new ColorUIResource(0xC0D0C0));
+        uidefaults.put(DISPLAY_SHAPE_OUTLINE_COLOR_KEY, new ColorUIResource(0xC0C0C0));
+
         uidefaults.put(JTSlider.uiClassID, JTNM1SliderUI.class.getName());
         uidefaults.put(JTKnob.uiClassID, JTNM1KnobUI.class.getName());
         uidefaults.put(JTNM1ResetButton.uiClassID, JTNM1ResetButtonUI.class.getName());
