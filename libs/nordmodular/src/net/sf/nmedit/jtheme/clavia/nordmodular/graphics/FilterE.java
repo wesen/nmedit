@@ -114,17 +114,19 @@ public class FilterE extends Curve {
 			//band pass
 			case 2:
 				//compute left end of the curve
-				float cut;
+				float leftEnd, rightEnd;
 				if(slope == 0)
 				{
-					cut = -0.65f+cutOff+0.12f*resonance;
+					leftEnd = -0.65f+cutOff+0.12f*resonance;
+					rightEnd = 0.65f+cutOff-0.12f*resonance;
 				} else
 				{
-					cut = -0.45f+ cutOff;
+					leftEnd = -0.45f+ cutOff;
+					rightEnd = .45f+ cutOff;
 				}
 				
 				points[1].setLocation(-0.1f,1.1f);
-				points[2].setLocation(cut,1.1f);
+				points[2].setLocation(leftEnd,1.1f);
 				points[2].setPoint_type(PathIterator.SEG_LINETO);
 				points[2].setCurve_type(LIN);
 								
@@ -139,7 +141,7 @@ public class FilterE extends Curve {
 				points[3].setBezier(points[2].getX(),points[2].getY(),lenSegOrig,lenSegEnd,angle,angle2);
 				
 				// curve is symetric w.r.t. cutoff = 0.5.
-				points[4].setLocation(1-cut, 1.1f);
+				points[4].setLocation(rightEnd, 1.1f);
 				points[4].setPoint_type(PathIterator.SEG_CUBICTO);
 				points[4].setCurve_type(EXP);
 								
