@@ -21,6 +21,7 @@
         <pathelement location="../nmutils/dist/lib/nmutils.jar"/>
         <pathelement location="../java_depencies/jdom/jdom.jar"/>
         <pathelement location="../java_depencies/sac/sac.jar"/>
+      	<pathelement location="../java_depencies/commons-logging/commons-logging.jar"/>
       </classpath>
 	</javac>
   </target>
