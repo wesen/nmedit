@@ -54,7 +54,10 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
         g.drawLine(0, y, getWidth(), y);
         
         g.setColor(getForeground());
-        filterE.setBounds(0, 0, getWidth(), getHeight());
+        filterE.setBounds(0, 0, getWidth(), getHeight());        
+    	g.setColor(JTNM1Context.GRAPH_DISPLAY_FILL);
+    	g.fill(filterE);
+    	g.setColor(JTNM1Context.GRAPH_DISPLAY_FILL_LINE);
         g.draw(filterE);
     }
     

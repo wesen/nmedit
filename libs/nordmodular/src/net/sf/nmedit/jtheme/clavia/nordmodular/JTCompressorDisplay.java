@@ -219,8 +219,8 @@ public class JTCompressorDisplay extends JTDisplay implements ChangeListener
     
     protected void updateRefLevel()
     {
-        if (refLevelAdapter != null)
-            setRefLevel((float)refLevelAdapter.getNormalizedValue());
+        if (refLevelAdapter != null) 
+        	setRefLevel((float)refLevelAdapter.getNormalizedValue());                     
     }
     
     public void stateChanged(ChangeEvent e)

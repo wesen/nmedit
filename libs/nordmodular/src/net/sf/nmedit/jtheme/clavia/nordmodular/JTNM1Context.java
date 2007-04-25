@@ -56,6 +56,8 @@ public class JTNM1Context extends JTCustomContext
 {
 
     public static final Color GRAPH_DISPLAY_LINE = new Color(0xC0C0C0);
+    public static final Color GRAPH_DISPLAY_FILL = new Color(0xC0D0C0);
+    public static final Color GRAPH_DISPLAY_FILL_LINE = new Color(0x000000);
     
     private StorageContext stc;
 
@@ -144,6 +146,7 @@ public class JTNM1Context extends JTCustomContext
         uidefaults.put(JTFilterEDisplay.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(JTFilterFDisplay.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(LFODisplay.uiClassID, JTDisplayUI.class.getName());
+        uidefaults.put(JTCompressorDisplay.uiClassID, JTDisplayUI.class.getName());
 
         uidefaults.put(NoteVelScaleDisplay.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(ADDisplay.uiClassID, JTDisplayUI.class.getName());

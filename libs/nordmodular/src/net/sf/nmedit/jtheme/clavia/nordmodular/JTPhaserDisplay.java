@@ -53,7 +53,10 @@ public class JTPhaserDisplay extends JTDisplay implements ChangeListener
         g.drawLine(0, y, getWidth(), y);
         
         g.setColor(getForeground());
-        phaser.setBounds(0, 0, getWidth(), getHeight());
+        phaser.setBounds(0, 0, getWidth(), getHeight());        
+        g.setColor(JTNM1Context.GRAPH_DISPLAY_FILL);      
+    	g.fill(phaser);
+    	g.setColor(JTNM1Context.GRAPH_DISPLAY_FILL_LINE);
         g.draw(phaser);
     }
     

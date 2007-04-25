@@ -28,174 +28,152 @@ import net.sf.nmedit.jtheme.clavia.nordmodular.graphics.FilterF;
 import net.sf.nmedit.jtheme.component.JTControlAdapter;
 import net.sf.nmedit.jtheme.component.JTDisplay;
 
-public class JTFilterFDisplay extends JTDisplay implements ChangeListener
-{
-    
-    private FilterF filterF;
-    
-    private JTControlAdapter cutoffAdapter;
-    private JTControlAdapter resonanceAdapter;
-    private JTControlAdapter slopeAdapter;
+public class JTFilterFDisplay extends JTDisplay implements ChangeListener {
 
-    public JTFilterFDisplay(JTContext context)
-    {
-        super(context);
-        
-        filterF = new FilterF();
-    }
+	private FilterF filterF;
 
-    protected void paintDynamicLayer(Graphics2D g)
-    {
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	private JTControlAdapter cutoffAdapter;
 
-        g.setColor(JTNM1Context.GRAPH_DISPLAY_LINE);
-        int y = getHeight()/2;
-        g.drawLine(0, y, getWidth(), y);
-        
-        g.setColor(getForeground());
-        filterF.setBounds(0, 0, getWidth(), getHeight());
-        g.draw(filterF);
-    }
-    
-    public float getCutoff()
-    {
-        return filterF.getCutOff()/127f;
-    }
-    
-    public float getResonance()
-    {
-        return filterF.getResonance();
-    }
-    
-    public int getSlope()
-    {
-        return filterF.getSlope();
-    }
-    
-    public void setCutoff(float value)
-    {
-        if (getCutoff() != value)
-        {
-            filterF.setCutOff((int)(value*127f));
-            repaint();
-        }
-    }
-    
-    public void setResonance(float value)
-    {
-        if (getResonance() != value)
-        {
-            filterF.setResonance(value);
-            repaint();
-        }
-    }
-    
-    public void setSlope(int value)
-    {
-        if (getSlope() != value)
-        {
-            filterF.setSlope(value);
-            repaint();
-        }
-    }
-    
-    public JTControlAdapter getCutoffAdapter()
-    {
-        return cutoffAdapter;
-    }
+	private JTControlAdapter resonanceAdapter;
 
-    public JTControlAdapter getResonanceAdapter()
-    {
-        return resonanceAdapter;
-    }
+	private JTControlAdapter slopeAdapter;
 
-    public JTControlAdapter getSlopeAdapter()
-    {
-        return slopeAdapter;
-    }
+	public JTFilterFDisplay(JTContext context) {
+		super(context);
 
-    public void setCutoffAdapter(JTControlAdapter adapter)
-    {
-        JTControlAdapter oldAdapter = this.cutoffAdapter;
-        
-        if (oldAdapter != adapter)
-        {
-            if (oldAdapter != null)
-                oldAdapter.setChangeListener(null);
-            this.cutoffAdapter = adapter;
-            if (adapter != null)
-                adapter.setChangeListener(this);
-            
-            updateCutoff();
-        }
-    }
+		filterF = new FilterF();
+	}
 
-    public void setResonanceAdapter(JTControlAdapter adapter)
-    {
-        JTControlAdapter oldAdapter = this.resonanceAdapter;
-        
-        if (oldAdapter != adapter)
-        {
-            if (oldAdapter != null)
-                oldAdapter.setChangeListener(null);
-            this.resonanceAdapter = adapter;
-            if (adapter != null)
-                adapter.setChangeListener(this);
-            
-            updateResonance();
-        }
-    }
+	protected void paintDynamicLayer(Graphics2D g) {
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
 
-    public void setSlopeAdapter(JTControlAdapter adapter)
-    {
-        JTControlAdapter oldAdapter = this.slopeAdapter;
-        
-        if (oldAdapter != adapter)
-        {
-            if (oldAdapter != null)
-                oldAdapter.setChangeListener(null);
-            this.slopeAdapter = adapter;
-            if (adapter != null)
-                adapter.setChangeListener(this);
-            
-            updateSlope();
-        }
-    }
+		g.setColor(JTNM1Context.GRAPH_DISPLAY_LINE);
+		int y = getHeight() / 2;
+		g.drawLine(0, y, getWidth(), y);
 
-    protected void updateCutoff()
-    {
-        if (cutoffAdapter != null)
-            setCutoff((float)cutoffAdapter.getNormalizedValue());
-    }
+		g.setColor(getForeground());
+		filterF.setBounds(0, 0, getWidth(), getHeight());		
+		g.setColor(JTNM1Context.GRAPH_DISPLAY_FILL);
+		g.fill(filterF);
+		g.setColor(JTNM1Context.GRAPH_DISPLAY_FILL_LINE);
+		g.draw(filterF);
+	}
 
-    protected void updateResonance()
-    {
-        if (resonanceAdapter != null)
-            setResonance((float)resonanceAdapter.getNormalizedValue());
-    }
+	public float getCutoff() {
+		return filterF.getCutOff() / 127f;
+	}
 
-    protected void updateSlope()
-    {
-        if (slopeAdapter != null)
-            setSlope(slopeAdapter.getValue()-slopeAdapter.getMinValue());
-    }
+	public float getResonance() {
+		return filterF.getResonance();
+	}
 
-    public void stateChanged(ChangeEvent e)
-    {
-        if (e.getSource() == cutoffAdapter)
-        {
-            updateCutoff();
-            return;
-        }
-        if (e.getSource() == resonanceAdapter)
-        {
-            updateResonance();
-            return;
-        }
-        if (e.getSource() == slopeAdapter)
-        {
-            updateSlope();
-            return;
-        }
-    }
+	public int getSlope() {
+		return filterF.getSlope();
+	}
+
+	public void setCutoff(float value) {
+		if (getCutoff() != value) {
+			filterF.setCutOff((int) (value * 127f));
+			repaint();
+		}
+	}
+
+	public void setResonance(float value) {
+		if (getResonance() != value) {
+			filterF.setResonance(value);
+			repaint();
+		}
+	}
+
+	public void setSlope(int value) {
+		if (getSlope() != value) {
+			filterF.setSlope(value);
+			repaint();
+		}
+	}
+
+	public JTControlAdapter getCutoffAdapter() {
+		return cutoffAdapter;
+	}
+
+	public JTControlAdapter getResonanceAdapter() {
+		return resonanceAdapter;
+	}
+
+	public JTControlAdapter getSlopeAdapter() {
+		return slopeAdapter;
+	}
+
+	public void setCutoffAdapter(JTControlAdapter adapter) {
+		JTControlAdapter oldAdapter = this.cutoffAdapter;
+
+		if (oldAdapter != adapter) {
+			if (oldAdapter != null)
+				oldAdapter.setChangeListener(null);
+			this.cutoffAdapter = adapter;
+			if (adapter != null)
+				adapter.setChangeListener(this);
+
+			updateCutoff();
+		}
+	}
+
+	public void setResonanceAdapter(JTControlAdapter adapter) {
+		JTControlAdapter oldAdapter = this.resonanceAdapter;
+
+		if (oldAdapter != adapter) {
+			if (oldAdapter != null)
+				oldAdapter.setChangeListener(null);
+			this.resonanceAdapter = adapter;
+			if (adapter != null)
+				adapter.setChangeListener(this);
+
+			updateResonance();
+		}
+	}
+
+	public void setSlopeAdapter(JTControlAdapter adapter) {
+		JTControlAdapter oldAdapter = this.slopeAdapter;
+
+		if (oldAdapter != adapter) {
+			if (oldAdapter != null)
+				oldAdapter.setChangeListener(null);
+			this.slopeAdapter = adapter;
+			if (adapter != null)
+				adapter.setChangeListener(this);
+
+			updateSlope();
+		}
+	}
+
+	protected void updateCutoff() {
+		if (cutoffAdapter != null)
+			setCutoff((float) cutoffAdapter.getNormalizedValue());
+	}
+
+	protected void updateResonance() {
+		if (resonanceAdapter != null)
+			setResonance((float) resonanceAdapter.getNormalizedValue());
+	}
+
+	protected void updateSlope() {
+		if (slopeAdapter != null)
+			setSlope(slopeAdapter.getValue() - slopeAdapter.getMinValue());
+	}
+
+	public void stateChanged(ChangeEvent e) {
+		if (e.getSource() == cutoffAdapter) {
+			updateCutoff();
+			return;
+		}
+		if (e.getSource() == resonanceAdapter) {
+			updateResonance();
+			return;
+		}
+		if (e.getSource() == slopeAdapter) {
+			updateSlope();
+			return;
+		}
+	}
 }
