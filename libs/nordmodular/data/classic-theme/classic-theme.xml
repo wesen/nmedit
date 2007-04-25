@@ -3719,6 +3719,12 @@ label{fill:#000;}
 		<label x="184" y="62" >Limiter</label>
 		<label x="227" y="77" >L</label>
 		<label x="227" y="96" >R</label>
+		<compressor-display x="91" y="4" width="46" height="46">
+			<threshold class="parameter" index="2" alt="threshold" />
+			<ratio class="parameter" index="3" alt="ratio" />
+			<ref-level class="parameter" index="4" alt="ref level" />
+			<limiter class="parameter" index="5" alt="limiter" />						
+	    	</compressor-display>
 	</module>
 	<module id="78" width="255" height="45">
 		<name>Delay</name>
