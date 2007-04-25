@@ -132,18 +132,18 @@ public class FilterE extends Curve {
 				points[3].setPoint_type(PathIterator.SEG_CUBICTO);
 				points[3].setCurve_type(EXP);
 				
-				float l = 0.25f; 
-				float l2 = slope == 1 ? 0.25f : 0.25f+0.15f*resonance;
+				float lenSegOrig = 0.25f; 
+				float lenSegEnd = slope == 1 ? 0.25f : 0.25f+0.15f*resonance;
 				angle = -50f - 20f*resonance - 20*slope;				
 				float angle2 = 180f - 80f*resonance;
-				points[3].setBezier(points[2].getX(),points[2].getY(),l,l2,angle,angle2);
+				points[3].setBezier(points[2].getX(),points[2].getY(),lenSegOrig,lenSegEnd,angle,angle2);
 				
 				// curve is symetric w.r.t. cutoff = 0.5.
 				points[4].setLocation(1-cut, 1.1f);
 				points[4].setPoint_type(PathIterator.SEG_CUBICTO);
 				points[4].setCurve_type(EXP);
 								
-				points[4].setBezier(points[3].getX(),points[3].getY(),l2,l,180 - angle2, 180 - angle);
+				points[4].setBezier(points[3].getX(),points[3].getY(),lenSegEnd,lenSegOrig,180 - angle2, 180 - angle);
 
 				points[5].setLocation(1.1f,1.1f);
 				points[6].setLocation(-0.1f,1.1f);
@@ -155,15 +155,18 @@ public class FilterE extends Curve {
 				points[2].setPoint_type(PathIterator.SEG_LINETO);
 				points[2].setCurve_type(LIN);
 				
-				l = 0.2f;
+				//adapting the beziez parameter with respect to the slop
+				lenSegOrig = 0.2f;
 				float res;
-				if(slope == 1){
-					l = 0.2f;
-					l2 = 0.2f;
+				//slope is 12db
+				if(slope == 0){
+					lenSegOrig = 0.2f; // length of the orinal control segment  
+					lenSegEnd = 0.2f; //  length of the ending control segment
 					res = 1 + resAmplitude/2*(1- resonance);
+				// 24db: make to curve steeper => reduce length of segments  
 				} else{
-					l = 0.1f;
-					l2 = 0.5f;
+					lenSegOrig = 0.1f;
+					lenSegEnd = 0.5f;
 					res = 1;
 				}
 				 
@@ -172,13 +175,13 @@ public class FilterE extends Curve {
 				points[3].setPoint_type(PathIterator.SEG_CUBICTO);
 				points[3].setCurve_type(EXP);
 				
-				points[3].setBezier(points[2].getX(),points[2].getY(),l,l2,0,-90);
+				points[3].setBezier(points[2].getX(),points[2].getY(),lenSegOrig,lenSegEnd,0,-90);
 				
 				points[4].setLocation(0.45f-(0.15f-0.1f*slope)*resonance+cutOff+slope*0.05f, resAmplitude + resAmplitude*.25f*resonance);
 				points[4].setPoint_type(PathIterator.SEG_CUBICTO);
 				points[4].setCurve_type(EXP);
 				
-				points[4].setBezier(points[3].getX(),points[3].getY(),l2,l,-90,180);
+				points[4].setBezier(points[3].getX(),points[3].getY(),lenSegEnd,lenSegOrig,-90,180);
 				points[5].setLocation(1.1f,resAmplitude + resAmplitude*.25f*resonance);
 				points[6].setLocation(1.1f,1.1f);
 				break;
