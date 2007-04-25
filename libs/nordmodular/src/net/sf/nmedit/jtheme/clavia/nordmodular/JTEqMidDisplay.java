@@ -18,6 +18,7 @@
  */
 package net.sf.nmedit.jtheme.clavia.nordmodular;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
@@ -45,10 +46,27 @@ public class JTEqMidDisplay extends JTDisplay implements ChangeListener
         equalizerMid = new EqualizerMid();
     }
 
+    // do not use field directly, instead use getGraphDisplayLineColor()
+    private transient Color cachedShapeOutlineColor;
+
+    protected Color getShapeOutlineColor()
+    {
+        if (cachedShapeOutlineColor == null)
+        {
+            cachedShapeOutlineColor =
+                getContext().getUIDefaults().getColor(JTNM1Context.DISPLAY_SHAPE_OUTLINE_COLOR_KEY);
+            if (cachedShapeOutlineColor == null)
+                cachedShapeOutlineColor = getForeground();
+        }
+        return cachedShapeOutlineColor;
+    }
+    
     protected void paintDynamicLayer(Graphics2D g)
     {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setColor(JTNM1Context.GRAPH_DISPLAY_LINE);
+        
+        Color outline = getShapeOutlineColor();
+        g.setColor(outline);
         int y = getHeight()/2;
         g.drawLine(0, y, getWidth(), y);
         
