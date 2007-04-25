@@ -122,7 +122,7 @@ public class Compressor extends Curve {
 
 	public void setLimiter(int limiter) {
 		this.limiterInt = limiter;
-		this.limiter = limiter/42f;
+		this.limiter = 24f/42f-limiter/42f;
 		update();
 	}
 
