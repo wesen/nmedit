@@ -28,7 +28,6 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.FontUIResource;
 
 import net.sf.nmedit.jtheme.JTCustomContext;
-import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.JTNM1ButtonControlUI;
 import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.JTNM1ConnectorUI;
 import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.JTNM1KnobUI;
 import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.JTNM1ResetButtonUI;
@@ -44,6 +43,8 @@ import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.JTSlider;
 import net.sf.nmedit.jtheme.component.JTTextDisplay;
+import net.sf.nmedit.jtheme.component.plaf.JTBasicButtonControlUI;
+import net.sf.nmedit.jtheme.component.plaf.JTButtonControlUI;
 import net.sf.nmedit.jtheme.component.plaf.JTDisplayUI;
 import net.sf.nmedit.jtheme.component.plaf.JTImageUI;
 import net.sf.nmedit.jtheme.component.plaf.JTLabelUI;
@@ -135,10 +136,15 @@ public class JTNM1Context extends JTCustomContext
         uidefaults.put(JTKnob.uiClassID, JTNM1KnobUI.class.getName());
         uidefaults.put(JTNM1ResetButton.uiClassID, JTNM1ResetButtonUI.class.getName());
         uidefaults.put(JTConnector.uiClassID, JTNM1ConnectorUI.class.getName());
-        uidefaults.put(JTButtonControl.uiClassID, JTNM1ButtonControlUI.class.getName());
-        uidefaults.put(JTNM1ButtonControlUI.borderUpKey, JTNM1BorderFactory.createNordEditor311RaisedButtonBorder());
-        uidefaults.put(JTNM1ButtonControlUI.borderDownKey, JTNM1BorderFactory.createNordEditor311LoweredButtonBorder());
 
+        uidefaults.put(JTButtonControl.uiClassID, JTBasicButtonControlUI.class.getName());
+        
+        uidefaults.put(JTButtonControlUI.BORDER_KEY, JTNM1BorderFactory.createNordEditor311RaisedButtonBorder());
+        uidefaults.put(JTButtonControlUI.SELECTED_BORDER_KEY, JTNM1BorderFactory.createNordEditor311LoweredButtonBorder());
+        uidefaults.put(JTButtonControlUI.BACKGROUND_KEY, new ColorUIResource(0xB0B0B0));
+        uidefaults.put(JTButtonControlUI.BACKGROUND_STATE_KEY, new ColorUIResource(0xC4F6ED));
+        uidefaults.put(JTButtonControlUI.BACKGROUND_SELECTED_KEY, new ColorUIResource(0xC6CCDE));
+        
         uidefaults.put(JTImage.uiClassID, JTImageUI.class.getName());
         uidefaults.put(JTLabel.uiClassID, JTLabelUI.class.getName());
         uidefaults.put(JTLabelUI.fontKey, baseFont);

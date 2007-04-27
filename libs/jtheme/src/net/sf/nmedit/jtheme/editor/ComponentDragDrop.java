@@ -18,6 +18,7 @@
  */
 package net.sf.nmedit.jtheme.editor;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -297,7 +298,7 @@ public class ComponentDragDrop
             return false;
         }
 
-        public boolean importClass(JComponent comp, Class<?> clazz)
+        public <T extends JTComponent> boolean importClass(JComponent comp, Class<T> clazz)
         {
             JTContext context = dd.getContext();
             if (context == null)
@@ -314,7 +315,7 @@ public class ComponentDragDrop
                 return false;
             }
             
-            context.setPreferredSize(component);
+            setPreferredSize(component);
             JComponent target = dd.getView();
             target.add(component, 0);
             ComponentView.setLocation(component, dd.getDropLocation());
@@ -325,6 +326,15 @@ public class ComponentDragDrop
         }
     }
 
+    private static void setPreferredSize(JTComponent component)
+    {
+        Dimension d = component.getPreferredSize();
+        if (d != null && d.width>0 && d.height>0)
+            component.setSize(d);
+        else
+            component.setSize(20, 20);
+    }
+    
     public void setDropLocation(Point location)
     {
         dropLocation.setLocation(location);

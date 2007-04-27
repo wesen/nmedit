@@ -58,7 +58,7 @@ public class ComponentListCellRenderer extends DefaultListCellRenderer
         Object renderedValue = value;
 
         ComponentListModel listModel = (ComponentListModel) list.getModel();
-        Class<?> clazz = (Class<?>) value;
+        Class clazz = (Class) value;
         Icon iconForClass;
         
         synchronized (getTreeLock())

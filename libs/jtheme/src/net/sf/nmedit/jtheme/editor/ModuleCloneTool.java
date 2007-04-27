@@ -78,7 +78,9 @@ public class ModuleCloneTool
 
     private void cloneChild(JTModule target, Component child, JTContext context, PropertyDatabase pd) throws JTException
     {
-        JTComponent clonedChild = context.createComponentInstance(child.getClass());
+        Class c = (Class) child.getClass();
+        
+        JTComponent clonedChild = context.createComponentInstance(c);
         transferProperties(clonedChild, child, pd);
         clonedChild.setBounds(child.getX(), child.getY(), child.getWidth(), child.getHeight());
         target.add(clonedChild);

@@ -135,13 +135,13 @@ public abstract class JTContext
             return (ClassLoader) loader;
     }
     
-    public JTComponent createComponentInstance(Class<?> clazz) throws JTException
+    public <T extends JTComponent> T createComponentInstance(Class<T> clazz) throws JTException
     {
-        JTComponent component;
+        T component;
         
         try
         {
-            component = (JTComponent) clazz
+            component = clazz
             .getConstructor(new Class<?>[] {JTContext.class})
             .newInstance(new Object[] {this});
             
@@ -161,14 +161,6 @@ public abstract class JTContext
         return component;
     }
     
-    public void setPreferredSize(JTComponent component)
-    {
-        Dimension d = component.getPreferredSize();
-        if (d != null && d.width>0 && d.height>0)
-            component.setSize(d);
-        else
-            component.setSize(20, 20);
-    }
     
     protected CableRenderer createDefaultCableRenderer()
     {

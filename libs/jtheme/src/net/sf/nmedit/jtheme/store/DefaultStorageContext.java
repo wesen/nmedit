@@ -26,7 +26,6 @@ import java.util.Map;
 
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.store.resource.ImageResource;
-import net.sf.nmedit.nmutils.Timer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,7 +37,6 @@ import org.w3c.dom.css.CSSStyleSheet;
 import org.xml.sax.InputSource;
 
 import com.steadystate.css.parser.CSSOMParser;
-import com.steadystate.css.parser.SACParserCSS2;
 
 public class DefaultStorageContext extends StorageContext
 {
@@ -104,12 +102,12 @@ public class DefaultStorageContext extends StorageContext
         {
             document = saxBuilder.build(source);
             
-            Timer t = new Timer();
-            t.reset();
+            //Timer t = new Timer();
+            //t.reset();
             
             buildStore();
             
-            System.out.println("buildStore "+t);
+            //System.out.println("buildStore "+t);
         }
         catch (JDOMException e)
         {

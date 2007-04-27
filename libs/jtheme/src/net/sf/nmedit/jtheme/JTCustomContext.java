@@ -35,7 +35,7 @@ public abstract class JTCustomContext extends JTContext
     private boolean hasModuleContainerOverlay;
     private UIDefaults uiDefaults;
     private Set<Class> componentClasses = new HashSet<Class>();
-    private Map<String,Class> classMap = new HashMap<String,Class>();
+    private Map<String,Class<? extends JTComponent>> classMap = new HashMap<String,Class<? extends JTComponent>>();
     private boolean dndAllowed = false;
     
     protected JTCustomContext(boolean hasModuleContainerOverlay, boolean dndAllowed)
@@ -64,14 +64,14 @@ public abstract class JTCustomContext extends JTContext
         classMap.put(type, clazz);
     }
     
-    public Class<?> getComponentType(String type)
+    public Class<? extends JTComponent> getComponentType(String type)
     {
         return classMap.get(type);
     }
 
     public JTComponent createComponent(String type) throws JTException
     {
-        Class<?> clazz = getComponentType(type);
+        Class<? extends JTComponent> clazz = getComponentType(type);
 
         if (clazz == null)
             throw new JTException("type not found: "+type);
