@@ -2862,8 +2862,8 @@ label{fill:#000;}
 			<parameter class="parameter" index="0" alt="stepcount" />
 		</knob>
 		<button x="95" y="5" width="24" height="16" cyclic="true" landscape="false" >
-			<parameter class="parameter" index="1" alt="active" />
-		</button>
+			<parameter class="parameter" index="1" alt="active" /> 
+		</button>		
 		<button x="217" y="35" width="14" height="16" cyclic="true" landscape="false" >
 			<parameter class="parameter" index="2" alt="gate1" />
 			<btn index="0">G</btn>
@@ -2874,8 +2874,9 @@ label{fill:#000;}
 			<btn index="0">G</btn>
 			<btn index="1">G</btn>
 		</button>
+		
 		<button x="23" y="35" width="12" height="16" cyclic="true" landscape="false" >
-			<parameter class="parameter" index="4" alt="seq 1, step 1" />
+			<parameter class="parameter" index="4" alt="seq 1, step 1" />			
 		</button>
 		<button x="35" y="35" width="12" height="16" cyclic="true" landscape="false" >
 			<parameter class="parameter" index="5" alt="seq 1, step 2" />
@@ -2966,7 +2967,7 @@ label{fill:#000;}
 		</button>
 		<button x="191" y="54" width="12" height="16" cyclic="true" landscape="false" >
 			<parameter class="parameter" index="34" alt="seq 2, step 15" />
-		</button>
+		</button> 
 		<button x="203" y="54" width="12" height="16" cyclic="true" landscape="false" >
 			<parameter class="parameter" index="35" alt="seq 2, step 16" />
 		</button>
@@ -3695,7 +3696,7 @@ label{fill:#000;}
 			<parameter class="parameter" index="1" alt="release" />
 		</textDisplay>
 		<textDisplay x="76" y="62" width="30" height="16" >
-			<parameter class="parameter" index="2" alt="threshold" />
+			<parameter class="parameter" index="2" alt="treshold" />
 		</textDisplay>
 		<textDisplay x="113" y="62" width="30" height="16" >
 			<parameter class="parameter" index="3" alt="ratio" />
@@ -3797,7 +3798,7 @@ label{fill:#000;}
 		<knob x="168" y="79" size="21" >
 			<parameter class="parameter" index="8" alt="time 5" />
 		</knob>
-		<button x="187" y="36" width="34" height="19" cyclic="true" landscape="false" >
+		<button x="200" y="38" width="34" height="19" cyclic="true" landscape="false" >
 			<parameter class="parameter" index="9" alt="sustain" />
 			<btn index="0">1</btn>
 			<btn index="1">2</btn>
@@ -3848,9 +3849,21 @@ label{fill:#000;}
 		<label x="92" y="88" >T3</label>
 		<label x="126" y="88" >T4</label>
 		<label x="157" y="88" >T5</label>
-		<label x="187" y="34" >Sustain</label>
+		<label x="167" y="52" >Sustain</label>
 		<label x="213" y="73" >Env</label>
-		<image x="209" y="79" width="27" height="19" xlink:href="./images/single/decoration-15.png" />
+		<image x="209" y="80" width="27" height="19" xlink:href="./images/single/decoration-15.png" />
+		<multi-env-display x="162" y="2" width="85" height="33">
+			<l1 class="parameter" index="0" alt="Level 1" />
+			<l2 class="parameter" index="1" alt="Level 2" />
+			<l3 class="parameter" index="2" alt="Level 3" />
+			<l4 class="parameter" index="3" alt="Level 4" />
+			<t1 class="parameter" index="4" alt="Time  1" />
+			<t2 class="parameter" index="5" alt="Time  2" />
+			<t3 class="parameter" index="6" alt="Time  3" />
+			<t4 class="parameter" index="7" alt="Time  4" />
+			<t5 class="parameter" index="8" alt="Time  5" />
+			<sustain class="parameter" index="9" alt="Sustain seg." />
+   	        </multi-env-display>
 	</module>
 	<module id="90" width="255" height="135">
 		<name>NoteSeqB</name>
