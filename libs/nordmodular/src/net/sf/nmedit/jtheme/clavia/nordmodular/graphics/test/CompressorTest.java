@@ -161,13 +161,13 @@ public class CompressorTest
     {
         public ThresholdChanger()
         {
-        	super(JSlider.HORIZONTAL, 0,100, 0);
-            setValue((int)(sh.getThreshold()*100));
+        	super(JSlider.HORIZONTAL, 0,200, 0);
+            setValue((int)(sh.getThreshold()*200f));
             addChangeListener(this);
         }
         public void stateChanged( ChangeEvent e )
         {
-            sh.setThreshold(getValue()/100f);
+            sh.setThreshold(getValue()/200f);
             pp.repaint();
         }
     }
@@ -176,7 +176,7 @@ public class CompressorTest
     {
         public RatioChanger()
         {
-        	super(JSlider.HORIZONTAL,1,80, 0);
+        	super(JSlider.HORIZONTAL,0,63,0);
             setValue((int)(sh.getRatio()-1));
             addChangeListener(this);
         }

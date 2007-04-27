@@ -57,6 +57,8 @@ public class MultiEnvelopeTest
         f.getContentPane().setLayout(new BorderLayout());
         f.getContentPane().add(createENV(),BorderLayout.CENTER);
         f.setVisible(true);
+       
+       
     }
 
     // the envelope

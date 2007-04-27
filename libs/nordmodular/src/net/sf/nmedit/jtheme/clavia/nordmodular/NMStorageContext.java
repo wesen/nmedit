@@ -29,6 +29,7 @@ import net.sf.nmedit.jtheme.clavia.nordmodular.store.EqShelveDisplayStore;
 import net.sf.nmedit.jtheme.clavia.nordmodular.store.FilterEDisplayStore;
 import net.sf.nmedit.jtheme.clavia.nordmodular.store.FilterFDisplayStore;
 import net.sf.nmedit.jtheme.clavia.nordmodular.store.LFODisplayStore;
+import net.sf.nmedit.jtheme.clavia.nordmodular.store.MultiEnvDisplayStore;
 import net.sf.nmedit.jtheme.clavia.nordmodular.store.NoteSeqEditorStore;
 import net.sf.nmedit.jtheme.clavia.nordmodular.store.NoteVelScaleDisplayStore;
 import net.sf.nmedit.jtheme.clavia.nordmodular.store.PhaserDisplayStore;
@@ -63,5 +64,6 @@ public class NMStorageContext extends DefaultStorageContext
         installStore("filter-f-display", FilterFDisplayStore.class);
         installStore("note-seq-editor", NoteSeqEditorStore.class);
         installStore("compressor-display", CompressorDisplayStore.class); 
+        installStore("multi-env-display", MultiEnvDisplayStore.class);
     }
 }

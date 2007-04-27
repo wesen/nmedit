@@ -78,7 +78,7 @@ public class Compressor extends Curve {
 					//first segment equation is y=-x + yThresh + threshold
 					points[0].setLocation(0, 1);
 					
-					points[1].setLocation(1 - limiter, limiter);
+					points[1].setLocation(1f - limiter, limiter);
 					points[1].setPoint_type(PathIterator.SEG_LINETO);
 					
 					//beginning of the limiter horizontal line
@@ -102,7 +102,9 @@ public class Compressor extends Curve {
 						
 			points[0].setLocation(0, 1);
 			
-			points[1].setLocation(tempThresh, 1-tempThresh);
+			//TODO: there is a minor graphical glitch due to rounding 
+			// errors => (1-tempThresh)+tempThresh != 1
+			points[1].setLocation(tempThresh, 1f-tempThresh);
 			points[1].setPoint_type(PathIterator.SEG_LINETO);
 			
 			points[2].setLocation(xLimiter, limiter);

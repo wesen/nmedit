@@ -30,10 +30,10 @@ public class MultiEnvelope extends Envelope{
         setNbSegment(6);
         // attack
         setTime(0, 0);
-        setLevel(0, RANGE_MAX);        
+        setLevel(0, 0);        
         
         setTime(1, RANGE_MAX);
-        setLevel(1, 0);       
+        setLevel(1, 64);       
         
         setTime(2, RANGE_MAX);
         setLevel(2, 63);       
@@ -45,10 +45,10 @@ public class MultiEnvelope extends Envelope{
         setLevel(4, 0);        
         		
         setTime(5,RANGE_MAX);
-        setLevel(5, RANGE_MAX);        
+        setLevel(5, 0);        
         
         setTime(6,RANGE_MAX);
-        setLevel(6, RANGE_MAX);    
+        setLevel(6, 0);    
     }
     
     public MultiEnvelope()
@@ -72,6 +72,9 @@ public class MultiEnvelope extends Envelope{
     }
     
     public void setLevel(int segment, int level){
+    	//inverse level so that level = 0 corresponds to the top of the graph
+    	level = 127 - level;
+    	
     	if(segment < sustainSeg) {
     		super.setLevel(segment, level);    		
     	}

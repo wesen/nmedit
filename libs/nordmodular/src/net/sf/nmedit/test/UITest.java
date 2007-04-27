@@ -287,7 +287,7 @@ public class UITest
     static void createTransformationsE() throws Exception
     {
         
-        InputSource is = new InputSource(new FileInputStream("/home/christian/CVS-Arbeitsbereich/nmedit/libs/nordmodular/data/module-descriptions/transformations.xml"));
+        InputSource is = new InputSource(new FileInputStream("./nordmodular/data/module-descriptions/transformations.xml"));
         
         Transformations t = TransformationsBuilder.build(is, modules);
        
