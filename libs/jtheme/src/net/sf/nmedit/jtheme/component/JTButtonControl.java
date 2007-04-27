@@ -36,10 +36,25 @@ public class JTButtonControl extends JTControl
     private boolean cyclic = false;
     private int orientation = SwingConstants.VERTICAL;
     private int spacing = 2;
+    private boolean toggleEnabledRequested = true;
     
     public JTButtonControl(JTContext context)
     {
         super(context);
+    }
+
+    public boolean isToggleEnabledRequested()
+    {
+        return toggleEnabledRequested;
+    }
+    
+    public void setToggleEnabledRequested(boolean enable)
+    {
+        if (toggleEnabledRequested!=enable)
+        {
+            this.toggleEnabledRequested = enable;
+            repaint();
+        }
     }
     
     public String getUIClassID()

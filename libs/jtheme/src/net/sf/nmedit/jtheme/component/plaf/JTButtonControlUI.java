@@ -22,5 +22,11 @@ package net.sf.nmedit.jtheme.component.plaf;
 public class JTButtonControlUI extends JTComponentUI
 {
 
+    public static final String BORDER_KEY = "buttons.border";
+    public static final String SELECTED_BORDER_KEY = "buttons.border.selected";
+    public static final String BACKGROUND_KEY = "buttons.background";
+    public static final String BACKGROUND_SELECTED_KEY = "buttons.background.selected";
+    public static final String BACKGROUND_STATE_KEY = "buttons.background.state";
+    
 }
 
