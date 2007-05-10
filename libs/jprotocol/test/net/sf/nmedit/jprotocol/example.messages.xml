@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<messages version="1.0">
+
+<message name="DeleteModuleMessage" message-id="1">
+	<parameter name="cc" path="cc" default="0x17" />
+	<parameter name="slot" path="slot" default="0" />
+	<parameter name="pid" path="data:data:pid" />
+	<parameter name="sc" path="data:data:sc" default="0x32" />
+</message>
+
+</messages>
