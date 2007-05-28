@@ -20,17 +20,19 @@ package net.sf.nmedit.jtheme.cable;
 
 import java.awt.Color;
 
-import net.sf.nmedit.jpatch.Connection;
-import net.sf.nmedit.jpatch.Connector;
+import net.sf.nmedit.jpatch.PConnector;
+import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jtheme.component.JTConnector;
 
-public interface Cable extends CableGeometrie, Connection
+public interface Cable extends CableGeometrie
 {
 
     JTConnector getSourceComponent();
     JTConnector getDestinationComponent();
-    Connector getSource();
-    Connector getDestination();
+    PConnector getSource();
+    PConnector getDestination();
+    PModule getSourceModule();
+    PModule getDestinationModule();
     Color getColor();
     void setColor(Color color);
     void updateEndPoints();

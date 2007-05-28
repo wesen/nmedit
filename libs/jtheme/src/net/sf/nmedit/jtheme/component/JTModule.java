@@ -31,7 +31,7 @@ import java.awt.Image;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 
-import net.sf.nmedit.jpatch.Module;
+import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.plaf.JTModuleUI;
 
@@ -39,7 +39,7 @@ public class JTModule extends JTComponent
 {
 
     public static final String uiClassID = "JTModuleUI";
-    private Module module;
+    private PModule module;
     private boolean selected = false;
     
     public JTModule(JTContext context)
@@ -189,12 +189,12 @@ public class JTModule extends JTComponent
         {
             g2.dispose();
         }
-        return img;
+        return img; 
     }
 
-    public void setModule(Module module)
+    public void setModule(PModule module)
     {
-        Module oldModule = this.module;
+        PModule oldModule = this.module;
         
         if (oldModule != module)
         {
@@ -204,7 +204,7 @@ public class JTModule extends JTComponent
         }
     }
     
-    public Module getModule()
+    public PModule getModule()
     {
         return module;
     }

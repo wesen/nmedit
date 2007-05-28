@@ -41,7 +41,7 @@ import com.steadystate.css.parser.CSSOMParser;
 public class DefaultStorageContext extends StorageContext
 {
     
-    private Map<String, ModuleStore> moduleStoreMap = new HashMap<String, ModuleStore>();
+    private Map<Object, ModuleStore> moduleStoreMap = new HashMap<Object, ModuleStore>();
     private Document document;
     private ClassLoader classLoader;
     private CSSStyleSheet styleSheet;
@@ -86,7 +86,7 @@ public class DefaultStorageContext extends StorageContext
     }
 
     @Override
-    public ModuleStore getModuleStoreById(String id)
+    public ModuleStore getModuleStoreById(Object id)
     {
         return moduleStoreMap.get(id);
     }

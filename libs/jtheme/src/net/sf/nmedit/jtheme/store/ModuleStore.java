@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.sf.nmedit.jpatch.Module;
+import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.component.JTComponent;
@@ -74,12 +74,12 @@ public class ModuleStore extends DefaultStore implements Iterable<Store>
     }
 
 
-    public JTModule createModule(JTContext context, Module module) throws JTException
+    public JTModule createModule(JTContext context, PModule module) throws JTException
     {
         return createModule(context, module, staticLayerBackingStore != null);
     }
 
-    public JTModule createModule(JTContext context, Module module, boolean addReducible) throws JTException
+    public JTModule createModule(JTContext context, PModule module, boolean addReducible) throws JTException
     {
         JTModule jtmodule = createComponent(context);
         jtmodule.setModule(module);
@@ -102,7 +102,7 @@ public class ModuleStore extends DefaultStore implements Iterable<Store>
         }
     }
     
-    protected void createChildren(JTContext context, JTModule jtmodule, Module module, boolean addReducible) throws JTException
+    protected void createChildren(JTContext context, JTModule jtmodule, PModule module, boolean addReducible) throws JTException
     {
         // iteration order is important because it implies which components are at the front/back
         for (int i=childStore.size()-1;i>=0;i--)
@@ -131,7 +131,7 @@ public class ModuleStore extends DefaultStore implements Iterable<Store>
         return component;
     }
 
-    protected void link(JTContext context, JTComponent component, Module module)
+    protected void link(JTContext context, JTComponent component, PModule module)
       throws JTException
     {
         JTModule jtmodule = (JTModule) component;
@@ -166,7 +166,7 @@ public class ModuleStore extends DefaultStore implements Iterable<Store>
 
     public String getId()
     {
-        return getElement().getAttributeValue("id");
+        return getElement().getAttributeValue("component-id");
     }
     
 }

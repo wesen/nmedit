@@ -46,6 +46,7 @@ import javax.swing.event.ChangeListener;
 
 import net.sf.nmedit.jtheme.component.JTButtonControl;
 import net.sf.nmedit.jtheme.component.JTComponent;
+import net.sf.nmedit.jtheme.component.misc.CallDescriptor;
 
 public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingConstants
 {
@@ -223,14 +224,14 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
             
             int defaultSelection = -1;
             
-            if (control.isToggleEnabledRequested())
+            if (control.isToggleEnabledRequested() && (!control.isIncrementModeEnabled()))
             {
-                defaultSelection = control.getDefaultValue()-min;
+                defaultSelection = control.getDefaultValue()-min+1;
             }
             
             paintButton(g, defaultSelection, intSelectionIndex, icon, label, 0, 0, btnw, btnh);
         }
-        else
+        else 
         {
             int dx, dy;
             if (control.getOrientation() == HORIZONTAL)
@@ -294,9 +295,20 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
                 
                 if (size>0)
                 {
-                    index = pos/(size/range);
-                    if (index<0 || index>range())
+                    if (range==0)
                         index = -1;
+                    else
+                    {
+                        int d = size/range;
+                        if (d==0)
+                            index = -1;
+                        else
+                        {
+                            index = pos/d;
+                            if (index<0 || index>range())
+                                index = -1;
+                            }
+                        }
                 }
             }
         }
@@ -376,7 +388,10 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
 
     private int range()
     {
-        return control.getMaxValue()-control.getMinValue()+1;
+        if (control.isIncrementModeEnabled())
+            return 2;
+        else
+            return control.getMaxValue()-control.getMinValue()+1;
     }
     
     private transient String[] btnLabels;
@@ -638,19 +653,33 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
             {
                 if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1)
                 {
-                    int newValue;
-                    if (selectedControl.isCyclic())
+                    
+                    CallDescriptor call = selectedControl.getCall();
+                    if ( call != null)
                     {
-                        newValue = selectedControl.getValue()+1;
-                        if (newValue > selectedControl.getMaxValue())
-                            newValue = selectedControl.getMinValue();
+                        call.call();
                     }
                     else
                     {
-                        newValue = selectedControl.getMinValue()+internalSelectedButtonIndex;
+                        int newValue;
+                        if (selectedControl.isIncrementModeEnabled())
+                        {
+                            newValue = selectedControl.getValue()+(internalSelectedButtonIndex>0?+1:-1);
+                        }
+                        else
+                        if (selectedControl.isCyclic())
+                        {
+                            newValue = selectedControl.getValue()+1;
+                            if (newValue>selectedControl.getMaxValue())
+                                newValue = selectedControl.getMinValue();
+                        }
+                        else
+                        {
+                            newValue = selectedControl.getMinValue()+internalSelectedButtonIndex;
+                        }
+                        
+                        selectedControl.setValue(newValue);
                     }
-                    
-                    selectedControl.setValue(newValue);
                 }
                 selectedUI.setHoveredAt(-1);
                 selectedUI.setArmedAt(-1);   

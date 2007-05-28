@@ -53,14 +53,14 @@ import javax.swing.UIDefaults;
 import javax.swing.border.Border;
 
 import net.sf.nmedit.jpatch.ImageSource;
-import net.sf.nmedit.jpatch.Module;
-import net.sf.nmedit.jpatch.ModuleDescriptor;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.ModuleDescriptions;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.event.ModuleEvent;
 import net.sf.nmedit.jpatch.event.ModuleListener;
-import net.sf.nmedit.jpatch.spec.ModuleDescriptions;
-import net.sf.nmedit.jpatch.transformation.TransformTool;
-import net.sf.nmedit.jpatch.transformation.TransformableModule;
-import net.sf.nmedit.jpatch.transformation.Transformations;
+import net.sf.nmedit.jpatch.transform.TransformTool;
+import net.sf.nmedit.jpatch.transform.PTModule;
+import net.sf.nmedit.jpatch.transform.PTTransformations;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTImage;
@@ -74,8 +74,10 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
 
     public static final String moduleBorder = "ModuleUI.Border";
     private static final String moduleTransIcon = "ModuleUI.transformationIcon";
-    
+    private static final String moduleTransIconHovered = "ModuleUI.transformationIcon.hovered";
+
     private static final Color DEFAULT_MTICON_COLOR = new Color(0x626262);
+    private static final Color DEFAULT_MTICON_COLOR_HOVERED = new Color(0x929292);
     
     public static JTModuleUI createUI(JComponent c)
     {
@@ -92,7 +94,7 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
     
     // private static transient Map<ModuleDescriptor, Color> backgroundColors;
 
-    public void moduleChanged(JTModule c, Module oldModule, Module newModule)
+    public void moduleChanged(JTModule c, PModule oldModule, PModule newModule)
     {
         if (oldModule != null)
         {
@@ -161,14 +163,14 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
     
     protected void updateTitle()
     {
-        Module m = module.getModule();
+        PModule m = module.getModule();
         
         String title = m != null ? m.getTitle() : null;
         if (title != null)
             titleLabel.setText(title);
     }
         
-    
+
     private Icon getModuleTransformationIcon(UIDefaults def)
     {
         Icon icon = def.getIcon(moduleTransIcon);
@@ -179,10 +181,21 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
         }
         return icon;
     }
+
+    private Icon getModuleTransformationIconHovered(UIDefaults def)
+    {
+        Icon icon = def.getIcon(moduleTransIconHovered);
+        if (icon == null)
+        {
+            icon = new ImageIcon(renderModuleTransformationIcon(DEFAULT_MTICON_COLOR_HOVERED));
+            def.put(moduleTransIconHovered, icon);
+        }
+        return icon;
+    }
     
     protected Image renderModuleTransformationIcon(Color c)
     {
-        BufferedImage bi = new BufferedImage(11, 11, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bi = new BufferedImage(12, 12, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = bi.createGraphics();
         try
         {
@@ -239,14 +252,16 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
         Insets i = module.getInsets();
         int left = i.left;
         Icon ic = getModuleTransformationIcon(uidefaults);
+        //Icon hov = getModuleTransformationIconHovered(uidefaults);
+        
         if (ic != null && ic instanceof ImageIcon)
         {
             JTImage jti = new JTTransformer(jtcontext);
-            jti.setUI(JTImageUI.createUI(jti));
             jti.setIcon((ImageIcon) ic);
+            jti.setUI(JTImageUI.createUI(jti));
             jti.setLocation(left, i.top);
             jti.setSize(jti.getPreferredSize());
-            module.add(jti, 0);
+            module.add(jti,0);
             left+=jti.getWidth();
         }
         
@@ -313,21 +328,21 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
         {
         }
         
-        private void createPopup(MouseEvent e, Module source)
+        private void createPopup(MouseEvent e, PModule source)
         {
-            ModuleDescriptions md = source.getDescriptor().getModuleDescriptions();
+            ModuleDescriptions md = source.getDescriptor().getModules();
             
             ClassLoader loader = md.getModuleDescriptionsClassLoader();
             
-            Transformations t = md.getTransformations();
+            PTTransformations t = md.getTransformations();
             if (t == null)
                 return ;
             
             TransformTool tool = t.createTransformation(source.getDescriptor());
                         
             JPopupMenu popup = null;
-            for (TransformableModule tm: tool.getTargets())
-            {       
+            for (PTModule tm: tool.getTargets())
+            {
                 if (popup == null)
                     popup = new JPopupMenu();
                 
@@ -353,7 +368,7 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
         {
             // no op
         }
-
+        
         public void mouseReleased(MouseEvent e)
         {
             // no op
@@ -375,7 +390,7 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
             
             if (m == null)
                 return;
-            Module mm = m.getModule();
+            PModule mm = m.getModule();
             if (mm == null)
                 return;
             
@@ -437,24 +452,29 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
         {
             return false;
         }
+        
+        public void paintStaticLayer(Graphics2D g2)
+        {
+            getIcon().paintIcon(this, g2, 0, 0);
+        }
     }
     
     private static class TransformAction extends AbstractAction
     {
 
         private TransformTool tool;
-        private Module source;
-        private TransformableModule target;
+        private PModule source;
+        private PTModule target;
 
         public TransformAction(ClassLoader loader, TransformTool tool, 
-                Module source, TransformableModule tm)
+                PModule source, PTModule tm)
         {
             this.tool = tool;
             this.source = source;
             this.target = tm;
             
-            ModuleDescriptor md = tm.getTarget();
-            putValue(NAME, md.getDisplayName());
+            PModuleDescriptor md = tm.getTarget();
+            putValue(NAME, md.getName());
             setEnabled(tm.getTarget() != source.getDescriptor());
             ImageSource is = md.getImage("icon16x16");
             if (is != null)                
@@ -549,7 +569,7 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
         {
             if (!titleSet)
             {
-                Module m = module.getModule();
+                PModule m = module.getModule();
                 if (m != null)
                 {
                     setText(m.getTitle());
@@ -572,7 +592,7 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
 
         private void editModuleName()
         {
-            Module m = module.getModule();
+            PModule m = module.getModule();
             if (m == null)
                 return ;
 

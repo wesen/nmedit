@@ -21,27 +21,21 @@ package net.sf.nmedit.jtheme.xml;
 import java.awt.Color;
 import java.text.ParseException;
 
+import net.sf.nmedit.nmutils.Hex;
+
 public class ColorProperty implements PropertyHandler
 {
-
+    
     public Color parseString(String value) throws ParseException
     {
-        if ((!value.startsWith("#"))||(value.length()!=1+2+2+2))
-            throw new ParseException(value, 0);
+        return parseColor(value);
+    }
 
-        String rs = value.substring(1, 1+2);
-        String rg = value.substring(1+2, 1+2+2);
-        String rb = value.substring(1+2+2, 1+2+2+2); 
-        
-        int r = str2(rs);
-        int g = str2(rg);
-        int b = str2(rb);
-        
-        if (r<0 || g<0 || b<0)
-            throw new ParseException(value, 0);
-        
-        return new Color(r, g, b);
-        
+    public static Color parseColor(String value) throws ParseException
+    {
+        Color color = Hex.htmlHexColor(value);
+        if (color == null) throw new ParseException(value, 0);
+        return color;
     }
 
     public String toString(Object value)
@@ -62,25 +56,5 @@ public class ColorProperty implements PropertyHandler
         return s;
     }
 
-    private int str2(String s)
-    {
-        int x1 = str2(s.charAt(0))*16;
-        int x0 = str2(s.charAt(1));
-        
-        if (x1<0 || x0<0)
-            return -1;
-        return x1+x0;
-    }
-
-    private int str2(char c)
-    {
-        if ('0'<=c && c<='9')
-            return c-'0';
-        if ('a'<=c && c<='z')
-            return (c-'a')+10;
-        if ('A'<=c && c<='Z')
-            return (c-'A')+10;
-        return -1;
-    }
 }
 

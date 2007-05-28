@@ -18,46 +18,41 @@
  */
 package net.sf.nmedit.jtheme.store;
 
-import net.sf.nmedit.jpatch.Module;
-import net.sf.nmedit.jpatch.Parameter;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTControl;
 import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
-import net.sf.nmedit.jtheme.store.helpers.ParameterDescriptorHelper;
 
 import org.jdom.Element;
 
 public abstract class ControlStore extends DefaultStore
 {
-    
-    protected ParameterDescriptorHelper parameterDescriptorHelper;
+
+    protected String parameterId;
     
     protected ControlStore(Element element)
     {
         super(element);
-        
-        initDescriptors(element);
+        initDescriptors();
     }
     
-    protected void initDescriptors(Element element)
+    protected void initDescriptors()
     {
-        parameterDescriptorHelper = ParameterDescriptorHelper.createHelper(element.getChild("parameter"));
+        parameterId = lookupChildElementComponentId("parameter");
     }
 
-    protected void link(JTContext context, JTComponent component, Module module)
+    protected void link(JTContext context, JTComponent component, PModule module)
       throws JTException
     {
-        Parameter parameter = parameterDescriptorHelper.lookup(module);
-        
+        PParameter parameter = module.getParameterByComponentId(parameterId);
         if (parameter != null)
-        {
             link2(context, component, module, parameter);
-        }
     }
     
-    protected void link2(JTContext context, JTComponent component, Module module, Parameter parameter)
+    protected void link2(JTContext context, JTComponent component, PModule module, PParameter parameter)
     {
         ((JTControl)component).setAdapter(new JTParameterControlAdapter(parameter));
     }

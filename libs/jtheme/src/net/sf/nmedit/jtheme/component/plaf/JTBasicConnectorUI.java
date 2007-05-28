@@ -35,10 +35,12 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
-import net.sf.nmedit.jpatch.Connection;
-import net.sf.nmedit.jpatch.ConnectionManager;
-import net.sf.nmedit.jpatch.Connector;
-import net.sf.nmedit.jpatch.Signal;
+import net.sf.nmedit.jpatch.PConnection;
+import net.sf.nmedit.jpatch.PConnectionManager;
+import net.sf.nmedit.jpatch.PConnector;
+import net.sf.nmedit.jpatch.PConnectorDescriptor;
+import net.sf.nmedit.jpatch.PSignalType;
+import net.sf.nmedit.jpatch.PSignalTypes;
 import net.sf.nmedit.jpatch.history.History;
 import net.sf.nmedit.jtheme.JTCursor;
 import net.sf.nmedit.jtheme.cable.Cable;
@@ -60,7 +62,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
     public void paintDynamicLayer(Graphics2D g, JTComponent c)
     {
         JTConnector connector = (JTConnector) c;
-        Signal signal = connector.getSignal();
+        PSignalType signal = connector.getSignal();
         paintConnector(g, connector, signal, connector.isOutput(), connector.isConnected(), c.hasFocus());
     }
     
@@ -71,7 +73,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
         return size;
     }
     
-    protected void paintConnector(Graphics2D g, JTConnector c, Signal signal, boolean output, 
+    protected void paintConnector(Graphics2D g, JTConnector c, PSignalType signal, boolean output, 
             boolean connected, boolean focused)
     {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -270,6 +272,17 @@ public class JTBasicConnectorUI extends JTConnectorUI
             {
                 dragSource = c;
                 DragCable drag = new DragCable(cableManager.createCable(c, null));
+                
+                PConnectorDescriptor cd = c.getConnectorDescriptor();
+                if (cd != null)
+                {
+                    PSignalTypes signalTypes = 
+                        cd.getParentDescriptor().getModules().getDefinedSignals();
+                    PSignalType noSignal = signalTypes.noSignal();
+                    if (noSignal != null && noSignal.getColor() != null)
+                        drag.setColor(noSignal.getColor());
+                }
+                
                 cables = new Cable[] {drag};
                 cableManager.add(drag);
                 
@@ -376,7 +389,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
             
             if (connectedCables != null)
             {
-                ConnectionManager cm =
+                PConnectionManager cm =
                     c.getConnector().getConnectionManager();
 
                 for (Cable cable: connectedCables)
@@ -388,7 +401,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
                 
                 
                 History history = 
-                    c.getConnector().getOwner().getPatch().getHistory();
+                    c.getConnector().getParentComponent().getPatch().getHistory();
                 
                 try
                 {
@@ -398,15 +411,15 @@ public class JTBasicConnectorUI extends JTConnectorUI
                     
                     if (target != null)
                     {
-                        Collection<Connection> cc = cm.getConnections(c.getConnector());
-                        cm.removeAll(cc);
+                        Collection<PConnection> cc = cm.connections(c.getConnector());
+                        cm.removeAllConnections(cc);
     
-                        for (Connection con: cc)
+                        for (PConnection con: cc)
                         {
-                            Connector b = con.getDestination();
-                            if (c.getConnector() == b) b = con.getSource();
+                            PConnector b = con.getA();
+                            if (c.getConnector() == b) b = con.getB();
                             
-                            b.connectWith(target.getConnector());
+                            b.connect(target.getConnector());
                         }
                     }
                     
@@ -434,8 +447,8 @@ public class JTBasicConnectorUI extends JTConnectorUI
             {
                 if (dragCreate)
                 {
-                    Connector a = c.getConnector();
-                    Connector b = target.getConnector();
+                    PConnector a = c.getConnector();
+                    PConnector b = target.getConnector();
                     if (a == null && b == null)
                     {
                         Cable cable = cableManager.createCable(c, target);
@@ -445,7 +458,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
                     }
                     else if (a != null && b != null)
                     {
-                        a.getConnectionManager().connect(a, b);
+                        a.getConnectionManager().add(a, b);
                     }
                 }
             }

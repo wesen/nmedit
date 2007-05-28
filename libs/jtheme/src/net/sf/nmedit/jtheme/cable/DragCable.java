@@ -24,8 +24,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 
-import net.sf.nmedit.jpatch.Connector;
-import net.sf.nmedit.jpatch.Module;
+import net.sf.nmedit.jpatch.PConnector;
+import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jtheme.component.JTConnector;
 
 public class DragCable implements Cable
@@ -115,12 +115,12 @@ public class DragCable implements Cable
         peer.setColor(color);
     }
     
-    private Connector getConnectorSavely(JTConnector c)
+    private PConnector getConnectorSavely(JTConnector c)
     {
         return c == null ? null : c.getConnector();
     }
 
-    public Connector getDestination()
+    public PConnector getDestination()
     {
         return getConnectorSavely(getDestinationComponent());
     }
@@ -130,7 +130,7 @@ public class DragCable implements Cable
         return peer.getDestinationComponent();
     }
 
-    public Connector getSource()
+    public PConnector getSource()
     {
         return getConnectorSavely(getSourceComponent());
     }
@@ -182,26 +182,26 @@ public class DragCable implements Cable
         setEndPoints(p1.x, p1.y, p2.x, p2.y);
     }
 
-    public boolean contains(Connector c)
+    public boolean contains(PConnector c)
     {
         return getDestination() == c || getSource() == c;
     }
 
-    public boolean contains(Module m)
+    public boolean contains(PModule m)
     {
         return getDestinationModule() == m || getSourceModule() == m;
     }
 
-    public Module getDestinationModule()
+    public PModule getDestinationModule()
     {
-        Connector c = getDestination();
-        return c == null ? null : c.getOwner();
+        PConnector c = getDestination();
+        return c == null ? null : c.getParentComponent();
     }
 
-    public Module getSourceModule()
+    public PModule getSourceModule()
     {
-        Connector c = getSource();
-        return c == null ? null : c.getOwner();
+        PConnector c = getSource();
+        return c == null ? null : c.getParentComponent();
     }
 
 }

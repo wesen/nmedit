@@ -205,7 +205,7 @@ public abstract class ImageResource implements Resource
             {
                 return cachedImage;
             }
-            
+
             if (!ensureBytesAvailable())
                 return null;
 

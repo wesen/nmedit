@@ -27,6 +27,7 @@ import javax.swing.SwingConstants;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.component.JTButtonControl;
+import net.sf.nmedit.jtheme.component.misc.CallDescriptor;
 
 import org.jdom.Element;
 
@@ -34,24 +35,53 @@ public class ButtonStore extends ControlStore
 {
 
     private StorageContext context;
+    
+    private int orientation;
+    private boolean cyclic ;
+    private boolean incrementMode;
+    
+    private String callComponent;
+    private String callMethod;
 
     protected ButtonStore(Element element, StorageContext context)
     {
         super(element);
         this.context = context;
+        
+        this.orientation =
+            Boolean.parseBoolean(element.getAttributeValue("landscape"))
+        ? SwingConstants.HORIZONTAL : SwingConstants.VERTICAL;
+        this.cyclic = Boolean.parseBoolean(element.getAttributeValue("cyclic"));
+        this.incrementMode = "increment".equals(element.getAttributeValue("mode")); 
     }
-
+    
     public static ButtonStore create(StorageContext context, Element element)
     {
         return new ButtonStore(element, context);
+    }
+    
+    protected void initDescriptors()
+    {
+        super.initDescriptors();
+        
+        Element e = getElement().getChild("call");
+        if (e != null)
+        {
+            callComponent = e.getAttributeValue("component");
+            callMethod = e.getAttributeValue("method");
+        }
     }
     
     @Override
     public JTButtonControl createComponent(JTContext context) throws JTException
     {
         JTButtonControl buttons = (JTButtonControl) context.createComponent(JTContext.TYPE_BUTTONS);
+        applyName(buttons);
         applyLocation(buttons);
         applySize(buttons);
+        
+        if (callComponent != null && callMethod != null)
+            buttons.setCall(new CallDescriptor(buttons, callComponent, callMethod));
         
         configure(buttons);
         
@@ -62,22 +92,20 @@ public class ButtonStore extends ControlStore
     {
         Element root = getElement();
         
-        buttons.setOrientation(
-                Boolean.parseBoolean(root.getAttributeValue("landscape"))
-                ? SwingConstants.HORIZONTAL : SwingConstants.VERTICAL);
-        
-        buttons.setCyclic(Boolean.parseBoolean(root.getAttributeValue("cyclic")));
+        buttons.setIncrementModeEnabled(incrementMode);
+        buttons.setOrientation(orientation);
+        buttons.setCyclic(cyclic);
         
         for (Element btn : (List<Element>) root.getChildren("btn"))
         {
             int index = getIntAtt(btn, "index");
-            
             Element img = btn.getChild("image");
             if (img != null)
             {
                 String href = ImageStore.getXlinkHref(img);
-                Image image = context.getImage(href);
-                buttons.setIcon(index, new ImageIcon(image));
+                Image image = ImageStore.getImage(href, context);
+                if (image != null)
+                    buttons.setIcon(index, new ImageIcon(image));
             }
             else
             {

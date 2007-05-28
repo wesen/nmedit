@@ -30,8 +30,9 @@ import java.awt.Rectangle;
 
 import javax.swing.border.Border;
 
-import net.sf.nmedit.jpatch.Module;
-import net.sf.nmedit.jpatch.ModuleContainer;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleContainer;
+import net.sf.nmedit.jpatch.PModuleMetrics;
 import net.sf.nmedit.jpatch.event.ModuleContainerEvent;
 import net.sf.nmedit.jpatch.event.ModuleContainerListener;
 import net.sf.nmedit.jtheme.JTContext;
@@ -48,7 +49,7 @@ public class JTModuleContainer extends JTBaseComponent
     private boolean optimizedDrawing;
     private JTCableManager cableManager;
     private JTPatch patchContainer;
-    private ModuleContainer moduleContainer;
+    private PModuleContainer moduleContainer;
     private ContentSynchronisation cs;
 
     public JTModuleContainer(JTContext context, JTCableManager cableManager)
@@ -71,7 +72,7 @@ public class JTModuleContainer extends JTBaseComponent
     
     protected class ContentSynchronisation implements ModuleContainerListener
     {
-        private ModuleContainer mc;
+        private PModuleContainer mc;
         private boolean oneUpdate = false;
         
         public void install()
@@ -84,7 +85,7 @@ public class JTModuleContainer extends JTBaseComponent
             setInstalledContainer(moduleContainer);
         }
 
-        private void setInstalledContainer(ModuleContainer moduleContainer)
+        private void setInstalledContainer(PModuleContainer moduleContainer)
         {
             if (this.mc != null)
                 uninstall(this.mc);
@@ -93,12 +94,12 @@ public class JTModuleContainer extends JTBaseComponent
                 install(this.mc);
         }
 
-        protected void install(ModuleContainer mc)
+        protected void install(PModuleContainer mc)
         {
             mc.addModuleContainerListener(this);
         }
 
-        protected void uninstall(ModuleContainer mc)
+        protected void uninstall(PModuleContainer mc)
         {
             mc.removeModuleContainerListener(this);
         }
@@ -113,10 +114,9 @@ public class JTModuleContainer extends JTBaseComponent
             removeUI(e.getModule());
         }
 
-        private void createUIFor(Module module)
+        private void createUIFor(PModule module)
         {
-            String ID = ""+module.getDescriptor().getIndex();
-            ModuleStore ms = getContext().getStorageContext().getModuleStoreById(ID);
+            ModuleStore ms = getContext().getStorageContext().getModuleStoreById(module.getComponentId());
             
             try
             {
@@ -133,7 +133,7 @@ public class JTModuleContainer extends JTBaseComponent
             }
         }
 
-        public void removeUI(Module module)
+        public void removeUI(PModule module)
         {
             Component[] components = JTModuleContainer.this.getComponents();
             for (int i=components.length-1;i>=0;i--)
@@ -158,15 +158,20 @@ public class JTModuleContainer extends JTBaseComponent
 
     }
     
-    public void setModuleContainer(ModuleContainer mc)
+    public void setModuleContainer(PModuleContainer mc)
     {
         this.moduleContainer = mc;
+        
+        PModuleMetrics metrics = null;
+        if (mc != null) metrics = mc.getModuleMetrics();
+        if (metrics == null) setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        else setMaximumSize(new Dimension(metrics.getMaxScreenX(), metrics.getMaxScreenY()));
         
         if (cs != null)
             cs.update();
     }
     
-    public ModuleContainer getModuleContainer()
+    public PModuleContainer getModuleContainer()
     {
         return moduleContainer;
     }

@@ -18,26 +18,24 @@
  */
 package net.sf.nmedit.jtheme.store;
 
-import net.sf.nmedit.jpatch.Connector;
-import net.sf.nmedit.jpatch.Module;
+import net.sf.nmedit.jpatch.PConnector;
+import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTConnector;
-import net.sf.nmedit.jtheme.store.helpers.ConnectorDescriptorHelper;
 
 import org.jdom.Element;
 
 public class ConnectorStore extends DefaultStore
 {
     
-    private ConnectorDescriptorHelper connectorDescriptorHelper;
+    private String connectorId;
 
     protected ConnectorStore(Element element)
     {
         super(element);
-        connectorDescriptorHelper =
-            ConnectorDescriptorHelper.createHelper(element.getChild("connector"));
+        connectorId = lookupChildElementComponentId("connector");
     }
 
     public static ConnectorStore create(StorageContext context, Element element)
@@ -49,15 +47,16 @@ public class ConnectorStore extends DefaultStore
     public JTComponent createComponent(JTContext context) throws JTException
     {
         JTComponent component = context.createComponent(JTContext.TYPE_CONNECTOR);
+        applyName(component);
         applyLocation(component);
         applySize(component);
         return component;
     }
 
-    protected void link(JTContext context, JTComponent component, Module module)
+    protected void link(JTContext context, JTComponent component, PModule module)
       throws JTException
     {
-        Connector connector = connectorDescriptorHelper.lookup(module);
+        PConnector connector = module.getConnectorByComponentId(connectorId);
         if (connector != null)
         {
             JTConnector jtconnector = (JTConnector) component;

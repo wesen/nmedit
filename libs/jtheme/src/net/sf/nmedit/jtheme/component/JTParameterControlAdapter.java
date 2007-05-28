@@ -21,17 +21,17 @@ package net.sf.nmedit.jtheme.component;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import net.sf.nmedit.jpatch.Parameter;
 import net.sf.nmedit.jpatch.event.ParameterEvent;
-import net.sf.nmedit.jpatch.event.ParameterValueChangeListener;
+import net.sf.nmedit.jpatch.event.PParameterListener;
+import net.sf.nmedit.jpatch.PParameter;
 
-public class JTParameterControlAdapter implements JTControlAdapter, ParameterValueChangeListener
+public class JTParameterControlAdapter implements JTControlAdapter, PParameterListener
 {
     
     private ChangeListener changeListener;
-    private Parameter parameter;
+    private PParameter parameter;
 
-    public JTParameterControlAdapter(Parameter parameter)
+    public JTParameterControlAdapter(PParameter parameter)
     {
         this.parameter = parameter;
         install();
@@ -39,12 +39,12 @@ public class JTParameterControlAdapter implements JTControlAdapter, ParameterVal
     
     private void install()
     {
-        parameter.addParameterValueChangeListener(this);   
+        parameter.addParameterListener(this);   
     }
     
     public void uninstall()
     {
-        parameter.removeParameterValueChangeListener(this);
+        parameter.removeParameterListener(this);
     }
 
     public void parameterValueChanged(ParameterEvent e)
@@ -89,7 +89,7 @@ public class JTParameterControlAdapter implements JTControlAdapter, ParameterVal
     public double getNormalizedValue()
     {
         // TODO Auto-generated method stub
-        return parameter.getNormalizedValue();
+        return parameter.getDoubleValue();
     }
 
     public int getValue()
@@ -108,7 +108,7 @@ public class JTParameterControlAdapter implements JTControlAdapter, ParameterVal
 
     public void setNormalizedValue(double value)
     { 
-        parameter.setNormalizedValue(value);
+        parameter.setDoubleValue(value);
         notifyChangeListener();
     }
 

@@ -64,12 +64,12 @@ import javax.swing.UIDefaults;
 import javax.swing.plaf.ComponentUI;
 
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
-import net.sf.nmedit.jpatch.Module;
-import net.sf.nmedit.jpatch.ModuleContainer;
-import net.sf.nmedit.jpatch.ModuleDescriptor;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleContainer;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.MoveOperation;
+import net.sf.nmedit.jpatch.PatchUtils;
 import net.sf.nmedit.jpatch.history.History;
-import net.sf.nmedit.jpatch.utils.PatchUtils;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
@@ -121,12 +121,12 @@ public class JTModuleContainerUI extends ComponentUI
             {
                 putValue(NAME, "Delete Unused Modules");
                 putValue(ACTION_COMMAND_KEY, command);
-                ModuleContainer t = getTarget();
+                PModuleContainer t = getTarget();
                 setEnabled(t != null && PatchUtils.hasUnusedModules(t));
             }
         }
         
-        protected ModuleContainer getTarget()
+        protected PModuleContainer getTarget()
         {
             return getModuleContainer().getModuleContainer();
         }
@@ -137,7 +137,7 @@ public class JTModuleContainerUI extends ComponentUI
             {
                 if (getValue(ACTION_COMMAND_KEY)==DELETE_UNUSED)
                 {
-                    ModuleContainer mc = getTarget();
+                    PModuleContainer mc = getTarget();
                     if (mc != null)
                     {
                         History history = mc.getPatch().getHistory();
@@ -690,15 +690,15 @@ public class JTModuleContainerUI extends ComponentUI
 
             if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable()))
             {
-                ModuleContainer mc = getModuleContainer().getModuleContainer();
-                ModuleDescriptor md = JTDragDrop.getModuleDescriptor(dtde.getTransferable());
+                PModuleContainer mc = getModuleContainer().getModuleContainer();
+                PModuleDescriptor md = JTDragDrop.getModuleDescriptor(dtde.getTransferable());
                 if (md == null || mc == null)
                 {
                     dtde.rejectDrop();
                     return;
                 }
                 
-                Module module;
+                PModule module;
                 try
                 {
                     module = mc.createModule(md);
@@ -826,7 +826,7 @@ public class JTModuleContainerUI extends ComponentUI
             p.y = p.y-o.y;
             
             JTModuleContainer jtmc = getModuleContainer();
-            ModuleContainer mc = jtmc.getModuleContainer();
+            PModuleContainer mc = jtmc.getModuleContainer();
             
             MoveOperation moveop = mc.createMoveOperation();
 
@@ -838,14 +838,14 @@ public class JTModuleContainerUI extends ComponentUI
             
             moveop.move();
             
-            Collection<? extends Module> moved = moveop.getMovedModules();
+            Collection<? extends PModule> moved = moveop.getMovedModules();
                         
             int maxx = 0;
             int maxy = 0;
             
             for (JTModule jtmodule: NmSwingUtilities.getChildren(JTModule.class, jtmc))
             {
-                Module module = jtmodule.getModule();
+                PModule module = jtmodule.getModule();
                 if (moved.contains(module))
                 {
                     jtmodule.setLocation(module.getScreenLocation());

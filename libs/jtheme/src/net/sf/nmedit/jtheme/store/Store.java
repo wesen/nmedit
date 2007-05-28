@@ -18,7 +18,7 @@
  */
 package net.sf.nmedit.jtheme.store;
 
-import net.sf.nmedit.jpatch.Module;
+import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.component.JTComponent;
@@ -29,6 +29,7 @@ public abstract class Store
 {
     
     private boolean reducible = false;
+    protected String name;
     
     public boolean isReducible()
     {
@@ -49,7 +50,7 @@ public abstract class Store
     public abstract JTComponent createComponent(JTContext context)
       throws JTException;
     
-    public JTComponent createComponent(JTContext context, Module module)
+    public JTComponent createComponent(JTContext context, PModule module)
       throws JTException
     {
         JTComponent component = createComponent(context);
@@ -58,13 +59,23 @@ public abstract class Store
         return component;
     }
 
-    protected void link(JTContext context, JTComponent component, Module module)
+    protected void link(JTContext context, JTComponent component, PModule module)
       throws JTException
     {
         // no such operation
     }
     
     public abstract Element getElement();
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+    
+    public String getName()
+    {
+        return name;
+    }
     
 }
 

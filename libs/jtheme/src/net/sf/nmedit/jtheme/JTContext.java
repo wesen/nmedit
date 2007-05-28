@@ -22,7 +22,6 @@
  */
 package net.sf.nmedit.jtheme;
 
-import java.awt.Dimension;
 import java.awt.Image;
 
 import javax.swing.JComponent;

@@ -45,7 +45,7 @@ public class SliderStore extends ControlStore
         JTSlider slider = (JTSlider) context.createComponent(JTContext.TYPE_SLIDER);
         applyLocation(slider);
         applySize(slider);
-        
+        applyName(slider);
         configure(slider);
         
         return slider;

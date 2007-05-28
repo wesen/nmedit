@@ -73,6 +73,7 @@ public class LabelStore extends DefaultStore
        // label.setFont(defaultFont);
         
         applyStyles(label);
+        applyName(label);
         
         label.setSize(label.getPreferredSize());
         

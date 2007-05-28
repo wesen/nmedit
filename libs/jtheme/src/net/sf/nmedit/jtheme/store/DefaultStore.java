@@ -18,8 +18,11 @@
  */
 package net.sf.nmedit.jtheme.store;
 
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.component.JTComponent;
 
+import org.jdom.Attribute;
 import org.jdom.Element;
 
 public abstract class DefaultStore extends Store
@@ -90,6 +93,12 @@ public abstract class DefaultStore extends Store
         return getIntAtt("size", -1);
     }
     
+    protected void applyName(JTComponent c)
+    {
+        if (name != null)
+            c.setName(name);
+    }
+    
     protected void applyLocation(JTComponent c)
     {
         c.setLocation(getX(), getY());
@@ -110,6 +119,19 @@ public abstract class DefaultStore extends Store
         }
         
         c.setSize(w, h);
+    }
+    
+    protected String lookupChildElementComponentId(String childElementName)
+    {
+        Element e = getElement().getChild(childElementName);
+        
+        if (e != null) 
+        {
+            Attribute a = e.getAttribute("component-id");
+            if (a != null)
+                return a.getValue();
+        }
+        return null;
     }
     
 }

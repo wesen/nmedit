@@ -25,6 +25,7 @@ import javax.swing.Icon;
 import javax.swing.SwingConstants;
 
 import net.sf.nmedit.jtheme.JTContext;
+import net.sf.nmedit.jtheme.component.misc.CallDescriptor;
 
 public class JTButtonControl extends JTControl
 {
@@ -37,12 +38,34 @@ public class JTButtonControl extends JTControl
     private int orientation = SwingConstants.VERTICAL;
     private int spacing = 2;
     private boolean toggleEnabledRequested = true;
+    private boolean incrementMode = false;
+    private CallDescriptor call;
     
     public JTButtonControl(JTContext context)
     {
         super(context);
     }
 
+    public void setCall(CallDescriptor call)
+    {
+        this.call = call;
+    }
+    
+    public CallDescriptor getCall()
+    {
+        return this.call;
+    }
+
+    public boolean isIncrementModeEnabled()
+    {
+        return this.incrementMode;
+    }
+    
+    public void setIncrementModeEnabled(boolean enable)
+    {
+        this.incrementMode = enable;
+    }
+    
     public boolean isToggleEnabledRequested()
     {
         return toggleEnabledRequested;

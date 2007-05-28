@@ -24,9 +24,9 @@ package net.sf.nmedit.jtheme.component;
 
 import java.awt.Container;
 
-import net.sf.nmedit.jpatch.Connector;
-import net.sf.nmedit.jpatch.ConnectorDescriptor;
-import net.sf.nmedit.jpatch.Signal;
+import net.sf.nmedit.jpatch.PConnector;
+import net.sf.nmedit.jpatch.PConnectorDescriptor;
+import net.sf.nmedit.jpatch.PSignalType;
 import net.sf.nmedit.jpatch.event.ConnectorListener;
 import net.sf.nmedit.jpatch.event.ConnectorStateEvent;
 import net.sf.nmedit.jtheme.JTContext;
@@ -36,9 +36,13 @@ import net.sf.nmedit.jtheme.component.plaf.JTConnectorUI;
 public class JTConnector extends JTComponent implements ConnectorListener
 {
  
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2055932385325208113L;
     public static final String uiClassID = "connector";
-    private Connector connector;
-    private ConnectorDescriptor connectorDescriptor;
+    private PConnector connector;
+    private PConnectorDescriptor connectorDescriptor;
     private transient JTCableManager cableManager;
 
     public JTConnector(JTContext context)
@@ -57,17 +61,17 @@ public class JTConnector extends JTComponent implements ConnectorListener
         return uiClassID;
     }
     
-    public Signal getSignal()
+    public PSignalType getSignal()
     {
-        return connector != null ? connector.getSignal() : null;
+        return connector != null ? connector.getDefaultSignalType() : null;
     }
     
-    public Signal getDefaultSignal()
+    public PSignalType getDefaultSignal()
     {
-        return connector != null ? connector.getDefaultSignal() : null;
+        return connector != null ? connector.getDefaultSignalType() : null;
     }
     
-    public void setConnector(Connector c)
+    public void setConnector(PConnector c)
     {
         if (this.connector != c)
         {
@@ -87,30 +91,30 @@ public class JTConnector extends JTComponent implements ConnectorListener
         }
     }
     
-    public Connector getConnector()
+    public PConnector getConnector()
     {
         return connector;
     }
 
-    public void setConnectorDescriptor(ConnectorDescriptor descriptor)
+    public void setConnectorDescriptor(PConnectorDescriptor descriptor)
     {
         setToolTipText(null);
         this.connectorDescriptor = descriptor;
        
         if (descriptor != null)
         {
-            setToolTipText(descriptor.getComponentName());
+            setToolTipText(descriptor.getName());
         }
     }
     
-    public ConnectorDescriptor getConnectorDescriptor()
+    public PConnectorDescriptor getConnectorDescriptor()
     {
         return connectorDescriptor;
     }
     
     public boolean isOutput()
     {
-        ConnectorDescriptor descriptor = connectorDescriptor;
+        PConnectorDescriptor descriptor = connectorDescriptor;
         return descriptor == null ? false : descriptor.isOutput();
     }
     

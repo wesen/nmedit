@@ -28,7 +28,7 @@ import javax.swing.JComponent;
 import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
 
-import net.sf.nmedit.jpatch.Module;
+import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jtheme.component.JTConnector;
 import net.sf.nmedit.nmutils.iterator.ArrayIterator;
 
@@ -296,12 +296,12 @@ public class JTCableManagerImpl implements JTCableManager
             c.add(cables[i]);
     }
     
-    private boolean isConnected(Cable c, Module m)
+    private boolean isConnected(Cable c, PModule m)
     {
         return c.getSourceModule() == m || c.getDestinationModule() == m;
     }
     
-    public void getCables(Collection<Cable> c, Module module)
+    public void getCables(Collection<Cable> c, PModule module)
     {
         for (int i=0;i<cableCount;i++)
         {
@@ -310,7 +310,7 @@ public class JTCableManagerImpl implements JTCableManager
         }
     }
     
-    public void getCables(Collection<Cable> c, Collection<? extends Module> modules)
+    public void getCables(Collection<Cable> c, Collection<? extends PModule> modules)
     {
         for (int i=0;i<cableCount;i++)
         {

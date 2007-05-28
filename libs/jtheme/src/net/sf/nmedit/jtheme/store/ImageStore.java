@@ -126,6 +126,23 @@ public class ImageStore extends DefaultStore
         return e.getAttributeValue("href", xlinkns);
     }
     
+    public static Image getImage(String href, StorageContext context)
+    {
+        if (href.startsWith("url(#") && href.endsWith(")"))
+        {
+            if (context instanceof DefaultStorageContext)
+            {
+                DefaultStorageContext c = (DefaultStorageContext) context;
+                String id = href.substring(5, href.length()-1);
+                
+                ImageResource ir = c.getImageResourceById(id);
+                return ir == null ? null : ir.getImage(-1, -1);
+            }
+            return null;
+        }
+        else return context.getImage(href);
+    }
+    
     private void preloadExtern(Element e)
     {
         String src = getXlinkHref(e);
@@ -147,6 +164,7 @@ public class ImageStore extends DefaultStore
 
                     image = ir.getImage(svgw, svgh);
                 }
+                
                 return;
             }
             
@@ -194,7 +212,7 @@ public class ImageStore extends DefaultStore
             return null;
         
         JTImage jtimg = (JTImage) context.createComponent(JTContext.TYPE_IMAGE);
-
+        applyName(jtimg);
         setReducible(jtimg);
         jtimg.setIcon(new ImageIcon(image));
         applyLocation(jtimg);

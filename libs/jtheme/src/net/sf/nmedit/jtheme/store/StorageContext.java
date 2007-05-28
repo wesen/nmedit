@@ -34,6 +34,7 @@ import net.sf.nmedit.jtheme.css.FakeRule;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jdom.Attribute;
 import org.jdom.Element;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
@@ -107,7 +108,7 @@ public abstract class StorageContext
         return storeClassMap.get(elementName);
     }
     
-    public abstract ModuleStore getModuleStoreById(String id);
+    public abstract ModuleStore getModuleStoreById(Object id);
     
     public abstract ClassLoader getContextClassLoader();
 
@@ -187,7 +188,13 @@ public abstract class StorageContext
         Method create = getStoreCreateMethod(element.getName());
         try
         {
-            return (Store) create.invoke(null, new Object[] {this, element});
+            Store store = (Store) create.invoke(null, new Object[] {this, element});
+            
+            Attribute aname = element.getAttribute("name");
+            if (aname != null)
+                store.setName(aname.getValue());
+            
+            return store;
         }
         catch (IllegalArgumentException e)
         {

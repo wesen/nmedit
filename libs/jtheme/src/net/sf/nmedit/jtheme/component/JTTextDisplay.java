@@ -18,17 +18,17 @@
  */
 package net.sf.nmedit.jtheme.component;
 
-import net.sf.nmedit.jpatch.Parameter;
 import net.sf.nmedit.jpatch.event.ParameterEvent;
-import net.sf.nmedit.jpatch.event.ParameterValueChangeListener;
+import net.sf.nmedit.jpatch.event.PParameterListener;
+import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
 
-public class JTTextDisplay extends JTLabel implements ParameterValueChangeListener
+public class JTTextDisplay extends JTLabel implements PParameterListener
 {
 
     final public static String uiClassID = "TextDisplayUI";
     
-    private Parameter par;
+    private PParameter par;
     
     public JTTextDisplay(JTContext context)
     {
@@ -51,7 +51,7 @@ public class JTTextDisplay extends JTLabel implements ParameterValueChangeListen
         return false;
     }
 
-    public void setParameter(Parameter par)
+    public void setParameter(PParameter par)
     {
         if (this.par != par)
         {
@@ -65,20 +65,20 @@ public class JTTextDisplay extends JTLabel implements ParameterValueChangeListen
         }
     }
 
-    protected void install(Parameter p)
+    protected void install(PParameter p)
     {
-        p.addParameterValueChangeListener(this);
+        p.addParameterListener(this);
     }
 
-    protected void uninstall(Parameter p)
+    protected void uninstall(PParameter p)
     {
-        p.removeParameterValueChangeListener(this);
+        p.removeParameterListener(this);
     }
 
     protected void updateText()
     {
         if (par != null)
-            setText(par.getFormattedValue());
+            setText(par.getDisplayValue());
         else
             setText(null);
     }

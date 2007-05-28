@@ -41,6 +41,7 @@ public class KnobStore extends ControlStore
     public JTComponent createComponent(JTContext context) throws JTException
     {
         JTComponent component = context.createComponent(JTContext.TYPE_KNOB);
+        applyName(component);
         applyLocation(component);
         applySize(component);
         return component;

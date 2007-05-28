@@ -23,8 +23,8 @@ import java.awt.Color;
 import org.jdom.Element;
 import org.w3c.dom.css.CSSStyleDeclaration;
 
-import net.sf.nmedit.jpatch.Module;
-import net.sf.nmedit.jpatch.Parameter;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.component.JTComponent;
@@ -56,6 +56,7 @@ public class TextDisplayStore extends ControlStore
         JTComponent component = context.createComponent(JTContext.TYPE_TEXTDISPLAY);
         applyLocation(component);
         applySize(component);
+        applyName(component);
         applyStyle(component);
         return component;
     }
@@ -78,7 +79,7 @@ public class TextDisplayStore extends ControlStore
             component.setBorder(null);
     }
     
-    protected void link2(JTContext context, JTComponent component, Module module, Parameter parameter)
+    protected void link2(JTContext context, JTComponent component, PModule module, PParameter parameter)
     {
         ((JTTextDisplay)component).setParameter(parameter);
     }

@@ -26,6 +26,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import javax.swing.JComponent;
+import javax.swing.UIDefaults;
+import javax.swing.border.Border;
 
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTDisplay;
@@ -38,6 +40,7 @@ public class JTDisplayUI extends JTComponentUI
 
     public static final String FOREGROUND_KEY = "display.foreground";
     public static final Color DEFAULT_FOREGROUND = Color.GREEN;
+    public static final String BORDER_KEY = "display.border";
 
     protected Color getDefaultBackgroundColor()
     {
@@ -59,15 +62,21 @@ public class JTDisplayUI extends JTComponentUI
     public void installUI(JComponent c)
     {
         JTDisplay display = (JTDisplay) c;
-        Color bgColor = display.getContext().getUIDefaults().getColor(BACKGROUND_KEY);
+        UIDefaults defaults = display.getContext().getUIDefaults();
+        
+        Color bgColor = defaults.getColor(BACKGROUND_KEY);
         if (bgColor == null)
             bgColor = getDefaultBackgroundColor();
         display.setBackground(bgColor);
 
-        Color fgColor = display.getContext().getUIDefaults().getColor(FOREGROUND_KEY);
+        Color fgColor = defaults.getColor(FOREGROUND_KEY);
         if (fgColor == null)
             fgColor = getDefaultForegroundColor();
         display.setForeground(fgColor);
+        
+        Border border = defaults.getBorder(BORDER_KEY);
+        if (border != null)
+            display.setBorder(border);
     }
     
     public void paintStaticLayer(Graphics2D g, JTComponent c)

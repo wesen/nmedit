@@ -24,8 +24,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 
-import net.sf.nmedit.jpatch.Connector;
-import net.sf.nmedit.jpatch.Module;
+import net.sf.nmedit.jpatch.PConnector;
+import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTConnector;
 
@@ -105,7 +105,7 @@ public class SimpleCable implements Cable
         return getCableGeometrie().getShape();
     }
 
-    public Connector getSource()
+    public PConnector getSource()
     {
         return getSourceComponent().getConnector();
     }
@@ -115,7 +115,7 @@ public class SimpleCable implements Cable
         return sourceComponent;
     }
 
-    public Connector getDestination()
+    public PConnector getDestination()
     {
         return getDestinationComponent().getConnector();
     }
@@ -165,26 +165,26 @@ public class SimpleCable implements Cable
         return getCableGeometrie().getStop();
     }
 
-    public boolean contains(Connector c)
+    public boolean contains(PConnector c)
     {
         return getDestination() == c || getSource() == c;
     }
 
-    public boolean contains(Module m)
+    public boolean contains(PModule m)
     {
         return getDestinationModule() == m || getSourceModule() == m;
     }
 
-    public Module getDestinationModule()
+    public PModule getDestinationModule()
     {
-        Connector c = getDestination();
-        return c == null ? null : c.getOwner();
+        PConnector c = getDestination();
+        return c == null ? null : c.getParentComponent();
     }
 
-    public Module getSourceModule()
+    public PModule getSourceModule()
     {
-        Connector c = getSource();
-        return c == null ? null : c.getOwner();
+        PConnector c = getSource();
+        return c == null ? null : c.getParentComponent();
     }
 
 }
