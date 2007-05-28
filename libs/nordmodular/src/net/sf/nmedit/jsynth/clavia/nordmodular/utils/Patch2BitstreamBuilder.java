@@ -24,22 +24,21 @@ package net.sf.nmedit.jsynth.clavia.nordmodular.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import net.sf.nmedit.jnmprotocol.PDLData;
-import net.sf.nmedit.jpatch.Module;
-import net.sf.nmedit.jpatch.Parameter;
+import net.sf.nmedit.jpatch.PConnector;
+import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Format;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Header;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Knob;
 import net.sf.nmedit.jpatch.clavia.nordmodular.MidiController;
 import net.sf.nmedit.jpatch.clavia.nordmodular.MidiControllerSet;
-import net.sf.nmedit.jpatch.clavia.nordmodular.Morph;
-import net.sf.nmedit.jpatch.clavia.nordmodular.MorphSection;
-import net.sf.nmedit.jpatch.clavia.nordmodular.NMConnector;
-import net.sf.nmedit.jpatch.clavia.nordmodular.NMModule;
-import net.sf.nmedit.jpatch.clavia.nordmodular.NMParameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
+import net.sf.nmedit.jpatch.clavia.nordmodular.PNMMorphSection;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
+import net.sf.nmedit.jpatch.clavia.nordmodular.parser.Helper;
+import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpdl.BitStream;
 import net.sf.nmedit.jpdl.IntStream;
 import net.sf.nmedit.jpdl.PacketParser;
@@ -215,28 +214,28 @@ public class Patch2BitstreamBuilder
       {
           int nknobs = 0;
           
-          final MorphSection ms = patch.getMorphSection();
+          final PNMMorphSection ms = patch.getMorphSection();
           for (int i=0;i<ms.getMorphCount();i++)
           {
-              Morph m = ms.getMorph(i);
+              PParameter m = ms.getMorph(i);
               append(m.getValue());
-              nknobs+=m.getAssignmentsCount();
+              nknobs+=ms.getAssignments(i).size();
           }
           for (int i=0;i<ms.getMorphCount();i++)
           {
-              Morph m = ms.getMorph(i);
+              PParameter m = ms.getMorph(i);
               append(m.getValue());
           }
           append(nknobs);
           for (int i=0;i<ms.getMorphCount();i++)
           {
-              Morph m = ms.getMorph(i);
-              for (NMParameter p : m.getAssignments())
+              PParameter m = ms.getMorph(i);
+              for (PParameter p : ms.getAssignments(i))
               {
-                  append(Format.getVoiceAreaID(p.getOwner().getParent().isPolyVoiceArea()));
-                  append(p.getOwner().getIndex());
-                  append(p.getDescriptor().getIndex());
-                  append(m.getDescriptor().getIndex());
+                  append(p.getParentComponent().getParentComponent().getComponentIndex());
+                  append(p.getParentComponent().getComponentIndex());
+                  append(Helper.index(p));
+                  append(Helper.index(m));
                   append(m.getValue()); // ???? m.getRange() ???
               }
           }
@@ -255,20 +254,14 @@ public class Patch2BitstreamBuilder
               {                
                   found = true;
                   append(1);
-                  Parameter a = k.getParameter();
-                  if (a instanceof Morph)
-                  {
-                      append(Format.VALUE_SECTION_MORPH);
-                      append(1);
-                      append(((Morph)a).getDescriptor().getMorphId());
-                  }
-                  else
-                  {
-                      NMParameter p = (NMParameter) a;
-                      append(Format.getVoiceAreaID(p.getOwner().getParent().isPolyVoiceArea()));
-                      append(p.getOwner().getIndex());
-                      append(p.getDescriptor().getIndex());
-                  }
+                  PParameter a = k.getParameter();
+                  int moduleIndex
+                      = patch.getMorphSection().isMorph(a) 
+                      ? 1 : a.getParentComponent().getComponentIndex();
+    
+                  append(a.getParentComponent().getParentComponent().getComponentIndex());
+                  append(moduleIndex);
+                  append(Helper.index(a));
                   break ;
               }
           }
@@ -290,20 +283,15 @@ public class Patch2BitstreamBuilder
           for (MidiController mc : msList)
           {
               append(mc.getControlId()); // CC
-              Parameter a = mc.getParameter();
-              if (a instanceof Morph)
-              {
-                  append(Format.VALUE_SECTION_MORPH);
-                  append(1);
-                  append(((Morph)a).getDescriptor().getMorphId());
-              }
-              else
-              {
-                  NMParameter p = (NMParameter) a;
-                  append(Format.getVoiceAreaID(p.getOwner().getParent().isPolyVoiceArea()));
-                  append(p.getOwner().getIndex());
-                  append(p.getDescriptor().getIndex());
-              }
+              PParameter a = mc.getParameter();
+              
+              int moduleIndex
+                  = patch.getMorphSection().isMorph(a) 
+                  ? 1 : a.getParentComponent().getComponentIndex();
+
+              append(a.getParentComponent().getParentComponent().getComponentIndex());
+              append(moduleIndex);
+              append(Helper.index(a));
           }
       }
       endSection();
@@ -323,14 +311,12 @@ public class Patch2BitstreamBuilder
        append(Format.getVoiceAreaID(va.isPolyVoiceArea()));
        
        append(va.getModuleCount());
-       for (Module mm : va)
+       for (PModule m : va)
        {
-           NMModule m = (NMModule) mm;
-           
-           append(m.getID());
-           append(m.getIndex());
-           append(m.getX());
-           append(m.getY());   
+           append(Helper.index(m));
+           append(m.getComponentIndex());
+           append(m.getInternalX());
+           append(m.getInternalY());   
        }
        endSection();
     }
@@ -343,33 +329,32 @@ public class Patch2BitstreamBuilder
         IntStream intStream2 = new IntStream();
         int cablecount = 0;
         
-        for (Module mm : va)
+        for (PModule m : va)
         {
-            NMModule m = (NMModule) mm;
             for (int j=m.getConnectorCount()-1;j>=0;j--)
             {
                 // first connector (dst) triple is always an input
                 // the second (src) triple is either in, or output
                 
-                NMConnector dst = (NMConnector) m.getConnector(j);
-                NMConnector src = dst.getSource();
+                PConnector dst = m.getConnector(j);
+                PConnector src = dst.getParentConnector();
                 if (src!=null)
                 {
                     // only src can be an output
                     intStream2.append(//Format.CABLE_DUMP_COLOR 
-                            src.getConnectionColor().getSignalID());
+                            src.getSignalType().getId());
 
                     intStream2.append(//Format.CABLE_DUMP_MODULE_INDEX_SOURCE, 
-                            src.getModule().getIndex());
+                            src.getParentComponent().getComponentIndex());
                     intStream2.append(//Format.CABLE_DUMP_CONNECTOR_INDEX_SOURCE, 
-                            src.getDescriptor().getIndex());
+                            Helper.index(src));
                     intStream2.append(//Format.CABLE_DUMP_CONNECTOR_TYPE_SOURCE, 
                             Format.getOutputID(src.isOutput()));
 
                     intStream2.append(//Format.CABLE_DUMP_MODULE_INDEX_DESTINATION, 
-                            dst.getModule().getIndex());
+                            dst.getParentComponent().getComponentIndex());
                     intStream2.append(//Format.CABLE_DUMP_CONNECTOR_INDEX_DESTINATION
-                            dst.getDescriptor().getIndex());
+                            Helper.index(dst));
                     // always input
                     //intStream2.append(//Format.CABLE_DUMP_CONNECTOR_TYPE_DESTINATION, 
                     //        Format.getOutputID(dst.isOutput()));
@@ -395,25 +380,25 @@ public class Patch2BitstreamBuilder
         
         int nmodules = 0;
         
-        for (Module mm : va)
+        for (PModule m : va)
         {
-            NMModule m = (NMModule) mm;
-            if (m.getParameterCount()>0)
+            if (Helper.getParameterClassCount(m, "parameter")>0)
                 nmodules++;
         }
         
         append(nmodules);
       
-        for (Module mm : va)
+        for (PModule m : va)
         {
-            NMModule m = (NMModule) mm;
-            if (m.getParameterCount()>0)
+            Map map = Helper.getParameterClassMap(m, "parameter");
+            int size = map.size();
+            if (size>0)
             {
-                append(m.getIndex());
-                append(m.getID());
-                for (int i=0;i<m.getParameterCount();i++)
+                append(m.getComponentIndex());
+                append(Helper.index(m));
+                for (int i=0;i<size;i++)
                 {
-                    append(m.getParameter(i).getValue());
+                    append(((PParameter)map.get(i)).getValue());
                 }
             }
         }
@@ -427,26 +412,26 @@ public class Patch2BitstreamBuilder
         
         int nmodules = 0;
         
-        for (Module mm : va)
+        for (PModule m : va)
         {
-            NMModule m = (NMModule) mm;
-            if (m.getCustomCount()>0)
+            if (Helper.getParameterClassCount(m, "custom")>0)
                 nmodules++;
         }
         
         append(nmodules);
       
-        for (Module mm : va)
+        for (PModule m : va)
         {
-            NMModule m = (NMModule) mm;
-            if (m.getCustomCount()>0)
+            Map map = Helper.getParameterClassMap(m, "custom");
+            int size = map.size();
+            if (size>0)
             {
-                append(m.getIndex());
-                // not:append(m.getID());
-                append(m.getCustomCount());
-                for (int i=0;i<m.getCustomCount();i++)
+                append(m.getComponentIndex());
+                // not:append(module id);
+                append(size);
+                for (int i=0;i<size;i++)
                 {
-                    append(m.getCustom(i).getValue());
+                    append(((PParameter)map.get(i)).getValue());
                 }
             }
         }
@@ -458,11 +443,11 @@ public class Patch2BitstreamBuilder
         beginSection(Format.S_NAMEDUMP);
         append(Format.getVoiceAreaID(va.isPolyVoiceArea()));
         append(va.getModuleCount());
-        for (Module mm : va)
+        for (PModule m : va)
         {
-            NMModule m = (NMModule) mm;
-            append(m.getIndex());
-            appendName(m.getName());
+            append(m.getComponentIndex());
+            String t = m.getTitle();
+            appendName(t == null ? "" : t);
         }
         endSection();
     }

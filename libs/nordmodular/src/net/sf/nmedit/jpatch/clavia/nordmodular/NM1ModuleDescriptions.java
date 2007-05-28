@@ -27,6 +27,8 @@ import java.io.InputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import net.sf.nmedit.jpatch.ModuleDescriptions;
+import net.sf.nmedit.jpatch.ModuleDescriptionsParser;
 import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.AmpGain;
 import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.BPM;
 import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.CompressorLimiter;
@@ -55,10 +57,8 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.Phase;
 import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.Semitones;
 import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.SmoothTime;
 import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.Timbre;
-import net.sf.nmedit.jpatch.spec.ModuleDescriptions;
-import net.sf.nmedit.jpatch.spec.ModuleDescriptionsParser;
-import net.sf.nmedit.jpatch.spec.formatter.FormatterRegistry;
-import net.sf.nmedit.jpatch.transformation.Transformations;
+import net.sf.nmedit.jpatch.formatter.FormatterRegistry;
+import net.sf.nmedit.jpatch.impl.PBasicModuleMetrics;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -85,6 +85,7 @@ public class NM1ModuleDescriptions extends ModuleDescriptions
     public NM1ModuleDescriptions()
     {
         installNM1Formatters(getFormatterRegistry());
+        this.metrics = new PBasicModuleMetrics(255, 15, 4000, 4000);
     }
     
     private void installNM1Formatters( FormatterRegistry registry )
@@ -117,11 +118,6 @@ public class NM1ModuleDescriptions extends ModuleDescriptions
         registry.putFormatter("pattern-step", new PatternStep());
         registry.putFormatter("expander-gate", new ExpanderGate());
         registry.putFormatter("expander-hold", new ExpanderHold());
-    }
-
-    public void setTransformations(Transformations t)
-    {
-        this.transformations = t;
     }
 
 }

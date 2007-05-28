@@ -44,6 +44,7 @@ public class ADEnvelopeStore extends AbstractEnvelopeStore
     public JTComponent createComponent(JTContext context) throws JTException
     {
         JTComponent component = context.createComponentInstance(ADDisplay.class);
+        applyName(component);
         applyLocation(component);
         applySize(component);
         return component;

@@ -22,25 +22,23 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.parser;
 
+import java.util.Map;
 import java.util.NoSuchElementException;
 
-import net.sf.nmedit.jpatch.ConnectorDescriptor;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
-import net.sf.nmedit.jpatch.Parameter;
+import net.sf.nmedit.jpatch.ModuleDescriptions;
+import net.sf.nmedit.jpatch.PConnector;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Header;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Knob;
 import net.sf.nmedit.jpatch.clavia.nordmodular.MidiController;
 import net.sf.nmedit.jpatch.clavia.nordmodular.MidiControllerSet;
-import net.sf.nmedit.jpatch.clavia.nordmodular.Morph;
-import net.sf.nmedit.jpatch.clavia.nordmodular.MorphSection;
-import net.sf.nmedit.jpatch.clavia.nordmodular.NMConnector;
-import net.sf.nmedit.jpatch.clavia.nordmodular.NMModule;
-import net.sf.nmedit.jpatch.clavia.nordmodular.NMParameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Note;
+import net.sf.nmedit.jpatch.clavia.nordmodular.PNMMorphSection;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Signal;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
-import net.sf.nmedit.jpatch.spec.ModuleDescriptions;
 
 public class PatchBuilder implements PContentHandler
 {
@@ -144,24 +142,23 @@ public class PatchBuilder implements PContentHandler
 
     public void moduleDump( int[] record ) throws ParseException
     {
-        NMModule module;
+        PModule module;
         int mindex = record[1];
         try
         {
-            module = voiceArea.createModule( mindex );
+            module = voiceArea.createModule(modules.getModuleById("m"+mindex));
         }
         catch (InvalidDescriptorException e)
         {
             throw new ParseException(e);
         }
-        module.setIndex(record[0]);
-        module.setLocation(record[2], record[3]);
+        module.setInternalLocation(record[2], record[3]);
         
-        if (!voiceArea.add(module))
+        if (!voiceArea.add(record[0], module))
         {
             String e = module+" rejected in "+voiceArea;
             
-            NMModule prev = voiceArea.getModule(mindex);
+            PModule prev = voiceArea.getModule(mindex);
             if (prev != null)
                 e+=" index reserved by "+prev;
              
@@ -185,94 +182,93 @@ public class PatchBuilder implements PContentHandler
         }
     }
 
-    private NMConnector getConnector(int mod, int cindex, int ctype) throws ParseException
+    private PConnector getConnector(int mod, int cindex, int ctype) throws ParseException
     {
-        NMModule module = voiceArea.getModule(mod);
+        PModule module = voiceArea.getModule(mod);
         if (module == null)
         {
             emiterror("module[index="+mod+"] does not exist");
             return null;
         }
         boolean output = intToOutput(ctype);
-        ConnectorDescriptor cd = module.getDescriptor().getConnector(cindex, output);
-        if (cd == null)
-        {
-            for (int i=module.getDescriptor().getConnectorCount()-1;i>=0;i--)
-            {
-                System.out.println(module.getDescriptor().getConnector(i));
-            }
-            
-            emiterror("Connector[index="+cindex
-                    +",output="+output+"("+ctype+")] does not exist in "+module);
-            return null;
-        }
         
-        NMConnector c = null;
-        try
+        for (int i=module.getConnectorCount()-1;i>=0;i--)
         {
-            c = module.getConnector(cd);
+            PConnector tmp = module.getConnector(i);
+            if (cindex==tmp.getIntAttribute("index",-1) && tmp.isOutput()==output)
+            {
+                return tmp;
+            }
         }
-        catch (InvalidDescriptorException e)
-        {
-            emiterror(e.getMessage());
-        }
-        return c;
+        emiterror("Connector[index="+cindex
+                +",output="+output+"("+ctype+")] does not exist in "+module);
+        return null;
     }
 
     public void cableDump( int[] record ) throws ParseException
     {
         Signal signal = Signal.bySignalID(record[0]);
-        NMConnector cdst = getConnector(record[1], record[2], record[3]);
-        NMConnector csrc = getConnector(record[4], record[5], record[6]);
+        PConnector cdst = getConnector(record[1], record[2], record[3]);
+        PConnector csrc = getConnector(record[4], record[5], record[6]);
         
         if (cdst == null || csrc == null)
         {
             return;
         }
 
-        if (cdst.isConnectedWith(csrc))
+        if (cdst.isConnected(csrc))
             emitwarning("Already connected: "+csrc+", "+cdst);
         else
         {
-            if (csrc.connectWith(cdst/*, signal*/)==null) // TODO signal
+            if (!csrc.connect(cdst/*, signal*/)) // TODO signal
                 emiterror("Could not connect: "+csrc+", "+cdst);
         }
     }
     
     public void parameterDump( int[] record ) throws ParseException
     {
-        NMModule module = voiceArea.getModule(record[0]);
+        PModule module = voiceArea.getModule(record[0]);
         
-        if (module.getModuleId()!=record[1])
+        if (module.getIntAttribute("index", -1)!=record[1])
             emiterror(module+" has different id than "+record[1]+" in ParameterDump");
+
+        Map map = Helper.getParameterClassMap(module, "parameter");
+        int paramClassCount = map.size();
         
-        if (record[2]!=module.getParamCount())
-            emiterror("invalid number of parameters "+record[2]+" expected "+module.getParamCount());
+        if (record[2]!=paramClassCount)
+            emiterror("invalid number of parameters[class='parameter'] "+record[2]+" expected "+paramClassCount);
         
-        for (int i=0;i<module.getParamCount();i++)
-            module.getParameter(i).setValue(record[3+i]);
+        for (int i=0;i<paramClassCount;i++)
+        {
+            ((PParameter)map.get(i)).setValue(record[3+i]);
+        }
     }
 
     public void customDump( int[] record ) throws ParseException
     {
-        NMModule module = voiceArea.getModule(record[0]);
+        PModule module = voiceArea.getModule(record[0]);
+
+        Map map = Helper.getParameterClassMap(module, "custom");
+        int customCount = map.size();
         
-        if (record[1]!=module.getCustomCount())
-            emiterror("invalid number of custom-parameters "+record[2]+" expected "+module.getParamCount());
+        if (record[1]!=customCount)
+            emiterror("invalid number of parameters[class=custom] "+record[2]+" expected "+customCount);
         
-        for (int i=0;i<module.getCustomCount();i++)
-            module.getCustom(i).setValue(record[2+i]);
+        for (int i=0;i<customCount;i++)
+        {
+            ((PParameter)map.get(i)).setValue(record[2+i]);
+        }
     }
 
     public void keyboardAssignment( int[] record ) throws ParseException
     {
-        MorphSection morphs = patch.getMorphSection();
+        PNMMorphSection morphs = patch.getMorphSection();
         
         for (int i=0;i<4;i++)
         {
             int value = record[i];
 
-            Parameter m = morphs.getMorph(i);
+            PParameter m = morphs.getMorph(i);
             if (value>=0 && value<=2)
                 m.setValue(value);
             else
@@ -287,14 +283,14 @@ public class PatchBuilder implements PContentHandler
         VoiceArea va = getVoiceArea(record[0]);
         int modIndex = record[1];
         int paramIndex = record[2];
-        Parameter p;
+        PParameter p;
         if (va == null)
         {
             p = patch.getMorphSection().getMorph(paramIndex);
         }
         else
         {
-            NMModule module = va.getModule(modIndex);
+            PModule module = va.getModule(modIndex);
             p = module.getParameter(paramIndex);
         }
         Knob knob = patch.getKnobs().getByID(record[3]);
@@ -303,13 +299,13 @@ public class PatchBuilder implements PContentHandler
 
     public void morphMapDumpProlog( int[] record ) throws ParseException
     {
-        MorphSection morphs = patch.getMorphSection();
+        PNMMorphSection morphs = patch.getMorphSection();
         
         for (int i=0;i<4;i++)
         {
             int value = record[i];
             
-            Parameter m = morphs.getMorph(i);
+            PParameter m = morphs.getMorph(i);
             
             if (value>=m.getMinValue() && value<=m.getMaxValue())
                 m.setValue(value);
@@ -322,11 +318,10 @@ public class PatchBuilder implements PContentHandler
     public void morphMapDump( int[] record ) throws ParseException
     {
         VoiceArea voiceArea = getVoiceArea(record[0]);
-        NMModule module = voiceArea.getModule(record[1]);
-        NMParameter p = module.getParameter(record[2]);
-        Parameter morphRange = module.getParameter(record[2]);
-        Morph morph = patch.getMorphSection().getMorph(record[3]);
-        morph.add(p);
+        PModule module = voiceArea.getModule(record[1]);
+        PParameter p = module.getParameter(record[2]);
+        PParameter morphRange = module.getParameter(record[2]);
+        patch.getMorphSection().assign(record[3], p);
         morphRange.setValue(record[4]);
     }
 
@@ -340,7 +335,7 @@ public class PatchBuilder implements PContentHandler
         {
             MidiController cc = mcset.getByMC(record[3]);
             
-            Parameter p = null;
+            PParameter p = null;
             
             int section = record[0];
             int pindex = record[2];
@@ -348,9 +343,9 @@ public class PatchBuilder implements PContentHandler
             {
                 try
                 {
-                NMModule module =  patch.getCommonVoiceArea().getModule(record[1]);
+                PModule module =  patch.getCommonVoiceArea().getModule(record[1]);
                 
-                if (pindex<0 || pindex>=module.getParamCount())
+                if (pindex<0 || pindex>=Helper.getParameterClassCount(module, "parameter"))                    
                     emiterror(module+" has no parameter[index="+pindex+"]");
                 else
                     p = module.getParameter(pindex);
@@ -364,8 +359,8 @@ public class PatchBuilder implements PContentHandler
             {
                 try
                 {
-                NMModule module = patch.getPolyVoiceArea().getModule(record[1]);
-                if (pindex<0 || pindex>=module.getParamCount())
+                PModule module = patch.getPolyVoiceArea().getModule(record[1]);
+                if (pindex<0 || pindex>=Helper.getParameterClassCount(module, "parameter"))
                     emiterror(module+" has no parameter[index="+pindex+"]");
                 else
                     p = module.getParameter(pindex);
@@ -387,7 +382,7 @@ public class PatchBuilder implements PContentHandler
     public void moduleNameDump( int moduleIndex, String moduleName )
             throws ParseException
     {
-        NMModule module = null;
+        PModule module = null;
         
         try
         { 

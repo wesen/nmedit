@@ -18,8 +18,8 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.formatter;
 
-import net.sf.nmedit.jpatch.Parameter;
-import net.sf.nmedit.jpatch.spec.formatter.Formatter;
+import net.sf.nmedit.jpatch.formatter.Formatter;
+import net.sf.nmedit.jpatch.PParameter;
 
 /**
  * @author Christian Schneider
@@ -28,7 +28,7 @@ import net.sf.nmedit.jpatch.spec.formatter.Formatter;
 public class Semitones  implements Formatter
 {
 
-    public String getString( Parameter parameter, int value )
+    public String getString( PParameter parameter, int value )
     {
         value -= 64;
         

@@ -27,7 +27,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.sf.nmedit.jpatch.AbstractMoveOperation;
-import net.sf.nmedit.jpatch.Module;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleMetrics;
 
 public class NMMoveOperation extends AbstractMoveOperation
 {
@@ -36,7 +37,7 @@ public class NMMoveOperation extends AbstractMoveOperation
     private int dx;
     private int dy;
     private boolean offsetSet = false;
-    private Collection<Module> moved = null;
+    private Collection<PModule> moved = null;
 
     public NMMoveOperation(VoiceArea va)
     {
@@ -65,7 +66,7 @@ public class NMMoveOperation extends AbstractMoveOperation
         int srcmaxx = 0;
         int srcmaxy = 0;
         
-        for (Module m: this)
+        for (PModule m: this)
         {
             int sx = m.getScreenX();
             int sy = m.getScreenY();
@@ -82,8 +83,10 @@ public class NMMoveOperation extends AbstractMoveOperation
         int dxaligned;
         int dyaligned;
         
-        int minxaligned = NMModuleMetrics.computeScreenX(NMModuleMetrics.computeInternalX(dstminx));
-        int minyaligned = NMModuleMetrics.computeScreenY(NMModuleMetrics.computeInternalY(dstminy));
+        PModuleMetrics metrics = va.getModuleMetrics();
+        
+        int minxaligned = metrics.internalToScreenX(metrics.screenToInternalX(dstminx));
+        int minyaligned = metrics.internalToScreenY(metrics.screenToInternalY(dstminy));
 
         if (minxaligned <0) minxaligned = 0;
         if (minyaligned <0) minyaligned = 0;
@@ -96,13 +99,13 @@ public class NMMoveOperation extends AbstractMoveOperation
         int dstmaxx = srcmaxx+dxaligned;
         int dstmaxy = srcmaxy+dyaligned;
 
-        Collection<Module> tmpMoved = new ArrayList<Module>(va.getModuleCount());
+        Collection<PModule> tmpMoved = new ArrayList<PModule>(va.getModuleCount());
         
         // move other modules so they do not overlap  
         
-        List<Module> other = new ArrayList<Module>(va.getModuleCount());
+        List<PModule> other = new ArrayList<PModule>(va.getModuleCount());
         
-        for (Module m: va)
+        for (PModule m: va)
         {
             if (!modules.contains(m))
             {
@@ -117,31 +120,31 @@ public class NMMoveOperation extends AbstractMoveOperation
         YOrder yorder = new YOrder();
         
         if (!other.isEmpty()){
-            Collections.<Module>sort(other, xorder);
+            Collections.<PModule>sort(other, xorder);
             int colpx = other.get(0).getScreenX();
-            Iterator<Module> iter = other.iterator();
-            List<Module> col = new ArrayList<Module>(other.size());
+            Iterator<PModule> iter = other.iterator();
+            List<PModule> col = new ArrayList<PModule>(other.size());
             
             while (iter.hasNext())
             {
-                Module m = iter.next();
+                PModule m = iter.next();
                 int sx = m.getScreenX();
                 if (colpx != sx)
                 {
                     // new column
                     colpx = sx;
-                    Collections.<Module>sort(col, yorder);
+                    Collections.<PModule>sort(col, yorder);
                     moveColumn(colpx, col, tmpMoved, dxaligned, dyaligned);
                     col.clear();
                 }       
                 col.add(m);
             }
-            Collections.<Module>sort(col, yorder);
+            Collections.<PModule>sort(col, yorder);
             moveColumn(colpx, col, tmpMoved, dxaligned, dyaligned);
             
         }
         
-        for (Module m: this)
+        for (PModule m: this)
         {
             int sx = m.getScreenX();
             int sy = m.getScreenY();
@@ -152,26 +155,23 @@ public class NMMoveOperation extends AbstractMoveOperation
         moved = tmpMoved;
     }
 
-    private int height(Module m)
+    private int height(PModule m)
     {
-        Object o = m.getDescriptor().getAttribute("height");
-        int h = (o != null && o instanceof Integer) ? (Integer) o : 1;
-        
-        return NMModuleMetrics.computeScreenY(h);
+        return m.getScreenHeight();
     }
 
-    private void moveColumn(int col, Collection<Module> column, Collection<Module> moved, int dxaligned, int dyaligned)
+    private void moveColumn(int col, Collection<PModule> column, Collection<PModule> moved, int dxaligned, int dyaligned)
     {
         int nexty = 0;
         int acol = col-dxaligned;
-        for (Module m: this)
+        for (PModule m: this)
         {
             if (m.getScreenX()==acol)
                 nexty = Math.max(nexty, m.getScreenY()+height(m));
         }
         nexty+=dyaligned;
         
-        for (Module m: column)
+        for (PModule m: column)
         {
             int sy = m.getScreenY();
             
@@ -184,17 +184,17 @@ public class NMMoveOperation extends AbstractMoveOperation
         }
     }
 
-    private static class XOrder implements Comparator<Module>
+    private static class XOrder implements Comparator<PModule>
     {
-        public int compare(Module o1, Module o2)
+        public int compare(PModule o1, PModule o2)
         {
             return o1.getScreenX()-o2.getScreenX();
         }
     }
 
-    private static class YOrder implements Comparator<Module>
+    private static class YOrder implements Comparator<PModule>
     {
-        public int compare(Module o1, Module o2)
+        public int compare(PModule o1, PModule o2)
         {
             return o1.getScreenY()-o2.getScreenY();
         }
@@ -216,7 +216,7 @@ public class NMMoveOperation extends AbstractMoveOperation
         this.offsetSet = true;
     }
 
-    public Collection<? extends Module> getMovedModules()
+    public Collection<? extends PModule> getMovedModules()
     {
         if (moved == null)
             throw new IllegalStateException("move not called");

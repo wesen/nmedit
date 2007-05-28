@@ -49,12 +49,13 @@ import net.sf.nmedit.jnmprotocol.SlotActivatedMessage;
 import net.sf.nmedit.jnmprotocol.SlotsSelectedMessage;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Format;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
-import net.sf.nmedit.jpatch.clavia.nordmodular.NMConnector;
-import net.sf.nmedit.jpatch.clavia.nordmodular.NMModule;
-import net.sf.nmedit.jpatch.clavia.nordmodular.NMParameter;
+import net.sf.nmedit.jpatch.PConnector;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.ErrorHandler;
+import net.sf.nmedit.jpatch.clavia.nordmodular.parser.Helper;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PParser;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.ParseException;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchBuilder;
@@ -132,46 +133,46 @@ public class NmUtils
         return msg;
     }
     
-    public static MidiMessage createNewModuleMessage(int pid, NMModule module) throws Exception
+    public static MidiMessage createNewModuleMessage(int pid, PModule module) throws Exception
     {
         NewModuleMessage msg = new NewModuleMessage();
         msg.set("pid", pid);
 
         // get data
-        int section = Format.getVoiceAreaID(module.getParent().isPolyVoiceArea());
+        int section = module.getParentComponent().getComponentIndex();
         
         // set data
         msg.newModule 
         (
-            module.getID(),
+            Helper.index(module), // module id
             section, 
-            module.getIndex(),
-            module.getX(), 
-            module.getY(),
+            module.getComponentIndex(),
+            module.getInternalX(), 
+            module.getInternalY(),
             "",// module.getName(),
-            module.getParameterValues(),
-            module.getCustomValues()
+            Helper.paramValues(module, "parameter"),
+            Helper.paramValues(module, "custom")
         );
         
         return msg;
     }
     
-    public static MidiMessage createDeleteModuleMessage( int pid, NMModule module ) throws Exception
+    public static MidiMessage createDeleteModuleMessage( int pid, PModule module ) throws Exception
     {    
-        return createDeleteModuleMessage(pid, module.getParent().isPolyVoiceArea(), module.getIndex());
+        return createDeleteModuleMessage(pid, module.getParentComponent().getComponentIndex(), module.getComponentIndex());
     }
     
-    public static MidiMessage createDeleteModuleMessage( int pid, boolean polyVoiceArea, int moduleIndex ) throws Exception
+    public static MidiMessage createDeleteModuleMessage( int pid, int polyVoiceArea, int moduleIndex ) throws Exception
     {
         DeleteModuleMessage msg = new DeleteModuleMessage();
         // get data
-        int section = Format.getVoiceAreaID(polyVoiceArea);
+        int section = polyVoiceArea;
         // set data
         msg.deleteModule( section, moduleIndex );
         return msg;
     }
 
-    public static MidiMessage createDeleteCableMessage( VoiceArea va, NMConnector a, NMConnector b, int slotId, int pId ) throws Exception
+    public static MidiMessage createDeleteCableMessage( VoiceArea va, PConnector a, PConnector b, int slotId, int pId ) throws Exception
     {
         // get message instance
         DeleteCableMessage msg = new DeleteCableMessage();
@@ -179,8 +180,8 @@ public class NmUtils
         msg.set("pid", pId);
 
         // get data
-        NMConnector src = a;
-        NMConnector dst = b;
+        PConnector src = a;
+        PConnector dst = b;
 
         if (dst.isOutput())
         {
@@ -193,19 +194,19 @@ public class NmUtils
         (
             getVoiceAreaId(va),
                 
-            dst.getModule().getIndex(), 
+            dst.getParentComponent().getComponentIndex(), 
             Format.getOutputID(dst.isOutput()),
-            dst.getDescriptor().getIndex(),
+            Helper.index(dst),
             
-            src.getModule().getIndex(), 
+            src.getParentComponent().getComponentIndex(), 
             Format.getOutputID(src.isOutput()),
-            src.getDescriptor().getIndex()
+            Helper.index(src)
         );
         
         return msg;
     }
 
-    public static MidiMessage createNewCableMessage( VoiceArea va, NMConnector a, NMConnector b, int slotId, int pId ) throws Exception
+    public static MidiMessage createNewCableMessage( VoiceArea va, PConnector a, PConnector b, int slotId, int pId ) throws Exception
     {
         // get message instance
         NewCableMessage msg = new NewCableMessage();
@@ -213,8 +214,8 @@ public class NmUtils
         msg.set("pid", pId);
 
         // get data
-        NMConnector src = a;
-        NMConnector dst = b;
+        PConnector src = a;
+        PConnector dst = b;
         
         if (dst.isOutput())
         {
@@ -222,7 +223,7 @@ public class NmUtils
             dst = a;
         }
         
-        int color = src.getConnectionColor().getSignalID();
+        int color = src.getSignalType().getId();
         
         // set data
         msg.newCable
@@ -230,19 +231,19 @@ public class NmUtils
             getVoiceAreaId(va),
             color, 
             
-            dst.getModule().getIndex(), 
+            dst.getParentComponent().getComponentIndex(), 
             Format.getOutputID(dst.isOutput()),
-            dst.getDescriptor().getIndex(),
+            Helper.index(dst),
             
-            src.getModule().getIndex(), 
+            src.getParentComponent().getComponentIndex(), 
             Format.getOutputID(src.isOutput()),
-            src.getDescriptor().getIndex()
+            Helper.index(src)
         );
         
         return msg;
     }
 
-    public static MidiMessage createMoveModuleMessage( NMModule module, int slotId, int pId ) throws Exception
+    public static MidiMessage createMoveModuleMessage( PModule module, int slotId, int pId ) throws Exception
     {
         // get message instance
         MoveModuleMessage msg = new MoveModuleMessage();
@@ -253,15 +254,15 @@ public class NmUtils
         msg.moveModule
         (
             getVoiceAreaId(module),
-            module.getIndex(), 
-            module.getX(), 
-            module.getY()
+            module.getComponentIndex(), 
+            module.getInternalX(), 
+            module.getInternalY()
         );
 
         return msg;
     }
     
-    public static MidiMessage createParameterChangedMessage( NMParameter parameter, int slotId, int pId ) throws Exception
+    public static MidiMessage createParameterChangedMessage( PParameter parameter, int slotId, int pId ) throws Exception
     {
         // get message instance
         ParameterMessage msg = new ParameterMessage();
@@ -269,12 +270,12 @@ public class NmUtils
         msg.set("pid", pId);
         
         // get data
-        NMModule module = parameter.getOwner();
+        PModule module = parameter.getParentComponent();
         
         // set data
-        msg.set("module", module.getIndex());
+        msg.set("module", module.getComponentIndex());
         msg.set("section", getVoiceAreaId(module));
-        msg.set("parameter", parameter.getDescriptor().getIndex());
+        msg.set("parameter", Helper.index(parameter));
         msg.set("value", parameter.getValue());
 
         return msg;
@@ -290,9 +291,9 @@ public class NmUtils
         return Format.getVoiceAreaID(voiceArea.isPolyVoiceArea());
     }
     
-    public static int getVoiceAreaId(NMModule module)
+    public static int getVoiceAreaId(PModule module)
     {
-        return getVoiceAreaId(module.getParent());
+        return module.getParentComponent().getComponentIndex();
     }
 
 

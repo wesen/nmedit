@@ -18,9 +18,9 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.formatter;
 
-import net.sf.nmedit.jpatch.Parameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.Math2;
-import net.sf.nmedit.jpatch.spec.formatter.Formatter;
+import net.sf.nmedit.jpatch.formatter.Formatter;
+import net.sf.nmedit.jpatch.PParameter;
 
 /**
  * @author Christian Schneider
@@ -34,7 +34,7 @@ public class Partials  implements Formatter
 			"1:4", "1:2", "1:1", "2:1", 
 			"4:1", "8:1", "16:1", "32:1"};
 
-    public String getString( Parameter parameter, int value )
+    public String getString( PParameter parameter, int value )
     {
         if ((value+8)%12==0)
             return FRACTIONS[value / 12];

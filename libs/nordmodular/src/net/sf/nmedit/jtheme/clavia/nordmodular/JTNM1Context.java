@@ -121,6 +121,7 @@ public class JTNM1Context extends JTCustomContext
         installComponentClass(JTFilterEDisplay.class);
         installComponentClass(JTFilterFDisplay.class);
         installComponentClass(NMNoteSeqEditor.class);
+        installComponentClass(VocoderDisplay.class);
     }
 
     @Override
@@ -153,11 +154,13 @@ public class JTNM1Context extends JTCustomContext
         uidefaults.put(JTDisplay.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(JTDisplayUI.BACKGROUND_KEY, new ColorUIResource(0x008080));
         uidefaults.put(JTDisplayUI.FOREGROUND_KEY, new ColorUIResource(0x00ff00));
+        uidefaults.put(JTDisplayUI.BORDER_KEY, new BorderUIResource(JTNM1BorderFactory.createNordEditor311Border()));
         uidefaults.put(JTModule.uiClassID, JTModuleUI.class.getName());
         uidefaults.put(JTEqMidDisplay.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(JTEqShelvingDisplay.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(JTPhaserDisplay.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(JTFilterEDisplay.uiClassID, JTDisplayUI.class.getName());
+        uidefaults.put(VocoderDisplay.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(JTFilterFDisplay.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(LFODisplay.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(JTCompressorDisplay.uiClassID, JTDisplayUI.class.getName());

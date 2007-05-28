@@ -18,9 +18,9 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.formatter;
 
-import net.sf.nmedit.jpatch.Parameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.Math2;
-import net.sf.nmedit.jpatch.spec.formatter.Formatter;
+import net.sf.nmedit.jpatch.formatter.Formatter;
+import net.sf.nmedit.jpatch.PParameter;
 
 /**
  * @author Christian Schneider
@@ -32,7 +32,7 @@ public class DrumPartials  implements Formatter
 	private final static String[] FRACTIONS =
 		new String[] {"1:1", "2:1", "4:1"};
 
-    public String getString( Parameter parameter, int value )
+    public String getString( PParameter parameter, int value )
     {
         if (value%48==0)
             return FRACTIONS[value / 48];

@@ -18,27 +18,26 @@
  */
 package net.sf.nmedit.jtheme.clavia.nordmodular.store;
 
-import net.sf.nmedit.jpatch.Module;
-import net.sf.nmedit.jpatch.Parameter;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTEnvelopeDisplay;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
 import net.sf.nmedit.jtheme.store.ControlStore;
-import net.sf.nmedit.jtheme.store.helpers.ParameterDescriptorHelper;
 
 import org.jdom.Element;
 
 public abstract class AbstractEnvelopeStore extends ControlStore
 {
 
-    protected ParameterDescriptorHelper decayParameterHelper;
-    private ParameterDescriptorHelper holdParameterHelper;
-    private ParameterDescriptorHelper sustainParameterHelper;
-    private ParameterDescriptorHelper releaseParameterHelper;
-    private ParameterDescriptorHelper attackTypeParameterHelper;
-    private ParameterDescriptorHelper inverseParameterHelper;
+    private String decayParameterId;
+    private String holdParameterId;
+    private String sustainParameterId;
+    private String releaseParameterId;
+    private String attackTypeParameterId;
+    private String inverseParameterId;
     
     protected AbstractEnvelopeStore(Element element)
     {
@@ -47,28 +46,28 @@ public abstract class AbstractEnvelopeStore extends ControlStore
 
     protected void initDescriptors(Element element)
     {
-        parameterDescriptorHelper = ParameterDescriptorHelper.createHelper(element.getChild("attack"));
-        decayParameterHelper = ParameterDescriptorHelper.createHelper(element.getChild("decay"));
-        holdParameterHelper = ParameterDescriptorHelper.createHelper(element.getChild("hold"));
-        sustainParameterHelper = ParameterDescriptorHelper.createHelper(element.getChild("sustain"));
-        releaseParameterHelper = ParameterDescriptorHelper.createHelper(element.getChild("release"));
-        attackTypeParameterHelper = ParameterDescriptorHelper.createHelper(element.getChild("attack-type"));
-        inverseParameterHelper = ParameterDescriptorHelper.createHelper(element.getChild("inverse"));
+        parameterId = lookupChildElementComponentId("attack");
+        decayParameterId = lookupChildElementComponentId("decay");
+        holdParameterId = lookupChildElementComponentId("hold");
+        sustainParameterId = lookupChildElementComponentId("sustain");
+        releaseParameterId = lookupChildElementComponentId("release");
+        attackTypeParameterId = lookupChildElementComponentId("attack-type");
+        inverseParameterId = lookupChildElementComponentId("inverse");
     }
 
     @Override
     public abstract JTComponent createComponent(JTContext context) throws JTException;
 
-    protected void link(JTContext context, JTComponent component, Module module)
+    protected void link(JTContext context, JTComponent component, PModule module)
       throws JTException
     {
-        Parameter attack = parameterDescriptorHelper.lookup(module);
-        Parameter decay = decayParameterHelper.lookup(module);
-        Parameter hold = holdParameterHelper.lookup(module);
-        Parameter sustain = sustainParameterHelper.lookup(module);
-        Parameter release = releaseParameterHelper.lookup(module);
-        Parameter attackType = attackTypeParameterHelper.lookup(module);
-        Parameter Inverse = inverseParameterHelper.lookup(module);
+        PParameter attack = module.getParameterByComponentId(parameterId);
+        PParameter decay = module.getParameterByComponentId(decayParameterId);
+        PParameter hold = module.getParameterByComponentId(holdParameterId);
+        PParameter sustain = module.getParameterByComponentId(sustainParameterId);
+        PParameter release = module.getParameterByComponentId(releaseParameterId);
+        PParameter attackType = module.getParameterByComponentId(attackTypeParameterId) ;
+        PParameter Inverse = module.getParameterByComponentId(inverseParameterId);
         
         JTEnvelopeDisplay disp = (JTEnvelopeDisplay) component;
 
@@ -81,7 +80,7 @@ public abstract class AbstractEnvelopeStore extends ControlStore
         if (Inverse != null) disp.setInverseAdapter(new JTParameterControlAdapter(Inverse));
     }
     
-    protected void link2(JTContext context, JTComponent component, Module module, Parameter parameter)
+    protected void link2(JTContext context, JTComponent component, PModule module, PParameter parameter)
     {
         throw new UnsupportedOperationException();
     }

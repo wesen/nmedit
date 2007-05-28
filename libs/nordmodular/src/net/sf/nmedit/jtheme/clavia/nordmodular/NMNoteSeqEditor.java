@@ -150,6 +150,7 @@ public class NMNoteSeqEditor extends JTComponent implements ChangeListener
         f.getContentPane().setLayout(null);
         
         final NMNoteSeqEditor ed = new NMNoteSeqEditor(null);
+        ed.setUI(NoteSeqEditorUI.createUI(ed));
         
         f.getContentPane().add( ed );
         

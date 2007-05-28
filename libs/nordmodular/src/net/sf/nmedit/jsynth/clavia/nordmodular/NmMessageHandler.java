@@ -35,12 +35,13 @@ import net.sf.nmedit.jnmprotocol.SlotActivatedMessage;
 import net.sf.nmedit.jnmprotocol.SlotsSelectedMessage;
 import net.sf.nmedit.jnmprotocol.VoiceCountMessage;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
-import net.sf.nmedit.jpatch.ModuleDescriptor;
-import net.sf.nmedit.jpatch.Parameter;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
+import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Format;
-import net.sf.nmedit.jpatch.clavia.nordmodular.NMModule;
+import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
+import net.sf.nmedit.jpatch.clavia.nordmodular.parser.Helper;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.GetPatchWorker;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.ScheduledMessage;
@@ -208,13 +209,13 @@ public class NmMessageHandler extends NmProtocolListener
         if (va == null)
             return;
         
-        NMModule module = va.getModule(moduleId);
+        PModule module = va.getModule(moduleId);
         
-        ModuleDescriptor md = module.getDescriptor();
-        Parameter p;
+        PModuleDescriptor md = module.getDescriptor();
+        PParameter p;
         try
         {
-            p = module.getParameter(md.getParameter(paramId, "parameter"));
+            p = Helper.getParameter(module, "parameter", paramId);
         }
         catch (InvalidDescriptorException e)
         {

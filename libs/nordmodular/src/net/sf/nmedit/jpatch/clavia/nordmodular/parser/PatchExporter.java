@@ -28,22 +28,19 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import net.sf.nmedit.jpatch.Connection;
-import net.sf.nmedit.jpatch.Connector;
+import net.sf.nmedit.jpatch.PConnection;
+import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
-import net.sf.nmedit.jpatch.Module;
-import net.sf.nmedit.jpatch.Parameter;
+import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Knob;
 import net.sf.nmedit.jpatch.clavia.nordmodular.MidiController;
-import net.sf.nmedit.jpatch.clavia.nordmodular.Morph;
-import net.sf.nmedit.jpatch.clavia.nordmodular.MorphSection;
-import net.sf.nmedit.jpatch.clavia.nordmodular.NMConnector;
-import net.sf.nmedit.jpatch.clavia.nordmodular.NMModule;
-import net.sf.nmedit.jpatch.clavia.nordmodular.NMParameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Note;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NoteSet;
+import net.sf.nmedit.jpatch.clavia.nordmodular.PNMMorphSection;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
+import net.sf.nmedit.jpatch.clavia.nordmodular.PNMMorphSection.Assignments;
+import net.sf.nmedit.jpatch.PParameter;
 
 public class PatchExporter
 {
@@ -97,14 +94,14 @@ public class PatchExporter
         {  // MorphMapDump
 
             // first : morph group
-            MorphSection morphs = p.getMorphSection();
+            PNMMorphSection morphs = p.getMorphSection();
             
             int size = 0;
             if (MorphMapDumpBugEnabled)
             {
                 for (int i=0;i<morphs.getMorphCount();i++)
                 {
-                    size+= morphs.getMorph(i).getAssignmentsCount();
+                    size+= morphs.getAssignments(i).size();
                 }
             }
             else
@@ -131,28 +128,30 @@ public class PatchExporter
                 int[] record = getRecord(5);
                 for (int i=0;i<morphs.getMorphCount();i++)
                 {
-                    Morph morph = morphs.getMorph(i);
-                    if (morph.getAssignmentsCount()>0)
+                    Assignments assignments = morphs.getAssignments(i);
+                    PParameter morph = morphs.getMorph(i);
+                    if (assignments.size()>0)
                     {
                         
-                        for (NMParameter pp : morph.getAssignments())
+                        for (PParameter pp : assignments)
                         {
-                            int pindex = pp.getDescriptor().getIndex();
-                            NMModule m = pp.getOwner();
-                            Parameter morphRange;
+                            int pindex = Helper.index(pp);
+                            
+                            PModule m = pp.getParentComponent();
+                            PParameter morphRange;
                             try
                             {
-                                morphRange = m.getParameter(m.getDescriptor().getParameter( pindex, "morph" ));
+                                morphRange = Helper.getParameter(m, "morph", pindex);
                             }
                             catch (InvalidDescriptorException e)
                             {
                                 throw new ParseException(e);
                             }
                             
-                            record[0] = vaId(m.getParent());
-                            record[1] = m.getIndex();
+                            record[0] = m.getParentComponent().getComponentIndex();
+                            record[1] = Helper.index(m);
                             record[2] = pindex;
-                            record[3] = morph.getDescriptor().getMorphId();
+                            record[3] = i;
                             record[4] = morphRange.getValue();
                         }
                     }
@@ -162,7 +161,7 @@ public class PatchExporter
         }
 
         {   // KeyboardAssignment
-            MorphSection morphs = p.getMorphSection();
+            PNMMorphSection morphs = p.getMorphSection();
             int [] record = getRecord(morphs.getMorphCount());
             boolean writeKA = false;
             for (int i=0;i<morphs.getMorphCount();i++)
@@ -200,24 +199,24 @@ public class PatchExporter
                         handler.beginSection(PParser.IKNOBMAPDUMP, -1);
                     }
                     
-                    String pclass = k.getParameter().getDescriptor().getParameterClass();
+                    String pclass = Helper.pclass(k.getParameter());
                     
                     if ("parameter".equals(pclass))
                     {
-                        NMParameter pp = (NMParameter) k.getParameter();
-                        NMModule m = pp.getOwner();
-                        record[0] = vaId(m.getParent());
-                        record[1] = m.getIndex();
-                        record[2] = pp.getDescriptor().getIndex();
+                        PParameter pp = k.getParameter();
+                        PModule m = pp.getParentComponent();
+                        record[0] = m.getParentComponent().getComponentIndex();
+                        record[1] = Helper.index(m);
+                        record[2] = Helper.index(pp);
                         record[3] = k.getID();
                         handler.knobMapDump(record);
                     }
                     else if ("morph".equals(pclass))
                     {
-                        Morph morph = (Morph) k.getParameter();
+                        PParameter  morph = k.getParameter();
                         record[0] = 2;
                         record[1] = 1; // module index = const(1)
-                        record[2] = morph.getDescriptor().getMorphId();
+                        record[2] = Helper.index(morph);
                         record[3] = k.getID();
                         handler.knobMapDump(record);
                     }
@@ -248,27 +247,27 @@ public class PatchExporter
                         handler.beginSection(PParser.ICTRLMAPDUMP, -1);
                     }
 
-                    String pclass = mc.getParameter().getDescriptor().getParameterClass();
+                    String pclass = Helper.pclass(mc.getParameter());
                     
                     if ("parameter".equals(pclass))
                     {
-                        NMParameter pp = (NMParameter) mc.getParameter();
-                        NMModule m = pp.getOwner();
+                        PParameter pp = mc.getParameter();
+                        PModule m = pp.getParentComponent();
 
-                        record[0] = vaId(m.getParent());
-                        record[1] = m.getIndex();
-                        record[2] = pp.getDescriptor().getIndex();
+                        record[0] = m.getParentComponent().getComponentIndex();
+                        record[1] = Helper.index(m);
+                        record[2] = Helper.index(pp);
                         record[3] = mc.getControlId();
                         
                         handler.ctrlMapDump(record);
                     }
                     else if ("morph".equals(pclass))
                     {
-                        Morph morph = (Morph) mc.getParameter();
+                        PParameter morph = mc.getParameter();
 
                         record[0] = 2;
                         record[1] = 1; // module index = const(1)
-                        record[2] = morph.getDescriptor().getMorphId(); // morph index [0..3]
+                        record[2] = Helper.index(morph); // morph index [0..3]
                         record[3] = mc.getControlId();
                         
                         handler.ctrlMapDump(record);
@@ -312,18 +311,19 @@ public class PatchExporter
     private void parameterDump( PContentHandler handler, VoiceArea voiceArea ) throws ParseException
     {
         handler.beginSection(PParser.IPARAMETERDUMP, vaId(voiceArea));
-        for (Module m : voiceArea)
+        for (PModule m : voiceArea)
         {
-            NMModule nm = (NMModule) m; 
+            PModule nm = (PModule) m; 
             if (m.getParameterCount()>0)
             {
-                int[] record = getRecord(3+nm.getParamCount());
-                record[0] = nm.getIndex();
-                record[1] = nm.getModuleId();
-                record[2] = nm.getParamCount();
+                int pcount = Helper.getParameterClassCount(nm, "parameter");
+                int[] record = getRecord(3+pcount);
+                record[0] = nm.getComponentIndex(); // index in module container
+                record[1] = Helper.index(nm); // module id
+                record[2] = pcount;
                 
-                for (int i=0;i<nm.getParamCount();i++)
-                    record[3+i]=nm.getParameter(i).getValue();
+                for (int i=0;i<pcount;i++)
+                    record[3+i]=Helper.getParameter(nm, "parameter", i).getValue();
                 handler.parameterDump(record);
             }
         }
@@ -333,17 +333,18 @@ public class PatchExporter
     private void customDump( PContentHandler handler, VoiceArea voiceArea ) throws ParseException
     {
         handler.beginSection(PParser.ICUSTOMDUMP, vaId(voiceArea));
-        for (Module m : voiceArea)
+        for (PModule m : voiceArea)
         {
-            NMModule nm = (NMModule) m;
-            if (nm.getCustomCount()>0)
+            PModule nm = (PModule) m;
+            int ccount = Helper.getParameterClassCount(nm, "custom");
+            if (ccount>0)
             {
-                int[] record = getRecord(2+nm.getCustomCount());
-                record[0] = nm.getIndex();
-                record[1] = nm.getCustomCount();
+                int[] record = getRecord(2+ccount);
+                record[0] = nm.getComponentIndex(); // index in module container
+                record[1] = ccount;
                 
-                for (int i=0;i<nm.getCustomCount();i++)
-                    record[2+i]=nm.getCustom(i).getValue();
+                for (int i=0;i<ccount;i++)
+                    record[2+i]=Helper.getParameter(nm, "custom", i).getValue();
                 handler.customDump(record);
             }
         }
@@ -354,13 +355,13 @@ public class PatchExporter
     {
         handler.beginSection(PParser.IMODULEDUMP, vaId(voiceArea));
         int[] record = getRecord(4);
-        for (Module mm : voiceArea)
+        for (PModule mm : voiceArea)
         {
-            NMModule m = (NMModule)mm;
-            record[0] = m.getIndex();
-            record[1] = m.getID();
-            record[2] = m.getX();
-            record[3] = m.getY();
+            PModule m = (PModule)mm;
+            record[0] = m.getComponentIndex();
+            record[1] = Helper.index(m);
+            record[2] = m.getInternalX();
+            record[3] = m.getInternalY();
             handler.moduleDump(record);
         }
         handler.endSection(PParser.IMODULEDUMP);
@@ -369,33 +370,33 @@ public class PatchExporter
     private void nameDump( PContentHandler handler, VoiceArea voiceArea ) throws ParseException
     {
         handler.beginSection(PParser.INAMEDUMP, vaId(voiceArea));
-        for (Module mm : voiceArea)
+        for (PModule mm : voiceArea)
         {
-            NMModule m = (NMModule)mm;
-            handler.moduleNameDump(m.getIndex(), m.getTitle());
+            PModule m = (PModule)mm;
+            handler.moduleNameDump(m.getComponentIndex(), m.getTitle());
         }
         handler.endSection(PParser.INAMEDUMP);
     }
     
-    private void getConnectionRecord(int[] record, Connection c)
+    private void getConnectionRecord(int[] record, PConnection c)
     {
-        Connector dst = c.getDestination();
-        Connector src = c.getSource();
+        PConnector dst = c.getA();
+        PConnector src = c.getB();
         
         // check order
         if (dst.isOutput())
         {
-            Connector tmp = dst;
+            PConnector tmp = dst;
             dst = src;
             src = tmp;
         }
         
-        record[0] = ((NMConnector)src).getConnectionColor().getSignalID();
-        record[1] = ((NMModule)dst.getOwner()).getIndex();
-        record[2] = dst.getDescriptor().getIndex();
+        record[0] = src.getSignalType().getId();
+        record[1] = dst.getParentComponent().getComponentIndex();
+        record[2] = Helper.index(dst);
         record[3] = 0;
-        record[4] = ((NMModule)src.getOwner()).getIndex();
-        record[5] = src.getDescriptor().getIndex();
+        record[4] = src.getParentComponent().getComponentIndex();
+        record[5] = Helper.index(src);
         record[6] = src.isOutput()?1:0;
     }
 
@@ -409,7 +410,7 @@ public class PatchExporter
         {
             int[] record = getRecord(rsize);
             
-            for(Connection c: voiceArea.getConnectionManager())
+            for(PConnection c: voiceArea.getConnectionManager())
             {
                 getConnectionRecord(record, c);
                 handler.cableDump(record);   
@@ -420,7 +421,7 @@ public class PatchExporter
             List<int[]> cables = new ArrayList<int[]>(100);
 
             {
-                for (Connection c: voiceArea.getConnectionManager())
+                for (PConnection c: voiceArea.getConnectionManager())
                 {
                     int[] r = new int[rsize];
                     getConnectionRecord(r, c);

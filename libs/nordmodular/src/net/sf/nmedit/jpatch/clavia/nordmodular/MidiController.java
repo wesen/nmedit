@@ -22,13 +22,13 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular;
 
-import net.sf.nmedit.jpatch.Parameter;
+import net.sf.nmedit.jpatch.PParameter;
 
 public class MidiController
 {
 
     private final int ID;
-    private Parameter parameter;
+    private PParameter parameter;
     private MidiControllerSet set;
 
     MidiController(MidiControllerSet set, int ID)
@@ -48,12 +48,12 @@ public class MidiController
         return ID;
     }
 
-    public void setParameter(Parameter parameter)
+    public void setParameter(PParameter parameter)
     {
         this.parameter = parameter;
     }
     
-    public Parameter getParameter()
+    public PParameter getParameter()
     {
         return parameter;
     }

@@ -24,7 +24,7 @@ package net.sf.nmedit.jpatch.clavia.nordmodular;
 
 import java.awt.Color;
 
-public enum Signal implements net.sf.nmedit.jpatch.Signal {
+public enum Signal {
 	
     AUDIO   (0, Color.decode("#CB4F4F"), "Audio"),   // 0 ~red/audio
     CONTROL (1, Color.decode("#5A5FB3"), "Control"), // 1 ~blue/control

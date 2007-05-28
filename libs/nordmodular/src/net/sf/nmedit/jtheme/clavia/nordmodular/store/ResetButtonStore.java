@@ -43,6 +43,7 @@ public class ResetButtonStore extends ControlStore
     public JTComponent createComponent(JTContext context) throws JTException
     {
         JTComponent component = context.createComponent(JTContext.TYPE_RESET_BUTTON);
+        applyName(component);
         applyLocation(component);
         applySize(component);
         return component;

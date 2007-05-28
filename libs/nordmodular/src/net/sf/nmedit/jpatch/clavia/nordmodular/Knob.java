@@ -22,14 +22,14 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular;
 
-import net.sf.nmedit.jpatch.Parameter;
+import net.sf.nmedit.jpatch.PParameter;
 
 public class Knob
 {
 
     private final int ID;
     private KnobSet set;
-    private Parameter parameter = null;
+    private PParameter parameter = null;
     
     Knob(KnobSet set, int ID)
     {
@@ -47,12 +47,12 @@ public class Knob
         return ID;
     }
     
-    public void setParameter(Parameter parameter)
+    public void setParameter(PParameter parameter)
     {
         this.parameter = parameter;
     }
     
-    public Parameter getParameter()
+    public PParameter getParameter()
     {
         return parameter;
     }

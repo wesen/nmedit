@@ -23,6 +23,7 @@ import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +54,7 @@ public class JTNM1KnobUI extends JTBasicKnobUI
     {
         final int minBorder = Math.min(c.getWidth(), c.getHeight());
         final int s = getDiameter(c);
+        
         final Integer key = new Integer(minBorder); // prevent duplicate auto boxing
         BufferedImage bi = backgroundMap.get(key);
         if (bi==null)
@@ -77,7 +79,12 @@ public class JTNM1KnobUI extends JTBasicKnobUI
             g.drawImage(bi, 0, 0, null);
     }
 
-    private Color bgFill = new Color(0x9A9A9A);
+    private static final Color bgFill = new Color(0xB0B0B0/*0x9A9A9A*/);
+    private static final Stroke stroke1 = new BasicStroke(1.75f);
+    private static final Stroke stroke2 = new BasicStroke(1.00f);
+    private static final Color stroke2color = new Color(0xBB000000, true);
+    private static final Color gradColor1 = new Color(0x77FFFFFF, true);
+    private static final Color gradColor2 = new Color(0x77000000, true);
     
     protected void renderBackground( Graphics2D g2, int s )
     {
@@ -93,13 +100,12 @@ public class JTNM1KnobUI extends JTBasicKnobUI
         g2.setColor(bgFill);
         g2.fillOval(0, 0, s-1, s-1);
 
-        g2.setStroke(new BasicStroke(1.75f));
-        g2.setPaint(new GradientPaint(6, 6, new Color(0x77FFFFFF, true), s-6, s-6, new  Color(0x77000000, true)));
+        g2.setStroke(stroke1);
+        g2.setPaint(new GradientPaint(6, 6, gradColor1, s-6, s-6, gradColor2));
         g2.drawOval(1, 1, s-3, s-3);
         
-        BasicStroke stroke = new BasicStroke(1.00f);
-        g2.setStroke(stroke);
-        g2.setColor(new  Color(0xBB000000, true));
+        g2.setStroke(stroke2);
+        g2.setColor(stroke2color);
         g2.drawOval(0, 0, s-1, s-1);
         
     }

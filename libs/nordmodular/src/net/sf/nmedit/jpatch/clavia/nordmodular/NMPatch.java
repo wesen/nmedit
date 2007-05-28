@@ -25,12 +25,12 @@ package net.sf.nmedit.jpatch.clavia.nordmodular;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.nmedit.jpatch.ModuleContainer;
-import net.sf.nmedit.jpatch.Patch;
-import net.sf.nmedit.jpatch.history.History;
+import net.sf.nmedit.jpatch.ModuleDescriptions;
+import net.sf.nmedit.jpatch.PModuleContainer;
+import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.history.HistoryImpl;
 import net.sf.nmedit.jpatch.history.Synchronizer;
-import net.sf.nmedit.jpatch.spec.ModuleDescriptions;
+import net.sf.nmedit.jpatch.impl.PBasicPatch;
 import net.sf.nmedit.jsynth.Slot;
 
 /**
@@ -39,7 +39,7 @@ import net.sf.nmedit.jsynth.Slot;
  * @author Christian Schneider
  * TODO handle Micro Modular
  */
-public class NMPatch implements Patch
+public class NMPatch extends PBasicPatch implements PPatch
 {
 
     //   setPolyphonie(1-32)
@@ -77,9 +77,7 @@ public class NMPatch implements Patch
      * morph groups
      * @see MorphSet
      */
-    private MorphSection morphSection;
-    
-    private History history;
+    private PNMMorphSection morphSection;
     
     /**
      * A set of notes. The hashcode of the note class is equal to the note number.
@@ -98,37 +96,42 @@ public class NMPatch implements Patch
     public final static String VAPOLY_CYCLES = "patch.va.poly.cycles";
     public final static String VACOMMON_CYCLES = "patch.va.common.cycles";
     private Map<String, Object> properties = new HashMap<String,Object>();
-    private ModuleDescriptions moduleDescriptions ;
     private Slot slot;
 
+    private PModuleContainer[] containers;
+    
     /**
      * Creates a new patch.
      */
     public NMPatch(ModuleDescriptions modules)
     {
-        this.moduleDescriptions = modules;
+        super(modules);
         header = new Header(this);
         noteSet = new NoteSet();
         
-        morphSection = new MorphSection(this);
         midiControllerSet = new MidiControllerSet(this);
         knobs = new KnobSet(this);
+        polyVoiceArea = new VoiceArea(this, "PolyVoiceArea", Format.VALUE_SECTION_VOICE_AREA_POLY);
+        commonVoiceArea = new VoiceArea(this, "CommonVoiceArea", Format.VALUE_SECTION_VOICE_AREA_COMMON);
+        morphSection = new PNMMorphSection(this);
         
-        polyVoiceArea = new VoiceArea(this);
-        commonVoiceArea = new VoiceArea(this);
+        containers = new PModuleContainer[]{commonVoiceArea, polyVoiceArea, morphSection};
         
         setProperty(VERSION, "Nord Modular patch 3.0");
         
-        HistoryImpl hi = new HistoryImpl();
-        history = hi;
-        Synchronizer synch = new Synchronizer(hi);
+        Synchronizer synch = new Synchronizer((HistoryImpl)getHistory());
         synch.installModuleContainer(polyVoiceArea);
         synch.installModuleContainer(commonVoiceArea);
     }
-    
-    public History getHistory()
+
+    public PModuleContainer getModuleContainer(int index)
     {
-        return history;
+        return containers[index];
+    }
+
+    public int getModuleContainerCount()
+    {
+        return containers.length;
     }
 
     public Slot getSlot()
@@ -141,12 +144,7 @@ public class NMPatch implements Patch
         this.slot = slot;
     }
     
-    public ModuleDescriptions getModules()
-    {
-        return moduleDescriptions;
-    }
-    
-    public MorphSection getMorphSection()
+    public PNMMorphSection getMorphSection()
     {
         return morphSection;
     }
@@ -310,11 +308,6 @@ public class NMPatch implements Patch
     public String getVersion()
     {
         return (String) getProperty(VERSION);
-    }
-
-    public ModuleContainer getModuleContainer()
-    {
-        return null;
     }
 
     public String toString()

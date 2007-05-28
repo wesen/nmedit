@@ -22,13 +22,13 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.formatter;
 
-import net.sf.nmedit.jpatch.Parameter;
-import net.sf.nmedit.jpatch.spec.formatter.Formatter;
+import net.sf.nmedit.jpatch.formatter.Formatter;
+import net.sf.nmedit.jpatch.PParameter;
 
 public class EnvelopeLevelDivider implements Formatter
 {
 
-    public String getString( Parameter parameter, int value )
+    public String getString( PParameter parameter, int value )
     {
         return value == 127 ? "64" : ""+(value*0.5);
     }

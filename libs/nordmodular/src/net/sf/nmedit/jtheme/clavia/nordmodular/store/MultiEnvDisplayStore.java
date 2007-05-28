@@ -18,8 +18,8 @@
  */
 package net.sf.nmedit.jtheme.clavia.nordmodular.store;
 
-import net.sf.nmedit.jpatch.Module;
-import net.sf.nmedit.jpatch.Parameter;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTMultiEnvDisplay;
@@ -28,15 +28,14 @@ import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
 import net.sf.nmedit.jtheme.store.ControlStore;
 import net.sf.nmedit.jtheme.store.StorageContext;
 import net.sf.nmedit.jtheme.store.Store;
-import net.sf.nmedit.jtheme.store.helpers.ParameterDescriptorHelper;
 
 import org.jdom.Element;
 
 public class MultiEnvDisplayStore extends ControlStore
 {
 
-    protected ParameterDescriptorHelper levelParameterHelper[];
-    protected ParameterDescriptorHelper timeParameterHelper[];
+    protected String levelParameterHelper[];
+    protected String timeParameterHelper[];
    
     
     protected MultiEnvDisplayStore(Element element)
@@ -51,15 +50,15 @@ public class MultiEnvDisplayStore extends ControlStore
 
     protected void initDescriptors(Element element)
     {
-        parameterDescriptorHelper = ParameterDescriptorHelper.createHelper(element.getChild("sustain"));
-        levelParameterHelper = new ParameterDescriptorHelper[4];
+        parameterId = lookupChildElementComponentId("sustain");
+        levelParameterHelper = new String[4];
         for (int i = 0 ; i < levelParameterHelper.length  ; i++){
-            levelParameterHelper[i] = ParameterDescriptorHelper.createHelper(element.getChild("l"+(i+1)));
+            levelParameterHelper[i] = lookupChildElementComponentId("l"+(i+1));
         }
         
-        timeParameterHelper = new ParameterDescriptorHelper[5];
+        timeParameterHelper = new String[5];
         for (int i = 0 ; i < timeParameterHelper.length  ; i++){
-            timeParameterHelper[i] = ParameterDescriptorHelper.createHelper(element.getChild("t"+(i+1)));
+            timeParameterHelper[i] = lookupChildElementComponentId("t"+(i+1));
         }       
     }
 
@@ -67,12 +66,13 @@ public class MultiEnvDisplayStore extends ControlStore
     public JTComponent createComponent(JTContext context) throws JTException
     {
         JTComponent component = context.createComponentInstance(JTMultiEnvDisplay.class);
+        applyName(component);
         applyLocation(component);
         applySize(component);
         return component;
     }
 
-    protected void link(JTContext context, JTComponent component, Module module)
+    protected void link(JTContext context, JTComponent component, PModule module)
       throws JTException
     {
     	
@@ -80,23 +80,23 @@ public class MultiEnvDisplayStore extends ControlStore
     	
         
         for (int i = 0 ; i < levelParameterHelper.length  ; i++){
-            Parameter p = levelParameterHelper[i].lookup(module);
+            PParameter p = module.getParameterByComponentId(levelParameterHelper[i]);
             if (p!=null)
             	disp.setLevelAdapter(i,new JTParameterControlAdapter(p));
         } 
        
         for (int i = 0 ; i < timeParameterHelper.length  ; i++){
-            Parameter p = timeParameterHelper[i].lookup(module);
+            PParameter p = module.getParameterByComponentId(timeParameterHelper[i]);
             if (p!=null)
             	disp.setTimeAdapter(i,new JTParameterControlAdapter(p));
         } 
         
-        Parameter sustain = parameterDescriptorHelper.lookup(module);
+        PParameter sustain = module.getParameterByComponentId(parameterId);
         if (sustain != null)
             disp.setSustainAdapter(new JTParameterControlAdapter(sustain));        
     }
     
-    protected void link2(JTContext context, JTComponent component, Module module, Parameter parameter)
+    protected void link2(JTContext context, JTComponent component, PModule module, PParameter parameter)
     {
         throw new UnsupportedOperationException();
     }

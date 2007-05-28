@@ -20,16 +20,14 @@ package net.sf.nmedit.jsynth.clavia.nordmodular;
 
 import net.sf.nmedit.jnmprotocol.MidiMessage;
 import net.sf.nmedit.jpatch.AllEventsListener;
-import net.sf.nmedit.jpatch.Parameter;
-import net.sf.nmedit.jpatch.clavia.nordmodular.NMConnector;
-import net.sf.nmedit.jpatch.clavia.nordmodular.NMModule;
-import net.sf.nmedit.jpatch.clavia.nordmodular.NMParameter;
+import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
 import net.sf.nmedit.jpatch.event.ConnectionEvent;
 import net.sf.nmedit.jpatch.event.ModuleContainerEvent;
 import net.sf.nmedit.jpatch.event.ModuleEvent;
 import net.sf.nmedit.jpatch.event.ParameterEvent;
+import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 
@@ -88,7 +86,7 @@ public class NmPatchSynchronizer extends AllEventsListener
     public void moduleAdded(ModuleContainerEvent e)
     {
         super.moduleAdded(e);
-        NMModule module = (NMModule) e.getModule();            
+        PModule module = e.getModule();            
         try
         {
             synth.getProtocol().send(NmUtils.createNewModuleMessage(slot.getPatchId(), module));
@@ -102,7 +100,7 @@ public class NmPatchSynchronizer extends AllEventsListener
     public void moduleRemoved(ModuleContainerEvent e)
     {
         super.moduleRemoved(e);
-        NMModule module = (NMModule) e.getModule();
+        PModule module = e.getModule();
         try
         {
         synth.getProtocol().send(NmUtils.createDeleteModuleMessage(slot.getPatchId(), module));
@@ -123,7 +121,7 @@ public class NmPatchSynchronizer extends AllEventsListener
         try
         {
             MidiMessage message =
-                NmUtils.createMoveModuleMessage((NMModule)e.getModule(), slot.getSlotIndex(), 
+                NmUtils.createMoveModuleMessage(e.getModule(), slot.getSlotIndex(), 
                     slot.getPatchId());
             
             // TODO if (synth.isConnected())
@@ -137,12 +135,12 @@ public class NmPatchSynchronizer extends AllEventsListener
 
     public void parameterValueChanged(ParameterEvent e)
     {
-        Parameter parameter = e.getParameter();
+        PParameter parameter = e.getParameter();
 
         try
         {
             MidiMessage message =
-                NmUtils.createParameterChangedMessage((NMParameter) parameter, 
+                NmUtils.createParameterChangedMessage(parameter, 
                         slot.getSlotIndex(), slot.getPatchId());
 
             // TODO if (synth.isConnected())
@@ -158,12 +156,12 @@ public class NmPatchSynchronizer extends AllEventsListener
     {
         try
         {
-            VoiceArea va = (VoiceArea) e.getConnectionManager().getTarget();
+            VoiceArea va = (VoiceArea) e.getConnectionManager().getModuleContainer();
             
             MidiMessage message =
             NmUtils.createNewCableMessage(va, 
-                    (NMConnector) e.getSource(), 
-                    (NMConnector) e.getDestination(),
+                    e.getSource(), 
+                    e.getDestination(),
                     slot.getSlotId(), slot.getPatchId());
                     
             synth.getProtocol().send(message);
@@ -178,12 +176,12 @@ public class NmPatchSynchronizer extends AllEventsListener
     {
         try
         {
-            VoiceArea va = (VoiceArea) e.getConnectionManager().getTarget();
+            VoiceArea va = (VoiceArea) e.getConnectionManager().getModuleContainer();
             
             synth.getProtocol().send(
                     NmUtils.createDeleteCableMessage(va, 
-                            (NMConnector) e.getSource(), 
-                            (NMConnector) e.getDestination(),
+                            e.getSource(), 
+                            e.getDestination(),
                     slot.getSlotId(), slot.getPatchId()
             ));
         }

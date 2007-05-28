@@ -97,7 +97,7 @@ public class ClipDisp extends JTDisplay implements ChangeListener
         return Math.max(0, Math.min(v, 1));
     }
 
-    public void setClipParameterAdapter(JTControlAdapter adapter)
+    public void setCliParameterAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = clipParam;
         this.clipParam = adapter;

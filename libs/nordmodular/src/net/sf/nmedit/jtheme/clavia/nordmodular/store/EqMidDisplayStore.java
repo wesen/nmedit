@@ -18,8 +18,8 @@
  */
 package net.sf.nmedit.jtheme.clavia.nordmodular.store;
 
-import net.sf.nmedit.jpatch.Module;
-import net.sf.nmedit.jpatch.Parameter;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTEqMidDisplay;
@@ -28,15 +28,14 @@ import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
 import net.sf.nmedit.jtheme.store.ControlStore;
 import net.sf.nmedit.jtheme.store.StorageContext;
 import net.sf.nmedit.jtheme.store.Store;
-import net.sf.nmedit.jtheme.store.helpers.ParameterDescriptorHelper;
 
 import org.jdom.Element;
 
 public class EqMidDisplayStore extends ControlStore
 {
 
-    protected ParameterDescriptorHelper gainGainParameterHelper;
-    protected ParameterDescriptorHelper bwParameterHelper;
+    protected String gainGainParameterId;
+    protected String bwParameterId;
     
     protected EqMidDisplayStore(Element element)
     {
@@ -50,26 +49,27 @@ public class EqMidDisplayStore extends ControlStore
 
     protected void initDescriptors(Element element)
     {
-        parameterDescriptorHelper = ParameterDescriptorHelper.createHelper(element.getChild("frequency"));
-        gainGainParameterHelper = ParameterDescriptorHelper.createHelper(element.getChild("gain"));
-        bwParameterHelper = ParameterDescriptorHelper.createHelper(element.getChild("bandwidth"));
+        parameterId = lookupChildElementComponentId("frequency");
+        gainGainParameterId = lookupChildElementComponentId("gain");
+        bwParameterId = lookupChildElementComponentId("bandwidth");
     }
 
     @Override
     public JTComponent createComponent(JTContext context) throws JTException
     {
         JTComponent component = context.createComponentInstance(JTEqMidDisplay.class);
+        applyName(component);
         applyLocation(component);
         applySize(component);
         return component;
     }
 
-    protected void link(JTContext context, JTComponent component, Module module)
+    protected void link(JTContext context, JTComponent component, PModule module)
       throws JTException
     {
-        Parameter freq = parameterDescriptorHelper.lookup(module);
-        Parameter gain = gainGainParameterHelper.lookup(module);
-        Parameter bw = bwParameterHelper.lookup(module);
+        PParameter freq = module.getParameterByComponentId(parameterId);
+        PParameter gain = module.getParameterByComponentId(gainGainParameterId);
+        PParameter bw = module.getParameterByComponentId(bwParameterId);
         
         JTEqMidDisplay disp = (JTEqMidDisplay) component;
         
@@ -81,7 +81,7 @@ public class EqMidDisplayStore extends ControlStore
             disp.setBWAdapter(new JTParameterControlAdapter(bw));
     }
     
-    protected void link2(JTContext context, JTComponent component, Module module, Parameter parameter)
+    protected void link2(JTContext context, JTComponent component, PModule module, PParameter parameter)
     {
         throw new UnsupportedOperationException();
     }

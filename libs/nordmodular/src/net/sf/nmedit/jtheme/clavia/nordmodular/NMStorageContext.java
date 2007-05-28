@@ -34,6 +34,7 @@ import net.sf.nmedit.jtheme.clavia.nordmodular.store.NoteSeqEditorStore;
 import net.sf.nmedit.jtheme.clavia.nordmodular.store.NoteVelScaleDisplayStore;
 import net.sf.nmedit.jtheme.clavia.nordmodular.store.PhaserDisplayStore;
 import net.sf.nmedit.jtheme.clavia.nordmodular.store.ResetButtonStore;
+import net.sf.nmedit.jtheme.clavia.nordmodular.store.VocoderDisplayStore;
 import net.sf.nmedit.jtheme.clavia.nordmodular.store.WaveWrapDisplayStore;
 import net.sf.nmedit.jtheme.store.DefaultStorageContext;
 
@@ -65,5 +66,6 @@ public class NMStorageContext extends DefaultStorageContext
         installStore("note-seq-editor", NoteSeqEditorStore.class);
         installStore("compressor-display", CompressorDisplayStore.class); 
         installStore("multi-env-display", MultiEnvDisplayStore.class);
+        installStore("vocoder-display", VocoderDisplayStore.class);
     }
 }

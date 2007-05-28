@@ -26,7 +26,7 @@ import java.awt.RenderingHints;
 
 import javax.swing.JComponent;
 
-import net.sf.nmedit.jpatch.Signal;
+import net.sf.nmedit.jpatch.PSignalType;
 import net.sf.nmedit.jtheme.component.JTConnector;
 import net.sf.nmedit.jtheme.component.plaf.JTBasicConnectorUI;
 import net.sf.nmedit.nmutils.graphics.RoundGradientPaint;
@@ -61,7 +61,7 @@ public class JTNM1ConnectorUI extends JTBasicConnectorUI
         return holeGradient;
     }
     
-    protected void paintConnector(Graphics2D g, JTConnector c, Signal signal, 
+    protected void paintConnector(Graphics2D g, JTConnector c, PSignalType signal, 
             boolean output, 
             boolean connected, boolean focused)
     {

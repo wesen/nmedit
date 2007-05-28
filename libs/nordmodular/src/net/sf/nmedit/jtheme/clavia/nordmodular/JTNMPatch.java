@@ -36,13 +36,15 @@ import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 
-import net.sf.nmedit.jpatch.Connection;
-import net.sf.nmedit.jpatch.Connector;
-import net.sf.nmedit.jpatch.Module;
-import net.sf.nmedit.jpatch.Signal;
-import net.sf.nmedit.jpatch.clavia.nordmodular.NMConnector;
+import net.sf.nmedit.jpatch.PConnection;
+import net.sf.nmedit.jpatch.PConnector;
+import net.sf.nmedit.jpatch.PConnectorDescriptor;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PSignalType;
+import net.sf.nmedit.jpatch.PSignalTypes;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
 import net.sf.nmedit.jpatch.event.ConnectionEvent;
@@ -55,22 +57,19 @@ import net.sf.nmedit.jtheme.component.JTConnector;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.JTPatch;
-import net.sf.nmedit.jtheme.store.DefaultStorageContext;
 import net.sf.nmedit.jtheme.store.ModuleStore;
 
 public class JTNMPatch extends JTPatch
 {
 
-    private DefaultStorageContext storage;
     private JTPatchSettingsBar settings;
     private NMPatch patch;
     private ModuleContainerEventHandler ehPoly;
     private ModuleContainerEventHandler ehCommon;
 
-    public JTNMPatch(DefaultStorageContext dsc, JTContext context, NMPatch patch) throws Exception
+    public JTNMPatch(JTNM1Context context, NMPatch patch) throws Exception
     {
         super(context);
-        this.storage = dsc;
         this.patch = patch;
         JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         split.setOneTouchExpandable(true);
@@ -209,8 +208,8 @@ public class JTNMPatch extends JTPatch
         
         private static void removeModule(JTModule m)
         {
-            Module nm = m.getModule();
-            nm.getParent().remove(nm);
+            PModule nm = m.getModule();
+            nm.getParentComponent().remove(nm);
         }
         
     }
@@ -228,49 +227,59 @@ public class JTNMPatch extends JTPatch
         public static final String DELETE = "Delete";
         
         private JTConnector connector;
+        private PSignalType signalType;
         
         public static JPopupMenu createPopup(JTConnector connector)
         {
             JPopupMenu popup = new JPopupMenu();
-            popup.add(new ConnectorAction(DISCONNECT, connector));
-            popup.add(new ConnectorAction(BREAK, connector));
+            popup.add(new ConnectorAction(DISCONNECT, connector, null));
+            popup.add(new ConnectorAction(BREAK, connector, null));
             popup.addSeparator();
+            
+            PSignalTypes signalTypes = getSignalTypes(connector);
             
             JMenu colorItem = new JMenu("Color");
             
             popup.add(colorItem);
-            colorItem.add(new ConnectorAction(CAUDIO, connector));
-            colorItem.add(new ConnectorAction(CCTRL, connector));
-            colorItem.add(new ConnectorAction(CLOGIC, connector));
-            colorItem.add(new ConnectorAction(CSLAVE, connector));
-            colorItem.add(new ConnectorAction(CU1, connector));
-            colorItem.add(new ConnectorAction(CU2, connector));
             
+            for (PSignalType s: signalTypes)
+            {
+                colorItem.add(new ConnectorAction(s.getName(), connector, s));
+            }
             popup.addSeparator();
-            popup.add(new ConnectorAction(DELETE, connector));
+            popup.add(new ConnectorAction(DELETE, connector, null));
             return popup;
         }
+
+        protected static PSignalTypes getSignalTypes(JTConnector conui)
+        {
+            PConnectorDescriptor d = conui.getConnectorDescriptor();
+            if (d == null && conui.getConnector() != null)
+                d = conui.getConnector().getDescriptor();
+            if (d == null) return null;
+            return d.getParentDescriptor().getModules().getDefinedSignals();
+        }
         
-        public ConnectorAction(String action, JTConnector connector)
+        public ConnectorAction(String action, JTConnector connector, PSignalType s)
         {
             this.connector = connector;
             putValue(ACTION_COMMAND_KEY, action);
 
             putValue(NAME, action);
-            
+            this.signalType = s;
             if (action == DISCONNECT)
             {
                 setEnabled(connector.isConnected());
             }
             else 
             {
-                net.sf.nmedit.jpatch.clavia.nordmodular.Signal s = toSignal(action);
                 if (s == null)
                 {
                     setEnabled(false);
                 }
                 else
                 {
+                    putValue(NAME, s.getName());
                     putValue(SMALL_ICON, renderIcon(s.getColor()));
                 }
             }
@@ -294,8 +303,8 @@ public class JTNMPatch extends JTPatch
             }
             return new ImageIcon(bi);
         }
-
-        private net.sf.nmedit.jpatch.clavia.nordmodular.Signal toSignal(String name)
+/*
+        private PSignalType toSignal(String name)
         {
             if (name == CAUDIO) return net.sf.nmedit.jpatch.clavia.nordmodular.Signal.AUDIO;
             else if (name == CCTRL) return net.sf.nmedit.jpatch.clavia.nordmodular.Signal.CONTROL;
@@ -304,7 +313,7 @@ public class JTNMPatch extends JTPatch
             else if (name == CU1) return net.sf.nmedit.jpatch.clavia.nordmodular.Signal.USER1;
             else if (name == CU2) return net.sf.nmedit.jpatch.clavia.nordmodular.Signal.USER2;
             else return null;
-        }
+        }*/
 
         public void actionPerformed(ActionEvent e)
         {
@@ -322,32 +331,31 @@ public class JTNMPatch extends JTPatch
                 deleteCables();
             else 
             {
-                net.sf.nmedit.jpatch.clavia.nordmodular.Signal s = toSignal(command);
-                if (s != null)
-                    setColor(s);
+                if (signalType != null) setColor(signalType);
             }
         }
 
-        private void setColor(net.sf.nmedit.jpatch.clavia.nordmodular.Signal signal)
+        private void setColor(PSignalType signal)
         {
             if (connector == null) return;
-            NMConnector c = (NMConnector) connector.getConnector();
+            PConnector c = connector.getConnector();
             if (c == null) return;
-            c.setConnectionColor(signal);
+            
+            // c.setConnectionColor(signal);
         }
         
         private void deleteCables()
         {
             if (connector == null) return;
-            Connector c = connector.getConnector();
+            PConnector c = connector.getConnector();
             if (c != null) c.disconnect();
         }
 
         private void breakCables()
         {
             if (connector == null) return;
-            Connector c = connector.getConnector();
-            if (c != null) ((NMConnector)c).breakConnection();
+            PConnector c = connector.getConnector();
+            if (c != null) c.breakConnection();
         }
 
         private void disconnectCables()
@@ -495,7 +503,7 @@ public class JTNMPatch extends JTPatch
             
             Cable cable = cont.getCableManager().createCable(src, dst);
             
-            Signal signal = e.getSource().getSignal();
+            PSignalType signal = e.getSource().getSignalType();
             if (signal != null)
             {
                 cable.setColor(signal.getColor());
@@ -519,12 +527,12 @@ public class JTNMPatch extends JTPatch
             }
         }
         
-        private boolean compareEq(Connector a1, Connector b1, Connector a2, Connector b2)
+        private boolean compareEq(PConnector a1, PConnector b1, PConnector a2, PConnector b2)
         {
             return (a1==a2&&b1==b2)||(a1==b2&&b1==a2);
         }
         
-        private static JTConnector findConnector(JTModuleContainer cont, Connector c)
+        private static JTConnector findConnector(JTModuleContainer cont, PConnector c)
         {
             for (Component component: cont.getComponents())
             {
@@ -538,7 +546,7 @@ public class JTNMPatch extends JTPatch
             return null;
         }
 
-        private static JTConnector findConnector(JTModule module, Connector c)
+        private static JTConnector findConnector(JTModule module, PConnector c)
         {
             for (Component component: module.getComponents())
             {
@@ -570,6 +578,8 @@ public class JTNMPatch extends JTPatch
         
         JScrollPane scrollPane = new JScrollPane(cont);
         
+        scrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+        
         // scrollPane.setAutoscrolls(true);
         scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         scrollPane.getHorizontalScrollBar().setUnitIncrement(10);
@@ -584,14 +594,15 @@ public class JTNMPatch extends JTPatch
         int width = 0;
         int height = 0;
         
-        for (Module module : va)
+        for (PModule module : va)
         {
+            ModuleStore mstore = getContext().getStorageContext()
+            .getModuleStoreById(module.getComponentId());
             
+            if (mstore == null)
+                throw new RuntimeException("no store found for "+module);
             
-            ModuleStore mstore =
-            storage.getModuleStoreById(""+module.getDescriptor().getIndex());
-            
-            //Image image = mstore.getStaticLayer();
+           // Image image = mstore.getStaticLayer();
             mstore.setStaticLayer(null);
             
             JTModule jtmodule =
@@ -618,23 +629,23 @@ public class JTNMPatch extends JTPatch
         
         JTCableManager cm = cont.getCableManager();
         
-        for (Connection c: va.getConnectionManager())
+        for (PConnection c: va.getConnectionManager())
         {
-            JTConnector con1 = find(cont, c.getSource());
-            JTConnector con2 = find(cont, c.getDestination());
+            JTConnector con1 = find(cont, c.getA());
+            JTConnector con2 = find(cont, c.getB());
             
             if (con1 != null && con2 != null)
             { 
                 Cable cable = cm.createCable(con1, con2);
-                cable.setColor(c.getSource().getSignal().getColor());
+                cable.setColor(c.getA().getSignalType().getColor());
                 cm.add(cable);
             }
         }
     }
 
-    private JTConnector find(JTModuleContainer cont, Connector c)
+    private JTConnector find(JTModuleContainer cont, PConnector c)
     {
-        Module m = c.getOwner();
+        PModule m = c.getParentComponent();
         for (int i=cont.getComponentCount()-1;i>=0;i--)
         {
             Component cc = cont.getComponent(i);

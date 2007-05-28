@@ -18,8 +18,8 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.formatter;
 
-import net.sf.nmedit.jpatch.Parameter;
-import net.sf.nmedit.jpatch.spec.formatter.Formatter;
+import net.sf.nmedit.jpatch.formatter.Formatter;
+import net.sf.nmedit.jpatch.PParameter;
 
 /**
  * @author Christian Schneider
@@ -33,7 +33,7 @@ public class Note  implements Formatter
 	private final static String[] SHARPS = 
 		new String[] {" ","#"," ","#"," "," ","#"," ","#"," ","#"," "};
 
-    public String getString( Parameter parameter, int value )
+    public String getString( PParameter parameter, int value )
     {
         int v12 = value % 12;
         return NOTES[v12]+((value/12) -1)+SHARPS[v12];
