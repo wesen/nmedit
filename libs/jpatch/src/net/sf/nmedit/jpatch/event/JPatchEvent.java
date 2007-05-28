@@ -26,6 +26,13 @@ import java.awt.Event;
 
 public class JPatchEvent extends Event
 {
+    public static final int VALUE_CHANGED = 0;
+    public static final int MODULE_ADDED = 1;
+    public static final int MODULE_REMOVED = 2;
+    public static final int MODULE_MOVED = 100;
+    public static final int MODULE_RENAMED = 101;
+    
+
 
     protected JPatchEvent( Object target, long when, int id, int x, int y, int key,
             int modifiers, Object arg )

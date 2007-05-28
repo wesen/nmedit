@@ -16,48 +16,23 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-/*
- * Created on Dec 2, 2006
- */
 package net.sf.nmedit.jpatch;
 
-/** 
- * An exception that indicates that a descriptor was invalid (or incompatible).
- */
-public class InvalidDescriptorException extends JPRuntimeException
+
+public class InvalidDescriptorException extends PRuntimeException
 {
 
-    private Descriptor descriptor = null;
+    private PDescriptor descriptor;
     
-    public InvalidDescriptorException(Descriptor descriptor)
+    public InvalidDescriptorException(PDescriptor descriptor, String message)
     {
-        super("invalid descriptor "+descriptor);
+        super(message);
+        this.descriptor = descriptor;
     }
     
-    public Descriptor getDescriptor()
+    public PDescriptor getInvalidDescriptor()
     {
         return descriptor;
     }
-
-    public InvalidDescriptorException()
-    {
-        super();
-    }
-
-    public InvalidDescriptorException( String message )
-    {
-        super( message );
-    }
-
-    public InvalidDescriptorException( String message, Throwable cause )
-    {
-        super( message, cause );
-    }
-
-    public InvalidDescriptorException( Throwable cause )
-    {
-        super( cause );
-    }
-
+    
 }

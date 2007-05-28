@@ -22,14 +22,14 @@
  */
 package net.sf.nmedit.jpatch.event;
 
-import net.sf.nmedit.jpatch.Module;
-import net.sf.nmedit.jpatch.ModuleContainer;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleContainer;
 
 public class ModuleContainerEvent extends JPatchEvent
 {
 
-    private ModuleContainer container;
-    private Module module;
+    private PModuleContainer container;
+    private PModule module;
 
     protected ModuleContainerEvent( Object target, long when, int id, int x, int y, int key,
             int modifiers, Object arg )
@@ -48,23 +48,35 @@ public class ModuleContainerEvent extends JPatchEvent
         super( target, id, arg );
     }
     
-    public ModuleContainerEvent(ModuleContainer container)
+    public ModuleContainerEvent(PModuleContainer container)
     {
-        this(null, 0, null);
+        this(null, -1, null);
         this.container = container;
     }
 
-    public ModuleContainer getContainer()
+    public void moduleAdded(PModule module)
+    {
+        this.id = MODULE_ADDED;
+        setModule(module);
+    }
+
+    public void moduleRemoved(PModule module)
+    {
+        this.id = MODULE_REMOVED;
+        setModule(module);
+    }
+    
+    public PModuleContainer getContainer()
     {
         return container;
     }
 
-    public void setModule( Module module )
+    public void setModule( PModule module )
     {
         this.module = module;
     }
     
-    public Module getModule()
+    public PModule getModule()
     {
         return module;
     }

@@ -18,40 +18,26 @@
  */
 package net.sf.nmedit.jpatch;
 
-import java.awt.Point;
-import java.util.Collection;
-
-public interface MoveOperation extends Iterable<PModule>
+public class PException extends Exception
 {
 
-    boolean add(PModule module);
-    
-    boolean remove(Object o);
-    
-    int size();
-    
-    boolean isEmpty();
-    
-    boolean contains(Object o);
-    
-    PModule[] toArray();
-   
-    Collection<? extends PModule> toCollection();
-    
-    void addAll(Collection<? extends PModule> modules);
-    
-    <T extends PModule> void addAll(T[] modules);
+    public PException()
+    {
+    }
 
-    void setScreenOffset(Point offset);
+    public PException(String message)
+    {
+        super(message);
+    }
 
-    void setScreenOffset(int x, int y);
-    
-    Point getScreenOffset();
-    
-    Point getScreenOffset(Point dst);
-    
-    void move();
-    
-    Collection<? extends PModule> getMovedModules();
-    
+    public PException(Throwable cause)
+    {
+        super(cause);
+    }
+
+    public PException(String message, Throwable cause)
+    {
+        super(message, cause);
+    }
+
 }

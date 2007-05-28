@@ -26,16 +26,16 @@ import java.util.LinkedList;
 public abstract class AbstractMoveOperation implements MoveOperation
 {
 
-    protected LinkedList<Module> modules = new LinkedList<Module>();
+    protected LinkedList<PModule> modules = new LinkedList<PModule>();
     
-    public boolean add(Module module)
+    public boolean add(PModule module)
     {
         if (modules.contains(module))
             return false;
         return modules.add(module);
     }
 
-    public void addAll(Collection<? extends Module> modules)
+    public void addAll(Collection<? extends PModule> modules)
     {
         this.modules.addAll(modules);
     }
@@ -45,9 +45,9 @@ public abstract class AbstractMoveOperation implements MoveOperation
         return modules.size();
     }
 
-    public <T extends Module> void addAll(T[] modules)
+    public <T extends PModule> void addAll(T[] modules)
     {
-        for (Module m: modules)
+        for (PModule m: modules)
             add(m);
     }
     
@@ -73,19 +73,19 @@ public abstract class AbstractMoveOperation implements MoveOperation
         return modules.contains(o);
     }
 
-    public Module[] toArray()
+    public PModule[] toArray()
     {
-        return modules.toArray(new Module[modules.size()]);
+        return modules.toArray(new PModule[modules.size()]);
     }
 
-    public Iterator<Module> iterator()
+    public Iterator<PModule> iterator()
     {
         return modules.iterator();
     }
     
-    public Collection<? extends Module> toCollection()
+    public Collection<? extends PModule> toCollection()
     {
-        return (Collection<Module>) modules.clone();
+        return (Collection<PModule>) modules.clone();
     }
     
     public Point getScreenOffset()

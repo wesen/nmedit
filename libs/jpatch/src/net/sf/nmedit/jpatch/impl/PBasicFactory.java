@@ -16,42 +16,27 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.nmedit.jpatch;
+package net.sf.nmedit.jpatch.impl;
 
-import java.awt.Point;
-import java.util.Collection;
+import net.sf.nmedit.jpatch.PFactory;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
 
-public interface MoveOperation extends Iterable<PModule>
+public class PBasicFactory implements PFactory
 {
+    
+    private static final PBasicFactory instance = new PBasicFactory();
+    
+    public static PBasicFactory getSharedInstance()
+    {
+        return instance;
+    }
 
-    boolean add(PModule module);
-    
-    boolean remove(Object o);
-    
-    int size();
-    
-    boolean isEmpty();
-    
-    boolean contains(Object o);
-    
-    PModule[] toArray();
-   
-    Collection<? extends PModule> toCollection();
-    
-    void addAll(Collection<? extends PModule> modules);
-    
-    <T extends PModule> void addAll(T[] modules);
+    public PModule createModule(PModuleDescriptor descriptor)
+    {
+        if (descriptor.isInstanciable())
+            return new PBasicModule(descriptor);
+        else throw new IllegalArgumentException("module is not instanciable: "+descriptor);
+    }
 
-    void setScreenOffset(Point offset);
-
-    void setScreenOffset(int x, int y);
-    
-    Point getScreenOffset();
-    
-    Point getScreenOffset(Point dst);
-    
-    void move();
-    
-    Collection<? extends PModule> getMovedModules();
-    
 }

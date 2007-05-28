@@ -22,12 +22,12 @@
  */
 package net.sf.nmedit.jpatch.event;
 
-import net.sf.nmedit.jpatch.Connector;
+import net.sf.nmedit.jpatch.PConnector;
 
 public class ConnectorStateEvent extends JPatchEvent
 {
 
-    private Connector c;
+    private PConnector c;
 
     protected ConnectorStateEvent(  Object target, long when, int id, int x, int y, int key,
             int modifiers, Object arg )
@@ -46,12 +46,12 @@ public class ConnectorStateEvent extends JPatchEvent
         super( target, id, arg );
     }
     
-    public ConnectorStateEvent(Connector c)
+    public ConnectorStateEvent(PConnector c)
     {
         this(c, 0, null);
     }
     
-    public Connector getConnector()
+    public PConnector getConnector()
     {
         return c;
     }

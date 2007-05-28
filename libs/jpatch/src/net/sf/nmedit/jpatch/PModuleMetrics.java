@@ -18,40 +18,27 @@
  */
 package net.sf.nmedit.jpatch;
 
-import java.awt.Point;
-import java.util.Collection;
-
-public interface MoveOperation extends Iterable<PModule>
+public interface PModuleMetrics
 {
 
-    boolean add(PModule module);
-    
-    boolean remove(Object o);
-    
-    int size();
-    
-    boolean isEmpty();
-    
-    boolean contains(Object o);
-    
-    PModule[] toArray();
-   
-    Collection<? extends PModule> toCollection();
-    
-    void addAll(Collection<? extends PModule> modules);
-    
-    <T extends PModule> void addAll(T[] modules);
+    int getScreenHeight(PModuleDescriptor module);
+    int getScreenHeight(PModule module);
+    int getScreenWidth(PModuleDescriptor module);
+    int getScreenWidth(PModule module);
 
-    void setScreenOffset(Point offset);
+    int getInternalHeight(PModuleDescriptor module);
+    int getInternalHeight(PModule module);
+    int getInternalWidth(PModuleDescriptor module);
+    int getInternalWidth(PModule module);
 
-    void setScreenOffset(int x, int y);
-    
-    Point getScreenOffset();
-    
-    Point getScreenOffset(Point dst);
-    
-    void move();
-    
-    Collection<? extends PModule> getMovedModules();
+    int internalToScreenX(int x);
+    int internalToScreenY(int y);
+    int screenToInternalX(int x);
+    int screenToInternalY(int y);
+
+    int getMaxScreenX();
+    int getMaxScreenY();
+    int getMaxInternalX();
+    int getMaxInternalY();
     
 }

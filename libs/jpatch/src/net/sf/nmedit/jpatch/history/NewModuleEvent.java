@@ -18,44 +18,40 @@
  */
 package net.sf.nmedit.jpatch.history;
 
-import net.sf.nmedit.jpatch.Module;
-import net.sf.nmedit.jpatch.ModuleContainer;
-import net.sf.nmedit.jpatch.ModuleDescriptor;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleContainer;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
+import net.sf.nmedit.jpatch.PatchUtils;
 
 public class NewModuleEvent implements Event
 {
 
-    private ModuleDescriptor descriptor;
-    private ModuleContainer container;
+    private PModuleDescriptor descriptor;
+    private PModuleContainer container;
     private int x;
     private int y;
-    private int uniqueId;
+    private int moduleIndex;
     private int[] parameters;
     private String title;
 
-    public NewModuleEvent(Module m)
+    public NewModuleEvent(PModule m)
     {
-        this.container = m.getParent();
+        this.container = m.getParentComponent();
         this.descriptor = m.getDescriptor();
         this.x = m.getScreenX();
         this.y = m.getScreenY();
-        this.uniqueId = m.getUniqueId();
+        this.moduleIndex = m.getComponentIndex();
         this.title = m.getTitle();
-        
-        parameters = new int[descriptor.getParameterCount()];
-        for (int i=descriptor.getParameterCount()-1;i>=0;i--)
-            parameters[i] = m.getParameter(descriptor.getParameterDescriptor(i)).getValue();
+        parameters = PatchUtils.getParameterValues(m);
     }
     
     public void newModule()
     {
-        Module m = container.createModule(descriptor);
+        PModule m = container.createModule(descriptor);
         m.setTitle(title);
-        m.setUniqueId(uniqueId);        
         m.setScreenLocation(x, y);
-        for (int i=descriptor.getParameterCount()-1;i>=0;i--)
-            m.getParameter(descriptor.getParameterDescriptor(i)).setValue(parameters[i]);
-        container.add(m);
+        PatchUtils.setParameterValues(m, parameters);
+        container.add(moduleIndex, m);
     }
 
     public String getTitle()

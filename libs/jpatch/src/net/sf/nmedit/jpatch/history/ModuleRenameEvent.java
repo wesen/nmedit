@@ -18,26 +18,26 @@
  */
 package net.sf.nmedit.jpatch.history;
 
-import net.sf.nmedit.jpatch.Module;
-import net.sf.nmedit.jpatch.ModuleContainer;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleContainer;
 
 public class ModuleRenameEvent implements Event
 {
 
     private String title;
-    private int moduleId;
-    private ModuleContainer container;
+    private int moduleIndex;
+    private PModuleContainer container;
 
-    public ModuleRenameEvent(Module m, String title)
+    public ModuleRenameEvent(PModule m, String title)
     {
-        this.container = m.getParent();
-        this.moduleId = m.getUniqueId();
+        this.container = m.getParentComponent();
+        this.moduleIndex = m.getComponentIndex();
         this.title = title;
     }
     
     public void renameModule()
     {
-        Utils.getModuleById(container, moduleId).setTitle(title);
+        container.getModule(moduleIndex).setTitle(title);
     }
 
     public String getTitle()

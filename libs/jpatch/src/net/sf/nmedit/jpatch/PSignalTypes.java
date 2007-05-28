@@ -18,40 +18,19 @@
  */
 package net.sf.nmedit.jpatch;
 
-import java.awt.Point;
-import java.util.Collection;
-
-public interface MoveOperation extends Iterable<PModule>
+public interface PSignalTypes extends Iterable<PSignalType>
 {
 
-    boolean add(PModule module);
+    int getSignalTypeCount();
     
-    boolean remove(Object o);
+    PSignalType getSignalType(int index);
     
-    int size();
+    PSignalType getSignalTypeById(int id);
     
-    boolean isEmpty();
+    PSignalType getSignalTypeByName(String name);
     
-    boolean contains(Object o);
+    PSignalType noSignal();
     
-    PModule[] toArray();
-   
-    Collection<? extends PModule> toCollection();
-    
-    void addAll(Collection<? extends PModule> modules);
-    
-    <T extends PModule> void addAll(T[] modules);
+    boolean contains(PSignalType signalType);
 
-    void setScreenOffset(Point offset);
-
-    void setScreenOffset(int x, int y);
-    
-    Point getScreenOffset();
-    
-    Point getScreenOffset(Point dst);
-    
-    void move();
-    
-    Collection<? extends PModule> getMovedModules();
-    
 }

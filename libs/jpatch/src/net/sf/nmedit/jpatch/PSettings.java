@@ -18,40 +18,13 @@
  */
 package net.sf.nmedit.jpatch;
 
-import java.awt.Point;
-import java.util.Collection;
-
-public interface MoveOperation extends Iterable<PModule>
+/**
+ * TODO define interface
+ * @author Christian Schneider
+ */
+public interface PSettings 
 {
 
-    boolean add(PModule module);
-    
-    boolean remove(Object o);
-    
-    int size();
-    
-    boolean isEmpty();
-    
-    boolean contains(Object o);
-    
-    PModule[] toArray();
-   
-    Collection<? extends PModule> toCollection();
-    
-    void addAll(Collection<? extends PModule> modules);
-    
-    <T extends PModule> void addAll(T[] modules);
-
-    void setScreenOffset(Point offset);
-
-    void setScreenOffset(int x, int y);
-    
-    Point getScreenOffset();
-    
-    Point getScreenOffset(Point dst);
-    
-    void move();
-    
-    Collection<? extends PModule> getMovedModules();
+    PPatch getPatch();
     
 }

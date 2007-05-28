@@ -18,24 +18,24 @@
  */
 package net.sf.nmedit.jpatch.history;
 
-import net.sf.nmedit.jpatch.Module;
-import net.sf.nmedit.jpatch.ModuleContainer;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleContainer;
 
 public class ModuleDeleteEvent implements Event
 {
 
-    private ModuleContainer container;
-    private int moduleId;
+    private PModuleContainer container;
+    private int moduleIndex;
 
-    public ModuleDeleteEvent(Module m)
+    public ModuleDeleteEvent(PModule m)
     {
-        this.container = m.getParent();
-        this.moduleId = m.getUniqueId();
+        this.container = m.getParentComponent();
+        this.moduleIndex = m.getComponentIndex();
     }
     
     public void deleteModule()
     { 
-        container.remove(Utils.getModuleById(container, moduleId));
+        container.remove(container.getModule(moduleIndex));
     }
 
     public String getTitle()

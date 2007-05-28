@@ -18,40 +18,22 @@
  */
 package net.sf.nmedit.jpatch;
 
-import java.awt.Point;
-import java.util.Collection;
-
-public interface MoveOperation extends Iterable<PModule>
+/**
+ * Describes a connector.
+ * 
+ * @author Christian Schneider
+ */
+public interface PConnectorDescriptor extends PComponentDescriptor
 {
 
-    boolean add(PModule module);
+    /**
+     * Returns true if this connector is an output, false if it is an input
+     * @return true if this connector is an output, false if it is an input.
+     */
+    boolean isOutput();
     
-    boolean remove(Object o);
+    PSignalType getDefaultSignalType();
     
-    int size();
-    
-    boolean isEmpty();
-    
-    boolean contains(Object o);
-    
-    PModule[] toArray();
-   
-    Collection<? extends PModule> toCollection();
-    
-    void addAll(Collection<? extends PModule> modules);
-    
-    <T extends PModule> void addAll(T[] modules);
-
-    void setScreenOffset(Point offset);
-
-    void setScreenOffset(int x, int y);
-    
-    Point getScreenOffset();
-    
-    Point getScreenOffset(Point dst);
-    
-    void move();
-    
-    Collection<? extends PModule> getMovedModules();
+    PModuleDescriptor getParentDescriptor();
     
 }

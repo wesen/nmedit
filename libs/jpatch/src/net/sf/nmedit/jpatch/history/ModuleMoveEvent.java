@@ -18,28 +18,28 @@
  */
 package net.sf.nmedit.jpatch.history;
 
-import net.sf.nmedit.jpatch.Module;
-import net.sf.nmedit.jpatch.ModuleContainer;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleContainer;
 
 public class ModuleMoveEvent implements Event
 {
 
     private int x;
     private int y;
-    private int moduleId;
-    private ModuleContainer container;
+    private int moduleIndex;
+    private PModuleContainer container;
 
-    public ModuleMoveEvent(Module m, int x, int y)
+    public ModuleMoveEvent(PModule m, int x, int y)
     {
-        this.container = m.getParent();
-        this.moduleId = m.getUniqueId();
+        this.container = m.getParentComponent();
+        this.moduleIndex = m.getComponentIndex();
         this.x = x;
         this.y = y;
     }
     
     public void moveModule()
     {
-        Utils.getModuleById(container, moduleId).setScreenLocation(x, y);
+        container.getModule(moduleIndex).setScreenLocation(x, y);
     }
 
     public String getTitle()

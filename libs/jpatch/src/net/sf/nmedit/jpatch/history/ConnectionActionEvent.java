@@ -18,44 +18,42 @@
  */
 package net.sf.nmedit.jpatch.history;
 
-import net.sf.nmedit.jpatch.Connector;
-import net.sf.nmedit.jpatch.ConnectorDescriptor;
-import net.sf.nmedit.jpatch.ModuleContainer;
+import net.sf.nmedit.jpatch.PConnector;
+import net.sf.nmedit.jpatch.PModuleContainer;
 
 public class ConnectionActionEvent implements Event
 {
-
-    private int moduleIdA ;
-    private int moduleIdB ;
-    private ConnectorDescriptor da;
-    private ConnectorDescriptor db;
-    private ModuleContainer container;
+    private int moduleIndexA ;
+    private int moduleIndexB ;
+    private int connectorIndexA ;
+    private int connectorIndexB ;
+    private PModuleContainer container;
     private boolean create;
 
-    public ConnectionActionEvent(Connector a, Connector b, boolean create)
+    public ConnectionActionEvent(PConnector a, PConnector b, boolean create)
     {
-        moduleIdA = a.getOwner().getUniqueId();
-        moduleIdB = b.getOwner().getUniqueId();
-        container = a.getOwner().getParent();
-        da = a.getDescriptor();
-        db = b.getDescriptor();
+        moduleIndexA = a.getParentComponent().getComponentIndex();
+        moduleIndexB = b.getParentComponent().getComponentIndex();
+        connectorIndexA = a.getComponentIndex();
+        connectorIndexB = b.getComponentIndex();
+        container = a.getParentComponent().getParentComponent();
         this.create = create;
     }
 
-    public void performCreate(ModuleContainer container)
+    public void performCreate(PModuleContainer container)
     {
-        Connector ca = Utils.getModuleById(container, moduleIdA).getConnector(da);
-        Connector cb = Utils.getModuleById(container, moduleIdB).getConnector(db);
-        if (ca.connectWith(cb) == null)
-            throw new IllegalStateException("could not connect connectors: "+ca+", "+cb);
+        PConnector ca = (PConnector)container.getModule(moduleIndexA).getComponent(connectorIndexA);
+        PConnector cb = (PConnector)container.getModule(moduleIndexB).getComponent(connectorIndexB);
+        if(!ca.connect(cb))
+            throw new IllegalStateException("could not connect: "+ca+", "+cb);
     }
 
-    public void performRemove(ModuleContainer container)
+    public void performRemove(PModuleContainer container)
     {
-        Connector ca = Utils.getModuleById(container, moduleIdA).getConnector(da);
-        Connector cb = Utils.getModuleById(container, moduleIdB).getConnector(db);
-        if (!ca.disconnectFrom(cb))
-            throw new IllegalStateException("connectors were not connected: "+ca+", "+cb);
+        PConnector ca = (PConnector)container.getModule(moduleIndexA).getComponent(connectorIndexA);
+        PConnector cb = (PConnector)container.getModule(moduleIndexB).getComponent(connectorIndexB);
+        if (!ca.disconnect(cb))
+            throw new IllegalStateException("could not disconnect: "+ca+", "+cb);
     }
 
     public String getTitle()

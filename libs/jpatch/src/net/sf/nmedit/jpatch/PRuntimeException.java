@@ -18,40 +18,26 @@
  */
 package net.sf.nmedit.jpatch;
 
-import java.awt.Point;
-import java.util.Collection;
-
-public interface MoveOperation extends Iterable<PModule>
+public class PRuntimeException extends RuntimeException
 {
 
-    boolean add(PModule module);
-    
-    boolean remove(Object o);
-    
-    int size();
-    
-    boolean isEmpty();
-    
-    boolean contains(Object o);
-    
-    PModule[] toArray();
-   
-    Collection<? extends PModule> toCollection();
-    
-    void addAll(Collection<? extends PModule> modules);
-    
-    <T extends PModule> void addAll(T[] modules);
+    public PRuntimeException()
+    {
+    }
 
-    void setScreenOffset(Point offset);
+    public PRuntimeException(String message)
+    {
+        super(message);
+    }
 
-    void setScreenOffset(int x, int y);
-    
-    Point getScreenOffset();
-    
-    Point getScreenOffset(Point dst);
-    
-    void move();
-    
-    Collection<? extends PModule> getMovedModules();
-    
+    public PRuntimeException(Throwable cause)
+    {
+        super(cause);
+    }
+
+    public PRuntimeException(String message, Throwable cause)
+    {
+        super(message, cause);
+    }
+
 }

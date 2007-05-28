@@ -24,14 +24,11 @@ package net.sf.nmedit.jpatch.event;
 
 import java.awt.Event;
 
-import net.sf.nmedit.jpatch.Module;
+import net.sf.nmedit.jpatch.PModule;
 
-public class ModuleEvent extends Event
+public class ModuleEvent extends JPatchEvent
 {
 
-    public static final int MODULE_MOVED = 100;
-    public static final int MODULE_RENAMED = 101;
-    
     private String oldName;
 
     protected ModuleEvent( Object target, long when, int id, int x, int y, int key,
@@ -51,7 +48,7 @@ public class ModuleEvent extends Event
         super( target, id, arg );
     }
 
-    public ModuleEvent(Module module)
+    public ModuleEvent(PModule module)
     {
         super(module, 0, null);
     }
@@ -61,9 +58,9 @@ public class ModuleEvent extends Event
         return id;
     }
     
-    public Module getModule()
+    public PModule getModule()
     {
-        return (Module) target;
+        return (PModule) target;
     }
     
     public void moduleRenamed(String oldName)

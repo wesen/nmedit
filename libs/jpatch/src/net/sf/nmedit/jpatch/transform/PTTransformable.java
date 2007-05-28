@@ -16,42 +16,30 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.nmedit.jpatch;
+package net.sf.nmedit.jpatch.transform;
 
-import java.awt.Point;
-import java.util.Collection;
+import net.sf.nmedit.jpatch.PDescriptor;
 
-public interface MoveOperation extends Iterable<PModule>
+public class PTTransformable<D extends PDescriptor>
 {
+    
+    private String name;
+    private D target;
+    
+    public PTTransformable(String name, D target)
+    {
+        this.name = name;
+        this.target = target;
+    }
 
-    boolean add(PModule module);
-    
-    boolean remove(Object o);
-    
-    int size();
-    
-    boolean isEmpty();
-    
-    boolean contains(Object o);
-    
-    PModule[] toArray();
-   
-    Collection<? extends PModule> toCollection();
-    
-    void addAll(Collection<? extends PModule> modules);
-    
-    <T extends PModule> void addAll(T[] modules);
+    public String getName()
+    {
+        return name;
+    }
 
-    void setScreenOffset(Point offset);
+    public D getTarget()
+    {
+        return target;
+    }
 
-    void setScreenOffset(int x, int y);
-    
-    Point getScreenOffset();
-    
-    Point getScreenOffset(Point dst);
-    
-    void move();
-    
-    Collection<? extends PModule> getMovedModules();
-    
 }

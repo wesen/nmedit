@@ -18,40 +18,21 @@
  */
 package net.sf.nmedit.jpatch;
 
-import java.awt.Point;
-import java.util.Collection;
+import java.awt.Color;
 
-public interface MoveOperation extends Iterable<PModule>
+/**
+ * Identifies a specific signal type for example 
+ * an audio signal, a logic signal or a control signal. 
+ */
+public interface PSignalType 
 {
 
-    boolean add(PModule module);
+    String getName();
     
-    boolean remove(Object o);
+    int getId();
     
-    int size();
+    PSignalTypes getSignalTypes();
     
-    boolean isEmpty();
-    
-    boolean contains(Object o);
-    
-    PModule[] toArray();
-   
-    Collection<? extends PModule> toCollection();
-    
-    void addAll(Collection<? extends PModule> modules);
-    
-    <T extends PModule> void addAll(T[] modules);
-
-    void setScreenOffset(Point offset);
-
-    void setScreenOffset(int x, int y);
-    
-    Point getScreenOffset();
-    
-    Point getScreenOffset(Point dst);
-    
-    void move();
-    
-    Collection<? extends PModule> getMovedModules();
+    Color getColor();
     
 }

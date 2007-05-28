@@ -18,40 +18,26 @@
  */
 package net.sf.nmedit.jpatch;
 
-import java.awt.Point;
-import java.util.Collection;
 
-public interface MoveOperation extends Iterable<PModule>
+public interface PModuleDescriptor extends PDescriptor
 {
 
-    boolean add(PModule module);
+    int getConnectorDescriptorCount();
+    PConnectorDescriptor getConnectorDescriptor(int index);
     
-    boolean remove(Object o);
+    int getParameterDescriptorCount();
+    PParameterDescriptor getParameterDescriptor(int index);
     
-    int size();
+    /**
+     * Returns <code>null</code> if not stated otherwise.
+     */
+    PDescriptor getParentDescriptor();
     
-    boolean isEmpty();
+    int getLimit();
     
-    boolean contains(Object o);
+    ModuleDescriptions getModules();
     
-    PModule[] toArray();
-   
-    Collection<? extends PModule> toCollection();
-    
-    void addAll(Collection<? extends PModule> modules);
-    
-    <T extends PModule> void addAll(T[] modules);
-
-    void setScreenOffset(Point offset);
-
-    void setScreenOffset(int x, int y);
-    
-    Point getScreenOffset();
-    
-    Point getScreenOffset(Point dst);
-    
-    void move();
-    
-    Collection<? extends PModule> getMovedModules();
+    String getCategory();
+    boolean isInstanciable();
     
 }

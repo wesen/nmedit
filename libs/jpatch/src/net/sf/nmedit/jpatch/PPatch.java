@@ -18,40 +18,28 @@
  */
 package net.sf.nmedit.jpatch;
 
-import java.awt.Point;
-import java.util.Collection;
+import net.sf.nmedit.jpatch.history.History;
 
-public interface MoveOperation extends Iterable<PModule>
+public interface PPatch
 {
 
-    boolean add(PModule module);
+    PSettings getSettings();
     
-    boolean remove(Object o);
+    int getModuleContainerCount();
+    PModuleContainer getModuleContainer(int index);
     
-    int size();
+    ModuleDescriptions getModuleDescriptions();
     
-    boolean isEmpty();
+  //  PHistory getHistory();
     
-    boolean contains(Object o);
-    
-    PModule[] toArray();
-   
-    Collection<? extends PModule> toCollection();
-    
-    void addAll(Collection<? extends PModule> modules);
-    
-    <T extends PModule> void addAll(T[] modules);
+    PFactory getComponentFactory();
 
-    void setScreenOffset(Point offset);
-
-    void setScreenOffset(int x, int y);
+    String getName();
     
-    Point getScreenOffset();
+    History getHistory();
     
-    Point getScreenOffset(Point dst);
+    PModule createModule(PModuleDescriptor d);
     
-    void move();
-    
-    Collection<? extends PModule> getMovedModules();
+    PModuleMetrics getModuleMetrics();
     
 }

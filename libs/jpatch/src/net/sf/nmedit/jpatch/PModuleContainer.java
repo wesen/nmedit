@@ -18,40 +18,42 @@
  */
 package net.sf.nmedit.jpatch;
 
-import java.awt.Point;
-import java.util.Collection;
+import net.sf.nmedit.jpatch.event.ModuleContainerListener;
 
-public interface MoveOperation extends Iterable<PModule>
+public interface PModuleContainer extends PComponent, Iterable<PModule>
 {
 
+    PConnectionManager getConnectionManager();
+
+    PPatch getPatch();
+    
+    /**
+     * Adds a module to this container.
+     * 
+     * @param module
+     * @return
+     */
     boolean add(PModule module);
     
-    boolean remove(Object o);
+    boolean add(int index, PModule module);
     
-    int size();
+    boolean remove(PModule module);
     
-    boolean isEmpty();
+    int getModuleCount();
     
-    boolean contains(Object o);
+    PModule getModule(int index);
     
-    PModule[] toArray();
-   
-    Collection<? extends PModule> toCollection();
-    
-    void addAll(Collection<? extends PModule> modules);
-    
-    <T extends PModule> void addAll(T[] modules);
+    int indexOf(PModule module);
 
-    void setScreenOffset(Point offset);
+    boolean contains(PModule module);
 
-    void setScreenOffset(int x, int y);
+    void addModuleContainerListener(ModuleContainerListener l);
+    void removeModuleContainerListener(ModuleContainerListener l);
     
-    Point getScreenOffset();
+    PModule createModule(PModuleDescriptor d);
     
-    Point getScreenOffset(Point dst);
-    
-    void move();
-    
-    Collection<? extends PModule> getMovedModules();
+    PModuleMetrics getModuleMetrics();
+
+    MoveOperation createMoveOperation();
     
 }

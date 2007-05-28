@@ -18,29 +18,50 @@
  */
 
 /*
- * Created on Nov 30, 2006
+ * Created on Dec 10, 2006
  */
-package net.sf.nmedit.jpatch.event;
+package net.sf.nmedit.jpatch.formatter;
 
-import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PParameter;
 
-public class ParameterEvent extends JPatchEvent
+public class FormattingInstruction
 {
 
-    public ParameterEvent(PParameter parameter, int id)
+    private FormattingInstructionClass fiClass;
+
+    protected FormattingInstruction(FormattingInstructionClass fiClass)
     {
-        super(parameter, id, null);
-    }
-    
-    public PModule getModule()
-    {
-        return getParameter().getParentComponent();
-    }
-    
-    public PParameter getParameter()
-    {
-        return (PParameter) target;
+        this.fiClass = fiClass;
     }
 
+    public FormattingInstructionClass getFormattingInstructionClass()
+    {
+        return fiClass;
+    }
+    
+    public boolean isString()
+    {
+        return false;
+    }
+    
+    public Object getValue(PParameter parameter, Object value)
+    {
+        return value;
+    }
+    
+    public String toString()
+    {
+        return fiClass.toString();
+    }
+    
+    public boolean isUnionPossible(FormattingInstruction fi)
+    {
+        return false;
+    }
+    
+    public FormattingInstruction computeUnion(FormattingInstruction fi)
+    {
+        throw new IllegalArgumentException("union not possible");
+    }
+    
 }

@@ -16,42 +16,17 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.nmedit.jpatch;
 
-import java.awt.Point;
-import java.util.Collection;
+/*
+ * Created on Nov 30, 2006
+ */
+package net.sf.nmedit.jpatch.event;
 
-public interface MoveOperation extends Iterable<PModule>
+import java.util.EventListener;
+
+public interface PParameterListener extends EventListener
 {
 
-    boolean add(PModule module);
-    
-    boolean remove(Object o);
-    
-    int size();
-    
-    boolean isEmpty();
-    
-    boolean contains(Object o);
-    
-    PModule[] toArray();
-   
-    Collection<? extends PModule> toCollection();
-    
-    void addAll(Collection<? extends PModule> modules);
-    
-    <T extends PModule> void addAll(T[] modules);
-
-    void setScreenOffset(Point offset);
-
-    void setScreenOffset(int x, int y);
-    
-    Point getScreenOffset();
-    
-    Point getScreenOffset(Point dst);
-    
-    void move();
-    
-    Collection<? extends PModule> getMovedModules();
+    void parameterValueChanged(ParameterEvent e);
     
 }

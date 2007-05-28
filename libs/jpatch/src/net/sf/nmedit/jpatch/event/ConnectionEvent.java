@@ -22,15 +22,16 @@
  */
 package net.sf.nmedit.jpatch.event;
 
-import net.sf.nmedit.jpatch.Connection;
-import net.sf.nmedit.jpatch.ConnectionManager;
-import net.sf.nmedit.jpatch.Connector;
+import net.sf.nmedit.jpatch.PConnection;
+import net.sf.nmedit.jpatch.PConnectionManager;
+import net.sf.nmedit.jpatch.PConnector;
 
 public class ConnectionEvent extends JPatchEvent
 {
 
-    private Connector source;
-    private Connector destination;
+    private PConnector source;
+    private PConnector destination;
+    private transient PConnection connection;
 
     protected ConnectionEvent(  Object target, long when, int id, int x, int y, int key,
             int modifiers, Object arg )
@@ -49,34 +50,42 @@ public class ConnectionEvent extends JPatchEvent
         super( target, id, arg );
     }
     
-    public ConnectionEvent(ConnectionManager cm, Connection c)
+    public ConnectionEvent(PConnectionManager cm, PConnection c)
     {
-        this(cm, c.getSource(), c.getDestination());
+        this(cm, c.getA(), c.getB());
+        this.connection = c;
     }
     
-    public ConnectionEvent(ConnectionManager cm, Connector source, Connector destination)
+    public ConnectionEvent(PConnectionManager cm, PConnector source, PConnector destination)
     {
         this(cm, 0, null);
         this.source = source;
         this.destination = destination;
     }
 
-    public ConnectionManager getConnectionManager()
+    public PConnectionManager getConnectionManager()
     {
-        return (ConnectionManager) target;
+        return (PConnectionManager) target;
     }
     
-    public Connector getSource()
+    public PConnection getConnection()
+    {
+        if (connection == null)
+            connection = new PConnection(source, destination);
+        return connection;
+    }
+    
+    public PConnector getSource()
     {
         return source;
     }
     
-    public Connector getDestination()
+    public PConnector getDestination()
     {
         return destination;
     }
 
-    public void setConnectors( Connector source, Connector destination )
+    public void setConnectors( PConnector source, PConnector destination )
     {
         this.source = source;
         this.destination = destination;

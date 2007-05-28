@@ -29,23 +29,23 @@ import net.sf.nmedit.jpatch.event.ModuleContainerListener;
 import net.sf.nmedit.jpatch.event.ModuleEvent;
 import net.sf.nmedit.jpatch.event.ModuleListener;
 import net.sf.nmedit.jpatch.event.ParameterEvent;
-import net.sf.nmedit.jpatch.event.ParameterValueChangeListener;
+import net.sf.nmedit.jpatch.event.PParameterListener;
 
 public class AllEventsListener
-    implements ParameterValueChangeListener,
+    implements PParameterListener,
     ModuleContainerListener, ModuleListener, ConnectionListener
 {
     
     protected boolean listenParameters = false;
     protected boolean listenModules = false;
     protected boolean listenConnections = false;
-    private List<ModuleContainer> containerList = new LinkedList<ModuleContainer>();
+    private List<PModuleContainer> containerList = new LinkedList<PModuleContainer>();
     
     public void dispose()
     {
         if (!containerList.isEmpty())
         {
-            Iterator<ModuleContainer> iter = containerList.iterator();
+            Iterator<PModuleContainer> iter = containerList.iterator();
             while (iter.hasNext())
             {
                 uninstallModuleContainer(iter.next());
@@ -64,7 +64,7 @@ public class AllEventsListener
         return listenModules;
     }
     
-    public void installModuleContainer(ModuleContainer container)
+    public void installModuleContainer(PModuleContainer container)
     {
         if (containerList.contains(container))
             return;
@@ -72,61 +72,59 @@ public class AllEventsListener
         container.addModuleContainerListener(this);
         if (listenConnections)
         {
-            ConnectionManager cm = container.getConnectionManager();
+            PConnectionManager cm = container.getConnectionManager();
             if (cm != null)
                 cm.addConnectionListener(this);
         }
         
         if (listenModules)
-            for (Module m: container)
+            for (PModule m: container)
                 installModule(m);
         if (listenParameters)
-            for (Module m: container)
+            for (PModule m: container)
                 installParameters(m);
     }
     
-    public void uninstallModuleContainer(ModuleContainer container)
+    public void uninstallModuleContainer(PModuleContainer container)
     {
         if (!containerList.contains(container))
             return;
         if (listenParameters)
-            for (Module m: container)
+            for (PModule m: container)
                 uninstallParameters(m);
         if (listenModules)
-            for (Module m: container)
+            for (PModule m: container)
                 uninstallModule(m);
         container.removeModuleContainerListener(this);
         if (listenConnections)
         {
-            ConnectionManager cm = container.getConnectionManager();
+            PConnectionManager cm = container.getConnectionManager();
             if (cm != null)
                 cm.removeConnectionListener(this);
         }
         containerList.remove(container);
     }
     
-    protected void installModule(Module module)
+    protected void installModule(PModule module)
     {
         module.addModuleListener(this);
     }
     
-    protected void uninstallModule(Module module)
+    protected void uninstallModule(PModule module)
     {
         module.removeModuleListener(this);
     }
     
-    protected void installParameters(Module module)
+    protected void installParameters(PModule module)
     {
-        ModuleDescriptor md = module.getDescriptor();
-        for (int i=md.getParameterCount()-1;i>=0;i--)
-            module.getParameter(md.getParameterDescriptor(i)).addParameterValueChangeListener(this);
+        for (int i=module.getParameterCount()-1;i>=0;i--)
+            module.getParameter(i).addParameterListener(this);
     }
     
-    protected void uninstallParameters(Module module)
+    protected void uninstallParameters(PModule module)
     {
-        ModuleDescriptor md = module.getDescriptor();
-        for (int i=md.getParameterCount()-1;i>=0;i--)
-            module.getParameter(md.getParameterDescriptor(i)).removeParameterValueChangeListener(this);
+        for (int i=module.getParameterCount()-1;i>=0;i--)
+            module.getParameter(i).removeParameterListener(this);
     }
 
     public void moduleAdded(ModuleContainerEvent e)
