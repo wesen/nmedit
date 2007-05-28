@@ -33,9 +33,9 @@ public class PBasicParameterDescriptor extends PBasicDescriptor
     public static final Formatter DEFAULT_FORMATTER = new DefaultFormatter();
     
     
-    private int defaultValue;
-    private int minValue;
-    private int maxValue;
+    private int defaultValue = 0;
+    private int minValue = 0;
+    private int maxValue = 127;
     private PModuleDescriptor parent;
     private Formatter formatter = null;
     
