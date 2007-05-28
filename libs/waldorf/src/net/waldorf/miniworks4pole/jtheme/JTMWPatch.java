@@ -29,7 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import net.sf.nmedit.jpatch.spec.ModuleDescriptions;
+import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.component.JTModule;

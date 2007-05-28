@@ -80,144 +80,145 @@
 </defs>
 <body>
 
-<module name="miniworks4Pole" index="0" id="main">
+<module component-id="0" name="miniworks4Pole" index="0" id="main">
 
   <!-- LFO envelope -->
-  <parameter key="16" name="Speed"  index="0">
+  <parameter component-id="0" key="16" name="Speed"  index="0">
     <attribute name="message-id" value="LFOSpeed" />
     <attribute name="controller" type="integer" value="24" />
   </parameter>
-  <parameter key="17" name="Speed Mod. Amount" formatter="offset(-64)" defaultValue="64" index="1">
+  <parameter component-id="1" key="17" name="Speed Mod. Amount" formatter="offset(-64)" defaultValue="64" index="1">
     <attribute name="message-id" value="LFOSpeedModAmount" />
     <attribute name="controller" type="integer" value="26" />
   </parameter>
-  <parameter key="18" name="Shape" maxValue="4" formatter="type('tmLFOShape')"  index="2">
+  <parameter component-id="2" key="18" name="Shape" maxValue="4" formatter="type('tmLFOShape')"  index="2">
     <attribute name="message-id" value="LFOShape" />
     <attribute name="controller" type="integer" value="25" />
   </parameter>
-  <parameter key="19" name="Speed Modulation Source" maxValue="15"  index="3" formatter="type('tmModulationSource')" >
+  <parameter component-id="3" key="19" name="Speed Modulation Source" maxValue="15"  index="3" formatter="type('tmModulationSource')" >
     <attribute name="message-id" value="LFOSpeedModulationSource" />
     <attribute name="controller" type="integer" value="27" />
   </parameter>
   <!-- /LFO -->
       
   <!-- vcf envelope -->
-  <parameter key="6" name="Attack" index="4">
+  <parameter component-id="4" key="6" name="Attack" index="4">
     <attribute name="message-id" value="VCFEnvelopeAttack" />
     <attribute name="controller" type="integer" value="14" />
   </parameter>
-  <parameter key="7" name="Decay"  index="5">
+  <parameter component-id="5" key="7" name="Decay"  index="5">
     <attribute name="message-id" value="VCFEnvelopeDecay" />
     <attribute name="controller" type="integer" value="15" />
   </parameter>
-  <parameter key="8" name="Sustain" defaultValue="127" index="6">
+  <parameter component-id="6" key="8" name="Sustain" defaultValue="127" index="6">
     <attribute name="message-id" value="VCFEnvelopeSustain" />
     <attribute name="controller" type="integer" value="16" />
   </parameter>
-  <parameter key="9" name="Release"  index="7">
+  <parameter component-id="7" key="9" name="Release"  index="7">
     <attribute name="message-id" value="VCFEnvelopeRelease" />
     <attribute name="controller" type="integer" value="17" />
   </parameter>
-  <parameter key="14" name="VCF Envelope Cutoff Amount" defaultValue="64" formatter="offset(-64)"  index="8" >
+  <parameter component-id="8" key="14" name="VCF Envelope Cutoff Amount" defaultValue="64" formatter="offset(-64)"  index="8" >
     <attribute name="message-id" value="VCFEnvlopeCutoffAmount" />
     <attribute name="controller" type="integer" value="22" />
   </parameter>
   <!-- /vcf -->
 
   <!-- vca envelope -->
-  <parameter key="10" name="Attack"  index="9">
+  <parameter component-id="9" key="10" name="Attack"  index="9">
     <attribute name="message-id" value="VCAEnvelopeAttack" />
     <attribute name="controller" type="integer" value="18" />
   </parameter>
-  <parameter key="11" name="Decay"  index="10">
+  <parameter component-id="10" key="11" name="Decay"  index="10">
     <attribute name="message-id" value="VCAEnvelopeDecay" />
     <attribute name="controller" type="integer" value="19" />
   </parameter>
-  <parameter key="12" name="Sustain" defaultValue="127" index="11">
+  <parameter component-id="11" key="12" name="Sustain" defaultValue="127" index="11">
     <attribute name="message-id" value="VCAEnvelopeSustain" />
     <attribute name="controller" type="integer" value="20" />
   </parameter>
-  <parameter key="13" name="Release"  index="12">
+  <parameter component-id="12" key="13" name="Release"  index="12">
     <attribute name="message-id" value="VCAEnvelopeRelease" />
     <attribute name="controller" type="integer" value="21" />
   </parameter>
-  <parameter key="15" name="VCA Envelope Volume Amount" formatter="offset(-64)" defaultValue="64" index="13">
+  <parameter component-id="13" key="15" name="VCA Envelope Volume Amount" formatter="offset(-64)" defaultValue="64" index="13">
     <attribute name="message-id" value="VCAEnvlopeVolumeAmount" />
     <attribute name="controller" type="integer" value="23" />
   </parameter>
   <!-- /vca -->
         
-  <parameter key="20" name="Cutoff Modulation Amount" formatter="offset(-64)"  index="14" defaultValue="64" >
+  <parameter component-id="14" key="20" name="Cutoff Modulation Amount" formatter="offset(-64)"  index="14" defaultValue="64" >
     <attribute name="message-id" value="CutoffModulationAmount" />
     <attribute name="controller" type="integer" value="70" />
   </parameter>
-  <parameter key="21" name="Resonance Modulation Amount" formatter="offset(-64)"  index="15" defaultValue="64" >
+  <parameter component-id="15" key="21" name="Resonance Modulation Amount" formatter="offset(-64)"  index="15" defaultValue="64" >
     <attribute name="message-id" value="ResonanceModulationAmount" />
     <attribute name="controller" type="integer" value="72" />
   </parameter>
-  <parameter key="24" name="Cutoff Modulation Source" maxValue="15" index="16" formatter="type('tmModulationSource')" >
+  <parameter component-id="16" key="24" name="Cutoff Modulation Source" maxValue="15" index="16" formatter="type('tmModulationSource')" >
     <attribute name="message-id" value="CutoffModulationSource" />
     <attribute name="controller" type="integer" value="71" />
   </parameter>
-  <parameter key="25" name="Resonance Modulation Source" maxValue="15" index="17" formatter="type('tmModulationSource')" >
+  <parameter component-id="17" key="25" name="Resonance Modulation Source" maxValue="15" index="17" formatter="type('tmModulationSource')" >
     <attribute name="message-id" value="ResonanceModulationSource" />
     <attribute name="controller" type="integer" value="73" />
   </parameter>
-  <parameter key="28" name="Cutoff"  index="18">
+  <parameter component-id="18" key="28" name="Cutoff"  index="18">
     <attribute name="message-id" value="Cutoff" />
     <attribute name="controller" type="integer" value="78" />
   </parameter>
-  <parameter key="29" name="Resonance"  index="19">
+  <parameter component-id="19" key="29" name="Resonance"  index="19">
     <attribute name="message-id" value="Resonance" />
     <attribute name="controller" type="integer" value="79" />
   </parameter>
 
-  <parameter key="22" name="Volume Modulation Amount" formatter="offset(-64)"  index="20">
+  <parameter component-id="20" key="22" name="Volume Modulation Amount" formatter="offset(-64)"  index="20">
     <attribute name="message-id" value="VolumeModulationAmount" />
     <attribute name="controller" type="integer" value="74" />
   </parameter>
-  <parameter key="26" name="Volume Modulation Source" maxValue="15"  index="21" formatter="type('tmModulationSource')" >
+  <parameter component-id="21" key="26" name="Volume Modulation Source" maxValue="15"  index="21" formatter="type('tmModulationSource')" >
     <attribute name="message-id" value="VolumeModulationSource" />
     <attribute name="controller" type="integer" value="43" />
   </parameter>
-  <parameter key="30" name="Volume" index="22" defaultValue="64">
+  <parameter component-id="22" key="30" name="Volume" index="22" defaultValue="64">
     <attribute name="message-id" value="Volume" />
     <attribute name="controller" type="integer" value="9" />
   </parameter>
 
-  <parameter key="23" name="Panning Modulation Amount" formatter="offset(-64)"  index="23">
+  <parameter component-id="23" key="23" name="Panning Modulation Amount" formatter="offset(-64)"  index="23">
     <attribute name="message-id" value="PanningModulationAmount" />
     <attribute name="controller" type="integer" value="76" />
   </parameter>
-  <parameter key="27" name="Panning Modulation Source" maxValue="15" index="24" formatter="type('tmModulationSource')" >
+  <parameter component-id="24" key="27" name="Panning Modulation Source" maxValue="15" index="24" formatter="type('tmModulationSource')" >
     <attribute name="message-id" value="PanningModulationSource" />
     <attribute name="controller" type="integer" value="45" />
   </parameter>
-  <parameter key="31" name="Panning"  index="25"  formatter="offset(-64)" defaultValue="64"  >
+  <parameter component-id="25" key="31" name="Panning"  index="25"  formatter="offset(-64)" defaultValue="64"  >
     <attribute name="message-id" value="Panning" />
     <attribute name="controller" type="integer" value="10" />
   </parameter>
 
-  <parameter key="32" name="Gate Time" format-id="GateTimeFormatter"  index="26">
+  <parameter component-id="26" key="32" name="Gate Time" format-id="GateTimeFormatter"  index="26">
     <attribute name="message-id" value="GateTime" />
     <attribute name="controller" type="integer" value="80" />
   </parameter>
-  <parameter key="33" name="Trigger Source" maxValue="2" formatter="type('tmTriggerSource')"  index="27">
+  <parameter component-id="27" key="33" name="Trigger Source" maxValue="2" formatter="type('tmTriggerSource')"  index="27">
     <attribute name="message-id" value="TriggerSource" />
     <attribute name="controller" type="integer" value="81" />
   </parameter>
-  <parameter key="34" name="Trigger Mode" maxValue="1" formatter="type('tmTriggerMode')"  index="28">
+  <parameter component-id="28" key="34" name="Trigger Mode" maxValue="1" formatter="type('tmTriggerMode')"  index="28">
     <attribute name="message-id" value="TriggerMode" />
     <attribute name="controller" type="integer" value="82" />
   </parameter>
 
 </module>
 
-<module category="External" name="External" index="1">
+<!--
+<module component-id="1" category="External" name="External" index="1">
   <comment>
 	  Module containing only output connectors.
   </comment>
-  <connector type="output" key="7" name="Signal Env" index="0" />
+  <connector component-id="" type="output" key="7" name="Signal Env" index="0" />
   <connector type="output" key="9" name="Velocity" index="1" />
   <connector type="output" key="10" name="Keytrack" index="2" />
   <connector type="output" key="11" name="Pitch Bend" index="3" />
@@ -227,7 +228,7 @@
   <connector type="output" key="15" name="Foot Ctr." index="7" />
 </module>
 
-<module category="LFO" name="LFO" index="2">
+<module component-id="2" category="LFO" name="LFO" index="2">
   <parameter key="16" name="Speed"  index="0" />
   <parameter key="17" name="Speed Mod. Amount" formatter="offset(-64)" index="1"/>
   <parameter key="18" name="Shape" maxValue="4" formatter="type('tmLFOShape')"  index="2"/>
@@ -249,7 +250,7 @@
   <connector type="output" key="4" name="LFO * VCA Env"  index="4"/>
 </module>
 
-<module category="Envelope" name="VCF Envelope" index="3">
+<module component-id="3" category="Envelope" name="VCF Envelope" index="3">
   <parameter key="6" name="Attack" index="0" />
   <parameter key="7" name="Decay"  index="1"/>
   <parameter key="8" name="Sustain"  index="2"/>
@@ -259,7 +260,7 @@
   <connector type="output" key="5" name="VCF Env"  index="0"/>
 </module>
 
-<module category="Envelope" name="VCA Envelope" index="4">
+<module component-id="4" category="Envelope" name="VCA Envelope" index="4">
   <parameter key="10" name="Attack"  index="0"/>
   <parameter key="11" name="Decay"  index="1"/>	
   <parameter key="12" name="Sustain"  index="2"/>
@@ -270,7 +271,7 @@
   <connector type="output" key="8" name="Vel * VCA Env"  index="1" />
 </module>
 
-<module category="Filter" name="Filter" index="5">
+<module component-id="5" category="Filter" name="Filter" index="5">
   <parameter key="20" name="Cutoff Modulation Amount" formatter="offset(-64)"  index="0"/>
   <parameter key="21" name="Resonance Modulation Amount" formatter="offset(-64)"  index="1"/>
   <parameter key="24" name="Cutoff Modulation Source" maxValue="15" index="2"
@@ -292,7 +293,7 @@
   </connector>
 </module>
 
-<module category="Audio" name="Amp"  index="6">
+<module component-id="6" category="Audio" name="Amp"  index="6">
   <parameter key="22" name="Volume Modulation Amount" formatter="offset(-64)"  index="0"/>
   <parameter key="26" name="Volume Modulation Source" maxValue="15"  index="1" formatter="type('tmModulationSource')" >
     <attribute type="boolean" name="has-replacement" value="yes" />
@@ -313,10 +314,11 @@
   </connector>
 </module>
 
-<module category="Settings" name="Settings"  index="7">
+<module component-id="7" category="Settings" name="Settings"  index="7">
   <parameter key="32" name="Gate Time" format-id="GateTimeFormatter"  index="0"/>
   <parameter key="33" name="Trigger Source" maxValue="2" formatter="type('tmTriggerSource')"  index="1"/>
   <parameter key="34" name="Trigger Mode" maxValue="1" formatter="type('tmTriggerMode')"  index="2"/>
-</module>
+</module> 
+-->
 </body>
 </ModuleDescriptions>

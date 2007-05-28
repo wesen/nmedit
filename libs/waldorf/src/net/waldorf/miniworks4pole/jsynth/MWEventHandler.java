@@ -21,17 +21,16 @@ package net.waldorf.miniworks4pole.jsynth;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.nmedit.jpatch.DefaultModule;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
-import net.sf.nmedit.jpatch.Module;
-import net.sf.nmedit.jpatch.ModuleDescriptor;
-import net.sf.nmedit.jpatch.Parameter;
-import net.sf.nmedit.jpatch.ParameterDescriptor;
-import net.sf.nmedit.jpatch.Patch;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
+import net.sf.nmedit.jpatch.PParameterDescriptor;
+import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.event.ModuleContainerEvent;
 import net.sf.nmedit.jpatch.event.ModuleContainerListener;
 import net.sf.nmedit.jpatch.event.ParameterEvent;
-import net.sf.nmedit.jpatch.event.ParameterValueChangeListener;
+import net.sf.nmedit.jpatch.event.PParameterListener;
+import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpdl.Packet;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.event.SlotEvent;
@@ -43,14 +42,14 @@ import net.waldorf.miniworks4pole.jprotocol.MWMidiListener;
 import net.waldorf.miniworks4pole.jprotocol.MiniworksMidiMessage;
 
 public class MWEventHandler extends MWMidiListener 
-    implements ModuleContainerListener, ParameterValueChangeListener, SlotManagerListener, SlotListener
+    implements ModuleContainerListener, PParameterListener, SlotManagerListener, SlotListener
 {
 
     private Miniworks4Pole synth;
-    private Patch patch = null;
+    private PPatch patch = null;
 
-    private Map<Parameter, Integer> p2c = new HashMap<Parameter, Integer>();
-    private Map<Integer, Parameter> c2p = new HashMap<Integer, Parameter>();
+    private Map<PParameter, Integer> p2c = new HashMap<PParameter, Integer>();
+    private Map<Integer, PParameter> c2p = new HashMap<Integer, PParameter>();
 
 
     public MWEventHandler(Miniworks4Pole synth, MWListenerSupport listenerSupport)
@@ -64,7 +63,7 @@ public class MWEventHandler extends MWMidiListener
             install(synth.getSlot(i));
     }
     
-    public void setPatch(Patch patch)
+    public void setPatch(PPatch patch)
     {
         if (this.patch != patch)
         {
@@ -78,17 +77,17 @@ public class MWEventHandler extends MWMidiListener
         }
     }
 
-    private void install(Patch pch)
+    private void install(PPatch pch)
     {
-        pch.getModuleContainer().addModuleContainerListener(this);
-        for (Module m : pch.getModuleContainer())
+        pch.getModuleContainer(0).addModuleContainerListener(this);
+        for (PModule m : pch.getModuleContainer(0))
             install(m);
     }
 
-    private void uninstall(Patch pch)
+    private void uninstall(PPatch pch)
     {
-        pch.getModuleContainer().removeModuleContainerListener(this);
-        for (Module m : pch.getModuleContainer())
+        pch.getModuleContainer(0).removeModuleContainerListener(this);
+        for (PModule m : pch.getModuleContainer(0))
             uninstall(m);
     }
 
@@ -102,58 +101,36 @@ public class MWEventHandler extends MWMidiListener
         uninstall(e.getModule());
     }
 
-    private void install(Module module)
+    private void install(PModule module)
     {
-        ModuleDescriptor md = module.getDescriptor();
-        
-        for (int i=md.getParameterCount()-1;i>=0;i--)
+        for (int i=module.getParameterCount()-1;i>=0;i--)
         {
-            ParameterDescriptor pd = md.getParameter(i);
-          
-            try
-            {
-                install(module.getParameter(pd));
-            }
-            catch (InvalidDescriptorException e)
-            {
-                // ignore
-            }
+            install(module.getParameter(i));
         }
     }
 
-    private void uninstall(Module module)
+    private void uninstall(PModule module)
     {
-        ModuleDescriptor md = module.getDescriptor();
-        
-        for (int i=md.getParameterCount()-1;i>=0;i--)
+        for (int i=module.getParameterCount()-1;i>=0;i--)
         {
-            ParameterDescriptor pd = md.getParameter(i);
-            
-            try
-            {
-                uninstall(module.getParameter(pd));
-            }
-            catch (InvalidDescriptorException e)
-            {
-                // ignore
-            }
+            uninstall(module.getParameter(i));
         }
     }
 
-    private void install(Parameter parameter)
+    private void install(PParameter parameter)
     { 
-        parameter.addParameterValueChangeListener(this);
+        parameter.addParameterListener(this);
      
-        ParameterDescriptor pd = parameter.getDescriptor();
+        PParameterDescriptor pd = parameter.getDescriptor();
         Integer controller = ((Integer)pd.getAttribute("controller"));
 
         p2c.put(parameter, controller);
         c2p.put(controller, parameter);
     }
 
-    private void uninstall(Parameter parameter)
+    private void uninstall(PParameter parameter)
     {
-        parameter.removeParameterValueChangeListener(this);
+        parameter.removeParameterListener(this);
 
         Integer controller = p2c.get(parameter);
         if (controller != null)
@@ -163,7 +140,7 @@ public class MWEventHandler extends MWMidiListener
 
     public void parameterValueChanged(ParameterEvent e)
     {   
-        Parameter p = e.getParameter();
+        PParameter p = e.getParameter();
         Integer controller = p2c.get(p);
         if (controller == null)
             return;
@@ -178,7 +155,7 @@ public class MWEventHandler extends MWMidiListener
 
     public void parameterMessage(MiniworksMidiMessage message) 
     {
-        Parameter p = c2p.get(message.getController());
+        PParameter p = c2p.get(message.getController());
         if (p == null)
             return;
         
@@ -209,21 +186,13 @@ public class MWEventHandler extends MWMidiListener
         byte[] data = message.getData();
         System.out.println(data);
         
-        DefaultModule module = patch.getMiniworksModule();
+        PModule module = patch.getMiniworksModule();
         for (int i=0;i<module.getParameterCount();i++)
         {
-            ParameterDescriptor pd = module.getDescriptor().getParameter(i); 
-            try
-            {
-                Parameter p = module.getParameter(pd);
-                int value = pack.getVariable((String) pd.getAttribute("message-id"));
-                p.setValue(value);
-                
-            }
-            catch (InvalidDescriptorException e)
-            {
-                // no op
-            }
+            PParameter par = module.getParameter(i); 
+            PParameterDescriptor pd = par.getDescriptor();
+            int value = pack.getVariable((String) pd.getAttribute("message-id"));
+            par.setValue(value);
         }
         
         synth.getSlot(0).setPatch(patch);

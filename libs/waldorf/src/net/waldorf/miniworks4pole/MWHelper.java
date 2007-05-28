@@ -18,9 +18,9 @@
  */
 package net.waldorf.miniworks4pole;
 
-import net.sf.nmedit.jpatch.Parameter;
-import net.sf.nmedit.jpatch.spec.ModuleDescriptions;
-import net.sf.nmedit.jpatch.spec.formatter.Formatter;
+import net.sf.nmedit.jpatch.formatter.Formatter;
+import net.sf.nmedit.jpatch.ModuleDescriptions;
+import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.clavia.nordmodular.NMStorageContext;
 import net.sf.nmedit.jtheme.store.DefaultStorageContext;
 public class MWHelper
@@ -37,7 +37,7 @@ public class MWHelper
     public static class GateTimeFormatter implements Formatter
     {
 
-        public String getString(Parameter parameter, int value)
+        public String getString(PParameter parameter, int value)
         {
             return Integer.toString(value);
         }

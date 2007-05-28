@@ -21,7 +21,7 @@ package net.waldorf.miniworks4pole.jsynth;
 import javax.sound.midi.MidiUnavailableException;
 
 import net.sf.nmedit.jnmprotocol.MidiDriver;
-import net.sf.nmedit.jpatch.spec.ModuleDescriptions;
+import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jsynth.AbstractSynthesizer;
 import net.sf.nmedit.jsynth.Bank;
 import net.sf.nmedit.jsynth.DefaultSlotManager;

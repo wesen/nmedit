@@ -18,34 +18,36 @@
  */
 package net.waldorf.miniworks4pole.jpatch;
 
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.Collection;
 
-import net.sf.nmedit.jpatch.ComponentDescriptor;
-import net.sf.nmedit.jpatch.ConnectionManager;
-import net.sf.nmedit.jpatch.DefaultModule;
+import net.sf.nmedit.jpatch.PConnectionManager;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
-import net.sf.nmedit.jpatch.Module;
-import net.sf.nmedit.jpatch.ModuleContainer;
-import net.sf.nmedit.jpatch.ModuleDescriptor;
+import net.sf.nmedit.jpatch.PFactory;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleContainer;
+import net.sf.nmedit.jpatch.ModuleDescriptions;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.MoveOperation;
-import net.sf.nmedit.jpatch.Patch;
+import net.sf.nmedit.jpatch.PPatch;
+import net.sf.nmedit.jpatch.PSettings;
 import net.sf.nmedit.jpatch.event.ModuleContainerListener;
 import net.sf.nmedit.jpatch.history.History;
-import net.sf.nmedit.jpatch.spec.ModuleDescriptions;
+import net.sf.nmedit.jpatch.impl.PBasicModule;
+import net.sf.nmedit.jpatch.impl.PBasicModuleContainer;
+import net.sf.nmedit.jpatch.impl.PBasicPatch;
 import net.sf.nmedit.nmutils.iterator.ArrayIterator;
 
-public class MWPatch implements Patch
+public class MWPatch extends PBasicPatch implements PPatch
 {
     
-    private ModuleDescriptions moduleDescriptions;
     private MWContainer container;
     private int programNumber = -1;
 
     public MWPatch(ModuleDescriptions moduleDescriptions)
     {
-        this.moduleDescriptions = moduleDescriptions;
-        container = new MWContainer(this, new DefaultModule(moduleDescriptions.get(0)));
+        super(moduleDescriptions);
+        container = new MWContainer(this, new PBasicModule(moduleDescriptions.getModuleById(""+0)));
     }
 
     public void setProgramNumber(int programNumber)
@@ -53,12 +55,12 @@ public class MWPatch implements Patch
         this.programNumber = programNumber;
     }
 
-    public DefaultModule getMiniworksModule()
+    public PBasicModule getMiniworksModule()
     {
         return container.miniworks;
     }
     
-    public ModuleContainer getModuleContainer()
+    public PModuleContainer getModuleContainer()
     {
         return container;
     }
@@ -70,22 +72,29 @@ public class MWPatch implements Patch
 
     public String getVersion()
     {
+        
+        
         return null;
     }
 
-    private static class MWContainer implements ModuleContainer
+    private static class MWContainer extends PBasicModuleContainer
     {
         
-        private DefaultModule miniworks;
+        private PBasicModule miniworks;
         private MWPatch patch;
         
-        public MWContainer(MWPatch patch, DefaultModule miniworks)
+        public MWContainer(MWPatch patch, PBasicModule miniworks)
         {
-            this.patch = patch;
+            super(patch, "module", 0);
             this.miniworks = miniworks;
         }
 
-        public void add(Module module)
+        public boolean add(PModule module)
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        public boolean add(int index, PModule module)
         {
             throw new UnsupportedOperationException();
         }
@@ -95,17 +104,13 @@ public class MWPatch implements Patch
             // ignore
         }
 
-        public boolean contains(Module module)
-        {
-            return miniworks == module;
-        }
 
-        public Module createModule(ModuleDescriptor descriptor) throws InvalidDescriptorException
+        public PModule createModule(PModuleDescriptor descriptor) 
         {
             throw new UnsupportedOperationException();
         }
 
-        public ConnectionManager getConnectionManager()
+        public PConnectionManager getConnectionManager()
         {
             return null;
         }
@@ -120,7 +125,7 @@ public class MWPatch implements Patch
             return patch;
         }
 
-        public void remove(Module module)
+        public boolean remove(PModule module)
         {
             throw new UnsupportedOperationException();
         }
@@ -130,21 +135,10 @@ public class MWPatch implements Patch
             // ignore
         }
 
-        public ComponentDescriptor getDescriptor()
-        {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
         public String getName()
         {
             // TODO Auto-generated method stub
             return null;
-        }
-
-        public Iterator<Module> iterator()
-        {
-            return new ArrayIterator<Module>(new Module[]{miniworks});
         }
 
         public MoveOperation createMoveOperation()
@@ -152,21 +146,38 @@ public class MWPatch implements Patch
             throw new UnsupportedOperationException("operation 'move' not supported");
         }
 
-        public void listUnusedModules(Collection<Module> modules)
-        {
-            // TODO Auto-generated method stub
-            
-        }
-
-        public Module[] listUnusedModules()
-        {
-            // TODO Auto-generated method stub
-            return null;
-        }
-        
     }
 
     public History getHistory()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public PModule createModule(PModuleDescriptor d)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public PFactory getComponentFactory()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public PModuleContainer getModuleContainer(int index)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public int getModuleContainerCount()
+    {
+        return 1;
+    }
+
+    public PSettings getSettings()
     {
         // TODO Auto-generated method stub
         return null;
