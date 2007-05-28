@@ -55,8 +55,8 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import net.sf.nmedit.jpatch.ImageSource;
-import net.sf.nmedit.jpatch.ModuleDescriptor;
-import net.sf.nmedit.jpatch.spec.ModuleDescriptions;
+import net.sf.nmedit.jpatch.ModuleDescriptions;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jtheme.dnd.JTDragDrop;
 import net.sf.nmedit.nomad.core.swing.ButtonBarBuilder;
 import net.sf.nmedit.nomad.core.swing.explorer.ContainerNode;
@@ -227,7 +227,7 @@ public class ModulePane extends JPanel
                     
                     cdst.addChild(new ModuleDescriptorNode(
                             cdst, nsrc.getIcon(),
-                            nsrc.getDescriptor().getDisplayName(), 
+                            nsrc.getDescriptor().getName(), 
                             nsrc.getDescriptor()));
                 }
             }
@@ -270,7 +270,7 @@ public class ModulePane extends JPanel
                 return;
             Object last = path.getLastPathComponent();
             
-            ModuleDescriptor descriptor = null;
+            PModuleDescriptor descriptor = null;
             
             if (last instanceof ModuleDescriptorNode)
             {
@@ -280,7 +280,7 @@ public class ModulePane extends JPanel
             setSelection(descriptor);
         }
 
-        private void setSelection(ModuleDescriptor descriptor)
+        private void setSelection(PModuleDescriptor descriptor)
         {
             preview.setModule(descriptor);
         }
@@ -312,7 +312,7 @@ public class ModulePane extends JPanel
                 Object lpc = path.getLastPathComponent();
                 if (lpc != null && lpc instanceof ModuleDescriptorNode)
                 {
-                    ModuleDescriptor descriptor =
+                    PModuleDescriptor descriptor =
                         ((ModuleDescriptorNode)lpc).getDescriptor();
                     
                     Transferable t = JTDragDrop.createTransferable(descriptor);
@@ -355,10 +355,10 @@ public class ModulePane extends JPanel
     {
         visibleCategories.clear();
         categories.clear();
-        Map<String, List<ModuleDescriptor>> categoryMap = new HashMap<String, List<ModuleDescriptor>>();
+        Map<String, List<PModuleDescriptor>> categoryMap = new HashMap<String, List<PModuleDescriptor>>();
         buildCategories(categoryMap, modules);
         
-        Comparator<ModuleDescriptor> order = new ModuleDescriptorOrder();
+        Comparator<PModuleDescriptor> order = new ModuleDescriptorOrder();
         List<String> categories = new ArrayList<String>();
         categories.addAll(categoryMap.keySet());
         Collections.sort(categories);
@@ -369,7 +369,7 @@ public class ModulePane extends JPanel
         
         for (String cat: categories)
         {
-            List<ModuleDescriptor> catList = categoryMap.get(cat);
+            List<PModuleDescriptor> catList = categoryMap.get(cat);
             Collections.sort(catList, order);
             
             ContainerNode catNode = new ContainerNode(root, cat);
@@ -377,7 +377,7 @@ public class ModulePane extends JPanel
             ModulePane.this.categories.add(catNode);
             visibleCategories.add(catNode);
             
-            for (ModuleDescriptor m: catList)
+            for (PModuleDescriptor m: catList)
             {
                 ImageSource is = m.getImage("icon16x16");
                 
@@ -386,7 +386,7 @@ public class ModulePane extends JPanel
                 
              //   ImageSource.*/
                 
-                LeafNode n = new ModuleDescriptorNode(catNode, icon, m.getDisplayName(), m);
+                LeafNode n = new ModuleDescriptorNode(catNode, icon, m.getName(), m);
                 catNode.addChild(n);
             }   
         }
@@ -398,29 +398,31 @@ public class ModulePane extends JPanel
         return iconURL == null ? null : new ImageIcon(iconURL);
     }
 
-    private void buildCategories(Map<String, List<ModuleDescriptor>> categoryMap, ModuleDescriptions modules)
+    private void buildCategories(Map<String, List<PModuleDescriptor>> categoryMap, ModuleDescriptions modules)
     {
-        for (ModuleDescriptor module : modules)
+        for (PModuleDescriptor module : modules)
         {
-            String cat = module.getCategory();
-            
-            List<ModuleDescriptor> catList = categoryMap.get(cat);
-            if (catList == null)
+            if (module.isInstanciable())
             {
-                catList = new ArrayList<ModuleDescriptor>();
-                categoryMap.put(cat, catList);
+                String cat = module.getCategory();
+                List<PModuleDescriptor> catList = categoryMap.get(cat);
+                if (catList == null)
+                {
+                    catList = new ArrayList<PModuleDescriptor>();
+                    categoryMap.put(cat, catList);
+                }
+                catList.add(module);
             }
-            catList.add(module);
         }
     }
     
-    private static class ModuleDescriptorOrder implements Comparator<ModuleDescriptor>
+    private static class ModuleDescriptorOrder implements Comparator<PModuleDescriptor>
     {
 
-        public int compare(ModuleDescriptor o1, ModuleDescriptor o2)
+        public int compare(PModuleDescriptor o1, PModuleDescriptor o2)
         {
-            String n1 = o1.getDisplayName();
-            String n2 = o2.getDisplayName();
+            String n1 = o1.getName();
+            String n2 = o2.getName();
             
             if (n1 == n2) return 0;
             if (n1 == null) return 1;
@@ -434,15 +436,15 @@ public class ModulePane extends JPanel
     private static class ModuleDescriptorNode extends LeafNode
     {
 
-        private ModuleDescriptor descriptor;
+        private PModuleDescriptor descriptor;
 
-        public ModuleDescriptorNode(TreeNode parent, Icon icon, String displayName, ModuleDescriptor m)
+        public ModuleDescriptorNode(TreeNode parent, Icon icon, String displayName, PModuleDescriptor m)
         {
             super(parent, icon, displayName);
             this.descriptor = m;
         }
         
-        public ModuleDescriptor getDescriptor()
+        public PModuleDescriptor getDescriptor()
         {
             return descriptor;
         }

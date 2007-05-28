@@ -26,8 +26,8 @@ import java.awt.Graphics2D;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 
-import net.sf.nmedit.jpatch.ModuleDescriptor;
-import net.sf.nmedit.jpatch.spec.ModuleDescriptions;
+import net.sf.nmedit.jpatch.ModuleDescriptions;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.component.JTModule;
@@ -41,7 +41,7 @@ public class ModulePreview extends ImagePreview
     private ModuleDescriptions moduleDescriptions;
     private JTContext uiContext;
     private StorageContext storageContext;
-    private ModuleDescriptor moduleDescriptor;
+    private PModuleDescriptor moduleDescriptor;
 
     public void setModules(ModuleDescriptions md)
     {
@@ -52,7 +52,7 @@ public class ModulePreview extends ImagePreview
         }
     }
 
-    public void setModule(ModuleDescriptor m)
+    public void setModule(PModuleDescriptor m)
     {
         if (this.moduleDescriptor != m)
         {
@@ -80,7 +80,7 @@ public class ModulePreview extends ImagePreview
         return moduleDescriptions;
     }
 
-    public ModuleDescriptor getModule()
+    public PModuleDescriptor getModule()
     {
         return moduleDescriptor;
     }
@@ -114,7 +114,7 @@ public class ModulePreview extends ImagePreview
         }
 
         ModuleStore store = storageContext
-            .getModuleStoreById ( ""+moduleDescriptor.getIndex() );
+            .getModuleStoreById ( moduleDescriptor.getComponentId() );
 
         JTModule module = 
             store.createModule(uiContext, 
