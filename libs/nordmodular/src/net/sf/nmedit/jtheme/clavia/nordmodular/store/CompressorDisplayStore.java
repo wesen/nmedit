@@ -49,7 +49,7 @@ public class CompressorDisplayStore extends ControlStore
         return new CompressorDisplayStore(element);
     }
 
-    protected void initDescriptors(Element element)
+    protected void initDescriptors()
     {
         parameterId = lookupChildElementComponentId("threshold");
         ratioParameterId = lookupChildElementComponentId("ratio");

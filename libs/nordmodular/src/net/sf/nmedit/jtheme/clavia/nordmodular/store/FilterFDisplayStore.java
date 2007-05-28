@@ -47,7 +47,7 @@ public class FilterFDisplayStore extends ControlStore
         return new FilterFDisplayStore(element);
     }
 
-    protected void initDescriptors(Element element)
+    protected void initDescriptors()
     {
         parameterId = lookupChildElementComponentId("cutoff");
         resonanceParameterId = lookupChildElementComponentId("resonance");

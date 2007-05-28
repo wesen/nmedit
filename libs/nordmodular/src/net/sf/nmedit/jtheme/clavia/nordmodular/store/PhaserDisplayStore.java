@@ -47,7 +47,7 @@ public class PhaserDisplayStore extends ControlStore
         return new PhaserDisplayStore(element);
     }
 
-    protected void initDescriptors(Element element)
+    protected void initDescriptors()
     {
         parameterId = lookupChildElementComponentId("feedback");
         peaksParameterId = lookupChildElementComponentId("peaks");

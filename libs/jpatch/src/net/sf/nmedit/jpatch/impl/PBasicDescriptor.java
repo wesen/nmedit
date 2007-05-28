@@ -40,6 +40,7 @@ public class PBasicDescriptor implements PDescriptor, Serializable
 
     public PBasicDescriptor(String name, Object componentId)
     {
+        assert componentId != null : "component id must not be null";
         this.name = name;
         this.componentId = componentId;
     }

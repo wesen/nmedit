@@ -27,8 +27,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 
-import net.sf.nmedit.jpatch.spec.ModuleDescriptions;
-import net.sf.nmedit.jpatch.spec.ModuleDescriptionsParser;
+import net.sf.nmedit.jpatch.ModuleDescriptions;
+import net.sf.nmedit.jpatch.ModuleDescriptionsParser;
 import net.sf.nmedit.jpdl.Protocol;
 import net.sf.nmedit.jtheme.store.DefaultStorageContext;
 import net.sf.nmedit.jtheme.util.RelativeClassLoader;

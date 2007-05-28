@@ -47,7 +47,7 @@ public class EqMidDisplayStore extends ControlStore
         return new EqMidDisplayStore(element);
     }
 
-    protected void initDescriptors(Element element)
+    protected void initDescriptors()
     {
         parameterId = lookupChildElementComponentId("frequency");
         gainGainParameterId = lookupChildElementComponentId("gain");

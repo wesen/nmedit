@@ -48,6 +48,7 @@ public abstract class ControlStore extends DefaultStore
       throws JTException
     {
         PParameter parameter = module.getParameterByComponentId(parameterId);
+        
         if (parameter != null)
             link2(context, component, module, parameter);
     }

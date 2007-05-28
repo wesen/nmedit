@@ -272,13 +272,15 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
     public PConnector getConnectorByComponentId(Object id)
     {
         PConnectorDescriptor d = getDescriptor().getConnectorByComponentId(id);
-        return d!=null ? getConnector(d) : null;
+        if (d != null) return getConnector(d); 
+        else return null;
     }
 
     public PParameter getParameterByComponentId(Object id)
     {
         PParameterDescriptor d = getDescriptor().getParameterByComponentId(id);
-        return d!=null ? getParameter(d) : null;
+        if (d != null) return getParameter(d);
+        else return null;
     }
 
     public Point getScreenLocation()

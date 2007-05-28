@@ -47,7 +47,7 @@ public class NoteVelScaleDisplayStore extends ControlStore
         return new NoteVelScaleDisplayStore(element);
     }
 
-    protected void initDescriptors(Element element)
+    protected void initDescriptors()
     {
         parameterId = lookupChildElementComponentId("left-gain");
         rightGainParameterId = lookupChildElementComponentId("right-gain");

@@ -39,7 +39,7 @@ public class VocoderDisplayStore extends DefaultStore
     public VocoderDisplayStore(Element element)
     {
         super(element);
-        initDescriptors(element);
+        initDescriptors();
     }
 
     public static Store create(StorageContext context, Element xmlElement)
@@ -48,9 +48,9 @@ public class VocoderDisplayStore extends DefaultStore
         return new VocoderDisplayStore(xmlElement);
     }
     
-    protected void initDescriptors(Element element)
+    protected void initDescriptors()
     {
-        for (Object oelement : element.getChildren("parameter"))
+        for (Object oelement : getElement().getChildren("parameter"))
         {
             Element e = (Element) oelement;
             int band = getIntAtt(e, "band");

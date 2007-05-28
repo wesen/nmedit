@@ -18,8 +18,6 @@
  */
 package net.sf.nmedit.jtheme.store;
 
-import net.sf.nmedit.jpatch.PModule;
-import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.component.JTComponent;
 
 import org.jdom.Attribute;
@@ -29,6 +27,8 @@ public abstract class DefaultStore extends Store
 {
     
     private Element element;
+    
+    private static boolean DEBUG = false;
 
     protected DefaultStore(Element element)
     {
@@ -130,7 +130,16 @@ public abstract class DefaultStore extends Store
             Attribute a = e.getAttribute("component-id");
             if (a != null)
                 return a.getValue();
+            else if (DEBUG)
+            {
+                System.err.println("element "+getElement()+"/"+e+" has no attribute:'component-id'");
+            }
         }
+        else  if (DEBUG)
+        {
+            System.err.println("element "+getElement()+" has no such child element:'"+childElementName+"'");
+        }
+        
         return null;
     }
     

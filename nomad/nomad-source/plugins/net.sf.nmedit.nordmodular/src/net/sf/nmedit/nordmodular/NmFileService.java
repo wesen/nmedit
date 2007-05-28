@@ -52,14 +52,13 @@ public class NmFileService implements FileService
 
     public void open(File file)
     {
-        NMContext nmc=
-        Nordmodular.sharedContext();
+        NMData data = NMData.sharedInstance();
         
         try
         {
             InputStream in = new FileInputStream(file);
 
-            NMPatch patch = NmUtils.parsePatch(nmc.getModuleDescriptions(), in);
+            NMPatch patch = NmUtils.parsePatch(data.getModuleDescriptions(), in);
             in.close();
 
             patch.setName(NmUtils.getPatchNameFromfileName(file));
@@ -90,11 +89,8 @@ public class NmFileService implements FileService
     }
 
     public static JTNMPatch createPatchUI(NMPatch patch) throws Exception
-    {
-        NMContext nmc=
-            Nordmodular.sharedContext();
-            
-        return new JTNMPatch(nmc.getStorageContext(), nmc.getContext(), patch);
+    {            
+        return new JTNMPatch(NMData.sharedInstance().getJTContext(), patch);
     }
 
     public Class<? extends Service> getServiceClass()
@@ -109,12 +105,11 @@ public class NmFileService implements FileService
 
     public void newFile()
     {
-        NMContext nmc=
-            Nordmodular.sharedContext();
+        NMData data = NMData.sharedInstance();
 
         try
         {
-            NMPatch patch = new NMPatch(nmc.getModuleDescriptions());
+            NMPatch patch = new NMPatch(data.getModuleDescriptions());
             patch.getHistory().setEnabled(true);
             PatchDocument pd = createPatchDoc(patch);
             Nomad.sharedInstance()

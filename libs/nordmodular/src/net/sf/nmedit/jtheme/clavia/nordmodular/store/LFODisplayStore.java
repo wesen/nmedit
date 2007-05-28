@@ -43,12 +43,12 @@ public class LFODisplayStore extends ControlStore
         super(element);
     }
 
-    protected void initDescriptors(Element element)
+    protected void initDescriptors()
     {
         phaseDescriptorId = lookupChildElementComponentId("phase");
         shapeDescriptorId = lookupChildElementComponentId("shape");
         
-        Element wv = element.getChild("waveform");
+        Element wv = getElement().getChild("waveform");
         String wvvalue = wv != null ? wv.getAttributeValue("value") : null;
         if (wvvalue != null)
         {
@@ -90,7 +90,10 @@ public class LFODisplayStore extends ControlStore
         if (waveform >= 0)
             disp.setWaveForm(waveform);
 
-        if (phase != null) disp.setPhaseAdapter(new JTParameterControlAdapter(phase));
+        if (phase == null)
+            throw new JTException("parameter phase not found [id="+phaseDescriptorId+"] in "+module);
+        
+        disp.setPhaseAdapter(new JTParameterControlAdapter(phase));
         if (shape != null) disp.setWaveAdapter(new JTParameterControlAdapter(shape));
     }
     

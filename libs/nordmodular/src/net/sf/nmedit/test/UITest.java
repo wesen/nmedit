@@ -49,8 +49,8 @@ import org.xml.sax.InputSource;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.history.History;
-import net.sf.nmedit.jpatch.transformation.Transformations;
-import net.sf.nmedit.jpatch.transformation.impl.TransformationsBuilder;
+import net.sf.nmedit.jpatch.transform.TransformationsBuilder;
+import net.sf.nmedit.jpatch.transform.PTTransformations;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTNM1Context;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTNMPatch;
@@ -219,8 +219,7 @@ public class UITest
         JTNMPatch patchui;
         try
         {
-            patchui = new JTNMPatch((DefaultStorageContext)uicontext.getStorageContext(),
-                    uicontext, patch);
+            patchui = new JTNMPatch(uicontext, patch);
         }
         catch (Exception e)
         {
@@ -289,11 +288,9 @@ public class UITest
         
         InputSource is = new InputSource(new FileInputStream("./nordmodular/data/module-descriptions/transformations.xml"));
         
-        Transformations t = TransformationsBuilder.build(is, modules);
+        PTTransformations t = TransformationsBuilder.build(is, modules);
        
         modules.setTransformations(t);
-        
-        System.out.println("transformations: "+t);
         
     }
 
@@ -331,6 +328,8 @@ public class UITest
         {
             f = (new File(moduleURL.toURI())).getParentFile();
             loader = new RelativeClassLoader(f, loader);
+            
+            
         }
         catch (URISyntaxException e)
         {
@@ -346,6 +345,7 @@ public class UITest
     {
         String classicThemeXml = "/classic-theme/classic-theme.xml";
         URL classicThemeURL = UITest.class.getResource(classicThemeXml);
+       
         File classicThemeFile = null;
         try
         {
@@ -357,7 +357,7 @@ public class UITest
             System.exit(1);
         }
         RelativeClassLoader relLoader = new RelativeClassLoader(classicThemeFile.getParent());
-        
+
         DefaultStorageContext dsc = new NMStorageContext(relLoader);
         
         InputStream in = null;

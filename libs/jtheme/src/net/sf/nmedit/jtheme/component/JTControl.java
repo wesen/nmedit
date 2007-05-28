@@ -109,7 +109,6 @@ public abstract class JTControl extends JTComponent implements ChangeListener
     {
         if (adapter != null)
             adapter.setValue(value);
-        
         repaint();
     }
     

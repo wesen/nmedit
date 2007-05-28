@@ -61,9 +61,11 @@ public class Installer implements InitService
     {
         readSynthConfiguration();
         
+        NMData data = NMData.sharedInstance();
+        
         ModulePane pane = ModulePane.getSharedInstance();
-        pane.setModules(Nordmodular.sharedContext().getModuleDescriptions());
-        pane.setTheme(Nordmodular.sharedContext().getContext());
+        pane.setModules(data.getModuleDescriptions());
+        pane.setTheme(data.getJTContext());
     }
 
     public void shutdown()

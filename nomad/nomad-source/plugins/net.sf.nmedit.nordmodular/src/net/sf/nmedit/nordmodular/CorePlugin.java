@@ -32,9 +32,6 @@ public class CorePlugin extends Plugin
             getManager().getPluginClassLoader(getDescriptor());
         
         PDLData.setSource(loader, "/midi.pdl", "/patch.pdl");
-        
-        Nordmodular.sharedContext();
-
     }
 
     @Override

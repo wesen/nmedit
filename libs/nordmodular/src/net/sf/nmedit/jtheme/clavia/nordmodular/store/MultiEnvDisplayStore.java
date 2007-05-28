@@ -48,7 +48,7 @@ public class MultiEnvDisplayStore extends ControlStore
         return new MultiEnvDisplayStore(element);
     }
 
-    protected void initDescriptors(Element element)
+    protected void initDescriptors()
     {
         parameterId = lookupChildElementComponentId("sustain");
         levelParameterHelper = new String[4];

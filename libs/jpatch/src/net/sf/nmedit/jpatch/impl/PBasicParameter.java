@@ -110,7 +110,7 @@ public class PBasicParameter
         else if (value>=1d)
             setValue(getMaxValue());
         else
-            setValue(getMinValue() + (int)(value*(getMaxValue()-getMinValue())));
+            setValue(getMinValue() + (int)(value*(double)(getMaxValue()-getMinValue())));
     }
 
     public void setFloatValue(float value)
@@ -120,7 +120,7 @@ public class PBasicParameter
         else if (value>=1f)
             setValue(getMaxValue());
         else
-            setValue(getMinValue() + (int)(value*(getMaxValue()-getMinValue())));        
+            setValue(getMinValue() + (int)(value*(float)(getMaxValue()-getMinValue())));        
     }
 
     public String getDisplayValue()

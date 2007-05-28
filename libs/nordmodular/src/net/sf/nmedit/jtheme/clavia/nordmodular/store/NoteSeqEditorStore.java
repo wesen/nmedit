@@ -45,7 +45,7 @@ public class NoteSeqEditorStore extends ControlStore
         return new NoteSeqEditorStore(element);
     }
     
-    protected void initDescriptors(Element element)
+    protected void initDescriptors()
     {
         idlist = new String[16];
         for (int i=0;i<16;i++)

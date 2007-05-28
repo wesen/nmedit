@@ -46,7 +46,7 @@ public class EqShelveDisplayStore extends ControlStore
         return new EqShelveDisplayStore(element);
     }
 
-    protected void initDescriptors(Element element)
+    protected void initDescriptors()
     {
         parameterId = lookupChildElementComponentId("frequency");
         gainGainParameterId = lookupChildElementComponentId("gain");

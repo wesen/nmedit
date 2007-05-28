@@ -18,7 +18,6 @@
  */
 package net.sf.nmedit.nordmodular;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
 import net.sf.nmedit.jsynth.midi.MidiPlug;
@@ -63,7 +62,7 @@ public abstract class AbstractNewNordService
     
     protected void newNordModular(boolean microModular)
     {
-        NordModular nm = new NordModular(Nordmodular.sharedContext().getModuleDescriptions());
+        NordModular nm = new NordModular(NMData.sharedInstance().getModuleDescriptions());
         nm.setMaxSlotCount(microModular ? 1 : 4);
         
         newContext(nm);
@@ -88,9 +87,8 @@ public abstract class AbstractNewNordService
     
     public static void newSynth(int maxSlotCount, String name, MidiPlug input, MidiPlug output)
     {
-        ExplorerTree etree = Nomad.sharedInstance().getExplorer();
-        NM1ModuleDescriptions d = Nordmodular.sharedContext().getModuleDescriptions();        
-        NordModular synth = new NordModular(d, false);
+        ExplorerTree etree = Nomad.sharedInstance().getExplorer();  
+        NordModular synth = new NordModular(NMData.sharedInstance().getModuleDescriptions(), false);
         synth.setMaxSlotCount(maxSlotCount);
         try
         {

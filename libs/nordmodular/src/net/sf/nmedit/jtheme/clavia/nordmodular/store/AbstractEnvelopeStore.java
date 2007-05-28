@@ -44,7 +44,7 @@ public abstract class AbstractEnvelopeStore extends ControlStore
         super(element);
     }
 
-    protected void initDescriptors(Element element)
+    protected void initDescriptors()
     {
         parameterId = lookupChildElementComponentId("attack");
         decayParameterId = lookupChildElementComponentId("decay");
