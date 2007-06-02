@@ -18,7 +18,7 @@
  */
 package net.sf.nmedit.jtheme.component;
 
-import net.sf.nmedit.jpatch.event.ParameterEvent;
+import net.sf.nmedit.jpatch.event.PParameterEvent;
 import net.sf.nmedit.jpatch.event.PParameterListener;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
@@ -83,7 +83,7 @@ public class JTTextDisplay extends JTLabel implements PParameterListener
             setText(null);
     }
     
-    public void parameterValueChanged(ParameterEvent e)
+    public void parameterValueChanged(PParameterEvent e)
     {
         updateText();
         repaint();

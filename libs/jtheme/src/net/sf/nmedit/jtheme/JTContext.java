@@ -73,6 +73,7 @@ public abstract class JTContext
     public static final String TYPE_CONNECTOR = "connector";
     public static final String TYPE_BUTTONS = "buttons";
     public static final String TYPE_TEXTDISPLAY = "textDisplay";
+    public static final String TYPE_LIGHT = "light";
     
     // TODO does not belong here - nm1 specific
     public static final String TYPE_RESET_BUTTON = "resetButton";

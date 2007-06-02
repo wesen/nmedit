@@ -35,7 +35,6 @@ public abstract class DefaultStore extends Store
         this.element = element;
     }
 
-    @Override
     public Element getElement()
     {
         return element;

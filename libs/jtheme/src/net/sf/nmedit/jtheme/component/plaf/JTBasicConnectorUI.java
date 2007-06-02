@@ -39,7 +39,7 @@ import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnectionManager;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
-import net.sf.nmedit.jpatch.PSignalType;
+import net.sf.nmedit.jpatch.PSignal;
 import net.sf.nmedit.jpatch.PSignalTypes;
 import net.sf.nmedit.jpatch.history.History;
 import net.sf.nmedit.jtheme.JTCursor;
@@ -62,7 +62,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
     public void paintDynamicLayer(Graphics2D g, JTComponent c)
     {
         JTConnector connector = (JTConnector) c;
-        PSignalType signal = connector.getSignal();
+        PSignal signal = connector.getSignal();
         paintConnector(g, connector, signal, connector.isOutput(), connector.isConnected(), c.hasFocus());
     }
     
@@ -73,7 +73,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
         return size;
     }
     
-    protected void paintConnector(Graphics2D g, JTConnector c, PSignalType signal, boolean output, 
+    protected void paintConnector(Graphics2D g, JTConnector c, PSignal signal, boolean output, 
             boolean connected, boolean focused)
     {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -278,7 +278,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
                 {
                     PSignalTypes signalTypes = 
                         cd.getParentDescriptor().getModules().getDefinedSignals();
-                    PSignalType noSignal = signalTypes.noSignal();
+                    PSignal noSignal = signalTypes.noSignal();
                     if (noSignal != null && noSignal.getColor() != null)
                         drag.setColor(noSignal.getColor());
                 }

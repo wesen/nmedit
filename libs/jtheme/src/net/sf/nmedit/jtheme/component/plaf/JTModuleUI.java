@@ -24,6 +24,7 @@ package net.sf.nmedit.jtheme.component.plaf;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -42,7 +43,6 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -53,13 +53,13 @@ import javax.swing.UIDefaults;
 import javax.swing.border.Border;
 
 import net.sf.nmedit.jpatch.ImageSource;
-import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.ModuleDescriptions;
+import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
-import net.sf.nmedit.jpatch.event.ModuleEvent;
-import net.sf.nmedit.jpatch.event.ModuleListener;
-import net.sf.nmedit.jpatch.transform.TransformTool;
-import net.sf.nmedit.jpatch.transform.PTModule;
+import net.sf.nmedit.jpatch.event.PModuleEvent;
+import net.sf.nmedit.jpatch.event.PModuleListener;
+import net.sf.nmedit.jpatch.transform.PTBasicTransformations;
+import net.sf.nmedit.jpatch.transform.PTModuleMapping;
 import net.sf.nmedit.jpatch.transform.PTTransformations;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.JTComponent;
@@ -68,8 +68,9 @@ import net.sf.nmedit.jtheme.component.JTLabel;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.nmutils.swing.EscapeKeyListener;
 import net.sf.nmedit.nmutils.swing.LimitedText;
+import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
 
-public class JTModuleUI extends JTComponentUI implements ModuleListener
+public class JTModuleUI extends JTComponentUI implements PModuleListener
 {
 
     public static final String moduleBorder = "ModuleUI.Border";
@@ -326,34 +327,16 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
 
         public void mousePressed(MouseEvent e)
         {
+            Component c = e.getComponent();
+            if (c instanceof JTModule)
+            {
+                if (!c.hasFocus())
+                {
+                    c.requestFocus();
+                }
+            }
         }
         
-        private void createPopup(MouseEvent e, PModule source)
-        {
-            ModuleDescriptions md = source.getDescriptor().getModules();
-            
-            ClassLoader loader = md.getModuleDescriptionsClassLoader();
-            
-            PTTransformations t = md.getTransformations();
-            if (t == null)
-                return ;
-            
-            TransformTool tool = t.createTransformation(source.getDescriptor());
-                        
-            JPopupMenu popup = null;
-            for (PTModule tm: tool.getTargets())
-            {
-                if (popup == null)
-                    popup = new JPopupMenu();
-                
-                Action a = new TransformAction(loader, tool, source, tm);
-                popup.add(a);
-            }
-            
-            if (popup != null)
-                popup.show(e.getComponent(), e.getX(), e.getY());
-        }
-
         public void mouseClicked(MouseEvent e)
         {
             // no op
@@ -372,31 +355,6 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
         public void mouseReleased(MouseEvent e)
         {
             // no op
-            if (e.isConsumed())
-                return;
-            
-            if (!SwingUtilities.isLeftMouseButton(e))
-                return;
-            
-            if (!(e.getComponent() instanceof JTModule))
-                return;
-            
-            JTModule m = (JTModule) e.getComponent();
-            
-            Component c = m.getComponentAt(e.getX(), e.getY());
-            
-            if (!(c instanceof JTTransformer))
-                return;
-            
-            if (m == null)
-                return;
-            PModule mm = m.getModule();
-            if (mm == null)
-                return;
-            
-            e.consume();
-            
-            createPopup(e, mm);
         }
 
         public void componentHidden(ComponentEvent e)
@@ -446,6 +404,7 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
         public JTTransformer(JTContext context)
         {
             super(context);
+            enableEvents(MouseEvent.MOUSE_EVENT_MASK|MouseEvent.MOUSE_MOTION_EVENT_MASK);
         }
         
         public boolean isReducible()
@@ -457,25 +416,91 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
         {
             getIcon().paintIcon(this, g2, 0, 0);
         }
+
+        protected void processMouseEvent(MouseEvent e)
+        {
+            if ((!e.isConsumed()) && e.getID() == MouseEvent.MOUSE_PRESSED && SwingUtilities.isLeftMouseButton(e))
+            {
+                Container p = getParent();
+                if (p instanceof JTModule)
+                {
+                    PModule m = ((JTModule) p).getModule();
+                    if (m != null)
+                    {
+                        createPopup(e, m);
+                        super.processMouseEvent(e);
+                        return;
+                    }
+                }
+            }
+
+            NmSwingUtilities.redispatchMouseEvent(e, getParent());
+        }
+
+        protected void processMouseMotionEvent(MouseEvent e)
+        {
+            NmSwingUtilities.redispatchMouseEvent(e, getParent());
+        }
+        
+        private void createPopup(MouseEvent e, PModule source)
+        {
+            ModuleDescriptions md = source.getDescriptor().getModules();
+            
+            ClassLoader loader = md.getModuleDescriptionsClassLoader();
+            
+            PTTransformations t = md.getTransformations();
+            if (t == null)
+                return ;
+            
+            PTModuleMapping[] mappings = t.getMappings(source.getDescriptor());
+
+            PTBasicTransformations.sort(mappings);
+            
+            JPopupMenu popup = null;
+            if (mappings.length>0)
+            {
+                for (int i=0;i<mappings.length;i++)
+                {
+                    if (popup == null)
+                        popup = new JPopupMenu();
+                    popup.add(new TransformAction(loader, source, mappings[i]));
+                }
+                
+                popup.show(e.getComponent(), e.getX(), e.getY());
+            }
+        }
+
     }
     
     private static class TransformAction extends AbstractAction
     {
 
-        private TransformTool tool;
         private PModule source;
-        private PTModule target;
+        private PTModuleMapping mapping;
 
-        public TransformAction(ClassLoader loader, TransformTool tool, 
-                PModule source, PTModule tm)
+        public TransformAction(ClassLoader loader, 
+                PModule source, PTModuleMapping mapping)
         {
-            this.tool = tool;
             this.source = source;
-            this.target = tm;
+            this.mapping = mapping;
             
-            PModuleDescriptor md = tm.getTarget();
-            putValue(NAME, md.getName());
-            setEnabled(tm.getTarget() != source.getDescriptor());
+            PModuleDescriptor md = mapping.getTarget(source.getDescriptor());
+            if (md == null)
+            {
+                putValue(NAME, "#error");
+                setEnabled(false);
+                return;
+            }
+            
+            float covering = ((int)(mapping.getCovering()*10000))/100f;
+            
+            putValue(NAME, md.getName()+" ("+covering+"%)");
+            
+            String hint =
+                "<html><body><strong>transformed</strong><br/>connector(s): "+mapping.getConnectorCount()
+                +"<br/>parameter(s): "+mapping.getParameterCount()
+                +"</body></html>";
+            putValue(AbstractAction.SHORT_DESCRIPTION, hint);
             ImageSource is = md.getImage("icon16x16");
             if (is != null)                
             {
@@ -488,7 +513,7 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
         public void actionPerformed(ActionEvent e)
         {
             if (isEnabled())
-                tool.transformReplace(target, source);
+                mapping.transform(source);
         }
 
         private Icon getIcon(ImageSource is, ClassLoader loader)
@@ -526,7 +551,7 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
     public void paintSelection(Graphics g, JTModule module)
     {
         
-        if (module.isSelected())
+        if (module.isSelected() || module.hasFocus())
         {
             // TODO lookup selection color
             
@@ -537,7 +562,7 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
     }
     
     private class TitleLabel extends JTLabel implements 
-        MouseListener, FocusListener, ActionListener
+        FocusListener, ActionListener
     {
         
         private JTModule module;
@@ -547,7 +572,7 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
         {
             super(context);
             this.module = module;
-            addMouseListener(this);
+            enableEvents(MouseEvent.MOUSE_EVENT_MASK|MouseEvent.MOUSE_MOTION_EVENT_MASK);
         }
 
         protected boolean opacityOverwrite(boolean isOpaque)
@@ -581,15 +606,28 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
             
             super.paint(g);
         }
-
-        public void mouseClicked(MouseEvent e)
+        
+        protected void processMouseMotionEvent(MouseEvent e)
         {
-            if (e.getClickCount()==2 && SwingUtilities.isLeftMouseButton(e))
-            {
-                editModuleName();
-            }
+            NmSwingUtilities.redispatchMouseEvent(e, getParent());
+            super.processMouseEvent(e);
         }
 
+        protected void processMouseEvent(MouseEvent e)
+        {
+            boolean redispatch = true;
+            if (e.getID() == MouseEvent.MOUSE_CLICKED && 
+                    e.getClickCount()==2 && SwingUtilities.isLeftMouseButton(e))
+            {
+                editModuleName();
+                redispatch = false;
+            }
+
+            if (redispatch)
+                NmSwingUtilities.redispatchMouseEvent(e, getParent());
+            super.processMouseEvent(e);
+        }
+        
         private void editModuleName()
         {
             PModule m = module.getModule();
@@ -611,26 +649,6 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
                 return ;
             }
             module.repaint();
-        }
-
-        public void mouseEntered(MouseEvent e)
-        {
-            // no op
-        }
-
-        public void mouseExited(MouseEvent e)
-        {
-            // no op
-        }
-
-        public void mousePressed(MouseEvent e)
-        {
-            // no op
-        }
-
-        public void mouseReleased(MouseEvent e)
-        {
-            // no op
         }
 
         public void focusGained(FocusEvent e)
@@ -681,7 +699,7 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
 
     }
 
-    public void moduleMoved(ModuleEvent e)
+    public void moduleMoved(PModuleEvent e)
     {
         /*
         Module m = e.getModule();
@@ -706,7 +724,7 @@ public class JTModuleUI extends JTComponentUI implements ModuleListener
         }*/
     }
 
-    public void moduleRenamed(ModuleEvent e)
+    public void moduleRenamed(PModuleEvent e)
     {
         titleLabel.setText(e.getModule().getTitle());
     }

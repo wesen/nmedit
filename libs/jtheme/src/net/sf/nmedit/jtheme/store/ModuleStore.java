@@ -76,7 +76,7 @@ public class ModuleStore extends DefaultStore implements Iterable<Store>
 
     public JTModule createModule(JTContext context, PModule module) throws JTException
     {
-        return createModule(context, module, staticLayerBackingStore != null);
+        return createModule(context, module, staticLayerBackingStore == null);
     }
 
     public JTModule createModule(JTContext context, PModule module, boolean addReducible) throws JTException

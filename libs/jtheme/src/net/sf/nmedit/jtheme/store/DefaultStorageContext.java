@@ -83,6 +83,7 @@ public class DefaultStorageContext extends StorageContext
         installStore("button", ButtonStore.class);
         installStore("slider", SliderStore.class);
         installStore("textDisplay", TextDisplayStore.class);
+        installStore("light", LightStore.class);
     }
 
     @Override

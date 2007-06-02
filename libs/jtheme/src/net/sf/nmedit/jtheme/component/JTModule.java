@@ -23,19 +23,28 @@
 package net.sf.nmedit.jtheme.component;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Transparency;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
+import javax.swing.JComponent;
+import javax.swing.RepaintManager;
+
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.event.PModuleEvent;
+import net.sf.nmedit.jpatch.event.PModuleListener;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.plaf.JTModuleUI;
 
 public class JTModule extends JTComponent
+    implements PModuleListener
 {
 
     public static final String uiClassID = "JTModuleUI";
@@ -45,7 +54,19 @@ public class JTModule extends JTComponent
     public JTModule(JTContext context)
     {
         super(context);
+        enableEvents(MouseEvent.COMPONENT_EVENT_MASK);
+        setFocusable(true);
         setOpaque(true);
+    }
+    
+    protected void processEvent(ComponentEvent e)
+    {
+        if (e.getID() == ComponentEvent.COMPONENT_MOVED
+                && module != null)
+        {
+            module.setScreenLocation(getX(), getY());
+        }
+        super.processEvent(e);
     }
     
     public void setSelected(boolean selected)
@@ -54,6 +75,15 @@ public class JTModule extends JTComponent
         {
             this.selected = selected;
             repaint();
+            // repaint parent 
+            Container parent = getParent();
+            if (parent != null && parent instanceof JComponent)
+            {
+                JComponent jparent = (JComponent) parent;
+                RepaintManager
+                .currentManager(jparent)
+                .addDirtyRegion(jparent, getX(), getY(), getWidth()+1, getHeight()+1);
+            }
         }
     }
     
@@ -198,7 +228,14 @@ public class JTModule extends JTComponent
         
         if (oldModule != module)
         {
+            if (this.module != null)
+                this.module.removeModuleListener(this);
             this.module = module;
+            if (module != null)
+            {
+                module.addModuleListener(this);
+                setLocation(module.getScreenX(), module.getScreenY());
+            }
             if (ui != null)
                 getUI().moduleChanged(this, oldModule, module);
         }
@@ -207,6 +244,19 @@ public class JTModule extends JTComponent
     public PModule getModule()
     {
         return module;
+    }
+
+    public void moduleMoved(PModuleEvent e)
+    {
+        setLocation(
+        e.getModule().getScreenX(),
+        e.getModule().getScreenY());
+    }
+
+    public void moduleRenamed(PModuleEvent e)
+    {
+        // TODO Auto-generated method stub
+        
     }
 
 }

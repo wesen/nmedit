@@ -698,10 +698,13 @@ public class JTModuleContainerUI extends ComponentUI
                     return;
                 }
                 
+                Point l = dtde.getLocation();
+                
                 PModule module;
                 try
                 {
                     module = mc.createModule(md);
+                    module.setScreenLocation(l.x, l.y);
                 }
                 catch (InvalidDescriptorException e)
                 {
@@ -710,7 +713,6 @@ public class JTModuleContainerUI extends ComponentUI
                     return;
                 }
 
-                module.setScreenLocation(dtde.getLocation());
                 mc.add(module);
                 
                 dtde.acceptDrop(DnDConstants.ACTION_COPY);

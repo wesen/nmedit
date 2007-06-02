@@ -65,8 +65,6 @@ public abstract class Store
         // no such operation
     }
     
-    public abstract Element getElement();
-
     public void setName(String name)
     {
         this.name = name;

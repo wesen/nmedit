@@ -33,8 +33,8 @@ import javax.swing.border.Border;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PModuleMetrics;
-import net.sf.nmedit.jpatch.event.ModuleContainerEvent;
-import net.sf.nmedit.jpatch.event.ModuleContainerListener;
+import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
+import net.sf.nmedit.jpatch.event.PModuleContainerListener;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
@@ -56,6 +56,7 @@ public class JTModuleContainer extends JTBaseComponent
     {
         super(context);
         setOpaque(true);
+        setFocusable(true);
         optimizedDrawing = true;// does not work: !context.hasModuleContainerOverlay();
                                 // we have to overwrite boolean isPaintingOrigin() which is package private 
         setCableManager(cableManager);
@@ -70,7 +71,7 @@ public class JTModuleContainer extends JTBaseComponent
         return new ContentSynchronisation();
     }
     
-    protected class ContentSynchronisation implements ModuleContainerListener
+    protected class ContentSynchronisation implements PModuleContainerListener
     {
         private PModuleContainer mc;
         private boolean oneUpdate = false;
@@ -104,12 +105,12 @@ public class JTModuleContainer extends JTBaseComponent
             mc.removeModuleContainerListener(this);
         }
 
-        public void moduleAdded(ModuleContainerEvent e)
+        public void moduleAdded(PModuleContainerEvent e)
         {
             createUIFor(e.getModule());
         }
 
-        public void moduleRemoved(ModuleContainerEvent e)
+        public void moduleRemoved(PModuleContainerEvent e)
         {
             removeUI(e.getModule());
         }
@@ -121,8 +122,14 @@ public class JTModuleContainer extends JTBaseComponent
             try
             {
                 JTModule mui = ms.createModule(getContext(), module);
-                mui.setLocation(module.getScreenLocation());
+                mui.setLocation(module.getScreenLocation());                
                 add(mui);
+                
+                if (mui.getStaticLayerBackingStore() == null)
+                {
+                    ms.setStaticLayer(mui.renderStaticLayerImage());
+                    mui.setStaticLayerBackingStore(mui.getStaticLayerBackingStore());
+                }
                 
                 // TODO revalidate/repaint container
                 mui.repaint();
@@ -146,7 +153,6 @@ public class JTModuleContainer extends JTBaseComponent
                     {
                         Rectangle bounds = mui.getBounds();
                         remove(mui);
-                        
                         // TODO revalidate/repaint
                         repaint(bounds);
                         

@@ -26,14 +26,14 @@ import java.awt.Container;
 
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
-import net.sf.nmedit.jpatch.PSignalType;
-import net.sf.nmedit.jpatch.event.ConnectorListener;
-import net.sf.nmedit.jpatch.event.ConnectorStateEvent;
+import net.sf.nmedit.jpatch.PSignal;
+import net.sf.nmedit.jpatch.event.PConnectorListener;
+import net.sf.nmedit.jpatch.event.PConnectorStateEvent;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.plaf.JTConnectorUI;
 
-public class JTConnector extends JTComponent implements ConnectorListener
+public class JTConnector extends JTComponent implements PConnectorListener
 {
  
     /**
@@ -61,12 +61,12 @@ public class JTConnector extends JTComponent implements ConnectorListener
         return uiClassID;
     }
     
-    public PSignalType getSignal()
+    public PSignal getSignal()
     {
         return connector != null ? connector.getDefaultSignalType() : null;
     }
     
-    public PSignalType getDefaultSignal()
+    public PSignal getDefaultSignal()
     {
         return connector != null ? connector.getDefaultSignalType() : null;
     }
@@ -144,7 +144,7 @@ public class JTConnector extends JTComponent implements ConnectorListener
         return null;
     }
 
-    public void connectorStateChanged(ConnectorStateEvent e)
+    public void connectorStateChanged(PConnectorStateEvent e)
     {
         repaint();
     }

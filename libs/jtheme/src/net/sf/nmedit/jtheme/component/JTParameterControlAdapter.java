@@ -21,7 +21,7 @@ package net.sf.nmedit.jtheme.component;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import net.sf.nmedit.jpatch.event.ParameterEvent;
+import net.sf.nmedit.jpatch.event.PParameterEvent;
 import net.sf.nmedit.jpatch.event.PParameterListener;
 import net.sf.nmedit.jpatch.PParameter;
 
@@ -47,7 +47,7 @@ public class JTParameterControlAdapter implements JTControlAdapter, PParameterLi
         parameter.removeParameterListener(this);
     }
 
-    public void parameterValueChanged(ParameterEvent e)
+    public void parameterValueChanged(PParameterEvent e)
     {
         notifyChangeListener();
     }
