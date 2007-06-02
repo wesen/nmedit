@@ -1,3 +1,21 @@
+/* Copyright (C) 2006 Christian Schneider
+ * 
+ * This file is part of Nomad.
+ * 
+ * Nomad is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * Nomad is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Nomad; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package net.sf.nmedit.nordmodular;
 
 import java.io.File;
@@ -8,7 +26,7 @@ import java.net.URL;
 import org.xml.sax.InputSource;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
-import net.sf.nmedit.jpatch.transform.TransformationsBuilder;
+import net.sf.nmedit.jpatch.transform.PTTransformationsBuillder;
 import net.sf.nmedit.jpatch.transform.PTTransformations;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTNM1Context;
 import net.sf.nmedit.jtheme.clavia.nordmodular.NMStorageContext;
@@ -71,7 +89,7 @@ public class NMData
         try
         {
             PTTransformations t = 
-                TransformationsBuilder.build(new InputSource(source), descriptions);
+                PTTransformationsBuillder.build(new InputSource(source), descriptions);
             descriptions.setTransformations(t);
         }
         finally
