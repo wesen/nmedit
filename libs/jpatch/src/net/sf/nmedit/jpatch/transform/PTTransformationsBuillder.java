@@ -27,9 +27,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import net.sf.nmedit.jpatch.ModuleDescriptions;
-import net.sf.nmedit.jpatch.PConnectorDescriptor;
-import net.sf.nmedit.jpatch.PModuleDescriptor;
-import net.sf.nmedit.jpatch.PParameterDescriptor;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -37,25 +34,32 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class TransformationsBuilder
+/**
+ * Creates the {@link PTTransformations} from a XML Transformations v1.1 file.
+ * 
+ * @author Christian Schneider
+ */
+public class PTTransformationsBuillder
 {
-    
 
+    /**
+     * Creates the {@link PTTransformations} from a XML Transformations v1.1 file.
+     * @param is the xml file source
+     * @param moduleDescriptions the module descriptors
+     * @return the transformations
+     */
     public static PTTransformations build(InputSource is, ModuleDescriptions moduleDescriptions) 
-        throws ParserConfigurationException, SAXException, IOException
+        throws ParserConfigurationException, SAXException, IOException 
     {
 
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser parser = factory.newSAXParser();
-        
-        PTTransformations transformations = new PTTransformations();
-        
-        DocumentHandler handler = new DocumentHandler(moduleDescriptions, transformations);
-        /*
+        DocumentHandler handler = new DocumentHandler(moduleDescriptions);
+       
         try
-        {*/
+        {
             parser.parse(is, handler);
-        /*}
+        }
         catch (SAXException e)
         {
             Locator l = handler.locator;
@@ -66,12 +70,12 @@ public class TransformationsBuilder
             se.initCause(e);
             
             throw se;
-        }*/
-        
-        return transformations;
+        }
+
+        return new PTBasicTransformations(handler.builder.getSelectors());
     }
 
-        private static class DocumentHandler extends DefaultHandler 
+        private static class DocumentHandler extends DefaultHandler
         {
             // !!! order is important
             static final int eltransformations = 0;
@@ -100,10 +104,11 @@ public class TransformationsBuilder
             
             int currentElement = -1;
             
-            public DocumentHandler( ModuleDescriptions descriptions, PTTransformations transformations )
+            PTBuilder builder;
+            
+            public DocumentHandler( ModuleDescriptions modules )
             {
-                this.moduleDescriptions = descriptions;
-                this.transformations = transformations;
+                builder = new PTBuilder(modules);
             }
 
             private static void configMap( String[] names, Map<String, Integer> map )
@@ -117,12 +122,6 @@ public class TransformationsBuilder
                 return getIdFromMap(element, elementMap);
             }
             
-            private PTGroup currentGroup;
-            private PTModule currentModule;
-
-            private ModuleDescriptions moduleDescriptions ;
-            private PTTransformations transformations;
-            
             public final int getIdFromMap(String name, Map<String,Integer> map)
             {
                 Integer id = map.get(name);
@@ -132,13 +131,13 @@ public class TransformationsBuilder
             public void startDocument ()
             throws SAXException
             {
-            // no op
+                // no op
             }
 
             public void endDocument ()
             throws SAXException
             {
-            // no op
+                // no op
             }
 
             public InputSource resolveEntity (String publicId, String systemId)
@@ -177,127 +176,79 @@ public class TransformationsBuilder
                 return saxexception(message, null);
             }
             
-            private int integer(Attributes a, String attName) throws SAXException
-            {
-                String v = a.getValue(attName);
-                if (v == null)
-                    throw saxexception("attribute '"+attName+"' missing");
-                
-                try
-                {
-                    return Integer.parseInt(v);
-                }
-                catch (NumberFormatException e)
-                {
-                    throw saxexception("attribute '"+attName+"'", e);
-                }
-            }
-
             public void startElement (String uri, String localName,
                           String qName, Attributes attributes)
             throws SAXException
             {
-                final int eid = getElementId(qName);
-                
-                if (eid < 0)
-                    throw saxexception("unknown element "+qName);
-                
-                switch (eid)
+                switch (getElementId(qName))
                 {
                     case eltransformations:
                     {
                         String version = attributes.getValue("version");
-                        if (!"1.0".equals(version))
+                        if (!"1.1".equals(version))
                             throw new  SAXException("incompatible version "+version);
                     }
                     break ;
                     case elgroup:
                     {
-                        if (currentGroup == null)
-                            currentGroup = new PTGroup();
+                        builder.beginGroup();
                     }
                     break;
                     case elmodule:
                     {
-                        String componentid = attributes.getValue("component-id");
-                        PModuleDescriptor md = moduleDescriptions.getModuleById(componentid);
-                        if (md == null)
-                            throw saxexception("module [component-id="+componentid+"] does not exist");
-                        
-                        currentModule = new PTModule(md);
-                        currentGroup.add(currentModule);
+                        String componentId = attributes.getValue("component-id");
+                        if (componentId == null)
+                            throw saxexception("attribute 'component-id' missing");
+                        builder.beginModule(componentId);
                     }
                     break;
                     case elparameter:
                     {
-                        if (currentModule == null)
-                            throw saxexception("no module associated with parameter");
+                        String componentId = attributes.getValue("component-id");  
+                        if (componentId == null)
+                            throw saxexception("attribute 'component-id' missing");
+                        String selector = attributes.getValue("selector");
+                        if (selector == null)
+                            throw saxexception("attribute 'selector' missing");
                         
-                        String componentid = attributes.getValue("component-id");                     
-                        String id = attributes.getValue("variable");
-                        if (componentid == null) throw saxexception("attribute 'component-id' missing");   
-                        if (id == null) throw saxexception("attribute 'variable' missing");
-                        
-                        PModuleDescriptor md = currentModule.getTarget();
-                        
-                        PParameterDescriptor pd = md.getParameterByComponentId(componentid);
-                        
-                        if (pd == null)
-                            throw saxexception("parameter [component-id="+componentid+"]" +
-                                    " not found in "+currentModule.getTarget());
-                                
-                        currentModule.add(new PTTransformable<PParameterDescriptor>(id, pd));
+                        builder.parameter(componentId, selector);
                     }
                     break;
                     case elconnector:
                     {
-                        if (currentModule == null)
-                            throw saxexception("no module associated with connector");
-
-
-                        String componentid = attributes.getValue("component-id");                     
-                        String id = attributes.getValue("variable");
-                        if (componentid == null) throw saxexception("attribute 'component-id' missing");   
-                        if (id == null) throw saxexception("attribute 'variable' missing");
-                        PModuleDescriptor md = currentModule.getTarget();
-                        PConnectorDescriptor cd = md.getConnectorByComponentId(componentid);
-
-                        if (cd == null)
-                            throw saxexception("connector [component-id="+componentid+"]" +
-                                    " not found in "+currentModule.getTarget());
-                        currentModule.add(new PTTransformable<PConnectorDescriptor>(id, cd));
+                        String componentId = attributes.getValue("component-id");  
+                        if (componentId == null)
+                            throw saxexception("attribute 'component-id' missing");
+                        String selector = attributes.getValue("selector");
+                        if (selector == null)
+                            throw saxexception("attribute 'selector' missing");
+                        
+                        builder.connector(componentId, selector);
                     }
                     break;
+                    default: throw saxexception("unknown element "+qName);
                 }
-                
-                currentElement = eid;
             }
 
             public void endElement (String uri, String localName, String qName)
             throws SAXException
             {
-
-                final int eid = getElementId(qName);
-                
-                switch (eid)
+                switch (getElementId(qName))
                 {
+                    case eltransformations:
+                        builder.done();
+                        break;
                     case elparameter:
+                        break;
                     case elconnector:
-                    break;
+                        break;
                     case elgroup:
-                    {
-                        if (currentGroup != null)
-                        {
-                            transformations.add(currentGroup);
-                            currentGroup = null;
-                        }
-                    }
-                    break;
+                        builder.endGroup();
+                        break;
                     case elmodule:
-                    {
-                        currentModule = null;
-                    }
-                    break;
+                        builder.endModule();
+                        break;
+                    default: throw saxexception("unknown element "+qName);
                 }
             }
             

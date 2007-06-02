@@ -18,81 +18,49 @@
  */
 package net.sf.nmedit.jpatch.transform;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
+import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 
-public class PTTransformations
-    implements Iterable<PTGroup>
+/**
+ * Contains the mappings which describe how one module
+ * can be transformed into another one without loosing the parameter values 
+ * and connections. 
+ * 
+ * @author Christian Schneider
+ */
+public interface PTTransformations
 {
+
+    /**
+     * Returns the possible transformation targets for the specified module. 
+     * @param source the source module 
+     * @return the possible transformation targets
+     */
+    PModuleDescriptor[] getTargets(PModuleDescriptor source);
+
+    /**
+     * Returns all transformations (mappings) for the specified module.
+     * @param source the source module
+     * @return all transformations (mappings) for the specified module
+     */
+    PTModuleMapping[] getMappings(PModuleDescriptor source);
+
+    /**
+     * Returns the mapping for the specified source and destination module
+     * 
+     * @param source the source module 
+     * @param destination the destination module
+     * @return the mapping of the specified modules or null of no such mapping exists
+     */
+    PTModuleMapping getMapping(PModuleDescriptor source, PModuleDescriptor destination);
+
+    /**
+     * Returns the mapping for the specified source and destination module
+     * 
+     * @param source the source module 
+     * @param destination the destination module
+     * @return the mapping of the specified modules or null of no such mapping exists
+     */
+    PTModuleMapping getMapping(PModule source, PModuleDescriptor destination);
     
-    private List<PTGroup> groups = 
-        new ArrayList<PTGroup>();
-    private transient Map<PModuleDescriptor, Collection<PTGroup>> targetMap;
-
-    public void add(PTGroup group)
-    {
-        groups.add(group);
-    }
-    
-    public int size()
-    {
-        return groups.size();
-    }
-    
-    public PTGroup remove(int index)
-    {
-        return groups.remove(index);
-    }
-    
-    public PTGroup get(int index)
-    {
-        return groups.get(index);
-    }
-
-    public Iterator<PTGroup> iterator()
-    {
-        return groups.iterator();
-    }
-
-    public Collection<PTGroup> getTargets(PModuleDescriptor source)
-    {
-        if (targetMap == null)
-            targetMap = new HashMap<PModuleDescriptor, Collection<PTGroup>>();
-        
-        Collection<PTGroup> c = targetMap.get(source);
-        if (c == null)
-        {
-            List<PTGroup> list = new LinkedList<PTGroup>();
-            buildTargets(list, source);
-            c = Collections.<PTGroup>unmodifiableList(list);
-            targetMap.put(source, c);
-        }
-        
-        return c;
-    }
-
-    private void buildTargets(Collection<PTGroup> c, PModuleDescriptor source)
-    {
-        for (PTGroup group: this)
-        {
-            if (group.contains(source))
-            {
-                c.add(group);
-            }
-        }
-    }
-
-    public TransformTool createTransformation(PModuleDescriptor source)
-    {
-        return new TransformTool(this, source);
-    }
-
 }
