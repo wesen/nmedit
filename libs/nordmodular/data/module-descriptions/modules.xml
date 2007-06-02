@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xml" href="./ModuleDescriptions2html.xsl"?>
-<ModuleDescriptions version="1.3"
+
+
+<!--
+  Copyright (C) 2006 Christian Schneider
+  
+  This file is part of Nomad.
+  
+  Nomad is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+  
+  Nomad is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with Nomad; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+-->
+
+
+<ModuleDescriptions version="1.4"
   xmlns="http://nmedit.sf.net/ns/ModuleDescriptions"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 <header>
@@ -1130,6 +1153,13 @@
     <image type="icon32x32" src="img/icons/32x32/module-id-2.png" width="32" height="32" />
     <connector component-id="c1" index="0" name="left" type="output" signal="audio" />
     <connector component-id="c2" index="1" name="right" type="output" signal="audio" />
+    
+    <light type="meter" index="0" component-id="lightAudioLeft" name="audio left" minValue="0" maxValue="127">
+	    <attribute name="possible-values" value="0, 16, 32, 48, 64, 80, 96, 112, 122, 127"/>
+    </light>
+    <light type="meter" index="1" component-id="lightAudioRight" name="audio right" minValue="0" maxValue="127">
+	    <attribute name="possible-values" value="0, 16, 32, 48, 64, 80, 96, 112, 122, 127"/>
+    </light>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="2.2" />
     <attribute name="x-mem" type="double" value="1.0" />
@@ -1541,6 +1571,9 @@
     <parameter component-id="p40" index="18" name="morph:record" class="morph" maxValue="1" />
     <parameter component-id="p41" index="19" name="morph:pause" class="morph" maxValue="1" />
     <parameter component-id="p42" index="20" name="morph:active" class="morph" maxValue="1" />
+
+	<light component-id="ledStep1-16" type="led-array" name="Step 1-16" minValue="0" maxValue="16" />
+
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.4375" />
     <attribute name="x-mem" type="double" value="0.5625" />
@@ -1654,6 +1687,9 @@
     <parameter component-id="p70" index="33" name="morph:seq 2, step 14" class="morph" maxValue="1" />
     <parameter component-id="p71" index="34" name="morph:seq 2, step 15" class="morph" maxValue="1" />
     <parameter component-id="p72" index="35" name="morph:seq 2, step 16" class="morph" maxValue="1" />
+    
+	<light component-id="ledStep1-16" type="led-array" name="Step 1-16" minValue="0" maxValue="16" />
+    
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.65625" />
     <attribute name="x-mem" type="double" value="0.625" />
@@ -1734,6 +1770,7 @@
     <parameter component-id="p10" index="3" name="morph:sustain" class="morph" defaultValue="64" />
     <parameter component-id="p11" index="4" name="morph:release" class="morph" />
     <parameter component-id="p12" index="5" name="morph:invert" class="morph" maxValue="1" />
+    <light component-id="ledGateIn" name="LED Gate" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.625" />
     <attribute name="x-mem" type="double" value="1.03125" />
@@ -1772,6 +1809,10 @@
     <parameter component-id="p16" index="6" name="morph:act" class="morph" maxValue="1" />
     <parameter component-id="p17" index="7" name="morph:mon" class="morph" maxValue="1" />
     <parameter component-id="p18" index="8" name="morph:bypass" class="morph" maxValue="1" />
+    
+    <light index="0" type="meter" component-id="lightGainReduction" name="Gain reduction DB" minValue="0" maxValue="127" ledOnValue="127">
+	    <attribute name="limiter-active" value="127"/>
+    </light>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="8.28125" />
     <attribute name="x-mem" type="double" value="0.5625" />
@@ -1834,6 +1875,7 @@
     <parameter component-id="p16" index="6" name="morph:sustain mod" class="morph" />
     <parameter component-id="p17" index="7" name="morph:release mod" class="morph" />
     <parameter component-id="p18" index="8" name="morph:invert" class="morph" maxValue="1" />
+    <light component-id="ledGate" name="LED Gate" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="3.34375" />
     <attribute name="x-mem" type="double" value="2.59375" />
@@ -1869,6 +1911,7 @@
     <parameter component-id="p14" index="5" name="morph:rate kbt" class="morph" />
     <parameter component-id="p15" index="6" name="morph:phase" class="morph" defaultValue="64" />
     <parameter component-id="p16" index="7" name="morph:mute" class="morph" maxValue="1" />
+    <light component-id="ledControlOut" name="LED Control Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.78125" />
     <attribute name="x-mem" type="double" value="0.5625" />
@@ -1905,6 +1948,7 @@
     <parameter component-id="p14" index="5" name="morph:rate kbt" class="morph" />
     <parameter component-id="p15" index="6" name="morph:PW mod" class="morph" />
     <parameter component-id="p16" index="7" name="morph:PW" class="morph" defaultValue="64" />
+    <light component-id="ledControlOut" name="LED Control Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.1875" />
     <attribute name="x-mem" type="double" value="0.5" />
@@ -1935,6 +1979,7 @@
     <parameter component-id="p10" index="3" name="morph:rate mod" class="morph" />
     <parameter component-id="p11" index="4" name="morph:mono" class="morph" maxValue="1" />
     <parameter component-id="p12" index="5" name="morph:mute" class="morph" maxValue="1" />
+    <light component-id="ledControlOut" name="LED Control Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.46875" />
     <attribute name="x-mem" type="double" value="0.5" />
@@ -1958,6 +2003,7 @@
     <!-- parameter(s) -->
     <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" format-id="lfo-hz" />
     <parameter component-id="p3" index="0" name="morph:rate" class="morph" defaultValue="64" />
+    <light component-id="ledControlOut" name="LED Control Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.375" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -1981,6 +2027,7 @@
     <!-- parameter(s) -->
     <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" format-id="lfo-hz" />
     <parameter component-id="p3" index="0" name="morph:rate" class="morph" defaultValue="64" />
+    <light component-id="ledControlOut" name="LED Control Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.78125" />
     <attribute name="x-mem" type="double" value="0.34375" />
@@ -2004,6 +2051,7 @@
     <!-- parameter(s) -->
     <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" format-id="lfo-hz" />
     <parameter component-id="p3" index="0" name="morph:rate" class="morph" defaultValue="64" />
+    <light component-id="ledControlOut" name="LED Control Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.375" />
     <attribute name="x-mem" type="double" value="0.15625" />
@@ -2163,6 +2211,7 @@
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#e6c2df" />
+    <light component-id="ledLogicOut" name="LED Logic Out" index="0" type="led" />
   </module>
   <module component-id="m36" index="36" name="PosEdgeDelay" category="Logic">
     <image type="screenshot" src="img/modules/module-36.png" width="256" height="30" />
@@ -2272,6 +2321,8 @@
     <parameter component-id="p16" index="6" name="morph:in sense 7" class="morph" defaultValue="100" />
     <parameter component-id="p17" index="7" name="morph:in sense 8" class="morph" defaultValue="100" />
     <parameter component-id="p18" index="8" name="morph:-6dB" class="morph" maxValue="1" />
+    
+    <light component-id="ledAudioOut" name="LED Audio Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="2.1875" />
     <attribute name="x-mem" type="double" value="0.28125" />
@@ -2384,6 +2435,7 @@
     <parameter component-id="p10" index="3" name="morph:A mod" class="morph" />
     <parameter component-id="p11" index="4" name="morph:H mod" class="morph" />
     <parameter component-id="p12" index="5" name="morph:D mod" class="morph" />
+    <light component-id="ledTriggerIn" name="LED Trigger Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="2.46875" />
     <attribute name="x-mem" type="double" value="1.3125" />
@@ -2574,6 +2626,7 @@
     <parameter component-id="p20" index="8" name="morph:time 5" class="morph" />
     <parameter component-id="p21" index="9" name="morph:sustain" class="morph" maxValue="4" />
     <parameter component-id="p22" index="10" name="morph:curve" class="morph" maxValue="2" />
+    <light component-id="ledGateIn" name="LED Gate Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.96875" />
     <attribute name="x-mem" type="double" value="2.53125" />
@@ -2682,6 +2735,7 @@
     <parameter component-id="p30" index="13" name="morph:Click" class="morph" defaultValue="16" />
     <parameter component-id="p31" index="14" name="morph:Noise" class="morph" defaultValue="16" />
     <parameter component-id="p32" index="15" name="morph:Mute" class="morph" maxValue="1" />
+    <light component-id="ledTriggerIn" name="LED Trigger In" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="12.21875" />
     <attribute name="x-mem" type="double" value="2.1875" />
@@ -3139,6 +3193,7 @@
     <parameter component-id="p9" index="2" name="morph:waveform" class="morph" maxValue="4" />
     <parameter component-id="p10" index="3" name="morph:mono" class="morph" maxValue="1" />
     <parameter component-id="p11" index="4" name="morph:mute" class="morph" maxValue="1" />
+    <light component-id="ledControlOut" name="LED Control Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.21875" />
     <attribute name="x-mem" type="double" value="0.4375" />
@@ -3206,7 +3261,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#eda0a4" />
   </module>
-  <module component-id="m84" index="84" name="AD" category="Env">
+  <module component-id="m84" index="84" name="AD-Env" category="Env">
     <image type="screenshot" src="img/modules/module-84.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-84.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-84.png" width="32" height="32" />
@@ -3222,6 +3277,7 @@
     <parameter component-id="p4" index="0" name="morph:attack" class="morph" />
     <parameter component-id="p5" index="1" name="morph:decay" class="morph" defaultValue="77" />
     <parameter component-id="p6" index="2" name="morph:gate" class="morph" maxValue="1" />
+    <light component-id="ledGateIn" name="LED Gate In" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.4375" />
     <attribute name="x-mem" type="double" value="0.75" />
@@ -3406,6 +3462,9 @@
     <parameter component-id="p42" index="18" name="morph:record" class="morph" maxValue="1" />
     <parameter component-id="p43" index="19" name="morph:play" class="morph" maxValue="1" />
     <parameter component-id="p44" index="20" name="morph:loop" class="morph" maxValue="1" />
+    
+	<light component-id="ledStep1-16" type="led-array" name="Step 1-16" minValue="0" maxValue="16" />
+    
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.4375" />
     <attribute name="x-mem" type="double" value="0.5625" />
@@ -3464,6 +3523,9 @@
     <parameter component-id="p36" index="16" name="morph:step" class="morph" defaultValue="15" />
     <parameter component-id="p37" index="17" name="morph:uni" class="morph" maxValue="1" />
     <parameter component-id="p38" index="18" name="morph:loop" class="morph" maxValue="1" />
+    
+	<light component-id="ledStep1-16" type="led-array" name="Step 1-16" minValue="0" maxValue="16" />
+    
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.4375" />
     <attribute name="x-mem" type="double" value="0.5625" />
@@ -3772,6 +3834,7 @@
     <parameter component-id="p20" index="8" name="morph:bypass" class="morph" maxValue="1" />
     <parameter component-id="p21" index="9" name="morph:depth" class="morph" defaultValue="64" />
     <parameter component-id="p22" index="10" name="morph:inlevel" class="morph" defaultValue="127" />
+    <light component-id="ledAudioOut" name="LED Audio Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="12.5625" />
     <attribute name="x-mem" type="double" value="1.15625" />
@@ -3799,6 +3862,7 @@
     <parameter component-id="p8" index="2" name="morph:bandwidth" class="morph" />
     <parameter component-id="p9" index="3" name="morph:bypass" class="morph" maxValue="1" />
     <parameter component-id="p10" index="4" name="morph:in level" class="morph" defaultValue="127" />
+    <light component-id="ledAudioOut" name="LED Audio Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="3.34375" />
     <attribute name="x-mem" type="double" value="0.34375" />
@@ -3826,6 +3890,7 @@
     <parameter component-id="p8" index="2" name="morph:mode" class="morph" maxValue="1" />
     <parameter component-id="p9" index="3" name="morph:bypass" class="morph" maxValue="1" />
     <parameter component-id="p10" index="4" name="morph:in level" class="morph" defaultValue="127" />
+    <light component-id="ledAudioOut" name="LED Audio Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="2.4375" />
     <attribute name="x-mem" type="double" value="0.21875" />
@@ -3864,6 +3929,11 @@
     <parameter component-id="p16" index="6" name="morph:sidechain activation" class="morph" maxValue="1" />
     <parameter component-id="p17" index="7" name="morph:sidechain monitor" class="morph" maxValue="1" />
     <parameter component-id="p18" index="8" name="morph:bypass" class="morph" maxValue="1" />
+
+    <light index="0" type="meter" component-id="lightGainReduction" name="Gain reduction DB" minValue="0" maxValue="127" ledOnValue="127">
+	    <attribute name="gate-active" value="127"/>
+    </light>
+    
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="8.28125" />
     <attribute name="x-mem" type="double" value="0.6875" />
@@ -4061,6 +4131,7 @@
     <!-- parameter(s) -->
     <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" format-id="lfo-hz" />
     <parameter component-id="p3" index="0" name="morph:rate" class="morph" defaultValue="64" />
+    <light component-id="ledControlOut" name="LED Control Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.4375" />
     <attribute name="x-mem" type="double" value="0.5" />
@@ -4239,6 +4310,12 @@
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="+6db" class="parameter" maxValue="1" formatter="type('off-on')" />
     <parameter component-id="p2" index="0" name="morph:+6db" class="morph" maxValue="1" />
+    <light index="0" type="meter" component-id="lightAudioLeft" name="audio left" minValue="0" maxValue="127">
+	    <attribute name="possible-values" value="0, 16, 32, 48, 64, 80, 96, 112, 122, 127"/>
+    </light>
+    <light index="1" type="meter" component-id="lightAudioRight" name="audio right" minValue="0" maxValue="127">
+	    <attribute name="possible-values" value="0, 16, 32, 48, 64, 80, 96, 112, 122, 127"/>
+    </light>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="2.2" />
     <attribute name="x-mem" type="double" value="1.0" />

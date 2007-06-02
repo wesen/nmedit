@@ -47,7 +47,7 @@ label{fill:#000;}
 		<connector x="100" y="8" size="13" class="cCONTROL" >
 			<connector component-id="c1"  alt="mst" />
 		</connector>
-		<connector x="235" y="8" size="13" class="cCONTROL" >
+		<connector x="238" y="14" size="13" class="cCONTROL" >
 			<connector component-id="c2"  alt="out" />
 		</connector>
 		<knob x="180" y="2" size="21" >
@@ -58,6 +58,7 @@ label{fill:#000;}
 		<textDisplay x="131" y="8" width="40" height="16" >
 			<parameter component-id="p2"  alt="rate" />
 		</textDisplay>
+		<light component-id="ledControlOut" type="led" x="240" y="5" width="7" height="7" /> 
 	</module>
 	<module component-id="m31" width="255" height="30">
 		<name>Noise</name>
@@ -495,7 +496,7 @@ label{fill:#000;}
 		<connector x="100" y="8" size="13" class="cCONTROL" >
 			<connector component-id="c1"  alt="mst" />
 		</connector>
-		<connector x="235" y="8" size="13" class="cCONTROL" >
+		<connector x="238" y="14" size="13" class="cCONTROL" >
 			<connector component-id="c2"  alt="out" />
 		</connector>
 		<knob x="180" y="2" size="21" >
@@ -506,6 +507,7 @@ label{fill:#000;}
 		<textDisplay x="129" y="6" width="40" height="16" >
 			<parameter component-id="p2"  alt="rate" />
 		</textDisplay>
+		<light component-id="ledControlOut" type="led" x="240" y="5" width="7" height="7" /> 
 	</module>
 	<module component-id="m100" width="255" height="45">
 		<name>KeybSplit</name>
@@ -682,6 +684,7 @@ label{fill:#000;}
 			<parameter component-id="p1"  alt="MTune" />
 		</textDisplay>
 		<label x="157" y="111" >Preset</label>
+        <light component-id="ledTriggerIn" type="led" x="6" y="50" width="7" height="7" /> 
 	</module>
 	<module component-id="m82" width="255" height="30">
 		<name>Diode</name>
@@ -763,7 +766,7 @@ label{fill:#000;}
 		<connector x="100" y="8" size="13" class="cCONTROL" >
 			<connector component-id="c1"  alt="mst" />
 		</connector>
-		<connector x="235" y="8" size="13" class="cCONTROL" >
+		<connector x="238" y="14" size="13" class="cCONTROL" >
 			<connector component-id="c2"  alt="out" />
 		</connector>
 		<knob x="180" y="2" size="21" >
@@ -774,6 +777,7 @@ label{fill:#000;}
 		<textDisplay x="128" y="6" width="40" height="16" >
 			<parameter component-id="p2"  alt="rate" />
 		</textDisplay>
+		<light component-id="ledControlOut" type="led" x="240" y="5" width="7" height="7" /> 
 	</module>
 	<module component-id="m64" width="255" height="30">
 		<name>NegEdgeDelay</name>
@@ -801,6 +805,12 @@ label{fill:#000;}
 		<light x="208" y="18" width="7" height="7" >
 <light>light.2.1</light>
 		</light> -->
+		
+		<light component-id="lightAudioLeft" type="meter" x="115" y="4" width="92" height="5" /> 
+		<light component-id="lightAudioRight" type="meter" x="115" y="20" width="92" height="5" />
+		<light component-id="lightAudioLeft" type="led" x="207" y="4" width="7" height="7" ledOnValue="127" /> 
+		<light component-id="lightAudioRight" type="led" x="207" y="20" width="7" height="7" ledOnValue="127" />
+		
 		<connector x="221" y="13" size="13" class="cAUDIO" >
 			<connector component-id="c1"  alt="left" />
 		</connector>
@@ -810,9 +820,6 @@ label{fill:#000;}
 		<label x="85" y="13" >Left</label>
 		<label x="85" y="26" >Right</label>
 		<label x="239" y="12" >R</label>
-		<!--
-		<display.audiolevel x="115" y="4" width="92" height="5" /> 
-		<display.audiolevel x="115" y="20" width="92" height="5" /> -->
 		<label x="111" y="19" >30</label>
 		<label x="125" y="19" >20</label>
 		<label x="138" y="19" >10</label>
@@ -844,7 +851,7 @@ label{fill:#000;}
 		<connector x="100" y="8" size="13" class="cCONTROL" >
 			<connector component-id="c1"  alt="mst" />
 		</connector>
-		<connector x="235" y="8" size="13" class="cCONTROL" >
+		<connector x="238" y="14" size="13" class="cCONTROL" >
 			<connector component-id="c2"  alt="out" />
 		</connector>
 		<knob x="180" y="2" size="21" >
@@ -854,7 +861,8 @@ label{fill:#000;}
 		<image x="220" y="10" width="11" height="9" xlink:href="./images/slice/wf_sine.png" />
 		<textDisplay x="130" y="8" width="40" height="16" >
 			<parameter component-id="p2"  alt="rate" />
-		</textDisplay>
+		</textDisplay>		
+		<light component-id="ledControlOut" type="led" x="240" y="5" width="7" height="7" /> 
 	</module>
 	<module component-id="m57" width="255" height="30">
 		<name>InvLevShift</name>
@@ -990,6 +998,8 @@ label{fill:#000;}
 			<decay component-id="p2"  alt="decay" />
 			<inverse component-id="p9"  alt="invert" />
 		</adsr-mod-envelope>
+
+		<light component-id="ledGate" type="led" x="21" y="50" width="7" height="7" /> 
 	</module>
 	<module component-id="m87" width="255" height="30">
 		<name>FilterB</name>
@@ -1010,7 +1020,7 @@ label{fill:#000;}
 	</module>
 	<module component-id="m35" width="255" height="30">
 		<name>RndPulsGen</name>
-		<connector x="235" y="8" size="13" class="cLOGIC" >
+		<connector x="238" y="14" size="13" class="cLOGIC" >
 			<connector component-id="c1"  alt="out" />
 		</connector>
 		<knob x="176" y="2" size="21" >
@@ -1018,6 +1028,8 @@ label{fill:#000;}
 		</knob>
 		<label x="138" y="19" >Density</label>
 		<image x="211" y="9" width="19" height="12" xlink:href="./images/single/decorator.rndgen.logic.png" />
+		
+		<light component-id="ledLogicOut" type="led" x="240" y="5" width="7" height="7" /> 
 	</module>
 	<module component-id="m7" width="255" height="90">
 		<name>OscA</name>
@@ -1136,6 +1148,11 @@ label{fill:#000;}
 		<connector x="236" y="85" size="13" class="cAUDIO" >
 			<connector component-id="c5"  alt="out right" />
 		</connector>
+		
+		<light component-id="lightGainReduction" type="meter" x="150" y="15" width="92" height="5" /> 
+		
+		<light component-id="lightGainReduction" type="led" x="220" y="32" width="7" height="7" ledOnValue="127" /> 
+		
 		<knob x="7" y="78" size="21" >
 			<parameter component-id="p1"  alt="attack" />
 		</knob>
@@ -1234,7 +1251,7 @@ label{fill:#000;}
 		<connector x="200" y="8" size="13" class="cCONTROL" >
 			<connector component-id="c1"  alt="clk" />
 		</connector>
-		<connector x="235" y="8" size="13" class="cCONTROL" >
+		<connector x="238" y="14" size="13" class="cCONTROL" >
 			<connector component-id="c2"  alt="out" />
 		</connector>
 		<button x="95" y="7" width="34" height="19" cyclic="true" landscape="false" >
@@ -1249,6 +1266,7 @@ label{fill:#000;}
 		</button>
 		<label x="179" y="19" >Clk</label>
 		<image x="217" y="9" width="17" height="11" xlink:href="./images/slice/decorator_rndgen_diskret.png" />
+		<light component-id="ledControlOut" type="led" x="240" y="5" width="7" height="7" /> 
 	</module>
 	<module component-id="m24" width="255" height="75">
 		<name>LFOA</name>
@@ -1320,6 +1338,7 @@ label{fill:#000;}
 			<shape component-id="p3"  alt="waveform" />
 			<waveform value="2" />
 		</LFODisplay>
+		<light component-id="ledControlOut" type="led" x="240" y="50" width="7" height="7" /> 
 	</module>
 	<module component-id="m115" width="255" height="60">
 		<name>NoteVelScal</name>
@@ -1511,6 +1530,7 @@ label{fill:#000;}
 			<btn index="1">Lo</btn>
 			<btn index="2">Sub</btn>
 		</button>
+		<light component-id="ledControlOut" type="led" x="240" y="35" width="7" height="7" /> 
 	</module>
 	<module component-id="m67" width="255" height="30">
 		<name>NoteDetect</name>
@@ -1535,13 +1555,11 @@ label{fill:#000;}
 	</module>
 	<module component-id="m127" width="255" height="30">
 		<name>PolyAreaIn</name>
-		<!--
-		<light x="186" y="2" width="7" height="7" >
-<light>light.127.0</light>
-		</light>
-		<light x="186" y="18" width="7" height="7" >
-<light>light.127.1</light>
-		</light> -->
+		<light component-id="lightAudioLeft" type="meter" x="95" y="4" width="82" height="5" /> 
+		<light component-id="lightAudioRight" type="meter" x="95" y="20" width="82" height="5" />
+		<light component-id="lightAudioLeft" type="led" x="177" y="4" width="7" height="7" ledOnValue="127" /> 
+		<light component-id="lightAudioRight" type="led" x="177" y="20" width="7" height="7" ledOnValue="127" />
+		
 		<connector x="222" y="13" size="13" class="cAUDIO" >
 			<connector component-id="c1"  alt="Left" />
 		</connector>
@@ -1873,6 +1891,8 @@ label{fill:#000;}
 			<attack component-id="p1"  alt="A" />
 			<decay component-id="p3"  alt="D" />
 		</ahd-envelope>
+				
+		<light component-id="ledTriggerIn" type="led" x="20" y="32" width="7" height="7" /> 
 	</module>
 	<module component-id="m25" width="255" height="75">
 		<name>LFOB</name>
@@ -1944,6 +1964,7 @@ label{fill:#000;}
 			<phase component-id="p3"  alt="phase" />
 			<waveform value="4" />
 		</LFODisplay>
+		<light component-id="ledControlOut" type="led" x="240" y="50" width="7" height="7" /> 
 	</module>
 	<module component-id="m5" width="255" height="45">
 		<name>1Output</name>
@@ -2032,6 +2053,11 @@ label{fill:#000;}
 		<label x="181" y="31" >14</label>
 		<label x="193" y="31" >15</label>
 		<label x="205" y="31" >16</label>
+		
+		
+		<light component-id="ledStep1-16" type="led-array" x="27" y="30" width="190" height="7" /> 
+		
+		
 		<slider x="24" y="39" width="11" height="50" orientation="vertical" >
 			<parameter component-id="p1"  alt="xy" />
 		</slider>
@@ -2328,6 +2354,7 @@ label{fill:#000;}
 			<shape component-id="p4"  alt="waveform" />
 			<waveform value="2" />
 		</LFODisplay>
+		<light component-id="ledControlOut" type="led" x="240" y="30" width="7" height="7" /> 
 	</module>
 	<module component-id="m73" width="255" height="30">
 		<name>LogicProc</name>
@@ -2749,10 +2776,10 @@ label{fill:#000;}
 	</module>
 	<module component-id="m103" width="255" height="60">
 		<name>EqMid</name>
-		<connector x="189" y="42" size="13" class="cAUDIO" >
+		<connector x="189" y="46" size="13" class="cAUDIO" >
 			<connector component-id="c1"  alt="in" />
 		</connector>
-		<connector x="237" y="42" size="13" class="cAUDIO" >
+		<connector x="237" y="46" size="13" class="cAUDIO" >
 			<connector component-id="c2"  alt="out" />
 		</connector>
 		<knob x="7" y="24" size="29" >
@@ -2764,7 +2791,7 @@ label{fill:#000;}
 		<knob x="131" y="32" size="21" >
 			<parameter component-id="p3"  alt="bandwidth" />
 		</knob>
-		<button x="215" y="41" width="18" height="16" cyclic="true" landscape="false" >
+		<button x="215" y="44" width="16" height="16" cyclic="true" landscape="false" >
 			<parameter component-id="p4"  alt="bypass" />
 			<btn index="0">B</btn>
 			<btn index="1">B</btn>
@@ -2789,6 +2816,8 @@ label{fill:#000;}
 			<gain component-id="p2"  alt="gain" />
 			<bandwidth component-id="p3"  alt="bandwidth" />
 	    </eq-mid-display>
+
+   		<light component-id="ledAudioOut" type="led" x="238" y="40" width="7" height="7" /> 
 	</module>
 	<module component-id="m98" width="255" height="60">
 		<name>KeyQuant</name>
@@ -3067,6 +3096,9 @@ label{fill:#000;}
 		<label x="234" y="35" >Out</label>
 		<label x="214" y="13" >Link</label>
 		<label x="135" y="16" >Step</label>
+		
+		<light component-id="ledStep1-16" type="led-array" x="27" y="28" width="190" height="7" /> 
+		
 		<textDisplay x="155" y="4" width="25" height="16" >
 			<parameter component-id="p1"  alt="stepcount" />
 		</textDisplay>
@@ -3139,7 +3171,7 @@ label{fill:#000;}
 		<name>Phaser</name>
 		<image x="167" y="28" width="82" height="46" xlink:href="url(#groupbox)" />
 		<image x="3" y="15" width="80" height="80" xlink:href="url(#groupbox)" />
-		<connector x="197" y="82" size="13" class="cAUDIO" >
+		<connector x="197" y="88" size="13" class="cAUDIO" >
 			<connector component-id="c1"  alt="in" />
 		</connector>
 		<connector x="91" y="82" size="13" class="cCONTROL" >
@@ -3148,7 +3180,7 @@ label{fill:#000;}
 		<connector x="207" y="51" size="13" class="cCONTROL" >
 			<connector component-id="c3"  alt="spread mod" />
 		</connector>
-		<connector x="237" y="82" size="13" class="cAUDIO" >
+		<connector x="237" y="88" size="13" class="cAUDIO" >
 			<connector component-id="c4"  alt="out" />
 		</connector>
 		<knob x="10" y="58" size="29" >
@@ -3177,7 +3209,7 @@ label{fill:#000;}
 		<knob x="172" y="42" size="29" >
 			<parameter component-id="p8"  alt="spread" />
 		</knob>
-		<button x="216" y="81" width="18" height="16" cyclic="true" landscape="false" >
+		<button x="216" y="87" width="18" height="16" cyclic="true" landscape="false" >
 			<parameter component-id="p9"  alt="bypass" />
 			<btn index="0">B</btn>
 			<btn index="1">B</btn>
@@ -3208,9 +3240,10 @@ label{fill:#000;}
 			<peaks component-id="p7"  alt="peaks" />
 			<spread component-id="p8"  alt="spread" />
 	    </phaser-display>
+   		<light component-id="ledAudioOut" type="led" x="238" y="80" width="7" height="7" /> 
 	</module>
 	<module component-id="m84" width="255" height="45">
-		<name>AD</name>
+		<name>AD-Env</name>
 		<image x="211" y="22" width="27" height="19" xlink:href="./images/single/decoration-15.png" />
 		<connector x="7" y="29" size="13" class="cCONTROL" >
 			<connector component-id="c1"  alt="trigger" />
@@ -3251,6 +3284,7 @@ label{fill:#000;}
 			<attack component-id="p1"  alt="attack" />
 			<decay component-id="p2"  alt="decay" />
 		</ad-envelope>
+		<light component-id="ledGateIn" type="led" x="20" y="32" width="7" height="7" /> 
 	</module>
 	<module component-id="m37" width="255" height="30">
 		<name>LogicDelay</name>
@@ -3485,6 +3519,7 @@ label{fill:#000;}
 		<label x="137" y="24" >6</label>
 		<label x="164" y="24" >7</label>
 		<label x="193" y="24" >8</label>
+		<light component-id="ledAudioOut" type="led" x="225" y="45" width="7" height="7" /> 
 	</module>
 	<module component-id="m99" width="255" height="60">
 		<name>PatternGen</name>
@@ -3535,10 +3570,10 @@ label{fill:#000;}
 	</module>
 	<module component-id="m104" width="255" height="60">
 		<name>EqShelving</name>
-		<connector x="189" y="42" size="13" class="cAUDIO" >
+		<connector x="189" y="45" size="13" class="cAUDIO" >
 			<connector component-id="c1"  alt="in" />
 		</connector>
-		<connector x="237" y="42" size="13" class="cAUDIO" >
+		<connector x="237" y="45" size="13" class="cAUDIO" >
 			<connector component-id="c2"  alt="out" />
 		</connector>
 		<knob x="12" y="23" size="29" >
@@ -3552,7 +3587,7 @@ label{fill:#000;}
 			<btn index="0">Hi</btn>
 			<btn index="1">Lo</btn>
 		</button>
-		<button x="215" y="41" width="18" height="16" cyclic="true" landscape="false" >
+		<button x="215" y="44" width="16" height="16" cyclic="true" landscape="false" >
 			<parameter component-id="p4"  alt="bypass" />
 			<btn index="0">B</btn>
 			<btn index="1">B</btn>
@@ -3572,6 +3607,7 @@ label{fill:#000;}
 			<frequency component-id="p1"  alt="freq" />
 			<gain component-id="p2"  alt="gain" />
 	    </eq-shelving-display>
+   		<light component-id="ledAudioOut" type="led" x="238" y="40" width="7" height="7" /> 
 	</module>
 	<module component-id="m72" width="255" height="30">
 		<name>NoteScaler</name>
@@ -3746,6 +3782,10 @@ label{fill:#000;}
 		<connector x="236" y="85" size="13" class="cAUDIO" >
 			<connector component-id="c5"  alt="right" />
 		</connector>
+		<light component-id="lightGainReduction" type="meter" x="150" y="15" width="92" height="5" /> 
+		
+		<light component-id="lightGainReduction" type="led" x="220" y="32" width="7" height="7" ledOnValue="127" /> 
+		
 		<knob x="7" y="78" size="21" >
 			<parameter component-id="p1"  alt="attack" />
 		</knob>
@@ -3953,7 +3993,8 @@ label{fill:#000;}
 			<t4 component-id="p8"  alt="Time  4" />
 			<t5 component-id="p9"  alt="Time  5" />
 			<sustain component-id="p10"  alt="Sustain seg." />
-   	        </multi-env-display>
+   	    </multi-env-display>
+        <light component-id="ledGateIn" type="led" x="8" y="40" width="7" height="7" /> 
 	</module>
 	<module component-id="m90" width="255" height="135">
 		<name>NoteSeqB</name>
@@ -4012,6 +4053,8 @@ label{fill:#000;}
 			<step15 component-id="p17"  alt="note 15" />
 			<step16 component-id="p18"  alt="note 16" />
 		</note-seq-editor>
+		
+		<light component-id="ledStep1-16" type="led-array" x="30" y="28" width="190" height="7" /> 
 		
 	</module>
 	<module component-id="m111" width="255" height="30">
@@ -4188,6 +4231,8 @@ label{fill:#000;}
 		<label x="181" y="31" >14</label>
 		<label x="192" y="31" >15</label>
 		<label x="204" y="31" >16</label>
+		
+		<light component-id="ledStep1-16" type="led-array" x="28" y="30" width="190" height="7" /> 
 		
 		<slider x="24" y="39" width="11" height="50" orientation="vertical" >
 			<parameter component-id="p1"  alt="xy" />
@@ -4403,13 +4448,14 @@ label{fill:#000;}
 			<decay component-id="p3"  alt="decay" />
 			<inverse component-id="p6"  alt="invert" />
 		</adsr-envelope>
+		<light component-id="ledGateIn" type="led" x="7" y="18" width="7" height="7" /> 
 	</module>
 	<module component-id="m110" width="255" height="30">
 		<name>RandomGen</name>
-		<connector x="118" y="8" size="13" class="cCONTROL" >
+		<connector x="118" y="12" size="13" class="cCONTROL" >
 			<connector component-id="c1"  alt="master" />
 		</connector>
-		<connector x="235" y="8" size="13" class="cCONTROL" >
+		<connector x="235" y="12" size="13" class="cCONTROL" >
 			<connector component-id="c2"  alt="out" />
 		</connector>
 		<knob x="184" y="2" size="21" >
@@ -4420,6 +4466,7 @@ label{fill:#000;}
 		<textDisplay x="140" y="6" width="36" height="16" >
 			<parameter component-id="p2"  alt="rate" />
 		</textDisplay>
+   		<light component-id="ledGateOut" type="led" x="238" y="4" width="7" height="7" /> 
 	</module>
 	<module component-id="m10" width="255" height="45">
 		<name>OscSlvB</name>
