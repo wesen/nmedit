@@ -20,9 +20,8 @@ package net.sf.nmedit.jpatch;
 
 import java.util.Iterator;
 
-
 /**
- * A component of a patch.
+ * A component in a patch.
  * 
  * @author Christian Schneider
  */
@@ -56,29 +55,115 @@ public interface PComponent
      */
     PComponent getComponent(int index);
     
+    /**
+     * Returns the index of this component.
+     * Generally this is equal to {@link PDescriptor#getDescriptorIndex() getDescriptor().getDescriptorIndex()}.
+     * @return returns the index of this component
+     * @see PDescriptor#getDescriptorIndex()
+     */
     int getComponentIndex();
     
+    /**
+     * Returns a unique identifier of this component. The uniqueness is limited
+     * to the {@link #getParentComponent() parent component}'s children.
+     * Generally this returns {@link PDescriptor#getComponentId() getDescriptor().getComponentId()}.
+     * @return a unique identifier of this component
+     * @see PDescriptor#getComponentId()
+     */
     Object getComponentId();
 
-    PComponent getComponentByComponentId(Object id);
+    /**
+     * Returns the child component with the specified id or null if no
+     * such component exists.
+     * @param componentId the component id
+     * @return returns the child component with the specified id
+     */
+    PComponent getComponentByComponentId(Object componentId);
 
-    PConnector getConnectorByComponentId(Object id);
+    /**
+     * Returns the child connector with the specified id or null if no
+     * such component exists.
+     * @param componentId the component id
+     * @return returns the child connector with the specified id
+     */
+    PConnector getConnectorByComponentId(Object componentId);
 
-    PParameter getParameterByComponentId(Object id);
+    /**
+     * Returns the child parameter with the specified id or null if no
+     * such component exists.
+     * @param componentId the component id
+     * @return returns the child parameter with the specified id
+     */
+    PParameter getParameterByComponentId(Object componentId);
+
+    /**
+     * Returns the child light with the specified id or null if no
+     * such component exists.
+     * @param componentId the component id
+     * @return returns the child light with the specified id
+     */
+    PLight getLightByComponentId(Object componentId);
     
-
+    /**
+     * Returns the attribute with the specified name or <code>null</code>
+     * if the attribute does not exist. The value is obtained from the
+     * component's {@link #getDescriptor() descriptor}. 
+     * 
+     * @param name name of the attribute
+     * @return the attribute with the specified name
+     * @see PDescriptor#getAttribute(String)
+     */
     Object getAttribute(String name);
-    
-    void setAttribute(String name, Object value);
-    
-    int getIntAttribute(String name, int defaultValue);
-    
+
+    /**
+     * Returns the string-attribute with the specified name or <code>null</code>
+     * if the attribute does not exist. The value is obtained from the
+     * component's {@link #getDescriptor() descriptor}. 
+     * 
+     * @param name name of the attribute
+     * @return the attribute with the specified name
+     * @see PDescriptor#getAttribute(String)
+     */
     String getStringAttribute(String name);
     
+    /**
+     * Returns the integer-attribute with the specified name or <code>null</code>
+     * if the attribute does not exist. The value is obtained from the
+     * component's {@link #getDescriptor() descriptor}. 
+     * 
+     * @param name name of the attribute
+     * @param defaultValue the default value
+     * @return the attribute with the specified name
+     * @see PDescriptor#getIntAttribute(String, int)
+     */
+    int getIntAttribute(String name, int defaultValue);
+
+    /**
+     * Returns the boolean-attribute with the specified name or <code>null</code>
+     * if the attribute does not exist. The value is obtained from the
+     * component's {@link #getDescriptor() descriptor}. 
+     * 
+     * @param name name of the attribute
+     * @param defaultValue the default value
+     * @return the attribute with the specified name
+     * @see PDescriptor#getBooleanAttribute(String, boolean)
+     */
     boolean getBooleanAttribute(String name, boolean defaultValue);
-    
+
+    /**
+     * Returns the number of attributes defined in the 
+     * component's {@link #getDescriptor() descriptor}. 
+     * 
+     * @see PDescriptor#getAttributeCount()
+     */
     int getAttributeCount();
-    
+
+    /**
+     * Returns the names of the attributes which are defined in the
+     * component's {@link #getDescriptor() descriptor}. 
+     * 
+     * @see PDescriptor#attributeKeys()
+     */
     Iterator<String> attributeKeys();
     
 }

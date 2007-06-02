@@ -16,9 +16,32 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.nmedit.jpatch;
 
-public interface PComponentDescriptor extends PDescriptor
+/*
+ * Created on Nov 30, 2006
+ */
+package net.sf.nmedit.jpatch.event;
+
+import java.util.EventListener;
+
+/**
+ * Listens to the events of the {@link net.sf.nmedit.jpatch.PModuleContainer module container}.
+ * 
+ * @author Christian Schneider
+ */
+public interface PModuleContainerListener extends EventListener
 {
 
+    /**
+     * Notifies that a module was added to the module container.
+     * @param e the event
+     */
+    void moduleAdded(PModuleContainerEvent e);
+
+    /**
+     * Notifies that a module was removed from the module container.
+     * @param e the event
+     */
+    void moduleRemoved(PModuleContainerEvent e);
+    
 }

@@ -23,8 +23,13 @@ import java.util.Iterator;
 import net.sf.nmedit.jpatch.PComponent;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PDescriptor;
+import net.sf.nmedit.jpatch.PLight;
 import net.sf.nmedit.jpatch.PParameter;
 
+/**
+ * The reference implementation of interface {@link PComponent}.
+ * @author Christian Schneider
+ */
 public abstract class PBasicComponent<P extends PDescriptor> implements PComponent
 {
     
@@ -88,6 +93,11 @@ public abstract class PBasicComponent<P extends PDescriptor> implements PCompone
     }
 
     public PParameter getParameterByComponentId(Object id)
+    {
+        return null;
+    }
+
+    public PLight getLightByComponentId(Object id)
     {
         return null;
     }

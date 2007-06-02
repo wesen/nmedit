@@ -24,8 +24,12 @@ import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.PParameterDescriptor;
 import net.sf.nmedit.jpatch.event.PParameterListener;
-import net.sf.nmedit.jpatch.event.ParameterEvent;
+import net.sf.nmedit.jpatch.event.PParameterEvent;
 
+/**
+ * The reference implementation of interface {@link PParameter}.
+ * @author Christian Schneider
+ */
 public class PBasicParameter 
     extends PBasicComponent<PParameterDescriptor> 
     implements PParameter
@@ -147,7 +151,7 @@ public class PBasicParameter
     
     protected void fireParameterValueChanged(int oldValue, int newValue) 
     {
-        ParameterEvent parameterEvent = null;
+        PParameterEvent parameterEvent = null;
         // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
         // Process the listeners last to first, notifying
@@ -158,7 +162,7 @@ public class PBasicParameter
             {
                 // Lazily create the event:
                 if (parameterEvent == null)
-                    parameterEvent = new ParameterEvent(this, ParameterEvent.VALUE_CHANGED);
+                    parameterEvent = new PParameterEvent(this, PParameterEvent.VALUE_CHANGED);
                 ((PParameterListener)listeners[i+1]).parameterValueChanged(parameterEvent);
             }
         }

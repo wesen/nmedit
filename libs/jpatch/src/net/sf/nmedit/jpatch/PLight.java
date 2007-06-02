@@ -18,21 +18,28 @@
  */
 package net.sf.nmedit.jpatch;
 
-import java.awt.Color;
+import net.sf.nmedit.jpatch.event.PLightListener;
 
-/**
- * Identifies a specific signal type for example 
- * an audio signal, a logic signal or a control signal. 
- */
-public interface PSignalType 
+public interface PLight extends PComponent
 {
 
-    String getName();
+    int getType();
     
-    int getId();
+    int getMinValue();
     
-    PSignalTypes getSignalTypes();
+    int getMaxValue();
     
-    Color getColor();
+    int getDefaultValue();
+
+    int getValue();
+    
+    void setValue(int value);
+    
+    PModule getParentComponent();
+    
+    void addLightListener(PLightListener l);
+    void removeLightListener(PLightListener l);
+    
+    PLightDescriptor getDescriptor();
     
 }

@@ -22,6 +22,10 @@ import net.sf.nmedit.jpatch.PFactory;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 
+/**
+ * The reference implementation of interface {@link PFactory}.
+ * @author Christian Schneider
+ */
 public class PBasicFactory implements PFactory
 {
     

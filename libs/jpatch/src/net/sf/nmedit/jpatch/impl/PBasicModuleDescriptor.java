@@ -27,9 +27,14 @@ import java.util.Map;
 import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
 import net.sf.nmedit.jpatch.PDescriptor;
+import net.sf.nmedit.jpatch.PLightDescriptor;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PParameterDescriptor;
 
+/**
+ * The reference implementation of interface {@link PModuleDescriptor}.
+ * @author Christian Schneider
+ */
 public class PBasicModuleDescriptor extends PBasicDescriptor
 implements PModuleDescriptor
 {
@@ -37,6 +42,7 @@ implements PModuleDescriptor
     private static final long serialVersionUID = 5166147655672576230L;
     private List<PParameterDescriptor> parameters;
     private List<PConnectorDescriptor> connectors;
+    private List<PLightDescriptor> lights;
     private transient Map<Object, PDescriptor> componentIdMap;
     private ModuleDescriptions modules;
 
@@ -53,6 +59,7 @@ implements PModuleDescriptor
         {
             parameters = new ArrayList<PParameterDescriptor>(1);
             connectors = new ArrayList<PConnectorDescriptor>(1);
+            lights = new ArrayList<PLightDescriptor>(0);
         }
     }
 
@@ -69,12 +76,26 @@ implements PModuleDescriptor
         for (int i=connectors.size()-1;i>=0;i--)
             connectors.get(i).setDescriptorIndex(i);
     }
+
+    public void setLights(Collection<PLightDescriptor> c)
+    {
+        lights = new ArrayList<PLightDescriptor>(c);
+        for (int i=lights.size()-1;i>=0;i--)
+            lights.get(i).setDescriptorIndex(i);
+    }
     
     public ModuleDescriptions getModules()
     {
         return modules;
     }
-    
+
+    public void addLightDescriptor(PLightDescriptor descriptor)
+    {
+        int index = lights.size();
+        lights.add(index, descriptor);
+        descriptor.setDescriptorIndex(index);
+    }
+
     public void addParameterDescriptor(PParameterDescriptor descriptor)
     {
         int index = parameters.size();
@@ -87,6 +108,16 @@ implements PModuleDescriptor
         int index = connectors.size();
         connectors.add(index, descriptor);
         descriptor.setDescriptorIndex(index);
+    }
+
+    public PLightDescriptor getLightDescriptor(int index)
+    {
+        return lights.get(index);
+    }
+
+    public int getLightDescriptorCount()
+    {
+        return lights.size();
     }
     
     public PConnectorDescriptor getConnectorDescriptor(int index)
@@ -118,10 +149,11 @@ implements PModuleDescriptor
     {
         if (componentIdMap == null)
         {
-            int dc = getParameterDescriptorCount()+getConnectorDescriptorCount();
+            int dc = getParameterDescriptorCount()+getConnectorDescriptorCount()+getLightDescriptorCount();
             componentIdMap = new HashMap<Object, PDescriptor>(dc*2);
             for (PDescriptor d: parameters) putComponentInMap(d);
             for (PDescriptor d: connectors) putComponentInMap(d);
+            for (PDescriptor d: lights) putComponentInMap(d);
         }
         return componentIdMap.get(id);
     }
@@ -140,5 +172,5 @@ implements PModuleDescriptor
     {
         return getBooleanAttribute("instantiable", true);
     }
-    
+
 }

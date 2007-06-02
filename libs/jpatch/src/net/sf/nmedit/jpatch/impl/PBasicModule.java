@@ -29,6 +29,8 @@ import net.sf.nmedit.jpatch.PConnectionManager;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
 import net.sf.nmedit.jpatch.PDescriptor;
+import net.sf.nmedit.jpatch.PLight;
+import net.sf.nmedit.jpatch.PLightDescriptor;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
@@ -36,16 +38,27 @@ import net.sf.nmedit.jpatch.PModuleMetrics;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.PParameterDescriptor;
 import net.sf.nmedit.jpatch.PPatch;
-import net.sf.nmedit.jpatch.event.ModuleEvent;
-import net.sf.nmedit.jpatch.event.ModuleListener;
+import net.sf.nmedit.jpatch.event.PModuleEvent;
+import net.sf.nmedit.jpatch.event.PModuleListener;
 import net.sf.nmedit.jpatch.event.PParameterListener;
 
+/**
+ * The reference implementation of interface {@link PModule}.
+ * @author Christian Schneider
+ */
 public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements PModule
 {
 
+    private static final PParameter[] EMPTYP = new PParameter[0];
+    private static final PConnector[] EMPTYC = new PConnector[0];
+    private static final PLight[] EMPTYL = new PLight[0];
+    
+    
+    
     private String title;
     private PParameter[] parameters;
     private PConnector[] connectors;
+    private PLight[] lights;
     private PModuleContainer parent;
     private EventListenerList listenerList = new EventListenerList();
     protected int sx = 0;
@@ -78,19 +91,19 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
         }
     }
 
-    public void addModuleListener(ModuleListener l)
+    public void addModuleListener(PModuleListener l)
     {
-        listenerList.add(ModuleListener.class, l);
+        listenerList.add(PModuleListener.class, l);
     }
 
-    public void removeModuleListener(ModuleListener l)
+    public void removeModuleListener(PModuleListener l)
     {
-        listenerList.remove(ModuleListener.class, l);
+        listenerList.remove(PModuleListener.class, l);
     }
 
     protected void fireModuleRenamed(String oldTitle, String newTitle)
     {
-        ModuleEvent moduleEvent = null;
+        PModuleEvent moduleEvent = null;
         // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
         // Process the listeners last to first, notifying
@@ -102,17 +115,17 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
                 // Lazily create the event:
                 if (moduleEvent == null)
                 {
-                    moduleEvent = new ModuleEvent(this);
+                    moduleEvent = new PModuleEvent(this);
                     moduleEvent.moduleRenamed(oldTitle);
                 }
-                ((ModuleListener)listeners[i+1]).moduleRenamed(moduleEvent);
+                ((PModuleListener)listeners[i+1]).moduleRenamed(moduleEvent);
             }
         }
     }
 
     protected void fireModuleMoved(int oldScreenX, int oldScreenY)
     {
-        ModuleEvent moduleEvent = null;
+        PModuleEvent moduleEvent = null;
         // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
         // Process the listeners last to first, notifying
@@ -124,10 +137,10 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
                 // Lazily create the event:
                 if (moduleEvent == null)
                 {
-                    moduleEvent = new ModuleEvent(this);
+                    moduleEvent = new PModuleEvent(this);
                     moduleEvent.moduleMoved(oldScreenX, oldScreenY);
                 }
-                ((ModuleListener)listeners[i+1]).moduleMoved(moduleEvent);
+                ((PModuleListener)listeners[i+1]).moduleMoved(moduleEvent);
             }
         }
     }
@@ -156,21 +169,53 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
         return new PBasicParameter(descriptor, this, componentIndex);
     }
     
+    protected PLight createLight(PLightDescriptor descriptor, int componentIndex)
+    {
+        return new PBasicLight(descriptor, this, componentIndex);
+    }
+    
     /**
      * Creates the components of this module: connectors and parameters.
      * 
-     * @see #createConnector(PConnectorDescriptor)
-     * @see #createParameter(PParameterDescriptor)
+     * @see #createConnector(PConnectorDescriptor,int)
+     * @see #createParameter(PParameterDescriptor,int)
      */
     protected void createComponents()
     {
         PModuleDescriptor d = getDescriptor();
-        connectors = new PConnector[d.getConnectorDescriptorCount()];
-        for (int i = connectors.length-1; i>=0; i--)
-            connectors[i] = createConnector(d.getConnectorDescriptor(i), i);
-        parameters = new PParameter[d.getParameterDescriptorCount()];
-        for (int i = parameters.length-1; i>=0; i--)
-            parameters[i] = createParameter(d.getParameterDescriptor(i), connectors.length+i);
+        
+        if (d.getConnectorDescriptorCount()>0)
+        {
+            connectors = new PConnector[d.getConnectorDescriptorCount()];
+            for (int i = connectors.length-1; i>=0; i--)
+                connectors[i] = createConnector(d.getConnectorDescriptor(i), i);
+        }
+        else
+        {
+            connectors = EMPTYC;
+        }
+        int offset = connectors.length;
+        if (d.getParameterDescriptorCount()>0)
+        {
+            parameters = new PParameter[d.getParameterDescriptorCount()];
+            for (int i = parameters.length-1; i>=0; i--)
+                parameters[i] = createParameter(d.getParameterDescriptor(i), offset+i);
+        }
+        else
+        {
+            parameters = EMPTYP;
+        }
+        offset+=parameters.length;
+        if (d.getLightDescriptorCount()>0)
+        {
+            lights = new PLight[d.getLightDescriptorCount()];
+            for (int i = lights.length-1; i>=0; i--)
+                lights[i] = createLight(d.getLightDescriptor(i), offset+i);
+        }
+        else
+        {
+            lights = EMPTYL;
+        }
     }
 
     public PComponent getComponent(int index)
@@ -179,22 +224,32 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
         {
             return connectors[index];
         }
-        else
+        else 
         {
             index -= connectors.length;
-            return parameters[index];
+            if (index<parameters.length)
+            {
+                return parameters[index];
+            }
+            else
+            {
+                index -= parameters.length;
+                return lights[index];
+            }
         }
     }
 
     public int getComponentCount()
     {
-        return connectors.length+parameters.length;
+        return connectors.length+parameters.length+lights.length;
     }
 
     public PConnector getConnector(PConnectorDescriptor descriptor)
     {
-        if (getDescriptor() != descriptor.getParentDescriptor())
-            throw new InvalidDescriptorException(descriptor, "parents are not equal");
+        PDescriptor parent = descriptor.getParentDescriptor();
+        if (!(getDescriptor() == parent
+                || getDescriptor().equals(parent)))
+            throw new InvalidDescriptorException(descriptor, "parents are not equal "+descriptor+" in "+this);
         int index = descriptor.getDescriptorIndex();
         if (index<0 || index>=getConnectorCount())
             throw new InvalidDescriptorException(descriptor, "invalid connector index: "+index);
@@ -213,12 +268,24 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
 
     public PParameter getParameter(PParameterDescriptor descriptor)
     {
-        if (getDescriptor() != descriptor.getParentDescriptor())
-            throw new InvalidDescriptorException(descriptor, "parents are not equal");
+        PDescriptor parent = descriptor.getParentDescriptor();
+        if (!(getDescriptor() == parent || getDescriptor().equals(parent)))
+            throw new InvalidDescriptorException(descriptor, "parents are not equal "+descriptor+" in "+this);
         int index = descriptor.getDescriptorIndex();
         if (index<0 || index>=getParameterCount())
             throw new InvalidDescriptorException(descriptor, "invalid parameter index: "+index);
         return parameters[index];
+    }
+
+    public PLight getLight(PLightDescriptor descriptor)
+    {
+        PDescriptor parent = descriptor.getParentDescriptor();
+        if (!(getDescriptor() == parent || getDescriptor().equals(parent)))
+            throw new InvalidDescriptorException(descriptor, "parents are not equal "+descriptor+" in "+this);
+        int index = descriptor.getDescriptorIndex();
+        if (index<0 || index>=getLightCount())
+            throw new InvalidDescriptorException(descriptor, "invalid light index: "+index);
+        return lights[index];
     }
 
     public PParameter getParameter(int index)
@@ -226,6 +293,16 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
         return parameters[index];
     }
 
+    public PLight getLight(int index)
+    {
+        return lights[index];
+    }
+
+    public int getLightCount()
+    {
+        return lights.length;
+    }
+    
     public int getParameterCount()
     {
         return parameters.length;
@@ -283,6 +360,13 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
         else return null;
     }
 
+    public PLight getLightByComponentId(Object id)
+    {
+        PLightDescriptor d = getDescriptor().getLightDescriptorByComponentId(id);
+        if (d != null) return getLight(d);
+        else return null;
+    }
+
     public Point getScreenLocation()
     {
         return new Point(getScreenX(), getScreenY());
@@ -303,6 +387,10 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
         PModuleMetrics m = getModuleMetrics();
         if (m != null)
         {
+            
+            x = m.alignScreenX(x);
+            y = m.alignScreenY(y);
+            
             x = Math.max(0, Math.min(x, m.getMaxScreenX()));
             y = Math.max(0, Math.min(y, m.getMaxScreenY()));
         }

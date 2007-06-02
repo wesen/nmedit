@@ -40,5 +40,7 @@ public interface PModuleMetrics
     int getMaxScreenY();
     int getMaxInternalX();
     int getMaxInternalY();
+    int alignScreenX(int x);
+    int alignScreenY(int y);
     
 }

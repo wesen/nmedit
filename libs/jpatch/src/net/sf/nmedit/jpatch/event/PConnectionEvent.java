@@ -26,37 +26,42 @@ import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnectionManager;
 import net.sf.nmedit.jpatch.PConnector;
 
-public class ConnectionEvent extends JPatchEvent
+/**
+ * Event sent by the {@link PConnectionManager connection manager}.
+ * 
+ * @author Christian Schneider
+ */
+public class PConnectionEvent extends PPatchEvent
 {
 
     private PConnector source;
     private PConnector destination;
     private transient PConnection connection;
 
-    protected ConnectionEvent(  Object target, long when, int id, int x, int y, int key,
+    protected PConnectionEvent(  Object target, long when, int id, int x, int y, int key,
             int modifiers, Object arg )
     {
         super( target, when, id, x, y, key, modifiers, arg );
     }
 
-    protected ConnectionEvent( Object target, long when, int id, int x, int y, int key,
+    protected PConnectionEvent( Object target, long when, int id, int x, int y, int key,
             int modifiers )
     {
         super( target, when, id, x, y, key, modifiers );
     }
 
-    protected ConnectionEvent( Object target, int id, Object arg )
+    protected PConnectionEvent( Object target, int id, Object arg )
     {
         super( target, id, arg );
     }
     
-    public ConnectionEvent(PConnectionManager cm, PConnection c)
+    public PConnectionEvent(PConnectionManager cm, PConnection c)
     {
         this(cm, c.getA(), c.getB());
         this.connection = c;
     }
     
-    public ConnectionEvent(PConnectionManager cm, PConnector source, PConnector destination)
+    public PConnectionEvent(PConnectionManager cm, PConnector source, PConnector destination)
     {
         this(cm, 0, null);
         this.source = source;

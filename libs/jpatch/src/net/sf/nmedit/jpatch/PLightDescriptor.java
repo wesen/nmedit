@@ -16,19 +16,22 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+package net.sf.nmedit.jpatch;
 
-/*
- * Created on Nov 30, 2006
- */
-package net.sf.nmedit.jpatch.event;
-
-import java.util.EventListener;
-
-public interface ModuleListener extends EventListener
+public interface PLightDescriptor extends PDescriptor
 {
 
-    void moduleMoved(ModuleEvent e);
-
-    void moduleRenamed(ModuleEvent e);
+    public static final int TYPE_UNKNOWN = 0;
+    public static final int TYPE_LED = 1;
+    public static final int TYPE_LED_ARRAY = 2;
+    public static final int TYPE_METER = 3;
     
+    int getType();
+    
+    int getMinValue();
+    
+    int getMaxValue();
+    
+    int getDefaultValue();
+
 }

@@ -22,20 +22,38 @@
  */
 package net.sf.nmedit.jpatch.event;
 
-import java.util.EventListener;
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PParameter;
 
 /**
- * Listens to the events of the {@link net.sf.nmedit.jpatch.PParameter parameter}.
+ * Event sent by a {@link PParameter parameter}.
  * 
  * @author Christian Schneider
  */
-public interface PParameterListener extends EventListener
+public class PParameterEvent extends PPatchEvent
 {
 
-    /**
-     * Notifies that the value of the parameter has changed.
-     * @param e the event
-     */
-    void parameterValueChanged(PParameterEvent e);
+    public PParameterEvent(PParameter parameter, int id)
+    {
+        super(parameter, id, null);
+    }
     
+    /**
+     * Returns the module containing the {@link #getParameter() parameter}.
+     * @return the module containing the parameter
+     */
+    public PModule getModule()
+    {
+        return getParameter().getParentComponent();
+    }
+    
+    /**
+     * Returns the parameter that changed.
+     * @return the parameter
+     */
+    public PParameter getParameter()
+    {
+        return (PParameter) target;
+    }
+
 }

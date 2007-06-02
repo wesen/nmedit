@@ -29,6 +29,12 @@ import net.sf.nmedit.jpatch.PSettings;
 import net.sf.nmedit.jpatch.history.History;
 import net.sf.nmedit.jpatch.history.HistoryImpl;
 
+/**
+ * The reference implementation of interface {@link PPatch}.
+ * 
+ * TODO settings / history / meta data implementation
+ * @author Christian Schneider
+ */
 public class PBasicPatch implements PPatch
 {
 

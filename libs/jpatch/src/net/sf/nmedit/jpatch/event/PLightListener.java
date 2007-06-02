@@ -16,26 +16,13 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-/*
- * Created on Nov 30, 2006
- */
 package net.sf.nmedit.jpatch.event;
 
 import java.util.EventListener;
 
-/**
- * Listens to the events of the {@link net.sf.nmedit.jpatch.PParameter parameter}.
- * 
- * @author Christian Schneider
- */
-public interface PParameterListener extends EventListener
+public interface PLightListener extends EventListener
 {
 
-    /**
-     * Notifies that the value of the parameter has changed.
-     * @param e the event
-     */
-    void parameterValueChanged(PParameterEvent e);
+    void lightChanged(PLightEvent e);
     
 }

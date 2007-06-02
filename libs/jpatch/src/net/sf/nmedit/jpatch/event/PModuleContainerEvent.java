@@ -22,73 +22,76 @@
  */
 package net.sf.nmedit.jpatch.event;
 
-import java.awt.Event;
-
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleContainer;
 
-public class ModuleEvent extends JPatchEvent
+/**
+ * Event sent by a {@link PModuleContainer module container}.
+ * 
+ * @author Christian Schneider
+ */
+public class PModuleContainerEvent extends PPatchEvent
 {
 
-    private String oldName;
+    private PModuleContainer container;
+    private PModule module;
+    private int index = -1;
 
-    protected ModuleEvent( Object target, long when, int id, int x, int y, int key,
+    protected PModuleContainerEvent( Object target, long when, int id, int x, int y, int key,
             int modifiers, Object arg )
     {
         super( target, when, id, x, y, key, modifiers, arg );
     }
 
-    protected ModuleEvent( Object target, long when, int id, int x, int y, int key,
+    protected PModuleContainerEvent( Object target, long when, int id, int x, int y, int key,
             int modifiers )
     {
         super( target, when, id, x, y, key, modifiers );
     }
 
-    protected ModuleEvent( Object target, int id, Object arg )
+    protected PModuleContainerEvent( Object target, int id, Object arg )
     {
         super( target, id, arg );
     }
-
-    public ModuleEvent(PModule module)
+    
+    public PModuleContainerEvent(PModuleContainer container)
     {
-        super(module, 0, null);
+        this(null, -1, null);
+        this.container = container;
+    }
+
+    public void moduleAdded(PModule module, int index)
+    {
+        this.id = MODULE_ADDED;
+        setModule(module);
+        this.index = index;
     }
     
-    public int getId()
+    public int getIndex()
     {
-        return id;
+        return index;
+    }
+
+    public void moduleRemoved(PModule module, int index)
+    {
+        this.id = MODULE_REMOVED;
+        setModule(module);
+        this.index = index;
+    }
+    
+    public PModuleContainer getContainer()
+    {
+        return container;
+    }
+
+    public void setModule( PModule module )
+    {
+        this.module = module;
     }
     
     public PModule getModule()
     {
-        return (PModule) target;
-    }
-    
-    public void moduleRenamed(String oldName)
-    {
-        this.id = MODULE_RENAMED;
-        this.oldName = oldName;
-    }
-    
-    public String getOldName()
-    {
-        return oldName;
-    }
-
-    public void moduleMoved(int oldScreenX, int oldScreenY)
-    {
-        this.id = MODULE_MOVED;
-        this.x = oldScreenX;
-        this.y = oldScreenY;
-    }
-    
-    public int getOldScreenX()
-    {
-        return x;
-    }
-    
-    public int getOldScreenY()
-    {
-        return y;
+        return module;
     }
     
 }

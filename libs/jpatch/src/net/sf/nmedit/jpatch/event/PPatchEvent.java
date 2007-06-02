@@ -24,33 +24,68 @@ package net.sf.nmedit.jpatch.event;
 
 import java.awt.Event;
 
-public class JPatchEvent extends Event
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleContainer;
+import net.sf.nmedit.jpatch.PParameter;
+
+/**
+ * Parent class of all events in the JPatch API.
+ * 
+ * @author Christian Schneider
+ */
+public class PPatchEvent extends Event
 {
+    /**
+     * The value of a {@link PParameter parameter} was changed.
+     */
     public static final int VALUE_CHANGED = 0;
-    public static final int MODULE_ADDED = 1;
-    public static final int MODULE_REMOVED = 2;
-    public static final int MODULE_MOVED = 100;
-    public static final int MODULE_RENAMED = 101;
     
+    /**
+     * A {@link PModule module} was added to the {@link PModuleContainer module container}.
+     */
+    public static final int MODULE_ADDED = 1;
 
+    /**
+     * A {@link PModule module} was removed from {@link PModuleContainer module container}.
+     */
+    public static final int MODULE_REMOVED = 2;
 
-    protected JPatchEvent( Object target, long when, int id, int x, int y, int key,
+    /**
+     * The location of a {@link PModule module} changed.
+     */
+    public static final int MODULE_MOVED = 100;
+
+    /**
+     * The title/name property of a {@link PModule module} was changed.
+     */
+    public static final int MODULE_RENAMED = 101;
+
+    /**
+     * Value of a {@link PLight light} was changed.
+     */
+    public static final int LIGHT = 110;
+    
+    protected PPatchEvent( Object target, long when, int id, int x, int y, int key,
             int modifiers, Object arg )
     {
         super( target, when, id, x, y, key, modifiers, arg );
     }
 
-    protected JPatchEvent( Object target, long when, int id, int x, int y, int key,
+    protected PPatchEvent( Object target, long when, int id, int x, int y, int key,
             int modifiers )
     {
         super( target, when, id, x, y, key, modifiers );
     }
 
-    protected JPatchEvent( Object target, int id, Object arg )
+    protected PPatchEvent( Object target, int id, Object arg )
     {
         super( target, id, arg );
     }
 
+    /**
+     * Returns the id of this event.
+     * @return the id of this event
+     */
     public int getId()
     {
         return id;

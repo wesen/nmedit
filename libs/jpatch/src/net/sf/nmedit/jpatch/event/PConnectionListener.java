@@ -24,10 +24,24 @@ package net.sf.nmedit.jpatch.event;
 
 import java.util.EventListener;
 
-public interface ModuleContainerListener extends EventListener
+/**
+ * Listens to the events of the {@link net.sf.nmedit.jpatch.PConnectionManager connection manager}.
+ * 
+ * @author Christian Schneider
+ */
+public interface PConnectionListener extends EventListener
 {
 
-    void moduleAdded(ModuleContainerEvent e);
-    void moduleRemoved(ModuleContainerEvent e);
+    /**
+     * Notifies that a new connection was added to the module container.
+     * @param e the event
+     */
+    void connectionAdded(PConnectionEvent e);
+
+    /**
+     * Notifies that a connection was removed from the module container.
+     * @param e the event
+     */
+    void connectionRemoved(PConnectionEvent e);
     
 }

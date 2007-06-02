@@ -22,18 +22,18 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.sf.nmedit.jpatch.event.ConnectionEvent;
-import net.sf.nmedit.jpatch.event.ConnectionListener;
-import net.sf.nmedit.jpatch.event.ModuleContainerEvent;
-import net.sf.nmedit.jpatch.event.ModuleContainerListener;
-import net.sf.nmedit.jpatch.event.ModuleEvent;
-import net.sf.nmedit.jpatch.event.ModuleListener;
-import net.sf.nmedit.jpatch.event.ParameterEvent;
+import net.sf.nmedit.jpatch.event.PConnectionEvent;
+import net.sf.nmedit.jpatch.event.PConnectionListener;
+import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
+import net.sf.nmedit.jpatch.event.PModuleContainerListener;
+import net.sf.nmedit.jpatch.event.PModuleEvent;
+import net.sf.nmedit.jpatch.event.PModuleListener;
+import net.sf.nmedit.jpatch.event.PParameterEvent;
 import net.sf.nmedit.jpatch.event.PParameterListener;
 
 public class AllEventsListener
     implements PParameterListener,
-    ModuleContainerListener, ModuleListener, ConnectionListener
+    PModuleContainerListener, PModuleListener, PConnectionListener
 {
     
     protected boolean listenParameters = false;
@@ -127,7 +127,7 @@ public class AllEventsListener
             module.getParameter(i).removeParameterListener(this);
     }
 
-    public void moduleAdded(ModuleContainerEvent e)
+    public void moduleAdded(PModuleContainerEvent e)
     {
         if (listenModules)
             installModule(e.getModule());
@@ -135,7 +135,7 @@ public class AllEventsListener
             installParameters(e.getModule());
     }
 
-    public void moduleRemoved(ModuleContainerEvent e)
+    public void moduleRemoved(PModuleContainerEvent e)
     {
         if (listenModules)
             uninstallModule(e.getModule());
@@ -143,27 +143,27 @@ public class AllEventsListener
             uninstallParameters(e.getModule());   
     }
 
-    public void parameterValueChanged(ParameterEvent e)
+    public void parameterValueChanged(PParameterEvent e)
     {
         // no op
     }
 
-    public void moduleMoved(ModuleEvent e)
+    public void moduleMoved(PModuleEvent e)
     {
         // no op
     }
 
-    public void moduleRenamed(ModuleEvent e)
+    public void moduleRenamed(PModuleEvent e)
     {
         // no op
     }
 
-    public void connectionAdded(ConnectionEvent e)
+    public void connectionAdded(PConnectionEvent e)
     {
         // no op
     }
 
-    public void connectionRemoved(ConnectionEvent e)
+    public void connectionRemoved(PConnectionEvent e)
     {
         // no op
     }

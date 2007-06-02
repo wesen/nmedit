@@ -21,7 +21,7 @@ package net.sf.nmedit.jpatch;
 import java.awt.Dimension;
 import java.awt.Point;
 
-import net.sf.nmedit.jpatch.event.ModuleListener;
+import net.sf.nmedit.jpatch.event.PModuleListener;
 
 
 public interface PModule extends PComponent
@@ -42,12 +42,18 @@ public interface PModule extends PComponent
     PParameter getParameter(int index);
     
     PParameter getParameter(PParameterDescriptor descriptor);
-    
+
     int getConnectorCount();
     
     PConnector getConnector(int index);
 
     PConnector getConnector(PConnectorDescriptor descriptor);
+
+    int getLightCount();
+    
+    PLight getLight(int index);
+
+    PLight getLight(PLightDescriptor descriptor);
  
     String getTitle();
     
@@ -64,8 +70,8 @@ public interface PModule extends PComponent
 
     void removeAllConnections();
 
-    void addModuleListener(ModuleListener l);
-    void removeModuleListener(ModuleListener l);
+    void addModuleListener(PModuleListener l);
+    void removeModuleListener(PModuleListener l);
 
     Point getScreenLocation();
     Point getInternalLocation();

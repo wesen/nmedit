@@ -18,19 +18,53 @@
  */
 package net.sf.nmedit.jpatch;
 
-public interface PSignalTypes extends Iterable<PSignalType>
+/**
+ * Contains all defined signals.
+ * 
+ * @author Christian Schneider
+ */
+public interface PSignalTypes extends Iterable<PSignal>
 {
 
+    /**
+     * Returns the number of defined signals.
+     * @return the number of defined signals
+     */
     int getSignalTypeCount();
     
-    PSignalType getSignalType(int index);
+    /**
+     * Returns the signal at the specified index.
+     * @param index the signal index
+     * @return the signal at the specified index
+     */
+    PSignal getSignalType(int index);
     
-    PSignalType getSignalTypeById(int id);
+    /**
+     * Returns the signal with the specified id.
+     * @param id the signal id
+     * @return the signal with the specified id
+     */
+    PSignal getSignalTypeById(int id);
     
-    PSignalType getSignalTypeByName(String name);
+    /**
+     * Returns the signal with the specified name.
+     * @param name name of the signal
+     * @return the signal with the specified name
+     */
+    PSignal getSignalTypeByName(String name);
     
-    PSignalType noSignal();
+    /**
+     * Returns the signal definition for the no-signal situation.
+     * @return the no-signal
+     */
+    PSignal noSignal();
     
-    boolean contains(PSignalType signalType);
+    /**
+     * Returns true if the specified signal is defined,
+     * false otherwise.
+     * @param signal the signal
+     * @return true if the specified signal is defined
+     */
+    boolean contains(PSignal signal);
 
 }

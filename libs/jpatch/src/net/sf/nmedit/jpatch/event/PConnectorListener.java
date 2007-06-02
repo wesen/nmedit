@@ -24,9 +24,22 @@ package net.sf.nmedit.jpatch.event;
 
 import java.util.EventListener;
 
-public interface ConnectorListener extends EventListener
+/**
+ * Listens to the events of the {@link net.sf.nmedit.jpatch.PConnector connector}.
+ * 
+ * @author Christian Schneider
+ */
+public interface PConnectorListener extends EventListener
 {
 
-    void connectorStateChanged(ConnectorStateEvent e);
+    /**
+     * Notifies that the state of the connector was changed.
+     * Thus the connector was connected and now is not connected
+     * anymore or the connecter was not connected and now is connected
+     * to another connector.
+     * 
+     * @param e the event
+     */
+    void connectorStateChanged(PConnectorStateEvent e);
     
 }

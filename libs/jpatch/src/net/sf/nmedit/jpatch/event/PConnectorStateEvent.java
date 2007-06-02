@@ -24,29 +24,34 @@ package net.sf.nmedit.jpatch.event;
 
 import net.sf.nmedit.jpatch.PConnector;
 
-public class ConnectorStateEvent extends JPatchEvent
+/**
+ * Event sent by a {@link PConnector connector}.
+ * 
+ * @author Christian Schneider
+ */
+public class PConnectorStateEvent extends PPatchEvent
 {
 
     private PConnector c;
 
-    protected ConnectorStateEvent(  Object target, long when, int id, int x, int y, int key,
+    protected PConnectorStateEvent(  Object target, long when, int id, int x, int y, int key,
             int modifiers, Object arg )
     {
         super( target, when, id, x, y, key, modifiers, arg );
     }
 
-    protected ConnectorStateEvent( Object target, long when, int id, int x, int y, int key,
+    protected PConnectorStateEvent( Object target, long when, int id, int x, int y, int key,
             int modifiers )
     {
         super( target, when, id, x, y, key, modifiers );
     }
 
-    protected ConnectorStateEvent( Object target, int id, Object arg )
+    protected PConnectorStateEvent( Object target, int id, Object arg )
     {
         super( target, id, arg );
     }
     
-    public ConnectorStateEvent(PConnector c)
+    public PConnectorStateEvent(PConnector c)
     {
         this(c, 0, null);
     }

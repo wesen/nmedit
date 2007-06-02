@@ -24,10 +24,20 @@ package net.sf.nmedit.jpatch.event;
 
 import java.util.EventListener;
 
-public interface ConnectionListener extends EventListener
+/**
+ * Listens to the events of the {@link net.sf.nmedit.jpatch.PModule module}.
+ * 
+ * @author Christian Schneider
+ */
+public interface PModuleListener extends EventListener
 {
 
-    void connectionAdded(ConnectionEvent e);
-    void connectionRemoved(ConnectionEvent e);
+    /**
+     * Notifies that the location of the module changed.
+     * @param e the event
+     */
+    void moduleMoved(PModuleEvent e);
+
+    void moduleRenamed(PModuleEvent e);
     
 }

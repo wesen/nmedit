@@ -18,7 +18,7 @@
  */
 package net.sf.nmedit.jpatch;
 
-import net.sf.nmedit.jpatch.event.ModuleContainerListener;
+import net.sf.nmedit.jpatch.event.PModuleContainerListener;
 
 public interface PModuleContainer extends PComponent, Iterable<PModule>
 {
@@ -47,8 +47,8 @@ public interface PModuleContainer extends PComponent, Iterable<PModule>
 
     boolean contains(PModule module);
 
-    void addModuleContainerListener(ModuleContainerListener l);
-    void removeModuleContainerListener(ModuleContainerListener l);
+    void addModuleContainerListener(PModuleContainerListener l);
+    void removeModuleContainerListener(PModuleContainerListener l);
     
     PModule createModule(PModuleDescriptor d);
     

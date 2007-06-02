@@ -20,18 +20,23 @@ package net.sf.nmedit.jpatch.impl;
 
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
-import net.sf.nmedit.jpatch.PSignalType;
+import net.sf.nmedit.jpatch.PSignal;
+import net.sf.nmedit.jpatch.PSignalTypes;
 
+/**
+ * The reference implementation of interface {@link PConnectorDescriptor}.
+ * @author Christian Schneider
+ */
 public class PBasicConnectorDescriptor extends PBasicDescriptor implements PConnectorDescriptor
 {
 
     private static final long serialVersionUID = -4016101017192946943L;
-    private PSignalType defaultSignal;
+    private PSignal defaultSignal;
     private boolean output;
     private PModuleDescriptor parent;
     
     public PBasicConnectorDescriptor(PModuleDescriptor parent, String name, Object componentId, 
-            PSignalType defaultSignal, boolean output)
+            PSignal defaultSignal, boolean output)
     {
         super(name, componentId);
         this.parent = parent;
@@ -39,7 +44,7 @@ public class PBasicConnectorDescriptor extends PBasicDescriptor implements PConn
         this.output = output;
     }
 
-    public PSignalType getDefaultSignalType()
+    public PSignal getDefaultSignalType()
     {
         return defaultSignal;
     }
@@ -54,4 +59,15 @@ public class PBasicConnectorDescriptor extends PBasicDescriptor implements PConn
         return parent;
     }
 
+    protected void toStringProperties(StringBuilder sb)
+    {
+        super.toStringProperties(sb);
+        sb.append(",output="+output+",default-signal="+defaultSignal);
+    }
+
+    public PSignalTypes getDefinedSignals()
+    {
+        return getParentDescriptor().getModules().getDefinedSignals();
+    }
+    
 }

@@ -20,7 +20,7 @@ package net.sf.nmedit.jpatch;
 
 import java.util.Collection;
 
-import net.sf.nmedit.jpatch.event.ConnectionListener;
+import net.sf.nmedit.jpatch.event.PConnectionListener;
 
 
 /**
@@ -134,7 +134,7 @@ public interface PConnectionManager extends Iterable<PConnection>
     
     void clear();
 
-    PSignalType getSignalType(PConnector connector);
+    PSignal getSignalType(PConnector connector);
 
     // collection connectors
     
@@ -227,9 +227,23 @@ public interface PConnectionManager extends Iterable<PConnection>
      */
     int childCount(PConnector c);
 
+    /**
+     * Returns true if at least one connector of the specified module is connected.
+     * @param m
+     * @return
+     */
     boolean isConnected(PModule m);
     
-    void addConnectionListener(ConnectionListener l); 
-    void removeConnectionListener(ConnectionListener l);
+    /**
+     * Adds the specified {@link PConnectionListener} to the listener list.
+     * @param l the listener
+     */
+    void addConnectionListener(PConnectionListener l);
+
+    /**
+     * Removes the specified {@link PConnectionListener} from the listener list.
+     * @param l the listener
+     */
+    void removeConnectionListener(PConnectionListener l);
     
 }

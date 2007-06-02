@@ -20,6 +20,10 @@ package net.sf.nmedit.jpatch.impl;
 
 import net.sf.nmedit.jpatch.PModuleContainerDescriptor;
 
+/**
+ * The reference implementation of interface {@link PModuleContainerDescriptor}.
+ * @author Christian Schneider
+ */
 public class PBasicModuleContainerDescriptor extends PBasicDescriptor implements
         PModuleContainerDescriptor
 {

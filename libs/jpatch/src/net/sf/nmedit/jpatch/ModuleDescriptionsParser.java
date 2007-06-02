@@ -40,6 +40,7 @@ import net.sf.nmedit.jpatch.PParameterDescriptor;
 import net.sf.nmedit.jpatch.formatter.Formatter;
 import net.sf.nmedit.jpatch.formatter.FormatterParser;
 import net.sf.nmedit.jpatch.impl.PBasicConnectorDescriptor;
+import net.sf.nmedit.jpatch.impl.PBasicLightDescriptor;
 import net.sf.nmedit.jpatch.impl.PBasicModuleDescriptor;
 import net.sf.nmedit.jpatch.impl.PBasicParameterDescriptor;
 import net.sf.nmedit.jpatch.impl.PBasicSignalTypes;
@@ -119,6 +120,7 @@ public class ModuleDescriptionsParser
         static final int item = 26;
         static final int link = 27;
         static final int mail = 28;
+        static final int light = 29;
 
         Locator locator = null;
         
@@ -152,7 +154,8 @@ public class ModuleDescriptionsParser
           "list",
           "item",
           "link",
-          "mail"
+          "mail",
+          "light"
         };
         
         static String[] attributes = new String[]
@@ -168,24 +171,43 @@ public class ModuleDescriptionsParser
         static final int attInteger = 2;
         static final int attFloat = 3;
         static final int attDouble = 4;
+        static final int attColor = 5;
         static String[] attTypes = new String[]
         {
            "string",
            "boolean",
            "integer",
            "float",
-           "double"
+           "double",
+           "color"
         };
                 
         static Map<String,Integer> elementMap = new HashMap<String,Integer>();
         static Map<String,Integer> attributeMap = new HashMap<String,Integer>();
         static Map<String,Integer> attTypeMap = new HashMap<String,Integer>();
         
+        static Map<String, Integer> ledTypes = new HashMap<String, Integer>();
+        
         static
         {
             configMap(elements, elementMap);
             configMap(attributes, attributeMap);
             configMap(attTypes, attTypeMap);
+
+            ledTypes.put("led", PLightDescriptor.TYPE_LED);
+            ledTypes.put("led-array", PLightDescriptor.TYPE_LED_ARRAY);
+            ledTypes.put("meter", PLightDescriptor.TYPE_METER);
+        }
+        
+        private int getLEDType(String typeValue)
+        {
+            if (typeValue == null)
+                return PLightDescriptor.TYPE_UNKNOWN;
+            Integer t = ledTypes.get(typeValue);
+            if (t == null)
+                return PLightDescriptor.TYPE_UNKNOWN;
+            else
+                return t.intValue();
         }
         
         int currentElement = -1;
@@ -219,9 +241,11 @@ public class ModuleDescriptionsParser
         private PBasicModuleDescriptor moduled = null;
         private PBasicParameterDescriptor parameterd = null;
         private PBasicConnectorDescriptor connectord = null;
+        private PBasicLightDescriptor lightd = null;
 
         private List<PParameterDescriptor> parameterList = new ArrayList<PParameterDescriptor>(100);
         private List<PConnectorDescriptor> connectorList = new ArrayList<PConnectorDescriptor>(100);
+        private List<PLightDescriptor> lightList = new ArrayList<PLightDescriptor>(100);
         
         ModuleDescriptions moduleDescriptions ;
         
@@ -279,7 +303,7 @@ public class ModuleDescriptionsParser
                 case ModuleDescriptions:
                     {
                         String version = attributes.getValue("version");
-                        if (!"1.3".equals(version))
+                        if (!"1.4".equals(version))
                             throw new  SAXException("incompatible version "+version);
                     }
                     break ;
@@ -309,6 +333,7 @@ public class ModuleDescriptionsParser
                         
                         parameterList.clear();
                         connectorList.clear();
+                        lightList.clear();
                     }
                     break;
                 case defsignal:
@@ -339,8 +364,8 @@ public class ModuleDescriptionsParser
                         if (color == null)
                             color = noSignal ? Color.WHITE : Color.BLACK;
 
-                        
-                        signalTypes.create(key, type, color, noSignal);
+                        PSignal signal = signalTypes.create(key, type, color, noSignal);
+                        //System.out.println(signal);
                     }
                     break;
                 case deftype:
@@ -392,6 +417,39 @@ public class ModuleDescriptionsParser
                         moduled.setAttribute(type, is);
                     }
                     break ;
+                case light:
+                    {
+                        String name = attributes.getValue("name");
+                        if (name == null)
+                            throw new SAXParseException("light name must not be null", locator); 
+
+                        String componentId = attributes.getValue("component-id");
+                        if (componentId == null)
+                            throw new SAXException("component-id missing in light: "+name);
+
+                        String minValue = attributes.getValue("minValue");
+                        String maxValue = attributes.getValue("maxValue");
+                        String defaultValue = attributes.getValue("defaultValue");
+
+                        lightd = new PBasicLightDescriptor(moduled, name, componentId);
+                        
+                        String index = attributes.getValue("index");
+                        if (index != null)
+                            lightd.setAttribute("index", Integer.parseInt(index));
+                        
+                        lightd.setType(getLEDType(attributes.getValue("type")));
+                        
+                        if (minValue != null)
+                            lightd.setMinValue(Integer.parseInt(minValue));
+                        if (maxValue != null)
+                            lightd.setMaxValue(Integer.parseInt(maxValue));
+                        if (defaultValue != null)
+                            lightd.setDefaultValue(Integer.parseInt(defaultValue));
+                        
+                        lightd.setAttribute("class", attributes.getValue("class"));
+                        lightList.add(lightd);
+                    }
+                    break;
                 case parameter:
                     {
                         if (moduled == null)
@@ -485,6 +543,9 @@ public class ModuleDescriptionsParser
                         case attInteger:
                             value = Integer.parseInt(svalue);
                             break;
+                        case attColor:
+                            value = Hex.htmlHexColor(svalue);
+                            break;
                         default:
                             value = svalue;
                             break;
@@ -494,10 +555,10 @@ public class ModuleDescriptionsParser
                         parameterd.setAttribute(name, value);
                     else if (connectord != null)
                         connectord.setAttribute(name, value);
+                    else if (lightd != null)
+                        lightd.setAttribute(name, value);
                     else if (moduled != null)
-                    {
                         moduled.setAttribute(name, value);
-                    }
                     else
                     {
                         throw new SAXException("attribute not associated with (module|parameter|connector)");
@@ -530,7 +591,7 @@ public class ModuleDescriptionsParser
                         else
                             throw new SAXException("connector must be one of (input|output): "+type);
 
-                        PSignalType sig = null;
+                        PSignal sig = null;
                         String signalName = attributes.getValue("signal");
                         if (signalName != null)
                         {
@@ -573,6 +634,11 @@ public class ModuleDescriptionsParser
                     connectord = null;
                 }
                 break;
+                case light:
+                {
+                    lightd = null;
+                }
+                break;
                 case module:
                 {
                     if (moduled==null)
@@ -580,6 +646,7 @@ public class ModuleDescriptionsParser
                     
                     moduled.setParameters(parameterList);
                     moduled.setConnectors(connectorList);
+                    moduled.setLights(lightList);
                     moduleDescriptions.add(moduled);
                     moduled = null;
                 }

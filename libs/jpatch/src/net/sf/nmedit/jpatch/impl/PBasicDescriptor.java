@@ -28,8 +28,13 @@ import java.util.NoSuchElementException;
 import net.sf.nmedit.jpatch.ImageSource;
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
 import net.sf.nmedit.jpatch.PDescriptor;
+import net.sf.nmedit.jpatch.PLightDescriptor;
 import net.sf.nmedit.jpatch.PParameterDescriptor;
 
+/**
+ * The reference implementation of interface {@link PDescriptor}.
+ * @author Christian Schneider
+ */
 public class PBasicDescriptor implements PDescriptor, Serializable
 {
     private static final long serialVersionUID = -7021888357211502978L;
@@ -209,6 +214,13 @@ public class PBasicDescriptor implements PDescriptor, Serializable
                 (PParameterDescriptor) d : null;
     }
 
+    public PLightDescriptor getLightDescriptorByComponentId(Object id)
+    {
+        PDescriptor d = getComponentByComponentId(id);
+        return d != null && d instanceof PLightDescriptor ?
+                (PLightDescriptor) d : null;
+    }
+
     private void disposeCache()
     {
         if (attributeMap != null)
@@ -235,4 +247,43 @@ public class PBasicDescriptor implements PDescriptor, Serializable
         in.defaultReadObject();
         attributeMap = (Map<String,Object>) in.readObject();
     }
+    
+
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getName());
+        sb.append("[");
+        toStringProperties(sb);
+        sb.append("]");
+        return sb.toString();
+    }
+    
+    protected void toStringProperties(StringBuilder sb)
+    {
+        sb.append("name='");
+        sb.append(getName());
+        sb.append("',component-id=");
+        sb.append(getComponentId());
+        sb.append(",attributes={");
+        
+        Iterator<String> keys = attributeKeys();
+        while (keys.hasNext())
+        {
+            String k = keys.next();
+            if (!k.startsWith(CACHE_KEY_PREFIX))
+            {
+                sb.append(k);
+                sb.append("=");
+                sb.append(getAttribute(k));
+                sb.append(";");
+            }
+        }
+            
+        sb.append("}");
+        
+        sb.append(",parent=");
+        sb.append(getParentDescriptor());
+    }
+    
 }

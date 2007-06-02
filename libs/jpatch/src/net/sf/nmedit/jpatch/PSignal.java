@@ -18,38 +18,42 @@
  */
 package net.sf.nmedit.jpatch;
 
+import java.awt.Color;
+
 /**
- * Descriptor for a {@link PConnector connector}.
- * 
- * @author Christian Schneider
+ * Identifies a specific signal type for example 
+ * an audio signal, a logic signal or a control signal. 
  */
-public interface PConnectorDescriptor extends PDescriptor
+public interface PSignal 
 {
 
     /**
-     * Returns true if this connector is an output, false if it is an input
-     * @return true if this connector is an output, false if it is an input.
+     * Returns the name of this signal. The return value
+     * must not be <code>null</code>. The value might be
+     * displayed to the user (used as fallback), 
+     * thus it should be named carefully.
+     * @return the name of this signal
      */
-    boolean isOutput();
+    String getName();
     
     /**
-     * Returns the default signal type of the connector.
-     * The return value is always non-null.
-     * @return the default signal of the connector
+     * Returns an identifier of this signal.
+     * Each {@link #getDefinedSignals() signal} is unique.
+     * @return the identifier of this signal
      */
-    PSignal getDefaultSignalType();
+    int getId();
     
     /**
-     * Returns the parent module descriptor.
-     * The return value is always non-null.
-     * @return the parent descriptor.
-     */
-    PModuleDescriptor getParentDescriptor();
-
-    /**
-     * Returns the defined signals.
-     * @return the defined signals
+     * Returns the defined signal types.
+     * @return the defined signal types
      */
     PSignalTypes getDefinedSignals();
+    
+    /**
+     * Returns the preferred color for this signal.
+     * The value must not be null.
+     * @return the preferred color for this signal
+     */
+    Color getColor();
     
 }

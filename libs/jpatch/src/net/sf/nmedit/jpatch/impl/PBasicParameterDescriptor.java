@@ -24,6 +24,10 @@ import net.sf.nmedit.jpatch.PParameterDescriptor;
 import net.sf.nmedit.jpatch.formatter.DefaultFormatter;
 import net.sf.nmedit.jpatch.formatter.Formatter;
 
+/**
+ * The reference implementation of interface {@link PParameterDescriptor}.
+ * @author Christian Schneider
+ */
 public class PBasicParameterDescriptor extends PBasicDescriptor
     implements PParameterDescriptor
 {
@@ -103,10 +107,10 @@ public class PBasicParameterDescriptor extends PBasicDescriptor
         return PT_VALUE;
     }
 
-    public String toString()
+    protected void toStringProperties(StringBuilder sb)
     {
-        return getName()+"[name='"+getName()+"',min="+minValue+",max="+maxValue+",default="+defaultValue+"]";
+        super.toStringProperties(sb);
+        sb.append(",min="+minValue+",max="+maxValue+",default="+defaultValue);
     }
-
     
 }

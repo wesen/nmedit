@@ -19,28 +19,50 @@
 package net.sf.nmedit.jpatch;
 
 /**
- * Describes a parameter;
+ * Descriptor for a {@link PParameter parameter}.
+ * 
  * @author Christian Schneider
  */
-public interface PParameterDescriptor extends PComponentDescriptor
+public interface PParameterDescriptor extends PDescriptor
 {
 
-    // parameter types
+    /**
+     * The default parameter control for this component is preferred.
+     */
     public static final int PT_VALUE = 0;
+    
+    /**
+     * A radio button group is preferred.  
+     */
     public static final int PT_OPTION = 1;
-    public static final int PT_BOOLEAN = 2;
+    
+    /**
+     * A knob is preferred.  
+     */
+    public static final int PT_KNOB = 2;
 
     /**
-     * Returns the type of this parameter.
-     * The type can be used by an automated
-     * user interface builder to decide which
+     * A slider is preferred.
+     */
+    public static final int PT_SLIDER = 3;
+    
+    /**
+     * A two-state switch is preferred.  
+     */
+    public static final int PT_BOOLEAN = 4;
+
+    /**
+     * Returns the type of this parameter. The type can be used
+     * by an automated user interface builder to decide which
      * control to create for this parameter.
      *
      * Possible values are
-     * <ul><li>PT_VALUE - a knob control is preferred</li>
-     * <li>PT_OPTION - radio buttons (or similar controls) are preferred </li>
-     * <li>PT_BOOLEAN - a toggle button with true/false states are preferred
-     *  if additionally getMaxValue()-getMinValue()+1==2 are true.
+     * <ul><li>PT_VALUE - The default parameter control for this component is preferred</li>
+     * <li>PT_KNOB - A knob (or similar control) is preferred</li>
+     * <li>PT_SLIDER - A slider (or similar control) is preferred</li>
+     * <li>PT_OPTION - A radio button group (or similar control) is preferred</li>
+     * <li>PT_BOOLEAN - A two-state switch (or similar control) is preferred
+     *  if additionally getMaxValue()-getMinValue()+1==2 is true (it must have exactly two states).
      *  The maximum value is interpreted as true, minimum value is interpreted as false</li>
      * </ul>
      * 
@@ -75,7 +97,7 @@ public interface PParameterDescriptor extends PComponentDescriptor
     String getDisplayValue(PParameter parameter, int value);
 
     /**
-     * Returns the parent descriptor.
+     * Returns the parent module descriptor.
      */
     PModuleDescriptor getParentDescriptor();
 

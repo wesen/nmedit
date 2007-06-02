@@ -30,11 +30,14 @@ import net.sf.nmedit.jpatch.PModuleContainerDescriptor;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PModuleMetrics;
 import net.sf.nmedit.jpatch.PPatch;
-import net.sf.nmedit.jpatch.event.ModuleContainerEvent;
-import net.sf.nmedit.jpatch.event.ModuleContainerListener;
-import net.sf.nmedit.jpatch.event.PParameterListener;
+import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
+import net.sf.nmedit.jpatch.event.PModuleContainerListener;
 import net.sf.nmedit.nmutils.collections.ArrayMap;
 
+/**
+ * The reference implementation of interface {@link PModuleContainer}.
+ * @author Christian Schneider
+ */
 public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescriptor> implements
         PModuleContainer
 {
@@ -43,7 +46,7 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
     private PPatch patch;
     private PConnectionManager connectionManager;
     private EventListenerList listenerList = new EventListenerList();
-    private transient ModuleContainerEvent mcEvent;
+    private transient PModuleContainerEvent mcEvent;
     private transient PModuleMetrics moduleMetrics;
 
     public PBasicModuleContainer(PPatch patch, String name, int componentIndex)
@@ -65,14 +68,14 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
         return new PBasicConnectionManager(this);
     }
 
-    public void addModuleContainerListener(ModuleContainerListener l)
+    public void addModuleContainerListener(PModuleContainerListener l)
     {
-        listenerList.add(ModuleContainerListener.class, l);
+        listenerList.add(PModuleContainerListener.class, l);
     }
     
-    public void removeModuleContainerListener(ModuleContainerListener l)
+    public void removeModuleContainerListener(PModuleContainerListener l)
     {
-        listenerList.remove(ModuleContainerListener.class, l);   
+        listenerList.remove(PModuleContainerListener.class, l);   
     }
 
     protected void fireModuleAdded(PModule module)
@@ -80,45 +83,55 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
         // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
         if (mcEvent != null)
-            mcEvent.moduleAdded(module);
+            mcEvent.moduleAdded(module, module.getComponentIndex());
             
         // Process the listeners last to first, notifying
         // those that are interested in this event
         for (int i = listeners.length-2; i>=0; i-=2) 
         {
-            if (listeners[i]==PParameterListener.class) 
+            if (listeners[i]==PModuleContainerListener.class) 
             {
                 // Lazily create the event:
                 if (mcEvent == null)
                 {
-                    mcEvent = new ModuleContainerEvent(this);
-                    mcEvent.moduleAdded(module);
+                    mcEvent = new PModuleContainerEvent(this);
+                    mcEvent.moduleAdded(module, module.getComponentIndex());
                 }
-                ((ModuleContainerListener)listeners[i+1]).moduleAdded(mcEvent);
+                ((PModuleContainerListener)listeners[i+1]).moduleAdded(mcEvent);
             }
         }
     }
 
-    protected void fireModuleRemoved(PModule module)
+    protected void registerModule(PModule module)
+    {
+        // no op
+    }
+    
+    protected void unregisterModule(PModule module)
+    {
+        // no op
+    }
+
+    protected void fireModuleRemoved(PModule module, int oldIndex)
     {
         // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
         if (mcEvent != null)
-            mcEvent.moduleRemoved(module);
-            
+            mcEvent.moduleRemoved(module, oldIndex);
+
         // Process the listeners last to first, notifying
         // those that are interested in this event
         for (int i = listeners.length-2; i>=0; i-=2) 
         {
-            if (listeners[i]==PParameterListener.class) 
+            if (listeners[i]==PModuleContainerListener.class) 
             {
                 // Lazily create the event:
                 if (mcEvent == null)
                 {
-                    mcEvent = new ModuleContainerEvent(this);
-                    mcEvent.moduleRemoved(module);
+                    mcEvent = new PModuleContainerEvent(this);
+                    mcEvent.moduleRemoved(module, oldIndex);
                 }
-                ((ModuleContainerListener)listeners[i+1]).moduleRemoved(mcEvent);
+                ((PModuleContainerListener)listeners[i+1]).moduleRemoved(mcEvent);
             }
         }
     }
@@ -134,6 +147,18 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
             return false;
         configure(module, index);
         modules.put(index, module);
+        registerModule(module);
+        fireModuleAdded(module);
+        
+        /*
+        MoveOperation move = createMoveOperation();
+        if (move != null)
+        {
+            move.setScreenOffset(0, 0);
+            move.add(module);
+            move.move();
+        }*/
+        
         return true;
     }
     
@@ -221,7 +246,9 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
         {
             module.removeAllConnections();
             modules.remove(index);
+            unregisterModule(module);
             revertConfigure(module);
+            fireModuleRemoved(module, index);
             return true;
         }
         else

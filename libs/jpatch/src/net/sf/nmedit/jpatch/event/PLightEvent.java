@@ -16,31 +16,21 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-/*
- * Created on Nov 30, 2006
- */
 package net.sf.nmedit.jpatch.event;
 
-import net.sf.nmedit.jpatch.PModule;
-import net.sf.nmedit.jpatch.PParameter;
+import net.sf.nmedit.jpatch.PLight;
 
-public class ParameterEvent extends JPatchEvent
+public class PLightEvent extends PPatchEvent
 {
 
-    public ParameterEvent(PParameter parameter, int id)
+    public PLightEvent( PLight target )
     {
-        super(parameter, id, null);
+        super( target, LIGHT, null);
     }
     
-    public PModule getModule()
+    public PLight getLight()
     {
-        return getParameter().getParentComponent();
+        return (PLight) target;
     }
     
-    public PParameter getParameter()
-    {
-        return (PParameter) target;
-    }
-
 }

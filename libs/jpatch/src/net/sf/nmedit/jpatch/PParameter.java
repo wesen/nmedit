@@ -20,7 +20,11 @@ package net.sf.nmedit.jpatch;
 
 import net.sf.nmedit.jpatch.event.PParameterListener;
 
-
+/**
+ * Parameter of a {@link PModule module}.
+ * 
+ * @author Christian Schneider
+ */
 public interface PParameter extends PComponent
 {
     
@@ -141,8 +145,16 @@ public interface PParameter extends PComponent
      */
 //    String getDisplayValue(double normalizedValue);
 
+    /**
+     * Adds the specified {@link PParameterListener} to the listener list.
+     * @param l the listener
+     */
     void addParameterListener(PParameterListener l);
-    
+
+    /**
+     * Removes the specified {@link PParameterListener} from the listener list.
+     * @param l the listener
+     */
     void removeParameterListener(PParameterListener l);
     
 }

@@ -27,18 +27,22 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.nmedit.jpatch.PSignalType;
+import net.sf.nmedit.jpatch.PSignal;
 import net.sf.nmedit.jpatch.PSignalTypes;
 import net.sf.nmedit.nmutils.collections.UnmodifiableIterator;
 
+/**
+ * The reference implementation of interface {@link PSignalTypes}.
+ * @author Christian Schneider
+ */
 public class PBasicSignalTypes implements PSignalTypes, Serializable
 {
     
     private static final long serialVersionUID = 8556928210665894178L;
-    private PSignalType noSignal = null;
-    private transient List<PSignalType> signalList ;
-    private transient Map<Integer, PSignalType> signalIdMap;
-    private transient Map<String, PSignalType> signalNameMap;
+    private PSignal noSignal = null;
+    private transient List<PSignal> signalList ;
+    private transient Map<Integer, PSignal> signalIdMap;
+    private transient Map<String, PSignal> signalNameMap;
 
     public PBasicSignalTypes()
     {
@@ -48,44 +52,44 @@ public class PBasicSignalTypes implements PSignalTypes, Serializable
 
     protected void init(int initialCapacity)
     {
-        signalList = new ArrayList<PSignalType>(initialCapacity);
-        signalIdMap = new HashMap<Integer, PSignalType>(initialCapacity);
-        signalNameMap = new HashMap<String, PSignalType>(initialCapacity);
+        signalList = new ArrayList<PSignal>(initialCapacity);
+        signalIdMap = new HashMap<Integer, PSignal>(initialCapacity);
+        signalNameMap = new HashMap<String, PSignal>(initialCapacity);
     }
 
-    public PSignalType create(int id, String name, boolean noSignal)
+    public PSignal create(int id, String name, boolean noSignal)
     {
         return create(id, name, noSignal ? Color.WHITE : Color.BLACK, noSignal);
     }
 
-    public PSignalType create(int id, String name, Color color, boolean noSignal)
+    public PSignal create(int id, String name, Color color, boolean noSignal)
     {
         if (signalIdMap.containsKey(id)) throw new IllegalArgumentException("id already defined: "+id);
         if (signalNameMap.containsKey(name)) throw new IllegalArgumentException("name already defined: "+name);
-        PSignalType signal = new PBasicSignalType(this, id, name, color);
+        PSignal signal = new PBasicSignal(this, id, name, color);
         addSignalType(signal);
         if (noSignal) this.noSignal = signal;
         return signal;
     }
     
-    private void addSignalType(PSignalType signal)
+    private void addSignalType(PSignal signal)
     {
         signalList.add(signal);
         signalIdMap.put(signal.getId(), signal);
         signalNameMap.put(signal.getName(), signal);
     }
     
-    public PSignalType getSignalType(int index)
+    public PSignal getSignalType(int index)
     {
         return signalList.get(index);
     }
 
-    public PSignalType getSignalTypeById(int id)
+    public PSignal getSignalTypeById(int id)
     {
         return signalIdMap.get(id);
     }
 
-    public PSignalType getSignalTypeByName(String name)
+    public PSignal getSignalTypeByName(String name)
     {
         return signalNameMap.get(name);
     }
@@ -95,14 +99,14 @@ public class PBasicSignalTypes implements PSignalTypes, Serializable
         return signalList.size();
     }
 
-    public PSignalType noSignal()
+    public PSignal noSignal()
     {
         return noSignal;
     }
 
-    public Iterator<PSignalType> iterator()
+    public Iterator<PSignal> iterator()
     {
-        return new UnmodifiableIterator<PSignalType>(signalList.iterator());
+        return new UnmodifiableIterator<PSignal>(signalList.iterator());
     }
 
     public String toString()
@@ -111,7 +115,7 @@ public class PBasicSignalTypes implements PSignalTypes, Serializable
         sb.append(getClass().getName());
         sb.append('[');
         int cnt = 0;
-        for (PSignalType t: signalList)
+        for (PSignal t: signalList)
         {
             sb.append(t);
             if (++cnt<signalList.size())
@@ -126,7 +130,7 @@ public class PBasicSignalTypes implements PSignalTypes, Serializable
         return signalList.hashCode();
     }
 
-    public boolean contains(PSignalType signalType)
+    public boolean contains(PSignal signalType)
     {
         return signalList.contains(signalType);
     }
@@ -164,7 +168,7 @@ public class PBasicSignalTypes implements PSignalTypes, Serializable
         init(signalTypeCount);
         while (signalTypeCount>0)
         {
-            addSignalType((PSignalType) in.readObject());
+            addSignalType((PSignal) in.readObject());
             signalTypeCount --;
         }
     }

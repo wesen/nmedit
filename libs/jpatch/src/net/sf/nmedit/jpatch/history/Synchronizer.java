@@ -19,10 +19,10 @@
 package net.sf.nmedit.jpatch.history;
 
 import net.sf.nmedit.jpatch.AllEventsListener;
-import net.sf.nmedit.jpatch.event.ConnectionEvent;
-import net.sf.nmedit.jpatch.event.ModuleContainerEvent;
-import net.sf.nmedit.jpatch.event.ModuleEvent;
-import net.sf.nmedit.jpatch.event.ParameterEvent;
+import net.sf.nmedit.jpatch.event.PConnectionEvent;
+import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
+import net.sf.nmedit.jpatch.event.PModuleEvent;
+import net.sf.nmedit.jpatch.event.PParameterEvent;
 
 public class Synchronizer extends AllEventsListener
 {
@@ -37,7 +37,7 @@ public class Synchronizer extends AllEventsListener
         listenParameters = true;
     }
     
-    public void moduleAdded(ModuleContainerEvent e)
+    public void moduleAdded(PModuleContainerEvent e)
     {
         super.moduleAdded(e);
         
@@ -47,7 +47,7 @@ public class Synchronizer extends AllEventsListener
         history.put(event);
     }
 
-    public void moduleRemoved(ModuleContainerEvent e)
+    public void moduleRemoved(PModuleContainerEvent e)
     {
         super.moduleRemoved(e);
         
@@ -57,7 +57,7 @@ public class Synchronizer extends AllEventsListener
         history.put(event);
     }
 
-    public void connectionAdded(ConnectionEvent e)
+    public void connectionAdded(PConnectionEvent e)
     {
         if (!history.isEnabled())
             return;
@@ -65,7 +65,7 @@ public class Synchronizer extends AllEventsListener
         history.put(event);
     }
 
-    public void connectionRemoved(ConnectionEvent e)
+    public void connectionRemoved(PConnectionEvent e)
     {
         if (!history.isEnabled())
             return;
@@ -73,14 +73,14 @@ public class Synchronizer extends AllEventsListener
         history.put(event);
     }
 
-    public void parameterValueChanged(ParameterEvent e)
+    public void parameterValueChanged(PParameterEvent e)
     {
         if (!history.isEnabled())
             return;
         history.markChanged(true);
     }
 
-    public void moduleMoved(ModuleEvent e)
+    public void moduleMoved(PModuleEvent e)
     {
         if (!history.isEnabled())
             return;
@@ -88,7 +88,7 @@ public class Synchronizer extends AllEventsListener
         history.put(event);
     }
 
-    public void moduleRenamed(ModuleEvent e)
+    public void moduleRenamed(PModuleEvent e)
     {
         if (!history.isEnabled())
             return;

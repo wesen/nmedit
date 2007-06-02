@@ -22,6 +22,11 @@ import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PModuleMetrics;
 
+/**
+ * The reference implementation of interface {@link PModuleMetrics} using
+ * a grid layout.
+ * @author Christian Schneider
+ */
 public class PBasicModuleMetrics implements PModuleMetrics
 {
 
@@ -120,6 +125,16 @@ public class PBasicModuleMetrics implements PModuleMetrics
     public int getMaxScreenY()
     {
         return maxScreenY;
+    }
+
+    public int alignScreenX(int x)
+    {
+        return internalToScreenX(screenToInternalX(x));
+    }
+
+    public int alignScreenY(int y)
+    {
+        return internalToScreenY(screenToInternalY(y));
     }
 
 }

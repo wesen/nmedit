@@ -40,10 +40,14 @@ import net.sf.nmedit.jpatch.PConnectionManager;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
-import net.sf.nmedit.jpatch.PSignalType;
-import net.sf.nmedit.jpatch.event.ConnectionEvent;
-import net.sf.nmedit.jpatch.event.ConnectionListener;
+import net.sf.nmedit.jpatch.PSignal;
+import net.sf.nmedit.jpatch.event.PConnectionEvent;
+import net.sf.nmedit.jpatch.event.PConnectionListener;
 
+/**
+ * The reference implementation of interface {@link PConnectionManager}.
+ * @author Christian Schneider
+ */
 public class PBasicConnectionManager implements PConnectionManager
 {
 
@@ -62,40 +66,40 @@ public class PBasicConnectionManager implements PConnectionManager
         nodemap = new HashMap<PConnector, Node>();
     }
 
-    public void addConnectionListener( ConnectionListener l )
+    public void addConnectionListener( PConnectionListener l )
     {
-        eventListeners.add(ConnectionListener.class, l);
+        eventListeners.add(PConnectionListener.class, l);
     }
 
-    public void removeConnectionListener( ConnectionListener l )
+    public void removeConnectionListener( PConnectionListener l )
     {
-        eventListeners.remove(ConnectionListener.class, l);
+        eventListeners.remove(PConnectionListener.class, l);
     }
 
     protected void fireConnectionAdded(PConnector a, PConnector b)
     {
-        ConnectionEvent e = null;
+        PConnectionEvent e = null;
         Object[] listenerList = eventListeners.getListenerList();
         for (int i=listenerList.length-2;i>=0;i-=2)
         {
-            if (listenerList[i]==ConnectionListener.class)
+            if (listenerList[i]==PConnectionListener.class)
             {
-                if (e == null) e = new ConnectionEvent(this, a, b);
-                ((ConnectionListener) listenerList[i+1]).connectionAdded(e);
+                if (e == null) e = new PConnectionEvent(this, a, b);
+                ((PConnectionListener) listenerList[i+1]).connectionAdded(e);
             }
         }
     }
 
     protected void fireConnectionRemoved(PConnector a, PConnector b)
     {
-        ConnectionEvent e = null;
+        PConnectionEvent e = null;
         Object[] listenerList = eventListeners.getListenerList();
         for (int i=listenerList.length-2;i>=0;i-=2)
         {
-            if (listenerList[i]==ConnectionListener.class)
+            if (listenerList[i]==PConnectionListener.class)
             {
-                if (e == null) e = new ConnectionEvent(this, a, b);
-                ((ConnectionListener) listenerList[i+1]).connectionRemoved(e);
+                if (e == null) e = new PConnectionEvent(this, a, b);
+                ((PConnectionListener) listenerList[i+1]).connectionRemoved(e);
             }
         }
     }
@@ -422,12 +426,13 @@ public class PBasicConnectionManager implements PConnectionManager
         return container;
     }
 
-    public PSignalType getSignalType(PConnector connector)
+    public PSignal getSignalType(PConnector connector)
     {
         Node n = nodemap.get(connector);
-        if (n!=null) n = n.root();
-        
-        return n.isOutput() ? n.c.getDefaultSignalType() : connector.getDefaultSignalType();
+        if (n == null)
+            return connector.getDefinedSignals().noSignal();
+        n = n.root();
+        return n.isOutput() ? n.c.getDefaultSignalType() : connector.getDefinedSignals().noSignal();
     }
 
     public Collection<PConnector> graph(PConnector c)

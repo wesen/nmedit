@@ -30,10 +30,15 @@ import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
-import net.sf.nmedit.jpatch.PSignalType;
-import net.sf.nmedit.jpatch.event.ConnectorListener;
-import net.sf.nmedit.jpatch.event.ConnectorStateEvent;
+import net.sf.nmedit.jpatch.PSignal;
+import net.sf.nmedit.jpatch.PSignalTypes;
+import net.sf.nmedit.jpatch.event.PConnectorListener;
+import net.sf.nmedit.jpatch.event.PConnectorStateEvent;
 
+/**
+ * The reference implementation of interface {@link PConnector}.
+ * @author Christian Schneider
+ */
 public class PBasicConnector extends PBasicComponent<PConnectorDescriptor> implements PConnector
 {
     
@@ -49,14 +54,14 @@ public class PBasicConnector extends PBasicComponent<PConnectorDescriptor> imple
         this.eventListenerList = new EventListenerList();
     }
 
-    public void addConnectorListener(ConnectorListener l)
+    public void addConnectorListener(PConnectorListener l)
     {
-        eventListenerList.add(ConnectorListener.class, l);
+        eventListenerList.add(PConnectorListener.class, l);
     }
     
-    public void removeConnectorListener(ConnectorListener l)
+    public void removeConnectorListener(PConnectorListener l)
     {
-        eventListenerList.remove(ConnectorListener.class, l);   
+        eventListenerList.remove(PConnectorListener.class, l);   
     }
 
     public boolean canBreakConnection()
@@ -86,15 +91,15 @@ public class PBasicConnector extends PBasicComponent<PConnectorDescriptor> imple
 
     protected void fireConnectorStateChanged()
     {
-        ConnectorStateEvent cse = null;
+        PConnectorStateEvent cse = null;
         Object[] list = eventListenerList.getListenerList();
         for (int i=list.length-2;i>=0;i-=2)
         {
-            if (list[i]==ConnectorListener.class)
+            if (list[i]==PConnectorListener.class)
             {
                 if (cse == null)
-                    cse = new ConnectorStateEvent(this);
-                ((ConnectorListener)list[i+1]).connectorStateChanged(cse);
+                    cse = new PConnectorStateEvent(this);
+                ((PConnectorListener)list[i+1]).connectorStateChanged(cse);
             }
         }
     }
@@ -111,12 +116,17 @@ public class PBasicConnector extends PBasicComponent<PConnectorDescriptor> imple
         return null;
     }
 
-    public PSignalType getDefaultSignalType()
+    public PSignal getDefaultSignalType()
     {
         return getDescriptor().getDefaultSignalType();
     }
 
-    public PSignalType getSignalType()
+    public PSignalTypes getDefinedSignals()
+    {
+        return getDescriptor().getDefinedSignals();
+    }
+    
+    public PSignal getSignalType()
     {
         return getConnectionManager().getSignalType(this);
     }

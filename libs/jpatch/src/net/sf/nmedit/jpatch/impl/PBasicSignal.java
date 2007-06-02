@@ -21,10 +21,14 @@ package net.sf.nmedit.jpatch.impl;
 import java.awt.Color;
 import java.io.Serializable;
 
-import net.sf.nmedit.jpatch.PSignalType;
+import net.sf.nmedit.jpatch.PSignal;
 import net.sf.nmedit.jpatch.PSignalTypes;
 
-public class PBasicSignalType implements PSignalType, Serializable
+/**
+ * The reference implementation of interface {@link PSignal}.
+ * @author Christian Schneider
+ */
+public class PBasicSignal implements PSignal, Serializable
 {
 
     private static final long serialVersionUID = -2637295506140546814L;
@@ -34,7 +38,7 @@ public class PBasicSignalType implements PSignalType, Serializable
     private String name;
     private Color color;
 
-    public PBasicSignalType(PSignalTypes parent, int id, String name, Color color)
+    public PBasicSignal(PSignalTypes parent, int id, String name, Color color)
     {
         this.parent = parent;
         this.id = id;
@@ -52,7 +56,7 @@ public class PBasicSignalType implements PSignalType, Serializable
         return name;
     }
 
-    public PSignalTypes getSignalTypes()
+    public PSignalTypes getDefinedSignals()
     {
         return parent;
     }
@@ -75,9 +79,9 @@ public class PBasicSignalType implements PSignalType, Serializable
     public boolean equals(Object o)
     {
         if (o == this) return true;
-        if (o == null || (!(o instanceof PSignalType))) return false;
+        if (o == null || (!(o instanceof PSignal))) return false;
         
-        PSignalType st = (PSignalType) o;
+        PSignal st = (PSignal) o;
         return st.getId() == id && 
         ((name == st.getName()) || ((name != null) && name.equals(st.getName())));
     }
