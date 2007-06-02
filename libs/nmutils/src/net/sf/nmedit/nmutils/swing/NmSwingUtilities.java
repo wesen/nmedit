@@ -21,8 +21,11 @@ package net.sf.nmedit.nmutils.swing;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import javax.swing.SwingUtilities;
 
 import gnu.classpath.javax.swing.plaf.basic.BasicGraphicsUtils;
 
@@ -59,6 +62,13 @@ public class NmSwingUtilities
             if (clazz.isInstance(c))
                 dst.add(clazz.cast(c));
         }
+    }
+
+    public static void redispatchMouseEvent(MouseEvent e, Component target)
+    {
+        MouseEvent me = SwingUtilities.convertMouseEvent(e.getComponent(), e, target);
+        target.dispatchEvent(me);
+
     }
     
 }
