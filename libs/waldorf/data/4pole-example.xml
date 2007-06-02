@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xml" href="./ModuleDescriptions2html.xsl"?>
-<ModuleDescriptions version="1.3"
+<ModuleDescriptions version="1.4"
   xmlns="http://nmedit.sf.net/ns/ModuleDescriptions"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 <header>
