@@ -26,9 +26,9 @@ import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PParameterDescriptor;
 import net.sf.nmedit.jpatch.PPatch;
-import net.sf.nmedit.jpatch.event.ModuleContainerEvent;
-import net.sf.nmedit.jpatch.event.ModuleContainerListener;
-import net.sf.nmedit.jpatch.event.ParameterEvent;
+import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
+import net.sf.nmedit.jpatch.event.PModuleContainerListener;
+import net.sf.nmedit.jpatch.event.PParameterEvent;
 import net.sf.nmedit.jpatch.event.PParameterListener;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpdl.Packet;
@@ -42,7 +42,7 @@ import net.waldorf.miniworks4pole.jprotocol.MWMidiListener;
 import net.waldorf.miniworks4pole.jprotocol.MiniworksMidiMessage;
 
 public class MWEventHandler extends MWMidiListener 
-    implements ModuleContainerListener, PParameterListener, SlotManagerListener, SlotListener
+    implements PModuleContainerListener, PParameterListener, SlotManagerListener, SlotListener
 {
 
     private Miniworks4Pole synth;
@@ -91,12 +91,12 @@ public class MWEventHandler extends MWMidiListener
             uninstall(m);
     }
 
-    public void moduleAdded(ModuleContainerEvent e)
+    public void moduleAdded(PModuleContainerEvent e)
     {
         install(e.getModule());
     }
 
-    public void moduleRemoved(ModuleContainerEvent e)
+    public void moduleRemoved(PModuleContainerEvent e)
     {
         uninstall(e.getModule());
     }
@@ -138,7 +138,7 @@ public class MWEventHandler extends MWMidiListener
         p2c.remove(parameter);
     }
 
-    public void parameterValueChanged(ParameterEvent e)
+    public void parameterValueChanged(PParameterEvent e)
     {   
         PParameter p = e.getParameter();
         Integer controller = p2c.get(p);

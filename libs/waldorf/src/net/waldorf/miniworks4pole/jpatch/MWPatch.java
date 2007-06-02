@@ -31,7 +31,7 @@ import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.MoveOperation;
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.PSettings;
-import net.sf.nmedit.jpatch.event.ModuleContainerListener;
+import net.sf.nmedit.jpatch.event.PModuleContainerListener;
 import net.sf.nmedit.jpatch.history.History;
 import net.sf.nmedit.jpatch.impl.PBasicModule;
 import net.sf.nmedit.jpatch.impl.PBasicModuleContainer;
@@ -99,7 +99,7 @@ public class MWPatch extends PBasicPatch implements PPatch
             throw new UnsupportedOperationException();
         }
 
-        public void addModuleContainerListener(ModuleContainerListener l)
+        public void addModuleContainerListener(PModuleContainerListener l)
         {
             // ignore
         }
@@ -130,7 +130,7 @@ public class MWPatch extends PBasicPatch implements PPatch
             throw new UnsupportedOperationException();
         }
 
-        public void removeModuleContainerListener(ModuleContainerListener l)
+        public void removeModuleContainerListener(PModuleContainerListener l)
         {
             // ignore
         }
