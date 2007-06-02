@@ -14,9 +14,34 @@
       <classpath>
         <pathelement path="."/>
         <pathelement location="../nmutils/dist/lib/nmutils.jar"/>
+        <pathelement location="../java_depencies/commons-logging/commons-logging.jar"/>
       </classpath>
-	</javac>
+    </javac>
   </target>
+
+<target name="javadoc" description="Generates the JavaDoc of the JPatch API">
+  <javadoc destdir="docs/api" author="true" version="true" use="true" windowtitle="JPatch API">
+      <classpath>
+        <pathelement path="."/>
+        <pathelement location="../nmutils/dist/lib/nmutils.jar"/>
+        <pathelement location="../java_depencies/commons-logging/commons-logging.jar"/>
+      </classpath>
+
+    <fileset dir="src" defaultexcludes="yes">
+      <include name="net/sf/nmedit/jpatch/**"/>
+      <exclude name="net/sf/nmedit/jpatch/**/*.html"/>
+    </fileset>
+
+    <doctitle><![CDATA[<h1>JPatch API</h1>]]></doctitle>
+    <bottom><![CDATA[<i>Copyright &#169; 2007 <a href="http://nmedit.sourceforge.net>nmedit project</a>.</i>]]></bottom>
+    <group title="JPatch API Package" packages="net.sf.nmedit.jpatch" />
+
+    <!-- <tag name="todo" scope="all" description="To do:"/>
+    <group title="Group 1 Packages" packages="com.dummy.test.a*"/>
+    <group title="Group 2 Packages" packages="com.dummy.test.b*:com.dummy.test.c*"/> -->
+    <!-- <link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/> -->
+  </javadoc>
+</target>
 
   <target name="dist" depends="compile" description="generate the distribution">
     <mkdir dir="${dist}/lib"/>

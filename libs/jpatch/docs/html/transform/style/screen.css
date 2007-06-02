@@ -1,0 +1,118 @@
+
+body { font-size: 12px; font-family: Verdana, sans-serif; padding: 10px; margin: 0; }
+html { font-size: 12px; font-family: Verdana, sans-serif; }
+div { font-size: 12px; font-family: Verdana, sans-serif; padding: 0; margin: 0; }
+p { font-size: 12px; font-family: Verdana, sans-serif; }
+td { font-size: 12px; font-family: Verdana, sans-serif; }
+
+h1#doc{ font-size: 20px; }
+h1{ font-size: 18px; }
+h2{ font-size: 16px; }
+
+img
+{
+	padding: 0;
+	margin: 0;
+	border: solid #aaa 1px;	
+}
+
+div#dvheader
+{
+	background-color: #efe;
+	border: solid #464 1px;
+	padding: 8px;
+}
+	
+div#dvfooter
+{
+	font-size: 10px; 
+	color: #666;
+	margin-top: 40px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	border-top: solid #808080 1px;
+}
+
+code
+{
+	font-family:'Lucida Console', monospace;
+	background-color:#F4FfF4;
+	border: solid #bcb 1px;
+}
+
+pre
+{
+	font-family:'Lucida Console', monospace;	
+	padding-left: 36px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-right: 4px;
+	background-color:#efe;
+	border: solid #474 1px;
+}
+
+p.ppre
+{
+	font-family:'Lucida Console', monospace;
+	padding-left: 36px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-right: 4px;
+	background-color:#efe;
+	border: solid #474 1px;
+}
+
+ul
+{
+	list-style-position: inside;
+	margin-left: 0px;
+	padding-left: 14px;
+}
+
+div.dvfigure
+{
+	margin-left: 40px;
+}
+
+table
+{
+	border-collapse:collapse;
+}
+
+td
+{
+	border: solid #aaa 1px;
+}
+
+table.matrix td
+{
+	width: 30px;
+	height: 30px;
+	text-align:center;
+	vertical-align:middle;
+}
+
+/* empty */ 
+td.tcell
+{
+	background-color: #FFF;
+}
+/* mapping */ 
+td.tmapp
+{
+	background-color: #ccf;
+}
+/* diagonal */ 
+td.tdiag
+{
+	background-color: #ccd;
+}
+/* symmetrie */ 
+td.tsymm
+{
+	background-color: #eee;
+}
+sub
+{
+	color: #44f;
+}

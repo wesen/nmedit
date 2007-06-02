@@ -1,0 +1,31 @@
+graph example1
+{
+	node [fontsize=8, fontname=Verdana]
+	edge [color=blue, fontsize=7, fontname=Verdana]
+
+	subgraph group3
+	{
+		// group 3
+		WaveWrapper -- Overdrive;
+		label = "Group3";
+	}
+
+	subgraph group1_2
+	{
+		// group 1
+		SineOsc -- PulseOsc ;
+		SineOsc -- SawtoothOsc;
+		PulseOsc -- SawtoothOsc;
+
+		// group2
+		PulseOsc -- PulseOscB;
+
+
+		// implied
+		edge [color = red]
+		SineOsc -- PulseOscB [label="implied"];
+		SawtoothOsc -- PulseOscB [label="implied"];
+		label = "Group1/Group2";
+	}
+
+}

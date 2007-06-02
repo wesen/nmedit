@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!--
+  Copyright (C) 2006 Christian Schneider
+  
+  This file is part of Nomad.
+  
+  Nomad is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+  
+  Nomad is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with Nomad; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+-->
+
+<!-- 
+math unicode table: http://tlt.its.psu.edu/suggestions/international/bylanguage/mathchart.html
+ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml"  xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-type" content="text/html+xhtml; charset=UTF-8" />
+    <meta name="keywords" content="nmedit, JPatch API, module transformation" />
+	<meta name="description" content="NMedit/Nomad - Nord Modular Editor Project" />
+    <title>JPatch API - module transformations</title>
+  	<link rel="stylesheet" media="screen" href="style/screen.css" title="style" type="text/css" />
+</head>
+<body>
+<div id="dvheader">
+<h1 id="doc">JPatch API - Module Transformations</h1>
+<ul>
+<li><strong>current version:</strong> Module Transformations v1.1</li>
+<li><strong>last modification:</strong> 2007-05-31</li>
+<li><strong>author(s):</strong> 
+
+<ul>
+<li>Christian Schneider &lt;<a href="mailto:chresan[at]users.sourceforge.net">chresan[at]users.sourceforge.net</a>&gt;</li>
+</ul>
+</li>
+</ul>
+</div>
+
+
+<h1>Table of Contents</h1>
+<div>
+<ul style="list-style-type:none">
+	<li>1. <a href="#toc1.">Abstract</a></li>
+	<li>2. <a href="#toc2.">Mappings</a></li>
+	<li>3. <a href="#toc3.">Transformations</a></li>
+	<li>4. <a href="#toc4.">Transformations XML v1.1</a>
+	<ul style="list-style-type:none">
+		<li>4.1 <a href="#toc4.1.">Document Structure</a></li>
+		<li>4.2 <a href="#toc4.2.">Example Document</a></li>
+	</ul>
+	</li>
+</ul>
+</div>
+
+<p><a name="toc1." id="toc1.">&nbsp;</a></p>
+<h1>1. Abstract</h1>
+<p>
+	A modular synthesizer usually contains modules which have similarities. Oscillator modules for
+	example have a controller for it's frequency and an (audio) output connector.
+	The JPatch API supports taking advantage of these similarities.
+	Mappings from one module to another can be defined in a XML file and
+	the transformations can be automated. The user can use this feature to switch
+	from one module to another while (some of the) parameter values and connections are retained.
+</p>
+
+<p><a name="toc2." id="toc2.">&nbsp;</a></p>
+<h1>2. Mappings</h1>
+<p>
+	In this document the term mapping refers to the 
+	transformation t := (m<sub>a</sub> &rarr; m<sub>b</sub>)  and 
+	the inverse t<sup>-1</sup> := (m<sub>b</sub> &rarr; m<sub>a</sub>)  of the modules m<sub>a</sub>, module m<sub>b</sub>.
+</p>
+<p>
+	Each mapping contains the components (parameters and connectors) of two modules which can be mapped.
+	The components have a selector id associated with them which is used to link a component of
+	module m<sub>a</sub> and a component of module m<sub>b</sub>.
+</p>
+<div class="dvfigure">
+<p><strong>Example:</strong></p>
+<table style="width:660px;">
+<thead>
+<tr><th>Sine Osc.</th><th>selector id</th><th>mapping</th><th>selector id</th><th>Pulse Osc.</th></tr>
+</thead>
+<tbody>
+<tr><td>parameter: frequency</td><td>freq</td><td>freq</td><td>freq</td><td>parameter: frequency</td></tr>
+<tr><td>parameter: fine tune</td><td>finetune</td><td>-  </td><td>pwma</td><td>parameter: pulse width mod amount</td></tr>
+<tr><td>connector: audio out </td><td>aout</td><td>aout</td><td>aout</td><td>connector: audio out</td></tr>
+<tr><td>-</td><td>-</td><td>-  </td><td>fm</td><td>connector: fm in</td></tr>
+<tr><td>-</td><td>-</td><td>-  </td><td>pwm</td><td>connector: pulse width mod</td></tr>
+<tr><td>&#x22EE;</td><td>&#x22EE;</td><td>&#x22EE;  </td><td>&#x22EE;</td><td>&#x22EE;</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>
+	Using this table the mapping is defined as the intersection of the selectors:
+mapping(m<sub>a</sub>,m<sub>b</sub>) := selectors(m<sub>a</sub>) &cap; selectors(m<sub>b</sub>)
+</p>
+
+<p><a name="toc3." id="toc3.">&nbsp;</a></p>
+<h1>3. Transformations</h1>
+<p>
+  Each pair of modules (m<sub>a</sub>,m<sub>b</sub>) defines a possible mapping, 
+  thus the mappings can be defined as a matrix with a row/column for each module.
+  Because the the pairs of modules (m<sub>a</sub>,m<sub>b</sub>) and (m<sub>b</sub>,m<sub>a</sub>)
+  refer to the same mapping the matrix is symmetrical.
+  The pairs (m<sub>a</sub>, m<sub>a</sub>) are the identical mapping (diagonale).
+</p>
+
+<div class="dvfigure">
+
+<table class="matrix">
+<tbody>
+<tr><td class="tcell">&nbsp;</td> <td class="tcell">m<sub>1</sub></td> <td class="tcell">m<sub>2</sub></td> <td class="tcell">&#x22EF;</td> <td class="tcell">m<sub>n</sub></td> </tr>
+<tr><td class="tcell">m<sub>1</sub></td> <td class="tdiag">id</td> <td class="tmapp">x</td> <td class="tmapp">&nbsp;</td> <td class="tmapp">i</td> </tr>
+<tr><td class="tcell">m<sub>2</sub></td> <td class="tsymm">&nbsp;-</td> <td class="tdiag">id</td> <td class="tmapp">&nbsp;</td> <td class="tmapp">x</td> </tr>
+<tr><td class="tcell">&#x22EE;</td> <td class="tsymm">&#x22EE;</td> <td class="tsymm">&nbsp;</td> <td class="tdiag">&#x22F1;</td> <td class="tmapp">&#x22EE;</td> </tr>
+<tr><td class="tcell">m<sub>n</sub></td> <td class="tsymm">&nbsp;-</td> <td class="tsymm">&nbsp;-</td> <td class="tsymm">&#x22EF;</td> <td class="tdiag">id</td> </tr>
+</tbody>
+</table>
+<ul style="list-style-type:none;">
+	<li><strong>x</strong>: defined mapping</li>
+	<li><strong>i</strong>: implied mapping</li>
+	<li><strong>id</strong>: identical mapping</li>
+</ul>
+
+</div>
+
+<p>
+	If an initial set of mappings is defined it is possible to add some of the missing mappings to the matrix using
+	an algorithm. For example in the matrix above the mappings (m<sub>1</sub>, m<sub>2</sub>) and 
+	(m<sub>2</sub>, m<sub>n</sub>) were defined at the beginning. These two mappings imply the third mapping
+	(m<sub>1</sub>, m<sub>n</sub>). However, the algorithm must work carefully because different paths could 
+	result in better or worse mappings.
+</p>
+
+<p><a name="toc4." id="toc4.">&nbsp;</a></p>
+<h1>4. Transformations XML v1.1</h1>
+<p>
+	The initial mappings can be defined using the <strong>Transformations XML v1.1</strong> format.
+</p>
+
+<p><a name="toc4.1." id="toc4.1.">&nbsp;</a></p>
+<h2>4.1 Document Structure</h2>
+<h3>Element: transformations</h3>
+<p>The element <code>transformations</code> is the root element. It has an attribute <code>version</code>
+ containing the version
+of the specification (current version "1.1"). The element contains any number of <code>group</code>-elements.</p>
+<pre>
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;transformations version="1.1"&gt;
+  ...
+&lt;/transformations&gt;
+</pre>
+
+<h3>Element: group</h3>
+<p>The element <code>group</code> has no attributes and contains any number <code>module</code>-elements.
+Each combination of the containing modules defines a mapping. Two different groups must not contain
+the same pair of modules, more formally for each two groups g<sub>1</sub> and g<sub>2</sub> the condition 
+<code>g<sub>1</sub> &ne; g<sub>2</sub> &rArr; | g<sub>1</sub> &cap; g<sub>2</sub> | &lt; 2</code> must be true. 
+
+A <code>group</code> can contain at most one module with a specific id (<code>component-id</code>).
+</p>
+<pre>
+&lt;group&gt;
+  ...
+&lt;/group&gt;
+</pre>
+
+<h3>Element: module</h3>
+<p>The element <code>module</code> has the attribute <code>component-id</code> which contains the identifier (id) of the
+module. 
+Possible child elements are  <code>parameter</code> and <code>connector</code>.</p>
+<pre>
+&lt;module component-id="SineOsc"&gt;
+  ...
+&lt;/module&gt;
+</pre>
+
+<h3>Element: parameter</h3>
+<p>The element <code>parameter</code> has the attribute <code>component-id</code> which contains the id of the
+parameter. The attribute <code>selector</code> is used to map this parameter to another parameter in the same group.
+A parameter (identified by it's component id) can be declared one time at most in the <code>module</code> element
+and there must not be any other <code>parameter</code> or <code>connector</code> element with the same <code>selector</code> value.
+</p>
+<pre>
+&lt;parameter component-id="frequency" selector="freq" /&gt;
+</pre>
+
+<h3>Element: connector</h3>
+<p>The element <code>connector</code> has the attribute <code>component-id</code> which contains the id of the
+connector. The attribute <code>selector</code> is used to map this connector to another connector in the same group.
+A connector (identified by it's component id) can be declared one time at most in the <code>module</code> element
+and there must not be any other <code>parameter</code> or <code>connector</code> element with the same <code>selector</code> value.
+The connectors which are mapped to each other must be of the same type either input or output.
+</p>
+<pre>
+&lt;connector component-id="aout" selector="out" /&gt;
+</pre>
+
+<p><a name="toc4.2." id="toc4.2.">&nbsp;</a></p>
+<h2>4.2 Example Document</h2>
+<pre>
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;transformations version="1.1"&gt;
+	&lt;group&gt;
+		&lt;module component-id="SineOsc"&gt;
+			&lt;parameter component-id="frequency" selector="freq" /&gt;
+			&lt;connector component-id="audioout" selector="aout" /&gt;
+		&lt;/module&gt;
+		&lt;module component-id="PulseOsc"&gt;
+			&lt;parameter component-id="frequency" selector="freq" /&gt;
+			&lt;connector component-id="audioout" selector="aout" /&gt;
+			&lt;connector component-id="fm-in" selector="fmin" /&gt;
+		&lt;/module&gt;
+		&lt;module component-id="SawtoothOsc"&gt;
+			&lt;parameter component-id="frequency" selector="freq" /&gt;
+			&lt;connector component-id="audioout" selector="aout" /&gt;
+			&lt;connector component-id="fm-in" selector="fmin" /&gt;
+		&lt;/module&gt;
+	&lt;/group&gt;
+	&lt;group&gt;
+		&lt;module component-id="PulseOsc"&gt;
+			&lt;parameter component-id="frequency" selector="freq" /&gt;
+			&lt;connector component-id="audioout" selector="aout" /&gt;
+			&lt;connector component-id="fm-in" selector="fmin" /&gt;
+		&lt;/module&gt;
+		&lt;module component-id="PulseOscB"&gt;
+			&lt;parameter component-id="frequency" selector="freq" /&gt;
+			&lt;connector component-id="audioout" selector="aout" /&gt;
+			&lt;connector component-id="fm-in" selector="fmin" /&gt;
+		&lt;/module&gt;
+	&lt;/group&gt;
+	&lt;group&gt;
+		&lt;module component-id="WaveWrapper"&gt;
+			&lt;parameter component-id="amount" selector="amount" /&gt;
+			&lt;connector component-id="audioout" selector="aout" /&gt;
+		&lt;/module&gt;
+		&lt;module component-id="Overdrive"&gt;
+			&lt;parameter component-id="overdrive" selector="amount" /&gt;
+			&lt;connector component-id="audioout" selector="aout" /&gt;
+		&lt;/module&gt;
+	&lt;/group&gt;
+&lt;/transformations&gt;
+</pre>
+
+<p>The example document defines the initial mappings of the modules SinceOsc, PulseOsc, SawtoothOsc, PulseOscB,
+WaveWrapper, Overdrive.
+Three mappings are defined in the  <strong>first group</strong>
+{ (SineOsc, PulseOsc), (SinceOsc, SawtoothOsc), (PulseOsc,SawtoothOsc) },
+one in the <strong>second group</strong>
+{ (PulseOsc, PulseOscB) },
+and one in the <strong>third group</strong>
+{ (WaveWrapper, Overdrive) }.
+</p>
+<div class="dvfigure">
+
+<table class="matrix">
+<tbody>
+<tr><td class="tcell">&nbsp;</td>      <td class="tcell">SineOsc</td> <td class="tcell">PulseOsc</td> <td class="tcell">SawtoothOsc</td> <td class="tcell">PulseOscB</td> <td class="tcell">WaveWrapper</td> <td class="tcell">Overdrive</td> </tr>
+<tr><td class="tcell">SineOsc</td>     <td class="tdiag">id</td>      <td class="tmapp">x</td>        <td class="tmapp">x</td>           <td class="tmapp">i</td>         <td class="tmapp">&nbsp;</td>      <td class="tmapp">&nbsp;</td> </tr>
+<tr><td class="tcell">PulseOsc</td> <td class="tsymm">&nbsp;-</td> <td class="tdiag">id</td>    <td class="tmapp">x</td>           <td class="tmapp">x</td>         <td class="tmapp">&nbsp;</td>      <td class="tmapp">&nbsp;</td> </tr>
+<tr><td class="tcell">SawtoothOsc</td> <td class="tsymm">&nbsp;-</td> <td class="tsymm">&nbsp;-</td>  <td class="tdiag">id</td>          <td class="tmapp">i</td>         <td class="tmapp">&nbsp;</td>      <td class="tmapp">&nbsp;</td> </tr>
+<tr><td class="tcell">PulseOscB</td>   <td class="tsymm">&nbsp;-</td> <td class="tsymm">&nbsp;-</td>  <td class="tsymm">&nbsp;-</td>    <td class="tdiag">id</td>         <td class="tmapp">&nbsp;</td>      <td class="tmapp">&nbsp;</td> </tr>
+<tr><td class="tcell">WaveWrapper</td> <td class="tsymm">&nbsp;-</td> <td class="tsymm">&nbsp;-</td>  <td class="tsymm">&nbsp;-</td>    <td class="tdiag">&nbsp;-</td>         <td class="tmapp">id</td>      <td class="tmapp">x</td> </tr>
+<tr><td class="tcell">Overdrive</td>   <td class="tsymm">&nbsp;-</td> <td class="tsymm">&nbsp;-</td>  <td class="tsymm">&nbsp;-</td>    <td class="tdiag">&nbsp;-</td>         <td class="tmapp">&nbsp;</td>      <td class="tmapp">id</td> </tr>
+</tbody>
+</table>
+<ul style="list-style-type:none;">
+	<li><strong>x</strong>: defined mapping</li>
+	<li><strong>i</strong>: implied mapping</li>
+	<li><strong>id</strong>: identical mapping</li>
+</ul>
+
+</div>
+
+<p>Some of the undefined mappings are derived using the matrix.</p>
+<ul>
+<li>((SineOscB,PulseOsc) &rarr; (PulseOsc, PulseOscB))  &rArr; (SineOscB,PulseOscB)</li>
+<li>((SawtoothOsc,PulseOsc) &rarr; (PulseOsc, PulseOscB))  &rArr; (SawtoothOsc,PulseOscB)</li>
+</ul>
+<p>The third group {WaveWrapper, Overdrive} is independent of the other two groups, no further mappings can be derived.</p>
+
+<p>This is the graph of the matrix above. Each edge represents a mapping. The blue edges are
+defined in the XML file, the red edges are derived. </p>
+
+<div class="dvfigure">
+	<img src="./example1.png" width="300" height="388" alt="[figure:graph of the previous matrix]" />
+</div>
+
+<!-- the footer -->
+<div id="dvfooter">
+  <p>Copyright &copy; 2007 <a href="http://nmedit.sourceforge.net/">NMEdit project</a>. All rights reserved.</p>
+  <p>
+    <a href="http://validator.w3.org/check?uri=referer"><img style="border:0 none;"
+        src="http://www.w3.org/Icons/valid-xhtml10"
+        alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
+  </p>	
+</div>
+<!-- end of the footer -->	
+</body>
+</html>
