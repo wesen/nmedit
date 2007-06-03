@@ -47,13 +47,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
-import net.sf.nmedit.jpatch.event.ModuleContainerEvent;
-import net.sf.nmedit.jpatch.event.ModuleContainerListener;
+import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
+import net.sf.nmedit.jpatch.event.PModuleContainerListener;
 import net.sf.nmedit.jtheme.clavia.nordmodular.misc.GradientProgressBar;
 import net.sf.nmedit.nmutils.math.Math2;
 import net.sf.nmedit.nmutils.swing.LimitedText;
 
-public class JTPatchSettingsBar extends JPanel implements ModuleContainerListener 
+public class JTPatchSettingsBar extends JPanel implements PModuleContainerListener 
 
 /*implements PatchListener */
 {
@@ -351,12 +351,12 @@ public class JTPatchSettingsBar extends JPanel implements ModuleContainerListene
         
     }
 
-    public void moduleAdded(ModuleContainerEvent e)
+    public void moduleAdded(PModuleContainerEvent e)
     {
         updateCyclesInfo();
     }
 
-    public void moduleRemoved(ModuleContainerEvent e)
+    public void moduleRemoved(PModuleContainerEvent e)
     {
         updateCyclesInfo();
     }

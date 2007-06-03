@@ -43,12 +43,12 @@ import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
 import net.sf.nmedit.jpatch.PModule;
-import net.sf.nmedit.jpatch.PSignalType;
+import net.sf.nmedit.jpatch.PSignal;
 import net.sf.nmedit.jpatch.PSignalTypes;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
-import net.sf.nmedit.jpatch.event.ConnectionEvent;
-import net.sf.nmedit.jpatch.event.ConnectionListener;
+import net.sf.nmedit.jpatch.event.PConnectionEvent;
+import net.sf.nmedit.jpatch.event.PConnectionListener;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
@@ -81,7 +81,7 @@ public class JTNMPatch extends JTPatch
         settings = new JTPatchSettingsBar(this);
         setLayout(new BorderLayout());
         add(split, BorderLayout.CENTER);
-        add(settings, BorderLayout.NORTH);
+        //add(settings, BorderLayout.NORTH);
     }
     
     protected static class ModuleAction extends AbstractAction
@@ -209,7 +209,11 @@ public class JTNMPatch extends JTPatch
         private static void removeModule(JTModule m)
         {
             PModule nm = m.getModule();
-            nm.getParentComponent().remove(nm);
+            
+            if (nm != null && nm.getParentComponent() != null)
+            {
+                nm.getParentComponent().remove(nm);
+            }
         }
         
     }
@@ -227,7 +231,7 @@ public class JTNMPatch extends JTPatch
         public static final String DELETE = "Delete";
         
         private JTConnector connector;
-        private PSignalType signalType;
+        private PSignal signalType;
         
         public static JPopupMenu createPopup(JTConnector connector)
         {
@@ -242,7 +246,7 @@ public class JTNMPatch extends JTPatch
             
             popup.add(colorItem);
             
-            for (PSignalType s: signalTypes)
+            for (PSignal s: signalTypes)
             {
                 colorItem.add(new ConnectorAction(s.getName(), connector, s));
             }
@@ -260,7 +264,7 @@ public class JTNMPatch extends JTPatch
             return d.getParentDescriptor().getModules().getDefinedSignals();
         }
         
-        public ConnectorAction(String action, JTConnector connector, PSignalType s)
+        public ConnectorAction(String action, JTConnector connector, PSignal s)
         {
             this.connector = connector;
             putValue(ACTION_COMMAND_KEY, action);
@@ -335,7 +339,7 @@ public class JTNMPatch extends JTPatch
             }
         }
 
-        private void setColor(PSignalType signal)
+        private void setColor(PSignal signal)
         {
             if (connector == null) return;
             PConnector c = connector.getConnector();
@@ -376,7 +380,7 @@ public class JTNMPatch extends JTPatch
     }
 
     private static class ModuleContainerEventHandler extends MouseAdapter
-        implements ConnectionListener, ContainerListener
+        implements PConnectionListener, ContainerListener
     {
         
         private JTModuleContainer cont;
@@ -493,7 +497,7 @@ public class JTNMPatch extends JTPatch
             cont.getModuleContainer().getConnectionManager().addConnectionListener(this);
         }
         
-        public void connectionAdded(ConnectionEvent e)
+        public void connectionAdded(PConnectionEvent e)
         {
             JTConnector src = findConnector(cont, e.getSource());
             JTConnector dst = findConnector(cont, e.getDestination());
@@ -503,7 +507,7 @@ public class JTNMPatch extends JTPatch
             
             Cable cable = cont.getCableManager().createCable(src, dst);
             
-            PSignalType signal = e.getSource().getSignalType();
+            PSignal signal = e.getSource().getSignalType();
             if (signal != null)
             {
                 cable.setColor(signal.getColor());
@@ -514,7 +518,7 @@ public class JTNMPatch extends JTPatch
             cont.getCableManager().notifyRepaintManager();
         }
 
-        public void connectionRemoved(ConnectionEvent e)
+        public void connectionRemoved(PConnectionEvent e)
         {
             for (Cable cable : cont.getCableManager())
             {

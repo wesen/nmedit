@@ -182,6 +182,30 @@ public class NmMessageHandler extends NmProtocolListener
         synth.getNmSlotManager().setActiveSlot(slotId);
     }
 
+    public void messageReceived(LightMessage message) 
+    {
+        int slotId = message.get("slot");
+        
+        if (!isValidSlot(slotId))
+            return;
+        NmSlot slot = synth.getSlot(slotId);
+        NMPatch patch = slot.getPatch();
+        if (patch == null) return;
+        patch.getLightProcessor().processLightMessage(message);
+    }
+    
+    public void messageReceived(MeterMessage message) 
+    {
+        int slotId = message.get("slot");
+        
+        if (!isValidSlot(slotId))
+            return;
+        NmSlot slot = synth.getSlot(slotId);
+        NMPatch patch = slot.getPatch();
+        if (patch == null) return;
+        patch.getLightProcessor().processMeterMessage(message);
+    }
+    
     public void messageReceived(ParameterMessage message) 
     {
         int slotId = message.get("slot");
@@ -222,16 +246,6 @@ public class NmMessageHandler extends NmProtocolListener
             return;
         }
         p.setValue(value);        
-    }
-    
-    public void messageReceived(MeterMessage message) 
-    {
-        // TODO implement message handling
-    }
-        
-    public void messageReceived(LightMessage message) 
-    {
-        // TODO implement message handling
     }
     
     public void messageReceived(ErrorMessage message) 

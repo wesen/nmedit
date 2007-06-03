@@ -157,9 +157,9 @@ public class NmUtils
         return msg;
     }
     
-    public static MidiMessage createDeleteModuleMessage( int pid, PModule module ) throws Exception
+    public static MidiMessage createDeleteModuleMessage( int pid, PModule module, int moduleIndex ) throws Exception
     {    
-        return createDeleteModuleMessage(pid, module.getParentComponent().getComponentIndex(), module.getComponentIndex());
+        return createDeleteModuleMessage(pid, module.getParentComponent().getComponentIndex(), moduleIndex);
     }
     
     public static MidiMessage createDeleteModuleMessage( int pid, int polyVoiceArea, int moduleIndex ) throws Exception

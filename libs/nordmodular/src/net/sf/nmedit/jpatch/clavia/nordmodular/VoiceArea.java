@@ -22,14 +22,12 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular;
 
-import javax.swing.event.EventListenerList;
-
 import net.sf.nmedit.jpatch.MoveOperation;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainerDescriptor;
+import net.sf.nmedit.jpatch.PParameter;
+import net.sf.nmedit.jpatch.clavia.nordmodular.PNMMorphSection.Assignments;
 import net.sf.nmedit.jpatch.clavia.nordmodular.misc.Cycles;
-import net.sf.nmedit.jpatch.event.ModuleContainerEvent;
-import net.sf.nmedit.jpatch.event.ModuleContainerListener;
 import net.sf.nmedit.jpatch.impl.PBasicModuleContainer;
 
 public class VoiceArea extends PBasicModuleContainer
@@ -39,16 +37,56 @@ public class VoiceArea extends PBasicModuleContainer
     
     private Cycles cycles = new Cycles();
     
-    protected void fireModuleAdded(PModule module)
+    protected void registerModule(PModule module)
     {
-        super.fireModuleAdded(module);
+        super.registerModule(module);
         registerCycles(module);
+        
+        if (module.getLightCount()>0)
+            lightProcessor.registerModule(module);
     }
 
-    protected void fireModuleRemoved(PModule module)
+    protected void unregisterModule(PModule module)
     {
-        super.fireModuleRemoved(module);
+        super.unregisterModule(module);
         unregisterCycles(module);
+        unregisterAssignments(module);
+        
+        if (module.getLightCount()>0)
+            lightProcessor.unregisterModule(module);
+    }
+
+    private void unregisterAssignments(PModule module)
+    {
+        
+        NMPatch patch = getPatch();
+        // knobs
+        KnobSet knobs = patch.getKnobs();
+        
+        for (int i=knobs.size()-1;i>=0;i--)
+        {
+            Knob k = knobs.get(i);
+            PParameter p = k.getParameter();
+            if (p != null)
+            {
+                PModule m = p.getParentComponent();
+                if (m==module)
+                {
+                    k.setParameter(null);
+                }   
+            }
+        }
+        // morphs
+        PNMMorphSection morph = patch.getMorphSection();
+        for (int i=morph.getMorphCount()-1;i>=0;i--)
+        {
+            Assignments a = morph.getAssignments(i);
+            a.remove(module);
+        }
+        
+        // midi controller
+        MidiControllerSet mcset = patch.getMidiControllers();
+        mcset.remove(module);
     }
 
     protected boolean canAdd(int index, PModule module)
@@ -65,17 +103,25 @@ public class VoiceArea extends PBasicModuleContainer
     private int impWidth;
     private int impHeight;
 
-    public VoiceArea(NMPatch patch, String name, int componentIndex)
+    private LightProcessor lightProcessor;
+
+    private boolean polyVa;
+
+    public VoiceArea(NMPatch patch, boolean polyVa, LightProcessor lp, String name, int componentIndex)
     {
         super(patch, name, componentIndex);
+        this.polyVa = polyVa;
+        this.lightProcessor = lp;
         //modules.setMinKey(1);
         impWidth = 0;
         impHeight = 0;
     }
 
-    public VoiceArea(NMPatch patch, PModuleContainerDescriptor descriptor, int componentIndex)
+    public VoiceArea(NMPatch patch, boolean polyVa, LightProcessor lp, PModuleContainerDescriptor descriptor, int componentIndex)
     {
         super(patch, descriptor, componentIndex);
+        this.polyVa = polyVa;
+        this.lightProcessor = lp;
         //modules.setMinKey(1);
         impWidth = 0;
         impHeight = 0;
@@ -108,7 +154,7 @@ public class VoiceArea extends PBasicModuleContainer
     
     public boolean isPolyVoiceArea()
     {
-        return getPatch().getPolyVoiceArea()==this;
+        return polyVa;
     }
     
     public NMPatch getPatch()
@@ -127,29 +173,6 @@ public class VoiceArea extends PBasicModuleContainer
         return impHeight;
     }
     
-    private EventListenerList eventListeners = null;
-    private transient ModuleContainerEvent mce = null;
-    
-    private ModuleContainerEvent getModuleContainerEvent()
-    {
-        if (mce == null)
-            mce = new ModuleContainerEvent(this);
-        return mce;
-    }
-
-    public void addModuleContainerListener( ModuleContainerListener l )
-    {
-        if (eventListeners == null)
-            eventListeners = new EventListenerList();
-        eventListeners.add(ModuleContainerListener.class, l);
-    }
-
-    public void removeModuleContainerListener( ModuleContainerListener l )
-    {
-        if (eventListeners != null)
-            eventListeners.remove(ModuleContainerListener.class, l);
-    }
-
     public String toString()
     {
         return ((isPolyVoiceArea()) ? "PolyVoiceArea":"CommonVoiceArea")

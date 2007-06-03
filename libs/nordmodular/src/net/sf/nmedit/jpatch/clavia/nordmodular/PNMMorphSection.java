@@ -26,7 +26,7 @@ import net.sf.nmedit.jpatch.PConnectionManager;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.PPatch;
-import net.sf.nmedit.jpatch.event.ModuleContainerListener;
+import net.sf.nmedit.jpatch.event.PModuleContainerListener;
 import net.sf.nmedit.jpatch.impl.PBasicModule;
 import net.sf.nmedit.jpatch.impl.PBasicModuleContainer;
 import net.sf.nmedit.nmutils.collections.UnmodifiableIterator;
@@ -64,6 +64,25 @@ public class PNMMorphSection extends PBasicModuleContainer
         public Iterator<PParameter> iterator()
         {
             return new UnmodifiableIterator<PParameter>(assignmentList.iterator());
+        }
+
+        public void remove(PModule module)
+        {
+            if (assignmentList.size()<=0 || module.getParameterCount()<=0)
+                return;
+            
+            for (int i=module.getParameterCount()-1;i>=0;i--)
+            {
+                PParameter p = module.getParameter(i);
+                for (int j=assignmentList.size()-1;j>=0;j--)
+                {
+                    if (assignmentList.get(j)==p)
+                    {
+                        assignmentList.remove(j);
+                        break;
+                    }
+                }
+            }
         }
     }
     
@@ -155,12 +174,12 @@ public class PNMMorphSection extends PBasicModuleContainer
         // ignore - no events
     }
     
-    public void addModuleContainerListener(ModuleContainerListener l)
+    public void addModuleContainerListener(PModuleContainerListener l)
     {
         // ignore - no events
     }
     
-    public void removeModuleContainerListener(ModuleContainerListener l)
+    public void removeModuleContainerListener(PModuleContainerListener l)
     {
         // ignore - no events
     }

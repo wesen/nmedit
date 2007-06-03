@@ -23,10 +23,10 @@ import net.sf.nmedit.jpatch.AllEventsListener;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
-import net.sf.nmedit.jpatch.event.ConnectionEvent;
-import net.sf.nmedit.jpatch.event.ModuleContainerEvent;
-import net.sf.nmedit.jpatch.event.ModuleEvent;
-import net.sf.nmedit.jpatch.event.ParameterEvent;
+import net.sf.nmedit.jpatch.event.PConnectionEvent;
+import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
+import net.sf.nmedit.jpatch.event.PModuleEvent;
+import net.sf.nmedit.jpatch.event.PParameterEvent;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
@@ -83,7 +83,7 @@ public class NmPatchSynchronizer extends AllEventsListener
         installModuleContainer(patch.getCommonVoiceArea());
     }
 
-    public void moduleAdded(ModuleContainerEvent e)
+    public void moduleAdded(PModuleContainerEvent e)
     {
         super.moduleAdded(e);
         PModule module = e.getModule();            
@@ -97,13 +97,16 @@ public class NmPatchSynchronizer extends AllEventsListener
         }
     }
 
-    public void moduleRemoved(ModuleContainerEvent e)
+    public void moduleRemoved(PModuleContainerEvent e)
     {
         super.moduleRemoved(e);
         PModule module = e.getModule();
+        int index = e.getIndex();
+        
+        //System.out.println("delete@"+index);
         try
         {
-        synth.getProtocol().send(NmUtils.createDeleteModuleMessage(slot.getPatchId(), module));
+        synth.getProtocol().send(NmUtils.createDeleteModuleMessage(slot.getPatchId(), module, index));
         }
         catch (Exception er)
         {
@@ -111,12 +114,12 @@ public class NmPatchSynchronizer extends AllEventsListener
         }
     }
 
-    public void moduleRenamed(ModuleEvent e)
+    public void moduleRenamed(PModuleEvent e)
     {
         // NmUtils.create
     }
 
-    public void moduleMoved(ModuleEvent e)
+    public void moduleMoved(PModuleEvent e)
     {
         try
         {
@@ -133,7 +136,7 @@ public class NmPatchSynchronizer extends AllEventsListener
         }
     }
 
-    public void parameterValueChanged(ParameterEvent e)
+    public void parameterValueChanged(PParameterEvent e)
     {
         PParameter parameter = e.getParameter();
 
@@ -152,7 +155,7 @@ public class NmPatchSynchronizer extends AllEventsListener
         }
     }
 
-    public void connectionAdded(ConnectionEvent e)
+    public void connectionAdded(PConnectionEvent e)
     {
         try
         {
@@ -172,7 +175,7 @@ public class NmPatchSynchronizer extends AllEventsListener
         }
     }
 
-    public void connectionRemoved(ConnectionEvent e)
+    public void connectionRemoved(PConnectionEvent e)
     {
         try
         {

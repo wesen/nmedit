@@ -80,7 +80,7 @@ public class Helper
             if (name.equals(p.getAttribute("class")))
                 map.put(index(p), p);
         }
-        module.setAttribute(key, map);        
+        module.getDescriptor().setAttribute(key, map);        
         return map;
     }
 

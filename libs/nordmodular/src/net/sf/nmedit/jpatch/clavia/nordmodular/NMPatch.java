@@ -100,19 +100,24 @@ public class NMPatch extends PBasicPatch implements PPatch
 
     private PModuleContainer[] containers;
     
+    private LightProcessor lightProcessor;
+    
     /**
      * Creates a new patch.
      */
     public NMPatch(ModuleDescriptions modules)
     {
         super(modules);
+        
+        lightProcessor = new LightProcessor();
+        
         header = new Header(this);
         noteSet = new NoteSet();
         
         midiControllerSet = new MidiControllerSet(this);
         knobs = new KnobSet(this);
-        polyVoiceArea = new VoiceArea(this, "PolyVoiceArea", Format.VALUE_SECTION_VOICE_AREA_POLY);
-        commonVoiceArea = new VoiceArea(this, "CommonVoiceArea", Format.VALUE_SECTION_VOICE_AREA_COMMON);
+        polyVoiceArea = new VoiceArea(this, true, lightProcessor, "PolyVoiceArea", Format.VALUE_SECTION_VOICE_AREA_POLY);
+        commonVoiceArea = new VoiceArea(this, false, lightProcessor, "CommonVoiceArea", Format.VALUE_SECTION_VOICE_AREA_COMMON);
         morphSection = new PNMMorphSection(this);
         
         containers = new PModuleContainer[]{commonVoiceArea, polyVoiceArea, morphSection};
@@ -314,6 +319,11 @@ public class NMPatch extends PBasicPatch implements PPatch
     {
         return getClass().getName()
         +"[name="+getName()+",version="+getVersion()+"]";
+    }
+
+    public LightProcessor getLightProcessor()
+    {
+        return lightProcessor;
     }
     
 }

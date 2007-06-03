@@ -28,7 +28,6 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.FontUIResource;
 
 import net.sf.nmedit.jtheme.JTCustomContext;
-import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.JTNM1ConnectorUI;
 import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.JTNM1KnobUI;
 import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.JTNM1ResetButtonUI;
 import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.JTNM1SliderUI;
@@ -39,15 +38,19 @@ import net.sf.nmedit.jtheme.component.JTDisplay;
 import net.sf.nmedit.jtheme.component.JTImage;
 import net.sf.nmedit.jtheme.component.JTKnob;
 import net.sf.nmedit.jtheme.component.JTLabel;
+import net.sf.nmedit.jtheme.component.JTLight;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.JTSlider;
 import net.sf.nmedit.jtheme.component.JTTextDisplay;
 import net.sf.nmedit.jtheme.component.plaf.JTBasicButtonControlUI;
+import net.sf.nmedit.jtheme.component.plaf.JTBasicConnectorUI;
+import net.sf.nmedit.jtheme.component.plaf.JTBasicLightUI;
 import net.sf.nmedit.jtheme.component.plaf.JTButtonControlUI;
 import net.sf.nmedit.jtheme.component.plaf.JTDisplayUI;
 import net.sf.nmedit.jtheme.component.plaf.JTImageUI;
 import net.sf.nmedit.jtheme.component.plaf.JTLabelUI;
+import net.sf.nmedit.jtheme.component.plaf.JTLightUI;
 import net.sf.nmedit.jtheme.component.plaf.JTModuleContainerUI;
 import net.sf.nmedit.jtheme.component.plaf.JTModuleUI;
 import net.sf.nmedit.jtheme.component.plaf.JTTextDisplayUI;
@@ -93,6 +96,7 @@ public class JTNM1Context extends JTCustomContext
         installComponentType(TYPE_BUTTONS, JTButtonControl.class);
         installComponentType(TYPE_RESET_BUTTON, JTNM1ResetButton.class);
         installComponentType(TYPE_TEXTDISPLAY, JTTextDisplay.class);
+        installComponentType(TYPE_LIGHT, JTLight.class);
     }
 
     @Override
@@ -122,6 +126,7 @@ public class JTNM1Context extends JTCustomContext
         installComponentClass(JTFilterFDisplay.class);
         installComponentClass(NMNoteSeqEditor.class);
         installComponentClass(VocoderDisplay.class);
+        installComponentClass(JTLight.class);
     }
 
     @Override
@@ -136,7 +141,7 @@ public class JTNM1Context extends JTCustomContext
         uidefaults.put(JTSlider.uiClassID, JTNM1SliderUI.class.getName());
         uidefaults.put(JTKnob.uiClassID, JTNM1KnobUI.class.getName());
         uidefaults.put(JTNM1ResetButton.uiClassID, JTNM1ResetButtonUI.class.getName());
-        uidefaults.put(JTConnector.uiClassID, JTNM1ConnectorUI.class.getName());
+        uidefaults.put(JTConnector.uiClassID, JTBasicConnectorUI.class.getName());
 
         uidefaults.put(JTButtonControl.uiClassID, JTBasicButtonControlUI.class.getName());
         
@@ -145,7 +150,9 @@ public class JTNM1Context extends JTCustomContext
         uidefaults.put(JTButtonControlUI.BACKGROUND_KEY, new ColorUIResource(0xB0B0B0));
         uidefaults.put(JTButtonControlUI.BACKGROUND_STATE_KEY, new ColorUIResource(0xC4F6ED));
         uidefaults.put(JTButtonControlUI.BACKGROUND_SELECTED_KEY, new ColorUIResource(0xC6CCDE));
-        
+
+        uidefaults.put(JTLight.uiClassId, JTBasicLightUI.class.getName());
+        uidefaults.put(JTLightUI.BORDER_KEY,  new BorderUIResource(JTNM1BorderFactory.createNordEditor311Border()));
         uidefaults.put(JTImage.uiClassID, JTImageUI.class.getName());
         uidefaults.put(JTLabel.uiClassID, JTLabelUI.class.getName());
         uidefaults.put(JTLabelUI.fontKey, baseFont);

@@ -26,6 +26,9 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PParameter;
+
 public class MidiControllerSet extends AbstractList<MidiController>
 {
     
@@ -134,6 +137,19 @@ public class MidiControllerSet extends AbstractList<MidiController>
         }
         
         return list.toArray(new MidiController[list.size()]);
+    }
+    
+    public void remove(PModule module)
+    {
+        for (int i=midiControllerList.length-1;i>=0;i--)
+        {
+            MidiController mc = midiControllerList[i];
+            PParameter p;
+            if (mc != null && (p=mc.getParameter())!=null && p.getParentComponent()==module)
+            {
+                mc.setParameter(null);
+            }
+        }
     }
 
 }
