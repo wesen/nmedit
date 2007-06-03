@@ -34,6 +34,7 @@ import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
+import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
 
 import net.sf.nmedit.jtheme.JTContext;
@@ -74,6 +75,7 @@ import net.sf.nmedit.jtheme.component.plaf.JTComponentUI;
 public class JTComponent extends JTBaseComponent
 {
 
+    private static final long serialVersionUID = 3945939382230355343L;
     // the static layer backing store image
     private Image staticLayerBackingStore;
     // the non-volatile double buffer 
@@ -234,7 +236,7 @@ public class JTComponent extends JTBaseComponent
         // be sure that repaint(long,int,int,int,int)
         // is called by super.repaint()
         setDoubleBufferNeedsUpdateFlag();
-        super.repaint();
+        super.repaint(0,0,0,getWidth(), getHeight());
     }
 
     /**
@@ -248,7 +250,7 @@ public class JTComponent extends JTBaseComponent
         // be sure that repaint(long,int,int,int,int)
         // is called by super.repaint(long)
         setDoubleBufferNeedsUpdateFlag();
-        super.repaint(tm);
+        super.repaint(tm,0,0,getWidth(),getHeight());
     }
 
     /**
@@ -262,7 +264,7 @@ public class JTComponent extends JTBaseComponent
         // be sure that repaint(long,int,int,int,int)
         // is called by super.repaint(int,int,int,int)
         setDoubleBufferNeedsUpdateFlag();
-        super.repaint(x, y, width, height);
+        super.repaint(0, x, y, width, height);
     }
 
     /**
@@ -276,7 +278,7 @@ public class JTComponent extends JTBaseComponent
         // be sure that repaint(long,int,int,int,int)
         // is called by super.repaint(Rectangle)
         setDoubleBufferNeedsUpdateFlag();
-        super.repaint(r);
+        super.repaint(0,r.x,r.y,r.width,r.height);
     }
     
     /**
@@ -363,35 +365,31 @@ public class JTComponent extends JTBaseComponent
      */
     protected void paintComponent(Graphics g)
     {
-        if (isNonVolatileDoubleBufferEnabled() && isDisplayable())
-        {
-            if (doubleBuffer == null)
-                doubleBuffer = new DoubleBuffer();
-
-            doubleBuffer.prepareNonVolatile(this);
-
-            if (doubleBuffer.needsUpdate)
-            {
-                Graphics2D dbGraphics = doubleBuffer.createOffscreenGraphics();
-                try
-                {
-                    dbGraphics.setFont(g.getFont());
-                    dbGraphics.setColor(g.getColor());
-                    doubleBuffer.needsUpdate = false;
-                    paintComponentWithoutDoubleBuffer(dbGraphics);
-                }
-                finally
-                {
-                    dbGraphics.dispose();
-                }
-            }
-
-            doubleBuffer.flip(g);
-        }
+        if (doubleBuffer == null && isNonVolatileDoubleBufferEnabled() && isDisplayable())
+            doubleBuffer = new DoubleBuffer();
         else
         {
             paintComponentWithoutDoubleBuffer((Graphics2D)g);
+            return;
         }
+        
+        doubleBuffer.prepareNonVolatile(this);
+        if (doubleBuffer.needsUpdate)
+        {
+            Graphics2D dbGraphics = doubleBuffer.createOffscreenGraphics();
+            try
+            {
+                dbGraphics.setFont(g.getFont());
+                dbGraphics.setColor(g.getColor());
+                doubleBuffer.needsUpdate = false;
+                paintComponentWithoutDoubleBuffer(dbGraphics);
+            }
+            finally
+            {
+                dbGraphics.dispose();
+            }
+        }
+        doubleBuffer.flip(g);
     }
     
     /**
@@ -414,8 +412,8 @@ public class JTComponent extends JTBaseComponent
     {
         if (hasStaticLayerBackingStore())
         {
-            int r = getWidth()-1;
-            int b = getHeight()-1;
+            int r = getWidth();
+            int b = getHeight();
             int ox = getStaticLayerBackingStoreOffsetX();
             int oy = getStaticLayerBackingStoreOffsetY();
            
@@ -519,13 +517,13 @@ public class JTComponent extends JTBaseComponent
         int w;
         int h;
 
-        public void prepareNonVolatile(Component c)
+        public void prepareNonVolatile(JTComponent c)
         {
             int oldw = w;
             int oldh = h;
             w = c.getWidth();
             h = c.getHeight();
-            
+
             if (w<1) w=1;
             if (h<1) h=1;
             
@@ -559,7 +557,7 @@ public class JTComponent extends JTBaseComponent
              }
         }
 
-        private BufferedImage createNonVolatileImage( Component c, int w, int h )
+        private BufferedImage createNonVolatileImage( JTComponent c, int w, int h )
         {
             if (gc == null)
             { 
@@ -569,9 +567,16 @@ public class JTComponent extends JTBaseComponent
                 .getDefaultConfiguration();
             }
             
+            boolean opaque = c.isOpaque();
+            if (opaque)
+            {
+                Border b = c.getBorder();
+                if (b != null) opaque = b.isBorderOpaque();
+            }
+            
             // Create a non-volatile image that can be optimally blitted.
             // The image is translucent depending on the components opacity setting.
-            return gc.createCompatibleImage(w, h, c.isOpaque() ?  
+            return gc.createCompatibleImage(w, h, opaque ?  
                     Transparency.OPAQUE : Transparency.TRANSLUCENT);
         }
 
@@ -587,9 +592,7 @@ public class JTComponent extends JTBaseComponent
 
         public void flip( Graphics g )
         {
-            int r = w-1;
-            int b = h-1;
-            g.drawImage(image, 0, 0, r, b, 0, 0, r, b, null);
+            g.drawImage(image, 0, 0, w, h, 0, 0, w, h, null);
         }
         
     }
