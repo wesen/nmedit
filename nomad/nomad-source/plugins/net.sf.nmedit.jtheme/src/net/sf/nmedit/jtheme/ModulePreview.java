@@ -27,9 +27,9 @@ import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 
 import net.sf.nmedit.jpatch.ModuleDescriptions;
+import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
-import net.sf.nmedit.jtheme.JTContext;
-import net.sf.nmedit.jtheme.JTException;
+import net.sf.nmedit.jpatch.impl.PBasicModule;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.store.ModuleStore;
 import net.sf.nmedit.jtheme.store.StorageContext;
@@ -116,9 +116,9 @@ public class ModulePreview extends ImagePreview
         ModuleStore store = storageContext
             .getModuleStoreById ( moduleDescriptor.getComponentId() );
 
-        JTModule module = 
-            store.createModule(uiContext, 
-                null, false);
+        PModule pmodule = new PBasicModule(moduleDescriptor);
+        
+        JTModule module = store.createModule(uiContext, pmodule, true);
 
         BufferedImage image =
             GraphicsToolkit.createCompatibleBuffer(
