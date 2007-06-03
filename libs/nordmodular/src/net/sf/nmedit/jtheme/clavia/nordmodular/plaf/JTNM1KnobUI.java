@@ -29,20 +29,42 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JComponent;
+import javax.swing.UIDefaults;
 
+import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.plaf.JTBasicKnobUI;
 
 public class JTNM1KnobUI extends JTBasicKnobUI
 {
 
-    private static JTNM1KnobUI instance = new JTNM1KnobUI();
 /*
     private BasicStroke thinStroke = new BasicStroke(0.6f);
 */
+    private static volatile transient JTContext currentContext;
+    private static volatile transient JTNM1KnobUI currentUI;
+    
     public static JTNM1KnobUI createUI(JComponent c)
     {
-        return instance;
+        JTComponent jtc = (JTComponent) c;
+        JTContext context = jtc.getContext();
+        
+        if (context == null) return new JTNM1KnobUI();
+
+        if (currentUI!=null && context==currentContext)
+            return currentUI;
+
+        String key = JTBasicKnobUI.class.getName();
+        UIDefaults def = context.getUIDefaults();
+        Object o = def.get(key);
+        if (o!=null && o instanceof JTNM1KnobUI)
+            return (JTNM1KnobUI) o;
+        JTNM1KnobUI ui = new JTNM1KnobUI();
+        def.put(key, ui);
+        
+        currentContext = context;
+        currentUI = ui;
+        return ui;
     }
     /*
     private GradientPaint gp = null;
@@ -52,14 +74,14 @@ public class JTNM1KnobUI extends JTBasicKnobUI
     
     public void paintStaticLayer(Graphics2D g, JTComponent c)
     {
-        final int minBorder = Math.min(c.getWidth(), c.getHeight());
-        final int s = getDiameter(c);
+        //final int minBorder = Math.min(c.getWidth(), c.getHeight());
+        final int s = diameter(c);
         
-        final Integer key = new Integer(minBorder); // prevent duplicate auto boxing
+        final Integer key = new Integer(s); // prevent duplicate auto boxing
         BufferedImage bi = backgroundMap.get(key);
         if (bi==null)
         {
-            bi = new BufferedImage(minBorder, minBorder, BufferedImage.TYPE_INT_ARGB);
+            bi = new BufferedImage(s, s, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2 = bi.createGraphics();
             try
             {
@@ -90,8 +112,11 @@ public class JTNM1KnobUI extends JTBasicKnobUI
     {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-
-        int rad = (int)Math.floor(s/2.0);//s>>1; // mid = s/2
+/*
+        g2.setColor(Color.BLUE);
+        g2.drawRect(0, 0, s-1, s-1);*/
+        
+        int rad = s/2;//(int)Math.floor((s)/2.0f);//s>>1; // mid = s/2
 
         g2.setColor(Color.BLACK);
         g2.drawLine(rad, rad, 0, s);
