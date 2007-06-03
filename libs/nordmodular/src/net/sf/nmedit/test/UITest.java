@@ -49,7 +49,7 @@ import org.xml.sax.InputSource;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.history.History;
-import net.sf.nmedit.jpatch.transform.TransformationsBuilder;
+import net.sf.nmedit.jpatch.transform.PTTransformationsBuillder;
 import net.sf.nmedit.jpatch.transform.PTTransformations;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTNM1Context;
@@ -288,7 +288,7 @@ public class UITest
         
         InputSource is = new InputSource(new FileInputStream("./nordmodular/data/module-descriptions/transformations.xml"));
         
-        PTTransformations t = TransformationsBuilder.build(is, modules);
+        PTTransformations t = PTTransformationsBuillder.build(is, modules);
        
         modules.setTransformations(t);
         

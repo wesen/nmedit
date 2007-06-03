@@ -64,7 +64,7 @@ public class JTWaldorfKnobUI extends JTBasicKnobUI
 
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        int size = getDiameter(control);
+        int size = diameter(control);
         
         Color backgroundColor = defaults.getColor(getPrefix()+knobBackgroundColorKey);
         if (backgroundColor == null)
@@ -99,7 +99,7 @@ public class JTWaldorfKnobUI extends JTBasicKnobUI
         if (control.hasFocus())
         {
             Color focusColor = defaultFocusedBorderColor;
-            int size = getDiameter(control);
+            int size = diameter(control);
             
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -125,7 +125,7 @@ public class JTWaldorfKnobUI extends JTBasicKnobUI
     private void paintKnobGrip(Graphics2D g, JTControl control, Color gripColor, 
             double gripStartValue, double gripStopValue, double value)
     {
-        int size = getDiameter(control);
+        int size = diameter(control);
 
         int pos = size/2-5;
         int cxy = 1+size/2;
