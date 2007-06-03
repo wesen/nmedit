@@ -95,13 +95,16 @@ public class JTBasicKnobUI extends JTBasicControlUI
         paintKnobForeground(g, control);
     }
 
-    protected int getDiameter(JTComponent c)
+    protected static int diameter(int w, int h)
     {
-        int size = Math.min(c.getWidth(), c.getHeight());
         // use uneven size to avoid bad looking circles
-        if ((size%2)!=0 && size>1) size--;
-        
-        return size;
+        int d = Math.min(w, h);
+        return d - (d+1)%2;
+    }
+    
+    protected static int diameter(JTComponent c)
+    {
+        return diameter(c.getWidth(), c.getHeight());
     }
     
     protected void paintKnobBackground( Graphics2D g, JTControl control )
@@ -110,7 +113,7 @@ public class JTBasicKnobUI extends JTBasicControlUI
         
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        int size = getDiameter(control);
+        int size = diameter(control);
         
         Color backgroundColor = defaults.getColor(getPrefix()+knobBackgroundColorKey);
         if (backgroundColor == null)
@@ -132,7 +135,7 @@ public class JTBasicKnobUI extends JTBasicControlUI
         if (control.hasFocus())
         {
             Color focusColor = defaultFocusedBorderColor;
-            int size = getDiameter(control);
+            int size = diameter(control);
             
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -158,7 +161,7 @@ public class JTBasicKnobUI extends JTBasicControlUI
     private void paintKnobGrip(Graphics2D g, JTControl control, Color gripColor, 
             double gripStartValue, double gripStopValue, double value)
     {
-        int size = getDiameter(control);
+        int size = diameter(control);
 
         int len = size/2-1;
         int cxy = 1+len;

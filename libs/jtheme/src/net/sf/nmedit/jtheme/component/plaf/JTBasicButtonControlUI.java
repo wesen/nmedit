@@ -233,30 +233,32 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
         }
         else 
         {
-            int dx, dy;
+            float dx, dy;
             if (control.getOrientation() == HORIZONTAL)
             {
-                btnw = w/range;
-                dx = btnw;
+                float btnf = w/(float)range;
+                btnw = (int)btnf;
+                dx = btnf;
                 dy = 0;
             }
             else
             {
                 // vertical
-                btnh = h/range;
+                float btnf = h/(float)range;
+                btnh = (int)btnf;
                 dx = 0;
-                dy = btnh;
+                dy = btnf;
             }
             
-            int x = 0;
-            int y = 0;
+            float x = 0;
+            float y = 0;
             
             for (int i=0;i<range;i++)
             {
                 Icon icon = btnIcons[i];
                 String label = btnLabels[i];
              
-                paintButton(g, intSelectionIndex, min+i, icon, label, x, y, btnw, btnh);
+                paintButton(g, intSelectionIndex, min+i, icon, label, (int)x, (int)y, btnw, btnh);
                 
                 x+=dx; 
                 y+=dy;
@@ -366,6 +368,23 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
 
         if (selected) px+=1;
         int mid = y+btnh/2;
+        
+        int contentwidth = 0;
+        FontMetrics fm = null;
+        if (icon != null)
+            contentwidth+=icon.getIconWidth();
+        if (label != null)
+        {
+            fm = getFontMetrics();
+            contentwidth+=iconLabelGap+fm.stringWidth(label);
+        } 
+        
+        // inner width
+        int t = btnw-(borderInsets.left+paddingInsets.left+borderInsets.right+paddingInsets.right);
+        
+        int off = (t-contentwidth)/2;
+        
+        px += off;
 
         if (icon != null)
         {
@@ -374,8 +393,6 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
             icon.paintIcon(control, g, px, top);
             px+=icon.getIconWidth()+iconLabelGap;
         }
-        
-        FontMetrics fm = getFontMetrics();
         
         if (label!=null)
         {
