@@ -42,13 +42,13 @@ public class JTConnector extends JTComponent implements PConnectorListener
     private static final long serialVersionUID = -2055932385325208113L;
     public static final String uiClassID = "connector";
     private PConnector connector;
-    private PConnectorDescriptor connectorDescriptor;
+    private PConnectorDescriptor descriptor;
     private transient JTCableManager cableManager;
 
     public JTConnector(JTContext context)
     {
         super(context);
-        setOpaque(false);
+        setOpaque(true);
     }
     
     public void setUI(JTConnectorUI ui)
@@ -63,12 +63,12 @@ public class JTConnector extends JTComponent implements PConnectorListener
     
     public PSignal getSignal()
     {
-        return connector != null ? connector.getDefaultSignalType() : null;
+        return descriptor != null ? descriptor.getDefaultSignalType() : null;
     }
     
     public PSignal getDefaultSignal()
     {
-        return connector != null ? connector.getDefaultSignalType() : null;
+        return descriptor != null ? descriptor.getDefaultSignalType() : null;
     }
     
     public void setConnector(PConnector c)
@@ -99,22 +99,26 @@ public class JTConnector extends JTComponent implements PConnectorListener
     public void setConnectorDescriptor(PConnectorDescriptor descriptor)
     {
         setToolTipText(null);
-        this.connectorDescriptor = descriptor;
+        this.descriptor = descriptor;
        
         if (descriptor != null)
         {
+            setOpaque(descriptor.isOutput());
             setToolTipText(descriptor.getName());
+        }
+        else
+        {
+            setOpaque(true);
         }
     }
     
     public PConnectorDescriptor getConnectorDescriptor()
     {
-        return connectorDescriptor;
+        return descriptor;
     }
     
     public boolean isOutput()
     {
-        PConnectorDescriptor descriptor = connectorDescriptor;
         return descriptor == null ? false : descriptor.isOutput();
     }
     

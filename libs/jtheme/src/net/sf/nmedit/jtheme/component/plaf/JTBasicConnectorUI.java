@@ -18,8 +18,11 @@
  */
 package net.sf.nmedit.jtheme.component.plaf;
 
+import java.awt.Color;
+import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.Component;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -28,12 +31,17 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
+import javax.swing.UIDefaults;
 
 import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnectionManager;
@@ -42,28 +50,68 @@ import net.sf.nmedit.jpatch.PConnectorDescriptor;
 import net.sf.nmedit.jpatch.PSignal;
 import net.sf.nmedit.jpatch.PSignalTypes;
 import net.sf.nmedit.jpatch.history.History;
+import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTCursor;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.DragCable;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.JTConnector;
+import net.sf.nmedit.nmutils.graphics.RoundGradientPaint;
 
 public class JTBasicConnectorUI extends JTConnectorUI
 {
 
-    private static JTBasicConnectorUI instance = new JTBasicConnectorUI();
+    private static final String UIKEY = JTConnectorUI.class.getName();
+    private static transient JTContext currentContext;
+    private static transient JTConnectorUI currentUI;
     
-    public static JTBasicConnectorUI createUI(JComponent c)
+    public static JTConnectorUI createUI(JComponent c)
     {
-        return instance;
+        JTComponent jtc = (JTComponent) c;
+        JTContext context = jtc.getContext();
+        if (context == currentContext && currentUI != null)
+            return currentUI;
+
+        JTConnectorUI ui = null;
+        
+        if (context != null)
+        {
+            UIDefaults defaults = context.getUIDefaults();
+            Object o = defaults.get(UIKEY);
+            if (o != null && o instanceof JTConnectorUI)
+            {
+                ui = (JTConnectorUI) o;
+            }
+            else
+            {
+                ui = createInstance();
+                defaults.put(UIKEY, ui);
+            }
+        }
+        else
+        {
+            ui = createInstance();
+        }
+        currentContext = context;
+        currentUI = ui;
+        return ui;
+    }
+    
+    protected static JTConnectorUI createInstance()
+    {
+        return new JTBasicConnectorUI();
     }
     
     public void paintDynamicLayer(Graphics2D g, JTComponent c)
     {
-        JTConnector connector = (JTConnector) c;
-        PSignal signal = connector.getSignal();
-        paintConnector(g, connector, signal, connector.isOutput(), connector.isConnected(), c.hasFocus());
+        JTConnector con = (JTConnector) c;
+        PSignal signal = con.getSignal();
+        
+        Color color = signal == null ? Color.BLACK : signal.getColor();
+        
+        int size = diameter(c.getWidth(), c.getHeight());
+        paintConnector(g, size, color, con.isOutput(), con.isConnected());
     }
     
     protected int getSize(JTConnector c)
@@ -73,27 +121,148 @@ public class JTBasicConnectorUI extends JTConnectorUI
         return size;
     }
     
-    protected void paintConnector(Graphics2D g, JTConnector c, PSignal signal, boolean output, 
-            boolean connected, boolean focused)
+    private static int diameter(int w, int h)
     {
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        
-        /*Color outline = c.hasFocus() ? Color.BLUE : Color.BLACK;
-        g.setColor(outline);*/
-        
-        int size = getSize(c);
-        
-        g.setColor(signal.getColor());
-        if (output)
+        int d = Math.min(w, h);
+        return d - (d+1)%2;
+    }
+
+    private static final Color OUTLINE = new Color(0,0,0,.5f);
+    private static final Color RGP_INNER = new Color(0,0,0,.85f);
+    private static final Color RGP_OUTER = new Color(0,0,0,.05f);
+    
+    protected static int computeHash(int size, Color fill, boolean output, boolean connected)
+    {
+        return ((fill.hashCode()*size)<<2)|(output?2:0)|(connected?1:0);
+    }
+    
+    private static class CachedConnector
+    {
+        private int size;
+        private Color fill;
+        private boolean output;
+        private boolean connected;
+        private int hashCode;
+        private Image image;
+
+        public CachedConnector(int size, Color fill, boolean output, boolean connected, int hashCode, Image image)
         {
-            if (connected) g.fillRect(0, 0, size, size);
-            g.drawRect(0, 0, size-1, size-1);
+            this.size = size;
+            this.fill = fill;
+            this.output = output;
+            this.connected = connected;
+            this.hashCode = hashCode;
+            this.image = image;
+        }
+        
+        public int hashCode()
+        {
+            return hashCode;
+        }
+        
+        public boolean equals(Object o)
+        {
+            if (o == null || o.hashCode() != hashCode) return false;
+            if (o == this) return true;
+            if (!(o instanceof CachedConnector)) return false;
+            
+            CachedConnector c = (CachedConnector) o;
+            return equals(c.size, c.fill, c.output, c.connected);
+        }
+        
+        public boolean equals(int size, Color fill, boolean output, boolean connected)
+        {
+            return size==this.size && fill.getRGB()==this.fill.getRGB()&&output==this.output&&connected==this.connected;
+        }
+    }
+
+    private transient SoftReference<Map<Integer, CachedConnector>> cache ; 
+    
+    protected Image getConnector(int size, Color fill, boolean output, boolean connected)
+    {
+        final int hash = computeHash(size, fill, output, connected);
+        
+        Map<Integer, CachedConnector> map = null;
+        if (cache != null) map = cache.get();
+        if (map == null)
+        {
+            map = new HashMap<Integer, CachedConnector>();
+            cache = new SoftReference<Map<Integer,CachedConnector>>(map);
         }
         else
         {
-            if (connected) g.fillOval(0, 0, size-1, size-1);
-            g.drawOval(0, 0, size-1, size-1);
+            CachedConnector c = map.get(hash);
+            
+            if (c != null && c.equals(size, fill, output, connected))
+            {
+                // found
+                return c.image;
+            }
         }
+        
+        // render new image
+        BufferedImage bi = new BufferedImage(size, size, output ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = bi.createGraphics();
+        try
+        {
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            renderConnector(g2, size, fill, output, connected);
+        }
+        finally
+        {
+            g2.dispose();
+        }
+        
+        map.put(hash, new CachedConnector(size, fill, output, connected, hash, bi));
+        return bi;   
+    }
+    
+    
+    
+    protected void paintConnector(Graphics2D g, int s, Color fill, boolean output, boolean connected)
+    {
+
+        /*
+        renderConnector(g, s, fill, output, connected);
+        */
+        
+        Image buf = getConnector(s, fill, output, connected);
+        g.drawImage(buf, 0, 0, null);
+    }
+    
+    protected void renderConnector(Graphics2D g, final int s, Color fill, boolean output, boolean connected)
+    {
+        int c = (s+1)/2; // (s mod 2) == 1 
+
+        Color bright = fill.brighter().brighter();
+        g.setPaint(new GradientPaint(0, 0, fill, s, s, bright));
+
+        if (output) 
+        {
+            g.fillRect(0, 0, s, s);
+            g.setPaint(new GradientPaint(0, 0, bright, c, c, fill));
+            g.fillRect(0, 0, c, c);
+        }
+        else g.fillOval(0, 0, s, s);
+        
+        final int xy = (int)(s*3f/16f);
+        c++;
+
+        float c2 = c/2f; 
+        float sxy = xy+c2;
+        g.setPaint(new RoundGradientPaint(sxy, sxy, c2, RGP_INNER, RGP_OUTER));
+        g.fillOval(xy, xy, c, c);
+        
+        if (connected)
+        {
+            g.setColor(fill);
+            g.fillOval(xy, xy, c, c);
+        }
+
+        // outlines
+        g.setColor(OUTLINE);
+        if (output) g.drawRect(0, 0, s-1, s-1);
+        else g.drawOval(0, 0, s-1, s-1);
     }
 
     protected BasicConnectorListener createConnectorListener(JComponent c)
@@ -167,7 +336,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
 
         public void installFocusListener(JComponent c)
         {
-            c.addFocusListener(this);
+            //c.addFocusListener(this);
         }
         
         protected void uninstallMouseMotionListener(JComponent c)
@@ -182,7 +351,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
 
         public void uninstallFocusListener(JComponent c)
         {
-            c.removeFocusListener(this);
+            //c.removeFocusListener(this);
         }
         
         public void uninstallListener(JComponent c)
