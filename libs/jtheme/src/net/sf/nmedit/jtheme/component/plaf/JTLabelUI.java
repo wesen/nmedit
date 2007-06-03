@@ -35,6 +35,7 @@ import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTLabel;
@@ -110,12 +111,24 @@ public class JTLabelUI extends JTComponentUI implements SwingConstants
         return (((JTLabel) c).isReducible());
     }
     
+    private static Insets labelInsets = new Insets(0,0,0,0);
+    
     public void paintStaticLayer(Graphics2D g, JTComponent c)
     {
         if (c.isOpaque()) 
         {
             g.setColor(c.getBackground());
-            g.fillRect(0, 0, c.getWidth(),c.getHeight());
+            Border b = c.getBorder();
+            if (b == null || b.isBorderOpaque())
+            {
+                g.fillRect(0, 0, c.getWidth(),c.getHeight());
+            }
+            else
+            {
+                Insets i = c.getInsets(labelInsets);
+                g.fillRect(i.left, i.top, c.getWidth()-i.left-i.right, c.getHeight()-i.top-i.bottom);    
+            }
+            
         }
         
         if (reducible(c))
