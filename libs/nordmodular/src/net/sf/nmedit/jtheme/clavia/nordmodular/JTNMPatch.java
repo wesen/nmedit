@@ -23,6 +23,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
@@ -606,11 +607,10 @@ public class JTNMPatch extends JTPatch
             if (mstore == null)
                 throw new RuntimeException("no store found for "+module);
             
-           // Image image = mstore.getStaticLayer();
-            mstore.setStaticLayer(null);
+             Image image = mstore.getStaticLayer();
+            //mstore.setStaticLayer(null);
             
-            JTModule jtmodule =
-            mstore.createModule(context, module, true);
+            JTModule jtmodule = mstore.createModule(context, module, image == null);
             
             jtmodule.setLocation( module.getScreenX(), module.getScreenY() );
 
@@ -618,14 +618,14 @@ public class JTNMPatch extends JTPatch
             height = Math.max(height, jtmodule.getY()+jtmodule.getHeight());
             
             cont.add(jtmodule);
-            /*
+            
             if (image == null)
             {
                 image = jtmodule.renderStaticLayerImage();
                 mstore.setStaticLayer(image);
             }
             
-            jtmodule.setStaticLayerBackingStore(image);*/
+            jtmodule.setStaticLayerBackingStore(image);
         }
         
         cont.setPreferredSize(new Dimension(width, height));
