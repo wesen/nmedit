@@ -28,11 +28,13 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.FontUIResource;
 
 import net.sf.nmedit.jtheme.JTCustomContext;
+import net.sf.nmedit.jtheme.JTPopupHandler;
 import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.JTNM1KnobUI;
 import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.JTNM1ResetButtonUI;
 import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.JTNM1SliderUI;
 import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.NoteSeqEditorUI;
 import net.sf.nmedit.jtheme.component.JTButtonControl;
+import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTConnector;
 import net.sf.nmedit.jtheme.component.JTDisplay;
 import net.sf.nmedit.jtheme.component.JTImage;
@@ -68,11 +70,20 @@ public class JTNM1Context extends JTCustomContext
     public static final Color GRAPH_DISPLAY_FILL_LINE = new Color(0x000000);
 
     private StorageContext stc;
+    
+    private JTPopupHandler popupHandler = new ControlPopupHandler();
 
     public JTNM1Context(StorageContext stc)
     {
         super(true, true);
         this.stc = stc;
+        
+        
+    }
+    
+    public JTPopupHandler getPopupHandler(JTComponent c)
+    {
+        return popupHandler;
     }
     
     public StorageContext getStorageContext()
