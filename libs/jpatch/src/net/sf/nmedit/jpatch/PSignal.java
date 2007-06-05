@@ -24,8 +24,20 @@ import java.awt.Color;
  * Identifies a specific signal type for example 
  * an audio signal, a logic signal or a control signal. 
  */
-public interface PSignal 
+public class PSignal extends PType
 {
+
+    private static final long serialVersionUID = -2637295506140546814L;
+    
+    private PSignalTypes parent;
+    private Color color;
+
+    public PSignal(PSignalTypes parent, int id, String name, Color color)
+    {
+        super(id, name);
+        this.parent = parent;
+        this.color = color;
+    }
 
     /**
      * Returns the name of this signal. The return value
@@ -34,26 +46,52 @@ public interface PSignal
      * thus it should be named carefully.
      * @return the name of this signal
      */
-    String getName();
-    
+    public String getName()
+    {
+        return super.getName();
+    }
+
     /**
      * Returns an identifier of this signal.
      * Each {@link #getDefinedSignals() signal} is unique.
      * @return the identifier of this signal
      */
-    int getId();
-    
+    public int getId()
+    {
+        return super.getId();
+    }
+
     /**
      * Returns the defined signal types.
      * @return the defined signal types
      */
-    PSignalTypes getDefinedSignals();
-    
+    public PSignalTypes getDefinedSignals()
+    {
+        return parent;
+    }
+
+    public String toString()
+    {
+        return getClass().getName()+"[id="+getId()+",name="+getName()+",color="+color+"]";
+    }
+
     /**
      * Returns the preferred color for this signal.
      * The value must not be null.
      * @return the preferred color for this signal
      */
-    Color getColor();
+    public Color getColor()
+    {
+        return color;
+    }
     
+    public boolean equals(Object o)
+    {
+        if (o == this) return true;
+        if (o == null || (!(o instanceof PSignal))) return false;
+        
+        PSignal st = (PSignal) o;
+        return st.getId() == getId() && eq(getName(), st.getName());
+    }
+
 }

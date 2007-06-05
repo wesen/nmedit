@@ -22,52 +22,18 @@
  */
 package net.sf.nmedit.jpatch;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
-public class Type
+public class PSimpleTypes extends PTypes<PType>
 {
-
-    private Map<Integer,String> key_value = new HashMap<Integer,String>();
-    private Map<String,Integer> value_key = new HashMap<String,Integer>();
-    private String name;
     
-    public Type( String name )
+    public PSimpleTypes( String name )
     {
-        this.name = name;
+        super(name);
     }
 
-    public String getName()
-    {
-        return name;
-    }
-    
-    public Iterator<String> values()
-    {
-        return key_value.values().iterator();
-    }
-    
     public void putValue(int key, String name)
     {
-        Integer i = new Integer(key);
-        key_value.put(i, name);
-        value_key.put(name, i);
-    }
-    
-    public String getValue(int key)
-    {
-        return key_value.get(key);
-    }
-    
-    public Integer getKey(String value)
-    {
-        return value_key.get(value);
-    }
-
-    public String toString()
-    {
-        return "type "+getName();
+        super.addType(new PType(key, name));
     }
 
 }

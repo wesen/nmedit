@@ -24,7 +24,8 @@ package net.sf.nmedit.jpatch.formatter;
 
 import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.PParameter;
-import net.sf.nmedit.jpatch.Type;
+import net.sf.nmedit.jpatch.PType;
+import net.sf.nmedit.jpatch.PTypes;
 
 public class FICType extends FormattingInstructionClass
 {
@@ -42,20 +43,20 @@ public class FICType extends FormattingInstructionClass
     {
         checkArgs(this, args, 1);
         
-        Type type = descriptions.getType(args[0]);
+        PTypes<PType> types = descriptions.getType(args[0]);
         
-        if (type == null)
+        if (types == null)
             throw new IllegalArgumentException("type not found:"+args[0]);
         
-        return new FIType(this, type);
+        return new FIType(this, types);
     }
 
     private static class FIType extends FormattingInstruction
     {
 
-        private Type type;
+        private PTypes type;
 
-        protected FIType( FormattingInstructionClass fiClass, Type type )
+        protected FIType( FormattingInstructionClass fiClass, PTypes type )
         {
             super( fiClass );
             this.type = type;
@@ -65,9 +66,9 @@ public class FICType extends FormattingInstructionClass
         {
             if (value instanceof Integer)
             {
-                String name = type.getValue(((Integer)value).intValue());
-                if (name != null)
-                    return name;
+                PType t = type.getTypeById(((Integer)value).intValue());
+                if (t != null)
+                    return t.getName();
             }
             return value;
         }

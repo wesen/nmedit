@@ -18,53 +18,71 @@
  */
 package net.sf.nmedit.jpatch;
 
+import java.awt.Color;
+
 /**
- * Contains all defined signals.
- * 
+ * The reference implementation of interface {@link PSignalTypes}.
  * @author Christian Schneider
  */
-public interface PSignalTypes extends Iterable<PSignal>
+public class PSignalTypes extends PTypes<PSignal>
 {
+    
+    private PSignal noSignal = null;
 
-    /**
-     * Returns the number of defined signals.
-     * @return the number of defined signals
-     */
-    int getSignalTypeCount();
-    
-    /**
-     * Returns the signal at the specified index.
-     * @param index the signal index
-     * @return the signal at the specified index
-     */
-    PSignal getSignalType(int index);
-    
-    /**
-     * Returns the signal with the specified id.
-     * @param id the signal id
-     * @return the signal with the specified id
-     */
-    PSignal getSignalTypeById(int id);
-    
-    /**
-     * Returns the signal with the specified name.
-     * @param name name of the signal
-     * @return the signal with the specified name
-     */
-    PSignal getSignalTypeByName(String name);
-    
+    public PSignalTypes(String name)
+    {
+        super(name);
+    }
+
+    public PSignal create(int id, String name, boolean noSignal)
+    {
+        return create(id, name, noSignal ? Color.WHITE : Color.BLACK, noSignal);
+    }
+
+    public PSignal create(int id, String name, Color color, boolean noSignal)
+    {
+        PSignal signal = new PSignal(this, id, name, color);
+        super.addType(signal);
+        if (noSignal) this.noSignal = signal;
+        return signal;
+    }
+
     /**
      * Returns the signal definition for the no-signal situation.
      * @return the no-signal
      */
-    PSignal noSignal();
-    
+    public PSignal noSignal()
+    {
+        return noSignal;
+    }
+
     /**
      * Returns true if the specified signal is defined,
      * false otherwise.
      * @param signal the signal
      * @return true if the specified signal is defined
      */
-    boolean contains(PSignal signal);
-
+    public boolean contains(PType type)
+    {
+        return (type instanceof PSignal) && super.contains(type);
+    }
+    /*
+    public boolean equals(Object o)
+    {
+        if (o == this) return true;
+        if (o == null || (!(o instanceof PSignalTypes))) return false;
+        
+        PSignalTypes st = (PSignalTypes) o;
+        if (st.getSignalTypeCount() != getSignalTypeCount())
+            return false;
+        
+        if (!(noSignal == st.noSignal() || (noSignal != null && noSignal.equals(st.noSignal()))))
+            return false;
+        
+        for (int i=getSignalTypeCount()-1;i>=0;i--)
+            if (!st.contains(signalList.get(i)))
+                return false;
+        return true;
+    }
+    */
 }
