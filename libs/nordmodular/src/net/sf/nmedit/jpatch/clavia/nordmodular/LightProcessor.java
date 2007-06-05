@@ -353,8 +353,15 @@ public class LightProcessor
                 }
                 else
                 {
-                    a.setValue(message.get(meterValueKeysA[i]));
-                    b.setValue(message.get(meterValueKeysB[i]));
+                    if (a != null)
+                    {
+                        a.setValue(message.get(meterValueKeysA[i]));
+                        b.setValue(message.get(meterValueKeysB[i]));
+                    }
+                    else
+                    {
+                        b.setValue(message.get(meterValueKeysB[i]));
+                    }
                 }
             }
         }
