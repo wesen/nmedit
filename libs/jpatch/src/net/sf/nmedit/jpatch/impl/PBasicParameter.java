@@ -40,6 +40,8 @@ public class PBasicParameter
     // the parameter value
     private int value;
     private EventListenerList listenerList = new EventListenerList();
+    
+    private PParameter extensionParameter;
 
     public PBasicParameter(PParameterDescriptor descriptor,
             PModule parent, int componentIndex)
@@ -166,6 +168,16 @@ public class PBasicParameter
                 ((PParameterListener)listeners[i+1]).parameterValueChanged(parameterEvent);
             }
         }
+    }
+
+    public PParameter getExtensionParameter()
+    {
+        return extensionParameter;
+    }
+    
+    void setExtensionParameter(PParameter p)
+    {
+        this.extensionParameter = p;
     }
     
 }

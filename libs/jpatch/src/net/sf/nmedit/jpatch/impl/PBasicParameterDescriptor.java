@@ -42,6 +42,7 @@ public class PBasicParameterDescriptor extends PBasicDescriptor
     private int maxValue = 127;
     private PModuleDescriptor parent;
     private Formatter formatter = null;
+    private PParameterDescriptor extensionDescriptor;
     
     public PBasicParameterDescriptor(PModuleDescriptor parent, String name, Object componentId)
     {
@@ -111,6 +112,16 @@ public class PBasicParameterDescriptor extends PBasicDescriptor
     {
         super.toStringProperties(sb);
         sb.append(",min="+minValue+",max="+maxValue+",default="+defaultValue);
+    }
+
+    public PParameterDescriptor getExtensionDescriptor()
+    {
+        return extensionDescriptor;
+    }
+    
+    public void setExtensionDescriptor(PParameterDescriptor d)
+    {
+        this.extensionDescriptor = d;
     }
     
 }

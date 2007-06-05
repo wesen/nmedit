@@ -101,4 +101,6 @@ public interface PParameterDescriptor extends PDescriptor
      */
     PModuleDescriptor getParentDescriptor();
 
+    PParameterDescriptor getExtensionDescriptor();
+    
 }

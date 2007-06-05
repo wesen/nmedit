@@ -157,4 +157,6 @@ public interface PParameter extends PComponent
      */
     void removeParameterListener(PParameterListener l);
     
+    PParameter getExtensionParameter();
+    
 }
