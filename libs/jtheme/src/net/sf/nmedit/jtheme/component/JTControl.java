@@ -22,23 +22,39 @@
  */
 package net.sf.nmedit.jtheme.component;
 
+import java.awt.Color;
+import java.awt.event.MouseEvent;
+
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import net.sf.nmedit.jtheme.JTContext;
+import net.sf.nmedit.jtheme.JTPopupHandler;
 import net.sf.nmedit.jtheme.component.plaf.JTControlUI;
 
 public abstract class JTControl extends JTComponent implements ChangeListener
 {
 
     private JTControlAdapter adapter;
+    private JTControlAdapter extensionAdapter;
+    private Color extensionColor;
 
     public JTControl(JTContext context)
     {
         super(context);
     }
 
+    public Color getExtensionColor()
+    {
+        return extensionColor;
+    }
+    
+    public void setExtensionColor(Color c)
+    {
+        this.extensionColor = c;
+    }
+    
     public void setUI(JTControlUI controlUI)
     {
         super.setUI(controlUI);
@@ -88,11 +104,27 @@ public abstract class JTControl extends JTComponent implements ChangeListener
     {
         return adapter;
     }
+    
+    public JTControlAdapter getExtensiondapter()
+    {
+        return extensionAdapter;
+    }
 
     public void setAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = adapter;
         this.adapter = adapter;
+        
+        if (oldAdapter != null)
+            oldAdapter.setChangeListener(null);
+        if (adapter != null)
+            adapter.setChangeListener(this);
+    }
+
+    public void setExtensionAdapter(JTControlAdapter adapter)
+    {
+        JTControlAdapter oldAdapter = extensionAdapter;
+        this.extensionAdapter = adapter;
         
         if (oldAdapter != null)
             oldAdapter.setChangeListener(null);
@@ -110,6 +142,23 @@ public abstract class JTControl extends JTComponent implements ChangeListener
         if (adapter != null)
             adapter.setValue(value);
         repaint();
+    }
+
+    public int getExtensionValue()
+    {
+        return extensionAdapter != null ? extensionAdapter.getValue() : 0; 
+    }
+    
+    public void setExtensionValue(int value)
+    {
+        if (extensionAdapter != null)
+            extensionAdapter.setValue(value);
+        repaint();
+    }
+    
+    public boolean isExtensionAdapterSet()
+    {
+        return extensionAdapter != null;
     }
     
     public int getMinValue()
@@ -157,5 +206,63 @@ public abstract class JTControl extends JTComponent implements ChangeListener
         if (adapter!=null)
             adapter.setDefaultValue(defaultValue);
     }
+    
+    // ext
+    
+
+    public int getExtMinValue()
+    {
+        return extensionAdapter != null ? extensionAdapter.getMinValue() : 0;
+    }
+    
+    public void setExtMinValue(int minValue)
+    {
+        if (extensionAdapter != null)
+            extensionAdapter.setMinValue(minValue); 
+    }
+    
+    public int getExtMaxValue()
+    {
+        return extensionAdapter != null ? extensionAdapter.getMaxValue() : 0;
+    }
+    
+    public void setExtMaxValue(int maxValue)
+    {
+        if (extensionAdapter != null)
+            extensionAdapter.setMaxValue(maxValue); 
+    }
+    
+    public double getExtNormalizedValue()
+    {
+        return extensionAdapter != null ? extensionAdapter.getNormalizedValue() : 0;
+    }
+    
+    public void setExtNormalizedValue(double value)
+    {
+        if (extensionAdapter != null)
+            extensionAdapter.setNormalizedValue(value);
+        
+        repaint();
+    }
+
+    public int getExtDefaultValue()
+    {
+        return extensionAdapter != null ? extensionAdapter.getDefaultValue() : 0;
+    }
+  
+    public void setExtDefaultValue(int defaultValue)
+    {
+        if (extensionAdapter!=null)
+            extensionAdapter.setDefaultValue(defaultValue);
+    }
+
+    public void showControlPopup(MouseEvent e)
+    {
+        JTContext c = getContext();
+        if (c == null) return;
+        JTPopupHandler popup = c.getPopupHandler(this);
+        if (popup != null) popup.showPopup(e, this);
+    }
+    
     
 }

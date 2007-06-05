@@ -20,6 +20,8 @@ package net.sf.nmedit.jtheme.component;
 
 import javax.swing.event.ChangeListener;
 
+import net.sf.nmedit.jpatch.PParameter;
+
 public interface JTControlAdapter
 {
 
@@ -46,6 +48,8 @@ public interface JTControlAdapter
     void setChangeListener(ChangeListener l);
     
     ChangeListener getChangeListener();
+    
+    PParameter getParameter();
     
 }
 

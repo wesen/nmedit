@@ -55,7 +55,13 @@ public abstract class ControlStore extends DefaultStore
     
     protected void link2(JTContext context, JTComponent component, PModule module, PParameter parameter)
     {
-        ((JTControl)component).setAdapter(new JTParameterControlAdapter(parameter));
+        JTControl control = (JTControl) component;
+        control.setAdapter(new JTParameterControlAdapter(parameter));
+        
+        PParameter ext = parameter.getExtensionParameter();
+        
+        if (ext != null) control.setExtensionAdapter(new JTParameterControlAdapter(ext));
+        
     }
 
 }

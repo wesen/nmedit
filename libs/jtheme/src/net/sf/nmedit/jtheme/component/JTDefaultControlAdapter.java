@@ -21,6 +21,8 @@ package net.sf.nmedit.jtheme.component;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import net.sf.nmedit.jpatch.PParameter;
+
 public class JTDefaultControlAdapter implements JTControlAdapter
 {
 
@@ -123,6 +125,11 @@ public class JTDefaultControlAdapter implements JTControlAdapter
     public void setDefaultValue(int defaultValue)
     {
         this.defaultValue = defaultValue;
+    }
+
+    public PParameter getParameter()
+    {
+        return null;
     }
 
 }

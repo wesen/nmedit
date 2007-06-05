@@ -118,5 +118,10 @@ public class JTParameterControlAdapter implements JTControlAdapter, PParameterLi
         notifyChangeListener();
     }
 
+    public PParameter getParameter()
+    {
+        return parameter;
+    }
+
 }
 
