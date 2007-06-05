@@ -78,6 +78,11 @@ public abstract class JTContext
     // TODO does not belong here - nm1 specific
     public static final String TYPE_RESET_BUTTON = "resetButton";
     
+    public JTPopupHandler getPopupHandler(JTComponent component)
+    {
+        return null;
+    }
+    
     public JTKnob createKnob() throws JTException
     {
         return (JTKnob) createComponent(TYPE_KNOB);
