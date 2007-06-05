@@ -20,7 +20,6 @@ package net.sf.nmedit.jpatch;
 
 import java.awt.Color;
 
-import net.sf.nmedit.jpatch.impl.PBasicSignalTypes;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -38,7 +37,7 @@ public class PBasicSignalTypesTest
     
     public PSignalTypes createSignalTypes()
     {
-        PBasicSignalTypes bst = new PBasicSignalTypes();
+        PSignalTypes bst = new PSignalTypes("signals");
         for (int i=0;i<10;i++)
             bst.create(i, ""+i, new Color(i,i,i), i==1);
         return bst;

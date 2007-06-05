@@ -20,8 +20,6 @@ package net.sf.nmedit.jpatch;
 
 import java.awt.Color;
 
-import net.sf.nmedit.jpatch.impl.PBasicSignal;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -30,7 +28,7 @@ public class PBasicSignalTypeTest
     int id = 345;
     String name = "test.name";
     Color color = new Color(1,2,3);
-    PBasicSignal st = new PBasicSignal(null, id, name, color);
+    PSignal st = new PSignal(null, id, name, color);
 
     @Test
     public void createTest()
@@ -45,11 +43,11 @@ public class PBasicSignalTypeTest
     public void equalsTest()
     {
         Assert.assertTrue(st.equals(st));
-        PBasicSignal st2 = new PBasicSignal(null, id, name, color);
+        PSignal st2 = new PSignal(null, id, name, color);
         Assert.assertTrue(st.equals(st2));
-        Assert.assertFalse(st.equals(new PBasicSignal(null, id+1, name, color)));
-        Assert.assertFalse(st.equals(new PBasicSignal(null, id, name+" ", color)));
-        Assert.assertFalse(st.equals(new PBasicSignal(null, id, name, Color.RED)));
+        Assert.assertFalse(st.equals(new PSignal(null, id+1, name, color)));
+        Assert.assertFalse(st.equals(new PSignal(null, id, name+" ", color)));
+        Assert.assertFalse(st.equals(new PSignal(null, id, name, Color.RED)));
     }
 
     @Test
