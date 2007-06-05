@@ -24,10 +24,12 @@ package net.sf.nmedit.jpatch.clavia.nordmodular;
 
 import java.util.AbstractList;
 
+import net.sf.nmedit.jpatch.PParameter;
+
 public class KnobSet extends AbstractList<Knob>
 {
 
-    private Knob[] knobs;
+    Knob[] knobs;
 
     private NMPatch patch;
     
@@ -67,6 +69,17 @@ public class KnobSet extends AbstractList<Knob>
         }
     }
 
+    public boolean deassign(PParameter p)
+    {
+        int index = getKnobIndex(p);
+        if (index>=0)
+        {
+            knobs[index].setParameter(null);
+            return true;
+        }
+        return false;
+    }
+    
     @Override
     public Knob get( int index )
     {
@@ -77,6 +90,14 @@ public class KnobSet extends AbstractList<Knob>
     public int size()
     {
         return knobs.length;
+    }
+
+    public int getKnobIndex(PParameter parameter)
+    {
+        for (int i=0;i<knobs.length;i++)
+            if (knobs[i].getParameter() == parameter)
+                return i;
+        return -1;
     }
 
 }

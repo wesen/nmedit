@@ -24,6 +24,7 @@ import java.beans.PropertyChangeListener;
 import net.sf.nmedit.jnmprotocol.AckMessage;
 import net.sf.nmedit.jnmprotocol.ErrorMessage;
 import net.sf.nmedit.jnmprotocol.IAmMessage;
+import net.sf.nmedit.jnmprotocol.KnobAssignmentMessage;
 import net.sf.nmedit.jnmprotocol.LightMessage;
 import net.sf.nmedit.jnmprotocol.MeterMessage;
 import net.sf.nmedit.jnmprotocol.NewPatchInSlotMessage;
@@ -35,10 +36,10 @@ import net.sf.nmedit.jnmprotocol.SlotActivatedMessage;
 import net.sf.nmedit.jnmprotocol.SlotsSelectedMessage;
 import net.sf.nmedit.jnmprotocol.VoiceCountMessage;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
-import net.sf.nmedit.jpatch.PModuleDescriptor;
+import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Format;
-import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.clavia.nordmodular.Knob;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.Helper;
@@ -193,7 +194,7 @@ public class NmMessageHandler extends NmProtocolListener
         if (patch == null) return;
         patch.getLightProcessor().processLightMessage(message);
     }
-    
+
     public void messageReceived(MeterMessage message) 
     {
         int slotId = message.get("slot");
@@ -204,6 +205,58 @@ public class NmMessageHandler extends NmProtocolListener
         NMPatch patch = slot.getPatch();
         if (patch == null) return;
         patch.getLightProcessor().processMeterMessage(message);
+    }
+
+    public void messageReceived(KnobAssignmentMessage message) 
+    { 
+        int slotId = message.get("slot");
+        
+        if (!isValidSlot(slotId))
+            return;
+        
+        int prevKnob = message.get("prevknob");
+        int vaId = message.get("section");
+        int moduleId = message.get("module");
+        int paramId = message.get("parameter");
+        int knob = message.get("knob");
+
+        NmSlot slot = synth.getSlot(slotId);
+        NMPatch patch = slot.getPatch();
+        
+        if (prevKnob>=0)
+        {
+            Knob k = patch.getKnobs().getByID(prevKnob);
+            if (k != null)
+                k.setParameter(null);
+        }
+        
+        if (knob>=0)
+        {
+            VoiceArea va = null;
+            if (vaId == Format.VALUE_SECTION_VOICE_AREA_POLY)
+                va = patch.getPolyVoiceArea();
+            else if (vaId == Format.VALUE_SECTION_VOICE_AREA_COMMON)
+                va = patch.getCommonVoiceArea();
+            
+            if (va == null)
+                return;
+            
+            PModule module = va.getModule(moduleId);
+            
+            PParameter p;
+            try
+            {
+                p = Helper.getParameter(module, "parameter", paramId);
+            }
+            catch (InvalidDescriptorException e)
+            {
+                return;
+            }
+            
+            Knob k = patch.getKnobs().getByID(knob);
+            if (k != null)
+                k.setParameter(p);
+        }
     }
     
     public void messageReceived(ParameterMessage message) 
@@ -235,7 +288,6 @@ public class NmMessageHandler extends NmProtocolListener
         
         PModule module = va.getModule(moduleId);
         
-        PModuleDescriptor md = module.getDescriptor();
         PParameter p;
         try
         {

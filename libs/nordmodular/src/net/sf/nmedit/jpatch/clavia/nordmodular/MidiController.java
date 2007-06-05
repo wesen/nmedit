@@ -23,10 +23,14 @@
 package net.sf.nmedit.jpatch.clavia.nordmodular;
 
 import net.sf.nmedit.jpatch.PParameter;
+import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentEvent;
 
 public class MidiController
 {
-
+    public static final int MODULATION_WHEEL = 1;
+    public static final int ExpressionPedal = 11;
+    public static final int VOLUME = 7;
+    
     private final int ID;
     private PParameter parameter;
     private MidiControllerSet set;
@@ -50,9 +54,46 @@ public class MidiController
 
     public void setParameter(PParameter parameter)
     {
-        this.parameter = parameter;
+        if (this.parameter != parameter)
+        {
+            if (this.parameter != null)
+                fireDeassigned(this.parameter);
+            this.parameter = null;
+            
+            if (parameter != null)
+            {
+                MidiController[] all = set.midiControllerList;
+                for (int i=all.length-1;i>=0;i--)
+                {
+                    MidiController mc = all[i];
+                    if (mc != this && mc.getParameter() == parameter)
+                    {
+                        mc.setParameter(null);
+                        break;
+                    }
+                }
+            }
+            
+            this.parameter = parameter;
+            if (parameter != null)
+                fireAssigned(this.parameter);
+        }
     }
     
+    private void fireDeassigned(PParameter parameter)
+    {
+        PAssignmentEvent e = new PAssignmentEvent();
+        e.midiDeAssigned(this, parameter);
+        set.getPatch().fireAssignmentEvent(e);
+    }
+    
+    private void fireAssigned(PParameter parameter)
+    {
+        PAssignmentEvent e = new PAssignmentEvent();
+        e.midiAssigned(this, parameter);
+        set.getPatch().fireAssignmentEvent(e);
+    }
+
     public PParameter getParameter()
     {
         return parameter;
@@ -66,7 +107,7 @@ public class MidiController
     {
         return MidiController.getDefaultName(ID);
     }
-    
+
     public static String getDefaultName(int midiControllerID)
     {
         switch (midiControllerID)

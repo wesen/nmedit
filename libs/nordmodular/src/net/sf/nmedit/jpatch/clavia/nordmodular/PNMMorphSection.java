@@ -25,7 +25,7 @@ import java.util.List;
 import net.sf.nmedit.jpatch.PConnectionManager;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PParameter;
-import net.sf.nmedit.jpatch.PPatch;
+import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentEvent;
 import net.sf.nmedit.jpatch.event.PModuleContainerListener;
 import net.sf.nmedit.jpatch.impl.PBasicModule;
 import net.sf.nmedit.jpatch.impl.PBasicModuleContainer;
@@ -38,24 +38,67 @@ public class PNMMorphSection extends PBasicModuleContainer
     {
         
         private List<PParameter> assignmentList;
+        private int group;
+        private NMPatch patch;
         
-        public Assignments ()
+        public Assignments (NMPatch patch, int group)
         {
             assignmentList = new ArrayList<PParameter>();
+            this.patch = patch;
+            this.group = group;
         }
         
-        public boolean add(PParameter parameter)
+        private boolean __add(PParameter parameter)
         {
+            if (parameter == null)
+                throw new NullPointerException("parameter must not be null");
+                
             // max capacity/assignments = 25
             if (assignmentList.size()<25)
                 return assignmentList.add(parameter);
             return false;
         }
+
+        public boolean add(PParameter parameter)
+        {
+            if (__add(parameter))
+            {
+                fireAssigned(parameter);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void fireDeassigned(PParameter parameter)
+        {
+            PAssignmentEvent e = new PAssignmentEvent();
+            e.morphDeAssigned(group, parameter);
+            patch.fireAssignmentEvent(e);
+        }
         
+        private void fireAssigned(PParameter parameter)
+        {
+            PAssignmentEvent e = new PAssignmentEvent();
+            e.morphAssigned(group, parameter);
+            patch.fireAssignmentEvent(e);
+        }
+
         public boolean remove(PParameter parameter)
         {
-            return assignmentList.remove(parameter);
+            if (assignmentList.remove(parameter))
+            {
+                fireDeassigned(parameter);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
+        
         public int size()
         {
             return assignmentList.size();
@@ -78,6 +121,7 @@ public class PNMMorphSection extends PBasicModuleContainer
                 {
                     if (assignmentList.get(j)==p)
                     {
+                        fireDeassigned(p);
                         assignmentList.remove(j);
                         break;
                     }
@@ -88,12 +132,12 @@ public class PNMMorphSection extends PBasicModuleContainer
     
     private Assignments[] assignments = new Assignments[4];
     
-    public PNMMorphSection(PPatch patch)
+    public PNMMorphSection(NMPatch patch)
     {
         super(patch, "MorphSection", Format.VALUE_SECTION_MORPH);
         super.add(1, new PBasicModule(patch.getModuleDescriptions().getModuleById("morph")));
         for (int i=0;i<assignments.length;i++)
-            assignments[i] = new Assignments();
+            assignments[i] = new Assignments(patch, i);
     }
 
     // assignments
@@ -101,6 +145,22 @@ public class PNMMorphSection extends PBasicModuleContainer
     public Assignments getAssignments(int morphIndex)
     {
         return assignments[morphIndex];
+    }
+
+    public int getAssignedMorph(PParameter parameter)
+    {
+        for (int i=0;i<assignments.length;i++)
+        {
+            if (!assignments[i].assignmentList.isEmpty())
+            {
+                for (PParameter p: assignments[i])
+                {
+                    if (p == parameter)
+                        return i;
+                }
+            }
+        }
+        return -1;
     }
 
     public boolean assign(int morphIndex, PParameter parameter)

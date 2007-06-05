@@ -23,6 +23,7 @@
 package net.sf.nmedit.jpatch.clavia.nordmodular;
 
 import net.sf.nmedit.jpatch.PParameter;
+import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentEvent;
 
 public class Knob
 {
@@ -49,9 +50,46 @@ public class Knob
     
     public void setParameter(PParameter parameter)
     {
-        this.parameter = parameter;
+        PParameter old = this.parameter;
+        
+        if (old != parameter)
+        {
+            this.parameter = null;
+            if (old != null)
+                fireDeassigned(old);
+            if (parameter != null)
+            {
+                Knob[] all = set.knobs;
+                for (int i=all.length-1;i>=0;i--)
+                {
+                    Knob k = all[i];
+                    if (k != this && k.getParameter() == parameter)
+                    {
+                        k.setParameter(null);
+                        break;
+                    }
+                }
+            }
+            this.parameter = parameter;
+            if (parameter != null)
+                fireAssigned(this.parameter);
+        }
     }
     
+    private void fireDeassigned(PParameter p)
+    {
+        PAssignmentEvent e = new PAssignmentEvent();
+        e.knobDeAssigned(this, p);
+        set.getPatch().fireAssignmentEvent(e);
+    }
+    
+    private void fireAssigned(PParameter p)
+    {
+        PAssignmentEvent e = new PAssignmentEvent();
+        e.knobAssigned(this, p);
+        set.getPatch().fireAssignmentEvent(e);
+    }
+
     public PParameter getParameter()
     {
         return parameter;
@@ -66,7 +104,7 @@ public class Knob
     {
         if (0<=knobID && knobID<=17)
         {
-            return "Knob"+(knobID+1);
+            return "Knob "+(knobID+1);
         }
         else
         {

@@ -32,10 +32,10 @@ import net.sf.nmedit.jpatch.PParameter;
 public class MidiControllerSet extends AbstractList<MidiController>
 {
     
-    private MidiController[] midiControllerList;
+    MidiController[] midiControllerList;
     
     private NMPatch patch;
-    
+
     public NMPatch getPatch()
     {
         return patch;
@@ -50,10 +50,30 @@ public class MidiControllerSet extends AbstractList<MidiController>
         for (int i=33;i<=120;i++)
             midiControllerList[i-1] = new MidiController(this, i);
     }
+    
 
     public static boolean isValidMC(int mc)
     {
         return 0 <= mc && mc<= 120 && mc!=32;
+    }
+
+    public int getMidiControllerIndex(PParameter p)
+    {
+        for (int i=midiControllerList.length-1;i>=0;i--)
+            if (midiControllerList[i].getParameter() == p)
+                return i;
+        return -1;
+    }
+    
+    public boolean deassign(PParameter p)
+    {
+        int index = getMidiControllerIndex(p);
+        if (index>=0)
+        {
+            midiControllerList[index].setParameter(null);
+            return true;
+        }
+        return false;
     }
     
     public int getIndexForMC(int mc)

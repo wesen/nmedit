@@ -25,9 +25,13 @@ package net.sf.nmedit.jpatch.clavia.nordmodular;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.event.EventListenerList;
+
 import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PPatch;
+import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentListener;
 import net.sf.nmedit.jpatch.history.HistoryImpl;
 import net.sf.nmedit.jpatch.history.Synchronizer;
 import net.sf.nmedit.jpatch.impl.PBasicPatch;
@@ -102,6 +106,8 @@ public class NMPatch extends PBasicPatch implements PPatch
     
     private LightProcessor lightProcessor;
     
+    private EventListenerList listenerList = new EventListenerList();
+    
     /**
      * Creates a new patch.
      */
@@ -127,6 +133,47 @@ public class NMPatch extends PBasicPatch implements PPatch
         Synchronizer synch = new Synchronizer((HistoryImpl)getHistory());
         synch.installModuleContainer(polyVoiceArea);
         synch.installModuleContainer(commonVoiceArea);
+    }
+
+    public void addAssignmentListener(PAssignmentListener l)
+    {
+        listenerList.add(PAssignmentListener.class, l);
+    }
+
+    public void removeAssignmentListener(PAssignmentListener l)
+    {
+        listenerList.remove(PAssignmentListener.class, l);
+    }
+    
+    protected void fireAssignmentEvent(PAssignmentEvent event)
+    {
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        
+        if (event.isAssignmentEvent())
+        {
+            for (int i = listeners.length-2; i>=0; i-=2) 
+            {
+                if (listeners[i]==PAssignmentListener.class) 
+                {
+                    // Lazily create the event:
+                    ((PAssignmentListener)listeners[i+1]).parameterAssigned(event);
+                }
+            }
+        }
+        else
+        {
+            for (int i = listeners.length-2; i>=0; i-=2) 
+            {
+                if (listeners[i]==PAssignmentListener.class) 
+                {
+                    // Lazily create the event:
+                    ((PAssignmentListener)listeners[i+1]).parameterDeassigned(event);
+                }
+            }
+        }
     }
 
     public PModuleContainer getModuleContainer(int index)

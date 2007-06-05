@@ -21,17 +21,20 @@ package net.sf.nmedit.jsynth.clavia.nordmodular;
 import net.sf.nmedit.jnmprotocol.MidiMessage;
 import net.sf.nmedit.jpatch.AllEventsListener;
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
+import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentListener;
 import net.sf.nmedit.jpatch.event.PConnectionEvent;
 import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
 import net.sf.nmedit.jpatch.event.PModuleEvent;
 import net.sf.nmedit.jpatch.event.PParameterEvent;
-import net.sf.nmedit.jpatch.PParameter;
+import net.sf.nmedit.jpdl.BitStream;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 
-public class NmPatchSynchronizer extends AllEventsListener 
+public class NmPatchSynchronizer extends AllEventsListener implements PAssignmentListener
 {
 
     private NordModular synth;
@@ -69,6 +72,8 @@ public class NmPatchSynchronizer extends AllEventsListener
     {
         if (!installed)
             return;
+        
+        patch.removeAssignmentListener(this);
 
         uninstallModuleContainer(patch.getPolyVoiceArea());
         uninstallModuleContainer(patch.getCommonVoiceArea());
@@ -79,6 +84,8 @@ public class NmPatchSynchronizer extends AllEventsListener
         if (installed)
             return;
 
+        patch.addAssignmentListener(this);
+        
         installModuleContainer(patch.getPolyVoiceArea());
         installModuleContainer(patch.getCommonVoiceArea());
     }
@@ -192,6 +199,75 @@ public class NmPatchSynchronizer extends AllEventsListener
         {
             e1.printStackTrace();
         }
+    }
+
+    public void parameterAssigned(PAssignmentEvent e)
+    {
+
+      //  System.out.println("user assign:" +e);
+        
+        MidiMessage msg = null;
+        
+        switch (e.getId())
+        {
+            case PAssignmentEvent.MORPH_ASSIGNED:
+                break;
+            case PAssignmentEvent.KNOB_ASSIGNED:
+                msg = NmUtils.createKnobAssignmentMessage(e.getParameter(), -1, e.getKnobId(),
+                        slot.getSlotIndex(), slot.getPatchId());
+                break;
+            case PAssignmentEvent.MIDICTRL_ASSIGNED:
+                break;
+        }
+        
+        if (msg != null)
+        {
+            try
+            {
+                synth.getProtocol().send(msg);
+            }
+            catch (Exception e1)
+            {
+                e1.printStackTrace();
+            }
+        }
+        
+    }
+
+    public void parameterDeassigned(PAssignmentEvent e)
+    {
+
+       // System.out.println("user deassign:" +e);
+        
+        MidiMessage msg = null;
+        
+        switch (e.getId())
+        {
+            case PAssignmentEvent.MORPH_DEASSIGNED:
+                break;
+            case PAssignmentEvent.KNOB_DEASSIGNED:
+                msg = NmUtils.createKnobDeAssignmentMessage(e.getKnobId(), 
+                        slot.getSlotIndex(), slot.getPatchId());
+                
+       //         System.out.println("user deassign:"+msg);
+                
+                break;
+            case PAssignmentEvent.MIDICTRL_DEASSIGNED:
+                break;
+        }
+        
+        if (msg != null)
+        {
+            try
+            {
+                synth.getProtocol().send(msg);
+            }
+            catch (Exception e1)
+            {
+                e1.printStackTrace();
+            }
+        }
+        
     }
    
 }
