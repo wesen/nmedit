@@ -37,7 +37,7 @@ public class ModuleDescriptions implements Iterable<PModuleDescriptor>
 {
 
     private PSignalTypes signalTypes;
-    private Map<String,Type> types = new HashMap<String, Type>();
+    private Map<String,PTypes<PType>> types = new HashMap<String, PTypes<PType>>();
     private FormatterRegistry formatterRegistry = new FormatterRegistry();
     private Map<Object, PModuleDescriptor> moduleMap = new HashMap<Object, PModuleDescriptor>(127);
     private ClassLoader loader;
@@ -97,7 +97,7 @@ public class ModuleDescriptions implements Iterable<PModuleDescriptor>
         this.signalTypes = signalTypes;
     }
 
-    public void addType( Type type )
+    public void addType( PTypes<PType> type )
     {
         types.put(type.getName(), type);
     }
@@ -107,7 +107,7 @@ public class ModuleDescriptions implements Iterable<PModuleDescriptor>
         return formatterRegistry;
     }
 
-    public Type getType( String name )
+    public PTypes<PType> getType( String name )
     {
         return types.get(name);
     }

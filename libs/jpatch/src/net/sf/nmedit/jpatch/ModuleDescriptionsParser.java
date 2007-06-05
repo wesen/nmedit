@@ -43,7 +43,6 @@ import net.sf.nmedit.jpatch.impl.PBasicConnectorDescriptor;
 import net.sf.nmedit.jpatch.impl.PBasicLightDescriptor;
 import net.sf.nmedit.jpatch.impl.PBasicModuleDescriptor;
 import net.sf.nmedit.jpatch.impl.PBasicParameterDescriptor;
-import net.sf.nmedit.jpatch.impl.PBasicSignalTypes;
 import net.sf.nmedit.nmutils.Hex;
 
 import org.xml.sax.Attributes;
@@ -188,6 +187,8 @@ public class ModuleDescriptionsParser
         
         static Map<String, Integer> ledTypes = new HashMap<String, Integer>();
         
+        Map<PBasicParameterDescriptor, String> extensions = new HashMap<PBasicParameterDescriptor, String>();
+        
         static
         {
             configMap(elements, elementMap);
@@ -249,8 +250,8 @@ public class ModuleDescriptionsParser
         
         ModuleDescriptions moduleDescriptions ;
         
-        PBasicSignalTypes signalTypes;
-        Type typedef;
+        PSignalTypes signalTypes;
+        PSimpleTypes typedef;
         
         public final int getIdFromMap(String name, Map<String,Integer> map)
         {
@@ -334,13 +335,14 @@ public class ModuleDescriptionsParser
                         parameterList.clear();
                         connectorList.clear();
                         lightList.clear();
+                        extensions.clear();
                     }
                     break;
                 case defsignal:
                     {
                         if (signalTypes == null)
                         {
-                            signalTypes = new PBasicSignalTypes();
+                            signalTypes = new PSignalTypes("signals");
                             moduleDescriptions.setSignals(signalTypes);
                         }
                     }
@@ -374,7 +376,7 @@ public class ModuleDescriptionsParser
                         if (name == null)
                             throw new SAXException("type name not specified");
                     
-                        typedef = new Type(name);
+                        typedef = new PSimpleTypes(name);
                         moduleDescriptions.addType(typedef);
                     }
                     break;
@@ -469,6 +471,10 @@ public class ModuleDescriptionsParser
                         
                         parameterd = new PBasicParameterDescriptor(moduled, name, componentId);
 
+                        String extension = attributes.getValue("extension");
+                        if (extension != null)
+                            extensions.put(parameterd, extension);
+                        
                         String index = attributes.getValue("index");
                         if (index != null)
                             parameterd.setAttribute("index", Integer.parseInt(index));
@@ -597,7 +603,7 @@ public class ModuleDescriptionsParser
                         {
                             if (signalTypes == null)
                                 throw new SAXException("signal definitions missing");
-                            sig = signalTypes.getSignalTypeByName(signalName);
+                            sig = signalTypes.getTypeByName(signalName);
                             if (sig==null)
                                 throw new SAXException("signal '"+signalName+"' not defined in "+signalTypes);
                         }
@@ -647,6 +653,22 @@ public class ModuleDescriptionsParser
                     moduled.setParameters(parameterList);
                     moduled.setConnectors(connectorList);
                     moduled.setLights(lightList);
+                    
+
+                    // set extensions
+                    if (!extensions.isEmpty())
+                    {
+                        for (PBasicParameterDescriptor dst: extensions.keySet())
+                        {
+                            String id = extensions.get(dst);
+                            PParameterDescriptor ext = moduled.getParameterByComponentId(id);
+                            if (ext == null)
+                                throw new PRuntimeException("extension [component-id='"+id+"'] not found for parameter: "+dst);
+                            dst.setExtensionDescriptor(ext);
+                        }
+                    }
+                    
+                    
                     moduleDescriptions.add(moduled);
                     moduled = null;
                 }
