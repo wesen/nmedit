@@ -93,9 +93,13 @@ public abstract class MidiMessage
 		if (packet.contains("Meters")) {
 		    return new MeterMessage(packet);
 		}
-		if (packet.contains("KnobChange")) {
-		    return new ParameterMessage(packet);
-		}
+        if (packet.contains("KnobChange")) {
+            return new ParameterMessage(packet);
+        }
+        if (packet.contains("KnobAssignment")||packet.contains("KnobAssignmentChange"))
+        {
+            return new KnobAssignmentMessage(packet);
+        }
 		if (packet.contains("PatchListResponse")) {
 		    return new PatchListMessage(packet);
 		}
@@ -152,13 +156,27 @@ public abstract class MidiMessage
     {
 	return paths.keySet().contains(name);
     }
-
+    
     public void set(String parameter, int value)
     {
 	if (!parameters.contains(parameter)) {
 	    throw new RuntimeException("Unsupported paramenter: " + parameter);
 	}
 	values.put(parameter, new Integer(value));
+    }
+
+    public Iterator parameterNames()
+    {
+        return parameters.iterator();
+    }
+    
+    public int get(String parameter, int defaultValue)
+    {
+    if (!parameters.contains(parameter)) {
+        throw new RuntimeException("Unsupported paramenter: " + parameter);
+    }
+    Object value = values.get(parameter);
+    return value == null ? defaultValue : ((Integer) value).intValue();
     }
 
     public int get(String parameter)
@@ -273,7 +291,7 @@ public abstract class MidiMessage
                 sb.append(",");
                 String param = (String) params.next();
                 sb.append(param);
-                sb.append("="+get(param));
+                sb.append("="+values.get(param));
             }
             
             sb.append("]");
