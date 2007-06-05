@@ -48,31 +48,44 @@ public class JTBasicKnobUI extends JTBasicControlUI
     public static final String knobGripStartValueKey = "grip.start";
     public static final String knobGripStopValueKey = "grip.stop";
     
-    private static JTBasicKnobUI instance;
-    
-    public JTBasicKnobUI()
+    protected static UIInstance<JTBasicKnobUI> uiInstance = new UIInstance<JTBasicKnobUI>(JTBasicKnobUI.class);
+
+    public static JTBasicKnobUI createUI(JComponent c) 
     {
-        super();
+        JTBasicKnobUI ui = uiInstance.getInstance(c);
+        if (ui == null) uiInstance.setInstance(c, ui = new JTBasicKnobUI());
+        return ui;
     }
-
-
+    
     public void installUI(JComponent c)
     {
         super.installUI(c);
         c.setOpaque(false);   
     }
     
+    private Color backgroundColor;
+    private Color borderColor;
+    private double gripStartValue;
+    private double gripStopValue;
+    private Color gripColor;
+
+    protected void initUIDefaults(UIDefaults defaults)
+    {
+        // read the defaults here
+        backgroundColor = defaults.getColor(getPrefix()+knobBackgroundColorKey);
+        borderColor = defaults.getColor(getPrefix()+knobBorderColorKey);
+        gripStartValue = getDouble(defaults, getPrefix()+knobGripStartValueKey, 0.25/2);
+        gripStopValue = getDouble(defaults, getPrefix()+knobGripStopValueKey, 1-0.25/2);
+        gripColor = defaults.getColor(getPrefix()+knobGripColorKey);
+
+        if (backgroundColor == null) backgroundColor = defaultBackgroundColor;
+        if (borderColor == null) borderColor = defaultBorderColor;
+        if (gripColor == null) gripColor = defaultGripColor;
+    }
+    
     public void uninstallUI(JComponent c)
     {
         super.uninstallUI(c);
-    }
-    
-    public static JTBasicKnobUI createUI(JComponent c) 
-    {
-        if (instance == null)
-            instance = new JTBasicKnobUI();
-        
-        return instance;
     }
 
     protected String getPrefix()
@@ -83,7 +96,6 @@ public class JTBasicKnobUI extends JTBasicControlUI
     public void paintStaticLayer(Graphics2D g, JTComponent c)
     {
         JTControl control = (JTControl) c;
-        
         paintKnobBackground(g, control);
     }
 
@@ -109,20 +121,8 @@ public class JTBasicKnobUI extends JTBasicControlUI
     
     protected void paintKnobBackground( Graphics2D g, JTControl control )
     {
-        UIDefaults defaults = control.getContext().getUIDefaults();
-        
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
         int size = diameter(control);
-        
-        Color backgroundColor = defaults.getColor(getPrefix()+knobBackgroundColorKey);
-        if (backgroundColor == null)
-            backgroundColor = defaultBackgroundColor;
-
-        Color borderColor = defaults.getColor(getPrefix()+knobBorderColorKey);
-        if (borderColor == null)
-            borderColor = defaultBorderColor;
-        
         g.setColor(backgroundColor);
         g.fillOval(0, 0, size, size);
 
@@ -146,20 +146,37 @@ public class JTBasicKnobUI extends JTBasicControlUI
 
     protected void paintKnobForeground( Graphics2D g, JTControl control )
     {
-        UIDefaults defaults = control.getContext().getUIDefaults();
         double value = control.getNormalizedValue();
-        double gripStartValue = getDouble(defaults, getPrefix()+knobGripStartValueKey, 0.25/2);
-        double gripStopValue = getDouble(defaults, getPrefix()+knobGripStopValueKey, 1-0.25/2);
         
-        Color gripColor = defaults.getColor(getPrefix()+knobGripColorKey);
-        if (gripColor == null)
-            gripColor = defaultGripColor;
+        /*
+        if (control.isExtensionAdapterSet())
+        {
+            double relative = value+(control.getExtNormalizedValue()*2)-1;
+            paintExtensionGrip(g, control, gripColor, value, relative);
+        }*/
         
-        paintKnobGrip(g, control, gripColor, gripStartValue, gripStopValue, value);
+        paintKnobGrip(g, control, gripColor, value);
     }
+/*
+    private void paintExtensionGrip(Graphics2D g, JTControl control, Color gripColor2, double start, double stop)
+    {
+        int size = diameter(control);
 
-    private void paintKnobGrip(Graphics2D g, JTControl control, Color gripColor, 
-            double gripStartValue, double gripStopValue, double value)
+        int len = size/2-1;
+        int cxy = 1+len;
+        
+        // scale and translate value
+        value = KnobMetrics.cw(gripStartValue+(value*(gripStopValue-gripStartValue)));
+        
+        int gx = (int) (Math.sin(value*KnobMetrics.PI2)*len);
+        int gy = (int) (Math.cos(value*KnobMetrics.PI2)*len);
+
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setColor(Color.BLUE);
+        g.drawLine(cxy, cxy, cxy+gx, cxy+gy);
+    }
+*/
+    private void paintKnobGrip(Graphics2D g, JTControl control, Color gripColor, double value)
     {
         int size = diameter(control);
 

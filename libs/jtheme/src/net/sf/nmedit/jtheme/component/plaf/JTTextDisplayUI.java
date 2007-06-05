@@ -26,19 +26,34 @@ import net.sf.nmedit.jtheme.component.JTComponent;
 public class JTTextDisplayUI extends JTLabelUI
 {
 
-    private final static JTTextDisplayUI instance = new JTTextDisplayUI();
     public static final String borderKey = "TextDisplay.border";
+    private static UIInstance<JTTextDisplayUI> uiInstance = new UIInstance<JTTextDisplayUI>(JTTextDisplayUI.class);
 
     public static JTTextDisplayUI createUI(JComponent c)
     {
-        return instance;
+        JTTextDisplayUI ui = uiInstance.getInstance(c);
+        if (ui == null) uiInstance.setInstance(c, ui = new JTTextDisplayUI());
+        return ui;
     }
+    
+    public JTTextDisplayUI()
+    {
+        alignLabel = true;
+    }
+    
+    private boolean borderSet = false;
+    private transient Border border;
 
     public void installUI(JComponent c)
     {
-        JTComponent jtc = (JTComponent) c;
-        Border border = jtc.getContext().getUIDefaults().getBorder(borderKey);
-        jtc.setBorder(border);
+        super.installUI(c);
+        if (!borderSet)
+        {
+            borderSet = true;
+            border = ((JTComponent)c).getContext().getUIDefaults().getBorder(borderKey);
+        }
+        if (border != null)
+            c.setBorder(border);
     }
     
     public void uninstallUI(JComponent c)

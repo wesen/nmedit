@@ -36,7 +36,7 @@ import net.sf.nmedit.jtheme.component.JTComponent;
  */
 public class JTComponentUI extends ComponentUI
 {
-
+    
     /**
      * Throws an unsupported operation exception.
      * 

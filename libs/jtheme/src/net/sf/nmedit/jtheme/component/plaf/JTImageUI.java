@@ -32,11 +32,13 @@ import net.sf.nmedit.jtheme.component.JTImage;
 public class JTImageUI extends JTComponentUI
 {
 
-    private static JTImageUI instance = new JTImageUI();
+    private static UIInstance<JTImageUI> uiInstance = new UIInstance<JTImageUI>(JTImageUI.class);
     
     public static JTImageUI createUI(JComponent c)
     {
-        return instance;
+        JTImageUI ui = uiInstance.getInstance(c);
+        if (ui == null) uiInstance.setInstance(c, ui = new JTImageUI());
+        return ui;
     }
     
     public Dimension getPreferredSize(JComponent c)

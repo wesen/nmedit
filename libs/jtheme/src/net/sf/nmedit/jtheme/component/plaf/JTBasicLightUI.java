@@ -37,24 +37,26 @@ public class JTBasicLightUI extends JTLightUI
     private final static Point2D.Float gradientStart = new Point2D.Float(1,0);
     private Point2D.Float gradientStop = new Point2D.Float(0,0);
 
-    private static transient JTBasicLightUI instance;
+    private static UIInstance<JTLightUI> uiInstance = new UIInstance<JTLightUI>(JTLightUI.class);
     
-    public static JTBasicLightUI createUI(JComponent c)
+    public static JTLightUI createUI(JComponent c)
     {
-        if (instance == null)
-            instance = new JTBasicLightUI();
-        
-        
-        return instance;
+        JTLightUI ui = uiInstance.getInstance(c);
+        if (ui == null) uiInstance.setInstance(c, ui=new JTBasicLightUI());
+        return ui;
     }
+    
+    private boolean borderSet = false;
+    private transient Border border;
 
     public void installUI(JComponent c)
     {
-        JTComponent jtc = (JTComponent) c;
-        Border b = jtc.getContext().getUIDefaults().getBorder(BORDER_KEY);
-        
-        if (b != null)
-            c.setBorder(b);
+        if (!borderSet)
+        {
+            border = ((JTComponent)c).getContext().getUIDefaults().getBorder(BORDER_KEY);
+            borderSet = true;
+        }
+        if (border != null) c.setBorder(border);
     }
     
     public void uninstallUI(JComponent c)

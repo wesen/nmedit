@@ -34,11 +34,11 @@ public class JTNM1SliderUI extends JTBasicSliderUI
     public static final String sliderGripBorderLightColorKey = sliderGripColorKey+".light";
     public static final String sliderGripBorderDarkColorKey = sliderGripColorKey+".dark";
 
-    private static JTNM1SliderUI instance = new JTNM1SliderUI();
-    
-    public static JTBasicSliderUI createUI(JComponent c)
+    public static JTBasicSliderUI createUI(JComponent c) 
     {
-        return instance;
+        JTBasicSliderUI ui = uiInstance.getInstance(c);
+        if (ui == null) uiInstance.setInstance(c, ui = new JTNM1SliderUI());
+        return ui;
     }
     
     private Color sliderGripLight = null;

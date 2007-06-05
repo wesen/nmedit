@@ -24,13 +24,13 @@ package net.sf.nmedit.jtheme.component.plaf;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 
 import javax.swing.JComponent;
 import javax.swing.UIDefaults;
 import javax.swing.border.Border;
 
 import net.sf.nmedit.jtheme.component.JTComponent;
-import net.sf.nmedit.jtheme.component.JTDisplay;
 
 public class JTDisplayUI extends JTComponentUI
 {
@@ -52,32 +52,50 @@ public class JTDisplayUI extends JTComponentUI
         return DEFAULT_FOREGROUND;
     }
     
-    private static JTDisplayUI instance = new JTDisplayUI();
+    private static UIInstance<JTDisplayUI> uiInstance = new UIInstance<JTDisplayUI>(JTDisplayUI.class);
 
     public static JTDisplayUI createUI(JComponent c)
     {
-        return instance; 
+        JTDisplayUI ui = uiInstance.getInstance(c);
+        if (ui == null) uiInstance.setInstance(c, ui = new JTDisplayUI());
+        return ui; 
     }
+    
+    private Color bgColor;
+    private Color fgColor;
+    private Border border;
+    private boolean defaultsInitialized = false;
     
     public void installUI(JComponent c)
     {
-        JTDisplay display = (JTDisplay) c;
-        UIDefaults defaults = display.getContext().getUIDefaults();
+        if (!defaultsInitialized)
+        {
+            UIDefaults uiDefaults = ((JTComponent) c).getContext().getUIDefaults();
+            initDefaults(uiDefaults);
+            defaultsInitialized = true;
+        }
         
-        Color bgColor = defaults.getColor(BACKGROUND_KEY);
+        c.setBackground(bgColor);
+        c.setForeground(fgColor);
+        if (border != null)
+            c.setBorder(border);
+    }
+    
+    private void initDefaults(UIDefaults defaults)
+    {
+        border = defaults.getBorder(BORDER_KEY);
+
+        bgColor = defaults.getColor(BACKGROUND_KEY);
         if (bgColor == null)
             bgColor = getDefaultBackgroundColor();
-        display.setBackground(bgColor);
 
-        Color fgColor = defaults.getColor(FOREGROUND_KEY);
+        fgColor = defaults.getColor(FOREGROUND_KEY);
         if (fgColor == null)
             fgColor = getDefaultForegroundColor();
-        display.setForeground(fgColor);
         
-        Border border = defaults.getBorder(BORDER_KEY);
-        if (border != null)
-            display.setBorder(border);
     }
+
+    private transient Insets cachedInsets;
     
     public void paintStaticLayer(Graphics2D g, JTComponent c)
     {
@@ -86,9 +104,12 @@ public class JTDisplayUI extends JTComponentUI
             Color bgColor = c.getBackground();
             if (bgColor != null)
             {
+                Insets i = cachedInsets = c.getInsets(cachedInsets);
                 Color oldColor = g.getColor();
                 g.setColor(bgColor);
-                g.fillRect(0, 0, c.getWidth(), c.getHeight());
+                g.fillRect(i.left, i.top, 
+                        c.getWidth()-i.left-i.right, 
+                        c.getHeight()-i.top-i.bottom);
                 g.setColor(oldColor);
             }
         }

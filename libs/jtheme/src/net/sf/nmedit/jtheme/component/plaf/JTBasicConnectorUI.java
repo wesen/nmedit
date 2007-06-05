@@ -41,7 +41,6 @@ import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
-import javax.swing.UIDefaults;
 
 import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnectionManager;
@@ -50,7 +49,6 @@ import net.sf.nmedit.jpatch.PConnectorDescriptor;
 import net.sf.nmedit.jpatch.PSignal;
 import net.sf.nmedit.jpatch.PSignalTypes;
 import net.sf.nmedit.jpatch.history.History;
-import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTCursor;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.DragCable;
@@ -62,45 +60,13 @@ import net.sf.nmedit.nmutils.graphics.RoundGradientPaint;
 public class JTBasicConnectorUI extends JTConnectorUI
 {
 
-    private static final String UIKEY = JTConnectorUI.class.getName();
-    private static transient JTContext currentContext;
-    private static transient JTConnectorUI currentUI;
+    private static UIInstance<JTConnectorUI> uiInstance = new UIInstance<JTConnectorUI>(JTConnectorUI.class);
     
     public static JTConnectorUI createUI(JComponent c)
     {
-        JTComponent jtc = (JTComponent) c;
-        JTContext context = jtc.getContext();
-        if (context == currentContext && currentUI != null)
-            return currentUI;
-
-        JTConnectorUI ui = null;
-        
-        if (context != null)
-        {
-            UIDefaults defaults = context.getUIDefaults();
-            Object o = defaults.get(UIKEY);
-            if (o != null && o instanceof JTConnectorUI)
-            {
-                ui = (JTConnectorUI) o;
-            }
-            else
-            {
-                ui = createInstance();
-                defaults.put(UIKEY, ui);
-            }
-        }
-        else
-        {
-            ui = createInstance();
-        }
-        currentContext = context;
-        currentUI = ui;
+        JTConnectorUI ui = uiInstance.getInstance(c);
+        if (ui == null) uiInstance.setInstance(c, ui = new JTBasicConnectorUI());
         return ui;
-    }
-    
-    protected static JTConnectorUI createInstance()
-    {
-        return new JTBasicConnectorUI();
     }
     
     public void paintDynamicLayer(Graphics2D g, JTComponent c)

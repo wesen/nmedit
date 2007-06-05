@@ -56,13 +56,28 @@ public abstract class JTBasicControlUI extends JTControlUI
     protected static final String DEFAULTVALUE = "default.value";
 
     public static final String knobActionMapKey = "knob.actionMap";
-    
+
+    private boolean defaultsInitialized = false;
+
     public void installUI(JComponent c)
     {
-        installDefaults((JTControl) c);
-        installListeners((JTControl) c);
-        installKeyboardActions((JTControl) c); 
+        JTControl control = (JTControl) c;
+        
+        if (!defaultsInitialized)
+        {
+            initUIDefaults(control.getContext().getUIDefaults());
+            defaultsInitialized = true;
+        }
+        
+        installDefaults(control);
+        installListeners(control);
+        installKeyboardActions(control); 
         c.setFocusable(true);
+    }
+
+    protected void initUIDefaults(UIDefaults defaults)
+    {
+        // read the defaults here
     }
 
     public void uninstallUI(JComponent c)
@@ -179,6 +194,7 @@ public abstract class JTBasicControlUI extends JTControlUI
         protected JTControl control;
         protected double pressedValue;
         protected int pressedModifier;
+        protected boolean extensionAdapter = false;
 
         public static void loadActionMap(NMLazyActionMap map) 
         {  
@@ -257,8 +273,19 @@ public abstract class JTBasicControlUI extends JTControlUI
 
         public void mousePressed( MouseEvent e )
         {
-            pressedValue = control.getNormalizedValue();
+            if (SwingUtilities.isLeftMouseButton(e))
+            {
+            
+            extensionAdapter = e.isControlDown();
+            
+            pressedValue = extensionAdapter ? control.getExtNormalizedValue() :
+                control.getNormalizedValue();
             pressedModifier = getValueModifier(e);
+            }
+            else if (e.isPopupTrigger())
+            {
+                control.showControlPopup(e);
+            }
             
             if (!control.hasFocus())
                 control.requestFocus();
@@ -267,7 +294,12 @@ public abstract class JTBasicControlUI extends JTControlUI
         public void mouseReleased( MouseEvent e )
         {
             if (e.getClickCount()>=2)
-                control.setValue(control.getDefaultValue());
+            {
+                if (extensionAdapter)
+                    control.setExtensionValue(control.getExtDefaultValue());
+                else
+                    control.setValue(control.getDefaultValue());   
+            }
         }
 
         public void mouseEntered( MouseEvent e )
@@ -298,7 +330,11 @@ public abstract class JTBasicControlUI extends JTControlUI
             double modifier = (currentModifier-pressedModifier)/200d;
             // assure value in range [0..1]
             double nvalue = Math.max(0, Math.min(pressedValue+modifier, 1));
-            control.setNormalizedValue(nvalue);
+            
+            if (extensionAdapter)
+                control.setExtNormalizedValue(nvalue);
+            else
+                control.setNormalizedValue(nvalue);
         }
 
         public void mouseMoved( MouseEvent e )

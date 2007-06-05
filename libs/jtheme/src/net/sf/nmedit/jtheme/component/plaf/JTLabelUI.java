@@ -44,26 +44,27 @@ import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
 public class JTLabelUI extends JTComponentUI implements SwingConstants
 {
 
-    private final static JTLabelUI instance = new JTLabelUI();
-    
     public static final String fontKey = "Label.font";
 
+    private static UIInstance<JTLabelUI> labelUIInstance = new UIInstance<JTLabelUI>(JTLabelUI.class);
+    
     public static JTLabelUI createUI(JComponent c)
     {
-        return instance;
+        JTLabelUI ui = labelUIInstance.getInstance(c);
+        if (ui == null) labelUIInstance.setInstance(c, ui = new JTLabelUI());
+        return ui;
     }
 
+    private transient Font labelFont;
+    
+    protected boolean alignLabel = false;
+    
     public void installUI(JComponent c)
     {
-        Font font = 
-        ((JTComponent ) c)
-        .getContext()
-        .getUIDefaults()
-        .getFont(fontKey);
-        
-        
-        if (font != null)
-            c.setFont(font);
+        if (labelFont == null)
+            labelFont = ((JTComponent) c).getContext().getUIDefaults().getFont(fontKey);
+        if (labelFont != null)
+            c.setFont(labelFont);
     }
     
     protected void paintEnabledText(JTLabel l, Graphics g, String s, int textX, int textY)
@@ -97,7 +98,7 @@ public class JTLabelUI extends JTComponentUI implements SwingConstants
     private static Insets paintViewInsets = new Insets(0, 0, 0, 0);
     private static Rectangle paintTextR = new Rectangle();
     private static Rectangle paintViewR = new Rectangle();
-//    private static Rectangle paintIconR = new Rectangle(0,0,0,0);
+    private static Rectangle paintIconR = new Rectangle(0,0,0,0);
     private static Rectangle textR = new Rectangle();
     
 /*
@@ -141,6 +142,17 @@ public class JTLabelUI extends JTComponentUI implements SwingConstants
             paintLabel(g, c);
     }
 
+    private transient Font currentFont;
+    private transient FontMetrics currentFontMetrics;
+    
+    protected FontMetrics getFontMetrics(Font font, JComponent c)
+    {
+        if (font == currentFont)
+            return currentFontMetrics;
+        currentFont = font;
+        return currentFontMetrics = c.getFontMetrics(font); 
+    }
+    
     public void paintLabel(Graphics g, JTComponent c) 
     {
         JTLabel label = (JTLabel) c;
@@ -148,8 +160,8 @@ public class JTLabelUI extends JTComponentUI implements SwingConstants
         if ((text == null)) {
             return;
         }
-
-        FontMetrics fm = label.getFontMetrics(label.getFont());
+        
+        FontMetrics fm = getFontMetrics(label.getFont(), label);
         Insets insets = c.getInsets(paintViewInsets);
 
         paintViewR.x = insets.left;
@@ -159,11 +171,11 @@ public class JTLabelUI extends JTComponentUI implements SwingConstants
 
         paintTextR.x = paintTextR.y = paintTextR.width = paintTextR.height = 0;
 
-        if (text != null) {/*
-        View v = (View) c.getClientProperty(BasicHTML.propertyKey);
-        if (v != null) {
-        v.paint(g, paintTextR);
-        } else {*/
+        if (text != null) {
+        if (alignLabel)
+            layout(label, fm, text, label.getWidth(), label.getHeight());
+            
+            
         int textX = paintTextR.x;
         int textY = paintTextR.y + fm.getAscent();
         
@@ -173,8 +185,20 @@ public class JTLabelUI extends JTComponentUI implements SwingConstants
         else {
             paintDisabledText(label, g, text, textX, textY);
         }
-        /*}*/
         }
+    }
+    private String layout(JTLabel label, FontMetrics fm, String text,
+            int width, int height) {
+        Insets insets = label.getInsets(paintViewInsets);
+        Icon icon = null;
+        paintViewR.x = insets.left;
+        paintViewR.y = insets.top;
+        paintViewR.width = width - (insets.left + insets.right);
+        paintViewR.height = height - (insets.top + insets.bottom);
+        paintIconR.x = paintIconR.y = paintIconR.width = paintIconR.height = 0;
+        paintTextR.x = paintTextR.y = paintTextR.width = paintTextR.height = 0;
+        return layoutCL(label, fm, text, icon, paintViewR, paintIconR,
+                  paintTextR);
     }
 
     private Insets viewInsets = new Insets(0,0,0,0);
@@ -225,15 +249,27 @@ public class JTLabelUI extends JTComponentUI implements SwingConstants
         Rectangle iconR, 
         Rectangle textR)
     {
+        
+        int verticalAlignment = CENTER;
+        int horizontalAlignment = LEADING;
+        int verticalTextPosition = CENTER;
+        int horizontalTextPosition = TRAILING;
+        
+        if (alignLabel)
+        {
+            horizontalAlignment = CENTER;
+            horizontalTextPosition = CENTER;
+        }
+        
         return SwingUtilities.layoutCompoundLabel(
             (JComponent) label,
             fontMetrics,
             text,
             icon,
-            CENTER, // label.getVerticalAlignment(),
-            LEADING, // label.getHorizontalAlignment(),
-            CENTER, // label.getVerticalTextPosition(),
-            TRAILING, // label.getHorizontalTextPosition(),
+            verticalAlignment, 
+            horizontalAlignment, 
+            verticalTextPosition, 
+            horizontalTextPosition, 
             viewR,
             iconR,
             textR,

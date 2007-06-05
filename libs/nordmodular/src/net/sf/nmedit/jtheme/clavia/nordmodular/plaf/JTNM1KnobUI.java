@@ -29,9 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JComponent;
-import javax.swing.UIDefaults;
 
-import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.plaf.JTBasicKnobUI;
 
@@ -41,29 +39,10 @@ public class JTNM1KnobUI extends JTBasicKnobUI
 /*
     private BasicStroke thinStroke = new BasicStroke(0.6f);
 */
-    private static volatile transient JTContext currentContext;
-    private static volatile transient JTNM1KnobUI currentUI;
-    
-    public static JTNM1KnobUI createUI(JComponent c)
+    public static JTBasicKnobUI createUI(JComponent c) 
     {
-        JTComponent jtc = (JTComponent) c;
-        JTContext context = jtc.getContext();
-        
-        if (context == null) return new JTNM1KnobUI();
-
-        if (currentUI!=null && context==currentContext)
-            return currentUI;
-
-        String key = JTBasicKnobUI.class.getName();
-        UIDefaults def = context.getUIDefaults();
-        Object o = def.get(key);
-        if (o!=null && o instanceof JTNM1KnobUI)
-            return (JTNM1KnobUI) o;
-        JTNM1KnobUI ui = new JTNM1KnobUI();
-        def.put(key, ui);
-        
-        currentContext = context;
-        currentUI = ui;
+        JTBasicKnobUI ui = uiInstance.getInstance(c);
+        if (ui == null) uiInstance.setInstance(c, ui = new JTNM1KnobUI());
         return ui;
     }
     /*
@@ -135,39 +114,5 @@ public class JTNM1KnobUI extends JTBasicKnobUI
         
     }
 
-    /*
-    protected void renderBackground( Graphics2D g2, int s )
-    {
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        int rad = s>>1; // mid = s/2
-
-        g2.setColor(Color.BLACK);
-        g2.drawLine(rad, rad, 0, s);
-        g2.drawLine(rad, rad, s, s);
-        
-        if (gp==null || gps!=s)
-        {
-            gps = s;
-            gp = new GradientPaint(0, 0, Color.WHITE, s, s, Color.LIGHT_GRAY);
-        }
-        
-        final Paint oldPaint = g2.getPaint();
-        g2.setPaint(gp);
-        g2.fillOval(0, 0, s, s);
-        g2.setPaint(oldPaint);
-        
-        paintOutline(g2, s, Color.BLACK);
-    }
-
-    protected void paintOutline(Graphics2D g2, int s, Color c)
-    {
-        g2.setColor(c);
-        final Stroke oldStroke = g2.getStroke();
-        g2.setStroke(thinStroke);
-        g2.drawOval(0, 0, s-1, s-1);
-        g2.setStroke(oldStroke);
-    }
-*/
 }
 

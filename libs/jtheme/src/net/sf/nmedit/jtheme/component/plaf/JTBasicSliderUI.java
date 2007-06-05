@@ -49,21 +49,13 @@ public class JTBasicSliderUI extends JTBasicControlUI implements SwingConstants
     public static final String sliderGripSizeKey = "sliderui.grip.size";
     public static final String borderKey = "sliderui.border";
     
-    private static JTBasicSliderUI instance;
-    
-    public JTBasicSliderUI()
-    {
-        super();
-    }
-
-    private boolean defaultsNotInitialized = true;
-
+    protected static UIInstance<JTBasicSliderUI> uiInstance = new UIInstance<JTBasicSliderUI>(JTBasicSliderUI.class);
+  
     public static JTBasicSliderUI createUI(JComponent c) 
     {
-        if (instance == null)
-            instance = new JTBasicSliderUI();
-        
-        return instance;
+        JTBasicSliderUI ui = uiInstance.getInstance(c);
+        if (ui == null) uiInstance.setInstance(c, ui = new JTBasicSliderUI());
+        return ui;
     }
 
     protected Border createDefaultBorder()
@@ -75,6 +67,7 @@ public class JTBasicSliderUI extends JTBasicControlUI implements SwingConstants
     protected Color defaultBackground;
     protected int defaultGripSize=5;
     protected Color defaultGripColor;
+    private boolean defaultsInitialized = false;
 
     protected void initDefaults(JTComponent c)
     {
@@ -103,10 +96,10 @@ public class JTBasicSliderUI extends JTBasicControlUI implements SwingConstants
         
         JTComponent jtc = (JTComponent) c;
         
-        if (defaultsNotInitialized)
+        if (!defaultsInitialized)
         {
             initDefaults(jtc);
-            defaultsNotInitialized = false;
+            defaultsInitialized = true;
         }
         
         c.setBorder(defaultBorder);
@@ -235,10 +228,7 @@ public class JTBasicSliderUI extends JTBasicControlUI implements SwingConstants
     {
         boolean hrz = ((JTControl) c).getOrientation() != VERTICAL;
         
-        return 
-        hrz ?
-        new Dimension(100, 20)
-        : new Dimension(20, 100);
+        return hrz ? new Dimension(100, 20) : new Dimension(20, 100);
     }
     
     public Dimension getMinimumSize(JComponent c) 
