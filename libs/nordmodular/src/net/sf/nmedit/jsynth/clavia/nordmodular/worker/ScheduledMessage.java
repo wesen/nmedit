@@ -51,7 +51,7 @@ public class ScheduledMessage implements ScheduledWorker
         if (isWorkerFinished())
             return;
         
-        System.out.println("scheduled: "+message);
+        //System.out.println("scheduled: "+message);
         
         messageSent = true;
         try
