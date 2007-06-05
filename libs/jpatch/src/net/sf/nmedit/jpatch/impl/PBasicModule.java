@@ -49,14 +49,14 @@ import net.sf.nmedit.jpatch.event.PParameterListener;
 public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements PModule
 {
 
-    private static final PParameter[] EMPTYP = new PParameter[0];
+    private static final PBasicParameter[] EMPTYP = new PBasicParameter[0];
     private static final PConnector[] EMPTYC = new PConnector[0];
     private static final PLight[] EMPTYL = new PLight[0];
     
     
     
     private String title;
-    private PParameter[] parameters;
+    private PBasicParameter[] parameters;
     private PConnector[] connectors;
     private PLight[] lights;
     private PModuleContainer parent;
@@ -82,9 +82,9 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
     }
 
     public void setTitle(String title)
-    {
+    {        
         String oldTitle = this.title;
-        if (oldTitle != title || (title!=null && (!title.equals(oldTitle))))
+        if (!(oldTitle == title || (title!=null && title.equals(oldTitle))))
         {
             this.title = title;
             fireModuleRenamed(oldTitle, title);
@@ -164,7 +164,7 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
      * @param descriptor describes the parameter that will be created 
      * @return parameter
      */
-    protected PParameter createParameter(PParameterDescriptor descriptor, int componentIndex)
+    protected PBasicParameter createParameter(PParameterDescriptor descriptor, int componentIndex)
     {
         return new PBasicParameter(descriptor, this, componentIndex);
     }
@@ -197,9 +197,26 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
         int offset = connectors.length;
         if (d.getParameterDescriptorCount()>0)
         {
-            parameters = new PParameter[d.getParameterDescriptorCount()];
+            boolean extensions = false;
+            parameters = new PBasicParameter[d.getParameterDescriptorCount()];
             for (int i = parameters.length-1; i>=0; i--)
-                parameters[i] = createParameter(d.getParameterDescriptor(i), offset+i);
+            {
+                PParameterDescriptor p = d.getParameterDescriptor(i);
+                parameters[i] = createParameter(p, offset+i);
+                extensions |= p.getExtensionDescriptor()!=null;
+            }
+
+            if (extensions)
+            {
+                // link extensions
+                
+                for (int i=parameters.length-1;i>=0;i--)
+                {
+                    PBasicParameter p = parameters[i];
+                    PParameterDescriptor ext = p.getDescriptor().getExtensionDescriptor();
+                    if (ext!=null) p.setExtensionParameter(parameters[ext.getDescriptorIndex()]);
+                }
+            }
         }
         else
         {
@@ -498,7 +515,7 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
     
     public String toString()
     {
-        return getClass().getName()+"[name="+getName()+",component-id="+getComponentId()+"]";
+        return getClass().getName()+"[name="+getName()+",component-id="+getComponentId()+",component-index="+getComponentIndex()+",title="+title+"]";
     }
     
 }
