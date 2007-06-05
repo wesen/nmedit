@@ -799,10 +799,7 @@ public class SynthDeviceContext extends ContainerNode
     protected boolean showSettings()
     {
         SynthPropertiesDialog spd = new SynthPropertiesDialog(synth);
-        
-        spd.addSynthInfo();
-        spd.addPortSettings();
-        spd.addSynthSettings();
+        addForms(spd);
         spd.setSelectedPath("connection");
         
         final JDialog d = new JDialog(Nomad.sharedInstance().getWindow(), "Properties for "+synth.getDeviceName());
@@ -826,6 +823,14 @@ public class SynthDeviceContext extends ContainerNode
             }});
         
         return true;
+    }
+    
+    
+    protected void addForms(SynthPropertiesDialog spd)
+    {
+        spd.addSynthInfo();
+        spd.addPortSettings();
+        spd.addSynthSettings();
     }
     
     private static void showError(Exception e)

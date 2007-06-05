@@ -36,10 +36,8 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.jsynth.DefaultMidiPorts;
-import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.Synthesizer;
 import net.sf.nmedit.jsynth.midi.MidiPlug;
-import net.sf.nmedit.jsynth.midi.MidiPort;
 import net.sf.nmedit.nomad.core.forms.ExceptionDialog;
 import net.sf.nmedit.nomad.core.forms.NomadMidiDialogFrmHandler;
 import net.sf.nmedit.nomad.core.forms.PropertyDialogForm;
@@ -66,7 +64,7 @@ public class SynthPropertiesDialog extends PropertyDialogForm
 
     public void addSynthSettings()
     {
-        addEntry("synth/settings", "Settings");
+        //addEntry("synth/settings", "Settings");
     }
     
     public void addPortSettings()
@@ -84,7 +82,7 @@ public class SynthPropertiesDialog extends PropertyDialogForm
         return new PortSettingsDialog(synth);
     }
     
-    protected abstract static class DialogPane implements ActionListener, Runnable
+    public abstract static class DialogPane implements ActionListener, Runnable
     {
         
         protected Synthesizer synth;

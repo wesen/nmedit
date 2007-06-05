@@ -20,12 +20,14 @@ package net.sf.nmedit.nordmodular;
 
 import java.awt.Event;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.sound.midi.MidiDevice;
 import javax.swing.AbstractAction;
+import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SynthException;
@@ -34,12 +36,11 @@ import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
 import net.sf.nmedit.jsynth.event.SlotEvent;
 import net.sf.nmedit.jsynth.event.SlotListener;
 import net.sf.nmedit.jsynth.event.SlotManagerListener;
-import net.sf.nmedit.jsynth.midi.MidiPlug;
 import net.sf.nmedit.jsynth.nomad.SynthDeviceContext;
+import net.sf.nmedit.jsynth.nomad.SynthPropertiesDialog;
+import net.sf.nmedit.jsynth.nomad.SynthPropertiesDialog.DialogPane;
 import net.sf.nmedit.jsynth.worker.RequestPatchWorker;
 import net.sf.nmedit.nomad.core.Nomad;
-import net.sf.nmedit.nomad.core.forms.NomadMidiDialog;
-import net.sf.nmedit.nomad.core.forms.NomadMidiDialogFrmHandler;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 
 public class NMSynthDeviceContext extends SynthDeviceContext 
@@ -234,7 +235,31 @@ public class NMSynthDeviceContext extends SynthDeviceContext
         
     }
 
-    protected boolean showSettings2()
+    protected void addForms(final SynthPropertiesDialog spd)
+    {
+        super.addForms(spd);
+        DialogPane dp = new SSF(getSynthesizer());
+        dp.install(spd);
+    }
+    
+    protected static class SSF extends DialogPane
+    {
+
+        public SSF(NordModular synth)
+        {
+            super(synth, "synthsettings", "Settings");
+        }
+
+        @Override
+        protected JComponent createDialogComponent()
+        {
+            return new SynthSettingsFrm();
+        }
+
+    }
+
+    /*
+    private boolean showSettings2()
     {
         NordModular synth = getSynthesizer();
 
@@ -274,7 +299,7 @@ public class NMSynthDeviceContext extends SynthDeviceContext
         }
         
         return false;
-    }
+    }*/
     
 
     protected void processEvent(Event event, Slot slot)
