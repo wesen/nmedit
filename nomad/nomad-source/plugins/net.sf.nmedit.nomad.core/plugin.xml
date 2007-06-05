@@ -23,14 +23,13 @@ javax.swing.plaf.metal.MetalTheme=com.jgoodies.looks.plastic.theme.DesertBlue
 	<requires>
 		<import plugin-id="net.sf.nmedit.nmutils"  />
 		<import plugin-id="org.apache.xerces" />
+		<import plugin-id="com.jgoodies.forms" />
+		<import plugin-id="com.jgoodies.looks" />
 	</requires>
 	<runtime>
 		<library id="core" path="classes/" type="code">
 			<export prefix="*"/>
 		</library>
-		<library id="jgoodies.forms" path="lib/forms-1.0.7.jar" type="code" />
-		<library id="jgoodies.looks" path="lib/looks-2.1.3.jar" type="code" />
-		
 		<library type="resources" path="data/" id="data">
 			<export prefix="*"/>
 		</library>
