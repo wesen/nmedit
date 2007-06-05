@@ -36,4 +36,7 @@ public abstract class NmProtocolListener
     public void messageReceived(ParameterMessage message) {}
     public void messageReceived(ErrorMessage message) {}
     public void messageReceived(SynthSettingsMessage message) {}
+
+    public void messageReceived(KnobAssignmentMessage message) { }
+    
 }
