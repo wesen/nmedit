@@ -36,6 +36,7 @@ import net.sf.nmedit.jnmprotocol.DeleteCableMessage;
 import net.sf.nmedit.jnmprotocol.DeleteModuleMessage;
 import net.sf.nmedit.jnmprotocol.GetPatchMessage;
 import net.sf.nmedit.jnmprotocol.IAmMessage;
+import net.sf.nmedit.jnmprotocol.KnobAssignmentMessage;
 import net.sf.nmedit.jnmprotocol.MidiMessage;
 import net.sf.nmedit.jnmprotocol.MoveModuleMessage;
 import net.sf.nmedit.jnmprotocol.NewCableMessage;
@@ -51,6 +52,7 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.Format;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
@@ -116,6 +118,44 @@ public class NmUtils
         message.set("slot2Selected", slot2?1:0);
         message.set("slot3Selected", slot3?1:0);
         return message;
+    }
+    /*
+    public static MidiMessage createMorphRangeMessage(PParameter parameter, int span, int direction)
+    {
+        MorphRangeMessage msg = new MorphRangeMessage();
+        
+        PModule module = parameter.getParentComponent();
+        PModuleContainer va = module.getParentComponent();
+        
+        int section = va.getComponentIndex();
+        int moduleIndex = module.getComponentIndex();
+        int parameterIndex = parameter.getComponentIndex();
+        
+        msg.setMessage(section, moduleIndex, parameterIndex, span, direction);
+        return msg;
+    }
+    */
+    public static MidiMessage createKnobAssignmentMessage(PParameter parameter, int prevKnob, int knob,
+            int slot, int pid)
+    {
+        KnobAssignmentMessage msg = new KnobAssignmentMessage();
+
+        PModule module = parameter.getParentComponent();
+        PModuleContainer va = module.getParentComponent();
+        
+        int section = va.getComponentIndex();
+        int moduleIndex = module.getComponentIndex();
+        int parameterIndex = Helper.index(parameter);
+        
+        msg.assign(slot, pid, prevKnob, knob, section, moduleIndex, parameterIndex);
+        return msg;
+    }
+    
+    public static MidiMessage createKnobDeAssignmentMessage(int knob, int slot, int pid)
+    {
+        KnobAssignmentMessage msg = new KnobAssignmentMessage();
+        msg.deassign(slot, pid, knob);
+        return msg;
     }
     
     public static MidiMessage createRequestPatchMessage(int slotId) 
