@@ -92,9 +92,6 @@ public class ReceivePatchWorker extends NmProtocolListener
 
     public void messageReceived(PatchMessage message) 
     {
-        
-        System.out.println("laLALALALALA"+message.get("pid"));
-        
         if (pid == message.get("pid"))
         {
             try
