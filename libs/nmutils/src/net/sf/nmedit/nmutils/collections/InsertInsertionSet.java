@@ -20,6 +20,7 @@ package net.sf.nmedit.nmutils.collections;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
@@ -112,8 +113,23 @@ public class InsertInsertionSet<E> extends AbstractSet<E> implements Set<E>, Ser
             if (newCapacity < minCapacity)
                 newCapacity = minCapacity;
             // minCapacity is usually close to size, so this is a win:
-            elements = Arrays.copyOf(elements, newCapacity);
+            // Java 6 only: elements = Arrays.copyOf(elements, newCapacity);
+            elements = copyOf(elements, newCapacity);
+            
         }
+    }
+
+    public static <T> T[] copyOf(T[] original, int newLength) {
+        return (T[]) copyOf(original, newLength, original.getClass());
+    }
+
+    public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) {
+        T[] copy = ((Object)newType == (Object)Object[].class)
+            ? (T[]) new Object[newLength]
+            : (T[]) Array.newInstance(newType.getComponentType(), newLength);
+        System.arraycopy(original, 0, copy, 0,
+                         Math.min(original.length, newLength));
+        return copy;
     }
     
     public boolean add(E e)
