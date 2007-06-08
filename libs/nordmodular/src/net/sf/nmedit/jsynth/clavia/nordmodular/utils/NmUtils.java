@@ -23,13 +23,18 @@
 package net.sf.nmedit.jsynth.clavia.nordmodular.utils;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collection;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.xml.sax.SAXException;
 
 import net.sf.nmedit.jnmprotocol.DeleteCableMessage;
@@ -61,6 +66,8 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.parser.Helper;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PParser;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.ParseException;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchBuilder;
+import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchExporter;
+import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchFileWriter;
 import net.sf.nmedit.jsynth.SynthException;
 
 public class NmUtils
@@ -382,6 +389,39 @@ public class NmUtils
         bsParser.transcode(message.getPatchStream(), patchBuilder);
     }
 
+    public static boolean writePatchSavely(NMPatch patch, File file)
+    {
+        try
+        {
+            writePatch(patch, file);
+            return true;
+        }
+        catch (Exception e)
+        {
+            Log log = LogFactory.getLog(NmUtils.class);
+            if (log.isErrorEnabled())
+                log.error("could not write patch "+patch+" to file "+file, e);
+            return false;
+        }
+    }
+    
+    public static void writePatch(NMPatch patch, File file)
+        throws IOException, ParseException
+    {
+        OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+        try
+        {
+            PatchExporter export = new PatchExporter();
+            PatchFileWriter writer = new PatchFileWriter(out);
+            export.export(patch, writer);
+        }
+        finally
+        {
+            out.flush();
+            out.close();
+        }
+    }
+    
     /*
     private String int2str(int[] array)
     {
