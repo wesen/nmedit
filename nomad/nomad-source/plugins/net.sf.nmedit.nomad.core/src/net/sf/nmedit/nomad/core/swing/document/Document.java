@@ -22,11 +22,20 @@
  */
 package net.sf.nmedit.nomad.core.swing.document;
 
+import java.io.File;
+
 import javax.swing.Icon;
 import javax.swing.JComponent;
 
 public interface Document
 {
+
+    public static final String ACTION_COMMAND_SAVE = "save";
+    public static final String ACTION_COMMAND_SAVE_AS = "save as";
+    public static final String ACTION_COMMAND_CLOSE = "close"; 
+    public static final String ACTION_COMMAND_PROPERTIES = "properties"; 
+    
+    public File getFile();
     public String getTitle();
     public JComponent getComponent();
     Icon getIcon();

@@ -304,6 +304,11 @@ public class PluginView implements Document
             return null;
         }
         
+        public File getFile()
+        {
+            return null;
+        }
+        
     }
 
     private String getAttributeValue(PluginDescriptor d, String attribute)
@@ -505,6 +510,12 @@ public class PluginView implements Document
     }
 
     public <T> T getFeature(Class<T> featureClass)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public File getFile()
     {
         // TODO Auto-generated method stub
         return null;

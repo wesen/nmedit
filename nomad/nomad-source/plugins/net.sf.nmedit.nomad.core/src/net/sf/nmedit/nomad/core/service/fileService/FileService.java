@@ -42,6 +42,12 @@ public interface FileService extends Service
     String getDescription();
 
     Icon getIcon();
+
+    boolean isDirectSaveOperationSupported(Object source);
+    
+    boolean isSaveOperationSupported(Object source);
+
+    void save(Object source, File as);
     
 }
 

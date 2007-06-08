@@ -31,11 +31,12 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.swing.Action;
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -44,7 +45,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
 import net.sf.nmedit.nomad.core.NomadLoader.LocaleHandler;
-import net.sf.nmedit.nomad.core.forms.NomadMidiDialogFrmHandler;
 import net.sf.nmedit.nomad.core.helpers.DocumentActionActivator;
 import net.sf.nmedit.nomad.core.helpers.RuntimeMenuBuilder;
 import net.sf.nmedit.nomad.core.i18n.LocaleConfiguration;
@@ -56,7 +56,11 @@ import net.sf.nmedit.nomad.core.service.fileService.FileService;
 import net.sf.nmedit.nomad.core.service.fileService.FileServiceTool;
 import net.sf.nmedit.nomad.core.service.initService.InitService;
 import net.sf.nmedit.nomad.core.swing.ButtonBarBuilder;
+import net.sf.nmedit.nomad.core.swing.FileTransferHandler;
 import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
+import net.sf.nmedit.nomad.core.swing.document.Document;
+import net.sf.nmedit.nomad.core.swing.document.DocumentEvent;
+import net.sf.nmedit.nomad.core.swing.document.DocumentListener;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 import net.sf.nmedit.nomad.core.swing.tabs.JTabbedPane2;
 import net.sf.nmedit.nomad.core.utils.ClonedAction;
@@ -69,6 +73,9 @@ import org.java.plugin.boot.Boot;
 public class Nomad
 {
 
+    private static final String MENU_FILE_SAVE = "nomad.menu.file.save.save";
+    private static final String MENU_FILE_SAVEAS = "nomad.menu.file.save.saveas";
+    
     private static Nomad instance;
     private JFrame mainWindow = null;
     private NomadPlugin pluginInstance;
@@ -96,28 +103,25 @@ public class Nomad
 
         menuLayout.getEntry("nomad.menu.file.open")
         .addActionListener(new ActionListener(){
-
             public void actionPerformed(ActionEvent e)
             {
-                
-                JFileChooser chooser = new JFileChooser(new File("/home/christian/Programme/nomad/data/patch/"));
-                chooser.setMultiSelectionEnabled(true);
-                FileServiceTool.addChoosableFileFilters(chooser);
-                if (!(chooser.showOpenDialog(mainWindow)==JFileChooser.APPROVE_OPTION))
-                return;
-                
-                FileService service =
-                FileServiceTool.lookupFileService(chooser);
-                
-                if (service != null)
-                {
-                    for (File file:chooser.getSelectedFiles())
-                    {
-                        service.open(file);
-                    }
-                }
-                
+                fileOpen();
             }});
+
+        menuLayout.getEntry(MENU_FILE_SAVE)
+        .addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e)
+            {
+                fileSave(false);
+            }});
+
+        menuLayout.getEntry(MENU_FILE_SAVEAS)
+        .addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e)
+            {
+                fileSave(true);
+            }});
+
         menuBuilder = new MenuBuilder(menuLayout);
         menuBuilder.setResourceBundle(localizedMessages);
         LocaleConfiguration.getLocaleConfiguration().addLocaleChangeListener(new LocaleHandler(menuBuilder));
@@ -149,22 +153,119 @@ public class Nomad
                 .add(view);
             }});
 
-        menuLayout.getEntry("nomad.menu.synth.setup")
-        .addActionListener(new ActionListener(){
-
-            public void actionPerformed(ActionEvent e)
-            {
-                JDialog dialog = new JDialog(Nomad.this.mainWindow);
-                
-                dialog.setContentPane(new NomadMidiDialogFrmHandler());
-
-                dialog.setBounds(0, 0, 400, 300);
-                dialog.setVisible(true);
-            }});
-
         MenuLayout.disableGhosts(menuLayout);
-        
+
         setupUI();
+        
+        DocumentSelectionHandler dsh = new DocumentSelectionHandler();
+        pageContainer.addListener(dsh);
+        dsh.setMenuForDocument(pageContainer.getSelection());
+
+        //pageContainer.getTabBar()
+        pageContainer
+        .setTransferHandler(new FileTransferHandler(){
+            protected boolean importFiles(JComponent c, List<File> filelist)
+            {
+                if (c!=pageContainer)
+                    return false;
+                
+                for (File f: filelist)
+                    openOrSelect(f);
+                return true;
+            }
+        });
+    }
+    
+    private class DocumentSelectionHandler implements DocumentListener
+    {
+        public void documentAdded(DocumentEvent e)
+        {
+            // no op
+        }
+
+        public void documentRemoved(DocumentEvent e)
+        {
+            // no op
+        }
+
+        public void documentSelected(DocumentEvent e)
+        {
+            setMenuForDocument(e.getDocument());
+        }
+        
+        public void setMenuForDocument(Document d)
+        {
+            boolean saveEnabled = false;
+            boolean saveAsEnabled = false;
+            if (d != null)
+            {
+                Iterator<FileService> iter = ServiceRegistry.getServices(FileService.class);
+                while (iter.hasNext() && (!saveEnabled) && (!saveAsEnabled))
+                {
+                    FileService fs = iter.next();
+                    if (!saveEnabled) saveEnabled = fs.isDirectSaveOperationSupported(d);
+                    if (!saveAsEnabled) saveAsEnabled = fs.isSaveOperationSupported(d);
+                }
+            }
+            menuLayout.getEntry(MENU_FILE_SAVE).setEnabled(saveEnabled);
+            menuLayout.getEntry(MENU_FILE_SAVEAS).setEnabled(saveAsEnabled);
+        }
+        
+    }
+
+    void fileSave(boolean saveAs)
+    {
+        Document d = pageContainer.getSelection();
+        if (d == null) return;
+
+        JFileChooser chooser = new JFileChooser(d.getFile());
+        chooser.setMultiSelectionEnabled(false);
+
+        Iterator<FileService> iter = ServiceRegistry.getServices(FileService.class);
+        while (iter.hasNext())
+        {
+            FileService fs = iter.next();
+            
+            boolean add = 
+                (saveAs && fs.isSaveOperationSupported(d))
+                || ((!saveAs)&&fs.isSaveOperationSupported(d));
+            
+            if (add)
+                chooser.addChoosableFileFilter(fs.getFileFilter());
+        }
+
+        
+        if (!(chooser.showSaveDialog(mainWindow)==JFileChooser.APPROVE_OPTION)) return;
+        
+        FileService service = FileServiceTool.lookupFileService(chooser);
+        
+        if (service != null)
+        {
+            File newFile = chooser.getSelectedFile();
+            if (newFile == null) return;
+            service.save(d, newFile);
+        }
+    }
+    
+    void fileOpen()
+    {
+        
+        JFileChooser chooser = new JFileChooser(new File("/home/christian/Programme/nomad/data/patch/"));
+        chooser.setMultiSelectionEnabled(true);
+        FileServiceTool.addChoosableFileFilters(chooser);
+        if (!(chooser.showOpenDialog(mainWindow)==JFileChooser.APPROVE_OPTION))
+        return;
+        
+        FileService service =
+        FileServiceTool.lookupFileService(chooser);
+        
+        if (service != null)
+        {
+            for (File file:chooser.getSelectedFiles())
+            {
+                service.open(file);
+            }
+        }
         
     }
     
@@ -211,6 +312,10 @@ public class Nomad
         left.setPreferredSize(new Dimension(200,110));
 */
         pageContainer = new DefaultDocumentManager();
+        /*
+        ImageIcon helpIcon = getImage("/icons/etool16/help_contents.gif");
+        
+        toolPane.addTab("Help", helpIcon, new HelpPane(helpIcon));*/
 
         new DocumentActionActivator(pageContainer, menuLayout);
         
@@ -347,8 +452,6 @@ public class Nomad
     {
         if (file.isDirectory())
             return;
-        
-        String name = file.getName();
         
         Iterator<FileService> iter = ServiceRegistry.getServices(FileService.class);
         while (iter.hasNext())
