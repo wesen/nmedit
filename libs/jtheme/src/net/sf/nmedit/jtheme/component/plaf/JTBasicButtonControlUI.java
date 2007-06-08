@@ -264,6 +264,10 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
                 y+=dy;
             }
         }
+        /*
+        g.setColor(Color.red);
+        g.drawRect(0, 0, c.getWidth()-1, c.getHeight()-1);
+        */
     }
     
     public int getInternalButtonIndexForLocation(Point loc)
