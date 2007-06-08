@@ -38,13 +38,28 @@ public abstract class JTControl extends JTComponent implements ChangeListener
 
     private JTControlAdapter adapter;
     private JTControlAdapter extensionAdapter;
-    private Color extensionColor;
+    private Color extensionColor = Color.BLACK;
+    private boolean extensionEnabled = false;
 
     public JTControl(JTContext context)
     {
         super(context);
     }
-
+    
+    public boolean isExtensionParameterEnabled()
+    {
+        return extensionEnabled;
+    }
+    
+    public void setExtensionParameterEnabled(boolean enabled)
+    {
+        if (this.extensionEnabled != enabled)
+        {
+            this.extensionEnabled = enabled;
+            this.repaint();
+        }
+    }
+    
     public Color getExtensionColor()
     {
         return extensionColor;
@@ -52,7 +67,10 @@ public abstract class JTControl extends JTComponent implements ChangeListener
     
     public void setExtensionColor(Color c)
     {
+        if (c == null)
+            throw new NullPointerException();
         this.extensionColor = c;
+        repaint();
     }
     
     public void setUI(JTControlUI controlUI)
@@ -112,13 +130,20 @@ public abstract class JTControl extends JTComponent implements ChangeListener
 
     public void setAdapter(JTControlAdapter adapter)
     {
-        JTControlAdapter oldAdapter = adapter;
-        this.adapter = adapter;
-        
-        if (oldAdapter != null)
-            oldAdapter.setChangeListener(null);
-        if (adapter != null)
-            adapter.setChangeListener(this);
+        JTControlAdapter oldAdapter = this.adapter;
+        if (oldAdapter != adapter)
+        {
+            this.adapter = adapter;
+            if (oldAdapter != null)
+                oldAdapter.setChangeListener(null);
+            
+            if (adapter != null)
+            {
+                adapter.setChangeListener(this);
+            }
+            
+            repaint();
+        }
     }
 
     public void setExtensionAdapter(JTControlAdapter adapter)

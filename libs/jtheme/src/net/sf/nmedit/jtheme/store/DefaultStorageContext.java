@@ -20,12 +20,13 @@ package net.sf.nmedit.jtheme.store;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import net.sf.nmedit.jtheme.JTException;
-import net.sf.nmedit.jtheme.store.resource.ImageResource;
+import net.sf.nmedit.jtheme.image.ImageResource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,8 +46,8 @@ public class DefaultStorageContext extends StorageContext
     private Document document;
     private ClassLoader classLoader;
     private CSSStyleSheet styleSheet;
-    
-    private Map<String, ImageResource> imageResourceMap = new HashMap<String, ImageResource>();
+
+    private Map<Object, ImageResource> imageResourceMap = new HashMap<Object, ImageResource>();
 
     private static transient Log _logger;
     
@@ -63,6 +64,24 @@ public class DefaultStorageContext extends StorageContext
         installDefaults();
     }
 
+    public ImageResource getCachedImage(URL source)
+    {
+        return imageResourceMap.get(source);
+    }
+
+    public ImageResource getCachedImage(String source)
+    {
+        ClassLoader loader = classLoader != null ? classLoader :getClass().getClassLoader();
+        URL url = loader.getResource(source);
+        return url != null ? getCachedImage(url) : null;
+    }
+    
+    public void putImage(URL url, ImageResource ir)
+    {
+        if (url != null)
+            imageResourceMap.put(url, ir);
+    }
+    
     public CSSStyleSheet getStyleSheet()
     {
         return styleSheet;

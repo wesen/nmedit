@@ -98,17 +98,17 @@ public class JTConnector extends JTComponent implements PConnectorListener
 
     public void setConnectorDescriptor(PConnectorDescriptor descriptor)
     {
-        setToolTipText(null);
-        this.descriptor = descriptor;
-       
-        if (descriptor != null)
+        if (this.descriptor != descriptor)
         {
-            setOpaque(descriptor.isOutput());
-            setToolTipText(descriptor.getName());
-        }
-        else
-        {
-            setOpaque(true);
+            this.descriptor = descriptor;
+            if (descriptor != null)
+            {
+                setOpaque(descriptor.isOutput());
+            }
+            else
+            {
+                setOpaque(true);
+            }
         }
     }
     

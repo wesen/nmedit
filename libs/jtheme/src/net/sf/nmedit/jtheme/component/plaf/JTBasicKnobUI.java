@@ -95,12 +95,14 @@ public class JTBasicKnobUI extends JTBasicControlUI
 
     public void paintStaticLayer(Graphics2D g, JTComponent c)
     {
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         JTControl control = (JTControl) c;
         paintKnobBackground(g, control);
     }
 
     public void paintDynamicLayer(Graphics2D g, JTComponent c)
     {
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         JTControl control = (JTControl) c;
         
         paintKnobForegroundUnderlay(g, control);
@@ -121,7 +123,6 @@ public class JTBasicKnobUI extends JTBasicControlUI
     
     protected void paintKnobBackground( Graphics2D g, JTControl control )
     {
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         int size = diameter(control);
         g.setColor(backgroundColor);
         g.fillOval(0, 0, size, size);
@@ -137,8 +138,6 @@ public class JTBasicKnobUI extends JTBasicControlUI
             Color focusColor = defaultFocusedBorderColor;
             int size = diameter(control);
             
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
             g.setColor(focusColor);
             g.drawOval(1, 1, size-3, size-3);
         }
@@ -189,7 +188,6 @@ public class JTBasicKnobUI extends JTBasicControlUI
         int gx = (int) (Math.sin(value*KnobMetrics.PI2)*len);
         int gy = (int) (Math.cos(value*KnobMetrics.PI2)*len);
 
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setColor(gripColor);
         g.drawLine(cxy, cxy, cxy+gx, cxy+gy);
     }

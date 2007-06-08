@@ -31,7 +31,11 @@ import javax.xml.transform.stream.StreamResult;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.component.JTImage;
-import net.sf.nmedit.jtheme.store.resource.ImageResource;
+import net.sf.nmedit.jtheme.image.AbstractImageResource;
+import net.sf.nmedit.jtheme.image.ImageResource;
+import net.sf.nmedit.jtheme.image.SVGImageResource;
+import net.sf.nmedit.jtheme.image.SVGStringRessource;
+import net.sf.nmedit.jtheme.image.ToolkitImageResource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -54,26 +58,70 @@ public class ImageStore extends DefaultStore
     public static ImageResource getImageResource(StorageContext context, Element element)
     {
         String href = getXlinkHref(element);
-        
-        if (href == null)
-            return null;
-        
+        if (href == null) return null;
         if (href.endsWith("svg"))
-            return new ImageResource.SVGImageResource(context.getContextClassLoader(), href);
+            return new SVGImageResource(href, context.getContextClassLoader());
         else
-            return new ImageResource.RasterImageResource(context, href);
+            return new ToolkitImageResource(href, context.getContextClassLoader());
+    }
+
+    private AbstractImageResource createResource(String src)
+    {
+        if (src.endsWith(".svg"))
+            return new SVGImageResource(src, context.getContextClassLoader());   
+        else
+            return new ToolkitImageResource(src, context.getContextClassLoader());
     }
     
-    private Image image;
     private StorageContext context;
-    private int svgw = -1;
-    private int svgh = -1;
-    private boolean preloaded = false;
+    private String src;
+    private ImageResource imageResource;
+    private int width = -1;
+    private int height = -1;
 
-    protected ImageStore(StorageContext context, Element element)
+    protected ImageStore(StorageContext context, Element e)
     {
-        super(element);
+        super(e);
         this.context = context;
+        src = getXlinkHref(e);
+        
+        if (src != null)
+        {
+            width = getIntAtt("width", -1);
+            height = getIntAtt("height", -1);
+            
+            if (context instanceof DefaultStorageContext)
+            {
+                DefaultStorageContext dsc = (DefaultStorageContext) context;
+                imageResource = dsc.getCachedImage(src);
+
+                if (src.startsWith("url(#") && src.endsWith(")"))
+                {
+                    String id = src.substring(5, src.length()-1);
+                    imageResource = dsc.getImageResourceById(id);
+                }
+                else if (imageResource == null)
+                {
+                    AbstractImageResource air = createResource(src);
+                    imageResource = air;
+                    dsc.putImage(air.getResolvedURL(), air);
+                }
+            }
+            else
+            {
+                imageResource = createResource(src);
+            }
+        }
+        else
+        {
+            Element svg = e.getChild("svg", svgns());
+            if (svg != null)
+            {
+                width = getIntAtt(svg, "width", -1);
+                height = getIntAtt(svg, "height", -1);
+                imageResource = new SVGStringRessource(element2txt(svg));
+            }
+        }
     }
     
     public StorageContext getContext()
@@ -104,20 +152,6 @@ public class ImageStore extends DefaultStore
         return cachedSvgNameSpace;
     }
     
-    private void preloadImage()
-    {
-        Element e = getElement();
-        
-        Element svg = e.getChild("svg", svgns());
-        
-        if (svg != null)
-        {
-            preloadSVG(e, svg);
-        }
-        else 
-            preloadExtern(e);
-    }
-
     private static final String XLINK_NS = "http://www.w3.org/1999/xlink";
     private static Namespace xlinkns = Namespace.getNamespace(XLINK_NS);
     
@@ -143,89 +177,40 @@ public class ImageStore extends DefaultStore
         else return context.getImage(href);
     }
     
-    private void preloadExtern(Element e)
-    {
-        String src = getXlinkHref(e);
-        
-        if (src != null)
-        {
-            if (src.startsWith("url(#") && src.endsWith(")"))
-            {
-                String id = src.substring(5, src.length()-1);
-                
-                if (context instanceof DefaultStorageContext)
-                {
-                    DefaultStorageContext dsc = (DefaultStorageContext) context;
-                    ImageResource ir = dsc.getImageResourceById(id);
-
-
-                    svgw = getIntAtt("width", -1);
-                    svgh = getIntAtt("height", -1);
-
-                    image = ir.getImage(svgw, svgh);
-                }
-                
-                return;
-            }
-            
-            Image img = context.getImage(src);
-            if (img != null)
-                image = img;
-            else
-            {
-                Log log = getLogger();
-                if (log.isWarnEnabled())
-                {
-                    log.warn((getClass()+", uri: '"+ src +"' image not found"));
-                }
-            }
-        }
-    }
-
-    private void preloadSVG(Element e, Element svg)
-    {
-        svgw = getIntAtt(svg, "width", -1);
-        svgh = getIntAtt(svg, "height", -1);
-
-        // fix namespace attribute
-        image = svgElement2img(svg);
-    }
-
-    public static Image svgElement2img(Element element)
+    public static ImageResource svgElement2img(Element element)
     {
         String svg = element2txt(element);
         if (svg == null) return null;
-
-        return ImageResource.svg2image(svg, -1, -1);
+        return new SVGStringRessource(svg);
     }
 
     @Override
     public JTImage createComponent(JTContext context) throws JTException
     {
-        if (!preloaded)
-        {
-            preloaded = true;
-            preloadImage();
-        }   
-
-        if (image == null)
+        if (imageResource == null)
             return null;
+
+        Image image = imageResource.getImage(width, height);
+        
+        if (image == null)
+        {
+            Log log = LogFactory.getLog(getClass());
+            if (log.isWarnEnabled())
+                log.warn("Could not open image [width="+width+",height="+height+"] from:"+imageResource);
+            
+            return null;
+        }
         
         JTImage jtimg = (JTImage) context.createComponent(JTContext.TYPE_IMAGE);
         applyName(jtimg);
         setReducible(jtimg);
+        
         jtimg.setIcon(new ImageIcon(image));
         applyLocation(jtimg);
-        
-        if (svgw>=0 && svgh>=0)
+        if (width>=0 && height>=0)
         {
-            jtimg.setSize(svgw, svgh);
+            jtimg.setSize(width, height);
         }
-        else
-        {
-            applySize(jtimg);
-        }
-        
         return jtimg;
     }
 
