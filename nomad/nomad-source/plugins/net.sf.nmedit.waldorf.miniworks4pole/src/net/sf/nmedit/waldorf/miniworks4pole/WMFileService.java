@@ -92,5 +92,20 @@ public class WMFileService implements FileService
         return null;
     }
 
+    public boolean isDirectSaveOperationSupported(Object source)
+    {
+        return false;
+    }
+    
+    public boolean isSaveOperationSupported(Object source)
+    {
+        return false;
+    }
+
+    public void save(Object source, File as)
+    {
+        throw new UnsupportedOperationException("save not supported");
+    }
+
 }
 

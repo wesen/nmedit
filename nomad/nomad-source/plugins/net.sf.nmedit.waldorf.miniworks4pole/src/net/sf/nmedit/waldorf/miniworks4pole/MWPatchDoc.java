@@ -18,6 +18,8 @@
  */
 package net.sf.nmedit.waldorf.miniworks4pole;
 
+import java.io.File;
+
 import javax.swing.Icon;
 import javax.swing.JComponent;
 
@@ -60,6 +62,12 @@ public class MWPatchDoc implements Document
     }
 
     public <T> T getFeature(Class<T> featureClass)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public File getFile()
     {
         // TODO Auto-generated method stub
         return null;
