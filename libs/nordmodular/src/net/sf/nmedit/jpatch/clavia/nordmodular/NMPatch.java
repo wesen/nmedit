@@ -22,6 +22,7 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -135,6 +136,18 @@ public class NMPatch extends PBasicPatch implements PPatch
         synch.installModuleContainer(commonVoiceArea);
     }
 
+    public File getFile()
+    {
+        try
+        {
+            return (File) getProperty("file");
+        }
+        catch (ClassCastException e)
+        {
+            return null;
+        }
+    }
+    
     public void addAssignmentListener(PAssignmentListener l)
     {
         listenerList.add(PAssignmentListener.class, l);
