@@ -79,10 +79,11 @@ public class JTNMPatch extends JTPatch
         split.setBottomComponent(createVoiceArea(patch.getCommonVoiceArea()));
         split.setResizeWeight(1);
         split.setDividerLocation(patch.getHeader().getSeparatorPosition());
+        
         settings = new JTPatchSettingsBar(this);
         setLayout(new BorderLayout());
         add(split, BorderLayout.CENTER);
-        //add(settings, BorderLayout.NORTH);
+        add(settings, BorderLayout.NORTH);
     }
     
     protected static class ModuleAction extends AbstractAction

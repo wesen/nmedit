@@ -25,7 +25,6 @@ package net.sf.nmedit.jtheme.clavia.nordmodular;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -71,80 +70,52 @@ public class JTPatchSettingsBar extends JPanel implements PModuleContainerListen
     private JProgressBar dspTotal;
     private JProgressBar dspPoly;
     
- //   private CableToggler cableToggler = new CableToggler();
+    //   private CableToggler cableToggler = new CableToggler();
     
     private JTNMPatch pui;
     
+    
     public JTPatchSettingsBar(JTNMPatch patchUI)
     {
-        
+        this.pui = patchUI;
+        this.patch = patchUI.getPatch();
+         
+        // panel
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        setMinimumSize(new Dimension(100,28));
+       // setPreferredSize(new Dimension(100,28));
+        setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
+
         Font smallFont = new Font("sansserif", Font.PLAIN, 10);
         setFont(smallFont);
         
-        this.pui = patchUI;
+        patch.getPolyVoiceArea().addModuleContainerListener(this);
+        patch.getCommonVoiceArea().addModuleContainerListener(this);
 
-        pui.getPatch().getPolyVoiceArea().addModuleContainerListener(this);
-        pui.getPatch().getCommonVoiceArea().addModuleContainerListener(this);
-        JComponent pane = this;
-        pane.setLayout(new BoxLayout(pane, BoxLayout.LINE_AXIS));//new GridLayout(1, 0, 2, 2));
-
-        setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
         
         pName = new JTextField(new LimitedText(16), "Name", 16);
-/*
-        pName.setPreferredSize(new Dimension(200, 20));
-        pName.setMinimumSize(new Dimension(80, 0));*/
         pName.setToolTipText("Patch Name");
+        pName.setMaximumSize(new Dimension(200,28));
         pName.setFont(smallFont);
-        pName.addKeyListener(new KeyAdapter(){
-            public void keyPressed( KeyEvent e )
-            {
-                if (e.getKeyCode()==KeyEvent.VK_ESCAPE)
-                {
-                    if (patch!=null)
-                    {
-                        pName.setBackground(Color.WHITE);
-                        pName.setText(patch.getName());
-                    }
-                }
-            }
-
-            public void keyReleased( KeyEvent e )
-            {
-                if (patch!=null)
-                {
-                    String name = patch.getName();
-                    if (name == null) name = "";
-                    pName.setBackground
-                    (
-                            name.equals(pName.getText()) ?
-                            Color.WHITE:Color.RED
-                    );
-                }   
-            }});
+        pName.addKeyListener(new PatchNameKeyAdapter());
         pName.addActionListener(new ActionListener() {
             public void actionPerformed( ActionEvent e )
             {
-                if (patch!=null)
-                {
-                    patch.setName(pName.getText());
-                }
+                if (patch!=null) patch.setName(pName.getText());
             }});
         
         pVoices = new JSpinner(); 
         voices = new VoicesNumberModel(1, 1, 32);
         pVoices.setFont(smallFont);
+        pVoices.setMaximumSize(new Dimension(90,28));
         pVoices.setToolTipText("requested voices / available voices");
         pVoices.setModel(voices);
-        pVoices.setValue(1/*voices.getMinimum()*/);
+        pVoices.setValue(1);//voices.getMinimum());
         
         voices.addChangeListener(new ChangeListener() {
             public void stateChanged( ChangeEvent e )
             {
-                if (patch!=null)
-                {
-                    patch.getHeader().setRequestedVoices(voices.getRequestedVoices());
-                }
+                if (patch!=null) patch.getHeader().setRequestedVoices(voices.getRequestedVoices());
             }
             
         });
@@ -153,42 +124,69 @@ public class JTPatchSettingsBar extends JPanel implements PModuleContainerListen
         l = new JLabel("Name:");
         l.setLabelFor(pName);
         l.setFont(smallFont);
-        pane.add(l);
-        pane.add(pName);
-        pane.add(Box.createHorizontalGlue());
-        pane.add(Box.createHorizontalStrut(5));
+        add(l);
+        add(pName);
+        //pane.add(Box.createHorizontalGlue());
+        
         l = new JLabel("Voices:");
         l.setLabelFor(pVoices);
         l.setFont(smallFont);
-        pane.add(l);
-        pane.add(pVoices);
+        add(l);
+        add(pVoices);
         l = null;
-
-        pane.add(Box.createHorizontalStrut(5));
         
-        dspPane = new JPanel(new GridLayout(2, 1));
-        dspPane.setMinimumSize(new Dimension(40, 0));
+        JComponent dsp = Box.createVerticalBox();
         dspPoly = createBar();
         dspTotal = createBar();
-
         dspPoly.setToolTipText("dsp load: poly voice area");
         dspTotal.setToolTipText("dsp load: total");
         
-        dspPane.add(dspPoly);
-        dspPane.add(dspTotal);
+        dsp.add(dspPoly);
+        dsp.add(dspTotal);
         
-       pane.add(dspPane);
-        pane.add(Box.createHorizontalStrut(5));
+        add(dsp);
         
         Action showNoteDialogA = null;
         
-        pane.add(new JButton(showNoteDialogA));
-        pane.add(Box.createHorizontalStrut(5));
+        add(new JButton(showNoteDialogA));
         //pane.add(cableToggler);
-        pane.add(Box.createHorizontalGlue());
-        
+
+        // morphs
+        JTMorphModule morphModule = new JTMorphModule(patchUI.getContext());
+        morphModule.setModule(patch.getMorphSection().getMorphModule());
+        add(morphModule);
+
         updateValues();
     } 
+    
+    private class PatchNameKeyAdapter extends KeyAdapter
+    {
+        public void keyPressed( KeyEvent e )
+        {
+            if (e.getKeyCode()==KeyEvent.VK_ESCAPE)
+            {
+                if (patch!=null)
+                {
+                    pName.setBackground(Color.WHITE);
+                    pName.setText(patch.getName());
+                }
+            }
+        }
+
+        public void keyReleased( KeyEvent e )
+        {
+            if (patch!=null)
+            {
+                String name = patch.getName();
+                if (name == null) name = "";
+                pName.setBackground
+                (
+                        name.equals(pName.getText()) ?
+                        Color.WHITE:Color.RED
+                );
+            }   
+        }
+    }
     
     private JProgressBar createBar()
     {
@@ -200,6 +198,7 @@ public class JTPatchSettingsBar extends JPanel implements PModuleContainerListen
         gp.setMinimum(0);
         gp.setMaximum(100);
         gp.setPreferredSize(new Dimension(40,4));
+        gp.setMaximumSize(new Dimension(40,10));
         return gp;
     }
     
