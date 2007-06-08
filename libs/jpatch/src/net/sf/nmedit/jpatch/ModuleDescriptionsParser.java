@@ -120,6 +120,7 @@ public class ModuleDescriptionsParser
         static final int link = 27;
         static final int mail = 28;
         static final int light = 29;
+        static final int doc = 30;
 
         Locator locator = null;
         
@@ -154,7 +155,8 @@ public class ModuleDescriptionsParser
           "item",
           "link",
           "mail",
-          "light"
+          "light",
+          "doc"
         };
         
         static String[] attributes = new String[]
@@ -199,6 +201,37 @@ public class ModuleDescriptionsParser
             ledTypes.put("led-array", PLightDescriptor.TYPE_LED_ARRAY);
             ledTypes.put("meter", PLightDescriptor.TYPE_METER);
         }
+        
+        private Map<String,String> strCache = new HashMap<String, String>(1000);
+        
+        private int instcount = 0;
+        
+        private String str(String stringId)
+        {
+            String s;
+            if (stringId == null)
+            {
+                s = null;
+            }
+            else
+            {
+                s = strCache.get(stringId);
+                if (s == null)
+                    strCache.put(s = stringId, stringId);
+                
+             //   System.out.println("strings: "+(++instcount)+"/"+(strCache.size()));*/
+            }
+            return s;
+        }
+
+        private static final String INDEX = "index";
+        private static final String CLASS = "class";
+        private static final String TYPE = "type";
+        private static final String KEY = "key";
+        private static final String VALUE = "value";
+        private static final String NAME = "name";
+        private static final String SIGNAL = "signal";
+        private static final String COMPONENTID = "component-id";
         
         private int getLEDType(String typeValue)
         {
@@ -252,6 +285,8 @@ public class ModuleDescriptionsParser
         
         PSignalTypes signalTypes;
         PSimpleTypes typedef;
+        StringBuffer docText = new StringBuffer();
+        private boolean docElement = false;
         
         public final int getIdFromMap(String name, Map<String,Integer> map)
         {
@@ -308,6 +343,11 @@ public class ModuleDescriptionsParser
                             throw new  SAXException("incompatible version "+version);
                     }
                     break ;
+
+                case doc:
+                    docElement = true;
+                    docText.setLength(0);
+                    break;
                     
                 case header:
                     break;
@@ -315,22 +355,22 @@ public class ModuleDescriptionsParser
                     break;
                 case module:
                     {
-                        String name = attributes.getValue("name");
+                        String name = attributes.getValue(NAME);
                         if (name == null)
                             throw new SAXException("module name must not be null");
                         
-                        String componentId = attributes.getValue("component-id");
+                        String componentId = attributes.getValue(COMPONENTID);
                         if (componentId == null)
                             throw new SAXException("component-id missing in module: "+name);
                         
-                        moduled = new PBasicModuleDescriptor(moduleDescriptions, name, componentId, true);
+                        moduled = new PBasicModuleDescriptor(moduleDescriptions, name, str(componentId), true);
 
-                        String index = attributes.getValue("index");
+                        String index = attributes.getValue(INDEX);
                         if (index != null)
-                            moduled.setAttribute("index", Integer.parseInt(index));
+                            moduled.setAttribute(INDEX, Integer.parseInt(index));
                         
-                        moduled.setAttribute("category", attributes.getValue("category"));
-                        moduled.setAttribute("class", attributes.getValue("class"));
+                        moduled.setAttribute("category", str(attributes.getValue("category")));
+                        moduled.setAttribute(CLASS, str(attributes.getValue(CLASS)));
                         
                         parameterList.clear();
                         connectorList.clear();
@@ -351,9 +391,9 @@ public class ModuleDescriptionsParser
                     {
                         if (signalTypes == null)
                             throw new SAXException("internal error signal(def=null)");
-                    
-                        int key = Integer.parseInt(attributes.getValue("key"));
-                        String type = attributes.getValue("type");
+                        
+                        int key = Integer.parseInt(attributes.getValue(KEY));
+                        String type = attributes.getValue(TYPE);
                         
                         if (type == null)
                             throw new SAXException("signal type name not specified");
@@ -366,17 +406,17 @@ public class ModuleDescriptionsParser
                         if (color == null)
                             color = noSignal ? Color.WHITE : Color.BLACK;
 
-                        PSignal signal = signalTypes.create(key, type, color, noSignal);
+                        PSignal signal = signalTypes.create(key, str(type), color, noSignal);
                         //System.out.println(signal);
                     }
                     break;
                 case deftype:
                     {
-                        String name = attributes.getValue("name");
+                        String name = attributes.getValue(NAME);
                         if (name == null)
                             throw new SAXException("type name not specified");
                     
-                        typedef = new PSimpleTypes(name);
+                        typedef = new PSimpleTypes(str(name));
                         moduleDescriptions.addType(typedef);
                     }
                     break;
@@ -385,8 +425,8 @@ public class ModuleDescriptionsParser
                         if (typedef == null)
                             throw new SAXException("internal error type(def=null)");
                     
-                        int key = Integer.parseInt(attributes.getValue("key"));
-                        String value = attributes.getValue("value");
+                        int key = Integer.parseInt(attributes.getValue(KEY));
+                        String value = attributes.getValue(VALUE);
                         
                         if (value == null)
                             throw new SAXException("value[key="+key+"] not specified in type "+typedef);
@@ -403,7 +443,7 @@ public class ModuleDescriptionsParser
                         if (src==null)
                             throw new SAXException("image has no such attribute: 'src'");
                         
-                        String type = attributes.getValue("type");
+                        String type = attributes.getValue(TYPE);
                         if (type==null)
                             throw new SAXException("image has no such attribute: 'type'");
                         
@@ -416,16 +456,16 @@ public class ModuleDescriptionsParser
                             throw new SAXException("invalid image height: "+height);
                         
                         ImageSource is = new ImageSource(src, width, height);
-                        moduled.setAttribute(type, is);
+                        moduled.setAttribute(str(type), is);
                     }
                     break ;
                 case light:
                     {
-                        String name = attributes.getValue("name");
+                        String name = attributes.getValue(NAME);
                         if (name == null)
                             throw new SAXParseException("light name must not be null", locator); 
 
-                        String componentId = attributes.getValue("component-id");
+                        String componentId = attributes.getValue(COMPONENTID);
                         if (componentId == null)
                             throw new SAXException("component-id missing in light: "+name);
 
@@ -433,13 +473,13 @@ public class ModuleDescriptionsParser
                         String maxValue = attributes.getValue("maxValue");
                         String defaultValue = attributes.getValue("defaultValue");
 
-                        lightd = new PBasicLightDescriptor(moduled, name, componentId);
+                        lightd = new PBasicLightDescriptor(moduled, name, str(componentId));
                         
-                        String index = attributes.getValue("index");
+                        String index = attributes.getValue(INDEX);
                         if (index != null)
-                            lightd.setAttribute("index", Integer.parseInt(index));
+                            lightd.setAttribute(INDEX, Integer.parseInt(index));
                         
-                        lightd.setType(getLEDType(attributes.getValue("type")));
+                        lightd.setType(getLEDType(attributes.getValue(TYPE)));
                         
                         if (minValue != null)
                             lightd.setMinValue(Integer.parseInt(minValue));
@@ -448,7 +488,7 @@ public class ModuleDescriptionsParser
                         if (defaultValue != null)
                             lightd.setDefaultValue(Integer.parseInt(defaultValue));
                         
-                        lightd.setAttribute("class", attributes.getValue("class"));
+                        lightd.setAttribute(CLASS, attributes.getValue(CLASS));
                         lightList.add(lightd);
                     }
                     break;
@@ -457,11 +497,11 @@ public class ModuleDescriptionsParser
                         if (moduled == null)
                             throw new SAXException("no module associated with parameter");
 
-                        String name = attributes.getValue("name");
+                        String name = attributes.getValue(NAME);
                         if (name == null)
                             throw new SAXParseException("parameter name must not be null", locator); 
 
-                        String componentId = attributes.getValue("component-id");
+                        String componentId = attributes.getValue(COMPONENTID);
                         if (componentId == null)
                             throw new SAXException("component-id missing in parameter: "+name);
                         
@@ -469,15 +509,15 @@ public class ModuleDescriptionsParser
                         String maxValue = attributes.getValue("maxValue");
                         String defaultValue = attributes.getValue("defaultValue");
                         
-                        parameterd = new PBasicParameterDescriptor(moduled, name, componentId);
+                        parameterd = new PBasicParameterDescriptor(moduled, str(name), componentId);
 
                         String extension = attributes.getValue("extension");
                         if (extension != null)
                             extensions.put(parameterd, extension);
                         
-                        String index = attributes.getValue("index");
+                        String index = attributes.getValue(INDEX);
                         if (index != null)
-                            parameterd.setAttribute("index", Integer.parseInt(index));
+                            parameterd.setAttribute(INDEX, Integer.parseInt(index));
                         
                         if (minValue != null)
                             parameterd.setMinValue(Integer.parseInt(minValue));
@@ -486,7 +526,7 @@ public class ModuleDescriptionsParser
                         if (defaultValue != null)
                             parameterd.setDefaultValue(Integer.parseInt(defaultValue));
                         
-                        parameterd.setAttribute("class", attributes.getValue("class"));
+                        parameterd.setAttribute(CLASS, str(attributes.getValue(CLASS)));
                    
                         String fmt;
                         
@@ -517,9 +557,9 @@ public class ModuleDescriptionsParser
                     break;
                 case attribute:
                 {
-                    String name = attributes.getValue("name");
-                    String type = attributes.getValue("type");
-                    String svalue = attributes.getValue("value");
+                    String name = attributes.getValue(NAME);
+                    String type = attributes.getValue(TYPE);
+                    String svalue = attributes.getValue(VALUE);
                     
                     int typeid = -1;
                     if (type != null)
@@ -553,7 +593,7 @@ public class ModuleDescriptionsParser
                             value = Hex.htmlHexColor(svalue);
                             break;
                         default:
-                            value = svalue;
+                            value = str(svalue);
                             break;
                     }
                     
@@ -576,15 +616,15 @@ public class ModuleDescriptionsParser
                         if (moduled == null)
                             throw new SAXException("no module associated with connector");
 
-                        String name = attributes.getValue("name");
+                        String name = attributes.getValue(NAME);
                         if (name == null)
                             throw new SAXException("connector name must not be null"); 
 
-                        String componentId = attributes.getValue("component-id");
+                        String componentId = attributes.getValue(COMPONENTID);
                         if (componentId == null)
                             throw new SAXException("component-id missing in connector: "+name);
                         
-                        String type = attributes.getValue("type");
+                        String type = attributes.getValue(TYPE);
                         if (type == null)
                             throw new SAXException("connector type (input|output) not specified");
 
@@ -598,7 +638,7 @@ public class ModuleDescriptionsParser
                             throw new SAXException("connector must be one of (input|output): "+type);
 
                         PSignal sig = null;
-                        String signalName = attributes.getValue("signal");
+                        String signalName = attributes.getValue(SIGNAL);
                         if (signalName != null)
                         {
                             if (signalTypes == null)
@@ -608,11 +648,11 @@ public class ModuleDescriptionsParser
                                 throw new SAXException("signal '"+signalName+"' not defined in "+signalTypes);
                         }
                         
-                        connectord = new PBasicConnectorDescriptor(moduled, name, componentId, sig, isOutput);
+                        connectord = new PBasicConnectorDescriptor(moduled, str(name), str(componentId), sig, isOutput);
 
-                        String index = attributes.getValue("index");
+                        String index = attributes.getValue(INDEX);
                         if (index != null)
-                            connectord.setAttribute("index", Integer.parseInt(index));
+                            connectord.setAttribute(INDEX, Integer.parseInt(index));
                         
                         connectorList.add(connectord);
                     }
@@ -630,6 +670,29 @@ public class ModuleDescriptionsParser
             
             switch (eid)
             {
+                case doc:
+                {
+                    if (docText.length()>0)
+                    {
+                        PDescriptor descriptor;
+
+                        if (parameterd != null)
+                            descriptor = parameterd;
+                        else if (connectord != null)
+                            descriptor = connectord;
+                        else if (lightd != null)
+                            descriptor = lightd;
+                        else if (moduled != null)
+                            descriptor = moduled;
+                        else
+                            descriptor = null;
+                         
+                        if (descriptor != null)
+                            descriptor.setAttribute("doc", docText.toString());
+                    }
+                    docElement = false;
+                    break;
+                }
                 case parameter:
                 {
                     parameterd = null;
@@ -696,7 +759,8 @@ public class ModuleDescriptionsParser
         public void characters (char ch[], int start, int length)
         throws SAXException
         {
-            // no op
+            if (docElement)
+                docText.append(ch, start, length);
         }
         
         public void ignorableWhitespace (char ch[], int start, int length)
