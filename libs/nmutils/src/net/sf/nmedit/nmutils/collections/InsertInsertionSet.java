@@ -241,7 +241,7 @@ public class InsertInsertionSet<E> extends AbstractSet<E> implements Set<E>, Ser
 
     public Object[] toArray()
     {
-        return Arrays.copyOf(elements, size);
+        return copyOf(elements, size);
     }
 
     @SuppressWarnings("unchecked")
@@ -249,7 +249,7 @@ public class InsertInsertionSet<E> extends AbstractSet<E> implements Set<E>, Ser
     {
         if (a.length < size)
             // Make a new array of a's runtime type, but my contents:
-            return (T[]) Arrays.copyOf(elements, size, a.getClass());
+            return (T[]) copyOf(elements, size, a.getClass());
         System.arraycopy(elements, 0, a, 0, size);
         if (a.length > size)
             a[size] = null;
