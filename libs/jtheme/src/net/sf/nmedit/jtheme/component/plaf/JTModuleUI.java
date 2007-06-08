@@ -269,7 +269,7 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         titleLabel = new TitleLabel(jtcontext, module);
         titleLabel.setUI(JTLabelUI.createUI(titleLabel));
         titleLabel.setLocation(left, i.top);
-        titleLabel.setSize(100, 13);
+        titleLabel.setSize(60, 13);
         module.add(titleLabel, 0);
         
         if (module.getModule()!=null)
