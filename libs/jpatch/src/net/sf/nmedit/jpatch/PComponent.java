@@ -165,5 +165,8 @@ public interface PComponent
      * @see PDescriptor#attributeKeys()
      */
     Iterator<String> attributeKeys();
+
+
+    String getName();
     
 }
