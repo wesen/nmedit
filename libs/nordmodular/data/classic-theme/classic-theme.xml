@@ -392,7 +392,7 @@ label{fill:#000;}
 		<label x="152" y="11" >AM</label>
 		<label x="175" y="39" >RM</label>
 		<label x="194" y="14" >Mod</label>
-		<image x="211" y="17" width="25" height="22" xlink:href="./images/single/decoration-3.png" />
+		<image x="211" y="17" width="25" height="22" xlink:href="./images/single/decoration-3.svg" />
 		<resetButton x="154" y="10" width="9" height="6" >
 			<parameter component-id="p2"  alt="ringmod depth" />
 		</resetButton>
@@ -1220,6 +1220,7 @@ label{fill:#000;}
 	</module>
 	<module component-id="m53" width="255" height="30">
 		<name>Sample&amp;Hold</name>
+		<image x="167" y="3" width="68" height="16" xlink:href="./images/single/decoration-1.svg" />
 		<connector x="161" y="8" size="13" class="cAUDIO" >
 			<connector component-id="c1"  alt="trig" />
 		</connector>
@@ -1229,7 +1230,6 @@ label{fill:#000;}
 		<connector x="235" y="8" size="13" class="cAUDIO" >
 			<connector component-id="c3"  alt="out" />
 		</connector>
-		<image x="167" y="3" width="68" height="16" xlink:href="./images/single/decoration-1.png" />
 	</module>
 	<module component-id="m65" width="255" height="30">
 		<name>MIDIGlobal</name>
@@ -2821,6 +2821,7 @@ label{fill:#000;}
 	</module>
 	<module component-id="m98" width="255" height="60">
 		<name>KeyQuant</name>
+		<image x="210" y="42" width="25" height="11" xlink:href="./images/single/decoration-6.png" />
 		<connector x="197" y="41" size="13" class="cCONTROL" >
 			<connector component-id="c1"  alt="in" />
 		</connector>
@@ -2898,11 +2899,15 @@ label{fill:#000;}
 		<textDisplay x="191" y="4" width="30" height="16" >
 			<parameter component-id="p1"  alt="range" />
 		</textDisplay>
-		<image x="210" y="42" width="25" height="11" xlink:href="./images/single/decoration-6.png" />
 		<label x="160" y="17" >Range</label>
 	</module>
 	<module component-id="m12" width="255" height="45">
 		<name>OscSlvD</name>
+		<image x="238" y="2" width="11" height="9" xlink:href="./images/slice/wf_tri.png" />
+		<label x="2" y="25" >Mst</label>
+		<label x="72" y="15" >Detune</label>
+		<label x="107" y="15" >Fine</label>
+		<label x="149" y="12" >FMA</label>
 		<connector x="4" y="26" size="13" class="cAUDIO" >
 			<connector component-id="c1"  alt="mst" />
 		</connector>
@@ -2929,17 +2934,13 @@ label{fill:#000;}
 		<textDisplay x="22" y="14" width="50" height="16" >
 			<parameter component-id="p2"  alt="detune coarse" />
 		</textDisplay>
-		<label x="2" y="25" >Mst</label>
-		<label x="72" y="15" >Detune</label>
-		<label x="107" y="15" >Fine</label>
-		<label x="149" y="12" >FMA</label>
-		<image x="238" y="2" width="11" height="9" xlink:href="./images/slice/wf_tri.png" />
 		<resetButton x="110" y="14" width="9" height="6" >
 			<parameter component-id="p3"  alt="detune fine" />
 		</resetButton>
 	</module>
 	<module component-id="m44" width="255" height="30">
 		<name>GainControl</name>
+		<image x="140" y="4" width="91" height="18" xlink:href="./images/single/decoration-2.svg" />
 		<connector x="127" y="8" size="13" class="cAUDIO" >
 			<connector component-id="c1"  alt="control" />
 		</connector>
@@ -2955,7 +2956,6 @@ label{fill:#000;}
 			<btn index="1"><image xlink:href="./images/slice/lev_shift_up.png" /></btn>
 		</button>
 		<label x="85" y="19" >Control</label>
-		<image x="140" y="4" width="-1" height="-1" xlink:href="./images/single/decoration-2.png" />
 	</module>
 	<module component-id="m17" width="255" height="75">
 		<name>EventSeq</name>
@@ -4234,55 +4234,136 @@ label{fill:#000;}
 		
 		<light component-id="ledStep1-16" type="led-array" x="28" y="30" width="190" height="7" /> 
 		
-		<slider x="24" y="39" width="11" height="50" orientation="vertical" >
+		<slider x="24" y="37" width="11" height="47" orientation="vertical" >
 			<parameter component-id="p1"  alt="xy" />
 		</slider>
-		<slider x="36" y="39" width="11" height="50" orientation="vertical" >
+		<slider x="36" y="37" width="11" height="47" orientation="vertical" >
 			<parameter component-id="p2"  alt="xy" />
 		</slider>
-		<slider x="48" y="39" width="11" height="50" orientation="vertical" >
+		<slider x="48" y="37" width="11" height="47" orientation="vertical" >
 			<parameter component-id="p3"  alt="xy" />
 		</slider>
-		<slider x="60" y="39" width="11" height="50" orientation="vertical" >
+		<slider x="60" y="37" width="11" height="47" orientation="vertical" >
 			<parameter component-id="p4"  alt="xy" />
 		</slider>
-		<slider x="72" y="39" width="11" height="50" orientation="vertical" >
+		<slider x="72" y="37" width="11" height="47" orientation="vertical" >
 			<parameter component-id="p5"  alt="xy" />
 		</slider>
-		<slider x="84" y="39" width="11" height="50" orientation="vertical" >
+		<slider x="84" y="37" width="11" height="47" orientation="vertical" >
 			<parameter component-id="p6"  alt="xy" />
 		</slider>
-		<slider x="96" y="39" width="11" height="50" orientation="vertical" >
+		<slider x="96" y="37" width="11" height="47" orientation="vertical" >
 			<parameter component-id="p7"  alt="xy" />
 		</slider>
-		<slider x="108" y="39" width="11" height="50" orientation="vertical" >
+		<slider x="108" y="37" width="11" height="47" orientation="vertical" >
 			<parameter component-id="p8"  alt="xy" />
 		</slider>
-		<slider x="120" y="39" width="11" height="50" orientation="vertical" >
+		<slider x="120" y="37" width="11" height="47" orientation="vertical" >
 			<parameter component-id="p9"  alt="xy" />
 		</slider>
-		<slider x="132" y="39" width="11" height="50" orientation="vertical" >
+		<slider x="132" y="37" width="11" height="47" orientation="vertical" >
 			<parameter component-id="p10"  alt="xy" />
 		</slider>
-		<slider x="144" y="39" width="11" height="50" orientation="vertical" >
+		<slider x="144" y="37" width="11" height="47" orientation="vertical" >
 			<parameter component-id="p11"  alt="xy" />
 		</slider>
-		<slider x="156" y="39" width="11" height="50" orientation="vertical" >
+		<slider x="156" y="37" width="11" height="47" orientation="vertical" >
 			<parameter component-id="p12"  alt="xy" />
 		</slider>
-		<slider x="168" y="39" width="11" height="50" orientation="vertical" >
+		<slider x="168" y="37" width="11" height="47" orientation="vertical" >
 			<parameter component-id="p13"  alt="xy" />
 		</slider>
-		<slider x="180" y="39" width="11" height="50" orientation="vertical" >
+		<slider x="180" y="37" width="11" height="47" orientation="vertical" >
 			<parameter component-id="p14"  alt="xy" />
 		</slider>
-		<slider x="192" y="39" width="11" height="50" orientation="vertical" >
+		<slider x="192" y="37" width="11" height="47" orientation="vertical" >
 			<parameter component-id="p15"  alt="xy" />
 		</slider>
-		<slider x="204" y="39" width="11" height="50" orientation="vertical" >
+		<slider x="204" y="37" width="11" height="47" orientation="vertical" >
 			<parameter component-id="p16"  alt="xy" />
 		</slider>
 		
+		
+		<button x="24" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
+			<parameter component-id="p1"  alt="ctrl 1" />
+			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		</button>
+		<button x="35" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
+			<parameter component-id="p2"  alt="ctrl 2" />
+			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		</button>
+		<button x="47" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
+			<parameter component-id="p3"  alt="ctrl 3" />
+			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		</button>
+		<button x="59" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
+			<parameter component-id="p4"  alt="ctrl 4" />
+			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		</button>
+		<button x="71" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
+			<parameter component-id="p5"  alt="ctrl 5" />
+			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		</button>
+		<button x="83" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
+			<parameter component-id="p6"  alt="ctrl 6" />
+			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		</button>
+		<button x="95" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
+			<parameter component-id="p7"  alt="ctrl 7" />
+			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		</button>
+		<button x="107" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
+			<parameter component-id="p8"  alt="ctrl 8" />
+			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		</button>
+		<button x="119" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
+			<parameter component-id="p9"  alt="ctrl 9" />
+			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		</button>
+		<button x="131" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
+			<parameter component-id="p10"  alt="ctrl 10" />
+			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		</button>
+		<button x="143" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
+			<parameter component-id="p11"  alt="ctrl 11" />
+			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		</button>
+		<button x="155" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
+			<parameter component-id="p12"  alt="ctrl 12" />
+			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		</button>
+		<button x="167" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
+			<parameter component-id="p13"  alt="ctrl 13" />
+			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		</button>
+		<button x="179" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
+			<parameter component-id="p14"  alt="ctrl 14" />
+			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		</button>
+		<button x="191" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
+			<parameter component-id="p15"  alt="ctrl 15" />
+			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		</button>
+		<button x="203" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
+			<parameter component-id="p16"  alt="ctrl 16" />
+			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		</button>
 		
 	</module>
 	<module component-id="m39" width="255" height="30">
@@ -4293,7 +4374,7 @@ label{fill:#000;}
 		<connector x="233" y="8" size="13" class="cCONTROL" >
 			<connector component-id="c2"  alt="out" />
 		</connector>
-		<knob x="150" y="3" size="21" >
+		<knob x="147" y="3" size="21" >
 			<parameter component-id="p1"  alt="time" />
 		</knob>
 		<textDisplay x="93" y="7" width="50" height="16" >
