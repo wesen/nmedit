@@ -27,13 +27,13 @@
 		<library type="resources" path="codecs/" id="codecs">
 			<export prefix="*.pdl"/>
 		</library> 
+		<!--
 		<library id="jtheme-classes" path="../../../../libs/nordmodular/bin/" type="code">
 			<export prefix="*"/>
-		</library>
-		<!--
+		</library> -->
 		<library id="nordmodular" path="lib/nordmodular.jar" type="code" >
 		<export prefix="*"/>
-		</library> -->
+		</library>
 		<library id="jnmprotocol" path="lib/jnmprotocol.jar" type="code" >
 		<export prefix="*"/>
 		</library>
