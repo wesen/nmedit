@@ -92,5 +92,10 @@ public class PatchDocument implements Document
         return null;
     }
 
+    public File getFile()
+    {
+        return jtpatch != null ? jtpatch.getPatch().getFile() : null;
+    }
+
 }
 

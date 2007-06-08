@@ -60,6 +60,8 @@ public class NmFileService implements FileService
 
             NMPatch patch = NmUtils.parsePatch(data.getModuleDescriptions(), in);
             in.close();
+            
+            patch.setProperty("file", file);
 
             patch.setName(NmUtils.getPatchNameFromfileName(file));
             PatchDocument pd = createPatchDoc(patch);
@@ -140,6 +142,39 @@ public class NmFileService implements FileService
     public Icon getIcon()
     {
         return PatchDocument.pchIcon;
+    }
+    
+    private NMPatch getPatch(Object source)
+    {
+        if (source instanceof NMPatch) return (NMPatch) source;
+        if (source instanceof JTNMPatch) return ((JTNMPatch) source).getPatch();
+        if (source instanceof PatchDocument) return ((PatchDocument)source).getComponent().getPatch();
+        return null;
+    }
+
+    public boolean isDirectSaveOperationSupported(Object source)
+    {
+        NMPatch patch = getPatch(source);
+        return patch != null && (patch.getFile()!=null);
+    }
+    
+    public boolean isSaveOperationSupported(Object source)
+    {
+        return getPatch(source) != null;
+    }
+
+    public void save(Object source, File as)
+    {
+        NMPatch patch = getPatch(source);
+        
+        if (patch == null)
+            throw new IllegalArgumentException("save operation not supported for source: "+source);
+
+        File file = as != null ? as : patch.getFile();
+        if (file == null)
+            throw new RuntimeException("not file specified");
+        if (NmUtils.writePatchSavely(patch, file))
+            patch.setProperty("file", file);
     }
 
 }
