@@ -20,6 +20,7 @@ package net.sf.nmedit.jtheme.clavia.nordmodular;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.RenderingHints;
 
 import javax.swing.event.ChangeEvent;
@@ -64,12 +65,18 @@ public class JTEqMidDisplay extends JTDisplay implements ChangeListener
     protected void paintDynamicLayer(Graphics2D g)
     {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        Insets insets = getInsets();
+        int w = getWidth()-insets.left-insets.right;
+        int h = getHeight()-insets.top-insets.bottom;
         
         Color outline = getShapeOutlineColor();
         g.setColor(outline);
-        int y = getHeight()/2;
-        g.drawLine(0, y, getWidth(), y);
-        
+        int y = insets.top + h/2;
+        g.drawLine(insets.left, y, w-1, y);
+
+        g.setClip(insets.left, insets.top, w, h);
+        g.translate(insets.left, insets.top);
         g.setColor(getForeground());
         equalizerMid.setBounds(0, 0, getWidth(), getHeight());
         g.draw(equalizerMid);

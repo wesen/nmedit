@@ -20,6 +20,7 @@
 package net.sf.nmedit.jtheme.clavia.nordmodular;
 
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
@@ -505,13 +506,17 @@ public class JTEnvelopeDisplay extends JTDisplay implements ChangeListener
 
         AffineTransform at = new AffineTransform();
         
+        Insets insets = getInsets();
+        int w = getWidth()-insets.left-insets.right;
+        int h = getHeight()-insets.top-insets.bottom;
+        
         if (!inverse)
         {
            at.scale(1, -1);
-           at.translate(0, -(getHeight()-1));
+           at.translate(insets.left, -insets.top-(h-1));
         }
         
-        at.scale((getWidth()-1)/segments, getHeight()-1);
+        at.scale((w-1)/segments, h-1);
 
         gp.transform(at);
 

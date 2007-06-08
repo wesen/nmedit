@@ -165,13 +165,13 @@ public class NoteVelScaleDisplay extends JTDisplay implements ChangeListener
     protected void updateRightGain()
     {
         if (rightGainAdapter != null)
-            setLeftGain(rightGainAdapter.getNormalizedValue());
+            setRightGain(rightGainAdapter.getNormalizedValue());
     }
     
     protected void updateBreakPoint()
     {
         if (breakPointAdapter != null)
-            setLeftGain(breakPointAdapter.getNormalizedValue());
+            setBreakPoint(breakPointAdapter.getNormalizedValue());
     }
 
 

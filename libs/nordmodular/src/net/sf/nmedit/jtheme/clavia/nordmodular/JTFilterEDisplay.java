@@ -18,6 +18,7 @@
  */package net.sf.nmedit.jtheme.clavia.nordmodular;
 
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.RenderingHints;
 
 import javax.swing.event.ChangeEvent;
@@ -49,12 +50,19 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
     {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         
+        Insets insets = getInsets();
+        int w = getWidth()-insets.left-insets.right;
+        int h = getHeight()-insets.top-insets.bottom;
+        
         g.setColor(JTNM1Context.GRAPH_DISPLAY_LINE);
-        int y = getHeight()/2;
-        g.drawLine(0, y, getWidth(), y);
+        int y = insets.top+h/2;
+        g.drawLine(insets.left, y, w-1, y);
+        
+        g.setClip(insets.left, insets.top, w, h);
         
         g.setColor(getForeground());
-        filterE.setBounds(0, 0, getWidth(), getHeight());        
+        filterE.setBounds(0, 0, w, h);
+        g.translate(insets.left, insets.top);
     	g.setColor(JTNM1Context.GRAPH_DISPLAY_FILL);
     	g.fill(filterE);
     	g.setColor(JTNM1Context.GRAPH_DISPLAY_FILL_LINE);

@@ -20,6 +20,7 @@ package net.sf.nmedit.jtheme.clavia.nordmodular;
 
 import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.awt.RenderingHints;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -87,6 +88,8 @@ public class VocoderDisplay extends JTDisplay implements ChangeListener
     
     public void paintDynamicLayer(Graphics2D g2)
     {
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
         Insets insets = getInsets();
         
         int aw = getWidth()-(insets.left+insets.right);
@@ -94,7 +97,7 @@ public class VocoderDisplay extends JTDisplay implements ChangeListener
         
         float space = aw/(float)getBands(); // space between two bands
         int loffset = insets.left+(int)(space/2); // offset from left
-        int boffset = ah+insets.top; // bottom
+        int boffset = ah+insets.top-1; // bottom
 
         g2.setColor(getForeground());
         for (int band=getBands()-1;band>=0;band--)
