@@ -112,7 +112,7 @@ public class JTNM1BorderFactory {
 
 	private static class NordEditor311ButtonBorder implements Border {
 
-		public final static Color clTop1Up = Color.decode("#C3C3C1"); //"#A3A3A3"
+		public final static Color clTop1Up = Color.decode("#b3b3b1"); //"#A3A3A3"
 		public final static Color clTop2Up = Color.decode("#DBDBDB");
 		public final static Color clTop3Up = Color.decode("#C1C1C3");
 		public final static Color clBot1Up = Color.decode("#757575");
@@ -151,7 +151,7 @@ public class JTNM1BorderFactory {
 		}
 		
 		public void paintBorder(Component comp, Graphics g, int x, int y, int w, int h) {
-			Graphics2D g2 = (Graphics2D) g.create();
+			Graphics2D g2 = (Graphics2D) g;//.create();
 			
 			int tmpw = w; int tmph=h; int tmpx=x; int tmpy=y;
 			
@@ -163,30 +163,34 @@ public class JTNM1BorderFactory {
 			x++; y++;w-=2;h-=2;
 			g2.drawLine(x,y,x+w,y); // hrz
 			g2.drawLine(x,y,x,y+h); // vrt
+            /*
 			g2.setColor(clTop3);
 			x++; y++;w-=2;h-=2;
 			g2.drawLine(x,y,x+w,y); // hrz
-			g2.drawLine(x,y,x,y+h); // vrt
+			g2.drawLine(x,y,x,y+h); // vrt*/
 			
 			
 			w=tmpw;h=tmph;x=tmpx;y=tmpy;
 			w--;h--;
 			g2.setColor(clBot1);
-			g2.drawLine(x+1,y+h,x+w,y+h); // hrz
+			g2.drawLine(x,y+h,x+w,y+h); // hrz
 			g2.drawLine(x+w,y,x+w,y+h); // vrt
 			g2.setColor(clBot2);
 			x++; y++;w-=2;h-=2;
 			g2.drawLine(x,y+h,x+w,y+h); // hrz
 			g2.drawLine(x+w,y,x+w,y+h); // vrt
+            /*
 			g2.setColor(clBot3);
 			x++; y++;w-=2;h-=2;
 			g2.drawLine(x,y+h,x+w,y+h); // hrz
 			g2.drawLine(x+w,y,x+w,y+h); // vrt
-			g2.dispose();
+            */
+			//g2.dispose();
 		}
 
 		public Insets getBorderInsets(Component component) {
-			return new Insets(3,3,3,3);
+            //return new Insets(3,3,3,3);
+            return new Insets(2,2,2,2);
 		}
 
 		public boolean isBorderOpaque() {
