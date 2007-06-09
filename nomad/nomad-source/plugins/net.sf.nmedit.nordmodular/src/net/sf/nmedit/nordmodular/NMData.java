@@ -23,6 +23,8 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.java.plugin.Plugin;
+import org.java.plugin.PluginManager;
 import org.xml.sax.InputSource;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
@@ -32,6 +34,7 @@ import net.sf.nmedit.jtheme.clavia.nordmodular.JTNM1Context;
 import net.sf.nmedit.jtheme.clavia.nordmodular.NMStorageContext;
 import net.sf.nmedit.jtheme.store.DefaultStorageContext;
 import net.sf.nmedit.jtheme.util.RelativeClassLoader;
+import net.sf.nmedit.nomad.core.jpf.TempDir;
 
 public class NMData
 {
@@ -151,7 +154,18 @@ public class NMData
             URL relative = getClass().getClassLoader().getResource(ctf);
             
             storageContext = new NMStorageContext(getRelativeClassLoader(relative));
-            storageContext.parseStore(new InputSource(source));
+
+            ClassLoader loader = getClass().getClassLoader();
+/*
+            PluginManager manager = PluginManager.lookup(this); 
+            
+            Plugin plugin = manager.getPluginFor(this);
+            Thread.currentThread().setContextClassLoader(loader);
+            
+            TempDir tmp = new TempDir(plugin);
+            storageContext.setCacheFile(tmp.getTempFile("store.cache"));
+            */
+            storageContext.parseStore(new InputSource(source), loader);
         }
         finally
         {

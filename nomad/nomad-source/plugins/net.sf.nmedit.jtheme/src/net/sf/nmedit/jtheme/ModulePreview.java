@@ -31,8 +31,8 @@ import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.impl.PBasicModule;
 import net.sf.nmedit.jtheme.component.JTModule;
-import net.sf.nmedit.jtheme.store.ModuleStore;
 import net.sf.nmedit.jtheme.store.StorageContext;
+import net.sf.nmedit.jtheme.store2.ModuleElement;
 import net.sf.nmedit.nmutils.graphics.GraphicsToolkit;
 
 public class ModulePreview extends ImagePreview
@@ -113,7 +113,7 @@ public class ModulePreview extends ImagePreview
             return;
         }
 
-        ModuleStore store = storageContext
+        ModuleElement store = storageContext
             .getModuleStoreById ( moduleDescriptor.getComponentId() );
 
         PModule pmodule = new PBasicModule(moduleDescriptor);
