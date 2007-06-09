@@ -18,65 +18,75 @@
  */
 package net.sf.nmedit.jtheme.clavia.nordmodular.store;
 
-import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
+import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.clavia.nordmodular.NMNoteSeqEditor;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
-import net.sf.nmedit.jtheme.store.ControlStore;
 import net.sf.nmedit.jtheme.store.StorageContext;
+import net.sf.nmedit.jtheme.store2.AbstractMultiParameterElement;
 
 import org.jdom.Element;
 
-public class NoteSeqEditorStore extends ControlStore
+public class NoteSeqEditorStore extends AbstractMultiParameterElement
 {
 
-    protected String[] idlist;
+    private static final String[] PARAMETERS = {
+        "step1",
+        "step2",
+        "step3",
+        "step4",
+        "step5",
+        "step6",
+        "step7",
+        "step8",
+        "step9",
+        "step10",
+        "step11",
+        "step12",
+        "step13",
+        "step14",
+        "step15",
+        "step16",
+    };
     
-    protected NoteSeqEditorStore(Element element)
+    protected NoteSeqEditorStore()
     {
-        super(element);
+        super(PARAMETERS);
     }
 
-    public static NoteSeqEditorStore create(StorageContext context, Element element)
-    {
-        return new NoteSeqEditorStore(element);
-    }
-    
-    protected void initDescriptors()
-    {
-        idlist = new String[16];
-        for (int i=0;i<16;i++)
-        {
-            idlist[i] = lookupChildElementComponentId("step"+(i+1));
-        }
-    }
-
-
-    protected void link(JTContext context, JTComponent component, PModule module)
-      throws JTException
+    protected void link(JTComponent component, PModule module)
     {
         NMNoteSeqEditor ed = (NMNoteSeqEditor) component;
         
-        for (int i=0;i<idlist.length;i++)
+        for (int i=0;i<componentIdList.length;i++)
         {
-            PParameter p = module.getParameterByComponentId(idlist[i]);
+            PParameter p = module.getParameterByComponentId(componentIdList[i]);
             if (p != null)
-            {
                 ed.setControlAdapter(i, new JTParameterControlAdapter(p));
-            }
         }
     }
-    
+
+    public static NoteSeqEditorStore createElement(StorageContext context, Element element)
+    {
+        NoteSeqEditorStore e = new NoteSeqEditorStore();
+        e.initElement(context, element);
+        e.checkDimensions();
+        e.checkLocation();
+        return e;
+    }
+
     @Override
-    public JTComponent createComponent(JTContext context) throws JTException
+    public JTComponent createComponent(JTContext context, PModuleDescriptor descriptor, PModule module)
+    throws JTException
     {
         JTComponent component = context.createComponentInstance(NMNoteSeqEditor.class);
-        applyName(component);
-        applyLocation(component);
-        applySize(component);
+        setName(component);
+        setBounds(component);
+        link(component, module);
         return component;
     }
 

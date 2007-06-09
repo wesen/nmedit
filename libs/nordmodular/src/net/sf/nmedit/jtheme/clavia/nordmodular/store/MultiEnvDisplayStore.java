@@ -19,86 +19,81 @@
 package net.sf.nmedit.jtheme.clavia.nordmodular.store;
 
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTMultiEnvDisplay;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
-import net.sf.nmedit.jtheme.store.ControlStore;
 import net.sf.nmedit.jtheme.store.StorageContext;
-import net.sf.nmedit.jtheme.store.Store;
+import net.sf.nmedit.jtheme.store2.AbstractMultiParameterElement;
+import net.sf.nmedit.jtheme.store2.ComponentElement;
 
 import org.jdom.Element;
 
-public class MultiEnvDisplayStore extends ControlStore
+public class MultiEnvDisplayStore extends AbstractMultiParameterElement
 {
 
-    protected String levelParameterHelper[];
-    protected String timeParameterHelper[];
+    private static final String[] PARAMETERS = {
+        "sustain",
+        "l1", // level
+        "l2",
+        "l3",
+        "l4",
+        "t1", // time
+        "t2",
+        "t3",
+        "t4",
+        "t5"
+    };
    
-    
-    protected MultiEnvDisplayStore(Element element)
+    protected MultiEnvDisplayStore()
     {
-        super(element);
+        super(PARAMETERS);
     }
 
-    public static Store create(StorageContext context, Element element)
+    public static ComponentElement createElement(StorageContext context, Element element)
     {
-        return new MultiEnvDisplayStore(element);
-    }
-
-    protected void initDescriptors()
-    {
-        parameterId = lookupChildElementComponentId("sustain");
-        levelParameterHelper = new String[4];
-        for (int i = 0 ; i < levelParameterHelper.length  ; i++){
-            levelParameterHelper[i] = lookupChildElementComponentId("l"+(i+1));
-        }
-        
-        timeParameterHelper = new String[5];
-        for (int i = 0 ; i < timeParameterHelper.length  ; i++){
-            timeParameterHelper[i] = lookupChildElementComponentId("t"+(i+1));
-        }       
+        MultiEnvDisplayStore e = new MultiEnvDisplayStore();
+        e.initElement(context, element);
+        e.checkDimensions();
+        e.checkLocation();
+        return e;
     }
 
     @Override
-    public JTComponent createComponent(JTContext context) throws JTException
+    public JTComponent createComponent(JTContext context, PModuleDescriptor descriptor, PModule module)
+    throws JTException
     {
         JTComponent component = context.createComponentInstance(JTMultiEnvDisplay.class);
-        applyName(component);
-        applyLocation(component);
-        applySize(component);
+        setName(component);
+        setBounds(component);
+        link(component, module);
         return component;
     }
 
-    protected void link(JTContext context, JTComponent component, PModule module)
-      throws JTException
+    protected void link(JTComponent component, PModule module)
     {
     	
     	JTMultiEnvDisplay disp = (JTMultiEnvDisplay) component;
-    	
+
+        PParameter sustain = module.getParameterByComponentId(componentIdList[0]);
+        if (sustain != null)
+            disp.setSustainAdapter(new JTParameterControlAdapter(sustain));
         
-        for (int i = 0 ; i < levelParameterHelper.length  ; i++){
-            PParameter p = module.getParameterByComponentId(levelParameterHelper[i]);
+        for (int i = 1 ; i <= 4  ; i++){
+            PParameter p = module.getParameterByComponentId(componentIdList[i]);
             if (p!=null)
-            	disp.setLevelAdapter(i,new JTParameterControlAdapter(p));
+            	disp.setLevelAdapter(i-1,new JTParameterControlAdapter(p));
         } 
        
-        for (int i = 0 ; i < timeParameterHelper.length  ; i++){
-            PParameter p = module.getParameterByComponentId(timeParameterHelper[i]);
+        for (int i = 5 ; i <= 9  ; i++){
+            PParameter p = module.getParameterByComponentId(componentIdList[i]);
             if (p!=null)
-            	disp.setTimeAdapter(i,new JTParameterControlAdapter(p));
+            	disp.setTimeAdapter(i-5,new JTParameterControlAdapter(p));
         } 
         
-        PParameter sustain = module.getParameterByComponentId(parameterId);
-        if (sustain != null)
-            disp.setSustainAdapter(new JTParameterControlAdapter(sustain));        
     }
-    
-    protected void link2(JTContext context, JTComponent component, PModule module, PParameter parameter)
-    {
-        throw new UnsupportedOperationException();
-    }
-    
+   
 }

@@ -16,51 +16,35 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.nmedit.jtheme.clavia.nordmodular.store;
+package net.sf.nmedit.jtheme.store2;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
-import net.sf.nmedit.jpatch.PModule;
-import net.sf.nmedit.jpatch.PModuleDescriptor;
-import net.sf.nmedit.jpatch.PParameter;
-import net.sf.nmedit.jtheme.JTContext;
-import net.sf.nmedit.jtheme.JTException;
-import net.sf.nmedit.jtheme.clavia.nordmodular.VocoderDisplay;
-import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
 import net.sf.nmedit.jtheme.store.StorageContext;
-import net.sf.nmedit.jtheme.store2.AbstractElement;
-import net.sf.nmedit.jtheme.store2.ComponentElement;
 
+import org.jdom.Attribute;
 import org.jdom.Element;
 
-public class VocoderDisplayStore extends AbstractElement implements Serializable
+public abstract class AbstractMultiParameterElement extends AbstractElement
+    implements Serializable
 {
 
-    public static final String ATT_BAND = "band";
+    protected transient String[] parameterElementNames;
+    protected transient String[] componentIdList;
     
-    private transient String[] componentIdList = new String[16];
-
-    public static ComponentElement createElement(StorageContext context, Element element)
+    public AbstractMultiParameterElement(String[] parameterElementNames)
     {
-        VocoderDisplayStore e = new VocoderDisplayStore();
-        e.initElement(context, element);
-        e.initComponentIdList(element);
-        e.checkDimensions();
-        e.checkLocation();
-        return e;
+        this.parameterElementNames = parameterElementNames;
+        componentIdList = new String[parameterElementNames.length];
     }
-
+    
     @Override
-    public VocoderDisplay createComponent(JTContext context, PModuleDescriptor descriptor, PModule module)
-        throws JTException
+    protected void initElement(StorageContext context, Element e)
     {
-        VocoderDisplay component = (VocoderDisplay) context.createComponentInstance(VocoderDisplay.class);
-        setName(component);
-        setBounds(component);
-        link(component, module);
-        return component; 
+        super.initElement(context, e);
+        initComponentIdList(e);
     }
 
     protected void initComponentIdList(Element e)
@@ -69,20 +53,19 @@ public class VocoderDisplayStore extends AbstractElement implements Serializable
         for (int i=children.size()-1;i>=0;i--)
         {
             Element p = (Element) children.get(i);
-            if ("parameter".equals(p.getName()))
+            for (int index=parameterElementNames.length-1;index>=0;index--)
             {
-                int band = parseInt(p.getAttributeValue(ATT_BAND), -1);
-                componentIdList[band] = p.getAttributeValue(ATT_COMPONENT_ID);
+                String n = parameterElementNames[index];
+                if (n.equals(p.getName()))
+                {
+                    Attribute a = p.getAttribute(ATT_COMPONENT_ID);
+                    if (a != null)
+                    {
+                        componentIdList[index] = a.getValue();   
+                    }
+                    break;
+                }
             }
-        }
-    }
-
-    protected void link(VocoderDisplay disp, PModule module)
-    {
-        for (int i=componentIdList.length-1;i>=0;i--)
-        {
-            PParameter p = module.getParameterByComponentId(componentIdList[i]);
-            if (p != null) disp.setBandAdapter(i, new JTParameterControlAdapter(p));
         }
     }
 
@@ -91,9 +74,28 @@ public class VocoderDisplayStore extends AbstractElement implements Serializable
     {
         out.defaultWriteObject();
         
-        out.writeInt(componentIdList.length);
+        out.writeInt(parameterElementNames.length);
         
         int size = 0;
+        for (int i=0;i<parameterElementNames.length;i++)
+        {
+            String n = parameterElementNames[i];
+            if (n!=null)
+                size++;
+        }
+        
+        out.writeInt(size);
+        for (int i=0;i<parameterElementNames.length;i++)
+        {
+            String n = parameterElementNames[i];
+            if (n != null)
+            {
+                out.writeInt(i);
+                out.writeObject(n);
+            }
+        }
+        
+        size = 0;
         for (int i=0;i<componentIdList.length;i++)
         {
             String n = componentIdList[i];
@@ -120,8 +122,17 @@ public class VocoderDisplayStore extends AbstractElement implements Serializable
 
         int size = in.readInt();
         
+        parameterElementNames = new String[size];
         componentIdList = new String[size];
 
+        size = in.readInt();
+        for (int i=0;i<size;i++)
+        {
+            int index = in.readInt();
+            String n = (String) in.readObject();
+            parameterElementNames[index] = n;
+        }
+        
         size = in.readInt();
         for (int i=0;i<size;i++)
         {

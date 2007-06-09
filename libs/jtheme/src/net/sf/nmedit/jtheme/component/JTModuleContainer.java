@@ -39,7 +39,7 @@ import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.plaf.JTModuleContainerUI;
-import net.sf.nmedit.jtheme.store.ModuleStore;
+import net.sf.nmedit.jtheme.store2.ModuleElement;
 
 public class JTModuleContainer extends JTBaseComponent 
 {
@@ -117,7 +117,7 @@ public class JTModuleContainer extends JTBaseComponent
 
         private void createUIFor(PModule module)
         {
-            ModuleStore ms = getContext().getStorageContext().getModuleStoreById(module.getComponentId());
+            ModuleElement ms = getContext().getStorageContext().getModuleStoreById(module.getComponentId());
             
             try
             {

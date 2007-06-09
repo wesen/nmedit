@@ -18,6 +18,7 @@
  */
 package net.sf.nmedit.jtheme.store;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
@@ -27,6 +28,16 @@ import java.util.Map;
 
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.image.ImageResource;
+import net.sf.nmedit.jtheme.store2.ButtonElement;
+import net.sf.nmedit.jtheme.store2.ComponentElement;
+import net.sf.nmedit.jtheme.store2.ConnectorElement;
+import net.sf.nmedit.jtheme.store2.ImageElement;
+import net.sf.nmedit.jtheme.store2.KnobElement;
+import net.sf.nmedit.jtheme.store2.LabelElement;
+import net.sf.nmedit.jtheme.store2.LightElement;
+import net.sf.nmedit.jtheme.store2.ModuleElement;
+import net.sf.nmedit.jtheme.store2.SliderElement;
+import net.sf.nmedit.jtheme.store2.TextDisplayElement;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,7 +53,7 @@ import com.steadystate.css.parser.CSSOMParser;
 public class DefaultStorageContext extends StorageContext
 {
     
-    private Map<Object, ModuleStore> moduleStoreMap = new HashMap<Object, ModuleStore>();
+    private Map<Object, ModuleElement> moduleStoreMap = new HashMap<Object, ModuleElement>();
     private Document document;
     private ClassLoader classLoader;
     private CSSStyleSheet styleSheet;
@@ -94,40 +105,61 @@ public class DefaultStorageContext extends StorageContext
     
     protected void installDefaults()
     {
-        installStore("module", ModuleStore.class);
-        installStore("knob", KnobStore.class);
-        installStore("label", LabelStore.class);
-        installStore("image", ImageStore.class);
-        installStore("connector", ConnectorStore.class);
-        installStore("button", ButtonStore.class);
-        installStore("slider", SliderStore.class);
-        installStore("textDisplay", TextDisplayStore.class);
-        installStore("light", LightStore.class);
+        installStore("module", ModuleElement.class);
+        installStore("knob", KnobElement.class);
+        installStore("label", LabelElement.class);
+        installStore("image", ImageElement.class);
+        installStore("connector", ConnectorElement.class);
+        installStore("button", ButtonElement.class);
+        installStore("slider", SliderElement.class);
+        installStore("textDisplay", TextDisplayElement.class);
+        installStore("light", LightElement.class);
     }
 
     @Override
-    public ModuleStore getModuleStoreById(Object id)
+    public ModuleElement getModuleStoreById(Object id)
     {
         return moduleStoreMap.get(id);
     }
     
+    private File cacheFile = null;
 
+
+    public void setCacheFile(File cacheFile)
+    {
+        this.cacheFile = cacheFile;
+    }
     
+    public File getCacheFile()
+    {
+        return cacheFile;
+    }
+
+
     public void parseStore(InputSource source)
     throws JTException
     {
+        parseStore(source, null);
+    }
+
+    public void parseStore(InputSource source, ClassLoader loader)
+    throws JTException
+    {
+        
+        if (loader == null)
+            loader = getClass().getClassLoader();
         
         SAXBuilder saxBuilder = new SAXBuilder();
         try
         {
             document = saxBuilder.build(source);
+            /*
+            Timer t = new Timer();
+            t.reset();*/
             
-            //Timer t = new Timer();
-            //t.reset();
-            
-            buildStore();
-            
-            //System.out.println("buildStore "+t);
+            buildStore(loader);
+            /*
+            System.out.println("buildStore "+t);*/
         }
         catch (JDOMException e)
         {
@@ -152,13 +184,14 @@ public class DefaultStorageContext extends StorageContext
         return document;
     }
     
-    protected void buildStore() throws JTException
+    protected void buildStore(ClassLoader loader) throws JTException
     {
         Element root = document.getRootElement();
-        
-        buildCss(root);
+
         buildDefs(root);
-        buildModules(root);
+        buildCss(root);
+
+        buildModules(root, loader);
     }
 
     private void buildDefs(Element root)
@@ -180,7 +213,7 @@ public class DefaultStorageContext extends StorageContext
         if (id.length() == 0) return;
         
         ImageResource is =
-        ImageStore.getImageResource(this, element);
+        ImageElement.getImageResource(this, element);
 
         imageResourceMap.put(id, is);
     }
@@ -192,20 +225,33 @@ public class DefaultStorageContext extends StorageContext
 
     private void buildCss(Element root) throws JTException
     {
-        String cssText = "";
-        Element styleElement = root.getChild("style");
-        if (styleElement != null)
+        Element styleElement = null;
+        
+        List<?> children = root.getChildren();
+        for (int i=0;i<children.size();i++)
         {
-             cssText = styleElement.getText();   
+            Element e = (Element) children.get(i);
+            String name = e.getName();
+            
+            if (name.equals("style"))
+            {
+                styleElement = e;
+                break;
+            }
+            else if (!name.equals("defs"))
+            {
+                break;
+            }
         }
-        
+
+        String cssText = styleElement != null
+            ? styleElement.getText() : "";
         buildCssFromString(cssText);
-        
     }
     
     private void buildCssFromString(String cssText) throws JTException
     {
-        CSSOMParser cssParser = CSSUtils.makeParser();
+        CSSOMParser cssParser = CSSUtils.getCSSOMParser();
         try
         {
             // TODO set uri ???
@@ -237,19 +283,108 @@ public class DefaultStorageContext extends StorageContext
         }        
     }
 
-    private void buildModules(Element root) throws JTException
-    {
+    private void buildModules(Element root, ClassLoader loader) throws JTException
+    {/*
+        if (cacheFile != null && cacheFile.exists())
+        {
+            buildModuleStoresFromCache(loader);
+            return;
+        }
+  */      
         List<Element> moduleElementList = (List<Element>) root.getChildren("module");
-        
+
         for (Element moduleElement : moduleElementList)
         {
             buildModuleStore(moduleElement);
         }
+/*
+        if (cacheFile != null)
+        {
+            writeModuleStoresCache();
+            return;
+        }*/
+    }
+/*
+    private void writeModuleStoresCache()
+    {
+        try
+        {
+            __writeModuleStoresCache();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
+    private void __writeModuleStoresCache() throws Exception
+    {
+        ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(cacheFile)));
+        try
+        {
+            out.writeInt(moduleStoreMap.size());
+            for (ModuleElement e: moduleStoreMap.values())
+            {
+                out.writeObject(e);    
+            }
+        }
+        finally
+        {
+            out.flush();
+            out.close();
+        }
+    }
+
+    private void buildModuleStoresFromCache(ClassLoader loader)
+    {
+        try
+        {
+            __buildModuleStoresFromCache(loader);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void __buildModuleStoresFromCache(ClassLoader loader) throws Exception
+    {
+        ObjectInputStream in = new ObjectInputStreamC(loader,
+                new BufferedInputStream(new FileInputStream(cacheFile)));
+        try
+        {
+            int size = in.readInt();
+            moduleStoreMap = new HashMap<Object, ModuleElement>(size);
+            for (int i=0;i<size;i++)
+            {
+                ModuleElement e = (ModuleElement) in.readObject();
+                moduleStoreMap.put(e.getId(), e);
+            }
+        }
+        finally
+        {
+            in.close();
+        }
+    }
+
+    static class ObjectInputStreamC extends ObjectInputStream 
+    {
+      private ClassLoader loader;
+
+    public ObjectInputStreamC(ClassLoader loader, InputStream in) throws IOException
+        {
+            super(in);
+            this.loader = loader;
+        }
+
+    protected Class<?> resolveClass(ObjectStreamClass desc) throws ClassNotFoundException {
+        return loader.loadClass(desc.getName());
+      }
+    };
+    */
     private void buildModuleStore(Element moduleElement) throws JTException
     {
-        ModuleStore moduleStore = (ModuleStore) buildComponentStore(moduleElement);
+        ModuleElement moduleStore = (ModuleElement) buildComponentStore(moduleElement);
         
         for (Element child : (List<Element>) moduleElement.getChildren())
         {
@@ -259,7 +394,7 @@ public class DefaultStorageContext extends StorageContext
             
             if (!dontLoad)
             {
-                Store childStore = tryBuildComponentStore(child);
+                ComponentElement childStore = tryBuildComponentStore(child);
                 
                 if (childStore != null)
                 {
@@ -271,7 +406,7 @@ public class DefaultStorageContext extends StorageContext
         moduleStoreMap.put(moduleStore.getId(), moduleStore);
     }
     
-    private Store tryBuildComponentStore(Element element)
+    private ComponentElement tryBuildComponentStore(Element element)
     {
         try
         {
@@ -288,7 +423,7 @@ public class DefaultStorageContext extends StorageContext
         }
     }
     
-    private Store buildComponentStore(Element element)
+    private ComponentElement buildComponentStore(Element element)
       throws JTException
     {
         // TODO not all elements can be handled ????

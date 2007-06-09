@@ -58,7 +58,7 @@ import net.sf.nmedit.jtheme.component.JTConnector;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.JTPatch;
-import net.sf.nmedit.jtheme.store.ModuleStore;
+import net.sf.nmedit.jtheme.store2.ModuleElement;
 
 public class JTNMPatch extends JTPatch
 {
@@ -602,7 +602,7 @@ public class JTNMPatch extends JTPatch
         
         for (PModule module : va)
         {
-            ModuleStore mstore = getContext().getStorageContext()
+            ModuleElement mstore = getContext().getStorageContext()
             .getModuleStoreById(module.getComponentId());
             
             if (mstore == null)
@@ -619,14 +619,14 @@ public class JTNMPatch extends JTPatch
             height = Math.max(height, jtmodule.getY()+jtmodule.getHeight());
             
             cont.add(jtmodule);
-            
+            /*
             if (image == null)
             {
                 image = jtmodule.renderStaticLayerImage();
                 mstore.setStaticLayer(image);
             }
             
-            jtmodule.setStaticLayerBackingStore(image);
+            jtmodule.setStaticLayerBackingStore(image);*/
         }
         
         cont.setPreferredSize(new Dimension(width, height));

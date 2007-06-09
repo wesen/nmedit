@@ -18,72 +18,55 @@
  */
 package net.sf.nmedit.jtheme.clavia.nordmodular.store;
 
-import org.jdom.Element;
-
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.clavia.nordmodular.LFODisplay;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
-import net.sf.nmedit.jtheme.store.ControlStore;
 import net.sf.nmedit.jtheme.store.StorageContext;
-import net.sf.nmedit.jtheme.store.Store;
+import net.sf.nmedit.jtheme.store2.AbstractMultiParameterElement;
 
-public class LFODisplayStore extends ControlStore
+import org.jdom.Element;
+
+public class LFODisplayStore extends AbstractMultiParameterElement
 {
-    
-    private String phaseDescriptorId;
-    private String shapeDescriptorId;
+
+    private static final String[] PARAMETERS = {"phase", "shape"};
     private int waveform = -1;
 
-    protected LFODisplayStore(Element element)
+    protected LFODisplayStore()
     {
-        super(element);
+        super(PARAMETERS);
     }
 
-    protected void initDescriptors()
+    public static LFODisplayStore createElement(StorageContext context, Element element)
     {
-        phaseDescriptorId = lookupChildElementComponentId("phase");
-        shapeDescriptorId = lookupChildElementComponentId("shape");
-        
-        Element wv = getElement().getChild("waveform");
-        String wvvalue = wv != null ? wv.getAttributeValue("value") : null;
-        if (wvvalue != null)
-        {
-            try
-            {
-                waveform = Integer.parseInt(wvvalue);
-            }
-            catch (NumberFormatException e)
-            {
-                e.printStackTrace();
-            }
-
-        }
-    }
-    
-    public static Store create(StorageContext context, Element element)
-    {
-        return new LFODisplayStore(element);
+        LFODisplayStore e = new LFODisplayStore();
+        e.initElement(context, element);
+        e.checkDimensions();
+        e.checkLocation();
+        Element wf = element.getChild("waveform");
+        e.waveform = wf != null ? parseInt(wf.getAttributeValue("value"), -1) : -1;        
+        return e;
     }
 
     @Override
-    public JTComponent createComponent(JTContext context) throws JTException
+    public JTComponent createComponent(JTContext context, PModuleDescriptor descriptor, PModule module)
+    throws JTException
     {
         JTComponent component = context.createComponentInstance(LFODisplay.class);
-        applyName(component);
-        applyLocation(component);
-        applySize(component);
+        setName(component);
+        setBounds(component);
         return component;
     }
 
-    protected void link(JTContext context, JTComponent component, PModule module)
-      throws JTException
+    protected void link(JTComponent component, PModule module) throws JTException
     {
-        PParameter phase = module.getParameterByComponentId(phaseDescriptorId);
-        PParameter shape = module.getParameterByComponentId(shapeDescriptorId);
+        PParameter phase = module.getParameterByComponentId(componentIdList[0]);
+        PParameter shape = module.getParameterByComponentId(componentIdList[1]);
         
         LFODisplay disp = (LFODisplay) component;
 
@@ -91,15 +74,10 @@ public class LFODisplayStore extends ControlStore
             disp.setWaveForm(waveform);
 
         if (phase == null)
-            throw new JTException("parameter phase not found [id="+phaseDescriptorId+"] in "+module);
+            throw new JTException("parameter phase not found [id="+componentIdList[0]+"] in "+module);
         
         disp.setPhaseAdapter(new JTParameterControlAdapter(phase));
         if (shape != null) disp.setWaveAdapter(new JTParameterControlAdapter(shape));
     }
-    
-    protected void link2(JTContext context, JTComponent component, PModule module, PParameter parameter)
-    {
-        throw new UnsupportedOperationException();
-    }
-    
+
 }

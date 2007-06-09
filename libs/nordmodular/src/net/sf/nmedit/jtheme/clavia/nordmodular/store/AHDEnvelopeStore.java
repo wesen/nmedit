@@ -18,36 +18,35 @@
  */
 package net.sf.nmedit.jtheme.clavia.nordmodular.store;
 
-import org.jdom.Element;
-
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
-import net.sf.nmedit.jtheme.clavia.nordmodular.AHDDisplay;
-import net.sf.nmedit.jtheme.component.JTComponent;
+import net.sf.nmedit.jtheme.clavia.nordmodular.JTEnvelopeDisplay;
 import net.sf.nmedit.jtheme.store.StorageContext;
-import net.sf.nmedit.jtheme.store.Store;
+import net.sf.nmedit.jtheme.store2.ComponentElement;
+
+import org.jdom.Element;
 
 public class AHDEnvelopeStore extends AbstractEnvelopeStore
 {
 
-    protected AHDEnvelopeStore(Element element)
+    public static ComponentElement createElement(StorageContext context, Element element)
     {
-        super(element);
-    }
-
-    public static Store create(StorageContext context, Element element)
-    {
-        return new AHDEnvelopeStore(element);
+        AHDEnvelopeStore e = new AHDEnvelopeStore();
+        e.initElement(context, element);
+        e.checkDimensions();
+        e.checkLocation();
+        return e;
     }
 
     @Override
-    public JTComponent createComponent(JTContext context) throws JTException
+    public JTEnvelopeDisplay createComponent(JTContext context, PModuleDescriptor descriptor, PModule module)
+        throws JTException
     {
-        JTComponent component = context.createComponentInstance(AHDDisplay.class);
-        applyName(component);
-        applyLocation(component);
-        applySize(component);
-        return component;
+        JTEnvelopeDisplay component = super.createComponent(context, descriptor, module);
+        component.configureAHD();
+        return component; 
     }
 
 }

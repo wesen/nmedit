@@ -19,57 +19,53 @@
 package net.sf.nmedit.jtheme.clavia.nordmodular.store;
 
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTPhaserDisplay;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
-import net.sf.nmedit.jtheme.store.ControlStore;
 import net.sf.nmedit.jtheme.store.StorageContext;
-import net.sf.nmedit.jtheme.store.Store;
+import net.sf.nmedit.jtheme.store2.AbstractMultiParameterElement;
 
 import org.jdom.Element;
 
-public class PhaserDisplayStore extends ControlStore
+public class PhaserDisplayStore extends AbstractMultiParameterElement
 {
 
-    protected String peaksParameterId;
-    protected String spreadParameterId;
+    private static final String[] PARAMETERS = {"feedback", "peaks", "spread"};
     
-    protected PhaserDisplayStore(Element element)
+    protected PhaserDisplayStore()
     {
-        super(element);
+        super(PARAMETERS);
     }
 
-    public static Store create(StorageContext context, Element element)
+    public static PhaserDisplayStore createElement(StorageContext context, Element element)
     {
-        return new PhaserDisplayStore(element);
+        PhaserDisplayStore e = new PhaserDisplayStore();
+        e.initElement(context, element);
+        e.checkDimensions();
+        e.checkLocation();
+        return e;
     }
 
-    protected void initDescriptors()
-    {
-        parameterId = lookupChildElementComponentId("feedback");
-        peaksParameterId = lookupChildElementComponentId("peaks");
-        spreadParameterId = lookupChildElementComponentId("spread");
-    }
-//
     @Override
-    public JTComponent createComponent(JTContext context) throws JTException
+    public JTComponent createComponent(JTContext context, PModuleDescriptor descriptor, PModule module)
+    throws JTException
     {
         JTComponent component = context.createComponentInstance(JTPhaserDisplay.class);
-        applyName(component);
-        applyLocation(component);
-        applySize(component);
+        setName(component);
+        setBounds(component);
+        link(component, module);
         return component;
     }
 
-    protected void link(JTContext context, JTComponent component, PModule module)
-      throws JTException
+    protected void link(JTComponent component, PModule module)
     {
-        PParameter feedback = module.getParameterByComponentId(parameterId);
-        PParameter peaks = module.getParameterByComponentId(peaksParameterId);
-        PParameter spread = module.getParameterByComponentId(spreadParameterId);
+        PParameter feedback = module.getParameterByComponentId(componentIdList[0]);
+        PParameter peaks = module.getParameterByComponentId(componentIdList[1]);
+        PParameter spread = module.getParameterByComponentId(componentIdList[2]);
         
         JTPhaserDisplay disp = (JTPhaserDisplay) component;
         
@@ -79,11 +75,6 @@ public class PhaserDisplayStore extends ControlStore
             disp.setPeakCountAdapter(new JTParameterControlAdapter(peaks));
         if (spread != null)
             disp.setSpreadAdapter(new JTParameterControlAdapter(spread));
-    }
-    
-    protected void link2(JTContext context, JTComponent component, PModule module, PParameter parameter)
-    {
-        throw new UnsupportedOperationException();
     }
     
 }

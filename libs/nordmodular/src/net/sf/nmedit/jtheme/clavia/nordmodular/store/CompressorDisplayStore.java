@@ -20,62 +20,55 @@
 package net.sf.nmedit.jtheme.clavia.nordmodular.store;
 
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTCompressorDisplay;
-import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
-import net.sf.nmedit.jtheme.store.ControlStore;
 import net.sf.nmedit.jtheme.store.StorageContext;
-import net.sf.nmedit.jtheme.store.Store;
+import net.sf.nmedit.jtheme.store2.AbstractMultiParameterElement;
+import net.sf.nmedit.jtheme.store2.ComponentElement;
 
 import org.jdom.Element;
 
-public class CompressorDisplayStore extends ControlStore
+public class CompressorDisplayStore extends AbstractMultiParameterElement
 {
-	//inherited field parameterId is used for the threshold parameter    
-    protected String ratioParameterId;
-    protected String refLevelParameterId;
-    protected String limiterParameterId;
-    
-    protected CompressorDisplayStore(Element element)
+	private static final String[] PARAMETERS = { "threshold", "ratio", 
+        "ref-level", "limiter"   
+    };
+
+    protected CompressorDisplayStore()
     {
-        super(element);        
+        super(PARAMETERS);        
     }
 
-    public static Store create(StorageContext context, Element element)
+    public static ComponentElement createElement(StorageContext context, Element element)
     {
-        return new CompressorDisplayStore(element);
-    }
-
-    protected void initDescriptors()
-    {
-        parameterId = lookupChildElementComponentId("threshold");
-        ratioParameterId = lookupChildElementComponentId("ratio");
-        refLevelParameterId = lookupChildElementComponentId("ref-level");
-        limiterParameterId = lookupChildElementComponentId("limiter");
+        CompressorDisplayStore e = new CompressorDisplayStore();
+        e.initElement(context, element);
+        e.checkDimensions();
+        e.checkLocation();
+        return e;
     }
 
     @Override
-    public JTComponent createComponent(JTContext context) throws JTException
+    public JTCompressorDisplay createComponent(JTContext context, PModuleDescriptor descriptor, PModule module)
+        throws JTException
     {
-        JTComponent component = context.createComponentInstance(JTCompressorDisplay.class);
-        applyName(component);
-        applyLocation(component);
-        applySize(component);
-        return component;
+        JTCompressorDisplay component = (JTCompressorDisplay) context.createComponentInstance(JTCompressorDisplay.class);
+        setName(component);
+        setBounds(component);
+        link(component, module);
+        return component; 
     }
 
-    protected void link(JTContext context, JTComponent component, PModule module)
-      throws JTException
+    protected void link(JTCompressorDisplay disp, PModule module)
     {
-        PParameter threshold = module.getParameterByComponentId(parameterId);
-        PParameter ratio = module.getParameterByComponentId(ratioParameterId);
-        PParameter limiter = module.getParameterByComponentId(limiterParameterId);
-        PParameter refLevel = module.getParameterByComponentId(refLevelParameterId);
-        
-        JTCompressorDisplay disp = (JTCompressorDisplay) component;
+        PParameter threshold = module.getParameterByComponentId(componentIdList[0]);
+        PParameter ratio = module.getParameterByComponentId(componentIdList[1]);
+        PParameter refLevel = module.getParameterByComponentId(componentIdList[2]);
+        PParameter limiter = module.getParameterByComponentId(componentIdList[3]);
                 
         if (ratio != null)
             disp.setRatioAdapter(new JTParameterControlAdapter(ratio));
@@ -86,11 +79,6 @@ public class CompressorDisplayStore extends ControlStore
         if (refLevel!= null)
             disp.setRefLevelAdapter(new JTParameterControlAdapter(refLevel));
     }
-    
-    protected void link2(JTContext context, JTComponent component, PModule module, PParameter parameter)
-    {
-        throw new UnsupportedOperationException();
-    }
-    
+
 }
 

@@ -36,7 +36,7 @@ import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.JTPatch;
 import net.sf.nmedit.jtheme.store.DefaultStorageContext;
-import net.sf.nmedit.jtheme.store.ModuleStore;
+import net.sf.nmedit.jtheme.store2.ModuleElement;
 import net.waldorf.miniworks4pole.jpatch.MWPatch;
 
 public class JTMWPatch extends JTPatch
@@ -69,7 +69,7 @@ public class JTMWPatch extends JTPatch
     {
         // patch
         JTModuleContainer container = getContext().createModuleContainer();
-        ModuleStore store = storageContext.getModuleStoreById("main");
+        ModuleElement store = storageContext.getModuleStoreById("main");
 
         JTModule jtmodule = store.createModule(getContext(), patch.getMiniworksModule());
         jtmodule.setLocation(10, 10);

@@ -152,31 +152,54 @@ public class CSSUtils
         return null;
     }
 
-    private static CSSStyleDeclaration parseStyleDeclaration(Element e, CSSStyleSheet parent)
+    
+    public static CSSStyleDeclaration getStyleDeclaration(String cssClassName, String styleAttribute, StorageContext context)
     {
-        Attribute styleAtt = e.getAttribute("style");
-        if (styleAtt != null)
-        {
-            String style = "{"+styleAtt.getValue()+"}";
-            
-            CSSOMParser cssParser = CSSUtils.makeParser();
-            cssParser.setParentStyleSheet((CSSStyleSheetImpl) parent);
+        CSSStyleSheet css = context.getStyleSheet();
+        CSSStyleRule rule = context.getStyleRule(cssClassName);
         
-            try
-            {
-                return cssParser.parseStyleDeclaration(new InputSource(new StringReader(style)));
-            }
-            catch (IOException ioe)
-            {
-            }
+        CSSStyleDeclarationImpl decl = styleAttribute == null ? null
+                : (CSSStyleDeclarationImpl) parseStyleDeclaration(styleAttribute, css);
+        
+        if (decl != null)
+        {
+            if (rule != null)
+                decl.setParentRule(rule);
             
+            return decl;
         }
+        
+        if (rule != null)
+            return rule.getStyle();
         
         return null;
     }
 
+    private static CSSStyleDeclaration parseStyleDeclaration(Element e, CSSStyleSheet parent)
+    {
+        Attribute styleAtt = e.getAttribute("style");
+        if (styleAtt != null)
+            return parseStyleDeclaration(e, parent);
+        return null;
+    }
+
+    public static CSSStyleDeclaration parseStyleDeclaration(String style, CSSStyleSheet parent)
+    {
+        CSSOMParser cssParser = getCSSOMParser();
+        cssParser.setParentStyleSheet((CSSStyleSheetImpl) parent);
+        try
+        {
+            return cssParser.parseStyleDeclaration(new InputSource(new StringReader("{"+style+"}")));
+        }
+        catch (IOException ioe)
+        {
+            return null;
+        }
+    }
+
     
     private static transient SACParserCSS2 cssParser;
+    private static transient CSSOMParser cssomparser;
     
     private static SACParserCSS2 getCSSParser()
     {
@@ -184,10 +207,19 @@ public class CSSUtils
             cssParser = new SACParserCSS2();
         return cssParser;
     }
-    
-    public static CSSOMParser makeParser()
+
+    private static CSSOMParser __makeParser()
     {
         return new CSSOMParser(getCSSParser());
+    }
+
+    public static CSSOMParser getCSSOMParser()
+    {
+        if (cssomparser == null)
+            cssomparser = __makeParser();
+        else
+            cssomparser.setParentStyleSheet(null);
+        return cssomparser;
     }
 
     public static CSSStyleDeclaration getStyleDeclaration(CSSStyleSheet styleSheet, String name)

@@ -16,9 +16,7 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.nmedit.jtheme.clavia.nordmodular.store;
-
-import org.jdom.Element;
+package net.sf.nmedit.jtheme.store2;
 
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
@@ -27,31 +25,37 @@ import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTControl;
 import net.sf.nmedit.jtheme.store.StorageContext;
-import net.sf.nmedit.jtheme.store2.ComponentElement;
-import net.sf.nmedit.jtheme.store2.ControlElement;
 
-public class ResetButtonStore extends ControlElement
+import org.jdom.Element;
+
+public class KnobElement extends ControlElement
 {
 
-    public static ComponentElement createElement(StorageContext context, Element element)
+    public static AbstractElement createElement(StorageContext context, Element element)
     {
-        ResetButtonStore e = new ResetButtonStore();
+        KnobElement e = new KnobElement();
         e.initElement(context, element);
         e.checkDimensions();
+        
+        if (e.x<0||e.y<0)
+            System.out.println(((Element)element.getParent()).getAttributeValue("component-id"));
+        
         e.checkLocation();
         return e;
     }
 
     @Override
-    public JTComponent createComponent(JTContext context, PModuleDescriptor descriptor, PModule module)
-        throws JTException
+    public JTComponent createComponent(JTContext context,
+            PModuleDescriptor descriptor, PModule module) throws JTException
     {
-        JTControl component = (JTControl) context.createComponent(JTContext.TYPE_RESET_BUTTON);
-        setName(component);
-        setBounds(component);
-        setParameter(component, descriptor, module);
-        return component; 
+        JTControl knob = (JTControl) context.createComponent(JTContext.TYPE_KNOB);
+        /*setLocation(knob);
+        if (width>=0 && height>=0)
+            setSize(knob);*/
+        setBounds(knob);
+        setName(knob);
+        setParameter(knob, descriptor, module);
+        return knob;
     }
 
 }
-

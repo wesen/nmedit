@@ -16,23 +16,35 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+package net.sf.nmedit.jtheme.store2;
 
-/*
- * Created on Jul 26, 2006
- */
-package net.sf.nmedit.jtheme.clavia.nordmodular;
-
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jtheme.JTContext;
+import net.sf.nmedit.jtheme.JTException;
+import net.sf.nmedit.jtheme.component.JTComponent;
 
-public class ADSRModDisplay extends ADDisplay
+import org.jdom.Element;
+
+public abstract class ComponentElement
 {
-    public ADSRModDisplay(JTContext context)
+
+    protected ComponentElement()
     {
-        super(context);
+        super();
     }
     
-    protected void configure()
+    public static ComponentElement createElement(JTContext context, Element element)
     {
-        configureADSR();
+        throw new UnsupportedOperationException("createElement(JTContext, Element) not implemented");
     }
+    
+    public abstract JTComponent createComponent(JTContext context, PModuleDescriptor descriptor, PModule module)
+        throws JTException;
+
+    public boolean isReducible()
+    {
+        return false;
+    }
+    
 }

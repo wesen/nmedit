@@ -16,28 +16,31 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.nmedit.jtheme.clavia.nordmodular.store;
+package net.sf.nmedit.jtheme.store2;
+
+import javax.swing.SwingConstants;
 
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
-import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
-import net.sf.nmedit.jtheme.clavia.nordmodular.WaveWrapDisp;
 import net.sf.nmedit.jtheme.component.JTComponent;
-import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
+import net.sf.nmedit.jtheme.component.JTSlider;
 import net.sf.nmedit.jtheme.store.StorageContext;
-import net.sf.nmedit.jtheme.store2.ComponentElement;
-import net.sf.nmedit.jtheme.store2.ControlElement;
 
+import org.jdom.Attribute;
 import org.jdom.Element;
 
-public class WaveWrapDisplayStore extends ControlElement
+public class SliderElement extends ControlElement
 {
 
-    public static ComponentElement createElement(StorageContext context, Element element)
+    protected static final String ATT_ORIENTATION = "orientation";
+
+    protected int orientation = SwingConstants.VERTICAL;
+
+    public static AbstractElement createElement(StorageContext context, Element element)
     {
-        WaveWrapDisplayStore e = new WaveWrapDisplayStore();
+        SliderElement e = new SliderElement();
         e.initElement(context, element);
         e.checkDimensions();
         e.checkLocation();
@@ -45,23 +48,29 @@ public class WaveWrapDisplayStore extends ControlElement
     }
 
     @Override
-    public JTComponent createComponent(JTContext context, PModuleDescriptor descriptor, PModule module)
-    throws JTException
+    protected void initAttributes(StorageContext context, Attribute att)
     {
-        JTComponent component = context.createComponentInstance(WaveWrapDisp.class);
-        setName(component);
-        setBounds(component);
-        
-        PParameter p = module.getParameterByComponentId(componentId);
-        if (p != null)
-            link(component, p);
-        
-        return component;
+        if (ATT_ORIENTATION.equals(att.getName()))
+        {
+            orientation = ("horizontal".equals(att.getValue()))
+                ? SwingConstants.HORIZONTAL : SwingConstants.VERTICAL;
+        }
+        else
+        {
+            super.initAttributes(context, att);
+        }
     }
-    
-    protected void link(JTComponent component, PParameter parameter)
+
+    @Override
+    public JTComponent createComponent(JTContext context,
+            PModuleDescriptor descriptor, PModule module) throws JTException
     {
-        ((WaveWrapDisp)component).setWaveWrapAdapter(new JTParameterControlAdapter(parameter));
+        JTSlider slider = (JTSlider) context.createComponent(JTContext.TYPE_SLIDER);
+        setBounds(slider);
+        setName(slider);
+        setParameter(slider, descriptor, module);
+        slider.setOrientation(orientation);
+        return slider;
     }
-    
+
 }

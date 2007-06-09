@@ -18,55 +18,53 @@
  */
 package net.sf.nmedit.jtheme.clavia.nordmodular.store;
 
-import org.jdom.Element;
-
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.clavia.nordmodular.ClipDisp;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
-import net.sf.nmedit.jtheme.store.ControlStore;
 import net.sf.nmedit.jtheme.store.StorageContext;
-import net.sf.nmedit.jtheme.store.Store;
+import net.sf.nmedit.jtheme.store2.AbstractMultiParameterElement;
 
-public class ClipDispStore extends ControlStore
+import org.jdom.Element;
+
+public class ClipDispStore extends AbstractMultiParameterElement
 {
 
-    protected String symParameterId;
-    
-    protected ClipDispStore(Element element)
+    private static final String[] PARAMETERS = {"clip", "symmetry"};
+
+    protected ClipDispStore()
     {
-        super(element);
+        super(PARAMETERS);
     }
 
-    public static Store create(StorageContext context, Element element)
+    public static ClipDispStore createElement(StorageContext context, Element element)
     {
-        return new ClipDispStore(element);
-    }
-
-    protected void initDescriptors()
-    {
-        parameterId = lookupChildElementComponentId("clip");
-        symParameterId = lookupChildElementComponentId("symmetry");
+        ClipDispStore e = new ClipDispStore();
+        e.initElement(context, element);
+        e.checkDimensions();
+        e.checkLocation();
+        return e;
     }
 
     @Override
-    public JTComponent createComponent(JTContext context) throws JTException
+    public JTComponent createComponent(JTContext context, PModuleDescriptor descriptor, PModule module)
+    throws JTException
     {
         JTComponent component = context.createComponentInstance(ClipDisp.class);
-        applyName(component);
-        applyLocation(component);
-        applySize(component);
+        setName(component);
+        setBounds(component);
+        link(component, module);
         return component;
     }
 
-    protected void link(JTContext context, JTComponent component, PModule module)
-      throws JTException
+    protected void link(JTComponent component, PModule module)
     {
-        PParameter clip = module.getParameterByComponentId(parameterId);
-        PParameter sym = module.getParameterByComponentId(symParameterId);
+        PParameter clip = module.getParameterByComponentId(componentIdList[0]);
+        PParameter sym = module.getParameterByComponentId(componentIdList[1]);
         
         ClipDisp disp = (ClipDisp) component;
         
@@ -74,11 +72,6 @@ public class ClipDispStore extends ControlStore
             disp.setCliParameterAdapter(new JTParameterControlAdapter(clip));
         if (sym != null)
             disp.setSymmetricParameterAdapter(new JTParameterControlAdapter(sym));
-    }
-    
-    protected void link2(JTContext context, JTComponent component, PModule module, PParameter parameter)
-    {
-        throw new UnsupportedOperationException();
     }
     
 }

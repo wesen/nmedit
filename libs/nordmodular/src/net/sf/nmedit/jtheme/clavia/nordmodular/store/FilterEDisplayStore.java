@@ -19,60 +19,54 @@
 package net.sf.nmedit.jtheme.clavia.nordmodular.store;
 
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTFilterEDisplay;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
-import net.sf.nmedit.jtheme.store.ControlStore;
 import net.sf.nmedit.jtheme.store.StorageContext;
-import net.sf.nmedit.jtheme.store.Store;
+import net.sf.nmedit.jtheme.store2.AbstractMultiParameterElement;
 
 import org.jdom.Element;
 
-public class FilterEDisplayStore extends ControlStore
+public class FilterEDisplayStore extends AbstractMultiParameterElement
 {
 
-    protected String resonanceParameterId;
-    protected String typeParameterId;
-    protected String slopeParameterId;
-    
-    protected FilterEDisplayStore(Element element)
+    private static final String[] PARAMETERS = {"cutoff", "resonance", "type", "slope"};
+
+    protected FilterEDisplayStore()
     {
-        super(element);
+        super(PARAMETERS);
     }
 
-    public static Store create(StorageContext context, Element element)
+    public static FilterEDisplayStore createElement(StorageContext context, Element element)
     {
-        return new FilterEDisplayStore(element);
-    }
-
-    protected void initDescriptors()
-    {
-        parameterId = lookupChildElementComponentId("cutoff");
-        resonanceParameterId = lookupChildElementComponentId("resonance");
-        typeParameterId = lookupChildElementComponentId("type");
-        slopeParameterId = lookupChildElementComponentId("slope");
+        FilterEDisplayStore e = new FilterEDisplayStore();
+        e.initElement(context, element);
+        e.checkDimensions();
+        e.checkLocation();
+        return e;
     }
 
     @Override
-    public JTComponent createComponent(JTContext context) throws JTException
+    public JTComponent createComponent(JTContext context, PModuleDescriptor descriptor, PModule module)
+    throws JTException
     {
         JTComponent component = context.createComponentInstance(JTFilterEDisplay.class);
-        applyName(component);
-        applyLocation(component);
-        applySize(component);
+        setName(component);
+        setBounds(component);
+        link(component, module);
         return component;
     }
 
-    protected void link(JTContext context, JTComponent component, PModule module)
-      throws JTException
+    protected void link(JTComponent component, PModule module)
     {
-        PParameter cutoff = module.getParameterByComponentId(parameterId);
-        PParameter resonance = module.getParameterByComponentId(resonanceParameterId);
-        PParameter type = module.getParameterByComponentId(typeParameterId);
-        PParameter slope = module.getParameterByComponentId(slopeParameterId);
+        PParameter cutoff = module.getParameterByComponentId(componentIdList[0]);
+        PParameter resonance = module.getParameterByComponentId(componentIdList[1]);
+        PParameter type = module.getParameterByComponentId(componentIdList[2]);
+        PParameter slope = module.getParameterByComponentId(componentIdList[3]);
         
         JTFilterEDisplay disp = (JTFilterEDisplay) component;
         
@@ -86,10 +80,5 @@ public class FilterEDisplayStore extends ControlStore
             disp.setSlopeAdapter(new JTParameterControlAdapter(slope));
                    
     }
-    
-    protected void link2(JTContext context, JTComponent component, PModule module, PParameter parameter)
-    {
-        throw new UnsupportedOperationException();
-    }
-    
+
 }

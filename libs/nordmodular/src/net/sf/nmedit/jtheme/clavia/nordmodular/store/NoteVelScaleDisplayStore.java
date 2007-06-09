@@ -18,58 +18,55 @@
  */
 package net.sf.nmedit.jtheme.clavia.nordmodular.store;
 
-
-import org.jdom.Element;
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.clavia.nordmodular.NoteVelScaleDisplay;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
-import net.sf.nmedit.jtheme.store.ControlStore;
 import net.sf.nmedit.jtheme.store.StorageContext;
-import net.sf.nmedit.jtheme.store.Store;
+import net.sf.nmedit.jtheme.store2.AbstractMultiParameterElement;
+import net.sf.nmedit.jtheme.store2.ComponentElement;
 
-public class NoteVelScaleDisplayStore extends ControlStore
+import org.jdom.Element;
+
+public class NoteVelScaleDisplayStore extends AbstractMultiParameterElement
 {
 
-    protected String rightGainParameterId;
-    protected String breakPointParameterId;
-    
-    protected NoteVelScaleDisplayStore(Element element)
+    private static final String[] PARAMETERS = {"left-gain", "right-gain", "break-point"};
+
+    protected NoteVelScaleDisplayStore()
     {
-        super(element);
+        super(PARAMETERS);
     }
 
-    public static Store create(StorageContext context, Element element)
+    public static ComponentElement createElement(StorageContext context, Element element)
     {
-        return new NoteVelScaleDisplayStore(element);
-    }
-
-    protected void initDescriptors()
-    {
-        parameterId = lookupChildElementComponentId("left-gain");
-        rightGainParameterId = lookupChildElementComponentId("right-gain");
-        breakPointParameterId = lookupChildElementComponentId("break-point");
+        NoteVelScaleDisplayStore e = new NoteVelScaleDisplayStore();
+        e.initElement(context, element);
+        e.checkDimensions();
+        e.checkLocation();
+        return e;
     }
 
     @Override
-    public JTComponent createComponent(JTContext context) throws JTException
+    public JTComponent createComponent(JTContext context, PModuleDescriptor descriptor, PModule module)
+    throws JTException
     {
         JTComponent component = context.createComponentInstance(NoteVelScaleDisplay.class);
-        applyName(component);
-        applyLocation(component);
-        applySize(component);
+        setName(component);
+        setBounds(component);
+        link(component, module);
         return component;
     }
 
-    protected void link(JTContext context, JTComponent component, PModule module)
-      throws JTException
+    protected void link(JTComponent component, PModule module)
     {
-        PParameter lgain = module.getParameterByComponentId(parameterId);
-        PParameter rgain = module.getParameterByComponentId(rightGainParameterId);
-        PParameter breakPoint = module.getParameterByComponentId(breakPointParameterId);
+        PParameter lgain = module.getParameterByComponentId(componentIdList[0]);
+        PParameter rgain = module.getParameterByComponentId(componentIdList[1]);
+        PParameter breakPoint = module.getParameterByComponentId(componentIdList[2]);
         
         NoteVelScaleDisplay disp = (NoteVelScaleDisplay) component;
         
@@ -79,11 +76,6 @@ public class NoteVelScaleDisplayStore extends ControlStore
             disp.setRightGainAdapter(new JTParameterControlAdapter(rgain));
         if (breakPoint != null)
             disp.setBreakPointAdapter(new JTParameterControlAdapter(breakPoint));
-    }
-    
-    protected void link2(JTContext context, JTComponent component, PModule module, PParameter parameter)
-    {
-        throw new UnsupportedOperationException();
     }
     
 }

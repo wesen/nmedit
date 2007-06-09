@@ -19,58 +19,47 @@
 package net.sf.nmedit.jtheme.clavia.nordmodular.store;
 
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTEnvelopeDisplay;
-import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
-import net.sf.nmedit.jtheme.store.ControlStore;
+import net.sf.nmedit.jtheme.store2.AbstractMultiParameterElement;
 
-import org.jdom.Element;
-
-public abstract class AbstractEnvelopeStore extends ControlStore
+public abstract class AbstractEnvelopeStore extends AbstractMultiParameterElement
 {
 
-    private String decayParameterId;
-    private String holdParameterId;
-    private String sustainParameterId;
-    private String releaseParameterId;
-    private String attackTypeParameterId;
-    private String inverseParameterId;
-    
-    protected AbstractEnvelopeStore(Element element)
-    {
-        super(element);
-    }
+    private static final String[] PARAMETERS = {"attack", "decay", "hold",
+        "sustain", "release", "attack-type", "inverse"};
 
-    protected void initDescriptors()
+    protected AbstractEnvelopeStore()
     {
-        parameterId = lookupChildElementComponentId("attack");
-        decayParameterId = lookupChildElementComponentId("decay");
-        holdParameterId = lookupChildElementComponentId("hold");
-        sustainParameterId = lookupChildElementComponentId("sustain");
-        releaseParameterId = lookupChildElementComponentId("release");
-        attackTypeParameterId = lookupChildElementComponentId("attack-type");
-        inverseParameterId = lookupChildElementComponentId("inverse");
+        super(PARAMETERS);
     }
 
     @Override
-    public abstract JTComponent createComponent(JTContext context) throws JTException;
+    public JTEnvelopeDisplay createComponent(JTContext context, PModuleDescriptor descriptor, PModule module)
+        throws JTException
+    {
+        JTEnvelopeDisplay component = (JTEnvelopeDisplay) context.createComponentInstance(JTEnvelopeDisplay.class);
+        setName(component);
+        setBounds(component);
+        link(component, module);
+        return component; 
+    }
 
-    protected void link(JTContext context, JTComponent component, PModule module)
+    protected void link(JTEnvelopeDisplay disp, PModule module)
       throws JTException
     {
-        PParameter attack = module.getParameterByComponentId(parameterId);
-        PParameter decay = module.getParameterByComponentId(decayParameterId);
-        PParameter hold = module.getParameterByComponentId(holdParameterId);
-        PParameter sustain = module.getParameterByComponentId(sustainParameterId);
-        PParameter release = module.getParameterByComponentId(releaseParameterId);
-        PParameter attackType = module.getParameterByComponentId(attackTypeParameterId) ;
-        PParameter Inverse = module.getParameterByComponentId(inverseParameterId);
+        PParameter attack = module.getParameterByComponentId(componentIdList[0]);
+        PParameter decay = module.getParameterByComponentId(componentIdList[1]);
+        PParameter hold = module.getParameterByComponentId(componentIdList[2]);
+        PParameter sustain = module.getParameterByComponentId(componentIdList[3]);
+        PParameter release = module.getParameterByComponentId(componentIdList[4]);
+        PParameter attackType = module.getParameterByComponentId(componentIdList[5]);
+        PParameter Inverse = module.getParameterByComponentId(componentIdList[6]);
         
-        JTEnvelopeDisplay disp = (JTEnvelopeDisplay) component;
-
         if (attack != null) disp.setAttackAdapter(new JTParameterControlAdapter(attack));
         if (decay != null) disp.setDecayAdapter(new JTParameterControlAdapter(decay));
         if (hold != null) disp.setHoldAdapter(new JTParameterControlAdapter(hold));
@@ -78,11 +67,6 @@ public abstract class AbstractEnvelopeStore extends ControlStore
         if (release != null) disp.setReleaseAdapter(new JTParameterControlAdapter(release));
         if (attackType != null) disp.setAttackTypeAdapter(new JTParameterControlAdapter(attackType));
         if (Inverse != null) disp.setInverseAdapter(new JTParameterControlAdapter(Inverse));
-    }
-    
-    protected void link2(JTContext context, JTComponent component, PModule module, PParameter parameter)
-    {
-        throw new UnsupportedOperationException();
     }
     
 }

@@ -122,10 +122,7 @@ public class JTNM1Context extends JTCustomContext
         installComponentClass(JTKnob.class);
         installComponentClass(JTSlider.class);
         installComponentClass(WaveWrapDisp.class);
-        installComponentClass(ADDisplay.class);
-        installComponentClass(ADSRDisplay.class);
-        installComponentClass(ADSRModDisplay.class);
-        installComponentClass(AHDDisplay.class);
+        installComponentClass(JTEnvelopeDisplay.class);
         installComponentClass(ClipDisp.class);
         installComponentClass(LFODisplay.class);
         installComponentClass(NoteVelScaleDisplay.class);
@@ -184,10 +181,7 @@ public class JTNM1Context extends JTCustomContext
         uidefaults.put(JTCompressorDisplay.uiClassID, JTDisplayUI.class.getName());
 
         uidefaults.put(NoteVelScaleDisplay.uiClassID, JTDisplayUI.class.getName());
-        uidefaults.put(ADDisplay.uiClassID, JTDisplayUI.class.getName());
-        uidefaults.put(ADSRDisplay.uiClassID, JTDisplayUI.class.getName());
-        uidefaults.put(AHDDisplay.uiClassID, JTDisplayUI.class.getName());
-        uidefaults.put(ADSRModDisplay.uiClassID, JTDisplayUI.class.getName());
+        uidefaults.put(JTEnvelopeDisplay.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(WaveWrapDisp.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(ClipDisp.uiClassID, JTDisplayUI.class.getName());
         
