@@ -156,7 +156,7 @@ label{fill:#000;}
 		<knob x="160" y="2" size="21" >
 			<parameter component-id="p1"  alt="frequency" />
 		</knob>
-		<image x="219" y="9" width="-1" height="16" xlink:href="./images/slice/ds-2-8.png" />
+		<image x="219" y="9" size="16" xlink:href="./images/slice/ds-2-8.png" />
 		<label x="217" y="12" >6dB</label>
 		<textDisplay x="107" y="7" width="40" height="16" >
 			<parameter component-id="p1"  alt="frequency" />
@@ -2013,7 +2013,7 @@ label{fill:#000;}
 		<connector x="238" y="74" size="13" class="cLOGIC" >
 			<connector component-id="c6"  alt="gclk" />
 		</connector>
-		<knob x="191" y="-1" size="21" >
+		<knob x="191" y="0" size="21" >
 			<parameter component-id="p17"  alt="step count" />
 		</knob>
 		<knob x="227" y="34" size="21" >
@@ -4195,7 +4195,7 @@ label{fill:#000;}
 		<connector x="238" y="40" size="13" class="cLOGIC" >
 			<connector component-id="c5"  alt="link" />
 		</connector>
-		<knob x="192" y="-1" size="21" >
+		<knob x="192" y="0" size="21" >
 			<parameter component-id="p17"  alt="step" />
 		</knob>
 		<button x="229" y="57" width="24" height="16" cyclic="true" landscape="false" >
