@@ -25,7 +25,7 @@ import net.sf.nmedit.jpdl.*;
 public class GetPatchMessage extends MidiMessage
 {
     public enum PatchPart {
-	ALL, NAME, POLY_MODULE, COMMON_MODULE, POLY_CABLE, COMMON_CABLE,
+	ALL, HEADER, POLY_MODULE, COMMON_MODULE, POLY_CABLE, COMMON_CABLE,
 	    POLY_PARAMETER, COMMON_PARAMETER, MORPHMAP, KNOBMAP, CONTROLMAP,
 	    POLY_NAMEDUMP, COMMON_NAMEDUMP, NOTE
 	    }
@@ -64,7 +64,7 @@ public class GetPatchMessage extends MidiMessage
 	IntStream intStream;
 	LinkedList bitStreamList = new LinkedList();
 	
-	if (part == PatchPart.ALL || part == PatchPart.NAME) {
+	if (part == PatchPart.ALL || part == PatchPart.HEADER) {
 	    intStream = appendAll();
 	    intStream.append(0x20);
 	    intStream.append(0x28);
