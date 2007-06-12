@@ -178,7 +178,9 @@ GetPatchList % 1 :=
 PatchModification % 1 :=
 	0:1 pid:7 0:1 sc:7
 
+	#sc=0x64 => MorphAssignment$data
 	#sc=0x20 => GetPatchPartExtra$data
+	#sc=0x41 => NoteEvent$data
 	#sc=0x4b => GetPatchPartExtra$data
 	#sc=0x4c => GetPatchPartExtra$data
 	#sc=0x4e => GetPatchPartExtra$data
@@ -187,10 +189,14 @@ PatchModification % 1 :=
 	#sc=0x63 => GetPatchPart$data
 	#sc=0x66 => GetPatchPart$data
 	#sc=0x68 => GetPatchPart$data
-
+	
+    #sc=0x22 => MidiCtrlAssignment$data
+	#sc=0x23 => MidiCtrlAssignmentChange$data
 	#sc=0x25 => KnobAssignment$data
 	#sc=0x26 => KnobAssignmentChange$data
+	#sc=0x27 => SetPatchTitle$data
 	#sc=0x32 => ModuleDeletion$data
+	#sc=0x33 => SetModuleTitle$data
 	#sc=0x34 => ModuleMove$data
 	#sc=0x50 => CableInsert$data
 	#sc=0x51 => CableDelete$data
@@ -198,7 +204,34 @@ PatchModification % 1 :=
 	#sc=0x55 => SendControllerSnapshot$data
 	#sc=0x56 => Note$data
 	#sc=0x58 => GetCurrentNotes$data
+	#sc=0x67 => MorphKeyboardAssignment$data
+	
 	0:1 checksum:7
+	;
+
+MorphKeyboardAssignment % 1 :=
+		0:1 morph:7 0:1 keyboard:7 ?NextMorphKeyboardAssignment
+	;
+
+
+NextMorphKeyboardAssignment % 1 :=
+		0:1 0x67:7 MorphKeyboardAssignment
+	;
+
+SetPatchTitle % 1 :=
+		String$name
+	;
+
+SetModuleTitle % 1 :=
+		0:1 section:7 0:1 module:7 String$name 
+	;
+
+NoteEvent % 1 :=
+		0:1 velocity:7 0:1 onoff:7 0:1 note:7
+	;
+	
+MorphAssignment % 1 :=
+		0:1 0x01:6 section:1 0:1 module:7 0:1 parameter:7 0:1 morph:7 0:1 0x0:7 0:1 0x0:7
 	;
 
 GetPatchPartExtra % 1 :=
@@ -218,6 +251,18 @@ KnobAssignmentChange % 1 :=
 
 NewKnobAssignmentPacket % 1 :=
     0:1 0x25:7 KnobAssignment$data
+    ;
+
+MidiCtrlAssignment % 1 :=
+    0:1 module:7 0:1 parameter:7 0:1 section:2 midictrl:5
+	;
+
+MidiCtrlAssignmentChange % 1 :=
+    0:1 prevmidictrl:7 ?NewMidiCtrlAssignmentPacket$data
+	;
+
+NewMidiCtrlAssignmentPacket % 1 :=
+    0:1 0x22:7 MidiCtrlAssignment$data
     ;
 
 ModuleDeletion % 1 :=
