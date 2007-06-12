@@ -244,7 +244,7 @@ public class ProtocolTester extends TestCase
             
             acceptor.sendInitialMessage();
             
-            long timeout = System.currentTimeMillis()+10*1000;
+            long timeout = System.currentTimeMillis()+20*1000;
             while (System.currentTimeMillis()<timeout && !acceptor.accepted())
             {
                 protocol.heartbeat();

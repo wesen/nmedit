@@ -82,7 +82,7 @@ public class GetPatchMessageReplyAcceptor extends NmProtocolListener
     
     public boolean accepted()
     {
-        return replyPatch >= 13;
+        return replyPatch >= 14;
     }
 
     public void sendInitialMessage() throws Exception
@@ -130,7 +130,7 @@ public class GetPatchMessageReplyAcceptor extends NmProtocolListener
     
     public void messageReceived(PatchMessage message) 
     {
-        if (replyPatch<13)
+        if (replyPatch<14)
         {
             countSections(message);
         }

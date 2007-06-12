@@ -24,14 +24,31 @@ import net.sf.nmedit.jpdl.*;
 
 public class GetPatchMessage extends MidiMessage
 {
+    public enum PatchPart {
+	ALL, NAME, POLY_MODULE, COMMON_MODULE, POLY_CABLE, COMMON_CABLE,
+	    POLY_PARAMETER, COMMON_PARAMETER, MORPHMAP, KNOBMAP, CONTROLMAP,
+	    POLY_NAMEDUMP, COMMON_NAMEDUMP, NOTE
+	    }
+    
+    private PatchPart part;
+
     public GetPatchMessage()
     {
 	super();
+
+	this.part = PatchPart.ALL;
 
 	addParameter("pid", "");
 	set("cc", 0x17);
 
 	expectsreply = true;
+    }
+
+    public GetPatchMessage(PatchPart part)
+    {
+	this();
+
+	this.part = part;
     }
 
     GetPatchMessage(Packet packet)
@@ -46,80 +63,106 @@ public class GetPatchMessage extends MidiMessage
     {
 	IntStream intStream;
 	LinkedList bitStreamList = new LinkedList();
-	    
-	intStream = appendAll();
-	intStream.append(0x20);
-	intStream.append(0x28);
-	appendChecksum(intStream);
-	bitStreamList.add(getBitStream(intStream));
+	
+	if (part == PatchPart.ALL || part == PatchPart.NAME) {
+	    intStream = appendAll();
+	    intStream.append(0x20);
+	    intStream.append(0x28);
+	    appendChecksum(intStream);
+	    bitStreamList.add(getBitStream(intStream));
+	}
 
-	intStream = appendAll();
-	intStream.append(0x4b);
-	intStream.append(0x01);
-	appendChecksum(intStream);
-	bitStreamList.add(getBitStream(intStream));
+	if (part == PatchPart.ALL || part == PatchPart.POLY_MODULE) {	
+	    intStream = appendAll();
+	    intStream.append(0x4b);
+	    intStream.append(0x01);
+	    appendChecksum(intStream);
+	    bitStreamList.add(getBitStream(intStream));
+	}
 
-	intStream = appendAll();
-	intStream.append(0x4b);
-	intStream.append(0x00);
-	appendChecksum(intStream);
-	bitStreamList.add(getBitStream(intStream));
+	if (part == PatchPart.ALL || part == PatchPart.COMMON_MODULE) {
+	    intStream = appendAll();
+	    intStream.append(0x4b);
+	    intStream.append(0x00);
+	    appendChecksum(intStream);
+	    bitStreamList.add(getBitStream(intStream));
+	}
 
-	intStream = appendAll();
-	intStream.append(0x53);
-	intStream.append(0x01);
-	appendChecksum(intStream);
-	bitStreamList.add(getBitStream(intStream));
+	if (part == PatchPart.ALL || part == PatchPart.POLY_CABLE) {
+	    intStream = appendAll();
+	    intStream.append(0x53);
+	    intStream.append(0x01);
+	    appendChecksum(intStream);
+	    bitStreamList.add(getBitStream(intStream));
+	}
 
-	intStream = appendAll();
-	intStream.append(0x53);
-	intStream.append(0x00);
-	appendChecksum(intStream);
-	bitStreamList.add(getBitStream(intStream));
+	if (part == PatchPart.ALL || part == PatchPart.COMMON_CABLE) {
+	    intStream = appendAll();
+	    intStream.append(0x53);
+	    intStream.append(0x00);
+	    appendChecksum(intStream);
+	    bitStreamList.add(getBitStream(intStream));
+	}
 
-	intStream = appendAll();
-	intStream.append(0x4c);
-	intStream.append(0x01);
-	appendChecksum(intStream);
-	bitStreamList.add(getBitStream(intStream));
+	if (part == PatchPart.ALL || part == PatchPart.POLY_PARAMETER) {
+	    intStream = appendAll();
+	    intStream.append(0x4c);
+	    intStream.append(0x01);
+	    appendChecksum(intStream);
+	    bitStreamList.add(getBitStream(intStream));
+	}
 
-	intStream = appendAll();
-	intStream.append(0x4c);
-	intStream.append(0x00);
-	appendChecksum(intStream);
-	bitStreamList.add(getBitStream(intStream));
+	if (part == PatchPart.ALL || part == PatchPart.COMMON_PARAMETER) {
+	    intStream = appendAll();
+	    intStream.append(0x4c);
+	    intStream.append(0x00);
+	    appendChecksum(intStream);
+	    bitStreamList.add(getBitStream(intStream));
+	}
 
-	intStream = appendAll();
-	intStream.append(0x66);
-	appendChecksum(intStream);
-	bitStreamList.add(getBitStream(intStream));
+	if (part == PatchPart.ALL || part == PatchPart.MORPHMAP) {
+	    intStream = appendAll();
+	    intStream.append(0x66);
+	    appendChecksum(intStream);
+	    bitStreamList.add(getBitStream(intStream));
+	}
 
-	intStream = appendAll();
-	intStream.append(0x63);
-	appendChecksum(intStream);
-	bitStreamList.add(getBitStream(intStream));
+	if (part == PatchPart.ALL || part == PatchPart.KNOBMAP) {
+	    intStream = appendAll();
+	    intStream.append(0x63);
+	    appendChecksum(intStream);
+	    bitStreamList.add(getBitStream(intStream));
+	}
 
-	intStream = appendAll();
-	intStream.append(0x61);
-	appendChecksum(intStream);
-	bitStreamList.add(getBitStream(intStream));
+	if (part == PatchPart.ALL || part == PatchPart.CONTROLMAP) {
+	    intStream = appendAll();
+	    intStream.append(0x61);
+	    appendChecksum(intStream);
+	    bitStreamList.add(getBitStream(intStream));
+	}
 
-	intStream = appendAll();
-	intStream.append(0x4e);
-	intStream.append(0x01);
-	appendChecksum(intStream);
-	bitStreamList.add(getBitStream(intStream));
+	if (part == PatchPart.ALL || part == PatchPart.POLY_NAMEDUMP) {
+	    intStream = appendAll();
+	    intStream.append(0x4e);
+	    intStream.append(0x01);
+	    appendChecksum(intStream);
+	    bitStreamList.add(getBitStream(intStream));
+	}
 
-	intStream = appendAll();
-	intStream.append(0x4e);
-	intStream.append(0x00);
-	appendChecksum(intStream);
-	bitStreamList.add(getBitStream(intStream));
+	if (part == PatchPart.ALL || part == PatchPart.COMMON_NAMEDUMP) {
+	    intStream = appendAll();
+	    intStream.append(0x4e);
+	    intStream.append(0x00);
+	    appendChecksum(intStream);
+	    bitStreamList.add(getBitStream(intStream));
+	}
 
-	intStream = appendAll();
-	intStream.append(0x68);
-	appendChecksum(intStream);
-	bitStreamList.add(getBitStream(intStream));
+	if (part == PatchPart.ALL || part == PatchPart.NOTE) {
+	    intStream = appendAll();
+	    intStream.append(0x68);
+	    appendChecksum(intStream);
+	    bitStreamList.add(getBitStream(intStream));
+	}
 
 	return bitStreamList;
     }
