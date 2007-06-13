@@ -35,7 +35,7 @@ public class MorphRangeChangeMessage extends MidiMessage
 	addParameter("parameter", "data:data:parameter");
     addParameter("span", "data:data:span");
     addParameter("direction", "data:data:direction");
-	set("cc", 0x13);
+    set("cc", 0x14);
 	set("sc", 0x43);
     }
 
@@ -43,7 +43,8 @@ public class MorphRangeChangeMessage extends MidiMessage
     {
         if (section<0 || section>1)
             throw new IllegalArgumentException("invalid section: "+section);
-        
+
+        set("cc", 0x13);
         set("slot", slot);
         set("pid", pid);
         set("section", section);
