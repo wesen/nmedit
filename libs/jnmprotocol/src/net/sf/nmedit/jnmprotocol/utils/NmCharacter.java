@@ -24,9 +24,30 @@ package net.sf.nmedit.jnmprotocol.utils;
 
 import java.util.Arrays;
 
+import net.sf.nmedit.jpdl.IntStream;
+
 public class NmCharacter
 {
+    
+    public static void appendString(IntStream intStream, CharSequence nmString)
+    {
+        appendString(intStream, nmString, 16);
+    }
 
+    public static void appendString(IntStream intStream, CharSequence nmString, int maxLen)
+    {
+        int len = Math.min(nmString.length(), maxLen);
+        for (int i=0;i<len;i++)
+        {
+            char c = nmString.charAt(i);
+            if (!isCharacter(c))
+                throw new IllegalArgumentException("invalid character at position: "+i+", string='"+nmString+"'");
+            intStream.append(c);
+        }
+        if (len<maxLen)
+            intStream.append(0); // string termination
+    }
+    
     /**
      * Returns true if the specified character is supported by the nord modular synthesizer.
      */
