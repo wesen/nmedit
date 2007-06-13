@@ -37,6 +37,11 @@ public abstract class NmProtocolListener
     public void messageReceived(ErrorMessage message) {}
     public void messageReceived(SynthSettingsMessage message) {}
 
-    public void messageReceived(KnobAssignmentMessage message) { }
+    public void messageReceived(KnobAssignmentMessage message) {}
+    public void messageReceived(MorphAssignmentMessage message) {}
+    public void messageReceived(NoteMessage message) {}
+    public void messageReceived(MorphRangeChangeMessage message) {}
+
+    public void messageReceived(SetPatchTitleMessage message) { }
     
 }
