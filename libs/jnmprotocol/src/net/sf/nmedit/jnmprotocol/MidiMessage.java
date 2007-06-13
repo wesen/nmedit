@@ -106,6 +106,9 @@ public abstract class MidiMessage
 		if(packet.contains("ACK")) {
 		    return new AckMessage(packet);
 		}
+        if (packet.contains("SetPatchTitle")) {
+            return new SetPatchTitleMessage(packet);
+        }
 		if(packet.contains("Error")) {
 		    return new ErrorMessage(packet);
 		}
@@ -268,36 +271,31 @@ public abstract class MidiMessage
 	return sbuilder.toString();
     }
     
-    private transient String toStringValue;
     public String toString()
     {
-        if (toStringValue == null)
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getName());
+        sb.append("[");
+        
+        Iterator params = parameters.iterator();
+        
+        if (params.hasNext())
         {
-            StringBuilder sb = new StringBuilder();
-            sb.append(getClass().getName());
-            sb.append("[");
-            
-            Iterator params = parameters.iterator();
-            
-            if (params.hasNext())
-            {
-                String param = (String) params.next();
-                sb.append(param);
-                sb.append("="+get(param));
-            }
-            
-            while (params.hasNext())
-            {
-                sb.append(",");
-                String param = (String) params.next();
-                sb.append(param);
-                sb.append("="+values.get(param));
-            }
-            
-            sb.append("]");
-            toStringValue = sb.toString();
+            String param = (String) params.next();
+            sb.append(param);
+            sb.append("="+get(param));
         }
-        return toStringValue;
+        
+        while (params.hasNext())
+        {
+            sb.append(",");
+            String param = (String) params.next();
+            sb.append(param);
+            sb.append("="+values.get(param));
+        }
+        
+        sb.append("]");
+        return sb.toString();
     }
     
     protected boolean isreply;
