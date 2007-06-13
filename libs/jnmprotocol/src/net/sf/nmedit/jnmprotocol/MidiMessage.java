@@ -74,7 +74,15 @@ public abstract class MidiMessage
 	    }
 	    
 	    if (checksumIsCorrect(bitStream)) {
-		
+
+        if (packet.contains("Lights")) {
+            return new LightMessage(packet);
+        }
+        
+        if (packet.contains("Meters")) {
+            return new MeterMessage(packet);
+        }
+            
 		if (packet.contains("VoiceCount")) {
 		    return new VoiceCountMessage(packet);
 		}
@@ -87,14 +95,12 @@ public abstract class MidiMessage
 		if (packet.contains("NewPatchInSlot")) {
 		    return new NewPatchInSlotMessage(packet);
 		}
-		if (packet.contains("Lights")) {
-		    return new LightMessage(packet);
-		}
-		if (packet.contains("Meters")) {
-		    return new MeterMessage(packet);
-		}
+
         if (packet.contains("KnobChange")) {
             return new ParameterMessage(packet);
+        }
+        if (packet.contains("MorphRangeChange")) {
+            return new MorphRangeChangeMessage(packet);
         }
         if (packet.contains("KnobAssignment")||packet.contains("KnobAssignmentChange"))
         {
@@ -106,8 +112,14 @@ public abstract class MidiMessage
 		if(packet.contains("ACK")) {
 		    return new AckMessage(packet);
 		}
+        if (packet.contains("NoteEvent")) {
+            return new NoteMessage(packet);
+        }   
         if (packet.contains("SetPatchTitle")) {
             return new SetPatchTitleMessage(packet);
+        }
+        if (packet.contains("ParameterSelect")) {
+            return new ParameterSelectMessage(packet);
         }
 		if(packet.contains("Error")) {
 		    return new ErrorMessage(packet);
@@ -126,7 +138,7 @@ public abstract class MidiMessage
 	else {
 	    error = " parse failed: ";
 	}
-	
+
     byte[] message =  bitStream.toByteArray();
     error += StringUtils.toHexadecimal(message)+" ("+StringUtils.toText(message)+")";
     
