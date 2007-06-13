@@ -163,6 +163,6 @@ public class MidiCtrlAssignmentMessage extends MidiMessage
     
     public void notifyListener(NmProtocolListener listener)
     {
-	listener.messageReceived(this);
+        // direction synth->editor not supported
     }
 }
