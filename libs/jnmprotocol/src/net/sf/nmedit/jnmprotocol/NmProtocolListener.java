@@ -43,5 +43,7 @@ public abstract class NmProtocolListener
     public void messageReceived(MorphRangeChangeMessage message) {}
 
     public void messageReceived(SetPatchTitleMessage message) { }
+
+    public void messageReceived(ParameterSelectMessage message) { }
     
 }
