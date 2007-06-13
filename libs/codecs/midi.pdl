@@ -210,12 +210,11 @@ PatchModification % 1 :=
 	;
 
 MorphKeyboardAssignment % 1 :=
-		0:1 morph:7 0:1 keyboard:7 ?NextMorphKeyboardAssignment
+		0:1 morph:7 0:1 keyboard:7 ?NextMorphKeyboardAssignment$data
 	;
 
-
 NextMorphKeyboardAssignment % 1 :=
-		0:1 0x67:7 MorphKeyboardAssignment
+		0:1 0x67:7 MorphKeyboardAssignment$data
 	;
 
 SetPatchTitle % 1 :=
