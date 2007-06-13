@@ -29,6 +29,9 @@ import net.sf.nmedit.jpdl.*;
 public class MorphAssignmentMessage extends MidiMessage
 {
 
+    // morphId = 4 deassigns a morph from a parameter
+    public static final int MORPH_ID_DEASSIGN = 4;
+    
     public MorphAssignmentMessage()
     {
 	super();
@@ -47,6 +50,11 @@ public class MorphAssignmentMessage extends MidiMessage
     {
 	this();
 	setAll(packet);
+    }
+
+    public void deAssignMorph(int slot, int pid, int section, int module, int parameter)
+    {
+        setMorphAssignment(slot, pid, section, module, parameter, MORPH_ID_DEASSIGN);
     }
     
     public void setMorphAssignment(int slot, int pid, int section, int module, int parameter, int morph)
