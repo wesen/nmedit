@@ -50,6 +50,7 @@ NMInfo % 1 :=
 	#sc=0x09 => SlotActivated$data
     #sc=0x25 => KnobAssignment$data
 	#sc=0x26 => KnobAssignmentChange$data
+	#sc=0x27 => SetPatchTitle$data
 	#sc=0x38 => NewPatchInSlot$data
 	#sc=0x39 => Lights$data
 	#sc=0x3a => Meters$data
@@ -253,7 +254,7 @@ NewKnobAssignmentPacket % 1 :=
     ;
 
 MidiCtrlAssignment % 1 :=
-    0:1 module:7 0:1 parameter:7 0:1 section:2 midictrl:5
+	0:1 section:7 0:1 module:7 0:1 parameter:7 0:1 midictrl:7
 	;
 
 MidiCtrlAssignmentChange % 1 :=
