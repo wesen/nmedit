@@ -350,11 +350,22 @@ PatchSettingsWithChecksum % 1 :=
 	;
 
 SetPatchSettings % 1 :=
-	0:1 b0:7 0:1 b1:7 0:1 b2:7 0:1 b3:7 0:1 b4:7 0:1 b5:7 0:1 b6:7
-	0:1 b7:7 0:1 b8:7 0:1 b9:7 0:1 b10:7 0:1 b11:7 0:1 b12:7  
-	;
-
+	0:1 unknown1:1 kbrangeMin1:6 
+	0:1 kbrangeMin2:1 kbrangeMax1:6 
+    0:1 kbrangeMax2:1 velocityRangeMin1:6
+    0:1 velocityRangeMin2:1 velocityRangeMax1:6
+    0:1 velocityRangeMax2:1 bendRange:5 portamentoTime1:1
+    0:1 portamentoTime2:6 portamentoType:1
+    0:1 pedalMode:1 voiceCount:5 unknown2:1
+    0:1 unknown3:1 dividerBar1:6
+    0:1 dividerBar2:6 octaveShift1:1 
+    0:1 octaveShift2:2 red:1 blue:1 yellow:1 gray:1 green:1 
+    0:1 purple:1 white:1 voiceRetriggerCommon:1 voiceRetriggerPoly:1 unknown4:3
+    0:1 unknown5:7
+   ;
+	
 SEQZoom % 1 :=
+
 	;
 
 PatchListResponse % 1 :=
