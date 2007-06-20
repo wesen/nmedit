@@ -23,7 +23,9 @@
 package net.sf.nmedit.jtheme.component;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.LayoutManager;
+import java.awt.Rectangle;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.JComponent;
@@ -59,6 +61,11 @@ public class JTBaseComponent extends JComponent
     public JTContext getContext()
     {
         return context;
+    }
+    
+    protected boolean isRepaintOrigin()
+    {
+        return false;
     }
     
     /**
@@ -279,6 +286,79 @@ public class JTBaseComponent extends JComponent
     protected void firePropertyChangeIndirection(String propertyName, char oldValue, char newValue) 
     {
         super.firePropertyChange(propertyName, oldValue, newValue);
+    }
+
+    /**
+     * Sets the double buffer needs update flag.
+     * @see Component#repaint()
+     */
+    public void repaint() 
+    {
+        repaint(0,0,0,getWidth(), getHeight());
+    }
+
+    /**
+     * Sets the double buffer needs update flag.
+     * @see Component#repaint(long)
+     */
+    public void repaint(long tm) 
+    {
+        repaint(tm,0,0,getWidth(),getHeight());
+    }
+
+    /**
+     * Sets the double buffer needs update flag.
+     * @see Component#repaint(int, int, int, int)
+     */
+    public void repaint(int x, int y, int width, int height) 
+    {
+        repaint(0, x, y, width, height);
+    }
+
+    /**
+     * Sets the double buffer needs update flag.
+     * @see JComponent#repaint(java.awt.Rectangle)
+     */
+    public void repaint(Rectangle r) 
+    {
+        repaint(0,r.x,r.y,r.width,r.height);
+    }
+    
+    private JTBaseComponent findRepaintOrigin()
+    {
+            Container c = getParent();
+            while (c != null && c instanceof JTBaseComponent)
+            {
+                JTBaseComponent b = (JTBaseComponent) c;
+                if (b.isRepaintOrigin())
+                {
+                    return b;
+                }
+                c = c.getParent();
+            }
+        return this;
+    }
+    
+    /**
+     * Sets the double buffer needs update flag.
+     * @see Component#repaint(long, int, int, int, int)
+     */
+    public void repaint(long tm, int x, int y, int width, int height) 
+    {   
+        JTBaseComponent origin = findRepaintOrigin();
+        if (origin != this)
+        {
+            Container c = this;
+            while (c != null && c != origin)
+            {
+                x+=c.getX();
+                y+=c.getY();
+                c = c.getParent();
+            }
+            origin.repaint(tm, x, y, width, height);
+        }
+        else
+            super.repaint(tm, x, y, width, height);
     }
 
 }
