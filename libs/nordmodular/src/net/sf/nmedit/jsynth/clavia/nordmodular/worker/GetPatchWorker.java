@@ -87,6 +87,7 @@ public class GetPatchWorker extends NmProtocolListener implements ScheduledWorke
         NmSlot slot = synth.getSlot(slotId);
         slot.setPatchId(patchId);
         NMPatch patch = patchBuilder.getPatch();
+        patch.setSlot(slot);
         patch.getHistory().setEnabled(true);
         slot.setPatch(patch);
     }
