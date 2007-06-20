@@ -28,7 +28,7 @@ import java.net.URL;
 public abstract class AbstractImageResource implements ImageResource, Serializable
 {
 
-    private ClassLoader customClassLoader;
+    private transient ClassLoader customClassLoader;
     private transient String srcURI;
     private transient URL srcURL;
     private transient URL resolvedURL;
@@ -37,6 +37,15 @@ public abstract class AbstractImageResource implements ImageResource, Serializab
     protected AbstractImageResource()
     {
         super();
+    }
+
+    public void setCustomClassLoader(ClassLoader loader)
+    {
+        if (this.customClassLoader != loader)
+        {
+            this.customClassLoader = loader;
+            initState();
+        }
     }
     
     public AbstractImageResource(URL imageURL)
@@ -59,7 +68,8 @@ public abstract class AbstractImageResource implements ImageResource, Serializab
     
     protected void initState()
     {
-        urlResolved = false;
+        this.resolvedURL = null;
+        this.urlResolved = false;
     }
 
     public URL getResolvedURL()

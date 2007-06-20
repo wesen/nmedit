@@ -20,11 +20,17 @@ package net.sf.nmedit.jtheme.image;
 
 import java.awt.Dimension;
 import java.awt.Image;
+import java.io.IOException;
+import java.io.Serializable;
 
 
-public class SVGStringRessource implements ImageResource
+public class SVGStringRessource implements ImageResource, Serializable
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7915560452708298768L;
     private String svgData;
     private transient Image cachedImage;
     
@@ -48,6 +54,11 @@ public class SVGStringRessource implements ImageResource
         return cachedImage = SVGImageResource.renderSVGImage(svgData, width, height);
     }
 
+    public void setCustomClassLoader(ClassLoader loader)
+    {
+        // we do not use a custom classloader - ignore
+    }
+    
     public int getType()
     {
         return SCALABLE_IMAGE;
@@ -91,6 +102,18 @@ public class SVGStringRessource implements ImageResource
     public ClassLoader getResourceClassLoader()
     {
         return getClass().getClassLoader();
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out)
+        throws IOException
+    {
+        out.defaultWriteObject();
+    }
+    
+    private void readObject(java.io.ObjectInputStream in)
+        throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();
     }
     
 }

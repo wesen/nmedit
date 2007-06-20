@@ -21,6 +21,7 @@ package net.sf.nmedit.jtheme.image;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
@@ -28,7 +29,7 @@ import javax.imageio.ImageIO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class ToolkitImageResource extends AbstractImageResource
+public class ToolkitImageResource extends AbstractImageResource implements Serializable
 {
 
     /**
@@ -88,4 +89,16 @@ public class ToolkitImageResource extends AbstractImageResource
         this.imageInitialized = false;
     }
 
+    private void writeObject(java.io.ObjectOutputStream out)
+        throws IOException
+    {
+        out.defaultWriteObject();
+    }
+    
+    private void readObject(java.io.ObjectInputStream in)
+        throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();
+    }
+    
 }

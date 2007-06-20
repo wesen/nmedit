@@ -25,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.net.URL;
 
@@ -38,7 +39,7 @@ import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class SVGImageResource extends AbstractImageResource
+public class SVGImageResource extends AbstractImageResource implements Serializable
 {
 
     /**
@@ -46,7 +47,7 @@ public class SVGImageResource extends AbstractImageResource
      */
     private static final long serialVersionUID = -2499486136640044057L;
 
-    private transient String svgData;
+    private String svgData;
     private transient Image cachedImage;
     private transient boolean svgDataInitialized;
     
@@ -64,7 +65,7 @@ public class SVGImageResource extends AbstractImageResource
     {
         super(srcURI, customClassLoader);
     }
-    
+
     protected void initState()
     {
         super.initState();
@@ -207,6 +208,21 @@ public class SVGImageResource extends AbstractImageResource
         svgDataInitialized = false;
         svgData = null;
         cachedImage = null;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out)
+        throws IOException
+    {
+        if (svgData == null)
+            readData();
+        
+        out.defaultWriteObject();
+    }
+    
+    private void readObject(java.io.ObjectInputStream in)
+        throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();
     }
     
 }

@@ -43,5 +43,7 @@ public interface ImageResource
     Object getSource();
     
     void flush();
+
+    void setCustomClassLoader(ClassLoader loader);
     
 }
