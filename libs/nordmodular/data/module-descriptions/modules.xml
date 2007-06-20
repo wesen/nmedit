@@ -1180,7 +1180,7 @@
     <connector component-id="c4" index="3" name="out 4" type="input" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="level" class="parameter" defaultValue="100" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:level" class="morph" defaultValue="100" />
+    <parameter component-id="m1" index="0" name="morph:level" class="morph" minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="2.0625" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -1201,9 +1201,9 @@
     <parameter component-id="p1" index="0" name="level" class="parameter" defaultValue="100" extension="m1" />
     <parameter component-id="p2" index="1" name="destination" class="parameter" maxValue="2" formatter="type('channel-select-out2')" extension="m2" />
     <parameter component-id="p3" index="2" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m3" />
-    <parameter component-id="m1" index="0" name="morph:level" class="morph" defaultValue="100" />
-    <parameter component-id="m2" index="1" name="morph:destination" class="morph" maxValue="2" />
-    <parameter component-id="m3" index="2" name="morph:mute" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:level" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:destination" class="morph" minValue="-2" maxValue="2" />
+    <parameter component-id="m3" index="2" name="morph:mute" class="morph" minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.40625" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -1223,9 +1223,9 @@
     <parameter component-id="p1" index="0" name="level" class="parameter" defaultValue="100" extension="m1" />
     <parameter component-id="p2" index="1" name="dest" class="parameter" maxValue="5" formatter="type('channel-select-out1')" extension="m2" />
     <parameter component-id="p3" index="2" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m3" />
-    <parameter component-id="m1" index="0" name="morph:level" class="morph" defaultValue="100" />
-    <parameter component-id="m2" index="1" name="morph:dest" class="morph" maxValue="5" />
-    <parameter component-id="m3" index="2" name="morph:mute" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:level" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:dest" class="morph"  minValue="-5" maxValue="5" />
+    <parameter component-id="m3" index="2" name="morph:mute" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.28125" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -1262,16 +1262,16 @@
     <parameter component-id="p9" index="7" name="fma mod" class="parameter" extension="m9" />
     <parameter component-id="p10" index="8" name="PW mod" class="parameter" extension="m10" />
     <parameter component-id="p11" index="9" name="Mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m11" />
-    <parameter component-id="m2" index="0" name="morph:freq coarse" class="morph" defaultValue="64" />
-    <parameter component-id="m3" index="1" name="morph:freq fine" class="morph" defaultValue="64" />
-    <parameter component-id="m4" index="2" name="morph:freq KBT" class="morph" defaultValue="64" />
-    <parameter component-id="m5" index="3" name="morph:Pulse width" class="morph" defaultValue="64" />
-    <parameter component-id="m6" index="4" name="morph:waveform" class="morph" maxValue="3" />
-    <parameter component-id="m7" index="5" name="morph:pitch mod 1" class="morph" />
-    <parameter component-id="m8" index="6" name="morph:pitch mod 2" class="morph" />
-    <parameter component-id="m9" index="7" name="morph:fma mod" class="morph" />
-    <parameter component-id="m10" index="8" name="morph:PW mod" class="morph" />
-    <parameter component-id="m11" index="9" name="morph:Mute" class="morph" maxValue="1" />
+    <parameter component-id="m2" index="0" name="morph:freq coarse" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="1" name="morph:freq fine" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="2" name="morph:freq KBT" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m5" index="3" name="morph:Pulse width" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m6" index="4" name="morph:waveform" class="morph"  minValue="-3" maxValue="3" />
+    <parameter component-id="m7" index="5" name="morph:pitch mod 1" class="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m8" index="6" name="morph:pitch mod 2" class="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m9" index="7" name="morph:fma mod" class="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m10" index="8" name="morph:PW mod" class="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m11" index="9" name="morph:Mute" class="morph" minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="10.8125" />
     <attribute name="x-mem" type="double" value="0.84375" />
@@ -1297,24 +1297,24 @@
       <attribute name="custom" type="boolean" value="yes" />
     </parameter>
     <!-- parameter(s) -->
-    <parameter component-id="p2" index="0" name="Freq coarse" class="parameter" defaultValue="64" format-id="note" />
-    <parameter component-id="p3" index="1" name="Freq fine" class="parameter" defaultValue="64" formatter="offset(-64)" />
-    <parameter component-id="p4" index="2" name="Freq KBT" class="parameter" defaultValue="64" format-id="freq-kbt" />
-    <parameter component-id="p5" index="3" name="waveform" class="parameter" maxValue="3" formatter="type('oscillator-wave')" />
-    <parameter component-id="p6" index="4" name="pitch mod 1" class="parameter" />
-    <parameter component-id="p7" index="5" name="pitch mod 2" class="parameter" />
-    <parameter component-id="p8" index="6" name="fma mod" class="parameter" />
-    <parameter component-id="p9" index="7" name="PWidth" class="parameter" />
-    <parameter component-id="p10" index="8" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" />
-    <parameter component-id="m2" index="0" name="morph:Freq coarse" class="morph" defaultValue="64" extension="m2" />
-    <parameter component-id="m3" index="1" name="morph:Freq fine" class="morph" defaultValue="64" extension="m3" />
-    <parameter component-id="m4" index="2" name="morph:Freq KBT" class="morph" defaultValue="64" extension="m4" />
-    <parameter component-id="m5" index="3" name="morph:waveform" class="morph" maxValue="3" extension="m5" />
-    <parameter component-id="m6" index="4" name="morph:pitch mod 1" class="morph" extension="m6" />
-    <parameter component-id="m7" index="5" name="morph:pitch mod 2" class="morph" extension="m7" />
-    <parameter component-id="m8" index="6" name="morph:fma mod" class="morph" extension="m8" />
-    <parameter component-id="m9" index="7" name="morph:PWidth" class="morph" extension="m9" />
-    <parameter component-id="m10" index="8" name="morph:mute" class="morph" maxValue="1" extension="m10" />
+    <parameter component-id="p2" index="0" name="Freq coarse" class="parameter" defaultValue="64" format-id="note" extension="m2" />
+    <parameter component-id="p3" index="1" name="Freq fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m3" />
+    <parameter component-id="p4" index="2" name="Freq KBT" class="parameter" defaultValue="64" format-id="freq-kbt" extension="m4" />
+    <parameter component-id="p5" index="3" name="waveform" class="parameter" maxValue="3" formatter="type('oscillator-wave')" extension="m5" />
+    <parameter component-id="p6" index="4" name="pitch mod 1" class="parameter" extension="m6" />
+    <parameter component-id="p7" index="5" name="pitch mod 2" class="parameter" extension="m7" />
+    <parameter component-id="p8" index="6" name="fma mod" class="parameter" extension="m8" />
+    <parameter component-id="p9" index="7" name="PWidth" class="parameter" extension="m9" />
+    <parameter component-id="p10" index="8" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m10" />
+    <parameter component-id="m2" index="0" name="morph:Freq coarse" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="1" name="morph:Freq fine" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="2" name="morph:Freq KBT" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m5" index="3" name="morph:waveform" class="morph"  minValue="-3" maxValue="3" />
+    <parameter component-id="m6" index="4" name="morph:pitch mod 1" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m7" index="5" name="morph:pitch mod 2" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m8" index="6" name="morph:fma mod" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m9" index="7" name="morph:PWidth" class="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m10" index="8" name="morph:mute" class="morph" minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="8.28125" />
     <attribute name="x-mem" type="double" value="0.6875" />
@@ -1345,12 +1345,12 @@
     <parameter component-id="p5" index="3" name="pitch mod amount" class="parameter" extension="m5" />
     <parameter component-id="p6" index="4" name="FMA" class="parameter" extension="m6" />
     <parameter component-id="p7" index="5" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m7" />
-    <parameter component-id="m2" index="0" name="morph:pitch coarse" class="morph" defaultValue="64" />
-    <parameter component-id="m3" index="1" name="morph:pitch fine" class="morph" defaultValue="64" />
-    <parameter component-id="m4" index="2" name="morph:pitch KBT" class="morph" maxValue="1" defaultValue="1" />
-    <parameter component-id="m5" index="3" name="morph:pitch mod amount" class="morph" />
-    <parameter component-id="m6" index="4" name="morph:FMA" class="morph" />
-    <parameter component-id="m7" index="5" name="morph:mute" class="morph" maxValue="1" />
+    <parameter component-id="m2" index="0" name="morph:pitch coarse" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="1" name="morph:pitch fine" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="2" name="morph:pitch KBT" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m5" index="3" name="morph:pitch mod amount" class="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m6" index="4" name="morph:FMA" class="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m7" index="5" name="morph:mute" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="4.96875" />
     <attribute name="x-mem" type="double" value="0.5625" />
@@ -1378,11 +1378,11 @@
     <parameter component-id="p4" index="2" name="PW" class="parameter" defaultValue="64" formatter="offset(1),scale(0.77165354330708658),str('%')" extension="m4" />
     <parameter component-id="p5" index="3" name="PW mod" class="parameter" extension="m5" />
     <parameter component-id="p6" index="4" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m6" />
-    <parameter component-id="m2" index="0" name="morph:detune coarse" class="morph" defaultValue="64" />
-    <parameter component-id="m3" index="1" name="morph:detune fine" class="morph" defaultValue="64" />
-    <parameter component-id="m4" index="2" name="morph:PW" class="morph" defaultValue="64" />
+    <parameter component-id="m2" index="0" name="morph:detune coarse" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="1" name="morph:detune fine" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="2" name="morph:PW" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m5" index="3" name="morph:PW mod" class="morph" />
-    <parameter component-id="m6" index="4" name="morph:mute" class="morph" maxValue="1" />
+    <parameter component-id="m6" index="4" name="morph:mute" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="7.125" />
     <attribute name="x-mem" type="double" value="0.21875" />
@@ -1409,10 +1409,10 @@
     <parameter component-id="p3" index="1" name="detune fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m3" />
     <parameter component-id="p4" index="2" name="FMA mod" class="parameter" extension="m4" />
     <parameter component-id="p5" index="3" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m5" />
-    <parameter component-id="m2" index="0" name="morph:detune coarse" class="morph" defaultValue="64" />
-    <parameter component-id="m3" index="1" name="morph:detune fine" class="morph" defaultValue="64" />
-    <parameter component-id="m4" index="2" name="morph:FMA mod" class="morph" />
-    <parameter component-id="m5" index="3" name="morph:mute" class="morph" maxValue="1" />
+    <parameter component-id="m2" index="0" name="morph:detune coarse" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="1" name="morph:detune fine" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="2" name="morph:FMA mod" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m5" index="3" name="morph:mute" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="6.0" />
     <attribute name="x-mem" type="double" value="0.15625" />
@@ -1439,10 +1439,10 @@
     <parameter component-id="p3" index="1" name="detune fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m3" />
     <parameter component-id="p4" index="2" name="FMA mod" class="parameter" extension="m4" />
     <parameter component-id="p5" index="3" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m5" />
-    <parameter component-id="m2" index="0" name="morph:detune coarse" class="morph" defaultValue="64" />
-    <parameter component-id="m3" index="1" name="morph:detune fine" class="morph" defaultValue="64" />
-    <parameter component-id="m4" index="2" name="morph:FMA mod" class="morph" />
-    <parameter component-id="m5" index="3" name="morph:mute" class="morph" maxValue="1" />
+    <parameter component-id="m2" index="0" name="morph:detune coarse" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="1" name="morph:detune fine" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="2" name="morph:FMA mod" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m5" index="3" name="morph:mute" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="5.875" />
     <attribute name="x-mem" type="double" value="0.15625" />
@@ -1470,10 +1470,10 @@
     <parameter component-id="p3" index="1" name="detune fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m3" />
     <parameter component-id="p4" index="2" name="FMA mod" class="parameter" extension="m4" />
     <parameter component-id="p5" index="3" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m5" />
-    <parameter component-id="m2" index="0" name="morph:detune coarse" class="morph" defaultValue="64" />
-    <parameter component-id="m3" index="1" name="morph:detune fine" class="morph" defaultValue="64" />
-    <parameter component-id="m4" index="2" name="morph:FMA mod" class="morph" />
-    <parameter component-id="m5" index="3" name="morph:mute" class="morph" maxValue="1" />
+    <parameter component-id="m2" index="0" name="morph:detune coarse" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="1" name="morph:detune fine" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="2" name="morph:FMA mod" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m5" index="3" name="morph:mute" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="3.0625" />
     <attribute name="x-mem" type="double" value="0.34375" />
@@ -1503,11 +1503,11 @@
     <parameter component-id="p4" index="2" name="shape" class="parameter" maxValue="3" extension="m4" />
     <parameter component-id="p5" index="3" name="FMA mod" class="parameter" extension="m5" />
     <parameter component-id="p6" index="4" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m6" />
-    <parameter component-id="m2" index="0" name="morph:detune coarse" class="morph" defaultValue="64" />
-    <parameter component-id="m3" index="1" name="morph:detune fine" class="morph" defaultValue="64" />
-    <parameter component-id="m4" index="2" name="morph:shape" class="morph" maxValue="3" />
-    <parameter component-id="m5" index="3" name="morph:FMA mod" class="morph" />
-    <parameter component-id="m6" index="4" name="morph:mute" class="morph" maxValue="1" />
+    <parameter component-id="m2" index="0" name="morph:detune coarse" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="1" name="morph:detune fine" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="2" name="morph:shape" class="morph"  minValue="-3" maxValue="3" />
+    <parameter component-id="m5" index="3" name="morph:FMA mod" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m6" index="4" name="morph:mute" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="7.625" />
     <attribute name="x-mem" type="double" value="0.4375" />
@@ -1550,22 +1550,22 @@
     <parameter component-id="p19" index="18" name="record" class="parameter" maxValue="1" formatter="type('off-on')" />
     <parameter component-id="p20" index="19" name="pause" class="parameter" maxValue="1" formatter="type('off-on')" />
     <parameter component-id="p21" index="20" name="active" class="parameter" maxValue="1" formatter="type('off-on')" />
-    <parameter component-id="m1" index="0" name="morph:step 1" class="morph" defaultValue="64" />
-    <parameter component-id="m2" index="1" name="morph:step 2" class="morph" defaultValue="64" />
-    <parameter component-id="m3" index="2" name="morph:step 3" class="morph" defaultValue="64" />
-    <parameter component-id="m4" index="3" name="morph:step 4" class="morph" defaultValue="64" />
-    <parameter component-id="m5" index="4" name="morph:step 5" class="morph" defaultValue="64" />
-    <parameter component-id="m6" index="5" name="morph:step 6" class="morph" defaultValue="64" />
-    <parameter component-id="m7" index="6" name="morph:step 7" class="morph" defaultValue="64" />
-    <parameter component-id="m8" index="7" name="morph:step 8" class="morph" defaultValue="64" />
-    <parameter component-id="m9" index="8" name="morph:step 9" class="morph" defaultValue="64" />
-    <parameter component-id="m10" index="9" name="morph:step 10" class="morph" defaultValue="64" />
-    <parameter component-id="m11" index="10" name="morph:step 11" class="morph" defaultValue="64" />
-    <parameter component-id="m12" index="11" name="morph:step 12" class="morph" defaultValue="64" />
-    <parameter component-id="m13" index="12" name="morph:step 13" class="morph" defaultValue="64" />
-    <parameter component-id="m14" index="13" name="morph:step 14" class="morph" defaultValue="64" />
-    <parameter component-id="m15" index="14" name="morph:step 15" class="morph" defaultValue="64" />
-    <parameter component-id="m16" index="15" name="morph:step 16" class="morph" defaultValue="64" />
+    <parameter component-id="m1" index="0" name="morph:step 1" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:step 2" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="2" name="morph:step 3" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="3" name="morph:step 4" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m5" index="4" name="morph:step 5" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m6" index="5" name="morph:step 6" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m7" index="6" name="morph:step 7" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m8" index="7" name="morph:step 8" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m9" index="8" name="morph:step 9" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m10" index="9" name="morph:step 10" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m11" index="10" name="morph:step 11" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m12" index="11" name="morph:step 12" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m13" index="12" name="morph:step 13" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m14" index="13" name="morph:step 14" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m15" index="14" name="morph:step 15" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m16" index="15" name="morph:step 16" class="morph"  minValue="-127" maxValue="127" />
 
 	<light component-id="ledStep1-16" type="led-array" name="Step 1-16" minValue="0" maxValue="16" />
 
@@ -1588,7 +1588,7 @@
     <connector component-id="c3" index="0" name="out" type="output" signal="control" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="time" class="parameter" defaultValue="64" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:time" class="morph" defaultValue="64" />
+    <parameter component-id="m1" index="0" name="morph:time" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.53125" />
     <attribute name="x-mem" type="double" value="0.15625" />
@@ -1646,42 +1646,42 @@
     <parameter component-id="p34" index="33" name="seq 2, step 14" class="parameter" maxValue="1" formatter="type('off-on')" extension="m34" />
     <parameter component-id="p35" index="34" name="seq 2, step 15" class="parameter" maxValue="1" formatter="type('off-on')" extension="m35" />
     <parameter component-id="p36" index="35" name="seq 2, step 16" class="parameter" maxValue="1" formatter="type('off-on')" extension="m36" />
-    <parameter component-id="m1" index="0" name="morph:stepcount" class="morph" defaultValue="15" />
-    <parameter component-id="m2" index="1" name="morph:active" class="morph" maxValue="1" />
-    <parameter component-id="m3" index="2" name="morph:gate1" class="morph" maxValue="1" />
-    <parameter component-id="m4" index="3" name="morph:gate2" class="morph" maxValue="1" />
-    <parameter component-id="m5" index="4" name="morph:seq 1, step 1" class="morph" maxValue="1" />
-    <parameter component-id="m6" index="5" name="morph:seq 1, step 2" class="morph" maxValue="1" />
-    <parameter component-id="m7" index="6" name="morph:seq 1, step 3" class="morph" maxValue="1" />
-    <parameter component-id="m8" index="7" name="morph:seq 1, step 4" class="morph" maxValue="1" />
-    <parameter component-id="m9" index="8" name="morph:seq 1, step 5" class="morph" maxValue="1" />
-    <parameter component-id="m10" index="9" name="morph:seq 1, step 6" class="morph" maxValue="1" />
-    <parameter component-id="m11" index="10" name="morph:seq 1, step 7" class="morph" maxValue="1" />
-    <parameter component-id="m12" index="11" name="morph:seq 1, step 8" class="morph" maxValue="1" />
-    <parameter component-id="m13" index="12" name="morph:seq 1, step 9" class="morph" maxValue="1" />
-    <parameter component-id="m14" index="13" name="morph:seq 1, step 10" class="morph" maxValue="1" />
-    <parameter component-id="m15" index="14" name="morph:seq 1, step 11" class="morph" maxValue="1" />
-    <parameter component-id="m16" index="15" name="morph:seq 1, step 12" class="morph" maxValue="1" />
-    <parameter component-id="m17" index="16" name="morph:seq 1, step 13" class="morph" maxValue="1" />
-    <parameter component-id="m18" index="17" name="morph:seq 1, step 14" class="morph" maxValue="1" />
-    <parameter component-id="m19" index="18" name="morph:seq 1, step 15" class="morph" maxValue="1" />
-    <parameter component-id="m20" index="19" name="morph:seq 1, step 16" class="morph" maxValue="1" />
-    <parameter component-id="m21" index="20" name="morph:seq 2, step 1" class="morph" maxValue="1" />
-    <parameter component-id="m22" index="21" name="morph:seq 2, step 2" class="morph" maxValue="1" />
-    <parameter component-id="m23" index="22" name="morph:seq 2, step 3" class="morph" maxValue="1" />
-    <parameter component-id="m24" index="23" name="morph:seq 2, step 4" class="morph" maxValue="1" />
-    <parameter component-id="m25" index="24" name="morph:seq 2, step 5" class="morph" maxValue="1" />
-    <parameter component-id="m26" index="25" name="morph:seq 2, step 6" class="morph" maxValue="1" />
-    <parameter component-id="m27" index="26" name="morph:seq 2, step 7" class="morph" maxValue="1" />
-    <parameter component-id="m28" index="27" name="morph:seq 2, step 8" class="morph" maxValue="1" />
-    <parameter component-id="m29" index="28" name="morph:seq 2, step 9" class="morph" maxValue="1" />
-    <parameter component-id="m30" index="29" name="morph:seq 2, step 10" class="morph" maxValue="1" />
-    <parameter component-id="m31" index="30" name="morph:seq 2, step 11" class="morph" maxValue="1" />
-    <parameter component-id="m32" index="31" name="morph:seq 2, step 12" class="morph" maxValue="1" />
-    <parameter component-id="m33" index="32" name="morph:seq 2, step 13" class="morph" maxValue="1" />
-    <parameter component-id="m34" index="33" name="morph:seq 2, step 14" class="morph" maxValue="1" />
-    <parameter component-id="m35" index="34" name="morph:seq 2, step 15" class="morph" maxValue="1" />
-    <parameter component-id="m36" index="35" name="morph:seq 2, step 16" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:stepcount" class="morph"  minValue="-15" maxValue="15" />
+    <parameter component-id="m2" index="1" name="morph:active" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m3" index="2" name="morph:gate1" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m4" index="3" name="morph:gate2" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m5" index="4" name="morph:seq 1, step 1" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m6" index="5" name="morph:seq 1, step 2" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m7" index="6" name="morph:seq 1, step 3" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m8" index="7" name="morph:seq 1, step 4" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m9" index="8" name="morph:seq 1, step 5" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m10" index="9" name="morph:seq 1, step 6" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m11" index="10" name="morph:seq 1, step 7" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m12" index="11" name="morph:seq 1, step 8" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m13" index="12" name="morph:seq 1, step 9" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m14" index="13" name="morph:seq 1, step 10" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m15" index="14" name="morph:seq 1, step 11" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m16" index="15" name="morph:seq 1, step 12" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m17" index="16" name="morph:seq 1, step 13" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m18" index="17" name="morph:seq 1, step 14" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m19" index="18" name="morph:seq 1, step 15" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m20" index="19" name="morph:seq 1, step 16" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m21" index="20" name="morph:seq 2, step 1" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m22" index="21" name="morph:seq 2, step 2" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m23" index="22" name="morph:seq 2, step 3" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m24" index="23" name="morph:seq 2, step 4" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m25" index="24" name="morph:seq 2, step 5" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m26" index="25" name="morph:seq 2, step 6" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m27" index="26" name="morph:seq 2, step 7" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m28" index="27" name="morph:seq 2, step 8" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m29" index="28" name="morph:seq 2, step 9" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m30" index="29" name="morph:seq 2, step 10" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m31" index="30" name="morph:seq 2, step 11" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m32" index="31" name="morph:seq 2, step 12" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m33" index="32" name="morph:seq 2, step 13" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m34" index="33" name="morph:seq 2, step 14" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m35" index="34" name="morph:seq 2, step 15" class="morph" minValue="-1" maxValue="1" />
+    <parameter component-id="m36" index="35" name="morph:seq 2, step 16" class="morph" minValue="-1" maxValue="1" />
     
 	<light component-id="ledStep1-16" type="led-array" name="Step 1-16" minValue="0" maxValue="16" />
     
@@ -1706,8 +1706,8 @@
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="modulation" class="parameter" extension="m1" />
     <parameter component-id="p2" index="1" name="crossfade" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m2" />
-    <parameter component-id="m1" index="0" name="morph:modulation" class="morph" />
-    <parameter component-id="m2" index="1" name="morph:crossfade" class="morph" defaultValue="64" />
+    <parameter component-id="m1" index="0" name="morph:modulation" class="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:crossfade" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.65625" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -1729,9 +1729,9 @@
     <parameter component-id="p1" index="0" name="in sense 1" class="parameter" defaultValue="127" extension="m1" />
     <parameter component-id="p2" index="1" name="in sense 2" class="parameter" defaultValue="127" extension="m2" />
     <parameter component-id="p3" index="2" name="in sense 3" class="parameter" defaultValue="127" extension="m3" />
-    <parameter component-id="m1" index="0" name="morph:in sense 1" class="morph" defaultValue="127" />
-    <parameter component-id="m2" index="1" name="morph:in sense 2" class="morph" defaultValue="127" />
-    <parameter component-id="m3" index="2" name="morph:in sense 3" class="morph" defaultValue="127" />
+    <parameter component-id="m1" index="0" name="morph:in sense 1" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:in sense 2" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="2" name="morph:in sense 3" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.90625" />
     <attribute name="x-mem" type="double" value="0.15625" />
@@ -1759,12 +1759,12 @@
     <parameter component-id="p4" index="3" name="sustain" class="parameter" defaultValue="64" extension="m4" />
     <parameter component-id="p5" index="4" name="release" class="parameter" formatter="type('adsr-time')" extension="m5" />
     <parameter component-id="p6" index="5" name="invert" class="parameter" maxValue="1" formatter="type('off-on')" extension="m6" />
-    <parameter component-id="m1" index="0" name="morph:attack shape" class="morph" maxValue="2" />
-    <parameter component-id="m2" index="1" name="morph:attack" class="morph" />
-    <parameter component-id="m3" index="2" name="morph:decay" class="morph" />
-    <parameter component-id="m4" index="3" name="morph:sustain" class="morph" defaultValue="64" />
-    <parameter component-id="m5" index="4" name="morph:release" class="morph" />
-    <parameter component-id="m6" index="5" name="morph:invert" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:attack shape" class="morph"  minValue="-2" maxValue="2" />
+    <parameter component-id="m2" index="1" name="morph:attack" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m3" index="2" name="morph:decay" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m4" index="3" name="morph:sustain" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m5" index="4" name="morph:release" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m6" index="5" name="morph:invert" class="morph"  minValue="-1" maxValue="1"/>
     <light component-id="ledGateIn" name="LED Gate" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.625" />
@@ -1795,15 +1795,15 @@
     <parameter component-id="p7" index="6" name="act" class="parameter" maxValue="1" formatter="type('off-on')" extension="m7" />
     <parameter component-id="p8" index="7" name="mon" class="parameter" maxValue="1" formatter="type('off-on')" extension="m8" />
     <parameter component-id="p9" index="8" name="bypass" class="parameter" maxValue="1" formatter="type('off-on')" extension="m9" />
-    <parameter component-id="m1" index="0" name="morph:attack" class="morph" />
-    <parameter component-id="m2" index="1" name="morph:release" class="morph" defaultValue="20" />
-    <parameter component-id="m3" index="2" name="morph:treshold" class="morph" maxValue="42" defaultValue="20" />
-    <parameter component-id="m4" index="3" name="morph:ratio" class="morph" maxValue="66" defaultValue="20" />
-    <parameter component-id="m5" index="4" name="morph:ref level" class="morph" maxValue="42" defaultValue="30" />
-    <parameter component-id="m6" index="5" name="morph:limiter" class="morph" maxValue="24" defaultValue="12" />
-    <parameter component-id="m7" index="6" name="morph:act" class="morph" maxValue="1" />
-    <parameter component-id="m8" index="7" name="morph:mon" class="morph" maxValue="1" />
-    <parameter component-id="m9" index="8" name="morph:bypass" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:attack" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m2" index="1" name="morph:release" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="2" name="morph:treshold" class="morph"  minValue="-42" maxValue="42" />
+    <parameter component-id="m4" index="3" name="morph:ratio" class="morph"  minValue="-66" maxValue="66" />
+    <parameter component-id="m5" index="4" name="morph:ref level" class="morph"  minValue="-42" maxValue="42" />
+    <parameter component-id="m6" index="5" name="morph:limiter" class="morph"  minValue="-24" maxValue="24" />
+    <parameter component-id="m7" index="6" name="morph:act" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m8" index="7" name="morph:mon" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m9" index="8" name="morph:bypass" class="morph"  minValue="-1" maxValue="1" />
     
     <light index="0" type="meter" component-id="lightGainReduction" name="Gain reduction DB" minValue="0" maxValue="127" ledOnValue="127">
 	    <attribute name="limiter-active" value="127"/>
@@ -1826,7 +1826,7 @@
     <connector component-id="c2" index="0" name="out" type="output" signal="control" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="range" class="parameter" formatter="offset(-64)" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:range" class="morph" />
+    <parameter component-id="m1" index="0" name="morph:range" class="morph" minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.59375" />
     <attribute name="x-mem" type="double" value="0.28125" />
@@ -1861,15 +1861,15 @@
     <parameter component-id="p7" index="6" name="sustain mod" class="parameter" extension="m7" />
     <parameter component-id="p8" index="7" name="release mod" class="parameter" extension="m8" />
     <parameter component-id="p9" index="8" name="invert" class="parameter" maxValue="1" formatter="type('off-on')" extension="m9" />
-    <parameter component-id="m1" index="0" name="morph:attack" class="morph" />
-    <parameter component-id="m2" index="1" name="morph:decay" class="morph" defaultValue="77" />
-    <parameter component-id="m3" index="2" name="morph:sustain" class="morph" />
-    <parameter component-id="m4" index="3" name="morph:release" class="morph" />
-    <parameter component-id="m5" index="4" name="morph:attack mod" class="morph" />
-    <parameter component-id="m6" index="5" name="morph:decay mod" class="morph" />
-    <parameter component-id="m7" index="6" name="morph:sustain mod" class="morph" />
-    <parameter component-id="m8" index="7" name="morph:release mod" class="morph" />
-    <parameter component-id="m9" index="8" name="morph:invert" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:attack" class="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:decay" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="2" name="morph:sustain" class="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="3" name="morph:release" class="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m5" index="4" name="morph:attack mod" class="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m6" index="5" name="morph:decay mod" class="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m7" index="6" name="morph:sustain mod" class="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m8" index="7" name="morph:release mod" class="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m9" index="8" name="morph:invert" class="morph"  minValue="-1" maxValue="1" />
     <light component-id="ledGate" name="LED Gate" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="3.34375" />
@@ -1898,14 +1898,14 @@
     <parameter component-id="p6" index="5" name="rate kbt" class="parameter" extension="m6" />
     <parameter component-id="p7" index="6" name="phase" class="parameter" defaultValue="64" format-id="phase" extension="m7" />
     <parameter component-id="p8" index="7" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m8" />
-    <parameter component-id="m1" index="0" name="morph:rate" class="morph" defaultValue="64" />
-    <parameter component-id="m2" index="1" name="morph:range" class="morph" maxValue="2" />
-    <parameter component-id="m3" index="2" name="morph:waveform" class="morph" maxValue="4" />
-    <parameter component-id="m4" index="3" name="morph:rate mod" class="morph" />
-    <parameter component-id="m5" index="4" name="morph:mono" class="morph" maxValue="1" />
-    <parameter component-id="m6" index="5" name="morph:rate kbt" class="morph" />
-    <parameter component-id="m7" index="6" name="morph:phase" class="morph" defaultValue="64" />
-    <parameter component-id="m8" index="7" name="morph:mute" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:range" class="morph"  minValue="-2" maxValue="2" />
+    <parameter component-id="m3" index="2" name="morph:waveform" class="morph"  minValue="-4" maxValue="4" />
+    <parameter component-id="m4" index="3" name="morph:rate mod" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m5" index="4" name="morph:mono" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m6" index="5" name="morph:rate kbt" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m7" index="6" name="morph:phase" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m8" index="7" name="morph:mute" class="morph"  minValue="-1" maxValue="1" />
     <light component-id="ledControlOut" name="LED Control Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.78125" />
@@ -1935,14 +1935,14 @@
     <parameter component-id="p6" index="5" name="rate kbt" class="parameter" extension="m6" />
     <parameter component-id="p7" index="6" name="PW mod" class="parameter" extension="m7" />
     <parameter component-id="p8" index="7" name="PW" class="parameter" defaultValue="64" extension="m8" />
-    <parameter component-id="m1" index="0" name="morph:rate" class="morph" defaultValue="64" />
-    <parameter component-id="m2" index="1" name="morph:range" class="morph" maxValue="2" />
-    <parameter component-id="m3" index="2" name="morph:phase" class="morph" defaultValue="64" />
-    <parameter component-id="m4" index="3" name="morph:rate mod" class="morph" />
-    <parameter component-id="m5" index="4" name="morph:mono" class="morph" maxValue="1" />
-    <parameter component-id="m6" index="5" name="morph:rate kbt" class="morph" />
-    <parameter component-id="m7" index="6" name="morph:PW mod" class="morph" />
-    <parameter component-id="m8" index="7" name="morph:PW" class="morph" defaultValue="64" />
+    <parameter component-id="m1" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:range" class="morph"  minValue="-2" maxValue="2" />
+    <parameter component-id="m3" index="2" name="morph:phase" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="3" name="morph:rate mod" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m5" index="4" name="morph:mono" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m6" index="5" name="morph:rate kbt" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m7" index="6" name="morph:PW mod" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m8" index="7" name="morph:PW" class="morph"  minValue="-127" maxValue="127" />
     <light component-id="ledControlOut" name="LED Control Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.1875" />
@@ -1968,12 +1968,12 @@
     <parameter component-id="p4" index="3" name="rate mod" class="parameter" extension="m4" />
     <parameter component-id="p5" index="4" name="mono" class="parameter" maxValue="1" formatter="type('off-on')" extension="m5" />
     <parameter component-id="p6" index="5" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m6" />
-    <parameter component-id="m1" index="0" name="morph:rate" class="morph" defaultValue="64" />
-    <parameter component-id="m2" index="1" name="morph:range" class="morph" maxValue="2" />
-    <parameter component-id="m3" index="2" name="morph:waveform" class="morph" maxValue="4" />
-    <parameter component-id="m4" index="3" name="morph:rate mod" class="morph" />
-    <parameter component-id="m5" index="4" name="morph:mono" class="morph" maxValue="1" />
-    <parameter component-id="m6" index="5" name="morph:mute" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:range" class="morph"  minValue="-2" maxValue="2" />
+    <parameter component-id="m3" index="2" name="morph:waveform" class="morph"  minValue="-4" maxValue="4" />
+    <parameter component-id="m4" index="3" name="morph:rate mod" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m5" index="4" name="morph:mono" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m6" index="5" name="morph:mute" class="morph"  minValue="-1" maxValue="1" />
     <light component-id="ledControlOut" name="LED Control Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.46875" />
@@ -1997,7 +1997,7 @@
     </parameter>
     <!-- parameter(s) -->
     <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" format-id="lfo-hz" extension="m2" />
-    <parameter component-id="m2" index="0" name="morph:rate" class="morph" defaultValue="64" />
+    <parameter component-id="m2" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127" />
     <light component-id="ledControlOut" name="LED Control Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.375" />
@@ -2021,7 +2021,7 @@
     </parameter>
     <!-- parameter(s) -->
     <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" format-id="lfo-hz" extension="m2" />
-    <parameter component-id="m2" index="0" name="morph:rate" class="morph" defaultValue="64" />
+    <parameter component-id="m2" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127" />
     <light component-id="ledControlOut" name="LED Control Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.78125" />
@@ -2045,7 +2045,7 @@
     </parameter>
     <!-- parameter(s) -->
     <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" format-id="lfo-hz" extension="m2" />
-    <parameter component-id="m2" index="0" name="morph:rate" class="morph" defaultValue="64" />
+    <parameter component-id="m2" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127" />
     <light component-id="ledControlOut" name="LED Control Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.375" />
@@ -2069,7 +2069,7 @@
     </parameter>
     <!-- parameter(s) -->
     <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" format-id="lfo-hz" extension="m2" />
-    <parameter component-id="m2" index="0" name="morph:rate" class="morph" defaultValue="64" />
+    <parameter component-id="m2" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.34375" />
     <attribute name="x-mem" type="double" value="0.15625" />
@@ -2087,7 +2087,7 @@
     <connector component-id="c1" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="color" class="parameter" />
-    <parameter component-id="p2" index="0" name="morph:color" class="morph" />
+    <parameter component-id="p2" index="0" name="morph:color" class="morph"  minValue="-127" maxValue="127"/>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.65625" />
     <attribute name="x-mem" type="double" value="0.28125" />
@@ -2120,21 +2120,21 @@
     <parameter component-id="p13" index="12" name="6.4" class="parameter" defaultValue="127" extension="m13" />
     <parameter component-id="p14" index="13" name="8.3" class="parameter" defaultValue="127" extension="m14" />
     <parameter component-id="p15" index="14" name="bypass" class="parameter" maxValue="1" extension="m15" />
-    <parameter component-id="m1" index="0" name="morph:50" class="morph" defaultValue="127" />
-    <parameter component-id="m2" index="1" name="morph:75" class="morph" defaultValue="127" />
-    <parameter component-id="m3" index="2" name="morph:110" class="morph" defaultValue="127" />
-    <parameter component-id="m4" index="3" name="morph:170" class="morph" defaultValue="127" />
-    <parameter component-id="m5" index="4" name="morph:250" class="morph" defaultValue="127" />
-    <parameter component-id="m6" index="5" name="morph:380" class="morph" defaultValue="127" />
-    <parameter component-id="m7" index="6" name="morph:570" class="morph" defaultValue="127" />
-    <parameter component-id="m8" index="7" name="morph:850" class="morph" defaultValue="127" />
-    <parameter component-id="m9" index="8" name="morph:1.3" class="morph" defaultValue="127" />
-    <parameter component-id="m10" index="9" name="morph:1.9" class="morph" defaultValue="127" />
-    <parameter component-id="m11" index="10" name="morph:2.9" class="morph" defaultValue="127" />
-    <parameter component-id="m12" index="11" name="morph:4.2" class="morph" defaultValue="127" />
-    <parameter component-id="m13" index="12" name="morph:6.4" class="morph" defaultValue="127" />
-    <parameter component-id="m14" index="13" name="morph:8.3" class="morph" defaultValue="127" />
-    <parameter component-id="m15" index="14" name="morph:bypass" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:50" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:75" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="2" name="morph:110" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="3" name="morph:170" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m5" index="4" name="morph:250" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m6" index="5" name="morph:380" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m7" index="6" name="morph:570" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m8" index="7" name="morph:850" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m9" index="8" name="morph:1.3" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m10" index="9" name="morph:1.9" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m11" index="10" name="morph:2.9" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m12" index="11" name="morph:4.2" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m13" index="12" name="morph:6.4" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m14" index="13" name="morph:8.3" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m15" index="14" name="morph:bypass" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="17.9375" />
     <attribute name="x-mem" type="double" value="5.59375" />
@@ -2154,8 +2154,8 @@
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="mono" class="parameter" maxValue="1" formatter="type('off-on')" extension="m1" />
     <parameter component-id="p2" index="1" name="col" class="parameter" maxValue="1" formatter="type('off-on')" extension="m2" />
-    <parameter component-id="m1" index="0" name="morph:mono" class="morph" maxValue="1" />
-    <parameter component-id="m2" index="1" name="morph:col" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:mono" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m2" index="1" name="morph:col" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.625" />
     <attribute name="x-mem" type="double" value="0.21875" />
@@ -2178,7 +2178,7 @@
     </parameter>
     <!-- parameter(s) -->
     <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" format-id="lfo-hz" extension="m2" />
-    <parameter component-id="m2" index="0" name="morph:rate" class="morph" defaultValue="64" />
+    <parameter component-id="m2" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127"/>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.625" />
     <attribute name="x-mem" type="double" value="0.21875" />
@@ -2196,7 +2196,7 @@
     <connector component-id="c1" index="0" name="out" type="output" signal="logic" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="density" class="parameter" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:density" class="morph" />
+    <parameter component-id="m1" index="0" name="morph:density" class="morph" minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.34375" />
     <attribute name="x-mem" type="double" value="0.21875" />
@@ -2216,7 +2216,7 @@
     <connector component-id="c2" index="0" name="out" type="output" signal="logic" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="time" class="parameter" defaultValue="64" format-id="logic-delay" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:time" class="morph" defaultValue="64" />
+    <parameter component-id="m1" index="0" name="morph:time" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.28125" />
     <attribute name="x-mem" type="double" value="0.15625" />
@@ -2235,7 +2235,7 @@
     <connector component-id="c2" index="0" name="out" type="output" signal="logic" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="time" class="parameter" defaultValue="64" format-id="logic-delay" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:time" class="morph" defaultValue="64" />
+    <parameter component-id="m1" index="0" name="morph:time" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.625" />
     <attribute name="x-mem" type="double" value="0.15625" />
@@ -2254,7 +2254,7 @@
     <connector component-id="c2" index="0" name="out" type="output" signal="logic" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="time" class="parameter" defaultValue="64" format-id="logic-delay" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:time" class="morph" defaultValue="64" />
+    <parameter component-id="m1" index="0" name="morph:time" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.34375" />
     <attribute name="x-mem" type="double" value="0.21875" />
@@ -2273,7 +2273,7 @@
     <connector component-id="c2" index="0" name="out" type="output" signal="control" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="time" class="parameter" defaultValue="64" format-id="smooth-time" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:time" class="morph" defaultValue="64" />
+    <parameter component-id="m1" index="0" name="morph:time" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.25" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -2307,15 +2307,15 @@
     <parameter component-id="p7" index="6" name="in sense 7" class="parameter" defaultValue="100" extension="m7" />
     <parameter component-id="p8" index="7" name="in sense 8" class="parameter" defaultValue="100" extension="m8" />
     <parameter component-id="p9" index="8" name="-6dB" class="parameter" maxValue="1" extension="m9" />
-    <parameter component-id="m1" index="0" name="morph:in sense 1" class="morph" defaultValue="100" />
-    <parameter component-id="m2" index="1" name="morph:in sense 2" class="morph" defaultValue="100" />
-    <parameter component-id="m3" index="2" name="morph:in sense 3" class="morph" defaultValue="100" />
-    <parameter component-id="m4" index="3" name="morph:in sense 4" class="morph" defaultValue="100" />
-    <parameter component-id="m5" index="4" name="morph:in sense 5" class="morph" defaultValue="100" />
-    <parameter component-id="m6" index="5" name="morph:in sense 6" class="morph" defaultValue="100" />
-    <parameter component-id="m7" index="6" name="morph:in sense 7" class="morph" defaultValue="100" />
-    <parameter component-id="m8" index="7" name="morph:in sense 8" class="morph" defaultValue="100" />
-    <parameter component-id="m9" index="8" name="morph:-6dB" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:in sense 1" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:in sense 2" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="2" name="morph:in sense 3" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="3" name="morph:in sense 4" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m5" index="4" name="morph:in sense 5" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m6" index="5" name="morph:in sense 6" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m7" index="6" name="morph:in sense 7" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m8" index="7" name="morph:in sense 8" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m9" index="8" name="morph:-6dB" class="morph"  minValue="-1" maxValue="1" />
     
     <light component-id="ledAudioOut" name="LED Audio Out" index="0" type="led" />
     <!-- custom attributes -->
@@ -2336,8 +2336,8 @@
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="value" class="parameter" defaultValue="64" format-id="offset-64-2" extension="m1" />
     <parameter component-id="p2" index="1" name="unipolar" class="parameter" maxValue="1" formatter="type('off-on')" extension="m2" />
-    <parameter component-id="m1" index="0" name="morph:value" class="morph" defaultValue="64" />
-    <parameter component-id="m2" index="1" name="morph:unipolar" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:value" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:unipolar" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.0" />
     <attribute name="x-mem" type="double" value="0.0" />
@@ -2357,7 +2357,7 @@
     <connector component-id="c3" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="shift" class="parameter" maxValue="1" formatter="type('off-on')" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:shift" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:shift" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.78125" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -2386,15 +2386,15 @@
     <parameter component-id="p7" index="6" name="frequency" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m7" />
     <parameter component-id="p8" index="7" name="frequency mod" class="parameter" extension="m8" />
     <parameter component-id="p9" index="8" name="resonance" class="parameter" defaultValue="64" extension="m9" />
-    <parameter component-id="m1" index="0" name="morph:left vowel" class="morph" maxValue="8" />
-    <parameter component-id="m2" index="1" name="morph:middle vowel" class="morph" maxValue="8" defaultValue="1" />
-    <parameter component-id="m3" index="2" name="morph:right vowel" class="morph" maxValue="8" defaultValue="2" />
-    <parameter component-id="m4" index="3" name="morph:in amplification" class="morph" defaultValue="100" />
-    <parameter component-id="m5" index="4" name="morph:vowel select" class="morph" defaultValue="64" />
-    <parameter component-id="m6" index="5" name="morph:vowel select mod" class="morph" />
-    <parameter component-id="m7" index="6" name="morph:frequency" class="morph" defaultValue="64" />
-    <parameter component-id="m8" index="7" name="morph:frequency mod" class="morph" />
-    <parameter component-id="m9" index="8" name="morph:resonance" class="morph" defaultValue="64" />
+    <parameter component-id="m1" index="0" name="morph:left vowel" class="morph"  minValue="-8" maxValue="8" />
+    <parameter component-id="m2" index="1" name="morph:middle vowel" class="morph"  minValue="-8" maxValue="8" />
+    <parameter component-id="m3" index="2" name="morph:right vowel" class="morph"  minValue="-8" maxValue="8" />
+    <parameter component-id="m4" index="3" name="morph:in amplification" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m5" index="4" name="morph:vowel select" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m6" index="5" name="morph:vowel select mod" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m7" index="6" name="morph:frequency" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m8" index="7" name="morph:frequency mod" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m9" index="8" name="morph:resonance" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="7.59375" />
     <attribute name="x-mem" type="double" value="1.78125" />
@@ -2424,12 +2424,12 @@
     <parameter component-id="p4" index="3" name="A mod" class="parameter" extension="m4" />
     <parameter component-id="p5" index="4" name="H mod" class="parameter" extension="m5" />
     <parameter component-id="p6" index="5" name="D mod" class="parameter" extension="m6" />
-    <parameter component-id="m1" index="0" name="morph:A" class="morph" />
-    <parameter component-id="m2" index="1" name="morph:H" class="morph" defaultValue="32" />
-    <parameter component-id="m3" index="2" name="morph:D" class="morph" defaultValue="77" />
-    <parameter component-id="m4" index="3" name="morph:A mod" class="morph" />
-    <parameter component-id="m5" index="4" name="morph:H mod" class="morph" />
-    <parameter component-id="m6" index="5" name="morph:D mod" class="morph" />
+    <parameter component-id="m1" index="0" name="morph:A" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m2" index="1" name="morph:H" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="2" name="morph:D" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="3" name="morph:A mod" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m5" index="4" name="morph:H mod" class="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m6" index="5" name="morph:D mod" class="morph"  minValue="-127" maxValue="127"/>
     <light component-id="ledTriggerIn" name="LED Trigger Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="2.46875" />
@@ -2452,8 +2452,8 @@
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="pan mod" class="parameter" extension="m1" />
     <parameter component-id="p2" index="1" name="pan" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m2" />
-    <parameter component-id="m1" index="0" name="morph:pan mod" class="morph" />
-    <parameter component-id="m2" index="1" name="morph:pan" class="morph" defaultValue="64" />
+    <parameter component-id="m1" index="0" name="morph:pan mod" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m2" index="1" name="morph:pan" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.65625" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -2473,7 +2473,7 @@
     <connector component-id="c3" index="0" name="out" type="output" signal="control" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="time" class="parameter" defaultValue="64" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:time" class="morph" defaultValue="64" />
+    <parameter component-id="m1" index="0" name="morph:time" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.46875" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -2502,10 +2502,10 @@
     <parameter component-id="p3" index="1" name="kbt" class="parameter" defaultValue="64" extension="m3" />
     <parameter component-id="p4" index="2" name="resonance" class="parameter" extension="m4" />
     <parameter component-id="p5" index="3" name="freqmod" class="parameter" extension="m5" />
-    <parameter component-id="m2" index="0" name="morph:freq" class="morph" defaultValue="60" />
-    <parameter component-id="m3" index="1" name="morph:kbt" class="morph" defaultValue="64" />
-    <parameter component-id="m4" index="2" name="morph:resonance" class="morph" />
-    <parameter component-id="m5" index="3" name="morph:freqmod" class="morph" />
+    <parameter component-id="m2" index="0" name="morph:freq" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="1" name="morph:kbt" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="2" name="morph:resonance" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m5" index="3" name="morph:freqmod" class="morph"  minValue="-127" maxValue="127"/>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="4.03125" />
     <attribute name="x-mem" type="double" value="0.5625" />
@@ -2532,9 +2532,9 @@
     <parameter component-id="p2" index="0" name="freq" class="parameter" defaultValue="60" format-id="filter-hz-2" extension="m2" />
     <parameter component-id="p3" index="1" name="resonance" class="parameter" extension="m3" />
     <parameter component-id="p4" index="2" name="gain control" class="parameter" maxValue="1" defaultValue="1" formatter="type('off-on')" extension="m4" />
-    <parameter component-id="m2" index="0" name="morph:freq" class="morph" defaultValue="60" />
-    <parameter component-id="m3" index="1" name="morph:resonance" class="morph" />
-    <parameter component-id="m4" index="2" name="morph:gain control" class="morph" maxValue="1" defaultValue="1" />
+    <parameter component-id="m2" index="0" name="morph:freq" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="1" name="morph:resonance" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m4" index="2" name="morph:gain control" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.78125" />
     <attribute name="x-mem" type="double" value="0.21875" />
@@ -2569,16 +2569,16 @@
     <parameter component-id="p9" index="7" name="slope" class="parameter" maxValue="1" defaultValue="1" extension="m9" />
     <parameter component-id="p10" index="8" name="frequency mod 2" class="parameter" extension="m10" />
     <parameter component-id="p11" index="9" name="bypass" class="parameter" maxValue="1" formatter="type('off-on')" extension="m11" />
-    <parameter component-id="m2" index="0" name="morph:filter type" class="morph" maxValue="3" />
-    <parameter component-id="m3" index="1" name="morph:gain control" class="morph" maxValue="1" defaultValue="1" />
-    <parameter component-id="m4" index="2" name="morph:frequency mod 1" class="morph" />
-    <parameter component-id="m5" index="3" name="morph:frequency" class="morph" defaultValue="60" />
-    <parameter component-id="m6" index="4" name="morph:kbt" class="morph" defaultValue="64" />
-    <parameter component-id="m7" index="5" name="morph:resonance mod" class="morph" />
-    <parameter component-id="m8" index="6" name="morph:resonance" class="morph" />
-    <parameter component-id="m9" index="7" name="morph:slope" class="morph" maxValue="1" defaultValue="1" />
-    <parameter component-id="m10" index="8" name="morph:frequency mod 2" class="morph" />
-    <parameter component-id="m11" index="9" name="morph:bypass" class="morph" maxValue="1" />
+    <parameter component-id="m2" index="0" name="morph:filter type" class="morph"  minValue="-3" maxValue="3" />
+    <parameter component-id="m3" index="1" name="morph:gain control" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m4" index="2" name="morph:frequency mod 1" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m5" index="3" name="morph:frequency" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m6" index="4" name="morph:kbt" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m7" index="5" name="morph:resonance mod" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m8" index="6" name="morph:resonance" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m9" index="7" name="morph:slope" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m10" index="8" name="morph:frequency mod 2" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m11" index="9" name="morph:bypass" class="morph"  minValue="-1" maxValue="1"/>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="6.625" />
     <attribute name="x-mem" type="double" value="0.5625" />
@@ -2610,17 +2610,17 @@
     <parameter component-id="p9" index="8" name="time 5" class="parameter" formatter="type('adsr-time')" extension="m9" />
     <parameter component-id="p10" index="9" name="sustain" class="parameter" maxValue="4" formatter="type('multi-env-sustain')" extension="m10" />
     <parameter component-id="p11" index="10" name="curve" class="parameter" maxValue="2" extension="m11" />
-    <parameter component-id="m1" index="0" name="morph:level 1" class="morph" defaultValue="127" />
-    <parameter component-id="m2" index="1" name="morph:level 2" class="morph" defaultValue="45" />
-    <parameter component-id="m3" index="2" name="morph:level 3" class="morph" defaultValue="64" />
-    <parameter component-id="m4" index="3" name="morph:level 4" class="morph" />
-    <parameter component-id="m5" index="4" name="morph:time 1" class="morph" />
-    <parameter component-id="m6" index="5" name="morph:time 2" class="morph" defaultValue="30" />
-    <parameter component-id="m7" index="6" name="morph:time 3" class="morph" defaultValue="30" />
-    <parameter component-id="m8" index="7" name="morph:time 4" class="morph" defaultValue="30" />
-    <parameter component-id="m9" index="8" name="morph:time 5" class="morph" />
-    <parameter component-id="m10" index="9" name="morph:sustain" class="morph" maxValue="4" />
-    <parameter component-id="m11" index="10" name="morph:curve" class="morph" maxValue="2" />
+    <parameter component-id="m1" index="0" name="morph:level 1" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:level 2" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="2" name="morph:level 3" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="3" name="morph:level 4" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m5" index="4" name="morph:time 1" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m6" index="5" name="morph:time 2" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m7" index="6" name="morph:time 3" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m8" index="7" name="morph:time 4" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m9" index="8" name="morph:time 5" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m10" index="9" name="morph:sustain" class="morph"  minValue="-4" maxValue="4" />
+    <parameter component-id="m11" index="10" name="morph:curve" class="morph"  minValue="-2" maxValue="2" />
     <light component-id="ledGateIn" name="LED Gate Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.96875" />
@@ -2657,7 +2657,7 @@
     <connector component-id="c2" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="bits" class="parameter" maxValue="12" formatter="offset(1)" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:bits" class="morph" maxValue="12" />
+    <parameter component-id="m1" index="0" name="morph:bits" class="morph"  minValue="-12" maxValue="12" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.53125" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -2677,8 +2677,8 @@
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="mode" class="parameter" maxValue="2" extension="m1" />
     <parameter component-id="p2" index="1" name="inv" class="parameter" maxValue="1" formatter="type('off-on')" extension="m2" />
-    <parameter component-id="m1" index="0" name="morph:mode" class="morph" maxValue="2" />
-    <parameter component-id="m2" index="1" name="morph:inv" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:mode" class="morph"  minValue="-2" maxValue="2" />
+    <parameter component-id="m2" index="1" name="morph:inv" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.53125" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -2714,22 +2714,22 @@
     <parameter component-id="p14" index="13" name="Click" class="parameter" defaultValue="16" extension="m14" />
     <parameter component-id="p15" index="14" name="Noise" class="parameter" defaultValue="16" extension="m15" />
     <parameter component-id="p16" index="15" name="Mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m16" />
-    <parameter component-id="m1" index="0" name="morph:MTune" class="morph" />
-    <parameter component-id="m2" index="1" name="morph:STune" class="morph" />
-    <parameter component-id="m3" index="2" name="morph:MDecay" class="morph" defaultValue="16" />
-    <parameter component-id="m4" index="3" name="morph:SDecay" class="morph" defaultValue="16" />
-    <parameter component-id="m5" index="4" name="morph:MLevel" class="morph" defaultValue="16" />
-    <parameter component-id="m6" index="5" name="morph:SLevel" class="morph" defaultValue="16" />
-    <parameter component-id="m7" index="6" name="morph:Filter freq" class="morph" defaultValue="16" />
-    <parameter component-id="m8" index="7" name="morph:Filter res" class="morph" defaultValue="16" />
-    <parameter component-id="m9" index="8" name="morph:Filter sweep" class="morph" defaultValue="16" />
-    <parameter component-id="m10" index="9" name="morph:Filter decay" class="morph" defaultValue="16" />
-    <parameter component-id="m11" index="10" name="morph:Filter mode" class="morph" maxValue="2" />
-    <parameter component-id="m12" index="11" name="morph:Amount" class="morph" defaultValue="16" />
-    <parameter component-id="m13" index="12" name="morph:Decay" class="morph" defaultValue="16" />
-    <parameter component-id="m14" index="13" name="morph:Click" class="morph" defaultValue="16" />
-    <parameter component-id="m15" index="14" name="morph:Noise" class="morph" defaultValue="16" />
-    <parameter component-id="m16" index="15" name="morph:Mute" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:MTune" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m2" index="1" name="morph:STune" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m3" index="2" name="morph:MDecay" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="3" name="morph:SDecay" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m5" index="4" name="morph:MLevel" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m6" index="5" name="morph:SLevel" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m7" index="6" name="morph:Filter freq" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m8" index="7" name="morph:Filter res" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m9" index="8" name="morph:Filter sweep" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m10" index="9" name="morph:Filter decay" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m11" index="10" name="morph:Filter mode" class="morph"  minValue="-2" maxValue="2" />
+    <parameter component-id="m12" index="11" name="morph:Amount" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m13" index="12" name="morph:Decay" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m14" index="13" name="morph:Click" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m15" index="14" name="morph:Noise" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m16" index="15" name="morph:Mute" class="morph"  minValue="-1" maxValue="1" />
     <light component-id="ledTriggerIn" name="LED Trigger In" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="12.21875" />
@@ -2749,7 +2749,7 @@
     <connector component-id="c2" index="0" name="out" type="output" signal="logic" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="level" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:level" class="morph" defaultValue="64" />
+    <parameter component-id="m1" index="0" name="morph:level" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.1875" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -2771,9 +2771,9 @@
     <parameter component-id="p1" index="0" name="clip mod" class="parameter" extension="m1" />
     <parameter component-id="p2" index="1" name="clip" class="parameter" extension="m2" />
     <parameter component-id="p3" index="2" name="sym" class="parameter" maxValue="1" extension="m3" />
-    <parameter component-id="m1" index="0" name="morph:clip mod" class="morph" />
-    <parameter component-id="m2" index="1" name="morph:clip" class="morph" />
-    <parameter component-id="m3" index="2" name="morph:sym" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:clip mod" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m2" index="1" name="morph:clip" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m3" index="2" name="morph:sym" class="morph"  minValue="-1" maxValue="1"/>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.53125" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -2794,8 +2794,8 @@
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="overdrive mod" class="parameter" extension="m1" />
     <parameter component-id="p2" index="1" name="overdrive" class="parameter" extension="m2" />
-    <parameter component-id="m1" index="0" name="morph:overdrive mod" class="morph" />
-    <parameter component-id="m2" index="1" name="morph:overdrive" class="morph" />
+    <parameter component-id="m1" index="0" name="morph:overdrive mod" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m2" index="1" name="morph:overdrive" class="morph"  minValue="-127" maxValue="127"/>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="4.0" />
     <attribute name="x-mem" type="double" value="0.28125" />
@@ -2833,7 +2833,7 @@
     <connector component-id="c2" index="0" name="out" type="output" signal="logic" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="time" class="parameter" defaultValue="64" format-id="logic-delay" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:time" class="morph" defaultValue="64" />
+    <parameter component-id="m1" index="0" name="morph:time" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.28125" />
     <attribute name="x-mem" type="double" value="0.15625" />
@@ -2875,11 +2875,11 @@
     <parameter component-id="p3" index="2" name="inv 2" class="parameter" maxValue="1" formatter="type('off-on')" extension="m3" />
     <parameter component-id="p4" index="3" name="level 2" class="parameter" defaultValue="127" extension="m4" />
     <parameter component-id="p5" index="4" name="mode" class="parameter" maxValue="1" extension="m5" />
-    <parameter component-id="m1" index="0" name="morph:inv 1" class="morph" maxValue="1" />
-    <parameter component-id="m2" index="1" name="morph:level 1" class="morph" defaultValue="127" />
-    <parameter component-id="m3" index="2" name="morph:inv 2" class="morph" maxValue="1" />
-    <parameter component-id="m4" index="3" name="morph:level 2" class="morph" defaultValue="127" />
-    <parameter component-id="m5" index="4" name="morph:mode" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:inv 1" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m2" index="1" name="morph:level 1" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="2" name="morph:inv 2" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m4" index="3" name="morph:level 2" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m5" index="4" name="morph:mode" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.1875" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -2899,7 +2899,7 @@
     <connector component-id="c3" index="2" name="releasevelocity" type="output" signal="control" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="note" class="parameter" defaultValue="60" format-id="note" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:note" class="morph" defaultValue="60" />
+    <parameter component-id="m1" index="0" name="morph:note" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.0" />
     <attribute name="x-mem" type="double" value="0.0" />
@@ -2922,8 +2922,8 @@
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="rate" class="parameter" defaultValue="64" format-id="bpm" extension="m1" />
     <parameter component-id="p2" index="1" name="on/off" class="parameter" maxValue="1" defaultValue="1" formatter="type('off-on')" extension="m2" />
-    <parameter component-id="m1" index="0" name="morph:rate" class="morph" defaultValue="64" />
-    <parameter component-id="m2" index="1" name="morph:on/off" class="morph" maxValue="1" defaultValue="1" />
+    <parameter component-id="m1" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:on/off" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.0" />
     <attribute name="x-mem" type="double" value="0.4375" />
@@ -2943,7 +2943,7 @@
     <connector component-id="c3" index="0" name="out" type="output" signal="logic" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="divider" class="parameter" formatter="offset(1)" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:divider" class="morph" />
+    <parameter component-id="m1" index="0" name="morph:divider" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.625" />
     <attribute name="x-mem" type="double" value="0.5" />
@@ -2979,8 +2979,8 @@
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="attack" class="parameter" formatter="type('envelope-attack')" extension="m1" />
     <parameter component-id="p2" index="1" name="release" class="parameter" defaultValue="20" formatter="type('envelop-release')" extension="m2" />
-    <parameter component-id="m1" index="0" name="morph:attack" class="morph" />
-    <parameter component-id="m2" index="1" name="morph:release" class="morph" defaultValue="20" />
+    <parameter component-id="m1" index="0" name="morph:attack" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m2" index="1" name="morph:release" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="2.3125" />
     <attribute name="x-mem" type="double" value="0.21875" />
@@ -2999,7 +2999,7 @@
     <connector component-id="c2" index="0" name="out" type="output" signal="control" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="transpose" class="parameter" format-id="note-scale" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:transpose" class="morph" />
+    <parameter component-id="m1" index="0" name="morph:transpose" class="morph"  minValue="-127" maxValue="127"/>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.15625" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -3019,7 +3019,7 @@
     <connector component-id="c3" index="0" name="out" type="output" signal="logic" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="mode" class="parameter" maxValue="2" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:mode" class="morph" maxValue="2" />
+    <parameter component-id="m1" index="0" name="morph:mode" class="morph"  minValue="-2" maxValue="2"/>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.28125" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -3040,8 +3040,8 @@
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="wrap mod" class="parameter" extension="m1" />
     <parameter component-id="p2" index="1" name="wrap" class="parameter" extension="m2" />
-    <parameter component-id="m1" index="0" name="morph:wrap mod" class="morph" />
-    <parameter component-id="m2" index="1" name="morph:wrap" class="morph" />
+    <parameter component-id="m1" index="0" name="morph:wrap mod" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:wrap" class="morph"  minValue="-127" maxValue="127"/>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="2.6875" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -3061,8 +3061,8 @@
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="range" class="parameter" formatter="offset(-64)" extension="m1" />
     <parameter component-id="p2" index="1" name="notes" class="parameter" extension="m2" />
-    <parameter component-id="m1" index="0" name="morph:range" class="morph" />
-    <parameter component-id="m2" index="1" name="morph:notes" class="morph" />
+    <parameter component-id="m1" index="0" name="morph:range" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m2" index="1" name="morph:notes" class="morph"  minValue="-127" maxValue="127"/>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.4375" />
     <attribute name="x-mem" type="double" value="0.15625" />
@@ -3081,7 +3081,7 @@
     <connector component-id="c2" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="on/off" class="parameter" maxValue="1" defaultValue="1" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:on/off" class="morph" maxValue="1" defaultValue="1" />
+    <parameter component-id="m1" index="0" name="morph:on/off" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.40625" />
     <attribute name="x-mem" type="double" value="0.0" />
@@ -3122,8 +3122,8 @@
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="modulation" class="parameter" extension="m1" />
     <parameter component-id="p2" index="1" name="time" class="parameter" formatter="type('delay-time')" extension="m2" />
-    <parameter component-id="m1" index="0" name="morph:modulation" class="morph" />
-    <parameter component-id="m2" index="1" name="morph:time" class="morph" />
+    <parameter component-id="m1" index="0" name="morph:modulation" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m2" index="1" name="morph:time" class="morph"  minValue="-127" maxValue="127"/>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="8.0" />
     <attribute name="x-mem" type="double" value="9.25" />
@@ -3150,12 +3150,12 @@
     <parameter component-id="p4" index="3" name="level 3" class="parameter" extension="m4" />
     <parameter component-id="p5" index="4" name="level 4" class="parameter" extension="m5" />
     <parameter component-id="p6" index="5" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m6" />
-    <parameter component-id="m1" index="0" name="morph:in" class="morph" maxValue="3" />
-    <parameter component-id="m2" index="1" name="morph:level 1" class="morph" />
-    <parameter component-id="m3" index="2" name="morph:level 2" class="morph" />
-    <parameter component-id="m4" index="3" name="morph:level 3" class="morph" />
-    <parameter component-id="m5" index="4" name="morph:level 4" class="morph" />
-    <parameter component-id="m6" index="5" name="morph:mute" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:in" class="morph"  minValue="-3" maxValue="3"/>
+    <parameter component-id="m2" index="1" name="morph:level 1" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m3" index="2" name="morph:level 2" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m4" index="3" name="morph:level 3" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m5" index="4" name="morph:level 4" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m6" index="5" name="morph:mute" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.03125" />
     <attribute name="x-mem" type="double" value="0.28125" />
@@ -3183,11 +3183,11 @@
     <parameter component-id="p4" index="2" name="waveform" class="parameter" maxValue="4" extension="m4" />
     <parameter component-id="p5" index="3" name="mono" class="parameter" maxValue="1" formatter="type('off-on')" extension="m5" />
     <parameter component-id="p6" index="4" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m6" />
-    <parameter component-id="m2" index="0" name="morph:rate" class="morph" defaultValue="64" />
-    <parameter component-id="m3" index="1" name="morph:phase" class="morph" defaultValue="64" />
-    <parameter component-id="m4" index="2" name="morph:waveform" class="morph" maxValue="4" />
-    <parameter component-id="m5" index="3" name="morph:mono" class="morph" maxValue="1" />
-    <parameter component-id="m6" index="4" name="morph:mute" class="morph" maxValue="1" />
+    <parameter component-id="m2" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="1" name="morph:phase" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="2" name="morph:waveform" class="morph"  minValue="-4" maxValue="4" />
+    <parameter component-id="m5" index="3" name="morph:mono" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m6" index="4" name="morph:mute" class="morph"  minValue="-1" maxValue="1" />
     <light component-id="ledControlOut" name="LED Control Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.21875" />
@@ -3207,7 +3207,7 @@
     <connector component-id="c2" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="gain" class="parameter" defaultValue="64" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:gain" class="morph" defaultValue="64" />
+    <parameter component-id="m1" index="0" name="morph:gain" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.65625" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -3226,7 +3226,7 @@
     <connector component-id="c2" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="mode" class="parameter" maxValue="2" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:mode" class="morph" maxValue="2" />
+    <parameter component-id="m1" index="0" name="morph:mode" class="morph"  minValue="-2" maxValue="2" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.65625" />
     <attribute name="x-mem" type="double" value="0.0" />
@@ -3245,7 +3245,7 @@
     <connector component-id="c2" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="mode" class="parameter" maxValue="4" defaultValue="2" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:mode" class="morph" maxValue="4" defaultValue="2" />
+    <parameter component-id="m1" index="0" name="morph:mode" class="morph"  minValue="-4" maxValue="4" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.90625" />
     <attribute name="x-mem" type="double" value="0.21875" />
@@ -3269,9 +3269,9 @@
     <parameter component-id="p1" index="0" name="attack" class="parameter" formatter="type('adsr-time')" extension="m1" />
     <parameter component-id="p2" index="1" name="decay" class="parameter" defaultValue="77" formatter="type('adsr-time')" extension="m2" />
     <parameter component-id="p3" index="2" name="gate" class="parameter" maxValue="1" formatter="type('off-on')" extension="m3" />
-    <parameter component-id="m1" index="0" name="morph:attack" class="morph" />
-    <parameter component-id="m2" index="1" name="morph:decay" class="morph" defaultValue="77" />
-    <parameter component-id="m3" index="2" name="morph:gate" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:attack" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m2" index="1" name="morph:decay" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="2" name="morph:gate" class="morph"  minValue="-1" maxValue="1" />
     <light component-id="ledGateIn" name="LED Gate In" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.4375" />
@@ -3301,11 +3301,11 @@
     <parameter component-id="p4" index="2" name="-3oct" class="parameter" maxValue="1" formatter="type('off-on')" extension="m4" />
     <parameter component-id="p5" index="3" name="fmb" class="parameter" extension="m5" />
     <parameter component-id="p6" index="4" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m6" />
-    <parameter component-id="m2" index="0" name="morph:detune" class="morph" defaultValue="64" />
-    <parameter component-id="m3" index="1" name="morph:fine" class="morph" defaultValue="64" />
-    <parameter component-id="m4" index="2" name="morph:-3oct" class="morph" maxValue="1" />
-    <parameter component-id="m5" index="3" name="morph:fmb" class="morph" />
-    <parameter component-id="m6" index="4" name="morph:mute" class="morph" maxValue="1" />
+    <parameter component-id="m2" index="0" name="morph:detune" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="1" name="morph:fine" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="2" name="morph:-3oct" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m5" index="3" name="morph:fmb" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m6" index="4" name="morph:mute" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="3.1875" />
     <attribute name="x-mem" type="double" value="0.4375" />
@@ -3324,7 +3324,7 @@
     <connector component-id="c2" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="frequency" class="parameter" defaultValue="64" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:frequency" class="morph" defaultValue="64" />
+    <parameter component-id="m1" index="0" name="morph:frequency" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.65625" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -3343,7 +3343,7 @@
     <connector component-id="c2" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="frequency" class="parameter" defaultValue="64" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:frequency" class="morph" defaultValue="64" />
+    <parameter component-id="m1" index="0" name="morph:frequency" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.03125" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -3367,9 +3367,9 @@
     <parameter component-id="p1" index="0" name="in" class="parameter" maxValue="3" extension="m1" />
     <parameter component-id="p2" index="1" name="level" class="parameter" extension="m2" />
     <parameter component-id="p3" index="2" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m3" />
-    <parameter component-id="m1" index="0" name="morph:in" class="morph" maxValue="3" />
-    <parameter component-id="m2" index="1" name="morph:level" class="morph" />
-    <parameter component-id="m3" index="2" name="morph:mute" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:in" class="morph"  minValue="-3" maxValue="3" />
+    <parameter component-id="m2" index="1" name="morph:level" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="2" name="morph:mute" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.90625" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -3436,24 +3436,24 @@
     <parameter component-id="p21" index="18" name="record" class="parameter" maxValue="1" formatter="type('off-on')" />
     <parameter component-id="p22" index="19" name="play" class="parameter" maxValue="1" formatter="type('off-on')" />
     <parameter component-id="p23" index="20" name="loop" class="parameter" maxValue="1" formatter="type('off-on')" />
-    <parameter component-id="m3" index="0" name="morph:note 1" class="morph" />
-    <parameter component-id="m4" index="1" name="morph:note 2" class="morph" />
-    <parameter component-id="m5" index="2" name="morph:note 3" class="morph" />
-    <parameter component-id="m6" index="3" name="morph:note 4" class="morph" />
-    <parameter component-id="m7" index="4" name="morph:note 5" class="morph" />
-    <parameter component-id="m8" index="5" name="morph:note 6" class="morph" />
-    <parameter component-id="m9" index="6" name="morph:note 7" class="morph" />
-    <parameter component-id="m10" index="7" name="morph:note 8" class="morph" />
-    <parameter component-id="m11" index="8" name="morph:note 9" class="morph" />
-    <parameter component-id="m12" index="9" name="morph:note 10" class="morph" />
-    <parameter component-id="m13" index="10" name="morph:note 11" class="morph" />
-    <parameter component-id="m14" index="11" name="morph:note 12" class="morph" />
-    <parameter component-id="m15" index="12" name="morph:note 13" class="morph" />
-    <parameter component-id="m16" index="13" name="morph:note 14" class="morph" />
-    <parameter component-id="m17" index="14" name="morph:note 15" class="morph" />
-    <parameter component-id="m18" index="15" name="morph:note 16" class="morph" />
-    <parameter component-id="m19" index="16" name="morph:step" class="morph" defaultValue="15" />
-    <parameter component-id="m20" index="17" name="morph:currentstep" class="morph" maxValue="16" />
+    <parameter component-id="m3" index="0" name="morph:note 1" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m4" index="1" name="morph:note 2" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m5" index="2" name="morph:note 3" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m6" index="3" name="morph:note 4" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m7" index="4" name="morph:note 5" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m8" index="5" name="morph:note 6" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m9" index="6" name="morph:note 7" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m10" index="7" name="morph:note 8" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m11" index="8" name="morph:note 9" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m12" index="9" name="morph:note 10" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m13" index="10" name="morph:note 11" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m14" index="11" name="morph:note 12" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m15" index="12" name="morph:note 13" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m16" index="13" name="morph:note 14" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m17" index="14" name="morph:note 15" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m18" index="15" name="morph:note 16" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m19" index="16" name="morph:step" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m20" index="17" name="morph:currentstep" class="morph"  minValue="-16" maxValue="16" />
     
 	<light component-id="ledStep1-16" type="led-array" name="Step 1-16" minValue="0" maxValue="16" />
     
@@ -3496,24 +3496,24 @@
     <parameter component-id="p17" index="16" name="step" class="parameter" defaultValue="15" formatter="offset(1)" extension="m17" />
     <parameter component-id="p18" index="17" name="uni" class="parameter" maxValue="1" formatter="type('off-on')" extension="m18" />
     <parameter component-id="p19" index="18" name="loop" class="parameter" maxValue="1" formatter="type('off-on')" />
-    <parameter component-id="m1" index="0" name="morph:ctrl 1" class="morph" />
-    <parameter component-id="m2" index="1" name="morph:ctrl 2" class="morph" />
-    <parameter component-id="m3" index="2" name="morph:ctrl 3" class="morph" />
-    <parameter component-id="m4" index="3" name="morph:ctrl 4" class="morph" />
-    <parameter component-id="m5" index="4" name="morph:ctrl 5" class="morph" />
-    <parameter component-id="m6" index="5" name="morph:ctrl 6" class="morph" />
-    <parameter component-id="m7" index="6" name="morph:ctrl 7" class="morph" />
-    <parameter component-id="m8" index="7" name="morph:ctrl 8" class="morph" />
-    <parameter component-id="m9" index="8" name="morph:ctrl 9" class="morph" />
-    <parameter component-id="m10" index="9" name="morph:ctrl 10" class="morph" />
-    <parameter component-id="m11" index="10" name="morph:ctrl 11" class="morph" />
-    <parameter component-id="m12" index="11" name="morph:ctrl 12" class="morph" />
-    <parameter component-id="m13" index="12" name="morph:ctrl 13" class="morph" />
-    <parameter component-id="m14" index="13" name="morph:ctrl 14" class="morph" />
-    <parameter component-id="m15" index="14" name="morph:ctrl 15" class="morph" />
-    <parameter component-id="m16" index="15" name="morph:ctrl 16" class="morph" />
-    <parameter component-id="m17" index="16" name="morph:step" class="morph" defaultValue="15" />
-    <parameter component-id="m18" index="17" name="morph:uni" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:ctrl 1" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m2" index="1" name="morph:ctrl 2" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m3" index="2" name="morph:ctrl 3" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m4" index="3" name="morph:ctrl 4" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m5" index="4" name="morph:ctrl 5" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m6" index="5" name="morph:ctrl 6" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m7" index="6" name="morph:ctrl 7" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m8" index="7" name="morph:ctrl 8" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m9" index="8" name="morph:ctrl 9" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m10" index="9" name="morph:ctrl 10" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m11" index="10" name="morph:ctrl 11" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m12" index="11" name="morph:ctrl 12" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m13" index="12" name="morph:ctrl 13" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m14" index="13" name="morph:ctrl 14" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m15" index="14" name="morph:ctrl 15" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m16" index="15" name="morph:ctrl 16" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m17" index="16" name="morph:step" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m18" index="17" name="morph:uni" class="morph"  minValue="-1" maxValue="1" />
     
 	<light component-id="ledStep1-16" type="led-array" name="Step 1-16" minValue="0" maxValue="16" />
     
@@ -3547,13 +3547,13 @@
     <parameter component-id="p6" index="4" name="freq mod 2" class="parameter" extension="m6" />
     <parameter component-id="p7" index="5" name="slope" class="parameter" maxValue="2" extension="m7" />
     <parameter component-id="p8" index="6" name="bypass" class="parameter" maxValue="1" formatter="type('off-on')" extension="m8" />
-    <parameter component-id="m2" index="0" name="morph:frequency" class="morph" defaultValue="60" />
-    <parameter component-id="m3" index="1" name="morph:kbt" class="morph" />
-    <parameter component-id="m4" index="2" name="morph:resonance" class="morph" />
-    <parameter component-id="m5" index="3" name="morph:freq mod 1" class="morph" />
-    <parameter component-id="m6" index="4" name="morph:freq mod 2" class="morph" />
-    <parameter component-id="m7" index="5" name="morph:slope" class="morph" maxValue="2" />
-    <parameter component-id="m8" index="6" name="morph:bypass" class="morph" maxValue="1" />
+    <parameter component-id="m2" index="0" name="morph:frequency" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="1" name="morph:kbt" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m4" index="2" name="morph:resonance" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m5" index="3" name="morph:freq mod 1" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m6" index="4" name="morph:freq mod 2" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m7" index="5" name="morph:slope" class="morph"  minValue="-2" maxValue="2" />
+    <parameter component-id="m8" index="6" name="morph:bypass" class="morph"  minValue="-1" maxValue="1"/>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="5.53125" />
     <attribute name="x-mem" type="double" value="0.6875" />
@@ -3575,9 +3575,9 @@
     <parameter component-id="p1" index="0" name="detune" class="parameter" defaultValue="64" extension="m1" />
     <parameter component-id="p2" index="1" name="amount" class="parameter" defaultValue="64" extension="m2" />
     <parameter component-id="p3" index="2" name="bypass" class="parameter" maxValue="1" formatter="type('off-on')" extension="m3" />
-    <parameter component-id="m1" index="0" name="morph:detune" class="morph" defaultValue="64" />
-    <parameter component-id="m2" index="1" name="morph:amount" class="morph" defaultValue="64" />
-    <parameter component-id="m3" index="2" name="morph:bypass" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:detune" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m2" index="1" name="morph:amount" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m3" index="2" name="morph:bypass" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="9.125" />
     <attribute name="x-mem" type="double" value="18.09375" />
@@ -3608,13 +3608,13 @@
     <parameter component-id="p6" index="4" name="pitchmod" class="parameter" extension="m6" />
     <parameter component-id="p7" index="5" name="pitchfine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m7" />
     <parameter component-id="p8" index="6" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m8" />
-    <parameter component-id="m2" index="0" name="morph:pitch" class="morph" defaultValue="64" />
-    <parameter component-id="m3" index="1" name="morph:click" class="morph" defaultValue="64" />
-    <parameter component-id="m4" index="2" name="morph:decay" class="morph" defaultValue="64" />
-    <parameter component-id="m5" index="3" name="morph:punch" class="morph" maxValue="1" />
-    <parameter component-id="m6" index="4" name="morph:pitchmod" class="morph" />
-    <parameter component-id="m7" index="5" name="morph:pitchfine" class="morph" defaultValue="64" />
-    <parameter component-id="m8" index="6" name="morph:mute" class="morph" maxValue="1" />
+    <parameter component-id="m2" index="0" name="morph:pitch" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="1" name="morph:click" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="2" name="morph:decay" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m5" index="3" name="morph:punch" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m6" index="4" name="morph:pitchmod" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m7" index="5" name="morph:pitchfine" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m8" index="6" name="morph:mute" class="morph"  minValue="-1" maxValue="1"/>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="4.875" />
     <attribute name="x-mem" type="double" value="0.5" />
@@ -3646,13 +3646,13 @@
     <parameter component-id="p6" index="4" name="timbre" class="parameter" format-id="timbre" extension="m6" />
     <parameter component-id="p7" index="5" name="pitch mod 1" class="parameter" extension="m7" />
     <parameter component-id="p8" index="6" name="pitch mod 2" class="parameter" extension="m8" />
-    <parameter component-id="m2" index="0" name="morph:pitch" class="morph" defaultValue="64" />
-    <parameter component-id="m3" index="1" name="morph:pitch fine" class="morph" defaultValue="64" />
-    <parameter component-id="m4" index="2" name="morph:kbt" class="morph" maxValue="1" defaultValue="1" />
-    <parameter component-id="m5" index="3" name="morph:mute" class="morph" maxValue="1" />
-    <parameter component-id="m6" index="4" name="morph:timbre" class="morph" />
-    <parameter component-id="m7" index="5" name="morph:pitch mod 1" class="morph" />
-    <parameter component-id="m8" index="6" name="morph:pitch mod 2" class="morph" />
+    <parameter component-id="m2" index="0" name="morph:pitch" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m3" index="1" name="morph:pitch fine" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="2" name="morph:kbt" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m5" index="3" name="morph:mute" class="morph"  minValue="-1" maxValue="1"/>
+    <parameter component-id="m6" index="4" name="morph:timbre" class="morph"   minValue="-127" maxValue="127"/>
+    <parameter component-id="m7" index="5" name="morph:pitch mod 1" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m8" index="6" name="morph:pitch mod 2" class="morph"  minValue="-127" maxValue="127"/>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="9.0625" />
     <attribute name="x-mem" type="double" value="0.5625" />
@@ -3680,11 +3680,11 @@
     <parameter component-id="p4" index="2" name="kbt" class="parameter" maxValue="1" formatter="type('off-on')" extension="m4" />
     <parameter component-id="p5" index="3" name="pitch mod 1" class="parameter" extension="m5" />
     <parameter component-id="p6" index="4" name="pitch mod 2" class="parameter" extension="m6" />
-    <parameter component-id="m2" index="0" name="morph:pitch" class="morph" defaultValue="64" />
-    <parameter component-id="m3" index="1" name="morph:pitch fine" class="morph" defaultValue="64" />
-    <parameter component-id="m4" index="2" name="morph:kbt" class="morph" maxValue="1" />
-    <parameter component-id="m5" index="3" name="morph:pitch mod 1" class="morph" />
-    <parameter component-id="m6" index="4" name="morph:pitch mod 2" class="morph" />
+    <parameter component-id="m2" index="0" name="morph:pitch" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m3" index="1" name="morph:pitch fine" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m4" index="2" name="morph:kbt" class="morph"  minValue="-1" maxValue="1"/>
+    <parameter component-id="m5" index="3" name="morph:pitch mod 1" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m6" index="4" name="morph:pitch mod 2" class="morph"  minValue="-127" maxValue="127"/>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.78125" />
     <attribute name="x-mem" type="double" value="0.21875" />
@@ -3740,11 +3740,11 @@
     <parameter component-id="p3" index="2" name="low delta" class="parameter" maxValue="1" formatter="type('off-on')" extension="m3" />
     <parameter component-id="p4" index="3" name="step" class="parameter" defaultValue="16" format-id="pattern-step" extension="m4" />
     <parameter component-id="p5" index="4" name="mono" class="parameter" maxValue="1" formatter="type('off-on')" extension="m5" />
-    <parameter component-id="m1" index="0" name="morph:pattern" class="morph" />
-    <parameter component-id="m2" index="1" name="morph:bank" class="morph" />
-    <parameter component-id="m3" index="2" name="morph:low delta" class="morph" maxValue="1" />
-    <parameter component-id="m4" index="3" name="morph:step" class="morph" defaultValue="16" />
-    <parameter component-id="m5" index="4" name="morph:mono" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:pattern" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m2" index="1" name="morph:bank" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m3" index="2" name="morph:low delta" class="morph"  minValue="-1" maxValue="1"/>
+    <parameter component-id="m4" index="3" name="morph:step" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m5" index="4" name="morph:mono" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="2.34375" />
     <attribute name="x-mem" type="double" value="0.5" />
@@ -3768,8 +3768,8 @@
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="lower" class="parameter" defaultValue="64" format-id="note" extension="m1" />
     <parameter component-id="p2" index="1" name="upper" class="parameter" defaultValue="64" format-id="note" extension="m2" />
-    <parameter component-id="m1" index="0" name="morph:lower" class="morph" defaultValue="64" />
-    <parameter component-id="m2" index="1" name="morph:upper" class="morph" defaultValue="64" />
+    <parameter component-id="m1" index="0" name="morph:lower" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:upper" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.79" />
     <attribute name="x-mem" type="double" value="1.0" />
@@ -3800,17 +3800,17 @@
     <parameter component-id="p9" index="8" name="bypass" class="parameter" maxValue="1" formatter="type('off-on')" extension="m9" />
     <parameter component-id="p10" index="9" name="depth" class="parameter" defaultValue="64" extension="m10" />
     <parameter component-id="p11" index="10" name="inlevel" class="parameter" defaultValue="127" extension="m11" />
-    <parameter component-id="m1" index="0" name="morph:rate" class="morph" defaultValue="60" />
-    <parameter component-id="m2" index="1" name="morph:lfo" class="morph" maxValue="1" />
-    <parameter component-id="m3" index="2" name="morph:center freq mod" class="morph" />
-    <parameter component-id="m4" index="3" name="morph:center freq" class="morph" defaultValue="64" />
-    <parameter component-id="m5" index="4" name="morph:spread mod" class="morph" />
-    <parameter component-id="m6" index="5" name="morph:feedback" class="morph" defaultValue="64" />
-    <parameter component-id="m7" index="6" name="morph:peaks" class="morph" maxValue="5" />
-    <parameter component-id="m8" index="7" name="morph:spread" class="morph" defaultValue="64" />
-    <parameter component-id="m9" index="8" name="morph:bypass" class="morph" maxValue="1" />
-    <parameter component-id="m10" index="9" name="morph:depth" class="morph" defaultValue="64" />
-    <parameter component-id="m11" index="10" name="morph:inlevel" class="morph" defaultValue="127" />
+    <parameter component-id="m1" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:lfo" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m3" index="2" name="morph:center freq mod" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m4" index="3" name="morph:center freq" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m5" index="4" name="morph:spread mod" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m6" index="5" name="morph:feedback" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m7" index="6" name="morph:peaks" class="morph"  minValue="-5" maxValue="5"/>
+    <parameter component-id="m8" index="7" name="morph:spread" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m9" index="8" name="morph:bypass" class="morph"  minValue="-1" maxValue="1"/>
+    <parameter component-id="m10" index="9" name="morph:depth" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m11" index="10" name="morph:inlevel" class="morph"  minValue="-127" maxValue="127" />
     <light component-id="ledAudioOut" name="LED Audio Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="12.5625" />
@@ -3834,11 +3834,11 @@
     <parameter component-id="p3" index="2" name="bandwidth" class="parameter" extension="m3" />
     <parameter component-id="p4" index="3" name="bypass" class="parameter" maxValue="1" formatter="type('off-on')" extension="m4" />
     <parameter component-id="p5" index="4" name="in level" class="parameter" defaultValue="127" extension="m5" />
-    <parameter component-id="m1" index="0" name="morph:freq" class="morph" defaultValue="60" />
-    <parameter component-id="m2" index="1" name="morph:gain" class="morph" defaultValue="64" />
-    <parameter component-id="m3" index="2" name="morph:bandwidth" class="morph" />
-    <parameter component-id="m4" index="3" name="morph:bypass" class="morph" maxValue="1" />
-    <parameter component-id="m5" index="4" name="morph:in level" class="morph" defaultValue="127" />
+    <parameter component-id="m1" index="0" name="morph:freq" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:gain" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m3" index="2" name="morph:bandwidth" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m4" index="3" name="morph:bypass" class="morph"  minValue="-1" maxValue="1"/>
+    <parameter component-id="m5" index="4" name="morph:in level" class="morph"  minValue="-127" maxValue="127" />
     <light component-id="ledAudioOut" name="LED Audio Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="3.34375" />
@@ -3862,11 +3862,11 @@
     <parameter component-id="p3" index="2" name="mode" class="parameter" maxValue="1" extension="m3" />
     <parameter component-id="p4" index="3" name="bypass" class="parameter" maxValue="1" formatter="type('off-on')" extension="m4" />
     <parameter component-id="p5" index="4" name="in level" class="parameter" defaultValue="127" extension="m5" />
-    <parameter component-id="m1" index="0" name="morph:freq" class="morph" defaultValue="60" />
-    <parameter component-id="m2" index="1" name="morph:gain" class="morph" />
-    <parameter component-id="m3" index="2" name="morph:mode" class="morph" maxValue="1" />
-    <parameter component-id="m4" index="3" name="morph:bypass" class="morph" maxValue="1" />
-    <parameter component-id="m5" index="4" name="morph:in level" class="morph" defaultValue="127" />
+    <parameter component-id="m1" index="0" name="morph:freq" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:gain" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m3" index="2" name="morph:mode" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m4" index="3" name="morph:bypass" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m5" index="4" name="morph:in level" class="morph"  minValue="-127" maxValue="127" />
     <light component-id="ledAudioOut" name="LED Audio Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="2.4375" />
@@ -3897,15 +3897,15 @@
     <parameter component-id="p7" index="6" name="sidechain activation" class="parameter" maxValue="1" formatter="type('off-on')" extension="m7" />
     <parameter component-id="p8" index="7" name="sidechain monitor" class="parameter" maxValue="1" formatter="type('off-on')" extension="m8" />
     <parameter component-id="p9" index="8" name="bypass" class="parameter" maxValue="1" formatter="type('off-on')" extension="m9" />
-    <parameter component-id="m1" index="0" name="morph:attack" class="morph" />
-    <parameter component-id="m2" index="1" name="morph:release" class="morph" defaultValue="20" />
-    <parameter component-id="m3" index="2" name="morph:treshold" class="morph" maxValue="84" defaultValue="24" />
-    <parameter component-id="m4" index="3" name="morph:ratio" class="morph" maxValue="66" defaultValue="20" />
-    <parameter component-id="m5" index="4" name="morph:gate" class="morph" maxValue="72" />
-    <parameter component-id="m6" index="5" name="morph:hold" class="morph" />
-    <parameter component-id="m7" index="6" name="morph:sidechain activation" class="morph" maxValue="1" />
-    <parameter component-id="m8" index="7" name="morph:sidechain monitor" class="morph" maxValue="1" />
-    <parameter component-id="m9" index="8" name="morph:bypass" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:attack" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m2" index="1" name="morph:release" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="2" name="morph:treshold" class="morph"  minValue="-84" maxValue="84" />
+    <parameter component-id="m4" index="3" name="morph:ratio" class="morph"  minValue="-66" maxValue="66" />
+    <parameter component-id="m5" index="4" name="morph:gate" class="morph"  minValue="-72" maxValue="72" />
+    <parameter component-id="m6" index="5" name="morph:hold" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m7" index="6" name="morph:sidechain activation" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m8" index="7" name="morph:sidechain monitor" class="morph"  minValue="-1" maxValue="1"/>
+    <parameter component-id="m9" index="8" name="morph:bypass" class="morph"  minValue="-1" maxValue="1" />
 
     <light index="0" type="meter" component-id="lightGainReduction" name="Gain reduction DB" minValue="0" maxValue="127" ledOnValue="127">
 	    <attribute name="gate-active" value="127"/>
@@ -3960,30 +3960,30 @@
     <parameter component-id="p22" index="21" name="osc4 mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m22" />
     <parameter component-id="p23" index="22" name="osc5 mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m23" />
     <parameter component-id="p24" index="23" name="osc6 mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m24" />
-    <parameter component-id="m1" index="0" name="morph:osc1 coarse" class="morph" defaultValue="64" />
-    <parameter component-id="m2" index="1" name="morph:osc1 fine" class="morph" defaultValue="64" />
-    <parameter component-id="m3" index="2" name="morph:osc1 level" class="morph" defaultValue="100" />
-    <parameter component-id="m4" index="3" name="morph:osc2 coarse" class="morph" defaultValue="64" />
-    <parameter component-id="m5" index="4" name="morph:osc2 fine" class="morph" defaultValue="64" />
-    <parameter component-id="m6" index="5" name="morph:osc2 level" class="morph" defaultValue="100" />
-    <parameter component-id="m7" index="6" name="morph:osc3 coarse" class="morph" defaultValue="64" />
-    <parameter component-id="m8" index="7" name="morph:osc3 fine" class="morph" defaultValue="64" />
-    <parameter component-id="m9" index="8" name="morph:osc3 level" class="morph" defaultValue="100" />
-    <parameter component-id="m10" index="9" name="morph:osc4 coarse" class="morph" defaultValue="64" />
-    <parameter component-id="m11" index="10" name="morph:osc4 fine" class="morph" defaultValue="64" />
-    <parameter component-id="m12" index="11" name="morph:osc4 level" class="morph" defaultValue="100" />
-    <parameter component-id="m13" index="12" name="morph:osc5 coarse" class="morph" defaultValue="64" />
-    <parameter component-id="m14" index="13" name="morph:osc5 fine" class="morph" defaultValue="64" />
-    <parameter component-id="m15" index="14" name="morph:osc5 level" class="morph" defaultValue="100" />
-    <parameter component-id="m16" index="15" name="morph:osc6 coarse" class="morph" defaultValue="64" />
-    <parameter component-id="m17" index="16" name="morph:osc6 fine" class="morph" defaultValue="64" />
-    <parameter component-id="m18" index="17" name="morph:osc6 level" class="morph" defaultValue="100" />
-    <parameter component-id="m19" index="18" name="morph:osc1 mute" class="morph" maxValue="1" />
-    <parameter component-id="m20" index="19" name="morph:osc2 mute" class="morph" maxValue="1" />
-    <parameter component-id="m21" index="20" name="morph:osc3 mute" class="morph" maxValue="1" />
-    <parameter component-id="m22" index="21" name="morph:osc4 mute" class="morph" maxValue="1" />
-    <parameter component-id="m23" index="22" name="morph:osc5 mute" class="morph" maxValue="1" />
-    <parameter component-id="m24" index="23" name="morph:osc6 mute" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:osc1 coarse" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m2" index="1" name="morph:osc1 fine" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="2" name="morph:osc1 level" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="3" name="morph:osc2 coarse" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m5" index="4" name="morph:osc2 fine" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m6" index="5" name="morph:osc2 level" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m7" index="6" name="morph:osc3 coarse" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m8" index="7" name="morph:osc3 fine" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m9" index="8" name="morph:osc3 level" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m10" index="9" name="morph:osc4 coarse" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m11" index="10" name="morph:osc4 fine" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m12" index="11" name="morph:osc4 level" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m13" index="12" name="morph:osc5 coarse" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m14" index="13" name="morph:osc5 fine" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m15" index="14" name="morph:osc5 level" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m16" index="15" name="morph:osc6 coarse" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m17" index="16" name="morph:osc6 fine" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m18" index="17" name="morph:osc6 level" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m19" index="18" name="morph:osc1 mute" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m20" index="19" name="morph:osc2 mute" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m21" index="20" name="morph:osc3 mute" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m22" index="21" name="morph:osc4 mute" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m23" index="22" name="morph:osc5 mute" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m24" index="23" name="morph:osc6 mute" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="16.78125" />
     <attribute name="x-mem" type="double" value="0.84375" />
@@ -4019,16 +4019,16 @@
     <parameter component-id="p9" index="7" name="spectral shape mod" class="parameter" extension="m9" />
     <parameter component-id="p10" index="8" name="kbt" class="parameter" maxValue="1" formatter="type('off-on')" extension="m10" />
     <parameter component-id="p11" index="9" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m11" />
-    <parameter component-id="m2" index="0" name="morph:freq coarse" class="morph" defaultValue="64" />
-    <parameter component-id="m3" index="1" name="morph:freq fine" class="morph" defaultValue="64" />
-    <parameter component-id="m4" index="2" name="morph:spectral shape" class="morph" defaultValue="64" />
-    <parameter component-id="m5" index="3" name="morph:partials" class="morph" maxValue="1" defaultValue="1" />
-    <parameter component-id="m6" index="4" name="morph:pitch mod 1" class="morph" />
-    <parameter component-id="m7" index="5" name="morph:pitch mod 2" class="morph" />
-    <parameter component-id="m8" index="6" name="morph:fma" class="morph" />
-    <parameter component-id="m9" index="7" name="morph:spectral shape mod" class="morph" />
-    <parameter component-id="m10" index="8" name="morph:kbt" class="morph" maxValue="1" />
-    <parameter component-id="m11" index="9" name="morph:mute" class="morph" maxValue="1" />
+    <parameter component-id="m2" index="0" name="morph:freq coarse" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="1" name="morph:freq fine" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="2" name="morph:spectral shape" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m5" index="3" name="morph:partials" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m6" index="4" name="morph:pitch mod 1" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m7" index="5" name="morph:pitch mod 2" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m8" index="6" name="morph:fma" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m9" index="7" name="morph:spectral shape mod" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m10" index="8" name="morph:kbt" class="morph"  minValue="-1" maxValue="1"/>
+    <parameter component-id="m11" index="9" name="morph:mute" class="morph"  minValue="-1" maxValue="1"/>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="7.90625" />
     <attribute name="x-mem" type="double" value="0.5" />
@@ -4066,25 +4066,25 @@
     <parameter component-id="p17" index="16" name="outgain" class="parameter" defaultValue="64" extension="m17" />
     <parameter component-id="p18" index="17" name="high freq emphasis" class="parameter" maxValue="1" extension="m18" />
     <parameter component-id="p19" index="18" name="monitor" class="parameter" maxValue="1" extension="m19" />
-    <parameter component-id="m1" index="0" name="morph:band 1" class="morph" maxValue="16" defaultValue="1" />
-    <parameter component-id="m2" index="1" name="morph:band 2" class="morph" maxValue="16" defaultValue="2" />
-    <parameter component-id="m3" index="2" name="morph:band 3" class="morph" maxValue="16" defaultValue="3" />
-    <parameter component-id="m4" index="3" name="morph:band 4" class="morph" maxValue="16" defaultValue="4" />
-    <parameter component-id="m5" index="4" name="morph:band 5" class="morph" maxValue="16" defaultValue="5" />
-    <parameter component-id="m6" index="5" name="morph:band 6" class="morph" maxValue="16" defaultValue="6" />
-    <parameter component-id="m7" index="6" name="morph:band 7" class="morph" maxValue="16" defaultValue="7" />
-    <parameter component-id="m8" index="7" name="morph:band 8" class="morph" maxValue="16" defaultValue="8" />
-    <parameter component-id="m9" index="8" name="morph:band 9" class="morph" maxValue="16" defaultValue="9" />
-    <parameter component-id="m10" index="9" name="morph:band 10" class="morph" maxValue="16" defaultValue="10" />
-    <parameter component-id="m11" index="10" name="morph:band 11" class="morph" maxValue="16" defaultValue="11" />
-    <parameter component-id="m12" index="11" name="morph:band 12" class="morph" maxValue="16" defaultValue="12" />
-    <parameter component-id="m13" index="12" name="morph:band 13" class="morph" maxValue="16" defaultValue="13" />
-    <parameter component-id="m14" index="13" name="morph:band 14" class="morph" maxValue="16" defaultValue="14" />
-    <parameter component-id="m15" index="14" name="morph:band 15" class="morph" maxValue="16" defaultValue="15" />
-    <parameter component-id="m16" index="15" name="morph:band 16" class="morph" maxValue="16" defaultValue="16" />
-    <parameter component-id="m17" index="16" name="morph:outgain" class="morph" defaultValue="64" />
-    <parameter component-id="m18" index="17" name="morph:high freq emphasis" class="morph" maxValue="1" />
-    <parameter component-id="m19" index="18" name="morph:monitor" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:band 1" class="morph"  minValue="-16" maxValue="16" />
+    <parameter component-id="m2" index="1" name="morph:band 2" class="morph" minValue="-16" maxValue="16" />
+    <parameter component-id="m3" index="2" name="morph:band 3" class="morph" minValue="-16" maxValue="16" />
+    <parameter component-id="m4" index="3" name="morph:band 4" class="morph" minValue="-16" maxValue="16" />
+    <parameter component-id="m5" index="4" name="morph:band 5" class="morph" minValue="-16" maxValue="16" />
+    <parameter component-id="m6" index="5" name="morph:band 6" class="morph" minValue="-16" maxValue="16" />
+    <parameter component-id="m7" index="6" name="morph:band 7" class="morph" minValue="-16" maxValue="16" />
+    <parameter component-id="m8" index="7" name="morph:band 8" class="morph" minValue="-16" maxValue="16" />
+    <parameter component-id="m9" index="8" name="morph:band 9" class="morph" minValue="-16" maxValue="16" />
+    <parameter component-id="m10" index="9" name="morph:band 10" class="morph" minValue="-16" maxValue="16" />
+    <parameter component-id="m11" index="10" name="morph:band 11" class="morph" minValue="-16" maxValue="16" />
+    <parameter component-id="m12" index="11" name="morph:band 12" class="morph" minValue="-16" maxValue="16" />
+    <parameter component-id="m13" index="12" name="morph:band 13" class="morph" minValue="-16" maxValue="16" />
+    <parameter component-id="m14" index="13" name="morph:band 14" class="morph" minValue="-16" maxValue="16" />
+    <parameter component-id="m15" index="14" name="morph:band 15" class="morph" minValue="-16" maxValue="16" />
+    <parameter component-id="m16" index="15" name="morph:band 16" class="morph" minValue="-16" maxValue="16" />
+    <parameter component-id="m17" index="16" name="morph:outgain" class="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m18" index="17" name="morph:high freq emphasis" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m19" index="18" name="morph:monitor" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="48.9375" />
     <attribute name="x-mem" type="double" value="23.78125" />
@@ -4107,7 +4107,7 @@
     </parameter>
     <!-- parameter(s) -->
     <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" format-id="lfo-hz" extension="m2" />
-    <parameter component-id="m2" index="0" name="morph:rate" class="morph" defaultValue="64" />
+    <parameter component-id="m2" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127"/>
     <light component-id="ledControlOut" name="LED Control Out" index="0" type="led" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.4375" />
@@ -4128,8 +4128,8 @@
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="multiplier" class="parameter" defaultValue="64" extension="m1" />
     <parameter component-id="p2" index="1" name="unipolar" class="parameter" maxValue="1" extension="m2" />
-    <parameter component-id="m1" index="0" name="morph:multiplier" class="morph" defaultValue="64" />
-    <parameter component-id="m2" index="1" name="morph:unipolar" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:multiplier" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:unipolar" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.53125" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -4149,8 +4149,8 @@
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="offset" class="parameter" defaultValue="64" extension="m1" />
     <parameter component-id="p2" index="1" name="unipolar" class="parameter" maxValue="1" extension="m2" />
-    <parameter component-id="m1" index="0" name="morph:offset" class="morph" defaultValue="64" />
-    <parameter component-id="m2" index="1" name="morph:unipolar" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:offset" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m2" index="1" name="morph:unipolar" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.53125" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -4170,7 +4170,7 @@
     <connector component-id="c3" index="1" name="out 2" type="output" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="fade" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:fade" class="morph" defaultValue="64" />
+    <parameter component-id="m1" index="0" name="morph:fade" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.78125" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -4190,7 +4190,7 @@
     <connector component-id="c3" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="fade" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:fade" class="morph" defaultValue="64" />
+    <parameter component-id="m1" index="0" name="morph:fade" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.78125" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -4213,10 +4213,10 @@
     <parameter component-id="p2" index="1" name="left gain" class="parameter" maxValue="48" defaultValue="24" formatter="offset(-24),str('dB')" extension="m2" />
     <parameter component-id="p3" index="2" name="breakpoint" class="parameter" defaultValue="64" format-id="note" extension="m3" />
     <parameter component-id="p4" index="3" name="right gain" class="parameter" maxValue="48" defaultValue="24" formatter="offset(-24),str('dB')" extension="m4" />
-    <parameter component-id="m1" index="0" name="morph:velocity sensitivity" class="morph" />
-    <parameter component-id="m2" index="1" name="morph:left gain" class="morph" maxValue="48" defaultValue="24" />
-    <parameter component-id="m3" index="2" name="morph:breakpoint" class="morph" defaultValue="64" />
-    <parameter component-id="m4" index="3" name="morph:right gain" class="morph" maxValue="48" defaultValue="24" />
+    <parameter component-id="m1" index="0" name="morph:velocity sensitivity" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m2" index="1" name="morph:left gain" class="morph"  minValue="-48" maxValue="48" />
+    <parameter component-id="m3" index="2" name="morph:breakpoint" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="3" name="morph:right gain" class="morph"  minValue="-48" maxValue="48" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.875" />
     <attribute name="x-mem" type="double" value="0.34375" />
@@ -4238,8 +4238,8 @@
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="ringmod depth mod" class="parameter" extension="m1" />
     <parameter component-id="p2" index="1" name="ringmod depth" class="parameter" defaultValue="64" extension="m2" />
-    <parameter component-id="m1" index="0" name="morph:ringmod depth mod" class="morph" />
-    <parameter component-id="m2" index="1" name="morph:ringmod depth" class="morph" defaultValue="64" />
+    <parameter component-id="m1" index="0" name="morph:ringmod depth mod" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m2" index="1" name="morph:ringmod depth" class="morph"  minValue="-127" maxValue="127"/>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.90625" />
     <attribute name="x-mem" type="double" value="0.09375" />
@@ -4263,11 +4263,11 @@
     <parameter component-id="p3" index="2" name="sample rate mod" class="parameter" extension="m3" />
     <parameter component-id="p4" index="3" name="quant off" class="parameter" maxValue="1" formatter="type('off-on')" extension="m4" />
     <parameter component-id="p5" index="4" name="sampling off" class="parameter" maxValue="1" formatter="type('off-on')" extension="m5" />
-    <parameter component-id="m1" index="0" name="morph:quant bits" class="morph" maxValue="11" />
-    <parameter component-id="m2" index="1" name="morph:sample rate" class="morph" defaultValue="64" />
-    <parameter component-id="m3" index="2" name="morph:sample rate mod" class="morph" />
-    <parameter component-id="m4" index="3" name="morph:quant off" class="morph" maxValue="1" />
-    <parameter component-id="m5" index="4" name="morph:sampling off" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:quant bits" class="morph"  minValue="-11" maxValue="11" />
+    <parameter component-id="m2" index="1" name="morph:sample rate" class="morph"  minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="2" name="morph:sample rate mod" class="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m4" index="3" name="morph:quant off" class="morph"  minValue="-1" maxValue="1" />
+    <parameter component-id="m5" index="4" name="morph:sampling off" class="morph"  minValue="-1" maxValue="1"/>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="3.4375" />
     <attribute name="x-mem" type="double" value="0.28125" />
@@ -4286,7 +4286,7 @@
     <connector component-id="c2" index="1" name="Right" type="output" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="+6db" class="parameter" maxValue="1" formatter="type('off-on')" extension="m1" />
-    <parameter component-id="m1" index="0" name="morph:+6db" class="morph" maxValue="1" />
+    <parameter component-id="m1" index="0" name="morph:+6db" class="morph"  minValue="-1" maxValue="1" />
     <light index="0" type="meter" component-id="lightAudioLeft" name="audio left" minValue="0" maxValue="127">
 	    <attribute name="possible-values" value="0, 16, 32, 48, 64, 80, 96, 112, 122, 127"/>
     </light>
