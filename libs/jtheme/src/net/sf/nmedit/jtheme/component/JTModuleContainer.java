@@ -51,21 +51,107 @@ public class JTModuleContainer extends JTBaseComponent
     private JTPatch patchContainer;
     private PModuleContainer moduleContainer;
     private ContentSynchronisation cs;
+    //private CableOverlay overlay;
 
     public JTModuleContainer(JTContext context, JTCableManager cableManager)
     {
         super(context);
         setOpaque(true);
         setFocusable(true);
-        optimizedDrawing = true;// does not work: !context.hasModuleContainerOverlay();
-                                // we have to overwrite boolean isPaintingOrigin() which is package private 
+        optimizedDrawing = true;// 'true' does not work: !context.hasModuleContainerOverlay();
+                                // we have to overwrite boolean isPaintingOrigin() which is package private
+        /*overlay = new CableOverlay();
+        super.add(overlay, 0);
+        overlay.setEnabled(false);*/
+
         setCableManager(cableManager);
-        
         cs = createContentSynchronisation();
         if (cs != null)
             cs.install();
     }
+
+    protected boolean isRepaintOrigin()
+    {
+        return true;
+    }
     
+/*
+    public Component findComponentAt(int x, int y) { 
+        if (!(contains(x, y) && isVisible() && isEnabled())) {
+            return null;
+        }
+        synchronized (getTreeLock())
+        {
+            for (int i=getComponentCount()-1;i>=0;i--)
+            {
+                Component comp = getComponent(i);
+                if (comp != overlay)
+                {
+                    if (comp instanceof Container)
+                    {
+                        comp = ((Container)comp).findComponentAt(x-comp.getX(), y-comp.getY());
+                    }
+                    else
+                    {
+                        comp = comp.getComponentAt(x, y);
+                    }
+                    if (comp != null && comp.isVisible() && comp.isEnabled())
+                    {
+                        return comp;
+                    }
+                }
+            }
+        }
+        return this;
+    }*/
+    public void repaintOverlay(Rectangle r)
+    {
+        repaintOverlay(r.x, r.y, r.width, r.height);
+    }
+    
+    public void repaintOverlay(int x, int y, int width, int height)
+    {
+        /*overlay.*/repaint(x, y, width, height);
+    }
+    /*
+    public void setPreferredSize(Dimension d)
+    {
+        super.setPreferredSize(d);
+        overlay.setPreferredSize(d);
+    }
+    
+    public Component add(Component c, int index)
+    {
+        if (index==getComponentCount())
+            index--;
+        
+        return super.add(c, index);
+    }*/
+    /*
+    public void setBounds(int x, int y, int width, int height)
+    {
+        overlay.setBounds(0, 0, width, height);
+        super.setBounds(x, y, width, height);
+    }
+
+    private class CableOverlay extends OverlayComponent
+    {
+        
+        
+        protected void paintComponent(Graphics g)
+        {
+            if (cableManager != null)
+            {
+                cableManager.paintCables((Graphics2D) g);
+            }
+        }
+        
+        protected void paintChildren(Graphics g)
+        {
+            // no op
+        }
+    }
+    */
     protected ContentSynchronisation createContentSynchronisation()
     {
         return new ContentSynchronisation();
@@ -124,13 +210,13 @@ public class JTModuleContainer extends JTBaseComponent
                 JTModule mui = ms.createModule(getContext(), module);
                 mui.setLocation(module.getScreenLocation());                
                 add(mui);
-                
+                /*
                 if (mui.getStaticLayerBackingStore() == null)
                 {
                     ms.setStaticLayer(mui.renderStaticLayerImage());
                     mui.setStaticLayerBackingStore(mui.getStaticLayerBackingStore());
                 }
-                
+                */
                 // TODO revalidate/repaint container
                 mui.repaint();
             }
@@ -176,7 +262,7 @@ public class JTModuleContainer extends JTBaseComponent
         if (cs != null)
             cs.update();
     }
-    
+
     public PModuleContainer getModuleContainer()
     {
         return moduleContainer;
@@ -213,10 +299,16 @@ public class JTModuleContainer extends JTBaseComponent
         if (oldManager != cableManager)
         {
             if (oldManager != null)
+            {
+                oldManager.setOwner(null);
                 oldManager.setView(null);
+            }
             this.cableManager = cableManager;
             if (cableManager != null)
+            {
+                cableManager.setOwner(this);
                 cableManager.setView(this);
+            }
         }
     }
     
@@ -263,8 +355,6 @@ public class JTModuleContainer extends JTBaseComponent
     protected void paintChildren(Graphics g)
     {
         super.paintChildren(g);
-        
-        JTCableManager cableManager = getCableManager();
         if (cableManager != null)
         {
             Graphics gs = g.create();
@@ -277,7 +367,6 @@ public class JTModuleContainer extends JTBaseComponent
                 gs.dispose();
             }
         }
-
         if (ui != null)
         {
             getUI().paintChildrenHack(g);
