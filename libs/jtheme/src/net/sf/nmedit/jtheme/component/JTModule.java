@@ -234,7 +234,11 @@ public class JTModule extends JTComponent
             if (module != null)
             {
                 module.addModuleListener(this);
-                setLocation(module.getScreenX(), module.getScreenY());
+                
+                setBounds(module.getScreenX(),
+                        module.getScreenY(),
+                        module.getScreenWidth(),
+                        module.getScreenHeight());
             }
             if (ui != null)
                 getUI().moduleChanged(this, oldModule, module);
