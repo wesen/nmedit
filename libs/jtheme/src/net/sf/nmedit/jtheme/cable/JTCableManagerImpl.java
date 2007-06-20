@@ -19,10 +19,13 @@
 package net.sf.nmedit.jtheme.cable;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import javax.swing.JComponent;
 import javax.swing.RepaintManager;
@@ -30,152 +33,268 @@ import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jtheme.component.JTConnector;
-import net.sf.nmedit.nmutils.iterator.ArrayIterator;
 
-/**
- * TODO bug: sometimes at least one element in cables[0..cableCount-1] is null  
- * 
- * @author christian
- */
 public class JTCableManagerImpl implements JTCableManager
 {
-
-    private static final boolean DEBUG = false;
     
-    private Cable[] cables = new Cable[0];
-    private int visibleCount = 0;
-    private int cableCount = 0;
-    private transient Rectangle cachedRectangle;
-    private Rectangle visibleRegion = new Rectangle(0,0,0,0);
-    private Rectangle prevVisibleRegion = null;
-    private CableRenderer cableRenderer;
-    private transient Rectangle dirtyRegion;
-    private boolean dirty = false;
-    private boolean completelyDirty = false;
-    private JComponent view ;
-    private transient int prevVisibleCount = 0;
+    
+    private int size = 0;
+    private ManagedCable[] cables = new ManagedCable[10];
 
+    private CableRenderer cableRenderer;
+    private Rectangle visibleRegion = null;
+    private transient float visibleRegionOuterSq;
+
+    private transient int structureModCount;
+    private transient int modCount;
+    private transient int unchangedMod;
+    private transient Point center = new Point(0, 0);
+    private transient Rectangle sharedRect;
+    private transient Rectangle dirtyRect;
+    /*
+    private transient Rectangle singleDirtyRegion;
+    private transient Cable singleUpdateCable;
+    private transient int singleUpdateCount = 0;*/
+    private JComponent view;
+    private JComponent owner;
+    
     public JTCableManagerImpl(CableRenderer cableRenderer)
     {
         this.cableRenderer = cableRenderer;
     }
+    
+    public void setOwner(JComponent owner)
+    {
+        this.owner = owner;
+    }
 
     public JTCableManagerImpl()
     {
-        this(null);
-    }
-
-    private void storeDirtyRegion(Rectangle r)
-    {
-        storeDirtyRegion(r.x, r.y, r.width, r.height);
+        super();
     }
     
-    private void storeDirtyRegion(int x, int y, int w, int h)
+    public JComponent getOwner()
     {
-        if (!completelyDirty)
+        return owner;
+    }
+
+    protected int checkComputation()
+    {
+        if (unchangedMod == modCount)
+            return 0;
+        
+        int updateResult = 0;
+        
+        // compute center
+        int cx = 0;
+        int cy = 0;
+
+        if (size > 0)
         {
-            if (dirtyRegion == null)
-                dirtyRegion = new Rectangle();
+            if (sharedRect == null)
+                sharedRect = new Rectangle();
             
-            if (x<0) {w+=x; x = 0;}
-            if (y<0) {h+=y; y = 0;}
-            if (w>0 && h>0)
-                SwingUtilities.computeUnion(x, y, w, h, dirtyRegion);   
-        }        
-        dirty = true;
-    }
-    
-    private Rectangle getCachedRectangle()
-    {
-        if (cachedRectangle == null)
-            cachedRectangle = new Rectangle();
-        return cachedRectangle;
-    }
-    
-    private Rectangle bounds(Cable c)
-    {
-        return c.getBounds(getCachedRectangle());
-    }
-    
-    private boolean checkIsVisible(Cable c)
-    {
-        return bounds(c).intersects(visibleRegion);
-    }
-    
-    private void swap(int a, int b)
-    {
-        Cable tmp = cables[a];
-        cables[a] = cables[b];
-        cables[b] = tmp;
-    }
-    
-    private void updateOrder()
-    {
-        if (prevVisibleRegion == null)
-            return;
-        
-        Rectangle oldr = prevVisibleRegion;
-        Rectangle newr = visibleRegion;
-        prevVisibleRegion = null;
-
-        if (DEBUG)
-        {
-            String r;
-            if (oldr.contains(newr))
-                r = "smaller";
-            else if (newr.contains(oldr))
-                r = "larger";
+            if (dirtyRect == null)
+            {
+                dirtyRect = new Rectangle(0,0,0,0);
+            }
             else
-                r = "?";
-            System.out.println("updateOrder: region="+r);
+            {
+                // we do not reset the dirtyRect region because
+                // we can not be sure that notifyRepaintManager()
+                // was called
+            }
+
+            int updateCount = 0;
+
+            for (int i=0;i<size;i++)
+            {
+                ManagedCable mc = cables[i];
+                
+                if (mc.update)
+                {
+                    sharedRect = mc.getOldBounds(sharedRect);
+                    if (updateCount == 0)
+                        dirtyRect.setBounds(sharedRect);
+                    else
+                        SwingUtilities.computeUnion(sharedRect.x, sharedRect.y, sharedRect.width, sharedRect.height, dirtyRect);
+                    mc.checkUpdate();
+                    sharedRect = mc.getBounds(sharedRect);
+                    SwingUtilities.computeUnion(sharedRect.x, sharedRect.y, sharedRect.width, sharedRect.height, dirtyRect);
+                    mc.dirty = true;
+                    updateCount ++;
+                }
+            }
+
+            updateResult = updateCount;
+            
+            final int oldcx = center.x;
+            final int oldcy = center.y;
+            
+            if (visibleRegion != null)
+            {
+                cx = visibleRegion.x+(visibleRegion.width/2);
+                cy = visibleRegion.y+(visibleRegion.height/2);
+            }
+    
+            center.x = cx<0?0:cx;
+            center.y = cy<0?0:cy;
+
+            boolean allDirty = false;
+            if (oldcx!=cx||oldcy!=cy)
+            {
+                allDirty = true;
+                updateResult++;
+            }
+            if (allDirty||updateCount>0)
+            {
+                // update distances 
+                for (int i=0;i<size;i++)
+                {
+                    ManagedCable c = cables[i];
+                    if (c.dirty||allDirty)
+                    {
+                        computeDistanceSq(c, c.getBounds(sharedRect));
+                        if (c.dirty && (!allDirty))
+                        {
+                            updateCount--;
+                            if (updateCount == 0)
+                                break;
+                        }
+                        c.dirty = false;
+                    }
+                }
+            }
+            
+            // sort array by distance
+            if (updateResult>0)
+                Arrays.sort(cables, 0, size);
+        }
+
+        // visible region
+        if (visibleRegion != null)
+        {
+            visibleRegionOuterSq = computeOuterDistanceSq(visibleRegion);
+        }
+        else
+        {
+            visibleRegionOuterSq = Float.MAX_VALUE;
         }
         
-        if (oldr.contains(newr))
-        {
-            // smaller
-            for (int i=0;i<visibleCount;i++)
-            {
-                if (!checkIsVisible(cables[i]))
-                {
-                    swap(i, --visibleCount);
-                }
-            }
-        }
-        else if (newr.contains(oldr))
-        {
-            // larger
-            for (int i=visibleCount;i<cableCount;i++)
-            {
-                if (checkIsVisible(cables[i]))
-                {
-                    if (i!=visibleCount)
-                        swap(i, visibleCount);
-                    visibleCount++;
-                }
-            }
-        }
-        else 
-        {
-            visibleCount = 0;
-            for (int i=0;i<cableCount;i++)
-            {
-                if (checkIsVisible(cables[i]))
-                {
-                    // check if we have to swap cables
-                    if (i+1>visibleCount)
-                    {
-                        swap(visibleCount, i);
-                    }
-                    visibleCount++;
-                }
-            }
-        }
+        //dirtyRegionSq = Math.min(dirtyRegionSq, visibleRegionOuterSq);
+        // mark as updated
+        unchangedMod = modCount;
+        
+        return updateResult;
+    }
+
+    public void markCompletelyDirty()
+    {
+        modCount ++;
     }
     
-    private int indexOf(Cable cable)
+    protected float computeDistanceSq(Point p)
     {
-        for (int i=cableCount-1;i>=0;i--)
-            if (cable == cables[i])
+        return (float) Point.distanceSq(center.x, center.y, p.x, p.y);
+    }
+    
+    protected float computeDistanceSq(float x, float y)
+    {
+        return (float) Point.distanceSq(center.x, center.y, x, y);
+    }
+
+    protected float computeOuterDistanceSq(Rectangle bounds)
+    {
+        float cx = ((bounds.x*2f)+bounds.width)*2f/4f;
+        float cy = ((bounds.y*2f)+bounds.height)*2f/4f;
+        
+        float dx, dy;
+
+        dx = bounds.x-cx;
+        dy = bounds.y-cy;   
+        float brad = (float)Math.sqrt((dx*dx)+(dy*dy));
+
+        dx = center.x-cx;
+        dy = center.y-cy;
+        float crad = (float)Math.sqrt((dx*dx)+(dy*dy));
+        
+        float outerRadSq = crad+brad;
+        outerRadSq = outerRadSq*outerRadSq;
+        return outerRadSq;
+    }
+
+    protected float computeInnerDistanceSq(Rectangle bounds)
+    {
+        float cx = ((bounds.x*2f)+bounds.width)*2f/4f;
+        float cy = ((bounds.y*2f)+bounds.height)*2f/4f;
+        
+        float dx, dy;
+
+        dx = bounds.x-cx;
+        dy = bounds.y-cy;   
+        float brad = (float)Math.sqrt((dx*dx)+(dy*dy));
+
+        dx = center.x-cx;
+        dy = center.y-cy;
+        float crad = (float)Math.sqrt((dx*dx)+(dy*dy));
+        
+        float innerRadSq = Math.max(0, crad-brad);
+        innerRadSq = innerRadSq*innerRadSq;
+        return innerRadSq;
+    }
+
+    protected void computeDistanceSq(ManagedCable c, Rectangle bounds)
+    {
+        float cx = ((bounds.x*2f)+bounds.width)*2f/4f;
+        float cy = ((bounds.y*2f)+bounds.height)*2f/4f;
+        
+        float dx, dy;
+
+        dx = bounds.x-cx;
+        dy = bounds.y-cy;   
+        float brad = (float)Math.sqrt((dx*dx)+(dy*dy));
+
+        dx = center.x-cx;
+        dy = center.y-cy;
+        float crad = (float)Math.sqrt((dx*dx)+(dy*dy));
+        
+        float innerRadSq = Math.max(0, crad-brad);
+        float outerRadSq = crad+brad;
+        outerRadSq = outerRadSq*outerRadSq;
+        innerRadSq = innerRadSq*innerRadSq;
+
+        c.outerDistanceSq = outerRadSq;
+        c.innerDistanceSq = innerRadSq;
+    }
+
+    private void ensureCapacity(int capacity)
+    {
+        modCount ++;
+        structureModCount++;
+        if (cables.length<=capacity)
+        {
+            ManagedCable[] a = new ManagedCable[(capacity*2)+1];
+            System.arraycopy(cables, 0, a, 0, size);
+            cables = a;
+        }
+    }
+
+    protected ManagedCable managedCable(Cable cable)
+    {
+        int index = indexOf(cable);
+        return (index>=0) ? cables[index] : null;
+    }
+    
+    public void add(Cable cable)
+    {
+        ensureCapacity(size+1);
+        cables[size++] = new ManagedCable(cable);
+    }
+    
+    public int indexOf(Cable cable)
+    {
+        for (int i=0;i<size;i++)
+            if (cable==cables[i].cable)
                 return i;
         return -1;
     }
@@ -185,117 +304,105 @@ public class JTCableManagerImpl implements JTCableManager
         return indexOf(cable)>=0;
     }
     
-    public void add(Cable cable)
+    private void fastRemoveAt(int index)
     {
-        if (contains(cable))
-            return;
-
-        if (cableCount>=cables.length)
-        {
-            Cable[] a = new Cable[(cableCount+1)*3/2];
-            System.arraycopy(cables, 0, a, 0, cableCount);
-            cables = a;
-        }
-
-        // append
-        cables[cableCount++] = cable;
+        System.arraycopy(cables, index+1, cables, index, size-index-1);
         
-        if (applyOrder(cable, cableCount-1))
-        {
-            markDirty(cable);
-        }
-    }
-    
-    private boolean applyOrder(Cable cable, int index)
-    {
-        // returns true if cable becomes visible/invisible or is/remains visible
+        ManagedCable mc = cables[size-1];
 
-        if (checkIsVisible(cable))
-        {
-            if (index>visibleCount)
-            {
-                // cable becomes visible
-                swap(visibleCount++, index);
-            }
-            else if (index == visibleCount)
-            {
-                visibleCount++;
-            }
-            return true;
-        }
+        sharedRect = mc.getOldBounds(sharedRect);
+        if (dirtyRect == null)
+            dirtyRect = new Rectangle(sharedRect);
         else
         {
-            if (index<visibleCount)
-            {
-                // cable becomes invisible
-                if (index==visibleCount-1)
-                    visibleCount--;
-                else
-                    swap(--visibleCount, index);
-                return true;
-            }
+            SwingUtilities.computeUnion(sharedRect.x, sharedRect.y, sharedRect.width, sharedRect.height, dirtyRect);
         }
-        
-        return false;
-    }
+        sharedRect = mc.getBounds(sharedRect);
+        SwingUtilities.computeUnion(sharedRect.x, sharedRect.y, sharedRect.width, sharedRect.height, dirtyRect);
 
-    public void update(Cable cable)
-    {
-        if (completelyDirty)
-            return;
-        
-        int index = indexOf(cable);
-        if (index<0)
-            return;
-        
-        markDirty(cable);
-        cable.updateEndPoints();
-        
-        if (applyOrder(cable, index))
-            markDirty(cable);
+        cables[size-1] = null;
+        size --;
+        structureModCount++;
+        modCount++;        
     }
     
-    private boolean isCableAtIndexVisible(int index)
-    {
-        return index<visibleCount;
-    }
-
     public void remove(Cable cable)
     {
         int index = indexOf(cable);
-        
-        if (index<0)
-            return;
-        
-        // pack
-        for (int i=index+1;i<cableCount;i++)
-            cables[i-1] = cables[i];
-        cables[cableCount-1] = null;
-        cableCount--;
-        
-        if (isCableAtIndexVisible(index))
-        {
-            visibleCount--;
-            markDirty(cable);
-        }
-    }
-
-    public Iterator<Cable> getCables()
-    {
-        return new ArrayIterator<Cable>(cables, 0, cableCount);
-    }
-
-    public Iterator<Cable> iterator()
-    {
-        return getCables();
-    }
-
-    public void getVisible(Collection<Cable> c)
-    {
-        for (int i=0;i<visibleCount;i++)
-            c.add(cables[i]);
+        if (index>=0)
+            fastRemoveAt(index);
     }
     
+    // managed cable
+    private static class ManagedCable implements Comparable<ManagedCable>
+    {
+        
+        public boolean dirty = true;
+        public boolean update = true;
+        Cable cable;
+        float outerDistanceSq = 0;
+        float innerDistanceSq = 0;
+        Rectangle oldBounds;
+        
+        public ManagedCable(Cable cable)
+        {
+            this.cable = cable;
+        }
+
+        public void setOldBounds()
+        {
+            if (oldBounds == null)
+                oldBounds = new Rectangle();
+            oldBounds = getBounds(oldBounds);
+        }
+        
+        public Rectangle getOldBounds(Rectangle r)
+        {
+            if (oldBounds == null)
+            {
+                oldBounds = new Rectangle();
+                oldBounds = getBounds(oldBounds);
+            }
+            
+            r.setBounds(oldBounds);
+            return r;
+        }
+        
+        public Rectangle getBounds(Rectangle r)
+        {
+            return cable.getBounds(r);
+        }
+
+        public boolean isManaged(Cable testCable)
+        {
+            return this.cable == testCable;
+        }
+
+        public int compareTo(ManagedCable o)
+        {
+            return (int) Math.signum(innerDistanceSq-o.innerDistanceSq);
+        }
+        
+        public boolean checkUpdate()
+        {
+            final boolean updated = update;
+            if (update)
+            {
+                cable.updateEndPoints();
+                update = false;
+            }
+            return updated;
+        }
+        
+    }
+
+    public void clear()
+    {
+        Arrays.fill(cables, 0, size, null);
+        size = 0;
+        unchangedMod = ++modCount;
+    }
+
     private boolean isConnected(Cable c, PModule m)
     {
         return c.getSourceModule() == m || c.getDestinationModule() == m;
@@ -303,51 +410,63 @@ public class JTCableManagerImpl implements JTCableManager
     
     public void getCables(Collection<Cable> c, PModule module)
     {
-        for (int i=0;i<cableCount;i++)
+        for (int i=0;i<size;i++)
         {
-            if (isConnected(cables[i], module))
-                c.add(cables[i]);
+            if (isConnected(cables[i].cable, module))
+                c.add(cables[i].cable);
         }
     }
     
     public void getCables(Collection<Cable> c, Collection<? extends PModule> modules)
     {
-        for (int i=0;i<cableCount;i++)
+        for (int i=0;i<size;i++)
         {
-            Cable cable = cables[i];
+            Cable cable = cables[i].cable;
             if (modules.contains(cable.getSourceModule()) || modules.contains(cable.getDestinationModule()))
                 c.add(cable);
         }
     }
 
-    public int size()
+    public Iterator<Cable> getCables()
     {
-        return cableCount;
-    }
+        return new Iterator<Cable>()
+        {
 
-    public void setVisibleRegion(int x, int y, int width, int height)
-    {
-        if (prevVisibleRegion == null)
-            prevVisibleRegion = new Rectangle(visibleRegion);
-        visibleRegion.setBounds(x, y, width, height);
-    }
+            int remove = -1;
+            int index = 0;
+            int expectedModCount = structureModCount;
+            
+            public boolean hasNext()
+            {
+                checkMod();
+                return index<size;
+            }
 
-    public void setVisibleRegion(Rectangle r)
-    {        
-        setVisibleRegion(r.x, r.y, r.width, r.height);
-    }
+            public Cable next()
+            {
+                checkMod();
+                if (!hasNext())
+                    throw new NoSuchElementException();
+                return cables[remove = index++].cable;
+            }
 
-    public Rectangle getVisibleRegion()
-    {
-        return getVisibleRegion(null);
-    }
+            public void remove()
+            {
+                checkMod();
+                if (remove<0)
+                    throw new IllegalStateException();
+                fastRemoveAt(remove);
+                remove = -1;
+                expectedModCount = structureModCount;
+            }
 
-    public Rectangle getVisibleRegion(Rectangle r)
-    {
-        if (r == null)
-            r = new Rectangle();
-        r.setBounds(visibleRegion);
-        return r;
+            private void checkMod()
+            {
+                if (expectedModCount != structureModCount)
+                    throw new ConcurrentModificationException();
+            }
+            
+        };
     }
 
     public Cable createCable(JTConnector source, JTConnector destination)
@@ -355,48 +474,11 @@ public class JTCableManagerImpl implements JTCableManager
         return new SimpleCable(source, destination, new Pseudo3DCableGeometrie());
     }
 
-    public void clear()
-    {
-        for (int i=0;i<visibleCount;i++)
-            markDirty(cables[i]);
-        
-        if (cableCount>0) Arrays.fill(cables, 0);
-        cableCount = 0;
-        visibleCount = 0;
-        dirty = false;
-        completelyDirty = false;
-    }
-    
     public CableRenderer getCableRenderer()
     {
         return cableRenderer;
     }
 
-    public void setCableRenderer(CableRenderer cableRenderer)
-    {
-        if (this.cableRenderer != cableRenderer)
-        {
-            this.cableRenderer = cableRenderer;
-            markCompletelyDirty();
-        }
-    }
-
-    public void markCompletelyDirty()
-    {
-        dirty = completelyDirty = true;
-    }
-
-    public boolean hasDirtyRegion()
-    {
-        return dirty;
-    }
-
-    public void markDirty(Cable cable)
-    {
-        if (view != null)
-            storeDirtyRegion(bounds(cable));
-    }
-    
     public void setView(JComponent view)
     {
         JComponent oldView = this.view;
@@ -412,97 +494,209 @@ public class JTCableManagerImpl implements JTCableManager
         return view;
     }
 
+    public Rectangle getVisibleRegion()
+    {
+        return getVisibleRegion(null);
+    }
+
+    public Rectangle getVisibleRegion(Rectangle r)
+    {
+        int vx, vy, vw, vh;
+        
+        if (visibleRegion == null)
+        {
+            vx = 0;
+            vy = 0;
+            vw = Integer.MAX_VALUE;
+            vh = Integer.MAX_VALUE;
+        }
+        else
+        {
+            vx = visibleRegion.x;
+            vy = visibleRegion.y;
+            vw = visibleRegion.width;
+            vh = visibleRegion.height;
+        }
+        
+        if (r == null)
+            r = new Rectangle(vx, vy, vw, vh);
+        else
+            r.setBounds(vx, vy, vw, vh);
+        return r;
+    }
+
+    public boolean hasDirtyRegion()
+    {
+        return modCount!=unchangedMod;
+    }
+
     public void paintCables(Graphics2D g2)
     {
         paintCables(g2, cableRenderer);
     }
     
-    public void paintCables(Graphics2D g2, CableRenderer cableRenderer)
+    public void setCableRenderer(CableRenderer cableRenderer)
     {
-        if (DEBUG)
+        if (this.cableRenderer != cableRenderer)
         {
-            if (prevVisibleCount!=visibleCount)
-            {
-                prevVisibleCount = visibleCount;
-                System.out.println("paint:visible:"+visibleCount+"/"
-                        +cableCount);
-            }
-        }
-        
-        updateOrder();
-        markCompletelyClean();
-
-        if (visibleCount <= 0)
-            return ;
-        
-        cableRenderer.initRenderer(g2);
-        for (int i=0;i<visibleCount;i++)
-        {
-            cableRenderer.render(g2, cables[i]);
+            this.cableRenderer = cableRenderer;
+            markCompletelyDirty();
         }
     }
 
-    public Rectangle getCoveredArea()
+    public void setVisibleRegion(int x, int y, int width, int height)
     {
-        return getCoveredArea(null);
+        if (visibleRegion == null)
+            visibleRegion = new Rectangle(x, y, width, height);
+        else
+            visibleRegion.setBounds(x, y, width, height);
+        markCompletelyDirty();
     }
 
-    public Rectangle getCoveredArea(Rectangle r)
+    public void setVisibleRegion(Rectangle r)
     {
-        if (r == null)
-            r = new Rectangle();
-        r.setBounds(0, 0, 0, 0);
-        
-        if (cableCount > 0)
-        {
-            Rectangle bounds = getCachedRectangle();
-            
-            for (int i=0;i<cableCount;i++)
-            {
-                cables[i].getBounds(bounds);
-                SwingUtilities.computeUnion( bounds.x, bounds.y, 
-                        bounds.width, bounds.height, r);
-            }
-        }
-        
-        return r;
+        this.visibleRegion = r;
+        markCompletelyDirty();
     }
 
-    public void notifyRepaintManager()
+    public int size()
     {
-        if (view == null)
-            return ;
+        return size;
+    }
 
-        RepaintManager rm = RepaintManager.currentManager(view);
-        
-        if (completelyDirty || (dirty && dirtyRegion == null))
+    public void getVisible(Collection<Cable> c)
+    {
+        checkComputation();
+        for (int i=0;i<size;i++)
         {
-            rm.markCompletelyDirty(view);
-            markCompletelyClean();
+            ManagedCable mc = cables[i];
+            if (mc.innerDistanceSq<=visibleRegionOuterSq)
+                c.add(mc.cable);
         }
-        else if (dirty && dirtyRegion != null)
-        {
-            SwingUtilities.computeIntersection(visibleRegion.x, 
-                    visibleRegion.y, visibleRegion.width,
-                    visibleRegion.height, dirtyRegion);
-            
-            final int add = 20;
+    }
 
-            dirtyRegion.x-=add;
-            dirtyRegion.y-=add;
-            dirtyRegion.width+=add*2;
-            dirtyRegion.height+=add*2;
-            
-            rm.addDirtyRegion(view, dirtyRegion.x, dirtyRegion.y, dirtyRegion.width, dirtyRegion.height);
-            markCompletelyClean();   
+    public void update(Cable cable)
+    {
+        markDirty(cable);
+        notifyRepaintManager();
+    }
+
+    public Iterator<Cable> iterator()
+    {
+        return getCables();
+    }
+
+    public void markDirty(Cable cable)
+    {
+        int index = indexOf(cable);
+        if (index>=0)
+        {
+            ManagedCable mc = cables[index];
+            mc.update = true;
+            modCount ++;
         }
     }
     
-    private void markCompletelyClean()
+    public void notifyRepaintManager()
     {
-        dirty = completelyDirty = false;
-        if (dirtyRegion != null)
-            dirtyRegion.setBounds(0, 0, 0, 0);
+        if (view != null && checkComputation()>0 && dirtyRect != null)
+        {
+            enlarge(dirtyRect);
+            RepaintManager
+                .currentManager(view)
+                .addDirtyRegion(view,
+                        dirtyRect.x, dirtyRect.y, 
+                        dirtyRect.width, dirtyRect.height);
+            dirtyRect.setBounds(0,0,0,0);
+        }
+    }
+    
+    public void paintCables(Graphics2D g, CableRenderer cableRenderer)
+    {
+        checkComputation();
+        modCount = unchangedMod;
+
+        Rectangle clip = g.getClipBounds();
+
+        float innerClipSq = 0;
+        float outerClipSq = Float.MAX_VALUE;
+
+
+        if (sharedRect == null)
+            sharedRect = new Rectangle();
+        
+        cableRenderer.initRenderer(g);
+        if (clip != null)
+        {
+            enlarge(clip);
+            innerClipSq = Math.max(0, computeInnerDistanceSq(clip));
+            outerClipSq = computeOuterDistanceSq(clip);
+            
+            for (int i=0;i<size;i++)
+            {
+                ManagedCable mc = cables[i];
+               
+                if (mc.innerDistanceSq<=outerClipSq)
+                {   
+                    if (mc.outerDistanceSq>=innerClipSq)
+                       if (mc.getBounds(sharedRect).intersects(clip))
+                       {
+                           mc.setOldBounds();
+                           cableRenderer.render(g, mc.cable);
+                       }
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        else
+        {
+        
+            for (int i=0;i<size;i++)
+            {
+                ManagedCable mc = cables[i];
+               
+                if (mc.innerDistanceSq<=outerClipSq)
+                {   
+                    if (mc.outerDistanceSq>=innerClipSq)
+                    {
+                       mc.setOldBounds();
+                       cableRenderer.render(g, mc.cable);
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    private void enlarge(Rectangle r)
+    {
+        enlarge(r, 10);
+    }
+    
+    private void enlarge(Rectangle r, int enlargement)
+    {
+        final int enlargement2 =enlargement*2;
+        r.x-=enlargement;
+        r.y-=enlargement;
+        r.width+=enlargement2;
+        r.height+=enlargement2;
+
+        if (r.x<0)
+        {
+            r.width+=r.x;
+            r.x = 0;
+        }
+        if (r.y<0)
+        {
+            r.height+=r.y;
+            r.y = 0;
+        }
     }
 
 }

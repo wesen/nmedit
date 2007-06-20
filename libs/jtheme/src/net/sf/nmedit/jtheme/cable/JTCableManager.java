@@ -27,6 +27,7 @@ import javax.swing.JComponent;
 
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jtheme.component.JTConnector;
+import net.sf.nmedit.jtheme.component.JTModuleContainer;
 
 public interface JTCableManager extends Iterable<Cable>
 {
@@ -49,9 +50,6 @@ public interface JTCableManager extends Iterable<Cable>
 
     Iterator<Cable> getCables();
 
-    Rectangle getCoveredArea();
-    Rectangle getCoveredArea(Rectangle r);
-    
     void setVisibleRegion(int x, int y, int width, int height);
     void setVisibleRegion(Rectangle r);
     
@@ -70,6 +68,8 @@ public interface JTCableManager extends Iterable<Cable>
     JComponent getView();
 
     Cable createCable(JTConnector source, JTConnector destination);
+    JComponent getOwner();
+    void setOwner(JComponent owner);
     
 }
 
