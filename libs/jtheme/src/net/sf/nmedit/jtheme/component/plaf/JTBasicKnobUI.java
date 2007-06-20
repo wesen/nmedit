@@ -22,7 +22,9 @@
  */
 package net.sf.nmedit.jtheme.component.plaf;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
@@ -75,7 +77,7 @@ public class JTBasicKnobUI extends JTBasicControlUI
         backgroundColor = defaults.getColor(getPrefix()+knobBackgroundColorKey);
         borderColor = defaults.getColor(getPrefix()+knobBorderColorKey);
         gripStartValue = getDouble(defaults, getPrefix()+knobGripStartValueKey, 0.25/2);
-        gripStopValue = getDouble(defaults, getPrefix()+knobGripStopValueKey, 1-0.25/2);
+        gripStopValue = getDouble(defaults, getPrefix()+knobGripStopValueKey, KnobMetrics.cw(0.25/2));
         gripColor = defaults.getColor(getPrefix()+knobGripColorKey);
 
         if (backgroundColor == null) backgroundColor = defaultBackgroundColor;
@@ -147,6 +149,26 @@ public class JTBasicKnobUI extends JTBasicControlUI
     {
         double value = control.getNormalizedValue();
         
+        if (control.isExtensionAdapterSet())
+        {
+            int e = control.getExtensionValue();
+            if (e != 0)
+            {
+                int relative = control.getValue()+e;
+                if (relative<control.getMinValue())
+                    relative = control.getMinValue();
+                else if (relative>control.getMaxValue())
+                    relative = control.getMaxValue();
+                
+                float d = control.getMaxValue()-control.getMinValue();
+                if (d>0)
+                {
+                    float rnorm = (relative-control.getMinValue())/d;
+                    paintExtensionGrip(g, control, Color.RED, value, rnorm);
+                }
+            }
+        }
+        
         /*
         if (control.isExtensionAdapterSet())
         {
@@ -156,25 +178,28 @@ public class JTBasicKnobUI extends JTBasicControlUI
         
         paintKnobGrip(g, control, gripColor, value);
     }
-/*
-    private void paintExtensionGrip(Graphics2D g, JTControl control, Color gripColor2, double start, double stop)
+    
+    private static final Composite extComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f);
+
+    private void paintExtensionGrip(Graphics2D g, JTControl control, Color fill, double start, double stop)
     {
         int size = diameter(control);
-
-        int len = size/2-1;
-        int cxy = 1+len;
+        
+        int degStop = -(int)((stop-start)*360*.75);
         
         // scale and translate value
-        value = KnobMetrics.cw(gripStartValue+(value*(gripStopValue-gripStartValue)));
-        
-        int gx = (int) (Math.sin(value*KnobMetrics.PI2)*len);
-        int gy = (int) (Math.cos(value*KnobMetrics.PI2)*len);
+        start = KnobMetrics.cw(gripStartValue+.25+(start*(gripStopValue-gripStartValue))); 
+        int degStart = (int)(start*360);
 
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setColor(Color.BLUE);
-        g.drawLine(cxy, cxy, cxy+gx, cxy+gy);
+        
+        Composite composite = g.getComposite();
+        g.setComposite(extComposite);
+        g.setColor(fill);
+        g.fillArc(1, 1, size-3, size-3, degStart, degStop);
+        g.setComposite(composite);
     }
-*/
+
     private void paintKnobGrip(Graphics2D g, JTControl control, Color gripColor, double value)
     {
         int size = diameter(control);
