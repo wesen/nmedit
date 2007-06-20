@@ -40,7 +40,6 @@ import net.sf.nmedit.jpatch.PParameterDescriptor;
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.event.PModuleEvent;
 import net.sf.nmedit.jpatch.event.PModuleListener;
-import net.sf.nmedit.jpatch.event.PParameterListener;
 
 /**
  * The reference implementation of interface {@link PModule}.
@@ -110,7 +109,7 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
         // those that are interested in this event
         for (int i = listeners.length-2; i>=0; i-=2) 
         {
-            if (listeners[i]==PParameterListener.class) 
+            if (listeners[i]==PModuleListener.class) 
             {
                 // Lazily create the event:
                 if (moduleEvent == null)
@@ -132,7 +131,7 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
         // those that are interested in this event
         for (int i = listeners.length-2; i>=0; i-=2) 
         {
-            if (listeners[i]==PParameterListener.class) 
+            if (listeners[i]==PModuleListener.class) 
             {
                 // Lazily create the event:
                 if (moduleEvent == null)
