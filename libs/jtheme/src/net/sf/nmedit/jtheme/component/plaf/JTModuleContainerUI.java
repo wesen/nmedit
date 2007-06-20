@@ -246,7 +246,7 @@ public class JTModuleContainerUI extends ComponentUI
             repaint.y-= enlarge;
             repaint.width+= enlarge*2;
             repaint.height+= enlarge*2;*/
-            getModuleContainer().repaint(repaint);
+            getModuleContainer().repaintOverlay(repaint);
         }
         
         if (box == null)
@@ -279,9 +279,7 @@ public class JTModuleContainerUI extends ComponentUI
                     getModuleContainer()
                     .getVisibleRect();
                 
-                dndInitialScrollLocation
-                = r.getLocation();
-                
+                dndInitialScrollLocation = r.getLocation();
             }
             
             dndBox = new Rectangle(box);
@@ -422,14 +420,14 @@ public class JTModuleContainerUI extends ComponentUI
 
         public DataFlavor[] getTransferDataFlavors()
         {
-            DataFlavor[] flavors = {EventHandler.ModuleSelectionFlavor};
+            DataFlavor[] flavors = {JTDragDrop.ModuleSelectionFlavor};
             return flavors;
         }
 
         public boolean isDataFlavorSupported(DataFlavor flavor)
         {
             // DropTarget gives his flavors. DropSource looks if it can be dropped on the target.
-            return flavor != null && flavor.equals(EventHandler.ModuleSelectionFlavor);
+            return flavor != null && flavor.equals(JTDragDrop.ModuleSelectionFlavor);
         }
     }
     
@@ -511,8 +509,6 @@ public class JTModuleContainerUI extends ComponentUI
         protected int dndActions =  DnDConstants.ACTION_COPY_OR_MOVE;
         protected DropTargetListener dropTargetListener;
 
-        public static final DataFlavor ModuleSelectionFlavor = new DataFlavor("nomad/ModuleSelectionFlavor", "Nomad ModuleSelectionFlavor");
-        
         protected DropTargetListener createDropTargetListener()
         {
             return this;
@@ -574,12 +570,12 @@ public class JTModuleContainerUI extends ComponentUI
                 return;
             }
             
-            if (dtde.getTransferable().isDataFlavorSupported(ModuleSelectionFlavor))
+            if (dtde.getTransferable().isDataFlavorSupported(JTDragDrop.ModuleSelectionFlavor))
             {
                 dtde.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
                 return;
             }
-                
+
             dtde.rejectDrag();
             
             // no op
@@ -604,14 +600,14 @@ public class JTModuleContainerUI extends ComponentUI
                 dtde.acceptDrag(DnDConstants.ACTION_COPY);
             }
             else*/
-            if (dtde.getCurrentDataFlavorsAsList().contains(EventHandler.ModuleSelectionFlavor))
+            if (dtde.getCurrentDataFlavorsAsList().contains(JTDragDrop.ModuleSelectionFlavor))
             {
                 dtde.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
 
                 ModuleTransferData data;
                 try
                 {
-                    data = (ModuleTransferData) dtde.getTransferable().getTransferData(EventHandler.ModuleSelectionFlavor);
+                    data = (ModuleTransferData) dtde.getTransferable().getTransferData(JTDragDrop.ModuleSelectionFlavor);
 
                     if (data!=null)
                     {
@@ -714,15 +710,19 @@ public class JTModuleContainerUI extends ComponentUI
                 }
 
                 mc.add(module);
+                MoveOperation move = module.getParentComponent().createMoveOperation();
+                move.setScreenOffset(0, 0);
+                move.add(module);
+                move.move();
                 
                 dtde.acceptDrop(DnDConstants.ACTION_COPY);
                 return;
             }
             
-            if (dtde.isDataFlavorSupported(EventHandler.ModuleSelectionFlavor)
+            if (dtde.isDataFlavorSupported(JTDragDrop.ModuleSelectionFlavor)
                     && dtde.isLocalTransfer())
             {
-                chosen = EventHandler.ModuleSelectionFlavor;
+                chosen = JTDragDrop.ModuleSelectionFlavor;
 
 
                 Transferable transfer = dtde.getTransferable();
@@ -886,7 +886,7 @@ public class JTModuleContainerUI extends ComponentUI
                 return;
             }
             
-            if (dtde.getTransferable().isDataFlavorSupported(ModuleSelectionFlavor))
+            if (dtde.getTransferable().isDataFlavorSupported(JTDragDrop.ModuleSelectionFlavor))
             {
                 dtde.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
                 return;
