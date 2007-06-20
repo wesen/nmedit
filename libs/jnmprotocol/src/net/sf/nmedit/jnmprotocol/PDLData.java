@@ -1,9 +1,11 @@
 package net.sf.nmedit.jnmprotocol;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import net.sf.nmedit.jpdl.PacketParser;
@@ -144,14 +146,38 @@ public final class PDLData
     private static Protocol parseProtocolFile(String file)
     {
         ClassLoader loader = getPDLClassLoader();
+
+        URL resource = null; 
+            
+        File abs = new File(file);
+        if (abs.exists())
+        {
+            try
+            {
+                resource = abs.toURI().toURL();
+            }
+            catch (MalformedURLException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
         
-        URL resource = loader.getResource(file);
+        if (resource == null)
+            resource = loader.getResource(file);
         
         if (resource == null)
             throw new RuntimeException("could not initialize protocol: "+file);
         
-        Reader reader = new BufferedReader(
-                new InputStreamReader( loader.getResourceAsStream(file)));
+        Reader reader;
+        try
+        {
+            reader = new BufferedReader(new InputStreamReader(resource.openStream()));
+        }
+        catch (IOException e1)
+        {
+            throw new RuntimeException(e1);
+        }
 
         Protocol protocol;
         try
