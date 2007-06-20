@@ -28,7 +28,7 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentEvent;
 public class MidiController
 {
     public static final int MODULATION_WHEEL = 1;
-    public static final int ExpressionPedal = 11;
+    public static final int FootPedal = 4;
     public static final int VOLUME = 7;
     
     private final int ID;
@@ -136,4 +136,9 @@ public class MidiController
         }
     }
 
+    public String toString()
+    {
+        return getClass().getName()+"[id="+getControlId()+",name='"+getName()+"']";
+    }
+    
 }

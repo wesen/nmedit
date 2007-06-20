@@ -75,7 +75,8 @@ public class JTNM1Context extends JTCustomContext
 
     public JTNM1Context(StorageContext stc)
     {
-        super(true, true);
+        //super(true, true);
+        super(false, true);
         this.stc = stc;
         
         

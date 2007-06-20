@@ -608,10 +608,9 @@ public class JTNMPatch extends JTPatch
             if (mstore == null)
                 throw new RuntimeException("no store found for "+module);
             
-             Image image = mstore.getStaticLayer();
             //mstore.setStaticLayer(null);
             
-            JTModule jtmodule = mstore.createModule(context, module, image == null);
+            JTModule jtmodule = mstore.createModule(context, module);
             
             jtmodule.setLocation( module.getScreenX(), module.getScreenY() );
 

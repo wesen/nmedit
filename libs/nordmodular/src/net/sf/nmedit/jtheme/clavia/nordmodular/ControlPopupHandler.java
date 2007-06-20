@@ -25,6 +25,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 
+import net.sf.nmedit.jnmprotocol.MorphKeyboardAssignmentMessage;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Knob;
 import net.sf.nmedit.jpatch.clavia.nordmodular.MidiController;
@@ -62,6 +63,7 @@ public class ControlPopupHandler implements JTPopupHandler
         private JMenu submenuKnob;
         private JMenu submenuMorph;
         private JMenu submenuMIDI;
+        private JMenu submenuKeyboard;
         
         private PParameter parameter;
         
@@ -112,7 +114,7 @@ public class ControlPopupHandler implements JTPopupHandler
                 if (tmp==i)
                 {
                     tmpa.setEnabled(false);
-                    tmpa.putValue(AbstractAction.SELECTED_KEY, Boolean.TRUE);
+                    //tmpa.putValue(mleAbstractAction.SELECTED_KEY, Boolean.TRUE);
                 }
                 submenuKnob.add(tmpa);
                 if (i==5||i==11||i==14||i==17)
@@ -146,7 +148,7 @@ public class ControlPopupHandler implements JTPopupHandler
             // MIDI Controller
             submenuMIDI = new JMenu("MIDI Controller");
             submenuMIDI.add(new ParameterAction(this, ParameterAction.MIDI, MidiController.MODULATION_WHEEL));
-            submenuMIDI.add(new ParameterAction(this, ParameterAction.MIDI, MidiController.ExpressionPedal));
+            submenuMIDI.add(new ParameterAction(this, ParameterAction.MIDI, MidiController.FootPedal));
             submenuMIDI.add(new ParameterAction(this, ParameterAction.MIDI, MidiController.VOLUME));
             submenuMIDI.addSeparator();
             submenuMIDI.add(new ParameterAction(this, ParameterAction.MIDI, -2));
@@ -154,6 +156,32 @@ public class ControlPopupHandler implements JTPopupHandler
             submenuMIDI.add(new ParameterAction(this, ParameterAction.MIDI, -1));
             
             popup.add(submenuMIDI);
+            
+            if (parameter.getParentComponent().getParentComponent() == getPatch().getMorphSection())
+            {
+                popup.addSeparator();
+                submenuKeyboard = new JMenu("Keyboard");
+                submenuKeyboard.add(new ParameterAction(this, ParameterAction.KB, MorphKeyboardAssignmentMessage.KEYBOARD_VELOCITY));
+                submenuKeyboard.add(new ParameterAction(this, ParameterAction.KB, MorphKeyboardAssignmentMessage.KEYBOARD_NOTE));
+                submenuKeyboard.addSeparator();
+                submenuKeyboard.add(new ParameterAction(this, ParameterAction.KB, MorphKeyboardAssignmentMessage.KEYBOARD_DISABLE));
+                popup.add(submenuKeyboard);
+            }
+            
+            /*
+            popup.add(new AbstractAction(){
+
+                {
+                    putValue(NAME, "TEST");
+                }
+                
+                public void actionPerformed(ActionEvent arg0)
+                {
+                 
+                    testSettingsMessage();
+                    
+                }});
+            */
             
             // Default value
             // Zero morph
@@ -184,9 +212,68 @@ public class ControlPopupHandler implements JTPopupHandler
             //          Other ...
             //          ----
             //          Disable
+            // ----
+            // Keyboard > (only in morph section!)
+            //          Velocity
+            //          Note
+            //          ----
+            //          Disable
             
         }
-        
+
+        /*
+        void testSettingsMessage()
+        {
+            
+            NMPatch patch = getPatch();
+            
+            NmSlot slot = (NmSlot) patch.getSlot();
+            NordModular nm = (NordModular) slot.getSynthesizer();
+            
+            
+            PatchSettingsMessage msg = new PatchSettingsMessage();
+            msg.setDefaults(slot.getSlotIndex(), slot.getPatchId(), 0x0);
+            
+            Header h = patch.getHeader();
+            
+            msg.set("kbrangeMin1", 0);
+            msg.set("kbrangeMin2", 0);
+            msg.set("kbrangeMax1", 1);
+            msg.set("kbrangeMax2", 0);
+            msg.set("velocityRangeMin1", 0);
+            msg.set("velocityRangeMin2", 0);
+            msg.set("velocityRangeMax1", 1);
+            msg.set("velocityRangeMax2", 0);
+            msg.set("bendRange", h.getBendRange());
+            msg.set("portamentoTime1", 0);
+            msg.set("portamentoTime2", 1);
+            msg.set("portamentoType", 0);
+            msg.set("pedalMode", 0);
+            msg.set("voiceCount", 1);
+            msg.set("dividerBar1", 0);
+            msg.set("dividerBar2", 0);
+            msg.set("octaveShift1", 0);
+            msg.set("octaveShift2", 0);
+            msg.set("red", 0);
+            msg.set("blue", 0);
+            msg.set("yellow", 0);
+            msg.set("gray", 0);
+            msg.set("green", 0);
+            msg.set("purple", 0);
+            msg.set("white", 0);
+            msg.set("voiceRetriggerCommon", 0);
+            msg.set("voiceRetriggerPoly", 0);
+
+            System.out.println(msg);
+            try
+            {
+            nm.getProtocol().send(msg);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }*/
     }
     
     private static class ParameterAction extends AbstractAction
@@ -197,6 +284,7 @@ public class ControlPopupHandler implements JTPopupHandler
         public static final String KNOB = "Knob";
         public static final String MORPH = "Morph";
         public static final String MIDI = "MIDI";
+        public static final String KB = "KB";
         
         private ControlPopup parent;
         private int index;
@@ -247,20 +335,48 @@ public class ControlPopupHandler implements JTPopupHandler
                     name = getPatch().getKnobs().get(index).getName();
             }
             else if (actionCommand == MIDI)
-            {
+            {   
+                boolean assigned = false;
+                if (index>=0)
+                {
+                    assigned = getPatch().getMidiControllers().get(index)
+                    .getParameter() == getParameter();
+                }
+                
                 if (MidiController.isValidCC(index))
                 {
+                    setEnabled(!assigned);
                     name = MidiController.getDefaultName(index);
                 }
                 else
                 {
                     if (index==-1)
+                    {                    
+                        setEnabled(getPatch().getMidiControllers().getMidiControllerIndex(getParameter())>=0);
                         name = "Disable";
+                    }
                     else if (index==-2)
+                    {
+                        setEnabled(true);
                         name = "Other...";
+                    }
                     else
                         throw new IllegalArgumentException("invalid midi controller ID: "+index);
                 }
+            }
+            else if (actionCommand == KB && getParameter().getParentComponent().getParentComponent()==getPatch().getMorphSection())
+            {
+                PNMMorphSection ms =
+                    (PNMMorphSection)getParameter().getParentComponent().getParentComponent();
+                
+                setEnabled(ms.getKeyboardAssignment(getParameter().getComponentIndex()).getValue()!=index);
+                
+                if (index == MorphKeyboardAssignmentMessage.KEYBOARD_VELOCITY)
+                    name = "Velocity";
+                else if (index == MorphKeyboardAssignmentMessage.KEYBOARD_NOTE)
+                    name = "Note";
+                else
+                    name = "Disable";
             }
             else
             {
@@ -294,6 +410,12 @@ public class ControlPopupHandler implements JTPopupHandler
                 PParameter p = getParameter();
                 p.setValue(p.getDefaultValue());
             }
+            else if (command == MIDI)
+            {
+                if (index==-1)
+                    deassignMidiCtrl();
+                else assignMidiCtrl();
+            }
         }
         
         PParameter getParameter()
@@ -304,6 +426,17 @@ public class ControlPopupHandler implements JTPopupHandler
         NMPatch getPatch()
         {
             return parent.getPatch();
+        }
+
+        private void deassignMidiCtrl()
+        {
+            getPatch().getMidiControllers().deassign(getParameter());
+        }
+
+        public void assignMidiCtrl()
+        {
+            MidiController cc = getPatch().getMidiControllers().get(index);
+            cc.setParameter(getParameter());
         }
 
         private void deassignKnob()
