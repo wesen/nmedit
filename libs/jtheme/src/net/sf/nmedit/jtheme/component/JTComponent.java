@@ -365,6 +365,10 @@ public class JTComponent extends JTBaseComponent
      */
     protected void paintComponent(Graphics g)
     {
+
+        paintComponentWithoutDoubleBuffer((Graphics2D)g);
+        /*
+        
         if (doubleBuffer == null && isNonVolatileDoubleBufferEnabled() && isDisplayable())
             doubleBuffer = new DoubleBuffer();
         else
@@ -390,6 +394,7 @@ public class JTComponent extends JTBaseComponent
             }
         }
         doubleBuffer.flip(g);
+        */
     }
     
     /**
@@ -409,7 +414,7 @@ public class JTComponent extends JTBaseComponent
      * the static layer backing store image instead if available.
      */
     protected void paintStaticLayerOrBackingStore(Graphics2D g2)
-    {
+    {/*
         if (hasStaticLayerBackingStore())
         {
             int r = getWidth();
@@ -427,7 +432,7 @@ public class JTComponent extends JTBaseComponent
                     // ImageObserver
                     null);
         }
-        else
+        else*/
         {
             paintStaticLayer(g2);
         }
