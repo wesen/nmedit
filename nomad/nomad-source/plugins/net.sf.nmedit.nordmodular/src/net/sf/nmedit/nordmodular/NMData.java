@@ -156,7 +156,7 @@ public class NMData
             storageContext = new NMStorageContext(getRelativeClassLoader(relative));
 
             ClassLoader loader = getClass().getClassLoader();
-/*
+
             PluginManager manager = PluginManager.lookup(this); 
             
             Plugin plugin = manager.getPluginFor(this);
@@ -164,7 +164,7 @@ public class NMData
             
             TempDir tmp = new TempDir(plugin);
             storageContext.setCacheFile(tmp.getTempFile("store.cache"));
-            */
+            
             storageContext.parseStore(new InputSource(source), loader);
         }
         finally
