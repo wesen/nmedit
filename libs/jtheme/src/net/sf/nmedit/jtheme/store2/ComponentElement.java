@@ -23,6 +23,7 @@ import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.component.JTComponent;
+import net.sf.nmedit.jtheme.store.StorageContext;
 
 import org.jdom.Element;
 
@@ -32,6 +33,11 @@ public abstract class ComponentElement
     protected ComponentElement()
     {
         super();
+    }
+    
+    public void initializeElement(StorageContext context)
+    {
+        // no op
     }
     
     public static ComponentElement createElement(JTContext context, Element element)

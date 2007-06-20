@@ -38,9 +38,10 @@ import net.sf.nmedit.jtheme.store.StorageContext;
 public class LabelElement extends AbstractElement implements Serializable
 {
 
+    private String cssStyleValue;
     private transient CSSStyleDeclaration styleDecl;
-    private Color clFill = null;
-    private int fontSize = -1;
+    private transient Color clFill;
+  //  private int fontSize = -1;
     protected boolean reducible = false;
     protected String text;
 
@@ -54,23 +55,22 @@ public class LabelElement extends AbstractElement implements Serializable
     }
 
     @Override
-    protected void initElement(StorageContext context, Element e)
+    public void initializeElement(StorageContext context)
     {
-        super.initElement(context, e);
+        styleDecl = CSSUtils.getStyleDeclaration("label", cssStyleValue, context);
         if (styleDecl == null)
         {
-            CSSStyleRule rule = context.getStyleRule(e.getName());
+            CSSStyleRule rule = context.getStyleRule("label");
             if (rule != null)
                 styleDecl = rule.getStyle();
         }
-        
 
         if (styleDecl != null)
         {
             clFill = CSSUtils.getColor(styleDecl, "fill");
-            float fs = CSSUtils.getPx(styleDecl, "font-size", -1);
+            /*float fs = CSSUtils.getPx(styleDecl, "font-size", -1);
             if (fs>0)
-                fontSize = (int) Math.floor(fs);
+                fontSize = (int) Math.floor(fs);*/
         }
     }
     

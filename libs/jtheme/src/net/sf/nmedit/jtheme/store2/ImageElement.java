@@ -54,6 +54,7 @@ import org.jdom.transform.JDOMSource;
 public class ImageElement extends AbstractElement implements Serializable
 {
     private String src;
+    private Object id;
     private transient ImageResource imageResource; // TODO serialization
     protected boolean reducible = false;
     
@@ -62,6 +63,14 @@ public class ImageElement extends AbstractElement implements Serializable
         return LogFactory.getLog(ImageElement.class);
     }
 
+    public void initializeElement(StorageContext context)
+    {
+        if (id != null)
+        {
+            imageResource = context.getCachedImage(id);
+        }
+    }
+    
     public static ImageResource getImageResource(StorageContext context, Element element)
     {
         String href = getXlinkHref(element);
@@ -111,13 +120,20 @@ public class ImageElement extends AbstractElement implements Serializable
         JTImage jtimg = (JTImage) context.createComponent(JTContext.TYPE_IMAGE);
         setName(jtimg);
         this.reducible = jtimg.isReducible();
+
         
         jtimg.setIcon(new ImageIcon(image));
+        
         setLocation(jtimg);
         if (width>=0 && height>=0)
         {
             setSize(jtimg);
         }
+        else
+        {
+            jtimg.setSize(image.getWidth(null), image.getHeight(null));
+        }
+
         return jtimg;
     }
 
@@ -130,6 +146,7 @@ public class ImageElement extends AbstractElement implements Serializable
     public static AbstractElement createElement(StorageContext context, Element element)
     {
         ImageElement e = new ImageElement();
+        e.initElement(context, element);
         e.lookupImage(context, element);
         return e;
     }
@@ -141,13 +158,13 @@ public class ImageElement extends AbstractElement implements Serializable
         else
             return new ToolkitImageResource(src, context.getContextClassLoader());
     }
-    
+
     @Override
     protected void initAttributes(StorageContext context, Attribute att)
     {
-        if (att.getName().endsWith("href") && xlinkns.equals(att.getNamespace()))
+        if ("href".equals(att.getName()) && xlinkns.equals(att.getNamespace()))
         {
-            this.src = att.getValue();
+            src = att.getValue();
         }
         else
         {
@@ -157,6 +174,9 @@ public class ImageElement extends AbstractElement implements Serializable
     
     protected void lookupImage(StorageContext context, Element e)
     {
+        if (imageResource != null)
+            return;
+        
         if (src != null)
         {
             if (context instanceof DefaultStorageContext)
@@ -165,15 +185,17 @@ public class ImageElement extends AbstractElement implements Serializable
                 imageResource = dsc.getCachedImage(src);
 
                 if (src.startsWith("url(#") && src.endsWith(")"))
-                {
+                {                    
                     String id = src.substring(5, src.length()-1);
                     imageResource = dsc.getImageResourceById(id);
+                    this.id = id;
                 }
                 else if (imageResource == null)
                 {
                     AbstractImageResource air = createResource(context, src);
                     imageResource = air;
-                    dsc.putImage(air.getResolvedURL(), air);
+                    this.id = air.getResolvedURL();
+                    dsc.putImage(id, air);
                 }
             }
             else
@@ -187,6 +209,13 @@ public class ImageElement extends AbstractElement implements Serializable
             if (svg != null)
             {
                 imageResource = new SVGStringRessource(element2txt(svg));
+
+                if (context instanceof DefaultStorageContext)
+                {
+                    DefaultStorageContext dsc = (DefaultStorageContext) context;
+                    this.id = context.generateId();
+                    dsc.putImage(id, imageResource);
+                }
             }
         }
     }

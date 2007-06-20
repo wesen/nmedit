@@ -38,8 +38,9 @@ import org.w3c.dom.css.CSSStyleRule;
 public class TextDisplayElement extends ControlElement
 {
 
-    private CSSStyleDeclaration styleDecl;
-    private Color fill;
+    private String cssStyleValue;
+    private transient CSSStyleDeclaration styleDecl;
+    private transient Color fill;
 
     public static AbstractElement createElement(StorageContext context, Element element)
     {
@@ -81,12 +82,12 @@ public class TextDisplayElement extends ControlElement
     }
 
     @Override
-    protected void initElement(StorageContext context, Element e)
+    public void initializeElement(StorageContext context)
     {
-        super.initElement(context, e);
+        styleDecl = CSSUtils.getStyleDeclaration("textDisplay", cssStyleValue, context);
         if (styleDecl == null)
         {
-            CSSStyleRule rule = context.getStyleRule(e.getName());
+            CSSStyleRule rule = context.getStyleRule("textDisplay");
             if (rule != null)
                 styleDecl = rule.getStyle();
         }
@@ -95,7 +96,7 @@ public class TextDisplayElement extends ControlElement
     @Override
     protected void initCSSStyle(StorageContext context, String styleValue)
     {
-        styleDecl = CSSUtils.getStyleDeclaration("textDisplay", styleValue, context);
+        this.cssStyleValue = styleValue;
     }
 
     private void applyStyle(JTComponent component)

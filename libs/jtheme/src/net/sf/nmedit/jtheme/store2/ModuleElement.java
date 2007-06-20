@@ -42,19 +42,20 @@ import org.w3c.dom.css.CSSStyleRule;
 
 public class ModuleElement extends AbstractElement implements Serializable
 {
-    
-    protected String moduleId;
 
+    protected String moduleId;
+    protected String cssStyleValue;
+    
     private transient List<ComponentElement> childStore;
     protected transient CSSStyleDeclaration decl;
     private transient CSSStyleDeclaration styleDecl;
     private transient Image staticLayerBackingStore;
-    
+
     protected ModuleElement()
     {
         childStore = new ArrayList<ComponentElement>();
     }
-    
+
     public static ModuleElement createElement(StorageContext context, Element element)
     {
         ModuleElement e = new ModuleElement();
@@ -75,22 +76,21 @@ public class ModuleElement extends AbstractElement implements Serializable
             jtmodule.setModule(module);
         return component;
     }
-
+/*
     public Image getStaticLayer()
     {
         return staticLayerBackingStore;
     }
-    
+
     public void setStaticLayer(Image staticLayer)
     {
         this.staticLayerBackingStore = staticLayer;
     }
-
+*/
     public JTModule createModule(JTContext context) throws JTException
     {
         return createModule(context, null);
     }
-
 
     public JTModule createModule(JTContext context, PModule module) throws JTException
     {
@@ -111,24 +111,28 @@ public class ModuleElement extends AbstractElement implements Serializable
     }
 
     @Override
-    protected void initElement(StorageContext context, Element e)
+    public void initializeElement(StorageContext context)
     {
-        super.initElement(context, e);
+        styleDecl = CSSUtils.getStyleDeclaration("module", cssStyleValue, context);
         if (styleDecl == null)
         {
-            CSSStyleRule rule = context.getStyleRule(e.getName());
+            CSSStyleRule rule = context.getStyleRule("module");
             if (rule != null)
                 styleDecl = rule.getStyle();
+        }
+        
+        for (int i=childStore.size()-1;i>=0;i--)
+        {
+            childStore.get(i).initializeElement(context);
         }
     }
     
     @Override
     protected void initCSSStyle(StorageContext context, String styleValue)
     {
-        styleDecl = CSSUtils.getStyleDeclaration("module", styleValue, context);
+        this.cssStyleValue = styleValue;
     }
-    
-    
+
     public JTModule createModule(JTContext context, PModule module, boolean addReducible) throws JTException
     {
         JTModule jtmodule = createComponent(context, module.getDescriptor(), module);
@@ -140,7 +144,7 @@ public class ModuleElement extends AbstractElement implements Serializable
         
         return jtmodule;
     }
-    
+
     private void applyStyle(JTModule jtmodule)
     {
         if (styleDecl == null) return;
@@ -151,7 +155,7 @@ public class ModuleElement extends AbstractElement implements Serializable
             jtmodule.setBackground(fill);
         }
     }
-    
+
     protected void createChildren(JTContext context, JTModule jtmodule, PModule module, boolean addReducible) throws JTException
     {
         // iteration order is important because it implies which components are at the front/back
@@ -172,17 +176,17 @@ public class ModuleElement extends AbstractElement implements Serializable
     {
         childStore.add(child);
     }
-    
+
     public int getChildCount()
     {
         return childStore.size();
     }
-    
+
     public ComponentElement getChild(int index)
     {
         return childStore.get(index);
     }
-    
+
     public Iterator<ComponentElement> iterator()
     {
         return getChildStoreIterator();

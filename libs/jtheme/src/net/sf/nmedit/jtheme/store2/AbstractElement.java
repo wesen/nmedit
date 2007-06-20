@@ -18,6 +18,8 @@
  */
 package net.sf.nmedit.jtheme.store2;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 import net.sf.nmedit.jtheme.component.JTComponent;
@@ -27,6 +29,7 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 
 public abstract class AbstractElement extends ComponentElement
+    implements Serializable
 {
 
     public static final String ATT_NAME = "name";
@@ -53,6 +56,7 @@ public abstract class AbstractElement extends ComponentElement
     protected void initElement(StorageContext context, Element e)
     {
         initFromAttributes(context, e);
+        initializeElement(context);
     }
 
     protected void initFromAttributes(StorageContext context, Element e)
@@ -153,7 +157,7 @@ public abstract class AbstractElement extends ComponentElement
     
     protected void setSize(JTComponent c)
     {
-        c.setLocation(width, height);
+        c.setSize(width, height);
     }
     
     protected void setBounds(JTComponent c)
@@ -167,4 +171,16 @@ public abstract class AbstractElement extends ComponentElement
             c.setName(name);
     }
 
+    private void writeObject(java.io.ObjectOutputStream out)
+        throws IOException
+    {
+        out.defaultWriteObject(); // 
+    }
+    
+    private void readObject(java.io.ObjectInputStream in)
+        throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();
+    }
+    
 }

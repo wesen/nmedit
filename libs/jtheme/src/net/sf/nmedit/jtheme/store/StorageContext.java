@@ -29,9 +29,9 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.css.FakeRule;
+import net.sf.nmedit.jtheme.image.ImageResource;
 import net.sf.nmedit.jtheme.store2.ComponentElement;
 import net.sf.nmedit.jtheme.store2.ModuleElement;
 
@@ -61,6 +61,15 @@ public abstract class StorageContext
     public abstract CSSStyleSheet getStyleSheet();
     
     protected Map<String, CSSStyleRule> styleRuleMap = new HashMap<String, CSSStyleRule>();
+    
+    private int idCounter = 1;
+    public String generateId()
+    {
+        return "#"+Integer.toHexString(idCounter++);
+    }
+
+
+    public abstract ImageResource getCachedImage(Object source);
     
     public CSSStyleRule getStyleRule(String name)
     {
