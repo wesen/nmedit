@@ -39,6 +39,7 @@ public class PPatchEvent extends Event
      * The value of a {@link PParameter parameter} was changed.
      */
     public static final int VALUE_CHANGED = 0;
+    public static final int PARAMETER_FOCUS_REQUEST = 111;
     
     /**
      * A {@link PModule module} was added to the {@link PModuleContainer module container}.

@@ -21,10 +21,12 @@ package net.sf.nmedit.jpatch.impl;
 import javax.swing.event.EventListenerList;
 
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.PParameterDescriptor;
-import net.sf.nmedit.jpatch.event.PParameterListener;
+import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.event.PParameterEvent;
+import net.sf.nmedit.jpatch.event.PParameterListener;
 
 /**
  * The reference implementation of interface {@link PParameter}.
@@ -150,7 +152,7 @@ public class PBasicParameter
     {
         listenerList.remove(PParameterListener.class, l);
     }
-    
+
     protected void fireParameterValueChanged(int oldValue, int newValue) 
     {
         PParameterEvent parameterEvent = null;
@@ -170,6 +172,25 @@ public class PBasicParameter
         }
     }
 
+    protected void fireFocusRequested() 
+    {
+        PParameterEvent parameterEvent = null;
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        for (int i = listeners.length-2; i>=0; i-=2) 
+        {
+            if (listeners[i]==PParameterListener.class) 
+            {
+                // Lazily create the event:
+                if (parameterEvent == null)
+                    parameterEvent = new PParameterEvent(this, PParameterEvent.PARAMETER_FOCUS_REQUEST);
+                ((PParameterListener)listeners[i+1]).focusRequested(parameterEvent);
+            }
+        }
+    }
+
     public PParameter getExtensionParameter()
     {
         return extensionParameter;
@@ -179,5 +200,18 @@ public class PBasicParameter
     {
         this.extensionParameter = p;
     }
-    
+
+    public void requestFocus()
+    {
+        PModuleContainer mc = getParentComponent().getParentComponent();
+        if (mc != null)
+        {
+            PPatch p = mc.getPatch();
+            if (p != null && p.getFocusedComponent()!=this && p.setFocusedComponent(this))
+            {
+                fireFocusRequested();
+            }
+        }
+    }
+
 }

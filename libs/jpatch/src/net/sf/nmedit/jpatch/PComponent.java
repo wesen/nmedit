@@ -125,9 +125,9 @@ public interface PComponent
      * @see PDescriptor#getAttribute(String)
      */
     String getStringAttribute(String name);
-    
+
     /**
-     * Returns the integer-attribute with the specified name or <code>null</code>
+     * Returns the integer-attribute with the specified name or <code>defaultValue</code>
      * if the attribute does not exist. The value is obtained from the
      * component's {@link #getDescriptor() descriptor}. 
      * 
@@ -137,6 +137,30 @@ public interface PComponent
      * @see PDescriptor#getIntAttribute(String, int)
      */
     int getIntAttribute(String name, int defaultValue);
+
+    /**
+     * Returns the float-attribute with the specified name or <code>defaultValue</code>
+     * if the attribute does not exist. The value is obtained from the
+     * component's {@link #getDescriptor() descriptor}. 
+     * 
+     * @param name name of the attribute
+     * @param defaultValue the default value
+     * @return the attribute with the specified name
+     * @see PDescriptor#getFloatAttribute(String, float)
+     */
+    float getFloatAttribute(String name, float defaultValue);
+
+    /**
+     * Returns the double-attribute with the specified name or <code>defaultValue</code>
+     * if the attribute does not exist. The value is obtained from the
+     * component's {@link #getDescriptor() descriptor}. 
+     * 
+     * @param name name of the attribute
+     * @param defaultValue the default value
+     * @return the attribute with the specified name
+     * @see PDescriptor#getDoubleAttribute(String, double)
+     */
+    double getDoubleAttribute(String name, double defaultValue);
 
     /**
      * Returns the boolean-attribute with the specified name or <code>null</code>

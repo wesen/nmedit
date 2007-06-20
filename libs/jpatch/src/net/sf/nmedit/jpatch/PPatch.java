@@ -41,5 +41,8 @@ public interface PPatch
     PModule createModule(PModuleDescriptor d);
     
     PModuleMetrics getModuleMetrics();
+
+    boolean setFocusedComponent(Object f);
+    Object getFocusedComponent();
     
 }

@@ -80,6 +80,20 @@ public class PBasicDescriptor implements PDescriptor, Serializable
         ? defaultValue : ((Integer)att).intValue();
     }
 
+    public float getFloatAttribute(String name, float defaultValue)
+    {
+        Object att = getAttribute(name);
+        return (att == null || (!(att instanceof Float)))
+        ? defaultValue : ((Float)att).floatValue();
+    }
+
+    public double getDoubleAttribute(String name, double defaultValue)
+    {
+        Object att = getAttribute(name);
+        return (att == null || (!(att instanceof Double)))
+        ? defaultValue : ((Double)att).doubleValue();
+    }
+
     public boolean getBooleanAttribute(String name, boolean defaultValue)
     {
         Object att = getAttribute(name);

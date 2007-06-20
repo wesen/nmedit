@@ -168,4 +168,9 @@ public class AllEventsListener
         // no op
     }
 
+    public void focusRequested(PParameterEvent e)
+    {
+        // no op
+    }
+
 }

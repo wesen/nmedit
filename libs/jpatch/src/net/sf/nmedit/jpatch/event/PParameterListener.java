@@ -38,4 +38,6 @@ public interface PParameterListener extends EventListener
      */
     void parameterValueChanged(PParameterEvent e);
     
+    void focusRequested(PParameterEvent e);
+    
 }

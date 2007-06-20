@@ -116,6 +116,16 @@ public abstract class PBasicComponent<P extends PDescriptor> implements PCompone
     {
         return getDescriptor().getIntAttribute(name, defaultValue);
     }
+
+    public float getFloatAttribute(String name, float defaultValue)
+    {
+        return getDescriptor().getFloatAttribute(name, defaultValue);
+    }
+
+    public double getDoubleAttribute(String name, double defaultValue)
+    {
+        return getDescriptor().getDoubleAttribute(name, defaultValue);
+    }
     
     public String getStringAttribute(String name)
     {

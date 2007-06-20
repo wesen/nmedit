@@ -159,4 +159,6 @@ public interface PParameter extends PComponent
     
     PParameter getExtensionParameter();
     
+    void requestFocus();
+    
 }

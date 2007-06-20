@@ -24,6 +24,7 @@ import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PModuleMetrics;
+import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.PSettings;
 import net.sf.nmedit.jpatch.history.History;
@@ -42,6 +43,7 @@ public class PBasicPatch implements PPatch
     private PFactory pfactory;
     private History history;
     private String name;
+    private Object focusedComponent; 
 
     public PBasicPatch(ModuleDescriptions moduleDescriptions)
     {
@@ -110,4 +112,27 @@ public class PBasicPatch implements PPatch
         throw new UnsupportedOperationException("not implemented");
     }
 
+    public boolean setFocusedComponent(Object f)
+    {
+        if (focusedComponent != f)
+        {
+            if (f == null || (f != null && requestFocus(f)))
+            {
+                this.focusedComponent = f;
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    protected boolean requestFocus(Object f)
+    {   
+        return (f instanceof PParameter);
+    }
+
+    public Object getFocusedComponent()
+    {
+        return focusedComponent;
+    }
+    
 }

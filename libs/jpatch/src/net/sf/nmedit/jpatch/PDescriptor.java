@@ -83,8 +83,29 @@ public interface PDescriptor
      * @return the integer attribute with the specified name
      */
     int getIntAttribute(String name, int defaultValue);
-    
 
+    /**
+     * Returns the attribute with the specified name.
+     * If the attribute is not defined or not instance of {@link Float}}
+     * then the specified default value is returned instead.
+     * 
+     * @param name name of the attribute
+     * @param defaultValue the default value of the attribute 
+     * @return the float attribute with the specified name
+     */
+    float getFloatAttribute(String name, float defaultValue);
+
+    /**
+     * Returns the attribute with the specified name.
+     * If the attribute is not defined or not instance of {@link Double}}
+     * then the specified default value is returned instead.
+     * 
+     * @param name name of the attribute
+     * @param defaultValue the default value of the attribute 
+     * @return the double attribute with the specified name
+     */
+    double getDoubleAttribute(String name, double defaultValue);
+    
     /**
      * Returns the attribute with the specified name.
      * If the attribute is not defined or not instance of {@link String}}
