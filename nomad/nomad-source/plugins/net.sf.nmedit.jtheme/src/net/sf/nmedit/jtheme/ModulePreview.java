@@ -131,11 +131,12 @@ public class ModulePreview extends ImagePreview
         {
             add(module);
             
+            /*
             if (module.getStaticLayerBackingStore() == null)
             {
                 BufferedImage background = module.renderStaticLayerImage();
                 store.setStaticLayer(background);
-            }
+            }*/
             
             module.paint(g);
         }
