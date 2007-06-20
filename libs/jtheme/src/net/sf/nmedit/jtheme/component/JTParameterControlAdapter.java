@@ -30,6 +30,7 @@ public class JTParameterControlAdapter implements JTControlAdapter, PParameterLi
     
     private ChangeListener changeListener;
     private PParameter parameter;
+    private JTComponent component;
 
     public JTParameterControlAdapter(PParameter parameter)
     {
@@ -54,7 +55,6 @@ public class JTParameterControlAdapter implements JTControlAdapter, PParameterLi
     
     protected void notifyChangeListener()
     {
-
         if (changeListener != null)
         {
             changeListener.stateChanged(new ChangeEvent(this));
@@ -123,5 +123,20 @@ public class JTParameterControlAdapter implements JTControlAdapter, PParameterLi
         return parameter;
     }
 
+    public void focusRequested(PParameterEvent e)
+    {
+        if (component != null)
+            component.requestFocus();
+    }
+
+    public JTComponent getComponent()
+    {
+        return this.component;
+    }
+
+    public void setComponent(JTComponent c)
+    {
+        this.component = c;
+    }
 }
 

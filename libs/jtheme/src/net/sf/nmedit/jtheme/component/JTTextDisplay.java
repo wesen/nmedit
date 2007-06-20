@@ -88,6 +88,11 @@ public class JTTextDisplay extends JTLabel implements PParameterListener
         updateText();
         repaint();
     }
+
+    public void focusRequested(PParameterEvent e)
+    {
+        // no op
+    }
     
 }
 

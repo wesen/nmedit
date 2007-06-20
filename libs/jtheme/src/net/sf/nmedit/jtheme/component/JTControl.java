@@ -46,6 +46,15 @@ public abstract class JTControl extends JTComponent implements ChangeListener
         super(context);
     }
     
+    public void requestFocus()
+    {
+        if ((!hasFocus()&& adapter != null && adapter.getParameter() != null))
+        {
+            adapter.getParameter().requestFocus();
+        }
+        super.requestFocus();
+    }
+    
     public boolean isExtensionParameterEnabled()
     {
         return extensionEnabled;
@@ -135,10 +144,14 @@ public abstract class JTControl extends JTComponent implements ChangeListener
         {
             this.adapter = adapter;
             if (oldAdapter != null)
+            {
+                oldAdapter.setComponent(null);
                 oldAdapter.setChangeListener(null);
+            }
             
             if (adapter != null)
             {
+                adapter.setComponent(this);
                 adapter.setChangeListener(this);
             }
             

@@ -51,5 +51,9 @@ public interface JTControlAdapter
     
     PParameter getParameter();
     
+    void setComponent(JTComponent c);
+    
+    JTComponent getComponent();
+    
 }
 

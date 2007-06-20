@@ -31,6 +31,7 @@ public class JTDefaultControlAdapter implements JTControlAdapter
     private int maxValue;
     private int defaultValue;
     private int value;
+    private JTComponent component;
     
     public JTDefaultControlAdapter(int minValue, int maxValue, int defaultValue)
     {
@@ -130,6 +131,16 @@ public class JTDefaultControlAdapter implements JTControlAdapter
     public PParameter getParameter()
     {
         return null;
+    }
+
+    public JTComponent getComponent()
+    {
+        return this.component;
+    }
+
+    public void setComponent(JTComponent c)
+    {
+        this.component = c;
     }
 
 }
