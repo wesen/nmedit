@@ -386,7 +386,14 @@ public class ModulePane extends JPanel
                 
              //   ImageSource.*/
                 
-                LeafNode n = new ModuleDescriptorNode(catNode, icon, m.getName(), m);
+                String title = m.getName();
+                double cycles = m.getDoubleAttribute("cycles", -1);
+                if (cycles >=0)
+                {
+                    title += " ("+(Math.round(cycles*100d)/100d)+"%)";
+                }
+                
+                LeafNode n = new ModuleDescriptorNode(catNode, icon, title, m);
                 catNode.addChild(n);
             }   
         }
