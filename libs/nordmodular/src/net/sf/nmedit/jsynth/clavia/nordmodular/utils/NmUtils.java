@@ -42,15 +42,21 @@ import net.sf.nmedit.jnmprotocol.DeleteModuleMessage;
 import net.sf.nmedit.jnmprotocol.GetPatchMessage;
 import net.sf.nmedit.jnmprotocol.IAmMessage;
 import net.sf.nmedit.jnmprotocol.KnobAssignmentMessage;
+import net.sf.nmedit.jnmprotocol.MidiCtrlAssignmentMessage;
 import net.sf.nmedit.jnmprotocol.MidiMessage;
+import net.sf.nmedit.jnmprotocol.MorphAssignmentMessage;
+import net.sf.nmedit.jnmprotocol.MorphRangeChangeMessage;
 import net.sf.nmedit.jnmprotocol.MoveModuleMessage;
 import net.sf.nmedit.jnmprotocol.NewCableMessage;
 import net.sf.nmedit.jnmprotocol.NewModuleMessage;
 import net.sf.nmedit.jnmprotocol.ParameterMessage;
+import net.sf.nmedit.jnmprotocol.ParameterSelectMessage;
 import net.sf.nmedit.jnmprotocol.PatchListEntry;
 import net.sf.nmedit.jnmprotocol.PatchListMessage;
 import net.sf.nmedit.jnmprotocol.PatchMessage;
 import net.sf.nmedit.jnmprotocol.RequestPatchMessage;
+import net.sf.nmedit.jnmprotocol.SetModuleTitleMessage;
+import net.sf.nmedit.jnmprotocol.SetPatchTitleMessage;
 import net.sf.nmedit.jnmprotocol.SlotActivatedMessage;
 import net.sf.nmedit.jnmprotocol.SlotsSelectedMessage;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Format;
@@ -142,6 +148,39 @@ public class NmUtils
         return msg;
     }
     */
+    
+    public static MidiMessage createMidiCtrlAssignmentMessage(PParameter parameter, int prevMidiCtrl, int midiCtrl,
+            int slot, int pid)
+    {
+        MidiCtrlAssignmentMessage msg = new MidiCtrlAssignmentMessage();
+
+        PModule module = parameter.getParentComponent();
+        PModuleContainer va = module.getParentComponent();
+        
+        int section = va.getComponentIndex();
+        int moduleIndex = module.getComponentIndex();
+        int parameterIndex = Helper.index(parameter);
+        
+        msg.assign(slot, pid, prevMidiCtrl, midiCtrl, section, moduleIndex, parameterIndex);
+        return msg;
+    }
+    
+    public static MidiMessage createMorphAssignmentMessage(PParameter parameter, int morph,
+            int slot, int pid)
+    {
+        MorphAssignmentMessage msg = new MorphAssignmentMessage();
+
+        PModule module = parameter.getParentComponent();
+        PModuleContainer va = module.getParentComponent();
+        
+        int section = va.getComponentIndex();
+        int moduleIndex = module.getComponentIndex();
+        int parameterIndex = Helper.index(parameter);
+        
+        msg.setMorphAssignment(slot, pid, section, moduleIndex, parameterIndex, morph);
+        return msg;
+    }
+    
     public static MidiMessage createKnobAssignmentMessage(PParameter parameter, int prevKnob, int knob,
             int slot, int pid)
     {
@@ -155,6 +194,13 @@ public class NmUtils
         int parameterIndex = Helper.index(parameter);
         
         msg.assign(slot, pid, prevKnob, knob, section, moduleIndex, parameterIndex);
+        return msg;
+    }
+    
+    public static MidiMessage createMidiCtrlDeAssignmentMessage(int cc, int slot, int pid)
+    {
+        MidiCtrlAssignmentMessage msg = new MidiCtrlAssignmentMessage();
+        msg.deassign(slot, pid, cc);
         return msg;
     }
     
@@ -309,6 +355,23 @@ public class NmUtils
         return msg;
     }
     
+    
+    public static MidiMessage createSelectParameterMessage( PParameter parameter, int slotId, int pId ) throws Exception
+    {
+        // get message instance
+        ParameterSelectMessage msg = new ParameterSelectMessage();
+
+        // get data
+        PModule module = parameter.getParentComponent();
+        
+        // set data
+        msg.select(slotId, pId, 
+                getVoiceAreaId(module),
+                module.getComponentIndex(), Helper.index(parameter));
+
+        return msg;
+    }
+    
     public static MidiMessage createParameterChangedMessage( PParameter parameter, int slotId, int pId ) throws Exception
     {
         // get message instance
@@ -325,6 +388,40 @@ public class NmUtils
         msg.set("parameter", Helper.index(parameter));
         msg.set("value", parameter.getValue());
 
+        return msg;
+    }
+    
+    public static MidiMessage createMorphRangeChangeMessage( PParameter parameter, int slotId, int pId ) throws Exception
+    {
+        // get message instance
+        MorphRangeChangeMessage msg = new MorphRangeChangeMessage();
+        msg.set("slot", slotId);
+        msg.set("pid", pId);
+        
+        // get data
+        PModule module = parameter.getParentComponent();
+        
+        // set data
+        msg.set("module", module.getComponentIndex());
+        msg.set("section", getVoiceAreaId(module));
+        msg.set("parameter", Helper.index(parameter));
+        msg.set("span", Math.abs(parameter.getValue()));
+        msg.set("direction", parameter.getValue()<0?0:1);
+
+        return msg;
+    }
+
+    public static MidiMessage createSetModuleTitleMessage(PModule module, String title, int slot, int pid)
+    {
+        SetModuleTitleMessage msg = new SetModuleTitleMessage();
+        msg.setTitle(slot, pid, getVoiceAreaId(module), module.getComponentIndex(), title);
+        return msg;
+    }
+
+    public static MidiMessage createSetPatchTitleMessage(String title, int slot, int pid)
+    {
+        SetPatchTitleMessage msg = new SetPatchTitleMessage();
+        msg.setTitle(slot, pid, title);
         return msg;
     }
 

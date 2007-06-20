@@ -27,11 +27,15 @@ import net.sf.nmedit.jnmprotocol.IAmMessage;
 import net.sf.nmedit.jnmprotocol.KnobAssignmentMessage;
 import net.sf.nmedit.jnmprotocol.LightMessage;
 import net.sf.nmedit.jnmprotocol.MeterMessage;
+import net.sf.nmedit.jnmprotocol.MorphRangeChangeMessage;
 import net.sf.nmedit.jnmprotocol.NewPatchInSlotMessage;
 import net.sf.nmedit.jnmprotocol.NmProtocolListener;
+import net.sf.nmedit.jnmprotocol.NoteMessage;
 import net.sf.nmedit.jnmprotocol.ParameterMessage;
+import net.sf.nmedit.jnmprotocol.ParameterSelectMessage;
 import net.sf.nmedit.jnmprotocol.PatchListMessage;
 import net.sf.nmedit.jnmprotocol.PatchMessage;
+import net.sf.nmedit.jnmprotocol.SetPatchTitleMessage;
 import net.sf.nmedit.jnmprotocol.SlotActivatedMessage;
 import net.sf.nmedit.jnmprotocol.SlotsSelectedMessage;
 import net.sf.nmedit.jnmprotocol.VoiceCountMessage;
@@ -69,6 +73,51 @@ public class NmMessageHandler extends NmProtocolListener
     {
         return 0<=slotId && slotId<synth.getSlotCount();
     }
+
+
+    public void messageReceived(MorphRangeChangeMessage message) 
+    { 
+        int slotId = message.get("slot");
+        
+        if (!isValidSlot(slotId))
+            return;
+        
+        int vaId = message.get("section");
+        int moduleId = message.get("module");
+        int paramId = message.get("parameter");
+        int span = message.get("span");
+        int direction = message.get("direction"); // +==0/-==1
+        
+        NmSlot slot = synth.getSlot(slotId);
+        NMPatch patch = slot.getPatch();
+        
+        VoiceArea va = null;
+        if (vaId == Format.VALUE_SECTION_VOICE_AREA_POLY)
+            va = patch.getPolyVoiceArea();
+        else if (vaId == Format.VALUE_SECTION_VOICE_AREA_COMMON)
+            va = patch.getCommonVoiceArea();
+        
+        if (va == null)
+            return;
+        
+        PModule module = va.getModule(moduleId);
+        
+        PParameter p;
+        try
+        {
+            p = Helper.getParameter(module, "morph", paramId);
+        }
+        catch (InvalidDescriptorException e)
+        {
+            return;
+        }
+        p.setValue(direction==1?-span:+span);
+    }
+
+    public void messageReceived(NoteMessage message) 
+    { 
+        System.out.println("note: "+message);
+    }
     
     /**
      * This message is ignored. NordModular.connect() causes this message and
@@ -94,6 +143,23 @@ public class NmMessageHandler extends NmProtocolListener
     public void messageReceived(PatchListMessage message) 
     {
         // no op
+    }
+
+    public void messageReceived(SetPatchTitleMessage message) 
+    {
+        int slotId = message.get("slot");
+        int pid = message.get("pid");
+        
+        // check if slot is available <=> synth is connected
+        // -> this is not implied by the received message
+        if (!isValidSlot(slotId))
+            return;
+
+        NmSlot slot = synth.getSlot(slotId);
+        NMPatch patch = slot.getPatch();
+        String title = message.getTitle();
+        if (patch != null)
+        patch.setName(title);
     }
     
     /**
@@ -257,6 +323,45 @@ public class NmMessageHandler extends NmProtocolListener
             if (k != null)
                 k.setParameter(p);
         }
+    }
+    
+    public void messageReceived(ParameterSelectMessage message) 
+    { 
+        int slotId = message.get("slot");
+        if (!isValidSlot(slotId))
+            return;
+        
+        int vaId = message.get("section");
+        int moduleId = message.get("module");
+        int paramId = message.get("parameter");
+        
+        // addParameter("pid", "data:pid");
+        // addParameter("sc", "data:sc");
+        
+        NmSlot slot = synth.getSlot(slotId);
+        NMPatch patch = slot.getPatch();
+        
+        VoiceArea va = null;
+        if (vaId == Format.VALUE_SECTION_VOICE_AREA_POLY)
+            va = patch.getPolyVoiceArea();
+        else if (vaId == Format.VALUE_SECTION_VOICE_AREA_COMMON)
+            va = patch.getCommonVoiceArea();
+        
+        if (va == null)
+            return;
+        
+        PModule module = va.getModule(moduleId);
+        
+        PParameter p;
+        try
+        {
+            p = Helper.getParameter(module, "parameter", paramId);
+        }
+        catch (InvalidDescriptorException e)
+        {
+            return;
+        }
+        p.requestFocus();
     }
     
     public void messageReceived(ParameterMessage message) 

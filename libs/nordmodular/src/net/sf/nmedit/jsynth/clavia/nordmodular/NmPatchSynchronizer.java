@@ -18,7 +18,11 @@
  */
 package net.sf.nmedit.jsynth.clavia.nordmodular;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import net.sf.nmedit.jnmprotocol.MidiMessage;
+import net.sf.nmedit.jnmprotocol.MorphAssignmentMessage;
 import net.sf.nmedit.jpatch.AllEventsListener;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PParameter;
@@ -30,11 +34,11 @@ import net.sf.nmedit.jpatch.event.PConnectionEvent;
 import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
 import net.sf.nmedit.jpatch.event.PModuleEvent;
 import net.sf.nmedit.jpatch.event.PParameterEvent;
-import net.sf.nmedit.jpdl.BitStream;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 
-public class NmPatchSynchronizer extends AllEventsListener implements PAssignmentListener
+public class NmPatchSynchronizer extends AllEventsListener 
+    implements PAssignmentListener, PropertyChangeListener
 {
 
     private NordModular synth;
@@ -73,6 +77,7 @@ public class NmPatchSynchronizer extends AllEventsListener implements PAssignmen
         if (!installed)
             return;
         
+        patch.removePropertyChangeListener(this);
         patch.removeAssignmentListener(this);
 
         uninstallModuleContainer(patch.getPolyVoiceArea());
@@ -84,6 +89,7 @@ public class NmPatchSynchronizer extends AllEventsListener implements PAssignmen
         if (installed)
             return;
 
+        patch.addPropertyChangeListener(this);
         patch.addAssignmentListener(this);
         
         installModuleContainer(patch.getPolyVoiceArea());
@@ -123,7 +129,18 @@ public class NmPatchSynchronizer extends AllEventsListener implements PAssignmen
 
     public void moduleRenamed(PModuleEvent e)
     {
-        // NmUtils.create
+        try
+        {
+            MidiMessage message =
+                NmUtils.createSetModuleTitleMessage(e.getModule(), e.getModule().getTitle(), slot.getSlotIndex(), 
+                        slot.getPatchId());
+            
+            synth.getProtocol().send(message);
+        }
+        catch (Exception e1)
+        {
+            e1.printStackTrace();
+        }
     }
 
     public void moduleMoved(PModuleEvent e)
@@ -143,18 +160,49 @@ public class NmPatchSynchronizer extends AllEventsListener implements PAssignmen
         }
     }
 
+    public void focusRequested(PParameterEvent e)
+    {
+        PParameter parameter = e.getParameter();
+        try
+        {
+            if ("parameter".equals(parameter.getAttribute("class")))
+            {   
+                MidiMessage message =
+                    NmUtils.createSelectParameterMessage(parameter, 
+                            slot.getSlotIndex(), slot.getPatchId());
+
+                synth.getProtocol().send(message);
+            }
+        }
+        catch (Exception e1)
+        {
+            e1.printStackTrace();
+        }
+    }
+    
     public void parameterValueChanged(PParameterEvent e)
     {
         PParameter parameter = e.getParameter();
+        Object pclass = parameter.getAttribute("class");
 
         try
         {
-            MidiMessage message =
-                NmUtils.createParameterChangedMessage(parameter, 
-                        slot.getSlotIndex(), slot.getPatchId());
-
-            // TODO if (synth.isConnected())
-            synth.getProtocol().send(message);
+            if ("parameter".equals(pclass))
+            {   
+                MidiMessage message =
+                    NmUtils.createParameterChangedMessage(parameter, 
+                            slot.getSlotIndex(), slot.getPatchId());
+    
+                synth.getProtocol().send(message);
+            }
+            else if ("morph".equals(pclass))
+            {
+                MidiMessage message =
+                    NmUtils.createMorphRangeChangeMessage(parameter, 
+                            slot.getSlotIndex(), slot.getPatchId());
+    
+                synth.getProtocol().send(message);
+            }
         }
         catch (Exception e1)
         {
@@ -211,12 +259,18 @@ public class NmPatchSynchronizer extends AllEventsListener implements PAssignmen
         switch (e.getId())
         {
             case PAssignmentEvent.MORPH_ASSIGNED:
+                msg = NmUtils.createMorphAssignmentMessage(e.getParameter(), e.getMorphGroup(),
+                        slot.getSlotIndex(), slot.getPatchId());
                 break;
             case PAssignmentEvent.KNOB_ASSIGNED:
                 msg = NmUtils.createKnobAssignmentMessage(e.getParameter(), -1, e.getKnobId(),
                         slot.getSlotIndex(), slot.getPatchId());
                 break;
             case PAssignmentEvent.MIDICTRL_ASSIGNED:
+                msg = NmUtils.createMidiCtrlAssignmentMessage(e.getParameter(), -1, e.getMidiControllerId(),
+                        slot.getSlotIndex(), slot.getPatchId());
+                System.out.println("assigned:"+msg);
+                
                 break;
         }
         
@@ -244,6 +298,15 @@ public class NmPatchSynchronizer extends AllEventsListener implements PAssignmen
         switch (e.getId())
         {
             case PAssignmentEvent.MORPH_DEASSIGNED:
+                /*
+                SendControllerSnapshot scs = new SendControllerSnapshot();
+                scs.setSource(slot.getSlotIndex(), slot.getPatchId());
+                msg = scs;
+                */
+
+                msg = NmUtils.createMorphAssignmentMessage(e.getParameter(),
+                        MorphAssignmentMessage.MORPH_ID_DEASSIGN,
+                        slot.getSlotIndex(), slot.getPatchId());
                 break;
             case PAssignmentEvent.KNOB_DEASSIGNED:
                 msg = NmUtils.createKnobDeAssignmentMessage(e.getKnobId(), 
@@ -253,6 +316,9 @@ public class NmPatchSynchronizer extends AllEventsListener implements PAssignmen
                 
                 break;
             case PAssignmentEvent.MIDICTRL_DEASSIGNED:
+                msg = NmUtils.createMidiCtrlDeAssignmentMessage(e.getMidiControllerId(), slot.getSlotIndex(), slot.getPatchId());
+
+                System.out.println("deassigned:"+msg);
                 break;
         }
         
@@ -269,5 +335,30 @@ public class NmPatchSynchronizer extends AllEventsListener implements PAssignmen
         }
         
     }
+
+    public void propertyChange(PropertyChangeEvent e)
+    {
+        if (isProperty(NMPatch.NAME, e))
+        {
+            MidiMessage msg = 
+                NmUtils.createSetPatchTitleMessage((String)e.getNewValue(), 
+                    slot.getSlotId(), slot.getPatchId());
+
+            try
+            {
+                synth.getProtocol().send(msg);
+            }
+            catch (Exception e1)
+            {
+                e1.printStackTrace();
+            }
+        }
+    }
    
+    private boolean isProperty(String name, PropertyChangeEvent e)
+    {
+        String n = e.getPropertyName();
+        return name == n || name.equals(n);
+    }
+    
 }
