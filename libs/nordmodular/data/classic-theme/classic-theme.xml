@@ -474,6 +474,10 @@ label{fill:#000;}
 	</module>
 	<module component-id="m1" width="255" height="30">
 		<name>Keyboard</name>
+		<label x="101" y="18" >Note</label>
+		<label x="139" y="18" >Gate</label>
+		<label x="184" y="18" >Vel</label>
+		<label x="222" y="12" >Rel\nvel</label>
 		<connector x="123" y="8" size="13" class="cCONTROL" >
 			<connector component-id="c1"  alt="Note" />
 		</connector>
@@ -486,10 +490,6 @@ label{fill:#000;}
 		<connector x="237" y="8" size="13" class="cCONTROL" >
 			<connector component-id="c4"  alt="velocity off" />
 		</connector>
-		<label x="101" y="18" >Note</label>
-		<label x="139" y="18" >Gate</label>
-		<label x="184" y="18" >Vel</label>
-		<label x="222" y="12" >Rel\nvel</label>
 	</module>
 	<module component-id="m29" width="255" height="30">
 		<name>LFOSlvD</name>
@@ -1968,6 +1968,10 @@ label{fill:#000;}
 	</module>
 	<module component-id="m5" width="255" height="45">
 		<name>1Output</name>
+		<label x="8" y="35" >Dest</label>
+		<label x="125" y="20" >-CVA-</label>
+		<label x="190" y="20" >Mix</label>
+		<label x="219" y="13" >Level</label>
 		<connector x="193" y="24" size="13" class="cAUDIO" >
 			<connector component-id="c1"  alt="out" />
 		</connector>
@@ -1988,10 +1992,6 @@ label{fill:#000;}
 			<btn index="4">L</btn>
 			<btn index="5">R</btn>
 		</button>
-		<label x="8" y="35" >Dest</label>
-		<label x="125" y="20" >-CVA-</label>
-		<label x="190" y="20" >Mix</label>
-		<label x="219" y="11" >Level</label>
 	</module>
 	<module component-id="m15" width="255" height="105">
 		<name>NoteSeqA</name>
