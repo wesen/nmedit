@@ -20,12 +20,18 @@ package net.sf.nmedit.jtheme.component;
 
 import java.awt.Image;
 import java.awt.Transparency;
+
 import javax.swing.ImageIcon;
+
 import net.sf.nmedit.jtheme.JTContext;
 
 public class JTImage extends JTComponent
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1051395748578312099L;
     public static final String uiClassID = "imageui";
     private ImageIcon icon;
 
@@ -77,6 +83,6 @@ public class JTImage extends JTComponent
     {
         return true;
     }
-    
+
 }
 

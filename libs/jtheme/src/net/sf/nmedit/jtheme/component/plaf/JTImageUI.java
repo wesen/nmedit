@@ -48,7 +48,8 @@ public class JTImageUI extends JTComponentUI
         
         return icon == null ? ic.getSize() : new Dimension(icon.getIconWidth(), icon.getIconHeight()); 
     }
-    
+
+    @Override
     public void paintStaticLayer(Graphics2D g, JTComponent c)
     {
         ImageIcon icon = ((JTImage) c).getIcon();

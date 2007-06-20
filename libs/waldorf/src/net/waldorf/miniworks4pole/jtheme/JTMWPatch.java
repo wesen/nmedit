@@ -75,11 +75,12 @@ public class JTMWPatch extends JTPatch
         jtmodule.setLocation(10, 10);
         container.add(jtmodule);
         
+        /*
         store.setStaticLayer(jtmodule.renderStaticLayerImage());
         
         jtmodule.setStaticLayerBackingStore(store.getStaticLayer());
         
-        
+        */
         container.setPreferredSize(new Dimension(jtmodule.getWidth()+20, jtmodule.getHeight()+20));
      
         // header

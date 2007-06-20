@@ -18,8 +18,10 @@
  */
 package net.sf.nmedit.jtheme.component.plaf;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -199,6 +201,8 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
         }
     }
 
+    private static final Composite overlayComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f);
+    
     public void paintDynamicLayer(Graphics2D g, JTComponent c)
     {
         checkComponent(c);
@@ -216,6 +220,17 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
         final int min = control.getMinValue();
         final int value = control.getValue();
         final int intSelectionIndex = min+value;
+        
+        if (control.isExtensionAdapterSet() && control.getExtensionValue()!=0)
+        {
+            Color overlay = Color.RED;
+            
+            Composite tmpComposite = g.getComposite();
+            g.setComposite(overlayComposite);
+            g.setColor(overlay);
+            g.fillRect(0, 0, w, h);
+            g.setComposite(tmpComposite);
+        }
         
         if (control.isCyclic())
         {
@@ -682,24 +697,53 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
                     }
                     else
                     {
-                        int newValue;
-                        if (selectedControl.isIncrementModeEnabled())
-                        {
-                            newValue = selectedControl.getValue()+(internalSelectedButtonIndex>0?+1:-1);
-                        }
-                        else
-                        if (selectedControl.isCyclic())
-                        {
-                            newValue = selectedControl.getValue()+1;
-                            if (newValue>selectedControl.getMaxValue())
-                                newValue = selectedControl.getMinValue();
-                        }
-                        else
-                        {
-                            newValue = selectedControl.getMinValue()+internalSelectedButtonIndex;
-                        }
                         
-                        selectedControl.setValue(newValue);
+                        if (selectedControl.isExtensionAdapterSet() && e.isControlDown())
+                        {
+
+                            // TODO compute extension value
+                            
+                            int newValue;
+                            if (selectedControl.isIncrementModeEnabled())
+                            {
+                                newValue = selectedControl.getExtensionValue()+(internalSelectedButtonIndex>0?+1:-1);
+                            }
+                            else
+                            if (selectedControl.isCyclic())
+                            {
+                                newValue = selectedControl.getExtensionValue()+1;
+                                if (newValue>selectedControl.getExtMaxValue())
+                                    newValue = selectedControl.getExtMinValue();
+                            }
+                            else
+                            {
+                                newValue = selectedControl.getExtMinValue()+internalSelectedButtonIndex;
+                            }
+                            
+                            selectedControl.setExtensionValue(newValue);
+                        }
+                        else
+                        {
+                            
+                            int newValue;
+                            if (selectedControl.isIncrementModeEnabled())
+                            {
+                                newValue = selectedControl.getValue()+(internalSelectedButtonIndex>0?+1:-1);
+                            }
+                            else
+                            if (selectedControl.isCyclic())
+                            {
+                                newValue = selectedControl.getValue()+1;
+                                if (newValue>selectedControl.getMaxValue())
+                                    newValue = selectedControl.getMinValue();
+                            }
+                            else
+                            {
+                                newValue = selectedControl.getMinValue()+internalSelectedButtonIndex;
+                            }
+                            
+                            selectedControl.setValue(newValue);
+                        }
                     }
                 }
                 selectedUI.setHoveredAt(-1);

@@ -231,6 +231,12 @@ public class MWEventHandler extends MWMidiListener
     public void newPatchInSlot(SlotEvent e)
     {
         setPatch(((MWSlot) e.getSlot()).getPatch());
+    }
+
+    public void focusRequested(PParameterEvent e)
+    {
+        // TODO Auto-generated method stub
+        
     };
 
 }
