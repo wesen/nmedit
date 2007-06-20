@@ -50,11 +50,6 @@ public class NomadJDialog extends JDialog
         super(owner);
     }
 
-    public NomadJDialog(Window owner)
-    {
-        super(owner);
-    }
-
     public NomadJDialog(Frame owner, boolean modal)
     {
         super(owner, modal);
@@ -75,16 +70,6 @@ public class NomadJDialog extends JDialog
         super(owner, title);
     }
 
-    public NomadJDialog(Window owner, ModalityType modalityType)
-    {
-        super(owner, modalityType);
-    }
-
-    public NomadJDialog(Window owner, String title)
-    {
-        super(owner, title);
-    }
-
     public NomadJDialog(Frame owner, String title, boolean modal)
     {
         super(owner, title, modal);
@@ -93,11 +78,6 @@ public class NomadJDialog extends JDialog
     public NomadJDialog(Dialog owner, String title, boolean modal)
     {
         super(owner, title, modal);
-    }
-
-    public NomadJDialog(Window owner, String title, ModalityType modalityType)
-    {
-        super(owner, title, modalityType);
     }
 
     public NomadJDialog(Frame owner, String title, boolean modal,
@@ -110,12 +90,6 @@ public class NomadJDialog extends JDialog
             GraphicsConfiguration gc)
     {
         super(owner, title, modal, gc);
-    }
-
-    public NomadJDialog(Window owner, String title, ModalityType modalityType,
-            GraphicsConfiguration gc)
-    {
-        super(owner, title, modalityType, gc);
     }
 
     public TitlePane createTitlePane(String title, Icon icon)

@@ -25,6 +25,8 @@ import java.beans.PropertyChangeListener;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
+import net.sf.nmedit.nomad.core.menulayout.MLEntry;
+
 public class ClonedAction extends AbstractAction implements PropertyChangeListener
 {
 
@@ -50,9 +52,9 @@ public class ClonedAction extends AbstractAction implements PropertyChangeListen
             putValue(ACTION_COMMAND_KEY, a.getValue(ACTION_COMMAND_KEY));
             putValue(ACCELERATOR_KEY, a.getValue(ACCELERATOR_KEY));
             putValue(MNEMONIC_KEY, a.getValue(MNEMONIC_KEY));
-            putValue(SELECTED_KEY, a.getValue(SELECTED_KEY));
-            putValue(DISPLAYED_MNEMONIC_INDEX_KEY, a.getValue(DISPLAYED_MNEMONIC_INDEX_KEY));
-            putValue(LARGE_ICON_KEY, a.getValue(LARGE_ICON_KEY));
+            putValue(MLEntry.SELECTED_KEY, a.getValue(MLEntry.SELECTED_KEY));
+            putValue(MLEntry.DISPLAYED_MNEMONIC_INDEX_KEY, a.getValue(MLEntry.DISPLAYED_MNEMONIC_INDEX_KEY));
+            putValue(MLEntry.LARGE_ICON_KEY, a.getValue(MLEntry.LARGE_ICON_KEY));
         }
         a.addPropertyChangeListener(this);
     }

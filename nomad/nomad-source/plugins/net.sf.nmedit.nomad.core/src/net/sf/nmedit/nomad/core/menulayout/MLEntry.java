@@ -32,7 +32,9 @@ import java.util.List;
 import java.util.Queue;
 
 import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JMenuItem;
 import javax.swing.event.EventListenerList;
 
@@ -391,8 +393,12 @@ public class MLEntry extends AbstractAction
         }
     }
 
+    public static final String SELECTED_KEY = "SwingSelectedKey";
+    public static final String DISPLAYED_MNEMONIC_INDEX_KEY = "SwingDisplayedMnemonicIndexKey";
+    public static final String LARGE_ICON_KEY = "SwingLargeIconKey";
+    
     private static void cloneSettings(MLEntry clone, MLEntry entry)
-    {
+    {        
         clone.disabledIcon = entry.disabledIcon;
         clone.enabledIcon = entry.enabledIcon;
         clone.disabledIconSrc = entry.enabledIconSrc;

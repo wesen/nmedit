@@ -75,6 +75,7 @@ import javax.swing.plaf.ColorUIResource;
 
 import net.sf.nmedit.nmutils.swing.NMLazyActionMap;
 import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
+import net.sf.nmedit.nomad.core.menulayout.MLEntry;
 import net.sf.nmedit.nomad.core.misc.FocusStroke;
 
 public class FFTabBarUI extends TabBarUI
@@ -541,10 +542,10 @@ public class FFTabBarUI extends TabBarUI
         {
             this.tabIndex = tabIndex;
             putValue(NAME, tabBar.getTitleAt(tabIndex));
-            putValue(SELECTED_KEY, tabIndex == tabBar.getSelectedIndex());
+            putValue(MLEntry.SELECTED_KEY, tabIndex == tabBar.getSelectedIndex());
             putValue(SHORT_DESCRIPTION, tabBar.getToolTipTextAt(tabIndex));
             putValue(SMALL_ICON, tabBar.getIconAt(tabIndex));
-            putValue(DISPLAYED_MNEMONIC_INDEX_KEY, tabBar.getDisplayedMnemonicIndexAt(tabIndex));
+            putValue(MLEntry.DISPLAYED_MNEMONIC_INDEX_KEY, tabBar.getDisplayedMnemonicIndexAt(tabIndex));
             putValue(MNEMONIC_KEY, tabBar.getMnemonicAt(tabIndex));
         }
         

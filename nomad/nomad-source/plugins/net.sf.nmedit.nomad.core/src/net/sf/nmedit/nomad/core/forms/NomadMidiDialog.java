@@ -71,12 +71,6 @@ public class NomadMidiDialog extends NomadJDialog
         initDialog();
     }
 
-    public NomadMidiDialog(Window owner)
-    {
-        super(owner);
-        initDialog();
-    }
-
     public NomadMidiDialog(Frame owner, boolean modal)
     {
         super(owner, modal);
@@ -101,18 +95,6 @@ public class NomadMidiDialog extends NomadJDialog
         initDialog();
     }
 
-    public NomadMidiDialog(Window owner, ModalityType modalityType)
-    {
-        super(owner, modalityType);
-        initDialog();
-    }
-
-    public NomadMidiDialog(Window owner, String title)
-    {
-        super(owner, title);
-        initDialog();
-    }
-
     public NomadMidiDialog(Frame owner, String title, boolean modal)
     {
         super(owner, title, modal);
@@ -125,11 +107,6 @@ public class NomadMidiDialog extends NomadJDialog
         initDialog();
     }
 
-    public NomadMidiDialog(Window owner, String title, ModalityType modalityType)
-    {
-        super(owner, title, modalityType);
-        initDialog();
-    }
 
     public NomadMidiDialog(Frame owner, String title, boolean modal,
             GraphicsConfiguration gc)
@@ -144,14 +121,6 @@ public class NomadMidiDialog extends NomadJDialog
         super(owner, title, modal, gc);
         initDialog();
     }
-
-    public NomadMidiDialog(Window owner, String title, ModalityType modalityType,
-            GraphicsConfiguration gc)
-    {
-        super(owner, title, modalityType, gc);
-        initDialog();
-    }
-    
     public NomadMidiDialogFrmHandler getForm()
     {
         return form;

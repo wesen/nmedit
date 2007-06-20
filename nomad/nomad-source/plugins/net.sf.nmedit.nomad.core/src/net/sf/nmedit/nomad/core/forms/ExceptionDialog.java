@@ -140,7 +140,7 @@ public class ExceptionDialog extends JPanel
     
     public static void showErrorDialog(JComponent parent, Object message, String title, Throwable throwable)
     {
-        JDialog dialog = parent == null ? new JDialog() : new JDialog(SwingUtilities.getWindowAncestor(parent));
+        JDialog dialog = new JDialog();
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setTitle(title);
         dialog.setMinimumSize(new Dimension(180, 100));
