@@ -341,7 +341,6 @@ public class JTBasicConnectorUI extends JTConnectorUI
                 if (!isDragging())
                 startDragCurrentCables(c, e.getX(), e.getY());
             }
-            
             updateDragLocation(c, e.getX(), e.getY());
         }
 
@@ -402,10 +401,11 @@ public class JTBasicConnectorUI extends JTConnectorUI
         {
             dragCreate = true;
             JTCableManager cableManager = c.getCableManager();
-            
+
             if (cableManager != null && cableManager.getView() != null)
             {
                 dragSource = c;
+                
                 DragCable drag = new DragCable(cableManager.createCable(c, null));
                 
                 PConnectorDescriptor cd = c.getConnectorDescriptor();
@@ -440,10 +440,12 @@ public class JTBasicConnectorUI extends JTConnectorUI
                 return ;
 
             JTCableManager cableManager = c.getCableManager();
+            
             if (cableManager == null)
                 return;
 
-            Point stop = SwingUtilities.convertPoint(c, new Point(x, y), cableManager.getView()); 
+            Point stop = SwingUtilities.convertPoint(c, new Point(x, y), cableManager.getOwner()); 
+            
             JTConnector target = findConnectorAt(c, stop.x, stop.y);
             
             if (target != null)
@@ -469,7 +471,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
                // cableManager.markCompletelyDirty();
                 cableManager.notifyRepaintManager();
                 
-                scrollToVisible(cableManager.getView(), c, x, y);
+                scrollToVisible(cableManager.getOwner(), c, x, y);
                 
                 return;
             }
@@ -485,7 +487,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
             //cableManager.markCompletelyDirty();
             cableManager.notifyRepaintManager();
             
-            scrollToVisible(cableManager.getView(), c, x, y);
+            scrollToVisible(cableManager.getOwner(), c, x, y);
         }
         
         private void scrollToVisible(JComponent view, JComponent c, int x, int y)
@@ -519,7 +521,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
 
             JTCableManager cableManager = c.getCableManager();
 
-            Point stop = SwingUtilities.convertPoint(c, new Point(x, y), cableManager.getView());
+            Point stop = SwingUtilities.convertPoint(c, new Point(x, y), cableManager.getOwner());
             JTConnector target = findConnectorAt(c, stop.x, stop.y);
             
             if (connectedCables != null)
