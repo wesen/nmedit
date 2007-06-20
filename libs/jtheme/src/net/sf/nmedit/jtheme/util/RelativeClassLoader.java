@@ -128,5 +128,11 @@ public class RelativeClassLoader extends ClassLoader
         }
         
     }
+    
+    public String toString()
+    {
+        return getClass().getName()+"[prefix="+absPathPrefix+",loader="+getParent()+"]";
+    }
+    
 }
 
