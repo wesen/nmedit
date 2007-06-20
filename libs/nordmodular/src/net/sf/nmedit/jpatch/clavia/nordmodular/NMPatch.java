@@ -22,6 +22,8 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -108,6 +110,8 @@ public class NMPatch extends PBasicPatch implements PPatch
     private LightProcessor lightProcessor;
     
     private EventListenerList listenerList = new EventListenerList();
+    
+    private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     
     /**
      * Creates a new patch.
@@ -329,16 +333,41 @@ public class NMPatch extends PBasicPatch implements PPatch
             if (value==null)
             {
                 properties.remove(name);
-         //       firePropertyChanged(name, oldValue, value);
+                firePropertyChanged(name, oldValue, value);
             }
             else if (!value.equals(oldValue))
             {
                 properties.put(name, value);
-         //       firePropertyChanged(name, oldValue, value);
+                firePropertyChanged(name, oldValue, value);
             }
         }
     }
     
+    protected void firePropertyChanged(String name, Object oldValue, Object newValue)
+    {
+        pcs.firePropertyChange(name, oldValue, newValue);
+    }
+    
+    public void addPropertyChangeListener(PropertyChangeListener l)
+    {
+        pcs.addPropertyChangeListener(l);
+    }
+    
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener l)
+    {
+        pcs.addPropertyChangeListener(propertyName, l);
+    }
+    
+    public void removePropertyChangeListener(PropertyChangeListener l)
+    {
+        pcs.removePropertyChangeListener(l);
+    }
+    
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener l)
+    {
+        pcs.removePropertyChangeListener(propertyName, l);
+    }
+
     public void setModified(boolean changed)
     {
         setProperty(MODIFIED, changed ? Boolean.TRUE : Boolean.FALSE);
