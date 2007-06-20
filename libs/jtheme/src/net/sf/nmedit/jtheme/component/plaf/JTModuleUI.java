@@ -411,12 +411,12 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         {
             return false;
         }
-        
+        /*
         public void paintStaticLayer(Graphics2D g2)
         {
             getIcon().paintIcon(this, g2, 0, 0);
         }
-
+*/
         protected void processMouseEvent(MouseEvent e)
         {
             if ((!e.isConsumed()) && e.getID() == MouseEvent.MOUSE_PRESSED && SwingUtilities.isLeftMouseButton(e))
