@@ -30,6 +30,7 @@ import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PParameter;
+import net.sf.nmedit.jpatch.clavia.nordmodular.Format;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Header;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Knob;
 import net.sf.nmedit.jpatch.clavia.nordmodular.MidiController;
@@ -267,8 +268,7 @@ public class PatchBuilder implements PContentHandler
         for (int i=0;i<4;i++)
         {
             int value = record[i];
-
-            PParameter m = morphs.getMorph(i);
+            PParameter m = morphs.getKeyboardAssignment(i);
             if (value>=0 && value<=2)
                 m.setValue(value);
             else
@@ -328,47 +328,40 @@ public class PatchBuilder implements PContentHandler
     public void ctrlMapDump( int[] record ) throws ParseException
     {
         MidiControllerSet mcset  = patch.getMidiControllers();
+        int ccId = record[Format.CTRL_MAP_DUMP_CC_INDEX];
         
-        if (!MidiController.isValidCC(record[3]))
-            emiterror("invalid cc number "+record[3]);
+        if (!MidiController.isValidCC(ccId))
+            emiterror("invalid cc number "+ccId);
         else
         {
-            MidiController cc = mcset.getByMC(record[3]);
+            MidiController cc = mcset.getByMC(ccId);
             
             PParameter p = null;
             
-            int section = record[0];
-            int pindex = record[2];
+            int section = record[Format.CTRL_MAP_DUMP_SECTION_INDEX];
+            int moduleIndex = record[Format.CTRL_MAP_DUMP_MODULE_INDEX];
+            int pindex = record[Format.CTRL_MAP_DUMP_PARAMETER_INDEX];
             if (section == 0)
             {
-                try
-                {
-                PModule module =  patch.getCommonVoiceArea().getModule(record[1]);
+                PModule module =  patch.getCommonVoiceArea().getModule(moduleIndex);
+                if (module == null)
+                    emiterror("Module[index="+moduleIndex+"] does not exist in "+patch.getCommonVoiceArea());
                 
                 if (pindex<0 || pindex>=Helper.getParameterClassCount(module, "parameter"))                    
                     emiterror(module+" has no parameter[index="+pindex+"]");
                 else
                     p = module.getParameter(pindex);
-                }
-                catch (NoSuchElementException e)
-                {
-                    emiterror("Module[index="+record[1]+"] does not exist in "+patch.getCommonVoiceArea());
-                }
             }
             else if (section==1)
             {
-                try
-                {
-                PModule module = patch.getPolyVoiceArea().getModule(record[1]);
+                PModule module = patch.getPolyVoiceArea().getModule(moduleIndex);
+                if(module == null)
+                    emiterror("Module[index="+moduleIndex+"] does not exist in "+patch.getPolyVoiceArea());
+                
                 if (pindex<0 || pindex>=Helper.getParameterClassCount(module, "parameter"))
                     emiterror(module+" has no parameter[index="+pindex+"]");
                 else
                     p = module.getParameter(pindex);
-                }
-                catch (NoSuchElementException e)
-                {
-                    emiterror("Module[index="+record[1]+"] does not exist in "+patch.getPolyVoiceArea());
-                }
             }
             else if (section==2)
                 p = patch.getMorphSection().getMorph(record[2]);
