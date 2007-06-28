@@ -17,11 +17,16 @@
 label{fill:#000;}
 ]]>
 </style>
+
 <defs>
   <image id="groupbox" xlink:href="./images/single/groupbox.svg" />
   <image id="btn-up-arrow" xlink:href="./images/single/btn-up-arrow.svg" />
   <image id="btn-down-arrow" xlink:href="./images/single/btn-down-arrow.svg" />
+  <image id="btn-right-arrow" xlink:href="./images/single/btn-right-arrow.svg" />
+  <image id="btn-left-arrow" xlink:href="./images/single/btn-left-arrow.svg" />
 </defs>
+
+
 	<module component-id="m62" width="255" height="45">
 		<name>Overdrive</name>
 		<connector x="78" y="22" size="13" class="cCONTROL" >
@@ -3935,6 +3940,7 @@ label{fill:#000;}
 			<btn index="2">3</btn>
 			<btn index="3">4</btn>
 		</button>
+		
 		<button x="90" y="2" width="68" height="16" cyclic="false" landscape="true" >
 			<parameter component-id="p11"  alt="curve" />
 			<btn index="0"><image xlink:href="./images/slice/env_multi_bipolar.png" /></btn>
@@ -3999,43 +4005,86 @@ label{fill:#000;}
 	<module component-id="m90" width="255" height="135">
 		<name>NoteSeqB</name>
 		
-		<connector x="3" y="20" size="13" class="cCONTROL" >
+		<label x="3" y="25" >Clk</label>
+		<connector x="3" y="25" size="13" class="cCONTROL" >
 			<connector component-id="c1"  alt="clock" />
 		</connector>
-		<connector x="3" y="30" size="13" class="cLOGIC" >
+		
+		<label x="3" y="52" >Rst</label>
+		<connector x="3" y="52" size="13" class="cLOGIC" >
 			<connector component-id="c2"  alt="reset" />
 		</connector>
-		<connector x="3" y="40" size="13" class="cLOGIC" >
+		
+		<label x="3" y="115" >Snc</label>
+		<connector x="3" y="115" size="13" class="cLOGIC" >
 			<connector component-id="c4"  alt="sync" />
 		</connector>
 		
-		<connector x="240" y="95" size="13" class="cLOGIC" >
+		<label x="232" y="61" >Link</label>
+		<connector x="235" y="61" size="13" class="cLOGIC" >
 			<connector component-id="c5"  alt="link" />
 		</connector>
-		<connector x="240" y="105" size="13" class="cLOGIC" >
+		
+		<label x="228" y="88" >Gclck</label>
+		<connector x="235" y="88" size="13" class="cLOGIC" >
 			<connector component-id="c6"  alt="gclk" />
 		</connector>
-		<connector x="240" y="115" size="13" class="cCONTROL" >
+		
+		<label x="234" y="115" >Out</label>
+		<connector x="235" y="115" size="13" class="cCONTROL" >
 			<connector component-id="c3"  alt="out" />
 		</connector>
-
-		<knob x="5" y="10" size="21" >
+		
+		 <button x="80" y="5" width="14" height="14" cyclic="true" landscape="true">
+	            <call component="note-seq-display" method="zoomIn" />
+        	    <btn index="0">Z</btn>
+	            <btn index="1">Z</btn> 
+	        </button>
+	        
+	         <button x="94" y="5" width="14" height="14" cyclic="true" landscape="true">
+	            <call component="note-seq-display" method="zoomOut" />
+        	    <btn index="0">z</btn>
+	            <btn index="1">z</btn> 
+	        </button>		
+		
+		<button x="125" y="5" width="20" height="14" cyclic="true" landscape="false" >
+			<parameter component-id="p23"  alt="loop" />			
+			<btn index="0"> <image xlink:href="./images/slice/loop_off.png"/> </btn>
+			<btn index="1"> <image xlink:href="./images/slice/loop_on.png"/> </btn>
+		</button> 
+		
+		<label x="152" y="17" >Step</label>
+		
+	        <textDisplay x="174" y="5" width="20" height="14" >
 			<parameter component-id="p19"  alt="step" />
-		</knob>
-		<knob x="25" y="10" size="21" >
-			<parameter component-id="p20"  alt="currentstep" />
-		</knob>
-		<button x="45" y="10" width="34" height="19" cyclic="true" landscape="false" >
+		</textDisplay>
+		
+	        <button x="198" y="5" width="24" height="14" cyclic="false" landscape="true" mode="increment">
+	            <parameter  component-id="p19" alt="step" />
+        	    <btn index="0"><image xlink:href="url(#btn-left-arrow)" /></btn>
+	            <btn index="1"><image xlink:href="url(#btn-right-arrow)" /></btn>
+        	</button>
+		
+		<button x="228" y="32" width="24" height="13" cyclic="false" landscape="true" mode="increment">
+	            <parameter  component-id="p20" alt="currentstep" />
+        	    <btn index="0"><image xlink:href="url(#btn-left-arrow)" /></btn>
+	            <btn index="1"><image xlink:href="url(#btn-right-arrow)" /></btn>
+        	</button>
+        	
+		
+		<button x="228" y="5" width="24" height="14" cyclic="true" landscape="false" >
 			<parameter component-id="p21"  alt="record" />
-		</button>
-		<button x="65" y="10" width="34" height="19" cyclic="true" landscape="false" >
-			<parameter component-id="p22"  alt="play" />
-		</button>
-		<button x="5" y="15" width="34" height="19" cyclic="true" landscape="false" >
-			<parameter component-id="p23"  alt="loop" />
+			<btn index="0"><image xlink:href="./images/slice/rec_off.png"/></btn>
+			<btn index="1"><image xlink:href="./images/slice/rec_on.png"/></btn>
 		</button>
 		
-		<note-seq-editor x="24" y="39" width="204" height="72">
+		<button x="228" y="19" width="24" height="14" cyclic="true" landscape="false" >
+			<parameter component-id="p22"  alt="play" />
+			<btn index="0"><image xlink:href="./images/slice/start.png"/></btn>
+			<btn index="1"> <image xlink:href="./images/slice/stop.png"/></btn>
+		</button> 
+		
+		<note-seq-editor name="note-seq-display" x="30" y="37" width="192" height="74">
 			<step1 component-id="p3"  alt="note 1" />
 			<step2 component-id="p4"  alt="note 2" />
 			<step3 component-id="p5"  alt="note 3" />
@@ -4054,7 +4103,117 @@ label{fill:#000;}
 			<step16 component-id="p18"  alt="note 16" />
 		</note-seq-editor>
 		
-		<light component-id="ledStep1-16" type="led-array" x="30" y="28" width="190" height="7" /> 
+		<button x="30" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+	            <parameter  component-id="p3" alt="note 1" />
+        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+		</button>
+		
+		<button x="42" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+	            <parameter  component-id="p4" alt="note 1" />
+        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+        	</button>
+        	
+        	<button x="54" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+	            <parameter  component-id="p5" alt="note 1" />
+        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+        	</button>
+        	
+        	<button x="66" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+	            <parameter  component-id="p6" alt="note 1" />
+        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+        	</button>
+        	
+        	<button x="78" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+	            <parameter  component-id="p7" alt="note 1" />
+        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+        	</button>
+        	
+        	<button x="90" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+	            <parameter  component-id="p8" alt="note 1" />
+        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+        	</button>
+        	
+        	<button x="102" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+	            <parameter  component-id="p9" alt="note 1" />
+        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+        	</button>
+        	
+        	<button x="114" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+	            <parameter  component-id="p10" alt="note 1" />
+        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+        	</button>
+        	
+        	<button x="126" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+	            <parameter  component-id="p11" alt="note 1" />
+        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+        	</button>
+        	
+        	<button x="138" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+	            <parameter  component-id="p12" alt="note 1" />
+        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+        	</button>
+        	
+        	<button x="150" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+	            <parameter  component-id="p13" alt="note 1" />
+        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+        	</button>
+        	
+        	<button x="162" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+	            <parameter  component-id="p14" alt="note 1" />
+        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+        	</button>
+        	
+        	<button x="174" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+	            <parameter  component-id="p15" alt="note 1" />
+        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+        	</button>
+        	
+        	<button x="186" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+	            <parameter  component-id="p16" alt="note 1" />
+        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+        	</button>
+        	
+        	<button x="198" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+	            <parameter  component-id="p17" alt="note 1" />
+        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+        	</button>
+        	
+        	<button x="210" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+	            <parameter  component-id="p18" alt="note 1" />
+        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+        	</button>
+		
+		
+		<button x="1" y="70" width="22" height="14" cyclic="true" landscape="true">
+	            <call component="note-seq-display" method="randomize" />
+        	    <btn index="1">Rnd</btn>
+	            <btn index="0">Rnd</btn> 
+	        </button>
+
+		<button x="1" y="84" width="22" height="14" cyclic="true" landscape="true">
+	            <call component="note-seq-display" method="clear" />
+        	    <btn index="1">Clr</btn>
+	            <btn index="0">Clr</btn> 
+	        </button>			
+	   
+	        
+		<light component-id="ledStep1-16" type="led-array" x="30" y="28" width="192" height="7" /> 
 		
 	</module>
 	<module component-id="m111" width="255" height="30">

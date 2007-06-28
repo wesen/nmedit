@@ -30,25 +30,42 @@ import javax.swing.event.ChangeListener;
 
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.NoteSeqEditorUI;
-import net.sf.nmedit.jtheme.component.JTComponent;
+import net.sf.nmedit.jtheme.component.JTControl;
 import net.sf.nmedit.jtheme.component.JTControlAdapter;
 
-public class NMNoteSeqEditor extends JTComponent implements ChangeListener
+public class NMNoteSeqEditor extends JTControl implements ChangeListener
 {
     
     public static final String uiClassID = "NoteSeqEditorUI";
     private static final int STEPS = 16;
     
-    private int zoom = 3;
+    private int zoom = 5, maxZoom = 5, minZoom = 1;
     private JTControlAdapter[] controlAdapters = new JTControlAdapter[STEPS];
+     
     
     public NMNoteSeqEditor(JTContext context)
     {
         super(context);
-        setUI(NoteSeqEditorUI.createUI(this));
-        randomize();
+
+        clear();
     }
 
+    protected class NoteListener implements ChangeListener{
+    	int note;
+    	boolean isPlus;
+    	public NoteListener(int note, boolean isPlus) {
+    		this.note = note;
+    		this.isPlus = isPlus;
+		}
+		public void stateChanged(ChangeEvent e) {
+			if (isPlus)
+				setNote(note, getNote(note)+1);
+			else 
+				setNote(note, getNote(note)-1);
+		}
+
+    }
+    
 
     public void setControlAdapter(int i, JTControlAdapter adapter)
     {
@@ -86,12 +103,12 @@ public class NMNoteSeqEditor extends JTComponent implements ChangeListener
     
     public int getMinZoom()
     {
-        return 1;
+        return minZoom;
     }
     
     public int getMaxZoom()
     {
-        return 5;
+        return maxZoom;
     }
     
     public int getZoom()
@@ -101,11 +118,19 @@ public class NMNoteSeqEditor extends JTComponent implements ChangeListener
 
     public void setZoom(int z)
     {
-        if (1<=z && z<=5 && this.zoom != z)
+        if (minZoom<=z && z<= maxZoom && this.zoom != z)
         {
             this.zoom = z;
             repaint();
         }
+    }
+    
+    public void zoomIn(){
+    	setZoom(zoom + 1);
+    }
+    
+    public void zoomOut(){
+    	setZoom(zoom - 1);
     }
     
     public int getRowHeight()
@@ -115,8 +140,16 @@ public class NMNoteSeqEditor extends JTComponent implements ChangeListener
     
     public void randomize()
     {
+    	int amp = (maxZoom - getZoom()+1)*12;
         for (int i=0;i<getNoteCount();i++)
-            setNote(i, (int)(Math.random()*127));
+        	
+            setNote(i, (int)(Math.random()*amp)+ 60 - amp/2);
+    }
+    
+    public void clear()
+    {
+    	for (int i=0;i<getNoteCount();i++)
+            setNote(i, 60);
     }
     
     public int getNoteCount()
@@ -140,6 +173,7 @@ public class NMNoteSeqEditor extends JTComponent implements ChangeListener
             //repaint();
         }
     }
+
     
     public static void main(String[] args)
     {
@@ -154,7 +188,7 @@ public class NMNoteSeqEditor extends JTComponent implements ChangeListener
         
         f.getContentPane().add( ed );
         
-        final JScrollBar sb = new JScrollBar(JScrollBar.VERTICAL, ed.getZoom(),1, ed.getMinZoom(), ed.getMaxZoom());
+        final JScrollBar sb = new JScrollBar(JScrollBar.VERTICAL, ed.getZoom(),1, ed.getMinZoom(), ed.getMaxZoom()+1);
         
         sb.addAdjustmentListener(new AdjustmentListener(){
 
@@ -181,5 +215,10 @@ public class NMNoteSeqEditor extends JTComponent implements ChangeListener
         
         f.setVisible(true);
     }
+
+
+	public int getSteps() {
+		return STEPS;
+	}
     
 }
