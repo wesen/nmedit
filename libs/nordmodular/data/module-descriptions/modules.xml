@@ -34,6 +34,7 @@
        <version type="os-version">3.3</version>
     </device>
    <property name="author">Christian Schneider</property>
+   <script type="text/javascript" src="nmformat.js" />
 </header>
 <defs>
   <def-signal>
@@ -46,1018 +47,7 @@
     <signal key="5" type="user2" color="#BB00D7" />
     <signal key="6" type="none" nosignal="true" color="#FFFFFF" />
   </def-signal>
-<def-type name="off-on" >
-  <enumeration key="0" value="Off"/>
-  <enumeration key="1" value="On"/>
-</def-type>
-<def-type name="compander-release">
-<enumeration key="0" value="125m" />
-<enumeration key="1" value="129m" />
-<enumeration key="2" value="124m" />
-<enumeration key="3" value="139m" />
-<enumeration key="4" value="144m" />
-<enumeration key="5" value="149m" />
-<enumeration key="6" value="154m" />
-<enumeration key="7" value="159m" />
-<enumeration key="8" value="165m" />
-<enumeration key="9" value="171m" />
-<enumeration key="10" value="177m" />
-<enumeration key="11" value="183m" />
-<enumeration key="12" value="189m" />
-<enumeration key="13" value="196m" />
-<enumeration key="14" value="203m" />
-<enumeration key="15" value="210m" />
-<enumeration key="16" value="218m" />
-<enumeration key="17" value="225m" />
-<enumeration key="18" value="233m" />
-<enumeration key="19" value="241m" />
-<enumeration key="20" value="250m" />
-<enumeration key="21" value="259m" />
-<enumeration key="22" value="268m" />
-<enumeration key="23" value="277m" />
-<enumeration key="24" value="287m" />
-<enumeration key="25" value="297m" />
-<enumeration key="26" value="208m" />
-<enumeration key="27" value="319m" />
-<enumeration key="28" value="330m" />
-<enumeration key="29" value="342m" />
-<enumeration key="30" value="354m" />
-<enumeration key="31" value="366m" />
-<enumeration key="32" value="379m" />
-<enumeration key="33" value="392m" />
-<enumeration key="34" value="406m" />
-<enumeration key="35" value="420m" />
-<enumeration key="36" value="435m" />
-<enumeration key="37" value="451m" />
-<enumeration key="38" value="467m" />
-<enumeration key="39" value="483m" />
-<enumeration key="40" value="500m" />
-<enumeration key="41" value="518m" />
-<enumeration key="42" value="536m" />
-<enumeration key="43" value="555m" />
-<enumeration key="44" value="574m" />
-<enumeration key="45" value="595m" />
-<enumeration key="46" value="616m" />
-<enumeration key="47" value="637m" />
-<enumeration key="48" value="660m" />
-<enumeration key="49" value="683m" />
-<enumeration key="50" value="707m" />
-<enumeration key="51" value="732m" />
-<enumeration key="52" value="758m" />
-<enumeration key="53" value="785m" />
-<enumeration key="54" value="812m" />
-<enumeration key="55" value="841m" />
-<enumeration key="56" value="871m" />
-<enumeration key="57" value="901m" />
-<enumeration key="58" value="933m" />
-<enumeration key="59" value="966m" />
-<enumeration key="60" value="1.00s" />
-<enumeration key="61" value="1.04s" />
-<enumeration key="62" value="1.07s" />
-<enumeration key="63" value="1.11s" />
-<enumeration key="64" value="1.15s" />
-<enumeration key="65" value="1.19s" />
-<enumeration key="66" value="1.23s" />
-<enumeration key="67" value="1.27s" />
-<enumeration key="68" value="1.32s" />
-<enumeration key="69" value="1.37s" />
-<enumeration key="70" value="1.41s" />
-<enumeration key="71" value="1.46s" />
-<enumeration key="72" value="1.52s" />
-<enumeration key="73" value="1.57s" />
-<enumeration key="74" value="1.62s" />
-<enumeration key="75" value="1.68s" />
-<enumeration key="76" value="1.74s" />
-<enumeration key="77" value="1.80s" />
-<enumeration key="78" value="1.87s" />
-<enumeration key="79" value="1.93s" />
-<enumeration key="80" value="2.00s" />
-<enumeration key="81" value="2.07s" />
-<enumeration key="82" value="2.14s" />
-<enumeration key="83" value="2.22s" />
-<enumeration key="84" value="2.30s" />
-<enumeration key="85" value="2.38s" />
-<enumeration key="86" value="2.46s" />
-<enumeration key="87" value="2.55s" />
-<enumeration key="88" value="2.64s" />
-<enumeration key="89" value="2.73s" />
-<enumeration key="90" value="2.83s" />
-<enumeration key="91" value="2.93s" />
-<enumeration key="92" value="3.03s" />
-<enumeration key="93" value="3.14s" />
-<enumeration key="94" value="3.25s" />
-<enumeration key="95" value="3.36s" />
-<enumeration key="96" value="3.48s" />
-<enumeration key="97" value="3.61s" />
-<enumeration key="98" value="3.73s" />
-<enumeration key="99" value="3.86s" />
-<enumeration key="100" value="4.00s" />
-<enumeration key="101" value="4.14s" />
-<enumeration key="102" value="4.29s" />
-<enumeration key="103" value="4.44s" />
-<enumeration key="104" value="4.59s" />
-<enumeration key="105" value="4.76s" />
-<enumeration key="106" value="4.92s" />
-<enumeration key="107" value="5.10s" />
-<enumeration key="108" value="5.28s" />
-<enumeration key="109" value="5.46s" />
-<enumeration key="110" value="5.66s" />
-<enumeration key="111" value="5.86s" />
-<enumeration key="112" value="6.06s" />
-<enumeration key="113" value="6.28s" />
-<enumeration key="114" value="6.50s" />
-<enumeration key="115" value="6.73s" />
-<enumeration key="116" value="6.96s" />
-<enumeration key="117" value="7.21s" />
-<enumeration key="118" value="7.46s" />
-<enumeration key="119" value="7.73s" />
-<enumeration key="120" value="8.00s" />
-<enumeration key="121" value="8.28s" />
-<enumeration key="122" value="8.57s" />
-<enumeration key="123" value="8.88s" />
-<enumeration key="124" value="9.19s" />
-<enumeration key="125" value="9.51s" />
-<enumeration key="126" value="9.85s" />
-<enumeration key="127" value="10.2s" />
-</def-type>
-<def-type name="filter-slope-2">
-<enumeration key="0" value="12 dB/Oct" />
-<enumeration key="1" value="24 dB/Oct" />
-</def-type>
-<def-type name="channel-select-out1">
-<enumeration key="0" value="1" />
-<enumeration key="1" value="2" />
-<enumeration key="2" value="3" />
-<enumeration key="3" value="4" />
-<enumeration key="4" value="L" />
-<enumeration key="5" value="R" />
-</def-type>
-<def-type name="diode-function">
-<enumeration key="0" value="Pass through" />
-<enumeration key="1" value="Half wave rectifiy" />
-<enumeration key="2" value="Full wave rectify" />
-</def-type>
-<def-type name="envelop-release">
-<enumeration key="0" value="Fast" />
-<enumeration key="1" value="41.4m" />
-<enumeration key="2" value="42.9m" />
-<enumeration key="3" value="44.4m" />
-<enumeration key="4" value="45.9m" />
-<enumeration key="5" value="47.6m" />
-<enumeration key="6" value="49.2m" />
-<enumeration key="7" value="51.0m" />
-<enumeration key="8" value="52.8m" />
-<enumeration key="9" value="54.6m" />
-<enumeration key="10" value="56.6m" />
-<enumeration key="11" value="58.6m" />
-<enumeration key="12" value="60.6m" />
-<enumeration key="13" value="62.8m" />
-<enumeration key="14" value="65.0m" />
-<enumeration key="15" value="67.3m" />
-<enumeration key="16" value="69.6m" />
-<enumeration key="17" value="72.1m" />
-<enumeration key="18" value="74.6m" />
-<enumeration key="19" value="77.3m" />
-<enumeration key="20" value="80.0m" />
-<enumeration key="21" value="82.8m" />
-<enumeration key="22" value="85.7m" />
-<enumeration key="23" value="88.8m" />
-<enumeration key="24" value="91.9m" />
-<enumeration key="25" value="95.1m" />
-<enumeration key="26" value="98.5m" />
-<enumeration key="27" value="102m" />
-<enumeration key="28" value="106m" />
-<enumeration key="29" value="109m" />
-<enumeration key="30" value="113m" />
-<enumeration key="31" value="117m" />
-<enumeration key="32" value="121m" />
-<enumeration key="33" value="126m" />
-<enumeration key="34" value="130m" />
-<enumeration key="35" value="135m" />
-<enumeration key="36" value="139m" />
-<enumeration key="37" value="144m" />
-<enumeration key="38" value="149m" />
-<enumeration key="39" value="155m" />
-<enumeration key="40" value="160m" />
-<enumeration key="41" value="166m" />
-<enumeration key="42" value="171m" />
-<enumeration key="43" value="178m" />
-<enumeration key="44" value="184m" />
-<enumeration key="45" value="190m" />
-<enumeration key="46" value="197m" />
-<enumeration key="47" value="204m" />
-<enumeration key="48" value="211m" />
-<enumeration key="49" value="219m" />
-<enumeration key="50" value="226m" />
-<enumeration key="51" value="234m" />
-<enumeration key="52" value="243m" />
-<enumeration key="53" value="251m" />
-<enumeration key="54" value="260m" />
-<enumeration key="55" value="269m" />
-<enumeration key="56" value="279m" />
-<enumeration key="57" value="288m" />
-<enumeration key="58" value="299m" />
-<enumeration key="59" value="309m" />
-<enumeration key="60" value="320m" />
-<enumeration key="61" value="331m" />
-<enumeration key="62" value="343m" />
-<enumeration key="63" value="355m" />
-<enumeration key="64" value="368m" />
-<enumeration key="65" value="381m" />
-<enumeration key="66" value="394m" />
-<enumeration key="67" value="408m" />
-<enumeration key="68" value="422m" />
-<enumeration key="69" value="437m" />
-<enumeration key="70" value="453m" />
-<enumeration key="71" value="469m" />
-<enumeration key="72" value="485m" />
-<enumeration key="73" value="502m" />
-<enumeration key="74" value="520m" />
-<enumeration key="75" value="538m" />
-<enumeration key="76" value="557m" />
-<enumeration key="77" value="577m" />
-<enumeration key="78" value="597m" />
-<enumeration key="79" value="618m" />
-<enumeration key="80" value="640m" />
-<enumeration key="81" value="663m" />
-<enumeration key="82" value="686m" />
-<enumeration key="83" value="710m" />
-<enumeration key="84" value="735m" />
-<enumeration key="85" value="761m" />
-<enumeration key="86" value="788m" />
-<enumeration key="87" value="816m" />
-<enumeration key="88" value="844m" />
-<enumeration key="89" value="874m" />
-<enumeration key="90" value="905m" />
-<enumeration key="91" value="937m" />
-<enumeration key="92" value="970m" />
-<enumeration key="93" value="1.00s" />
-<enumeration key="94" value="1.04s" />
-<enumeration key="95" value="1.08s" />
-<enumeration key="96" value="1.11s" />
-<enumeration key="97" value="1.15s" />
-<enumeration key="98" value="1.19s" />
-<enumeration key="99" value="1.24s" />
-<enumeration key="100" value="1.28s" />
-<enumeration key="101" value="1.33s" />
-<enumeration key="102" value="1.37s" />
-<enumeration key="103" value="1.42s" />
-<enumeration key="104" value="1.47s" />
-<enumeration key="105" value="1.52s" />
-<enumeration key="106" value="1.58s" />
-<enumeration key="107" value="1.63s" />
-<enumeration key="108" value="1.69s" />
-<enumeration key="109" value="1.75s" />
-<enumeration key="110" value="1.81s" />
-<enumeration key="111" value="1.87s" />
-<enumeration key="112" value="1.94s" />
-<enumeration key="113" value="2.01s" />
-<enumeration key="114" value="2.08s" />
-<enumeration key="115" value="2.15s" />
-<enumeration key="116" value="2.23s" />
-<enumeration key="117" value="2.31s" />
-<enumeration key="118" value="2.39s" />
-<enumeration key="119" value="2.47s" />
-<enumeration key="120" value="2.56s" />
-<enumeration key="121" value="2.65s" />
-<enumeration key="122" value="2.74s" />
-<enumeration key="123" value="2.84s" />
-<enumeration key="124" value="2.94s" />
-<enumeration key="125" value="3.04s" />
-<enumeration key="126" value="3.15s" />
-<enumeration key="127" value="3.26s" />
-</def-type>
-<def-type name="delay-time">
-<enumeration key="0" value="0.00ms" />
-<enumeration key="1" value="0.02ms" />
-<enumeration key="2" value="0.04ms" />
-<enumeration key="3" value="0.06ms" />
-<enumeration key="4" value="0.08ms" />
-<enumeration key="5" value="0.10ms" />
-<enumeration key="6" value="0.13ms" />
-<enumeration key="7" value="0.15ms" />
-<enumeration key="8" value="0.17ms" />
-<enumeration key="9" value="0.19ms" />
-<enumeration key="10" value="0.21ms" />
-<enumeration key="11" value="0.23ms" />
-<enumeration key="12" value="0.25ms" />
-<enumeration key="13" value="0.27ms" />
-<enumeration key="14" value="0.29ms" />
-<enumeration key="15" value="0.31ms" />
-<enumeration key="16" value="0.33ms" />
-<enumeration key="17" value="0.35ms" />
-<enumeration key="18" value="0.38ms" />
-<enumeration key="19" value="0.40ms" />
-<enumeration key="20" value="0.42ms" />
-<enumeration key="21" value="0.44ms" />
-<enumeration key="22" value="0.46ms" />
-<enumeration key="23" value="0.48ms" />
-<enumeration key="24" value="0.50ms" />
-<enumeration key="25" value="0.52ms" />
-<enumeration key="26" value="0.54ms" />
-<enumeration key="27" value="0.56ms" />
-<enumeration key="28" value="0.58ms" />
-<enumeration key="29" value="0.60ms" />
-<enumeration key="30" value="0.63ms" />
-<enumeration key="31" value="0.65ms" />
-<enumeration key="32" value="0.67ms" />
-<enumeration key="33" value="0.69ms" />
-<enumeration key="34" value="0.71ms" />
-<enumeration key="35" value="0.73ms" />
-<enumeration key="36" value="0.75ms" />
-<enumeration key="37" value="0.77ms" />
-<enumeration key="38" value="0.79ms" />
-<enumeration key="39" value="0.81ms" />
-<enumeration key="40" value="0.83ms" />
-<enumeration key="41" value="0.85ms" />
-<enumeration key="42" value="0.88ms" />
-<enumeration key="43" value="0.90ms" />
-<enumeration key="44" value="0.92ms" />
-<enumeration key="45" value="0.94ms" />
-<enumeration key="46" value="0.96ms" />
-<enumeration key="47" value="0.98ms" />
-<enumeration key="48" value="1.00ms" />
-<enumeration key="49" value="1.02ms" />
-<enumeration key="50" value="1.04ms" />
-<enumeration key="51" value="1.06ms" />
-<enumeration key="52" value="1.08ms" />
-<enumeration key="53" value="1.10ms" />
-<enumeration key="54" value="1.13ms" />
-<enumeration key="55" value="1.15ms" />
-<enumeration key="56" value="1.17ms" />
-<enumeration key="57" value="1.19ms" />
-<enumeration key="58" value="1.21ms" />
-<enumeration key="59" value="1.23ms" />
-<enumeration key="60" value="1.25ms" />
-<enumeration key="61" value="1.27ms" />
-<enumeration key="62" value="1.29ms" />
-<enumeration key="63" value="1.31ms" />
-<enumeration key="64" value="1.33ms" />
-<enumeration key="65" value="1.35ms" />
-<enumeration key="66" value="1.38ms" />
-<enumeration key="67" value="1.40ms" />
-<enumeration key="68" value="1.42ms" />
-<enumeration key="69" value="1.44ms" />
-<enumeration key="70" value="1.46ms" />
-<enumeration key="71" value="1.48ms" />
-<enumeration key="72" value="1.50ms" />
-<enumeration key="73" value="1.52ms" />
-<enumeration key="74" value="1.54ms" />
-<enumeration key="75" value="1.56ms" />
-<enumeration key="76" value="1.58ms" />
-<enumeration key="77" value="1.60ms" />
-<enumeration key="78" value="1.63ms" />
-<enumeration key="79" value="1.65ms" />
-<enumeration key="80" value="1.67ms" />
-<enumeration key="81" value="1.69ms" />
-<enumeration key="82" value="1.71ms" />
-<enumeration key="83" value="1.73ms" />
-<enumeration key="84" value="1.75ms" />
-<enumeration key="85" value="1.77ms" />
-<enumeration key="86" value="1.79ms" />
-<enumeration key="87" value="1.81ms" />
-<enumeration key="88" value="1.83ms" />
-<enumeration key="89" value="1.85ms" />
-<enumeration key="90" value="1.88ms" />
-<enumeration key="91" value="1.90ms" />
-<enumeration key="92" value="1.92ms" />
-<enumeration key="93" value="1.94ms" />
-<enumeration key="94" value="1.96ms" />
-<enumeration key="95" value="1.98ms" />
-<enumeration key="96" value="2.00ms" />
-<enumeration key="97" value="2.02ms" />
-<enumeration key="98" value="2.04ms" />
-<enumeration key="99" value="2.06ms" />
-<enumeration key="100" value="2.08ms" />
-<enumeration key="101" value="2.10ms" />
-<enumeration key="102" value="2.13ms" />
-<enumeration key="103" value="2.15ms" />
-<enumeration key="104" value="2.17ms" />
-<enumeration key="105" value="2.19ms" />
-<enumeration key="106" value="2.21ms" />
-<enumeration key="107" value="2.23ms" />
-<enumeration key="108" value="2.25ms" />
-<enumeration key="109" value="2.27ms" />
-<enumeration key="110" value="2.29ms" />
-<enumeration key="111" value="2.31ms" />
-<enumeration key="112" value="2.33ms" />
-<enumeration key="113" value="2.35ms" />
-<enumeration key="114" value="2.38ms" />
-<enumeration key="115" value="2.40ms" />
-<enumeration key="116" value="2.42ms" />
-<enumeration key="117" value="2.44ms" />
-<enumeration key="118" value="2.46ms" />
-<enumeration key="119" value="2.48ms" />
-<enumeration key="120" value="2.50ms" />
-<enumeration key="121" value="2.52ms" />
-<enumeration key="122" value="2.54ms" />
-<enumeration key="123" value="2.56ms" />
-<enumeration key="124" value="2.58ms" />
-<enumeration key="125" value="2.60ms" />
-<enumeration key="126" value="2.63ms" />
-<enumeration key="127" value="2.65ms" />
-</def-type>
-<def-type name="oscillator-wave">
-<enumeration key="0" value="Sine" />
-<enumeration key="1" value="Tri" />
-<enumeration key="2" value="Saw" />
-<enumeration key="3" value="Square" />
-</def-type>
-<def-type name="white-colored">
-<enumeration key="0" value="White" />
-<enumeration key="1" value="Colored" />
-</def-type>
-<def-type name="phaser-center-frequency">
-<enumeration key="0" value="100Hz" />
-<enumeration key="1" value="104Hz" />
-<enumeration key="2" value="108Hz" />
-<enumeration key="3" value="113Hz" />
-<enumeration key="4" value="117Hz" />
-<enumeration key="5" value="122Hz" />
-<enumeration key="6" value="127Hz" />
-<enumeration key="7" value="132Hz" />
-<enumeration key="8" value="138Hz" />
-<enumeration key="9" value="143Hz" />
-<enumeration key="10" value="149Hz" />
-<enumeration key="11" value="155Hz" />
-<enumeration key="12" value="162Hz" />
-<enumeration key="13" value="168Hz" />
-<enumeration key="14" value="175Hz" />
-<enumeration key="15" value="182Hz" />
-<enumeration key="16" value="190Hz" />
-<enumeration key="17" value="197Hz" />
-<enumeration key="18" value="205Hz" />
-<enumeration key="19" value="214Hz" />
-<enumeration key="20" value="222Hz" />
-<enumeration key="21" value="231Hz" />
-<enumeration key="22" value="241Hz" />
-<enumeration key="23" value="251Hz" />
-<enumeration key="24" value="261Hz" />
-<enumeration key="25" value="272Hz" />
-<enumeration key="26" value="283Hz" />
-<enumeration key="27" value="294Hz" />
-<enumeration key="28" value="306Hz" />
-<enumeration key="29" value="319Hz" />
-<enumeration key="30" value="332Hz" />
-<enumeration key="31" value="345Hz" />
-<enumeration key="32" value="359Hz" />
-<enumeration key="33" value="374Hz" />
-<enumeration key="34" value="389Hz" />
-<enumeration key="35" value="405Hz" />
-<enumeration key="36" value="421Hz" />
-<enumeration key="37" value="439Hz" />
-<enumeration key="38" value="457Hz" />
-<enumeration key="39" value="475Hz" />
-<enumeration key="40" value="495Hz" />
-<enumeration key="41" value="515Hz" />
-<enumeration key="42" value="536Hz" />
-<enumeration key="43" value="558Hz" />
-<enumeration key="44" value="580Hz" />
-<enumeration key="45" value="604Hz" />
-<enumeration key="46" value="629Hz" />
-<enumeration key="47" value="654Hz" />
-<enumeration key="48" value="681Hz" />
-<enumeration key="49" value="709Hz" />
-<enumeration key="50" value="738Hz" />
-<enumeration key="51" value="768Hz" />
-<enumeration key="52" value="799Hz" />
-<enumeration key="53" value="831Hz" />
-<enumeration key="54" value="865Hz" />
-<enumeration key="55" value="901Hz" />
-<enumeration key="56" value="937Hz" />
-<enumeration key="57" value="976Hz" />
-<enumeration key="58" value="1.02kHz" />
-<enumeration key="59" value="1.06kHz" />
-<enumeration key="60" value="1.10kHz" />
-<enumeration key="61" value="1.14kHz" />
-<enumeration key="62" value="1.19kHz" />
-<enumeration key="63" value="1.24kHz" />
-<enumeration key="64" value="1.29kHz" />
-<enumeration key="65" value="1.34kHz" />
-<enumeration key="66" value="1.40kHz" />
-<enumeration key="67" value="1.45kHz" />
-<enumeration key="68" value="1.51kHz" />
-<enumeration key="69" value="1.58khz" />
-<enumeration key="70" value="1.64kHz" />
-<enumeration key="71" value="1.71kHz" />
-<enumeration key="72" value="1.78kHz" />
-<enumeration key="73" value="1.85kHz" />
-<enumeration key="74" value="1.92kHz" />
-<enumeration key="75" value="2.00kHz" />
-<enumeration key="76" value="2.08kHz" />
-<enumeration key="77" value="2.17kHz" />
-<enumeration key="78" value="2.26kHz" />
-<enumeration key="79" value="2.35kHz" />
-<enumeration key="80" value="2.45kHz" />
-<enumeration key="81" value="2.55kHz" />
-<enumeration key="82" value="2.65kHz" />
-<enumeration key="83" value="2.76kHz" />
-<enumeration key="84" value="2.87kHz" />
-<enumeration key="85" value="2.99kHz" />
-<enumeration key="86" value="3.11kHz" />
-<enumeration key="87" value="3.24kHz" />
-<enumeration key="88" value="3.37kHz" />
-<enumeration key="89" value="3.50kHz" />
-<enumeration key="90" value="3.65kHz" />
-<enumeration key="91" value="3.80kHz" />
-<enumeration key="92" value="3.95kHz" />
-<enumeration key="93" value="4.11kHz" />
-<enumeration key="94" value="4.28kHz" />
-<enumeration key="95" value="4.45kHz" />
-<enumeration key="96" value="4.64kHz" />
-<enumeration key="97" value="4.82kHz" />
-<enumeration key="98" value="5.02kHz" />
-<enumeration key="99" value="5.23kHz" />
-<enumeration key="100" value="5.44kHz" />
-<enumeration key="101" value="5.66kHz" />
-<enumeration key="102" value="5.89kHz" />
-<enumeration key="103" value="6.13kHz" />
-<enumeration key="104" value="6.38kHz" />
-<enumeration key="105" value="6.64kHz" />
-<enumeration key="106" value="6.91kHz" />
-<enumeration key="107" value="7.19kHz" />
-<enumeration key="108" value="7.49kHz" />
-<enumeration key="109" value="7.79kHz" />
-<enumeration key="110" value="8.11kHz" />
-<enumeration key="111" value="8.44kHz" />
-<enumeration key="112" value="8.79kHz" />
-<enumeration key="113" value="9.14kHz" />
-<enumeration key="114" value="9.52kHz" />
-<enumeration key="115" value="9.91kHz" />
-<enumeration key="116" value="10.3kHz" />
-<enumeration key="117" value="10.7kHz" />
-<enumeration key="118" value="11.2kHz" />
-<enumeration key="119" value="11.6kHz" />
-<enumeration key="120" value="12.1kHz" />
-<enumeration key="121" value="12.6kHz" />
-<enumeration key="122" value="13.1kHz" />
-<enumeration key="123" value="13.6kHz" />
-<enumeration key="124" value="14.2kHz" />
-<enumeration key="125" value="14.8kHz" />
-<enumeration key="126" value="15.4kHz" />
-<enumeration key="127" value="16.0kHz" />
-</def-type>
-<def-type name="vowels">
-<enumeration key="0" value="A" />
-<enumeration key="1" value="E" />
-<enumeration key="2" value="I" />
-<enumeration key="3" value="O" />
-<enumeration key="4" value="U" />
-<enumeration key="5" value="Y" />
-<enumeration key="6" value="AA" />
-<enumeration key="7" value="AE" />
-<enumeration key="8" value="OE" />
-</def-type>
-<def-type name="filter-slope-3">
-<enumeration key="0" value="12 dB/Oct" />
-<enumeration key="1" value="18 dB/Oct" />
-<enumeration key="2" value="24 dB/Oct" />
-</def-type>
-<def-type name="envelope-adsr-shape">
-<enumeration key="0" value="Log" />
-<enumeration key="1" value="Lin" />
-<enumeration key="2" value="Exp" />
-</def-type>
-<def-type name="envelope-attack">
-<enumeration key="0" value="Fast" />
-<enumeration key="1" value="0.53m" />
-<enumeration key="2" value="0.56m" />
-<enumeration key="3" value="0.59m" />
-<enumeration key="4" value="0.63m" />
-<enumeration key="5" value="0.67m" />
-<enumeration key="6" value="0.71m" />
-<enumeration key="7" value="0.75m" />
-<enumeration key="8" value="0.79m" />
-<enumeration key="9" value="0.84m" />
-<enumeration key="10" value="0.89m" />
-<enumeration key="11" value="0.94m" />
-<enumeration key="12" value="1.00m" />
-<enumeration key="13" value="1.06m" />
-<enumeration key="14" value="1.12m" />
-<enumeration key="15" value="1.19m" />
-<enumeration key="16" value="1.26m" />
-<enumeration key="17" value="1.33m" />
-<enumeration key="18" value="1.41m" />
-<enumeration key="19" value="1.50m" />
-<enumeration key="20" value="1.59m" />
-<enumeration key="21" value="1.68m" />
-<enumeration key="22" value="1.78m" />
-<enumeration key="23" value="1.89m" />
-<enumeration key="24" value="2.00m" />
-<enumeration key="25" value="2.12m" />
-<enumeration key="26" value="2.24m" />
-<enumeration key="27" value="2.38m" />
-<enumeration key="28" value="2.52m" />
-<enumeration key="29" value="2.67m" />
-<enumeration key="30" value="2.83m" />
-<enumeration key="31" value="3.00m" />
-<enumeration key="32" value="3.17m" />
-<enumeration key="33" value="3.36m" />
-<enumeration key="34" value="3.56m" />
-<enumeration key="35" value="3.78m" />
-<enumeration key="36" value="4.00m" />
-<enumeration key="37" value="4.24m" />
-<enumeration key="38" value="4.49m" />
-<enumeration key="39" value="4.76m" />
-<enumeration key="40" value="5.04m" />
-<enumeration key="41" value="5.34m" />
-<enumeration key="42" value="5.66m" />
-<enumeration key="43" value="5.99m" />
-<enumeration key="44" value="6.35m" />
-<enumeration key="45" value="6.73m" />
-<enumeration key="46" value="7.13m" />
-<enumeration key="47" value="7.55m" />
-<enumeration key="48" value="8.00m" />
-<enumeration key="49" value="8.48m" />
-<enumeration key="50" value="8.98m" />
-<enumeration key="51" value="9.51m" />
-<enumeration key="52" value="10.1m" />
-<enumeration key="53" value="10.7m" />
-<enumeration key="54" value="11.3m" />
-<enumeration key="55" value="12.0m" />
-<enumeration key="56" value="12.7m" />
-<enumeration key="57" value="13.5m" />
-<enumeration key="58" value="14.3m" />
-<enumeration key="59" value="15.1m" />
-<enumeration key="60" value="16.0m" />
-<enumeration key="61" value="17.0m" />
-<enumeration key="62" value="18.0m" />
-<enumeration key="63" value="19.0m" />
-<enumeration key="64" value="20.2m" />
-<enumeration key="65" value="21.4m" />
-<enumeration key="66" value="22.6m" />
-<enumeration key="67" value="24.0m" />
-<enumeration key="68" value="25.4m" />
-<enumeration key="69" value="26.9m" />
-<enumeration key="70" value="28.5m" />
-<enumeration key="71" value="30.2m" />
-<enumeration key="72" value="32.0m" />
-<enumeration key="73" value="33.9m" />
-<enumeration key="74" value="35.9m" />
-<enumeration key="75" value="38.1m" />
-<enumeration key="76" value="40.3m" />
-<enumeration key="77" value="42.7m" />
-<enumeration key="78" value="45.3m" />
-<enumeration key="79" value="47.9m" />
-<enumeration key="80" value="50.8m" />
-<enumeration key="81" value="53.8m" />
-<enumeration key="82" value="57.0m" />
-<enumeration key="83" value="60.4m" />
-<enumeration key="84" value="64.0m" />
-<enumeration key="85" value="67.8m" />
-<enumeration key="86" value="71.8m" />
-<enumeration key="87" value="76.1m" />
-<enumeration key="88" value="80.6m" />
-<enumeration key="89" value="85.4m" />
-<enumeration key="90" value="90.5m" />
-<enumeration key="91" value="95.9m" />
-<enumeration key="92" value="102m" />
-<enumeration key="93" value="108m" />
-<enumeration key="94" value="114m" />
-<enumeration key="95" value="121m" />
-<enumeration key="96" value="128m" />
-<enumeration key="97" value="136m" />
-<enumeration key="98" value="144m" />
-<enumeration key="99" value="152m" />
-<enumeration key="100" value="161m" />
-<enumeration key="101" value="171m" />
-<enumeration key="102" value="181m" />
-<enumeration key="103" value="192m" />
-<enumeration key="104" value="203m" />
-<enumeration key="105" value="215m" />
-<enumeration key="106" value="228m" />
-<enumeration key="107" value="242m" />
-<enumeration key="108" value="256m" />
-<enumeration key="109" value="271m" />
-<enumeration key="110" value="287m" />
-<enumeration key="111" value="304m" />
-<enumeration key="112" value="323m" />
-<enumeration key="113" value="342m" />
-<enumeration key="114" value="362m" />
-<enumeration key="115" value="384m" />
-<enumeration key="116" value="406m" />
-<enumeration key="117" value="431m" />
-<enumeration key="118" value="456m" />
-<enumeration key="119" value="483m" />
-<enumeration key="120" value="512m" />
-<enumeration key="121" value="542m" />
-<enumeration key="122" value="575m" />
-<enumeration key="123" value="609m" />
-<enumeration key="124" value="645m" />
-<enumeration key="125" value="683m" />
-<enumeration key="126" value="724m" />
-<enumeration key="127" value="767m" />
-</def-type>
-<def-type name="envelope-multi-shape">
-<enumeration key="0" value="Bipolar" />
-<enumeration key="1" value="Uni/Exp" />
-<enumeration key="2" value="Uni/Lin" />
-</def-type>
-<def-type name="filter-type-4">
-<enumeration key="0" value="LP" />
-<enumeration key="1" value="BP" />
-<enumeration key="2" value="HP" />
-<enumeration key="3" value="BR" />
-</def-type>
-<def-type name="low-high">
-<enumeration key="0" value="Low" />
-<enumeration key="1" value="High" />
-</def-type>
-<def-type name="channel-select-out2">
-<enumeration key="0" value="1/2" />
-<enumeration key="1" value="3/4" />
-<enumeration key="2" value="CVA" />
-</def-type>
-<def-type name="filter-type-3">
-<enumeration key="0" value="LP" />
-<enumeration key="1" value="BP" />
-<enumeration key="2" value="HP" />
-</def-type>
-<def-type name="compander-ratio">
-<enumeration key="0" value="1.0:1" />
-<enumeration key="1" value="1.1:1" />
-<enumeration key="2" value="1.2:1" />
-<enumeration key="3" value="1.3:1" />
-<enumeration key="4" value="1.4:1" />
-<enumeration key="5" value="1.5:1" />
-<enumeration key="6" value="1.6:1" />
-<enumeration key="7" value="1.7:1" />
-<enumeration key="8" value="1.8:1" />
-<enumeration key="9" value="1.9:1" />
-<enumeration key="10" value="2.0:1" />
-<enumeration key="11" value="2.2:1" />
-<enumeration key="12" value="2.4:1" />
-<enumeration key="13" value="2.6:1" />
-<enumeration key="14" value="2.8:1" />
-<enumeration key="15" value="3.0:1" />
-<enumeration key="16" value="3.2:1" />
-<enumeration key="17" value="3.4:1" />
-<enumeration key="18" value="3.6:1" />
-<enumeration key="19" value="3.8:1" />
-<enumeration key="20" value="4.0:1" />
-<enumeration key="21" value="4.2:1" />
-<enumeration key="22" value="4.4:1" />
-<enumeration key="23" value="4.6:1" />
-<enumeration key="24" value="4.8:1" />
-<enumeration key="25" value="5.0:1" />
-<enumeration key="26" value="5.5:1" />
-<enumeration key="27" value="6.0:1" />
-<enumeration key="28" value="6.5:1" />
-<enumeration key="29" value="7.0:1" />
-<enumeration key="30" value="7.5:1" />
-<enumeration key="31" value="8.0:1" />
-<enumeration key="32" value="8.5:1" />
-<enumeration key="33" value="9.0:1" />
-<enumeration key="34" value="9.5:1" />
-<enumeration key="35" value="10:1" />
-<enumeration key="36" value="11:1" />
-<enumeration key="37" value="12:1" />
-<enumeration key="38" value="13:1" />
-<enumeration key="39" value="14:1" />
-<enumeration key="40" value="15:1" />
-<enumeration key="41" value="16:1" />
-<enumeration key="42" value="17:1" />
-<enumeration key="43" value="18:1" />
-<enumeration key="44" value="19:1" />
-<enumeration key="45" value="20:1" />
-<enumeration key="46" value="22:1" />
-<enumeration key="47" value="24:1" />
-<enumeration key="48" value="26:1" />
-<enumeration key="49" value="28:1" />
-<enumeration key="50" value="30:1" />
-<enumeration key="51" value="32:1" />
-<enumeration key="52" value="34:1" />
-<enumeration key="53" value="36:1" />
-<enumeration key="54" value="38:1" />
-<enumeration key="55" value="40:1" />
-<enumeration key="56" value="42:1" />
-<enumeration key="57" value="44:1" />
-<enumeration key="58" value="46:1" />
-<enumeration key="59" value="48:1" />
-<enumeration key="60" value="50:1" />
-<enumeration key="61" value="55:1" />
-<enumeration key="62" value="60:1" />
-<enumeration key="63" value="65:1" />
-<enumeration key="64" value="70:1" />
-<enumeration key="65" value="75:1" />
-<enumeration key="66" value="80:1" />
-</def-type>
-<def-type name="off-on">
-<enumeration key="0" value="Off" />
-<enumeration key="1" value="On" />
-</def-type>
-<def-type name="drum-presets">
-<enumeration key="0" value="none" />
-<enumeration key="1" value="Kick 1" />
-<enumeration key="2" value="Kick 2" />
-<enumeration key="3" value="Kick 3" />
-<enumeration key="4" value="Kick 4" />
-<enumeration key="5" value="Kick 5" />
-<enumeration key="6" value="Snare 1" />
-<enumeration key="7" value="Snare 2" />
-<enumeration key="8" value="Snare 3" />
-<enumeration key="9" value="Snare 4" />
-<enumeration key="10" value="Snare 5" />
-<enumeration key="11" value="Tom1 1" />
-<enumeration key="12" value="Tom1 2" />
-<enumeration key="13" value="Tom1 3" />
-<enumeration key="14" value="Tom2 1" />
-<enumeration key="15" value="Tom2 2" />
-<enumeration key="16" value="Tom2 3" />
-<enumeration key="17" value="Tom3 1" />
-<enumeration key="18" value="Tom3 2" />
-<enumeration key="19" value="Tom3 3" />
-<enumeration key="20" value="Cymb 1" />
-<enumeration key="21" value="Cymb 2" />
-<enumeration key="22" value="Cymb 3" />
-<enumeration key="23" value="Cymb 4" />
-<enumeration key="24" value="Cymb 5" />
-<enumeration key="25" value="Perc 1" />
-<enumeration key="26" value="Perc 2" />
-<enumeration key="27" value="Perc 3" />
-<enumeration key="28" value="Perc 4" />
-<enumeration key="29" value="Perc 5" />
-<enumeration key="30" value="Perc 6" />
-</def-type>
-<def-type name="adsr-time">
-<enumeration key="0" value="0.5m" />
-<enumeration key="1" value="0.7m" />
-<enumeration key="2" value="1.0m" />
-<enumeration key="3" value="1.3m" />
-<enumeration key="4" value="1.5m" />
-<enumeration key="5" value="1.8m" />
-<enumeration key="6" value="2.1m" />
-<enumeration key="7" value="2.3m" />
-<enumeration key="8" value="2.6m" />
-<enumeration key="9" value="2.9m" />
-<enumeration key="10" value="3.2m" />
-<enumeration key="11" value="3.5m" />
-<enumeration key="12" value="3.9m" />
-<enumeration key="13" value="4.2m" />
-<enumeration key="14" value="4.6m" />
-<enumeration key="15" value="4.9m" />
-<enumeration key="16" value="5.3m" />
-<enumeration key="17" value="5.7m" />
-<enumeration key="18" value="6.1m" />
-<enumeration key="19" value="6.6m" />
-<enumeration key="20" value="7.0m" />
-<enumeration key="21" value="7.5m" />
-<enumeration key="22" value="8.0m" />
-<enumeration key="23" value="8.5m" />
-<enumeration key="24" value="9.1m" />
-<enumeration key="25" value="9.7m" />
-<enumeration key="26" value="10m" />
-<enumeration key="27" value="11m" />
-<enumeration key="28" value="12m" />
-<enumeration key="29" value="13m" />
-<enumeration key="30" value="13m" />
-<enumeration key="31" value="14m" />
-<enumeration key="32" value="15m" />
-<enumeration key="33" value="16m" />
-<enumeration key="34" value="17m" />
-<enumeration key="35" value="19m" />
-<enumeration key="36" value="20m" />
-<enumeration key="37" value="21m" />
-<enumeration key="38" value="23m" />
-<enumeration key="39" value="24m" />
-<enumeration key="40" value="26m" />
-<enumeration key="41" value="28m" />
-<enumeration key="42" value="30m" />
-<enumeration key="43" value="32m" />
-<enumeration key="44" value="35m" />
-<enumeration key="45" value="37m" />
-<enumeration key="46" value="40m" />
-<enumeration key="47" value="43m" />
-<enumeration key="48" value="47m" />
-<enumeration key="49" value="51m" />
-<enumeration key="50" value="55m" />
-<enumeration key="51" value="59m" />
-<enumeration key="52" value="64m" />
-<enumeration key="53" value="69m" />
-<enumeration key="54" value="75m" />
-<enumeration key="55" value="81m" />
-<enumeration key="56" value="88m" />
-<enumeration key="57" value="95m" />
-<enumeration key="58" value="103m" />
-<enumeration key="59" value="112m" />
-<enumeration key="60" value="122m" />
-<enumeration key="61" value="132m" />
-<enumeration key="62" value="143m" />
-<enumeration key="63" value="156m" />
-<enumeration key="64" value="170m" />
-<enumeration key="65" value="185m" />
-<enumeration key="66" value="201m" />
-<enumeration key="67" value="219m" />
-<enumeration key="68" value="238m" />
-<enumeration key="69" value="260m" />
-<enumeration key="70" value="283m" />
-<enumeration key="71" value="308m" />
-<enumeration key="72" value="336m" />
-<enumeration key="73" value="367m" />
-<enumeration key="74" value="400m" />
-<enumeration key="75" value="436m" />
-<enumeration key="76" value="476m" />
-<enumeration key="77" value="520m" />
-<enumeration key="78" value="567m" />
-<enumeration key="79" value="619m" />
-<enumeration key="80" value="676m" />
-<enumeration key="81" value="738m" />
-<enumeration key="82" value="806m" />
-<enumeration key="83" value="881m" />
-<enumeration key="84" value="962m" />
-<enumeration key="85" value="1.1s" />
-<enumeration key="86" value="1.1s" />
-<enumeration key="87" value="1.3s" />
-<enumeration key="88" value="1.4s" />
-<enumeration key="89" value="1.5s" />
-<enumeration key="90" value="1.6s" />
-<enumeration key="91" value="1.8s" />
-<enumeration key="92" value="2.0s" />
-<enumeration key="93" value="2.1s" />
-<enumeration key="94" value="2.3s" />
-<enumeration key="95" value="2.6s" />
-<enumeration key="96" value="2.8s" />
-<enumeration key="97" value="3.1s" />
-<enumeration key="98" value="3.3s" />
-<enumeration key="99" value="3.7s" />
-<enumeration key="100" value="4.0s" />
-<enumeration key="101" value="4.4s" />
-<enumeration key="102" value="4.8s" />
-<enumeration key="103" value="5.2s" />
-<enumeration key="104" value="5.7s" />
-<enumeration key="105" value="6.3s" />
-<enumeration key="106" value="6.8s" />
-<enumeration key="107" value="7.5s" />
-<enumeration key="108" value="8.2s" />
-<enumeration key="109" value="9.0s" />
-<enumeration key="110" value="9.8s" />
-<enumeration key="111" value="10.7s" />
-<enumeration key="112" value="11.7s" />
-<enumeration key="113" value="12.8s" />
-<enumeration key="114" value="14.0s" />
-<enumeration key="115" value="15.3s" />
-<enumeration key="116" value="16.8s" />
-<enumeration key="117" value="18.3s" />
-<enumeration key="118" value="20.1s" />
-<enumeration key="119" value="21.9s" />
-<enumeration key="120" value="24.0s" />
-<enumeration key="121" value="26.3s" />
-<enumeration key="122" value="28.7s" />
-<enumeration key="123" value="31.4s" />
-<enumeration key="124" value="34.4s" />
-<enumeration key="125" value="37.6s" />
-<enumeration key="126" value="41.1s" />
-<enumeration key="127" value="45.0s" />
-</def-type>
-<def-type name="odd-all">
-<enumeration key="0" value="Odd" />
-<enumeration key="1" value="All" />
-</def-type>
-<def-type name="control-mixer-mode">
-<enumeration key="0" value="lin" />
-<enumeration key="1" value="exp" />
-</def-type>
-<def-type name="multi-env-sustain">
-<enumeration key="0" value="--" />
-<enumeration key="1" value="L1" />
-<enumeration key="2" value="L2" />
-<enumeration key="3" value="L3" />
-<enumeration key="4" value="L4" />
-</def-type>
-<def-type name="shape-function">
-<enumeration key="0" value="log 2" />
-<enumeration key="1" value="log 1" />
-<enumeration key="2" value="lin" />
-<enumeration key="3" value="exp 1" />
-<enumeration key="4" value="exp 2" />
-</def-type>
-<def-type name="lfo-wave">
-<enumeration key="0" value="Sine" />
-<enumeration key="1" value="Tri" />
-<enumeration key="2" value="Saw" />
-<enumeration key="3" value="Inverse saw" />
-<enumeration key="4" value="Square" />
-</def-type>
-<def-type name="lfo-range">
-<enumeration key="0" value="Sub" />
-<enumeration key="1" value="Lo" />
-<enumeration key="2" value="Hi" />
-</def-type>
-<def-type name="level-function">
-<enumeration key="0" value="Pass through" />
-<enumeration key="1" value="Shift down" />
-<enumeration key="2" value="Shift up" />
-</def-type>
-<def-type name="logic-function">
-<enumeration key="0" value="And" />
-<enumeration key="1" value="Or" />
-<enumeration key="2" value="Xor" />
-</def-type>
-<def-type name="morph-kb-assignment">
-<enumeration key="0" value="None" />
-<enumeration key="1" value="Velocity" />
-<enumeration key="2" value="Note" />
-</def-type>
+
 </defs>
 <annotation>
   <section>
@@ -1120,10 +110,10 @@
     <parameter component-id="morph2" index="1" name="Morph 1" class="morph" defaultValue="0" maxValue="127" />
     <parameter component-id="morph3" index="2" name="Morph 2" class="morph" defaultValue="0" maxValue="127" />
     <parameter component-id="morph4" index="3" name="Morph 3" class="morph" defaultValue="0" maxValue="127" />
-    <parameter component-id="mkb1" index="0" name="Keyboard Assignment, Morph 1" defaultValue="0" maxValue="3" formatter="type('morph-kb-assignment')" />
-    <parameter component-id="mkb2" index="1" name="Keyboard Assignment, Morph 1" defaultValue="0" maxValue="3" formatter="type('morph-kb-assignment')" />
-    <parameter component-id="mkb3" index="2" name="Keyboard Assignment, Morph 2" defaultValue="0" maxValue="3" formatter="type('morph-kb-assignment')" />
-    <parameter component-id="mkb4" index="3" name="Keyboard Assignment, Morph 3" defaultValue="0" maxValue="3" formatter="type('morph-kb-assignment')" />
+    <parameter component-id="mkb1" index="0" name="Keyboard Assignment, Morph 1" defaultValue="0" maxValue="3" formatter="fmtMorphKbAssignment" />
+    <parameter component-id="mkb2" index="1" name="Keyboard Assignment, Morph 1" defaultValue="0" maxValue="3" formatter="fmtMorphKbAssignment" />
+    <parameter component-id="mkb3" index="2" name="Keyboard Assignment, Morph 2" defaultValue="0" maxValue="3" formatter="fmtMorphKbAssignment" />
+    <parameter component-id="mkb4" index="3" name="Keyboard Assignment, Morph 3" defaultValue="0" maxValue="3" formatter="fmtMorphKbAssignment" />
     
     <attribute name="instantiable" type="boolean" value="false" />
   </module>
@@ -1199,8 +189,8 @@
     <connector component-id="c2" index="1" name="out right" type="input" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="level" class="parameter" defaultValue="100" extension="m1" />
-    <parameter component-id="p2" index="1" name="destination" class="parameter" maxValue="2" formatter="type('channel-select-out2')" extension="m2" />
-    <parameter component-id="p3" index="2" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m3" />
+    <parameter component-id="p2" index="1" name="destination" class="parameter" maxValue="2" formatter="fmtChannelSelectOut2" extension="m2" />
+    <parameter component-id="p3" index="2" name="mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m3" />
     <parameter component-id="m1" index="0" name="morph:level" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m2" index="1" name="morph:destination" class="morph" minValue="-2" maxValue="2" />
     <parameter component-id="m3" index="2" name="morph:mute" class="morph" minValue="-1" maxValue="1" />
@@ -1221,8 +211,8 @@
     <connector component-id="c1" index="0" name="out" type="input" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="level" class="parameter" defaultValue="100" extension="m1" />
-    <parameter component-id="p2" index="1" name="dest" class="parameter" maxValue="5" formatter="type('channel-select-out1')" extension="m2" />
-    <parameter component-id="p3" index="2" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m3" />
+    <parameter component-id="p2" index="1" name="dest" class="parameter" maxValue="5" formatter="fmtChannelSelectOut1" extension="m2" />
+    <parameter component-id="p3" index="2" name="mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m3" />
     <parameter component-id="m1" index="0" name="morph:level" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m2" index="1" name="morph:dest" class="morph"  minValue="-5" maxValue="5" />
     <parameter component-id="m3" index="2" name="morph:mute" class="morph"  minValue="-1" maxValue="1" />
@@ -1252,16 +242,16 @@
       <attribute name="custom" type="boolean" value="yes" />
     </parameter>
     <!-- parameter(s) -->
-    <parameter component-id="p2" index="0" name="freq coarse" class="parameter" defaultValue="64" format-id="note" extension="m2" />
-    <parameter component-id="p3" index="1" name="freq fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m3" />
-    <parameter component-id="p4" index="2" name="freq KBT" class="parameter" defaultValue="64" format-id="freq-kbt" extension="m4" />
-    <parameter component-id="p5" index="3" name="Pulse width" class="parameter" defaultValue="64" formatter="offset(1),scale(0.77165354330708658),str('%')" extension="m5" />
-    <parameter component-id="p6" index="4" name="waveform" class="parameter" maxValue="3" formatter="type('oscillator-wave')" extension="m6" />
+    <parameter component-id="p2" index="0" name="freq coarse" class="parameter" defaultValue="64" formatter="fmtNote" extension="m2" />
+    <parameter component-id="p3" index="1" name="freq fine" class="parameter" defaultValue="64" formatter="value-64" extension="m3" />
+    <parameter component-id="p4" index="2" name="freq KBT" class="parameter" defaultValue="64" formatter="fmtFreqkbt" extension="m4" />
+    <parameter component-id="p5" index="3" name="Pulse width" class="parameter" defaultValue="64" formatter="fmtPulseWidth" extension="m5" />
+    <parameter component-id="p6" index="4" name="waveform" class="parameter" maxValue="3" formatter="fmtOscillatorWave" extension="m6" />
     <parameter component-id="p7" index="5" name="pitch mod 1" class="parameter" extension="m7" />
     <parameter component-id="p8" index="6" name="pitch mod 2" class="parameter" extension="m8" />
     <parameter component-id="p9" index="7" name="fma mod" class="parameter" extension="m9" />
     <parameter component-id="p10" index="8" name="PW mod" class="parameter" extension="m10" />
-    <parameter component-id="p11" index="9" name="Mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m11" />
+    <parameter component-id="p11" index="9" name="Mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m11" />
     <parameter component-id="m2" index="0" name="morph:freq coarse" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="1" name="morph:freq fine" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m4" index="2" name="morph:freq KBT" class="morph"  minValue="-127" maxValue="127" />
@@ -1297,15 +287,15 @@
       <attribute name="custom" type="boolean" value="yes" />
     </parameter>
     <!-- parameter(s) -->
-    <parameter component-id="p2" index="0" name="Freq coarse" class="parameter" defaultValue="64" format-id="note" extension="m2" />
-    <parameter component-id="p3" index="1" name="Freq fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m3" />
-    <parameter component-id="p4" index="2" name="Freq KBT" class="parameter" defaultValue="64" format-id="freq-kbt" extension="m4" />
-    <parameter component-id="p5" index="3" name="waveform" class="parameter" maxValue="3" formatter="type('oscillator-wave')" extension="m5" />
+    <parameter component-id="p2" index="0" name="Freq coarse" class="parameter" defaultValue="64" formatter="fmtNote" extension="m2" />
+    <parameter component-id="p3" index="1" name="Freq fine" class="parameter" defaultValue="64" formatter="value-64" extension="m3" />
+    <parameter component-id="p4" index="2" name="Freq KBT" class="parameter" defaultValue="64" formatter="fmtFreqkbt" extension="m4" />
+    <parameter component-id="p5" index="3" name="waveform" class="parameter" maxValue="3" formatter="fmtOscillatorWave" extension="m5" />
     <parameter component-id="p6" index="4" name="pitch mod 1" class="parameter" extension="m6" />
     <parameter component-id="p7" index="5" name="pitch mod 2" class="parameter" extension="m7" />
     <parameter component-id="p8" index="6" name="fma mod" class="parameter" extension="m8" />
     <parameter component-id="p9" index="7" name="PWidth" class="parameter" extension="m9" />
-    <parameter component-id="p10" index="8" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m10" />
+    <parameter component-id="p10" index="8" name="mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m10" />
     <parameter component-id="m2" index="0" name="morph:Freq coarse" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="1" name="morph:Freq fine" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m4" index="2" name="morph:Freq KBT" class="morph"  minValue="-127" maxValue="127" />
@@ -1339,12 +329,12 @@
       <attribute name="custom" type="boolean" value="yes" />
     </parameter>
     <!-- parameter(s) -->
-    <parameter component-id="p2" index="0" name="pitch coarse" class="parameter" defaultValue="64" format-id="note" extension="m2" />
-    <parameter component-id="p3" index="1" name="pitch fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m3" />
-    <parameter component-id="p4" index="2" name="pitch KBT" class="parameter" maxValue="1" defaultValue="1" formatter="type('off-on')" extension="m4" />
+    <parameter component-id="p2" index="0" name="pitch coarse" class="parameter" defaultValue="64" formatter="fmtNote" extension="m2" />
+    <parameter component-id="p3" index="1" name="pitch fine" class="parameter" defaultValue="64" formatter="value-64" extension="m3" />
+    <parameter component-id="p4" index="2" name="pitch KBT" class="parameter" maxValue="1" defaultValue="1" formatter="fmtOffOn" extension="m4" />
     <parameter component-id="p5" index="3" name="pitch mod amount" class="parameter" extension="m5" />
     <parameter component-id="p6" index="4" name="FMA" class="parameter" extension="m6" />
-    <parameter component-id="p7" index="5" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m7" />
+    <parameter component-id="p7" index="5" name="mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m7" />
     <parameter component-id="m2" index="0" name="morph:pitch coarse" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="1" name="morph:pitch fine" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m4" index="2" name="morph:pitch KBT" class="morph"  minValue="-1" maxValue="1" />
@@ -1374,10 +364,10 @@
     </parameter>
     <!-- parameter(s) -->
     <parameter component-id="p2" index="0" name="detune coarse" class="parameter" defaultValue="64" extension="m2" />
-    <parameter component-id="p3" index="1" name="detune fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m3" />
-    <parameter component-id="p4" index="2" name="PW" class="parameter" defaultValue="64" formatter="offset(1),scale(0.77165354330708658),str('%')" extension="m4" />
+    <parameter component-id="p3" index="1" name="detune fine" class="parameter" defaultValue="64" formatter="value-64" extension="m3" />
+    <parameter component-id="p4" index="2" name="PW" class="parameter" defaultValue="64" formatter="fmtPulseWidth" extension="m4" />
     <parameter component-id="p5" index="3" name="PW mod" class="parameter" extension="m5" />
-    <parameter component-id="p6" index="4" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m6" />
+    <parameter component-id="p6" index="4" name="mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m6" />
     <parameter component-id="m2" index="0" name="morph:detune coarse" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="1" name="morph:detune fine" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m4" index="2" name="morph:PW" class="morph"  minValue="-127" maxValue="127" />
@@ -1405,10 +395,10 @@
       <attribute name="custom" type="boolean" value="yes" />
     </parameter>
     <!-- parameter(s) -->
-    <parameter component-id="p2" index="0" name="detune coarse" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m2" />
-    <parameter component-id="p3" index="1" name="detune fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m3" />
+    <parameter component-id="p2" index="0" name="detune coarse" class="parameter" defaultValue="64" formatter="value-64" extension="m2" />
+    <parameter component-id="p3" index="1" name="detune fine" class="parameter" defaultValue="64" formatter="value-64" extension="m3" />
     <parameter component-id="p4" index="2" name="FMA mod" class="parameter" extension="m4" />
-    <parameter component-id="p5" index="3" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m5" />
+    <parameter component-id="p5" index="3" name="mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m5" />
     <parameter component-id="m2" index="0" name="morph:detune coarse" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="1" name="morph:detune fine" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m4" index="2" name="morph:FMA mod" class="morph"  minValue="-127" maxValue="127" />
@@ -1435,10 +425,10 @@
       <attribute name="custom" type="boolean" value="yes" />
     </parameter>
     <!-- parameter(s) -->
-    <parameter component-id="p2" index="0" name="detune coarse" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m2" />
-    <parameter component-id="p3" index="1" name="detune fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m3" />
+    <parameter component-id="p2" index="0" name="detune coarse" class="parameter" defaultValue="64" formatter="value-64" extension="m2" />
+    <parameter component-id="p3" index="1" name="detune fine" class="parameter" defaultValue="64" formatter="value-64" extension="m3" />
     <parameter component-id="p4" index="2" name="FMA mod" class="parameter" extension="m4" />
-    <parameter component-id="p5" index="3" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m5" />
+    <parameter component-id="p5" index="3" name="mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m5" />
     <parameter component-id="m2" index="0" name="morph:detune coarse" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="1" name="morph:detune fine" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m4" index="2" name="morph:FMA mod" class="morph"  minValue="-127" maxValue="127" />
@@ -1466,10 +456,10 @@
       <attribute name="custom" type="boolean" value="yes" />
     </parameter>
     <!-- parameter(s) -->
-    <parameter component-id="p2" index="0" name="detune coarse" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m2" />
-    <parameter component-id="p3" index="1" name="detune fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m3" />
+    <parameter component-id="p2" index="0" name="detune coarse" class="parameter" defaultValue="64" formatter="value-64" extension="m2" />
+    <parameter component-id="p3" index="1" name="detune fine" class="parameter" defaultValue="64" formatter="value-64" extension="m3" />
     <parameter component-id="p4" index="2" name="FMA mod" class="parameter" extension="m4" />
-    <parameter component-id="p5" index="3" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m5" />
+    <parameter component-id="p5" index="3" name="mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m5" />
     <parameter component-id="m2" index="0" name="morph:detune coarse" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="1" name="morph:detune fine" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m4" index="2" name="morph:FMA mod" class="morph"  minValue="-127" maxValue="127" />
@@ -1498,11 +488,11 @@
       <attribute name="custom" type="boolean" value="yes" />
     </parameter>
     <!-- parameter(s) -->
-    <parameter component-id="p2" index="0" name="detune coarse" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m2" />
-    <parameter component-id="p3" index="1" name="detune fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m3" />
+    <parameter component-id="p2" index="0" name="detune coarse" class="parameter" defaultValue="64" formatter="value-64" extension="m2" />
+    <parameter component-id="p3" index="1" name="detune fine" class="parameter" defaultValue="64" formatter="value-64" extension="m3" />
     <parameter component-id="p4" index="2" name="shape" class="parameter" maxValue="3" extension="m4" />
     <parameter component-id="p5" index="3" name="FMA mod" class="parameter" extension="m5" />
-    <parameter component-id="p6" index="4" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m6" />
+    <parameter component-id="p6" index="4" name="mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m6" />
     <parameter component-id="m2" index="0" name="morph:detune coarse" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="1" name="morph:detune fine" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m4" index="2" name="morph:shape" class="morph"  minValue="-3" maxValue="3" />
@@ -1529,27 +519,27 @@
     <connector component-id="c5" index="2" name="link" type="output" signal="logic" />
     <connector component-id="c6" index="3" name="gclk" type="output" signal="logic" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="step 1" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m1" />
-    <parameter component-id="p2" index="1" name="step 2" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m2" />
-    <parameter component-id="p3" index="2" name="step 3" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m3" />
-    <parameter component-id="p4" index="3" name="step 4" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m4" />
-    <parameter component-id="p5" index="4" name="step 5" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m5" />
-    <parameter component-id="p6" index="5" name="step 6" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m6" />
-    <parameter component-id="p7" index="6" name="step 7" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m7" />
-    <parameter component-id="p8" index="7" name="step 8" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m8" />
-    <parameter component-id="p9" index="8" name="step 9" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m9" />
-    <parameter component-id="p10" index="9" name="step 10" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m10" />
-    <parameter component-id="p11" index="10" name="step 11" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m11" />
-    <parameter component-id="p12" index="11" name="step 12" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m12" />
-    <parameter component-id="p13" index="12" name="step 13" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m13" />
-    <parameter component-id="p14" index="13" name="step 14" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m14" />
-    <parameter component-id="p15" index="14" name="step 15" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m15" />
-    <parameter component-id="p16" index="15" name="step 16" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m16" />
-    <parameter component-id="p17" index="16" name="step count" class="parameter" defaultValue="15" formatter="offset(1)" />
+    <parameter component-id="p1" index="0" name="step 1" class="parameter" defaultValue="64" formatter="value-64" extension="m1" />
+    <parameter component-id="p2" index="1" name="step 2" class="parameter" defaultValue="64" formatter="value-64" extension="m2" />
+    <parameter component-id="p3" index="2" name="step 3" class="parameter" defaultValue="64" formatter="value-64" extension="m3" />
+    <parameter component-id="p4" index="3" name="step 4" class="parameter" defaultValue="64" formatter="value-64" extension="m4" />
+    <parameter component-id="p5" index="4" name="step 5" class="parameter" defaultValue="64" formatter="value-64" extension="m5" />
+    <parameter component-id="p6" index="5" name="step 6" class="parameter" defaultValue="64" formatter="value-64" extension="m6" />
+    <parameter component-id="p7" index="6" name="step 7" class="parameter" defaultValue="64" formatter="value-64" extension="m7" />
+    <parameter component-id="p8" index="7" name="step 8" class="parameter" defaultValue="64" formatter="value-64" extension="m8" />
+    <parameter component-id="p9" index="8" name="step 9" class="parameter" defaultValue="64" formatter="value-64" extension="m9" />
+    <parameter component-id="p10" index="9" name="step 10" class="parameter" defaultValue="64" formatter="value-64" extension="m10" />
+    <parameter component-id="p11" index="10" name="step 11" class="parameter" defaultValue="64" formatter="value-64" extension="m11" />
+    <parameter component-id="p12" index="11" name="step 12" class="parameter" defaultValue="64" formatter="value-64" extension="m12" />
+    <parameter component-id="p13" index="12" name="step 13" class="parameter" defaultValue="64" formatter="value-64" extension="m13" />
+    <parameter component-id="p14" index="13" name="step 14" class="parameter" defaultValue="64" formatter="value-64" extension="m14" />
+    <parameter component-id="p15" index="14" name="step 15" class="parameter" defaultValue="64" formatter="value-64" extension="m15" />
+    <parameter component-id="p16" index="15" name="step 16" class="parameter" defaultValue="64" formatter="value-64" extension="m16" />
+    <parameter component-id="p17" index="16" name="step count" class="parameter" defaultValue="15" formatter="value+1" />
     <parameter component-id="p18" index="17" name="edit position" class="parameter" maxValue="16" />
-    <parameter component-id="p19" index="18" name="record" class="parameter" maxValue="1" formatter="type('off-on')" />
-    <parameter component-id="p20" index="19" name="pause" class="parameter" maxValue="1" formatter="type('off-on')" />
-    <parameter component-id="p21" index="20" name="active" class="parameter" maxValue="1" formatter="type('off-on')" />
+    <parameter component-id="p19" index="18" name="record" class="parameter" maxValue="1" formatter="fmtOffOn" />
+    <parameter component-id="p20" index="19" name="pause" class="parameter" maxValue="1" formatter="fmtOffOn" />
+    <parameter component-id="p21" index="20" name="active" class="parameter" maxValue="1" formatter="fmtOffOn" />
     <parameter component-id="m1" index="0" name="morph:step 1" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m2" index="1" name="morph:step 2" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="2" name="morph:step 3" class="morph"  minValue="-127" maxValue="127" />
@@ -1610,42 +600,42 @@
     <connector component-id="c5" index="2" name="sync" type="output" signal="logic" />
     <connector component-id="c6" index="3" name="link" type="output" signal="logic" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="stepcount" class="parameter" defaultValue="15" formatter="offset(1)" extension="m1"  />
-    <parameter component-id="p2" index="1" name="active" class="parameter" maxValue="1" formatter="type('off-on')" extension="m2"  />
-    <parameter component-id="p3" index="2" name="gate1" class="parameter" maxValue="1" formatter="type('off-on')" extension="m3"  />
-    <parameter component-id="p4" index="3" name="gate2" class="parameter" maxValue="1" formatter="type('off-on')" extension="m4"  />
-    <parameter component-id="p5" index="4" name="seq 1, step 1" class="parameter" maxValue="1" formatter="type('off-on')" extension="m5" />
-    <parameter component-id="p6" index="5" name="seq 1, step 2" class="parameter" maxValue="1" formatter="type('off-on')" extension="m7" />
-    <parameter component-id="p7" index="6" name="seq 1, step 3" class="parameter" maxValue="1" formatter="type('off-on')" extension="m8" />
-    <parameter component-id="p8" index="7" name="seq 1, step 4" class="parameter" maxValue="1" formatter="type('off-on')" extension="m9" />
-    <parameter component-id="p9" index="8" name="seq 1, step 5" class="parameter" maxValue="1" formatter="type('off-on')" extension="m9" />
-    <parameter component-id="p10" index="9" name="seq 1, step 6" class="parameter" maxValue="1" formatter="type('off-on')" extension="m10" />
-    <parameter component-id="p11" index="10" name="seq 1, step 7" class="parameter" maxValue="1" formatter="type('off-on')" extension="m11" />
-    <parameter component-id="p12" index="11" name="seq 1, step 8" class="parameter" maxValue="1" formatter="type('off-on')" extension="m12" />
-    <parameter component-id="p13" index="12" name="seq 1, step 9" class="parameter" maxValue="1" formatter="type('off-on')" extension="m13" />
-    <parameter component-id="p14" index="13" name="seq 1, step 10" class="parameter" maxValue="1" formatter="type('off-on')" extension="m14" />
-    <parameter component-id="p15" index="14" name="seq 1, step 11" class="parameter" maxValue="1" formatter="type('off-on')" extension="m15" />
-    <parameter component-id="p16" index="15" name="seq 1, step 12" class="parameter" maxValue="1" formatter="type('off-on')" extension="m16" />
-    <parameter component-id="p17" index="16" name="seq 1, step 13" class="parameter" maxValue="1" formatter="type('off-on')" extension="m17" />
-    <parameter component-id="p18" index="17" name="seq 1, step 14" class="parameter" maxValue="1" formatter="type('off-on')" extension="m18" />
-    <parameter component-id="p19" index="18" name="seq 1, step 15" class="parameter" maxValue="1" formatter="type('off-on')" extension="m19" />
-    <parameter component-id="p20" index="19" name="seq 1, step 16" class="parameter" maxValue="1" formatter="type('off-on')" extension="m20" />
-    <parameter component-id="p21" index="20" name="seq 2, step 1" class="parameter" maxValue="1" formatter="type('off-on')" extension="m21" />
-    <parameter component-id="p22" index="21" name="seq 2, step 2" class="parameter" maxValue="1" formatter="type('off-on')" extension="m22" />
-    <parameter component-id="p23" index="22" name="seq 2, step 3" class="parameter" maxValue="1" formatter="type('off-on')" extension="m23" />
-    <parameter component-id="p24" index="23" name="seq 2, step 4" class="parameter" maxValue="1" formatter="type('off-on')" extension="m24" />
-    <parameter component-id="p25" index="24" name="seq 2, step 5" class="parameter" maxValue="1" formatter="type('off-on')" extension="m25" />
-    <parameter component-id="p26" index="25" name="seq 2, step 6" class="parameter" maxValue="1" formatter="type('off-on')" extension="m26" />
-    <parameter component-id="p27" index="26" name="seq 2, step 7" class="parameter" maxValue="1" formatter="type('off-on')" extension="m27" />
-    <parameter component-id="p28" index="27" name="seq 2, step 8" class="parameter" maxValue="1" formatter="type('off-on')" extension="m28" />
-    <parameter component-id="p29" index="28" name="seq 2, step 9" class="parameter" maxValue="1" formatter="type('off-on')" extension="m29" />
-    <parameter component-id="p30" index="29" name="seq 2, step 10" class="parameter" maxValue="1" formatter="type('off-on')" extension="m30" />
-    <parameter component-id="p31" index="30" name="seq 2, step 11" class="parameter" maxValue="1" formatter="type('off-on')" extension="m31" />
-    <parameter component-id="p32" index="31" name="seq 2, step 12" class="parameter" maxValue="1" formatter="type('off-on')" extension="m32" />
-    <parameter component-id="p33" index="32" name="seq 2, step 13" class="parameter" maxValue="1" formatter="type('off-on')" extension="m33" />
-    <parameter component-id="p34" index="33" name="seq 2, step 14" class="parameter" maxValue="1" formatter="type('off-on')" extension="m34" />
-    <parameter component-id="p35" index="34" name="seq 2, step 15" class="parameter" maxValue="1" formatter="type('off-on')" extension="m35" />
-    <parameter component-id="p36" index="35" name="seq 2, step 16" class="parameter" maxValue="1" formatter="type('off-on')" extension="m36" />
+    <parameter component-id="p1" index="0" name="stepcount" class="parameter" defaultValue="15" formatter="value+1" extension="m1"  />
+    <parameter component-id="p2" index="1" name="active" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m2"  />
+    <parameter component-id="p3" index="2" name="gate1" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m3"  />
+    <parameter component-id="p4" index="3" name="gate2" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m4"  />
+    <parameter component-id="p5" index="4" name="seq 1, step 1" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m5" />
+    <parameter component-id="p6" index="5" name="seq 1, step 2" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m7" />
+    <parameter component-id="p7" index="6" name="seq 1, step 3" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m8" />
+    <parameter component-id="p8" index="7" name="seq 1, step 4" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m9" />
+    <parameter component-id="p9" index="8" name="seq 1, step 5" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m9" />
+    <parameter component-id="p10" index="9" name="seq 1, step 6" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m10" />
+    <parameter component-id="p11" index="10" name="seq 1, step 7" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m11" />
+    <parameter component-id="p12" index="11" name="seq 1, step 8" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m12" />
+    <parameter component-id="p13" index="12" name="seq 1, step 9" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m13" />
+    <parameter component-id="p14" index="13" name="seq 1, step 10" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m14" />
+    <parameter component-id="p15" index="14" name="seq 1, step 11" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m15" />
+    <parameter component-id="p16" index="15" name="seq 1, step 12" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m16" />
+    <parameter component-id="p17" index="16" name="seq 1, step 13" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m17" />
+    <parameter component-id="p18" index="17" name="seq 1, step 14" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m18" />
+    <parameter component-id="p19" index="18" name="seq 1, step 15" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m19" />
+    <parameter component-id="p20" index="19" name="seq 1, step 16" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m20" />
+    <parameter component-id="p21" index="20" name="seq 2, step 1" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m21" />
+    <parameter component-id="p22" index="21" name="seq 2, step 2" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m22" />
+    <parameter component-id="p23" index="22" name="seq 2, step 3" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m23" />
+    <parameter component-id="p24" index="23" name="seq 2, step 4" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m24" />
+    <parameter component-id="p25" index="24" name="seq 2, step 5" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m25" />
+    <parameter component-id="p26" index="25" name="seq 2, step 6" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m26" />
+    <parameter component-id="p27" index="26" name="seq 2, step 7" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m27" />
+    <parameter component-id="p28" index="27" name="seq 2, step 8" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m28" />
+    <parameter component-id="p29" index="28" name="seq 2, step 9" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m29" />
+    <parameter component-id="p30" index="29" name="seq 2, step 10" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m30" />
+    <parameter component-id="p31" index="30" name="seq 2, step 11" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m31" />
+    <parameter component-id="p32" index="31" name="seq 2, step 12" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m32" />
+    <parameter component-id="p33" index="32" name="seq 2, step 13" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m33" />
+    <parameter component-id="p34" index="33" name="seq 2, step 14" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m34" />
+    <parameter component-id="p35" index="34" name="seq 2, step 15" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m35" />
+    <parameter component-id="p36" index="35" name="seq 2, step 16" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m36" />
     <parameter component-id="m1" index="0" name="morph:stepcount" class="morph"  minValue="-15" maxValue="15" />
     <parameter component-id="m2" index="1" name="morph:active" class="morph"  minValue="-1" maxValue="1" />
     <parameter component-id="m3" index="2" name="morph:gate1" class="morph"  minValue="-1" maxValue="1" />
@@ -1705,7 +695,7 @@
     <connector component-id="c4" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="modulation" class="parameter" extension="m1" />
-    <parameter component-id="p2" index="1" name="crossfade" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m2" />
+    <parameter component-id="p2" index="1" name="crossfade" class="parameter" defaultValue="64" formatter="value-64" extension="m2" />
     <parameter component-id="m1" index="0" name="morph:modulation" class="morph" minValue="-127" maxValue="127" />
     <parameter component-id="m2" index="1" name="morph:crossfade" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
@@ -1754,11 +744,11 @@
     <connector component-id="c6" index="1" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="attack shape" class="parameter" maxValue="2" extension="m1" />
-    <parameter component-id="p2" index="1" name="attack" class="parameter" formatter="type('adsr-time')" extension="m2" />
-    <parameter component-id="p3" index="2" name="decay" class="parameter" formatter="type('adsr-time')" extension="m3" />
+    <parameter component-id="p2" index="1" name="attack" class="parameter" formatter="fmtAdsrTime" extension="m2" />
+    <parameter component-id="p3" index="2" name="decay" class="parameter" formatter="fmtAdsrTime" extension="m3" />
     <parameter component-id="p4" index="3" name="sustain" class="parameter" defaultValue="64" extension="m4" />
-    <parameter component-id="p5" index="4" name="release" class="parameter" formatter="type('adsr-time')" extension="m5" />
-    <parameter component-id="p6" index="5" name="invert" class="parameter" maxValue="1" formatter="type('off-on')" extension="m6" />
+    <parameter component-id="p5" index="4" name="release" class="parameter" formatter="fmtAdsrTime" extension="m5" />
+    <parameter component-id="p6" index="5" name="invert" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m6" />
     <parameter component-id="m1" index="0" name="morph:attack shape" class="morph"  minValue="-2" maxValue="2" />
     <parameter component-id="m2" index="1" name="morph:attack" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m3" index="2" name="morph:decay" class="morph"  minValue="-127" maxValue="127"/>
@@ -1786,15 +776,15 @@
     <connector component-id="c4" index="0" name="left" type="output" signal="audio" />
     <connector component-id="c5" index="1" name="right" type="output" signal="audio" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="attack" class="parameter" formatter="type('envelope-attack')" extension="m1" />
-    <parameter component-id="p2" index="1" name="release" class="parameter" defaultValue="20" formatter="type('compander-release')" extension="m2" />
-    <parameter component-id="p3" index="2" name="treshold" class="parameter" maxValue="42" defaultValue="20" format-id="compressor-treshold" extension="m3" />
-    <parameter component-id="p4" index="3" name="ratio" class="parameter" maxValue="66" defaultValue="20" formatter="type('compander-ratio')" extension="m4" />
-    <parameter component-id="p5" index="4" name="ref level" class="parameter" maxValue="42" defaultValue="30" formatter="offset(-30),str('dB')" extension="m5" />
-    <parameter component-id="p6" index="5" name="limiter" class="parameter" maxValue="24" defaultValue="12" format-id="compressor-limiter" extension="m6" />
-    <parameter component-id="p7" index="6" name="act" class="parameter" maxValue="1" formatter="type('off-on')" extension="m7" />
-    <parameter component-id="p8" index="7" name="mon" class="parameter" maxValue="1" formatter="type('off-on')" extension="m8" />
-    <parameter component-id="p9" index="8" name="bypass" class="parameter" maxValue="1" formatter="type('off-on')" extension="m9" />
+    <parameter component-id="p1" index="0" name="attack" class="parameter" formatter="fmtEnvelopeAttack" extension="m1" />
+    <parameter component-id="p2" index="1" name="release" class="parameter" defaultValue="20" formatter="fmtCompanderRelease" extension="m2" />
+    <parameter component-id="p3" index="2" name="treshold" class="parameter" maxValue="42" defaultValue="20" formatter="fmtCompressorThreshold" extension="m3" />
+    <parameter component-id="p4" index="3" name="ratio" class="parameter" maxValue="66" defaultValue="20" formatter="fmtCompanderRatio" extension="m4" />
+    <parameter component-id="p5" index="4" name="ref level" class="parameter" maxValue="42" defaultValue="30" formatter="fmtEnvRefLevel" extension="m5" />
+    <parameter component-id="p6" index="5" name="limiter" class="parameter" maxValue="24" defaultValue="12" formatter="fmtCompressorLimiter" extension="m6" />
+    <parameter component-id="p7" index="6" name="act" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m7" />
+    <parameter component-id="p8" index="7" name="mon" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m8" />
+    <parameter component-id="p9" index="8" name="bypass" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m9" />
     <parameter component-id="m1" index="0" name="morph:attack" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m2" index="1" name="morph:release" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="2" name="morph:treshold" class="morph"  minValue="-42" maxValue="42" />
@@ -1825,7 +815,7 @@
     <connector component-id="c1" index="0" name="in" type="input" signal="control" />
     <connector component-id="c2" index="0" name="out" type="output" signal="control" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="range" class="parameter" formatter="offset(-64)" extension="m1" />
+    <parameter component-id="p1" index="0" name="range" class="parameter" formatter="value-64" extension="m1" />
     <parameter component-id="m1" index="0" name="morph:range" class="morph" minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.59375" />
@@ -1852,15 +842,15 @@
     <connector component-id="c9" index="0" name="env" type="output" signal="control" />
     <connector component-id="c10" index="1" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="attack" class="parameter" formatter="type('adsr-time')" extension="m1" />
-    <parameter component-id="p2" index="1" name="decay" class="parameter" defaultValue="77" formatter="type('adsr-time')" extension="m2" />
+    <parameter component-id="p1" index="0" name="attack" class="parameter" formatter="fmtAdsrTime" extension="m1" />
+    <parameter component-id="p2" index="1" name="decay" class="parameter" defaultValue="77" formatter="fmtAdsrTime" extension="m2" />
     <parameter component-id="p3" index="2" name="sustain" class="parameter" extension="m3" />
-    <parameter component-id="p4" index="3" name="release" class="parameter" formatter="type('adsr-time')" extension="m4" />
+    <parameter component-id="p4" index="3" name="release" class="parameter" formatter="fmtAdsrTime" extension="m4" />
     <parameter component-id="p5" index="4" name="attack mod" class="parameter" extension="m5" />
     <parameter component-id="p6" index="5" name="decay mod" class="parameter" extension="m6" />
     <parameter component-id="p7" index="6" name="sustain mod" class="parameter" extension="m7" />
     <parameter component-id="p8" index="7" name="release mod" class="parameter" extension="m8" />
-    <parameter component-id="p9" index="8" name="invert" class="parameter" maxValue="1" formatter="type('off-on')" extension="m9" />
+    <parameter component-id="p9" index="8" name="invert" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m9" />
     <parameter component-id="m1" index="0" name="morph:attack" class="morph" minValue="-127" maxValue="127" />
     <parameter component-id="m2" index="1" name="morph:decay" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="2" name="morph:sustain" class="morph" minValue="-127" maxValue="127" />
@@ -1890,14 +880,14 @@
     <connector component-id="c3" index="0" name="slv" type="output" signal="master-slave" />
     <connector component-id="c4" index="1" name="out" type="output" signal="control" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="rate" class="parameter" defaultValue="64" format-id="lfo-hz" extension="m1" />
-    <parameter component-id="p2" index="1" name="range" class="parameter" maxValue="2" formatter="type('lfo-range')" extension="m2" />
+    <parameter component-id="p1" index="0" name="rate" class="parameter" defaultValue="64" formatter="fmtLFOHz" extension="m1" />
+    <parameter component-id="p2" index="1" name="range" class="parameter" maxValue="2" formatter="fmtLFORange" extension="m2" />
     <parameter component-id="p3" index="2" name="waveform" class="parameter" maxValue="4" extension="m3" />
     <parameter component-id="p4" index="3" name="rate mod" class="parameter" extension="m4" />
-    <parameter component-id="p5" index="4" name="mono" class="parameter" maxValue="1" formatter="type('off-on')" extension="m5" />
+    <parameter component-id="p5" index="4" name="mono" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m5" />
     <parameter component-id="p6" index="5" name="rate kbt" class="parameter" extension="m6" />
-    <parameter component-id="p7" index="6" name="phase" class="parameter" defaultValue="64" format-id="phase" extension="m7" />
-    <parameter component-id="p8" index="7" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m8" />
+    <parameter component-id="p7" index="6" name="phase" class="parameter" defaultValue="64" formatter="fmtPhase" extension="m7" />
+    <parameter component-id="p8" index="7" name="mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m8" />
     <parameter component-id="m1" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m2" index="1" name="morph:range" class="morph"  minValue="-2" maxValue="2" />
     <parameter component-id="m3" index="2" name="morph:waveform" class="morph"  minValue="-4" maxValue="4" />
@@ -1927,11 +917,11 @@
     <connector component-id="c4" index="0" name="out" type="output" signal="control" />
     <connector component-id="c5" index="1" name="slv" type="output" signal="master-slave" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="rate" class="parameter" defaultValue="64" format-id="lfo-hz" extension="m1" />
-    <parameter component-id="p2" index="1" name="range" class="parameter" maxValue="2" formatter="type('lfo-range')" extension="m2" />
-    <parameter component-id="p3" index="2" name="phase" class="parameter" defaultValue="64" format-id="phase" extension="m3" />
+    <parameter component-id="p1" index="0" name="rate" class="parameter" defaultValue="64" formatter="fmtLFOHz" extension="m1" />
+    <parameter component-id="p2" index="1" name="range" class="parameter" maxValue="2" formatter="fmtLFORange" extension="m2" />
+    <parameter component-id="p3" index="2" name="phase" class="parameter" defaultValue="64" formatter="fmtPhase" extension="m3" />
     <parameter component-id="p4" index="3" name="rate mod" class="parameter" extension="m4" />
-    <parameter component-id="p5" index="4" name="mono" class="parameter" maxValue="1" formatter="type('off-on')" extension="m5" />
+    <parameter component-id="p5" index="4" name="mono" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m5" />
     <parameter component-id="p6" index="5" name="rate kbt" class="parameter" extension="m6" />
     <parameter component-id="p7" index="6" name="PW mod" class="parameter" extension="m7" />
     <parameter component-id="p8" index="7" name="PW" class="parameter" defaultValue="64" extension="m8" />
@@ -1962,12 +952,12 @@
     <connector component-id="c2" index="0" name="out" type="output" signal="control" />
     <connector component-id="c3" index="1" name="slv" type="output" signal="master-slave" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="rate" class="parameter" defaultValue="64" format-id="lfo-hz" extension="m1" />
-    <parameter component-id="p2" index="1" name="range" class="parameter" maxValue="2" formatter="type('lfo-range')" extension="m2" />
+    <parameter component-id="p1" index="0" name="rate" class="parameter" defaultValue="64" formatter="fmtLFOHz" extension="m1" />
+    <parameter component-id="p2" index="1" name="range" class="parameter" maxValue="2" formatter="fmtLFORange" extension="m2" />
     <parameter component-id="p3" index="2" name="waveform" class="parameter" maxValue="4" extension="m3" />
     <parameter component-id="p4" index="3" name="rate mod" class="parameter" extension="m4" />
-    <parameter component-id="p5" index="4" name="mono" class="parameter" maxValue="1" formatter="type('off-on')" extension="m5" />
-    <parameter component-id="p6" index="5" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m6" />
+    <parameter component-id="p5" index="4" name="mono" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m5" />
+    <parameter component-id="p6" index="5" name="mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m6" />
     <parameter component-id="m1" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m2" index="1" name="morph:range" class="morph"  minValue="-2" maxValue="2" />
     <parameter component-id="m3" index="2" name="morph:waveform" class="morph"  minValue="-4" maxValue="4" />
@@ -1996,7 +986,7 @@
       <attribute name="custom" type="boolean" value="yes" />
     </parameter>
     <!-- parameter(s) -->
-    <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" format-id="lfo-hz" extension="m2" />
+    <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" formatter="fmtLFOHz" extension="m2" />
     <parameter component-id="m2" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127" />
     <light component-id="ledControlOut" name="LED Control Out" index="0" type="led" />
     <!-- custom attributes -->
@@ -2020,7 +1010,7 @@
       <attribute name="custom" type="boolean" value="yes" />
     </parameter>
     <!-- parameter(s) -->
-    <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" format-id="lfo-hz" extension="m2" />
+    <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" formatter="fmtLFOHz" extension="m2" />
     <parameter component-id="m2" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127" />
     <light component-id="ledControlOut" name="LED Control Out" index="0" type="led" />
     <!-- custom attributes -->
@@ -2044,7 +1034,7 @@
       <attribute name="custom" type="boolean" value="yes" />
     </parameter>
     <!-- parameter(s) -->
-    <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" format-id="lfo-hz" extension="m2" />
+    <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" formatter="fmtLFOHz" extension="m2" />
     <parameter component-id="m2" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127" />
     <light component-id="ledControlOut" name="LED Control Out" index="0" type="led" />
     <!-- custom attributes -->
@@ -2068,7 +1058,7 @@
       <attribute name="custom" type="boolean" value="yes" />
     </parameter>
     <!-- parameter(s) -->
-    <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" format-id="lfo-hz" extension="m2" />
+    <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" formatter="fmtLFOHz" extension="m2" />
     <parameter component-id="m2" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.34375" />
@@ -2152,8 +1142,8 @@
     <connector component-id="c1" index="0" name="clk" type="input" signal="logic" />
     <connector component-id="c2" index="0" name="out" type="output" signal="control" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="mono" class="parameter" maxValue="1" formatter="type('off-on')" extension="m1" />
-    <parameter component-id="p2" index="1" name="col" class="parameter" maxValue="1" formatter="type('off-on')" extension="m2" />
+    <parameter component-id="p1" index="0" name="mono" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m1" />
+    <parameter component-id="p2" index="1" name="col" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m2" />
     <parameter component-id="m1" index="0" name="morph:mono" class="morph"  minValue="-1" maxValue="1" />
     <parameter component-id="m2" index="1" name="morph:col" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
@@ -2177,7 +1167,7 @@
       <attribute name="custom" type="boolean" value="yes" />
     </parameter>
     <!-- parameter(s) -->
-    <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" format-id="lfo-hz" extension="m2" />
+    <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" formatter="fmtLFOHz" extension="m2" />
     <parameter component-id="m2" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127"/>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.625" />
@@ -2215,7 +1205,7 @@
     <connector component-id="c1" index="0" name="in" type="input" signal="logic" />
     <connector component-id="c2" index="0" name="out" type="output" signal="logic" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="time" class="parameter" defaultValue="64" format-id="logic-delay" extension="m1" />
+    <parameter component-id="p1" index="0" name="time" class="parameter" defaultValue="64" formatter="fmtLogicDelay" extension="m1" />
     <parameter component-id="m1" index="0" name="morph:time" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.28125" />
@@ -2234,7 +1224,7 @@
     <connector component-id="c1" index="0" name="in" type="input" signal="logic" />
     <connector component-id="c2" index="0" name="out" type="output" signal="logic" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="time" class="parameter" defaultValue="64" format-id="logic-delay" extension="m1" />
+    <parameter component-id="p1" index="0" name="time" class="parameter" defaultValue="64" formatter="fmtLogicDelay" extension="m1" />
     <parameter component-id="m1" index="0" name="morph:time" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.625" />
@@ -2253,7 +1243,7 @@
     <connector component-id="c1" index="0" name="in" type="input" signal="logic" />
     <connector component-id="c2" index="0" name="out" type="output" signal="logic" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="time" class="parameter" defaultValue="64" format-id="logic-delay" extension="m1" />
+    <parameter component-id="p1" index="0" name="time" class="parameter" defaultValue="64" formatter="fmtLogicDelay" extension="m1" />
     <parameter component-id="m1" index="0" name="morph:time" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.34375" />
@@ -2272,7 +1262,7 @@
     <connector component-id="c1" index="0" name="in" type="input" signal="control" />
     <connector component-id="c2" index="0" name="out" type="output" signal="control" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="time" class="parameter" defaultValue="64" format-id="smooth-time" extension="m1" />
+    <parameter component-id="p1" index="0" name="time" class="parameter" defaultValue="64" formatter="fmtSmoothTime" extension="m1" />
     <parameter component-id="m1" index="0" name="morph:time" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.25" />
@@ -2334,8 +1324,8 @@
     <image type="icon32x32" src="img/icons/32x32/module-id-43.png" width="32" height="32" />
     <connector component-id="c1" index="0" name="out" type="output" signal="control" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="value" class="parameter" defaultValue="64" format-id="offset-64-2" extension="m1" />
-    <parameter component-id="p2" index="1" name="unipolar" class="parameter" maxValue="1" formatter="type('off-on')" extension="m2" />
+    <parameter component-id="p1" index="0" name="value" class="parameter" defaultValue="64" formatter="fmtOffset64_2" extension="m1" />
+    <parameter component-id="p2" index="1" name="unipolar" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m2" />
     <parameter component-id="m1" index="0" name="morph:value" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m2" index="1" name="morph:unipolar" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
@@ -2356,7 +1346,7 @@
     <connector component-id="c2" index="1" name="in" type="input" signal="audio" />
     <connector component-id="c3" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="shift" class="parameter" maxValue="1" formatter="type('off-on')" extension="m1" />
+    <parameter component-id="p1" index="0" name="shift" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m1" />
     <parameter component-id="m1" index="0" name="morph:shift" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.78125" />
@@ -2377,13 +1367,13 @@
     <connector component-id="c3" index="2" name="frequency mod" type="input" signal="control" />
     <connector component-id="c4" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="left vowel" class="parameter" maxValue="8" formatter="type('vowels')" extension="m1" />
-    <parameter component-id="p2" index="1" name="middle vowel" class="parameter" maxValue="8" defaultValue="1" formatter="type('vowels')" extension="m2" />
-    <parameter component-id="p3" index="2" name="right vowel" class="parameter" maxValue="8" defaultValue="2" formatter="type('vowels')" extension="m3" />
+    <parameter component-id="p1" index="0" name="left vowel" class="parameter" maxValue="8" formatter="fmtVowels" extension="m1" />
+    <parameter component-id="p2" index="1" name="middle vowel" class="parameter" maxValue="8" defaultValue="1" formatter="fmtVowels" extension="m2" />
+    <parameter component-id="p3" index="2" name="right vowel" class="parameter" maxValue="8" defaultValue="2" formatter="fmtVowels" extension="m3" />
     <parameter component-id="p4" index="3" name="in amplification" class="parameter" defaultValue="100" extension="m4" />
     <parameter component-id="p5" index="4" name="vowel select" class="parameter" defaultValue="64" extension="m5" />
     <parameter component-id="p6" index="5" name="vowel select mod" class="parameter" extension="m6" />
-    <parameter component-id="p7" index="6" name="frequency" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m7" />
+    <parameter component-id="p7" index="6" name="frequency" class="parameter" defaultValue="64" formatter="value-64" extension="m7" />
     <parameter component-id="p8" index="7" name="frequency mod" class="parameter" extension="m8" />
     <parameter component-id="p9" index="8" name="resonance" class="parameter" defaultValue="64" extension="m9" />
     <parameter component-id="m1" index="0" name="morph:left vowel" class="morph"  minValue="-8" maxValue="8" />
@@ -2418,9 +1408,9 @@
     <connector component-id="c7" index="0" name="env" type="output" signal="control" />
     <connector component-id="c8" index="1" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="A" class="parameter" formatter="type('adsr-time')" extension="m1" />
-    <parameter component-id="p2" index="1" name="H" class="parameter" defaultValue="32" formatter="type('adsr-time')" extension="m2" />
-    <parameter component-id="p3" index="2" name="D" class="parameter" defaultValue="77" formatter="type('adsr-time')" extension="m3" />
+    <parameter component-id="p1" index="0" name="A" class="parameter" formatter="fmtAdsrTime" extension="m1" />
+    <parameter component-id="p2" index="1" name="H" class="parameter" defaultValue="32" formatter="fmtAdsrTime" extension="m2" />
+    <parameter component-id="p3" index="2" name="D" class="parameter" defaultValue="77" formatter="fmtAdsrTime" extension="m3" />
     <parameter component-id="p4" index="3" name="A mod" class="parameter" extension="m4" />
     <parameter component-id="p5" index="4" name="H mod" class="parameter" extension="m5" />
     <parameter component-id="p6" index="5" name="D mod" class="parameter" extension="m6" />
@@ -2451,7 +1441,7 @@
     <connector component-id="c4" index="1" name="outR" type="output" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="pan mod" class="parameter" extension="m1" />
-    <parameter component-id="p2" index="1" name="pan" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m2" />
+    <parameter component-id="p2" index="1" name="pan" class="parameter" defaultValue="64" formatter="value-64" extension="m2" />
     <parameter component-id="m1" index="0" name="morph:pan mod" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m2" index="1" name="morph:pan" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
@@ -2498,7 +1488,7 @@
       <attribute name="custom" type="boolean" value="yes" />
     </parameter>
     <!-- parameter(s) -->
-    <parameter component-id="p2" index="0" name="freq" class="parameter" defaultValue="60" format-id="filter-hz-2" extension="m2" />
+    <parameter component-id="p2" index="0" name="freq" class="parameter" defaultValue="60" formatter="fmtFilterHz2" extension="m2" />
     <parameter component-id="p3" index="1" name="kbt" class="parameter" defaultValue="64" extension="m3" />
     <parameter component-id="p4" index="2" name="resonance" class="parameter" extension="m4" />
     <parameter component-id="p5" index="3" name="freqmod" class="parameter" extension="m5" />
@@ -2529,9 +1519,9 @@
       <attribute name="custom" type="boolean" value="yes" />
     </parameter>
     <!-- parameter(s) -->
-    <parameter component-id="p2" index="0" name="freq" class="parameter" defaultValue="60" format-id="filter-hz-2" extension="m2" />
+    <parameter component-id="p2" index="0" name="freq" class="parameter" defaultValue="60" formatter="fmtFilterHz2" extension="m2" />
     <parameter component-id="p3" index="1" name="resonance" class="parameter" extension="m3" />
-    <parameter component-id="p4" index="2" name="gain control" class="parameter" maxValue="1" defaultValue="1" formatter="type('off-on')" extension="m4" />
+    <parameter component-id="p4" index="2" name="gain control" class="parameter" maxValue="1" defaultValue="1" formatter="fmtOffOn" extension="m4" />
     <parameter component-id="m2" index="0" name="morph:freq" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="1" name="morph:resonance" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m4" index="2" name="morph:gain control" class="morph"  minValue="-1" maxValue="1" />
@@ -2560,15 +1550,15 @@
     </parameter>
     <!-- parameter(s) -->
     <parameter component-id="p2" index="0" name="filter type" class="parameter" maxValue="3" extension="m2" />
-    <parameter component-id="p3" index="1" name="gain control" class="parameter" maxValue="1" defaultValue="1" formatter="type('off-on')" extension="m3" />
+    <parameter component-id="p3" index="1" name="gain control" class="parameter" maxValue="1" defaultValue="1" formatter="fmtOffOn" extension="m3" />
     <parameter component-id="p4" index="2" name="frequency mod 1" class="parameter" extension="m4" />
-    <parameter component-id="p5" index="3" name="frequency" class="parameter" defaultValue="60" format-id="filter-hz-2" extension="m5" />
+    <parameter component-id="p5" index="3" name="frequency" class="parameter" defaultValue="60" formatter="fmtFilterHz2" extension="m5" />
     <parameter component-id="p6" index="4" name="kbt" class="parameter" defaultValue="64" extension="m6" />
     <parameter component-id="p7" index="5" name="resonance mod" class="parameter" extension="m7" />
     <parameter component-id="p8" index="6" name="resonance" class="parameter" extension="m8" />
     <parameter component-id="p9" index="7" name="slope" class="parameter" maxValue="1" defaultValue="1" extension="m9" />
     <parameter component-id="p10" index="8" name="frequency mod 2" class="parameter" extension="m10" />
-    <parameter component-id="p11" index="9" name="bypass" class="parameter" maxValue="1" formatter="type('off-on')" extension="m11" />
+    <parameter component-id="p11" index="9" name="bypass" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m11" />
     <parameter component-id="m2" index="0" name="morph:filter type" class="morph"  minValue="-3" maxValue="3" />
     <parameter component-id="m3" index="1" name="morph:gain control" class="morph"  minValue="-1" maxValue="1" />
     <parameter component-id="m4" index="2" name="morph:frequency mod 1" class="morph"  minValue="-127" maxValue="127"/>
@@ -2599,16 +1589,16 @@
     <connector component-id="c4" index="0" name="env" type="output" signal="control" />
     <connector component-id="c5" index="1" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="level 1" class="parameter" defaultValue="127" format-id="envelope-level-divider" extension="m1" />
-    <parameter component-id="p2" index="1" name="level 2" class="parameter" defaultValue="45" format-id="envelope-level-divider" extension="m2" />
-    <parameter component-id="p3" index="2" name="level 3" class="parameter" defaultValue="64" format-id="envelope-level-divider" extension="m3" />
-    <parameter component-id="p4" index="3" name="level 4" class="parameter" format-id="envelope-level-divider" extension="m4" />
-    <parameter component-id="p5" index="4" name="time 1" class="parameter" formatter="type('adsr-time')" extension="m5" />
-    <parameter component-id="p6" index="5" name="time 2" class="parameter" defaultValue="30" formatter="type('adsr-time')" extension="m6" />
-    <parameter component-id="p7" index="6" name="time 3" class="parameter" defaultValue="30" formatter="type('adsr-time')" extension="m7" />
-    <parameter component-id="p8" index="7" name="time 4" class="parameter" defaultValue="30" formatter="type('adsr-time')" extension="m8" />
-    <parameter component-id="p9" index="8" name="time 5" class="parameter" formatter="type('adsr-time')" extension="m9" />
-    <parameter component-id="p10" index="9" name="sustain" class="parameter" maxValue="4" formatter="type('multi-env-sustain')" extension="m10" />
+    <parameter component-id="p1" index="0" name="level 1" class="parameter" defaultValue="127" formatter="fmtEnvelopeLevelDivider" extension="m1" />
+    <parameter component-id="p2" index="1" name="level 2" class="parameter" defaultValue="45" formatter="fmtEnvelopeLevelDivider" extension="m2" />
+    <parameter component-id="p3" index="2" name="level 3" class="parameter" defaultValue="64" formatter="fmtEnvelopeLevelDivider" extension="m3" />
+    <parameter component-id="p4" index="3" name="level 4" class="parameter" formatter="fmtEnvelopeLevelDivider" extension="m4" />
+    <parameter component-id="p5" index="4" name="time 1" class="parameter" formatter="fmtAdsrTime" extension="m5" />
+    <parameter component-id="p6" index="5" name="time 2" class="parameter" defaultValue="30" formatter="fmtAdsrTime" extension="m6" />
+    <parameter component-id="p7" index="6" name="time 3" class="parameter" defaultValue="30" formatter="fmtAdsrTime" extension="m7" />
+    <parameter component-id="p8" index="7" name="time 4" class="parameter" defaultValue="30" formatter="fmtAdsrTime" extension="m8" />
+    <parameter component-id="p9" index="8" name="time 5" class="parameter" formatter="fmtAdsrTime" extension="m9" />
+    <parameter component-id="p10" index="9" name="sustain" class="parameter" maxValue="4" formatter="fmtMultiEnvSustain" extension="m10" />
     <parameter component-id="p11" index="10" name="curve" class="parameter" maxValue="2" extension="m11" />
     <parameter component-id="m1" index="0" name="morph:level 1" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m2" index="1" name="morph:level 2" class="morph"  minValue="-127" maxValue="127" />
@@ -2656,7 +1646,7 @@
     <connector component-id="c1" index="0" name="in" type="input" signal="audio" />
     <connector component-id="c2" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="bits" class="parameter" maxValue="12" formatter="offset(1)" extension="m1" />
+    <parameter component-id="p1" index="0" name="bits" class="parameter" maxValue="12" formatter="value+1" extension="m1" />
     <parameter component-id="m1" index="0" name="morph:bits" class="morph"  minValue="-12" maxValue="12" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.53125" />
@@ -2676,7 +1666,7 @@
     <connector component-id="c2" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="mode" class="parameter" maxValue="2" extension="m1" />
-    <parameter component-id="p2" index="1" name="inv" class="parameter" maxValue="1" formatter="type('off-on')" extension="m2" />
+    <parameter component-id="p2" index="1" name="inv" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m2" />
     <parameter component-id="m1" index="0" name="morph:mode" class="morph"  minValue="-2" maxValue="2" />
     <parameter component-id="m2" index="1" name="morph:inv" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
@@ -2698,8 +1688,8 @@
     <connector component-id="c3" index="2" name="pitch" type="input" signal="control" />
     <connector component-id="c4" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="MTune" class="parameter" format-id="drum-hz" extension="m1" />
-    <parameter component-id="p2" index="1" name="STune" class="parameter" format-id="drumpartials" extension="m2" />
+    <parameter component-id="p1" index="0" name="MTune" class="parameter" formatter="fmtDrumHz" extension="m1" />
+    <parameter component-id="p2" index="1" name="STune" class="parameter" formatter="fmtDrumPartials" extension="m2" />
     <parameter component-id="p3" index="2" name="MDecay" class="parameter" defaultValue="16" extension="m3" />
     <parameter component-id="p4" index="3" name="SDecay" class="parameter" defaultValue="16" extension="m4" />
     <parameter component-id="p5" index="4" name="MLevel" class="parameter" defaultValue="16" extension="m5" />
@@ -2713,7 +1703,7 @@
     <parameter component-id="p13" index="12" name="Decay" class="parameter" defaultValue="16" extension="m13" />
     <parameter component-id="p14" index="13" name="Click" class="parameter" defaultValue="16" extension="m14" />
     <parameter component-id="p15" index="14" name="Noise" class="parameter" defaultValue="16" extension="m15" />
-    <parameter component-id="p16" index="15" name="Mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m16" />
+    <parameter component-id="p16" index="15" name="Mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m16" />
     <parameter component-id="m1" index="0" name="morph:MTune" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m2" index="1" name="morph:STune" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m3" index="2" name="morph:MDecay" class="morph"  minValue="-127" maxValue="127" />
@@ -2748,7 +1738,7 @@
     <connector component-id="c1" index="0" name="in" type="input" signal="control" />
     <connector component-id="c2" index="0" name="out" type="output" signal="logic" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="level" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m1" />
+    <parameter component-id="p1" index="0" name="level" class="parameter" defaultValue="64" formatter="value-64" extension="m1" />
     <parameter component-id="m1" index="0" name="morph:level" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.1875" />
@@ -2832,7 +1822,7 @@
     <connector component-id="c1" index="0" name="in" type="input" signal="logic" />
     <connector component-id="c2" index="0" name="out" type="output" signal="logic" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="time" class="parameter" defaultValue="64" format-id="logic-delay" extension="m1" />
+    <parameter component-id="p1" index="0" name="time" class="parameter" defaultValue="64" formatter="fmtLogicDelay" extension="m1" />
     <parameter component-id="m1" index="0" name="morph:time" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.28125" />
@@ -2870,9 +1860,9 @@
     <connector component-id="c2" index="1" name="in2" type="input" signal="control" />
     <connector component-id="c3" index="0" name="out" type="output" signal="control" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="inv 1" class="parameter" maxValue="1" formatter="type('off-on')" extension="m1" />
+    <parameter component-id="p1" index="0" name="inv 1" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m1" />
     <parameter component-id="p2" index="1" name="level 1" class="parameter" defaultValue="127" extension="m2" />
-    <parameter component-id="p3" index="2" name="inv 2" class="parameter" maxValue="1" formatter="type('off-on')" extension="m3" />
+    <parameter component-id="p3" index="2" name="inv 2" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m3" />
     <parameter component-id="p4" index="3" name="level 2" class="parameter" defaultValue="127" extension="m4" />
     <parameter component-id="p5" index="4" name="mode" class="parameter" maxValue="1" extension="m5" />
     <parameter component-id="m1" index="0" name="morph:inv 1" class="morph"  minValue="-1" maxValue="1" />
@@ -2898,7 +1888,7 @@
     <connector component-id="c2" index="1" name="velocity" type="output" signal="control" />
     <connector component-id="c3" index="2" name="releasevelocity" type="output" signal="control" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="note" class="parameter" defaultValue="60" format-id="note" extension="m1" />
+    <parameter component-id="p1" index="0" name="note" class="parameter" defaultValue="60" formatter="fmtNote" extension="m1" />
     <parameter component-id="m1" index="0" name="morph:note" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.0" />
@@ -2920,8 +1910,8 @@
     <connector component-id="c4" index="2" name="slv" type="output" signal="master-slave" />
     <connector component-id="c5" index="3" name="sync" type="output" signal="logic" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="rate" class="parameter" defaultValue="64" format-id="bpm" extension="m1" />
-    <parameter component-id="p2" index="1" name="on/off" class="parameter" maxValue="1" defaultValue="1" formatter="type('off-on')" extension="m2" />
+    <parameter component-id="p1" index="0" name="rate" class="parameter" defaultValue="64" formatter="fmtBPM" extension="m1" />
+    <parameter component-id="p2" index="1" name="on/off" class="parameter" maxValue="1" defaultValue="1" formatter="fmtOffOn" extension="m2" />
     <parameter component-id="m1" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m2" index="1" name="morph:on/off" class="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
@@ -2942,7 +1932,7 @@
     <connector component-id="c2" index="1" name="reset" type="input" signal="logic" />
     <connector component-id="c3" index="0" name="out" type="output" signal="logic" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="divider" class="parameter" formatter="offset(1)" extension="m1" />
+    <parameter component-id="p1" index="0" name="divider" class="parameter" formatter="value+1" extension="m1" />
     <parameter component-id="m1" index="0" name="morph:divider" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.625" />
@@ -2977,8 +1967,8 @@
     <connector component-id="c1" index="0" name="in" type="input" signal="audio" />
     <connector component-id="c2" index="0" name="out" type="output" signal="control" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="attack" class="parameter" formatter="type('envelope-attack')" extension="m1" />
-    <parameter component-id="p2" index="1" name="release" class="parameter" defaultValue="20" formatter="type('envelop-release')" extension="m2" />
+    <parameter component-id="p1" index="0" name="attack" class="parameter" formatter="fmtEnvelopeAttack" extension="m1" />
+    <parameter component-id="p2" index="1" name="release" class="parameter" defaultValue="20" formatter="fmtEnvelopeRelease" extension="m2" />
     <parameter component-id="m1" index="0" name="morph:attack" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m2" index="1" name="morph:release" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
@@ -2998,7 +1988,7 @@
     <connector component-id="c1" index="0" name="in" type="input" signal="control" />
     <connector component-id="c2" index="0" name="out" type="output" signal="control" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="transpose" class="parameter" format-id="note-scale" extension="m1" />
+    <parameter component-id="p1" index="0" name="transpose" class="parameter" formatter="fmtNoteScale" extension="m1" />
     <parameter component-id="m1" index="0" name="morph:transpose" class="morph"  minValue="-127" maxValue="127"/>
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.15625" />
@@ -3059,7 +2049,7 @@
     <connector component-id="c1" index="0" name="in" type="input" signal="control" />
     <connector component-id="c2" index="0" name="out" type="output" signal="control" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="range" class="parameter" formatter="offset(-64)" extension="m1" />
+    <parameter component-id="p1" index="0" name="range" class="parameter" formatter="value-64" extension="m1" />
     <parameter component-id="p2" index="1" name="notes" class="parameter" extension="m2" />
     <parameter component-id="m1" index="0" name="morph:range" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m2" index="1" name="morph:notes" class="morph"  minValue="-127" maxValue="127"/>
@@ -3121,7 +2111,7 @@
     <connector component-id="c4" index="1" name="variable delay out" type="output" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="modulation" class="parameter" extension="m1" />
-    <parameter component-id="p2" index="1" name="time" class="parameter" formatter="type('delay-time')" extension="m2" />
+    <parameter component-id="p2" index="1" name="time" class="parameter" formatter="fmtDelayTime" extension="m2" />
     <parameter component-id="m1" index="0" name="morph:modulation" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m2" index="1" name="morph:time" class="morph"  minValue="-127" maxValue="127"/>
     <!-- custom attributes -->
@@ -3149,7 +2139,7 @@
     <parameter component-id="p3" index="2" name="level 2" class="parameter" extension="m3" />
     <parameter component-id="p4" index="3" name="level 3" class="parameter" extension="m4" />
     <parameter component-id="p5" index="4" name="level 4" class="parameter" extension="m5" />
-    <parameter component-id="p6" index="5" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m6" />
+    <parameter component-id="p6" index="5" name="mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m6" />
     <parameter component-id="m1" index="0" name="morph:in" class="morph"  minValue="-3" maxValue="3"/>
     <parameter component-id="m2" index="1" name="morph:level 1" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m3" index="2" name="morph:level 2" class="morph"  minValue="-127" maxValue="127"/>
@@ -3178,11 +2168,11 @@
       <attribute name="custom" type="boolean" value="yes" />
     </parameter>
     <!-- parameter(s) -->
-    <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" format-id="lfo-hz" extension="m2" />
-    <parameter component-id="p3" index="1" name="phase" class="parameter" defaultValue="64" format-id="phase" extension="m3" />
+    <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" formatter="fmtLFOHz" extension="m2" />
+    <parameter component-id="p3" index="1" name="phase" class="parameter" defaultValue="64" formatter="fmtPhase" extension="m3" />
     <parameter component-id="p4" index="2" name="waveform" class="parameter" maxValue="4" extension="m4" />
-    <parameter component-id="p5" index="3" name="mono" class="parameter" maxValue="1" formatter="type('off-on')" extension="m5" />
-    <parameter component-id="p6" index="4" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m6" />
+    <parameter component-id="p5" index="3" name="mono" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m5" />
+    <parameter component-id="p6" index="4" name="mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m6" />
     <parameter component-id="m2" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="1" name="morph:phase" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m4" index="2" name="morph:waveform" class="morph"  minValue="-4" maxValue="4" />
@@ -3266,9 +2256,9 @@
     <connector component-id="c4" index="0" name="envelope" type="output" signal="control" />
     <connector component-id="c5" index="1" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="attack" class="parameter" formatter="type('adsr-time')" extension="m1" />
-    <parameter component-id="p2" index="1" name="decay" class="parameter" defaultValue="77" formatter="type('adsr-time')" extension="m2" />
-    <parameter component-id="p3" index="2" name="gate" class="parameter" maxValue="1" formatter="type('off-on')" extension="m3" />
+    <parameter component-id="p1" index="0" name="attack" class="parameter" formatter="fmtAdsrTime" extension="m1" />
+    <parameter component-id="p2" index="1" name="decay" class="parameter" defaultValue="77" formatter="fmtAdsrTime" extension="m2" />
+    <parameter component-id="p3" index="2" name="gate" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m3" />
     <parameter component-id="m1" index="0" name="morph:attack" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m2" index="1" name="morph:decay" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="2" name="morph:gate" class="morph"  minValue="-1" maxValue="1" />
@@ -3297,10 +2287,10 @@
     </parameter>
     <!-- parameter(s) -->
     <parameter component-id="p2" index="0" name="detune" class="parameter" defaultValue="64" extension="m2" />
-    <parameter component-id="p3" index="1" name="fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m3" />
-    <parameter component-id="p4" index="2" name="-3oct" class="parameter" maxValue="1" formatter="type('off-on')" extension="m4" />
+    <parameter component-id="p3" index="1" name="fine" class="parameter" defaultValue="64" formatter="value-64" extension="m3" />
+    <parameter component-id="p4" index="2" name="-3oct" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m4" />
     <parameter component-id="p5" index="3" name="fmb" class="parameter" extension="m5" />
-    <parameter component-id="p6" index="4" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m6" />
+    <parameter component-id="p6" index="4" name="mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m6" />
     <parameter component-id="m2" index="0" name="morph:detune" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="1" name="morph:fine" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m4" index="2" name="morph:-3oct" class="morph"  minValue="-1" maxValue="1" />
@@ -3366,7 +2356,7 @@
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="in" class="parameter" maxValue="3" extension="m1" />
     <parameter component-id="p2" index="1" name="level" class="parameter" extension="m2" />
-    <parameter component-id="p3" index="2" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m3" />
+    <parameter component-id="p3" index="2" name="mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m3" />
     <parameter component-id="m1" index="0" name="morph:in" class="morph"  minValue="-3" maxValue="3" />
     <parameter component-id="m2" index="1" name="morph:level" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="2" name="morph:mute" class="morph"  minValue="-1" maxValue="1" />
@@ -3431,11 +2421,11 @@
     <parameter component-id="p16" index="13" name="note 14" class="parameter" extension="m16" />
     <parameter component-id="p17" index="14" name="note 15" class="parameter" extension="m17" />
     <parameter component-id="p18" index="15" name="note 16" class="parameter" extension="m18" />
-    <parameter component-id="p19" index="16" name="step" class="parameter" defaultValue="15" formatter="offset(1)" extension="m19" />
+    <parameter component-id="p19" index="16" name="step" class="parameter" defaultValue="15" formatter="value+1" extension="m19" />
     <parameter component-id="p20" index="17" name="currentstep" class="parameter" maxValue="16" extension="m20" />
-    <parameter component-id="p21" index="18" name="record" class="parameter" maxValue="1" formatter="type('off-on')" />
-    <parameter component-id="p22" index="19" name="play" class="parameter" maxValue="1" formatter="type('off-on')" />
-    <parameter component-id="p23" index="20" name="loop" class="parameter" maxValue="1" formatter="type('off-on')" />
+    <parameter component-id="p21" index="18" name="record" class="parameter" maxValue="1" formatter="fmtOffOn" />
+    <parameter component-id="p22" index="19" name="play" class="parameter" maxValue="1" formatter="fmtOffOn" />
+    <parameter component-id="p23" index="20" name="loop" class="parameter" maxValue="1" formatter="fmtOffOn" />
     <parameter component-id="m3" index="0" name="morph:note 1" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m4" index="1" name="morph:note 2" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m5" index="2" name="morph:note 3" class="morph"  minValue="-127" maxValue="127"/>
@@ -3493,9 +2483,9 @@
     <parameter component-id="p14" index="13" name="ctrl 14" class="parameter" extension="m14" defaultValue="64" />
     <parameter component-id="p15" index="14" name="ctrl 15" class="parameter" extension="m15" defaultValue="64" />
     <parameter component-id="p16" index="15" name="ctrl 16" class="parameter" extension="m16" defaultValue="64" />
-    <parameter component-id="p17" index="16" name="step" class="parameter" defaultValue="15" formatter="offset(1)" extension="m17" />
-    <parameter component-id="p18" index="17" name="uni" class="parameter" maxValue="1" formatter="type('off-on')" extension="m18" />
-    <parameter component-id="p19" index="18" name="loop" class="parameter" maxValue="1" formatter="type('off-on')" />
+    <parameter component-id="p17" index="16" name="step" class="parameter" defaultValue="15" formatter="value+1" extension="m17" />
+    <parameter component-id="p18" index="17" name="uni" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m18" />
+    <parameter component-id="p19" index="18" name="loop" class="parameter" maxValue="1" formatter="fmtOffOn" />
     <parameter component-id="m1" index="0" name="morph:ctrl 1" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m2" index="1" name="morph:ctrl 2" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m3" index="2" name="morph:ctrl 3" class="morph"  minValue="-127" maxValue="127"/>
@@ -3540,13 +2530,13 @@
       <attribute name="custom" type="boolean" value="yes" />
     </parameter>
     <!-- parameter(s) -->
-    <parameter component-id="p2" index="0" name="frequency" class="parameter" defaultValue="60" format-id="filter-hz-2" extension="m2" />
+    <parameter component-id="p2" index="0" name="frequency" class="parameter" defaultValue="60" formatter="fmtFilterHz2" extension="m2" />
     <parameter component-id="p3" index="1" name="kbt" class="parameter" extension="m3" />
     <parameter component-id="p4" index="2" name="resonance" class="parameter" extension="m4" />
     <parameter component-id="p5" index="3" name="freq mod 1" class="parameter" extension="m5" />
     <parameter component-id="p6" index="4" name="freq mod 2" class="parameter" extension="m6" />
     <parameter component-id="p7" index="5" name="slope" class="parameter" maxValue="2" extension="m7" />
-    <parameter component-id="p8" index="6" name="bypass" class="parameter" maxValue="1" formatter="type('off-on')" extension="m8" />
+    <parameter component-id="p8" index="6" name="bypass" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m8" />
     <parameter component-id="m2" index="0" name="morph:frequency" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="1" name="morph:kbt" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m4" index="2" name="morph:resonance" class="morph"  minValue="-127" maxValue="127"/>
@@ -3574,7 +2564,7 @@
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="detune" class="parameter" defaultValue="64" extension="m1" />
     <parameter component-id="p2" index="1" name="amount" class="parameter" defaultValue="64" extension="m2" />
-    <parameter component-id="p3" index="2" name="bypass" class="parameter" maxValue="1" formatter="type('off-on')" extension="m3" />
+    <parameter component-id="p3" index="2" name="bypass" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m3" />
     <parameter component-id="m1" index="0" name="morph:detune" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m2" index="1" name="morph:amount" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m3" index="2" name="morph:bypass" class="morph"  minValue="-1" maxValue="1" />
@@ -3604,10 +2594,10 @@
     <parameter component-id="p2" index="0" name="pitch" class="parameter" defaultValue="64" extension="m2" />
     <parameter component-id="p3" index="1" name="click" class="parameter" defaultValue="64" extension="m3" />
     <parameter component-id="p4" index="2" name="decay" class="parameter" defaultValue="64" extension="m4" />
-    <parameter component-id="p5" index="3" name="punch" class="parameter" maxValue="1" formatter="type('off-on')" extension="m5" />
+    <parameter component-id="p5" index="3" name="punch" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m5" />
     <parameter component-id="p6" index="4" name="pitchmod" class="parameter" extension="m6" />
-    <parameter component-id="p7" index="5" name="pitchfine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m7" />
-    <parameter component-id="p8" index="6" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m8" />
+    <parameter component-id="p7" index="5" name="pitchfine" class="parameter" defaultValue="64" formatter="value-64" extension="m7" />
+    <parameter component-id="p8" index="6" name="mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m8" />
     <parameter component-id="m2" index="0" name="morph:pitch" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="1" name="morph:click" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m4" index="2" name="morph:decay" class="morph"  minValue="-127" maxValue="127" />
@@ -3640,10 +2630,10 @@
     </parameter>
     <!-- parameter(s) -->
     <parameter component-id="p2" index="0" name="pitch" class="parameter" defaultValue="64" extension="m2" />
-    <parameter component-id="p3" index="1" name="pitch fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m3" />
-    <parameter component-id="p4" index="2" name="kbt" class="parameter" maxValue="1" defaultValue="1" formatter="type('off-on')" extension="m4" />
-    <parameter component-id="p5" index="3" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m5" />
-    <parameter component-id="p6" index="4" name="timbre" class="parameter" format-id="timbre" extension="m6" />
+    <parameter component-id="p3" index="1" name="pitch fine" class="parameter" defaultValue="64" formatter="value-64" extension="m3" />
+    <parameter component-id="p4" index="2" name="kbt" class="parameter" maxValue="1" defaultValue="1" formatter="fmtOffOn" extension="m4" />
+    <parameter component-id="p5" index="3" name="mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m5" />
+    <parameter component-id="p6" index="4" name="timbre" class="parameter" formatter="fmtTimbre" extension="m6" />
     <parameter component-id="p7" index="5" name="pitch mod 1" class="parameter" extension="m7" />
     <parameter component-id="p8" index="6" name="pitch mod 2" class="parameter" extension="m8" />
     <parameter component-id="m2" index="0" name="morph:pitch" class="morph"  minValue="-127" maxValue="127"/>
@@ -3676,8 +2666,8 @@
     </parameter>
     <!-- parameter(s) -->
     <parameter component-id="p2" index="0" name="pitch" class="parameter" defaultValue="64" extension="m2" />
-    <parameter component-id="p3" index="1" name="pitch fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m3" />
-    <parameter component-id="p4" index="2" name="kbt" class="parameter" maxValue="1" formatter="type('off-on')" extension="m4" />
+    <parameter component-id="p3" index="1" name="pitch fine" class="parameter" defaultValue="64" formatter="value-64" extension="m3" />
+    <parameter component-id="p4" index="2" name="kbt" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m4" />
     <parameter component-id="p5" index="3" name="pitch mod 1" class="parameter" extension="m5" />
     <parameter component-id="p6" index="4" name="pitch mod 2" class="parameter" extension="m6" />
     <parameter component-id="m2" index="0" name="morph:pitch" class="morph"  minValue="-127" maxValue="127"/>
@@ -3702,20 +2692,20 @@
     <connector component-id="c1" index="0" name="in" type="input" signal="control" />
     <connector component-id="c2" index="0" name="out" type="output" signal="control" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="range" class="parameter" formatter="offset(-64)" />
-    <parameter component-id="p2" index="1" name="cont" class="parameter" maxValue="1" formatter="type('off-on')" />
-    <parameter component-id="p3" index="2" name="E" class="parameter" maxValue="1" formatter="type('off-on')" />
-    <parameter component-id="p4" index="3" name="F" class="parameter" maxValue="1" formatter="type('off-on')" />
-    <parameter component-id="p5" index="4" name="F#" class="parameter" maxValue="1" formatter="type('off-on')" />
-    <parameter component-id="p6" index="5" name="G" class="parameter" maxValue="1" formatter="type('off-on')" />
-    <parameter component-id="p7" index="6" name="G#" class="parameter" maxValue="1" formatter="type('off-on')" />
-    <parameter component-id="p8" index="7" name="A" class="parameter" maxValue="1" formatter="type('off-on')" />
-    <parameter component-id="p9" index="8" name="Bb" class="parameter" maxValue="1" formatter="type('off-on')" />
-    <parameter component-id="p10" index="9" name="B" class="parameter" maxValue="1" formatter="type('off-on')" />
-    <parameter component-id="p11" index="10" name="C" class="parameter" maxValue="1" formatter="type('off-on')" />
-    <parameter component-id="p12" index="11" name="C#" class="parameter" maxValue="1" formatter="type('off-on')" />
-    <parameter component-id="p13" index="12" name="D" class="parameter" maxValue="1" formatter="type('off-on')" />
-    <parameter component-id="p14" index="13" name="D#" class="parameter" maxValue="1" formatter="type('off-on')" />
+    <parameter component-id="p1" index="0" name="range" class="parameter" formatter="value-64" />
+    <parameter component-id="p2" index="1" name="cont" class="parameter" maxValue="1" formatter="fmtOffOn" />
+    <parameter component-id="p3" index="2" name="E" class="parameter" maxValue="1" formatter="fmtOffOn" />
+    <parameter component-id="p4" index="3" name="F" class="parameter" maxValue="1" formatter="fmtOffOn" />
+    <parameter component-id="p5" index="4" name="F#" class="parameter" maxValue="1" formatter="fmtOffOn" />
+    <parameter component-id="p6" index="5" name="G" class="parameter" maxValue="1" formatter="fmtOffOn" />
+    <parameter component-id="p7" index="6" name="G#" class="parameter" maxValue="1" formatter="fmtOffOn" />
+    <parameter component-id="p8" index="7" name="A" class="parameter" maxValue="1" formatter="fmtOffOn" />
+    <parameter component-id="p9" index="8" name="Bb" class="parameter" maxValue="1" formatter="fmtOffOn" />
+    <parameter component-id="p10" index="9" name="B" class="parameter" maxValue="1" formatter="fmtOffOn" />
+    <parameter component-id="p11" index="10" name="C" class="parameter" maxValue="1" formatter="fmtOffOn" />
+    <parameter component-id="p12" index="11" name="C#" class="parameter" maxValue="1" formatter="fmtOffOn" />
+    <parameter component-id="p13" index="12" name="D" class="parameter" maxValue="1" formatter="fmtOffOn" />
+    <parameter component-id="p14" index="13" name="D#" class="parameter" maxValue="1" formatter="fmtOffOn" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="1.34375" />
     <attribute name="x-mem" type="double" value="1.03125" />
@@ -3737,9 +2727,9 @@
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="pattern" class="parameter" extension="m1" />
     <parameter component-id="p2" index="1" name="bank" class="parameter" extension="m2" />
-    <parameter component-id="p3" index="2" name="low delta" class="parameter" maxValue="1" formatter="type('off-on')" extension="m3" />
-    <parameter component-id="p4" index="3" name="step" class="parameter" defaultValue="16" format-id="pattern-step" extension="m4" />
-    <parameter component-id="p5" index="4" name="mono" class="parameter" maxValue="1" formatter="type('off-on')" extension="m5" />
+    <parameter component-id="p3" index="2" name="low delta" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m3" />
+    <parameter component-id="p4" index="3" name="step" class="parameter" defaultValue="16" formatter="fmtPatternStep" extension="m4" />
+    <parameter component-id="p5" index="4" name="mono" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m5" />
     <parameter component-id="m1" index="0" name="morph:pattern" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m2" index="1" name="morph:bank" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m3" index="2" name="morph:low delta" class="morph"  minValue="-1" maxValue="1"/>
@@ -3766,8 +2756,8 @@
     <connector component-id="c5" index="1" name="gate" type="output" signal="logic" />
     <connector component-id="c6" index="2" name="vel" type="output" signal="control" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="lower" class="parameter" defaultValue="64" format-id="note" extension="m1" />
-    <parameter component-id="p2" index="1" name="upper" class="parameter" defaultValue="64" format-id="note" extension="m2" />
+    <parameter component-id="p1" index="0" name="lower" class="parameter" defaultValue="64" formatter="fmtNote" extension="m1" />
+    <parameter component-id="p2" index="1" name="upper" class="parameter" defaultValue="64" formatter="fmtNote" extension="m2" />
     <parameter component-id="m1" index="0" name="morph:lower" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m2" index="1" name="morph:upper" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
@@ -3790,14 +2780,14 @@
     <connector component-id="c4" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="rate" class="parameter" defaultValue="60" extension="m1" />
-    <parameter component-id="p2" index="1" name="lfo" class="parameter" maxValue="1" formatter="type('off-on')" extension="m2" />
+    <parameter component-id="p2" index="1" name="lfo" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m2" />
     <parameter component-id="p3" index="2" name="center freq mod" class="parameter" extension="m3" />
-    <parameter component-id="p4" index="3" name="center freq" class="parameter" defaultValue="64" formatter="type('phaser-center-frequency')" extension="m4" />
+    <parameter component-id="p4" index="3" name="center freq" class="parameter" defaultValue="64" formatter="fmtPhaserCenterFrequency" extension="m4" />
     <parameter component-id="p5" index="4" name="spread mod" class="parameter" extension="m5" />
     <parameter component-id="p6" index="5" name="feedback" class="parameter" defaultValue="64" extension="m6" />
-    <parameter component-id="p7" index="6" name="peaks" class="parameter" maxValue="5" formatter="offset(1)" extension="m7" />
+    <parameter component-id="p7" index="6" name="peaks" class="parameter" maxValue="5" formatter="value+1" extension="m7" />
     <parameter component-id="p8" index="7" name="spread" class="parameter" defaultValue="64" extension="m8" />
-    <parameter component-id="p9" index="8" name="bypass" class="parameter" maxValue="1" formatter="type('off-on')" extension="m9" />
+    <parameter component-id="p9" index="8" name="bypass" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m9" />
     <parameter component-id="p10" index="9" name="depth" class="parameter" defaultValue="64" extension="m10" />
     <parameter component-id="p11" index="10" name="inlevel" class="parameter" defaultValue="127" extension="m11" />
     <parameter component-id="m1" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127" />
@@ -3829,10 +2819,10 @@
     <connector component-id="c1" index="0" name="in" type="input" signal="audio" />
     <connector component-id="c2" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="freq" class="parameter" defaultValue="60" format-id="eq-hz" extension="m1" />
+    <parameter component-id="p1" index="0" name="freq" class="parameter" defaultValue="60" formatter="fmtEqHz" extension="m1" />
     <parameter component-id="p2" index="1" name="gain" class="parameter" defaultValue="64" extension="m2" />
     <parameter component-id="p3" index="2" name="bandwidth" class="parameter" extension="m3" />
-    <parameter component-id="p4" index="3" name="bypass" class="parameter" maxValue="1" formatter="type('off-on')" extension="m4" />
+    <parameter component-id="p4" index="3" name="bypass" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m4" />
     <parameter component-id="p5" index="4" name="in level" class="parameter" defaultValue="127" extension="m5" />
     <parameter component-id="m1" index="0" name="morph:freq" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m2" index="1" name="morph:gain" class="morph"  minValue="-127" maxValue="127"/>
@@ -3857,10 +2847,10 @@
     <connector component-id="c1" index="0" name="in" type="input" signal="audio" />
     <connector component-id="c2" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="freq" class="parameter" defaultValue="60" format-id="eq-hz" extension="m1" />
+    <parameter component-id="p1" index="0" name="freq" class="parameter" defaultValue="60" formatter="fmtEqHz" extension="m1" />
     <parameter component-id="p2" index="1" name="gain" class="parameter" extension="m2" />
     <parameter component-id="p3" index="2" name="mode" class="parameter" maxValue="1" extension="m3" />
-    <parameter component-id="p4" index="3" name="bypass" class="parameter" maxValue="1" formatter="type('off-on')" extension="m4" />
+    <parameter component-id="p4" index="3" name="bypass" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m4" />
     <parameter component-id="p5" index="4" name="in level" class="parameter" defaultValue="127" extension="m5" />
     <parameter component-id="m1" index="0" name="morph:freq" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m2" index="1" name="morph:gain" class="morph"  minValue="-127" maxValue="127"/>
@@ -3888,15 +2878,15 @@
     <connector component-id="c4" index="0" name="out left" type="output" signal="audio" />
     <connector component-id="c5" index="1" name="out right" type="output" signal="audio" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="attack" class="parameter" formatter="type('envelope-attack')" extension="m1" />
-    <parameter component-id="p2" index="1" name="release" class="parameter" defaultValue="20" formatter="type('compander-release')" extension="m2" />
-    <parameter component-id="p3" index="2" name="treshold" class="parameter" maxValue="84" defaultValue="24" format-id="expander-treshold" extension="m3" />
-    <parameter component-id="p4" index="3" name="ratio" class="parameter" maxValue="66" defaultValue="20" formatter="type('compander-ratio')" extension="m4" />
-    <parameter component-id="p5" index="4" name="gate" class="parameter" maxValue="72" format-id="expander-gate" extension="m5" />
-    <parameter component-id="p6" index="5" name="hold" class="parameter" format-id="expander-hold" extension="m6" />
-    <parameter component-id="p7" index="6" name="sidechain activation" class="parameter" maxValue="1" formatter="type('off-on')" extension="m7" />
-    <parameter component-id="p8" index="7" name="sidechain monitor" class="parameter" maxValue="1" formatter="type('off-on')" extension="m8" />
-    <parameter component-id="p9" index="8" name="bypass" class="parameter" maxValue="1" formatter="type('off-on')" extension="m9" />
+    <parameter component-id="p1" index="0" name="attack" class="parameter" formatter="fmtEnvelopeAttack" extension="m1" />
+    <parameter component-id="p2" index="1" name="release" class="parameter" defaultValue="20" formatter="fmtCompanderRelease" extension="m2" />
+    <parameter component-id="p3" index="2" name="treshold" class="parameter" maxValue="84" defaultValue="24" formatter="fmtExpanderThreshold" extension="m3" />
+    <parameter component-id="p4" index="3" name="ratio" class="parameter" maxValue="66" defaultValue="20" formatter="fmtCompanderRatio" extension="m4" />
+    <parameter component-id="p5" index="4" name="gate" class="parameter" maxValue="72" formatter="fmtExpanderGate" extension="m5" />
+    <parameter component-id="p6" index="5" name="hold" class="parameter" formatter="fmtExpanderHold" extension="m6" />
+    <parameter component-id="p7" index="6" name="sidechain activation" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m7" />
+    <parameter component-id="p8" index="7" name="sidechain monitor" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m8" />
+    <parameter component-id="p9" index="8" name="bypass" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m9" />
     <parameter component-id="m1" index="0" name="morph:attack" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m2" index="1" name="morph:release" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="2" name="morph:treshold" class="morph"  minValue="-84" maxValue="84" />
@@ -3936,30 +2926,30 @@
     <connector component-id="c9" index="8" name="osc6 am" type="input" signal="audio" />
     <connector component-id="c10" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="osc1 coarse" class="parameter" defaultValue="64" format-id="semitones" extension="m1" />
-    <parameter component-id="p2" index="1" name="osc1 fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m2" />
-    <parameter component-id="p3" index="2" name="osc1 level" class="parameter" defaultValue="100" format-id="semitones" extension="m3" />
-    <parameter component-id="p4" index="3" name="osc2 coarse" class="parameter" defaultValue="64" format-id="semitones" extension="m4" />
-    <parameter component-id="p5" index="4" name="osc2 fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m5" />
-    <parameter component-id="p6" index="5" name="osc2 level" class="parameter" defaultValue="100" format-id="semitones" extension="m6" />
-    <parameter component-id="p7" index="6" name="osc3 coarse" class="parameter" defaultValue="64" format-id="semitones" extension="m7" />
-    <parameter component-id="p8" index="7" name="osc3 fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m8" />
-    <parameter component-id="p9" index="8" name="osc3 level" class="parameter" defaultValue="100" format-id="semitones" extension="m9" />
-    <parameter component-id="p10" index="9" name="osc4 coarse" class="parameter" defaultValue="64" format-id="semitones" extension="m10" />
-    <parameter component-id="p11" index="10" name="osc4 fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m11" />
-    <parameter component-id="p12" index="11" name="osc4 level" class="parameter" defaultValue="100" format-id="semitones" extension="m12" />
-    <parameter component-id="p13" index="12" name="osc5 coarse" class="parameter" defaultValue="64" format-id="semitones" extension="m13" />
-    <parameter component-id="p14" index="13" name="osc5 fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m14" />
-    <parameter component-id="p15" index="14" name="osc5 level" class="parameter" defaultValue="100" format-id="semitones" extension="m15" />
-    <parameter component-id="p16" index="15" name="osc6 coarse" class="parameter" defaultValue="64" format-id="semitones" extension="m16" />
-    <parameter component-id="p17" index="16" name="osc6 fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m17" />
-    <parameter component-id="p18" index="17" name="osc6 level" class="parameter" defaultValue="100" format-id="semitones" extension="m18" />
-    <parameter component-id="p19" index="18" name="osc1 mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m19" />
-    <parameter component-id="p20" index="19" name="osc2 mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m20" />
-    <parameter component-id="p21" index="20" name="osc3 mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m21" />
-    <parameter component-id="p22" index="21" name="osc4 mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m22" />
-    <parameter component-id="p23" index="22" name="osc5 mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m23" />
-    <parameter component-id="p24" index="23" name="osc6 mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m24" />
+    <parameter component-id="p1" index="0" name="osc1 coarse" class="parameter" defaultValue="64" formatter="fmtSemitones" extension="m1" />
+    <parameter component-id="p2" index="1" name="osc1 fine" class="parameter" defaultValue="64" formatter="value-64" extension="m2" />
+    <parameter component-id="p3" index="2" name="osc1 level" class="parameter" defaultValue="100" formatter="fmtSemitones" extension="m3" />
+    <parameter component-id="p4" index="3" name="osc2 coarse" class="parameter" defaultValue="64" formatter="fmtSemitones" extension="m4" />
+    <parameter component-id="p5" index="4" name="osc2 fine" class="parameter" defaultValue="64" formatter="value-64" extension="m5" />
+    <parameter component-id="p6" index="5" name="osc2 level" class="parameter" defaultValue="100" formatter="fmtSemitones" extension="m6" />
+    <parameter component-id="p7" index="6" name="osc3 coarse" class="parameter" defaultValue="64" formatter="fmtSemitones" extension="m7" />
+    <parameter component-id="p8" index="7" name="osc3 fine" class="parameter" defaultValue="64" formatter="value-64" extension="m8" />
+    <parameter component-id="p9" index="8" name="osc3 level" class="parameter" defaultValue="100" formatter="fmtSemitones" extension="m9" />
+    <parameter component-id="p10" index="9" name="osc4 coarse" class="parameter" defaultValue="64" formatter="fmtSemitones" extension="m10" />
+    <parameter component-id="p11" index="10" name="osc4 fine" class="parameter" defaultValue="64" formatter="value-64" extension="m11" />
+    <parameter component-id="p12" index="11" name="osc4 level" class="parameter" defaultValue="100" formatter="fmtSemitones" extension="m12" />
+    <parameter component-id="p13" index="12" name="osc5 coarse" class="parameter" defaultValue="64" formatter="fmtSemitones" extension="m13" />
+    <parameter component-id="p14" index="13" name="osc5 fine" class="parameter" defaultValue="64" formatter="value-64" extension="m14" />
+    <parameter component-id="p15" index="14" name="osc5 level" class="parameter" defaultValue="100" formatter="fmtSemitones" extension="m15" />
+    <parameter component-id="p16" index="15" name="osc6 coarse" class="parameter" defaultValue="64" formatter="fmtSemitones" extension="m16" />
+    <parameter component-id="p17" index="16" name="osc6 fine" class="parameter" defaultValue="64" formatter="value-64" extension="m17" />
+    <parameter component-id="p18" index="17" name="osc6 level" class="parameter" defaultValue="100" formatter="fmtSemitones" extension="m18" />
+    <parameter component-id="p19" index="18" name="osc1 mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m19" />
+    <parameter component-id="p20" index="19" name="osc2 mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m20" />
+    <parameter component-id="p21" index="20" name="osc3 mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m21" />
+    <parameter component-id="p22" index="21" name="osc4 mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m22" />
+    <parameter component-id="p23" index="22" name="osc5 mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m23" />
+    <parameter component-id="p24" index="23" name="osc6 mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m24" />
     <parameter component-id="m1" index="0" name="morph:osc1 coarse" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m2" index="1" name="morph:osc1 fine" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="2" name="morph:osc1 level" class="morph"  minValue="-127" maxValue="127" />
@@ -4009,16 +2999,16 @@
       <attribute name="custom" type="boolean" value="yes" />
     </parameter>
     <!-- parameter(s) -->
-    <parameter component-id="p2" index="0" name="freq coarse" class="parameter" defaultValue="64" format-id="osc-hz" extension="m2" />
-    <parameter component-id="p3" index="1" name="freq fine" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m3" />
+    <parameter component-id="p2" index="0" name="freq coarse" class="parameter" defaultValue="64" formatter="fmtOscHz" extension="m2" />
+    <parameter component-id="p3" index="1" name="freq fine" class="parameter" defaultValue="64" formatter="value-64" extension="m3" />
     <parameter component-id="p4" index="2" name="spectral shape" class="parameter" defaultValue="64" extension="m4" />
-    <parameter component-id="p5" index="3" name="partials" class="parameter" maxValue="1" defaultValue="1" format-id="partials" extension="m5" />
+    <parameter component-id="p5" index="3" name="partials" class="parameter" maxValue="1" defaultValue="1" formatter="fmtPartials" extension="m5" />
     <parameter component-id="p6" index="4" name="pitch mod 1" class="parameter" extension="m6" />
     <parameter component-id="p7" index="5" name="pitch mod 2" class="parameter" extension="m7" />
     <parameter component-id="p8" index="6" name="fma" class="parameter" extension="m8" />
     <parameter component-id="p9" index="7" name="spectral shape mod" class="parameter" extension="m9" />
-    <parameter component-id="p10" index="8" name="kbt" class="parameter" maxValue="1" formatter="type('off-on')" extension="m10" />
-    <parameter component-id="p11" index="9" name="mute" class="parameter" maxValue="1" formatter="type('off-on')" extension="m11" />
+    <parameter component-id="p10" index="8" name="kbt" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m10" />
+    <parameter component-id="p11" index="9" name="mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m11" />
     <parameter component-id="m2" index="0" name="morph:freq coarse" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="1" name="morph:freq fine" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m4" index="2" name="morph:spectral shape" class="morph"  minValue="-127" maxValue="127" />
@@ -4106,7 +3096,7 @@
       <attribute name="custom" type="boolean" value="yes" />
     </parameter>
     <!-- parameter(s) -->
-    <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" format-id="lfo-hz" extension="m2" />
+    <parameter component-id="p2" index="0" name="rate" class="parameter" defaultValue="64" formatter="fmtLFOHz" extension="m2" />
     <parameter component-id="m2" index="0" name="morph:rate" class="morph"  minValue="-127" maxValue="127"/>
     <light component-id="ledControlOut" name="LED Control Out" index="0" type="led" />
     <!-- custom attributes -->
@@ -4169,7 +3159,7 @@
     <connector component-id="c2" index="0" name="out 1" type="output" signal="audio" />
     <connector component-id="c3" index="1" name="out 2" type="output" signal="audio" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="fade" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m1" />
+    <parameter component-id="p1" index="0" name="fade" class="parameter" defaultValue="64" formatter="value-64" extension="m1" />
     <parameter component-id="m1" index="0" name="morph:fade" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.78125" />
@@ -4189,7 +3179,7 @@
     <connector component-id="c2" index="1" name="in 2" type="input" signal="audio" />
     <connector component-id="c3" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="fade" class="parameter" defaultValue="64" formatter="offset(-64)" extension="m1" />
+    <parameter component-id="p1" index="0" name="fade" class="parameter" defaultValue="64" formatter="value-64" extension="m1" />
     <parameter component-id="m1" index="0" name="morph:fade" class="morph"  minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="0.78125" />
@@ -4210,9 +3200,9 @@
     <connector component-id="c3" index="0" name="out" type="output" signal="control" />
     <!-- parameter(s) -->
     <parameter component-id="p1" index="0" name="velocity sensitivity" class="parameter" extension="m1" />
-    <parameter component-id="p2" index="1" name="left gain" class="parameter" maxValue="48" defaultValue="24" formatter="offset(-24),str('dB')" extension="m2" />
-    <parameter component-id="p3" index="2" name="breakpoint" class="parameter" defaultValue="64" format-id="note" extension="m3" />
-    <parameter component-id="p4" index="3" name="right gain" class="parameter" maxValue="48" defaultValue="24" formatter="offset(-24),str('dB')" extension="m4" />
+    <parameter component-id="p2" index="1" name="left gain" class="parameter" maxValue="48" defaultValue="24" formatter="fmtNoteVelScaleGain" extension="m2" />
+    <parameter component-id="p3" index="2" name="breakpoint" class="parameter" defaultValue="64" formatter="fmtNote" extension="m3" />
+    <parameter component-id="p4" index="3" name="right gain" class="parameter" maxValue="48" defaultValue="24" formatter="fmtNoteVelScaleGain" extension="m4" />
     <parameter component-id="m1" index="0" name="morph:velocity sensitivity" class="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m2" index="1" name="morph:left gain" class="morph"  minValue="-48" maxValue="48" />
     <parameter component-id="m3" index="2" name="morph:breakpoint" class="morph"  minValue="-127" maxValue="127" />
@@ -4258,11 +3248,11 @@
     <connector component-id="c2" index="1" name="sample rate mod" type="input" signal="control" />
     <connector component-id="c3" index="0" name="out" type="output" signal="audio" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="quant bits" class="parameter" maxValue="11" formatter="offset(1)" extension="m1" />
-    <parameter component-id="p2" index="1" name="sample rate" class="parameter" defaultValue="64" format-id="digitizer-hz" extension="m2" />
+    <parameter component-id="p1" index="0" name="quant bits" class="parameter" maxValue="11" formatter="value+1" extension="m1" />
+    <parameter component-id="p2" index="1" name="sample rate" class="parameter" defaultValue="64" formatter="fmtDigitizerHz" extension="m2" />
     <parameter component-id="p3" index="2" name="sample rate mod" class="parameter" extension="m3" />
-    <parameter component-id="p4" index="3" name="quant off" class="parameter" maxValue="1" formatter="type('off-on')" extension="m4" />
-    <parameter component-id="p5" index="4" name="sampling off" class="parameter" maxValue="1" formatter="type('off-on')" extension="m5" />
+    <parameter component-id="p4" index="3" name="quant off" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m4" />
+    <parameter component-id="p5" index="4" name="sampling off" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m5" />
     <parameter component-id="m1" index="0" name="morph:quant bits" class="morph"  minValue="-11" maxValue="11" />
     <parameter component-id="m2" index="1" name="morph:sample rate" class="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="2" name="morph:sample rate mod" class="morph"  minValue="-127" maxValue="127"/>
@@ -4285,7 +3275,7 @@
     <connector component-id="c1" index="0" name="Left" type="output" signal="audio" />
     <connector component-id="c2" index="1" name="Right" type="output" signal="audio" />
     <!-- parameter(s) -->
-    <parameter component-id="p1" index="0" name="+6db" class="parameter" maxValue="1" formatter="type('off-on')" extension="m1" />
+    <parameter component-id="p1" index="0" name="+6db" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m1" />
     <parameter component-id="m1" index="0" name="morph:+6db" class="morph"  minValue="-1" maxValue="1" />
     <light index="0" type="meter" component-id="lightAudioLeft" name="audio left" minValue="0" maxValue="127">
 	    <attribute name="possible-values" value="0, 16, 32, 48, 64, 80, 96, 112, 122, 127"/>
