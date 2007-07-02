@@ -148,7 +148,7 @@ public class NmMessageHandler extends NmProtocolListener
     public void messageReceived(SetPatchTitleMessage message) 
     {
         int slotId = message.get("slot");
-        int pid = message.get("pid");
+        //int pid = message.get("pid");
         
         // check if slot is available <=> synth is connected
         // -> this is not implied by the received message

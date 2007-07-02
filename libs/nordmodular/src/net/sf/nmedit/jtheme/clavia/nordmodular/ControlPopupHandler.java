@@ -279,6 +279,10 @@ public class ControlPopupHandler implements JTPopupHandler
     private static class ParameterAction extends AbstractAction
     {
 
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -6529948398460343031L;
         public static final String DEFAULTVALUE = "Default value";
         public static final String ZEROMORPH = "Zero morph";
         public static final String KNOB = "Knob";

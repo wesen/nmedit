@@ -34,7 +34,11 @@ import org.jdom.Element;
 
 public class CompressorDisplayStore extends AbstractMultiParameterElement
 {
-	private static final String[] PARAMETERS = { "threshold", "ratio", 
+	/**
+     * 
+     */
+    private static final long serialVersionUID = -3089610669534017095L;
+    private static final String[] PARAMETERS = { "threshold", "ratio", 
         "ref-level", "limiter"   
     };
 

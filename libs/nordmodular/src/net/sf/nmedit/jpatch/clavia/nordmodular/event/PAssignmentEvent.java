@@ -26,6 +26,10 @@ import net.sf.nmedit.jpatch.event.PPatchEvent;
 public class PAssignmentEvent extends PPatchEvent
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4539602407743939224L;
     public static final int KNOB_ASSIGNED = CUSTOM_EVENT_START+1;
     public static final int KNOB_DEASSIGNED = CUSTOM_EVENT_START+2;
     public static final int MORPH_ASSIGNED = CUSTOM_EVENT_START+3;

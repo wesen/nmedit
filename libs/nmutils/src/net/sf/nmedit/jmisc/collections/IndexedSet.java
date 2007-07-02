@@ -36,6 +36,10 @@ public class IndexedSet<E> extends AbstractSet<E>
     implements Set<E>, Serializable, Cloneable
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6699327676964923532L;
     private transient int modCount;
     private int size = 0;
     private int max = -1;

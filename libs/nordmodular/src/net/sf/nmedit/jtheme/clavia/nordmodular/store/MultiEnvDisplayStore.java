@@ -35,6 +35,10 @@ import org.jdom.Element;
 public class MultiEnvDisplayStore extends AbstractMultiParameterElement
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2686307579438779799L;
     private static final String[] PARAMETERS = {
         "sustain",
         "l1", // level

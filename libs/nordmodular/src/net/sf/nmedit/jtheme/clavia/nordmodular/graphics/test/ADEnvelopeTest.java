@@ -102,6 +102,10 @@ public class ADEnvelopeTest
     
     static class EnvelopeDisplay extends JComponent
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 7044157078249878572L;
         final Color fillColor = Color.decode("#C0DCC0");
         
         {
@@ -146,6 +150,11 @@ public class ADEnvelopeTest
     
     static class CurveTypeChange extends JComboBox implements ActionListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 2758735529619298946L;
+
         final static String[] curveTypes = new String[]{"Lin", "Exp", "Log"};
         
         private int index;
@@ -167,6 +176,10 @@ public class ADEnvelopeTest
     static class AttackChanger extends JSlider implements ChangeListener
     {
     
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -8718842140680102559L;
         public AttackChanger()
         {
         	super(JSlider.HORIZONTAL, 0,Envelope.RANGE_MAX, 0);
@@ -182,6 +195,10 @@ public class ADEnvelopeTest
     
     static class DecayChanger extends JSlider implements ChangeListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 2349137747525466759L;
         public DecayChanger()
         {
         	super(JSlider.HORIZONTAL, 0,Envelope.RANGE_MAX, 0);

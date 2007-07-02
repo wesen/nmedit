@@ -33,6 +33,10 @@ import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
 public class JTMorphModule extends JTModule
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7164915539987099677L;
     private JTControl[] morphKnobs;
     private final static Color[] MORPH_COLORS = {
         NomadClassicColors.MORPH_RED,

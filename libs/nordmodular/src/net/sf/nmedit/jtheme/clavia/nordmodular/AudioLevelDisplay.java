@@ -34,7 +34,12 @@ import net.sf.nmedit.jtheme.component.JTDisplay;
 public class AudioLevelDisplay extends JTDisplay 
 {
 
-	public AudioLevelDisplay(JTContext context) {
+	/**
+     * 
+     */
+    private static final long serialVersionUID = -8129516286690822700L;
+
+    public AudioLevelDisplay(JTContext context) {
 		super(context);
 		setSize(90,5);
 	}

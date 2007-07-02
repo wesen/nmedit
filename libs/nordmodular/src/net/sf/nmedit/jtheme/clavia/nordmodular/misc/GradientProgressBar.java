@@ -33,6 +33,11 @@ import javax.swing.JProgressBar;
 public class GradientProgressBar extends JProgressBar
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1792044626323606987L;
+
     private Color gradient = null;
 
     private int w = 0;

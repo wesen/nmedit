@@ -237,6 +237,8 @@ public class Format
      * header-value index 
      */
     public final static int HEADER_BEND_RANGE                       = 4;
+    public final static int HEADER_BEND_RANGE_MIN                   = 0;
+    public final static int HEADER_BEND_RANGE_MAX                   = 24;
     public final static int HEADER_BEND_RANGE_DEFAULT               = 2;
     
     /**

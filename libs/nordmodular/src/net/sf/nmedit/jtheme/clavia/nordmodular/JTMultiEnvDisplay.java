@@ -24,14 +24,18 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import net.sf.nmedit.jtheme.JTContext;
-import net.sf.nmedit.jtheme.clavia.nordmodular.graphics.FilterF;
 import net.sf.nmedit.jtheme.clavia.nordmodular.graphics.MultiEnvelope;
 import net.sf.nmedit.jtheme.component.JTControlAdapter;
 import net.sf.nmedit.jtheme.component.JTDisplay;
 
 public class JTMultiEnvDisplay extends JTDisplay implements ChangeListener {
 
-	private MultiEnvelope multiEnv;
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 9061406842045130579L;
+
+    private MultiEnvelope multiEnv;
 
 	private JTControlAdapter levelAdapter[];
 	private JTControlAdapter timeAdapter[];

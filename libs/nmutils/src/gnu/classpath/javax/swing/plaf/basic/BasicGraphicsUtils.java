@@ -611,7 +611,7 @@ public class BasicGraphicsUtils
      */
     SwingUtilities.layoutCompoundLabel(
       b, // for the component orientation
-      b.getToolkit().getFontMetrics(b.getFont()), // see comment above
+      b.getFontMetrics(b.getFont()), // see comment above
       b.getText(),
       b.getIcon(),
       SwingUtilities.TOP,    // important:

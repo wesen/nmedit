@@ -37,6 +37,11 @@ import net.sf.nmedit.jtheme.component.JTDisplay;
 public class LFODisplay extends JTDisplay implements ChangeListener
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4431079405680653586L;
+
     public LFODisplay( JTContext context )
     {
         super( context );

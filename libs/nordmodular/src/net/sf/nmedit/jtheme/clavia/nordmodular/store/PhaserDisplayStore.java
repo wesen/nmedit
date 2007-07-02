@@ -34,6 +34,10 @@ import org.jdom.Element;
 public class PhaserDisplayStore extends AbstractMultiParameterElement
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6580368145736390021L;
     private static final String[] PARAMETERS = {"feedback", "peaks", "spread"};
     
     protected PhaserDisplayStore()

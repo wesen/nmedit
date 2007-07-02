@@ -33,6 +33,11 @@ import net.sf.nmedit.jtheme.component.JTDisplay;
 public class JTCompressorDisplay extends JTDisplay implements ChangeListener
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3622081455931068485L;
+
     private Compressor compressor;
     
     private JTControlAdapter ratioAdapter;

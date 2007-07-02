@@ -33,6 +33,11 @@ import net.sf.nmedit.jtheme.component.JTDisplay;
 public class JTEqShelvingDisplay extends JTDisplay implements ChangeListener
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 541131328142715929L;
+
     private EqualizerShelve equalizerShelve;
     
     private JTControlAdapter freqAdapter;

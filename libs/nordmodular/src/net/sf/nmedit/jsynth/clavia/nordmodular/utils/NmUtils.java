@@ -29,6 +29,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Collection;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -75,12 +77,13 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchBuilder;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchExporter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchFileWriter;
 import net.sf.nmedit.jsynth.SynthException;
+import net.sf.nmedit.jtheme.util.RelativeClassLoader;
 
 public class NmUtils
 {
     
     public static NM1ModuleDescriptions parseModuleDescriptions() 
-        throws ParserConfigurationException, SAXException, IOException
+        throws ParserConfigurationException, SAXException, IOException, URISyntaxException
     {
         NmUtils instance = new NmUtils();
 
@@ -88,10 +91,14 @@ public class NmUtils
 
         NM1ModuleDescriptions descriptions;
         
-        InputStream in = new BufferedInputStream(instance.getClass().getResourceAsStream(file));
+        
+        URL resource = instance.getClass().getResource(file);
+        
+        InputStream in = new BufferedInputStream(resource.openStream());
         try
         {
-        descriptions = NM1ModuleDescriptions.parse(in);
+        descriptions = NM1ModuleDescriptions.parse(RelativeClassLoader.fromPath(NmUtils.class.getClassLoader(), 
+                resource),in);
         }
         finally
         {
@@ -450,10 +457,18 @@ public class NmUtils
             names[index++] = e.getName();
         return names;
     }
-    
+
     public static MidiMessage createPatchMessage(NMPatch patch, int slotId) throws Exception
     {
         Patch2BitstreamBuilder builder = new Patch2BitstreamBuilder(patch);
+        builder.generate();
+        return new PatchMessage(builder.getBitStream(), builder.getSectionEndPositions(), slotId);
+    }
+
+    public static MidiMessage createPatchSettingsMessage(NMPatch patch, int slotId) throws Exception
+    {
+        Patch2BitstreamBuilder builder = new Patch2BitstreamBuilder(patch);
+        builder.setHeaderOnly(true);
         builder.generate();
         return new PatchMessage(builder.getBitStream(), builder.getSectionEndPositions(), slotId);
     }

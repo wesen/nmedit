@@ -118,10 +118,12 @@ public class InsertInsertionSet<E> extends AbstractSet<E> implements Set<E>, Ser
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T[] copyOf(T[] original, int newLength) {
         return (T[]) copyOf(original, newLength, original.getClass());
     }
 
+    @SuppressWarnings("unchecked")
     public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) {
         T[] copy = ((Object)newType == (Object)Object[].class)
             ? (T[]) new Object[newLength]

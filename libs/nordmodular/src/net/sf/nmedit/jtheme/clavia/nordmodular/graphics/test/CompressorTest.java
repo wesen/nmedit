@@ -25,11 +25,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -110,6 +105,10 @@ public class CompressorTest
     
     static class EnvelopeDisplay extends JComponent
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -6283820502645930485L;
         final Color fillColor = Color.decode("#C0DCC0");
         
         {
@@ -159,6 +158,10 @@ public class CompressorTest
     
     static class ThresholdChanger extends JSlider implements ChangeListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -3740630414671160171L;
         public ThresholdChanger()
         {
         	super(JSlider.HORIZONTAL, 0,200, 0);
@@ -174,6 +177,10 @@ public class CompressorTest
 //    
     static class RatioChanger extends JSlider implements ChangeListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 8118802460111531023L;
         public RatioChanger()
         {
         	super(JSlider.HORIZONTAL,0,63,0);
@@ -189,6 +196,10 @@ public class CompressorTest
 //    
     static class LimiterChanger extends JSlider implements ChangeListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -6294133045767312401L;
         public LimiterChanger()
         {
         	super(JSlider.HORIZONTAL, 0,24, 0);
@@ -204,6 +215,10 @@ public class CompressorTest
     
     static class RefLevelChanger extends JSlider implements ChangeListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -677020035538098407L;
         public RefLevelChanger()
         {
         	super(JSlider.HORIZONTAL, 0,100, 0);

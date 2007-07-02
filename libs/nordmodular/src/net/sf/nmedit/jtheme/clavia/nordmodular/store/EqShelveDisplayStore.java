@@ -34,6 +34,10 @@ import org.jdom.Element;
 public class EqShelveDisplayStore extends AbstractMultiParameterElement
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2462193513715754225L;
     private static final String[] PARAMETERS = {"frequency", "gain"};
     protected String gainGainParameterId;
     

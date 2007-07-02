@@ -16,35 +16,25 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.nmedit.jsynth.clavia.nordmodular;
+package net.sf.nmedit.jtheme.clavia.nordmodular;
 
-import net.sf.nmedit.jnmprotocol.NewPatchInSlotMessage;
-import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
+import net.sf.nmedit.jtheme.JTContext;
+import net.sf.nmedit.jtheme.component.JTSlider;
 
-public class NewPatchInSlotHandler
+public class NMScrollbar extends JTSlider
 {
     
-    private NMPatch[] slots = new NMPatch[4];
+    public static final String ScrollBarUIClassID = "ScrollbarUI";
+    private static final long serialVersionUID = -1941567075222304256L;
 
-    public void setSendingPatch(int slotIndex, NMPatch patch)
+    public NMScrollbar(JTContext context)
     {
-        slots[slotIndex] = patch;
+        super(context);
     }
     
-    public NMPatch getSendingPatch(int slotIndex)
+    public String getUIClassID()
     {
-        return slots[slotIndex];
+        return ScrollBarUIClassID;
     }
-    
-    public void handle(NewPatchInSlotMessage message)
-    {
-        /*
-        int slotIndex = message.get("slot");
-        int pid = message.get("pid");
-        // int cc = message.get("cc");
-        */
-        
-        
-    }
-    
+
 }

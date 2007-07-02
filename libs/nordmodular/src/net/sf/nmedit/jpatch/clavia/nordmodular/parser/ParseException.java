@@ -25,6 +25,11 @@ package net.sf.nmedit.jpatch.clavia.nordmodular.parser;
 public class ParseException extends Exception
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5054125729469272528L;
+
     public ParseException(String message )
     {
         super( message );

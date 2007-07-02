@@ -32,6 +32,11 @@ import net.sf.nmedit.jtheme.component.JTDisplay;
 public class JTPhaserDisplay extends JTDisplay implements ChangeListener
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3271589716317598895L;
+
     private Phaser phaser;
     
     private JTControlAdapter feedbackAdapter;

@@ -325,7 +325,7 @@ public class Header
         if (oldValue != value)
         {
             data[index] = value;
-            // fireValueChangedEvent(index, oldValue, value);
+            firePatchSettingsChanged();
         }
     }
 
@@ -333,8 +333,12 @@ public class Header
     {
         return data[index];
     }
+    
+    public void firePatchSettingsChanged()
+    {
+        patch.firePatchSettingsChanged();
+    }
 
-    // TODO remove this fix for separator position bug
     public void setValueWithoutNotification( int index, int value )
     {
         data[index] = value;

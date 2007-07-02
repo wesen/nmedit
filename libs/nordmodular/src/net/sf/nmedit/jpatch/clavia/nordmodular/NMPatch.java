@@ -35,6 +35,8 @@ import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentEvent;
 import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.event.PPatchSettingsEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.event.PPatchSettingsListener;
 import net.sf.nmedit.jpatch.history.HistoryImpl;
 import net.sf.nmedit.jpatch.history.Synchronizer;
 import net.sf.nmedit.jpatch.impl.PBasicPatch;
@@ -193,6 +195,38 @@ public class NMPatch extends PBasicPatch implements PPatch
         }
     }
 
+    public void addPatchSettingsListener(PPatchSettingsListener l)
+    {
+        listenerList.add(PPatchSettingsListener.class, l);
+    }
+
+    public void removePatchSettingsListener(PPatchSettingsListener l)
+    {
+        listenerList.remove(PPatchSettingsListener.class, l);
+    }
+    
+    public void firePatchSettingsChanged()
+    {
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+
+        PPatchSettingsEvent event = null;
+        
+        for (int i = listeners.length-2; i>=0; i-=2) 
+        {
+            if (listeners[i]==PPatchSettingsListener.class) 
+            {
+                if (event != null)
+                    event = new PPatchSettingsEvent(this);
+                
+                // Lazily create the event:
+                ((PPatchSettingsListener)listeners[i+1]).patchSettingsChanged(event);
+            }
+        }
+    }
+    
     public PModuleContainer getModuleContainer(int index)
     {
         return containers[index];

@@ -16,35 +16,33 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.nmedit.jsynth.clavia.nordmodular;
+package net.sf.nmedit.nmutils;
 
-import net.sf.nmedit.jnmprotocol.NewPatchInSlotMessage;
-import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
 
-public class NewPatchInSlotHandler
+public class PluginObjectInputStream extends ObjectInputStream
 {
-    
-    private NMPatch[] slots = new NMPatch[4];
 
-    public void setSendingPatch(int slotIndex, NMPatch patch)
+    private ClassLoader loader;
+
+    public PluginObjectInputStream(ClassLoader loader, InputStream in) throws IOException
     {
-        slots[slotIndex] = patch;
+        super(in);
+        this.loader = loader;
     }
-    
-    public NMPatch getSendingPatch(int slotIndex)
+
+    protected Class<?> resolveClass(ObjectStreamClass desc) throws ClassNotFoundException, IOException 
     {
-        return slots[slotIndex];
+        //return loader.loadClass(desc.getName());
+
+        String name = desc.getName();
+        try {
+            return Class.forName(name, false, loader);
+        } catch (ClassNotFoundException ex) {
+            return super.resolveClass(desc);
+        }
     }
-    
-    public void handle(NewPatchInSlotMessage message)
-    {
-        /*
-        int slotIndex = message.get("slot");
-        int pid = message.get("pid");
-        // int cc = message.get("cc");
-        */
-        
-        
-    }
-    
 }

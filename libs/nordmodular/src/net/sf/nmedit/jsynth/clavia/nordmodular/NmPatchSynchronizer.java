@@ -30,6 +30,8 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
 import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentEvent;
 import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.event.PPatchSettingsEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.event.PPatchSettingsListener;
 import net.sf.nmedit.jpatch.event.PConnectionEvent;
 import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
 import net.sf.nmedit.jpatch.event.PModuleEvent;
@@ -38,7 +40,7 @@ import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 
 public class NmPatchSynchronizer extends AllEventsListener 
-    implements PAssignmentListener, PropertyChangeListener
+    implements PAssignmentListener, PropertyChangeListener, PPatchSettingsListener
 {
 
     private NordModular synth;
@@ -79,6 +81,7 @@ public class NmPatchSynchronizer extends AllEventsListener
         
         patch.removePropertyChangeListener(this);
         patch.removeAssignmentListener(this);
+        patch.removePatchSettingsListener(this);
 
         uninstallModuleContainer(patch.getPolyVoiceArea());
         uninstallModuleContainer(patch.getCommonVoiceArea());
@@ -91,6 +94,7 @@ public class NmPatchSynchronizer extends AllEventsListener
 
         patch.addPropertyChangeListener(this);
         patch.addAssignmentListener(this);
+        patch.addPatchSettingsListener(this);
         
         installModuleContainer(patch.getPolyVoiceArea());
         installModuleContainer(patch.getCommonVoiceArea());
@@ -359,6 +363,19 @@ public class NmPatchSynchronizer extends AllEventsListener
     {
         String n = e.getPropertyName();
         return name == n || name.equals(n);
+    }
+
+    public void patchSettingsChanged(PPatchSettingsEvent e)
+    {
+        try
+        {
+            MidiMessage msg = NmUtils.createPatchSettingsMessage(patch, slot.getSlotId());
+            synth.getProtocol().send(msg);
+        }
+        catch (Exception e1)
+        {
+            e1.printStackTrace();
+        }
     }
     
 }

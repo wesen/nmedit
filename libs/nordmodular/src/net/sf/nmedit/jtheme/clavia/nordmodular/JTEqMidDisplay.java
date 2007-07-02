@@ -34,6 +34,11 @@ import net.sf.nmedit.jtheme.component.JTDisplay;
 public class JTEqMidDisplay extends JTDisplay implements ChangeListener
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7924250746781242031L;
+
     private EqualizerMid equalizerMid;
     
     private JTControlAdapter freqAdapter;

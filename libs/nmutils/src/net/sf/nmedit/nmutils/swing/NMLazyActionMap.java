@@ -31,6 +31,10 @@ import javax.swing.plaf.ActionMapUIResource;
 public class NMLazyActionMap extends ActionMapUIResource
 {
     /**
+     * 
+     */
+    private static final long serialVersionUID = 7173055551302608417L;
+    /**
      * Object to invoke <code>loadActionMap</code> on. This may be a Class
      * object.
      */

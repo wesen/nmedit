@@ -36,6 +36,10 @@ import net.sf.nmedit.jtheme.component.JTDisplay;
 public class ClipDisp extends JTDisplay implements ChangeListener 
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5156590739842216466L;
     private JTControlAdapter clipParam; 
     private JTControlAdapter symParam;
 

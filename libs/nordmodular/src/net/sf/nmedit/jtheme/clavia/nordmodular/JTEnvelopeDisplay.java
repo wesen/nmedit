@@ -41,6 +41,10 @@ public class JTEnvelopeDisplay extends JTDisplay implements ChangeListener
 
     // adsr / ad / ahd
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6469770227264863413L;
     // sustain-release enabled
     private boolean srEnabled = true;
     // hold enabled

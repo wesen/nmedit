@@ -30,6 +30,10 @@ import javax.swing.text.DefaultStyledDocument;
 
 public class LimitedText extends DefaultStyledDocument {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1104470300584043715L;
     private int maxCharacters;
 
     public LimitedText(int maxCharacters) 

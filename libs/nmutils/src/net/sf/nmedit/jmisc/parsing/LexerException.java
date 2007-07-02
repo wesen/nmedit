@@ -25,6 +25,11 @@ package net.sf.nmedit.jmisc.parsing;
 public class LexerException extends Exception
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -612233637180219047L;
+
     public LexerException( SimpleLexer lexer, String message )
     {
         super( fmtMessage(lexer, message) );

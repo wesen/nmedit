@@ -261,17 +261,17 @@ public class LightProcessor
                 break;
             }
         }
-        
+        /*
         Object mb = null;
         Object ma = null;
-        
+        */
         if (index>=0)
         {
             System.arraycopy(METERs, index+2, METERs, index, METERCount*2-index-2);
-
+/*
             mb = METERs[METERCount*2-1];
             ma = METERs[METERCount*2-2]; 
-            
+            */
             METERs[METERCount*2-1] = null;
             METERs[METERCount*2-2] = null;
             METERCount--;

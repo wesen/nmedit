@@ -28,6 +28,11 @@ public class NoteSet extends ArrayList<Note> //extends HashSet<Note>
 {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 1322315239826596094L;
+
+    /**
      * Adds a note to the set. If a note with the same note
      * number already exists it will be replaced.
      * 

@@ -35,6 +35,11 @@ import org.jdom.Element;
 public class WaveWrapDisplayStore extends ControlElement
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1012847643653948994L;
+
     public static ComponentElement createElement(StorageContext context, Element element)
     {
         WaveWrapDisplayStore e = new WaveWrapDisplayStore();

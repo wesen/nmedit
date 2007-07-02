@@ -52,6 +52,13 @@ public class Patch2BitstreamBuilder
     private List<Integer> sectionEndPositions = new ArrayList<Integer>();
 
     private final NMPatch patch;
+    
+    private boolean headerOnly = false;
+    
+    public void setHeaderOnly(boolean enable)
+    {
+        this.headerOnly = enable;
+    }
 
     public Patch2BitstreamBuilder( NMPatch patch )
     {
@@ -137,6 +144,13 @@ public class Patch2BitstreamBuilder
     {
         
       // Create patch bitstream
+     
+      if (headerOnly)
+      {
+          generateHeader();
+          
+          return;
+      }
         
 
       // Name section
@@ -149,32 +163,7 @@ public class Patch2BitstreamBuilder
       endSection();
       
       // Header section
-      Header h = patch.getHeader();
-      beginSection(Format.S_HEADER);
-      append(h.getKeyboardRangeMin());
-      append(h.getKeyboardRangeMax());
-      append(h.getVelocityRangeMin());
-      append(h.getVelocityRangeMax());
-      append(h.getBendRange());
-      append(h.getPortamentoTime());
-      append(h.getPortamento());
-      append(1);
-      append(h.getRequestedVoices() - 1);
-      append(0);
-      append(h.getSeparatorPosition());
-      append(h.getOctaveShift());
-      append(h.getValue(Format.HEADER_CABLE_VISIBILITY_RED));
-      append(h.getValue(Format.HEADER_CABLE_VISIBILITY_BLUE));
-      append(h.getValue(Format.HEADER_CABLE_VISIBILITY_YELLOW));
-      append(h.getValue(Format.HEADER_CABLE_VISIBILITY_GRAY));
-      append(h.getValue(Format.HEADER_CABLE_VISIBILITY_GREEN));
-      append(h.getValue(Format.HEADER_CABLE_VISIBILITY_PURPLE));
-      append(h.getValue(Format.HEADER_CABLE_VISIBILITY_WHITE));
-      append(h.getValue(Format.HEADER_VOICE_RETRIGGER_COMMON));
-      append(h.getValue(Format.HEADER_VOICE_RETRIGGER_POLY));
-      append(0xF);
-      append(0);
-      endSection();
+      generateHeader();
 
       // Module section
       moduleSection(patch.getPolyVoiceArea());
@@ -304,6 +293,36 @@ public class Patch2BitstreamBuilder
       moduleNameSection(patch.getPolyVoiceArea());
       moduleNameSection(patch.getCommonVoiceArea());
     }
+
+    protected void generateHeader()
+    {
+        Header h = patch.getHeader();
+        beginSection(Format.S_HEADER);
+        append(h.getKeyboardRangeMin());
+        append(h.getKeyboardRangeMax());
+        append(h.getVelocityRangeMin());
+        append(h.getVelocityRangeMax());
+        append(h.getBendRange());
+        append(h.getPortamentoTime());
+        append(h.getPortamento());
+        append(1);
+        append(h.getRequestedVoices() - 1);
+        append(0);
+        append(h.getSeparatorPosition());
+        append(h.getOctaveShift());
+        append(h.getValue(Format.HEADER_CABLE_VISIBILITY_RED));
+        append(h.getValue(Format.HEADER_CABLE_VISIBILITY_BLUE));
+        append(h.getValue(Format.HEADER_CABLE_VISIBILITY_YELLOW));
+        append(h.getValue(Format.HEADER_CABLE_VISIBILITY_GRAY));
+        append(h.getValue(Format.HEADER_CABLE_VISIBILITY_GREEN));
+        append(h.getValue(Format.HEADER_CABLE_VISIBILITY_PURPLE));
+        append(h.getValue(Format.HEADER_CABLE_VISIBILITY_WHITE));
+        append(h.getValue(Format.HEADER_VOICE_RETRIGGER_COMMON));
+        append(h.getValue(Format.HEADER_VOICE_RETRIGGER_POLY));
+        append(0xF);
+        append(0);
+        endSection();
+    }
     
     private void moduleSection(VoiceArea va)
     {
@@ -419,7 +438,7 @@ public class Patch2BitstreamBuilder
         }
         
         append(nmodules);
-      
+
         for (PModule m : va)
         {
             Map map = Helper.getParameterClassMap(m, "custom");

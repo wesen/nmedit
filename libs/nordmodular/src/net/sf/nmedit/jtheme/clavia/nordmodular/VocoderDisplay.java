@@ -32,6 +32,10 @@ import net.sf.nmedit.jtheme.component.JTDisplay;
 public class VocoderDisplay extends JTDisplay implements ChangeListener
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 519965459660076704L;
     private JTControlAdapter[] adapters;
 
     public VocoderDisplay(JTContext context)

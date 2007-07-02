@@ -103,6 +103,10 @@ public class PhaserTest
     
     static class EnvelopeDisplay extends JComponent
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -3471559914444160864L;
         final Color fillColor = Color.decode("#C0DCC0");
         
         {
@@ -149,6 +153,10 @@ public class PhaserTest
     
     static class NbPeakChanger extends JSlider implements ChangeListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -501034908194519513L;
         public NbPeakChanger()
         {
         	super(JSlider.HORIZONTAL, 0,5, 0);
@@ -164,6 +172,10 @@ public class PhaserTest
     
     static class SpreadChanger extends JSlider implements ChangeListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 8121588597452562234L;
         public SpreadChanger()
         {
         	super(JSlider.HORIZONTAL, 0,127, 0);
@@ -179,6 +191,10 @@ public class PhaserTest
     
     static class FeedbackChanger extends JSlider implements ChangeListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 5162791097410799913L;
         public FeedbackChanger()
         {
         	super(JSlider.HORIZONTAL, 0,127, 0);

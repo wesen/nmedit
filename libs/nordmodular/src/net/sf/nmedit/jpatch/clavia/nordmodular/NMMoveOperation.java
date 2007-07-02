@@ -47,7 +47,7 @@ public class NMMoveOperation extends AbstractMoveOperation
             throw new IllegalStateException("offset not set");
     }
     
-    private final static int MAX_POS = 8000-1; // which value is correct ?
+    protected final static int MAX_POS = 8000-1; // which value is correct ?
 
     @Override
     public void move()

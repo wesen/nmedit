@@ -34,6 +34,10 @@ import org.jdom.Element;
 public class FilterEDisplayStore extends AbstractMultiParameterElement
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3756936306341643552L;
     private static final String[] PARAMETERS = {"cutoff", "resonance", "type", "slope"};
 
     protected FilterEDisplayStore()

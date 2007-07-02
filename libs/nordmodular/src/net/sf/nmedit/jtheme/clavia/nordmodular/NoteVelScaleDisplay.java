@@ -35,6 +35,11 @@ import net.sf.nmedit.jtheme.component.JTDisplay;
 public class NoteVelScaleDisplay extends JTDisplay implements ChangeListener
 { 
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8628598647083829107L;
+
     public NoteVelScaleDisplay( JTContext context )
     {
         super( context );

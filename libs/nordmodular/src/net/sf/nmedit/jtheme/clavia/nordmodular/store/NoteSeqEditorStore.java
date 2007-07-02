@@ -18,6 +18,8 @@
  */
 package net.sf.nmedit.jtheme.clavia.nordmodular.store;
 
+import java.io.Serializable;
+
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PParameter;
@@ -32,8 +34,13 @@ import net.sf.nmedit.jtheme.store2.AbstractMultiParameterElement;
 import org.jdom.Element;
 
 public class NoteSeqEditorStore extends AbstractMultiParameterElement
+implements Serializable
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3406543447263312706L;
     private static final String[] PARAMETERS = {
         "step1",
         "step2",

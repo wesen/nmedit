@@ -43,7 +43,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import net.sf.nmedit.jtheme.clavia.nordmodular.graphics.Envelope;
-import net.sf.nmedit.jtheme.clavia.nordmodular.graphics.Envelope.ADSREnvelope;
 
 public class EnvelopeTest
 {
@@ -110,6 +109,10 @@ public class EnvelopeTest
     
     static class EnvelopeDisplay extends JComponent
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 2425294777822199724L;
         final Color fillColor = Color.decode("#C0DCC0");
         
         {
@@ -154,6 +157,11 @@ public class EnvelopeTest
     
     static class CurveTypeChange extends JComboBox implements ActionListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 467452423382838968L;
+
         final static String[] curveTypes = new String[]{"Lin", "Exp", "Log"};
         
         private int index;
@@ -175,6 +183,10 @@ public class EnvelopeTest
     static class AttackChanger extends JSlider implements ChangeListener
     {
     
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 9143852492364704879L;
         public AttackChanger()
         {
         	super(JSlider.HORIZONTAL, 0,127, 0);
@@ -191,6 +203,10 @@ public class EnvelopeTest
     
     static class DecayChanger extends JSlider implements ChangeListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 8715639397593913942L;
         public DecayChanger()
         {
         	super(JSlider.HORIZONTAL, 0,127, 0);            
@@ -206,7 +222,11 @@ public class EnvelopeTest
     
     static class SustainChanger extends JSlider implements ChangeListener
     {
-        private int index;
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -4548049085353623050L;
+        //private int index;
 
         public SustainChanger()
         {
@@ -224,6 +244,10 @@ public class EnvelopeTest
     
     static class ReleaseChanger extends JSlider implements ChangeListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -3142555968233552198L;
         public ReleaseChanger()
         {
         	super(JSlider.HORIZONTAL, 0,127, 0);

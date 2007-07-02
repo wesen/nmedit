@@ -34,6 +34,10 @@ import org.jdom.Element;
 public class ClipDispStore extends AbstractMultiParameterElement
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2299181345259558576L;
     private static final String[] PARAMETERS = {"clip", "symmetry"};
 
     protected ClipDispStore()

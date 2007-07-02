@@ -36,6 +36,11 @@ public class Note implements Comparable<Note>, IndexedElement<Note>, Serializabl
 {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = -7223760755067137921L;
+
+    /**
      * bits 21..15: release velocity
      * bits 14.. 8: attack velocity
      * bits  7.. 0: note number

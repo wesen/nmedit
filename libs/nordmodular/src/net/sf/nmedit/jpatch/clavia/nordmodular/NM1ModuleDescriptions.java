@@ -29,35 +29,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.ModuleDescriptionsParser;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.AmpGain;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.BPM;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.CompressorLimiter;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.CompressorThreshold;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.DigitizerHz;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.DrumHz;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.DrumPartials;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.EnvelopeLevelDivider;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.EqHz;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.ExpanderGate;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.ExpanderHold;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.ExpanderThreshold;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.FilterHz1;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.FilterHz2;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.Freqkbt;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.LFOHz;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.LogicDelay;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.Note;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.NoteScale;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.Offset64_2;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.OscHz;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.PartialRange;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.Partials;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.PatternStep;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.Phase;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.Semitones;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.SmoothTime;
-import net.sf.nmedit.jpatch.clavia.nordmodular.formatter.Timbre;
-import net.sf.nmedit.jpatch.formatter.FormatterRegistry;
 import net.sf.nmedit.jpatch.impl.PBasicModuleMetrics;
 
 import org.xml.sax.SAXException;
@@ -66,9 +37,9 @@ import org.xml.sax.SAXParseException;
 public class NM1ModuleDescriptions extends ModuleDescriptions
 {
 
-    public static NM1ModuleDescriptions parse(InputStream stream) throws ParserConfigurationException, SAXException, IOException
+    public static NM1ModuleDescriptions parse(ClassLoader loader, InputStream stream) throws ParserConfigurationException, SAXException, IOException
     {
-        NM1ModuleDescriptions mod = new NM1ModuleDescriptions();
+        NM1ModuleDescriptions mod = new NM1ModuleDescriptions(loader);
         
         try
         {
@@ -82,42 +53,11 @@ public class NM1ModuleDescriptions extends ModuleDescriptions
         return mod;
     }
 
-    public NM1ModuleDescriptions()
+    public NM1ModuleDescriptions(ClassLoader loader)
     {
-        installNM1Formatters(getFormatterRegistry());
+        
+        super(loader);
         this.metrics = new PBasicModuleMetrics(255, 15, 4000, 4000);
     }
     
-    private void installNM1Formatters( FormatterRegistry registry )
-    {
-        registry.putFormatter("bpm", new BPM());
-        registry.putFormatter("digitizer-hz", new DigitizerHz());
-        registry.putFormatter("drum-hz", new DrumHz());
-        registry.putFormatter("drumpartials", new DrumPartials());
-        registry.putFormatter("eq-hz", new EqHz());
-        registry.putFormatter("amp-gain", new AmpGain());
-        registry.putFormatter("filter-hz-1", new FilterHz1());
-        registry.putFormatter("filter-hz-2", new FilterHz2());
-        registry.putFormatter("lfo-hz", new LFOHz());
-        registry.putFormatter("logic-delay", new LogicDelay());
-        registry.putFormatter("note", new Note());
-        registry.putFormatter("note-scale", new NoteScale());
-        registry.putFormatter("osc-hz", new OscHz());
-        registry.putFormatter("partial-range", new PartialRange());
-        registry.putFormatter("partials", new Partials());
-        registry.putFormatter("phase", new Phase());
-        registry.putFormatter("semitones", new Semitones());
-        registry.putFormatter("smooth-time", new SmoothTime());
-        registry.putFormatter("freq-kbt", new Freqkbt());
-        registry.putFormatter("compressor-limiter", new CompressorLimiter());
-        registry.putFormatter("offset-64-2", new Offset64_2());
-        registry.putFormatter("compressor-treshold", new CompressorThreshold());
-        registry.putFormatter("expander-treshold", new ExpanderThreshold());
-        registry.putFormatter("envelope-level-divider", new EnvelopeLevelDivider());
-        registry.putFormatter("timbre", new Timbre());
-        registry.putFormatter("pattern-step", new PatternStep());
-        registry.putFormatter("expander-gate", new ExpanderGate());
-        registry.putFormatter("expander-hold", new ExpanderHold());
-    }
-
 }

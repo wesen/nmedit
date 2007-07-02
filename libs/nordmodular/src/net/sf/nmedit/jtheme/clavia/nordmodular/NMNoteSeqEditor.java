@@ -41,13 +41,34 @@ public class NMNoteSeqEditor extends JTControl implements ChangeListener
     
     private int zoom = 5, maxZoom = 5, minZoom = 1;
     private JTControlAdapter[] controlAdapters = new JTControlAdapter[STEPS];
-     
+
+    private float translation = 0;
     
     public NMNoteSeqEditor(JTContext context)
     {
         super(context);
 
         clear();
+    }
+
+    public float getTranslationStepSize()
+    {
+        return 0.1f;
+    }
+    
+    public float getTranslation()
+    {
+        return translation;
+    }
+    
+    public void setTranslation(float t)
+    {
+        t = Math.max(0, Math.min(1f, t));
+        if (this.translation != t)
+        {
+            this.translation = t;
+            repaint();
+        }
     }
 
     protected class NoteListener implements ChangeListener{

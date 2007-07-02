@@ -120,6 +120,10 @@ public class MultiEnvelopeTest
     
     static class EnvelopeDisplay extends JComponent
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -7144533902038873158L;
         final Color fillColor = Color.decode("#C0DCC0");
         
         {
@@ -164,6 +168,11 @@ public class MultiEnvelopeTest
     
     static class CurveTypeChange extends JComboBox implements ActionListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -3349234351342699398L;
+
         final static String[] curveTypes = new String[]{"Lin", "Exp", "Log"};
         
         private int index;
@@ -184,7 +193,11 @@ public class MultiEnvelopeTest
     
     static class LevelChanger extends JSlider implements ChangeListener
     {
-    	private int segment;
+    	/**
+         * 
+         */
+        private static final long serialVersionUID = 5178095337548830904L;
+        private int segment;
     	
         public LevelChanger(int segment)
         {           	
@@ -204,7 +217,11 @@ public class MultiEnvelopeTest
     
     static class TimeChanger extends JSlider implements ChangeListener
     {
-    	private int segment;
+    	/**
+         * 
+         */
+        private static final long serialVersionUID = -4277462784798419347L;
+        private int segment;
     	
         public TimeChanger(int segment)
         {   
@@ -228,6 +245,10 @@ public class MultiEnvelopeTest
     static class SustainChanger extends JSlider implements ChangeListener
     {
     
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 3486762989560437414L;
         public SustainChanger()
         {   
         	super(JSlider.HORIZONTAL, 0,4, 0);        	

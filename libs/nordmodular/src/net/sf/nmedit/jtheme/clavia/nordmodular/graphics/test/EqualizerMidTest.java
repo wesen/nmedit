@@ -102,6 +102,10 @@ public class EqualizerMidTest
     
     static class EnvelopeDisplay extends JComponent
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 7142376469898731254L;
         final Color fillColor = Color.decode("#C0DCC0");
         
         {
@@ -148,6 +152,10 @@ public class EqualizerMidTest
     
     static class GainChanger extends JSlider implements ChangeListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 8805845411005674043L;
         public GainChanger()
         {
             setValue((int)(sh.getGain()*100));
@@ -162,6 +170,10 @@ public class EqualizerMidTest
     
     static class BWChanger extends JSlider implements ChangeListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -3157743864374732090L;
         public BWChanger()
         {
             setValue((int)(sh.getBW()*100));
@@ -176,6 +188,10 @@ public class EqualizerMidTest
     
     static class FreqChanger extends JSlider implements ChangeListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -3586984733887686692L;
         public FreqChanger()
         {
             setValue((int)(sh.getFreq()*100));

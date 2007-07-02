@@ -23,7 +23,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
@@ -63,6 +62,10 @@ import net.sf.nmedit.jtheme.store2.ModuleElement;
 public class JTNMPatch extends JTPatch
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2196920112843451844L;
     private JTPatchSettingsBar settings;
     private NMPatch patch;
     private ModuleContainerEventHandler ehPoly;
@@ -88,6 +91,10 @@ public class JTNMPatch extends JTPatch
     
     protected static class ModuleAction extends AbstractAction
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -3424440102953404258L;
         public static final String DELETE = "remove";
         public static final String RENAME = "rename";
         public static final String HELP = "help";
@@ -222,6 +229,10 @@ public class JTNMPatch extends JTPatch
 
     protected static class ConnectorAction extends AbstractAction
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -6831064642989411996L;
         public static final String DISCONNECT = "Disconnect";
         public static final String BREAK = "Break";
         public static final String CAUDIO = "Audio";

@@ -142,7 +142,7 @@ public class JTNM1KnobUI extends JTBasicKnobUI
     private static final Color bgFill = new Color(/*0xB0B0B0/**/0xA0A0A0);
     private static final Stroke stroke1 = new BasicStroke(1.75f);
     private static final Stroke stroke2 = new BasicStroke(1.00f);
-    private static final Color stroke2color = new Color(0xBB000000, true);
+    //private static final Color stroke2color = new Color(0xBB000000, true);
     private static final Color gradColor1 = new Color(0x77FFFFFF, true);
     private static final Color gradColor2 = new Color(0x77000000, true);
     

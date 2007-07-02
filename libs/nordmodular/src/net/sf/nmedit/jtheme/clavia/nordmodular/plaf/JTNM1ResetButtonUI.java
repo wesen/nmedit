@@ -42,7 +42,7 @@ public class JTNM1ResetButtonUI extends JTBasicControlUI
     private final static Color defaultOutline = new Color(0, 0, 0, 0.4f);
     private final Color defaultHighlight = new Color(245, 245, 220, 180);
     private final static boolean upsidedown = true;
-    private boolean rememberState = false;
+    //private boolean rememberState = false;
     
     private Color clOutline = defaultOutline;
     private Color clHighlight = defaultHighlight;
@@ -91,7 +91,7 @@ public class JTNM1ResetButtonUI extends JTBasicControlUI
 
         JTControl control = (JTControl) c;
         
-        if (isInDefaultState((JTControl)c))
+        if (isInDefaultState(control))
         {
             configureGraphics(g);
             metrics.update(c.getWidth(), c.getHeight());
@@ -106,18 +106,17 @@ public class JTNM1ResetButtonUI extends JTBasicControlUI
         }
     }
 
+    private transient BasicControlListener rbControlListenerInstance;
+    
     protected BasicControlListener createControlListener(JTControl control) 
     {
-        return new ResetButtonControlListener(control);
+        if (rbControlListenerInstance == null)
+            rbControlListenerInstance = new ResetButtonControlListener();
+        return rbControlListenerInstance;
     }
 
     public static class ResetButtonControlListener extends BasicControlListener
     {
-
-        public ResetButtonControlListener(JTControl control)
-        {
-            super(control);
-        }
 
         public static void loadActionMap(NMLazyActionMap map) 
         {  

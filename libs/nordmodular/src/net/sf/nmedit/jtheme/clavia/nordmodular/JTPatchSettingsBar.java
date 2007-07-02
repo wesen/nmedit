@@ -59,6 +59,11 @@ public class JTPatchSettingsBar extends JPanel implements PModuleContainerListen
 /*implements PatchListener */
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7266333456740910212L;
+
     private JTextField
         pName;
 
@@ -68,7 +73,7 @@ public class JTPatchSettingsBar extends JPanel implements PModuleContainerListen
     private VoicesNumberModel voices;
     
     private NMPatch patch = null;
-    private JPanel dspPane;
+   // private JPanel dspPane;
     private JProgressBar dspTotal;
     private JProgressBar dspPoly;
     

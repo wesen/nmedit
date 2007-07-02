@@ -101,6 +101,10 @@ public class FilterETest {
     
     static class EnvelopeDisplay extends JComponent
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 5534019870934900490L;
         final Color fillColor = Color.decode("#C0DCC0");
         
         {
@@ -147,6 +151,10 @@ public class FilterETest {
     
     static class ResonanceChanger extends JSlider implements ChangeListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 4910742195109753192L;
         public ResonanceChanger()
         {
         	super(JSlider.HORIZONTAL, 0,100, 0);
@@ -162,6 +170,10 @@ public class FilterETest {
 //    
     static class CutOffChanger extends JSlider implements ChangeListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -1810808435359218622L;
         public CutOffChanger()
         {
         	super(JSlider.HORIZONTAL, 0,100, 0);
@@ -177,6 +189,10 @@ public class FilterETest {
 //    
     static class TypeChanger extends JSlider implements ChangeListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1069771227727182082L;
         public TypeChanger()
         {
         	super(JSlider.HORIZONTAL, 0,3, 0);

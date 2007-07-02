@@ -24,6 +24,10 @@ import net.sf.nmedit.jtheme.component.JTControl;
 public class JTNM1ResetButton extends JTControl
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 124946520750920129L;
     public static String uiClassID = "nm1.resetbutton";
     
     public JTNM1ResetButton(JTContext context)

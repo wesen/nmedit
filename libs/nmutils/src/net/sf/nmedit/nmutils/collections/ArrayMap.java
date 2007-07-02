@@ -32,6 +32,10 @@ import java.util.NoSuchElementException;
 public class ArrayMap<E> implements Iterable<E>, Cloneable, Serializable
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3401325714509820645L;
     private E[] elements;
     private int size = 0;
     private int minkey = 0;
@@ -161,7 +165,10 @@ public class ArrayMap<E> implements Iterable<E>, Cloneable, Serializable
 
             private int align(int index)
             {
-                while (++index<elements.length && elements[index]==null);
+                while (++index<elements.length && elements[index]==null)
+                {
+                    ;
+                }
                 return index;
             }
 

@@ -29,6 +29,7 @@ import javax.swing.plaf.FontUIResource;
 
 import net.sf.nmedit.jtheme.JTCustomContext;
 import net.sf.nmedit.jtheme.JTPopupHandler;
+import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.JTBasicSliderScrollbarUI;
 import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.JTNM1KnobUI;
 import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.JTNM1ResetButtonUI;
 import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.JTNM1SliderUI;
@@ -136,6 +137,7 @@ public class JTNM1Context extends JTCustomContext
         installComponentClass(NMNoteSeqEditor.class);
         installComponentClass(VocoderDisplay.class);
         installComponentClass(JTLight.class);
+        installComponentClass(NMScrollbar.class);
     }
 
     @Override
@@ -185,6 +187,7 @@ public class JTNM1Context extends JTCustomContext
         uidefaults.put(JTEnvelopeDisplay.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(WaveWrapDisp.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(ClipDisp.uiClassID, JTDisplayUI.class.getName());
+        uidefaults.put(NMScrollbar.ScrollBarUIClassID, JTBasicSliderScrollbarUI.class.getName());
         
         uidefaults.put(JTModuleUI.moduleBorder, new BorderUIResource(BorderFactory.createRaisedBevelBorder()));
         uidefaults.put(JTModuleContainer.uiClassId, JTModuleContainerUI.class.getName());
@@ -200,6 +203,8 @@ public class JTNM1Context extends JTCustomContext
         uidefaults.put(JTNM1SliderUI.sliderGripColorKey, new ColorUIResource(0xC4C4C4));
         uidefaults.put(JTNM1SliderUI.sliderBackgroundColorKey, new ColorUIResource(0xDCDCDE));
         uidefaults.put(JTNM1SliderUI.borderKey, new BorderUIResource(JTNM1BorderFactory.createNordEditor311Border()));
+        
+        uidefaults.put(NoteSeqEditorUI.borderKey, new BorderUIResource(JTNM1BorderFactory.createNordEditor311Border()));
         
         uidefaults.put(NMNoteSeqEditor.uiClassID, NoteSeqEditorUI.class.getName());
     }

@@ -38,6 +38,11 @@ import org.jdom.Element;
 public class VocoderDisplayStore extends AbstractElement implements Serializable
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3348068852175373870L;
+
     public static final String ATT_BAND = "band";
     
     private transient String[] componentIdList = new String[16];

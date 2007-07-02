@@ -39,6 +39,11 @@ import net.sf.nmedit.jtheme.component.JTDisplay;
 public class WaveWrapDisp extends JTDisplay implements ChangeListener
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8368226950144587665L;
+
     public WaveWrapDisp( JTContext context )
     {
         super( context );

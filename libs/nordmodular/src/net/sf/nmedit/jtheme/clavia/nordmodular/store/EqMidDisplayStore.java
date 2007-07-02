@@ -35,6 +35,10 @@ import org.jdom.Element;
 public class EqMidDisplayStore extends AbstractMultiParameterElement
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 369101428512128942L;
     private static final String[] PARAMETERS = {"frequency", "gain", "bandwidth"};
 
     public EqMidDisplayStore()

@@ -34,6 +34,10 @@ import org.jdom.Element;
 public class LFODisplayStore extends AbstractMultiParameterElement
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8351046562905328198L;
     private static final String[] PARAMETERS = {"phase", "shape"};
     private int waveform = -1;
 

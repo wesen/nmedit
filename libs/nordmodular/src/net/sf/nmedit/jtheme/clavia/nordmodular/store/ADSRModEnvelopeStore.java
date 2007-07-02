@@ -31,6 +31,11 @@ import org.jdom.Element;
 public class ADSRModEnvelopeStore extends AbstractEnvelopeStore
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -166723543228791475L;
+
     public static ComponentElement createElement(StorageContext context, Element element)
     {
         ADSRModEnvelopeStore e = new ADSRModEnvelopeStore();

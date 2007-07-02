@@ -26,6 +26,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
+import java.nio.charset.UnsupportedCharsetException;
 
 /**
  * Lexer for Nord Modular 3 Patch files.
@@ -124,6 +127,21 @@ public final class PScanner
     
     public void setSource(InputStream stream)
     {
+        try
+        {
+            Charset c = Charset.forName("ISO-8859-1");
+            setSource(new InputStreamReader(stream, c));
+            return;
+        }
+        catch (IllegalCharsetNameException e)
+        {
+            
+        }
+        catch (UnsupportedCharsetException e)
+        {
+            
+        }
+        
         setSource(new InputStreamReader(stream));
     }
        

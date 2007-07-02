@@ -68,12 +68,13 @@ public class Helper
         return getParameterClassMap(module, name).size();
     }
 
-    public static Map getParameterClassMap(PModule module, String name)
+    @SuppressWarnings("unchecked")
+    public static Map<Object, Object> getParameterClassMap(PModule module, String name)
     {
         String key = PDescriptor.CACHE_KEY_PREFIX+"parameter-map="+name;
         Object value = module.getAttribute(key);
         if (value instanceof Map) return (Map) value;
-        Map map = new HashMap<Object, Object>(module.getParameterCount()/2);
+        Map<Object, Object> map = new HashMap<Object, Object>(module.getParameterCount()/2);
         for (int i=module.getParameterCount()-1;i>=0;i--)
         {
             PParameter p = module.getParameter(i);

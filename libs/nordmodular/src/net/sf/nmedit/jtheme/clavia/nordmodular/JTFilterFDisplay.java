@@ -31,7 +31,12 @@ import net.sf.nmedit.jtheme.component.JTDisplay;
 
 public class JTFilterFDisplay extends JTDisplay implements ChangeListener {
 
-	private FilterF filterF;
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1177424918391669197L;
+
+    private FilterF filterF;
 
 	private JTControlAdapter cutoffAdapter;
 

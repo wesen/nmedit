@@ -35,6 +35,10 @@ import org.jdom.Element;
 public class NoteVelScaleDisplayStore extends AbstractMultiParameterElement
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8756690336945526847L;
     private static final String[] PARAMETERS = {"left-gain", "right-gain", "break-point"};
 
     protected NoteVelScaleDisplayStore()

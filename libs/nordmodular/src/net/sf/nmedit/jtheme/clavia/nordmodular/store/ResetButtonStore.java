@@ -33,6 +33,11 @@ import net.sf.nmedit.jtheme.store2.ControlElement;
 public class ResetButtonStore extends ControlElement
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2855211720275914470L;
+
     public static ComponentElement createElement(StorageContext context, Element element)
     {
         ResetButtonStore e = new ResetButtonStore();
