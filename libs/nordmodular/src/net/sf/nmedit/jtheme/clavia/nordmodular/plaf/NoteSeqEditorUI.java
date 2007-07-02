@@ -21,11 +21,11 @@ package net.sf.nmedit.jtheme.clavia.nordmodular.plaf;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
-import java.awt.Polygon;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -37,6 +37,7 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ComponentUI;
@@ -56,6 +57,8 @@ public class NoteSeqEditorUI extends JTComponentUI
 	
     public static final Color DEFAULT_BACKGROUND = new Color(0xDCDCDC);
     public static final Color DEFAULT_LINE_COLOR = new Color(0xC0C0C0);
+
+    public static final String borderKey = "NoteSeqEditorUI.border";
     
     private Color noteColor = new Color(0x2e43ad);
     private Color lineColor = DEFAULT_LINE_COLOR;
@@ -78,11 +81,32 @@ public class NoteSeqEditorUI extends JTComponentUI
     
     public void installUI(JComponent c)
     {
+        JTContext context = ((JTComponent) c).getContext();
+        Border border = context.getUIDefaults().getBorder(borderKey);
+        
+        c.setBorder(border);
+        if (border != null)
+            c.setOpaque(border.isBorderOpaque());
+        else
+            c.setOpaque(false);
+        
         c.setBackground(DEFAULT_BACKGROUND);
         
-        NoteSeqEditorListener noteSeqListenner= createNoteSeqEditorListener(control);
-        if (noteSeqListenner != null)
-        	noteSeqListenner.install(control);
+        NoteSeqEditorListener noteSeqListener= createNoteSeqEditorListener(control);
+        if (noteSeqListener != null)
+        	noteSeqListener.install(control);
+    }
+    
+    public void uninstallUI(JComponent c)
+    {
+        // remove border
+        c.setBorder(null);
+        
+        // uninstall listener
+        NoteSeqEditorListener listener = getNoteSeqEditorListener(c);
+        if (listener != null)
+            listener.uninstall((NMNoteSeqEditor)c);
+        
     }
     
     protected NoteSeqEditorListener createNoteSeqEditorListener(NMNoteSeqEditor ed) {
@@ -91,6 +115,17 @@ public class NoteSeqEditorUI extends JTComponentUI
     	return new NoteSeqEditorListener(this);
 		
 	}
+    
+    protected NoteSeqEditorListener getNoteSeqEditorListener(JComponent c)
+    {
+        Object[] list = c.getMouseListeners();
+        for (int i=0;i<list.length;i++)
+            if (list[i] instanceof NoteSeqEditorListener)
+            {
+                return (NoteSeqEditorListener) list[i];
+            }
+        return null;
+    }
 
 	public Dimension getPreferredSize(JComponent c)
     {
@@ -130,11 +165,34 @@ public class NoteSeqEditorUI extends JTComponentUI
         paintForeground(g, ed, x, y, w, h);
     }
 
+    private static final boolean FILL_NOTE[] = 
+        {
+           false,
+           true, // note = 1
+           false,
+           true, // note = 3
+           false,
+           false,
+           true, // note = 6
+           false,
+           true, // note = 8
+           false,
+           true, // note = 10
+           false,
+           false
+        };
+    
     private void paintBackground(Graphics2D g, NMNoteSeqEditor ed, int x, int y, int w, int h)
     {
-        g.setColor(ed.getBackground());
-        g.fillRect(0, 0, ed.getWidth(), ed.getHeight());
-
+        
+        {
+            Insets is = ed.getInsets();
+            g.setColor(ed.getBackground());
+            g.fillRect(is.left, is.top,
+                    ed.getWidth()-is.left-is.right,
+                    ed.getHeight()-is.top-is.bottom);
+        }
+        
         int mid = h/2;
         
         // 11 octave lines
@@ -147,16 +205,15 @@ public class NoteSeqEditorUI extends JTComponentUI
         	
         	// draw keyboard
         	if (noteHeight>=3)
+            {
+                g.setColor(new Color(0x9a9a9a));
 	        	for (int i = 0; i < 12 ; i ++){
-	        		if (i == 1 ||i == 3 ||i == 6 ||i == 8 ||i == 10)
-	        		{
-	        			g.setColor(new Color(0x9a9a9a));        			
-	        		} else 
-	        			g.setColor(Color.WHITE);
-	        		
-	        		g.fillRect(x, oy-i*noteHeight, nr, noteHeight);
+	        		if (FILL_NOTE[i])
+	        		{   
+                        g.fillRect(x, oy-i*noteHeight, nr, noteHeight);     			
+	        		} 
 	        	}        	
-        
+            }
             g.setColor(lineColor);
         	// draw line separating octaves            
             //g.drawLine(x, oy, nr, oy);   
@@ -170,13 +227,16 @@ public class NoteSeqEditorUI extends JTComponentUI
         
         // highlight edited note
         if (editedNote > -1 && editedNote < 16){
-        	g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.25f));
+            Composite oldComposite = g.getComposite();
+        	g.setComposite(NOTE_HIGHLIGHT_COMPOSITE);
 	        g.setColor(noteColor);
-	        g.fillRect(editedNote * w/16+1, y, w/16-1, h);
-	    
+	        g.fillRect(x+ (editedNote * w/16)+1, y, w/16, h);
+            g.setComposite(oldComposite); // restore previous composite
         }
     }
     
+    private static final AlphaComposite NOTE_HIGHLIGHT_COMPOSITE 
+        = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.25f);
 
     private void paintForeground(Graphics2D g, NMNoteSeqEditor ed, int x, int y, int w, int h)
     {
@@ -308,8 +368,7 @@ public class NoteSeqEditorUI extends JTComponentUI
 	
 	    public void mousePressed(MouseEvent e)
 	    {
-	    	
-	    	if (e.getButton() == e.BUTTON1){
+	    	if (SwingUtilities.isLeftMouseButton(e)){
 	    		editedNote = e.getX() / columnWidth;
 	    		y = e.getY();
 	    		oldNote = getControl(e).getNote(editedNote);
