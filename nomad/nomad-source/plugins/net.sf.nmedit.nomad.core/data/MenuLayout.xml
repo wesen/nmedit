@@ -39,6 +39,7 @@
 				<icon type="enabledIcon" src="&etool;/saveall_edit.gif" />
 				<icon type="disabledIcon" src="&dtool;/saveall_edit.gif" />
 			</entry>
+			<entry entryPoint="saveinsynth" />
 		</entry>
 		<entry entryPoint="ie" flat="true">
 			<entry entryPoint="import">
