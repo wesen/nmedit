@@ -32,9 +32,7 @@ import java.util.List;
 import java.util.Queue;
 
 import javax.swing.AbstractAction;
-import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JMenuItem;
 import javax.swing.event.EventListenerList;
 
@@ -47,6 +45,11 @@ import net.sf.nmedit.nmutils.iterator.BFSIterator;
  */
 public class MLEntry extends AbstractAction
 {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3695182855344600135L;
 
     // the enabled icon source uri
     private String enabledIconSrc = null;

@@ -308,6 +308,12 @@ public class PluginView implements Document
         {
             return null;
         }
+
+        public Object getProperty(String name)
+        {
+            // TODO Auto-generated method stub
+            return null;
+        }
         
     }
 
@@ -516,6 +522,12 @@ public class PluginView implements Document
     }
 
     public File getFile()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public Object getProperty(String name)
     {
         // TODO Auto-generated method stub
         return null;

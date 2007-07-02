@@ -75,6 +75,7 @@ public class Nomad
 
     private static final String MENU_FILE_SAVE = "nomad.menu.file.save.save";
     private static final String MENU_FILE_SAVEAS = "nomad.menu.file.save.saveas";
+    private static final String MENU_FILE_PROPERTIES = "nomad.menu.file.properties";
     
     private static Nomad instance;
     private JFrame mainWindow = null;
@@ -122,6 +123,13 @@ public class Nomad
                 fileSave(true);
             }});
 
+        menuLayout.getEntry(MENU_FILE_PROPERTIES)
+        .addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e)
+            {
+                fileProperties();
+            }});
+
         menuBuilder = new MenuBuilder(menuLayout);
         menuBuilder.setResourceBundle(localizedMessages);
         LocaleConfiguration.getLocaleConfiguration().addLocaleChangeListener(new LocaleHandler(menuBuilder));
@@ -164,6 +172,11 @@ public class Nomad
         //pageContainer.getTabBar()
         pageContainer
         .setTransferHandler(new FileTransferHandler(){
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 7177859593782278190L;
+
             protected boolean importFiles(JComponent c, List<File> filelist)
             {
                 if (c!=pageContainer)
@@ -197,18 +210,21 @@ public class Nomad
         {
             boolean saveEnabled = false;
             boolean saveAsEnabled = false;
+            boolean propertiesEnabled = false;
             if (d != null)
             {
                 Iterator<FileService> iter = ServiceRegistry.getServices(FileService.class);
-                while (iter.hasNext() && (!saveEnabled) && (!saveAsEnabled))
+                while (iter.hasNext() && (!saveEnabled) && (!saveAsEnabled) && (!propertiesEnabled))
                 {
                     FileService fs = iter.next();
                     if (!saveEnabled) saveEnabled = fs.isDirectSaveOperationSupported(d);
                     if (!saveAsEnabled) saveAsEnabled = fs.isSaveOperationSupported(d);
+                    if (!propertiesEnabled) propertiesEnabled = fs.isEditPropertiesSupported(d);
                 }
             }
             menuLayout.getEntry(MENU_FILE_SAVE).setEnabled(saveEnabled);
             menuLayout.getEntry(MENU_FILE_SAVEAS).setEnabled(saveAsEnabled);
+            menuLayout.getEntry(MENU_FILE_PROPERTIES).setEnabled(propertiesEnabled);
         }
         
     }
@@ -245,6 +261,27 @@ public class Nomad
             if (newFile == null) return;
             service.save(d, newFile);
         }
+    }
+
+    void fileProperties()
+    {
+        Document d = pageContainer.getSelection();
+        if (d == null) return;
+
+        FileService service = null;
+        
+        Iterator<FileService> iter = ServiceRegistry.getServices(FileService.class);
+        while (iter.hasNext() && service == null)
+        {
+            FileService fs = iter.next();
+            
+            if (fs.isEditPropertiesSupported(d))
+            {
+                service = fs;
+            }
+        }
+
+        service.editProperties(d);
     }
     
     void fileOpen()

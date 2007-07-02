@@ -55,7 +55,7 @@ public class FileContext extends FileNode implements TreeContext
             
             if (ce.getNode() instanceof FileNode)
             {
-                File file = ((FileNode) ce.getNode()).getFile();
+                //File file = ((FileNode) ce.getNode()).getFile();
                 /*
                 if (file.isFile())
                     Nomad.sharedInstance().openPatchFiles(

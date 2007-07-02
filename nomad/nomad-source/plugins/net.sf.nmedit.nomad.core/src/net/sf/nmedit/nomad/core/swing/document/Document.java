@@ -43,4 +43,6 @@ public interface Document
     
     <T> T getFeature(Class<T> featureClass);
     
+    Object getProperty(String name);
+    
 }

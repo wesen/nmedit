@@ -97,7 +97,7 @@ public class RootNode implements TreeNode
      *              <code>childIndex</code> is out of bounds
      */
     public void remove(int childIndex) {
-        TreeNode child = getChildAt(childIndex);
+        //TreeNode child = getChildAt(childIndex);
         children.removeElementAt(childIndex);
      //TODO   child.setParent(null);
     }

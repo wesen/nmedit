@@ -23,18 +23,9 @@
 package net.sf.nmedit.nomad.core;
 
 
-import java.util.Collection;
-
-import net.sf.nmedit.nomad.core.Nomad;
-import net.sf.nmedit.nomad.core.NomadLoader;
-
-import org.java.plugin.PluginLifecycleException;
 import org.java.plugin.PluginManager;
 import org.java.plugin.boot.Application;
 import org.java.plugin.boot.ApplicationPlugin;
-import org.java.plugin.boot.Boot;
-import org.java.plugin.boot.SplashHandler;
-import org.java.plugin.registry.PluginDescriptor;
 import org.java.plugin.util.ExtendedProperties;
 
 public class NomadPlugin extends ApplicationPlugin implements Application

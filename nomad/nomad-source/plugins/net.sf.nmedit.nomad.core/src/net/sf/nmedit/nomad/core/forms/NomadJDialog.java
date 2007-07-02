@@ -23,8 +23,6 @@ import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.GraphicsConfiguration;
-import java.awt.Window;
-
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JDialog;
@@ -34,6 +32,11 @@ import javax.swing.JSeparator;
 
 public class NomadJDialog extends JDialog
 {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4445330763131454925L;
 
     public NomadJDialog()
     {
@@ -101,6 +104,10 @@ public class NomadJDialog extends JDialog
     
     public static class TitlePane extends JPanel
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -9180986567660904009L;
         private JLabel lblTitle;
         private JLabel lblIcon;
         private JSeparator separator;

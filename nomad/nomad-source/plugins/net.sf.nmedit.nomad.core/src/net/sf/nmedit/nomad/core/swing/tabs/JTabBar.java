@@ -38,6 +38,11 @@ import javax.swing.plaf.UIResource;
 public class JTabBar<T> extends JComponent
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5578461150725889787L;
+
     public static String uiClassID = "TabBarUI";
     
     private Vector<Tab> tabs = new Vector<Tab>();
@@ -112,6 +117,11 @@ public class JTabBar<T> extends JComponent
     
     protected class ModelListener implements ChangeListener, Serializable 
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 6525131641051659632L;
+
         public void stateChanged(ChangeEvent e) 
         {
             fireStateChanged();
@@ -347,7 +357,7 @@ public class JTabBar<T> extends JComponent
 
      public void setToolTipTextAt(int index, String toolTipText) {
          Tab tab = tabs.get(index);
-         String oldToolTipText = tab.tip;
+         //String oldToolTipText = tab.tip;
          tab.tip = toolTipText;
          registerTipComponent(toolTipText != null);
      }
@@ -515,7 +525,7 @@ public class JTabBar<T> extends JComponent
          int selected = getSelectedIndex();
          int previouslySelected = getPreviousSelection(selected);
      
-         T item = tabs.remove(index).item;
+         tabs.remove(index);
 
          if (previouslySelected>selected && previouslySelected>0)
          {

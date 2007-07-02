@@ -21,6 +21,11 @@ package net.sf.nmedit.nomad.core.service;
 public class ServiceException extends Exception
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 536560876854507470L;
+
     public ServiceException()
     {
         super();

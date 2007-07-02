@@ -27,7 +27,6 @@ import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -35,7 +34,11 @@ import javax.swing.JSeparator;
 
 public class NomadMidiDialogFrm extends JPanel
 {
-   JComboBox m_cbOutDevices = new JComboBox();
+   /**
+     * 
+     */
+    private static final long serialVersionUID = -8229919657319024068L;
+JComboBox m_cbOutDevices = new JComboBox();
    JLabel m_lblInVendor = new JLabel();
    JLabel m_lblInVersion = new JLabel();
    JLabel m_lblOutVendor = new JLabel();

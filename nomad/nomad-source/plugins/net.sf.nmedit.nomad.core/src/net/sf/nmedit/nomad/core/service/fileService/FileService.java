@@ -49,5 +49,9 @@ public interface FileService extends Service
 
     void save(Object source, File as);
     
+    boolean isEditPropertiesSupported(Object source);
+    
+    void editProperties(Object source);
+    
 }
 

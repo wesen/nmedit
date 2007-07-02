@@ -42,12 +42,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 public class ExceptionDialog extends JPanel
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1830717129957093522L;
     private static transient int iconType = -1;
     private static transient Icon messageIcon;
     
@@ -231,6 +234,10 @@ public class ExceptionDialog extends JPanel
     private class DialogAction extends AbstractAction
     {
 
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -192407757621759091L;
         public static final String CLOSE = "Close";
         public static final String COPY = "Copy to Clipboard";
         public static final String MoreLess = "MoreLess";

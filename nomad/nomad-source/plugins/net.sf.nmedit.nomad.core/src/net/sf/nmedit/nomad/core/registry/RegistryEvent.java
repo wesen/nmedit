@@ -16,55 +16,35 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.nmedit.nomad.core.service;
+package net.sf.nmedit.nomad.core.registry;
 
 import java.awt.Event;
 
-
-public class ServiceManagerEvent extends Event
+public class RegistryEvent extends Event
 {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -8833080929458882447L;
-    public static final int SERVICE_ADDED = 0;
-    public static final int SERVICE_REMOVED = 1;
+    private static final long serialVersionUID = -1793137159431570737L;
+    public static final int ITEM_REGISTERED = 0;
+    public static final int ITEM_UNREGISTERED = 1;
+    
+    public <T> RegistryEvent(Registry<T> target, int id, T item)
+    {
+        super(target, id, item);
+    }
 
-    public ServiceManagerEvent(ServiceManager manager, Service service, boolean added)
+    public Registry<?> getTarget()
     {
-        this(manager, service, added ? SERVICE_ADDED : SERVICE_REMOVED);
+        return (Registry) target; 
     }
     
-    public ServiceManagerEvent(ServiceManager manager, Service service, int id)
+    public Object getItem()
     {
-        super(manager, id, service);
-    }
-    
-    public ServiceManager getServiceManager()
-    {
-        return (ServiceManager) target;
-    }
-    
-    public Service getService()
-    {
-        return (Service) arg;
+        return arg;
     }
     
     public int getId()
     {
         return id;
     }
-
-    public boolean isServiceAdded()
-    {
-        return getId() == SERVICE_ADDED;
-    }
-    
-    public boolean isServiceRemoved()
-    {
-        return getId() == SERVICE_REMOVED;
-    }
     
 }
-

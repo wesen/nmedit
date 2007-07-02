@@ -29,6 +29,11 @@ import javax.swing.JTextArea;
 public class HelpPane extends JPanel
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3503936712415774819L;
+
     public static final String NO_HELP = "Help not available.";
     
     private ImageIcon helpIcon;

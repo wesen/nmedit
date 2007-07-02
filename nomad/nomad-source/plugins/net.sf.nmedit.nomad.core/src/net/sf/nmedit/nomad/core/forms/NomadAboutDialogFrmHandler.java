@@ -29,6 +29,10 @@ import javax.swing.text.html.HTMLEditorKit;
 public class NomadAboutDialogFrmHandler extends NomadAboutDialogFrm
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6904912098189841299L;
     private NomadAboutDialogFrm form;
 
     public NomadAboutDialogFrmHandler()

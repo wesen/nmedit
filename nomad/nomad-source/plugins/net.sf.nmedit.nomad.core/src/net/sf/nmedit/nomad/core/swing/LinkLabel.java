@@ -35,6 +35,10 @@ import net.sf.nmedit.nomad.core.misc.FocusStroke;
 public class LinkLabel extends JLabel
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -864966524391235612L;
     private boolean hovered = false;
     private String plainTitle;
     private String hoverTitle;

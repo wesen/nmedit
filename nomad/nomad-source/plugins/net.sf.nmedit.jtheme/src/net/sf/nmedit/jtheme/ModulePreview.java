@@ -38,6 +38,10 @@ import net.sf.nmedit.nmutils.graphics.GraphicsToolkit;
 public class ModulePreview extends ImagePreview
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2330694492292729151L;
     private ModuleDescriptions moduleDescriptions;
     private JTContext uiContext;
     private StorageContext storageContext;

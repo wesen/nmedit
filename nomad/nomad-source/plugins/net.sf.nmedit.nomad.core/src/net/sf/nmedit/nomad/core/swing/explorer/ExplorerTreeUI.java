@@ -149,7 +149,7 @@ public class ExplorerTreeUI extends MetalTreeUI
         int bottom = tree.getHeight()-i.bottom;
 
         g.setColor(alternatingRowColor);
-        int r = tree.getWidth()-i.left-i.right;
+        //int r = tree.getWidth()-i.left-i.right;
         while (y<bottom)
         {
             g.fillRect(i.left, y, tree.getWidth(), rh);
@@ -178,7 +178,7 @@ public class ExplorerTreeUI extends MetalTreeUI
                       int row, boolean isExpanded,
                       boolean hasBeenExpanded,
                       boolean isLeaf) {
-        Object       value = path.getLastPathComponent();
+        //Object       value = path.getLastPathComponent();
     
         // Draw icons if not a leaf and either hasn't been loaded,
         // or the model child count is > 0.

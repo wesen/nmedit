@@ -43,6 +43,10 @@ import net.sf.nmedit.nomad.core.swing.tabs.JTabbedPane2;
 public class DefaultDocumentManager extends JTabbedPane2 implements DocumentManager, PropertyChangeListener
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8346940412067775776L;
     private List<Document> documentList = new ArrayList<Document>();
     final JTabbedPane2 container = this;
     
@@ -52,6 +56,11 @@ public class DefaultDocumentManager extends JTabbedPane2 implements DocumentMana
         container.addTabBarChangeListener(new TabChangeListener());
         container.setBorder(null);
         container.getTabBar().addPropertyChangeListener(this);
+    }
+
+    public int indexOf(Document d)
+    {
+        return container.indexOfComponent(d.getComponent());
     }
 
     protected void fireDocumentAdded(Document doc)
@@ -242,6 +251,11 @@ public class DefaultDocumentManager extends JTabbedPane2 implements DocumentMana
     private static class ContextMenuAction extends AbstractAction
     {
         
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -5802320514699863654L;
+
         public static final String CLOSE = "Close Tab";
         
         private JTabbedPane2 tabs;

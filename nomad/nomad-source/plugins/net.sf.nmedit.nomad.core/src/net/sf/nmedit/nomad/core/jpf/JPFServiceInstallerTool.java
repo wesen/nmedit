@@ -59,8 +59,8 @@ public class JPFServiceInstallerTool
             log.info("Activating services...");
         }
         
-        Map<String, Class<? extends Service>> serviceClassCache = 
-            new HashMap<String, Class<? extends Service>>();
+        Map<String, Class<Service>> serviceClassCache = 
+            new HashMap<String, Class<Service>>();
 
         ExtensionPoint serviceExtensionPoint = 
             mainPlugin.getDescriptor().getExtensionPoint("Service");
@@ -86,7 +86,7 @@ public class JPFServiceInstallerTool
         
     }
 
-    private static void activateService(Log log, Map<String, Class<? extends Service>> serviceClassCache, 
+    private static void activateService(Log log, Map<String, Class<Service>> serviceClassCache, 
             Extension extension, ClassLoader pluginClassLoader)
     {
         String serviceClassName =
@@ -104,7 +104,7 @@ public class JPFServiceInstallerTool
                     +" (description="+description+") / "+serviceClassName);
         }
         
-        Class<? extends Service> serviceClass;
+        Class<Service> serviceClass;
         try
         {
             serviceClass =
@@ -120,7 +120,7 @@ public class JPFServiceInstallerTool
             return ;
         }
         
-        Class<? extends Service> serviceImplementationClass;
+        Class<Service> serviceImplementationClass;
         try
         {
             serviceImplementationClass =
@@ -174,7 +174,8 @@ public class JPFServiceInstallerTool
         }
     }
     
-    private static Class<? extends Service> lookupServiceImplementationClass
+    @SuppressWarnings("unchecked")
+    private static Class<Service> lookupServiceImplementationClass
         (Class<? extends Service> serviceClass, String serviceImplementationName, 
                 ClassLoader loader) throws ClassNotFoundException
     {
@@ -184,17 +185,18 @@ public class JPFServiceInstallerTool
         if (!serviceClass.isAssignableFrom(_class))
             throw new ClassCastException("Service class is not subclass of "+serviceClass+": "+_class);
 
-        Class<? extends Service> serviceImplementationClass 
-            = (Class<? extends Service>) _class;
+        Class<Service> serviceImplementationClass 
+            = (Class<Service>) _class;
         
         return serviceImplementationClass;
     }
 
-    private static Class<? extends Service> lookupServiceClass(Map<String, 
-            Class<? extends Service>> serviceClassCache, String serviceClassName, 
+    @SuppressWarnings("unchecked")
+    private static Class<Service> lookupServiceClass(Map<String, 
+            Class<Service>> serviceClassCache, String serviceClassName, 
             ClassLoader loader) throws ClassNotFoundException
     {
-        Class<? extends Service> serviceClass
+        Class<Service> serviceClass
             = serviceClassCache.get(serviceClassName);
         
         if (serviceClass != null)
@@ -206,7 +208,7 @@ public class JPFServiceInstallerTool
         if (!Service.class.isAssignableFrom(_class))
             throw new ClassCastException("Service class is not subclass of "+Service.class+": "+_class);
         
-        serviceClass = (Class<? extends Service>) _class;
+        serviceClass = (Class<Service>) _class;
         
         serviceClassCache.put(serviceClassName, serviceClass);
         

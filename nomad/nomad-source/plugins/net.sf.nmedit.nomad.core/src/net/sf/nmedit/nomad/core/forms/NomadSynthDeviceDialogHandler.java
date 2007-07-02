@@ -46,6 +46,11 @@ public class NomadSynthDeviceDialogHandler extends JPanel
   implements ActionListener
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7101533839902727059L;
+
     public static final String UNKNOWN_VENDOR = "unknown";
     
     private JTree deviceTree;
@@ -121,6 +126,11 @@ public class NomadSynthDeviceDialogHandler extends JPanel
     
     private static class SynthNode extends DefaultMutableTreeNode
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 8011062922142830497L;
+
         public SynthNode(NewSynthService s)
         {
             super(s);
@@ -184,7 +194,7 @@ public class NomadSynthDeviceDialogHandler extends JPanel
         if (selectedPath == null)
             return;
         
-        DefaultTreeModel model = ((DefaultTreeModel)deviceTree.getModel());
+        //DefaultTreeModel model = ((DefaultTreeModel)deviceTree.getModel());
         TreeNode node = (TreeNode) selectedPath.getLastPathComponent();
         
         if (node == null)

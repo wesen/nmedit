@@ -35,6 +35,11 @@ import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTreeUI;
 public class ExplorerCellRenderer extends DefaultTreeCellRenderer
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3374974986759152540L;
+
     public ExplorerCellRenderer()
     {
         setBackgroundSelectionColor(ExplorerTreeUI.defaultSelectionBackground);

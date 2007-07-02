@@ -51,6 +51,10 @@ import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 public class PropertyDialogForm extends JPanel implements TreeSelectionListener
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1138963228471158691L;
     private ExplorerTree propertiesTree;
     private JPanel dialogPane ;
     protected JPanel buttonPane;
@@ -250,6 +254,11 @@ public class PropertyDialogForm extends JPanel implements TreeSelectionListener
         
         Action c = new AbstractAction()
         {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = -1632392266734922822L;
+
             public void actionPerformed(ActionEvent e)
             {
                 f.setVisible(false);

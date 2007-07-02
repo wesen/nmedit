@@ -38,6 +38,10 @@ import net.sf.nmedit.nmutils.graphics.GraphicsToolkit;
 public class ImagePreview extends JPanel
 {
    
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1152051978348388139L;
     private Image original = null;
     private BufferedImage scaled = null;
     private boolean autoResizeH = false;

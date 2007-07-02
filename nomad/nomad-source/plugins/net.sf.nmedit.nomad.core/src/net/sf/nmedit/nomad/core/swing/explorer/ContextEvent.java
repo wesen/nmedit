@@ -29,6 +29,11 @@ import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 public class ContextEvent extends Event
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2839803001070667423L;
+
     public ContextEvent( ExplorerTree tree, int id, ETreeNode node )
     {
         super( tree, id, node );

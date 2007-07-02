@@ -26,7 +26,6 @@ import java.awt.GraphicsConfiguration;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -47,6 +46,10 @@ import net.sf.nmedit.nomad.core.misc.NMUtilities;
 public class NomadMidiDialog extends NomadJDialog
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4444127141483231080L;
     public final static int CANCEL_OPTION = 0;
     public final static int APPROVE_OPTION = 1;
     
@@ -229,6 +232,10 @@ public class NomadMidiDialog extends NomadJDialog
     private class Option extends AbstractAction
     {
     
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -3410297609487159670L;
         private int result;
 
         public Option(int result, String name)

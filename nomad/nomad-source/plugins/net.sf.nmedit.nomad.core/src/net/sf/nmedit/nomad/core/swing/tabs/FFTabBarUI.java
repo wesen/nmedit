@@ -536,6 +536,10 @@ public class FFTabBarUI extends TabBarUI
     private class SelectTabAction extends AbstractAction implements Runnable
     {
 
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 7325111901000279179L;
         private int tabIndex;
 
         public SelectTabAction(int tabIndex)
@@ -1257,6 +1261,11 @@ public class FFTabBarUI extends TabBarUI
 
         public static class Actions extends AbstractAction
         {
+
+            /**
+             * 
+             */
+            private static final long serialVersionUID = -8696893310959747343L;
 
             public Actions(String name)
             {

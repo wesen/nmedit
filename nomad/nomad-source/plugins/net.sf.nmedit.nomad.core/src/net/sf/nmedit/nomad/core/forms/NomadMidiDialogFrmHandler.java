@@ -44,6 +44,10 @@ import net.sf.nmedit.nmutils.midi.MidiUtils;
 public class NomadMidiDialogFrmHandler extends NomadMidiDialogFrm implements ItemListener, ActionListener
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5654053362334343563L;
     public static final String INPUT_DEVICE_PROPERTY = "midi.input";
     public static final String OUTPUT_DEVICE_PROPERTY = "midi.output";
     
@@ -429,6 +433,10 @@ public class NomadMidiDialogFrmHandler extends NomadMidiDialogFrm implements Ite
     private class MidiInfoRenderer extends DefaultListCellRenderer
     {
 
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 4870999830473752949L;
         private JComboBox cb;
 
         public MidiInfoRenderer(JComboBox cb)

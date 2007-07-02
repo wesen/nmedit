@@ -38,6 +38,11 @@ import javax.swing.tree.TreePath;
 public class ExplorerTree extends JTree
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5896673886593869850L;
+
     public final static int ACTION_OPEN = 1;
     
     private RootNode root = new RootNode();
@@ -120,6 +125,10 @@ public class ExplorerTree extends JTree
     
     private static class ExpandAllAction extends AbstractAction implements Runnable
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 2170886267799299924L;
         private ExplorerTree tree;
 
         public ExpandAllAction(ExplorerTree tree)
@@ -151,6 +160,10 @@ public class ExplorerTree extends JTree
     
     private static class CollapseAllAction extends AbstractAction implements Runnable 
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -202201397605095160L;
         private ExplorerTree tree;
 
         public CollapseAllAction(ExplorerTree tree)

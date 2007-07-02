@@ -42,6 +42,12 @@ public class ServiceRegistry
     private ServiceManagerEventMulticaster multicaster = new
         ServiceManagerEventMulticaster();
     
+    @SuppressWarnings("unchecked")
+    private <T extends Service> ServiceManager<T> getManager(Class<T> serviceClass)
+    {
+        return managers.get(serviceClass);
+    }
+    
     public static <T extends Service> Iterator<T> getServices(Class<T> serviceClass)
     {
         return getInstance()._getServices(serviceClass);
@@ -49,18 +55,18 @@ public class ServiceRegistry
 
     private <T extends Service> Iterator<T> _getServices(Class<T> serviceClass)
     {
-        ServiceManager<T> manager = managers.get(serviceClass);
+        ServiceManager<T> manager = getManager(serviceClass);
         return (manager == null) ? new EmptyIterator<T>(): manager.iterator();
     }
 
-    public static <T extends Service> void addService(Class<? extends T> serviceClass, T service) throws ServiceException
+    public static <T extends Service> void addService(Class<T> serviceClass, T service) throws ServiceException
     {
         getInstance()._addService(serviceClass, service);
     }
 
-    private <T extends Service> void _addService(Class<? extends T> serviceClass, T service) throws ServiceException
+    private <T extends Service> void _addService(Class<T> serviceClass, T service) throws ServiceException
     {
-        ServiceManager<T> manager = managers.get(serviceClass);
+        ServiceManager<T> manager = getManager(serviceClass);
         
         if (manager == null)
         {
@@ -79,7 +85,7 @@ public class ServiceRegistry
 
     private <T extends Service> void _removeService(Class<T> serviceClass, T service)
     {
-        ServiceManager<T> manager = managers.get(serviceClass);
+        ServiceManager<T> manager = getManager(serviceClass);
         
         if (manager == null) return;
         

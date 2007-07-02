@@ -21,6 +21,7 @@ package net.sf.nmedit.jtheme;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
@@ -29,7 +30,6 @@ import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragSource;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -66,6 +66,10 @@ import net.sf.nmedit.nomad.core.swing.explorer.LeafNode;
 public class ModulePane extends JPanel
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6251114885486092481L;
     private static ModulePane instance;
     private ExplorerTree tree;
     private ModuleDescriptions modules;
@@ -365,8 +369,6 @@ public class ModulePane extends JPanel
         
         TreeNode root = tree.getRoot();
         
-        ClassLoader loader = modules.getModuleDescriptionsClassLoader();
-        
         for (String cat: categories)
         {
             List<PModuleDescriptor> catList = categoryMap.get(cat);
@@ -379,9 +381,9 @@ public class ModulePane extends JPanel
             
             for (PModuleDescriptor m: catList)
             {
-                ImageSource is = m.getImage("icon16x16");
-                
-                Icon icon = getIcon(is, loader);
+                ImageSource source = m.get16x16IconSource();
+                Image img = modules.getImage(source);
+                Icon icon = img != null ? new ImageIcon(img) : null;
                 
                 
              //   ImageSource.*/
@@ -397,12 +399,6 @@ public class ModulePane extends JPanel
                 catNode.addChild(n);
             }   
         }
-    }
-
-    private Icon getIcon(ImageSource is, ClassLoader loader)
-    {
-        URL iconURL = loader.getResource(is.getSource());
-        return iconURL == null ? null : new ImageIcon(iconURL);
     }
 
     private void buildCategories(Map<String, List<PModuleDescriptor>> categoryMap, ModuleDescriptions modules)

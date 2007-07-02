@@ -31,6 +31,11 @@ import javax.swing.TransferHandler;
 public class FileTransferHandler extends TransferHandler
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7987756192361607356L;
+
     public boolean canImport(JComponent c, DataFlavor[] flavors) 
     {
         for(int i = 0; i < flavors.length; i++)
@@ -39,6 +44,7 @@ public class FileTransferHandler extends TransferHandler
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     public boolean importData(JComponent c, Transferable t) 
     {
         if (t.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) 

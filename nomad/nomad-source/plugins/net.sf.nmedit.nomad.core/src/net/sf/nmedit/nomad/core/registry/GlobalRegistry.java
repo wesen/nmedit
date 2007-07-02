@@ -16,26 +16,38 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+package net.sf.nmedit.nomad.core.registry;
 
-/*
- * Created on May 13, 2006
- */
-package net.sf.nmedit.nomad.core.swing.document;
+import java.util.HashMap;
+import java.util.Map;
 
-public interface DocumentManager
+public class GlobalRegistry
 {
-    boolean add(Document d);
-    boolean remove(Document d);
-    boolean contains(Document d);
+
+    private static GlobalRegistry instance = new GlobalRegistry();
     
-    int getDocumentCount();
-    Document[] getDocuments();
+    private GlobalRegistry()
+    {
+        
+    }
+
+    public static GlobalRegistry getInstance()
+    {
+        return instance;
+    }
+
+    private Map<Class<?>, Registry<?>>
+        registryMap = new HashMap<Class<?>, Registry<?>>();
     
-    Document getSelection();
-    void setSelection(Document d);
-    void addListener(DocumentListener l);
-    void removeListener(DocumentListener l);
+    @SuppressWarnings("unchecked")
+    public <T> Registry<T> getRegistry(Class<T> clazz)
+    {
+        return (Registry<T>) registryMap.get(clazz);
+    }
     
-    int indexOf(Document d);
+    public <T> void put(Class<T> clazz, Registry<T> registry)
+    {
+        registryMap.put(clazz, registry);
+    }
     
 }

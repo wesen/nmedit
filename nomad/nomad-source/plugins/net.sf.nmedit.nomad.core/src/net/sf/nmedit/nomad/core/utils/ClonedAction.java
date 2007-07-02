@@ -30,6 +30,10 @@ import net.sf.nmedit.nomad.core.menulayout.MLEntry;
 public class ClonedAction extends AbstractAction implements PropertyChangeListener
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1769473263039316402L;
     private Action action;
     
     public ClonedAction(Action a)

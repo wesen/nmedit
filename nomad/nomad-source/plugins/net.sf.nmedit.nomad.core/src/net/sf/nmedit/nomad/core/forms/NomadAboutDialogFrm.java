@@ -26,7 +26,6 @@ import java.awt.Dimension;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JEditorPane;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -35,7 +34,11 @@ import javax.swing.JTextArea;
 
 public class NomadAboutDialogFrm extends JPanel
 {
-   JPanel m_NomadAboutDialogFrm = new JPanel();
+   /**
+     * 
+     */
+    private static final long serialVersionUID = 8136042905180754205L;
+JPanel m_NomadAboutDialogFrm = new JPanel();
    JTabbedPane m_jtabbedpane1 = new JTabbedPane();
    JEditorPane m_epAbout = new JEditorPane();
    JTextArea m_epLicense = new JTextArea();

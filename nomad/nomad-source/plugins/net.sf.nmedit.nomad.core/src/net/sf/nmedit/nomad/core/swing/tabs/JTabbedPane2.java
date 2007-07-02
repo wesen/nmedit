@@ -36,6 +36,10 @@ import javax.swing.event.ChangeListener;
 public class JTabbedPane2 extends JComponent
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2177154687789871416L;
     private JTabBar<Component> tabBar;
     
     public JTabbedPane2()

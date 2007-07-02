@@ -16,26 +16,14 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+package net.sf.nmedit.nomad.core.registry;
 
-/*
- * Created on May 13, 2006
- */
-package net.sf.nmedit.nomad.core.swing.document;
+import java.util.EventListener;
 
-public interface DocumentManager
+public interface RegistryListener extends EventListener
 {
-    boolean add(Document d);
-    boolean remove(Document d);
-    boolean contains(Document d);
-    
-    int getDocumentCount();
-    Document[] getDocuments();
-    
-    Document getSelection();
-    void setSelection(Document d);
-    void addListener(DocumentListener l);
-    void removeListener(DocumentListener l);
-    
-    int indexOf(Document d);
+
+    void itemRegistered(RegistryEvent e);
+    void itemUnregistered(RegistryEvent e);
     
 }

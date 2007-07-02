@@ -32,11 +32,11 @@ import net.sf.nmedit.nomad.core.swing.explorer.ETreeNode;
 public class TreeDynamicTreeExpansion implements TreeExpansionListener
 {
 
-    private JTree tree;
+    //private JTree tree;
 
     public TreeDynamicTreeExpansion( JTree tree )
     {
-        this.tree = tree;
+        //this.tree = tree;
     }
 
     public void treeExpanded( TreeExpansionEvent event )
