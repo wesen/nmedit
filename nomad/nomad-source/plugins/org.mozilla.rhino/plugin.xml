@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 0.4" "http://jpf.sourceforge.net/plugin_0_4.dtd">
+<plugin id="org.mozilla.rhino" version="1_6R5">    
+     <attributes>
+		<attribute id="description" value="Mozilla Rhino Javascript Engine" />
+		<attribute id="plugin-vendor" value="http://nmedit.sf.net/" />
+		<attribute id="vendor" value="http://www.mozilla.org/rhino/" />
+	</attributes>
+	<runtime>
+		<library id="rhino" path="lib/js.jar" type="code" >
+		<export prefix="*"/>
+		</library>
+	</runtime>
+</plugin>

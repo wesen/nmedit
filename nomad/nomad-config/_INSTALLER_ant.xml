@@ -25,6 +25,7 @@ No target specified.
       <ant antfile="./commons-logging_ant.xml" dir="." target="install" />
       <ant antfile="./log4j-logging_ant.xml" dir="." target="install" />
       <ant antfile="./cssparser-plugin_ant.xml" dir="." target="install" />
+      <ant antfile="./rhino-plugin_ant.xml" dir="." target="install" />
       <ant antfile="./jdom-plugin_ant.xml" dir="." target="install" />
       <ant antfile="./sac-plugin_ant.xml" dir="." target="install" />
       <ant antfile="./xerces-plugin_ant.xml" dir="." target="install" />
@@ -51,6 +52,7 @@ No target specified.
       <ant antfile="./log4j-logging_ant.xml" dir="." target="uninstall" />
       <ant antfile="./batik-plugin_ant.xml" dir="." target="uninstall" />
       <ant antfile="./cssparser-plugin_ant.xml" dir="." target="uninstall" />
+      <ant antfile="./rhino-plugin_ant.xml" dir="." target="uninstall" />
       <ant antfile="./jdom-plugin_ant.xml" dir="." target="uninstall" />
       <ant antfile="./sac-plugin_ant.xml" dir="." target="uninstall" />
       <ant antfile="./xerces-plugin_ant.xml" dir="." target="uninstall" />
