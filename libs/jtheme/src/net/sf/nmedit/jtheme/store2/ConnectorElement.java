@@ -36,6 +36,10 @@ import org.jdom.Element;
 public class ConnectorElement extends AbstractElement implements Serializable
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4299487398364650900L;
     protected String componentId;
     protected transient PConnectorDescriptor cachedConnectorDescriptor;
 

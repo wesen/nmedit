@@ -30,6 +30,10 @@ import net.sf.nmedit.jtheme.JTContext;
 
 public class JTKnob extends JTControl
 {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7632384382836698474L;
     public static final String uiClassID = "knob";
 
     public JTKnob(JTContext context)

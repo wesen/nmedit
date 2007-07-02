@@ -179,7 +179,6 @@ public abstract class JTControl extends JTComponent implements ChangeListener
     {
         if (adapter != null)
             adapter.setValue(value);
-        repaint();
     }
 
     public int getExtensionValue()
@@ -191,7 +190,6 @@ public abstract class JTControl extends JTComponent implements ChangeListener
     {
         if (extensionAdapter != null)
             extensionAdapter.setValue(value);
-        repaint();
     }
     
     public boolean isExtensionAdapterSet()

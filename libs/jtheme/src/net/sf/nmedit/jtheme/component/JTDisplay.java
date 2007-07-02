@@ -27,6 +27,10 @@ import net.sf.nmedit.jtheme.JTContext;
 public class JTDisplay extends JTComponent
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2772033221761972736L;
     public static final String uiClassID = "DisplayUI";
     
     public JTDisplay(JTContext context)

@@ -29,7 +29,6 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 
@@ -77,9 +76,9 @@ public class JTComponent extends JTBaseComponent
 
     private static final long serialVersionUID = 3945939382230355343L;
     // the static layer backing store image
-    private Image staticLayerBackingStore;
+    //private Image staticLayerBackingStore;
     // the non-volatile double buffer 
-    private transient DoubleBuffer doubleBuffer;
+    //private transient DoubleBuffer doubleBuffer;
 
     /**
      * Creates a new component.
@@ -126,29 +125,29 @@ public class JTComponent extends JTBaseComponent
      * 
      * @param staticLayerBackingStore the static layer replacement
      */
-    public void setStaticLayerBackingStore(Image staticLayerBackingStore)
+    /*public void setStaticLayerBackingStore(Image staticLayerBackingStore)
     {
         this.staticLayerBackingStore = staticLayerBackingStore;
         setOpaque(isOpaque());
-    }
+    }*/
     
     /**
      * Returns the static layer backing store image.
      * @return the static layer backing store image
      */
-    public final Image getStaticLayerBackingStore()
+    /*public final Image getStaticLayerBackingStore()
     {
         return staticLayerBackingStore;
-    }
+    }*/
 
     /**
      * Returns true if the static layer backing store image is set.
      * @return true if the static layer backing store image is set
      */
-    public final boolean hasStaticLayerBackingStore()
+    /*public final boolean hasStaticLayerBackingStore()
     {
         return staticLayerBackingStore != null; 
-    }
+    }*/
     
     /**
      * Returns the x-offset of this component
@@ -179,7 +178,7 @@ public class JTComponent extends JTBaseComponent
     
     protected boolean opacityOverwrite(boolean isOpaque)
     {
-        return isOpaque || staticLayerBackingStore!=null;
+        return isOpaque /*|| staticLayerBackingStore!=null*/;
     }
     
     /**
@@ -219,17 +218,17 @@ public class JTComponent extends JTBaseComponent
      * If the double buffer is used it sets the flag
      * indicating that the double buffer has to be updated.
      */
-    private final void setDoubleBufferNeedsUpdateFlag()
+    /*private final void setDoubleBufferNeedsUpdateFlag()
     {
         if (doubleBuffer != null)
             doubleBuffer.needsUpdate = true;
-    }
+    }*/
 
     /**
      * Sets the double buffer needs update flag.
      * @see Component#repaint()
      */
-    public void repaint() 
+    /*public void repaint() 
     {
         // double buffer must be updated
         // we have to set the flag here because we can't
@@ -237,13 +236,13 @@ public class JTComponent extends JTBaseComponent
         // is called by super.repaint()
         setDoubleBufferNeedsUpdateFlag();
         super.repaint(0,0,0,getWidth(), getHeight());
-    }
+    }*/
 
     /**
      * Sets the double buffer needs update flag.
      * @see Component#repaint(long)
      */
-    public void repaint(long tm) 
+    /*public void repaint(long tm) 
     {
         // double buffer must be updated
         // we have to set the flag here because we can't
@@ -251,13 +250,13 @@ public class JTComponent extends JTBaseComponent
         // is called by super.repaint(long)
         setDoubleBufferNeedsUpdateFlag();
         super.repaint(tm,0,0,getWidth(),getHeight());
-    }
+    }*/
 
     /**
      * Sets the double buffer needs update flag.
      * @see Component#repaint(int, int, int, int)
      */
-    public void repaint(int x, int y, int width, int height) 
+    /*public void repaint(int x, int y, int width, int height) 
     {
         // double buffer must be updated
         // we have to set the flag here because we can't
@@ -265,13 +264,13 @@ public class JTComponent extends JTBaseComponent
         // is called by super.repaint(int,int,int,int)
         setDoubleBufferNeedsUpdateFlag();
         super.repaint(0, x, y, width, height);
-    }
+    }*/
 
     /**
      * Sets the double buffer needs update flag.
      * @see JComponent#repaint(java.awt.Rectangle)
      */
-    public void repaint(Rectangle r) 
+    /*public void repaint(Rectangle r) 
     {
         // double buffer must be updated
         // we have to set the flag here because we can't
@@ -279,18 +278,18 @@ public class JTComponent extends JTBaseComponent
         // is called by super.repaint(Rectangle)
         setDoubleBufferNeedsUpdateFlag();
         super.repaint(0,r.x,r.y,r.width,r.height);
-    }
+    }*/
     
     /**
      * Sets the double buffer needs update flag.
      * @see Component#repaint(long, int, int, int, int)
      */
-    public void repaint(long tm, int x, int y, int width, int height) 
+    /*public void repaint(long tm, int x, int y, int width, int height) 
     {
         // double buffer must be updated
         setDoubleBufferNeedsUpdateFlag();
         super.repaint(tm, x, y, width, height);    
-    }
+    }*/
 
     /**
      * Calls paint.
@@ -343,10 +342,10 @@ public class JTComponent extends JTBaseComponent
         // If the static layer image is available it
         // contains the border and we do not have to
         // paint it again.
-        
+        /*
         if (hasStaticLayerBackingStore())
             return;
-
+*/
         renderBorder(g);
     }
     

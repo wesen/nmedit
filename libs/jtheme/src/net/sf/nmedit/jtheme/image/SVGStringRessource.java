@@ -32,7 +32,7 @@ public class SVGStringRessource implements ImageResource, Serializable
      */
     private static final long serialVersionUID = -7915560452708298768L;
     private String svgData;
-    private transient Image cachedImage;
+    private transient ImageCache cache;
     
     public SVGStringRessource(String svgData)
     {
@@ -41,17 +41,19 @@ public class SVGStringRessource implements ImageResource, Serializable
         this.svgData = svgData;
     }
 
+    public ImageCache getImageCache()
+    {
+        return cache;
+    }
+    
+    public void setImageCache(ImageCache cache)
+    {
+        this.cache = cache;
+    }
+    
     public Image getImage(int width, int height)
     {
-        
-        if (cachedImage != null)
-        {
-            int iw = cachedImage.getWidth(null);
-            int ih = cachedImage.getHeight(null);
-            if (iw==width && ih == height)
-                return cachedImage;
-        }
-        return cachedImage = SVGImageResource.renderSVGImage(svgData, width, height);
+        return SVGImageResource.getSVGImage(getImageCache(), svgData, width, height);
     }
 
     public void setCustomClassLoader(ClassLoader loader)
@@ -81,7 +83,7 @@ public class SVGStringRessource implements ImageResource, Serializable
 
     public void flush()
     {
-        cachedImage = null;
+        // no op
     }
 
     public ClassLoader getCustomClassLoader()

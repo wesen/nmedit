@@ -40,7 +40,6 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.net.URL;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
@@ -183,7 +182,7 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         return icon;
     }
 
-    private Icon getModuleTransformationIconHovered(UIDefaults def)
+    protected Icon getModuleTransformationIconHovered(UIDefaults def)
     {
         Icon icon = def.getIcon(moduleTransIconHovered);
         if (icon == null)
@@ -286,12 +285,34 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
             eventHandler.uninstall(module);
     }
     
-    private BasicEventHandler eventHandler;
 
-    protected BasicEventHandler createEventHandler(JTModule module)
+    private static final String MODULE_LISTENER_KEY = JTModuleUI.class.getName()+".MODULE_LISTENER";
+    
+    protected BasicEventHandler createEventHandler(JTModule control) 
     {
-        if (eventHandler == null)
+        BasicEventHandler eventHandler;
+        
+        JTContext context = control.getContext();
+        UIDefaults defaults = (context != null) ? context.getUIDefaults() : null;
+        
+        if (defaults != null)
+        {
+            Object l = defaults.get(MODULE_LISTENER_KEY);
+            if ((l != null) && (l instanceof BasicEventHandler))
+            {
+                eventHandler = (BasicEventHandler) l;
+            }
+            else
+            {
+                eventHandler = new BasicEventHandler();
+                defaults.put(MODULE_LISTENER_KEY, eventHandler);
+            }
+        }
+        else
+        {
             eventHandler = new BasicEventHandler();
+        }
+        
         return eventHandler;
     }
 
@@ -308,11 +329,6 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         ComponentListener
     {
         
-        public BasicEventHandler()
-        {
-            
-        }
-
         public void install(JTModule module)
         {
             //module.addComponentListener(this);
@@ -401,6 +417,11 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
     
     private static class JTTransformer extends JTImage
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 3285475892052794842L;
+
         public JTTransformer(JTContext context)
         {
             super(context);
@@ -475,6 +496,10 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
     private static class TransformAction extends AbstractAction
     {
 
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -682154271222280870L;
         private PModule source;
         private PTModuleMapping mapping;
 
@@ -501,12 +526,12 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
                 +"<br/>parameter(s): "+mapping.getParameterCount()
                 +"</body></html>";
             putValue(AbstractAction.SHORT_DESCRIPTION, hint);
-            ImageSource is = md.getImage("icon16x16");
+            ImageSource is = md.get16x16IconSource();
             if (is != null)                
             {
-                Icon ic = getIcon(is, loader);
-                if (ic != null)
-                    putValue(SMALL_ICON, ic);
+                Image img = md.getModules().getImage(is);
+                if (img != null)
+                    putValue(SMALL_ICON, new ImageIcon(img));
             }
         }
 
@@ -515,13 +540,6 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
             if (isEnabled())
                 mapping.transform(source);
         }
-
-        private Icon getIcon(ImageSource is, ClassLoader loader)
-        {
-            URL iconURL = loader.getResource(is.getSource());
-            return iconURL == null ? null : new ImageIcon(iconURL);
-        }
-        
     }
     
     public void paintStaticLayer(Graphics2D g, JTComponent c)
@@ -565,6 +583,10 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         FocusListener, ActionListener
     {
         
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 7086106076035449738L;
         private JTModule module;
         private boolean titleSet = false;
 

@@ -29,6 +29,10 @@ import net.sf.nmedit.jtheme.JTContext;
 public class JTSlider extends JTControl
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2371454335821522108L;
     public static final String uiClassID = "slider";
     private int orientation = SwingConstants.HORIZONTAL;
     

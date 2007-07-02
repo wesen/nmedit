@@ -31,6 +31,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.EventObject;
 
 import javax.swing.AbstractAction;
 import javax.swing.InputMap;
@@ -39,9 +40,8 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
+import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTControl;
 import net.sf.nmedit.nmutils.swing.NMLazyActionMap;
@@ -70,8 +70,14 @@ public abstract class JTBasicControlUI extends JTControlUI
         }
         
         installDefaults(control);
-        installListeners(control);
-        installKeyboardActions(control); 
+        
+
+        BasicControlListener listener = createControlListener(control);
+        if (listener != null)
+        {
+            installListeners(listener, control);
+            installKeyboardActions(listener, control); 
+        }
         c.setFocusable(true);
     }
 
@@ -82,9 +88,14 @@ public abstract class JTBasicControlUI extends JTControlUI
 
     public void uninstallUI(JComponent c)
     {
-        uninstallDefaults((JTControl) c);
-        uninstallListeners((JTControl) c);
-        uninstallKeyboardActions((JTControl) c);
+        JTControl control = (JTControl) c;
+        uninstallDefaults(control);
+        BasicControlListener listener = getControlListener(c);
+        if (listener != null)
+        {
+            uninstallListeners(listener, control);
+            uninstallKeyboardActions(listener, control);
+        }
     }
 
     protected void installDefaults( JTControl control )
@@ -97,47 +108,30 @@ public abstract class JTBasicControlUI extends JTControlUI
         // no op
     }
     
-    private void installListeners( JTControl c )
+    private void installListeners( BasicControlListener listener, JTControl c )
     {
-        BasicControlListener listener = createControlListener(c);
-        if(listener != null) 
-        {
-            c.addMouseListener(listener);
-            c.addMouseMotionListener(listener);
-            c.addFocusListener(listener);
-            c.addChangeListener(listener);
-        }
+        c.addMouseListener(listener);
+        c.addMouseMotionListener(listener);
+        c.addFocusListener(listener);
+        // component repaints itself c.addChangeListener(listener);
     }
 
-    private void uninstallListeners( JTControl c )
+    private void uninstallListeners( BasicControlListener listener, JTControl c )
     {
-        BasicControlListener listener = getControlListener(c);
-        if(listener != null) 
-        {
-            c.removeMouseListener(listener);
-            c.removeMouseMotionListener(listener);
-            c.removeFocusListener(listener);
-            c.removeChangeListener(listener);
-        }
+        c.removeMouseListener(listener);
+        c.removeMouseMotionListener(listener);
+        c.removeFocusListener(listener);
+        // omponent repaints itself c.removeChangeListener(listener);
     }
 
-    private void installKeyboardActions( JTControl control )
+    private void installKeyboardActions( BasicControlListener listener, JTControl control )
     {
-        BasicControlListener listener = getControlListener(control);
-        
-        if(listener != null) 
-        {
-            listener.installKeyboardActions(control);
-        }    
+        listener.installKeyboardActions(control); 
     }
 
-    protected void uninstallKeyboardActions(JTControl b) 
+    protected void uninstallKeyboardActions( BasicControlListener listener, JTControl b) 
     {
-        BasicControlListener listener = getControlListener(b);
-        if(listener != null) 
-        {
-            listener.uninstallKeyboardActions(b);
-        }
+        listener.uninstallKeyboardActions(b);
     }
 
     public void paintStaticLayer(Graphics2D g, JTComponent c)
@@ -168,7 +162,7 @@ public abstract class JTBasicControlUI extends JTControlUI
      * Returns the KnobListener for the passed in Knob, or null if one
      * could not be found.
      */
-    private BasicControlListener getControlListener(JTControl b) 
+    private BasicControlListener getControlListener(JComponent b) 
     {
         MouseMotionListener[] listeners = b.getMouseMotionListeners();
 
@@ -182,19 +176,47 @@ public abstract class JTBasicControlUI extends JTControlUI
         return null;
     }
 
+    
+    private static final String CONTROL_LISTENER_KEY = JTBasicControlUI.class.getName()
+        +".CONTROL_LISTENER";
+    private transient BasicControlListener bclInstance;
+    
     protected BasicControlListener createControlListener(JTControl control) 
     {
-        return new BasicControlListener(control);
+        if (bclInstance != null)
+            return bclInstance; 
+        
+        JTContext context = control.getContext();
+        UIDefaults defaults = (context != null) ? context.getUIDefaults() : null;
+        
+        if (defaults != null)
+        {
+            Object l = defaults.get(CONTROL_LISTENER_KEY);
+            if ((l != null) && (l instanceof BasicControlListener))
+            {
+                bclInstance = (BasicControlListener) l;
+            }
+            else
+            {
+                bclInstance = new BasicControlListener();
+                defaults.put(CONTROL_LISTENER_KEY, bclInstance);
+            }
+        }
+        else
+        {
+            bclInstance = new BasicControlListener();
+        }
+        
+        return bclInstance;
     }
 
     public static class BasicControlListener implements MouseListener, MouseMotionListener, 
-    FocusListener, ChangeListener
+    FocusListener
     {
         
-        protected JTControl control;
         protected double pressedValue;
         protected int pressedModifier;
-        protected boolean extensionAdapter = false;
+        protected boolean selectExtensionAdapter = false;
 
         public static void loadActionMap(NMLazyActionMap map) 
         {  
@@ -205,31 +227,30 @@ public abstract class JTBasicControlUI extends JTControlUI
             map.put(new Actions(DEFAULTVALUE));
         }
         
-        public BasicControlListener( JTControl control )
-        {
-            this.control = control;
-        }
-
         public void mouseClicked( MouseEvent e )
         {
             // no op
         }
         
-        protected int getValueModifier(MouseEvent e)
+        protected int getValueModifier(JTControl control, MouseEvent e)
         {
-            return getValueModifier(e.getX(), e.getY());
+            return getValueModifier(control, e.getX(), e.getY());
         }
 
-        private int getValueModifier(int x, int y)
+        private int getValueModifier(JTControl control, int x, int y)
         {
             return control.getOrientation() != SwingConstants.VERTICAL ? x : y;
         }
 
+        private transient InputMap inputMapWhenFocused ;
         protected InputMap createInputMapWhenFocused()
         {
-            InputMap map = new InputMap();
-            fillInputMap(map);
-            return map;
+            if (inputMapWhenFocused == null)
+            {
+                inputMapWhenFocused = new InputMap();
+                fillInputMap(inputMapWhenFocused);
+            }
+            return inputMapWhenFocused;
         }
         
         protected void fillInputMap(InputMap map)
@@ -268,19 +289,30 @@ public abstract class JTBasicControlUI extends JTControlUI
         {
             SwingUtilities.replaceUIInputMap(control, JComponent.WHEN_IN_FOCUSED_WINDOW, null);
             SwingUtilities.replaceUIInputMap(control, JComponent.WHEN_FOCUSED, null);
+
+            // TODO this line shouldn't be necessary, but if setUI() was called twice
+            // each time with a new ui instance then the input map will cause a StackOverflowError
+            // if a key was pressed
+            control.setInputMap(JComponent.WHEN_FOCUSED, new InputMap());
+            
             SwingUtilities.replaceUIActionMap(control, null);
         }
 
         public void mousePressed( MouseEvent e )
         {
+            selectExtensionAdapter = false;
+            
+            JTControl control = controlFor(e);
+            if (control == null) return;
+            
             if (SwingUtilities.isLeftMouseButton(e))
             {
             
-            extensionAdapter = e.isControlDown();
+                selectExtensionAdapter = e.isControlDown();
             
-            pressedValue = extensionAdapter ? control.getExtNormalizedValue() :
+            pressedValue = selectExtensionAdapter ? control.getExtNormalizedValue() :
                 control.getNormalizedValue();
-            pressedModifier = getValueModifier(e);
+            pressedModifier = getValueModifier(control, e);
             }
             else if (e.isPopupTrigger())
             {
@@ -293,9 +325,11 @@ public abstract class JTBasicControlUI extends JTControlUI
 
         public void mouseReleased( MouseEvent e )
         {
-            if (e.getClickCount()>=2)
+            JTControl control = controlFor(e);
+            
+            if (e.getClickCount()>=2 && control != null)
             {
-                if (extensionAdapter)
+                if (selectExtensionAdapter)
                     control.setExtensionValue(control.getExtDefaultValue());
                 else
                     control.setValue(control.getDefaultValue());   
@@ -314,24 +348,26 @@ public abstract class JTBasicControlUI extends JTControlUI
 
         public void mouseDragged( MouseEvent e )
         {
-            if (SwingUtilities.isLeftMouseButton(e))
+            JTControl control = controlFor(e);
+
+            if (SwingUtilities.isLeftMouseButton(e) && control != null)
             {
-                int currentModifier = getValueModifier(e);
-                
+                int currentModifier = getValueModifier(control, e);
+
                 if (control.getOrientation()!=SwingConstants.VERTICAL)
-                    updateValue(currentModifier, pressedModifier, pressedValue);
+                    updateValue(control, currentModifier, pressedModifier, pressedValue);
                 else // horizontal
-                    updateValue(pressedModifier, currentModifier, pressedValue);
+                    updateValue(control, pressedModifier, currentModifier, pressedValue);
             }
         }
 
-        public void updateValue(double currentModifier, double pressedModifier, double pressedValue)
+        public void updateValue(JTControl control, double currentModifier, double pressedModifier, double pressedValue)
         {
             double modifier = (currentModifier-pressedModifier)/200d;
             // assure value in range [0..1]
             double nvalue = Math.max(0, Math.min(pressedValue+modifier, 1));
             
-            if (extensionAdapter)
+            if (selectExtensionAdapter)
                 control.setExtNormalizedValue(nvalue);
             else
                 control.setNormalizedValue(nvalue);
@@ -344,18 +380,23 @@ public abstract class JTBasicControlUI extends JTControlUI
 
         public void focusGained( FocusEvent e )
         {
-            control.repaint();
+            e.getComponent().repaint();
         }
 
         public void focusLost( FocusEvent e )
         {
-            control.repaint();   
+            e.getComponent().repaint();
         }
 
         public static class Actions extends AbstractAction 
         {
             
             // private String action;
+
+            /**
+             * 
+             */
+            private static final long serialVersionUID = -2104045982638755995L;
 
             public Actions(String name)
             {
@@ -400,9 +441,22 @@ public abstract class JTBasicControlUI extends JTControlUI
             }
         }
 
+        /*
         public void stateChanged(ChangeEvent e)
         {
-            control.repaint();
+            JTControl c = controlFor(e);
+            if (c != null) c.repaint();
+        }
+        */
+
+        private JTControl controlFor(EventObject e)
+        {
+            return castControl(e.getSource());
+        }
+
+        private JTControl castControl(Object src)
+        {
+            return (src instanceof JTControl) ? (JTControl) src : null;
         }
         
         /*

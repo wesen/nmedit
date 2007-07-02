@@ -38,6 +38,10 @@ import net.sf.nmedit.jtheme.store.StorageContext;
 public class LabelElement extends AbstractElement implements Serializable
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5265904722291199511L;
     private String cssStyleValue;
     private transient CSSStyleDeclaration styleDecl;
     private transient Color clFill;

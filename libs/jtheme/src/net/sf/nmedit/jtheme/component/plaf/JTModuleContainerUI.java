@@ -113,6 +113,10 @@ public class JTModuleContainerUI extends ComponentUI
     protected class ContainerAction extends AbstractAction
     {
         
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 7135918324094843867L;
         public static final String DELETE_UNUSED = "delete.unused";
 
         public ContainerAction(String command)
@@ -183,7 +187,7 @@ public class JTModuleContainerUI extends ComponentUI
     public void uninstallUI(JComponent c) 
     {
         JTModuleContainer jtc = (JTModuleContainer) c;
-        JTContext context = jtc.getContext();
+        //JTContext context = jtc.getContext();
         // UIDefaults defaults = context.getUIDefaults();
         
         uninstallEventHandler(jtc);
@@ -708,7 +712,6 @@ public class JTModuleContainerUI extends ComponentUI
                     dtde.rejectDrop();
                     return;
                 }
-
                 mc.add(module);
                 MoveOperation move = module.getParentComponent().createMoveOperation();
                 move.setScreenOffset(0, 0);

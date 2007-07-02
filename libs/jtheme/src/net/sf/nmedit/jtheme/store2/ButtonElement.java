@@ -41,6 +41,10 @@ import org.jdom.Element;
 public class ButtonElement extends ControlElement
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6842481386886896976L;
     public static final String ATT_LANDSCAPE = "landscape";
     public static final String ATT_CYCLIC = "cyclic";
     public static final String ATT_MODE = "mode";

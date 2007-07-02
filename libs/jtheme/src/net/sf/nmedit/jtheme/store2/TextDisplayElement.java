@@ -38,6 +38,10 @@ import org.w3c.dom.css.CSSStyleRule;
 public class TextDisplayElement extends ControlElement
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6232380514341586662L;
     private String cssStyleValue;
     private transient CSSStyleDeclaration styleDecl;
     private transient Color fill;

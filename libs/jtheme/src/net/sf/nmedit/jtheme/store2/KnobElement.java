@@ -31,6 +31,11 @@ import org.jdom.Element;
 public class KnobElement extends ControlElement
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1305155623035466586L;
+
     public static AbstractElement createElement(StorageContext context, Element element)
     {
         KnobElement e = new KnobElement();

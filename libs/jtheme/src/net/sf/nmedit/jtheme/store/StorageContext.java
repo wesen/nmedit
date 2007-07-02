@@ -31,6 +31,7 @@ import javax.imageio.ImageIO;
 
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.css.FakeRule;
+import net.sf.nmedit.jtheme.image.ImageCache;
 import net.sf.nmedit.jtheme.image.ImageResource;
 import net.sf.nmedit.jtheme.store2.ComponentElement;
 import net.sf.nmedit.jtheme.store2.ModuleElement;
@@ -59,6 +60,8 @@ public abstract class StorageContext
     private Map<String, Method> storeMethodMap = new HashMap<String, Method>(); 
 
     public abstract CSSStyleSheet getStyleSheet();
+    
+    public abstract ImageCache getImageCache();
     
     protected Map<String, CSSStyleRule> styleRuleMap = new HashMap<String, CSSStyleRule>();
     

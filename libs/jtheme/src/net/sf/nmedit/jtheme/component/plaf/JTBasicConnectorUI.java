@@ -231,9 +231,13 @@ public class JTBasicConnectorUI extends JTConnectorUI
         else g.drawOval(0, 0, s-1, s-1);
     }
 
+    private transient BasicConnectorListener connectorListenerInstance;
+    
     protected BasicConnectorListener createConnectorListener(JComponent c)
     {
-        return new BasicConnectorListener();
+        if (connectorListenerInstance == null)
+            connectorListenerInstance = new BasicConnectorListener();
+        return connectorListenerInstance;
     }
     
     protected BasicConnectorListener getConnectorListener(JComponent c)

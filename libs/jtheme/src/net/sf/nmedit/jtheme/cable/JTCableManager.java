@@ -27,7 +27,6 @@ import javax.swing.JComponent;
 
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jtheme.component.JTConnector;
-import net.sf.nmedit.jtheme.component.JTModuleContainer;
 
 public interface JTCableManager extends Iterable<Cable>
 {

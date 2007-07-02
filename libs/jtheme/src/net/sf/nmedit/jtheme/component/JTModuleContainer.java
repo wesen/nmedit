@@ -44,6 +44,11 @@ import net.sf.nmedit.jtheme.store2.ModuleElement;
 public class JTModuleContainer extends JTBaseComponent 
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4287282305262880549L;
+
     public static final String uiClassId = "ModuleContainerUI";
     
     private boolean optimizedDrawing;
@@ -160,7 +165,7 @@ public class JTModuleContainer extends JTBaseComponent
     protected class ContentSynchronisation implements PModuleContainerListener
     {
         private PModuleContainer mc;
-        private boolean oneUpdate = false;
+        //private boolean oneUpdate = false;
         
         public void install()
         {
@@ -204,11 +209,11 @@ public class JTModuleContainer extends JTBaseComponent
         private void createUIFor(PModule module)
         {
             ModuleElement ms = getContext().getStorageContext().getModuleStoreById(module.getComponentId());
-            
+
             try
             {
                 JTModule mui = ms.createModule(getContext(), module);
-                mui.setLocation(module.getScreenLocation());                
+                mui.setLocation(module.getScreenLocation());    
                 add(mui);
                 /*
                 if (mui.getStaticLayerBackingStore() == null)

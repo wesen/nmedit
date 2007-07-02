@@ -60,9 +60,7 @@ public abstract class JTContext
     public abstract boolean hasModuleContainerOverlay();
     
     public abstract Class[] getComponentClasses();
-    
-    public abstract JTBuilder getBuilder();
-    
+
     public abstract StorageContext getStorageContext();
 
     public static final String TYPE_KNOB = "knob";

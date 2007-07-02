@@ -79,6 +79,7 @@ public class JTImageUI extends JTComponentUI
                     g.scale(dw/(double)sw, dh/(double)sh);
                     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                     g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+                    
                 }
                 icon.paintIcon(c, g, 0, 0);
             }

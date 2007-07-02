@@ -33,12 +33,24 @@ public abstract class AbstractImageResource implements ImageResource, Serializab
     private transient URL srcURL;
     private transient URL resolvedURL;
     private transient boolean urlResolved = false;
+    private transient ImageCache cache;
     
     protected AbstractImageResource()
     {
         super();
+        initState();
     }
 
+    public ImageCache getImageCache()
+    {
+        return cache;
+    }
+    
+    public void setImageCache(ImageCache cache)
+    {
+        this.cache = cache;
+    }
+    
     public void setCustomClassLoader(ClassLoader loader)
     {
         if (this.customClassLoader != loader)

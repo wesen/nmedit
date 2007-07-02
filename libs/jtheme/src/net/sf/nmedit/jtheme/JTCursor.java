@@ -81,14 +81,14 @@ public class JTCursor
         return tk.createCustomCursor(img, new Point(4,16), names[id]);
     }
     
-    private static SoftReference<Cursor>[] cursors = new SoftReference[4];
+    private static SoftReference<?>[] cursors = new SoftReference[4];
     
     public static Cursor getJackCursor(int id)
     {
         if (!(0<=id && id<names.length))
             return null;
         
-        SoftReference<Cursor> ref = cursors[id];
+        SoftReference<?> ref = cursors[id];
         
         Cursor cursor = null;
         if (ref == null)
@@ -97,7 +97,7 @@ public class JTCursor
             cursors[id] = new SoftReference<Cursor>(cursor);
             return cursor;
         }
-        cursor = ref.get();
+        cursor = (Cursor) ref.get();
         if (cursor == null)
         {
             cursor = createCursor(id);

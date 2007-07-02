@@ -37,6 +37,10 @@ import org.jdom.Element;
 public class LightElement extends AbstractElement implements Serializable
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2929771547830089798L;
     private static final String TYPE_LED = "led";
     private static final String TYPE_LED_ARRAY = "led-array";
     private static final String TYPE_METER = "meter";

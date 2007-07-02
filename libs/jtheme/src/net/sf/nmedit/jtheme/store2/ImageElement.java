@@ -43,6 +43,7 @@ import net.sf.nmedit.jtheme.image.SVGStringRessource;
 import net.sf.nmedit.jtheme.image.ToolkitImageResource;
 import net.sf.nmedit.jtheme.store.DefaultStorageContext;
 import net.sf.nmedit.jtheme.store.StorageContext;
+import net.sf.nmedit.nmutils.graphics.GraphicsToolkit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -53,6 +54,10 @@ import org.jdom.transform.JDOMSource;
 
 public class ImageElement extends AbstractElement implements Serializable
 {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1462274961082257283L;
     private String src;
     private Object id;
     private transient ImageResource imageResource; // TODO serialization
@@ -75,10 +80,17 @@ public class ImageElement extends AbstractElement implements Serializable
     {
         String href = getXlinkHref(element);
         if (href == null) return null;
+        
+        ImageResource ir;
+        
         if (href.endsWith("svg"))
-            return new SVGImageResource(href, context.getContextClassLoader());
+            ir = new SVGImageResource(href, context.getContextClassLoader());
         else
-            return new ToolkitImageResource(href, context.getContextClassLoader());
+            ir = new ToolkitImageResource(href, context.getContextClassLoader());
+        
+        ir.setImageCache(context.getImageCache());
+        
+        return ir;
     }
 
     private static final String SVG_NS = "http://www.w3.org/2000/svg";
@@ -98,10 +110,13 @@ public class ImageElement extends AbstractElement implements Serializable
     {
         return e.getAttributeValue("href", xlinkns);
     }
-    
-    @Override
-    public JTComponent createComponent(JTContext context,
-            PModuleDescriptor descriptor, PModule module) throws JTException
+
+    public void renderImage(StorageContext context)
+    {
+        render();
+    }
+
+    private Image render()
     {
         if (imageResource == null)
             return null;
@@ -117,11 +132,21 @@ public class ImageElement extends AbstractElement implements Serializable
             return null;
         }
         
+        return image;
+    }
+    
+    @Override
+    public JTComponent createComponent(JTContext context,
+            PModuleDescriptor descriptor, PModule module) throws JTException
+    {
+        Image image = render();
+        if (image == null)
+            return null;
+        
         JTImage jtimg = (JTImage) context.createComponent(JTContext.TYPE_IMAGE);
         setName(jtimg);
         this.reducible = jtimg.isReducible();
 
-        
         jtimg.setIcon(new ImageIcon(image));
         
         setLocation(jtimg);
@@ -131,7 +156,7 @@ public class ImageElement extends AbstractElement implements Serializable
         }
         else
         {
-            jtimg.setSize(image.getWidth(null), image.getHeight(null));
+            jtimg.setSize(GraphicsToolkit.getImageSize(image));
         }
 
         return jtimg;
@@ -153,10 +178,14 @@ public class ImageElement extends AbstractElement implements Serializable
 
     private AbstractImageResource createResource(StorageContext context, String src)
     {
+        AbstractImageResource ir;
         if (src.endsWith(".svg"))
-            return new SVGImageResource(src, context.getContextClassLoader());   
+            ir = new SVGImageResource(src, context.getContextClassLoader());   
         else
-            return new ToolkitImageResource(src, context.getContextClassLoader());
+            ir = new ToolkitImageResource(src, context.getContextClassLoader());
+        
+        ir.setImageCache(context.getImageCache());
+        return ir;
     }
 
     @Override
@@ -194,6 +223,7 @@ public class ImageElement extends AbstractElement implements Serializable
                 {
                     AbstractImageResource air = createResource(context, src);
                     imageResource = air;
+                    imageResource.setImageCache(context.getImageCache());
                     this.id = air.getResolvedURL();
                     dsc.putImage(id, air);
                 }
@@ -209,6 +239,7 @@ public class ImageElement extends AbstractElement implements Serializable
             if (svg != null)
             {
                 imageResource = new SVGStringRessource(element2txt(svg));
+                imageResource.setImageCache(context.getImageCache());
 
                 if (context instanceof DefaultStorageContext)
                 {

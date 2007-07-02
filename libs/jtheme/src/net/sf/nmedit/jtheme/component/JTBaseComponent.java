@@ -26,6 +26,8 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.LayoutManager;
 import java.awt.Rectangle;
+import java.awt.event.ComponentEvent;
+import java.awt.event.HierarchyEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.JComponent;
@@ -50,12 +52,50 @@ import net.sf.nmedit.jtheme.JTContext;
 public class JTBaseComponent extends JComponent
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4189716019536899996L;
+
     // the context
     private JTContext context;
+    
+    private transient JTBaseComponent repaintOrigin;
+    private transient int roDX;
+    private transient int roDY;
 
     public JTBaseComponent(JTContext context)
     {
         this.context = context;
+        enableEvents(HierarchyEvent.HIERARCHY_EVENT_MASK | ComponentEvent.COMPONENT_MOVED);
+    }
+
+    protected void processComponentEvent(ComponentEvent e)
+    {
+        if (e.getID() == ComponentEvent.COMPONENT_MOVED)
+            clearRepaintOrigin();
+        
+        super.processComponentEvent(e);
+    }
+    
+    private void clearRepaintOrigin()
+    {
+        repaintOrigin = null;
+        for (int i=getComponentCount()-1;i>=0;i--)
+        {
+            Component c = getComponent(i);
+            if (c instanceof JTBaseComponent)
+            {
+                ((JTBaseComponent)c).clearRepaintOrigin();
+            }
+        }
+    }
+
+    protected void processHierarchyEvent(HierarchyEvent e) 
+    {
+        if ((e.getChangeFlags() & HierarchyEvent.PARENT_CHANGED)>0)
+            clearRepaintOrigin();
+        super.processHierarchyEvent(e);
     }
     
     public JTContext getContext()
@@ -326,17 +366,27 @@ public class JTBaseComponent extends JComponent
     
     private JTBaseComponent findRepaintOrigin()
     {
+        if (repaintOrigin == null)
+        {
+            roDX = getX();
+            roDY = getY();
             Container c = getParent();
             while (c != null && c instanceof JTBaseComponent)
             {
                 JTBaseComponent b = (JTBaseComponent) c;
                 if (b.isRepaintOrigin())
                 {
+                    repaintOrigin = b;
                     return b;
                 }
+                roDX += c.getX();
+                roDY += c.getY();
                 c = c.getParent();
             }
-        return this;
+            roDX = roDY = 0;
+            repaintOrigin = this;
+        }
+        return repaintOrigin;
     }
     
     /**
@@ -347,15 +397,15 @@ public class JTBaseComponent extends JComponent
     {   
         JTBaseComponent origin = findRepaintOrigin();
         if (origin != this)
-        {
+        {/*
             Container c = this;
             while (c != null && c != origin)
             {
                 x+=c.getX();
                 y+=c.getY();
                 c = c.getParent();
-            }
-            origin.repaint(tm, x, y, width, height);
+            }*/
+            origin.repaint(tm, roDX, roDY, width, height);
         }
         else
             super.repaint(tm, x, y, width, height);

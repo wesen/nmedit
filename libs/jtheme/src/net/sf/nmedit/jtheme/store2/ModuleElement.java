@@ -40,9 +40,13 @@ import org.jdom.Element;
 import org.w3c.dom.css.CSSStyleDeclaration;
 import org.w3c.dom.css.CSSStyleRule;
 
-public class ModuleElement extends AbstractElement implements Serializable
+public class ModuleElement extends AbstractElement implements Serializable, Iterable<ComponentElement>
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8151320614763566232L;
     protected String moduleId;
     protected String cssStyleValue;
     
@@ -52,6 +56,11 @@ public class ModuleElement extends AbstractElement implements Serializable
     private transient Image staticLayerBackingStore;
 
     protected ModuleElement()
+    {
+        createChildStoreList();
+    }
+    
+    private void createChildStoreList()
     {
         childStore = new ArrayList<ComponentElement>();
     }
@@ -137,11 +146,11 @@ public class ModuleElement extends AbstractElement implements Serializable
     {
         JTModule jtmodule = createComponent(context, module.getDescriptor(), module);
         jtmodule.setModule(module);
-        
+
         createChildren(context, jtmodule, module, addReducible);
-        if (staticLayerBackingStore != null)
+        /*if (staticLayerBackingStore != null)
             jtmodule.setStaticLayerBackingStore(staticLayerBackingStore);
-        
+        */
         return jtmodule;
     }
 
@@ -166,12 +175,13 @@ public class ModuleElement extends AbstractElement implements Serializable
             if ((!store.isReducible()) || ((store.isReducible() && addReducible)))
             {
                 JTComponent child = store.createComponent(context, module.getDescriptor(), module);
+
                 if (child != null)
                     jtmodule.add(child);
             }
         }
     }
-
+    
     public void add(ComponentElement child)
     {
         childStore.add(child);
@@ -206,14 +216,23 @@ public class ModuleElement extends AbstractElement implements Serializable
         throws IOException
     {
         out.defaultWriteObject(); // module id
-        out.writeObject(childStore); // children
+        
+        // children
+        int size = childStore.size();
+        out.writeInt(size); 
+        for (int i=0;i<size;i++)
+            out.writeObject(childStore.get(i));
     }
     
     private void readObject(java.io.ObjectInputStream in)
         throws IOException, ClassNotFoundException
     {
         in.defaultReadObject();
-        childStore = (List<ComponentElement>) in.readObject();
+        
+        int size = in.readInt();
+        childStore = new ArrayList<ComponentElement>(size);
+        for (int i=0;i<size;i++)
+            childStore.add((ComponentElement)in.readObject());
     }
     
 }

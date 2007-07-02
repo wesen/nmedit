@@ -26,6 +26,11 @@ import net.sf.nmedit.jtheme.JTContext;
 public class JTTextDisplay extends JTLabel implements PParameterListener
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -179265143363795185L;
+
     final public static String uiClassID = "TextDisplayUI";
     
     private PParameter par;

@@ -27,6 +27,10 @@ import net.sf.nmedit.jtheme.JTContext;
 public class JTLabel extends JTComponent
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4347651399715148385L;
     final public static String uiClassID = "LabelUI";
     private String text = "label";
 

@@ -31,7 +31,6 @@ import net.sf.nmedit.jtheme.component.JTComponent;
 public abstract class JTCustomContext extends JTContext
 {
 
-    private JTBuilder builder = new JTBuilder();
     private boolean hasModuleContainerOverlay;
     private UIDefaults uiDefaults;
     private Set<Class> componentClasses = new HashSet<Class>();
@@ -59,7 +58,7 @@ public abstract class JTCustomContext extends JTContext
 
     protected abstract void installComponentClassMap();
     
-    public void installComponentType(String type, Class clazz)
+    public <T extends JTComponent> void installComponentType(String type, Class<T> clazz)
     {
         classMap.put(type, clazz);
     }
@@ -85,12 +84,6 @@ public abstract class JTCustomContext extends JTContext
     }
     
     protected abstract void setDefaults(UIDefaults uiDefaults);
-
-    @Override
-    public JTBuilder getBuilder()
-    {
-        return builder;
-    }
 
     @Override
     public Class[] getComponentClasses()

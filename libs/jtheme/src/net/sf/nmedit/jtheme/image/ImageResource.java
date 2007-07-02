@@ -45,5 +45,9 @@ public interface ImageResource
     void flush();
 
     void setCustomClassLoader(ClassLoader loader);
+
+    void setImageCache(ImageCache cache);
+    
+    ImageCache getImageCache();
     
 }

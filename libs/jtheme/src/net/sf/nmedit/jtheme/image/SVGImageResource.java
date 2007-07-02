@@ -29,8 +29,6 @@ import java.io.Serializable;
 import java.io.StringReader;
 import java.net.URL;
 
-import net.sf.nmedit.jtheme.store.helpers.ByteBuffer;
-
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
@@ -48,7 +46,6 @@ public class SVGImageResource extends AbstractImageResource implements Serializa
     private static final long serialVersionUID = -2499486136640044057L;
 
     private String svgData;
-    private transient Image cachedImage;
     private transient boolean svgDataInitialized;
     
     public SVGImageResource(URL imageURL)
@@ -92,7 +89,7 @@ public class SVGImageResource extends AbstractImageResource implements Serializa
         {
             Log log = LogFactory.getLog(getClass());
             if (log.isErrorEnabled())
-                log.error("readData() failed", e);
+                log.error(getClass().getName()+".readData() failed", e);
         }
         finally
         {
@@ -110,15 +107,7 @@ public class SVGImageResource extends AbstractImageResource implements Serializa
 
     @Override
     public Image getImage(int width, int height)
-    {
-        if (cachedImage != null)
-        {
-            int iw = cachedImage.getWidth(null);
-            int ih = cachedImage.getHeight(null);
-            if (iw==width && ih==height)
-                return cachedImage;
-        }
-        
+    {        
         if (!svgDataInitialized)
         {
             svgDataInitialized = true;
@@ -126,12 +115,8 @@ public class SVGImageResource extends AbstractImageResource implements Serializa
         }
         if (svgData == null)
             return null;
-        
-        Image renderedImage = renderSVGImage(svgData, width, height);
-        
-        cachedImage = renderedImage;
-        
-        return renderedImage;
+
+        return getSVGImage(getImageCache(), svgData, width, height);
     }
 
     @Override
@@ -140,17 +125,38 @@ public class SVGImageResource extends AbstractImageResource implements Serializa
         return SCALABLE_IMAGE;
     }
 
-    public static Image renderSVGImage(Reader source, int width, int height)
+    public static Image getSVGImage(ImageCache cache, String svgData, int width, int height)
+    {
+        if (cache != null)
+        {
+            Image image = cache.getImage(svgData, width, height);
+            if (image != null)
+                return image;
+        }
+
+        Image renderedImage = renderSVGImage(svgData, width, height);
+        
+        //Dimension size = GraphicsToolkit.getImageSize(renderedImage);
+
+        if (cache != null && renderedImage != null)
+        {
+            cache.putImage(svgData, width, height, renderedImage);
+        }
+        
+        return renderedImage;
+    }
+    
+    private static Image renderSVGImage(Reader source, int width, int height)
     {
 
         ImageTranscoder pngt = new PNGTranscoder();
         TranscoderInput input = new TranscoderInput(source);
         
-        ByteBuffer ostream = new ByteBuffer();
+        ByteArrayOutputStream out = new ByteArrayOutputStream(8096);
         
         try
         {
-            TranscoderOutput output = new TranscoderOutput(ostream);
+            TranscoderOutput output = new TranscoderOutput(out);
             
             if (width>0 && height>0)
             {
@@ -193,11 +199,11 @@ public class SVGImageResource extends AbstractImageResource implements Serializa
             }
         }
         
-        return Toolkit.getDefaultToolkit().createImage(ostream.getBytes());
+        return Toolkit.getDefaultToolkit().createImage(out.toByteArray());
         
     }
 
-    public static Image renderSVGImage(String svg, int width, int height)
+    private static Image renderSVGImage(String svg, int width, int height)
     {
         return renderSVGImage(new StringReader(svg), width, height);
     }
@@ -207,15 +213,16 @@ public class SVGImageResource extends AbstractImageResource implements Serializa
         super.flush();
         svgDataInitialized = false;
         svgData = null;
-        cachedImage = null;
     }
 
     private void writeObject(java.io.ObjectOutputStream out)
         throws IOException
     {
-        if (svgData == null)
+        if (!svgDataInitialized)
+        {
+            svgDataInitialized = true;
             readData();
-        
+        }
         out.defaultWriteObject();
     }
     
@@ -223,6 +230,7 @@ public class SVGImageResource extends AbstractImageResource implements Serializa
         throws IOException, ClassNotFoundException
     {
         in.defaultReadObject();
+        initState();
     }
     
 }

@@ -22,12 +22,11 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.ObjectStreamClass;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.HashMap;
@@ -35,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.nmedit.jtheme.JTException;
+import net.sf.nmedit.jtheme.image.ImageCache;
 import net.sf.nmedit.jtheme.image.ImageResource;
 import net.sf.nmedit.jtheme.store2.ButtonElement;
 import net.sf.nmedit.jtheme.store2.ComponentElement;
@@ -46,6 +46,7 @@ import net.sf.nmedit.jtheme.store2.LightElement;
 import net.sf.nmedit.jtheme.store2.ModuleElement;
 import net.sf.nmedit.jtheme.store2.SliderElement;
 import net.sf.nmedit.jtheme.store2.TextDisplayElement;
+import net.sf.nmedit.nmutils.PluginObjectInputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -66,6 +67,8 @@ public class DefaultStorageContext extends StorageContext
     private CSSStyleSheet styleSheet;
 
     private Map<Object, ImageResource> imageResourceMap = new HashMap<Object, ImageResource>();
+    
+    private ImageCache imageCache = new ImageCache();
 
     private static transient Log _logger;
     
@@ -74,6 +77,11 @@ public class DefaultStorageContext extends StorageContext
         if (_logger == null)
             _logger = LogFactory.getLog(DefaultStorageContext.class);
         return _logger;
+    }
+    
+    public ImageCache getImageCache()
+    {
+        return imageCache;
     }
     
     public DefaultStorageContext(ClassLoader classLoader)
@@ -102,13 +110,21 @@ public class DefaultStorageContext extends StorageContext
     public void putImage(URL url, ImageResource ir)
     {
         if (url != null)
+        {
+            if (ir.getImageCache() != null)
+                ir.setImageCache(imageCache);
             imageResourceMap.put(url, ir);
+        }
     }
     
     public void putImage(Object key, ImageResource ir)
     {
         if (key != null)
+        {
+            if (ir.getImageCache() != null)
+                ir.setImageCache(imageCache);
             imageResourceMap.put(key, ir);
+        }
     }
     
     public CSSStyleSheet getStyleSheet()
@@ -140,17 +156,35 @@ public class DefaultStorageContext extends StorageContext
         return moduleStoreMap.get(id);
     }
     
-    private File cacheFile = null;
+    private File cacheDir = null;
 
-
-    public void setCacheFile(File cacheFile)
+    private File getElementCacheFile()
     {
-        this.cacheFile = cacheFile;
+        if (cacheDir != null)
+            return new File(cacheDir, "data.cache");
+        return null;
+    }
+
+    private File getImageCacheFile()
+    {
+        if (cacheDir != null)
+            return new File(cacheDir, "image.cache");
+        return null;
+    }
+
+    public void setCacheDir(File cacheDir)
+    {
+        this.cacheDir = cacheDir;
+        
+        if (cacheDir != null && (!cacheDir.exists()))
+        {
+            cacheDir.mkdir();
+        }
     }
     
-    public File getCacheFile()
+    public File getCacheDir()
     {
-        return cacheFile;
+        return cacheDir;
     }
 
 
@@ -166,10 +200,34 @@ public class DefaultStorageContext extends StorageContext
         
         if (loader == null)
             loader = getClass().getClassLoader();
+        
+        File imageCacheFile = getImageCacheFile();
+        if (imageCacheFile != null && imageCacheFile.exists())
+        {
+            try
+            {
+                imageCache.readCacheFile(imageCacheFile);
+            }
+            catch (FileNotFoundException e)
+            {
+                e.printStackTrace();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            catch (ClassNotFoundException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        
+        File cacheFile = getElementCacheFile();
+
         try
         {
             if (cacheFile != null && cacheFile.exists())
-                if (initializeFromCache(loader))
+                if (initializeFromCache(cacheFile, loader))
                     return;
         }
         catch (Exception e)
@@ -194,16 +252,45 @@ public class DefaultStorageContext extends StorageContext
         
         if (cacheFile != null)
         {
-            writeCache();
-            return;
+            writeCache(cacheFile);
         }
+        
+        if (imageCacheFile != null)
+        {
+            // render images
+            
+            for (ModuleElement m: moduleStoreMap.values())
+            {
+                for (ComponentElement e: m)
+                {
+                    if (e instanceof ImageElement)
+                        ((ImageElement) e).renderImage(this);
+                }
+            }
+
+            try
+            {
+                imageCache.writeCacheFile(imageCacheFile);
+            }
+            catch (FileNotFoundException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            catch (IOException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        
     }
   
-    private void writeCache()
+    private void writeCache(File cacheFile)
     {
         try
         {
-            __writeCache();
+            __writeCache(cacheFile);
         }
         catch (Exception e)
         {
@@ -211,7 +298,7 @@ public class DefaultStorageContext extends StorageContext
         }
     }
 
-    private void __writeCache() throws Exception
+    private void __writeCache(File cacheFile) throws Exception
     {
         ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(cacheFile)));
         try
@@ -241,9 +328,9 @@ public class DefaultStorageContext extends StorageContext
         }
     }
 
-    private boolean initializeFromCache(ClassLoader loader) throws Exception
+    private boolean initializeFromCache(File cacheFile, ClassLoader loader) throws Exception
     {
-        ObjectInputStream in = new ObjectInputStreamC(loader,
+        ObjectInputStream in = new PluginObjectInputStream(loader,
                 new BufferedInputStream(new FileInputStream(cacheFile)));
         try
         {
@@ -271,6 +358,7 @@ public class DefaultStorageContext extends StorageContext
                     Object key = in.readObject();
                     ImageResource ir = (ImageResource) in.readObject();
                     ir.setCustomClassLoader(cl);
+                    ir.setImageCache(imageCache);
 
                     imageResourceMap.put(key, ir);
                 }
@@ -318,11 +406,11 @@ public class DefaultStorageContext extends StorageContext
         Element defs = root.getChild("defs");
         if (defs == null) return;
         
-        List<Element> imageList = (List<Element>) defs.getChildren("image");
+        List imageList = defs.getChildren("image");
         
         for (int i=imageList.size()-1;i>=0;i--)
         {
-            buildDefsImage(imageList.get(i));
+            buildDefsImage((Element)imageList.get(i));
         }
     }
 
@@ -331,10 +419,12 @@ public class DefaultStorageContext extends StorageContext
         String id = element.getAttributeValue("id");
         if (id.length() == 0) return;
         
-        ImageResource is =
-        ImageElement.getImageResource(this, element);
-
-        imageResourceMap.put(id, is);
+        ImageResource is = ImageElement.getImageResource(this, element);
+        if (is != null)
+        {
+            is.setImageCache(getImageCache());
+            imageResourceMap.put(id, is);
+        }
     }
     
     public ImageResource getImageResourceById(String id)
@@ -406,41 +496,19 @@ public class DefaultStorageContext extends StorageContext
 
     private void buildModules(Element root) throws JTException
     {
-        List<Element> moduleElementList = (List<Element>) root.getChildren("module");
-
-        for (Element moduleElement : moduleElementList)
+        for (Object moduleElement : root.getChildren("module"))
         {
-            buildModuleStore(moduleElement);
+            buildModuleStore((Element)moduleElement);
         }
     }
 
-    static class ObjectInputStreamC extends ObjectInputStream 
-    {
-      private ClassLoader loader;
-
-    public ObjectInputStreamC(ClassLoader loader, InputStream in) throws IOException
-        {
-            super(in);
-            this.loader = loader;
-        }
-
-    protected Class<?> resolveClass(ObjectStreamClass desc) throws ClassNotFoundException, IOException {
-        //return loader.loadClass(desc.getName());
-
-        String name = desc.getName();
-        try {
-            return Class.forName(name, false, loader);
-        } catch (ClassNotFoundException ex) {
-            return super.resolveClass(desc);
-        }
-      }
-    };
     private void buildModuleStore(Element moduleElement) throws JTException
     {
         ModuleElement moduleStore = (ModuleElement) buildComponentStore(moduleElement);
         
-        for (Element child : (List<Element>) moduleElement.getChildren())
+        for (Object uchild : moduleElement.getChildren())
         {
+            Element child = (Element) uchild;
             String name = child.getName();
             
             boolean dontLoad = name.equals("name") || name.startsWith("select-");

@@ -109,7 +109,7 @@ public class JTLabelUI extends JTComponentUI implements SwingConstants
 
     private boolean reducible(JTComponent c)
     {
-        return (((JTLabel) c).isReducible());
+        return c.isReducible();
     }
     
     private static Insets labelInsets = new Insets(0,0,0,0);

@@ -43,11 +43,11 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.border.Border;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
+import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.JTButtonControl;
 import net.sf.nmedit.jtheme.component.JTComponent;
+import net.sf.nmedit.jtheme.component.JTControl;
 import net.sf.nmedit.jtheme.component.misc.CallDescriptor;
 
 public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingConstants
@@ -553,11 +553,39 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
         return fontMetrics;
     }
 
-    protected BasicButtonListener createBasicButtonListener(JTButtonControl btn)
-    {
-        return BasicButtonListener.createListener(this);
-    }
+    private static final String CONTROL_LISTENER_KEY = JTBasicButtonControlUI.class.getName()
+        +".CONTROL_LISTENER";
+    private transient BasicButtonListener bblInstance;
     
+    protected BasicButtonListener createBasicButtonListener(JTControl control) 
+    {
+        if (bblInstance != null)
+            return bblInstance; 
+        
+        JTContext context = control.getContext();
+        UIDefaults defaults = (context != null) ? context.getUIDefaults() : null;
+        
+        if (defaults != null)
+        {
+            Object l = defaults.get(CONTROL_LISTENER_KEY);
+            if ((l != null) && (l instanceof BasicButtonListener))
+            {
+                bblInstance = (BasicButtonListener) l;
+            }
+            else
+            {
+                bblInstance = new BasicButtonListener();
+                defaults.put(CONTROL_LISTENER_KEY, bblInstance);
+            }
+        }
+        else
+        {
+            bblInstance = new BasicButtonListener();
+        }
+        
+        return bblInstance;
+    }
+
     protected BasicButtonListener getBasicButtonListener(JTButtonControl btn)
     {
         for (MouseListener ml : btn.getMouseListeners())
@@ -571,14 +599,9 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
     }
     
     protected static class BasicButtonListener implements MouseListener, 
-        MouseMotionListener, FocusListener, ChangeListener, KeyListener
+        MouseMotionListener, FocusListener, KeyListener
     {
 
-        public static BasicButtonListener createListener(JTBasicButtonControlUI controlUI2)
-        {
-            return new BasicButtonListener();
-        }
-        
         protected JTButtonControl getControl(ComponentEvent e)
         {
             Component c = e.getComponent();
@@ -601,7 +624,7 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
             btn.addMouseListener(this);
             btn.addMouseMotionListener(this);
             btn.addFocusListener(this);
-            btn.addChangeListener(this);
+            // component repaints itself btn.addChangeListener(this);
             btn.addKeyListener(this);
         }
         
@@ -610,7 +633,7 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
             btn.removeMouseListener(this);
             btn.removeMouseMotionListener(this);
             btn.removeFocusListener(this);
-            btn.removeChangeListener(this);
+            // component repaints itself btn.removeChangeListener(this);
             btn.removeKeyListener(this);
         }
 
@@ -771,12 +794,13 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
             e.getComponent().repaint();
         }
 
+        /*
         public void stateChanged(ChangeEvent e)
         {
             Object o = e.getSource();
             if (o instanceof Component)
                 ((Component)o).repaint();
-        }
+        }*/
 
         public void keyPressed(KeyEvent e)
         {
@@ -872,51 +896,4 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
         preferredButtonSize.setSize(pw, ph);
     }
 
-    /*
-    // for testing:
-    public static void main(String[] args) throws JTException
-    {
-        
-        BufferedImage img = new BufferedImage(11, 11, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g2 = img.createGraphics();
-        try
-        {
-            g2.setColor(Color.GREEN);
-            g2.fillRect(0, 0, img.getWidth(), img.getHeight());
-        }
-        finally
-        {
-            g2.dispose();
-        }
-        ImageIcon icon = new ImageIcon(img);
-
-        JTContext jtc = new JTNM1Context(null);
-        
-        jtc.getUIDefaults().put(JTButtonControl.uiClassID, JTBasicButtonControlUI.class.getName());
-        jtc.getUIDefaults().put(BORDER_KEY, JTNM1BorderFactory.createNordEditor311RaisedButtonBorder());
-        jtc.getUIDefaults().put(SELECTED_BORDER_KEY, JTNM1BorderFactory.createNordEditor311LoweredButtonBorder());
-        jtc.getUIDefaults().put(BACKGROUND_KEY, new ColorUIResource(Color.LIGHT_GRAY));
-        jtc.getUIDefaults().put(BACKGROUND_STATE_KEY, new ColorUIResource(Color.LIGHT_GRAY.brighter()));
-        
-        JFrame f = new JFrame();
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setBounds(0, 0, 200, 200);
-        f.getContentPane().setLayout(null);
-        
-        JTButtonControl btc = jtc.createComponentInstance(JTButtonControl.class);
-
-        btc.setAdapter(new JTDefaultControlAdapter(0, 2, 0));
-        btc.setText(0, "Hi");
-        btc.setText(1, "Di");
-        btc.setText(2, "Ho");
-        btc.setIcon(1, icon);
-        btc.setCyclic(false);
-        
-        f.getContentPane().add(btc);
-        btc.setLocation(10, 10);
-        btc.setSize(btc.getPreferredSize());
-    //    btc.setSize(btc.getWidth(), btc.getHeight()+50);
-        f.setVisible(true);
-    }*/
-    
 }

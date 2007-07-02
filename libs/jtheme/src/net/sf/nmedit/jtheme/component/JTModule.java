@@ -22,13 +22,11 @@
  */
 package net.sf.nmedit.jtheme.component;
 
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
-import java.awt.Image;
 import java.awt.Transparency;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
@@ -47,6 +45,10 @@ public class JTModule extends JTComponent
     implements PModuleListener
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1588824728080062930L;
     public static final String uiClassID = "JTModuleUI";
     private PModule module;
     private boolean selected = false;
@@ -113,7 +115,7 @@ public class JTModule extends JTComponent
         return uiClassID;
     }
 
-    public final void setStaticLayerBackingStore(Image staticLayerBackingStore)
+    /*public final void setStaticLayerBackingStore(Image staticLayerBackingStore)
     {
         super.setStaticLayerBackingStore(staticLayerBackingStore);
         setStaticLayerBackingStoreInChildren();
@@ -130,7 +132,7 @@ public class JTModule extends JTComponent
                 ((JTComponent) c).setStaticLayerBackingStore(img);
             }
         }
-    }
+    }*/
 
     /**
      * @return returns 0 (zero)

@@ -21,6 +21,7 @@ package net.sf.nmedit.jtheme.util;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
@@ -29,6 +30,20 @@ public class RelativeClassLoader extends ClassLoader
 {
     
     private String absPathPrefix;
+
+    public static ClassLoader fromPath(ClassLoader parent, URL path) throws URISyntaxException
+    {
+        File file = new File(path.toURI());
+        
+        if (file.isFile())
+        {
+            file = file.getParentFile();
+        }
+        String s = file.getAbsolutePath();
+        if (!s.endsWith(File.separator))
+            s = s + File.separatorChar;
+        return new RelativeClassLoader(s, parent);
+    }
 
     public RelativeClassLoader(File path, ClassLoader parent)
     {
@@ -82,6 +97,8 @@ public class RelativeClassLoader extends ClassLoader
     
     protected URL findResource(String name) 
     {
+        //return getParent().getResource(absPathPrefix+name);
+        
         File file = new File(absPathPrefix+name);
         
         if (file.exists())

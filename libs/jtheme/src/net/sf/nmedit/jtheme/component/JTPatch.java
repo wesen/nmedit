@@ -25,6 +25,10 @@ import net.sf.nmedit.jtheme.JTContext;
 public class JTPatch extends JComponent
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 794652007213898614L;
     private JTContext context;
 
     public JTPatch(JTContext context)

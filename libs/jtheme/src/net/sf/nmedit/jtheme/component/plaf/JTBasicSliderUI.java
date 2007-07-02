@@ -117,11 +117,15 @@ public class JTBasicSliderUI extends JTBasicControlUI implements SwingConstants
         c.setBorder(null);
     }
 
-    private transient Insets cachedInsets;
+    private transient Insets cachedBorderInsets;
     
     protected Insets getInsets(JTComponent c)
     {
-        return cachedInsets = c.getInsets(cachedInsets);
+        if (cachedBorderInsets == null)
+        {
+            cachedBorderInsets = c.getInsets(cachedBorderInsets);
+        }
+        return cachedBorderInsets;
     }
 
     public void paintStaticLayer(Graphics2D g, JTComponent c)
@@ -159,7 +163,12 @@ public class JTBasicSliderUI extends JTBasicControlUI implements SwingConstants
             w-=insets.left+insets.right;
             h-=insets.top+insets.bottom;
         }
-        g.setColor(c.getBackground());
+        
+        Color bg = c.getBackground();
+        if (c.hasFocus())
+            bg = bg.brighter();
+        
+        g.setColor(bg);
         g.fillRect(x, y, w, h);
     }
 
@@ -172,18 +181,6 @@ public class JTBasicSliderUI extends JTBasicControlUI implements SwingConstants
     {
         double value = control.getNormalizedValue();
         paintSliderGrip(g, control, defaultGripColor, defaultGripSize, value, insets);
-        
-
-        paintSliderFocus(g, control, insets);
-    }
-
-    protected void paintSliderFocus(Graphics2D g, JTControl control, Insets insets)
-    {
-        if (control.hasFocus())
-        {
-            g.setColor(defaultFocusedBorderColor);
-            g.drawRect(1, 1, control.getWidth()-3, control.getHeight()-3);
-        }
     }
 
     protected void paintSliderGrip(Graphics2D g, JTControl control, Color gripColor, 

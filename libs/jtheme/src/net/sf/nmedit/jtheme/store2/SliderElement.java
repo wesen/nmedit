@@ -34,6 +34,11 @@ import org.jdom.Element;
 public class SliderElement extends ControlElement
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5479694009082150230L;
+
     protected static final String ATT_ORIENTATION = "orientation";
 
     protected int orientation = SwingConstants.VERTICAL;

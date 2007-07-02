@@ -21,6 +21,11 @@ package net.sf.nmedit.jtheme;
 public class JTException extends Exception
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8489969924555344991L;
+
     public JTException()
     {
         super();
