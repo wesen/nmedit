@@ -177,5 +177,20 @@ public class NmFileService implements FileService
             patch.setProperty("file", file);
     }
 
+    public void editProperties(Object source)
+    {
+        NMPatch patch = getPatch(source);        
+        if (patch == null)
+            throw new IllegalArgumentException("properties not supported for source: "+source);
+        
+        
+        PatchSettingsDialog.invoke(this, patch);
+    }
+
+    public boolean isEditPropertiesSupported(Object source)
+    {
+        return getPatch(source) != null;
+    }
+
 }
 

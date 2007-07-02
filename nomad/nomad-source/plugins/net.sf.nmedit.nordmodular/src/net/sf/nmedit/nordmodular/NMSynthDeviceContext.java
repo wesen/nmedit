@@ -20,14 +20,12 @@ package net.sf.nmedit.nordmodular;
 
 import java.awt.Event;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SynthException;
@@ -94,17 +92,21 @@ public class NMSynthDeviceContext extends SynthDeviceContext
     private static class SlotAction extends AbstractAction
     {
 
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -8238875184398804108L;
         public static final String OPEN_PATCH = "open.patch";
         public static final String NEW_PATCH = "new.patch";
         public static final String ENABLE_DISABLE_SLOT = "EnableDisable";
         public static final String SELECT_SLOT = "select";
         
-        private SlotLeaf leaf;
+        //private SlotLeaf leaf;
         private NmSlot slot;
         
         public SlotAction(SlotLeaf leaf, String command)
         {
-            this.leaf = leaf;
+            //this.leaf = leaf;
             this.slot = (NmSlot) leaf.getSlot();
             
             putValue(ACTION_COMMAND_KEY, command);

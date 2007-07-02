@@ -16,14 +16,12 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 package net.sf.nmedit.nordmodular;
 
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -35,9 +33,17 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
+
 public class SynthSettingsFrm extends JPanel
 {
-   JPanel SynthSettingsFrm = new JPanel();
+   /**
+     * 
+     */
+    private static final long serialVersionUID = -8522180223157926470L;
+JPanel SynthSettingsFrm = new JPanel();
    JSpinner spChannelSlotA = new JSpinner();
    JSpinner spChannelSlotB = new JSpinner();
    JSpinner spChannelSlotC = new JSpinner();
@@ -55,14 +61,15 @@ public class SynthSettingsFrm extends JPanel
    JCheckBox cbProgramChangeSend = new JCheckBox();
    JCheckBox cbProgramChangeReceive = new JCheckBox();
    JRadioButton rbKBModeActiveSlot = new JRadioButton();
+   ButtonGroup buttongroup2 = new ButtonGroup();
    JRadioButton rbKBModeSelectedSlots = new JRadioButton();
    JCheckBox cbLocalOff = new JCheckBox();
    JCheckBox cbLEDsActive = new JCheckBox();
    JRadioButton rbKnobModeImmediate = new JRadioButton();
-   ButtonGroup buttongroup2 = new ButtonGroup();
+   ButtonGroup buttongroup3 = new ButtonGroup();
    JRadioButton rbKnobModeHook = new JRadioButton();
    JRadioButton rbPedalPolarityNormal = new JRadioButton();
-   ButtonGroup buttongroup3 = new ButtonGroup();
+   ButtonGroup buttongroup4 = new ButtonGroup();
    JRadioButton rbPedalPolarityInverted = new JRadioButton();
    JTextField jtSynthName = new JTextField();
    JSpinner spGlobalSyncBeats = new JSpinner();
@@ -256,13 +263,13 @@ public class SynthSettingsFrm extends JPanel
       rbKBModeActiveSlot.setName("rbKBModeActiveSlot");
       rbKBModeActiveSlot.setSelected(true);
       rbKBModeActiveSlot.setText("Active slot");
-      buttongroup1.add(rbKBModeActiveSlot);
+      buttongroup2.add(rbKBModeActiveSlot);
       SynthSettingsFrm.add(rbKBModeActiveSlot,cc.xy(9,5));
 
       rbKBModeSelectedSlots.setActionCommand("Selected slots");
       rbKBModeSelectedSlots.setName("rbKBModeSelectedSlots");
       rbKBModeSelectedSlots.setText("Selected slots");
-      buttongroup1.add(rbKBModeSelectedSlots);
+      buttongroup2.add(rbKBModeSelectedSlots);
       SynthSettingsFrm.add(rbKBModeSelectedSlots,cc.xy(9,6));
 
       cbLocalOff.setActionCommand("Local off");
@@ -279,26 +286,26 @@ public class SynthSettingsFrm extends JPanel
       rbKnobModeImmediate.setName("rbKnobModeImmediate");
       rbKnobModeImmediate.setSelected(true);
       rbKnobModeImmediate.setText("Immediate");
-      buttongroup2.add(rbKnobModeImmediate);
+      buttongroup3.add(rbKnobModeImmediate);
       SynthSettingsFrm.add(rbKnobModeImmediate,cc.xy(9,12));
 
       rbKnobModeHook.setActionCommand("Selected slots");
       rbKnobModeHook.setName("rbKnobModeHook");
       rbKnobModeHook.setText("Hook");
-      buttongroup2.add(rbKnobModeHook);
+      buttongroup3.add(rbKnobModeHook);
       SynthSettingsFrm.add(rbKnobModeHook,cc.xy(9,13));
 
       rbPedalPolarityNormal.setActionCommand("Active slot");
       rbPedalPolarityNormal.setName("rbPedalPolarityNormal");
       rbPedalPolarityNormal.setSelected(true);
       rbPedalPolarityNormal.setText("Normal");
-      buttongroup3.add(rbPedalPolarityNormal);
+      buttongroup4.add(rbPedalPolarityNormal);
       SynthSettingsFrm.add(rbPedalPolarityNormal,cc.xy(9,16));
 
       rbPedalPolarityInverted.setActionCommand("Selected slots");
       rbPedalPolarityInverted.setName("rbPedalPolarityInverted");
       rbPedalPolarityInverted.setText("Inverted");
-      buttongroup3.add(rbPedalPolarityInverted);
+      buttongroup4.add(rbPedalPolarityInverted);
       SynthSettingsFrm.add(rbPedalPolarityInverted,cc.xy(9,17));
 
       jtSynthName.setName("jtSynthName");
@@ -318,7 +325,43 @@ public class SynthSettingsFrm extends JPanel
       spMIDIClockRate.setName("spMIDIClockRate");
       SynthSettingsFrm.add(spMIDIClockRate,cc.xy(3,16));
 
-      addFillComponents(SynthSettingsFrm,new int[]{ 1,2,3,4,5,6,7,8,9,10,11 },new int[]{ 1,2,3,4,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28 });
+      JLabel jlabel10 = new JLabel();
+      jlabel10.setText("Name");
+      SynthSettingsFrm.add(jlabel10,cc.xywh(1,1,5,1));
+
+      JLabel jlabel11 = new JLabel();
+      jlabel11.setText("MIDI Channel");
+      SynthSettingsFrm.add(jlabel11,cc.xy(1,4));
+
+      JLabel jlabel12 = new JLabel();
+      jlabel12.setText("MIDI Clock");
+      SynthSettingsFrm.add(jlabel12,cc.xywh(1,11,5,1));
+
+      JLabel jlabel13 = new JLabel();
+      jlabel13.setText("Master Tune");
+      SynthSettingsFrm.add(jlabel13,cc.xywh(1,19,5,1));
+
+      JLabel jlabel14 = new JLabel();
+      jlabel14.setText("MIDI velocity scale");
+      SynthSettingsFrm.add(jlabel14,cc.xywh(1,22,5,1));
+
+      JLabel jlabel15 = new JLabel();
+      jlabel15.setText("Program change");
+      SynthSettingsFrm.add(jlabel15,cc.xywh(1,26,5,1));
+
+      JLabel jlabel16 = new JLabel();
+      jlabel16.setText("Keyboard mode");
+      SynthSettingsFrm.add(jlabel16,cc.xywh(7,4,5,1));
+
+      JLabel jlabel17 = new JLabel();
+      jlabel17.setText("Knob mode");
+      SynthSettingsFrm.add(jlabel17,cc.xywh(7,11,5,1));
+
+      JLabel jlabel18 = new JLabel();
+      jlabel18.setText("Pedal polarity");
+      SynthSettingsFrm.add(jlabel18,cc.xywh(7,15,5,1));
+
+      addFillComponents(SynthSettingsFrm,new int[]{ 2,3,4,5,6,7,8,9,10,11 },new int[]{ 2,3,9,10,12,13,14,15,16,17,18,20,21,23,24,25,27,28 });
       return jscrollpane1;
    }
 

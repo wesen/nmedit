@@ -16,31 +16,19 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.nmedit.nordmodular;
+package net.sf.nmedit.jsynth.nomad;
 
-import net.sf.nmedit.jnmprotocol.PDLData;
+import net.sf.nmedit.jsynth.Synthesizer;
+import net.sf.nmedit.nomad.core.registry.Registry;
 
-import org.java.plugin.Plugin;
-
-public class CorePlugin extends Plugin
+public class SynthRegistry extends Registry<Synthesizer>
 {
+
+    private static SynthRegistry instance = new SynthRegistry();
     
-    @Override
-    protected void doStart() throws Exception
+    public static SynthRegistry sharedInstance()
     {
-        ClassLoader loader =
-            getManager().getPluginClassLoader(getDescriptor());
-
-        PDLData.setSource(loader, "midi.pdl", "patch.pdl");
-        
-        PDLData.getPatchProtocol();
-        PDLData.getMidiProtocol();
+        return instance;
     }
-
-    @Override
-    protected void doStop() throws Exception
-    {        
-    }
-
+    
 }
-

@@ -73,4 +73,10 @@ public class MWPatchDoc implements Document
         return null;
     }
 
+    public Object getProperty(String name)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

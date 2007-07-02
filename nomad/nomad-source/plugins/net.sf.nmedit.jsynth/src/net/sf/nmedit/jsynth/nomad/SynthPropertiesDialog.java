@@ -45,6 +45,10 @@ import net.sf.nmedit.nomad.core.forms.PropertyDialogForm;
 public class SynthPropertiesDialog extends PropertyDialogForm
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6817919267677037724L;
     private Synthesizer synth;
     
     public SynthPropertiesDialog(Synthesizer synth)
@@ -161,6 +165,11 @@ public class SynthPropertiesDialog extends PropertyDialogForm
         
         protected class PortAction extends AbstractAction implements Runnable
         {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 4966069655840174685L;
+
             public PortAction(String command)
             {
                 if (command == ACTION_APPLY)

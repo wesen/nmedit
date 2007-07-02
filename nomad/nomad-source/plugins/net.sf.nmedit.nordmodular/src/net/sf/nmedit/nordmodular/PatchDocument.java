@@ -18,29 +18,37 @@
  */
 package net.sf.nmedit.nordmodular;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.net.URI;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTNMPatch;
+import net.sf.nmedit.nomad.core.Nomad;
+import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
 import net.sf.nmedit.nomad.core.swing.document.Document;
 import net.sf.nmedit.nomad.core.swing.document.HistoryFeature;
 
-public class PatchDocument implements Document
+public class PatchDocument implements Document, PropertyChangeListener
 {
     
     public static Icon pchIcon = new ImageIcon(
             PatchDocument.class.getResource("/icons/patch_file_icon16.png"));
     
     private JTNMPatch jtpatch;
+    private NMPatch nmpatch;
     private URI uri;
     private HistoryFeature historyFeature;
 
     public PatchDocument(JTNMPatch patch)
     {
         this.jtpatch = patch;
+        this.nmpatch = jtpatch.getPatch();
+        nmpatch.addPropertyChangeListener(NMPatch.NAME, this);
     }
     
     public void setURI(File file)
@@ -75,6 +83,11 @@ public class PatchDocument implements Document
 
     public void dispose()
     {
+        if (nmpatch != null)
+        {
+            nmpatch.removePropertyChangeListener(this);
+            nmpatch = null;
+        }
         if (jtpatch != null)
             jtpatch.dispose();
     }
@@ -95,6 +108,22 @@ public class PatchDocument implements Document
     public File getFile()
     {
         return jtpatch != null ? jtpatch.getPatch().getFile() : null;
+    }
+
+    public void propertyChange(PropertyChangeEvent evt)
+    {
+        if (evt.getPropertyName() == NMPatch.NAME)
+        {
+            DefaultDocumentManager m = Nomad.sharedInstance().getDocumentManager();
+            int index = m.indexOf(this);
+            if (index>=0)
+                m.setTitleAt(index, getTitle());
+        }
+    }
+
+    public Object getProperty(String name)
+    {
+        return "patch".equals(name) ? jtpatch.getPatch() : null;
     }
 
 }

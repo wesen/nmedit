@@ -75,16 +75,64 @@ public class NMData
         
         URL mdURL = getClass().getClassLoader().getResource("module-descriptions/modules.xml");
         
-        NM1ModuleDescriptions descriptions;
-        source = new FileInputStream(new File(mdURL.toURI()));
-        try
+        NM1ModuleDescriptions descriptions = null;
+/*
+        final File moduleCache = getTempDir().getTempFile("modules.cache");
+        
         {
-            descriptions = NM1ModuleDescriptions.parse(source);
-            descriptions.setModuleDescriptionsClassLoader(getRelativeClassLoader(mdURL));
+            // read from temp file
+            if (moduleCache.exists())
+            {
+                NM1ModuleDescriptions cached = new NM1ModuleDescriptions();
+                try
+                {
+                    ClassLoader loader = getClass().getClassLoader();
+                    Thread.currentThread().setContextClassLoader(loader);
+                    
+                    Timer timer = new Timer();
+                    timer.reset();
+                    
+                cached.readCache(moduleCache, loader);
+                
+                System.out.println("read cache "+timer);
+                }
+                catch (Exception e)
+                {
+                    Log log = LogFactory.getLog(getClass());
+                    if (log.isErrorEnabled())
+                    {
+                        log.error("reading module cache failed: "+moduleCache.getAbsolutePath(), e);
+                    }
+                }
+                descriptions = cached;
+            }
         }
-        finally
+        */
+        if (descriptions == null)
         {
-            source.close();
+            source = new FileInputStream(new File(mdURL.toURI()));
+            try
+            {
+                descriptions = NM1ModuleDescriptions.parse(RelativeClassLoader.fromPath(getClass().getClassLoader(), mdURL), source);
+                // write cache
+                /*
+                try
+                {
+                    descriptions.writeCache(moduleCache);
+                }
+                catch (Exception e)
+                {
+                    Log log = LogFactory.getLog(getClass());
+                    if (log.isErrorEnabled())
+                    {
+                        log.error("writing module cache failed: "+moduleCache.getAbsolutePath(), e);
+                    }
+                }*/
+            }
+            finally
+            {
+                source.close();
+            }
         }
         URL transURL = getClass().getClassLoader().getResource("module-descriptions/transformations.xml");
         
@@ -116,12 +164,13 @@ public class NMData
         }
     }
 
+    /*
     private RelativeClassLoader getRelativeClassLoader(URL url)
     {
         String r = url.getPath();
         r = r.substring(0, r.lastIndexOf("/"))+"/";
         return new RelativeClassLoader(r, getClass().getClassLoader());
-    }
+    }*/
 
     private InputStream getResourceAsStream(String path)
     {
@@ -140,6 +189,14 @@ public class NMData
             throw new RuntimeException(e);
         }
     }
+    
+    private TempDir getTempDir()
+    {
+        PluginManager manager = PluginManager.lookup(this); 
+        Plugin plugin = manager.getPluginFor(this);   
+        TempDir tmp = new TempDir(plugin);
+        return tmp;
+    }
 
     private JTNM1Context initContext() throws Exception
     {
@@ -153,17 +210,14 @@ public class NMData
         {
             URL relative = getClass().getClassLoader().getResource(ctf);
             
-            storageContext = new NMStorageContext(getRelativeClassLoader(relative));
+            storageContext = new NMStorageContext(RelativeClassLoader.fromPath(getClass().getClassLoader(), relative));
 
             ClassLoader loader = getClass().getClassLoader();
 
-            PluginManager manager = PluginManager.lookup(this); 
-            
-            Plugin plugin = manager.getPluginFor(this);
             Thread.currentThread().setContextClassLoader(loader);
-            
-            TempDir tmp = new TempDir(plugin);
-            storageContext.setCacheFile(tmp.getTempFile("store.cache"));
+
+            TempDir tmp = getTempDir();
+            storageContext.setCacheDir(tmp.getTempFile("theme-cache"));
             
             storageContext.parseStore(new InputSource(source), loader);
         }

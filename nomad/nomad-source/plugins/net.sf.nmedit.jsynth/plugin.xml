@@ -8,6 +8,7 @@
   	<requires>
 		<import plugin-id="net.sf.nmedit.nomad.core"  />
 		<import plugin-id="net.sf.nmedit.nmutils"  />
+		<import plugin-id="com.jgoodies.forms" />
 	</requires>
 	<runtime>
 		<library id="jsynth" path="lib/jsynth.jar" type="code" >
@@ -17,4 +18,10 @@
 			<export prefix="*"/>
 		</library>
 	</runtime>
+	<extension plugin-id="net.sf.nmedit.nomad.core"
+	  point-id="Service" id="SynthLibInstaller">
+		<parameter id="class" value="net.sf.nmedit.jsynth.nomad.Installer"/>
+		<parameter id="service" value="net.sf.nmedit.nomad.core.service.initService.InitService"/>
+		<parameter id="description" value="JSynth installer"/>
+	</extension>
 </plugin>

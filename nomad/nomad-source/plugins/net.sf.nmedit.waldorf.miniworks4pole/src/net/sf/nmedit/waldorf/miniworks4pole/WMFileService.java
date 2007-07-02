@@ -107,5 +107,17 @@ public class WMFileService implements FileService
         throw new UnsupportedOperationException("save not supported");
     }
 
+    public void editProperties(Object source)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public boolean isEditPropertiesSupported(Object source)
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }
 

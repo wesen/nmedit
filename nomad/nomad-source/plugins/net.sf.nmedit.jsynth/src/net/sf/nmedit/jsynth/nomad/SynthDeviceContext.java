@@ -552,7 +552,7 @@ public class SynthDeviceContext extends ContainerNode
         public void uninstall()
         {
             if (!installed) return;   
-            ExplorerTree tree = context.getTree();
+            //ExplorerTree tree = context.getTree();
             
             Synthesizer synth = context.getSynth();
             if (synth != null)
@@ -814,6 +814,10 @@ public class SynthDeviceContext extends ContainerNode
         d.setVisible(true);
         
         spd.addButton(new AbstractAction(){
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 6856066575494473810L;
             {
                 putValue(NAME, "Close");
             }

@@ -7,6 +7,7 @@
 	</attributes>
 	<requires>
 		<import plugin-id="net.sf.nmedit.nmutils" />
+		<import plugin-id="org.mozilla.rhino" />
 	</requires>
 	<runtime>
 		<!--	   

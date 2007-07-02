@@ -19,10 +19,13 @@
 package net.sf.nmedit.nordmodular;
 
 import net.sf.nmedit.jsynth.SynthException;
+import net.sf.nmedit.jsynth.Synthesizer;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
 import net.sf.nmedit.jsynth.midi.MidiPlug;
 import net.sf.nmedit.jsynth.nomad.SynthDeviceContext;
 import net.sf.nmedit.nomad.core.Nomad;
+import net.sf.nmedit.nomad.core.registry.GlobalRegistry;
+import net.sf.nmedit.nomad.core.registry.Registry;
 import net.sf.nmedit.nomad.core.service.Service;
 import net.sf.nmedit.nomad.core.service.synthService.NewSynthService;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
@@ -99,6 +102,10 @@ public abstract class AbstractNewNordService
         {
             // ignore - should not happen
         }
+
+        Registry<Synthesizer> sreg = GlobalRegistry.getInstance().getRegistry(Synthesizer.class);
+        sreg.add(synth);
+        
         etree.addRootNode(new NMSynthDeviceContext(etree, synth, name));
     }
     
