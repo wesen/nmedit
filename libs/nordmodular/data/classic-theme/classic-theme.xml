@@ -3940,7 +3940,6 @@ label{fill:#000;}
 			<btn index="2">3</btn>
 			<btn index="3">4</btn>
 		</button>
-		
 		<button x="90" y="2" width="68" height="16" cyclic="false" landscape="true" >
 			<parameter component-id="p11"  alt="curve" />
 			<btn index="0"><image xlink:href="./images/slice/env_multi_bipolar.png" /></btn>
@@ -4084,7 +4083,7 @@ label{fill:#000;}
 			<btn index="1"> <image xlink:href="./images/slice/stop.png"/></btn>
 		</button> 
 		
-		<note-seq-editor name="note-seq-display" x="30" y="37" width="192" height="74">
+		<note-seq-editor name="note-seq-display" x="25" y="37" width="192" height="74">
 			<step1 component-id="p3"  alt="note 1" />
 			<step2 component-id="p4"  alt="note 2" />
 			<step3 component-id="p5"  alt="note 3" />
@@ -4103,97 +4102,99 @@ label{fill:#000;}
 			<step16 component-id="p18"  alt="note 16" />
 		</note-seq-editor>
 		
-		<button x="30" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+		<button x="25" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter  component-id="p3" alt="note 1" />
         	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
 	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
+
+		<scrollbar x="217" y="37" width="11" height="74" note-sequencer="note-seq-display" />
 		
-		<button x="42" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+		<button x="37" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter  component-id="p4" alt="note 1" />
         	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
 	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
-        	<button x="54" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+        	<button x="49" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter  component-id="p5" alt="note 1" />
         	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
 	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
-        	<button x="66" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+        	<button x="61" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter  component-id="p6" alt="note 1" />
         	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
 	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
-        	<button x="78" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+        	<button x="73" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter  component-id="p7" alt="note 1" />
         	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
 	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
-        	<button x="90" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+        	<button x="85" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter  component-id="p8" alt="note 1" />
         	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
 	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
-        	<button x="102" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+        	<button x="97" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter  component-id="p9" alt="note 1" />
         	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
 	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
-        	<button x="114" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+        	<button x="109" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter  component-id="p10" alt="note 1" />
         	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
 	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
-        	<button x="126" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+        	<button x="121" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter  component-id="p11" alt="note 1" />
         	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
 	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
-        	<button x="138" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+        	<button x="133" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter  component-id="p12" alt="note 1" />
         	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
 	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
-        	<button x="150" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+        	<button x="145" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter  component-id="p13" alt="note 1" />
         	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
 	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
-        	<button x="162" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+        	<button x="157" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter  component-id="p14" alt="note 1" />
         	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
 	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
-        	<button x="174" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+        	<button x="169" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter  component-id="p15" alt="note 1" />
         	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
 	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
-        	<button x="186" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+        	<button x="181" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter  component-id="p16" alt="note 1" />
         	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
 	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
-        	<button x="198" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+        	<button x="193" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter  component-id="p17" alt="note 1" />
         	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
 	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
-        	<button x="210" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
+        	<button x="205" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter  component-id="p18" alt="note 1" />
         	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
 	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
@@ -4213,7 +4214,7 @@ label{fill:#000;}
 	        </button>			
 	   
 	        
-		<light component-id="ledStep1-16" type="led-array" x="30" y="28" width="192" height="7" /> 
+		<light component-id="ledStep1-16" type="led-array" x="25" y="28" width="192" height="7" /> 
 		
 	</module>
 	<module component-id="m111" width="255" height="30">
