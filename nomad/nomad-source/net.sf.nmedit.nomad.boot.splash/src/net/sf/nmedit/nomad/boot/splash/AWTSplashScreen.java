@@ -30,6 +30,7 @@ import java.awt.FontMetrics;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -312,33 +313,42 @@ public class AWTSplashScreen extends SplashScreenControl implements SplashScreen
     {
         synchronized (windowLock)
         {
-            SplashWindow w = new SplashWindow(splashImage);
-    
-            loadAndValidateProperties(w, width, height);
-            if (textPropertiesValid && progressMeterPropertiesValid)
+            try
             {
-                renderSplash(splashImage);
-            }
-            
-            if (!isAbortRequested())
-            {
-                w.setSize(width, height);
-                Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-                w.setLocation((screen.width-width)/2, (screen.height-height)/2);
-    
-                w.addMouseListener(new MouseAdapter(){
-                    public void mouseClicked(MouseEvent e)
-                    {
-                        disposeImmediately();
-                    }
-                });
+                SplashWindow w = new SplashWindow(splashImage);
+        
+                loadAndValidateProperties(w, width, height);
+                if (textPropertiesValid && progressMeterPropertiesValid)
+                {
+                    renderSplash(splashImage);
+                }
                 
-                w.setVisible(true);
-                splashWindow = w;
+                if (!isAbortRequested())
+                {
+                    w.setSize(width, height);
+                    Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+                    w.setLocation((screen.width-width)/2, (screen.height-height)/2);
+        
+                    w.addMouseListener(new MouseAdapter(){
+                        public void mouseClicked(MouseEvent e)
+                        {
+                            disposeImmediately();
+                        }
+                    });
+                    
+                    w.setVisible(true);
+                    splashWindow = w;
+                }
+                else
+                {
+                    setSplashScreenAborted();
+                }
             }
-            else
+            catch (HeadlessException e)
             {
+                disposeImmediately();
                 setSplashScreenAborted();
+                dispose();
             }
         }
     }
@@ -346,6 +356,10 @@ public class AWTSplashScreen extends SplashScreenControl implements SplashScreen
     private class SplashWindow extends Window
     {
 
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -4190188942520463765L;
         private Image splashImage;
 
         public SplashWindow(Image splashImage)
@@ -369,6 +383,11 @@ public class AWTSplashScreen extends SplashScreenControl implements SplashScreen
     
     private static class SplashFrame extends Frame
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 8071445905439526492L;
+
         public void update(Graphics g)
         {
             // do not erase background because we fill it completely with the image
