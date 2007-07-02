@@ -25,6 +25,7 @@ package net.sf.nmedit.jsynth.clavia.nordmodular;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 
 import javax.sound.midi.MidiDevice;
 import javax.xml.parsers.ParserConfigurationException;
@@ -59,10 +60,10 @@ public class NM1Test
     private static NordModular nm1; 
 
     @BeforeClass
-    public static void initModuleDescriptions() throws IOException, ParserConfigurationException, SAXException
+    public static void initModuleDescriptions() throws IOException, ParserConfigurationException, SAXException, URISyntaxException
     {
-        InputStream is = new FileInputStream("RESOURCE/modules.xml");
-        moduleDescriptions = NM1ModuleDescriptions.parse(is);
+        //putStream is = new FileInputStream("RESOURCE/modules.xml");
+        moduleDescriptions = NmUtils.parseModuleDescriptions();
     }
 
     @AfterClass

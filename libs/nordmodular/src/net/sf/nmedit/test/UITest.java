@@ -26,10 +26,14 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -46,6 +50,11 @@ import javax.swing.filechooser.FileFilter;
 
 import org.xml.sax.InputSource;
 
+import net.sf.nmedit.jpatch.PConnectorDescriptor;
+import net.sf.nmedit.jpatch.PDescriptor;
+import net.sf.nmedit.jpatch.PLightDescriptor;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
+import net.sf.nmedit.jpatch.PParameterDescriptor;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.history.History;
@@ -77,12 +86,18 @@ public class UITest
     
     private static class UITestAction extends AbstractAction
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 5875924171704911680L;
         public static final String FileOpen = "Open";
         public static final String FileClose= "Close";
         public static final String UIUpdate = "Update UI";
         public static final String Exit = "Exit";
         public static final String FileUndo = "Undo";
         public static final String FileRedo = "Redo";
+        
+        public static final String MD_SERIALIZATION = "MD Serialization";
         
         public UITestAction(String command)
         {
@@ -109,6 +124,11 @@ public class UITest
                 {
                     System.exit(0);
                 }
+            }
+            
+            else if (e.getActionCommand() == MD_SERIALIZATION)
+            {
+                UITest.MD_SerializationTest();
             }
         }
     }
@@ -151,6 +171,9 @@ public class UITest
         mnpatch.add(new UITestAction(UITestAction.FileUndo));
         mnpatch.add(new UITestAction(UITestAction.FileRedo));
         mnbar.add(mnpatch);
+        JMenu test = new JMenu("Test");
+        test.add(new UITestAction(UITestAction.MD_SERIALIZATION));
+        mnbar.add(test);
         frame.setJMenuBar(mnbar);
         
         // content
@@ -158,7 +181,7 @@ public class UITest
         frame.getContentPane().setLayout(new BorderLayout());
         frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
     }
-    
+
     static JFileChooser chooser;
     static void fileOpen()
     {
@@ -193,6 +216,123 @@ public class UITest
             files.add(file);
     }
     
+    public static void MD_SerializationTest()
+    {
+        System.out.println("Serialization Test...");
+        try
+        {
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();   
+            ObjectOutputStream out = new ObjectOutputStream(bout);
+
+            System.out.println("writing...");
+            modules.writeCache(out);
+            out.flush();
+            out.close();
+            System.out.println("ok");
+            
+            byte[] data = bout.toByteArray();
+
+            System.out.println("reading");
+            NM1ModuleDescriptions copy = new NM1ModuleDescriptions(modules.getModuleDescriptionsClassLoader());
+            copy.readCache(new ObjectInputStream(new ByteArrayInputStream(data)));
+            System.out.println("ok");
+            
+            compare(modules, copy);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    private static void compare(NM1ModuleDescriptions m1, NM1ModuleDescriptions m2)
+    {
+        check_true(m1.getDefinedSignals()!= null && m2.getDefinedSignals()!=null, "defined signals", m1, m2);
+        check_true(m1.getModuleCount() == m2.getModuleCount(), "module count", m1, m2);
+        
+        for (PModuleDescriptor ma: m1)
+        {
+            PModuleDescriptor mb = m2.getModuleById(ma.getComponentId());
+            check_true(mb != null, "module[component-id="+ma.getComponentId()+"]", ma, mb);
+            compare(ma, mb);
+        }   
+    }
+
+    private static void compare(PModuleDescriptor ma, PModuleDescriptor mb)
+    {
+        compareDescriptor(ma, mb);
+
+        check_true(ma.getParameterDescriptorCount()==mb.getParameterDescriptorCount(), "parameter count", ma, mb);
+        check_true(ma.getConnectorDescriptorCount()==mb.getConnectorDescriptorCount(), "connector count", ma, mb);
+        check_true(ma.getLightDescriptorCount()==mb.getLightDescriptorCount(), "light count", ma, mb);
+
+        for (int i=ma.getParameterDescriptorCount()-1;i>=0;i--)
+        {
+            PParameterDescriptor pa = ma.getParameterDescriptor(i);
+            PParameterDescriptor pb = mb.getParameterDescriptor(i);
+            compare(pa, pb);
+        }
+        for (int i=ma.getConnectorDescriptorCount()-1;i>=0;i--)
+        {
+            PConnectorDescriptor pa = ma.getConnectorDescriptor(i);
+            PConnectorDescriptor pb = mb.getConnectorDescriptor(i);
+            compare(pa, pb);
+        }
+        for (int i=ma.getLightDescriptorCount()-1;i>=0;i--)
+        {
+            PLightDescriptor pa = ma.getLightDescriptor(i);
+            PLightDescriptor pb = mb.getLightDescriptor(i);
+            compare(pa, pb);
+        }
+    }
+
+    private static void compare(PLightDescriptor pa, PLightDescriptor pb)
+    {
+        compareDescriptor(pa, pb);
+    }
+
+    private static void compare(PConnectorDescriptor pa, PConnectorDescriptor pb)
+    {
+        compareDescriptor(pa, pb);
+    }
+
+    private static void compare(PParameterDescriptor pa, PParameterDescriptor pb)
+    {
+        compareDescriptor(pa, pb);
+    }
+
+    private static void compareDescriptor(PDescriptor pa, PDescriptor pb)
+    {
+        check_true(pa.getComponentId().equals(pb.getComponentId()), "component-id", pa, pb);
+        check_true(pa.getDescriptorIndex()==pb.getDescriptorIndex(), "descriptor index", pa, pb);
+        
+        if (!(pa instanceof PModuleDescriptor))
+        {
+            check_true(pa.getParentDescriptor()!=null, "no parent", pa);
+            check_true(pb.getParentDescriptor()!=null, "no parent", pb);
+        }
+        
+    }
+
+    private static void check_true(boolean t, String msg, Object ... src)
+    {
+        if (!t) 
+        {
+            
+            StringBuilder sb = new StringBuilder();
+            sb.append(msg);
+            sb.append("; source: ");
+            int cnt = 0;
+            for (Object o: src)
+            {
+                sb.append(o);
+                if (++cnt<src.length)
+                    sb.append(", ");
+            }
+            throw new RuntimeException(sb.toString());
+        }
+    }
+
     static boolean fileOpenNoList(File file)
     {
         InputStream in = null;
@@ -259,7 +399,7 @@ public class UITest
         else history.redo();
     }
 
-    static void updateUI()
+    static void updateUI() 
     {
         createFrame(); // create a new frame
         createModuleDescriptions();
@@ -310,7 +450,7 @@ public class UITest
         try
         {
             in = new BufferedInputStream( new FileInputStream(new File(moduleURL.toURI())) );
-            modules = NM1ModuleDescriptions.parse(in);
+            modules = NM1ModuleDescriptions.parse(RelativeClassLoader.fromPath(UITest.class.getClassLoader(), moduleURL), in);
         }
         catch (Exception e)
         {
@@ -321,50 +461,31 @@ public class UITest
         {
             close(in);
         }
-
-        ClassLoader loader = UITest.class.getClassLoader();
-        File f;
-        try
-        {
-            f = (new File(moduleURL.toURI())).getParentFile();
-            loader = new RelativeClassLoader(f, loader);
-            
-            
-        }
-        catch (URISyntaxException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        
-        modules.setModuleDescriptionsClassLoader(loader);
-        
     }
 
-    static void createUIContext()
+    static void createUIContext() 
     {
         String classicThemeXml = "/classic-theme/classic-theme.xml";
         URL classicThemeURL = UITest.class.getResource(classicThemeXml);
-       
-        File classicThemeFile = null;
+        ClassLoader relLoader;
+        
         try
         {
-            classicThemeFile = new File(classicThemeURL.toURI());
+        relLoader = RelativeClassLoader.fromPath(UITest.class.getClassLoader(), classicThemeURL);
         }
         catch (URISyntaxException e)
         {
-            e.printStackTrace();
-            System.exit(1);
+            throw new RuntimeException(e);
         }
-        RelativeClassLoader relLoader = new RelativeClassLoader(classicThemeFile.getParent());
-
+        
         DefaultStorageContext dsc = new NMStorageContext(relLoader);
         
         InputStream in = null;
         try
         {
-            in = new BufferedInputStream(new FileInputStream(classicThemeFile));
-            dsc.parseStore(new InputSource(in));
+            in = new BufferedInputStream(classicThemeURL.openStream());
+            dsc.parseStore(new InputSource(in), relLoader);
+            
         }
         catch (Exception e)
         {
