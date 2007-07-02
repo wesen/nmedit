@@ -33,6 +33,10 @@ import net.sf.nmedit.jpatch.PModuleContainer;
 public class PModuleContainerEvent extends PPatchEvent
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3352798644873669518L;
     private PModuleContainer container;
     private PModule module;
     private int index = -1;

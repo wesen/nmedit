@@ -18,11 +18,14 @@
  */
 package net.sf.nmedit.jpatch.impl;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
@@ -36,7 +39,7 @@ import net.sf.nmedit.jpatch.PParameterDescriptor;
  * @author Christian Schneider
  */
 public class PBasicModuleDescriptor extends PBasicDescriptor
-implements PModuleDescriptor
+implements PModuleDescriptor, Serializable
 {
 
     private static final long serialVersionUID = 5166147655672576230L;
@@ -44,13 +47,18 @@ implements PModuleDescriptor
     private List<PConnectorDescriptor> connectors;
     private List<PLightDescriptor> lights;
     private transient Map<Object, PDescriptor> componentIdMap;
-    private ModuleDescriptions modules;
+    private transient ModuleDescriptions modules;
 
     public PBasicModuleDescriptor(ModuleDescriptions modules, String name, Object componentId)
     {
         this(modules, name, componentId, false);
     }
 
+    public void setModuleDescriptions(ModuleDescriptions modules)
+    {
+        this.modules = modules;
+    }
+    
     public PBasicModuleDescriptor(ModuleDescriptions modules, String name, Object componentId, boolean setComponents)
     {
         super(name, componentId);
@@ -171,6 +179,70 @@ implements PModuleDescriptor
     public boolean isInstanciable()
     {
         return getBooleanAttribute("instantiable", true);
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException
+    {
+        out.defaultWriteObject();
+        
+        Map<Object, Object> extensions = null;
+        for (PParameterDescriptor parameter: parameters)
+        {
+            if (parameter instanceof PBasicParameterDescriptor)
+            {
+                PParameterDescriptor extension = parameter.getExtensionDescriptor();
+                if (extension != null)
+                {
+                    if (extensions == null)
+                        extensions = new HashMap<Object, Object>();
+                    extensions.put(parameter.getComponentId(), extension.getComponentId());
+                }
+            }
+        }
+        if (extensions == null)
+            out.writeInt(0); // size
+        else
+        {
+            out.writeInt(extensions.size());
+            for (Entry<Object, Object> e: extensions.entrySet())
+            {
+                out.writeObject(e.getKey());
+                out.writeObject(e.getValue());
+            }
+        }
+    }
+    
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();
+        
+        int extSize = in.readInt(); // extensions
+        
+        for (int i=0;i<extSize;i++)
+        {
+            Object src = in.readObject();
+            Object dst = in.readObject();
+
+            PParameterDescriptor psrc = getParameterByComponentId(src);
+            PParameterDescriptor pdst = getParameterByComponentId(dst);
+            ((PBasicParameterDescriptor)psrc).setExtensionDescriptor(pdst);
+        }
+
+        for (PLightDescriptor d: lights)
+        {
+            if (d instanceof PBasicLightDescriptor)
+                ((PBasicLightDescriptor)d).setParent(this);
+        }
+        for (PParameterDescriptor d: parameters)
+        {
+            if (d instanceof PBasicParameterDescriptor)
+                ((PBasicParameterDescriptor)d).setParent(this);
+        }
+        for (PConnectorDescriptor d: connectors)
+        {
+            if (d instanceof PBasicConnectorDescriptor)
+                ((PBasicConnectorDescriptor)d).setParent(this);
+        }
     }
 
 }

@@ -32,6 +32,10 @@ import net.sf.nmedit.jpatch.PModule;
 public class PModuleEvent extends PPatchEvent
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7313259477979546246L;
     private String oldName;
 
     protected PModuleEvent( Object target, long when, int id, int x, int y, int key,

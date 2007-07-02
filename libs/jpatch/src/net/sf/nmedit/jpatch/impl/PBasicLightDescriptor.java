@@ -18,26 +18,34 @@
  */
 package net.sf.nmedit.jpatch.impl;
 
+import java.io.IOException;
+import java.io.Serializable;
+
 import net.sf.nmedit.jpatch.PLightDescriptor;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 
 public class PBasicLightDescriptor extends PBasicDescriptor implements
-        PLightDescriptor
+        PLightDescriptor, Serializable
 {
 
     private static final long serialVersionUID = -6555243015172013690L;
-    private PModuleDescriptor parent;
     private int defaultValue = 0;
     private int minValue = 0;
     private int maxValue = 1;
     private int type = TYPE_UNKNOWN;
+    private transient PModuleDescriptor parent;
     
     public PBasicLightDescriptor(PModuleDescriptor parent, String name, Object componentId)
     {
         super(name, componentId);
         this.parent = parent;
     }
-    
+
+    void setParent(PModuleDescriptor parent)
+    {
+        this.parent = parent;
+    }
+
     public void setType(int type)
     {
         this.type = type;
@@ -83,4 +91,14 @@ public class PBasicLightDescriptor extends PBasicDescriptor implements
         return parent;
     }
 
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException
+    {
+        out.defaultWriteObject();
+    }
+    
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();
+    }
+    
 }

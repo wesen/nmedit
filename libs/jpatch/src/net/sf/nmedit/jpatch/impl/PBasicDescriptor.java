@@ -138,17 +138,17 @@ public class PBasicDescriptor implements PDescriptor, Serializable
         this.descriptorIndex = index;
     }
 
-    public ImageSource get16x16Icon()
+    public ImageSource get16x16IconSource()
     {
-        return getImage("icon16x16");
+        return getImageSource("icon16x16");
     }
     
-    public ImageSource get32x32Icon()
+    public ImageSource get32x32IconSource()
     {
-        return getImage("icon32x32");
+        return getImageSource("icon32x32");
     }
 
-    public ImageSource getImage(String key)
+    public ImageSource getImageSource(String key)
     {
         Object att = getAttribute(key);
         return (att == null || (!(att instanceof ImageSource)))
@@ -199,7 +199,7 @@ public class PBasicDescriptor implements PDescriptor, Serializable
         };
     }
     
-    public Iterator<ImageSource> getImages()
+    public Iterator<ImageSource> getImageSources()
     {
         return iterator(ImageSource.class);
     }

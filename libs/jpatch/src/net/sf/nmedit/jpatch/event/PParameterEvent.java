@@ -33,6 +33,11 @@ import net.sf.nmedit.jpatch.PParameter;
 public class PParameterEvent extends PPatchEvent
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -490310354383195515L;
+
     public PParameterEvent(PParameter parameter, int id)
     {
         super(parameter, id, null);

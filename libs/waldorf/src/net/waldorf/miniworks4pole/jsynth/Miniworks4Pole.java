@@ -44,7 +44,7 @@ public class Miniworks4Pole extends AbstractSynthesizer
     private MidiDriver driver;
     private boolean connected = false;
     private WProtocol protocol;
-    private MWEventHandler eventHandler;
+    protected MWEventHandler eventHandler;
     private MWListenerSupport midiListenerSupport;
     private ModuleDescriptions moduleDescriptions;
 

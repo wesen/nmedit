@@ -32,6 +32,10 @@ import net.sf.nmedit.jpatch.PConnector;
 public class PConnectorStateEvent extends PPatchEvent
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 9119044209104155846L;
     private PConnector c;
 
     protected PConnectorStateEvent(  Object target, long when, int id, int x, int y, int key,

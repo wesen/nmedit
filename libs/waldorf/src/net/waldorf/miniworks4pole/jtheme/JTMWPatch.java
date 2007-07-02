@@ -42,7 +42,11 @@ import net.waldorf.miniworks4pole.jpatch.MWPatch;
 public class JTMWPatch extends JTPatch
 {
 
-    private ModuleDescriptions md;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2571775413095904059L;
+    protected ModuleDescriptions md;
     private MWPatch patch;
     private DefaultStorageContext storageContext;
 

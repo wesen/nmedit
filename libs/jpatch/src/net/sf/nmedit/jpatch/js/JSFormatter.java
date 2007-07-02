@@ -16,33 +16,33 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.nmedit.jpatch;
+package net.sf.nmedit.jpatch.js;
 
-public class PException extends Exception
+import org.mozilla.javascript.Function;
+
+import net.sf.nmedit.jpatch.PParameter;
+import net.sf.nmedit.jpatch.formatter.Formatter;
+
+public class JSFormatter implements Formatter
 {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 4730729279615092387L;
+    private JSContext context;
+    private Function f;
+    private transient Object[] args;
 
-    public PException()
+    public JSFormatter(JSContext context, Function f)
     {
+        this.context = context;
+        this.f = f;
     }
-
-    public PException(String message)
+    
+    public String getString(PParameter parameter, int value)
     {
-        super(message);
-    }
-
-    public PException(Throwable cause)
-    {
-        super(cause);
-    }
-
-    public PException(String message, Throwable cause)
-    {
-        super(message, cause);
+        if (args == null)
+            args = new Object[1];
+        args[0] = value;
+        Object result = f.call(context.getContext(), context.getScope(), context.getScope(), args);
+        return String.valueOf(result);
     }
 
 }

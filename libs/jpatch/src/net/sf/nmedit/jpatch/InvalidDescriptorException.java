@@ -22,6 +22,10 @@ package net.sf.nmedit.jpatch;
 public class InvalidDescriptorException extends PRuntimeException
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5477077620719270598L;
     private PDescriptor descriptor;
     
     public InvalidDescriptorException(PDescriptor descriptor, String message)

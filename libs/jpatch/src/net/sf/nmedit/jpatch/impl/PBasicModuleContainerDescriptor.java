@@ -18,6 +18,9 @@
  */
 package net.sf.nmedit.jpatch.impl;
 
+import java.io.IOException;
+import java.io.Serializable;
+
 import net.sf.nmedit.jpatch.PModuleContainerDescriptor;
 
 /**
@@ -25,7 +28,7 @@ import net.sf.nmedit.jpatch.PModuleContainerDescriptor;
  * @author Christian Schneider
  */
 public class PBasicModuleContainerDescriptor extends PBasicDescriptor implements
-        PModuleContainerDescriptor
+        PModuleContainerDescriptor, Serializable
 {
 
     private static final long serialVersionUID = 3842506879258093343L;
@@ -35,4 +38,14 @@ public class PBasicModuleContainerDescriptor extends PBasicDescriptor implements
         super(name, componentId);
     }
 
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException
+    {
+        out.defaultWriteObject();
+    }
+    
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();
+    }
+    
 }

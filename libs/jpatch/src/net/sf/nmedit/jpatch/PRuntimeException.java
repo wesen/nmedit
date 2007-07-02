@@ -21,6 +21,11 @@ package net.sf.nmedit.jpatch;
 public class PRuntimeException extends RuntimeException
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4643396492085631025L;
+
     public PRuntimeException()
     {
     }

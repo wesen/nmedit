@@ -25,6 +25,11 @@ package net.sf.nmedit.jsynth;
 public class SynthException extends Exception
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -446171347915392258L;
+
     public SynthException()
     {
         super();

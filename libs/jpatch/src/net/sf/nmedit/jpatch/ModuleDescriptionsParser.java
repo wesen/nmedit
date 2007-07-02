@@ -26,6 +26,7 @@ import java.awt.Color;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,13 +39,15 @@ import javax.xml.parsers.SAXParserFactory;
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
 import net.sf.nmedit.jpatch.PParameterDescriptor;
 import net.sf.nmedit.jpatch.formatter.Formatter;
-import net.sf.nmedit.jpatch.formatter.FormatterParser;
 import net.sf.nmedit.jpatch.impl.PBasicConnectorDescriptor;
 import net.sf.nmedit.jpatch.impl.PBasicLightDescriptor;
 import net.sf.nmedit.jpatch.impl.PBasicModuleDescriptor;
 import net.sf.nmedit.jpatch.impl.PBasicParameterDescriptor;
+import net.sf.nmedit.jpatch.js.JSContext;
+import net.sf.nmedit.jpatch.js.JSFormatter;
 import net.sf.nmedit.nmutils.Hex;
 
+import org.mozilla.javascript.Function;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
@@ -121,6 +124,7 @@ public class ModuleDescriptionsParser
         static final int mail = 28;
         static final int light = 29;
         static final int doc = 30;
+        static final int script = 31;
 
         Locator locator = null;
         
@@ -156,7 +160,8 @@ public class ModuleDescriptionsParser
           "link",
           "mail",
           "light",
-          "doc"
+          "doc",
+          "script"
         };
         
         static String[] attributes = new String[]
@@ -288,6 +293,29 @@ public class ModuleDescriptionsParser
         StringBuffer docText = new StringBuffer();
         private boolean docElement = false;
         
+        private Map<Function, Formatter> formatterMap = new HashMap<Function, Formatter>();
+        
+        private transient JSContext jsc;
+        
+        private Formatter getFormatter(String src) throws SAXException
+        {
+            if (jsc == null)
+                jsc = moduleDescriptions.getJSContext();
+            
+            Function jsFunction = jsc.getFormatterFunction(src);
+
+            if (jsFunction == null)
+                throw new SAXException("invalid function: "+src);
+            
+            Formatter formatter = formatterMap.get(jsFunction);
+            if (formatter == null)
+            {
+                formatter = new JSFormatter(jsc, jsFunction); 
+                formatterMap.put(jsFunction, formatter);
+            }
+            return formatter;
+        }
+        
         public final int getIdFromMap(String name, Map<String,Integer> map)
         {
             Integer id = map.get(name);
@@ -348,6 +376,29 @@ public class ModuleDescriptionsParser
                     docElement = true;
                     docText.setLength(0);
                     break;
+                case script:
+                {
+                    
+                    String type = attributes.getValue("type");
+                    if (!"text/javascript".equals(type))
+                        throw new SAXException("unsupported script type:"+type);
+                    
+                    String src = attributes.getValue("src");
+                    
+                    URL script = src == null ? null : moduleDescriptions.getResourceClassLoader().getResource(src);
+                    if (script == null)
+                        throw new SAXException("script not found: "+src);
+                    
+                    try
+                    {
+                        moduleDescriptions.getJSContext().addScript(script);
+                    }
+                    catch (IOException e)
+                    {
+                        throw new SAXException("error parsing script: "+src, e);
+                    }
+                }
+                break;
                     
                 case header:
                     break;
@@ -528,30 +579,13 @@ public class ModuleDescriptionsParser
                         
                         parameterd.setAttribute(CLASS, str(attributes.getValue(CLASS)));
                    
-                        String fmt;
-                        
-                        fmt = attributes.getValue("format-id");
-                        
-                        Formatter formatter = null;
+                        String fmt = attributes.getValue("formatter");
                         
                         if (fmt != null)
                         {
-                            formatter = moduleDescriptions.getFormatterRegistry().getFormatter(fmt);
-
-                            if (formatter == null)
-                                throw new SAXException("formatter not found: "+fmt);
-                        }
-                        else
-                        {
-                            fmt = attributes.getValue("formatter");
-                            if (fmt != null)
-                                formatter = FormatterParser.parseFormatter(moduleDescriptions.getFormatterRegistry(), fmt);
-
-                        }
-                        
-                        if (formatter != null)
+                            Formatter formatter = getFormatter(fmt);
                             parameterd.setFormatter(formatter);
-                        
+                        }
                         parameterList.add(parameterd);
                     }
                     break;

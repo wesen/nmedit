@@ -28,8 +28,8 @@ public class MWHelper
 
     public static ModuleDescriptions createModuleDescriptions()
     {
-        ModuleDescriptions md = new ModuleDescriptions();
-        md.getFormatterRegistry().putFormatter("GateTimeFormatter", new GateTimeFormatter() );
+        ModuleDescriptions md = new ModuleDescriptions(null);
+       //md.getFormatterRegistry().putFormatter("GateTimeFormatter", new GateTimeFormatter() );
      
         return md;
     }

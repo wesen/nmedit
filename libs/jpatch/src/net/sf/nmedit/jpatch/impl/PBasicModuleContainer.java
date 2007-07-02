@@ -84,7 +84,7 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
         Object[] listeners = listenerList.getListenerList();
         if (mcEvent != null)
             mcEvent.moduleAdded(module, module.getComponentIndex());
-            
+
         // Process the listeners last to first, notifying
         // those that are interested in this event
         for (int i = listeners.length-2; i>=0; i-=2) 

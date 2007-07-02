@@ -18,17 +18,13 @@
  */
 package net.waldorf.miniworks4pole.jpatch;
 
-import java.util.Iterator;
-import java.util.Collection;
-
+import net.sf.nmedit.jpatch.ModuleDescriptions;
+import net.sf.nmedit.jpatch.MoveOperation;
 import net.sf.nmedit.jpatch.PConnectionManager;
-import net.sf.nmedit.jpatch.InvalidDescriptorException;
 import net.sf.nmedit.jpatch.PFactory;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
-import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
-import net.sf.nmedit.jpatch.MoveOperation;
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.PSettings;
 import net.sf.nmedit.jpatch.event.PModuleContainerListener;
@@ -36,7 +32,6 @@ import net.sf.nmedit.jpatch.history.History;
 import net.sf.nmedit.jpatch.impl.PBasicModule;
 import net.sf.nmedit.jpatch.impl.PBasicModuleContainer;
 import net.sf.nmedit.jpatch.impl.PBasicPatch;
-import net.sf.nmedit.nmutils.iterator.ArrayIterator;
 
 public class MWPatch extends PBasicPatch implements PPatch
 {

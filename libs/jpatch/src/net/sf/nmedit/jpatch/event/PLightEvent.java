@@ -23,6 +23,11 @@ import net.sf.nmedit.jpatch.PLight;
 public class PLightEvent extends PPatchEvent
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1317397033053283219L;
+
     public PLightEvent( PLight target )
     {
         super( target, LIGHT, null);

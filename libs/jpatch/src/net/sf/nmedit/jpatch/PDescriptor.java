@@ -147,7 +147,7 @@ public interface PDescriptor
      * The resulting image must be a 16px * 16px or smaller icon for this component.
      * @return icon of this component 
      */
-    ImageSource get16x16Icon();
+    ImageSource get16x16IconSource();
 
     /**
      * Returns the attribute with the name 'icon32x32' which is instance
@@ -156,7 +156,7 @@ public interface PDescriptor
      * The resulting image must be a 32px * 32px or smaller icon for this component.
      * @return icon of this component 
      */
-    ImageSource get32x32Icon();
+    ImageSource get32x32IconSource();
 
     /**
      * Returns the attribute with the specified name.
@@ -166,13 +166,13 @@ public interface PDescriptor
      * @param key name of the attribute 
      * @return the ImageSource attribute with the specified name
      */
-    ImageSource getImage( String key );
+    ImageSource getImageSource( String key );
 
     /**
      * Returnsall attribute values which are instance of {@link ImageSource}.
      * @return all ImageSource attributes
      */
-    Iterator<ImageSource> getImages();
+    Iterator<ImageSource> getImageSources();
 
     /**
      * Returns a unique not-<code>null</code> identifier of this descriptor.

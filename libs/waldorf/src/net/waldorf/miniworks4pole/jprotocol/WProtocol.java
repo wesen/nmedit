@@ -39,7 +39,7 @@ public class WProtocol //extends NmProtocolST
         packetParser = protocol.getPacketParser("Message");
     }
 
-    private static Protocol protocol;
+    protected static Protocol protocol;
     private static PacketParser packetParser;
     
     public PacketParser getPacketParser()

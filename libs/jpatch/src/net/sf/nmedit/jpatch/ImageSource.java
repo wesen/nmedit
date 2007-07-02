@@ -22,9 +22,15 @@
  */
 package net.sf.nmedit.jpatch;
 
-public class ImageSource
+import java.io.Serializable;
+
+public class ImageSource implements Serializable
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5392578325330794513L;
     private String src;
     private int width;
     private int height;
@@ -51,10 +57,21 @@ public class ImageSource
         return height;
     }
 
+    public int hashCode()
+    {
+        return src.hashCode();
+    }
+    
+    public boolean equals(Object o)
+    {
+        if (o == this) return true;
+        if (o == null || (!(o instanceof ImageSource))) return false;
+        return src.equals(((ImageSource) o).src);
+    }
+
     public String toString()
     {
-        return getClass().getName()+"[src="+src+",width="
-            +width+",height="+height+"]";
+        return getClass().getName()+"[source="+src+",width="+width+",height="+height+"]";
     }
     
 }

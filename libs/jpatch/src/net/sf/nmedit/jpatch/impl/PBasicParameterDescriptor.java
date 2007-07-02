@@ -18,10 +18,12 @@
  */
 package net.sf.nmedit.jpatch.impl;
 
+import java.io.IOException;
+import java.io.Serializable;
+
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.PParameterDescriptor;
-import net.sf.nmedit.jpatch.formatter.DefaultFormatter;
 import net.sf.nmedit.jpatch.formatter.Formatter;
 
 /**
@@ -29,24 +31,27 @@ import net.sf.nmedit.jpatch.formatter.Formatter;
  * @author Christian Schneider
  */
 public class PBasicParameterDescriptor extends PBasicDescriptor
-    implements PParameterDescriptor
+    implements PParameterDescriptor, Serializable
 {
     private static final long serialVersionUID = -4704592363083615614L;
 
-
-    public static final Formatter DEFAULT_FORMATTER = new DefaultFormatter();
-    
-    
     private int defaultValue = 0;
     private int minValue = 0;
     private int maxValue = 127;
-    private PModuleDescriptor parent;
-    private Formatter formatter = null;
-    private PParameterDescriptor extensionDescriptor;
+
+   // private transient String formatterId;
+    private transient Formatter formatter = null;
+    private transient PParameterDescriptor extensionDescriptor;
+    private transient PModuleDescriptor parent;
     
     public PBasicParameterDescriptor(PModuleDescriptor parent, String name, Object componentId)
     {
         super(name, componentId);
+        this.parent = parent;
+    }
+    
+    void setParent(PModuleDescriptor parent)
+    {
         this.parent = parent;
     }
     
@@ -57,9 +62,21 @@ public class PBasicParameterDescriptor extends PBasicDescriptor
 
     public Formatter getFormatter()
     {
+        /*
+        if (formatter == null)
+        {
+            if (formatterId != null)
+            {
+                formatter = getParentDescriptor()
+                .getModules()
+                .getFormatterRegistry()
+                .getFormatterById(formatterId);
+            }
+        }
+        */
         return formatter; 
     }
-    
+
     public void setFormatter(Formatter formatter)
     {
         this.formatter = formatter;
@@ -87,10 +104,11 @@ public class PBasicParameterDescriptor extends PBasicDescriptor
 
     public String getDisplayValue(PParameter parameter, int value)
     {
-        if (formatter == null)
+        Formatter f = getFormatter();
+        if (f == null)
             return Integer.toString(value);
         else
-            return formatter.getString(parameter, value);
+            return f.getString(parameter, value);
     }
 
     public int getMaxValue()
@@ -122,6 +140,16 @@ public class PBasicParameterDescriptor extends PBasicDescriptor
     public void setExtensionDescriptor(PParameterDescriptor d)
     {
         this.extensionDescriptor = d;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException
+    {
+        out.defaultWriteObject();
+    }
+    
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();
     }
     
 }

@@ -23,6 +23,11 @@ import net.sf.nmedit.jsynth.Slot;
 public class SlotEvent extends SynthesizerEvent
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3461964499377795786L;
+
     public SlotEvent(int id, Slot slot)
     {
         super(slot.getSynthesizer(), id, slot);

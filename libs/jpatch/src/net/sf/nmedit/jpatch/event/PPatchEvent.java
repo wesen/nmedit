@@ -36,6 +36,10 @@ import net.sf.nmedit.jpatch.PParameter;
 public class PPatchEvent extends Event
 {
     /**
+     * 
+     */
+    private static final long serialVersionUID = 8994239811441141439L;
+    /**
      * The value of a {@link PParameter parameter} was changed.
      */
     public static final int VALUE_CHANGED = 0;

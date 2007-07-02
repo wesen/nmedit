@@ -18,6 +18,9 @@
  */
 package net.sf.nmedit.jpatch.impl;
 
+import java.io.IOException;
+import java.io.Serializable;
+
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PSignal;
@@ -27,13 +30,14 @@ import net.sf.nmedit.jpatch.PSignalTypes;
  * The reference implementation of interface {@link PConnectorDescriptor}.
  * @author Christian Schneider
  */
-public class PBasicConnectorDescriptor extends PBasicDescriptor implements PConnectorDescriptor
+public class PBasicConnectorDescriptor extends PBasicDescriptor 
+    implements PConnectorDescriptor, Serializable
 {
 
     private static final long serialVersionUID = -4016101017192946943L;
     private PSignal defaultSignal;
     private boolean output;
-    private PModuleDescriptor parent;
+    private transient PModuleDescriptor parent;
     
     public PBasicConnectorDescriptor(PModuleDescriptor parent, String name, Object componentId, 
             PSignal defaultSignal, boolean output)
@@ -42,6 +46,11 @@ public class PBasicConnectorDescriptor extends PBasicDescriptor implements PConn
         this.parent = parent;
         this.defaultSignal = defaultSignal;
         this.output = output;
+    }
+    
+    void setParent(PModuleDescriptor parent)
+    {
+        this.parent = parent;
     }
 
     public PSignal getDefaultSignalType()
@@ -69,5 +78,16 @@ public class PBasicConnectorDescriptor extends PBasicDescriptor implements PConn
     {
         return getParentDescriptor().getModules().getDefinedSignals();
     }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException
+    {
+        out.defaultWriteObject();
+    }
     
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();
+    }
+    
+
 }

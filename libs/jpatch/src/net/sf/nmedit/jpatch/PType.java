@@ -18,9 +18,15 @@
  */
 package net.sf.nmedit.jpatch;
 
-public class PType
+import java.io.Serializable;
+
+public class PType implements Serializable
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1688201803562450774L;
     private int id;
     private String name;
 

@@ -21,9 +21,7 @@ package net.waldorf.miniworks4pole.jsynth;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.nmedit.jpatch.InvalidDescriptorException;
 import net.sf.nmedit.jpatch.PModule;
-import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PParameterDescriptor;
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.event.PModuleContainerEvent;

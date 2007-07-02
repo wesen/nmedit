@@ -27,6 +27,10 @@ import java.awt.Color;
 public class PSignalTypes extends PTypes<PSignal>
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7327837439471694263L;
     private PSignal noSignal = null;
 
     public PSignalTypes(String name)

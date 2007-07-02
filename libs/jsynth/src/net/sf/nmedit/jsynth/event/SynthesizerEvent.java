@@ -29,6 +29,10 @@ import net.sf.nmedit.jsynth.Synthesizer;
 public class SynthesizerEvent extends Event
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4003614134438383460L;
     public static final int SYNTH_CONNECTION_STATE_CHANGED = 0;
     public static final int SYNTH_BANK_ADDED = 1;
     public static final int SYNTH_BANK_REMOVED = 2;

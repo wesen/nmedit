@@ -31,6 +31,10 @@ import net.sf.nmedit.jsynth.Synthesizer;
 public class PortAttachmentEvent extends Event
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6310227728011508217L;
     private Plug oldPlug;
     private Plug newPlug;
 
