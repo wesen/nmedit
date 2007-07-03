@@ -50,7 +50,8 @@ public class NMNoteSeqEditor extends JTControl implements ChangeListener
     public NMNoteSeqEditor(JTContext context)
     {
         super(context);
-
+        computeMaxTranslation();
+        setTranslation(maxTranslation/2);
         clear();
     }
     

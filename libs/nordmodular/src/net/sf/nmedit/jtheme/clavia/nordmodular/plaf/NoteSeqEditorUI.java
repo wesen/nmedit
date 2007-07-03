@@ -211,7 +211,7 @@ public class NoteSeqEditorUI extends JTComponentUI
         
         for (int octave = -4; octave<=6; octave++)
         {
-        	int oy = mid - octave * noteHeight*12;
+        	int oy = mid - octave * noteHeight*12 - (ed.getTranslation()- ed.getMaxTranslation()/2)*noteHeight;
         	
         	// draw keyboard
         	if (noteHeight>=3)
@@ -263,7 +263,7 @@ public class NoteSeqEditorUI extends JTComponentUI
             int nx = ((i*(w+1))/16) + (i>0?1:0);
             int note = ed.getNote(i);
             
-            int ny = mid-(note-60)*noteHeight;
+            int ny = mid-(note-60+ ed.getTranslation()- ed.getMaxTranslation()/2)*noteHeight ;
             
             if (0<=ny && ny<y+h)
             {
@@ -351,13 +351,6 @@ public class NoteSeqEditorUI extends JTComponentUI
 	        seq.removeChangeListener(this);
 	        seq.removeKeyListener(this);
 	    }
-	
-	    transient JTButtonControl selectedControl;
-	    transient JTBasicButtonControlUI selectedUI;
-	    transient int internalSelectedButtonIndex;
-	    
-	    
-	    
 	    
 	    public void mouseClicked(MouseEvent e)
 	    {	// no op    	
@@ -479,8 +472,7 @@ public class NoteSeqEditorUI extends JTComponentUI
 	}
 	
 	public void setNoteHeight(int noteHeight) {
-		//System.out.println("set height" + noteHigh);
 		this.noteHeight = noteHeight;
-		//System.out.println("after set height" + this.noteHigh);
+
 	}
 }
