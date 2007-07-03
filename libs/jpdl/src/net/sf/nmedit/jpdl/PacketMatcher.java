@@ -35,7 +35,7 @@ public class PacketMatcher extends Matcher
     public boolean match(Protocol protocol, BitStream data, Packet result)
     {
 	int iterations;
-	LinkedList packetList = new LinkedList();
+	List<Packet> packetList = new LinkedList<Packet>();
 	PacketParser packetParser = protocol.getPacketParser(parserName);
 	
 	trace(protocol);
@@ -44,7 +44,7 @@ public class PacketMatcher extends Matcher
 	    return false;
 	}
 	
-	if (count.equals("")) {
+	if (count.length()==0) {
 	    iterations = 1;
 	}
 	else {
@@ -64,8 +64,8 @@ public class PacketMatcher extends Matcher
 	    }
 	}
 	
-	if (count.equals("")) {
-	    result.bindPacket((Packet)packetList.get(0), binding);
+	if (count.length()==0) {
+	    result.bindPacket(packetList.get(0), binding);
 	}
 	else {
 	    result.bindPacketList(packetList, binding);
@@ -85,7 +85,7 @@ public class PacketMatcher extends Matcher
 	    return false;
 	}
 	
-	if (count.equals("")) {
+	if (count.length()==0) {
 	    iterations = 1;
 	}
 	else {
@@ -105,8 +105,11 @@ public class PacketMatcher extends Matcher
     
     private void trace(Protocol protocol)
     {
-	protocol.trace((count.equals("") ? "" : count + "*") +
+        if (protocol.isTraceEnabled())
+        {
+            protocol.trace((count.length()==0 ? "" : count + "*") +
 		       parserName + "$" + binding);
+        }
     }
 
     private String count;

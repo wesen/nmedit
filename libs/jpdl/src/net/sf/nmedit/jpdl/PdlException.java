@@ -21,6 +21,11 @@ package net.sf.nmedit.jpdl;
 
 public class PdlException extends Exception
 {
+    /**
+     * serial version UID
+     */
+    private static final long serialVersionUID = -2527747960145032752L;
+    
     public PdlException(String message, int error) {
 	this.message = message;
 	this.error = error;

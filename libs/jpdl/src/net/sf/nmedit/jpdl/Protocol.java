@@ -55,7 +55,7 @@ public class Protocol
 
     public PacketParser getPacketParser(String name)
     {
-	return (PacketParser)packetParsers.get(name);
+	return packetParsers.get(name);
     }
 
     public void useTracer(Tracer tracer)
@@ -63,6 +63,11 @@ public class Protocol
 	this.tracer = tracer;
     }
 
+    public boolean isTraceEnabled()
+    {
+        return tracer != null;
+    }
+    
     public void trace(String message)
     {
 	if (tracer != null) {
@@ -70,6 +75,6 @@ public class Protocol
 	}	
     }
 
-    private HashMap packetParsers = new HashMap();
+    private Map<String, PacketParser> packetParsers = new HashMap<String, PacketParser>();
     private Tracer tracer;
 }

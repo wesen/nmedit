@@ -36,12 +36,14 @@ public class PacketParser
 	boolean conditionalMatch = false;
 	int dataPos = data.getPosition();
 	
-	protocol.trace("PARSE PACKET " + name);
+    if (protocol.isTraceEnabled())
+    {
+        protocol.trace("PARSE PACKET " + name);
+    }
 	
 	result.setName(name);
 	
-	for (Iterator i = matchers.iterator(); i.hasNext(); ) {
-	    Matcher matcher = (Matcher)i.next();
+	for (Matcher matcher: matchers) {
 	    if (matcher.isConditional()) {
 		conditional = true;
 		if (matcher.trueCondition(result)) {
@@ -54,7 +56,10 @@ public class PacketParser
 	    else {
 		boolean success = matcher.match(protocol, data, result);
 		if (!success && !matcher.isOptional()) {
-		    protocol.trace("FAILED " + name);
+            if (protocol.isTraceEnabled())
+            {
+                protocol.trace("FAILED " + name);
+            }
 		    data.setPosition(dataPos);
 		    result.clear();
 		    return false;
@@ -66,11 +71,17 @@ public class PacketParser
 	    data.getInt(((data.getPosition()-dataPos) % padding) == 0 ?
 			 0 :
 			padding - ((data.getPosition()-dataPos) % padding));
-	    protocol.trace("MATCHED " + name);
+        if (protocol.isTraceEnabled())
+        {
+            protocol.trace("MATCHED " + name);
+        }
 	    return true;
 	}
 	
-	protocol.trace("FAILED " + name);
+    if (protocol.isTraceEnabled())
+    {
+        protocol.trace("FAILED " + name);
+    }
 	data.setPosition(dataPos);
 	result.clear();
 	return false;
@@ -84,10 +95,12 @@ public class PacketParser
 	int dataPos = data.getPosition();
 	int resultSize = result.getSize();
 	
-	protocol.trace("GENERATE PACKET " + name);
+    if (protocol.isTraceEnabled())
+    {
+        protocol.trace("GENERATE PACKET " + name);
+    }
 	
-	for (Iterator i = matchers.iterator(); i.hasNext(); ) {
-	    Matcher matcher = (Matcher)i.next();
+	for (Matcher matcher: matchers) {
 	    if (matcher.isConditional()) {
 		conditional = true;
 		if (matcher.trueCondition(packet)) {
@@ -102,7 +115,10 @@ public class PacketParser
 		boolean success =
 		    matcher.apply(protocol, packet, data, result);
 		if (!success && !matcher.isOptional()) {
-		    protocol.trace("FAILED " + name);
+            if (protocol.isTraceEnabled())
+            {
+                protocol.trace("FAILED " + name);
+            }
 		    data.setPosition(dataPos);
 		    result.setSize(resultSize);
 		    return false;
@@ -115,11 +131,17 @@ public class PacketParser
 			  ((result.getSize()-resultSize) % padding) == 0 ?
 			  0 :
 			  padding - ((result.getSize()-resultSize) % padding));
-	    protocol.trace("MATCHED " + name);
+        if (protocol.isTraceEnabled())
+        {
+            protocol.trace("MATCHED " + name);
+        }
 	    return true;
 	}
 	
-	protocol.trace("FAILED " + name);
+    if (protocol.isTraceEnabled())
+    {
+        protocol.trace("FAILED " + name);
+    }
 	data.setPosition(dataPos);
 	result.setSize(resultSize);
 	return false;
@@ -150,5 +172,5 @@ public class PacketParser
     private String name;
     private int padding;
     private Protocol protocol;
-    private LinkedList matchers = new LinkedList();
+    private List<Matcher> matchers = new LinkedList<Matcher>();
 }

@@ -52,14 +52,14 @@ public class Packet
 	    return true;
 	}
 	else {
-	    for (Iterator i = packets.values().iterator(); i.hasNext(); ) {
-		if (((Packet)i.next()).contains(packetName)) {
+	    for (Packet packet: packets.values()) {
+		if (packet.contains(packetName)) {
 		    return true;
 		}
 	    }
-	    for (Iterator m = packetLists.values().iterator(); m.hasNext(); ) {
-		for (Iterator n = ((List)m.next()).iterator(); n.hasNext(); ) {
-		    if (((Packet)n.next()).contains(packetName)) {
+	    for (List<Packet> packetList: packetLists.values()) {
+		for (Packet packet: packetList) {
+		    if (packet.contains(packetName)) {
 			return true;
 		    }
 		}
@@ -76,15 +76,15 @@ public class Packet
     public void bindVariable(int number, String name)
     {
 	allVariables.add(name);
-	variables.put(name, new Integer(number));
+	variables.put(name, number);
     }
 
-    public void bindPacketList(List list, String name)
+    public void bindPacketList(List<Packet> list, String name)
     {
 	packetLists.put(name, list);
     }
 
-    public void bindVariableList(List list, String name)
+    public void bindVariableList(List<Integer> list, String name)
     {
 	intLists.put(name, list);
     }
@@ -93,52 +93,53 @@ public class Packet
     {
 	int pos = name.indexOf(":");
 	if (pos >= 0) {
-	    return ((Packet)packets.get(name.substring(0, pos)))
+	    return packets.get(name.substring(0, pos))
 		.getPacket(name.substring(pos+1));
 	}
-	return (Packet)packets.get(name);
+	return packets.get(name);
     }
 
     public int getVariable(String name)
     {
 	int pos = name.indexOf(":");
 	if (pos >= 0) {
-	    return ((Packet)packets.get(name.substring(0, pos)))
-		.getVariable(name.substring(pos+1));
+	    return packets.get(name.substring(0, pos))
+		    .getVariable(name.substring(pos+1));
 	}
-	return variables.containsKey(name) ?
-	    ((Integer)variables.get(name)).intValue() : -1;
+    
+    Integer variable = variables.get(name);
+    return variable == null ? -1 : variable;
     }
 
-    public List getAllVariables()
+    public List<String> getAllVariables()
     {
 	return allVariables;
     }
     
-    public List getPacketList(String name)
+    public List<Packet> getPacketList(String name)
     {
 	int pos = name.indexOf(":");
 	if (pos >= 0) {
-	    return ((Packet)packets.get(name.substring(0, pos)))
+	    return packets.get(name.substring(0, pos))
 		.getPacketList(name.substring(pos+1));
 	}
-	return (List)packetLists.get(name);	
+	return packetLists.get(name);	
     }
 
-    public List getVariableList(String name)
+    public List<Integer> getVariableList(String name)
     {
 	int pos = name.indexOf(":");
 	if (pos >= 0) {
-	    return ((Packet)packets.get(name.substring(0, pos)))
+	    return packets.get(name.substring(0, pos))
 		.getVariableList(name.substring(pos+1));
 	}
-	return (List)intLists.get(name);
+	return intLists.get(name);
     }
 
-    private HashMap variables = new HashMap();
-    private LinkedList allVariables = new LinkedList();
-    private HashMap packets = new HashMap();
-    private HashMap packetLists = new HashMap();
-    private HashMap intLists = new HashMap();
+    private Map<String, Integer> variables = new HashMap<String, Integer>();
+    private List<String> allVariables = new LinkedList<String>();
+    private Map<String, Packet> packets = new HashMap<String, Packet>();
+    private Map<String, List<Packet>> packetLists = new HashMap<String, List<Packet>>();
+    private Map<String, List<Integer>> intLists = new HashMap<String, List<Integer>>();
     private String name;
 }

@@ -35,14 +35,14 @@ public class VariableMatcher extends Matcher
 
     public boolean match(Protocol protocol, BitStream data, Packet result)
     {
-	LinkedList variableList = new LinkedList();
+	List<Integer> variableList = new LinkedList<Integer>();
 	
 	trace(protocol);
 
 	for (int i = 0; i < count; i++) {
 	    if (data.isAvailable(size)) {
 		int value = data.getInt(size);
-		variableList.add(new Integer(value));
+		variableList.add(value);
 		
 		if (value == terminal) {
 		    break;
@@ -54,7 +54,7 @@ public class VariableMatcher extends Matcher
 	}
 	
 	if (count == 1) {
-	    int value = ((Integer)variableList.get(0)).intValue();
+	    int value = variableList.get(0);
 	    trace(protocol, value);
 	    result.bindVariable(value, variable);
 	}
@@ -67,14 +67,14 @@ public class VariableMatcher extends Matcher
     public boolean apply(Protocol protocol, Packet packet,
 			 IntStream data, BitStream result)
     {
-	LinkedList variableList = new LinkedList();
+	List<Integer> variableList = new LinkedList<Integer>();
 	
 	trace(protocol);
 	
 	for (int i = 0; i < count; i++) {
 	    if (data.isAvailable(1)) {
 		int value = data.getInt();
-		variableList.add(new Integer(value));
+		variableList.add(value);
 		result.append(value, size);
 		
 		if (value == terminal) {
@@ -87,7 +87,7 @@ public class VariableMatcher extends Matcher
 	}
 	
 	if (count == 1) {
-	    int value = ((Integer)variableList.get(0)).intValue();
+	    int value = variableList.get(0);
 	    trace(protocol, value);
 	    packet.bindVariable(value, variable);
 	}
@@ -99,22 +99,28 @@ public class VariableMatcher extends Matcher
   
     private void trace(Protocol protocol)
     {
-	if (count == 1) {
-	    protocol.trace(variable + ":" + size);
-	}
-	else {
-	    protocol.trace("" + count + "*" + variable + ":" + size);
-	}
+        if (protocol.isTraceEnabled())
+        {   
+        	if (count == 1) {
+        	    protocol.trace(variable + ":" + size);
+        	}
+        	else {
+        	    protocol.trace("" + count + "*" + variable + ":" + size);
+        	}
+        }
     }
 
     private void trace(Protocol protocol, int value)
     {
-	if (count == 1) {
-	    protocol.trace(variable + ":" + size + " = " + value);
-	}
-	else {
-	    protocol.trace("" + count + "*" + variable + ":" + size);
-	}
+        if (protocol.isTraceEnabled())
+        {
+        	if (count == 1) {
+        	    protocol.trace(variable + ":" + size + " = " + value);
+        	}
+        	else {
+        	    protocol.trace("" + count + "*" + variable + ":" + size);
+        	}
+        }
     }
 
     private int count;
