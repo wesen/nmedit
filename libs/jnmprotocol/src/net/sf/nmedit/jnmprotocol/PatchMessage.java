@@ -25,14 +25,14 @@ import net.sf.nmedit.jpdl.*;
 public class PatchMessage extends MidiMessage
 {
     private BitStream patchStream;
-    private LinkedList bitStreamList;
+    private List<BitStream> bitStreamList;
     
     public PatchMessage()
     {
 	super();
 
 	patchStream = new BitStream();
-	bitStreamList = new LinkedList();
+	bitStreamList = new LinkedList<BitStream>();
 
 	addParameter("pid", "data:pid");
 	set("cc", 0x1c);
@@ -59,7 +59,7 @@ public class PatchMessage extends MidiMessage
 	
     }
 
-    public PatchMessage(BitStream patchStream, List sectionEndPositions,
+    public PatchMessage(BitStream patchStream, List<Integer> sectionEndPositions,
 			int slot)
 	throws Exception
     {
@@ -78,7 +78,7 @@ public class PatchMessage extends MidiMessage
 	    int n = 0;
 	    while (patchStream.isAvailable(8) && n < 166) {
 		partialPatchStream.append(patchStream.getInt(8), 8);
-		if (n == (((Integer)sectionEndPositions.get(0)).intValue()
+		if (n == ((sectionEndPositions.get(0))
 			  - 166*messageNumber)) {
 		    sectionsEnded++;
 		    sectionEndPositions.remove(0);
@@ -111,7 +111,7 @@ public class PatchMessage extends MidiMessage
 	}
     }
 
-    public List getBitStream()
+    public List<BitStream> getBitStream()
 	throws Exception
     {
 	return bitStreamList;

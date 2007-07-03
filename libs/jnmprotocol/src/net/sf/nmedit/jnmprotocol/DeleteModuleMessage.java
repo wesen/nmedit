@@ -52,14 +52,11 @@ public class DeleteModuleMessage extends MidiMessage
         intStream.append(module);
     }
     
-    public List getBitStream()
+    public List<BitStream> getBitStream()
 	throws Exception
     {
 	appendChecksum(intStream);
-	
-	LinkedList bitStreamList = new LinkedList();
-	bitStreamList.add(getBitStream(intStream));
-	return bitStreamList;
+    return createBitstreamList(getBitStream(intStream));
     }
     
     public void notifyListener(NmProtocolListener listener)

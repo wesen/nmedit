@@ -63,7 +63,7 @@ public class SetModuleTitleMessage extends MidiMessage
         this.title = title == null ? "" : title;
     }
 
-    public List getBitStream()
+    public List<BitStream> getBitStream()
 	throws Exception
     {
         IntStream intStream = new IntStream();
@@ -75,10 +75,7 @@ public class SetModuleTitleMessage extends MidiMessage
         intStream.append(get("module"));
         NmCharacter.appendString(intStream, title);
         appendChecksum(intStream);
-
-    	LinkedList bitStreamList = new LinkedList();
-    	bitStreamList.add(getBitStream(intStream));
-    	return bitStreamList;
+        return createBitstreamList(getBitStream(intStream));
     }
     
     public void notifyListener(NmProtocolListener listener)

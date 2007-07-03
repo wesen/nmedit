@@ -58,7 +58,7 @@ public class LightMessage extends MidiMessage
 	setAll(packet);
     }
 
-    public List getBitStream()
+    public List<BitStream> getBitStream()
 	throws Exception
     {
 	throw new MidiException("LightMessage::getBitStream not implemented.",

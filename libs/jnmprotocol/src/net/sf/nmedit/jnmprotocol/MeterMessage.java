@@ -48,7 +48,7 @@ public class MeterMessage extends MidiMessage
 	setAll(packet);
     }
 
-    public List getBitStream()
+    public List<BitStream> getBitStream()
 	throws Exception
     {
 	throw new MidiException("MeterMessage::getBitStream not implemented.",

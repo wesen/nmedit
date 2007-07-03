@@ -25,7 +25,7 @@ import net.sf.nmedit.jpdl.*;
 public class SynthSettingsMessage extends MidiMessage
 {
     private BitStream patchStream;
-    private LinkedList bitStreamList;
+    private List<BitStream> bitStreamList;
     private String name;
 
     public SynthSettingsMessage()
@@ -34,7 +34,7 @@ public class SynthSettingsMessage extends MidiMessage
 	super();
 
 	patchStream = new BitStream();
-	bitStreamList = new LinkedList();
+	bitStreamList = new LinkedList<BitStream>();
 
 	addParameter("pid", "data:pid");
 	set("cc", 0x1c);
@@ -151,7 +151,7 @@ public class SynthSettingsMessage extends MidiMessage
 	}
     }
 
-    public List getBitStream()
+    public List<BitStream> getBitStream()
 	throws Exception
     {
 	return bitStreamList;

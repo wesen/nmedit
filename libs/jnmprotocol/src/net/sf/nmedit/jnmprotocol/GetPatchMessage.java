@@ -58,11 +58,11 @@ public class GetPatchMessage extends MidiMessage
 	    ("GetPatchMessage(Packet packet) not implemented", 0);
     }
 
-    public List getBitStream()
+    public List<BitStream> getBitStream()
 	throws Exception
     {
 	IntStream intStream;
-	LinkedList bitStreamList = new LinkedList();
+	List<BitStream> bitStreamList = new LinkedList<BitStream>();
 	
 	if (part == PatchPart.ALL || part == PatchPart.HEADER) {
 	    intStream = appendAll();

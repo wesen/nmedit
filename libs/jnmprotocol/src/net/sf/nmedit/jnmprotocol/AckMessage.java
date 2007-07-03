@@ -43,7 +43,7 @@ public class AckMessage extends MidiMessage
 	setAll(packet);
     }
 
-    public List getBitStream()
+    public List<BitStream> getBitStream()
 	throws Exception
     {
 	IntStream intStream = appendAll();
@@ -51,9 +51,7 @@ public class AckMessage extends MidiMessage
 	    appendChecksum(intStream);
 	}
 	
-	LinkedList bitStreamList = new LinkedList();
-	bitStreamList.add(getBitStream(intStream));
-	return bitStreamList;
+	return createBitstreamList(getBitStream(intStream));
     }
     
     public void notifyListener(NmProtocolListener listener)

@@ -56,12 +56,10 @@ public class IAmMessage extends MidiMessage
 	setAll(packet);
     }
 
-    public List getBitStream()
+    public List<BitStream> getBitStream()
 	throws Exception
     {
-	LinkedList bitStreamList = new LinkedList();
-	bitStreamList.add(getBitStream(appendAll()));
-	return bitStreamList;
+        return createBitstreamList(getBitStream(appendAll()));
     }
     
     public void notifyListener(NmProtocolListener listener)

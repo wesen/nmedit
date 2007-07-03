@@ -44,7 +44,7 @@ public class ErrorMessage extends MidiMessage
 	setAll(packet);
     }
 
-    public List getBitStream()
+    public List<BitStream> getBitStream()
 	throws Exception
     {
 	throw new

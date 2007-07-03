@@ -45,7 +45,7 @@ import net.sf.nmedit.jpdl.*;
  */
 public class PatchListMessage extends MidiMessage
 {
-    private LinkedList<PatchListEntry> names;
+    private List<PatchListEntry> names;
     private int nextPosition;
     private int nextSection;
 
@@ -53,7 +53,7 @@ public class PatchListMessage extends MidiMessage
     {
 	super();
 
-	names = new LinkedList();
+	names = new LinkedList<PatchListEntry>();
 
 	set("cc", 0x16);
 	set("slot", 0);
@@ -106,7 +106,7 @@ public class PatchListMessage extends MidiMessage
 	nextSection = section;
     }
 
-    public List getBitStream()
+    public List<BitStream> getBitStream()
 	throws Exception
     {
 	throw new

@@ -145,7 +145,7 @@ public abstract class MidiMessage
 	throw new MidiException(error, 0);
     }
 
-    public abstract List getBitStream()
+    public abstract List<BitStream> getBitStream()
 	throws Exception;
 
     public abstract void notifyListener(NmProtocolListener listener)
@@ -172,65 +172,68 @@ public abstract class MidiMessage
 	return paths.keySet().contains(name);
     }
     
+    private void ensureParameterExists(String parameter)
+    {
+        if (!parameters.contains(parameter)) {
+            throw new RuntimeException("Unsupported paramenter: " + parameter);
+        }
+    }
+    
     public void set(String parameter, int value)
     {
-	if (!parameters.contains(parameter)) {
-	    throw new RuntimeException("Unsupported paramenter: " + parameter);
-	}
-	values.put(parameter, new Integer(value));
+        ensureParameterExists(parameter);
+        values.put(parameter, value);
     }
 
-    public Iterator parameterNames()
+    public Iterator<String> parameterNames()
     {
         return parameters.iterator();
     }
     
     public int get(String parameter, int defaultValue)
     {
-    if (!parameters.contains(parameter)) {
-        throw new RuntimeException("Unsupported paramenter: " + parameter);
-    }
-    Object value = values.get(parameter);
-    return value == null ? defaultValue : ((Integer) value).intValue();
+        Integer value = values.get(parameter);
+        if (value == null)    
+            ensureParameterExists(parameter);
+        return value == null ? defaultValue : value.intValue();
     }
 
     public int get(String parameter)
     {
-	if (!parameters.contains(parameter)) {
-	    throw new RuntimeException("Unsupported paramenter: " + parameter);
-	}
-	if (values.get(parameter) == null) {
-	    throw new RuntimeException("Missing parameter value: " + parameter);
-	}
-	return ((Integer)values.get(parameter)).intValue();
+        Integer value = values.get(parameter);
+	    if (value == null) 
+        {
+	        ensureParameterExists(parameter);
+	        throw new RuntimeException("Missing parameter value: " + parameter);
+        }
+	    return value.intValue();
     }
 
     public void setAll(Packet packet)
     {
-	for (Iterator i = parameters.iterator(); i.hasNext(); ) {
-	    String name = (String)i.next();
-	    if (paths.get(name) != null) {
-		set(name, packet.getVariable((String)paths.get(name)));
-	    }
-	}	
+    	for (String name: parameters) 
+        {
+            String path = paths.get(name);
+    	    if (path != null)
+                set(name, packet.getVariable(path));
+    	}	
     }
 
     public IntStream appendAll()
     {
-	IntStream intStream = new IntStream();
-
-	for (Iterator i = parameters.iterator(); i.hasNext(); ) {
-	    intStream.append(get((String)i.next()));
-	}
-
-	return intStream;
+    	IntStream intStream = new IntStream(parameters.size()+10);
+    	for (String parameter: parameters) 
+        {
+    	    intStream.append(get(parameter));
+    	}
+    	return intStream;
     }
 
     protected MidiMessage()
     {
-	parameters = new LinkedList();
-	paths = new HashMap();
-	values = new HashMap();
+	parameters = new LinkedList<String>();
+	paths = new HashMap<String, String>();
+	values = new HashMap<String, Integer>();
 	expectsreply = false;
 	isreply = false;
 	
@@ -272,15 +275,27 @@ public abstract class MidiMessage
     
     protected String extractName(Packet name)
     {
-	List chars = name.getVariableList("chars");
+	List<Integer> chars = name.getVariableList("chars");
     StringBuilder sbuilder = new StringBuilder(chars.size()); 
-	for (Iterator i = chars.iterator(); i.hasNext(); ) {
-	    int data = ((Integer)i.next()).intValue();
+	for (int data: chars) {
+        // TODO shouldn't this be 'if(data==0) break;' ???
 	    if (data != 0) {
             sbuilder.append((char)data);
 	    }
 	}
 	return sbuilder.toString();
+    }
+    
+    protected static List<BitStream> createBitstreamList()
+    {
+        return new LinkedList<BitStream>();
+    }
+    
+    protected List<BitStream> createBitstreamList(BitStream bs)
+    {
+        List<BitStream> list = createBitstreamList();
+        list.add(bs);
+        return list;
     }
     
     public String toString()
@@ -289,11 +304,11 @@ public abstract class MidiMessage
         sb.append(getClass().getName());
         sb.append("[");
         
-        Iterator params = parameters.iterator();
+        Iterator<String> params = parameters.iterator();
         
         if (params.hasNext())
         {
-            String param = (String) params.next();
+            String param = params.next();
             sb.append(param);
             sb.append("="+get(param));
         }
@@ -301,7 +316,7 @@ public abstract class MidiMessage
         while (params.hasNext())
         {
             sb.append(",");
-            String param = (String) params.next();
+            String param = params.next();
             sb.append(param);
             sb.append("="+values.get(param));
         }
@@ -313,8 +328,8 @@ public abstract class MidiMessage
     protected boolean isreply;
     protected boolean expectsreply;
 
-    private LinkedList parameters;
-    private HashMap paths;
-    private HashMap values;
+    private List<String> parameters;
+    private Map<String, String> paths;
+    private Map<String, Integer> values;
 
 }

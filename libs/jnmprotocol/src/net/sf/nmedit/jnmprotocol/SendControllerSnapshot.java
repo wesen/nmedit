@@ -46,13 +46,11 @@ public class SendControllerSnapshot extends MidiMessage
         set("pid", pid);
     }
     
-    public List getBitStream()
+    public List<BitStream> getBitStream()
 	throws Exception
     {
 	IntStream intStream = appendAll();
-	LinkedList bitStreamList = new LinkedList();
-	bitStreamList.add(getBitStream(intStream));
-	return bitStreamList;
+    return createBitstreamList(getBitStream(intStream));
     }
 
     @Override
