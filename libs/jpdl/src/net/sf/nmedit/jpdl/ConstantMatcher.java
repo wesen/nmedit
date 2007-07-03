@@ -45,7 +45,10 @@ public class ConstantMatcher extends Matcher
 
     private void trace(Protocol protocol)
     {
-	protocol.trace("" + value + ":" + size);
+        if (protocol.isTraceEnabled())
+        {
+            protocol.trace("" + value + ":" + size);
+        }
     }
 
     private int value;
