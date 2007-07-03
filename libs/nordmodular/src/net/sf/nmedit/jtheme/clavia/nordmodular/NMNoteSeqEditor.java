@@ -36,38 +36,67 @@ import net.sf.nmedit.jtheme.component.JTControlAdapter;
 public class NMNoteSeqEditor extends JTControl implements ChangeListener
 {
     
+    private static final long serialVersionUID = -737910030163291008L;
+    
     public static final String uiClassID = "NoteSeqEditorUI";
     private static final int STEPS = 16;
     
     private int zoom = 5, maxZoom = 5, minZoom = 1;
     private JTControlAdapter[] controlAdapters = new JTControlAdapter[STEPS];
-
-    private float translation = 0;
     
+    private int maxTranslation = 10;
+    private int translation = 0;
+
     public NMNoteSeqEditor(JTContext context)
     {
         super(context);
 
         clear();
     }
-
-    public float getTranslationStepSize()
+    
+    private void computeMaxTranslation()
     {
-        return 0.1f;
+        // original component
+        // zoom | maxTranslation
+        //  1   | 127
+        //  2   | 57 
+        //  3   | 37 
+        //  4   | 27 
+        //  5   | 10
+        final int mint = 10;
+        final int maxt = 127;        
+        setMaxTranslation( mint+(((maxt-mint)*(zoom-1))/4) );
     }
     
-    public float getTranslation()
+    private void setMaxTranslation(int max)
+    {
+        if (max<=0) max = 1;
+        if (this.maxTranslation != max)
+        {
+            // scale translation value
+            translation = (max*translation)/maxTranslation;
+            this.maxTranslation = max;
+            fireStateChanged(); // invokes repaint()
+        }
+    }
+    
+    public int getMaxTranslation()
+    {
+        return maxTranslation;
+    }
+    
+    public int getTranslation()
     {
         return translation;
     }
     
-    public void setTranslation(float t)
+    public void setTranslation(int t)
     {
-        t = Math.max(0, Math.min(1f, t));
+        t = Math.max(0, Math.min(t, maxTranslation));
         if (this.translation != t)
         {
             this.translation = t;
-            repaint();
+            fireStateChanged(); // invokes repaint()
         }
     }
 
@@ -104,17 +133,14 @@ public class NMNoteSeqEditor extends JTControl implements ChangeListener
 
     private void uninstallAdapter(JTControlAdapter adapter)
     {
+        adapter.setComponent(null);
         adapter.setChangeListener(null);
     }
     
     private void installAdapter(JTControlAdapter adapter)
     {
+        adapter.setComponent(this);
         adapter.setChangeListener(this);
-    }
-
-    public void stateChanged(ChangeEvent e)
-    {
-        repaint();
     }
 
     public String getUIClassID()
@@ -142,6 +168,7 @@ public class NMNoteSeqEditor extends JTControl implements ChangeListener
         if (minZoom<=z && z<= maxZoom && this.zoom != z)
         {
             this.zoom = z;
+            computeMaxTranslation();
             repaint();
         }
     }

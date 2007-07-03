@@ -44,9 +44,6 @@ import org.jdom.Element;
 public class ScrollbarSliderElement extends SliderElement
 {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -3341440830935958705L;
     private String noteSequencerName;
     
@@ -92,7 +89,7 @@ public class ScrollbarSliderElement extends SliderElement
         return slider;
     }
     
-    private static class ScrollAdapter implements JTControlAdapter
+    private static class ScrollAdapter implements JTControlAdapter, ChangeListener
     {
         
         private ChangeListener changeListener;
@@ -123,6 +120,7 @@ public class ScrollbarSliderElement extends SliderElement
                             && (c instanceof NMNoteSeqEditor))
                     {
                         noteEditor = (NMNoteSeqEditor) c;
+                        noteEditor.addChangeListener(this);
                         break;
                     }
                 }
@@ -158,22 +156,11 @@ public class ScrollbarSliderElement extends SliderElement
             return 0;
         }
         
-        private int maxValue(float step)
-        {
-            if (step > 0)
-            {
-                int max = (int) Math.ceil(1f/step);
-                if (max<=0) max = 1;
-                return max;
-            }
-            return 1;
-        }
-
         public int getMaxValue()
         {
             if (lookupNoteEditor())
             {
-                return maxValue(noteEditor.getTranslationStepSize());
+                return noteEditor.getMaxTranslation();
             }
             return 1;
         }
@@ -185,26 +172,27 @@ public class ScrollbarSliderElement extends SliderElement
 
         public int getValue()
         {
-            if (lookupNoteEditor())
-            {
-                float pos = noteEditor.getTranslation();
-                float step = noteEditor.getTranslationStepSize();
-                if (step>0)
-                    return Math.max(0, Math.min((int)(pos/step), maxValue(step)));
-            }
-            return 0;
+            return lookupNoteEditor() ? noteEditor.getTranslation() : 0;
         }
 
         public double getNormalizedValue()
         {
-            return lookupNoteEditor() ? noteEditor.getTranslation() : 0;
+            if (lookupNoteEditor())
+            {
+                int t = noteEditor.getTranslation();
+                int m = noteEditor.getMaxTranslation();
+                if (m<=0) m = 1;
+                return t/(double)m;
+            }
+            return 0;
         }
 
         public void setNormalizedValue(double value)
         {
             if (lookupNoteEditor())
             {
-                noteEditor.setTranslation((float)value);
+                int t = (int) (value*noteEditor.getMaxTranslation());
+                noteEditor.setTranslation(t);
                 notifyChangeListener();
             }
         }
@@ -213,9 +201,7 @@ public class ScrollbarSliderElement extends SliderElement
         {
             if (lookupNoteEditor())
             {
-                float step = noteEditor.getTranslationStepSize();
-                int max = maxValue(step);
-                noteEditor.setTranslation(value/(float) max);
+                noteEditor.setTranslation(value);
                 notifyChangeListener();
             }
         } 
@@ -244,6 +230,11 @@ public class ScrollbarSliderElement extends SliderElement
         public void setMinValue(int minValue)
         {
             // no op
+        }
+
+        public void stateChanged(ChangeEvent e)
+        {
+            scrollbar.repaint();
         }
         
     }

@@ -138,6 +138,7 @@ public class NoteSeqEditorUI extends JTComponentUI
         NMNoteSeqEditor ed = (NMNoteSeqEditor) c;
         
         Insets insets = ed.getInsets();
+        
         int x = insets.left;
         int y = insets.top;
         int w = ed.getWidth()-(insets.left+insets.right);
@@ -161,26 +162,35 @@ public class NoteSeqEditorUI extends JTComponentUI
         // at maximum zoom level we display one octave
         noteHeight = ed.getZoom() ;//h/(12*(ed.getMaxZoom()+1-ed.getZoom()));
         
-        
         paintForeground(g, ed, x, y, w, h);
     }
 
-    private static final boolean FILL_NOTE[] = 
+    private static final boolean BLACK_KEY_12[] = 
         {
-           false,
-           true, // note = 1
-           false,
-           true, // note = 3
-           false,
-           false,
-           true, // note = 6
-           false,
-           true, // note = 8
-           false,
-           true, // note = 10
-           false,
-           false
+           false, // C
+           true,  // C#
+           false, // D
+           true,  // D#
+           false, // E
+           false, // F
+           true,  // F#
+           false, // G
+           true,  // G#
+           false, // A
+           true,  // B
+           false, // H
         };
+    
+    private boolean isBlackKey(int midiNote)
+    {
+        // midiNote == 0 <=> midiNote == C
+
+        midiNote = midiNote%12;
+        if (midiNote<0) // this should never be true 
+            midiNote = 12-midiNote;
+
+        return BLACK_KEY_12[midiNote];
+    }
     
     private void paintBackground(Graphics2D g, NMNoteSeqEditor ed, int x, int y, int w, int h)
     {
@@ -208,7 +218,7 @@ public class NoteSeqEditorUI extends JTComponentUI
             {
                 g.setColor(new Color(0x9a9a9a));
 	        	for (int i = 0; i < 12 ; i ++){
-	        		if (FILL_NOTE[i])
+	        		if (isBlackKey(i))
 	        		{   
                         g.fillRect(x, oy-i*noteHeight, nr, noteHeight);     			
 	        		} 
@@ -219,9 +229,9 @@ public class NoteSeqEditorUI extends JTComponentUI
             //g.drawLine(x, oy, nr, oy);   
         }
     
-        for (int i=0;i<=ed.getNoteCount()-1;i++)
-        {        	
-            int nx = i*w/16;
+        for (int i=1;i<=ed.getNoteCount()-1;i++)
+        {
+            int nx = (i*(w+1))/16;
             g.drawLine(nx+x, y, nx+x, y+h);
         }
         
@@ -230,7 +240,7 @@ public class NoteSeqEditorUI extends JTComponentUI
             Composite oldComposite = g.getComposite();
         	g.setComposite(NOTE_HIGHLIGHT_COMPOSITE);
 	        g.setColor(noteColor);
-	        g.fillRect(x+ (editedNote * w/16)+1, y, w/16, h);
+	        g.fillRect(x+ (editedNote * (w+1)/16)+(editedNote>0?1:0), y, (w+1)/16, h-y);
             g.setComposite(oldComposite); // restore previous composite
         }
     }
@@ -246,21 +256,19 @@ public class NoteSeqEditorUI extends JTComponentUI
 
         int mid = h/2;
         
-        int cw = w/16-2;
-                        
-        
+        int cw = (w+1)/16;
+
         for (int i=0;i<=ed.getNoteCount()-1;i++)
         {
-            int nx = i*w/16+1;
+            int nx = ((i*(w+1))/16) + (i>0?1:0);
             int note = ed.getNote(i);
-            
             
             int ny = mid-(note-60)*noteHeight;
             
             if (0<=ny && ny<y+h)
             {
             	g.setColor(noteColor);
-                g.fillRect(nx+x, ny, cw+1, noteHeight);
+                g.fillRect(nx+x, ny, cw, noteHeight);
             }
             else 
             {
