@@ -3309,56 +3309,56 @@ label{fill:#000;}
 	</module>
 	<module component-id="m51" width="255" height="90">
 		<name>FilterE</name>
-		<image x="135" y="6" width="56" height="82" xlink:href="url(#groupbox)" />
+		<image x="135" y="3" width="56" height="85" xlink:href="url(#groupbox)" />
 		<image x="3" y="13" width="104" height="74" xlink:href="url(#groupbox)" />
-		<connector x="6" y="42" size="13" class="cAUDIO" >
+		<connector x="6" y="39" size="13" class="cAUDIO" >
 			<connector component-id="c1"  alt="freq mod 1" />
 		</connector>
-		<connector x="144" y="70" size="13" class="cAUDIO" >
+		<connector x="144" y="65" size="13" class="cAUDIO" >
 			<connector component-id="c2"  alt="res mod" />
 		</connector>
 		<connector x="195" y="70" size="13" class="cAUDIO" >
 			<connector component-id="c3"  alt="in" />
 		</connector>
-		<connector x="6" y="67" size="13" class="cAUDIO" >
+		<connector x="6" y="65" size="13" class="cAUDIO" >
 			<connector component-id="c4"  alt="freq mod 2" />
 		</connector>
 		<connector x="237" y="70" size="13" class="cAUDIO" >
 			<connector component-id="c5"  alt="out" />
 		</connector>
-		<button x="108" y="16" width="24" height="60" cyclic="false" landscape="false" >
+		<button x="106" y="16" width="24" height="60" cyclic="false" landscape="false" >
 			<parameter component-id="p2"  alt="filter type" />
-			<btn index="0">BR</btn>
-			<btn index="1">HP</btn>
-			<btn index="2">BP</btn>
-			<btn index="3">LP</btn>
+			<btn index="3">BR</btn>
+			<btn index="2">HP</btn>
+			<btn index="1">BP</btn>
+			<btn index="0">LP</btn>
 		</button>
-		<button x="138" y="17" width="24" height="16" cyclic="true" landscape="false" >
+		<button x="138" y="14" width="24" height="16" cyclic="true" landscape="false" >
 			<parameter component-id="p3"  alt="gain control" />
 			<btn index="0">GC</btn>
 			<btn index="1">GC</btn>
 		</button>
-		<knob x="24" y="37" size="22" >
+		<knob x="23" y="34" size="20" >
 			<parameter component-id="p4"  alt="frequency mod 1" />
 		</knob>
-		<knob x="49" y="32" size="29" >
+		<knob x="49" y="34" size="28" >
 			<parameter component-id="p5"  alt="frequency" />
 		</knob>
-		<knob x="81" y="59" size="21" >
+		<knob x="78" y="59" size="20" >
 			<parameter component-id="p6"  alt="kbt" />
 		</knob>
-		<knob x="159" y="64" size="22" >
+		<knob x="163" y="61" size="20" >
 			<parameter component-id="p7"  alt="resonance mod" />
 		</knob>
-		<knob x="148" y="34" size="29" >
+		<knob x="148" y="31" size="28" >
 			<parameter component-id="p8"  alt="resonance" />
 		</knob>
-		<button x="200" y="46" width="44" height="16" cyclic="false" landscape="true" >
+		<button x="200" y="49" width="44" height="16" cyclic="false" landscape="true" >
 			<parameter component-id="p9"  alt="slope" />
 			<btn index="0">12</btn>
 			<btn index="1">24</btn>
 		</button>
-		<knob x="23" y="62" size="22" >
+		<knob x="23" y="61" size="20" >
 			<parameter component-id="p10"  alt="frequency mod 2" />
 		</knob>
 		<button x="217" y="69" width="18" height="16" cyclic="true" landscape="false" >
@@ -3369,17 +3369,17 @@ label{fill:#000;}
 		<textDisplay x="44" y="16" width="40" height="16" >
 			<parameter component-id="p5"  alt="frequency" />
 		</textDisplay>
-		<textDisplay x="163" y="17" width="24" height="16" >
+		<textDisplay x="163" y="14" width="24" height="16" >
 			<parameter component-id="p8"  alt="resonance" />
 		</textDisplay>
-		<label x="153" y="16" >Res</label>
-		<resetButton x="89" y="52" width="9" height="6" >
+		<label x="153" y="15" >Res</label>
+		<resetButton x="84" y="52" width="9" height="6" >
 			<parameter component-id="p6"  alt="kbt" />
 		</resetButton>
 		<label x="20" y="28" >Freq</label>
-		<label x="85" y="49" >Kbt</label>
-		<label x="206" y="43" >dB/Oct</label>
-		<filter-e-display x="192" y="2" width="55" height="35">
+		<label x="82" y="52" >Kbt</label>
+		<label x="206" y="49" >dB/Oct</label>
+		<filter-e-display x="192" y="2" width="60" height="34">
 			<cutoff component-id="p5"  alt="frequency" />
 			<resonance component-id="p8"  alt="resonance" />
 			<type component-id="p2"  alt="type" />

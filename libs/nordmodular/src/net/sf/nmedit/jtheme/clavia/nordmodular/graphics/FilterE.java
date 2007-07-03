@@ -23,7 +23,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 
 public class FilterE extends Curve {
-	int type =2; // 
+	int type =0; // 
 	float cutOff =0.5f;
 	
 	float resAmplitude = 0.4f;			
@@ -61,7 +61,7 @@ public class FilterE extends Curve {
 	{
 		switch(type){
 		//high pass
-			case 1:
+			case 2:
 				points[1].setLocation(cutOff-0.5f+slope*0.25f, 1.1f);
 				
 				points[2].setLocation(cutOff,resAmplitude - resonance*resAmplitude*.5f);
@@ -88,7 +88,7 @@ public class FilterE extends Curve {
 				points[6].setLocation(-0.1f,1.1f);
 				break;
 			//low pass
-			case 3:				
+			case 0:				
 				points[1].setLocation(-0.3f,resAmplitude + resAmplitude*.5f*resonance);
 				points[2].setLocation(-0.1f+cutOff-slope*.15f,resAmplitude + resAmplitude*.5f*resonance);
 				points[2].setPoint_type(PathIterator.SEG_LINETO);
@@ -112,7 +112,7 @@ public class FilterE extends Curve {
 				points[6].setLocation(-0.1f,1.1f);
 				break;
 			//band pass
-			case 2:
+			case 1:
 				//compute left end of the curve
 				float leftEnd, rightEnd;
 				if(slope == 0)
@@ -151,7 +151,7 @@ public class FilterE extends Curve {
 				points[6].setLocation(-0.1f,1.1f);
 				break;
 			// band reject
-			case 0:
+			case 3:
 				points[1].setLocation(-0.5f,resAmplitude + resAmplitude*.25f*resonance);
 				points[2].setLocation(-0.45f+(0.15f-0.1f*slope)*resonance+cutOff-slope*0.05f,resAmplitude + resAmplitude*.25f*resonance);
 				points[2].setPoint_type(PathIterator.SEG_LINETO);
