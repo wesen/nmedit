@@ -19,56 +19,96 @@
 
 package net.sf.nmedit.jpdl;
 
-import java.util.*;
+import java.io.IOException;
+import java.io.Serializable;
 
-public class IntStream
+public class IntStream implements Serializable
 {
+    
+    private static final long serialVersionUID = 1799889660028505749L;
+    
+    private transient int[] data;
+    private int size;
+    private int position;
+
+    public IntStream(int initialCapacity)
+    {
+        data = new int[initialCapacity];
+        position = 0;
+        size = 0;
+    }
+
     public IntStream()
     {
-	position = 0;
-	ints = new LinkedList();
+        this(128);
+    }
+    
+    private void ensureCapacity(int newCapacity)
+    {
+        if (newCapacity>data.length)
+        {
+            int[] a = new int[(newCapacity*3)/2+1];
+            System.arraycopy(data, 0, a, 0, size);
+            this.data = a;
+        }
     }
 
     public void append(int data)
     {
-	ints.add(new Integer(data));
+        ensureCapacity(size+1);
+        this.data[size++] = data;
     }
 
     public int getPosition()
     {
-	return position;
+        return position;
     }
     
     public int getSize()
     {
-	return ints.size();
+        return size;
     }
 
     public void setPosition(int position)
     {
-	this.position = position;
+        this.position = position;
     }
 
     public void setSize(int size)
     {
-        if (ints.size() > size) {
-            ints.subList(size, ints.size()).clear();
-	}
-	if (position > size) {
-	    position = size;
-	}
+        if (this.size > size)
+            this.size = size;
+    	if (position > size) 
+    	    position = size;
     }
 
     public boolean isAvailable(int amount)
     {
-	return position+amount <= ints.size();
+        return position+amount <= size;
     }
 
     public int getInt()
     {
-	return ((Integer)ints.get(position++)).intValue();
+        return data[position++];
     }
 
-    private List ints;
-    private int position;
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException 
+    {
+        // write size, position
+        out.defaultWriteObject();
+        // write data
+        for (int i=0;i<size;i++)
+            out.writeInt(data[i]);
+    }
+     
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException 
+    {
+        // read size, position
+        in.defaultReadObject();
+        // read data
+        data = new int[size];
+        for (int i=0;i<size;i++)
+            data[i] = in.readInt();
+    }
+    
 }
