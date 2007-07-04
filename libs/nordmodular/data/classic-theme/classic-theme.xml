@@ -842,7 +842,7 @@ label{fill:#000;}
 		<connector x="236" y="8" size="13" class="cLOGIC">
 			<connector component-id="c2" alt="out" />
 		</connector>
-		<knob x="142" y="4" size="21">
+		<knob x="143" y="5" size="21">
 			<parameter component-id="p1" alt="time" />
 		</knob>
 		<textDisplay x="90" y="7" width="50" height="16">
@@ -1157,22 +1157,22 @@ label{fill:#000;}
 		
 		<light component-id="lightGainReduction" type="led" x="220" y="32" width="7" height="7" ledOnValue="127" /> 
 		
-		<knob x="7" y="80" size="21">
+		<knob x="8" y="80" size="21">
 			<parameter component-id="p1" alt="attack" />
 		</knob>
-		<knob x="44" y="80" size="21">
+		<knob x="45" y="80" size="21">
 			<parameter component-id="p2" alt="release" />
 		</knob>
-		<knob x="79" y="80" size="21">
+		<knob x="80" y="80" size="21">
 			<parameter component-id="p3" alt="treshold" />
 		</knob>
 		<knob x="117" y="80" size="21">
 			<parameter component-id="p4" alt="ratio" />
 		</knob>
-		<knob x="152" y="80" size="21">
+		<knob x="153" y="80" size="21">
 			<parameter component-id="p5" alt="gate" />
 		</knob>
-		<knob x="189" y="80" size="21">
+		<knob x="190" y="80" size="21">
 			<parameter component-id="p6" alt="hold" />
 		</knob>
 		<button x="31" y="35" width="28" height="16" cyclic="true" landscape="false">
@@ -1355,30 +1355,30 @@ label{fill:#000;}
 		<connector x="236" y="42" size="13" class="cCONTROL">
 			<connector component-id="c3" alt="out" />
 		</connector>
-		<knob x="55" y="34" size="21">
+		<knob x="55" y="33" size="21">
 			<parameter component-id="p1" alt="velocity sensitivity" />
 		</knob>
-		<knob x="95" y="32" size="21">
+		<knob x="95" y="33" size="21">
 			<parameter component-id="p2" alt="left gain" />
 		</knob>
-		<knob x="129" y="32" size="21">
+		<knob x="129" y="33" size="21">
 			<parameter component-id="p3" alt="breakpoint" />
 		</knob>
-		<knob x="164" y="32" size="21">
+		<knob x="164" y="33" size="21">
 			<parameter component-id="p4" alt="right gain" />
 		</knob>
-		<textDisplay x="90" y="13" width="30" height="16">
+		<textDisplay x="90" y="14" width="30" height="16">
 			<parameter component-id="p2" alt="left gain" />
 		</textDisplay>
-		<textDisplay x="125" y="13" width="30" height="16">
+		<textDisplay x="125" y="14" width="30" height="16">
 			<parameter component-id="p3" alt="breakpoint" />
 		</textDisplay>
-		<textDisplay x="162" y="13" width="30" height="16">
+		<textDisplay x="162" y="14" width="30" height="16">
 			<parameter component-id="p4" alt="right gain" />
 		</textDisplay>
 		<label x="6" y="29">Vel</label>
 		<label x="26" y="29">Note</label>
-		<label x="48" y="21">Vel Sens</label>
+		<label x="47" y="20">Vel Sens</label>
 		<label x="90" y="1">L Gain</label>
 		<label x="123" y="1">Brk Pnt</label>
 		<label x="162" y="1">R Gain</label>
@@ -1458,7 +1458,7 @@ label{fill:#000;}
 		<connector x="236" y="8" size="13" class="cLOGIC">
 			<connector component-id="c2" alt="out" />
 		</connector>
-		<knob x="143" y="4" size="21">
+		<knob x="144" y="5" size="21">
 			<parameter component-id="p1" alt="time" />
 		</knob>
 		<textDisplay x="90" y="7" width="50" height="16">
@@ -2280,11 +2280,11 @@ label{fill:#000;}
 		<connector x="235" y="8" size="13" class="cCONTROL">
 			<connector component-id="c3" alt="out" />
 		</connector>
-		<knob x="124" y="2" size="21">
+		<knob x="124" y="5" size="21">
 			<parameter component-id="p1" alt="time" />
 		</knob>
-		<label x="99" y="7">Time</label>
-		<label x="158" y="8">On</label>
+		<label x="99" y="9">Time</label>
+		<label x="159" y="9">On</label>
 		<image x="210" y="9" width="25" height="11" xlink:href="./images/single/decoration-6.png" />
 	</module>
 	<module component-id="m112" width="255" height="30">
@@ -2295,7 +2295,7 @@ label{fill:#000;}
 		<connector x="235" y="8" size="13" class="cAUDIO">
 			<connector component-id="c2" alt="out" />
 		</connector>
-		<knob x="126" y="2" size="21">
+		<knob x="126" y="4" size="21">
 			<parameter component-id="p1" alt="offset" />
 		</knob>
 		<button x="93" y="7" width="24" height="16" cyclic="true" landscape="false">
@@ -2404,7 +2404,7 @@ label{fill:#000;}
 		<knob x="166" y="18" size="21">
 			<parameter component-id="p5" alt="pitch mod 1" />
 		</knob>
-		<knob x="206" y="18" size="21">
+		<knob x="207" y="18" size="21">
 			<parameter component-id="p6" alt="pitch mod 2" />
 		</knob>
 		<textDisplay x="23" y="19" width="50" height="16">
@@ -2414,7 +2414,7 @@ label{fill:#000;}
 		<label x="76" y="2">Coarse</label>
 		<label x="113" y="1">Fine</label>
 		<label x="146" y="7">Pitch</label>
-		<label x="186" y="7">Pitch</label>
+		<label x="188" y="7">Pitch</label>
 		<resetButton x="118" y="11" width="9" height="6">
 			<parameter component-id="p3" alt="pitch fine" />
 		</resetButton>
@@ -2462,7 +2462,7 @@ label{fill:#000;}
 		<connector x="236" y="132" size="13" class="cAUDIO">
 			<connector component-id="c10" alt="out" />
 		</connector>
-		<knob x="11" y="51" size="21">
+		<knob x="11" y="50" size="21">
 			<parameter component-id="p1" alt="osc1 coarse" />
 		</knob>
 		<knob x="18" y="74" size="21">
@@ -2471,7 +2471,7 @@ label{fill:#000;}
 		<knob x="17" y="106" size="21">
 			<parameter component-id="p3" alt="osc1 level" />
 		</knob>
-		<knob x="51" y="51" size="21">
+		<knob x="51" y="50" size="21">
 			<parameter component-id="p4" alt="osc2 coarse" />
 		</knob>
 		<knob x="59" y="74" size="21">
@@ -2480,7 +2480,7 @@ label{fill:#000;}
 		<knob x="58" y="107" size="21">
 			<parameter component-id="p6" alt="osc2 level" />
 		</knob>
-		<knob x="92" y="51" size="21">
+		<knob x="92" y="50" size="21">
 			<parameter component-id="p7" alt="osc3 coarse" />
 		</knob>
 		<knob x="100" y="74" size="21">
@@ -2489,7 +2489,7 @@ label{fill:#000;}
 		<knob x="99" y="107" size="21">
 			<parameter component-id="p9" alt="osc3 level" />
 		</knob>
-		<knob x="135" y="51" size="21">
+		<knob x="135" y="50" size="21">
 			<parameter component-id="p10" alt="osc4 coarse" />
 		</knob>
 		<knob x="143" y="74" size="21">
@@ -2498,7 +2498,7 @@ label{fill:#000;}
 		<knob x="143" y="107" size="21">
 			<parameter component-id="p12" alt="osc4 level" />
 		</knob>
-		<knob x="177" y="51" size="21">
+		<knob x="177" y="50" size="21">
 			<parameter component-id="p13" alt="osc5 coarse" />
 		</knob>
 		<knob x="185" y="74" size="21">
@@ -2507,7 +2507,7 @@ label{fill:#000;}
 		<knob x="186" y="107" size="21">
 			<parameter component-id="p15" alt="osc5 level" />
 		</knob>
-		<knob x="216" y="51" size="21">
+		<knob x="216" y="50" size="21">
 			<parameter component-id="p16" alt="osc6 coarse" />
 		</knob>
 		<knob x="227" y="74" size="21">
@@ -2610,7 +2610,7 @@ label{fill:#000;}
 		<connector x="238" y="43" size="13" class="cAUDIO">
 			<connector component-id="c5" alt="out" />
 		</connector>
-		<knob x="94" y="19" size="29">
+		<knob x="94" y="20" size="29">
 			<parameter component-id="p2" alt="detune coarse" />
 		</knob>
 		<knob x="126" y="28" size="21">
@@ -2636,7 +2636,7 @@ label{fill:#000;}
 		</textDisplay>
 		<label x="10" y="9">Sync</label>
 		<label x="20" y="45">Mst</label>
-		<label x="91" y="6">Detune</label>
+		<label x="92" y="6">Detune</label>
 		<label x="127" y="7">Fine</label>
 		<label x="153" y="24">FMA</label>
 		<label x="203" y="24">AM</label>
@@ -2921,10 +2921,10 @@ label{fill:#000;}
 		<connector x="238" y="26" size="13" class="cAUDIO">
 			<connector component-id="c3" alt="out" />
 		</connector>
-		<knob x="73" y="15" size="29">
+		<knob x="73" y="13" size="29">
 			<parameter component-id="p2" alt="detune coarse" />
 		</knob>
-		<knob x="105" y="19" size="21">
+		<knob x="106" y="19" size="21">
 			<parameter component-id="p3" alt="detune fine" />
 		</knob>
 		<knob x="169" y="9" size="21">
@@ -3121,7 +3121,7 @@ label{fill:#000;}
 		<connector x="238" y="26" size="13" class="cAUDIO">
 			<connector component-id="c4" alt="out" />
 		</connector>
-		<knob x="73" y="15" size="29">
+		<knob x="73" y="13" size="29">
 			<parameter component-id="p2" alt="detune coarse" />
 		</knob>
 		<knob x="107" y="20" size="21">
@@ -3298,7 +3298,7 @@ label{fill:#000;}
 		<connector x="236" y="8" size="13" class="cLOGIC">
 			<connector component-id="c2" alt="out" />
 		</connector>
-		<knob x="143" y="4" size="21">
+		<knob x="144" y="5" size="21">
 			<parameter component-id="p1" alt="time" />
 		</knob>
 		<textDisplay x="90" y="7" width="50" height="16">
@@ -3539,10 +3539,10 @@ label{fill:#000;}
 		<connector x="236" y="45" size="13" class="cCONTROL">
 			<connector component-id="c4" alt="out" />
 		</connector>
-		<knob x="98" y="32" size="21">
+		<knob x="98" y="33" size="21">
 			<parameter component-id="p1" alt="pattern" />
 		</knob>
-		<knob x="137" y="32" size="21">
+		<knob x="137" y="33" size="21">
 			<parameter component-id="p2" alt="bank" />
 		</knob>
 		<button x="221" y="16" width="32" height="16" cyclic="true" landscape="false">
@@ -3550,7 +3550,7 @@ label{fill:#000;}
 			<btn index="0">High</btn>
 			<btn index="1">Low</btn>
 		</button>
-		<knob x="180" y="12" size="21">
+		<knob x="180" y="14" size="21">
 			<parameter component-id="p4" alt="step" />
 		</knob>
 		<button x="176" y="40" width="34" height="16" cyclic="true" landscape="false">
@@ -3621,7 +3621,7 @@ label{fill:#000;}
 		<connector x="235" y="8" size="13" class="cCONTROL">
 			<connector component-id="c2" alt="out" />
 		</connector>
-		<knob x="150" y="2" size="21">
+		<knob x="150" y="4" size="21">
 			<parameter component-id="p1" alt="transpose" />
 		</knob>
 		<textDisplay x="91" y="7" width="50" height="16">
@@ -3671,7 +3671,7 @@ label{fill:#000;}
 		<connector x="236" y="56" size="13" class="cAUDIO">
 			<connector component-id="c5" alt="lp" />
 		</connector>
-		<knob x="69" y="34" size="29">
+		<knob x="69" y="35" size="29">
 			<parameter component-id="p2" alt="freq" />
 		</knob>
 		<knob x="103" y="34" size="21">
@@ -3734,7 +3734,7 @@ label{fill:#000;}
 		<connector x="5" y="40" size="13" class="cSLAVE">
 			<connector component-id="c5" alt="slv" />
 		</connector>
-		<knob x="80" y="25" size="29">
+		<knob x="80" y="23" size="29">
 			<parameter component-id="p2" alt="pitch coarse" />
 		</knob>
 		<knob x="112" y="31" size="21">
@@ -3745,7 +3745,7 @@ label{fill:#000;}
 			<btn index="0">KBT</btn>
 			<btn index="1">KBT</btn>
 		</button>
-		<knob x="50" y="33" size="21">
+		<knob x="50" y="31" size="21">
 			<parameter component-id="p5" alt="pitch mod amount" />
 		</knob>
 		<knob x="182" y="33" size="21">
@@ -3790,22 +3790,22 @@ label{fill:#000;}
 		
 		<light component-id="lightGainReduction" type="led" x="220" y="32" width="7" height="7" ledOnValue="127" /> 
 		
-		<knob x="7" y="79" size="21">
+		<knob x="8" y="79" size="21">
 			<parameter component-id="p1" alt="attack" />
 		</knob>
-		<knob x="44" y="79" size="21">
+		<knob x="45" y="79" size="21">
 			<parameter component-id="p2" alt="release" />
 		</knob>
-		<knob x="79" y="80" size="21">
+		<knob x="80" y="80" size="21">
 			<parameter component-id="p3" alt="treshold" />
 		</knob>
-		<knob x="117" y="80" size="21">
+		<knob x="118" y="80" size="21">
 			<parameter component-id="p4" alt="ratio" />
 		</knob>
-		<knob x="152" y="80" size="21">
+		<knob x="153" y="80" size="21">
 			<parameter component-id="p5" alt="ref level" />
 		</knob>
-		<knob x="189" y="80" size="21">
+		<knob x="190" y="80" size="21">
 			<parameter component-id="p6" alt="limiter" />
 		</knob>
 		<button x="31" y="35" width="26" height="16" cyclic="true" landscape="false">
@@ -4224,7 +4224,7 @@ label{fill:#000;}
 		<connector x="235" y="8" size="13" class="cAUDIO">
 			<connector component-id="c2" alt="out" />
 		</connector>
-		<knob x="126" y="2" size="21">
+		<knob x="126" y="4" size="21">
 			<parameter component-id="p1" alt="multiplier" />
 		</knob>
 		<button x="93" y="7" width="26" height="16" cyclic="true" landscape="false">
@@ -4251,13 +4251,13 @@ label{fill:#000;}
 		<connector x="234" y="8" size="13" class="cAUDIO">
 			<connector component-id="c4" alt="out" />
 		</connector>
-		<knob x="67" y="2" size="21">
+		<knob x="70" y="4" size="21">
 			<parameter component-id="p1" alt="in sense 1" />
 		</knob>
-		<knob x="117" y="2" size="21">
+		<knob x="120" y="4" size="21">
 			<parameter component-id="p2" alt="in sense 2" />
 		</knob>
-		<knob x="168" y="2" size="21">
+		<knob x="171" y="4" size="21">
 			<parameter component-id="p3" alt="in sense 3" />
 		</knob>
 	</module>
@@ -4272,7 +4272,7 @@ label{fill:#000;}
 		<connector x="238" y="26" size="13" class="cAUDIO">
 			<connector component-id="c3" alt="out" />
 		</connector>
-		<knob x="75" y="15" size="29">
+		<knob x="75" y="13" size="29">
 			<parameter component-id="p2" alt="detune coarse" />
 		</knob>
 		<knob x="108" y="19" size="21">
@@ -4533,7 +4533,7 @@ label{fill:#000;}
 		<connector x="233" y="8" size="13" class="cCONTROL">
 			<connector component-id="c2" alt="out" />
 		</connector>
-		<knob x="142" y="3" size="21">
+		<knob x="143" y="4" size="21">
 			<parameter component-id="p1" alt="time" />
 		</knob>
 		<textDisplay x="90" y="7" width="50" height="16">
@@ -4698,7 +4698,7 @@ label{fill:#000;}
 		<connector x="235" y="12" size="13" class="cCONTROL">
 			<connector component-id="c2" alt="out" />
 		</connector>
-		<knob x="184" y="2" size="21">
+		<knob x="184" y="5" size="21">
 			<parameter component-id="p2" alt="rate" />
 		</knob>
 		<label x="100" y="12">Mst</label>
