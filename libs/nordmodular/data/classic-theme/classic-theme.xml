@@ -174,7 +174,7 @@ label{fill:#000;}
 		<connector x="236" y="8" size="13" class="cLOGIC">
 			<connector component-id="c2" alt="out" />
 		</connector>
-		<knob x="140" y="2" size="21">
+		<knob x="142" y="4" size="21">
 			<parameter component-id="p1" alt="level" />
 		</knob>
 		<textDisplay x="90" y="7" width="50" height="16">
@@ -434,7 +434,7 @@ label{fill:#000;}
 			<btn index="1">M</btn>
 			<btn index="0">M</btn>
 		</button>
-		<textDisplay x="20" y="14" width="50" height="16">
+		<textDisplay x="20" y="16" width="50" height="16">
 			<parameter component-id="p2" alt="detune" />
 		</textDisplay>
 		<label x="1" y="13">Mst</label>
@@ -582,7 +582,7 @@ label{fill:#000;}
 		<label x="185" y="0">24 pulses/b</label>
 		<label x="191" y="12">4 pulses/b</label>
 		<label x="212" y="26">Sync</label>
-		<textDisplay x="66" y="15" width="46" height="16">
+		<textDisplay x="66" y="16" width="46" height="16">
 			<parameter component-id="p1" alt="rate" />
 		</textDisplay>
 	</module>
@@ -684,7 +684,7 @@ label{fill:#000;}
 		<textDisplay x="66" y="32" width="40" height="16">
 			<parameter component-id="p2" alt="STune" />
 		</textDisplay>
-		<textDisplay x="144" y="114" width="50" height="16">
+		<textDisplay x="144" y="115" width="50" height="16">
 			<parameter component-id="p1" alt="MTune" />
 		</textDisplay>
 		<label x="156" y="102">Preset</label>
@@ -1095,7 +1095,7 @@ label{fill:#000;}
 			<btn index="0">M</btn>
 			<btn index="1">M</btn>
 		</button>
-		<textDisplay x="7" y="25" width="50" height="16">
+		<textDisplay x="7" y="24" width="50" height="16">
 			<parameter component-id="p2" alt="freq coarse" />
 		</textDisplay>
 		<label x="8" y="11">Freq</label>
@@ -1553,7 +1553,7 @@ label{fill:#000;}
 		<label x="158" y="8">Gate</label>
 		<label x="201" y="6">V</label>
 		<label x="228" y="6">R</label>
-		<textDisplay x="98" y="7" width="30" height="16">
+		<textDisplay x="98" y="8" width="30" height="16">
 			<parameter component-id="p1" alt="note" />
 		</textDisplay>
 	</module>
@@ -1937,7 +1937,7 @@ label{fill:#000;}
 		<textDisplay x="46" y="18" width="48" height="16">
 			<parameter component-id="p1" alt="rate" />
 		</textDisplay>
-		<textDisplay x="136" y="15" width="30" height="16">
+		<textDisplay x="136" y="14" width="30" height="16">
 			<parameter component-id="p3" alt="phase" />
 		</textDisplay>
 		<label x="4" y="14">Rst</label>
@@ -1945,7 +1945,7 @@ label{fill:#000;}
 		<label x="23" y="19">Rate</label>
 		<label x="21" y="40">Rate</label>
 		<label x="134" y="30">KBT</label>
-		<label x="137" y="1">Phase</label>
+		<label x="137" y="3">Phase</label>
 		<label x="162" y="34">PW</label>
 		<button x="102" y="3" width="26" height="18" cyclic="true" landscape="false">
 			<parameter component-id="p5" alt="mono" />
@@ -2407,7 +2407,7 @@ label{fill:#000;}
 		<knob x="206" y="18" size="21">
 			<parameter component-id="p6" alt="pitch mod 2" />
 		</knob>
-		<textDisplay x="23" y="20" width="50" height="16">
+		<textDisplay x="23" y="19" width="50" height="16">
 			<parameter component-id="p2" alt="pitch" />
 		</textDisplay>
 		<label x="3" y="14">Slv</label>
@@ -2707,7 +2707,7 @@ label{fill:#000;}
 		<knob x="163" y="5" size="22">
 			<parameter component-id="p2" alt="notes" />
 		</knob>
-		<textDisplay x="91" y="11" width="30" height="16">
+		<textDisplay x="91" y="8" width="30" height="16">
 			<parameter component-id="p1" alt="range" />
 		</textDisplay>
 		<image x="210" y="9" width="25" height="11" xlink:href="./images/single/decoration-6.png" />
@@ -3439,7 +3439,7 @@ label{fill:#000;}
 			<btn index="0">M</btn>
 			<btn index="1">M</btn>
 		</button>
-		<textDisplay x="7" y="24" width="50" height="16">
+		<textDisplay x="7" y="23" width="50" height="16">
 			<parameter component-id="p2" alt="Freq coarse" />
 		</textDisplay>
 		<label x="23" y="40">Slv</label>
@@ -3542,7 +3542,7 @@ label{fill:#000;}
 		<knob x="98" y="32" size="21">
 			<parameter component-id="p1" alt="pattern" />
 		</knob>
-		<knob x="136" y="32" size="21">
+		<knob x="137" y="32" size="21">
 			<parameter component-id="p2" alt="bank" />
 		</knob>
 		<button x="221" y="16" width="32" height="16" cyclic="true" landscape="false">
@@ -3561,14 +3561,14 @@ label{fill:#000;}
 		<label x="7" y="27">Clk</label>
 		<label x="29" y="27">Rst</label>
 		<label x="92" y="3">Pattern</label>
-		<label x="138" y="3">Bank</label>
+		<label x="137" y="3">Bank</label>
 		<label x="181" y="1">Step</label>
 		<label x="226" y="4">Delta</label>
 		<label x="235" y="32">Out</label>
 		<textDisplay x="95" y="15" width="27" height="16">
 			<parameter component-id="p1" alt="pattern" />
 		</textDisplay>
-		<textDisplay x="136" y="15" width="27" height="16">
+		<textDisplay x="134" y="15" width="27" height="16">
 			<parameter component-id="p2" alt="bank" />
 		</textDisplay>
 	</module>
@@ -3646,7 +3646,7 @@ label{fill:#000;}
 		<label x="83" y="24">Atk</label>
 		<label x="136" y="25">Rel</label>
 		<image x="211" y="27" width="25" height="11" xlink:href="./images/single/decoration-6.png" />
-		<textDisplay x="98" y="2" width="30" height="16">
+		<textDisplay x="96" y="2" width="30" height="16">
 			<parameter component-id="p1" alt="attack" />
 		</textDisplay>
 		<textDisplay x="151" y="2" width="30" height="16">
@@ -3881,7 +3881,7 @@ label{fill:#000;}
 		<knob x="157" y="10" size="21">
 			<parameter component-id="p2" alt="time" />
 		</knob>
-		<textDisplay x="97" y="14" width="50" height="16">
+		<textDisplay x="95" y="15" width="50" height="16">
 			<parameter component-id="p2" alt="time" />
 		</textDisplay>
 		<label x="109" y="3">Time</label>
@@ -4286,7 +4286,7 @@ label{fill:#000;}
 			<btn index="0">M</btn>
 			<btn index="1">M</btn>
 		</button>
-		<textDisplay x="22" y="12" width="50" height="16">
+		<textDisplay x="22" y="14" width="50" height="16">
 			<parameter component-id="p2" alt="detune coarse" />
 		</textDisplay>
 		<label x="2" y="12">Mst</label>
@@ -4330,10 +4330,10 @@ label{fill:#000;}
 		<label x="221" y="14">HP</label>
 		<label x="223" y="28">BP</label>
 		<label x="223" y="42">LP</label>
-		<textDisplay x="10" y="33" width="40" height="16">
+		<textDisplay x="9" y="33" width="40" height="16">
 			<parameter component-id="p2" alt="freq" />
 		</textDisplay>
-		<textDisplay x="100" y="25" width="25" height="16">
+		<textDisplay x="100" y="23" width="25" height="16">
 			<parameter component-id="p3" alt="resonance" />
 		</textDisplay>
 	</module>
@@ -4536,7 +4536,7 @@ label{fill:#000;}
 		<knob x="142" y="3" size="21">
 			<parameter component-id="p1" alt="time" />
 		</knob>
-		<textDisplay x="93" y="7" width="50" height="16">
+		<textDisplay x="90" y="7" width="50" height="16">
 			<parameter component-id="p1" alt="time" />
 		</textDisplay>
 		<image x="212" y="10" width="18" height="10" xlink:href="./images/single/decoration-17.png" />
@@ -4644,16 +4644,16 @@ label{fill:#000;}
 			<btn index="1"><image xlink:href="./images/slice/env_lin.png" /></btn>
 			<btn index="2"><image xlink:href="./images/slice/env_exp.png" /></btn>
 		</button>
-		<knob x="60" y="51" size="21">
+		<knob x="64" y="51" size="21">
 			<parameter component-id="p2" alt="attack" />
 		</knob>
-		<knob x="99" y="51" size="21">
+		<knob x="101" y="51" size="21">
 			<parameter component-id="p3" alt="decay" />
 		</knob>
-		<knob x="134" y="51" size="21">
+		<knob x="137" y="51" size="21">
 			<parameter component-id="p4" alt="sustain" />
 		</knob>
-		<knob x="172" y="51" size="21">
+		<knob x="174" y="51" size="21">
 			<parameter component-id="p5" alt="release" />
 		</knob>
 		<button x="150" y="14" width="26" height="16" cyclic="true" landscape="false">
@@ -4662,22 +4662,22 @@ label{fill:#000;}
 		<label x="23" y="27">Gate</label>
 		<label x="23" y="43">Retrig</label>
 		<label x="23" y="59">Amp</label>
-		<label x="50" y="54">A</label>
-		<label x="86" y="54">D</label>
-		<label x="124" y="54">S</label>
-		<label x="161" y="54">R</label>
+		<label x="53" y="54">A</label>
+		<label x="91" y="54">D</label>
+		<label x="127" y="54">S</label>
+		<label x="164" y="54">R</label>
 		<label x="218" y="38">Env</label>
 		<image x="211" y="50" width="-1" height="-1" xlink:href="./images/single/decoration-15.png" />
 		<textDisplay x="54" y="33" width="33" height="16">
 			<parameter component-id="p2" alt="attack" />
 		</textDisplay>
-		<textDisplay x="92" y="33" width="33" height="16">
+		<textDisplay x="91" y="33" width="33" height="16">
 			<parameter component-id="p3" alt="decay" />
 		</textDisplay>
 		<textDisplay x="128" y="33" width="33" height="16">
 			<parameter component-id="p4" alt="sustain" />
 		</textDisplay>
-		<textDisplay x="166" y="33" width="33" height="16">
+		<textDisplay x="165" y="33" width="33" height="16">
 			<parameter component-id="p5" alt="release" />
 		</textDisplay>
 		<adsr-envelope x="182" y="3" width="69" height="27">
@@ -4736,7 +4736,7 @@ label{fill:#000;}
 			<btn index="0">M</btn>
 			<btn index="1">M</btn>
 		</button>
-		<textDisplay x="24" y="9" width="50" height="16">
+		<textDisplay x="24" y="14" width="50" height="16">
 			<parameter component-id="p2" alt="detune coarse" />
 		</textDisplay>
 		<label x="1" y="12">Mst</label>
@@ -4765,7 +4765,7 @@ label{fill:#000;}
 		<knob x="186" y="5" size="21">
 			<parameter component-id="p1" alt="divider" />
 		</knob>
-		<textDisplay x="150" y="12" width="30" height="16">
+		<textDisplay x="150" y="7" width="30" height="16">
 			<parameter component-id="p1" alt="divider" />
 		</textDisplay>
 		<label x="58" y="9">Clock</label>
