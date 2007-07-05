@@ -43,7 +43,7 @@ label{fill:#000;}
 		<knob x="121" y="12" size="29">
 			<parameter component-id="p2" alt="overdrive" />
 		</knob>
-		<label x="114" y="-2">Overdrive</label>
+		<label x="114" y="2">Overdrive</label>
 		<image x="211" y="26" width="25" height="11" xlink:href="./images/single/decoration-6.png" />
 	</module>
 	<module component-id="m30" width="255" height="30">
@@ -366,7 +366,7 @@ label{fill:#000;}
 		<label x="85" y="10">Coarse</label>
 		<label x="120" y="10">Fine</label>
 		<label x="150" y="27">Slv</label>
-		<label x="169" y="-1">Timbre</label>
+		<label x="169" y="1">Timbre</label>
 		<resetButton x="124" y="22" width="9" height="6">
 			<parameter component-id="p3" alt="pitch fine" />
 		</resetButton>
@@ -393,7 +393,7 @@ label{fill:#000;}
 		</knob>
 		<label x="73" y="3">Mod depth</label>
 		<label x="135" y="27">0</label>
-		<label x="152" y="-1">AM</label>
+		<label x="152" y="1">AM</label>
 		<label x="175" y="27">RM</label>
 		<label x="194" y="2">Mod</label>
 		<image x="211" y="17" width="25" height="22" xlink:href="./images/single/decoration-3.svg" />
@@ -469,7 +469,7 @@ label{fill:#000;}
 			<btn index="1">Sym</btn>
 			<btn index="0">Sym</btn>
 		</button>
-		<label x="126" y="-2">Clip</label>
+		<label x="126" y="2">Clip</label>
 		<image x="211" y="26" width="25" height="11" xlink:href="./images/single/decoration-6.png" />
 		<clip-display x="156" y="4" width="38" height="38">
 			<clip component-id="p2" alt="clip" />
@@ -727,7 +727,7 @@ label{fill:#000;}
 	</module>
 	<module component-id="m3" width="255" height="45">
 		<name>4Output</name>
-		<label x="221" y="-1">Level</label>
+		<label x="221" y="1">Level</label>
 		<connector x="108" y="21" size="13" class="cAUDIO">
 			<connector component-id="c1" alt="out 1" />
 		</connector>
@@ -911,8 +911,8 @@ label{fill:#000;}
 			<btn index="1">B</btn>
 			<btn index="0">B</btn>
 		</button>
-		<label x="95" y="-1">Detune</label>
-		<label x="132" y="-1">Amount</label>
+		<label x="95" y="1">Detune</label>
+		<label x="132" y="1">Amount</label>
 		<label x="221" y="3">L</label>
 		<label x="222" y="31">R</label>
 	</module>
@@ -1448,7 +1448,7 @@ label{fill:#000;}
 		<label x="176" y="9">Mix Bus</label>
 		<label x="170" y="25">L</label>
 		<label x="192" y="25">R</label>
-		<label x="222" y="-1">Level</label>
+		<label x="222" y="1">Level</label>
 	</module>
 	<module component-id="m36" width="255" height="30">
 		<name>PosEdgeDelay</name>
@@ -1827,7 +1827,7 @@ label{fill:#000;}
 		<knob x="121" y="12" size="29">
 			<parameter component-id="p2" alt="wrap" />
 		</knob>
-		<label x="126" y="-2">Wrap</label>
+		<label x="126" y="2">Wrap</label>
 		<image x="211" y="26" width="25" height="11" xlink:href="./images/single/decoration-6.png" />
 		<wavewrap-display x="156" y="4" width="38" height="38">
 			<parameter component-id="p2" alt="wrap" />
@@ -2564,7 +2564,7 @@ label{fill:#000;}
 		<textDisplay x="209" y="23" width="36" height="16">
 			<parameter component-id="p16" alt="osc6 coarse" />
 		</textDisplay>
-		<label x="105" y="-1">Sine slave oscillator bank</label>
+		<label x="105" y="1">Sine slave oscillator bank</label>
 		<label x="9" y="12">Osc1</label>
 		<label x="47" y="12">Osc2</label>
 		<label x="89" y="12">Osc3</label>
@@ -2711,8 +2711,8 @@ label{fill:#000;}
 			<parameter component-id="p1" alt="range" />
 		</textDisplay>
 		<image x="210" y="9" width="25" height="11" xlink:href="./images/single/decoration-6.png" />
-		<label x="92" y="-2">Range</label>
-		<label x="161" y="-2">Notes</label>
+		<label x="92" y="2">Range</label>
+		<label x="161" y="2">Notes</label>
 	</module>
 	<module component-id="m18" width="255" height="45">
 		<name>X-Fade</name>
@@ -4589,7 +4589,7 @@ label{fill:#000;}
 		<textDisplay x="138" y="32" width="30" height="16">
 			<parameter component-id="p4" alt="resonance" />
 		</textDisplay>
-		<label x="89" y="-1">Classic LP filter</label>
+		<label x="89" y="1">Classic LP filter</label>
 		<label x="62" y="20">Freq</label>
 		<label x="99" y="39">KBT</label>
 		<label x="144" y="20">Res</label>
@@ -4741,7 +4741,7 @@ label{fill:#000;}
 		</textDisplay>
 		<label x="1" y="12">Mst</label>
 		<label x="75" y="1">Detune</label>
-		<label x="109" y="-1">Fine</label>
+		<label x="109" y="1">Fine</label>
 		<label x="149" y="7">PW</label>
 		<image x="239" y="4" width="11" height="9" xlink:href="./images/slice/wf_square.png" />
 		<resetButton x="117" y="11" width="9" height="6">
@@ -4770,6 +4770,6 @@ label{fill:#000;}
 		</textDisplay>
 		<label x="58" y="9">Clock</label>
 		<label x="106" y="9">Rst</label>
-		<label x="150" y="-2">Divider</label>
+		<label x="150" y="2">Divider</label>
 	</module>
 </modules>
