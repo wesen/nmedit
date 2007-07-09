@@ -9,7 +9,7 @@ Sysex % 1 :=
 	#cc=0x1c => PatchPacket$data
 	#cc=0x1d => PatchPacket$data
 	#cc=0x1e => PatchPacket$data
-	#cc=0x1f => SettingsHandling$data
+	#cc=0x1f => PatchPacket$data
 	0xf7:8
 	;
 
@@ -48,7 +48,7 @@ NMInfo % 1 :=
 	#sc=0x05 => VoiceCount$data
 	#sc=0x07 => SlotsSelected$data
 	#sc=0x09 => SlotActivated$data
-    #sc=0x25 => KnobAssignment$data
+	#sc=0x25 => KnobAssignment$data
 	#sc=0x26 => KnobAssignmentChange$data
 	#sc=0x27 => SetPatchTitle$data
 	#sc=0x2f => ParameterSelect$data
@@ -193,7 +193,7 @@ PatchModification % 1 :=
 	#sc=0x66 => GetPatchPart$data
 	#sc=0x68 => GetPatchPart$data
 	
-    #sc=0x22 => MidiCtrlAssignment$data
+	#sc=0x22 => MidiCtrlAssignment$data
 	#sc=0x23 => MidiCtrlAssignmentChange$data
 	#sc=0x25 => KnobAssignment$data
 	#sc=0x26 => KnobAssignmentChange$data
@@ -213,27 +213,28 @@ PatchModification % 1 :=
 	;
 
 MorphKeyboardAssignment % 1 :=
-		0:1 morph:7 0:1 keyboard:7 ?NextMorphKeyboardAssignment$data
+	0:1 morph:7 0:1 keyboard:7 ?NextMorphKeyboardAssignment$data
 	;
 
 NextMorphKeyboardAssignment % 1 :=
-		0:1 0x67:7 MorphKeyboardAssignment$data
+	0:1 0x67:7 MorphKeyboardAssignment$data
 	;
 
 SetPatchTitle % 1 :=
-		String$name
+	String$name
 	;
 
 SetModuleTitle % 1 :=
-		0:1 section:7 0:1 module:7 String$name 
+	0:1 section:7 0:1 module:7 String$name 
 	;
 
 NoteEvent % 1 :=
-		0:1 velocity:7 0:1 onoff:7 0:1 note:7
+	0:1 velocity:7 0:1 onoff:7 0:1 note:7
 	;
 	
 MorphAssignment % 1 :=
-		0:1 0x01:6 section:1 0:1 module:7 0:1 parameter:7 0:1 morph:7 0:1 0x0:7 0:1 0x0:7
+	0:1 0x01:6 section:1 0:1 module:7 0:1 parameter:7
+	0:1 morph:7 0:1 0x0:7 0:1 0x0:7
 	;
 
 GetPatchPartExtra % 1 :=
@@ -244,28 +245,28 @@ GetPatchPart % 1 :=
 	;
 
 KnobAssignment % 1 :=
-    0:1 module:7 0:1 parameter:7 0:1 section:2 knob:5
+	0:1 module:7 0:1 parameter:7 0:1 section:2 knob:5
 	;
 
 KnobAssignmentChange % 1 :=
-    0:1 prevknob:7 ?NewKnobAssignmentPacket$data
+	0:1 prevknob:7 ?NewKnobAssignmentPacket$data
 	;
 
 NewKnobAssignmentPacket % 1 :=
-    0:1 0x25:7 KnobAssignment$data
-    ;
+	0:1 0x25:7 KnobAssignment$data
+	;
 
 MidiCtrlAssignment % 1 :=
 	0:1 section:7 0:1 module:7 0:1 parameter:7 0:1 midictrl:7
 	;
 
 MidiCtrlAssignmentChange % 1 :=
-    0:1 prevmidictrl:7 ?NewMidiCtrlAssignmentPacket$data
+	0:1 prevmidictrl:7 ?NewMidiCtrlAssignmentPacket$data
 	;
 
 NewMidiCtrlAssignmentPacket % 1 :=
-    0:1 0x22:7 MidiCtrlAssignment$data
-    ;
+	0:1 0x22:7 MidiCtrlAssignment$data
+	;
 
 ModuleDeletion % 1 :=
 	0:1 section:7 0:1 module:7
@@ -316,56 +317,6 @@ PatchPacket % 1 :=
 
 PatchData % 1 :=
 	0:1 data:7 ?PatchData$next
-	;
-
-SettingsHandling % 1 :=
-	0:1 command:1
-	#command=0x00 => PatchSettings$data
-	#command=0x01 => SettingsCommand$data
-	;
-
-SettingsCommand % 1 :=
-	pp:6
-	#pp=0x01 => SetSynthSettings$command
-	#pp!0x01 => PatchData$next
-	;
-
-SetSynthSettings % 1 :=
-	0:1 checksum:7
-	;
-
-PatchSettings % 1 :=
-	?ModuleInsertion$data ?PatchSettingsWithChecksum$data
-	;
-
-ModuleInsertion % 1 :=
-	pid:6 0:1 0x18:7 ?PatchData$next
-	;
-
-PatchSettingsWithChecksum % 1 :=
-	pid:6 0:1 sc:7
-	#sc=0x10 => SetPatchSettings$data
-	#sc=0x21 => SEQZoom$data
-	0:1 checksum:7
-	;
-
-SetPatchSettings % 1 :=
-	0:1 unknown1:1 kbrangeMin1:6 
-	0:1 kbrangeMin2:1 kbrangeMax1:6 
-    0:1 kbrangeMax2:1 velocityRangeMin1:6
-    0:1 velocityRangeMin2:1 velocityRangeMax1:6
-    0:1 velocityRangeMax2:1 bendRange:5 portamentoTime1:1
-    0:1 portamentoTime2:6 portamentoType:1
-    0:1 pedalMode:1 voiceCount:5 unknown2:1
-    0:1 unknown3:1 dividerBar1:6
-    0:1 dividerBar2:6 octaveShift1:1 
-    0:1 octaveShift2:2 red:1 blue:1 yellow:1 gray:1 green:1 
-    0:1 purple:1 white:1 voiceRetriggerCommon:1 voiceRetriggerPoly:1 unknown4:3
-    0:1 unknown5:7
-   ;
-	
-SEQZoom % 1 :=
-
 	;
 
 PatchListResponse % 1 :=
