@@ -36,4 +36,15 @@ public class Condition
     private String variable;
     private int value;
     private boolean negative;
+    
+    public String getSource()
+    {
+        return (negative?"!":"")+variable+"="+value;
+    }
+    
+    public String toString()
+    {
+        return getClass().getSimpleName()+"[condition='"+getSource()+"']";
+    }
+    
 }

@@ -43,14 +43,12 @@ public class ConstantMatcher extends Matcher
 	return true;
     }
 
-    private void trace(Protocol protocol)
-    {
-        if (protocol.isTraceEnabled())
-        {
-            protocol.trace("" + value + ":" + size);
-        }
-    }
-
     private int value;
     private int size;
+    
+    public String getSource()
+    {
+        return (isOptional() ? "?":"") + value+":"+size;
+    }
+
 }

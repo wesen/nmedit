@@ -97,29 +97,13 @@ public class VariableMatcher extends Matcher
 	return true;
     }
   
-    private void trace(Protocol protocol)
-    {
-        if (protocol.isTraceEnabled())
-        {   
-        	if (count == 1) {
-        	    protocol.trace(variable + ":" + size);
-        	}
-        	else {
-        	    protocol.trace("" + count + "*" + variable + ":" + size);
-        	}
-        }
-    }
-
     private void trace(Protocol protocol, int value)
     {
         if (protocol.isTraceEnabled())
         {
-        	if (count == 1) {
-        	    protocol.trace(variable + ":" + size + " = " + value);
-        	}
-        	else {
-        	    protocol.trace("" + count + "*" + variable + ":" + size);
-        	}
+            protocol.trace(getSource(value)
+                    +"; "+getClass().getSimpleName()
+                    +"["+toStringParams()+"]");
         }
     }
 
@@ -127,4 +111,25 @@ public class VariableMatcher extends Matcher
     private String variable;
     private int size;
     private int terminal;
+    
+    public String getSource()
+    {
+        return getSource(null);
+    }
+    
+    public String getSource(Integer value)
+    {
+        StringBuilder sb = new StringBuilder();
+        if (isOptional())
+            sb.append("?");
+        if (count!=1)
+            sb.append(count+"*");
+        sb.append(variable+":"+size);
+        if (terminal>=0)
+            sb.append("/"+terminal);
+        if (value!=null)
+            sb.append("="+value);
+        return sb.toString();
+    }
+
 }

@@ -26,7 +26,7 @@ public abstract class Matcher
 	this.condition = condition;
 	this.optional = optional;
     }
-
+    
     public boolean isConditional()
     {
 	return condition != null;
@@ -49,4 +49,32 @@ public abstract class Matcher
 
     private boolean optional;
     private Condition condition;
+    
+    public String toString()
+    {
+        String params = toStringParams();
+        if (params.length()>0)
+            params=","+params;
+        
+        return getClass().getSimpleName()+"["
+            +"matcher='"+getSource()+"'"+params+"]";
+    }
+    
+    public abstract String getSource();
+
+    protected String toStringParams()
+    {
+        return (condition==null?"":("condition='"+condition.getSource()+"'"));
+    }
+
+    protected void trace(Protocol protocol)
+    {
+        if (protocol.isTraceEnabled())
+        {
+            protocol.trace(getSource()
+                    +"; "+getClass().getSimpleName()
+                    +"["+toStringParams()+"]");
+        }
+    }
+    
 }

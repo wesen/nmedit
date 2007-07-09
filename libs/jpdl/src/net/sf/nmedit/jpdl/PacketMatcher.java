@@ -103,16 +103,13 @@ public class PacketMatcher extends Matcher
 	return true;
     }
     
-    private void trace(Protocol protocol)
-    {
-        if (protocol.isTraceEnabled())
-        {
-            protocol.trace((count.length()==0 ? "" : count + "*") +
-		       parserName + "$" + binding);
-        }
-    }
-
     private String count;
     private String parserName;
     private String binding;
+
+    public String getSource()
+    {
+        return (isOptional() ? "?":"") + (count.length()==0 ? "" : count + "*") + parserName + "$" + binding;
+    }
+    
 }
