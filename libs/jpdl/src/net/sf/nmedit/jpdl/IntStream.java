@@ -19,8 +19,8 @@
 
 package net.sf.nmedit.jpdl;
 
-import java.io.IOException;
 import java.io.Serializable;
+import java.io.IOException;
 
 public class IntStream implements Serializable
 {
@@ -31,6 +31,14 @@ public class IntStream implements Serializable
     private int size;
     private int position;
 
+    public IntStream(IntStream src)
+    {
+        size = src.getSize();
+        position = 0;
+        data = new int[src.getSize()];
+        System.arraycopy(src.data, 0, data, 0, size);
+    }
+    
     public IntStream(int initialCapacity)
     {
         data = new int[initialCapacity];
@@ -40,7 +48,7 @@ public class IntStream implements Serializable
 
     public IntStream()
     {
-        this(128);
+        this(32);
     }
     
     private void ensureCapacity(int newCapacity)
@@ -109,6 +117,12 @@ public class IntStream implements Serializable
         data = new int[size];
         for (int i=0;i<size;i++)
             data[i] = in.readInt();
+    }
+    
+    public String toString()
+    {
+        return getClass().getName()+"[size="+size+",position="+position
+        +",capacity="+data.length+"]";
     }
     
 }
