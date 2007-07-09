@@ -58,7 +58,7 @@ public class PacketParser
 		if (!success && !matcher.isOptional()) {
             if (protocol.isTraceEnabled())
             {
-                protocol.trace("FAILED " + name);
+                protocol.trace("FAILED " + name+"; "+matcher);
             }
 		    data.setPosition(dataPos);
 		    result.clear();
@@ -99,7 +99,7 @@ public class PacketParser
     {
         protocol.trace("GENERATE PACKET " + name);
     }
-	
+
 	for (Matcher matcher: matchers) {
 	    if (matcher.isConditional()) {
 		conditional = true;
@@ -114,10 +114,11 @@ public class PacketParser
 	    else {
 		boolean success =
 		    matcher.apply(protocol, packet, data, result);
+        
 		if (!success && !matcher.isOptional()) {
             if (protocol.isTraceEnabled())
             {
-                protocol.trace("FAILED " + name);
+                protocol.trace("FAILED " + name+"; "+matcher);
             }
 		    data.setPosition(dataPos);
 		    result.setSize(resultSize);
