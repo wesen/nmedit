@@ -18,9 +18,13 @@
  */
 package net.sf.nmedit.nordmodular;
 
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 
 import javax.swing.Icon;
@@ -33,7 +37,8 @@ import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
 import net.sf.nmedit.nomad.core.swing.document.Document;
 import net.sf.nmedit.nomad.core.swing.document.HistoryFeature;
 
-public class PatchDocument implements Document, PropertyChangeListener
+public class PatchDocument implements Document, 
+    PropertyChangeListener, Transferable
 {
     
     public static Icon pchIcon = new ImageIcon(
@@ -124,6 +129,23 @@ public class PatchDocument implements Document, PropertyChangeListener
     public Object getProperty(String name)
     {
         return "patch".equals(name) ? jtpatch.getPatch() : null;
+    }
+
+    // **** transferable
+    
+    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException
+    {
+        return jtpatch.getTransferData(flavor);
+    }
+
+    public DataFlavor[] getTransferDataFlavors()
+    {
+        return jtpatch.getTransferDataFlavors();
+    }
+
+    public boolean isDataFlavorSupported(DataFlavor flavor)
+    {
+        return jtpatch.isDataFlavorSupported(flavor);
     }
 
 }
