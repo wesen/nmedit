@@ -258,7 +258,7 @@ public class JTModuleContainer extends JTBaseComponent
     public void setModuleContainer(PModuleContainer mc)
     {
         this.moduleContainer = mc;
-        
+        setName(moduleContainer == null ? null : moduleContainer.getName());
         PModuleMetrics metrics = null;
         if (mc != null) metrics = mc.getModuleMetrics();
         if (metrics == null) setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
