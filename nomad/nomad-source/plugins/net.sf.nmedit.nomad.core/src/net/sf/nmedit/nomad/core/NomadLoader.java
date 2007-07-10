@@ -40,7 +40,6 @@ import javax.swing.JFrame;
 import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.MetalTheme;
 
@@ -291,12 +290,13 @@ public class NomadLoader
         
         PlasticLookAndFeel.setTabStyle(PlasticLookAndFeel.TAB_STYLE_METAL_VALUE);
         UIManager.put(Options.POPUP_DROP_SHADOW_ENABLED_KEY, Boolean.FALSE);
+
         
         //PlasticLookAndFeel.setFontPolicy(FontPolicies.getDefaultWindowsPolicy());
-
+/*
         UIManager.put("MenuItem.margin", new InsetsUIResource(2,2,1,2));
         UIManager.put("Menu.margin", new InsetsUIResource(1,2,1,2));
-        
+        */
         // set the metal theme
         MetalTheme theme = null;
         if (themeClassName != null)
