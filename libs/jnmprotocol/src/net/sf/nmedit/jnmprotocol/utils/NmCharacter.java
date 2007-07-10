@@ -23,11 +23,35 @@
 package net.sf.nmedit.jnmprotocol.utils;
 
 import java.util.Arrays;
+import java.util.List;
 
 import net.sf.nmedit.jpdl.IntStream;
+import net.sf.nmedit.jpdl.Packet;
 
 public class NmCharacter
 {
+
+    public static String extractName(Packet name)
+    {
+        return extractName(name, "chars");
+    }
+    
+    public static String extractName(Packet name, String variableListName)
+    {
+        // module name limit:16<20 / notes can be longer
+        StringBuffer buffer = new StringBuffer(20); 
+        List<Integer> list = name.getVariableList(variableListName);
+        int value;
+        for (int i=0;i<list.size();i++)
+        {
+            value = (Integer) list.get(i);
+            if (value!=0)
+            {
+                buffer.append((char) value);
+            }
+        }
+        return buffer.toString();
+    }
     
     public static void appendString(IntStream intStream, CharSequence nmString)
     {
@@ -45,7 +69,9 @@ public class NmCharacter
             intStream.append(c);
         }
         if (len<maxLen)
+        {
             intStream.append(0); // string termination
+        }
     }
     
     /**
