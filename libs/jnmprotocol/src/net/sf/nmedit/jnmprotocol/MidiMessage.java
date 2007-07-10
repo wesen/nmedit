@@ -124,8 +124,22 @@ public abstract class MidiMessage
 		if(packet.contains("Error")) {
 		    return new ErrorMessage(packet);
 		}
-		
 		if (packet.contains("PatchPacket")) {
+
+            {
+                Packet pp = packet.getPacket("data:next");
+                int command = pp == null ? -1 : pp.getVariable("data");
+                if (command == 0x01)
+                {
+                    pp = packet.getPacket("data:next");
+                    int pid = pp == null ? -1 : pp.getVariable("data");
+                    if (pid==0x01) 
+                    {
+                        return new SynthSettingsMessage(packet);
+                    }
+                }
+            }
+            
 		    return new PatchMessage(packet);
 		}	  
 		

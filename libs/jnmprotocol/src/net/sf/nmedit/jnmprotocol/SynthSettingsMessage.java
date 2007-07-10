@@ -20,151 +20,225 @@
 package net.sf.nmedit.jnmprotocol;
 
 import java.util.*;
+
 import net.sf.nmedit.jpdl.*;
 
 public class SynthSettingsMessage extends MidiMessage
 {
-    private BitStream patchStream;
+
+    private BitStream settingsStream;
     private List<BitStream> bitStreamList;
-    private String name;
-
-    public SynthSettingsMessage()
-	throws Exception
+    private Map<String, Integer> parameterMap;
+    
+    private static final String[] setting_parameters = {
+        "midiClockSource",
+        "midiVelScaleMin",
+        "ledsActive",
+        "midiVelScaleMax",
+        "midiClockBpm",
+        "local",
+        "keyboardMode",
+        "pedalPolarity",
+        "globalSync",
+        "masterTune",
+        "programChangeSend",
+        "knobMode",
+        "midiChannelsSlotA",
+        "midiChannelsSlotB",
+        "midiChannelsSlotC",
+        "midiChannelsSlotD"
+    };
+    
+    // TODO use correct defaults
+    private static final int[] defaults = {
+        0, // midiClockSource
+        0, // midiVelScaleMin
+        1, // ledsActive
+        127, // midiVelScaleMax
+        120, // midiClockBpm
+        1, // local
+        0, // keyboardMode
+        0, // pedalPolarity
+        3, // globalSync
+        0, // masterTune
+        3, // programChangeSend
+        0, // knobMode
+        0, // midiChannelsSlotA
+        1, // midiChannelsSlotB
+        2, // midiChannelsSlotC
+        3  // midiChannelsSlotD
+    };
+    
+    public static Map<String, Integer> createParamMap()
     {
-	super();
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        for (int i=0;i<setting_parameters.length;i++)
+            map.put(setting_parameters[i], defaults[i]);
+        return map;
+    }
+    
+    public static IntStream createIntStream(Map<String, Integer> params)
+    {
+        IntStream is = new IntStream();
+        
+        is.append(0x03); // type = 3 <= SynthSettings
+        
+        for (int i=0;i<setting_parameters.length;i++)
+        {
+            Integer value = params.get(setting_parameters[i]);
+            if (value == null)
+                throw new RuntimeException("parameter missing: "+setting_parameters[i]);
+            is.append(value.intValue());
+        }
+        return is;
+    }
+    
+    public static BitStream createBitStream(IntStream data)
+    {
+        PacketParser patchParser =  PDLData.getPatchParser();
+        BitStream result = new BitStream();
+        boolean success = patchParser.generate(data, result);
+        if (!success)
+            throw new RuntimeException("could not generate bitstream");
+        return result;
+    }
 
-	patchStream = new BitStream();
-	bitStreamList = new LinkedList<BitStream>();
+    private SynthSettingsMessage()
+    {
+        super();
+        settingsStream = new BitStream();
+        bitStreamList = new LinkedList<BitStream>();
 
-	addParameter("pid", "data:pid");
-	set("cc", 0x1c);
-	set("pid", 0);
-
-	addParameter("type", "section:type");
-	addParameter("midiClockSource", "section:data:midiClockSource");
-	addParameter("midiVelScaleMin", "section:data:midiVelScaleMin");
-	addParameter("ledsActive", "section:data:ledsActive");
-	addParameter("midiVelScaleMax", "section:data:midiVelScaleMax");
-	addParameter("midiClockBpm", "section:data:midiClockBpm");
-	addParameter("local", "section:data:local");
-	addParameter("keyboardMode", "section:data:keyboardMode");
-	addParameter("pedalPolarity", "section:data:pedalPolarity");
-	addParameter("globalSync", "section:data:globalSync");
-	addParameter("masterTune", "section:data:masterTune");
-	addParameter("programChangeSend", "section:data:programChangeSend");
-	addParameter("knobMode", "section:data:knobMode");
-	addParameter("midiChannelsSlotA", "section:data:midiChannelsSlotA");
-	addParameter("midiChannelsSlotB", "section:data:midiChannelsSlotB");
-	addParameter("midiChannelsSlotC", "section:data:midiChannelsSlotC");
-	addParameter("midiChannelsSlotD", "section:data:midiChannelsSlotD");
-	set("type", 3);
-	set("midiClockSource", 1);
-	set("midiVelScaleMin", 0);
-	set("ledsActive", 1);
-	set("midiVelScaleMax", 127);
-	set("midiClockBpm", 120);
-	set("local", 0);
-	set("keyboardMode", 0);
-	set("pedalPolarity", 0);
-	set("globalSync", 4);
-	set("masterTune", 0);
-	set("programChangeSend", 0);
-	set("knobMode", 0);
-	set("midiChannelsSlotA", 0);
-	set("midiChannelsSlotB", 1);
-	set("midiChannelsSlotC", 2);
-	set("midiChannelsSlotD", 3);
-
-	expectsreply = true;
-	isreply = true;
+        addParameter("pid", "data:pid");
+        set("cc", 0x1c);
+        set("pid", 0);
+    
+        expectsreply = false; // true ???
+        isreply = true;
     }
 
     public SynthSettingsMessage(Packet packet)
-	throws Exception
     {
-	this();
-	setAll(packet);
-	
-	packet = packet.getPacket("data:next");
-	while (packet != null) {
-	    patchStream.append(packet.getVariable("data"), 7);
-	    packet = packet.getPacket("next");
-	}
-	// Remove checksum
-	patchStream.setSize(patchStream.getSize()-7);
-	// Remove padding
-	patchStream.setSize((patchStream.getSize()/8)*8);
-	
-	
-	
+    this();
+    setAll(packet);
+    
+    packet = packet.getPacket("data:next");
+    while (packet != null) {
+        settingsStream.append(packet.getVariable("data"), 7);
+        packet = packet.getPacket("next");
+    }
+    // Remove checksum
+    settingsStream.setSize(settingsStream.getSize()-7);
+    // Remove padding
+    settingsStream.setSize((settingsStream.getSize()/8)*8);
+    
     }
 
-    public SynthSettingsMessage(BitStream patchStream, List sectionEndPositions,
-			int slot)
-	throws Exception
+    public SynthSettingsMessage(Map<String, Integer> params)
+    throws Exception
     {
-	this();
-	set("slot", slot);
-
-	// Create sysex messages
-	int first = 1;
-	int last = 0;
-	int messageNumber = 0;
-	while (patchStream.isAvailable(8)) {
-	    
-	    // Get data for one sysex packet
-	    BitStream partialPatchStream = new BitStream();
-	    int sectionsEnded = 0;
-	    int n = 0;
-	    while (patchStream.isAvailable(8) && n < 166) {
-		partialPatchStream.append(patchStream.getInt(8), 8);
-		if (n == (((Integer)sectionEndPositions.get(0)).intValue()
-			  - 166*messageNumber)) {
-		    sectionsEnded++;
-		    sectionEndPositions.remove(0);
-		}
-		n++;
-	    }
-	    messageNumber++;
-	    
-	    if (!patchStream.isAvailable(8)) {
-		last = 1;
-	    }
-	    
-	    // Pad. Extra bits are ignored later.
-	    partialPatchStream.append(0, 6);
-	    
-	    // Generate sysex bistream
-	    IntStream intStream = new IntStream();
-	    intStream.append(get("cc") + first + 2*last);
-	    first = 0;
-	    intStream.append(get("slot"));
-	    intStream.append(0x01);
-	    intStream.append(sectionsEnded);
-	    while (partialPatchStream.isAvailable(7)) {
-		intStream.append(partialPatchStream.getInt(7));
-	    }
-	    appendChecksum(intStream);
-	    
-	    // Generate sysex bitstream
-	    bitStreamList.add(getBitStream(intStream));
-	}
+        this();
+        set("slot", 0);
+        this.parameterMap = params;
+        IntStream is = createIntStream(params);
+        //BitStream bs = createBitStream(is);
+     
+        final int first = 1;
+        final int last = 1;
+        
+        // Generate sysex bistream
+        IntStream intStream = new IntStream();
+        intStream.append(get("cc") + first + 2*last);
+        intStream.append(get("slot"));
+        intStream.append(0x01); // command
+        intStream.append(0x01); // pp = 1
+        
+        while (is.isAvailable(1))
+        {
+            intStream.append(is.getInt());
+        }
+        
+        appendChecksum(intStream);
+        
+        settingsStream = getBitStream(intStream);
+        
+        // Generate sysex bitstream
+        bitStreamList.add(settingsStream);
     }
 
+    public Map<String, Integer> getParamMap()
+    {
+        if (parameterMap != null)
+            return parameterMap;
+        
+        parameterMap = new HashMap<String, Integer>();
+        
+
+        PacketParser parser = PDLData.getPatchParser();
+    
+        Packet packet = new Packet();
+        boolean success = false;
+        
+        try
+        {
+            settingsStream.setPosition(0);
+            success = parser.parse(settingsStream, packet);
+        }
+        finally
+        {
+            settingsStream.setPosition(0);
+        }
+        
+        if (!success)
+            throw new RuntimeException("could not parse settings");
+        
+        packet = packet.getPacket("section");
+        int type = packet.getVariable("type");
+        
+        if (type != 0x03)
+            throw new RuntimeException("wrong type: 0x"+Integer.toHexString(type));
+        
+        Packet data = packet.getPacket("data");
+        
+        for (int i=0;i<setting_parameters.length;i++)
+        {
+            String name = setting_parameters[i];
+            parameterMap.put(name, data.getVariable(name));
+        }
+        
+        return parameterMap;
+    }
+    
+    protected void appendChecksum(IntStream intStream)
+    throws Exception
+    {
+    int checksum = 0;
+    intStream.append(checksum);
+    
+    BitStream bitStream = getBitStream(intStream);
+    
+    checksum = calculateChecksum(bitStream);
+    
+    intStream.setSize(intStream.getSize()-1);
+    intStream.append(checksum);
+    intStream.setPosition(0);
+    }
+    
     public List<BitStream> getBitStream()
-	throws Exception
+    throws Exception
     {
-	return bitStreamList;
+    return bitStreamList;
     }
     
     public void notifyListener(NmProtocolListener listener)
-	throws Exception
+    throws Exception
     {
-	listener.messageReceived(this);
+    listener.messageReceived(this);
     }
-
-    public String getName()
+    
+    public BitStream getSynthSettingsStream()
     {
-	return name;
+        return settingsStream;
     }
+    
 }
