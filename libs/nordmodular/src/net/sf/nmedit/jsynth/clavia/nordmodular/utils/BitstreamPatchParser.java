@@ -25,6 +25,7 @@ package net.sf.nmedit.jsynth.clavia.nordmodular.utils;
 import java.util.List;
 
 import net.sf.nmedit.jnmprotocol.PDLData;
+import net.sf.nmedit.jnmprotocol.utils.NmCharacter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Format;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PContentHandler;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PParser;
@@ -49,36 +50,6 @@ public class BitstreamPatchParser
         super();
     }
 
-    private static String extractName(Packet name)
-    {
-        // module name limit:16<20 / notes may be longer
-        StringBuffer buffer = new StringBuffer(20); 
-        
-        List list = name.getVariableList("chars");
-        int value;
-        
-        for (int i=0;i<list.size();i++)
-        {
-            value = (Integer) list.get(i);
-            if (value!=0)
-            {
-                buffer.append((char) value);
-            }
-        }
-
-        return buffer.toString();
-
-        /*String result="";
-         List<Integer> chars = (List<Integer>) name.getVariableList("chars");
-         
-         for (Integer i : chars) {
-             if (i!=0)
-                 result+=(char)i.intValue();
-         }
-     
-         return result;*/
-    }
-    
     private int[] data = new int[100];
     
     private int[] getData(int size)
@@ -119,7 +90,7 @@ public class BitstreamPatchParser
             case Format.S_NAME_2:
 
                 // patch name
-                String patchName = extractName(sectionData.getPacket("name"));
+                String patchName = NmCharacter.extractName(sectionData.getPacket("name"));
                 callback.setPatchName(patchName);
                 break;
 
@@ -367,7 +338,7 @@ public class BitstreamPatchParser
                 for (Packet p : (List<Packet>)sectionData.getPacketList("moduleNames")) 
                 {
                     int moduleIndex = p.getVariable("index");
-                    String moduleName = extractName(p.getPacket("name"));
+                    String moduleName = NmCharacter.extractName(p.getPacket("name"));
                     callback.moduleNameDump(moduleIndex, moduleName);
                 }
                 callback.endSection(PParser.INAMEDUMP);
