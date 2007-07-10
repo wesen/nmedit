@@ -18,19 +18,24 @@
  */
 package net.sf.nmedit.nordmodular;
 
+import java.awt.BorderLayout;
 import java.awt.Event;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NmSlot;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
+import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 import net.sf.nmedit.jsynth.event.SlotEvent;
 import net.sf.nmedit.jsynth.event.SlotListener;
 import net.sf.nmedit.jsynth.event.SlotManagerListener;
@@ -39,6 +44,7 @@ import net.sf.nmedit.jsynth.nomad.SynthPropertiesDialog;
 import net.sf.nmedit.jsynth.nomad.SynthPropertiesDialog.DialogPane;
 import net.sf.nmedit.jsynth.worker.RequestPatchWorker;
 import net.sf.nmedit.nomad.core.Nomad;
+import net.sf.nmedit.nomad.core.menulayout.ActionHandler;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 
 public class NMSynthDeviceContext extends SynthDeviceContext 
@@ -247,17 +253,91 @@ public class NMSynthDeviceContext extends SynthDeviceContext
     protected static class SSF extends DialogPane
     {
 
+        private SynthSettingsFrm frm;
+        
         public SSF(NordModular synth)
         {
             super(synth, "synthsettings", "Settings");
         }
 
+        private SynthSettingsFrm getForm(boolean create)
+        {
+            if (frm == null && create)
+                frm = new SynthSettingsFrm();
+            return frm;
+        }
+        
         @Override
         protected JComponent createDialogComponent()
         {
-            return new SynthSettingsFrm();
+            JPanel btnPane = new JPanel();
+            btnPane.setLayout(new BoxLayout(btnPane, BoxLayout.X_AXIS));
+            JButton btn = new JButton("Apply");
+            btn.addActionListener(new ActionHandler(this, "apply"));
+            btnPane.add(btn);
+
+            JComponent frm = getForm(true);
+            
+            JPanel contentPane = new JPanel(new BorderLayout());
+            contentPane.add(frm, BorderLayout.CENTER);
+            contentPane.add(btnPane, BorderLayout.SOUTH);               
+            return contentPane;
         }
 
+        public void apply()
+        {
+            SynthSettingsFrm frm = getForm(false);
+            
+            if (frm == null) return;
+            
+            if (!synth.isConnected())
+                throw new RuntimeException("not connected");
+            
+            Map<String, Object> params = new HashMap<String, Object>();
+            
+            params.put("masterTune", 0);
+            params.put("globalSync", 3);
+            params.put("knobMode", 0);
+            params.put("midiClockSource", 0);
+            params.put("midiVelScaleMax", 127);
+            params.put("midiChannelsSlotC", 2);
+            params.put("midiChannelsSlotD", 3);
+            params.put("midiClockBpm", 120);
+            params.put("midiChannelsSlotB", 1);
+            params.put("local", 1);
+            params.put("midiChannelsSlotA", 0);
+            params.put("midiVelScaleMin", 0);
+            params.put("ledsActive", 1);
+            params.put("programChangeSend", 3);
+            params.put("keyboardMode", 0);
+            params.put("pedalPolarity",0);
+            params.put("name", "Nord Modular");
+
+            // custom::
+            params.put("local", 0);
+
+            
+            String name = frm.jtSynthName.getText();
+            if (name != null)
+                params.put("name", name);
+
+            try
+            {
+                System.out.println("send settings");
+                
+            ((NordModular)synth)
+            .getProtocol()
+            .send(
+            NmUtils.createSynthSettingsMessage(params)
+            );
+            System.out.println("send settings:ok");
+            }
+            catch (Exception e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
+        
     }
 
     /*
