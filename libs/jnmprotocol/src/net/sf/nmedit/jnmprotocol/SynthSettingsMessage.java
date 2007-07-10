@@ -21,6 +21,7 @@ package net.sf.nmedit.jnmprotocol;
 
 import java.util.*;
 
+import net.sf.nmedit.jnmprotocol.utils.NmCharacter;
 import net.sf.nmedit.jpdl.*;
 
 public class SynthSettingsMessage extends MidiMessage
@@ -28,7 +29,7 @@ public class SynthSettingsMessage extends MidiMessage
 
     private BitStream settingsStream;
     private List<BitStream> bitStreamList;
-    private Map<String, Integer> parameterMap;
+    private Map<String, Object> parameterMap;
     
     private static final String[] setting_parameters = {
         "midiClockSource",
@@ -77,19 +78,53 @@ public class SynthSettingsMessage extends MidiMessage
         return map;
     }
     
-    public static IntStream createIntStream(Map<String, Integer> params)
+    private static void append(IntStream dst, int i, Map<String, Object> params)
     {
+        Object value = params.get(setting_parameters[i]);
+        if (value == null)
+            throw new RuntimeException("parameter missing: "+setting_parameters[i]);
+        if (!(value instanceof Integer))
+            throw new RuntimeException("parameter not ant int: "+value);
+        dst.append(((Integer)value).intValue());
+    }
+    
+    public static IntStream createIntStream(Map<String, Object> params)
+    {
+        Object name = params.get("name");
+        if (name == null || (!(name instanceof String)) || !NmCharacter.isValid((String)name))
+            throw new RuntimeException("invalid parameter 'name': "+name);
+
         IntStream is = new IntStream();
-        
         is.append(0x03); // type = 3 <= SynthSettings
         
-        for (int i=0;i<setting_parameters.length;i++)
-        {
-            Integer value = params.get(setting_parameters[i]);
-            if (value == null)
-                throw new RuntimeException("parameter missing: "+setting_parameters[i]);
-            is.append(value.intValue());
-        }
+        int i=0;
+        append(is, i++, params); // midiClockSource
+        append(is, i++, params);
+        append(is, i++, params);
+        append(is, i++, params);
+        append(is, i++, params); // midiClockBpm
+        append(is, i++, params);
+        append(is, i++, params);
+        append(is, i++, params);
+        append(is, i++, params);
+        append(is, i++, params); // masterTune
+        append(is, i++, params);
+        append(is, i++, params); // knobMode
+        is.append(0);
+        NmCharacter.appendString(is, (String)name); // String$name
+        is.append(0);
+        append(is, i++, params); // midiChannelsSlotA
+        is.append(27);
+        is.append(0);
+        append(is, i++, params); // midiChannelsSlotB
+        is.append(27);
+        is.append(0);
+        append(is, i++, params); // midiChannelsSlotC
+        is.append(27);
+        is.append(0);
+        append(is, i++, params); // midiChannelsSlotD
+        is.append(27);
+        
         return is;
     }
     
@@ -134,14 +169,14 @@ public class SynthSettingsMessage extends MidiMessage
     
     }
 
-    public SynthSettingsMessage(Map<String, Integer> params)
+    public SynthSettingsMessage(Map<String, Object> params)
     throws Exception
     {
         this();
         set("slot", 0);
         this.parameterMap = params;
         IntStream is = createIntStream(params);
-        //BitStream bs = createBitStream(is);
+        BitStream bs = createBitStream(is);
      
         final int first = 1;
         final int last = 1;
@@ -152,10 +187,11 @@ public class SynthSettingsMessage extends MidiMessage
         intStream.append(get("slot"));
         intStream.append(0x01); // command
         intStream.append(0x01); // pp = 1
-        
-        while (is.isAvailable(1))
-        {
-            intStream.append(is.getInt());
+
+        // Pad. Extra bits are ignored later.
+        bs.append(0, 6);
+        while (bs.isAvailable(7)) {
+        intStream.append(bs.getInt(7));
         }
         
         appendChecksum(intStream);
@@ -166,14 +202,13 @@ public class SynthSettingsMessage extends MidiMessage
         bitStreamList.add(settingsStream);
     }
 
-    public Map<String, Integer> getParamMap()
+    public Map<String, Object> getParamMap()
     {
         if (parameterMap != null)
             return parameterMap;
         
-        parameterMap = new HashMap<String, Integer>();
+        parameterMap = new HashMap<String, Object>();
         
-
         PacketParser parser = PDLData.getPatchParser();
     
         Packet packet = new Packet();
@@ -192,19 +227,22 @@ public class SynthSettingsMessage extends MidiMessage
         if (!success)
             throw new RuntimeException("could not parse settings");
         
-        packet = packet.getPacket("section");
-        int type = packet.getVariable("type");
+        Packet section = packet.getPacket("section");
+        int type = section.getVariable("type");
         
         if (type != 0x03)
             throw new RuntimeException("wrong type: 0x"+Integer.toHexString(type));
         
-        Packet data = packet.getPacket("data");
+        Packet data = section.getPacket("data");
         
         for (int i=0;i<setting_parameters.length;i++)
         {
             String name = setting_parameters[i];
             parameterMap.put(name, data.getVariable(name));
         }
+
+        String name = NmCharacter.extractName(data.getPacket("name"));
+        parameterMap.put("name", name);
         
         return parameterMap;
     }
