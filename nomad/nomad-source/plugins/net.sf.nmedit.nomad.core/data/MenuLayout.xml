@@ -21,7 +21,9 @@
 				</entry>
 			</entry>
 		</entry>
-		<entry entryPoint="open" />
+		<entry entryPoint="open">
+		  <icon type="enabledIcon" src="&etool;/new_untitled_text_file.gif" />
+		</entry>
 		<entry entryPoint="close" flat="true">
 			<entry entryPoint="close" />
 			<entry entryPoint="closeall" />
