@@ -242,7 +242,7 @@ public class MenuBuilder
     // utils
 
     public final static String SUFFIX_KEYBINDING = "$keybinding";
-    public final static String SUFFIX_SHORT_DESC = "$short-description";
+    public final static String SUFFIX_SHORT_DESC = "$description";
     public final static String SUFFIX_LONG_DESC = "$long-description";
 
     private static Map<String, Integer> modifierMap = new HashMap<String, Integer>();
