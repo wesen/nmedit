@@ -59,6 +59,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
@@ -1319,7 +1322,8 @@ public class FFTabBarUI extends TabBarUI
                 int tabIndex = tabBar.getSelectedIndex();
                 if (tabIndex<0) return;
                 
-                Transferable t = new TransferableTab(tabIndex);
+                Object item = tabBar.getItemAt(tabIndex);
+                Transferable t = new TransferableTab(item, tabIndex);
                 
                 try
                 {
@@ -1426,22 +1430,24 @@ public class FFTabBarUI extends TabBarUI
                 dtde.rejectDrop();
                 return;
             }
-            
+
+            dtde.acceptDrop(DnDConstants.ACTION_MOVE);
             int source;
             try
             {
-                source = Integer.parseInt((String) dtde.getTransferable().getTransferData(TransferableTab.tabIndexFlavor));
+                source = ((TransferableTab) dtde
+                        .getTransferable()
+                        .getTransferData(TransferableTab.tabIndexFlavor))
+                        .getTabIndex();
             }
             catch (Exception e)
             {
                 e.printStackTrace();
-                dtde.rejectDrop();
                 return;
             }
             
             tabBar.moveTab(target, source);
             ui.setHoverIndex(target);
-            dtde.acceptDrop(DnDConstants.ACTION_MOVE);
         }
 
         public void dropActionChanged(DropTargetDragEvent dtde)
@@ -1474,31 +1480,58 @@ public class FFTabBarUI extends TabBarUI
     private static class TransferableTab implements Transferable
     {
         
-        public static DataFlavor tabIndexFlavor = DataFlavor.stringFlavor; 
+        public static DataFlavor tabIndexFlavor = //DataFlavor.stringFlavor; 
+            new DataFlavor(TransferableTab.class, "Tab");
         
         private int tabIndex;
+        private Object tabItem;
 
-        public TransferableTab(int tabIndex)
+        public TransferableTab(Object tabItem, int tabIndex)
         {
+            this.tabItem = tabItem;
             this.tabIndex = tabIndex;
+        }
+        
+        private Transferable getTransferableItem()
+        {
+            if (tabItem instanceof Transferable)
+                return (Transferable) tabItem;
+            return null;
         }
         
         public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException
         {
-            if (!tabIndexFlavor.equals(flavor))
-                throw new UnsupportedFlavorException(flavor);
+            if (tabIndexFlavor.equals(flavor))
+                return this;
             
-            return ""+tabIndex;
+            Transferable t = getTransferableItem();
+            if (t != null)
+                return t.getTransferData(flavor);
+            throw new UnsupportedFlavorException(flavor);
         }
 
+        public int getTabIndex()
+        {
+            return tabIndex;
+        }
+        
         public DataFlavor[] getTransferDataFlavors()
         {
-            return new DataFlavor[] {tabIndexFlavor};
+            List<DataFlavor> supportedDataFlavors = new ArrayList<DataFlavor>();
+            supportedDataFlavors.add(tabIndexFlavor);
+            Transferable t = getTransferableItem();
+            if (t != null)
+                Collections.addAll(supportedDataFlavors, t.getTransferDataFlavors());
+            return supportedDataFlavors.toArray(new DataFlavor[supportedDataFlavors.size()]);
         }
 
         public boolean isDataFlavorSupported(DataFlavor flavor)
         {
-            return tabIndexFlavor.equals(flavor);
+            DataFlavor[] supported = getTransferDataFlavors();
+            for (int i=0;i<supported.length;i++)
+                if (supported[i].equals(flavor))
+                    return true;
+            return false;
         }
         
     }
