@@ -140,6 +140,10 @@ PatchCommand % 1 :=
 	0:1 checksum:7
 	;
 
+GetSynthSettings % 1  :=
+    0:1 0x02:7 0:1 0x06:7 0:1 0x08:7 0:1 0x04:7
+    ;
+
 PatchManagerCommand % 1 :=
 	0:1 ssc:7
 	#ssc=0x07 => SelectSlots$data
