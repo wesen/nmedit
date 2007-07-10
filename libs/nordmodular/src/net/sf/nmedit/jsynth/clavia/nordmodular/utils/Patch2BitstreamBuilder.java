@@ -93,7 +93,9 @@ public class Patch2BitstreamBuilder
         {
             bitStream = new BitStream();
             intStream.setPosition(0);
-            patchParser.generate(intStream, bitStream);
+            if (!patchParser.generate(intStream, bitStream))
+                throw new RuntimeException("generate failed");
+            
         }
         return bitStream;
     }
@@ -108,13 +110,11 @@ public class Patch2BitstreamBuilder
             PacketParser patchParser,
             List<Integer> sep)
     {
-        IntStream isCopy = new IntStream();
-        while(is.isAvailable(1))
-            isCopy.append(is.getInt());
-        is.setPosition(0);
-        
+        IntStream isCopy = new IntStream(is);
         BitStream bs = new BitStream();
-        /*boolean result = */patchParser.generate(isCopy, bs);
+        boolean result = patchParser.generate(isCopy, bs);
+        if (!result)
+            throw new RuntimeException("store end position: generate failed");
         
         sep.add((bs.getSize()/8)-1);
     }
@@ -148,7 +148,6 @@ public class Patch2BitstreamBuilder
       if (headerOnly)
       {
           generateHeader();
-          
           return;
       }
         
