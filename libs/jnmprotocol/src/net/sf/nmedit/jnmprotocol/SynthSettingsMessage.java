@@ -70,11 +70,12 @@ public class SynthSettingsMessage extends MidiMessage
         3  // midiChannelsSlotD
     };
     
-    public static Map<String, Integer> createParamMap()
+    public static Map<String, Object> createParamMap()
     {
-        Map<String, Integer> map = new HashMap<String, Integer>();
+        Map<String, Object> map = new HashMap<String, Object>();
         for (int i=0;i<setting_parameters.length;i++)
             map.put(setting_parameters[i], defaults[i]);
+        map.put("name", "Nord Modular");
         return map;
     }
     
@@ -110,21 +111,12 @@ public class SynthSettingsMessage extends MidiMessage
         append(is, i++, params); // masterTune
         append(is, i++, params);
         append(is, i++, params); // knobMode
-        is.append(0);
         NmCharacter.appendString(is, (String)name); // String$name
-        is.append(0);
         append(is, i++, params); // midiChannelsSlotA
-        is.append(27);
-        is.append(0);
         append(is, i++, params); // midiChannelsSlotB
-        is.append(27);
-        is.append(0);
         append(is, i++, params); // midiChannelsSlotC
-        is.append(27);
-        is.append(0);
         append(is, i++, params); // midiChannelsSlotD
-        is.append(27);
-        
+      
         return is;
     }
     
@@ -177,7 +169,7 @@ public class SynthSettingsMessage extends MidiMessage
         this.parameterMap = params;
         IntStream is = createIntStream(params);
         BitStream bs = createBitStream(is);
-     
+        
         final int first = 1;
         final int last = 1;
         
