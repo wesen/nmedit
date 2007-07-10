@@ -23,21 +23,21 @@
 package net.sf.nmedit.jsynth.clavia.nordmodular.utils;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.xml.sax.SAXException;
 
 import net.sf.nmedit.jnmprotocol.DeleteCableMessage;
 import net.sf.nmedit.jnmprotocol.DeleteModuleMessage;
@@ -61,12 +61,13 @@ import net.sf.nmedit.jnmprotocol.SetModuleTitleMessage;
 import net.sf.nmedit.jnmprotocol.SetPatchTitleMessage;
 import net.sf.nmedit.jnmprotocol.SlotActivatedMessage;
 import net.sf.nmedit.jnmprotocol.SlotsSelectedMessage;
-import net.sf.nmedit.jpatch.clavia.nordmodular.Format;
-import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
+import net.sf.nmedit.jnmprotocol.SynthSettingsMessage;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PParameter;
+import net.sf.nmedit.jpatch.clavia.nordmodular.Format;
+import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.ErrorHandler;
@@ -78,6 +79,10 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchExporter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchFileWriter;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jtheme.util.RelativeClassLoader;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.xml.sax.SAXException;
 
 public class NmUtils
 {
@@ -465,11 +470,24 @@ public class NmUtils
         return new PatchMessage(builder.getBitStream(), builder.getSectionEndPositions(), slotId);
     }
 
+    public static Charset getPatchFileCharset()
+    {
+        return Charset.forName("ISO-8859-1");
+    }
+    
+    public static MidiMessage createSynthSettingsMessage(Map<String, Object> params)
+        throws Exception
+    {
+        return new SynthSettingsMessage(params);
+    }
+
     public static MidiMessage createPatchSettingsMessage(NMPatch patch, int slotId) throws Exception
     {
         Patch2BitstreamBuilder builder = new Patch2BitstreamBuilder(patch);
         builder.setHeaderOnly(true);
         builder.generate();
+        
+        // TODO PatchMessage not working yet, sectionsEnded must be != 1
         return new PatchMessage(builder.getBitStream(), builder.getSectionEndPositions(), slotId);
     }
     
@@ -520,17 +538,31 @@ public class NmUtils
     public static void writePatch(NMPatch patch, File file)
         throws IOException, ParseException
     {
-        OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+        FileOutputStream out = new FileOutputStream(file);
         try
         {
-            PatchExporter export = new PatchExporter();
-            PatchFileWriter writer = new PatchFileWriter(out);
-            export.export(patch, writer);
+            writePatch(patch, out);
         }
         finally
         {
             out.flush();
             out.close();
+        }
+    }
+    
+    public static void writePatch(NMPatch patch, OutputStream out)
+    throws IOException, ParseException
+    {
+        Writer writer =
+            new BufferedWriter(new OutputStreamWriter(out, getPatchFileCharset()));
+        try
+        {
+            (new PatchExporter()).export(patch, new PatchFileWriter(writer));
+        }
+        finally
+        {
+            writer.flush();
+            writer.close();
         }
     }
     
