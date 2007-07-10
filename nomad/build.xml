@@ -15,37 +15,34 @@
   </target>
 
   <target name="info" description="build script info" depends="validate-libs-path" >
-<fail>
-(no target specified)
-Nomad ANT build script (http://nmedit.sourcecforge.net/)
+<echo>Nomad ANT build script (http://nmedit.sourcecforge.net/)
 Following targets are available:
   [nomad]
-  build     - builds nomad (not implemented)
-  dist      - distributes nomad (not implemented)
+  run*      - starts nomad
+  build*    - builds nomad (not implemented)
+  dist*     - distributes nomad (not implemented)
   clean     - cleans the build/dist files (not implemented)
 
-  note: you have to call the configure target one-time before
-        you can build / run nomad
+  * you have to call the 'configure' target once before you call one of the
+  targets listed above
 
   [project]
   configure - configures the project
-              You should call this after you checked out the
-              project from CVS the first time. Amongst other
-              things it will compile the libraries located
-              in ../libs/ and install them in the plugin
-              folders of nomad
-  revert    - uninstalls libraries/resources which were
-              installed using configure
-  clean-libs - calls the clean target (or equivalent) in the
-              libraries located in ../libs/
+              call this after you checked out the project from CVS or if the source
+              of one of the libraries (in ../libs/) was changed. This target compiles
+              the libraries located in ../libs/ and install them in the plugin folders
+              of nomad
+  revert    - uninstalls libraries/resources which were installed using configure
+  clean-libs - calls the clean target (or equivalent) in the libraries located in ../libs/
 Note:
   If you checked out the project from CVS the first time you should run the configure target.
   It will install the required libraries in the corresponding locations of the nomad-source directory.
-</fail>
+</echo>
   </target>
 
   <target name="configure" description="configure project" depends="validate-libs-path">
       <ant antfile="${installer-script}" dir="${installer-script-path}" target="install" />
+  	  <ant antfile="build.xml" dir="${nomad-source}/net.sf.nmedit.nomad.boot.splash" target="install" />
   </target>
   
   <target name="revert" description="reverts 'configure'">
@@ -53,7 +50,7 @@ Note:
       <fail>TODO disabled for safety reasons</fail>-->
       	
       <ant antfile="${installer-script}" dir="${installer-script-path}" target="uninstall" />
-      	
+	  <ant antfile="build.xml" dir="${nomad-source}/net.sf.nmedit.nomad.boot.splash" target="uninstall" />
   </target>
   
   <target name="clean-libs" description="clean-libs">
@@ -63,7 +60,22 @@ Note:
       <ant antfile="${installer-script}" dir="${installer-script-path}" target="reverse-clean" />
       
   </target>
-  
+
+  <target name="run">
+  	<echo>Starting Nomad...</echo>
+    <java classname="org.java.plugin.boot.Boot"
+    	dir="${nomad-source}/"
+        fork="true"
+        failonerror="true" >
+    	<classpath>      
+    		<fileset dir="${nomad-source}/libs">
+	            <include name="jpf-boot.jar"/>
+	            <include name="nomad-splash.jar"/>
+    	    </fileset>
+        </classpath>
+    </java>
+  </target>
+	
   <!-- building nomad -->
 
 	<!--
