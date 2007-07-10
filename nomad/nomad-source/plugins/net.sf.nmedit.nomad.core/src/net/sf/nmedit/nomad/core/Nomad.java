@@ -23,32 +23,59 @@
 package net.sf.nmedit.nomad.core;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.RenderedImage;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.Reader;
+import java.net.URI;
 import java.util.Iterator;
-import java.util.List;
 import java.util.ResourceBundle;
 
+import javax.imageio.ImageIO;
+import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
 import javax.swing.Action;
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JToolBar;
 
 import net.sf.nmedit.nomad.core.NomadLoader.LocaleHandler;
 import net.sf.nmedit.nomad.core.helpers.DocumentActionActivator;
 import net.sf.nmedit.nomad.core.helpers.RuntimeMenuBuilder;
 import net.sf.nmedit.nomad.core.i18n.LocaleConfiguration;
 import net.sf.nmedit.nomad.core.jpf.PluginView;
+import net.sf.nmedit.nomad.core.menulayout.ActionHandler;
 import net.sf.nmedit.nomad.core.menulayout.MenuBuilder;
 import net.sf.nmedit.nomad.core.menulayout.MenuLayout;
 import net.sf.nmedit.nomad.core.service.ServiceRegistry;
@@ -56,7 +83,8 @@ import net.sf.nmedit.nomad.core.service.fileService.FileService;
 import net.sf.nmedit.nomad.core.service.fileService.FileServiceTool;
 import net.sf.nmedit.nomad.core.service.initService.InitService;
 import net.sf.nmedit.nomad.core.swing.ButtonBarBuilder;
-import net.sf.nmedit.nomad.core.swing.FileTransferHandler;
+import net.sf.nmedit.nomad.core.swing.JDropDownButtonControl;
+import net.sf.nmedit.nomad.core.swing.URIListDropHandler;
 import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
 import net.sf.nmedit.nomad.core.swing.document.Document;
 import net.sf.nmedit.nomad.core.swing.document.DocumentEvent;
@@ -73,9 +101,12 @@ import org.java.plugin.boot.Boot;
 public class Nomad
 {
 
+    private static final String MENU_FILE_OPEN = "nomad.menu.file.open";
     private static final String MENU_FILE_SAVE = "nomad.menu.file.save.save";
     private static final String MENU_FILE_SAVEAS = "nomad.menu.file.save.saveas";
     private static final String MENU_FILE_PROPERTIES = "nomad.menu.file.properties";
+    private static final String MENU_FILE_EXPORT = "nomad.menu.file.ie.export";
+    
     
     private static Nomad instance;
     private JFrame mainWindow = null;
@@ -102,34 +133,20 @@ public class Nomad
 
         ResourceBundle localizedMessages = NomadLoader.getResourceBundle();
 
-        menuLayout.getEntry("nomad.menu.file.open")
-        .addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e)
-            {
-                fileOpen();
-            }});
-
+        menuLayout.getEntry(MENU_FILE_OPEN)
+        .addActionListener(new ActionHandler(this, "fileOpen"));
         menuLayout.getEntry(MENU_FILE_SAVE)
-        .addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e)
-            {
-                fileSave(false);
-            }});
-
+        .addActionListener(new ActionHandler(this, "fileSave"));
         menuLayout.getEntry(MENU_FILE_SAVEAS)
-        .addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e)
-            {
-                fileSave(true);
-            }});
-
+        .addActionListener(new ActionHandler(this, "fileSaveAs"));
         menuLayout.getEntry(MENU_FILE_PROPERTIES)
-        .addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e)
-            {
-                fileProperties();
-            }});
+        .addActionListener(new ActionHandler(this, "fileProperties"));
+        menuLayout.getEntry("nomad.menu.help.plugins")
+        .addActionListener(new ActionHandler(this, "pluginsHelp"));
 
+        menuLayout.getEntry(MENU_FILE_EXPORT)
+        .addActionListener(new ActionHandler(this, "export"));
+        
         menuBuilder = new MenuBuilder(menuLayout);
         menuBuilder.setResourceBundle(localizedMessages);
         LocaleConfiguration.getLocaleConfiguration().addLocaleChangeListener(new LocaleHandler(menuBuilder));
@@ -140,26 +157,19 @@ public class Nomad
         main.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         main.setJMenuBar(mainMenuBar);
 
-        // finally install actions/listeners
-        final ExitHandler exitHandler = new ExitHandler();
-        menuBuilder.addActionListener("nomad.menu.file.exit", exitHandler);
-        main.addWindowListener(exitHandler);
+        menuBuilder.addActionListener("nomad.menu.file.exit", new ActionHandler(this, "handleExit"));
+        main.addWindowListener(new WindowAdapter() {
+                    public void windowClosing( WindowEvent e )
+                    {
+                        Nomad.sharedInstance().handleExit();
+                    }
+                });
         
         
         this.pluginInstance = plugin;
         Nomad.instance = this;
         
         this.menuLayout = menuLayout;
-
-        menuLayout.getEntry("nomad.menu.help.plugins")
-        .addActionListener(new ActionListener(){
-
-            public void actionPerformed(ActionEvent e)
-            {
-                PluginView view = new PluginView();
-                Nomad.sharedInstance().getDocumentManager()
-                .add(view);
-            }});
 
         MenuLayout.disableGhosts(menuLayout);
 
@@ -169,24 +179,11 @@ public class Nomad
         pageContainer.addListener(dsh);
         dsh.setMenuForDocument(pageContainer.getSelection());
 
-        //pageContainer.getTabBar()
-        pageContainer
-        .setTransferHandler(new FileTransferHandler(){
-            /**
-             * 
-             */
-            private static final long serialVersionUID = 7177859593782278190L;
-
-            protected boolean importFiles(JComponent c, List<File> filelist)
-            {
-                if (c!=pageContainer)
-                    return false;
-                
-                for (File f: filelist)
-                    openOrSelect(f);
-                return true;
-            }
-        });
+    }
+    
+    public void pluginsHelp()
+    {
+        getDocumentManager().add(new PluginView());
     }
     
     private class DocumentSelectionHandler implements DocumentListener
@@ -225,11 +222,218 @@ public class Nomad
             menuLayout.getEntry(MENU_FILE_SAVE).setEnabled(saveEnabled);
             menuLayout.getEntry(MENU_FILE_SAVEAS).setEnabled(saveAsEnabled);
             menuLayout.getEntry(MENU_FILE_PROPERTIES).setEnabled(propertiesEnabled);
+            menuLayout.getEntry(MENU_FILE_EXPORT).setEnabled(d instanceof Transferable);
         }
         
     }
 
-    void fileSave(boolean saveAs)
+    public void export()
+    {
+        Document doc = getDocumentManager().getSelection();
+        if (!(doc instanceof Transferable))
+            return;
+        
+        Transferable transferable = (Transferable) doc;
+        
+        String title = doc.getTitle();
+        if (title == null)
+            title = "Export";
+        else
+            title = "Export '"+title+"'";
+        
+        JComboBox src = new JComboBox(transferable.getTransferDataFlavors());
+        src.setRenderer(new DefaultListCellRenderer(){
+            public Component getListCellRendererComponent(
+                JList list,
+            Object value,
+                int index,
+                boolean isSelected,
+                boolean cellHasFocus)
+            {
+                String text;
+                if (value instanceof DataFlavor)
+                {
+                    DataFlavor flavor = (DataFlavor) value;
+                    String mimeType = flavor.getMimeType();
+                    String humanRep = flavor.getHumanPresentableName();
+                    String charset = flavor.getParameter("charset");
+                    
+                    if (mimeType == null)
+                        text = "?";
+                    else
+                    {
+                        text = mimeType;
+                        int ix = text.indexOf(';');
+                        if (ix>=0)
+                            text = text.substring(0, ix).trim();
+                    }
+                    if (charset != null)
+                        text+="; charset="+charset;
+                    if (humanRep != null)
+                        text+=" ("+humanRep+")";
+                }
+                else
+                {
+                    text = String.valueOf(value);
+                }
+                return super.getListCellRendererComponent(list, text, index, isSelected, cellHasFocus);
+            }
+        });
+        
+        JComboBox dst = new JComboBox(new Object[]{"File", "Clipboard"});
+        
+        Object[] msg = {"Source:", doc.getTitle(), 
+                "Export as:", src,
+                "Export to:", dst};
+        Object[] options = {"Ok", "Cancel"};
+        
+        JOptionPane op = new JOptionPane(
+                msg, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options);
+        
+        JDialog dialog = op.createDialog(getWindow(), title);
+        dialog.setModal(true);
+        dialog.setVisible(true);
+        
+        boolean ok =  "Ok".equals(op.getValue());
+        
+        DataFlavor flavor = (DataFlavor) src.getSelectedItem();
+        dialog.dispose();
+        if(!ok) return;
+        
+        if (flavor == null)
+            return;
+        
+        if ("Clipboard".equals(dst.getSelectedItem()))
+        {
+            Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+            cb.setContents(new SelectedTransfer(flavor, transferable), null);
+        }
+        else
+        {
+            export(transferable, flavor);
+        }
+    }
+
+    private static class SelectedTransfer implements Transferable
+    {
+        
+        private DataFlavor selectedFlavor;
+        private Transferable delegate;
+
+        public SelectedTransfer(DataFlavor selectedFlavor, Transferable delegate)
+        {
+            this.selectedFlavor = selectedFlavor;
+            this.delegate = delegate;
+        }
+
+        public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException
+        {
+            if (!selectedFlavor.match(flavor))
+                throw new UnsupportedFlavorException(flavor);
+            return delegate.getTransferData(flavor);
+        }
+
+        public DataFlavor[] getTransferDataFlavors()
+        {
+            DataFlavor[] flavors = {selectedFlavor};
+            return flavors;
+        }
+
+        public boolean isDataFlavorSupported(DataFlavor flavor)
+        {
+            return selectedFlavor.equals(flavor);
+        }
+        
+    }
+    
+    private void export(Transferable transferable, DataFlavor flavor)
+    {
+        File file = getExportFile();
+        if (file == null)
+            return;
+        
+        Reader reader;
+        try
+        {
+            reader = flavor.getReaderForText(transferable);
+        }
+        catch(Exception e)
+        {
+            reader = null;
+        }
+        
+        if (reader != null)
+        {
+            try
+            {
+                FileOutputStream out = new FileOutputStream(file);
+                try
+                {
+                    int data;
+                    while ((data=reader.read())!=-1)
+                    {
+                        out.write(data);
+                    }
+                    out.flush();
+                }
+                finally
+                {
+                    out.close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new RuntimeException(e);
+            }
+            return ;
+        }
+        
+        if (DataFlavor.imageFlavor.match(flavor))
+        {
+            Image image;
+            try
+            {
+                image = (Image) transferable.getTransferData(flavor);
+            }
+            catch (Exception e)
+            {
+                throw new RuntimeException(e);
+            }
+            
+            try
+            {
+                ImageIO.write((RenderedImage) image, "png", file);
+            }
+            catch (IOException e)
+            {
+                throw new RuntimeException(e);
+            }
+            
+        }
+        // else report unsupported flavor
+    }
+
+    private File getExportFile()
+    {
+        JFileChooser chooser = new JFileChooser();
+        if (chooser.showSaveDialog(mainWindow)==JFileChooser.APPROVE_OPTION)
+        {
+            return chooser.getSelectedFile();
+        }
+        return null;
+    }
+    
+    public void fileSave()
+    {
+        fileSave(false);
+    }
+
+    public void fileSaveAs()
+    {
+        fileSave(true);
+    }
+    
+    public void fileSave(boolean saveAs)
     {
         Document d = pageContainer.getSelection();
         if (d == null) return;
@@ -263,7 +467,7 @@ public class Nomad
         }
     }
 
-    void fileProperties()
+    public void fileProperties()
     {
         Document d = pageContainer.getSelection();
         if (d == null) return;
@@ -284,7 +488,7 @@ public class Nomad
         service.editProperties(d);
     }
     
-    void fileOpen()
+    public void fileOpen()
     {
         
         JFileChooser chooser = new JFileChooser(new File("/home/christian/Programme/nomad/data/patch/"));
@@ -354,6 +558,25 @@ public class Nomad
         
         toolPane.addTab("Help", helpIcon, new HelpPane(helpIcon));*/
 
+        
+        new DropTarget(contentPane, new URIListDropHandler() {
+            public void uriListDropped(URI[] uriList)
+            {
+                for (URI uri: uriList)
+                {
+                    try
+                    { 
+                    File f = new File(uri);
+                    openOrSelect(f);
+                    }
+                    catch (IllegalArgumentException e)
+                    {
+                        // ignore
+                    }
+                }
+            }
+        });
+        
         new DocumentActionActivator(pageContainer, menuLayout);
         
         JSplitPane splitLR = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -364,7 +587,46 @@ public class Nomad
                 
         contentPane.setLayout(new BorderLayout());
         contentPane.add(splitLR, BorderLayout.CENTER);
+        
+        JToolBar toolbar = new JToolBar();
+        toolbar.setFloatable(false);
+        toolbar.add(menuLayout.getEntry(MENU_FILE_OPEN));
+        toolbar.addSeparator();
+        toolbar.add(menuLayout.getEntry(MENU_FILE_SAVE)) ; 
+        contentPane.add(toolbar, BorderLayout.NORTH);
+  
+        JPopupMenu pop = new JPopupMenu();
+        Iterator<FileService> iter = ServiceRegistry.getServices(FileService.class);
+        
+        JRadioButtonMenuItem rfirst = null;
+        SelectedAction sa = new SelectedAction();
+        
+        
+        sa.putValue(AbstractAction.SMALL_ICON, getImage("/icons/etool16/new_untitled_text_file.gif"));
+        
+        while (iter.hasNext())
+        {
+            FileService fs = iter.next();
+            if (fs.isNewFileOperationSupported())
+            {
+                JRadioButtonMenuItem rb = new JRadioButtonMenuItem(new AHAction(fs.getName(), fs.getIcon(), fs, "newFile"));
+                sa.add(rb);
+                pop.add(rb);
+                if (rfirst == null)
+                    rfirst = rb;
+            }
+        }
+        /*
+        if (rfirst != null)
+            rfirst.setSelected(true);
+        */
+        JButton btn = toolbar.add(sa);
+   
+        new JDropDownButtonControl(btn, pop);
+        
 /*
+ * 
+ * 
  * 
         JToolBar toolbar = new JToolBar();
         toolbar.setFloatable(false);
@@ -372,6 +634,85 @@ public class Nomad
         
         JButton btn = new JButton(getImage("/icons/etool16/new_untitled_text_file.gif"));
         toolbar.add(btn);*/
+    }
+    
+    private static class SelectedAction extends AbstractAction implements ItemListener
+    {
+        private ButtonGroup bg;
+        private Action currentAction;
+
+        public SelectedAction()
+        {
+            this.bg = new ButtonGroup();
+            setEnabled(false);
+        }
+        
+        public void add(AbstractButton ab)
+        {
+            ab.addItemListener(this);
+            bg.add(ab);
+            setEnabled(true);
+            if (bg.getSelection() == null)
+                ab.setSelected(true);
+        }
+        
+        public void actionPerformed(ActionEvent e)
+        {
+            if (currentAction != null)
+                currentAction.actionPerformed(e);
+        }
+        
+        protected void setCurrentAction(Action o)
+        {
+            if (currentAction != o)
+            {
+                currentAction = o;
+                
+                Object actionCommand = null;
+                if (currentAction != null)
+                {
+                    actionCommand = currentAction.getValue(ACTION_COMMAND_KEY);
+                }
+                putValue(ACTION_COMMAND_KEY, actionCommand);
+            }
+            setEnabled(currentAction != null);
+        }
+        
+        protected Action getCurrentAction()
+        {
+            return currentAction;
+        }
+
+        public void itemStateChanged(ItemEvent e)
+        {
+            Object o = e.getSource();
+            if (o instanceof AbstractButton)
+                setCurrentAction(((AbstractButton)o).getAction());
+            else
+                setCurrentAction(null);
+        }
+        
+    }
+    
+    private static class AHAction extends AbstractAction
+    {
+        
+        private ActionHandler actionHandler;
+        
+        public AHAction(String title, Icon icon, Object imp, String method)
+        {
+            if (title != null)
+                putValue(NAME, title);
+            if (icon != null)
+                putValue(SMALL_ICON, icon);
+            actionHandler = new ActionHandler(imp, method);
+        }
+
+        public void actionPerformed(ActionEvent e)
+        {
+            actionHandler.actionPerformed(e);
+        }
+        
     }
     
     private ImageIcon getImage(String name)
@@ -454,25 +795,6 @@ public class Nomad
     public void handleExit()
     {
         askStopApplication();
-    }
-
-    private static class ExitHandler extends WindowAdapter implements ActionListener, ExitListener
-    {
-
-        public void windowClosing( WindowEvent e )
-        {
-            Nomad.sharedInstance().handleExit();
-        }
-
-        public void actionPerformed(ActionEvent e)
-        {
-            Nomad.sharedInstance().handleExit();
-        }
-
-        public void actionExit( ActionEvent e )
-        {
-            Nomad.sharedInstance().handleExit();
-        }
     }
 
     public MenuLayout getMenuLayout()
