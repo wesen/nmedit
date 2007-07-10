@@ -31,6 +31,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
+import net.sf.nmedit.jnmprotocol.RequestSynthSettingsMessage;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NmSlot;
@@ -325,11 +326,20 @@ public class NMSynthDeviceContext extends SynthDeviceContext
             {
                 System.out.println("send settings");
                 
+
+                ((NordModular)synth)
+                .getProtocol()
+                .send(
+                		new RequestSynthSettingsMessage()
+                		);
+                
+                
+                /*
             ((NordModular)synth)
             .getProtocol()
             .send(
             NmUtils.createSynthSettingsMessage(params)
-            );
+            );*/
             System.out.println("send settings:ok");
             }
             catch (Exception e)

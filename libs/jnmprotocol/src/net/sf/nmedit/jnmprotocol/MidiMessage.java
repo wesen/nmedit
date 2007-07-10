@@ -127,13 +127,15 @@ public abstract class MidiMessage
 		if (packet.contains("PatchPacket")) {
 
             {
+            	// check for type = 0x03 = (data1 << 1) | ((data2 >>> 6) & 0x1)
+            	
                 Packet pp = packet.getPacket("data:next");
-                int command = pp == null ? -1 : pp.getVariable("data");
-                if (command == 0x01)
+                int data1 = pp == null ? -1 : pp.getVariable("data");
+                if (data1 == 0x01)
                 {
-                    pp = packet.getPacket("data:next");
-                    int pid = pp == null ? -1 : pp.getVariable("data");
-                    if (pid==0x01) 
+                	pp = pp.getPacket("next");
+                    int data2 = pp == null ? -1 : pp.getVariable("data");
+                    if ((data2 & 0x40) > 0) 
                     {
                         return new SynthSettingsMessage(packet);
                     }
