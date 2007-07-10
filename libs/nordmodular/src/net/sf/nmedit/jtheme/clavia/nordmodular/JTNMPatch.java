@@ -23,12 +23,21 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -47,19 +56,22 @@ import net.sf.nmedit.jpatch.PSignal;
 import net.sf.nmedit.jpatch.PSignalTypes;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
+import net.sf.nmedit.jpatch.clavia.nordmodular.parser.ParseException;
 import net.sf.nmedit.jpatch.event.PConnectionEvent;
 import net.sf.nmedit.jpatch.event.PConnectionListener;
+import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.cable.ScrollListener;
+import net.sf.nmedit.jtheme.clavia.nordmodular.misc.NMPatchImageExporter;
 import net.sf.nmedit.jtheme.component.JTConnector;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.JTPatch;
 import net.sf.nmedit.jtheme.store2.ModuleElement;
 
-public class JTNMPatch extends JTPatch
+public class JTNMPatch extends JTPatch implements Transferable
 {
 
     /**
@@ -70,6 +82,8 @@ public class JTNMPatch extends JTPatch
     private NMPatch patch;
     private ModuleContainerEventHandler ehPoly;
     private ModuleContainerEventHandler ehCommon;
+    private JScrollPane spPoly;
+    private JScrollPane spCommon;
 
     public JTNMPatch(JTNM1Context context, NMPatch patch) throws Exception
     {
@@ -78,8 +92,8 @@ public class JTNMPatch extends JTPatch
         JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         split.setOneTouchExpandable(true);
         split.setContinuousLayout(false);
-        split.setTopComponent(createVoiceArea(patch.getPolyVoiceArea()));
-        split.setBottomComponent(createVoiceArea(patch.getCommonVoiceArea()));
+        split.setTopComponent(spPoly = createVoiceArea(patch.getPolyVoiceArea()));
+        split.setBottomComponent(spCommon = createVoiceArea(patch.getCommonVoiceArea()));
         split.setResizeWeight(1);
         split.setDividerLocation(patch.getHeader().getSeparatorPosition());
         
@@ -87,6 +101,11 @@ public class JTNMPatch extends JTPatch
         setLayout(new BorderLayout());
         add(split, BorderLayout.CENTER);
         add(settings, BorderLayout.NORTH);
+    }
+    
+    public NMPatchImageExporter createPatchImageExporter()
+    {
+        return new NMPatchImageExporter(this);
     }
     
     protected static class ModuleAction extends AbstractAction
@@ -577,8 +596,18 @@ public class JTNMPatch extends JTPatch
         }
 
     }
+
+    public JTModuleContainer getPolyVoiceArea()
+    {
+        return (JTModuleContainer) spPoly.getViewport().getView();
+    }
+
+    public JTModuleContainer getCommonVoiceArea()
+    {
+        return (JTModuleContainer) spCommon.getViewport().getView();
+    }
     
-    private Component createVoiceArea(VoiceArea va) throws Exception
+    private JScrollPane createVoiceArea(VoiceArea va) throws Exception
     {
         JTModuleContainer cont = getContext().createModuleContainer();
         cont.setPatchContainer(this);
@@ -695,5 +724,71 @@ public class JTNMPatch extends JTPatch
         ehCommon.uninstall();
     }
 
+    // transferable
+    
+
+    private static final String charset = "ISO-8859-1";
+
+    private static DataFlavor inputStreamFlavor =
+        new DataFlavor("text/plain; charset="+charset+"", "Nord Modular patch 3.0");
+    private static DataFlavor uriFlavor =
+        new DataFlavor("text/uri-list; charset=utf-8", "uri list");
+    private static DataFlavor imageFlavor =
+        DataFlavor.imageFlavor;
+
+    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException
+    {
+        if (uriFlavor.equals(flavor))
+        {
+            File file = patch.getFile();
+            if (file == null)
+                throw new UnsupportedFlavorException(flavor);
+            return new ByteArrayInputStream(file.toURI().toString().getBytes());
+            
+        }
+
+        if (inputStreamFlavor.equals(flavor))
+        {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            try
+            {
+                NmUtils.writePatch(patch, out);
+            }
+            catch (ParseException e)
+            {
+                throw new IOException(e.getMessage());
+            }
+            return new ByteArrayInputStream(out.toByteArray());
+        }
+        
+        if (imageFlavor.equals(flavor))
+        {
+            return createPatchImageExporter().export();
+        }
+        
+        throw new UnsupportedFlavorException(flavor);
+    }
+
+    public DataFlavor[] getTransferDataFlavors()
+    {
+        List<DataFlavor> flavorList = new ArrayList<DataFlavor>(2);
+        flavorList.add(inputStreamFlavor);
+        flavorList.add(imageFlavor);
+        if (patch.getFile() != null)
+            flavorList.add(uriFlavor);
+        return flavorList.toArray(new DataFlavor[flavorList.size()]);
+    }
+
+    public boolean isDataFlavorSupported(DataFlavor flavor)
+    {
+        for (DataFlavor f: getTransferDataFlavors())
+        {
+            if (f.equals(flavor))
+                return true;
+        }
+        return false;
+    }
+
+    
 }
 
