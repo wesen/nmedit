@@ -18,6 +18,8 @@
  */
 package net.sf.nmedit.nordmodular;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -36,14 +38,21 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiDevice.Info;
 import javax.swing.tree.TreeNode;
 
+
+import net.sf.nmedit.jpatch.PPatch;
+import net.sf.nmedit.jpatch.randomizer.GaussianRandomizer;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
 import net.sf.nmedit.jsynth.midi.MidiPlug;
 import net.sf.nmedit.jtheme.ModulePane;
+import net.sf.nmedit.jtheme.clavia.nordmodular.JTNMPatch;
 import net.sf.nmedit.nmutils.midi.MidiID;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.jpf.TempDir;
+import net.sf.nmedit.nomad.core.menulayout.MLEntry;
+import net.sf.nmedit.nomad.core.menulayout.MenuLayout;
 import net.sf.nmedit.nomad.core.service.Service;
 import net.sf.nmedit.nomad.core.service.initService.InitService;
+import net.sf.nmedit.nomad.core.swing.document.Document;
 
 import org.java.plugin.PluginManager;
 
@@ -51,7 +60,8 @@ public class Installer implements InitService
 {
 
     // TempDir temp = new TempDir(this);
-     
+	 private static final String MENU_PATCH_RANDOMIZE = "nomad.menu.patch.randomize";
+	
     public Class<? extends Service> getServiceClass()
     {
         return InitService.class;
@@ -66,6 +76,20 @@ public class Installer implements InitService
         ModulePane pane = ModulePane.getSharedInstance();
         pane.setModules(data.getModuleDescriptions());
         pane.setTheme(data.getJTContext());
+        
+        // add randomize action
+        MenuLayout menuLayout = Nomad.sharedInstance().getMenuLayout();
+        
+        MLEntry e = menuLayout.getEntry(MENU_PATCH_RANDOMIZE);
+        e.setEnabled(true);
+        e.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e)
+            {
+                randomizePatch();
+            }}
+         );
+
+			
     }
 
     public void shutdown()
@@ -264,5 +288,14 @@ public class Installer implements InitService
         return temp.getTempFile("synth.properties"); 
     }
 
+    private void randomizePatch() {
+    	JTNMPatch patchComp = (JTNMPatch) Nomad.sharedInstance().getDocumentManager().getSelection().getComponent();
+    	PPatch patch = patchComp.getPatch();
+    	if (patch != null) {
+    		GaussianRandomizer randomizer = GaussianRandomizer.getRandomizer();
+    		randomizer.randomize(patch);
+    	}
+	    	
+	}
 }
 
