@@ -18,7 +18,7 @@
  */
 package net.waldorf.miniworks4pole;
 
-import net.sf.nmedit.jpatch.formatter.Formatter;
+import net.sf.nmedit.jpatch.Formatter;
 import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.clavia.nordmodular.NMStorageContext;
