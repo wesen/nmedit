@@ -84,7 +84,7 @@ import javax.swing.KeyStroke;
  * <code>ALT+SHIFT+F12</code> 
  * </li>
  * <li><strong>short (long) description:</strong>
- * the short (long) description associated with an entry has the key [global entry-point]+"$short-description"
+ * the short (long) description associated with an entry has the key [global entry-point]+"$description"
  * ([global entry-point]+"$long-description").
  * For example: <code>menu.file$short-description (menu.file$long-description)</code>.</li>
  * 
