@@ -30,55 +30,40 @@ public class SynthSettingsMessage extends MidiMessage
     private BitStream settingsStream;
     private List<BitStream> bitStreamList;
     private Map<String, Object> parameterMap;
-    
+    private boolean extendedSettings = false;
+
     private static final String[] setting_parameters = {
         "midiClockSource",
         "midiVelScaleMin",
         "ledsActive",
         "midiVelScaleMax",
         "midiClockBpm",
-        "local",
+        "localOn",
         "keyboardMode",
         "pedalPolarity",
         "globalSync",
         "masterTune",
+        "programChangeReceive",
         "programChangeSend",
         "knobMode",
-        "midiChannelsSlotA",
-        "midiChannelsSlotB",
-        "midiChannelsSlotC",
-        "midiChannelsSlotD"
+        "midiChannelSlot0",
+        "midiChannelSlot1",
+        "midiChannelSlot2",
+        "midiChannelSlot3"
     };
-    
-    // TODO use correct defaults
-    private static final int[] defaults = {
-        0, // midiClockSource
-        0, // midiVelScaleMin
-        1, // ledsActive
-        127, // midiVelScaleMax
-        120, // midiClockBpm
-        1, // local
-        0, // keyboardMode
-        0, // pedalPolarity
-        3, // globalSync
-        0, // masterTune
-        3, // programChangeSend
-        0, // knobMode
-        0, // midiChannelsSlotA
-        1, // midiChannelsSlotB
-        2, // midiChannelsSlotC
-        3  // midiChannelsSlotD
+
+    private static final String[] extended_parameters = {
+        "slot0Selected",
+        "slot1Selected",
+        "slot2Selected",
+        "slot3Selected",
+        "activeSlot",
+        "slot0VoiceCount",
+        "slot1VoiceCount",
+        "slot2VoiceCount",
+        "slot3VoiceCount"
     };
-    
-    public static Map<String, Object> createParamMap()
-    {
-        Map<String, Object> map = new HashMap<String, Object>();
-        for (int i=0;i<setting_parameters.length;i++)
-            map.put(setting_parameters[i], defaults[i]);
-        map.put("name", "Nord Modular");
-        return map;
-    }
-    
+
     private static void append(IntStream dst, int i, Map<String, Object> params)
     {
         Object value = params.get(setting_parameters[i]);
@@ -109,6 +94,7 @@ public class SynthSettingsMessage extends MidiMessage
         append(is, i++, params);
         append(is, i++, params);
         append(is, i++, params); // masterTune
+        append(is, i++, params);
         append(is, i++, params);
         append(is, i++, params); // knobMode
         NmCharacter.appendString(is, (String)name); // String$name
@@ -167,6 +153,7 @@ public class SynthSettingsMessage extends MidiMessage
         this();
         set("slot", 0);
         this.parameterMap = params;
+        
         IntStream is = createIntStream(params);
         BitStream bs = createBitStream(is);
         
@@ -232,11 +219,31 @@ public class SynthSettingsMessage extends MidiMessage
             String name = setting_parameters[i];
             parameterMap.put(name, data.getVariable(name));
         }
-
-        String name = NmCharacter.extractName(data.getPacket("name"));
-        parameterMap.put("name", name);
+        
+        {
+            // name of the synth
+            String name = NmCharacter.extractName(data.getPacket("name"));
+            parameterMap.put("name", name);
+        }
+        
+        data = data.getPacket("extended");
+        if (data != null)
+        {
+            extendedSettings = true;
+            for (int i=0;i<extended_parameters.length;i++)
+            {
+                String name = extended_parameters[i];
+                parameterMap.put(name, data.getVariable(name));
+            }
+        }
         
         return parameterMap;
+    }
+    
+    public boolean containsExtendedSettings()
+    {
+        getParamMap(); // parse data
+        return extendedSettings;
     }
     
     protected void appendChecksum(IntStream intStream)
