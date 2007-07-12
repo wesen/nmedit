@@ -21,10 +21,10 @@ package net.sf.nmedit.jpatch.impl;
 import java.io.IOException;
 import java.io.Serializable;
 
+import net.sf.nmedit.jpatch.Formatter;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.PParameterDescriptor;
-import net.sf.nmedit.jpatch.formatter.Formatter;
 
 /**
  * The reference implementation of interface {@link PParameterDescriptor}.

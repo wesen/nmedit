@@ -20,9 +20,8 @@
 /*
  * Created on Dec 10, 2006
  */
-package net.sf.nmedit.jpatch.formatter;
+package net.sf.nmedit.jpatch;
 
-import net.sf.nmedit.jpatch.PParameter;
 
 public interface Formatter
 {

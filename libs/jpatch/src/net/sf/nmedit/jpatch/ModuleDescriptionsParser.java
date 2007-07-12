@@ -38,7 +38,6 @@ import javax.xml.parsers.SAXParserFactory;
 
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
 import net.sf.nmedit.jpatch.PParameterDescriptor;
-import net.sf.nmedit.jpatch.formatter.Formatter;
 import net.sf.nmedit.jpatch.impl.PBasicConnectorDescriptor;
 import net.sf.nmedit.jpatch.impl.PBasicLightDescriptor;
 import net.sf.nmedit.jpatch.impl.PBasicModuleDescriptor;
