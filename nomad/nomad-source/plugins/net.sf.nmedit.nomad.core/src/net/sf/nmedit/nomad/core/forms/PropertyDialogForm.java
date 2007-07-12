@@ -19,6 +19,7 @@
 package net.sf.nmedit.nomad.core.forms;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -75,11 +76,12 @@ public class PropertyDialogForm extends JPanel implements TreeSelectionListener
         
         JPanel titlePane = new JPanel();
         titleLabel = new JLabel();
-        
         titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));
+        titleLabel.setFont(new Font("sansserif", Font.BOLD, 12));
         titlePane.setLayout(new BoxLayout(titlePane, BoxLayout.Y_AXIS));
         titlePane.add(titleLabel);
         titlePane.add(new JSeparator(JSeparator.HORIZONTAL));
+        titlePane.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));
         
         dialogPane.setLayout(new BorderLayout());
         dialogPane.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
@@ -321,5 +323,10 @@ public class PropertyDialogForm extends JPanel implements TreeSelectionListener
             titleLabel.setText("");
         }
     }
-    
+
+    public void dispose()
+    {
+        
+    }
+
 }
