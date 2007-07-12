@@ -22,6 +22,11 @@
  */
 package net.sf.nmedit.jsynth;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.swing.event.EventListenerList;
 
 import net.sf.nmedit.jsynth.event.SynthesizerEvent;
@@ -31,7 +36,29 @@ public abstract class AbstractSynthesizer implements Synthesizer
 {
 
     private EventListenerList listenerList = new EventListenerList();
+    private PropertyChangeSupport changeSupport
+    = new PropertyChangeSupport(this);
     
+    private Map<Object, Object> clientPropertyMap;
+
+    private Map<Object, Object> getClientPropertyMap(boolean create)
+    {
+        if (create && clientPropertyMap == null)
+            clientPropertyMap = new HashMap<Object, Object>();
+        return clientPropertyMap;
+    }
+    
+    public void putClientProperty(Object key, Object value)
+    {
+        getClientPropertyMap(true).put(key, value);
+    }
+    
+    public Object getClientProperty(Object key)
+    {
+        Map<Object, Object> map = getClientPropertyMap(false);
+        return map == null ? null : map.get(key);
+    }
+
     protected void fireSynthesizerStateChanged()
     {
         SynthesizerStateListener[] list = 
@@ -46,6 +73,11 @@ public abstract class AbstractSynthesizer implements Synthesizer
             }
         }
     }
+
+    public Object getProperty(Object key)
+    {
+        return null;
+    }
     
     public void addSynthesizerStateListener( SynthesizerStateListener l )
     {
@@ -57,4 +89,39 @@ public abstract class AbstractSynthesizer implements Synthesizer
         listenerList.remove(SynthesizerStateListener.class, l);
     }
 
+    public void addPropertyChangeListener(PropertyChangeListener l)
+    {
+        changeSupport.addPropertyChangeListener(l);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener l)
+    {
+        changeSupport.removePropertyChangeListener(l);
+    }
+
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener l)
+    {
+        changeSupport.addPropertyChangeListener(propertyName, l);
+    }
+
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener l)
+    {
+        changeSupport.removePropertyChangeListener(propertyName, l);
+    }
+
+    protected void firePropertyChange(String propertyName, Object oldValue, Object newValue)
+    {
+        changeSupport.firePropertyChange(propertyName, oldValue, newValue);
+    }
+
+    protected void firePropertyChange(String propertyName, int oldValue, int newValue)
+    {
+        changeSupport.firePropertyChange(propertyName, oldValue, newValue);
+    }
+
+    protected void firePropertyChange(String propertyName, boolean oldValue, boolean newValue)
+    {
+        changeSupport.firePropertyChange(propertyName, oldValue, newValue);
+    }
+    
 }
