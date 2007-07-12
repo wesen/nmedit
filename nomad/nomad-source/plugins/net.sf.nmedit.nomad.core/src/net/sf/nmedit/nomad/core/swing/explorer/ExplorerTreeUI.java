@@ -30,6 +30,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.net.URL;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -47,8 +48,8 @@ public class ExplorerTreeUI extends MetalTreeUI
 {
     private static Icon getIcon(String name)
     {
-        return new ImageIcon(ExplorerTreeUI.class.getClassLoader().getResource(
-                "swing/browser/"+name));
+        URL url = ExplorerTreeUI.class.getClassLoader().getResource( "swing/browser/"+name);
+        return url == null ? null : new ImageIcon(url);
     }
 
     static Icon openIcon = getIcon("node-state-opened.png");
@@ -56,10 +57,8 @@ public class ExplorerTreeUI extends MetalTreeUI
     static Icon openIconHov = getIcon("node-state-opened-hovered.png");
     static Icon closedIconHov = getIcon("node-state-closed-hovered.png");
 
-    public static final Icon DefaultFolderIcon =
-        getIcon("fldr_obj.gif");
-    public static final Icon DefaultFileIcon =
-        getIcon("file_obj.gif");
+    public static final Icon DefaultFolderIcon = getIcon("fldr_obj.gif");
+    public static final Icon DefaultFileIcon = getIcon("file_obj.gif");
     //Icon leafIcon = new ImageIcon("net/sf/nmedit/nomad/cbrowser/images/...");
      
     public final static Color defaultSelectionBackground = Color.decode("#A8A8A8");
