@@ -23,6 +23,8 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 
+import javax.swing.ImageIcon;
+
 import org.java.plugin.Plugin;
 import org.java.plugin.PluginManager;
 import org.xml.sax.InputSource;
@@ -42,6 +44,9 @@ public class NMData
     private NM1ModuleDescriptions moduleDescriptions;
     private JTNM1Context jtContext;
     private static NMData instance;
+    private ImageIcon nmMicroIcon;
+    private ImageIcon nmRackIcon;
+    private ImageIcon nmModularIcon;
     
     public static NMData sharedInstance()
     {
@@ -58,6 +63,40 @@ public class NMData
         //cr.prepareData();
     }
     
+    private ImageIcon loadIcon(String name)
+    {
+        if (name == null)
+            return null;
+        URL resource = getClass().getClassLoader().getResource(name);
+        
+        if (resource == null)
+        {
+            // System.err.println("resource not found: "+name);
+            return null;
+        }
+        return new ImageIcon(resource);
+    }
+
+    public ImageIcon getMicroIcon()
+    {
+        if (nmMicroIcon == null)
+            nmMicroIcon = loadIcon("icons/micro-modular-icon.png");
+        return nmMicroIcon;
+    }
+
+    public ImageIcon getModularIcon()
+    {
+        if (nmModularIcon == null)
+            nmModularIcon = loadIcon("icons/nord-modular-icon.png");
+        
+        return nmModularIcon;
+    }
+
+    public ImageIcon getModularRackIcon()
+    {
+        return null;
+    }
+    
     public NM1ModuleDescriptions getModuleDescriptions()
     {
         return moduleDescriptions;
@@ -68,7 +107,6 @@ public class NMData
         return jtContext;
     }
     
-
     private NM1ModuleDescriptions initModuleDescriptions() throws Exception
     {
         InputStream source;
@@ -76,58 +114,13 @@ public class NMData
         URL mdURL = getClass().getClassLoader().getResource("module-descriptions/modules.xml");
         
         NM1ModuleDescriptions descriptions = null;
-/*
-        final File moduleCache = getTempDir().getTempFile("modules.cache");
-        
-        {
-            // read from temp file
-            if (moduleCache.exists())
-            {
-                NM1ModuleDescriptions cached = new NM1ModuleDescriptions();
-                try
-                {
-                    ClassLoader loader = getClass().getClassLoader();
-                    Thread.currentThread().setContextClassLoader(loader);
-                    
-                    Timer timer = new Timer();
-                    timer.reset();
-                    
-                cached.readCache(moduleCache, loader);
-                
-                System.out.println("read cache "+timer);
-                }
-                catch (Exception e)
-                {
-                    Log log = LogFactory.getLog(getClass());
-                    if (log.isErrorEnabled())
-                    {
-                        log.error("reading module cache failed: "+moduleCache.getAbsolutePath(), e);
-                    }
-                }
-                descriptions = cached;
-            }
-        }
-        */
+
         if (descriptions == null)
         {
             source = new FileInputStream(new File(mdURL.toURI()));
             try
             {
                 descriptions = NM1ModuleDescriptions.parse(RelativeClassLoader.fromPath(getClass().getClassLoader(), mdURL), source);
-                // write cache
-                /*
-                try
-                {
-                    descriptions.writeCache(moduleCache);
-                }
-                catch (Exception e)
-                {
-                    Log log = LogFactory.getLog(getClass());
-                    if (log.isErrorEnabled())
-                    {
-                        log.error("writing module cache failed: "+moduleCache.getAbsolutePath(), e);
-                    }
-                }*/
             }
             finally
             {

@@ -92,6 +92,12 @@ public abstract class AbstractNewNordService
     {
         ExplorerTree etree = Nomad.sharedInstance().getExplorer();  
         NordModular synth = new NordModular(NMData.sharedInstance().getModuleDescriptions(), false);
+       
+        if (maxSlotCount==1)
+            synth.putClientProperty("icon", NMData.sharedInstance().getMicroIcon());
+        else
+            synth.putClientProperty("icon", NMData.sharedInstance().getModularIcon());
+        
         synth.setMaxSlotCount(maxSlotCount);
         try
         {
