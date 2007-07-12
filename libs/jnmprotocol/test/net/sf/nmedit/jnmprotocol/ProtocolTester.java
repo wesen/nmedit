@@ -1,6 +1,5 @@
 package net.sf.nmedit.jnmprotocol;
 
-import java.util.Arrays;
 import java.util.Iterator;
 
 import javax.sound.midi.MidiDevice;
@@ -508,9 +507,10 @@ public class ProtocolTester extends TestCase
         }
     }
 
-    
     private static class MessageAcceptor implements MessageHandler
     {
+        // TODO use NmMessageAcceptor instead of this class
+        
         private final Class<? extends MidiMessage> messageClass;
         private final NmProtocol protocol;
         private MidiMessage acceptedMessage = null;
