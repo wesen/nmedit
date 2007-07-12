@@ -18,32 +18,26 @@
  */
 package net.sf.nmedit.nordmodular;
 
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
-
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 
 
 public class SynthSettingsFrm extends JPanel
 {
-   /**
-     * 
-     */
-    private static final long serialVersionUID = -8522180223157926470L;
-JPanel SynthSettingsFrm = new JPanel();
+   JPanel SynthSettingsFrm = new JPanel();
    JSpinner spChannelSlotA = new JSpinner();
    JSpinner spChannelSlotB = new JSpinner();
    JSpinner spChannelSlotC = new JSpinner();
@@ -150,13 +144,9 @@ JPanel SynthSettingsFrm = new JPanel();
       throw new IllegalArgumentException( "Unable to load image: " + imageName );
    }
 
-   public JScrollPane createSynthSettingsFrm()
+   public JPanel createSynthSettingsFrm()
    {
       SynthSettingsFrm.setName("SynthSettingsFrm");
-      JScrollPane jscrollpane1 = new JScrollPane();
-      jscrollpane1.setViewportView(SynthSettingsFrm);
-      jscrollpane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-      jscrollpane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
       FormLayout formlayout1 = new FormLayout("FILL:DEFAULT:NONE,FILL:4DLU:NONE,FILL:DEFAULT:NONE,FILL:4DLU:NONE,FILL:DEFAULT:NONE,FILL:4DLU:NONE,FILL:DEFAULT:NONE,FILL:4DLU:NONE,FILL:DEFAULT:NONE,FILL:DEFAULT:NONE,FILL:DEFAULT:NONE","CENTER:DEFAULT:NONE,CENTER:DEFAULT:NONE,CENTER:2DLU:NONE,CENTER:DEFAULT:NONE,CENTER:DEFAULT:NONE,CENTER:DEFAULT:NONE,CENTER:DEFAULT:NONE,CENTER:DEFAULT:NONE,CENTER:DEFAULT:NONE,CENTER:2DLU:NONE,CENTER:DEFAULT:NONE,CENTER:DEFAULT:NONE,CENTER:DEFAULT:NONE,CENTER:DEFAULT:NONE,CENTER:DEFAULT:NONE,CENTER:DEFAULT:NONE,CENTER:DEFAULT:NONE,CENTER:2DLU:NONE,CENTER:DEFAULT:NONE,CENTER:DEFAULT:NONE,CENTER:2DLU:NONE,CENTER:DEFAULT:NONE,CENTER:DEFAULT:NONE,CENTER:DEFAULT:NONE,CENTER:2DLU:NONE,CENTER:DEFAULT:NONE,CENTER:DEFAULT:NONE,CENTER:DEFAULT:NONE");
       CellConstraints cc = new CellConstraints();
       SynthSettingsFrm.setLayout(formlayout1);
@@ -362,7 +352,7 @@ JPanel SynthSettingsFrm = new JPanel();
       SynthSettingsFrm.add(jlabel18,cc.xywh(7,15,5,1));
 
       addFillComponents(SynthSettingsFrm,new int[]{ 2,3,4,5,6,7,8,9,10,11 },new int[]{ 2,3,9,10,12,13,14,15,16,17,18,20,21,23,24,25,27,28 });
-      return jscrollpane1;
+      return SynthSettingsFrm;
    }
 
    /**
