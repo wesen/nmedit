@@ -23,21 +23,23 @@
 package net.sf.nmedit.jsynth.clavia.nordmodular;
 
 import java.awt.EventQueue;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.sound.midi.MidiUnavailableException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import net.sf.nmedit.jnmprotocol.DebugProtocol;
 import net.sf.nmedit.jnmprotocol.IAmMessage;
 import net.sf.nmedit.jnmprotocol.MessageMulticaster;
 import net.sf.nmedit.jnmprotocol.MidiDriver;
 import net.sf.nmedit.jnmprotocol.MidiException;
+import net.sf.nmedit.jnmprotocol.NmMessageAcceptor;
 import net.sf.nmedit.jnmprotocol.NmProtocol;
 import net.sf.nmedit.jnmprotocol.NmProtocolListener;
 import net.sf.nmedit.jnmprotocol.NmProtocolMT;
 import net.sf.nmedit.jnmprotocol.NmProtocolST;
+import net.sf.nmedit.jnmprotocol.RequestSynthSettingsMessage;
+import net.sf.nmedit.jnmprotocol.SynthSettingsMessage;
 import net.sf.nmedit.jnmprotocol.utils.ProtocolRunner;
 import net.sf.nmedit.jnmprotocol.utils.ProtocolThreadExecutionPolicy;
 import net.sf.nmedit.jnmprotocol.utils.StoppableThread;
@@ -70,6 +72,57 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
     private NmSlotManager slotManager;
     private int maxSlotCount = 4;
     
+    private final static String DEVICE_NAME = "Nord Modular";
+    private String name = DEVICE_NAME;
+
+    private boolean settingsChangedFlag = false;
+    private boolean settingsInSync = true;
+
+    // false, true = external, internal
+    private Property midiClockSource = new Property("midiClockSource", true);
+    // false, true = active, inactive
+    private Property ledsActive = new Property("ledsActive", true);
+    // false, true = local on, local off
+    private Property localOn = new Property("localOn", false);
+    // false, true = active slot, selected slots
+    private Property keyboardMode = new Property("keyboardMode", false);
+    // false, true = normal, inverted
+    private Property pedalPolarity = new Property("pedalPolarity", false);
+    // print value = (value+1)
+    private Property globalSync = new Property("globalSync", 0, 31, 0);
+    // value range: -127..0..127
+    private Property masterTune = new Property("masterTune", -127, 127, 0, true);
+    // false, true = immediate, hook 
+    private Property knobMode = new Property("knobMode", false);
+    // other properties
+    private Property programChangeReceive = new Property("programChangeReceive", true);
+    private Property programChangeSend = new Property("programChangeSend", true);
+    private Property midiVelScaleMin = new Property("midiVelScaleMin", 0, 127, 0);
+    private Property midiVelScaleMax = new Property("midiVelScaleMax", 0, 127, 127);
+    private Property midiClockBpm = new Property("midiClockBpm", 31, 239, 120);
+    private Property[] slotMidiChannels = 
+    {
+        new Property("midiChannelSlot0", 0, 16, 0),
+        new Property("midiChannelSlot1", 0, 16, 1),
+        new Property("midiChannelSlot2", 0, 16, 2),
+        new Property("midiChannelSlot3", 0, 16, 3)      
+    };
+    private Property[] slotEnabled = 
+    {
+        new Property("slot0Selected", false),
+        new Property("slot1Selected", false),
+        new Property("slot2Selected", false),
+        new Property("slot3Selected", false)      
+    };
+    private Property[] slotVoiceCount = 
+    {
+        new Property("slot0VoiceCount", 0, 255, 0),
+        new Property("slot1VoiceCount", 0, 255, 0),
+        new Property("slot2VoiceCount", 0, 255, 0),
+        new Property("slot3VoiceCount", 0, 255, 0) 
+    };
+    private Property activeSlot = new Property("activeSlot", 0, 3, 0);
+
     public NordModular(NM1ModuleDescriptions moduleDescriptions)
     {
         this(moduleDescriptions, false);
@@ -156,12 +209,12 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
     
     public String getName()
     {
-        return getDeviceName();
+        return name;
     }
 
     public String getDeviceName()
     {
-        return "Nord Modular";
+        return DEVICE_NAME;
     }
 
     private MidiDriver createMidiDriver() throws SynthException
@@ -196,10 +249,14 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
 
         protocol.reset();
         
-        IAMAcceptor acceptor = new IAMAcceptor();
+        NmMessageAcceptor<IAmMessage> iamAcceptor = new NmMessageAcceptor<IAmMessage>(IAmMessage.class);
+
+        NmMessageAcceptor<SynthSettingsMessage> settingsAcceptor = 
+            new NmMessageAcceptor<SynthSettingsMessage>(SynthSettingsMessage.class);
+        
         try
         {
-            multicaster.addProtocolListener(acceptor);
+            multicaster.addProtocolListener(iamAcceptor);
 
             try
             {
@@ -209,66 +266,290 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
             {
                 throw new SynthException(e);
             }
-            
+
             final long timeout = 3000;
-            final long timeoutThreshold = System.currentTimeMillis()+timeout;
+            iamAcceptor.waitForReply(protocol, timeout);
             
-            while (!acceptor.IAMMessageReceived())
-            {
-                if (System.currentTimeMillis()>timeoutThreshold)
-                {
-                    throw new SynthException("time out: "+timeout+"ms");
-                }
-                
-                try
-                {
-                    // Important: heartbeat must be executed here rather than in the
-                    // separate thread. The NmProtocolMT implementation posts
-                    // messages in the same thread like this code is executed.
-                    // Thus the IAmMessage will only arrive after this method
-                    // has returned with the timeout exception.
-                    protocol.heartbeat();
-                }
-                catch (Exception e1)
-                {
-                    Log log = LogFactory.getLog(getClass());
-                    if (log.isWarnEnabled())
-                    {
-                        log.warn("protocol.heartbeat() caused an exception while waiting on IAMMessage", e1);
-                    }
-                }
-                
-                try
-                {
-                    protocol.awaitWorkSignal(100);
-                }
-                catch (InterruptedException e)
-                {
-                    // no op
-                }
-            }
-            
-            if (!acceptor.validateVersion(3, 3))
-            {
-                throw new SynthException("Unsupported firmware version: "
-                        +acceptor.getVersionHigh()+"."+acceptor.getVersionLow()+" ("+acceptor.getIAMMessage()+")");
-            }
+            validateVersion(iamAcceptor.getFirstMessage(), 3, 3);
             setConnectedFlag(true);
+
+            // request synth settings
+
+            multicaster.addProtocolListener(settingsAcceptor);
+            try
+            {
+                protocol.send(new RequestSynthSettingsMessage());
+            }
+            catch (Exception e)
+            {
+                throw new SynthException("Request synth settings failed.", e);
+            }
+            
+            settingsAcceptor.waitForReply(protocol, timeout);
+            setSettings(settingsAcceptor.getFirstMessage());
         }
         catch (SynthException e)
         {
             disconnect();
             throw e;
         }
+        catch (Exception e)
+        {
+            disconnect();
+            throw new SynthException(e);
+        }
         finally
         {
-            multicaster.removeProtocolListener(acceptor);
+            multicaster.removeProtocolListener(settingsAcceptor);
+            multicaster.removeProtocolListener(iamAcceptor);
         }
         
         // now everything is fine - start the protocol thread
         protocolThread.start();
     }
     
+    public boolean getMidiClockSource()
+    {
+        return midiClockSource.getBooleanValue();
+    }
+
+    public void setMidiClockSource(boolean internal)
+    {
+        midiClockSource.setValue(internal);
+    }
+
+    public int getMidiVelScaleMin()
+    {
+        return midiVelScaleMin.getValue();
+    }
+
+    public void setMidiVelScaleMin(int value)
+    {
+        midiVelScaleMin.setValue(value);
+    }
+
+    public int getMidiVelScaleMax()
+    {
+        return midiVelScaleMax.getValue();
+    }
+
+    public void setMidiVelScaleMax(int value)
+    {
+        midiVelScaleMax.setValue(value);
+    }
+
+    public boolean isLEDsActive()
+    {
+        return ledsActive.getBooleanValue();
+    }
+
+    public void setLEDsActive(boolean value)
+    {
+        ledsActive.setValue(value);
+    }
+
+    public int getMidiClockBPM()
+    {
+        return midiClockBpm.getValue();
+    }
+
+    public void setMidiClockBPM(int bpm)
+    {
+        midiClockBpm.setValue(bpm);
+    }
+
+    public boolean isLocalOn()
+    {
+        return localOn.getBooleanValue();
+    }
+
+    public void setLocalOn(boolean on)
+    {
+        this.localOn.setValue(on);
+    }
+
+    public boolean getKeyboardMode()
+    {
+        return keyboardMode.getBooleanValue();
+    }
+
+    public void setKeyboardMode(boolean selectedSlots)
+    {
+        keyboardMode.setValue(selectedSlots);
+    }
+
+    public boolean getPedalPolarity()
+    {
+        return pedalPolarity.getBooleanValue();
+    }
+
+    public void setPedalPolarity(boolean inverted)
+    {
+        pedalPolarity.setValue(inverted);
+    }
+    
+    public int getGlobalSync()
+    {
+        return globalSync.getValue();
+    }
+
+    public void setGlobalSync(int value)
+    {
+        globalSync.setValue(value);
+    }
+
+    public int getMasterTune()
+    {
+        return masterTune.getValue();
+    }
+
+    public void setMasterTune(int value)
+    {
+        masterTune.setValue(value);
+    }
+
+    public boolean getProgramChangeSend()
+    {
+        return programChangeSend.getBooleanValue();
+    }
+
+    public void setProgramChangeSend(boolean enabled)
+    {
+        programChangeSend.setValue(enabled);
+    }
+
+    public boolean getProgramChangeReceive()
+    {
+        return programChangeReceive.getBooleanValue();
+    }
+
+    public void setProgramChangeReceive(boolean enabled)
+    {
+        programChangeReceive.setValue(enabled);
+    }
+
+    public boolean getKnobMode()
+    {
+        return knobMode.getBooleanValue();
+    }
+
+    public void setKnobMode(boolean hook)
+    {
+        knobMode.setValue(hook);
+    }
+    
+    private void checkSlot(int slot)
+    {
+        if (slot>slotManager.getSlotCount() || slot<0)
+            throw new IndexOutOfBoundsException("invalid slot index: "+slot);
+    }
+
+    public int getMidiChannel(int slot)
+    {
+        checkSlot(slot);
+        return slotMidiChannels[slot].getValue();
+    }
+    
+    public void setMidiChannel(int slot, int channel)
+    {
+        checkSlot(slot);
+        slotMidiChannels[slot].setValue(channel);
+    }
+
+    public boolean isSlotEnabled(int slot)
+    {
+        checkSlot(slot);
+        return slotEnabled[slot].getBooleanValue();
+    }
+    
+    public void setSlotEnabled(int slot, boolean enable)
+    {
+        checkSlot(slot);
+        slotEnabled[slot].setValue(enable);
+    }
+    
+    public int getVoiceCount(int slot)
+    {
+        checkSlot(slot);
+        return slotVoiceCount[slot].getValue();
+    }
+    
+    public void setVoiceCount(int slot, int voiceCount)
+    {
+        checkSlot(slot);
+        slotVoiceCount[slot].setValue(voiceCount);
+    }
+
+    public int getActiveSlot()
+    {
+        return activeSlot.getValue();
+    }
+
+    public void getActiveSlot(int value)
+    {
+        activeSlot.setValue(value);
+    }
+    
+    public void setName(String name)
+    {
+        String oldName = this.name;
+        if (name == null)
+        {
+            name = "";
+        }
+        else if (name.length()>16)
+            name = name.substring(0, 16);
+        
+        if (oldName == null || (!name.equals(oldName)))
+        {
+            this.name = name;
+            settingsChangedFlag = true;
+            firePropertyChange("name", oldName, name);
+        }
+    }
+    
+    public void setSettings(SynthSettingsMessage message)
+    {
+        Map<String, Object> settings = message.getParamMap();
+        setName((String) settings.get("name"));
+        midiClockSource.readValue(settings);
+        midiVelScaleMin.readValue(settings);
+        midiVelScaleMax.readValue(settings);
+        ledsActive.readValue(settings);
+        midiClockBpm.readValue(settings);
+        localOn.readValue(settings);
+        keyboardMode.readValue(settings);
+        pedalPolarity.readValue(settings);
+        globalSync.readValue(settings);
+        masterTune.readValue(settings);
+        programChangeSend.readValue(settings);
+        programChangeReceive.readValue(settings);
+        knobMode.readValue(settings);
+
+        for (int i=0;i<4;i++)
+        {
+            slotMidiChannels[i].readValue(settings);
+        }
+
+        if (message.containsExtendedSettings())
+        {
+            for (int i=0;i<slotManager.getSlotCount();i++)
+            {
+                boolean disabled = i>=slotManager.getSlotCount();
+                slotEnabled[i].readValue(settings, disabled);
+                slotVoiceCount[i].readValue(settings, disabled);
+            }
+            // TODO check if slot is available
+            activeSlot.readValue(settings);
+        }
+        
+        if (settingsChangedFlag)
+        {
+            settingsChangedFlag = false;
+            firePropertyChange("settings", null, "settings");
+        }
+    }
+
     private void disconnect()
     {
         protocolThread.stop();
@@ -291,6 +572,67 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
         }
     }
     
+    private SynthSettingsMessage createSettingsMessage() throws Exception
+    {
+        Map<String, Object> settings = new HashMap<String, Object>();
+
+        settings.put("name", getName());
+        midiClockSource.putValue(settings);
+        midiVelScaleMin.putValue(settings);
+        midiVelScaleMax.putValue(settings);
+        ledsActive.putValue(settings);
+        midiClockBpm.putValue(settings);
+        localOn.putValue(settings);
+        keyboardMode.putValue(settings);
+        pedalPolarity.putValue(settings);
+        globalSync.putValue(settings);
+        masterTune.putValue(settings);
+        programChangeSend.putValue(settings);
+        programChangeReceive.putValue(settings);
+        knobMode.putValue(settings);
+
+        for (int i=0;i<4;i++)
+        {
+            slotMidiChannels[i].putValue(settings);
+        }
+
+        return new SynthSettingsMessage(settings);
+    }
+    
+    public void sendSettings()
+    {
+        if (isConnected())
+        {
+            try
+            {
+                protocol.send(createSettingsMessage());
+            }
+            catch (Exception e)
+            {
+                throw new RuntimeException(e);
+            }
+            settingsInSync = true;
+        }
+    }
+
+    public void syncSettings()
+    {
+        EventQueue.invokeLater(new Runnable(){
+            public void run()
+            {
+                syncSettingsImmediatelly();  
+            }
+        });
+    }
+
+    public void syncSettingsImmediatelly()
+    {
+        if ((!settingsInSync) && isConnected())
+        {
+            sendSettings();
+        }
+    }
+
     protected void fireSynthesizerStateChanged()
     {
         if (isConnected())
@@ -338,47 +680,21 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
     {
         return connected;
     }
-
-    private static class IAMAcceptor extends NmProtocolListener
+    
+    private void validateVersion(IAmMessage msg, int versionLow, int versionHigh)
+        throws SynthException
     {
-
-        private IAmMessage iamMessage = null;
+        int msgVersionLow = msg.get("versionLow");
+        int msgVersionHigh = msg.get("versionHigh");
         
-        public boolean IAMMessageReceived()
+        if (msgVersionLow != versionLow || msgVersionHigh != versionHigh)
         {
-            return getIAMMessage() != null;
+            throw new SynthException("Unsupported OS version: "
+                    +msgVersionHigh+"."+msgVersionLow
+                    +" (expected "
+                    +versionHigh+"."+versionLow
+                    +")");
         }
-        
-        public IAmMessage getIAMMessage()
-        {
-            return iamMessage;
-        }
-        
-        public void messageReceived(IAmMessage message) 
-        {
-            this.iamMessage = message;
-        }
-        
-        public int getVersionLow()
-        {
-            if (iamMessage==null)
-                return -1;
-            return iamMessage.get("versionLow");
-        }
-        
-        public int getVersionHigh()
-        {
-            if (iamMessage==null)
-                return -1;
-            return iamMessage.get("versionHigh");
-        }
-        
-        public boolean validateVersion(int versionHigh, int versionLow)
-        {
-            return versionHigh == getVersionHigh()
-            && versionLow == getVersionLow();
-        }
-        
     }
     
     private static class Nm1ProtocolErrorHandler extends ProtocolErrorHandler implements Runnable
@@ -502,6 +818,114 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
     public MidiPort getDefaultMidiOutPort()
     {
         return getPCOutPort();
+    }
+    
+    private class Property
+    {
+        private String propertyName;
+        private int minValue;
+        private int maxValue;
+        private int value;
+        private boolean isBooleanProperty = false;
+        private boolean signedByte = false;
+
+        public Property(String propertyName, boolean defaultValue)
+        {
+            this(propertyName, 0, 1, defaultValue ? 1 : 0);
+            this.isBooleanProperty = true;
+        }
+
+        public Property(String propertyName, int minValue, int maxValue, int defaultValue, boolean signedByte)
+        {
+            this(propertyName, minValue, maxValue, defaultValue);
+            this.signedByte = signedByte;
+        }
+        
+        public Property(String propertyName, int minValue, int maxValue, int defaultValue)
+        {
+            this.propertyName = propertyName;
+            this.minValue = minValue;
+            this.maxValue = maxValue;
+            this.value = defaultValue;
+        }
+
+        public void setValue(boolean value)
+        {
+            setValue(value ? 1 : 0);
+        }
+        
+        public boolean getBooleanValue()
+        {
+            return value > 0;
+        }
+        
+        public void setValue(int value)
+        {
+            value = Math.max(minValue, Math.min(value, maxValue));
+            int oldValue = this.value;
+            
+            if (oldValue != value)
+            {
+                this.value = value;
+                
+                NordModular.this.settingsChangedFlag = true;
+                NordModular.this.settingsInSync = false;
+                
+                if (isBooleanProperty)
+                {
+                    NordModular.this.firePropertyChange(propertyName, oldValue>0, value>0);
+                }
+                else
+                {
+                    NordModular.this.firePropertyChange(propertyName, oldValue, value);
+                }
+            }
+        }
+
+        public int getValue()
+        {
+            return value;
+        }
+        
+        protected void putValue(Map<String, Object> settings)
+        {
+            int internal = (signedByte) ? (((byte)value)&0xFF) : value;
+            settings.put(propertyName, internal);
+        }
+        
+        protected void readValue(Map<String, Object> settings)
+        {
+            readValue(settings, false);
+        }
+        
+        protected void readValue(Map<String, Object> settings, boolean zero)
+        {
+            try
+            {
+                int newValue = 0;
+                
+                if (!zero)
+                {
+                    newValue = ((Integer) settings.get(propertyName)).intValue();
+                    if (signedByte)
+                    { 
+                        // cast to signed byte, then back to int
+                        newValue = (byte) newValue;
+                    }
+                }
+                
+                setValue( newValue );
+            }
+            catch (NullPointerException e)
+            {
+                // ignore
+            }
+            catch (ClassCastException e)
+            {
+                // ignore
+            }
+        }
+        
     }
 
 }
