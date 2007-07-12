@@ -20,8 +20,8 @@ package net.sf.nmedit.jpatch.js;
 
 import org.mozilla.javascript.Function;
 
+import net.sf.nmedit.jpatch.Formatter;
 import net.sf.nmedit.jpatch.PParameter;
-import net.sf.nmedit.jpatch.formatter.Formatter;
 
 public class JSFormatter implements Formatter
 {
