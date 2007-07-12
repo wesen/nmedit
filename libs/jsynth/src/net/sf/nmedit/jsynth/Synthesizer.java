@@ -22,6 +22,8 @@
  */
 package net.sf.nmedit.jsynth;
 
+import java.beans.PropertyChangeListener;
+
 import net.sf.nmedit.jsynth.event.SynthesizerStateListener;
 
 /**
@@ -68,10 +70,19 @@ public interface Synthesizer
     String getName();
     String getDeviceName();
     
+    void putClientProperty(Object key, Object value);
+    Object getClientProperty(Object key);
+    
     void setConnected(boolean connected) throws SynthException;
     boolean isConnected();
 
     void addSynthesizerStateListener(SynthesizerStateListener l);
     void removeSynthesizerStateListener(SynthesizerStateListener l);
+
+    void addPropertyChangeListener(PropertyChangeListener l);
+    void removePropertyChangeListener(PropertyChangeListener l);
+
+    void addPropertyChangeListener(String propertyName, PropertyChangeListener l);
+    void removePropertyChangeListener(String propertyName, PropertyChangeListener l);
 
 }
