@@ -20,7 +20,6 @@ package net.sf.nmedit.jsynth.clavia.nordmodular;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Map.Entry;
 
 import net.sf.nmedit.jnmprotocol.AckMessage;
 import net.sf.nmedit.jnmprotocol.ErrorMessage;
@@ -76,13 +75,9 @@ public class NmMessageHandler extends NmProtocolListener
         return 0<=slotId && slotId<synth.getSlotCount();
     }
 
-    public void messageReceived(SynthSettingsMessage message)
+    public void messageReceived(SynthSettingsMessage msg)
     {
-    	System.out.println(message);
-    	for (Entry<String, Object> e : message.getParamMap().entrySet())
-    	{
-    		System.out.println(e.getKey() + ":" + e.getValue());
-    	}
+        synth.setSettings(msg);
     }
 
     public void messageReceived(MorphRangeChangeMessage message) 
