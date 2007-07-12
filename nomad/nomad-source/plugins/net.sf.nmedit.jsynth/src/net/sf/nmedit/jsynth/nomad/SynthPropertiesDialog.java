@@ -23,14 +23,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sound.midi.MidiDevice;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
@@ -42,21 +44,27 @@ import net.sf.nmedit.nomad.core.forms.ExceptionDialog;
 import net.sf.nmedit.nomad.core.forms.NomadMidiDialogFrmHandler;
 import net.sf.nmedit.nomad.core.forms.PropertyDialogForm;
 
-public class SynthPropertiesDialog extends PropertyDialogForm
+public class SynthPropertiesDialog<S extends Synthesizer> extends PropertyDialogForm
 {
     
     /**
      * 
      */
     private static final long serialVersionUID = 6817919267677037724L;
-    private Synthesizer synth;
+    private S synth;
+    private List<DialogPane<?>> disposeList = new ArrayList<DialogPane<?>>();
     
-    public SynthPropertiesDialog(Synthesizer synth)
+    public SynthPropertiesDialog(S synth)
     {
         this.synth = synth;
     }
     
-    public Synthesizer getSynth()
+    public void addToDisposeList(DialogPane<?> dp)
+    {
+        disposeList.add(dp);
+    }
+    
+    public S getSynth()
     {
         return synth;
     }
@@ -76,37 +84,49 @@ public class SynthPropertiesDialog extends PropertyDialogForm
         createPortSettings().install(this);
     }
 
-    protected DialogPane createSynthInfo()
+    protected DialogPane<S> createSynthInfo()
     {
-        return new SynthInfo(synth);
+        return new SynthInfo<S>(synth);
     }
 
-    protected DialogPane createPortSettings()
+    protected DialogPane<S> createPortSettings()
     {
-        return new PortSettingsDialog(synth);
+        return new PortSettingsDialog<S>(synth);
     }
     
-    public abstract static class DialogPane implements ActionListener, Runnable
+    public void dispose()
+    {
+        for (DialogPane<?> dp: disposeList)
+            dp.dispose();
+    }
+
+    public abstract static class DialogPane<S extends Synthesizer> implements ActionListener, Runnable
     {
         
-        protected Synthesizer synth;
+        protected S synth;
         protected String path;
         protected String title;
         protected JComponent component;
         protected PropertyDialogForm dialog;
         
-        public DialogPane(Synthesizer synth, String path, String title)
+        public DialogPane(S synth, String path, String title)
         {
             this.synth = synth;
             this.path = path;
             this.title = title;
         }
         
-        public void install(PropertyDialogForm dialog)
+        public void dispose()
+        {
+            // no op
+        }
+        
+        public void install(SynthPropertiesDialog<S> dialog)
         {
             this.dialog = dialog;
             dialog.addEntry(path, title);
             dialog.addActionListener(this);
+            dialog.addToDisposeList(this);
         }
         
         public void actionPerformed(ActionEvent e)
@@ -139,14 +159,15 @@ public class SynthPropertiesDialog extends PropertyDialogForm
         
     }
     
-    protected static class PortSettingsDialog extends DialogPane implements PropertyChangeListener
+    protected static class PortSettingsDialog<S extends Synthesizer> extends DialogPane<S> implements PropertyChangeListener
     {
 
         public static final String ACTION_APPLY = "Apply";
+        public static final String ACTION_REFRESH = "Refresh";
         protected NomadMidiDialogFrmHandler midiDialogFrmHandler;
-        protected PortAction applyAction;
+        protected MyAction applyAction;
         
-        public PortSettingsDialog(Synthesizer synth)
+        public PortSettingsDialog(S synth)
         {
             super(synth, "connection", "Connection Settings");
         }
@@ -156,28 +177,33 @@ public class SynthPropertiesDialog extends PropertyDialogForm
             return synth instanceof DefaultMidiPorts;
         }
         
-        public void install(PropertyDialogForm dialog)
+        public void install(SynthPropertiesDialog<S> dialog)
         {
             if (!isSynthSupported())
                 return;
             super.install(dialog);
         }
         
-        protected class PortAction extends AbstractAction implements Runnable
+        protected class MyAction extends AbstractAction implements Runnable
         {
             /**
              * 
              */
             private static final long serialVersionUID = 4966069655840174685L;
 
-            public PortAction(String command)
+            public MyAction(String command)
             {
                 if (command == ACTION_APPLY)
                 {
                     setEnabled(midiDialogFrmHandler.isSelectionDifferent());
                     putValue(NAME, "Apply");
-                    putValue(ACTION_COMMAND_KEY, command);
                 }
+                else if (command == ACTION_REFRESH)
+                {
+                    setEnabled(true);
+                    putValue(NAME, "Refresh");
+                }
+                putValue(ACTION_COMMAND_KEY, command);
             }
 
             public void actionPerformed(ActionEvent e)
@@ -193,6 +219,8 @@ public class SynthPropertiesDialog extends PropertyDialogForm
                     return;
                 if (getValue(ACTION_COMMAND_KEY) == ACTION_APPLY)
                     applyPortSettings();
+                else if (getValue(ACTION_COMMAND_KEY) == ACTION_REFRESH)
+                    midiDialogFrmHandler.refresh();
             }
         }
 
@@ -214,8 +242,8 @@ public class SynthPropertiesDialog extends PropertyDialogForm
                 mdp.getDefaultMidiInPort().setPlug(info != null ? new MidiPlug(info) : null);
                 info = midiDialogFrmHandler.getSelectedOutput();
                 mdp.getDefaultMidiOutPort().setPlug(info != null ? new MidiPlug(info) : null);
-                
-                
+
+                formSetPreviousPorts();
                 
                 if (reconnect)
                     synth.setConnected(true);
@@ -235,8 +263,7 @@ public class SynthPropertiesDialog extends PropertyDialogForm
                 applyAction.setEnabled(true);
         }
         
-        @Override
-        protected JComponent createDialogComponent()
+        private void formSetPreviousPorts()
         {
             DefaultMidiPorts mdp = (DefaultMidiPorts) synth;
             
@@ -245,17 +272,25 @@ public class SynthPropertiesDialog extends PropertyDialogForm
 
             MidiPlug outPlug = mdp.getDefaultMidiOutPort().getPlug();
             MidiDevice.Info out = outPlug != null ? outPlug.getDeviceInfo() : null;
-            
-            midiDialogFrmHandler = new NomadMidiDialogFrmHandler();
+
             midiDialogFrmHandler.setPreviousInput(in);
             midiDialogFrmHandler.setPreviousOutput(out);
+          //  midiDialogFrmHandler.updateForm();
+        }
+        
+        @Override
+        protected JComponent createDialogComponent()
+        {
+            midiDialogFrmHandler = new NomadMidiDialogFrmHandler();
+            formSetPreviousPorts();
             midiDialogFrmHandler.addPropertyChangeListener(NomadMidiDialogFrmHandler.INPUT_DEVICE_PROPERTY, this);
             midiDialogFrmHandler.addPropertyChangeListener(NomadMidiDialogFrmHandler.OUTPUT_DEVICE_PROPERTY, this);
             
             JPanel btnPane = new JPanel();
             btnPane.setLayout(new BoxLayout(btnPane, BoxLayout.LINE_AXIS));
             btnPane.add(Box.createHorizontalGlue());
-            btnPane.add(new JButton(applyAction = new PortAction(ACTION_APPLY)));;
+            btnPane.add(new JButton(new MyAction(ACTION_REFRESH)));
+            btnPane.add(new JButton(applyAction = new MyAction(ACTION_APPLY)));
 
             JPanel pan = new JPanel();
             pan.setLayout(new BorderLayout());
@@ -302,10 +337,10 @@ public class SynthPropertiesDialog extends PropertyDialogForm
         
     }
     
-    protected static class SynthInfo extends DialogPane
+    protected static class SynthInfo<S extends Synthesizer> extends DialogPane<S>
     {
 
-        public SynthInfo(Synthesizer synth)
+        public SynthInfo(S synth)
         {
             super(synth, "info", "Info");
         }
@@ -313,12 +348,19 @@ public class SynthPropertiesDialog extends PropertyDialogForm
         @Override
         protected JComponent createDialogComponent()
         {
-            JPanel p = new JPanel();
-            p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
-            p.add(new JLabel("Device: "+synth.getDeviceName()));
-            p.add(new JLabel("Synth: "+synth.getName()));
-            p.add(new JLabel("Vendor: "+synth.getVendor()));
-            return new JScrollPane(p);
+            SynthInfoFrm frm = new SynthInfoFrm();
+            frm.lblSynthName.setText(synth.getName());
+            frm.lblDeviceName.setText(synth.getDeviceName());
+            frm.lblSlotCount.setText(Integer.toString(synth.getSlotCount()));
+            frm.lblVendor.setText(synth.getVendor());
+            frm.lblSynthIcon.setText(null);
+            frm.lblSynthIcon.setIcon(null);
+            Object icon = synth.getClientProperty("icon");
+            if (icon instanceof Icon)
+                frm.lblSynthIcon.setIcon((Icon) icon);
+            JScrollPane sc = new JScrollPane(frm);
+            sc.setBorder(null);
+            return sc;
         }
         
     }

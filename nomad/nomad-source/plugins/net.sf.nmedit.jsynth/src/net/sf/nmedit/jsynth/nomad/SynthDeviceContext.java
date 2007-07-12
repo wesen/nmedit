@@ -30,14 +30,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.net.URL;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.TreeNode;
@@ -70,7 +73,7 @@ import org.apache.commons.logging.LogFactory;
 
 public class SynthDeviceContext extends ContainerNode
     implements TreeContext, SynthesizerStateListener,
-    SlotManagerListener
+    SlotManagerListener, PropertyChangeListener
 {
     
     public static enum State
@@ -176,6 +179,7 @@ public class SynthDeviceContext extends ContainerNode
     private void install()
     {
         synth.addSynthesizerStateListener(this);
+        synth.addPropertyChangeListener("name", this);
         synth.getSlotManager().addSlotManagerListener(this);
 
         for (int i=0;i<synth.getSlotCount();i++)
@@ -194,6 +198,7 @@ public class SynthDeviceContext extends ContainerNode
     
     private void uninstall()
     {
+        synth.removePropertyChangeListener(this);
         synth.removeSynthesizerStateListener(this);
         synth.getSlotManager().removeSlotManagerListener(this);
         
@@ -432,6 +437,14 @@ public class SynthDeviceContext extends ContainerNode
         
     }
     
+    private String getTitleFor(Slot slot)
+    {
+        String patch = slot.getPatchName();
+        if (patch == null)
+            patch = "?";
+        return patch+" ("+slot.getName()+")";
+    }
+    
     protected class SlotLeaf extends LeafNode implements SlotListener
     {
 
@@ -470,8 +483,7 @@ public class SynthDeviceContext extends ContainerNode
             String patch = slot.getPatchName();
             if (patch == null)
                 patch = "?";
-            setText(patch+" ("+slot.getName()+")");
-            
+            setText(getTitleFor(slot));
             etree.fireNodeChanged(this);
         }
         
@@ -726,7 +738,7 @@ public class SynthDeviceContext extends ContainerNode
                 if (log.isWarnEnabled())
                     log.warn("error while performing action", e);
                 
-                showError(e);
+                showError(context.etree, e);
             }
         }
     
@@ -798,11 +810,26 @@ public class SynthDeviceContext extends ContainerNode
 
     protected boolean showSettings()
     {
-        SynthPropertiesDialog spd = new SynthPropertiesDialog(synth);
+        final SynthPropertiesDialog spd = new SynthPropertiesDialog(synth);
+        
         addForms(spd);
         spd.setSelectedPath("connection");
         
-        final JDialog d = new JDialog(Nomad.sharedInstance().getWindow(), "Properties for "+synth.getDeviceName());
+        final JDialog d = new JDialog(Nomad.sharedInstance().getWindow(), 
+                "Properties for "+synth.getDeviceName())
+        {
+            {
+                enableEvents(WindowEvent.WINDOW_EVENT_MASK);
+            }
+            protected void processWindowEvent(WindowEvent e)
+            {
+                if (e.getID()==WindowEvent.WINDOW_CLOSED)
+                {
+                    spd.dispose();
+                }
+                super.processWindowEvent(e);
+            }
+        };
         d.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
         Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
@@ -811,8 +838,7 @@ public class SynthDeviceContext extends ContainerNode
         d.getContentPane().setLayout(new BorderLayout());
         d.getContentPane().add(spd);
         d.setBounds((ss.width-ds.width)/2, (ss.height-ds.height)/2, ds.width, ds.height);
-        d.setVisible(true);
-        
+      
         spd.addButton(new AbstractAction(){
             /**
              * 
@@ -823,8 +849,10 @@ public class SynthDeviceContext extends ContainerNode
             }
             public void actionPerformed(ActionEvent e)
             {
+                d.setVisible(false);
                 d.dispose();
             }});
+        d.setVisible(true);
         
         return true;
     }
@@ -837,16 +865,29 @@ public class SynthDeviceContext extends ContainerNode
         spd.addSynthSettings();
     }
     
-    private static void showError(Exception e)
+    private static void showError(JComponent parent, Exception e)
     {
-        JOptionPane.showMessageDialog(Nomad.sharedInstance().getWindow(),
-                "Warning: "+e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
+        ExceptionDialog.showErrorDialog(parent, "Warning:"+e.getMessage(), "Warning", e);
     }
     
     public static void createMidiDialog()
     {/*
         JOptionPane pan = new JOptionPane();
         pan.*/
+    }
+
+    public void propertyChange(PropertyChangeEvent evt)
+    {
+        if (evt.getSource() == synth)
+        {
+            if ("name".equals(evt.getPropertyName()))
+            {
+                String name = synth.getName();
+                String dev = synth.getDeviceName();
+                setTitle(name.equals(dev) ? name : (name+" ("+dev+")"));
+                etree.fireNodeChanged(this);
+            }
+        }
     }
     
 }
