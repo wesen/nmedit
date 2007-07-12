@@ -20,8 +20,6 @@ package net.sf.nmedit.nomad.core.forms;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
@@ -41,7 +39,7 @@ import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.nmutils.midi.MidiUtils;
 
-public class NomadMidiDialogFrmHandler extends NomadMidiDialogFrm implements ItemListener, ActionListener
+public class NomadMidiDialogFrmHandler extends NomadMidiDialogFrm implements ItemListener
 {
 
     /**
@@ -60,8 +58,6 @@ public class NomadMidiDialogFrmHandler extends NomadMidiDialogFrm implements Ite
     private MidiDevice.Info previousInput =  null;
     private MidiDevice.Info previousOutput =  null;
 
-    private boolean internalSelectedInputSet = false;
-    private boolean internalSelectedOutputSet = false;
     private MidiDevice.Info internalSelectedInput =  null;
     private MidiDevice.Info internalSelectedOutput =  null;
     
@@ -138,23 +134,15 @@ public class NomadMidiDialogFrmHandler extends NomadMidiDialogFrm implements Ite
     public void setPreviousInput(MidiDevice.Info previousInput)
     {
         this.previousInput = previousInput;
-        
-        if ((!internalSelectedInputSet) && (internalSelectedInput==null))
-        {
-            internalSelectedInputSet = true;
-            setInternalSelectedInput(previousInput);
-        }
+        setInternalSelectedInput(previousInput);
+        updateForm();
     }
-    
+
     public void setPreviousOutput(MidiDevice.Info previousOutput)
     {
         this.previousOutput = previousOutput;
-
-        if ((!internalSelectedOutputSet) && (internalSelectedOutput==null))
-        {
-            internalSelectedOutputSet = true;
-            setInternalSelectedOutput(previousOutput);
-        }
+        setInternalSelectedOutput(previousOutput);
+        updateForm();
     }
     
     public boolean isListingAvailableDeviceDevicesOnly()
@@ -190,66 +178,87 @@ public class NomadMidiDialogFrmHandler extends NomadMidiDialogFrm implements Ite
     /**
      * Updates the list of input/output devices.
      */
-    public void refresh()
+    public void refreshImmediatelly()
     {
-        updateData();
+        updateForm();
     }
 
     public MidiDevice.Info getSelectedInput()
     {
-        return getSelectedInfo(form.m_cbInDevices);
+        return getSelectedInfo(form.cbInDevices);
     }
     
     public MidiDevice.Info getSelectedOutput()
     {
-        return getSelectedInfo(form.m_cbOutDevices);   
+        return getSelectedInfo(form.cbOutDevices);   
     }
 
-    public void setSelectedInput(MidiDevice.Info info)
+    public boolean setSelectedInput(MidiDevice.Info info)
     {
-        setSelectedInfo(form.m_cbInDevices, info);
+        return setSelectedInfo(form.cbInDevices, info);
     }
 
-    public void setSelectedOutput(MidiDevice.Info info)
+    public boolean setSelectedOutput(MidiDevice.Info info)
     {
-        setSelectedInfo(form.m_cbOutDevices, info);
+        return setSelectedInfo(form.cbOutDevices, info);
     }
     
     private void initializeForm()
     {
-        form.m_cbInDevices.addItemListener(this);
-        form.m_cbOutDevices.addItemListener(this);
-        form.m_btnRefresh.addActionListener(this);
+        form.cbInDevices.addItemListener(this);
+        form.cbOutDevices.addItemListener(this);
 
-        form.m_cbInDevices.setRenderer(new MidiInfoRenderer(form.m_cbInDevices));
-        form.m_cbOutDevices.setRenderer(new MidiInfoRenderer(form.m_cbOutDevices));
+        form.cbInDevices.setRenderer(new MidiInfoRenderer(form.cbInDevices));
+        form.cbOutDevices.setRenderer(new MidiInfoRenderer(form.cbOutDevices));
 
-        updateData();
+        updateForm();
     }
     
-    private void updateData()
+    private void updateForm()
     {
-        form.m_cbInDevices.setModel(new DefaultComboBoxModel(createDeviceList(true)));
-        form.m_cbOutDevices.setModel(new DefaultComboBoxModel(createDeviceList(false)));
+        form.cbInDevices.setModel(new DefaultComboBoxModel(createDeviceList(true)));
+        form.cbOutDevices.setModel(new DefaultComboBoxModel(createDeviceList(false)));
 
-        if (form.m_cbInDevices.getItemCount()>0)
-            form.m_cbInDevices.setSelectedIndex(0);
-        if (form.m_cbOutDevices.getItemCount()>0)    
-            form.m_cbOutDevices.setSelectedIndex(0);
+        if (form.cbInDevices.getItemCount()>0)
+        {
+            if (internalSelectedInput == null && previousInput != null)
+            {
+                setInternalSelectedInput(previousInput);
+            }
+            if (!(internalSelectedInput != null && setSelectedInput(internalSelectedInput)))
+                form.cbInDevices.setSelectedIndex(0);
+        }
+        else
+        {
+            setInternalSelectedInput(null);
+        }
 
-        if (internalSelectedInput != null)
-            setSelectedInput(internalSelectedInput);
-        if (internalSelectedOutput != null)
-            setSelectedOutput(internalSelectedOutput);
+        if (form.cbOutDevices.getItemCount()>0)
+        {
+            if (internalSelectedOutput == null && previousOutput != null)
+            {
+                setInternalSelectedOutput(previousOutput);
+            }
+            if (!(internalSelectedOutput != null && setSelectedOutput(internalSelectedOutput)))
+                form.cbOutDevices.setSelectedIndex(0);
+        }
+        else
+        {
+            setInternalSelectedOutput(null);
+        }
 
-        checkItemCount(form.m_cbInDevices);
-        checkItemCount(form.m_cbOutDevices);
+        form.cbInDevices.setEnabled(form.cbInDevices.getItemCount()>0);
+        form.cbOutDevices.setEnabled(form.cbOutDevices.getItemCount()>0);
+        
         updateLabels(true);
         updateLabels(false);
 
-        if (getPreviousInput() == null ^ form.m_cbInDevices.getItemCount()==0)
+        form.cbInDevices.repaint();
+        form.cbOutDevices.repaint();
+
+        if (getPreviousInput() == null ^ form.cbInDevices.getItemCount()==0)
             firePropertyChange(INPUT_DEVICE_PROPERTY, getPreviousInput(), null);
-        if (getPreviousOutput() == null ^ form.m_cbOutDevices.getItemCount()==0)
+        if (getPreviousOutput() == null ^ form.cbOutDevices.getItemCount()==0)
             firePropertyChange(OUTPUT_DEVICE_PROPERTY, getPreviousOutput(), null);
     }
     
@@ -258,13 +267,15 @@ public class NomadMidiDialogFrmHandler extends NomadMidiDialogFrm implements Ite
         return (MidiDevice.Info) cb.getSelectedItem();
     }
 
-    private void setSelectedInfo(JComboBox cb, MidiDevice.Info info)
+    private boolean setSelectedInfo(JComboBox cb, MidiDevice.Info info)
     {
         if (defaultModel(cb).getIndexOf(info)>=0)
         {
             // element exists
             cb.setSelectedItem(info);
+            return true;
         }
+        return false;
     }
     
     private DefaultComboBoxModel defaultModel(JComboBox cb)
@@ -330,15 +341,15 @@ public class NomadMidiDialogFrmHandler extends NomadMidiDialogFrm implements Ite
 
     public void itemStateChanged(ItemEvent e)
     {
-        if (e.getSource() == form.m_cbInDevices)
+        if (e.getSource() == form.cbInDevices)
         {
-            setInternalSelectedInput((MidiDevice.Info)form.m_cbInDevices.getSelectedItem());
+            setInternalSelectedInput((MidiDevice.Info)form.cbInDevices.getSelectedItem());
             
             updateLabels(true);
         }
-        else if (e.getSource() == form.m_cbOutDevices)
+        else if (e.getSource() == form.cbOutDevices)
         {
-            setInternalSelectedOutput((MidiDevice.Info)form.m_cbOutDevices.getSelectedItem());
+            setInternalSelectedOutput((MidiDevice.Info)form.cbOutDevices.getSelectedItem());
             
             updateLabels(false);
         }
@@ -348,17 +359,12 @@ public class NomadMidiDialogFrmHandler extends NomadMidiDialogFrm implements Ite
     {
         if (forInputDevice)
         {
-            updateLabels(form.m_cbInDevices, form.m_lblInVendor, form.m_lblInVersion, form.m_lblInDescription);
+            updateLabels(form.cbInDevices, form.lblInVendor, form.lblInVersion, form.lblInDescription);
         }
         else
         {
-            updateLabels(form.m_cbOutDevices, form.m_lblOutVendor, form.m_lblOutVersion, form.m_lblOutDescription);
+            updateLabels(form.cbOutDevices, form.lblOutVendor, form.lblOutVersion, form.lblOutDescription);
         }
-    }
-    
-    private void checkItemCount(JComboBox cb)
-    {
-        cb.setEnabled(cb.getItemCount()>0);
     }
     
     private void updateLabels(JComboBox cb, JLabel lblVendor, JLabel lblVersion, JLabel lblDescription)
@@ -379,50 +385,18 @@ public class NomadMidiDialogFrmHandler extends NomadMidiDialogFrm implements Ite
             lblDescription.setText(info.getDescription());
         }
     }
-    
-    /**
-     * Handles the refresh button action.
-     */
-    public void actionPerformed(ActionEvent e)
+
+    public void refresh()
     {
-        if (e.getSource() == form.m_btnRefresh)
+        SwingUtilities.invokeLater(new Runnable()
         {
-            // disable components, indicating that something happens
-            form.m_btnRefresh.setEnabled(false);
-            
-            // we reactivate it later ...
-            SwingUtilities.invokeLater(new Refresher());
-        }
+            public void run()
+            {
+                refreshImmediatelly();
+            }
+        });
     }
     
-    private class Refresher implements Runnable
-    {
-
-        public void run()
-        {
-            try
-            {
-                // refresh list
-                refresh();
-                
-                // wait a few milliseconds so that
-                // the user can see the change of
-                // the button enabled/disabled state
-                Thread.sleep(500);
-            }
-            catch (InterruptedException e)
-            {
-                // ignore
-            }
-            finally
-            {
-                // enable components
-                form.m_btnRefresh.setEnabled(true);
-            }
-        }
-        
-    }
-
     /**
      * Renders the MidiDevice.Info list items of the JComboBox.
      * Instead of only showing the name of the device the renderer
