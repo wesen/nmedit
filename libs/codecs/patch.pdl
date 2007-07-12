@@ -704,31 +704,46 @@ SingleModule % 1 :=
 	type:8 section:8 index:8 xpos:8 ypos:8 String$name
 	;
 
+// extended synth settings are only send if the editor sends a requested 
 SynthSettings % 1 :=
 	midiClockSource:1
 	midiVelScaleMin:7
 	ledsActive:1
 	midiVelScaleMax:7
 	midiClockBpm:8
-	local:1
+	localOn:1
 	keyboardMode:1
 	pedalPolarity:1
 	globalSync:5
 	masterTune:8
-	programChangeSend:2
+	programChangeReceive:1
+	programChangeSend:1
 	knobMode:1
 	0:5
 	String$name
 	0:3
-	midiChannelsSlotA:5
+	midiChannelSlot0:5
 	27:8
 	0:3
-	midiChannelsSlotB:5
+	midiChannelSlot1:5
 	27:8
 	0:3
-	midiChannelsSlotC:5
+	midiChannelSlot2:5
 	27:8
 	0:3
-	midiChannelsSlotD:5
+	midiChannelSlot3:5
 	27:8
+	?ExtendedSynthSettings$extended
+	;
+
+ExtendedSynthSettings % 1 :=
+    0x07:8
+    0:4 slot0Selected:1 slot1Selected:1 slot2Selected:1 slot3Selected:1
+    0x09:8
+    0:6 activeSlot:2
+    0x05:8
+    slot0VoiceCount:8
+    slot1VoiceCount:8
+    slot2VoiceCount:8
+    slot3VoiceCount:8
 	;
