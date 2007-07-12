@@ -92,6 +92,7 @@
 	<entry entryPoint="patch">
 		<entry entryPoint="notes" />
 		<entry entryPoint="settings" />
+		<entry entryPoint="randomize" />
 	</entry>
 	<entry entryPoint="help">
 		<entry entryPoint="plugins">
