@@ -27,6 +27,10 @@ public class IAmMessage extends MidiMessage
     public static final int PC = 0;
     public static final int MODULAR = 1;
 
+    public static final int NORD_MODULAR_KEYBOARD = 0x00;
+    public static final int NORD_MODULAR_RACK = 0x01;
+    public static final int MICRO_MODULAR = 0x02;
+    
     public IAmMessage()
     {
 	super();
@@ -42,18 +46,58 @@ public class IAmMessage extends MidiMessage
 	expectsreply = true;
 	isreply = true;
     }
-
+    
     IAmMessage(Packet packet)
     {
-	this();
-	setAll(packet);
-	if (get("sender") == MODULAR) {
-	    addParameter("unknown1", "data:unknown:unknown1");
-	    addParameter("unknown2", "data:unknown:unknown2");
-	    addParameter("unknown3", "data:unknown:unknown3");
-	    addParameter("unknown4", "data:unknown:unknown4");
-	}
-	setAll(packet);
+    this();
+    setAll(packet);
+    if (get("sender") == MODULAR) {
+        addParameter("reserved", "data:identification:reserved");
+        addParameter("serial1", "data:identification:serial1");
+        addParameter("serial2", "data:identification:serial2");
+        addParameter("deviceId", "data:identification:deviceId");
+    }
+    setAll(packet);
+    }
+    
+    /**
+     * Returns the last four digits of the serial number.
+     * If the sender of this message is not the synthesizer,
+     * then -1 is returned.
+     * @return the last four digits of the serial number.
+     */
+    public int getSerial()
+    {
+        if (get("sender") == MODULAR) 
+        {
+            int s1 = get("serial1")&0x7F;
+            int s2 = get("serial2")&0x7F;
+            return (s1<<7)|s2;
+        }
+        return -1;
+    }
+    
+    /**
+     * Returns the device id. 
+     * If the sender of this message is not the synthesizer
+     * then the device id is unavailable and -1 is returned.
+     * Otherwise one of the following values is returned
+     * <ul>
+     *  <li>NORD_MODULAR_KEYBOARD</li>
+     *  <li>NORD_MODULAR_RACK</li>
+     *  <li>MICRO_MODULAR</li>
+     *  <li>3..127</li>
+     * </ul>
+     * 
+     * @return the device id
+     */
+    public int getDeviceId()
+    {
+        if (get("sender") == MODULAR) 
+        {
+            return get("deviceId")&0x7F;
+        }
+        return -1;
     }
 
     public List<BitStream> getBitStream()
