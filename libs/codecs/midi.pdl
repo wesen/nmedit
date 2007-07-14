@@ -16,11 +16,23 @@ Sysex % 1 :=
 IAm % 1 :=
 	0:1 sender:7 0:1 versionHigh:7 0:1 versionLow:7
 	#sender=0 => 0:0
-	#sender=1 => IAmUnknown$unknown
+	#sender=1 => IAmIdentification$identification
 	;
 
-IAmUnknown % 1 :=
-	0:1 unknown1:7 0:1 unknown2:7 0:1 unknown3:7 0:1 unknown4:7
+// reserved:
+//     reserved byte (usually zero)
+// serial1, serial2:
+//     serial = ((serial1&0x7F)<<7) | (serial2&0x7F)
+//     computes the last four digits of the serial number
+// deviceId:
+//     0x00 = Nord Modular Keyboard
+//     0x01 = Nord Modular Rack
+//     0x02 = Micro Modular
+IAmIdentification % 1 :=
+	0:1 reserved:7 
+	0:1 serial1:7 
+	0:1 serial2:7 
+	0:1 deviceId:7
 	;
 
 Parameter % 1 :=
