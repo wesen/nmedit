@@ -126,10 +126,27 @@ KnobChange % 1 :=
 ACK % 1 :=
 	0:1 pid1:7 0:1 type:7 0:1 pid2:7
 	#type=0x7f => 0:0
+	#type=0x0d => UnknownACKReply$data
 	#type=0x36 => ACKChecksum$checksum
 	#type=0x13 => PatchListResponse$patchList
 	#type=0x15 => PatchListResponse$patchList
 	#type=0x38 => PatchLoadResponse$patchLoad
+	;
+
+// Note:
+// The UnknownACKReply is sent as reply to a LoadPatchMessage
+// where the source (bank, position) contained no patch.
+// The operation is probably not valid, the ACK might contain an error message.
+// In each recorded sample message (about 20) unknown1 is alway 0, unknown2 always 1.
+// The last variable (unknown3) is probably a checksum.
+// 'pid2' contains the bank index, 'pid3' contains the bank position.
+// A slot index was not included in this message.
+// Example message: F0 33 58 06 08 0D 08 (21 00 01 40) F7
+UnknownACKReply % 1 :=
+	0:1 pid3:7
+	0:1 unknown1:7
+	0:1 unknown2:7
+	0:1 unknown3:7
 	;
 
 ACKChecksum % 1 :=
