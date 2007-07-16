@@ -31,33 +31,56 @@ import net.sf.nmedit.jpdl.Packet;
 public class NmCharacter
 {
 
+    /**
+     * Extracts a string from the specified packet. The packet
+     * must contain the variable list 'chars'
+     * @param name the source packet 
+     * @return the extracted string
+     */
     public static String extractName(Packet name)
     {
         return extractName(name, "chars");
     }
-    
+
+    /**
+     * Extracts a string from the specified packet.
+     * @param name the source packet 
+     * @param variableListName name of the variable list containing the string
+     * @return the extracted string
+     */
     public static String extractName(Packet name, String variableListName)
     {
         // module name limit:16<20 / notes can be longer
-        StringBuffer buffer = new StringBuffer(20); 
+        StringBuilder builder = new StringBuilder(16); 
         List<Integer> list = name.getVariableList(variableListName);
-        int value;
         for (int i=0;i<list.size();i++)
         {
-            value = (Integer) list.get(i);
-            if (value!=0)
-            {
-                buffer.append((char) value);
-            }
+            int value = list.get(i);
+            if (value==0)
+                break;
+            builder.append((char) value);
         }
-        return buffer.toString();
+        return builder.toString();
     }
-    
+
+    /**
+     * Appends the first 16 characters of the specified string to the intstream.
+     * @param intStream destination
+     * @param nmString the string
+     * @throws IllegalArgumentException if the string contains illegal characters
+     */
     public static void appendString(IntStream intStream, CharSequence nmString)
     {
         appendString(intStream, nmString, 16);
     }
 
+    /**
+     * Appends the first maxLen characters of the specified string to the intstream.
+     * @param intStream destination
+     * @param nmString the string
+     * @param maxLen maximum number of characters
+     * @throws IllegalArgumentException if the string contains illegal characters
+     */
     public static void appendString(IntStream intStream, CharSequence nmString, int maxLen)
     {
         int len = Math.min(nmString.length(), maxLen);
