@@ -60,6 +60,7 @@ NMInfo % 1 :=
 	#sc=0x05 => VoiceCount$data
 	#sc=0x07 => SlotsSelected$data
 	#sc=0x09 => SlotActivated$data
+	#sc=0x13 => UnknownNMInfo$data
 	#sc=0x25 => KnobAssignment$data
 	#sc=0x26 => KnobAssignmentChange$data
 	#sc=0x27 => SetPatchTitle$data
@@ -72,6 +73,20 @@ NMInfo % 1 :=
 	#sc=0x41 => VUMeters$data
 	#sc=0x7e => Error$data
 	0:1 checksum:7
+	;
+
+// cause of message: unknown (I believe I only had turned the knobs at the synth ?)
+// example: F0 33 50 06 04 13 (51 06 16 00 03 02 56 45 6C 70 69 61 6E 6F 20 36 00 05) 7B F7 (name='VElpiano 6')
+UnknownNMInfo % 1 :=
+	0:1 unknown1:7
+	0:1 unknown2:7
+	0:1 unknown3:7
+	0:1 unknown4:7
+	0:1 unknown5:7
+	0:1 unknown6:7
+	0:1 unknown7:7
+	String$name
+	0:1 unknown8:7
 	;
 
 VoiceCount % 1 :=
