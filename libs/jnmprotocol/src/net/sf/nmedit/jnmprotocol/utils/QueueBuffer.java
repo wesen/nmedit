@@ -128,6 +128,21 @@ public class QueueBuffer<E> implements Queue<E>
     private transient int modcount;
     
     /**
+     * Removes all elements from this queue and adds them to a new queue.
+     * @return a new queue
+     */
+    public QueueBuffer<E> release()
+    {
+        QueueBuffer<E> q = new QueueBuffer<E>();
+        q.head = head;
+        q.tail = tail;
+        head = null;
+        tail = null;
+        modcount++;
+        return q;
+    }
+    
+    /**
      * Inserts the specified element into this queue.
      * 
      * If possible the queue will not create new element
