@@ -33,7 +33,7 @@ import net.sf.nmedit.jnmprotocol.IAmMessage;
 import net.sf.nmedit.jnmprotocol.MessageHandler;
 import net.sf.nmedit.jnmprotocol.MidiDriver;
 import net.sf.nmedit.jnmprotocol.MidiMessage;
-import net.sf.nmedit.jnmprotocol.NmProtocolST;
+import net.sf.nmedit.jnmprotocol.NmProtocol;
 
 public class NmLookup
 {
@@ -151,7 +151,7 @@ public class NmLookup
             doDisconnect = true;
         }
 
-        NmProtocolST protocol = new NmProtocolST();
+        NmProtocol protocol = new NmProtocol();
         IAmAcceptor acceptor = new IAmAcceptor();
         protocol.setMessageHandler(acceptor);
         protocol.getTransmitter().setReceiver(driver.getReceiver());
@@ -168,15 +168,8 @@ public class NmLookup
                 protocol.heartbeat();
                 if (!acceptor.isAccepted())
                 {
-                    try
-                    {
-                        protocol.awaitWorkSignal(timeout);
-                    }
-                    catch (InterruptedException e)
-                    {
-                        // no op
-                    }
-                    
+                    protocol.waitForActivity(timeout);
+
                     long t = System.currentTimeMillis()-time;
                     timeout-=t;
                     time = System.currentTimeMillis();

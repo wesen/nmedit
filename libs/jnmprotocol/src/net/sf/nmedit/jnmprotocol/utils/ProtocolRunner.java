@@ -19,6 +19,7 @@
 
 package net.sf.nmedit.jnmprotocol.utils;
 
+import net.sf.nmedit.jnmprotocol.MidiException;
 import net.sf.nmedit.jnmprotocol.NmProtocol;
 
 public class ProtocolRunner implements Runnable
