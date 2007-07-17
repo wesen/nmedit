@@ -19,22 +19,34 @@
 
 package net.sf.nmedit.jnmprotocol; 
 
-public class EnqueuedPacket
+import javax.sound.midi.InvalidMidiDataException;
+
+import net.sf.nmedit.jnmprotocol.utils.FastSysexMessage;
+
+public class EnqueuedPacket extends FastSysexMessage
 {
-    public EnqueuedPacket(byte[] content, boolean expectsreply) {
-	this.expectsreply = expectsreply;
-	this.content = content;
+    public static EnqueuedPacket create(byte[] data, boolean expectsreply)
+        throws MidiException
+    {
+        try
+        {
+            return new EnqueuedPacket(data, expectsreply);
+        }
+        catch (InvalidMidiDataException e)
+        {
+            throw new MidiException(e.getMessage(), 0);
+        }
     }
     
-    public byte[] getContent() {
-	return content;
+    public EnqueuedPacket(byte[] data, boolean expectsreply) throws InvalidMidiDataException {
+        super(data);
+        this.expectsreply = expectsreply;
     }
     
     public boolean expectsReply() {
 	return expectsreply;
     }
   
-    private byte[] content;
     private boolean expectsreply;
 
 }
