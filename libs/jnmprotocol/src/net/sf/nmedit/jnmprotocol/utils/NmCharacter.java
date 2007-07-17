@@ -69,7 +69,7 @@ public class NmCharacter
      * @param nmString the string
      * @throws IllegalArgumentException if the string contains illegal characters
      */
-    public static void appendString(IntStream intStream, CharSequence nmString)
+    public static void appendString(IntStream intStream, String nmString)
     {
         appendString(intStream, nmString, 16);
     }
@@ -81,8 +81,11 @@ public class NmCharacter
      * @param maxLen maximum number of characters
      * @throws IllegalArgumentException if the string contains illegal characters
      */
-    public static void appendString(IntStream intStream, CharSequence nmString, int maxLen)
-    {
+    public static void appendString(IntStream intStream, String nmString, int maxLen)
+    { 
+        // TODO 
+        // byte[] chars = nmString.getBytes("ISO-8859-1");
+        
         int len = Math.min(nmString.length(), maxLen);
         for (int i=0;i<len;i++)
         {
