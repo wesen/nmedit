@@ -47,7 +47,7 @@ public class NMData
     private ImageIcon nmMicroIcon;
     private ImageIcon nmRackIcon;
     private ImageIcon nmModularIcon;
-    
+
     public static NMData sharedInstance()
     {
         if (instance == null)
@@ -94,7 +94,7 @@ public class NMData
 
     public ImageIcon getModularRackIcon()
     {
-        return null;
+        return getModularIcon();
     }
     
     public NM1ModuleDescriptions getModuleDescriptions()

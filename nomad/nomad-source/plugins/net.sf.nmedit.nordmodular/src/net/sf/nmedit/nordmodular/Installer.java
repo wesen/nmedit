@@ -18,8 +18,6 @@
  */
 package net.sf.nmedit.nordmodular;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -38,21 +36,14 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiDevice.Info;
 import javax.swing.tree.TreeNode;
 
-
-import net.sf.nmedit.jpatch.PPatch;
-import net.sf.nmedit.jpatch.randomizer.GaussianRandomizer;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
 import net.sf.nmedit.jsynth.midi.MidiPlug;
 import net.sf.nmedit.jtheme.ModulePane;
-import net.sf.nmedit.jtheme.clavia.nordmodular.JTNMPatch;
 import net.sf.nmedit.nmutils.midi.MidiID;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.jpf.TempDir;
-import net.sf.nmedit.nomad.core.menulayout.MLEntry;
-import net.sf.nmedit.nomad.core.menulayout.MenuLayout;
 import net.sf.nmedit.nomad.core.service.Service;
 import net.sf.nmedit.nomad.core.service.initService.InitService;
-import net.sf.nmedit.nomad.core.swing.document.Document;
 
 import org.java.plugin.PluginManager;
 
@@ -60,8 +51,6 @@ public class Installer implements InitService
 {
 
     // TempDir temp = new TempDir(this);
-	 private static final String MENU_PATCH_RANDOMIZE = "nomad.menu.patch.randomize";
-	
     public Class<? extends Service> getServiceClass()
     {
         return InitService.class;
@@ -77,19 +66,6 @@ public class Installer implements InitService
         pane.setModules(data.getModuleDescriptions());
         pane.setTheme(data.getJTContext());
         
-        // add randomize action
-        MenuLayout menuLayout = Nomad.sharedInstance().getMenuLayout();
-        
-        MLEntry e = menuLayout.getEntry(MENU_PATCH_RANDOMIZE);
-        e.setEnabled(true);
-        e.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e)
-            {
-                randomizePatch();
-            }}
-         );
-
-			
     }
 
     public void shutdown()
@@ -162,16 +138,8 @@ public class Installer implements InitService
         for (int i=0;i<count;i++)
         {
             String prefix = "nordmodular."+i+"."; 
-            int maxSlotCount = str2int(properties.getProperty(prefix+"slots.maxcount"), -1);
-            if (maxSlotCount <0)
-                continue;
-            if (maxSlotCount<4) maxSlotCount = 1;
-            if (maxSlotCount>4) maxSlotCount = 4;
 
             String name = properties.getProperty(prefix+"name");
-            
-            if (name == null)
-                name = maxSlotCount == 4 ? "Nord Modular" : "Micro Modular";
             
             MidiDevice.Info in = readMidiInfo(properties, prefix+"midi.in.", list, midiID, true);
             MidiDevice.Info out = readMidiInfo(properties, prefix+"midi.out.", list, midiID, false);
@@ -179,7 +147,7 @@ public class Installer implements InitService
             MidiPlug pin = in == null ? null : new MidiPlug(in);
             MidiPlug pout = out == null ? null : new MidiPlug(out);
             
-            AbstractNewNordService.newSynth(maxSlotCount, name, pin, pout);
+            NewNordModularService.newSynth(name, pin, pout);
         }
     }
 
@@ -236,7 +204,6 @@ public class Installer implements InitService
             String prefix = "nordmodular."+i+"."; 
             NordModular synth = synthList.get(i);
             properties.put(prefix+"name", synth.getName());
-            properties.put(prefix+"slots.maxcount", Integer.toString(synth.getMaxSlotCount()));
             putMidiInfo(properties, prefix+"midi.in.", synth.getPCInPort().getPlug(), midiID, true);
             putMidiInfo(properties, prefix+"midi.out.", synth.getPCOutPort().getPlug(), midiID, false);
         }
@@ -288,14 +255,5 @@ public class Installer implements InitService
         return temp.getTempFile("synth.properties"); 
     }
 
-    private void randomizePatch() {
-    	JTNMPatch patchComp = (JTNMPatch) Nomad.sharedInstance().getDocumentManager().getSelection().getComponent();
-    	PPatch patch = patchComp.getPatch();
-    	if (patch != null) {
-    		GaussianRandomizer randomizer = GaussianRandomizer.getRandomizer();
-    		randomizer.randomize(patch);
-    	}
-	    	
-	}
 }
 
