@@ -34,7 +34,7 @@ public class ProtocolTester extends TestCase
     
     private NmProtocol createProtocol(MidiDriver driver, MessageHandler messageHandler)
     {
-        return configureProtocol(new NmProtocolST(), driver, messageHandler);
+        return configureProtocol(new NmProtocol(), driver, messageHandler);
     }
     
     private NmProtocol configureProtocol(NmProtocol protocol,
@@ -236,7 +236,7 @@ public class ProtocolTester extends TestCase
             nmDriver.connect();
             
             MessageMulticaster multicaster = new MessageMulticaster();
-            NmProtocol protocol = new DebugProtocol(new NmProtocolST());
+            NmProtocol protocol = new NmProtocol();
             GetPatchMessageReplyAcceptor acceptor = new GetPatchMessageReplyAcceptor(protocol);
             configureProtocol(protocol, nmDriver, multicaster);
             multicaster.addProtocolListener(acceptor);
@@ -247,14 +247,7 @@ public class ProtocolTester extends TestCase
             while (System.currentTimeMillis()<timeout && !acceptor.accepted())
             {
                 protocol.heartbeat();
-                try
-                {
-                    protocol.awaitWorkSignal(1000);
-                }
-                catch (InterruptedException e)
-                {
-                    // ignore
-                }
+                protocol.waitForActivity(1000);
             }
             
             assertFalse("replies expected (PatchMessages:"+acceptor.getPatchMessageReplyCount()+", expected 13)", !acceptor.accepted());            
@@ -274,7 +267,7 @@ public class ProtocolTester extends TestCase
         nmDriver.connect();
         try
         {
-            NmProtocol protocol = configureProtocol(new NmProtocolST(), nmDriver, null);
+            NmProtocol protocol = configureProtocol(new NmProtocol(), nmDriver, null);
             MessageAcceptor acceptor = new MessageAcceptor(protocol, PatchListMessage.class);
             protocol.setMessageHandler(acceptor);
             
@@ -563,14 +556,8 @@ public class ProtocolTester extends TestCase
                     throw e1;
                 }
                 
-                try
-                {
-                    protocol.awaitWorkSignal(10);
-                }
-                catch (InterruptedException e)
-                {
-                    // ignore
-                }
+                protocol.waitForActivity(10);
+                
             }
         }
     }
