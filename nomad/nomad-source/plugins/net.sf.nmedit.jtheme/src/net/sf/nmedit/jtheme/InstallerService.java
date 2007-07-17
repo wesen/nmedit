@@ -20,6 +20,7 @@ package net.sf.nmedit.jtheme;
 
 import javax.swing.ImageIcon;
 
+import net.sf.nmedit.jtheme.randomizer.RandomizerTools;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.service.Service;
 import net.sf.nmedit.nomad.core.service.initService.InitService;
@@ -31,8 +32,8 @@ public class InstallerService implements InitService
     public void init()
     {
         JTabbedPane2 toolPane = Nomad.sharedInstance().getToolPane();
-        
         toolPane.addTab("Modules", new ImageIcon(getClass().getResource("/icons/eview16/members.gif")), ModulePane.getSharedInstance());
+        RandomizerTools.sharedInstance().install();
     }
 
     public void shutdown()
