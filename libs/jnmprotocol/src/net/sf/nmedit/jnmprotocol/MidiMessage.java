@@ -21,7 +21,6 @@ package net.sf.nmedit.jnmprotocol;
 
 import java.util.*;
 
-import net.sf.nmedit.jnmprotocol.utils.StringUtils;
 import net.sf.nmedit.jpdl.*;
 
 public abstract class MidiMessage
@@ -59,6 +58,23 @@ public abstract class MidiMessage
 
     public static MidiMessage create(BitStream bitStream)
         throws MidiException
+    {   
+        try
+        {
+            return createImpl(bitStream);
+        }
+        catch (MidiException e)
+        {
+            // set the midi message which caused the exception
+            e.setMidiMessage(bitStream.toByteArray());
+            // rethrow exception
+            throw e;
+        }   
+    }
+    
+    
+    private static MidiMessage createImpl(BitStream bitStream)
+        throws MidiException
     {
 	String error;
 	Packet packet = new Packet();
@@ -67,8 +83,9 @@ public abstract class MidiMessage
         .getMidiSysexParser()
         .parse(bitStream, packet);
 	bitStream.setPosition(0);
-	
+
 	if (success) {
+        
 	    if (packet.contains("IAm")) { 
 		return new IAmMessage(packet);
 	    }
@@ -145,27 +162,32 @@ public abstract class MidiMessage
 		    return new PatchMessage(packet);
 		}	  
 		
-		error = " unsupported packet: ";
+		error = "unsupported packet";
 	    }
 	    else {
-		error = " checksum error: ";
+		error = "checksum error";
 	    }
 	}
 	else {
-	    error = " parse failed: ";
+	    error = "parse failed";
 	}
 
-    byte[] message =  bitStream.toByteArray();
-    error += StringUtils.toHexadecimal(message)+" ("+StringUtils.toText(message)+")";
-    
 	throw new MidiException(error, 0);
     }
 
-    public abstract List<BitStream> getBitStream()
-	throws Exception;
+    public List<BitStream> getBitStream()
+	throws MidiException
+    {
+        throw new MidiException(
+                getClass().getName()+
+                ".getBitStream() not implemented.", 0);
+    }
 
-    public abstract void notifyListener(NmProtocolListener listener)
-	throws Exception;
+    public void notifyListener(NmProtocolListener listener)
+    {
+        throw new UnsupportedOperationException(
+                getClass().getName()+".notifyListener not implemented");
+    }
 
     public boolean expectsReply()
     {
@@ -179,77 +201,109 @@ public abstract class MidiMessage
 
     protected void addParameter(String name, String path)
     {
-	parameters.add(name);
-	paths.put(name, path);
+        if (isParameter(name))
+            throw new IllegalArgumentException("parameter already exists:"+name);
+
+        Parameter p = new Parameter(lastParameter, name, path);
+        if (firstParameter == null)
+            firstParameter = p;
+        lastParameter = p;
+        parameters.put(name, p);
     }
 
     protected boolean isParameter(String name)
     {
-	return paths.keySet().contains(name);
+        return parameterForName(name) != null;
     }
-    
-    private void ensureParameterExists(String parameter)
+
+    private void checkParameter(Parameter p, String parameter)
     {
-        if (!parameters.contains(parameter)) {
+        if (p == null) 
             throw new RuntimeException("Unsupported paramenter: " + parameter);
-        }
     }
     
     public void set(String parameter, int value)
     {
-        ensureParameterExists(parameter);
-        values.put(parameter, value);
+        Parameter p = parameterForName(parameter);
+        checkParameter(p, parameter);
+        p.setValue(value);
     }
 
     public Iterator<String> parameterNames()
     {
-        return parameters.iterator();
+        // can't use parameters.keySet().iterator()
+        // because it does not respect the order
+        return new Iterator<String>()
+        {
+            Parameter pos = firstParameter;
+
+            public boolean hasNext()
+            {
+                return pos != null;
+            }
+
+            public String next()
+            {
+                if (!hasNext())
+                    throw new NoSuchElementException();
+                Parameter res = pos;
+                pos = pos.next;
+                return res.name;
+            }
+
+            public void remove()
+            {
+                throw new UnsupportedOperationException();
+            }
+            
+        };
     }
     
     public int get(String parameter, int defaultValue)
     {
-        Integer value = values.get(parameter);
-        if (value == null)    
-            ensureParameterExists(parameter);
-        return value == null ? defaultValue : value.intValue();
+        Parameter p = parameterForName(parameter);
+        checkParameter(p, parameter);
+        return p.valueSet ? p.value : defaultValue;
+    }
+
+    private void checkValue(Parameter p)
+    {
+        if (!p.valueSet)
+            throw new RuntimeException("Missing parameter value: " + p.name);
     }
 
     public int get(String parameter)
     {
-        Integer value = values.get(parameter);
-	    if (value == null) 
-        {
-	        ensureParameterExists(parameter);
-	        throw new RuntimeException("Missing parameter value: " + parameter);
-        }
-	    return value.intValue();
+        Parameter p = parameterForName(parameter);
+        checkParameter(p, parameter);
+        checkValue(p);
+        return p.value;
     }
 
     public void setAll(Packet packet)
     {
-    	for (String name: parameters) 
+    	for (Parameter p: parameters.values()) 
         {
-            String path = paths.get(name);
-    	    if (path != null)
-                set(name, packet.getVariable(path));
-    	}	
+            p.setValue(packet.getVariable(p.path));
+        }
     }
 
     public IntStream appendAll()
     {
     	IntStream intStream = new IntStream(parameters.size()+10);
-    	for (String parameter: parameters) 
+        Parameter p = firstParameter;
+        while (p != null) 
         {
-    	    intStream.append(get(parameter));
+            checkValue(p);
+    	    intStream.append(p.value);
+            p = p.next;
     	}
     	return intStream;
     }
 
     protected MidiMessage()
     {
-	parameters = new LinkedList<String>();
-	paths = new HashMap<String, String>();
-	values = new HashMap<String, Integer>();
+        parameters = new HashMap<String, Parameter>();
 	expectsreply = false;
 	isreply = false;
 	
@@ -259,7 +313,7 @@ public abstract class MidiMessage
     }
   
     protected BitStream getBitStream(IntStream intStream)
-	throws Exception
+	throws MidiException
     {
 	BitStream bitStream = new BitStream();
 	boolean success = PDLData
@@ -267,15 +321,27 @@ public abstract class MidiMessage
         .generate(intStream, bitStream);
 
 	if (!success || intStream.isAvailable(1)) {
-	    throw new MidiException("Information mismatch in generate.",
+	    throw new MidiException("Information mismatch in generate. In "+this,
 				    intStream.getSize() - intStream.getPosition());
 	}
 
 	return bitStream;
     }
 
+    public int getSlot()
+    {
+        return get("slot");
+    }
+    
+    public void setSlot(int slot)
+    {
+        if (slot<0 || slot>=4)
+            throw new IllegalArgumentException("invalid slot: "+slot);
+        set("slot", slot);
+    }
+    
     protected void appendChecksum(IntStream intStream)
-	throws Exception
+        throws MidiException
     {
 	int checksum = 0;
 	intStream.append(checksum);
@@ -287,19 +353,6 @@ public abstract class MidiMessage
 	intStream.setSize(intStream.getSize()-1);
 	intStream.append(checksum);
 	intStream.setPosition(0);
-    }
-    
-    protected String extractName(Packet name)
-    {
-	List<Integer> chars = name.getVariableList("chars");
-    StringBuilder sbuilder = new StringBuilder(chars.size()); 
-	for (int data: chars) {
-        // TODO shouldn't this be 'if(data==0) break;' ???
-	    if (data != 0) {
-            sbuilder.append((char)data);
-	    }
-	}
-	return sbuilder.toString();
     }
     
     protected static List<BitStream> createBitstreamList()
@@ -320,32 +373,59 @@ public abstract class MidiMessage
         sb.append(getClass().getName());
         sb.append("[");
         
-        Iterator<String> params = parameters.iterator();
+        Iterator<Parameter> params = parameters.values().iterator();
         
         if (params.hasNext())
         {
-            String param = params.next();
-            sb.append(param);
-            sb.append("="+get(param));
+            sb.append(params.next());
         }
         
         while (params.hasNext())
         {
             sb.append(",");
-            String param = params.next();
-            sb.append(param);
-            sb.append("="+values.get(param));
+            sb.append(params.next());
         }
         
         sb.append("]");
         return sb.toString();
     }
+
+    private Parameter parameterForName(String name)
+    {
+        return parameters.get(name);
+    }
     
     protected boolean isreply;
     protected boolean expectsreply;
 
-    private List<String> parameters;
-    private Map<String, String> paths;
-    private Map<String, Integer> values;
+    private Map<String, Parameter> parameters;
+    private Parameter firstParameter;
+    private Parameter lastParameter;
 
+    private static class Parameter
+    {
+        String name;
+        String path;
+        int value;
+        boolean valueSet = false;
+        Parameter next;
+        public Parameter(Parameter previous, String name, String path)
+        {
+            if (previous != null)
+                previous.next = this;
+            
+            this.name = name;
+            this.path = path;
+        }
+        public void setValue(int value)
+        {
+            this.value = value;
+            this.valueSet = true;
+        }
+        public String toString()
+        {
+            return name+"="+(valueSet?Integer.toString(value):"?");
+        }
+    }
+    
 }
