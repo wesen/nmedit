@@ -23,17 +23,21 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 
 import javax.swing.Icon;
+import javax.swing.SwingUtilities;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
+import net.sf.nmedit.jtheme.clavia.nordmodular.JTNM1Context;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTNMPatch;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.service.Service;
 import net.sf.nmedit.nomad.core.service.fileService.FSFileFilter;
 import net.sf.nmedit.nomad.core.service.fileService.FileService;
+import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
+import net.sf.nmedit.nomad.core.swing.document.Document;
 
 public class NmFileService implements FileService
 {
@@ -52,8 +56,9 @@ public class NmFileService implements FileService
 
     public void open(File file)
     {
+
         NMData data = NMData.sharedInstance();
-        
+
         try
         {
             InputStream in = new FileInputStream(file);
@@ -64,12 +69,17 @@ public class NmFileService implements FileService
             patch.setProperty("file", file);
 
             patch.setName(NmUtils.getPatchNameFromfileName(file));
-            PatchDocument pd = createPatchDoc(patch);
+            final PatchDocument pd = createPatchDoc(patch);
             pd.setURI(file);
 
-            Nomad.sharedInstance()
-            .getDocumentManager()
-            .add(pd);
+            SwingUtilities.invokeLater(new Runnable(){
+                public void run()
+                {
+                    Nomad.sharedInstance()
+                    .getDocumentManager()
+                    .add(pd);
+                }
+            });
         
         }
         catch (Exception e)
@@ -91,8 +101,12 @@ public class NmFileService implements FileService
     }
 
     public static JTNMPatch createPatchUI(NMPatch patch) throws Exception
-    {            
-        return new JTNMPatch(NMData.sharedInstance().getJTContext(), patch);
+    {           
+        JTNM1Context context = NMData.sharedInstance().getJTContext();
+        synchronized(context.getLock())
+        {
+            return new JTNMPatch(context, patch);
+        }
     }
 
     public Class<? extends Service> getServiceClass()
@@ -112,7 +126,7 @@ public class NmFileService implements FileService
         try
         {
             NMPatch patch = new NMPatch(data.getModuleDescriptions());
-            patch.getHistory().setEnabled(true);
+            patch.getHistory().setEnabled(false);
             PatchDocument pd = createPatchDoc(patch);
             Nomad.sharedInstance()
             .getDocumentManager()
@@ -152,6 +166,38 @@ public class NmFileService implements FileService
         return null;
     }
 
+    public static void selectOrOpen(NMPatch patch)
+    {
+        final DefaultDocumentManager dm = Nomad.sharedInstance().getDocumentManager();
+        for (Document d: dm.getDocuments())
+        {
+            if (d instanceof PatchDocument)
+            {
+                PatchDocument pd = (PatchDocument) d;
+                if (pd.getPatch() == patch)
+                {
+                    dm.setSelection(pd);
+                    return;
+                }
+            }
+        }
+        // document does not exist
+        
+        try
+        {
+            final Document d = NmFileService.createPatchDoc(patch);
+
+            dm.add(d);
+            dm.setSelection(d); // TODO selection does not work
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return;
+        }
+        
+    }
+    
     public boolean isDirectSaveOperationSupported(Object source)
     {
         NMPatch patch = getPatch(source);

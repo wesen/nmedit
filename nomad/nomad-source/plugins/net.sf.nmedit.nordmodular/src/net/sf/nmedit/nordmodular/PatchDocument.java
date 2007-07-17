@@ -31,6 +31,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
+import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTNMPatch;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
@@ -54,6 +55,12 @@ public class PatchDocument implements Document,
         this.jtpatch = patch;
         this.nmpatch = jtpatch.getPatch();
         nmpatch.addPropertyChangeListener(NMPatch.NAME, this);
+        nmpatch.addPropertyChangeListener("slot", this);
+    }
+    
+    public NMPatch getPatch()
+    {
+        return nmpatch;
     }
     
     public void setURI(File file)
@@ -78,7 +85,13 @@ public class PatchDocument implements Document,
 
     public String getTitle()
     {
-        return jtpatch.getPatch().getName();
+        String name = nmpatch.getName();
+        Slot slot = nmpatch.getSlot();
+        if (slot != null)
+        {
+            name+=" ("+slot.getName()+")";
+        }
+        return name;
     }
 
     public Icon getIcon()
@@ -123,6 +136,14 @@ public class PatchDocument implements Document,
             int index = m.indexOf(this);
             if (index>=0)
                 m.setTitleAt(index, getTitle());
+        }
+        else if ("slot".equals(evt.getPropertyName()))
+        {
+            DefaultDocumentManager dm = Nomad.sharedInstance().getDocumentManager();
+            if (dm.contains(this))
+            {
+                dm.updateTitle(this);
+            }
         }
     }
 

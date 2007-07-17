@@ -22,8 +22,6 @@ import java.awt.Event;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBox;
@@ -35,6 +33,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NmSlot;
@@ -48,7 +47,6 @@ import net.sf.nmedit.jsynth.nomad.SynthDeviceContext;
 import net.sf.nmedit.jsynth.nomad.SynthPropertiesDialog;
 import net.sf.nmedit.jsynth.nomad.SynthPropertiesDialog.DialogPane;
 import net.sf.nmedit.jsynth.worker.RequestPatchWorker;
-import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 
 public class NMSynthDeviceContext extends SynthDeviceContext 
@@ -208,43 +206,12 @@ public class NMSynthDeviceContext extends SynthDeviceContext
 
         public void newPatchInSlot(SlotEvent e)
         {
-            NmSlot slot = (NmSlot) e.getSlot();
-            uninstallDoc(slot);
+            NMPatch oldpatch = (NMPatch) e.getOldPatch();
+            NMPatch newpatch = (NMPatch) e.getNewPatch(); 
             
-            if (slot.getPatch()!= null)
-                installDoc(slot);
+            if (newpatch != null)
+                NmFileService.selectOrOpen(newpatch);
         }
-
-        private void uninstallDoc(NmSlot slot)
-        {
-            PatchDocument doc = docMap.get(slot.getSlotId());
-            if (doc == null)
-                return ;
-            
-            Nomad.sharedInstance()
-            .getDocumentManager().remove(doc);
-        }
-
-        private void installDoc(NmSlot slot)
-        {
-            PatchDocument doc;
-            try
-            {
-                doc = NmFileService.createPatchDoc(slot.getPatch());
-            }
-            catch(Exception e)
-            {
-                e.printStackTrace();
-                return;
-            }
-            docMap.put(slot.getSlotId(), doc);
-         
-            Nomad.sharedInstance()
-            .getDocumentManager().add(doc);
-        }
-
-        private Map<Integer, PatchDocument> docMap = new HashMap<Integer, PatchDocument>();
-        
     }
 
     protected void addForms(final SynthPropertiesDialog spd)
@@ -684,17 +651,25 @@ public class NMSynthDeviceContext extends SynthDeviceContext
 
     protected void processEvent(Event event, Slot slot)
     {
-        RequestPatchWorker worker = slot.createRequestPatchWorker(); 
-        try
+        NmSlot nmslot = (NmSlot) slot;
+        NMPatch patch = nmslot.getPatch();
+        if (patch==null)
         {
-            worker.requestPatch();
+            RequestPatchWorker worker = slot.createRequestPatchWorker(); 
+            try
+            {
+                worker.requestPatch();
+            }
+            catch (SynthException e)
+            {
+                e.printStackTrace();
+            }
         }
-        catch (SynthException e)
+        else
         {
-            e.printStackTrace();
+            NmFileService.selectOrOpen(patch);
         }
     }
 
-    
 }
 
