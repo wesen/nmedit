@@ -19,17 +19,53 @@
 
 package net.sf.nmedit.jnmprotocol;
 
+import net.sf.nmedit.jnmprotocol.utils.StringUtils;
+
 public class MidiException extends Exception
 {
+    
+    // the midi message which caused this exception
+    private byte[] midiMessage;
+    
     public MidiException(String message, int error)
     {
 	this.message = message;
 	this.error = error;
     }
 
+    /**
+     * Sets the midi message which caused this exception
+     */
+    public void setMidiMessage(byte[] message)
+    {
+        this.midiMessage = message;
+    }
+
+    /**
+     * Returns the midi message which caused this exception
+     */
+    public byte[] getMidiMessage()
+    {
+        return midiMessage;
+    }
+    
     public String getMessage()
     {
-	return message;
+        StringBuilder sb = new StringBuilder();
+        sb.append(message);
+        sb.append(" [error=");
+        sb.append(Integer.toString(getError()));
+        if (midiMessage != null)
+        {
+            sb.append(",message={");
+            sb.append(StringUtils.toHexadecimal(midiMessage));
+            sb.append("}");
+            sb.append(",text={");
+            sb.append(StringUtils.toText(midiMessage));
+            sb.append("}");
+        }
+        sb.append("]");
+        return sb.toString();
     }
 
     public int getError()
@@ -39,10 +75,5 @@ public class MidiException extends Exception
 
     private String message;
     private int error;
-    
-    public String toString()
-    {
-        return super.toString() + " [error:"+getError()+"]";
-    }
     
 }
