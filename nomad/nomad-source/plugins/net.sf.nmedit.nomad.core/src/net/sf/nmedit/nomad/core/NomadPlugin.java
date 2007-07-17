@@ -23,6 +23,8 @@
 package net.sf.nmedit.nomad.core;
 
 
+import javax.swing.SwingUtilities;
+
 import org.java.plugin.PluginManager;
 import org.java.plugin.boot.Application;
 import org.java.plugin.boot.ApplicationPlugin;
@@ -65,11 +67,16 @@ public class NomadPlugin extends ApplicationPlugin implements Application
 
     public void startApplication() throws Exception
     {
-        NomadLoader loader = new NomadLoader();
-     
-        this.nomad = loader.createNomad(this);
-        
-        nomad.getWindow().setVisible(true);
+        final NomadLoader loader = new NomadLoader();
+        nomad = loader.createNomad(NomadPlugin.this);
+        SwingUtilities.invokeLater(new Runnable(){
+            public void run() {
+                // invoke on event dispatch thread
+                nomad.setupUI();
+                loader.initServices();
+                nomad.getWindow().setVisible(true);
+            }
+        });
         
     }
 }

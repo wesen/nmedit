@@ -83,6 +83,7 @@ import net.sf.nmedit.nomad.core.service.fileService.FileService;
 import net.sf.nmedit.nomad.core.service.fileService.FileServiceTool;
 import net.sf.nmedit.nomad.core.service.initService.InitService;
 import net.sf.nmedit.nomad.core.swing.ButtonBarBuilder;
+import net.sf.nmedit.nomad.core.swing.Factory;
 import net.sf.nmedit.nomad.core.swing.JDropDownButtonControl;
 import net.sf.nmedit.nomad.core.swing.URIListDropHandler;
 import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
@@ -125,60 +126,13 @@ public class Nomad
         return pageContainer;
     }
     
-    public Nomad(NomadPlugin plugin, MenuLayout menuLayout) throws Exception
+    public Nomad(NomadPlugin plugin, MenuLayout menuLayout) 
     {
-
-        // before menu builder is used
-        RuntimeMenuBuilder.buildNewMenuEntries(menuLayout);
-
-        ResourceBundle localizedMessages = NomadLoader.getResourceBundle();
-
-        menuLayout.getEntry(MENU_FILE_OPEN)
-        .addActionListener(new ActionHandler(this, "fileOpen"));
-        menuLayout.getEntry(MENU_FILE_SAVE)
-        .addActionListener(new ActionHandler(this, "fileSave"));
-        menuLayout.getEntry(MENU_FILE_SAVEAS)
-        .addActionListener(new ActionHandler(this, "fileSaveAs"));
-        menuLayout.getEntry(MENU_FILE_PROPERTIES)
-        .addActionListener(new ActionHandler(this, "fileProperties"));
-        menuLayout.getEntry("nomad.menu.help.plugins")
-        .addActionListener(new ActionHandler(this, "pluginsHelp"));
-
-        menuLayout.getEntry(MENU_FILE_EXPORT)
-        .addActionListener(new ActionHandler(this, "export"));
-        
+        mainWindow = new JFrame("Nomad");
         menuBuilder = new MenuBuilder(menuLayout);
-        menuBuilder.setResourceBundle(localizedMessages);
-        LocaleConfiguration.getLocaleConfiguration().addLocaleChangeListener(new LocaleHandler(menuBuilder));
-        final JMenuBar mainMenuBar = menuBuilder.createMenuBar("nomad.menu");
-
-        JFrame main = new JFrame("Nomad");
-        mainWindow = main;
-        main.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        main.setJMenuBar(mainMenuBar);
-
-        menuBuilder.addActionListener("nomad.menu.file.exit", new ActionHandler(this, "handleExit"));
-        main.addWindowListener(new WindowAdapter() {
-                    public void windowClosing( WindowEvent e )
-                    {
-                        Nomad.sharedInstance().handleExit();
-                    }
-                });
-        
-        
         this.pluginInstance = plugin;
         Nomad.instance = this;
-        
         this.menuLayout = menuLayout;
-
-        MenuLayout.disableGhosts(menuLayout);
-
-        setupUI();
-        
-        DocumentSelectionHandler dsh = new DocumentSelectionHandler();
-        pageContainer.addListener(dsh);
-        dsh.setMenuForDocument(pageContainer.getSelection());
-
     }
     
     public void pluginsHelp()
@@ -490,7 +444,6 @@ public class Nomad
     
     public void fileOpen()
     {
-        
         JFileChooser chooser = new JFileChooser(new File("/home/christian/Programme/nomad/data/patch/"));
         chooser.setMultiSelectionEnabled(true);
         FileServiceTool.addChoosableFileFilters(chooser);
@@ -515,15 +468,54 @@ public class Nomad
         return explorerTree;
     }
     
-    private void setupUI()
+    void setupUI()
     {
-        /*
-        pageContainer = new JPanel();
-        pageContainer.setLayout(new BorderLayout());
-        pageContainer.add(pageTabs, BorderLayout.NORTH);
+        // before menu builder is used
+        RuntimeMenuBuilder.buildNewMenuEntries(menuLayout);
 
-        */
+        ResourceBundle localizedMessages = NomadLoader.getResourceBundle();
+
+        menuLayout.getEntry(MENU_FILE_OPEN)
+        .addActionListener(new ActionHandler(this, true, "fileOpen"));
+        menuLayout.getEntry(MENU_FILE_SAVE)
+        .addActionListener(new ActionHandler(this, true, "fileSave"));
+        menuLayout.getEntry(MENU_FILE_SAVEAS)
+        .addActionListener(new ActionHandler(this, true, "fileSaveAs"));
+        menuLayout.getEntry(MENU_FILE_PROPERTIES)
+        .addActionListener(new ActionHandler(this, true, "fileProperties"));
+        menuLayout.getEntry("nomad.menu.help.plugins")
+        .addActionListener(new ActionHandler(this, true, "pluginsHelp"));
+
+        menuLayout.getEntry(MENU_FILE_EXPORT)
+        .addActionListener(new ActionHandler(this, true, "export"));
         
+        menuBuilder.setResourceBundle(localizedMessages);
+        LocaleConfiguration.getLocaleConfiguration().addLocaleChangeListener(new LocaleHandler(menuBuilder));
+        final JMenuBar mainMenuBar = menuBuilder.createMenuBar("nomad.menu");
+
+        mainWindow.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        mainWindow.setJMenuBar(mainMenuBar);
+
+        menuBuilder.addActionListener("nomad.menu.file.exit", new ActionHandler(this, true, "handleExit"));
+        mainWindow.addWindowListener(new WindowAdapter() {
+                    public void windowClosing( WindowEvent e )
+                    {
+                        Nomad.sharedInstance().handleExit();
+                    }
+                });
+        
+        
+
+
+        MenuLayout.disableGhosts(menuLayout);
+
+
+        pageContainer = new DefaultDocumentManager();
+
+        DocumentSelectionHandler dsh = new DocumentSelectionHandler();
+        pageContainer.addListener(dsh);
+        dsh.setMenuForDocument(pageContainer.getSelection());
+
         Container contentPane = mainWindow.getContentPane();
         
         explorerTree = new ExplorerTree();
@@ -548,17 +540,7 @@ public class Nomad
         explorerPane.add(explorerTreeScroller, BorderLayout.CENTER);
         
         toolPane.addTab("Explorer", getImage("/icons/eview16/filenav_nav.gif"), explorerPane);
-  /*      
-        left.setMinimumSize(new Dimension(200,110));
-        left.setPreferredSize(new Dimension(200,110));
-*/
-        pageContainer = new DefaultDocumentManager();
-        /*
-        ImageIcon helpIcon = getImage("/icons/etool16/help_contents.gif");
-        
-        toolPane.addTab("Help", helpIcon, new HelpPane(helpIcon));*/
 
-        
         new DropTarget(contentPane, new URIListDropHandler() {
             public void uriListDropped(URI[] uriList)
             {
@@ -584,17 +566,18 @@ public class Nomad
         splitLR.setDividerLocation(200);
         splitLR.setRightComponent(pageContainer);
         splitLR.setLeftComponent(toolPane);
-                
+        
         contentPane.setLayout(new BorderLayout());
         contentPane.add(splitLR, BorderLayout.CENTER);
         
         JToolBar toolbar = new JToolBar();
         toolbar.setFloatable(false);
-        toolbar.add(menuLayout.getEntry(MENU_FILE_OPEN));
+        toolbar.add(Factory.createToolBarButton(menuLayout.getEntry(MENU_FILE_OPEN)));
         toolbar.addSeparator();
-        toolbar.add(menuLayout.getEntry(MENU_FILE_SAVE)) ; 
+        toolbar.add(Factory.createToolBarButton(menuLayout.getEntry(MENU_FILE_SAVE))) ;
         contentPane.add(toolbar, BorderLayout.NORTH);
-  
+
+        
         JPopupMenu pop = new JPopupMenu();
         Iterator<FileService> iter = ServiceRegistry.getServices(FileService.class);
         
@@ -602,7 +585,7 @@ public class Nomad
         SelectedAction sa = new SelectedAction();
         
         
-        sa.putValue(AbstractAction.SMALL_ICON, getImage("/icons/etool16/new_untitled_text_file.gif"));
+        sa.putValue(AbstractAction.SMALL_ICON, getImage("/icons/tango/16x16/actions/document-new.png"));
         
         while (iter.hasNext())
         {
@@ -616,24 +599,10 @@ public class Nomad
                     rfirst = rb;
             }
         }
-        /*
-        if (rfirst != null)
-            rfirst.setSelected(true);
-        */
-        JButton btn = toolbar.add(sa);
-   
+
+        JButton btn = Factory.createToolBarButton(sa);
+        toolbar.add(btn);
         new JDropDownButtonControl(btn, pop);
-        
-/*
- * 
- * 
- * 
-        JToolBar toolbar = new JToolBar();
-        toolbar.setFloatable(false);
-        contentPane.add(toolbar, BorderLayout.NORTH);
-        
-        JButton btn = new JButton(getImage("/icons/etool16/new_untitled_text_file.gif"));
-        toolbar.add(btn);*/
     }
     
     private static class SelectedAction extends AbstractAction implements ItemListener

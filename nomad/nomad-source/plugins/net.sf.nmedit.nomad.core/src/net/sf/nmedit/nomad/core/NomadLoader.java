@@ -62,6 +62,7 @@ import org.java.plugin.registry.PluginDescriptor;
 
 import com.jgoodies.looks.Options;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
+import com.jgoodies.looks.plastic.PlasticTheme;
 
 public class NomadLoader
 {
@@ -75,7 +76,7 @@ public class NomadLoader
     
     private static NomadPlugin plugin;
     
-    public Nomad createNomad(final NomadPlugin plugin) throws Exception
+    public Nomad createNomad(final NomadPlugin plugin) 
     {
         NomadLoader.plugin = plugin;
         
@@ -106,7 +107,7 @@ public class NomadLoader
             {
                 log.fatal("could not read MenuLayout", e);
             }
-            throw e;
+            throw new RuntimeException(e);
         }
         finally
         {
@@ -144,19 +145,21 @@ public class NomadLoader
 
         activatePlugins();
         
-        //Runnable run = new Runnable(){public void run(){
+        progress.setText("Initializing services...");
         
         JPFServiceInstallerTool.activateAllServices(plugin);
+        progress.setText("Starting Nomad...");
         
-        //}};
-
        // SwingUtilities.invokeLater(run);
 
         Nomad nomad = new Nomad(plugin,menuLayout);
         getPreferredWindowBounds(nomad.getWindow(), nomadProperties);
         
-
-        Runnable run = new Runnable(){public void run(){
+        return nomad;
+    }
+    
+    public void initServices()
+    {
         for (Iterator<InitService> i=ServiceRegistry.getServices(InitService.class); i.hasNext();)
         {
             try
@@ -168,13 +171,7 @@ public class NomadLoader
                 t.printStackTrace();
             }
         }
-        }};
-
-        SwingUtilities.invokeLater(run);
-
-        return nomad;
     }
-    
     
     private void activatePlugins()
     {
@@ -289,9 +286,11 @@ public class NomadLoader
         // jgoodies specific properties
         
         PlasticLookAndFeel.setTabStyle(PlasticLookAndFeel.TAB_STYLE_METAL_VALUE);
-        UIManager.put(Options.POPUP_DROP_SHADOW_ENABLED_KEY, Boolean.FALSE);
-
+        //UIManager.put(Options.POPUP_DROP_SHADOW_ENABLED_KEY, Boolean.FALSE);
+        Options.setPopupDropShadowEnabled(false);
+        Options.setUseNarrowButtons(true);
         
+        //UIManager.put(Options.PLASTIC_MENU_FONT_KEY, new FontUIResource("Verdana", Font.PLAIN, 9));
         //PlasticLookAndFeel.setFontPolicy(FontPolicies.getDefaultWindowsPolicy());
 /*
         UIManager.put("MenuItem.margin", new InsetsUIResource(2,2,1,2));
@@ -304,7 +303,19 @@ public class NomadLoader
             try
             {
                 theme = (MetalTheme) Class.forName(themeClassName).newInstance();
-                MetalLookAndFeel.setCurrentTheme(theme);
+                UIManager.put("Plastic.theme", themeClassName);
+                
+                if (theme instanceof PlasticTheme) 
+                {
+                    PlasticLookAndFeel.setPlasticTheme((PlasticTheme)theme);
+                    // PlasticLookAndFeel.setTabStyle(settings.getPlasticTabStyle());
+                } 
+                else if (theme instanceof MetalTheme) 
+                {
+                    MetalLookAndFeel.setCurrentTheme(theme);
+                }
+                
+                
             }
             catch (Throwable e)
             {
@@ -327,8 +338,8 @@ public class NomadLoader
                 Log log = LogFactory.getLog(getClass());
                 log.warn("could not set custom look and feel" ,e);
             }
-        }    
-
+        }
+        
     }
     
     private void initLocale(Properties properties)

@@ -34,6 +34,8 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
@@ -46,11 +48,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import net.sf.nmedit.jsynth.Bank;
 import net.sf.nmedit.jsynth.Plug;
 import net.sf.nmedit.jsynth.Port;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.Synthesizer;
+import net.sf.nmedit.jsynth.event.BankUpdateEvent;
+import net.sf.nmedit.jsynth.event.BankUpdateListener;
 import net.sf.nmedit.jsynth.event.PortAttachmentEvent;
 import net.sf.nmedit.jsynth.event.PortAttachmentListener;
 import net.sf.nmedit.jsynth.event.SlotEvent;
@@ -58,6 +63,8 @@ import net.sf.nmedit.jsynth.event.SlotListener;
 import net.sf.nmedit.jsynth.event.SlotManagerListener;
 import net.sf.nmedit.jsynth.event.SynthesizerEvent;
 import net.sf.nmedit.jsynth.event.SynthesizerStateListener;
+import net.sf.nmedit.jsynth.worker.PatchLocation;
+import net.sf.nmedit.jsynth.worker.StorePatchWorker;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.forms.ExceptionDialog;
 import net.sf.nmedit.nomad.core.menulayout.MLEntry;
@@ -102,7 +109,7 @@ public class SynthDeviceContext extends ContainerNode
     
     protected ContainerNode slotsRoot;
     protected ContainerNode portsRoot;
-    //protected ContainerNode banksRoot;
+    protected ContainerNode banksRoot;
     private EventHandler eventHandler;
 
     public SynthDeviceContext(ExplorerTree etree, String title)
@@ -112,7 +119,7 @@ public class SynthDeviceContext extends ContainerNode
         setIcon(iconStopped);
         portsRoot = new ContainerNode(this, "Ports");
         slotsRoot = new ContainerNode(this, "Slots");
-      //  banksRoot = new ContainerNode(this, "Banks");
+        banksRoot = new ContainerNode(this, "Banks");
         
         addChild(portsRoot);
         
@@ -181,10 +188,11 @@ public class SynthDeviceContext extends ContainerNode
         synth.addSynthesizerStateListener(this);
         synth.addPropertyChangeListener("name", this);
         synth.getSlotManager().addSlotManagerListener(this);
-
+        
         for (int i=0;i<synth.getSlotCount();i++)
             installSlot(synth.getSlot(i));
-        
+
+        installBanks();
         portsRoot.clear();
         
         for (int i=0;i<synth.getPortCount();i++)
@@ -193,7 +201,6 @@ public class SynthDeviceContext extends ContainerNode
             PortLeaf leaf = new PortLeaf(portsRoot, port);
             portsRoot.addChild(leaf);
         }
-        
     }
     
     private void uninstall()
@@ -203,11 +210,35 @@ public class SynthDeviceContext extends ContainerNode
         synth.getSlotManager().removeSlotManagerListener(this);
         
         for (int i=synth.getSlotCount()-1;i>=0;i--)
+        {
             uninstallSlot(synth.getSlot(i));
+        }
 
+        uninstallBanks();
+        
         for (int i=portsRoot.getChildCount()-1;i>=0;i--)
             ((PortLeaf)portsRoot.getChildAt(i)).uninstall();        
         portsRoot.clear();
+    }
+    
+    private void installBanks()
+    {
+        banksRoot.clear();
+        for (int i=0;i<synth.getBankCount();i++)
+        {
+            banksRoot.addChild(new BankLeaf(banksRoot, synth.getBank(i)));
+        }
+    }
+
+    private void uninstallBanks()
+    {
+        for (int i=0;i<banksRoot.getChildCount();i++)
+        {
+            BankLeaf l = (BankLeaf) banksRoot.getChildAt(i);
+            l.uninstall();
+        }
+        banksRoot.clear();
+
     }
     
     public boolean isWarningFlagSet()
@@ -245,6 +276,18 @@ public class SynthDeviceContext extends ContainerNode
     public void synthConnectionStateChanged(SynthesizerEvent e)
     {
         updateState();
+        
+        if (synth.isConnected())
+        {
+            installBanks();
+            addChild(banksRoot);
+        }
+        else
+        {
+            uninstallBanks();
+            remove(banksRoot);   
+        }
+        etree.fireNodeStructureChanged(this);
     }
 
     public State getState()
@@ -316,6 +359,46 @@ public class SynthDeviceContext extends ContainerNode
             SlotLeaf s = (SlotLeaf) node;
             processEvent(event, s.getSlot());
         }
+        else if (node instanceof LeafNode && banksRoot.contains(node.getParent()))
+        {
+            Bank<? extends Synthesizer> b = ((BankLeaf)node.getParent()).bank;
+            processEvent(event, b, node.getParent().getIndex(node));
+        }
+    }
+
+    protected void processEvent(Event event, 
+            Bank<? extends Synthesizer> bank, 
+            int index)
+    {
+        // no op
+
+        List<Synthesizer> list = new LinkedList<Synthesizer>();
+        list.add(bank.getSynthesizer());
+        
+        SaveInSynthDialog ssd = new SaveInSynthDialog(list);
+        ssd.setTitle("Save In Slot");
+        ssd.setSaveInBankAllowed(false);
+        ssd.invoke();
+        
+        if (!ssd.isSaveOption())
+            return;
+
+        Slot dst = ssd.getSelectedSlot();
+    
+        if (dst == null)
+            return;
+        
+        StorePatchWorker w = synth.createStorePatchWorker();
+        w.setSource(new PatchLocation(bank.getBankIndex(), index));
+        w.setDestination(new PatchLocation(dst.getSlotIndex()));
+        try
+        {
+            w.store();
+        }
+        catch (SynthException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     protected void processEvent(Event event, Slot slot)
@@ -365,6 +448,66 @@ public class SynthDeviceContext extends ContainerNode
 
         etree.fireNodeStructureChanged(leaf);
         etree.fireNodeStructureChanged(this);
+    }
+
+    private class BankLeaf extends ContainerNode implements BankUpdateListener
+    {
+
+        private Bank<? extends Synthesizer> bank;
+        private boolean dropped = true;
+
+        public BankLeaf(TreeNode parent, Bank<? extends Synthesizer> bank)
+        {
+            super(parent, bank.getName());
+            this.bank = bank;
+            for (int i=0;i<bank.getPatchCount();i++)
+                addChild(new LeafNode(this, "?"));
+            bank.addBankUpdateListener(this);
+        }
+
+        public TreeNode getChildAt(int childIndex)
+        {
+            if (dropped)
+            {
+                if (synth.isConnected())
+                {
+                    bank.update();
+                    dropped = false;
+                }
+            }
+            return super.getChildAt(childIndex);
+        }
+
+        public void notifyDropChildren()
+        {
+            dropped = true;
+            super.notifyDropChildren();
+        }
+        
+        public void uninstall()
+        {
+            bank.removeBankUpdateListener(this);
+        }
+
+        public void bankUpdated(BankUpdateEvent e)
+        {
+            if (dropped) return;
+            for (int i=e.getBeginIndex();i<e.getEndIndex();i++)
+            {
+                LeafNode l = (LeafNode) getChildAt(i);
+                String name;
+                if (!bank.isPatchInfoAvailable(i))
+                    name = "?";
+                else
+                if (!bank.containsPatch(i))
+                    name = "<empty>";
+                else 
+                    name = bank.getPatchName(i);
+                l.setText(name);
+            }
+            etree.fireNodeStructureChanged(this);
+        }
+        
     }
     
     private class PortLeaf extends LeafNode implements PortAttachmentListener 

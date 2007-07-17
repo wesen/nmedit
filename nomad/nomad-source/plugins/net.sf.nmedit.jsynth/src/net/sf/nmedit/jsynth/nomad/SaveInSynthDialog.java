@@ -33,12 +33,16 @@ import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
+import net.sf.nmedit.jsynth.Bank;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.Synthesizer;
+import net.sf.nmedit.jsynth.worker.PatchLocation;
 
 public class SaveInSynthDialog extends JDialog 
 {
@@ -49,6 +53,10 @@ public class SaveInSynthDialog extends JDialog
     private static final long serialVersionUID = 4854099017201533301L;
     private Collection<Synthesizer> synths;
     private SaveInSynthFrm form;
+
+    private boolean saveInBankAllowed = true;
+    private boolean saveInSlotAllowed = true;
+    private boolean openPatchAllowed = false;
     
     public SaveInSynthDialog(Collection<Synthesizer> synths)
     {
@@ -57,6 +65,75 @@ public class SaveInSynthDialog extends JDialog
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         createComponents();
     }
+
+    public void setSaveInBankAllowed(boolean a)
+    {
+        if (this.saveInBankAllowed != a)
+        {
+            this.saveInBankAllowed = a;
+            updateState();
+            updateCheckBoxes();
+        }
+    }
+
+    public void setSaveInSlotAllowed(boolean a)
+    {
+        if (this.saveInSlotAllowed != a)
+        {
+            this.saveInSlotAllowed = a;
+            updateState();
+            updateCheckBoxes();
+        }
+    }
+
+    public void setOpenPatchAllowed(boolean a)
+    {
+        if (this.openPatchAllowed != a)
+        {
+            this.openPatchAllowed = a;
+            updateCheckBoxes();
+        }
+    }
+
+    private void updateCheckBoxes()
+    {        
+        if (form.cbSaveInSlot.isEnabled())
+        {
+            if (isSaveInSlotAllowed() && (!isSaveInBankAllowed()))
+                form.cbSaveInSlot.setSelected(true);
+        }
+        if (form.cbSaveInBank.isEnabled())
+        {
+            if (isSaveInBankAllowed() && (!isSaveInSlotAllowed()))
+                form.cbSaveInBank.setSelected(true);
+        }
+        form.cbOpenPatch.setEnabled(openPatchAllowed);
+    }
+
+    public boolean isSaveInBankAllowed()
+    {
+        return saveInBankAllowed;
+    }
+
+    public boolean isOpenPatchAllowed()
+    {
+        return openPatchAllowed;
+    }
+    
+    public boolean isSaveInSlotAllowed()
+    {
+        return saveInSlotAllowed;
+    }
+    
+    public boolean isOpenPatchSelected()
+    {
+        return form.cbOpenPatch.isSelected();
+    }
+    
+    public void setOpenPatchSelected(boolean s)
+    {
+        form.cbOpenPatch.setSelected(s);
+    }
     
     private void createComponents()
     {
@@ -64,11 +141,16 @@ public class SaveInSynthDialog extends JDialog
         
         form.cbSynth.setModel(new DefaultComboBoxModel(synths.toArray()));
 
+        form.lblIcon.setText("");
+        
         form.cbSaveInSlot.setSelected(true);
         form.cbSaveInBank.setSelected(false);
         form.cbSlot.setRenderer(new CustomRenderer());
         form.cbSynth.setRenderer(new CustomRenderer());
         form.cbBank.setRenderer(new CustomRenderer());
+
+        form.cbBank.setMaximumRowCount(20);
+        form.cbSynth.setMaximumRowCount(20);
 
         getRootPane().setDefaultButton(form.btnSave);
         
@@ -93,12 +175,13 @@ public class SaveInSynthDialog extends JDialog
         JPanel cp = new JPanel();
         
         setContentPane(cp);
-        cp.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+        form.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
         getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(form);
+        getContentPane().add(new JScrollPane(form));
         
         updateData();
         updateState();
+        updateSynthIcon();
         pack();
     }
     
@@ -142,8 +225,22 @@ public class SaveInSynthDialog extends JDialog
     {
         updateData();
         updateState();
+        updateSynthIcon();
     }
 
+    private void updateSynthIcon()
+    {
+        Synthesizer synth = (Synthesizer) form.cbSynth.getSelectedItem();
+        Object ic = null;
+        if (synth != null)
+            ic = synth.getClientProperty("icon");
+        Icon icon = null;
+        if (ic instanceof Icon)
+            icon = (Icon) ic;
+        
+        form.lblIcon.setIcon(icon);
+    }
+    
     private void updateData()
     {
         form.cbSlot.removeAllItems();
@@ -153,13 +250,19 @@ public class SaveInSynthDialog extends JDialog
         ComboBoxModel model = getSlotModel(synth);
         if (model != null)
             form.cbSlot.setModel(model);
+
+        model = getBankModel(synth);
+        if (model != null)
+            form.cbBank.setModel(model);
     }
     
     private void updateState()
     {
         boolean dataToSaveInSlot =
+            saveInSlotAllowed &&
             form.cbSlot.getItemCount()>0;
         boolean dataToSaveInBank =
+            saveInBankAllowed &&
             form.cbBank.getItemCount()>0;
         
         boolean canSaveInSlot =
@@ -173,12 +276,11 @@ public class SaveInSynthDialog extends JDialog
         form.cbSlot.setEnabled(canSaveInSlot);
 
         form.cbSaveInBank.setEnabled(dataToSaveInBank);
-        form.cbSaveInBank.setEnabled(false); // TODO not implemented yet
         form.cbBank.setEnabled(canSaveInBank);
 
         form.btnSave.setEnabled(canSaveInSlot||canSaveInBank);
     }
-    
+
     private ComboBoxModel getSlotModel(Synthesizer synth)
     {
         if (synth != null)
@@ -191,6 +293,57 @@ public class SaveInSynthDialog extends JDialog
             return new DefaultComboBoxModel(slots.toArray());
         }
         return null;
+    }
+
+    private ComboBoxModel getBankModel(Synthesizer synth)
+    {
+        if (synth != null)
+        {
+            List<PatchLocation> banks = new ArrayList<PatchLocation>(synth.getBankCount()*100);
+            for (int i=0;i<synth.getBankCount();i++)
+            {
+                Bank<?> b = synth.getBank(i);
+                for (int j=0;j<b.getPatchCount();j++)
+                {
+                    banks.add(new BankPatchLocation(b, j));
+                }
+            }
+            return new DefaultComboBoxModel(banks.toArray());
+        }
+        return null;
+    }
+    
+    private static class BankPatchLocation extends PatchLocation
+    {
+
+        private Bank<?> bank;
+
+        public BankPatchLocation(Bank<?> bank, int position)
+        {
+            super(bank.getBankIndex(), position);
+            this.bank = bank;
+        }
+        
+        public String toString()
+        {
+            int pos = getPosition();
+            String name = bank.getPatchLocationName(pos)+": ";
+            
+            if (!bank.isPatchInfoAvailable(pos))
+            {
+                name+="?";
+            }
+            else if (!bank.containsPatch(pos))
+            {
+                name+="<empty>";
+            }
+            else
+            {
+                name+=bank.getPatchName(pos);
+            }
+            return name;
+        }
+        
     }
 
     private Object action = ActionHandler.CANCEL;
@@ -222,7 +375,26 @@ public class SaveInSynthDialog extends JDialog
     {
         if (getSelectedSynthesizer() != null)
         {
+            if (!form.cbSaveInSlot.isSelected())
+                return null;
+            if (!isSaveInSlotAllowed())
+                return null;
+            
             return (Slot) form.cbSlot.getSelectedItem();
+        }
+        return null;
+    }
+
+    public PatchLocation getSelectedBank()
+    {
+        if (getSelectedSynthesizer() != null)
+        {
+            if (!form.cbSaveInBank.isSelected())
+                return null;
+            if (!isSaveInBankAllowed())
+                return null;
+            
+            return (PatchLocation) form.cbBank.getSelectedItem();
         }
         return null;
     }
