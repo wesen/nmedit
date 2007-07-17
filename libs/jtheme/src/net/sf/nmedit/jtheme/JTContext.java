@@ -46,6 +46,13 @@ public abstract class JTContext
     
     public static final String UIDefaultsClassLoaderKey = "ClassLoader";
     
+    private final Object lock = new Object();
+    
+    public final Object getLock()
+    {
+        return lock;
+    }
+    
     private static transient Log _log;
     
     protected static Log getLogger()
