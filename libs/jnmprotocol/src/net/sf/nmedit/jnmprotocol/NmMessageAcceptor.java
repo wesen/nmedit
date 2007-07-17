@@ -76,7 +76,7 @@ public class NmMessageAcceptor<M extends MidiMessage> extends NmProtocolListener
     }
 
     public void waitForReply(NmProtocol protocol, long timeout)
-        throws Exception
+        throws MidiException
     {
         final long timeoutThreshold = System.currentTimeMillis()+timeout;
         
@@ -84,19 +84,11 @@ public class NmMessageAcceptor<M extends MidiMessage> extends NmProtocolListener
         {
             if (System.currentTimeMillis()>timeoutThreshold)
             {
-                throw new Exception("timeout: "+timeout+"ms ("+messageClass.getName()+")");
+                throw new MidiException("timeout: "+timeout+"ms ("+messageClass.getName()+")", 0);
             }
 
             protocol.heartbeat();
-
-            try
-            {
-                protocol.awaitWorkSignal(100);
-            }
-            catch (InterruptedException e)
-            {
-                // no op
-            }
+            protocol.waitForActivity(100);
         }
     }
     
