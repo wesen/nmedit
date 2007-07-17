@@ -59,22 +59,22 @@ public class ProtocolThreadExecutionPolicy implements ThreadExecutionPolicy
         this.hibernationThreshold = hibernationThreshold;
     }
 
-    public void delay() throws InterruptedException
+    public void delay()
     {
         // Check if the hibernation threshold is reached or hibernation mode is disabled 
-        if (System.currentTimeMillis() - protocol.lastActivity() <= hibernationThreshold || hibernationThreshold == 0)
+        if (System.currentTimeMillis() - protocol.getRecentActivity() <= hibernationThreshold || hibernationThreshold == 0)
         {
             // awaitWorkSignal(0) would not return until the work signal is received
             // instead share some time using Thread.yield()
             if (delay == 0)
                 Thread.yield();
             else
-                protocol.awaitWorkSignal(delay);
+                protocol.waitForActivity(delay);
         }
         else
         {
             // block until signal is received
-            protocol.awaitWorkSignal();
+            protocol.waitForActivity();
         }
     }
 
@@ -103,7 +103,7 @@ public class ProtocolThreadExecutionPolicy implements ThreadExecutionPolicy
     public void interruptDelay()
     {
         // interrups delay() which waits on the work signal
-        protocol.sendWorkSignal();
+        protocol.activity();
     }
 
 }
