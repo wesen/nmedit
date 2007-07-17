@@ -39,25 +39,31 @@ public class DeletePatchMessage extends MidiMessage
 	expectsreply = true;
     }
 
+    public DeletePatchMessage(int section, int position)
+    {
+        this();
+        deletePatchAt(section, position);
+    }
+    
+    public void deletePatchAt(int section, int position)
+    {
+        set("section", section);
+        set("position", position);
+    }
+    
     DeletePatchMessage(Packet packet)
-	throws Exception
+    throws MidiException
     {
 	throw new MidiException
 	    ("DeletePatchMessage(Packet packet) not implemented", 0);
     }
 
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
 	IntStream intStream = appendAll();
 	appendChecksum(intStream);
 	return createBitstreamList(getBitStream(intStream));
     }
     
-    public void notifyListener(NmProtocolListener listener)
-	throws Exception
-    {
-	throw new MidiException
-	    ("DeletePatchMessage.notifyListener() not implemented", 0);
-    }
 }

@@ -46,7 +46,22 @@ public class MorphKeyboardAssignmentMessage extends MidiMessage
 	this();
 	setAll(packet);
     }
-        
+    
+    public int getPid()
+    {
+        return get("pid");
+    }
+    
+    public int getMorph()
+    {
+        return get("morph");
+    }
+    
+    public int getKeyboardAssignment()
+    {
+        return get("keyboard");
+    }
+
     public void setMorphAssignment(int slot, int pid, int morph, int keyboard)
     {
         set("slot", slot);
@@ -57,7 +72,7 @@ public class MorphKeyboardAssignmentMessage extends MidiMessage
     }
 
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
 	IntStream intStream = appendAll();
 	appendChecksum(intStream);
@@ -65,8 +80,4 @@ public class MorphKeyboardAssignmentMessage extends MidiMessage
     return createBitstreamList(getBitStream(intStream));
     }
     
-    public void notifyListener(NmProtocolListener listener)
-    {
-	// direction synth -> edittor not possible
-    }
 }

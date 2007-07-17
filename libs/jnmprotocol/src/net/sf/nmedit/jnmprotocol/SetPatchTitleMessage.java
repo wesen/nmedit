@@ -44,7 +44,13 @@ public class SetPatchTitleMessage extends MidiMessage
     {
 	this();
 	setAll(packet);
-        title = extractName(packet.getPacket("data:data:name"));
+        title = NmCharacter.extractName(packet.getPacket("data:data:name"));
+    }
+    
+    public SetPatchTitleMessage(int slot, int pid, String title)
+    {
+        this();
+        setTitle(slot, pid, title);
     }
     
     public String getTitle()
@@ -56,17 +62,17 @@ public class SetPatchTitleMessage extends MidiMessage
     {
         set("cc", 0x17);
         set("sc", 0x27);
-        set("slot", slot);
+        setSlot(slot);
         set("pid", pid);
         this.title = title == null ? "" : title;
     }
 
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
         IntStream intStream = new IntStream();
         intStream.append(get("cc"));
-        intStream.append(get("slot"));
+        intStream.append(getSlot());
         intStream.append(get("pid"));
         intStream.append(get("sc"));
         NmCharacter.appendString(intStream, title);

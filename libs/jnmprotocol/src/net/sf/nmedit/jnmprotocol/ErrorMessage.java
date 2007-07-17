@@ -19,7 +19,6 @@
 
 package net.sf.nmedit.jnmprotocol;
 
-import java.util.*;
 import net.sf.nmedit.jpdl.*;
 
 public class ErrorMessage extends MidiMessage
@@ -43,14 +42,12 @@ public class ErrorMessage extends MidiMessage
 	this();
 	setAll(packet);
     }
-
-    public List<BitStream> getBitStream()
-	throws Exception
-    {
-	throw new
-	    MidiException("ErrorMessage::getBitStream not implemented.", 0);	
-    }
     
+    public int getError()
+    {
+        return get("code");
+    }
+
     public void notifyListener(NmProtocolListener listener)
     {
 	listener.messageReceived(this);

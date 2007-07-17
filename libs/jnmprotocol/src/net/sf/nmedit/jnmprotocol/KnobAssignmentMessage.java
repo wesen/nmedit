@@ -145,7 +145,7 @@ public class KnobAssignmentMessage extends MidiMessage
     }
 
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
         IntStream intStream = new IntStream();
         for (Iterator i = parameterNames(); i.hasNext(); ) 

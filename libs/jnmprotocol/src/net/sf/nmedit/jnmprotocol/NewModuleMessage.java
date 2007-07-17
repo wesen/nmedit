@@ -20,6 +20,8 @@
 package net.sf.nmedit.jnmprotocol;
 
 import java.util.*;
+
+import net.sf.nmedit.jnmprotocol.utils.NmCharacter;
 import net.sf.nmedit.jpdl.*;
 
 public class NewModuleMessage extends MidiMessage
@@ -40,10 +42,15 @@ public class NewModuleMessage extends MidiMessage
     }
     
     NewModuleMessage(Packet packet)
-	throws Exception
+    throws MidiException
     {
 	throw new MidiException
 	    ("NewModuleMessage(Packet packet) not implemented", 0);
+    }
+    
+    public void setPid(int pid)
+    {
+        set("pid", pid);
     }
     
     public void newModule(int type,
@@ -64,7 +71,7 @@ public class NewModuleMessage extends MidiMessage
 	patchData.append(index);
 	patchData.append(xpos);
 	patchData.append(ypos);
-	appendName(name, patchData);
+    NmCharacter.appendString(patchData, name);
 
 	patchData.append(82);
 	patchData.append(section);
@@ -102,7 +109,7 @@ public class NewModuleMessage extends MidiMessage
 	patchData.append(section);
 	patchData.append(1);
 	patchData.append(index);
-	appendName(name, patchData);
+    NmCharacter.appendString(patchData, name);
 
 	
 
@@ -119,9 +126,6 @@ public class NewModuleMessage extends MidiMessage
 	// Pad. Extra bits are ignored later.
 	patchStream.append(0, 6);
 
-	// Throw away first 7 bits, already encoded with 'sc' parameter.
-        patchStream.getInt(7);
-	
 	// Generate message
         intStream = appendAll();
 	while (patchStream.isAvailable(7)) {
@@ -129,29 +133,10 @@ public class NewModuleMessage extends MidiMessage
 	}
     }
 
-    private void appendName(String stringName, IntStream patchData)
-    {
-	byte[] name = stringName.getBytes();
-	int i = 0;
-	for (i = 0; i < 16 && i < name.length; i++) {
-	    patchData.append(name[i]);
-	}
-	if (i < 16) {
-	    patchData.append(0);
-	}
-    }
-
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
 	appendChecksum(intStream);
     return createBitstreamList(getBitStream(intStream));
-    }
-    
-    public void notifyListener(NmProtocolListener listener)
-	throws Exception
-    {
-	throw new MidiException
-	    ("NewModuleMessage.notifyListener() not implemented", 0);
     }
 }

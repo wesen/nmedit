@@ -19,37 +19,33 @@
 
 package net.sf.nmedit.jnmprotocol;
 
-import java.util.*;
-import net.sf.nmedit.jpdl.*;
+import net.sf.nmedit.jpdl.Packet;
 
 public class LightMessage extends MidiMessage
 {
+
+    // use arrays instead of string concatenation to make the message more efficient
+    private static final int LIGHTCOUNT = 20;
+    private static final String[] TABLE_LIGHTS;
+    private static final String[] TABLE_PATHS;
+    static {
+        TABLE_LIGHTS = new String[LIGHTCOUNT];
+        TABLE_PATHS = new String[LIGHTCOUNT];
+        for (int i=0;i<LIGHTCOUNT;i++)
+        {
+            TABLE_LIGHTS[i] = "light"+i;
+            TABLE_PATHS[i] = "data:data:l"+i;
+        }
+    }
+    
     public LightMessage()
     {
 	super();
 
 	addParameter("pid", "data:pid");
 	addParameter("startIndex", "data:data:startIndex");
-	addParameter("light0", "data:data:l0");
-	addParameter("light1", "data:data:l1");
-	addParameter("light2", "data:data:l2");
-	addParameter("light3", "data:data:l3");
-	addParameter("light4", "data:data:l4");
-	addParameter("light5", "data:data:l5");
-	addParameter("light6", "data:data:l6");
-	addParameter("light7", "data:data:l7");
-	addParameter("light8", "data:data:l8");
-	addParameter("light9", "data:data:l9");
-	addParameter("light10", "data:data:l10");
-	addParameter("light11", "data:data:l11");
-	addParameter("light12", "data:data:l12");
-	addParameter("light13", "data:data:l13");
-	addParameter("light14", "data:data:l14");
-	addParameter("light15", "data:data:l15");
-	addParameter("light16", "data:data:l16");
-	addParameter("light17", "data:data:l17");
-	addParameter("light18", "data:data:l18");
-	addParameter("light19", "data:data:l19");
+    for (int i=0;i<LIGHTCOUNT;i++)
+        addParameter(TABLE_LIGHTS[i], TABLE_PATHS[i]);
     }
 
     LightMessage(Packet packet)
@@ -58,11 +54,19 @@ public class LightMessage extends MidiMessage
 	setAll(packet);
     }
 
-    public List<BitStream> getBitStream()
-	throws Exception
+    public int getStartIndex()
     {
-	throw new MidiException("LightMessage::getBitStream not implemented.",
-				0);
+        return get("startIndex");
+    }
+    
+    public int getLight(int index)
+    {
+        return get(TABLE_LIGHTS[index]);
+    }
+    
+    public int getLightCount()
+    {
+        return LIGHTCOUNT;
     }
     
     public void notifyListener(NmProtocolListener listener)

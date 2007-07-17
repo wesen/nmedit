@@ -32,6 +32,13 @@ public class GetPatchMessage extends MidiMessage
     
     private PatchPart part;
 
+    public GetPatchMessage(int slot, int pid)
+    {
+        this();
+        setSlot(slot);
+        set("pid", pid);
+    }
+    
     public GetPatchMessage()
     {
 	super();
@@ -52,14 +59,19 @@ public class GetPatchMessage extends MidiMessage
     }
 
     GetPatchMessage(Packet packet)
-	throws Exception
+    throws MidiException
     {
 	throw new MidiException
 	    ("GetPatchMessage(Packet packet) not implemented", 0);
     }
 
+    public int getPid()
+    {
+        return get("pid");
+    }
+    
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
 	IntStream intStream;
 	List<BitStream> bitStreamList = new LinkedList<BitStream>();
@@ -167,10 +179,4 @@ public class GetPatchMessage extends MidiMessage
 	return bitStreamList;
     }
     
-    public void notifyListener(NmProtocolListener listener)
-	throws Exception
-    {
-	throw new MidiException
-	    ("GetPatchMessage.notifyListener() not implemented", 0);
-    }
 }

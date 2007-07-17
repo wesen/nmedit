@@ -47,10 +47,10 @@ public class NoteMessage extends MidiMessage
 	this();
 	setAll(packet);
     }
-    
+
     public void setNote(int slot, int pid, int note, int velocity, boolean on)
     {
-        set("slot", slot);
+        setSlot(slot);
         set("pid", pid);
         set("velocity", velocity);
         set("onoff", on?1:0);
@@ -58,7 +58,7 @@ public class NoteMessage extends MidiMessage
     }
 
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
 	IntStream intStream = appendAll();
 	appendChecksum(intStream);

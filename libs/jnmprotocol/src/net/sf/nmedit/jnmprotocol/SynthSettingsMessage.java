@@ -130,7 +130,7 @@ public class SynthSettingsMessage extends MidiMessage
         isreply = true;
     }
 
-    public SynthSettingsMessage(Packet packet)
+    public SynthSettingsMessage(Packet packet) throws MidiException
     {
     this();
     setAll(packet);
@@ -145,10 +145,21 @@ public class SynthSettingsMessage extends MidiMessage
     // Remove padding
     settingsStream.setSize((settingsStream.getSize()/8)*8);
     
+    // parse settings
+    try
+    {
+    getParamMap();
+    }
+    catch (RuntimeException e)
+    {
+        // TODO do not use RuntimeException in getParamMap()
+        MidiException me = new MidiException(e.getMessage(), 0);
+        me.initCause(e);
+    }
     }
 
     public SynthSettingsMessage(Map<String, Object> params)
-    throws Exception
+    throws MidiException
     {
         this();
         set("slot", 0);
@@ -181,7 +192,7 @@ public class SynthSettingsMessage extends MidiMessage
         bitStreamList.add(settingsStream);
     }
 
-    public Map<String, Object> getParamMap()
+    public Map<String, Object> getParamMap() 
     {
         if (parameterMap != null)
             return parameterMap;
@@ -246,8 +257,7 @@ public class SynthSettingsMessage extends MidiMessage
         return extendedSettings;
     }
     
-    protected void appendChecksum(IntStream intStream)
-    throws Exception
+    protected void appendChecksum(IntStream intStream) throws MidiException
     {
     int checksum = 0;
     intStream.append(checksum);
@@ -261,14 +271,12 @@ public class SynthSettingsMessage extends MidiMessage
     intStream.setPosition(0);
     }
     
-    public List<BitStream> getBitStream()
-    throws Exception
+    public List<BitStream> getBitStream() throws MidiException
     {
     return bitStreamList;
     }
     
     public void notifyListener(NmProtocolListener listener)
-    throws Exception
     {
     listener.messageReceived(this);
     }

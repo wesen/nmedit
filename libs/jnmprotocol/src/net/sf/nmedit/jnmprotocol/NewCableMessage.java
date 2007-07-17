@@ -39,10 +39,15 @@ public class NewCableMessage extends MidiMessage
     }
 
     NewCableMessage(Packet packet)
-	throws Exception
+    throws MidiException
     {
 	throw new MidiException
 	    ("NewCableMessage(Packet packet) not implemented", 0);
+    }
+
+    public void setPid(int pid)
+    {
+        set("pid", pid);
     }
 
     public void newCable(int section, int color,
@@ -61,17 +66,10 @@ public class NewCableMessage extends MidiMessage
     }
     
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
 	appendChecksum(intStream);
 	
     return createBitstreamList(getBitStream(intStream));
-    }
-    
-    public void notifyListener(NmProtocolListener listener)
-	throws Exception
-    {
-	throw new MidiException
-	    ("NewCableMessage.notifyListener() not implemented", 0);
     }
 }

@@ -44,8 +44,46 @@ public class ParameterMessage extends MidiMessage
 	setAll(packet);
     }
 
+    public void setPid(int pid)
+    {
+        set("pid", pid);
+    }
+
+    public void parameterChanged(int section, int module, int parameter, int value)
+    {
+        set("section", section);
+        set("module", module);
+        set("parameter", parameter);
+        set("value", value);
+    }
+
+    public int getPid()
+    {
+        return get("pid");
+    }
+    
+    public int getSection()
+    {
+        return get("section");
+    }
+    
+    public int getModule()
+    {
+        return get("module");
+    }
+    
+    public int getParameter()
+    {
+        return get("parameter");
+    }
+    
+    public int getValue()
+    {
+        return get("value");
+    }
+    
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
 	IntStream intStream = appendAll();
 	appendChecksum(intStream);

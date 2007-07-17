@@ -44,11 +44,31 @@ public class ParameterSelectMessage extends MidiMessage
 	this();
 	setAll(packet);
     }
+
+    public int getPid()
+    {
+        return get("pid");
+    }
+
+    public int getSection()
+    {
+        return get("section");
+    }
+
+    public int getModule()
+    {
+        return get("module");
+    }
+
+    public int getParameter()
+    {
+        return get("parameter");
+    }
     
     public void select(int slot, int pid, int section, int module, int parameter)
     {
         set("cc", 0x13);
-        set("slot", slot);
+        setSlot(slot);
         set("pid", pid);
         set("unknown1", section); // synth sends only messages where unknown1==section ?
         set("section", section);
@@ -57,7 +77,7 @@ public class ParameterSelectMessage extends MidiMessage
     }
 
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
 	IntStream intStream = appendAll();
 	appendChecksum(intStream);

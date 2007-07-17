@@ -38,14 +38,50 @@ public class MorphRangeChangeMessage extends MidiMessage
     set("cc", 0x14);
 	set("sc", 0x43);
     }
+    
+    MorphRangeChangeMessage(Packet packet)
+    {
+	this();
+	setAll(packet);
+    }
 
+    public int getPid()
+    {
+        return get("pid");
+    }
+    
+    public int getSection()
+    {
+        return get("section");
+    }
+    
+    public int getModule()
+    {
+        return get("module");
+    }
+
+    public int getParameter()
+    {
+        return get("parameter");
+    }
+
+    public int getSpan()
+    {
+        return get("span");
+    }
+
+    public int getDirection()
+    {
+        return get("direction");
+    }
+    
     public void setMorphRange(int slot, int pid, int section, int module, int parameter, int span, int direction)
     {
         if (section<0 || section>1)
             throw new IllegalArgumentException("invalid section: "+section);
 
         set("cc", 0x13);
-        set("slot", slot);
+        setSlot(slot);
         set("pid", pid);
         set("section", section);
         set("module", module);
@@ -54,14 +90,8 @@ public class MorphRangeChangeMessage extends MidiMessage
         set("direction", direction);
     }
     
-    MorphRangeChangeMessage(Packet packet)
-    {
-	this();
-	setAll(packet);
-    }
-
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
 	IntStream intStream = appendAll();
 	appendChecksum(intStream);

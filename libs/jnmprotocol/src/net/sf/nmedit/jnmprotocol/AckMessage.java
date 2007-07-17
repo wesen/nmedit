@@ -42,9 +42,19 @@ public class AckMessage extends MidiMessage
 	this();
 	setAll(packet);
     }
+    
+    public int getPid1()
+    {
+        return get("pid1");
+    }
+    
+    public int getPid2()
+    {
+        return get("pid2");
+    }
 
     public List<BitStream> getBitStream()
-	throws Exception
+	throws MidiException
     {
 	IntStream intStream = appendAll();
 	if (get("type") == 0x36) {
