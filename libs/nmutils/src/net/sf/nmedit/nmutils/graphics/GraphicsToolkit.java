@@ -40,9 +40,51 @@ import java.awt.image.ColorModel;
 import java.awt.image.ImageObserver;
 import java.awt.image.PixelGrabber;
 
+import javax.swing.ImageIcon;
+
 public class GraphicsToolkit
 {
 
+    public static ImageIcon renderColorIcon(Color c)
+    {
+        return new ImageIcon(renderColorImage(c, 16, 16, Color.BLACK));
+    }
+    
+    public static BufferedImage renderColorImage(Color c, int w, int h, Color border)
+    {
+        boolean opaque = c.getAlpha()==0xFF && (border==null || (border!= null && border.getAlpha()==0xFF));
+        
+        BufferedImage img = new BufferedImage(w, h, opaque ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = img.createGraphics();
+        try
+        {
+            int fx, fy, fw, fh;
+            if (border == null)
+            {
+                fx = 0;
+                fy = 0;
+                fw = w;
+                fh = h;
+            }
+            else
+            {
+                fx = 1;
+                fy = 1;
+                fw = w-2;
+                fh = h-2;
+                g.setColor(border);
+                g.drawRect(0, 0, w-1, h-1);
+            }
+            g.setColor(c);
+            g.fillRect(fx, fy, fw, fh);
+        }
+        finally
+        {
+            g.dispose();
+        }
+        return img;
+    }
+    
     public static BufferedImage getScaledImage(Image source, double f)
     {
         return getScaledImage(source, null, f);
