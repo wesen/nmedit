@@ -19,10 +19,7 @@
 
 package net.sf.nmedit.jnmprotocol;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
+import javax.swing.event.EventListenerList;
 
 /**
  * Broadcasts midi messages to subscribed listeners. 
@@ -30,16 +27,24 @@ import java.util.List;
 public class MessageMulticaster implements MessageHandler
 {
 
-    private List<NmProtocolListener> listenerList = new ArrayList<NmProtocolListener>();
-    // keeps a copy of listenerList
-    private transient NmProtocolListener[] tempList = null;
-    
+    private EventListenerList listenerList = new EventListenerList();
     private ActivePidListener activePidListener;
+    private boolean errorMessageCausesException = true;
     
     public MessageMulticaster()
     {
         activePidListener = new ActivePidListener();
         addProtocolListener(activePidListener);
+    }
+
+    public void setErrorMessageCausesExceptionEnabled(boolean enabled)
+    {
+        this.errorMessageCausesException = enabled;
+    }
+    
+    public boolean isErrorMessageCausesExceptionEnabled()
+    {
+        return errorMessageCausesException;
     }
     
     public int getActivePid(int slot)
@@ -49,51 +54,28 @@ public class MessageMulticaster implements MessageHandler
     
     public void addProtocolListener(NmProtocolListener l)
     {
-        if (!listenerList.contains(l))
-            listenerList.add(l);
-        // listener list was altered, copy has to be recreated
-        tempList = null;
+        listenerList.add(NmProtocolListener.class, l);
     }
     
     public void removeProtocolListener(NmProtocolListener l)
     {
-        listenerList.remove(l);
-        // listener list was altered, copy has to be recreated
-        tempList = null;
+        listenerList.remove(NmProtocolListener.class, l);
     }
 
     public void processMessage( MidiMessage message )
     {
-        NmProtocolListener[] listeners = tempList;
-        // check if listener list has been altered
-        if (listeners == null)
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        for (int i = listeners.length-2; i>=0; i-=2) 
         {
-            listeners = listenerList.toArray(new NmProtocolListener[listenerList.size()]);
-            tempList = listeners;
-        }
-
-        try
-        {
-            for (int i=0;i<listeners.length;i++)
-            {
-                message.notifyListener(listeners[i]);
-            }
-        }
-        catch (RuntimeException e)
-        {
-            throw e; // rethrow exception
-        }
-        catch (Exception e)
-        {   
-            // processMessage() does not allow the throw cause Exception
-            // so we cast it to RuntimeException
-            
-            // TODO notifyListener should not throw an exception ???
-            throw new RuntimeException(e);
+            // always true: listeners[i]==NmProtocolListener.class
+            message.notifyListener((NmProtocolListener)listeners[i+1]);
         }
         
         // if the message is an ErrorMessage throw a RuntimeException
-        if (message instanceof ErrorMessage)
+        if (errorMessageCausesException && message instanceof ErrorMessage)
             throw new RuntimeException(message.toString());
     }
 

@@ -19,7 +19,9 @@
 
 package net.sf.nmedit.jnmprotocol;
 
-public abstract class NmProtocolListener
+import java.util.EventListener;
+
+public abstract class NmProtocolListener implements EventListener
 {
     public NmProtocolListener() {}
 
