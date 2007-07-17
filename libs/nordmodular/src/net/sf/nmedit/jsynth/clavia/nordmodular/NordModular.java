@@ -28,7 +28,7 @@ import java.util.Map;
 
 import javax.sound.midi.MidiUnavailableException;
 
-import net.sf.nmedit.jnmprotocol.DebugProtocol;
+import net.sf.nmedit.jnmprotocol.ErrorMessage;
 import net.sf.nmedit.jnmprotocol.IAmMessage;
 import net.sf.nmedit.jnmprotocol.MessageMulticaster;
 import net.sf.nmedit.jnmprotocol.MidiDriver;
@@ -36,8 +36,6 @@ import net.sf.nmedit.jnmprotocol.MidiException;
 import net.sf.nmedit.jnmprotocol.NmMessageAcceptor;
 import net.sf.nmedit.jnmprotocol.NmProtocol;
 import net.sf.nmedit.jnmprotocol.NmProtocolListener;
-import net.sf.nmedit.jnmprotocol.NmProtocolMT;
-import net.sf.nmedit.jnmprotocol.NmProtocolST;
 import net.sf.nmedit.jnmprotocol.RequestSynthSettingsMessage;
 import net.sf.nmedit.jnmprotocol.SynthSettingsMessage;
 import net.sf.nmedit.jnmprotocol.utils.ProtocolRunner;
@@ -46,14 +44,18 @@ import net.sf.nmedit.jnmprotocol.utils.StoppableThread;
 import net.sf.nmedit.jnmprotocol.utils.ProtocolRunner.ProtocolErrorHandler;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
 import net.sf.nmedit.jsynth.AbstractSynthesizer;
-import net.sf.nmedit.jsynth.Bank;
 import net.sf.nmedit.jsynth.DefaultMidiPorts;
 import net.sf.nmedit.jsynth.MidiPortSupport;
 import net.sf.nmedit.jsynth.SlotManager;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.Synthesizer;
+import net.sf.nmedit.jsynth.clavia.nordmodular.worker.NMStorePatchWorker;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.Scheduler;
 import net.sf.nmedit.jsynth.midi.MidiPort;
+import net.sf.nmedit.jsynth.worker.StorePatchWorker;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class NordModular extends AbstractSynthesizer implements Synthesizer, DefaultMidiPorts
 {
@@ -70,10 +72,16 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
     private NM1ModuleDescriptions moduleDescriptions;
 
     private NmSlotManager slotManager;
-    private int maxSlotCount = 4;
+ //   private int maxSlotCount = 4;
     
-    private final static String DEVICE_NAME = "Nord Modular";
-    private String name = DEVICE_NAME;
+    private int deviceId = -1;
+    private int serial = -1;
+
+    private final static String DEFAULT_DEVICE_NAME = "Nord Modular";
+    private final static String DEVICE_NAME_KEYBOARD = "Nord Modular Keyboard";
+    private final static String DEVICE_NAME_RACK = "Nord Modular Rack";
+    private final static String DEVICE_NAME_MICRO = "Micro Modular";
+    private String name = DEFAULT_DEVICE_NAME;
 
     private boolean settingsChangedFlag = false;
     private boolean settingsInSync = true;
@@ -123,19 +131,29 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
     };
     private Property activeSlot = new Property("activeSlot", 0, 3, 0);
 
-    public NordModular(NM1ModuleDescriptions moduleDescriptions)
-    {
-        this(moduleDescriptions, false);
-    }
+    private NmBank[] banks;
     
     public int getMaxSlotCount()
     {
-        return maxSlotCount;
+        if (!connected)
+            return 0;
+        if (deviceId == IAmMessage.MICRO_MODULAR)
+            return 1; // 1 slot
+        return 4; // default: 4 slots
     }
     
-    public void setMaxSlotCount(int slotCount)
+    public int getMaxBankCount()
     {
-        this.maxSlotCount = Math.max(1, Math.min(4, slotCount));
+        if (!connected)
+            return 0;
+        if (deviceId == IAmMessage.MICRO_MODULAR)
+            return 1; // 1 bank
+        return 9; // default: 9 banks
+    }
+    
+    public int getPId(int slot)
+    {
+        return multicaster.getActivePid(slot);
     }
     
     public NM1ModuleDescriptions getModuleDescriptions()
@@ -150,21 +168,44 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
     
     public boolean isMicroModular()
     {
-        return getSlotCount() == 1;
+        return deviceId == IAmMessage.MICRO_MODULAR;
     }
     
-    public NordModular(NM1ModuleDescriptions moduleDescriptions, boolean debug)
+    public int getDeviceId()
     {
+        return deviceId;
+    }
+    
+    public int getSerial()
+    {
+        return serial;
+    }
+    
+    public NordModular(NM1ModuleDescriptions moduleDescriptions)
+    {
+        banks = new NmBank[0];
+        
         this.moduleDescriptions = moduleDescriptions;
         slotManager = new NmSlotManager(this);
         
         midiports = new MidiPortSupport(this, "pc-in", "pc-out");
         
         multicaster = new MessageMulticaster();
-        protocol = new SchedulingProtocolMT(new NmProtocolST());
-        
-        if (debug)
-            protocol = new DebugProtocol(protocol);
+        multicaster.addProtocolListener(new NmProtocolListener(){
+           public void messageReceived(ErrorMessage m)
+           {
+               try
+            {
+                setConnected(false);
+            }
+            catch (SynthException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+           }
+        });
+        protocol = new SchedulingProtocol();
         
         protocol.setMessageHandler(multicaster);
 
@@ -177,16 +218,10 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
                 new ProtocolRunner(protocol, new Nm1ProtocolErrorHandler(this)));
     }
 
-    private class SchedulingProtocolMT extends NmProtocolMT
+    private class SchedulingProtocol extends NmProtocol
     {
-        public SchedulingProtocolMT(NmProtocol protocol)
+        protected void heartbeatImpl() throws MidiException
         {
-            super(protocol);
-        }
-
-        public void heartbeat() throws MidiException
-        {
-            
             try
             {
             scheduler.schedule();
@@ -198,7 +233,7 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
                 
                 throw me;
             }
-            super.heartbeat();
+            super.heartbeatImpl();
         }
     }
     
@@ -214,7 +249,17 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
 
     public String getDeviceName()
     {
-        return DEVICE_NAME;
+        switch (deviceId)
+        {
+            case IAmMessage.MICRO_MODULAR:
+                return DEVICE_NAME_MICRO;
+            case IAmMessage.NORD_MODULAR_RACK:
+                return DEVICE_NAME_RACK;
+            case IAmMessage.NORD_MODULAR_KEYBOARD:
+                return DEVICE_NAME_KEYBOARD;
+            default:
+                return DEFAULT_DEVICE_NAME;
+        }
     }
 
     private MidiDriver createMidiDriver() throws SynthException
@@ -270,7 +315,32 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
             final long timeout = 3000;
             iamAcceptor.waitForReply(protocol, timeout);
             
-            validateVersion(iamAcceptor.getFirstMessage(), 3, 3);
+            IAmMessage iam = iamAcceptor.getFirstMessage();
+            validateVersion(iam, 3, 3);
+            
+            deviceId = iam.getDeviceId();
+            serial = iam.getSerial();
+            
+            switch (deviceId)
+            {
+                case IAmMessage.NORD_MODULAR_RACK:
+                    break;
+                case IAmMessage.NORD_MODULAR_KEYBOARD:
+                    break;
+                case IAmMessage.MICRO_MODULAR:
+                    break;
+                default:
+                {
+                    Log log = LogFactory.getLog(getClass());
+                    if (log.isWarnEnabled())
+                    {
+                        log.warn("unknown deviceId: "+deviceId+", assume device is 'Nord Modular Keyboard'");
+                    }
+                    // assume keyboard
+                    deviceId = IAmMessage.NORD_MODULAR_KEYBOARD;
+                }
+            }
+            
             setConnectedFlag(true);
 
             // request synth settings
@@ -549,9 +619,35 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
             firePropertyChange("settings", null, "settings");
         }
     }
+    
+    public Object getClientProperty(Object key)
+    {
+        if (!"icon".equals(key))
+            return super.getClientProperty(key);
+
+        Object icon = super.getClientProperty("icon");
+        if (icon != null)
+            return icon;
+        
+        switch (deviceId)
+        {
+            case IAmMessage.MICRO_MODULAR:
+                icon = super.getClientProperty("icon.nm.micro");
+                break;
+            case IAmMessage.NORD_MODULAR_RACK:
+                icon = super.getClientProperty("icon.nm.rack");
+                break;
+        }
+        if (icon == null)
+            icon = super.getClientProperty("icon.nm.keyboard");
+        
+        return icon;
+    }
 
     private void disconnect()
     {
+        this.serial = -1;
+        this.deviceId = -1;
         protocolThread.stop();
         midiDriver.disconnect();
         protocol.reset();
@@ -568,11 +664,28 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
         if (this.connected != connected)
         {
             this.connected = connected;
+            
+            updateBanks();
+            
             fireSynthesizerStateChanged();
         }
     }
     
-    private SynthSettingsMessage createSettingsMessage() throws Exception
+    private void updateBanks()
+    {
+        if (!connected)
+        {
+            banks = new NmBank[0];
+            return;
+        }
+        
+        int cnt = getMaxBankCount();
+        banks = new NmBank[cnt];
+        for (int i=0;i<cnt;i++)
+            banks[i] = new NmBank(this, i);
+    }
+
+    private SynthSettingsMessage createSettingsMessage() throws MidiException
     {
         Map<String, Object> settings = new HashMap<String, Object>();
 
@@ -646,9 +759,8 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
     private void connected()
     {
         scheduler.clear();
-        
-        // TODO check if synthesizer is Micro Modular (1 slot) or not (4 slots)
-        NmSlot[] slots = new NmSlot[maxSlotCount];
+
+        NmSlot[] slots = new NmSlot[getMaxSlotCount()];
         for (int i=0;i<slots.length;i++)
             slots[i] = new NmSlot(this, i);
         slotManager.setSlots(slots);
@@ -765,9 +877,12 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
         return midiports.getOutPort();
     }
     
-    public Bank[] getBanks()
+    public NmBank[] getBanks()
     {
-        return new Bank[0];
+        NmBank[] copy = new NmBank[banks.length];
+        for (int i=0;i<banks.length;i++)
+            copy[i] = banks[i];
+        return copy;
     }
 
     public MidiPort getPort( int index )
@@ -775,9 +890,9 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
         return midiports.getPort(index);
     }
 
-    public Bank getBank( int index )
+    public NmBank getBank( int index )
     {
-        throw new IndexOutOfBoundsException();
+        return banks[index];
     }
 
     public NmSlot getSlot( int index )
@@ -792,7 +907,7 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
 
     public int getBankCount()
     {
-        return 0;
+        return banks.length;
     }
 
     public int getSlotCount()
@@ -926,6 +1041,11 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
             }
         }
         
+    }
+
+    public StorePatchWorker createStorePatchWorker()
+    {
+        return new NMStorePatchWorker(this);
     }
 
 }

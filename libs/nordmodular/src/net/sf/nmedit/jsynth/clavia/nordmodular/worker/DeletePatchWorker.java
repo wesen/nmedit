@@ -38,11 +38,7 @@ public class DeletePatchWorker
 
     public void store() throws SynthException
     {
-        DeletePatchMessage message = new DeletePatchMessage();
-
-        message.set("section", section);
-        message.set("position", position);
-        
+        DeletePatchMessage message = new DeletePatchMessage(section, position);
         synth.getScheduler().offer(new ScheduledMessage(synth, message));
     }
     

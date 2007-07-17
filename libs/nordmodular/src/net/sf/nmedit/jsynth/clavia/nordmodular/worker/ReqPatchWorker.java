@@ -20,9 +20,9 @@ package net.sf.nmedit.jsynth.clavia.nordmodular.worker;
 
 import net.sf.nmedit.jnmprotocol.AckMessage;
 import net.sf.nmedit.jnmprotocol.NmProtocolListener;
+import net.sf.nmedit.jnmprotocol.RequestPatchMessage;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
-import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 import net.sf.nmedit.jsynth.worker.RequestPatchWorker;
 
 public class ReqPatchWorker extends
@@ -88,7 +88,7 @@ public class ReqPatchWorker extends
             synth.addProtocolListener(this);
             try
             {
-                synth.getProtocol().send(NmUtils.createRequestPatchMessage(slotId));
+                synth.getProtocol().send(new RequestPatchMessage(slotId));
             }
             catch (Exception e)
             {

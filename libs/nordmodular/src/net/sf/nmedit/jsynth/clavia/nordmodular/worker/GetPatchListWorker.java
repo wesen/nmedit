@@ -1,0 +1,194 @@
+package net.sf.nmedit.jsynth.clavia.nordmodular.worker;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sf.nmedit.jnmprotocol.GetPatchListMessage;
+import net.sf.nmedit.jnmprotocol.NmProtocolListener;
+import net.sf.nmedit.jnmprotocol.PatchListEntry;
+import net.sf.nmedit.jnmprotocol.PatchListMessage;
+import net.sf.nmedit.jsynth.SynthException;
+import net.sf.nmedit.jsynth.clavia.nordmodular.NmBank;
+import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
+
+public class GetPatchListWorker extends NmProtocolListener implements ScheduledWorker
+{
+    
+    private NordModular synth;
+    private NmBank bank;
+    private int beginIndex;
+    private int endIndex;
+    private int nextIndex;
+    private boolean error = false;
+    private List<String> patches;
+    private int state = REQUEST_PATCH_LIST;
+    private static final int REQUEST_PATCH_LIST = 0;
+    private static final int AWAIT_REPLY = 1;
+    private static final int COMPLETE = 2;
+    private long timeout = 0;
+    private boolean replyAccepted = false;
+    private boolean installed = false;
+
+    public GetPatchListWorker(NmBank bank, int beginIndex, int endIndex)
+    {
+        if (endIndex<beginIndex || beginIndex<0 || endIndex>NmBank.PATCH_COUNT)
+            throw new IllegalArgumentException("invalid beginIndex:"+beginIndex+", endIndex:"+endIndex);
+
+        this.synth = bank.getSynthesizer();
+        this.bank = bank;
+        this.beginIndex = beginIndex;
+        this.nextIndex = beginIndex;
+        this.endIndex = endIndex;
+        this.patches = new ArrayList<String>(endIndex-beginIndex);
+    }
+    
+    private void install()
+    {
+        if (!installed)
+        {
+            installed = true;
+            bank.getSynthesizer().addProtocolListener(this);
+        }
+    }
+    
+    private void uninstall()
+    {
+        if (installed)
+        {
+            installed = false;
+            bank.getSynthesizer().removeProtocolListener(this);
+        }
+    }
+
+    public void aborted()
+    {
+        error = true;
+        uninstall();
+    }
+
+    public void sendRequest()
+    {
+        install();
+        bank.getSynthesizer().getScheduler().offer(this);
+    }
+
+    public boolean isWorkerFinished()
+    {
+        // TODO Auto-generated method stub
+        return error || (!synth.isConnected()) || requestComplete();
+    }
+
+    public void runWorker() throws SynthException
+    {
+        if (state == COMPLETE)
+            return;
+        
+        if (state == REQUEST_PATCH_LIST)
+        {
+            timeout = System.currentTimeMillis()+3000;
+            state = AWAIT_REPLY;
+            replyAccepted = false;
+            GetPatchListMessage get = new GetPatchListMessage(bank.getBankIndex(), nextIndex);
+            try
+            {
+                synth.getProtocol().send(get);
+            }
+            catch (Exception e)
+            {
+                error = true;
+                e.printStackTrace();
+            }
+            return;
+        }
+
+        // await reply
+        if (!replyAccepted)
+        {
+            if (System.currentTimeMillis()>timeout)
+                throw new SynthException("timeout while waiting for patch list: "+3000);
+            return;
+        }
+        
+        // reply accepted
+        if (!requestComplete())
+        {
+            state = REQUEST_PATCH_LIST;
+            return;
+        }
+        
+        // request complete
+        state = COMPLETE;
+        uninstall();
+        updateBank();
+    }
+    
+    private int updateBeginIndex = -1;
+    private void updateBank()
+    {
+        if (updateBeginIndex<0)
+            updateBeginIndex = beginIndex;
+     
+        int updateEndIndex = beginIndex+patches.size();
+        
+        if (updateBeginIndex<updateEndIndex)
+            bank.updatePatchList(updateBeginIndex, 
+                    patches.subList(updateBeginIndex-beginIndex, updateEndIndex-beginIndex));
+        
+        updateBeginIndex = updateEndIndex;
+    }
+    
+    private boolean requestComplete()
+    {
+        return nextIndex>=endIndex;
+    }
+    
+    private int previousNextIndex = Integer.MIN_VALUE;
+
+    public void messageReceived(PatchListMessage message) 
+    {
+        if (state != AWAIT_REPLY)
+            return;
+        
+        replyAccepted = true;
+        List<PatchListEntry> list = message.getEntries();
+        
+        if (previousNextIndex >= nextIndex || list.isEmpty())
+        {            
+            fillList(endIndex);
+            nextIndex = endIndex;
+            return;
+        }
+
+        previousNextIndex = nextIndex;
+        
+        for (PatchListEntry e: list)
+        {
+            if (e.getPosition()<0 || e.getSection()<0 || (e.getSection()>bank.getBankIndex()))
+            {
+                // positions containing no patches
+                fillList(endIndex);
+                nextIndex = endIndex;
+                return;
+                // complete
+            }
+            // positions containing no patches
+            fillList(e.getPosition());
+            String name = e.getName();
+            if (name == null) name = "";
+            patches.add(name);
+            nextIndex++;
+        }
+
+        updateBank();
+    }
+    
+    private void fillList(int end)
+    {
+        while (nextIndex<end)
+        {
+            patches.add(null);
+            nextIndex++;
+        }
+    }
+    
+}

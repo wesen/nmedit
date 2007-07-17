@@ -22,25 +22,38 @@
  */
 package net.sf.nmedit.jsynth.clavia.nordmodular;
 
+import java.util.Collection;
+import java.util.Iterator;
 import net.sf.nmedit.jsynth.AbstractBank;
-import net.sf.nmedit.jsynth.worker.SendPatchWorker;
+import net.sf.nmedit.jsynth.clavia.nordmodular.worker.GetPatchListWorker;
 
-public class NmBank<S extends NordModular> extends AbstractBank<S>
+public class NmBank extends AbstractBank<NordModular>
 {
+    
+    public static final int PATCH_COUNT = 99;
+    
+    private PatchInfo[] patchList = new PatchInfo[PATCH_COUNT];
 
-    public NmBank(S synth, int bankIndex)
+    public NmBank(NordModular synth, int bankIndex)
     {
         super(synth, bankIndex);
+        for (int i=0;i<patchList.length;i++)
+            patchList[i] = new PatchInfo();
+    }
+
+    public String getPatchLocationName(int position)
+    {
+        return Integer.toString(getSection()*100+1+position);
     }
 
     public String getName()
     {
-        return Integer.toString(getSection())+"-"+Integer.toString(getSection()+99);
+        return Integer.toString(getSection()*100+1)+"-"+Integer.toString(getSection()*100+99);
     }
 
     public int getPatchCount()
     {
-        return 99;
+        return PATCH_COUNT;
     }
 
     public int getSection()
@@ -48,9 +61,58 @@ public class NmBank<S extends NordModular> extends AbstractBank<S>
         return getBankIndex()+1;
     }
 
-    public SendPatchWorker createSendPatchWorker(int position)
+    public boolean containsPatch(int index)
     {
-        throw new UnsupportedOperationException("not implemented");
+        return patchList[index].containsPatch();
+    }
+
+    public String getPatchName(int index)
+    {
+        return patchList[index].name;
+    }
+
+    public boolean isPatchInfoAvailable(int index)
+    {
+        return patchList[index].valid;
+    }
+    
+    private static class PatchInfo
+    {
+        String name = null;
+        boolean valid = false;
+        boolean containsPatch()
+        {
+            return valid && name != null;
+        }
+    }
+
+    public void update(int beginIndex, int endIndex)
+    {
+        GetPatchListWorker w = new GetPatchListWorker(this, beginIndex, endIndex);
+        
+        NordModular synth = getSynthesizer();
+        if (!synth.isConnected())
+            throw new RuntimeException("not connected");
+        
+        w.sendRequest();
+    }
+
+    public void updatePatchList(int beginIndex, Collection<String> patches)
+    {
+        if (beginIndex<0 || beginIndex>=PATCH_COUNT)
+            throw new IllegalArgumentException("invalid index: "+beginIndex);
+        int endIndex = Math.min(beginIndex+patches.size(), PATCH_COUNT);
+        
+        Iterator<String> iter = patches.iterator();
+        for (int i=beginIndex;i<endIndex;i++)
+        {
+            String p = iter.next();
+            PatchInfo info = patchList[i];
+            info.valid = true;
+            info.name = p;
+        }
+        
+        fireBankUpdateEvent(beginIndex, endIndex);
     }
 
 }

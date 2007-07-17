@@ -23,6 +23,7 @@ import java.beans.PropertyChangeListener;
 
 import net.sf.nmedit.jnmprotocol.MidiMessage;
 import net.sf.nmedit.jnmprotocol.MorphAssignmentMessage;
+import net.sf.nmedit.jnmprotocol.SetPatchTitleMessage;
 import net.sf.nmedit.jpatch.AllEventsListener;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PParameter;
@@ -344,9 +345,8 @@ public class NmPatchSynchronizer extends AllEventsListener
     {
         if (isProperty(NMPatch.NAME, e))
         {
-            MidiMessage msg = 
-                NmUtils.createSetPatchTitleMessage((String)e.getNewValue(), 
-                    slot.getSlotId(), slot.getPatchId());
+            MidiMessage msg = new SetPatchTitleMessage( 
+                    slot.getSlotId(), slot.getPatchId(), (String)e.getNewValue());
 
             try
             {

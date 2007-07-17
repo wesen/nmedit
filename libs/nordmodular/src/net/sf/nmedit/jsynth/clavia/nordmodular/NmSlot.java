@@ -23,18 +23,15 @@
 package net.sf.nmedit.jsynth.clavia.nordmodular;
 
 import net.sf.nmedit.jnmprotocol.MidiMessage;
+import net.sf.nmedit.jnmprotocol.SlotActivatedMessage;
+import net.sf.nmedit.jnmprotocol.SlotsSelectedMessage;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jsynth.AbstractSlot;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SlotManager;
-import net.sf.nmedit.jsynth.SynthException;
-import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.ReqPatchWorker;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.ScheduledMessage;
-import net.sf.nmedit.jsynth.clavia.nordmodular.worker.SetPatchWorker;
 import net.sf.nmedit.jsynth.worker.RequestPatchWorker;
-import net.sf.nmedit.jsynth.worker.SendPatchWorker;
-import net.sf.nmedit.jsynth.worker.StorePatchWorker;
 
 public class NmSlot extends AbstractSlot implements Slot
 {
@@ -46,7 +43,6 @@ public class NmSlot extends AbstractSlot implements Slot
 
     private static final char[] slotIdLetter = new char[] {'A', 'B', 'C', 'D'};
     private int slotId;
-    private int patchId;
     private NordModular synth;
     private NMPatch patch;
     private int voiceCount = 0;
@@ -119,7 +115,7 @@ public class NmSlot extends AbstractSlot implements Slot
             selection[i] = manager.getSlot(i).isEnabled();
         selection[getSlotIndex()] = enable;
 
-        MidiMessage message = NmUtils.createSlotsSelectedMessage(
+        MidiMessage message = new SlotsSelectedMessage(
                 selection[0], selection[1], 
                 selection[2], selection[3]);
         
@@ -133,7 +129,7 @@ public class NmSlot extends AbstractSlot implements Slot
         if (!isActivated())
         {
             synth.getScheduler().offer(new ScheduledMessage(synth, 
-                    NmUtils.createSlotsActivatedMessage(getSlotId())
+                    new SlotActivatedMessage(getSlotId())
             ));
         }
     }
@@ -173,10 +169,10 @@ public class NmSlot extends AbstractSlot implements Slot
 
     public int getPatchId()
     {
-        return patchId;
+        return synth.getPId(getSlotId());
     }
-
-    public void setPatchId(int pid)
+/*
+    public void setPatchIds(int pid)
     {
         int oldValue = this.patchId;
         int newValue = pid;
@@ -186,9 +182,8 @@ public class NmSlot extends AbstractSlot implements Slot
             setEnabled(pid>0);//this is wrong:pid=0 is valid
             firePatchIdChange(oldValue, newValue);
         }
-    }
+    }*/
     
-
     public RequestPatchWorker createRequestPatchWorker()
     {
         return new ReqPatchWorker(synth, getSlotId(), patch!=null);
@@ -201,84 +196,21 @@ public class NmSlot extends AbstractSlot implements Slot
     
     public void setPatch(NMPatch patch)
     {
-        if (this.patch != patch)
+        NMPatch old = this.patch;
+        if (old != patch)
         {
+            if (old != null)
+                old.setSlot(null);
             this.patch = patch;
-            fireNewPatchInSlotEvent();
+            if (patch != null)
+                patch.setSlot(this);
+            fireNewPatchInSlotEvent(old, patch);
         }
     }
     
     public int getSlotIndex()
     {
         return slotId;
-    }
-
-    public StorePatchWorker createStorePatchWorker()
-    {
-  //TODO
-        return new 
-        net.sf.nmedit.jsynth
-        .clavia.nordmodular
-        .worker.StorePatchWorker(this, 0, 0);
-    }
- 
-    public SendPatchWorker createSendPatchWorker()
-    {
-        return new SendPatchToSlotPatchWorker(this);
-    }
-
-    /**
-     * Implementation of the SendPatchWorker interface.
-     * The worker sends the patch asynchronously and performs
-     * following steps:
-     * 
-     * 1. install to scheduler
-     * 2. install protocol listener/build/send patch message
-     * 
-     * @author christian
-     */
-    private static class SendPatchToSlotPatchWorker
-        implements SendPatchWorker
-    {
-        private NmSlot target;
-        private NMPatch patch;
-        private boolean sent = false;
-
-        public SendPatchToSlotPatchWorker(NmSlot target)
-        {
-            this.target = target;
-        }
-        
-        public NordModular getSynth()
-        {
-            return target.getSynthesizer();
-        }
-
-        public void setPatch(Object patch) throws SynthException
-        {
-            this.patch = (NMPatch) patch;
-        }
-
-        public void send() throws SynthException
-        {
-            if (patch == null)
-                throw new SynthException("patch is not set");
-
-            if (sent)
-                throw new SynthException("cannot resent patch");
-            sent = true;
-            
-            SetPatchWorker worker = new SetPatchWorker(target.getSynthesizer(), 
-                    patch, target.getSlotId());
-            
-            // we want to create the midi message in the current thread
-            // instead of the protocol thread so the latter thread
-            // is not blocked by this operation
-            worker.forceCreateMessage();
-            
-            getSynth().getScheduler().offer(worker);
-        }
-
     }
 
     protected void fireVoiceCountChange(int oldVoiceCount, int newVoiceCount)
