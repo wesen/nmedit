@@ -20,6 +20,7 @@ package net.sf.nmedit.jtheme.component;
 
 import javax.swing.JComponent;
 
+import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jtheme.JTContext;
 
 public class JTPatch extends JComponent
@@ -39,6 +40,12 @@ public class JTPatch extends JComponent
     public JTContext getContext()
     {
         return context;
+    }
+
+    public PPatch getPatch()
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
