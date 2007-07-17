@@ -22,7 +22,6 @@ import net.sf.nmedit.jsynth.AbstractSlot;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.worker.RequestPatchWorker;
-import net.sf.nmedit.jsynth.worker.SendPatchWorker;
 import net.sf.nmedit.jsynth.worker.StorePatchWorker;
 import net.waldorf.miniworks4pole.jpatch.MWPatch;
 import net.waldorf.miniworks4pole.jprotocol.MiniworksMidiMessage;
@@ -40,10 +39,11 @@ public class MWSlot extends AbstractSlot implements Slot
 
     public void setPatch(MWPatch patch)
     {
-        if (this.patch != patch)
+        MWPatch oldPatch = this.patch;
+        if (oldPatch != patch)
         {
             this.patch = patch;
-            fireNewPatchInSlotEvent();
+            fireNewPatchInSlotEvent(oldPatch, patch);
         }
     }
     
@@ -59,11 +59,6 @@ public class MWSlot extends AbstractSlot implements Slot
                 synth.send(message);
             }   
         };
-    }
-
-    public SendPatchWorker createSendPatchWorker()
-    {
-        throw new UnsupportedOperationException();
     }
 
     public StorePatchWorker createStorePatchWorker()
