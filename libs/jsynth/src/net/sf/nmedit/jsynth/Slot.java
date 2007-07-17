@@ -26,8 +26,6 @@ import java.beans.PropertyChangeListener;
 
 import net.sf.nmedit.jsynth.event.SlotListener;
 import net.sf.nmedit.jsynth.worker.RequestPatchWorker;
-import net.sf.nmedit.jsynth.worker.SendPatchWorker;
-import net.sf.nmedit.jsynth.worker.StorePatchWorker;
 
 public interface Slot
 {
@@ -39,11 +37,6 @@ public interface Slot
     String getName();
     
     String getPatchName();
-    
-    SendPatchWorker createSendPatchWorker();
-    
-    // TODO store where ?
-    StorePatchWorker createStorePatchWorker();
     
     // TODO better way ?
     RequestPatchWorker createRequestPatchWorker();

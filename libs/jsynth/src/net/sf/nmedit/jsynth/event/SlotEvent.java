@@ -27,10 +27,22 @@ public class SlotEvent extends SynthesizerEvent
      * 
      */
     private static final long serialVersionUID = -3461964499377795786L;
+    private Object oldPatch;
+    private Object newPatch;
 
     public SlotEvent(int id, Slot slot)
     {
         super(slot.getSynthesizer(), id, slot);
+    }
+    
+    public void setOldPatch(Object patch)
+    {
+        this.oldPatch = patch;
+    }
+    
+    public void setNewPatch(Object patch)
+    {
+        this.newPatch = patch;
     }
     
     public Slot getSlot()
@@ -38,4 +50,14 @@ public class SlotEvent extends SynthesizerEvent
         return (Slot) arg;
     }
 
+    public Object getOldPatch()
+    {
+        return oldPatch;
+    }
+    
+    public Object getNewPatch()
+    {
+        return newPatch;
+    }
+    
 }

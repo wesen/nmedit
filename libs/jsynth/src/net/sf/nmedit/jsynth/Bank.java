@@ -22,7 +22,7 @@
  */
 package net.sf.nmedit.jsynth;
 
-import net.sf.nmedit.jsynth.worker.SendPatchWorker;
+import net.sf.nmedit.jsynth.event.BankUpdateListener;
 
 public interface Bank<S extends Synthesizer>
 {
@@ -31,16 +31,16 @@ public interface Bank<S extends Synthesizer>
     int getPatchCount();
     int getBankIndex();
     S getSynthesizer();
-    
-    SendPatchWorker createSendPatchWorker(int position);
-    
-    /*
-    void requestPatchInfo(int start, int end)
-        throws SynthException;
 
+    String getPatchName(int index);
+    boolean containsPatch(int index);
     boolean isPatchInfoAvailable(int index);
-    boolean isPatchInfoAvailable(int start, int end);
-    PatchInfo getPatchInfo(int index);
     
-    */
+    void update();
+    void update(int beginIndex, int endIndex);
+
+    void addBankUpdateListener(BankUpdateListener l);
+    void removeBankUpdateListener(BankUpdateListener l);
+    String getPatchLocationName(int position);
+
 }
