@@ -34,9 +34,7 @@ public class StringUtils
         for (int i=0;i<b.length;i++)
         {
             char c = (char)b[i];
-            if (Character.isLetter(c)
-                ||Character.isDigit(c)
-                ||Character.isSpaceChar(c))
+            if (NmCharacter.isCharacter(c))
             {
                 if (invalid)
                     sb.append("...");
