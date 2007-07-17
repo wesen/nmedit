@@ -25,6 +25,7 @@ package net.sf.nmedit.jsynth;
 import java.beans.PropertyChangeListener;
 
 import net.sf.nmedit.jsynth.event.SynthesizerStateListener;
+import net.sf.nmedit.jsynth.worker.StorePatchWorker;
 
 /**
  * Synthesizer is the base interface for remote synthesizers.
@@ -69,6 +70,8 @@ public interface Synthesizer
     
     String getName();
     String getDeviceName();
+
+    StorePatchWorker createStorePatchWorker();
     
     void putClientProperty(Object key, Object value);
     Object getClientProperty(Object key);

@@ -64,7 +64,7 @@ public abstract class AbstractSlot implements Slot
         eventListenerList.remove(SlotListener.class, l);
     }
 
-    protected void fireNewPatchInSlotEvent()
+    protected void fireNewPatchInSlotEvent(Object oldPatch, Object newPatch)
     {
         if (eventListenerList == null)
             return;
@@ -75,6 +75,8 @@ public abstract class AbstractSlot implements Slot
             return;
         
         SlotEvent e = new SlotEvent(SlotEvent.SYNTH_SLOT_NEWPATCH, this);
+        e.setOldPatch(oldPatch);
+        e.setNewPatch(newPatch);
         
         for (int i=0;i<list.length;i++)
         {

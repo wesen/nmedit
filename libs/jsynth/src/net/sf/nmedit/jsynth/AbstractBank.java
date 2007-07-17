@@ -17,12 +17,19 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */package net.sf.nmedit.jsynth;
 
+import javax.swing.event.EventListenerList;
+
+import net.sf.nmedit.jsynth.event.BankUpdateEvent;
+import net.sf.nmedit.jsynth.event.BankUpdateListener;
+
 public abstract class AbstractBank<S extends Synthesizer> implements Bank<S>
 {
 
     private int bankIndex;
     
     private S synth;
+    
+    protected EventListenerList listenerList = new EventListenerList();
 
     protected AbstractBank(S synth, int bankIndex)
     {
@@ -45,80 +52,38 @@ public abstract class AbstractBank<S extends Synthesizer> implements Bank<S>
         return bankIndex;
     }
 
-    
-/*
-    private int bankIndex;
-    
-    protected DefaultPatchInfo[] patchInfoList;
-
-    private S synth;
-
-    protected AbstractBank(S synth, int bankIndex, int capacity)
+    public void update()
     {
-        this.synth = synth;
-        this.bankIndex = bankIndex;
-        createInfoList(capacity);
-    }
-    
-    public int getPatchCount()
-    {
-        return patchInfoList.length;
+        update(0, getPatchCount());
     }
 
-    protected void createInfoList(int capacity)
+    public void addBankUpdateListener(BankUpdateListener l)
     {
-        patchInfoList = new DefaultPatchInfo[capacity];
-        for (int i=0;i<patchInfoList.length;i++)
-        {
-            DefaultPatchInfo info = new DefaultPatchInfo();
-            info.setBankIndex(bankIndex);
-            info.setBankPosition(i);
-            patchInfoList[i] = info;
+        listenerList.add(BankUpdateListener.class, l);
+    }
+
+    public void removeBankUpdateListener(BankUpdateListener l)
+    {
+        listenerList.remove(BankUpdateListener.class, l);
+    }
+
+    protected void fireBankUpdateEvent(int beginIndex, int endIndex)
+    {
+        if (beginIndex>endIndex || beginIndex<0 || endIndex>getPatchCount())
+            throw new IllegalArgumentException("invalid beginIndex:"+beginIndex+", endIndex:"+endIndex);
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+        BankUpdateEvent event = null;
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        for (int i = listeners.length-2; i>=0; i-=2) {
+            if (listeners[i]==BankUpdateListener.class) {
+                // Lazily create the event:
+                if (event == null)
+                    event = new BankUpdateEvent(this, beginIndex, endIndex);
+                ((BankUpdateListener)listeners[i+1]).bankUpdated(event);
+            }
         }
     }
-
-    public DefaultPatchInfo getPatchInfo(int index)
-    {
-        return patchInfoList[index];
-    }
-
-    protected void checkIndex(int index)
-    {
-        if (index<0 || index>=getPatchCount())
-            throw new IndexOutOfBoundsException("invalid index: "+index);
-    }
-
-    protected void checkRange(int start, int end)
-    {
-        checkIndex(start);
-
-        int lastIndex = start+end-1;
-        if (end<start || lastIndex<0 || lastIndex>=getPatchCount())
-            throw new IllegalArgumentException("invalid range ["+start+".."+end+"]");
-    }
     
-    public boolean isPatchInfoAvailable(int index)
-    {
-        if (index<0 || index>=getPatchCount())
-            throw new IndexOutOfBoundsException("invalid index: "+index);
-        
-        return true;
-    }
-
-    public boolean isPatchInfoAvailable(int start, int end)
-    {
-        checkRange(start, end);
-        
-        for (int i=start;i<end;i++)
-            if (!isPatchInfoAvailable(i))
-                return false;
-        
-        return true;
-    }
-
-    public void requestPatchInfo(int start, int end) throws SynthException
-    {
-        checkRange(start, end);
-    }
-*/
 }

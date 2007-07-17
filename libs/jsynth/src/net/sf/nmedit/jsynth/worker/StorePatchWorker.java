@@ -23,6 +23,9 @@ import net.sf.nmedit.jsynth.SynthException;
 public interface StorePatchWorker extends Worker
 {
 
+    void setSource(Object source);
+    void setDestination(Object destination);
+    
     void store() throws SynthException;
     
 }
