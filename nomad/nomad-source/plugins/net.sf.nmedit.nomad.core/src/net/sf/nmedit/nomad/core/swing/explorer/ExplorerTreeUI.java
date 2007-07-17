@@ -26,11 +26,33 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragGestureListener;
+import java.awt.dnd.DragGestureRecognizer;
+import java.awt.dnd.DragSource;
+import java.awt.dnd.DragSourceDragEvent;
+import java.awt.dnd.DragSourceDropEvent;
+import java.awt.dnd.DragSourceEvent;
+import java.awt.dnd.DragSourceListener;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -84,6 +106,17 @@ public class ExplorerTreeUI extends MetalTreeUI
         tree.setShowsRootHandles(true);
         tree.setScrollsOnExpand(false);
         
+        DND dnd = new DND();
+        
+        
+        dnd.dragSource = new DragSource();
+        DragGestureRecognizer dgr = 
+            dnd.dragSource.createDefaultDragGestureRecognizer(tree, 
+                    DnDConstants.ACTION_COPY_OR_MOVE, dnd);
+        
+        dnd.dropTarget = new DropTarget(tree, DnDConstants.ACTION_COPY_OR_MOVE
+                | DnDConstants.ACTION_LINK,
+                dnd);
     }
     protected void installDefaults() 
     {
@@ -92,6 +125,151 @@ public class ExplorerTreeUI extends MetalTreeUI
         backgroundSelectionColor = defaultSelectionBackground;//UIManager.getColor("Tree.selectionBackground");
         setExpandedIcon(openIcon);
         setCollapsedIcon(closedIcon);
+        
+    }
+    
+    private class DND implements 
+        DragGestureListener,
+        DragSourceListener,
+        DropTargetListener
+    {
+        
+        DragSource dragSource;
+        DropTarget dropTarget;
+
+        public void dragGestureRecognized(DragGestureEvent dge)
+        {
+            Point p = dge.getDragOrigin();
+            TreePath path = getClosestPathForLocation(tree, p.x, p.y);
+            if (path == null)
+                return;
+            
+            Object node = path.getLastPathComponent();
+            if (!(node instanceof Transferable))
+                return;
+            
+            Transferable transferable = (Transferable) node;
+            
+            dragSource.startDrag(dge, 
+                    DragSource.DefaultMoveDrop,
+                    transferable,
+                    this
+                    );
+        }
+
+        public void dragDropEnd(DragSourceDropEvent dsde)
+        {
+            // no op
+        }
+
+        public void dragEnter(DragSourceDragEvent dsde)
+        {
+            // no op
+        }
+
+        public void dragExit(DragSourceEvent dse)
+        {
+            // no op
+        }
+
+        public void dragOver(DragSourceDragEvent dsde)
+        {
+            // no op
+        }
+
+        public void dropActionChanged(DragSourceDragEvent dsde)
+        {
+            // no op
+        }
+
+        private boolean testFileFlavor(DataFlavor[] list)
+        {
+            for (DataFlavor f: list)
+                if(f.isMimeTypeEqual("text/uri-list"))
+                    return true;
+            return false;
+        }
+        
+        public void dragEnter(DropTargetDragEvent dtde)
+        {
+            if (testFileFlavor(dtde.getCurrentDataFlavors()))
+                dtde.acceptDrag(DnDConstants.ACTION_LINK);
+            else
+                dtde.rejectDrag();
+        }
+
+        public void dragExit(DropTargetEvent dte)
+        {
+            // no op
+        }
+
+        public void dragOver(DropTargetDragEvent dtde)
+        {
+            if (testFileFlavor(dtde.getCurrentDataFlavors()))
+                dtde.acceptDrag(DnDConstants.ACTION_LINK);
+            else
+                dtde.rejectDrag();
+        }
+
+        public void drop(DropTargetDropEvent dtde)
+        {
+            DataFlavor flavor = null;
+            for (DataFlavor f: dtde.getCurrentDataFlavors())
+                if (f.isMimeTypeEqual("text/uri-list"))
+                {
+                    flavor = f;
+                    break;
+                }
+            if (flavor == null)
+            {
+                dtde.rejectDrop();
+                return;
+            }
+
+            
+            dtde.acceptDrop(DnDConstants.ACTION_LINK);
+            List<File> files = new ArrayList<File>();
+
+            try
+            {
+                BufferedReader r = new BufferedReader(flavor.getReaderForText(dtde.getTransferable()));
+                String line;
+                while ((line=r.readLine())!=null)
+                {
+                    if (line.startsWith("file:"))
+                    {
+                        File file = new File(URI.create(line));
+                        if (file.exists())
+                        {
+                            files.add(file);
+                        }
+                    }
+                }
+            }
+            catch (Throwable e)
+            {
+                dtde.rejectDrop();
+                e.printStackTrace();
+                return ;
+            }
+            
+            for (File file: files)
+            {
+                if (file.isDirectory())
+                {
+                    FileContext fc = new FileContext((ExplorerTree)tree, file);
+                    ((ExplorerTree)tree).getRoot()
+                    .add(fc);
+                    ((ExplorerTree)tree).fireRootChanged();
+                }
+            }
+        }
+
+        public void dropActionChanged(DropTargetDragEvent dtde)
+        {
+            // TODO Auto-generated method stub
+            
+        }
         
     }
 

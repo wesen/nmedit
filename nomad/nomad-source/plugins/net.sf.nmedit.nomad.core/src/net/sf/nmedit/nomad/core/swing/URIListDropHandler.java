@@ -53,14 +53,11 @@ public class URIListDropHandler implements DropTargetListener
         DataFlavor plainFlavor = null;
         for (DataFlavor flavor: list)
         {   
-            if (String.class.equals(flavor.getRepresentationClass()))
-            {
-                // prefer URI List
-                if (flavor.isMimeTypeEqual(MIME_TEXT_URI_LIST))
-                    return flavor;
-                else if (flavor.isMimeTypeEqual(MIME_TEXT_PLAIN))
-                    plainFlavor = flavor;
-            }
+            // prefer URI List
+            if (flavor.isMimeTypeEqual(MIME_TEXT_URI_LIST))
+                return flavor;
+            else if (flavor.isMimeTypeEqual(MIME_TEXT_PLAIN))
+                plainFlavor = flavor;
         }
      
         return plainFlavor;
@@ -102,7 +99,6 @@ public class URIListDropHandler implements DropTargetListener
             dtde.rejectDrop();
             return;
         }
-
         dtde.acceptDrop(dtde.getDropAction());
         List<URI> uris;
         try

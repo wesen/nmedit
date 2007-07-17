@@ -26,7 +26,8 @@ import java.util.List;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.Synthesizer;
-import net.sf.nmedit.jsynth.worker.SendPatchWorker;
+import net.sf.nmedit.jsynth.worker.PatchLocation;
+import net.sf.nmedit.jsynth.worker.StorePatchWorker;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.menulayout.MLEntry;
 import net.sf.nmedit.nomad.core.menulayout.MenuLayout;
@@ -87,54 +88,50 @@ public class Installer implements InitService
         
         SaveInSynthDialog ssd = new SaveInSynthDialog(synthList);
         
+        
         ssd.invoke();
         
         if (!ssd.isSaveOption())
             return;
 
         Synthesizer synth = ssd.getSelectedSynthesizer();
-        Slot slot = ssd.getSelectedSlot();
-        
-        if (synth == null || slot == null || (!synth.isConnected()))
+        if (synth == null || (!synth.isConnected()))
             return;
         
-        SendPatchWorker spw = slot.createSendPatchWorker();
-        try
+        Slot slot = ssd.getSelectedSlot();
+        
+        if (slot != null)
         {
-            spw.setPatch(patch);
-            spw.send();
+            StorePatchWorker spw = synth.createStorePatchWorker();
+            try
+            {
+                spw.setSource(patch);
+                spw.setDestination(new PatchLocation(slot.getSlotIndex()));
+                spw.store();
+            }
+            catch (SynthException e)
+            {
+                e.printStackTrace();
+            }
         }
-        catch (SynthException e)
+        
+        PatchLocation bank = ssd.getSelectedBank();
+        
+        if (bank != null)
         {
-            e.printStackTrace();
+            StorePatchWorker spw = synth.createStorePatchWorker();
+            try
+            {
+                spw.setSource(patch);
+                spw.setDestination(bank);
+                spw.store();
+            }
+            catch (SynthException e)
+            {
+                e.printStackTrace();
+            }
         }
         
-        
-/*        
-        Iterator<FileService> iter = ServiceRegistry.getServices(synt.class);
-        while (iter.hasNext())
-        {
-            FileService fs = iter.next();
-            
-            boolean add = 
-                (saveAs && fs.isSaveOperationSupported(d))
-                || ((!saveAs)&&fs.isSaveOperationSupported(d));
-            
-            if (add)
-                chooser.addChoosableFileFilter(fs.getFileFilter());
-        }
-
-        
-        if (!(chooser.showSaveDialog(mainWindow)==JFileChooser.APPROVE_OPTION)) return;
-        
-        FileService service = FileServiceTool.lookupFileService(chooser);
-        
-        if (service != null)
-        {
-            File newFile = chooser.getSelectedFile();
-            if (newFile == null) return;
-            service.save(d, newFile);
-        }*/
     }
 
     public void shutdown()

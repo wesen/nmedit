@@ -3,11 +3,12 @@
 	<!ENTITY ipath "icons/">
 	<!ENTITY etool "&ipath;etool16">
 	<!ENTITY dtool "&ipath;dtool16">
+	<!ENTITY tango "&ipath;tango/16x16/">
 ]>
 <entry entryPoint="nomad"
 	xmlns="http://nmedit.sf.net/MenuLayout"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	
+
   <entry entryPoint="menu" >
 	<entry entryPoint="file" >
 		<entry entryPoint="new">
@@ -22,7 +23,7 @@
 			</entry>
 		</entry>
 		<entry entryPoint="open">
-		  <icon type="enabledIcon" src="&etool;/new_untitled_text_file.gif" />
+		  <icon type="enabledIcon" src="&tango;/actions/document-open.png" />
 		</entry>
 		<entry entryPoint="close" flat="true">
 			<entry entryPoint="close" />

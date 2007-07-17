@@ -23,10 +23,15 @@
 package net.sf.nmedit.nomad.core.swing.explorer;
 
 import java.awt.Event;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
@@ -38,7 +43,8 @@ import javax.swing.tree.TreeNode;
 import net.sf.nmedit.nmutils.FileSort;
 import net.sf.nmedit.nomad.core.Nomad;
 
-public class FileNode implements ETreeNode, MouseListener
+public class FileNode implements ETreeNode, MouseListener,
+    Transferable
 {
 
     private final static TreeNode[] EMPTY = new TreeNode[0];
@@ -211,5 +217,36 @@ public class FileNode implements ETreeNode, MouseListener
         // no op
     }
 
-    
+    private static DataFlavor fileFlavor = new DataFlavor(File.class, "File");
+    private static DataFlavor uriFlavor =
+        new DataFlavor("text/uri-list; charset=utf-16", "uri list");
+ 
+    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException
+    {
+        if (fileFlavor.match(flavor))
+            return file;
+
+        if (uriFlavor.match(flavor))
+        {
+            String path = file == null ? null : 
+                file.getAbsoluteFile().toURI().toString();
+            return new ByteArrayInputStream(path.getBytes("utf-16"));
+        }
+        throw new UnsupportedFlavorException(flavor); 
+    }
+
+    public DataFlavor[] getTransferDataFlavors()
+    {
+        DataFlavor[] flavors = {fileFlavor, uriFlavor};
+        return flavors;
+    }
+
+    public boolean isDataFlavorSupported(DataFlavor flavor)
+    {
+        for (DataFlavor f: getTransferDataFlavors())
+            if (f.equals(flavor))
+                return true;
+        return false;
+    }
+
 }

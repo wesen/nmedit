@@ -1,21 +1,3 @@
-/* Copyright (C) 2006 Christian Schneider
- * 
- * This file is part of Nomad.
- * 
- * Nomad is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * 
- * Nomad is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Nomad; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
 package net.sf.nmedit.jsynth.nomad;
 
 import com.jgoodies.forms.layout.CellConstraints;
@@ -28,7 +10,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -42,6 +23,8 @@ public class SaveInSynthFrm extends JPanel
    JCheckBox cbSaveInBank = new JCheckBox();
    JButton btnCancel = new JButton();
    JButton btnSave = new JButton();
+   JCheckBox cbOpenPatch = new JCheckBox();
+   JLabel lblIcon = new JLabel();
 
    /**
     * Default constructor
@@ -121,35 +104,44 @@ public class SaveInSynthFrm extends JPanel
    public JPanel createPanel()
    {
       JPanel jpanel1 = new JPanel();
-      FormLayout formlayout1 = new FormLayout("FILL:DEFAULT:NONE,FILL:4DLU:NONE,FILL:DEFAULT:GROW(1.0)","CENTER:DEFAULT:NONE,CENTER:2DLU:NONE,CENTER:DEFAULT:NONE,CENTER:2DLU:NONE,CENTER:DEFAULT:NONE,CENTER:2DLU:GROW(1.0),CENTER:DEFAULT:NONE");
+      FormLayout formlayout1 = new FormLayout("FILL:DEFAULT:NONE,FILL:8DLU:NONE,FILL:DEFAULT:NONE,FILL:4DLU:NONE,FILL:DEFAULT:GROW(1.0)","CENTER:DEFAULT:NONE,CENTER:2DLU:NONE,CENTER:DEFAULT:NONE,CENTER:2DLU:NONE,CENTER:DEFAULT:NONE,CENTER:DEFAULT:NONE,CENTER:2DLU:GROW(1.0),CENTER:DEFAULT:NONE");
       CellConstraints cc = new CellConstraints();
       jpanel1.setLayout(formlayout1);
 
       JLabel jlabel1 = new JLabel();
       jlabel1.setText("Synthesizer");
-      jpanel1.add(jlabel1,cc.xy(1,1));
+      jpanel1.add(jlabel1,cc.xy(3,1));
 
       cbSynth.setName("cbSynth");
-      jpanel1.add(cbSynth,cc.xy(3,1));
+      jpanel1.add(cbSynth,cc.xy(5,1));
 
       cbSlot.setName("cbSlot");
-      jpanel1.add(cbSlot,cc.xy(3,3));
+      jpanel1.add(cbSlot,cc.xy(5,3));
 
       cbBank.setName("cbBank");
-      jpanel1.add(cbBank,cc.xy(3,5));
+      jpanel1.add(cbBank,cc.xy(5,5));
 
       cbSaveInSlot.setActionCommand("Save In Slot");
       cbSaveInSlot.setName("cbSaveInSlot");
       cbSaveInSlot.setText("Save In Slot");
-      jpanel1.add(cbSaveInSlot,cc.xy(1,3));
+      jpanel1.add(cbSaveInSlot,cc.xy(3,3));
 
       cbSaveInBank.setActionCommand("Save In Bank");
       cbSaveInBank.setName("cbSaveInBank");
       cbSaveInBank.setText("Save In Bank");
-      jpanel1.add(cbSaveInBank,cc.xy(1,5));
+      jpanel1.add(cbSaveInBank,cc.xy(3,5));
 
-      jpanel1.add(createPanel1(),new CellConstraints(3,7,1,1,CellConstraints.RIGHT,CellConstraints.DEFAULT));
-      addFillComponents(jpanel1,new int[]{ 2 },new int[]{ 2,4,6,7 });
+      jpanel1.add(createPanel1(),new CellConstraints(5,8,1,1,CellConstraints.RIGHT,CellConstraints.DEFAULT));
+      cbOpenPatch.setActionCommand("Open Patch");
+      cbOpenPatch.setName("cbOpenPatch");
+      cbOpenPatch.setText("Open Patch");
+      jpanel1.add(cbOpenPatch,cc.xy(3,6));
+
+      lblIcon.setName("lblIcon");
+      lblIcon.setText("JLabel");
+      jpanel1.add(lblIcon,new CellConstraints(1,1,1,8,CellConstraints.DEFAULT,CellConstraints.TOP));
+
+      addFillComponents(jpanel1,new int[]{ 2,4 },new int[]{ 2,3,4,5,6,7,8 });
       return jpanel1;
    }
 
