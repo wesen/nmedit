@@ -32,6 +32,7 @@ import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 import net.sf.nmedit.jsynth.midi.MidiPort;
 import net.sf.nmedit.jsynth.worker.RequestPatchWorker;
+import net.sf.nmedit.jsynth.worker.StorePatchWorker;
 import net.waldorf.miniworks4pole.jprotocol.MWListenerSupport;
 import net.waldorf.miniworks4pole.jprotocol.MiniworksMidiMessage;
 import net.waldorf.miniworks4pole.jprotocol.WProtocol;
@@ -200,6 +201,12 @@ public class Miniworks4Pole extends AbstractSynthesizer
     public ModuleDescriptions getModuleDescriptions()
     {
         return moduleDescriptions;
+    }
+
+    public StorePatchWorker createStorePatchWorker()
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
     
 }
