@@ -142,4 +142,43 @@ public class Packet
     private Map<String, List<Packet>> packetLists = new HashMap<String, List<Packet>>();
     private Map<String, List<Integer>> intLists = new HashMap<String, List<Integer>>();
     private String name;
+    
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getName());
+        sb.append("[");
+        sb.append("name='");
+        sb.append(name);
+        sb.append("'");
+        toStringParams(sb);
+        sb.append("]");
+        return sb.toString();
+    }
+
+    private void toStringParams(StringBuilder sb)
+    {
+        sb.append(",variables={");
+        int count = allVariables.size()-1;
+        for (String varName: allVariables)
+        {
+            sb.append(varName);
+            sb.append("=");
+            sb.append(variables.get(varName));
+            if (count>0)
+                sb.append(",");
+            count--;
+        }
+        sb.append("}, packets={");
+        count = packets.size()-1;
+        for (String packet: packets.keySet())
+        {
+            sb.append(packet);
+            if (count>0)
+                sb.append(",");
+            count--;
+        }
+        sb.append("}");
+    }
+    
 }
