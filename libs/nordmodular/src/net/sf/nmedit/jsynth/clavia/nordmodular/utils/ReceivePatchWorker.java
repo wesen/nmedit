@@ -22,6 +22,8 @@
  */
 package net.sf.nmedit.jsynth.clavia.nordmodular.utils;
 
+import net.sf.nmedit.jnmprotocol.GetPatchMessage;
+import net.sf.nmedit.jnmprotocol.MidiException;
 import net.sf.nmedit.jnmprotocol.NmProtocol;
 import net.sf.nmedit.jnmprotocol.NmProtocolListener;
 import net.sf.nmedit.jnmprotocol.PatchMessage;
@@ -48,12 +50,12 @@ public class ReceivePatchWorker extends NmProtocolListener
         this.modules = modules;
     }
     
-    public void getPatch(NmProtocol protocol) throws Exception
+    public void getPatch(NmProtocol protocol) throws MidiException
     {
-        protocol.send(NmUtils.createGetPatchMessage(slot, pid));
+        protocol.send(new GetPatchMessage(slot, pid));
     }
     
-    public void getPatch(NordModular nm1) throws Exception
+    public void getPatch(NordModular nm1) throws MidiException
     {
         getPatch(nm1.getProtocol());
     }

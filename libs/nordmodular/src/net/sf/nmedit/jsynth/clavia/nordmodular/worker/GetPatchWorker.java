@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */package net.sf.nmedit.jsynth.clavia.nordmodular.worker;
 
+import net.sf.nmedit.jnmprotocol.GetPatchMessage;
 import net.sf.nmedit.jnmprotocol.NmProtocolListener;
 import net.sf.nmedit.jnmprotocol.PatchMessage;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
@@ -41,6 +42,8 @@ public class GetPatchWorker extends NmProtocolListener implements ScheduledWorke
     private boolean messageSent = false;
     private long timeout;
 
+    private static final int PATCH_MESSAGE_COUNT = 13;
+    
     public GetPatchWorker(NordModular synth, 
             int slotId, int patchId)
     {
@@ -57,7 +60,7 @@ public class GetPatchWorker extends NmProtocolListener implements ScheduledWorke
 
     public boolean isWorkerFinished()
     {
-        return error || (!synth.isConnected()) || (messageCount>= 13 && slotSet);
+        return error || (!synth.isConnected()) || (messageCount>= PATCH_MESSAGE_COUNT && slotSet);
     }
 
     public void runWorker() throws SynthException
@@ -72,7 +75,7 @@ public class GetPatchWorker extends NmProtocolListener implements ScheduledWorke
             return;
         }
 
-        if (messageCount<13)
+        if (messageCount<PATCH_MESSAGE_COUNT)
         {
             if (System.currentTimeMillis()>timeout)
             {
@@ -85,9 +88,8 @@ public class GetPatchWorker extends NmProtocolListener implements ScheduledWorke
         slotSet = true;
         
         NmSlot slot = synth.getSlot(slotId);
-        slot.setPatchId(patchId);
+        //slot.setPatchId(patchId);
         NMPatch patch = patchBuilder.getPatch();
-        patch.setSlot(slot);
         patch.getHistory().setEnabled(true);
         slot.setPatch(patch);
     }
@@ -96,7 +98,7 @@ public class GetPatchWorker extends NmProtocolListener implements ScheduledWorke
     {
         try
         {
-            synth.getProtocol().send(NmUtils.createGetPatchMessage(slotId, patchId));
+            synth.getProtocol().send(new GetPatchMessage(slotId, patchId));
         }
         catch (Exception e)
         {
@@ -117,7 +119,7 @@ public class GetPatchWorker extends NmProtocolListener implements ScheduledWorke
 
         messageCount ++;
         
-        if (messageCount>=13)
+        if (messageCount>=PATCH_MESSAGE_COUNT)
             synth.removeProtocolListener(this);
         
         try

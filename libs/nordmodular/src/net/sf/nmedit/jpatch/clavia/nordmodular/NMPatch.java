@@ -244,7 +244,12 @@ public class NMPatch extends PBasicPatch implements PPatch
     
     public void setSlot(Slot slot)
     {
-        this.slot = slot;
+        Slot old = this.slot;
+        if (old != slot)
+        {
+            this.slot = slot;
+            firePropertyChanged("slot", old, slot);
+        }
     }
     
     public PNMMorphSection getMorphSection()

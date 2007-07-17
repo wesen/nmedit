@@ -18,6 +18,7 @@
  */package net.sf.nmedit.jsynth.clavia.nordmodular.worker;
 
 import net.sf.nmedit.jnmprotocol.AckMessage;
+import net.sf.nmedit.jnmprotocol.MidiException;
 import net.sf.nmedit.jnmprotocol.MidiMessage;
 import net.sf.nmedit.jnmprotocol.NmProtocolListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
@@ -26,7 +27,7 @@ import net.sf.nmedit.jsynth.clavia.nordmodular.NmSlot;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 
-public class SetPatchWorker extends NmProtocolListener implements ScheduledWorker
+public class StorePatchInSlotWorker extends NmProtocolListener implements ScheduledWorker
 {
 
     private NordModular synth;
@@ -38,33 +39,38 @@ public class SetPatchWorker extends NmProtocolListener implements ScheduledWorke
     private long timeout;
     private boolean ackReply = false;
 
-    public SetPatchWorker(NmSlot slot, NMPatch patch)
+    public StorePatchInSlotWorker(NmSlot slot, NMPatch patch)
     {
         this(slot.getSynthesizer(), patch, slot.getSlotId());
     }
     
-    public SetPatchWorker(NordModular synth, NMPatch patch, int slotId)
+    public StorePatchInSlotWorker(NordModular synth, NMPatch patch, int slotId)
     {
         this.synth = synth;
         this.patch = patch;
         this.slotId = slotId;
     }
     
+    public void store()
+    {
+        forceCreateMessage();
+        synth.getScheduler().offer(this);
+    }
+    
     public void messageReceived(AckMessage message) 
     {
         // int cc = message.get("cc");
-        int slotId = message.get("slot");
-        int pid1 = message.get("pid1");
+        int slotId = message.getSlot();
+        int pid1 = message.getPid1();
         // int type = message.get("type"); // type=54, purpose ???
         // int pid2 = message.get("pid2");
-        
-        if (this.slotId == slotId)
+
+        NmSlot slot = synth.getSlot(slotId);
+        if (this.slotId == slotId && (!ackReply))
         {
             ackReply = true;
             
-            NmSlot slot = synth.getSlot(slotId);
-            
-            slot.setPatchId(pid1);
+            //slot.setPatchId(pid1);
             slot.setPatch(patch);
         }
     }
@@ -122,7 +128,6 @@ public class SetPatchWorker extends NmProtocolListener implements ScheduledWorke
     }
 
     public void forceCreateMessage()
-        throws SynthException
     {
         if (message != null)
             return;
@@ -130,15 +135,15 @@ public class SetPatchWorker extends NmProtocolListener implements ScheduledWorke
         prepareMessage();
     }
     
-    private void prepareMessage() throws SynthException
+    private void prepareMessage()  
     {
         try
         {
             message = NmUtils.createPatchMessage(patch, slotId);
         }
-        catch (Exception e)
+        catch (MidiException e)
         {
-            throw NmUtils.transformException(e);
+            throw new RuntimeException(e);
         }
     }
     

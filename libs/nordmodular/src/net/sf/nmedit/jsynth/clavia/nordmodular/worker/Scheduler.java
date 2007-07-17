@@ -52,7 +52,7 @@ public class Scheduler
         }
         
         // we might have to wake up the thread
-        protocol.sendWorkSignal();
+        protocol.activity();
     }
     
     public void remove(ScheduledWorker worker)

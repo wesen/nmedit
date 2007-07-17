@@ -35,6 +35,7 @@ import net.sf.nmedit.jnmprotocol.ParameterMessage;
 import net.sf.nmedit.jnmprotocol.ParameterSelectMessage;
 import net.sf.nmedit.jnmprotocol.PatchListMessage;
 import net.sf.nmedit.jnmprotocol.PatchMessage;
+import net.sf.nmedit.jnmprotocol.RequestPatchMessage;
 import net.sf.nmedit.jnmprotocol.SetPatchTitleMessage;
 import net.sf.nmedit.jnmprotocol.SlotActivatedMessage;
 import net.sf.nmedit.jnmprotocol.SlotsSelectedMessage;
@@ -48,7 +49,6 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.Knob;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.Helper;
-import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.GetPatchWorker;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.ScheduledMessage;
 import net.sf.nmedit.jsynth.event.SlotEvent;
@@ -82,16 +82,16 @@ public class NmMessageHandler extends NmProtocolListener
 
     public void messageReceived(MorphRangeChangeMessage message) 
     { 
-        int slotId = message.get("slot");
+        int slotId = message.getSlot();
         
         if (!isValidSlot(slotId))
             return;
         
-        int vaId = message.get("section");
-        int moduleId = message.get("module");
-        int paramId = message.get("parameter");
-        int span = message.get("span");
-        int direction = message.get("direction"); // +==0/-==1
+        int vaId = message.getSection();
+        int moduleId = message.getModule();
+        int paramId = message.getParameter();
+        int span = message.getSpan();
+        int direction = message.getDirection(); // +==0/-==1
         
         NmSlot slot = synth.getSlot(slotId);
         NMPatch patch = slot.getPatch();
@@ -152,7 +152,7 @@ public class NmMessageHandler extends NmProtocolListener
 
     public void messageReceived(SetPatchTitleMessage message) 
     {
-        int slotId = message.get("slot");
+        int slotId = message.getSlot();
         //int pid = message.get("pid");
         
         // check if slot is available <=> synth is connected
@@ -172,21 +172,19 @@ public class NmMessageHandler extends NmProtocolListener
      */
     public void messageReceived(AckMessage message) 
     {
-        int slotId = message.get("slot");
-        int pid1 = message.get("pid1");
-        //int type = message.get("type");
-        //int pid2 = message.get("pid2");
+        int slotId = message.getSlot();
         
         // check if slot is available <=> synth is connected
         // -> this is not implied by the received message
         if (!isValidSlot(slotId))
             return;
         
+        /*
         NmSlot slot = synth.getSlot(slotId);
-        if (slot.getPatchId() != pid1)
+        if (slot.getPatchId() != message.getPid1())
         {
-            slot.setPatchId(pid1);
-        }
+            slot.setPatchId(message.getPid1());
+        }*/
     }
 
     public void messageReceived(NewPatchInSlotMessage message) 
@@ -194,15 +192,17 @@ public class NmMessageHandler extends NmProtocolListener
         // user changed the patch in one of the slots
         // trigger-source: synth
         
-        int slotId = message.get("slot");
-        int patchId = message.get("pid");
+        int slotId = message.getSlot();
         
         if (!isValidSlot(slotId))
             return;
+
+        int patchId = message.getPid();
         
         NmSlot slot = synth.getSlot(slotId);
+
         slot.setPatch(null);
-        slot.setPatchId(patchId);
+        //slot.setPatchId(patchId);
         
         getPatch(slotId, patchId);
     }
@@ -219,15 +219,14 @@ public class NmMessageHandler extends NmProtocolListener
     public static void requestPatch(NordModular synth, int slotId)
     {
         synth.getScheduler().offer(new ScheduledMessage(synth, 
-                NmUtils.createRequestPatchMessage(slotId)));
+                new RequestPatchMessage(slotId)));
     }
     
     public void messageReceived(VoiceCountMessage message) 
     {
         for (int i=0;i<synth.getSlotCount();i++)
         {
-            int vc = message.get("voiceCount"+i);
-            synth.getSlot(i).setVoiceCount(vc);
+            synth.getSlot(i).setVoiceCount(message.getVoiceCount(i));
         }
     }
     
@@ -238,15 +237,13 @@ public class NmMessageHandler extends NmProtocolListener
     {
         for (int i=0;i<synth.getSlotCount();i++)
         {
-            boolean selected = message.get("slot"+i+"Selected")==1;
-            NmSlot slot = synth.getSlot(i);
-            slot.setEnabled(selected);
+            synth.getSlot(i).setEnabled(message.isSlotSelected(i));
         }
     }
 
     public void messageReceived(SlotActivatedMessage message) 
     {
-        int slotId = message.get("activeSlot");
+        int slotId = message.getActiveSlot();
 
         if (!isValidSlot(slotId))
             return;
@@ -256,7 +253,7 @@ public class NmMessageHandler extends NmProtocolListener
 
     public void messageReceived(LightMessage message) 
     {
-        int slotId = message.get("slot");
+        int slotId = message.getSlot();
         
         if (!isValidSlot(slotId))
             return;
@@ -268,7 +265,7 @@ public class NmMessageHandler extends NmProtocolListener
 
     public void messageReceived(MeterMessage message) 
     {
-        int slotId = message.get("slot");
+        int slotId = message.getSlot();
         
         if (!isValidSlot(slotId))
             return;
@@ -280,7 +277,7 @@ public class NmMessageHandler extends NmProtocolListener
 
     public void messageReceived(KnobAssignmentMessage message) 
     { 
-        int slotId = message.get("slot");
+        int slotId = message.getSlot();
         
         if (!isValidSlot(slotId))
             return;
@@ -332,13 +329,13 @@ public class NmMessageHandler extends NmProtocolListener
     
     public void messageReceived(ParameterSelectMessage message) 
     { 
-        int slotId = message.get("slot");
+        int slotId = message.getSlot();
         if (!isValidSlot(slotId))
             return;
         
-        int vaId = message.get("section");
-        int moduleId = message.get("module");
-        int paramId = message.get("parameter");
+        int vaId = message.getSection();
+        int moduleId = message.getModule();
+        int paramId = message.getParameter();
         
         // addParameter("pid", "data:pid");
         // addParameter("sc", "data:sc");
@@ -371,15 +368,15 @@ public class NmMessageHandler extends NmProtocolListener
     
     public void messageReceived(ParameterMessage message) 
     {
-        int slotId = message.get("slot");
+        int slotId = message.getSlot();
         
         if (!isValidSlot(slotId))
             return;
         
-        int vaId = message.get("section");
-        int moduleId = message.get("module");
-        int paramId = message.get("parameter");
-        int value = message.get("value");
+        int vaId = message.getSection();
+        int moduleId = message.getModule();
+        int paramId = message.getParameter();
+        int value = message.getValue();
         
         // addParameter("pid", "data:pid");
         // addParameter("sc", "data:sc");
@@ -412,7 +409,7 @@ public class NmMessageHandler extends NmProtocolListener
     
     public void messageReceived(ErrorMessage message) 
     {
-        // no op
+        throw new RuntimeException(message.toString());
     }
 
     public void slotAdded(SlotEvent e)
@@ -448,12 +445,13 @@ public class NmMessageHandler extends NmProtocolListener
                 // enabled
                 // TODO should we call request patch first to get the pid ?
                 //getPatch(slot.getSlotId(), 0);
-                requestPatch(synth, slot.getSlotId());
+                
+                //requestPatch(synth, slot.getSlotId());
             }
             else
             {
                 // disabled
-                slot.setPatch(null);   
+                //slot.setPatch(null);   
             }
         }
     }
@@ -461,13 +459,14 @@ public class NmMessageHandler extends NmProtocolListener
     public void newPatchInSlot(SlotEvent e)
     {
         NmSlot slot = (NmSlot) e.getSlot();
+        NMPatch oldPatch = (NMPatch) e.getOldPatch();
+        NMPatch newPatch = (NMPatch) e.getNewPatch();
         
         uninstallSynchronizer(slot.getSlotId());
-        
-        NMPatch patch = slot.getPatch();
-        if (patch != null)
+     
+        if (newPatch != null)
         {
-            installSynchronizer(slot, patch);
+            installSynchronizer(slot, newPatch);
         }
     }
     

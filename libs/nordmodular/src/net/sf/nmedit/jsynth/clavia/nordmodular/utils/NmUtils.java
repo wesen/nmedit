@@ -35,16 +35,14 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Collection;
-import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import net.sf.nmedit.jnmprotocol.DeleteCableMessage;
 import net.sf.nmedit.jnmprotocol.DeleteModuleMessage;
-import net.sf.nmedit.jnmprotocol.GetPatchMessage;
-import net.sf.nmedit.jnmprotocol.IAmMessage;
 import net.sf.nmedit.jnmprotocol.KnobAssignmentMessage;
 import net.sf.nmedit.jnmprotocol.MidiCtrlAssignmentMessage;
+import net.sf.nmedit.jnmprotocol.MidiException;
 import net.sf.nmedit.jnmprotocol.MidiMessage;
 import net.sf.nmedit.jnmprotocol.MorphAssignmentMessage;
 import net.sf.nmedit.jnmprotocol.MorphRangeChangeMessage;
@@ -56,12 +54,7 @@ import net.sf.nmedit.jnmprotocol.ParameterSelectMessage;
 import net.sf.nmedit.jnmprotocol.PatchListEntry;
 import net.sf.nmedit.jnmprotocol.PatchListMessage;
 import net.sf.nmedit.jnmprotocol.PatchMessage;
-import net.sf.nmedit.jnmprotocol.RequestPatchMessage;
 import net.sf.nmedit.jnmprotocol.SetModuleTitleMessage;
-import net.sf.nmedit.jnmprotocol.SetPatchTitleMessage;
-import net.sf.nmedit.jnmprotocol.SlotActivatedMessage;
-import net.sf.nmedit.jnmprotocol.SlotsSelectedMessage;
-import net.sf.nmedit.jnmprotocol.SynthSettingsMessage;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
@@ -86,7 +79,7 @@ import org.xml.sax.SAXException;
 
 public class NmUtils
 {
-    
+
     public static NM1ModuleDescriptions parseModuleDescriptions() 
         throws ParserConfigurationException, SAXException, IOException, URISyntaxException
     {
@@ -126,24 +119,7 @@ public class NmUtils
     {        
         return Integer.toString(((section+1)*100)+(position+1));
     }
-    public static SlotActivatedMessage 
-        createSlotsActivatedMessage(int slot)
-    {
-        SlotActivatedMessage message = new SlotActivatedMessage();
-        message.set("activeSlot", slot);
-        return message;
-    }
     
-    public static SlotsSelectedMessage createSlotsSelectedMessage(
-            boolean slot0, boolean slot1, boolean slot2, boolean slot3)
-    {
-        SlotsSelectedMessage message = new SlotsSelectedMessage();
-        message.set("slot0Selected", slot0?1:0);
-        message.set("slot1Selected", slot1?1:0);
-        message.set("slot2Selected", slot2?1:0);
-        message.set("slot3Selected", slot3?1:0);
-        return message;
-    }
     /*
     public static MidiMessage createMorphRangeMessage(PParameter parameter, int span, int direction)
     {
@@ -223,28 +199,17 @@ public class NmUtils
         return msg;
     }
     
-    public static MidiMessage createRequestPatchMessage(int slotId) 
-    {
-        RequestPatchMessage msg = new RequestPatchMessage();
-        msg.set("slot", slotId);    
-        return msg;
-    }
-
-    public static MidiMessage createGetPatchMessage(int slot, int pid) throws Exception
-    {
-        GetPatchMessage msg = new GetPatchMessage();
-        msg.set("slot", slot);
-        msg.set("pid", pid);
-        return msg;
-    }
-    
-    public static MidiMessage createNewModuleMessage(int pid, PModule module) throws Exception
+    public static MidiMessage createNewModuleMessage(int pid, PModule module) throws MidiException
     {
         NewModuleMessage msg = new NewModuleMessage();
-        msg.set("pid", pid);
+        msg.setPid(pid);
 
         // get data
         int section = module.getParentComponent().getComponentIndex();
+        
+        String name = module.getName();
+        if (name == null)
+            name = "";
         
         // set data
         msg.newModule 
@@ -254,20 +219,29 @@ public class NmUtils
             module.getComponentIndex(),
             module.getInternalX(), 
             module.getInternalY(),
-            "",// module.getName(),
+            name,
             Helper.paramValues(module, "parameter"),
             Helper.paramValues(module, "custom")
         );
-        
+/*
+        System.out.println(msg);
+
+        System.out.println(Helper.index(module));
+        System.out.println(section);
+        System.out.println(module.getComponentIndex());
+        System.out.println(module.getInternalX());
+        System.out.println(module.getInternalY());
+        System.out.println(name);
+  */      
         return msg;
     }
-    
-    public static MidiMessage createDeleteModuleMessage( int pid, PModule module, int moduleIndex ) throws Exception
+
+    public static MidiMessage createDeleteModuleMessage( int pid, PModule module, int moduleIndex )
     {    
         return createDeleteModuleMessage(pid, module.getParentComponent().getComponentIndex(), moduleIndex);
     }
     
-    public static MidiMessage createDeleteModuleMessage( int pid, int polyVoiceArea, int moduleIndex ) throws Exception
+    public static MidiMessage createDeleteModuleMessage( int pid, int polyVoiceArea, int moduleIndex ) 
     {
         DeleteModuleMessage msg = new DeleteModuleMessage();
         // get data
@@ -277,13 +251,12 @@ public class NmUtils
         return msg;
     }
 
-    public static MidiMessage createDeleteCableMessage( VoiceArea va, PConnector a, PConnector b, int slotId, int pId ) throws Exception
+    public static MidiMessage createDeleteCableMessage( VoiceArea va, PConnector a, PConnector b, int slotId, int pId )
     {
         // get message instance
         DeleteCableMessage msg = new DeleteCableMessage();
-        msg.set("slot", slotId);
-        msg.set("pid", pId);
-
+        msg.setSlot(slotId);
+        msg.setPid(pId);
         // get data
         PConnector src = a;
         PConnector dst = b;
@@ -311,12 +284,12 @@ public class NmUtils
         return msg;
     }
 
-    public static MidiMessage createNewCableMessage( VoiceArea va, PConnector a, PConnector b, int slotId, int pId ) throws Exception
+    public static MidiMessage createNewCableMessage( VoiceArea va, PConnector a, PConnector b, int slotId, int pId ) 
     {
         // get message instance
         NewCableMessage msg = new NewCableMessage();
-        msg.set("slot", slotId);
-        msg.set("pid", pId);
+        msg.setSlot(slotId);
+        msg.setPid(pId);
 
         // get data
         PConnector src = a;
@@ -348,12 +321,12 @@ public class NmUtils
         return msg;
     }
 
-    public static MidiMessage createMoveModuleMessage( PModule module, int slotId, int pId ) throws Exception
+    public static MidiMessage createMoveModuleMessage( PModule module, int slotId, int pId ) 
     {
         // get message instance
         MoveModuleMessage msg = new MoveModuleMessage();
-        msg.set("slot", slotId);
-        msg.set("pid", pId);
+        msg.setSlot(slotId);
+        msg.setPid(pId);
         
         // set data
         msg.moveModule
@@ -368,7 +341,7 @@ public class NmUtils
     }
     
     
-    public static MidiMessage createSelectParameterMessage( PParameter parameter, int slotId, int pId ) throws Exception
+    public static MidiMessage createSelectParameterMessage( PParameter parameter, int slotId, int pId )
     {
         // get message instance
         ParameterSelectMessage msg = new ParameterSelectMessage();
@@ -384,41 +357,41 @@ public class NmUtils
         return msg;
     }
     
-    public static MidiMessage createParameterChangedMessage( PParameter parameter, int slotId, int pId ) throws Exception
+    public static MidiMessage createParameterChangedMessage( PParameter parameter, int slotId, int pId ) 
     {
         // get message instance
         ParameterMessage msg = new ParameterMessage();
-        msg.set("slot", slotId);
-        msg.set("pid", pId);
+        msg.setSlot(slotId);
+        msg.setPid(pId);
         
         // get data
         PModule module = parameter.getParentComponent();
         
         // set data
-        msg.set("module", module.getComponentIndex());
-        msg.set("section", getVoiceAreaId(module));
-        msg.set("parameter", Helper.index(parameter));
-        msg.set("value", parameter.getValue());
+        msg.parameterChanged(
+                getVoiceAreaId(module),
+                module.getComponentIndex(),
+                Helper.index(parameter),
+                parameter.getValue());
 
         return msg;
     }
     
-    public static MidiMessage createMorphRangeChangeMessage( PParameter parameter, int slotId, int pId ) throws Exception
+    public static MidiMessage createMorphRangeChangeMessage( PParameter parameter, int slotId, int pId )
     {
         // get message instance
         MorphRangeChangeMessage msg = new MorphRangeChangeMessage();
-        msg.set("slot", slotId);
-        msg.set("pid", pId);
         
         // get data
         PModule module = parameter.getParentComponent();
         
         // set data
-        msg.set("module", module.getComponentIndex());
-        msg.set("section", getVoiceAreaId(module));
-        msg.set("parameter", Helper.index(parameter));
-        msg.set("span", Math.abs(parameter.getValue()));
-        msg.set("direction", parameter.getValue()<0?0:1);
+        msg.setMorphRange(slotId, pId,
+                getVoiceAreaId(module),
+                module.getComponentIndex(),
+                Helper.index(parameter),
+                Math.abs(parameter.getValue()),
+                parameter.getValue()<0?0:1);
 
         return msg;
     }
@@ -430,18 +403,6 @@ public class NmUtils
         return msg;
     }
 
-    public static MidiMessage createSetPatchTitleMessage(String title, int slot, int pid)
-    {
-        SetPatchTitleMessage msg = new SetPatchTitleMessage();
-        msg.setTitle(slot, pid, title);
-        return msg;
-    }
-
-    public static MidiMessage createIAmMessage() throws Exception
-    {
-        return new IAmMessage();
-    }
-    
     public static int getVoiceAreaId(VoiceArea voiceArea)
     {
         return Format.getVoiceAreaID(voiceArea.isPolyVoiceArea());
@@ -463,7 +424,7 @@ public class NmUtils
         return names;
     }
 
-    public static MidiMessage createPatchMessage(NMPatch patch, int slotId) throws Exception
+    public static MidiMessage createPatchMessage(NMPatch patch, int slotId) throws MidiException 
     {
         Patch2BitstreamBuilder builder = new Patch2BitstreamBuilder(patch);
         builder.generate();
@@ -475,13 +436,7 @@ public class NmUtils
         return Charset.forName("ISO-8859-1");
     }
     
-    public static MidiMessage createSynthSettingsMessage(Map<String, Object> params)
-        throws Exception
-    {
-        return new SynthSettingsMessage(params);
-    }
-
-    public static MidiMessage createPatchSettingsMessage(NMPatch patch, int slotId) throws Exception
+    public static MidiMessage createPatchSettingsMessage(NMPatch patch, int slotId) throws MidiException
     {
         Patch2BitstreamBuilder builder = new Patch2BitstreamBuilder(patch);
         builder.setHeaderOnly(true);

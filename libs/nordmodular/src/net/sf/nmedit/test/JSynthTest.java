@@ -24,6 +24,7 @@ import javax.sound.midi.MidiDevice.Info;
 
 import net.sf.nmedit.jnmprotocol.AckMessage;
 import net.sf.nmedit.jnmprotocol.ErrorMessage;
+import net.sf.nmedit.jnmprotocol.GetPatchListMessage;
 import net.sf.nmedit.jnmprotocol.IAmMessage;
 import net.sf.nmedit.jnmprotocol.LightMessage;
 import net.sf.nmedit.jnmprotocol.MeterMessage;
@@ -42,7 +43,6 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SynthException;
-import net.sf.nmedit.jsynth.clavia.nordmodular.NmMessageFactory;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NmSlot;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
@@ -50,7 +50,8 @@ import net.sf.nmedit.jsynth.event.SlotEvent;
 import net.sf.nmedit.jsynth.event.SlotListener;
 import net.sf.nmedit.jsynth.event.SlotManagerListener;
 import net.sf.nmedit.jsynth.midi.MidiPlug;
-import net.sf.nmedit.jsynth.worker.SendPatchWorker;
+import net.sf.nmedit.jsynth.worker.PatchLocation;
+import net.sf.nmedit.jsynth.worker.StorePatchWorker;
 
 public class JSynthTest
 {
@@ -71,7 +72,7 @@ public class JSynthTest
         
         NM1ModuleDescriptions md = NmUtils.parseModuleDescriptions();
         
-        synth = new NordModular(md, false);
+        synth = new NordModular(md);
         synth.getSlotManager().addSlotManagerListener(new SlotManagerInfo());
         synth.addProtocolListener(new ProtocolInfo());
         
@@ -95,10 +96,11 @@ public class JSynthTest
         NMPatch patch = new NMPatch(null);
         patch.setName("Hallo123");
         
-        SendPatchWorker worker = slot.createSendPatchWorker();
-        worker.setPatch(patch);
+        StorePatchWorker worker = synth.createStorePatchWorker();
+        worker.setSource(patch);
+        worker.setDestination(new PatchLocation(slot.getSlotIndex()));
         
-        worker.send();
+        worker.store();
         
         //listBanks();
     }
@@ -152,8 +154,6 @@ public class JSynthTest
     
     private class BankListTest extends NmProtocolListener
     {
-        NmMessageFactory fact = NmMessageFactory.getFactory();
-        
         public void start() throws Exception
         {
             request(0,0);
@@ -169,7 +169,7 @@ public class JSynthTest
             
             System.out.println("requesting patch list: section="+section+", position="+position);
 
-            synth.getProtocol().send( fact.buildGetPatchListMessage(section, position) );
+            synth.getProtocol().send( new GetPatchListMessage(section, position) );
         }
         
         public void messageReceived(PatchListMessage message) 
