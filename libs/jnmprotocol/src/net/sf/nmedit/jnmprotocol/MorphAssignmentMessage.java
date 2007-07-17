@@ -52,6 +52,16 @@ public class MorphAssignmentMessage extends MidiMessage
 	setAll(packet);
     }
 
+    public int getSection()
+    {
+        return get("section");
+    }
+
+    public int getModule()
+    {
+        return get("module");
+    }
+    
     public void deAssignMorph(int slot, int pid, int section, int module, int parameter)
     {
         setMorphAssignment(slot, pid, section, module, parameter, MORPH_ID_DEASSIGN);
@@ -68,7 +78,7 @@ public class MorphAssignmentMessage extends MidiMessage
     }
 
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
 	IntStream intStream = appendAll();
 	appendChecksum(intStream);

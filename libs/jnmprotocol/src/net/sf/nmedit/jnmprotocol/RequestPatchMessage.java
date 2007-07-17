@@ -38,24 +38,29 @@ public class RequestPatchMessage extends MidiMessage
     }
 
     RequestPatchMessage(Packet packet)
-	throws Exception
+    throws MidiException
     {
 	throw new MidiException
 	    ("RequestPatchMessage(Packet packet) not implemented", 0);
     }
+    
+    public RequestPatchMessage(int slot)
+    {
+        this();
+        requestSlot(slot);
+    }
+    
+    public void requestSlot(int slot)
+    {
+        setSlot(slot);
+    }
 
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
 	IntStream intStream = appendAll();
 	appendChecksum(intStream);
     return createBitstreamList(getBitStream(intStream));
     }
     
-    public void notifyListener(NmProtocolListener listener)
-	throws Exception
-    {
-	throw new MidiException
-	    ("RequestPatchMessage.notifyListener() not implemented", 0);
-    }
 }

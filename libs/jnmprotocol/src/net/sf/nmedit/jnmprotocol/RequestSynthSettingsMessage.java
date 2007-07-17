@@ -36,24 +36,18 @@ public class RequestSynthSettingsMessage extends MidiMessage
     }
 
     RequestSynthSettingsMessage(Packet packet)
-	throws Exception
+    throws MidiException
     {
 	throw new MidiException
 	    ("RequestPatchMessage(Packet packet) not implemented", 0);
     }
 
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
 	IntStream intStream = appendAll();
 	appendChecksum(intStream);
     return createBitstreamList(getBitStream(intStream));
     }
     
-    public void notifyListener(NmProtocolListener listener)
-	throws Exception
-    {
-	throw new MidiException
-	    ("RequestPatchMessage.notifyListener() not implemented", 0);
-    }
 }

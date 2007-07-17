@@ -61,7 +61,7 @@ public class PatchMessage extends MidiMessage
 
     public PatchMessage(BitStream patchStream, List<Integer> sectionEndPositions,
 			int slot)
-	throws Exception
+    throws MidiException
     {
 	this();
 	set("slot", slot);
@@ -112,13 +112,12 @@ public class PatchMessage extends MidiMessage
     }
 
     public List<BitStream> getBitStream()
-	throws Exception
+	throws MidiException
     {
 	return bitStreamList;
     }
     
     public void notifyListener(NmProtocolListener listener)
-	throws Exception
     {
 	listener.messageReceived(this);
     }

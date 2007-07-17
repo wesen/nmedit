@@ -24,6 +24,7 @@ import net.sf.nmedit.jpdl.*;
 
 public class SlotsSelectedMessage extends MidiMessage
 {
+    
     public SlotsSelectedMessage()
     {
 	super();
@@ -41,12 +42,31 @@ public class SlotsSelectedMessage extends MidiMessage
 
     SlotsSelectedMessage(Packet packet)
     {
-	this();
-	setAll(packet);
+    this();
+    setAll(packet);
+    }
+
+    public SlotsSelectedMessage(boolean s0, boolean s1, boolean s2, boolean s3)
+    {
+        this();
+        setSlotsSelected(s0, s1, s2, s3);
+    }
+    
+    public boolean isSlotSelected(int slot)
+    {
+        return get("slot"+slot+"Selected")>0;
+    }
+    
+    public void setSlotsSelected(boolean s0, boolean s1, boolean s2, boolean s3)
+    {
+        set("slot0Selected", s0?1:0);
+        set("slot1Selected", s1?1:0);
+        set("slot2Selected", s2?1:0);
+        set("slot3Selected", s3?1:0);
     }
 
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
 	IntStream intStream = appendAll();
 	appendChecksum(intStream);

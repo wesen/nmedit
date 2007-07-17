@@ -20,6 +20,8 @@
 package net.sf.nmedit.jnmprotocol;
 
 import java.util.*;
+
+import net.sf.nmedit.jnmprotocol.utils.NmCharacter;
 import net.sf.nmedit.jpdl.*;
 
 /**
@@ -65,7 +67,6 @@ public class PatchListMessage extends MidiMessage
     {
 	this();
 	setAll(packet);
-	
 	int section = 0;
 	int position = 0;
 	Packet entry = packet.getPacket("data:patchList:data");
@@ -84,7 +85,7 @@ public class PatchListMessage extends MidiMessage
 		    position = cmd.getVariable("nextsection:position");
 		}
 	    }
-	    names.add(new PatchListEntry(extractName(entry.getPacket("name")),
+	    names.add(new PatchListEntry(NmCharacter.extractName(entry.getPacket("name")),
 					 section,
 					 position));
 		    
@@ -106,16 +107,7 @@ public class PatchListMessage extends MidiMessage
 	nextSection = section;
     }
 
-    public List<BitStream> getBitStream()
-	throws Exception
-    {
-	throw new
-	    MidiException("PatchListMessage::getBitStream not implemented.",
-			  0);
-    }
-    
     public void notifyListener(NmProtocolListener listener)
-	throws Exception
     {
 	listener.messageReceived(this);
     }

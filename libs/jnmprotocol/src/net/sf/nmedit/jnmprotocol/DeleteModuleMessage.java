@@ -39,30 +39,24 @@ public class DeleteModuleMessage extends MidiMessage
     }
 
     DeleteModuleMessage(Packet packet)
-	throws Exception
+	throws MidiException
     {
 	throw new MidiException
 	    ("DeleteModuleMessage(Packet packet) not implemented", 0);
     }
-
+    
     public void deleteModule(int section, int module)
     {
         intStream = appendAll();
         intStream.append(section);
         intStream.append(module);
     }
-    
+
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
 	appendChecksum(intStream);
     return createBitstreamList(getBitStream(intStream));
     }
     
-    public void notifyListener(NmProtocolListener listener)
-	throws Exception
-    {
-	throw new MidiException
-	    ("DeleteModuleMessage.notifyListener() not implemented", 0);
-    }
 }

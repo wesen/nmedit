@@ -42,8 +42,26 @@ public class SlotActivatedMessage extends MidiMessage
 	setAll(packet);
     }
 
+    public SlotActivatedMessage(int activeSlot)
+    {
+        this();
+        if (activeSlot<0||activeSlot>=4)
+            throw new IllegalArgumentException("invalid slot: "+activeSlot);
+        set("activeSlot", activeSlot);
+    }
+    
+    public int getPid()
+    {
+        return get("pid");
+    }
+
+    public int getActiveSlot()
+    {
+        return get("activeSlot");
+    }
+    
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
 	IntStream intStream = appendAll();
 	appendChecksum(intStream);

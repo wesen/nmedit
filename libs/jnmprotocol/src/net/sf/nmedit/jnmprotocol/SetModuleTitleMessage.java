@@ -46,7 +46,7 @@ public class SetModuleTitleMessage extends MidiMessage
     {
 	this();
 	setAll(packet);
-        title = extractName(packet.getPacket("data:data:name"));
+        title = NmCharacter.extractName(packet.getPacket("data:data:name"));
     }
     
     public String getTitle()
@@ -56,7 +56,7 @@ public class SetModuleTitleMessage extends MidiMessage
     
     public void setTitle(int slot, int pid, int section, int module, String title)
     {
-        set("slot", slot);
+        setSlot(slot);
         set("pid", pid);
         set("section", section);
         set("module", module);
@@ -64,7 +64,7 @@ public class SetModuleTitleMessage extends MidiMessage
     }
 
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
         IntStream intStream = new IntStream();
         intStream.append(get("cc"));
@@ -78,8 +78,4 @@ public class SetModuleTitleMessage extends MidiMessage
         return createBitstreamList(getBitStream(intStream));
     }
     
-    public void notifyListener(NmProtocolListener listener)
-    {
-	// direction synth -> editor not possible
-    }
 }

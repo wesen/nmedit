@@ -39,6 +39,21 @@ public class GetPatchListMessage extends MidiMessage
 	expectsreply = true;
     }
 
+    public GetPatchListMessage(int section, int position)
+    {
+        this();
+        getPatchList(section, position);
+    }
+    
+    public void getPatchList(int section, int position)
+    {
+        if (section<0 || section>8 || position<0 || position>=99)
+            throw new IllegalArgumentException("invalid section:"
+                    +section+",position:"+position);
+        set("section", section);
+        set("position", position);
+    }
+    
     GetPatchListMessage(Packet packet)
 	throws MidiException
     {
@@ -47,7 +62,7 @@ public class GetPatchListMessage extends MidiMessage
     }
 
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
 	IntStream intStream = appendAll();
 	appendChecksum(intStream);
@@ -55,10 +70,4 @@ public class GetPatchListMessage extends MidiMessage
     return createBitstreamList(getBitStream(intStream));
     }
     
-    public void notifyListener(NmProtocolListener listener)
-	throws Exception
-    {
-	throw new MidiException
-	    ("GetPatchListMessage.notifyListener() not implemented", 0);
-    }
 }

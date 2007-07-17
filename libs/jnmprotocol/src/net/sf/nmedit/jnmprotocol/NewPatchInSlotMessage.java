@@ -19,7 +19,6 @@
 
 package net.sf.nmedit.jnmprotocol;
 
-import java.util.*;
 import net.sf.nmedit.jpdl.*;
 
 public class NewPatchInSlotMessage extends MidiMessage
@@ -37,12 +36,9 @@ public class NewPatchInSlotMessage extends MidiMessage
 	setAll(packet);
     }
 
-    public List<BitStream> getBitStream()
-	throws Exception
+    public int getPid()
     {
-	throw new
-	    MidiException("NewPatchInSlotMessage::getBitStream not implemented.", 0);
-
+        return get("pid");
     }
     
     public void notifyListener(NmProtocolListener listener)

@@ -46,16 +46,10 @@ public class SendControllerSnapshot extends MidiMessage
         set("pid", pid);
     }
     
-    public List<BitStream> getBitStream()
-	throws Exception
+    public List<BitStream> getBitStream() throws MidiException
     {
 	IntStream intStream = appendAll();
     return createBitstreamList(getBitStream(intStream));
     }
 
-    @Override
-    public void notifyListener(NmProtocolListener listener) throws Exception
-    {
-        // this message can only be sent to the synth, not to the editor 
-    }
 }

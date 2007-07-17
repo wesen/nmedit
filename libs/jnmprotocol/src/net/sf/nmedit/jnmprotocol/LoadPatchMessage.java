@@ -40,26 +40,32 @@ public class LoadPatchMessage extends MidiMessage
 	expectsreply = true;
     }
 
+    public LoadPatchMessage(int loadSlot, int section, int position)
+    {
+        this();
+        load(loadSlot, section, position);
+    }
+    
+    public void load(int loadSlot, int section, int position)
+    {
+        set("loadslot", loadSlot);
+        set("section", section);
+        set("position", position);
+    }
+    
     LoadPatchMessage(Packet packet)
-	throws Exception
+    throws MidiException
     {
 	throw new MidiException
 	    ("LoadPatchMessage(Packet packet) not implemented", 0);
     }
 
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
 	IntStream intStream = appendAll();
 	appendChecksum(intStream);
 	
     return createBitstreamList(getBitStream(intStream));
-    }
-    
-    public void notifyListener(NmProtocolListener listener)
-	throws Exception
-    {
-	throw new MidiException
-	    ("LoadPatchMessage.notifyListener() not implemented", 0);
     }
 }

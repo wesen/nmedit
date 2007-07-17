@@ -19,27 +19,32 @@
 
 package net.sf.nmedit.jnmprotocol;
 
-import java.util.*;
-import net.sf.nmedit.jpdl.*;
+import net.sf.nmedit.jpdl.Packet;
 
 public class MeterMessage extends MidiMessage
 {
+    // use arrays instead of string concatenation to make the message more efficient
+    private static final int METER_COUNT = 5;
+    private static final String[] TABLE_A = {
+        "a0", "a1", "a2", "a3", "a4"};
+    private static final String[] TABLE_B = {
+        "b0", "b1", "b2", "b3", "b4"};
+    private static final String[] TABLE_PATHS_A = {
+        "data:data:a0", "data:data:a1", "data:data:a2", "data:data:a3", "data:data:a4"};
+    private static final String[] TABLE_PATHS_B = {
+        "data:data:b0", "data:data:b1", "data:data:b2", "data:data:b3", "data:data:b4"};
+    
     public MeterMessage()
     {
 	super();
 
 	addParameter("pid", "data:pid");
 	addParameter("startIndex", "data:data:startIndex");
-	addParameter("b0", "data:data:b0");
-	addParameter("a0", "data:data:a0");
-	addParameter("b1", "data:data:b1");
-	addParameter("a1", "data:data:a1");
-	addParameter("b2", "data:data:b2");
-	addParameter("a2", "data:data:a2");
-	addParameter("b3", "data:data:b3");
-	addParameter("a3", "data:data:a3");
-	addParameter("b4", "data:data:b4");
-	addParameter("a4", "data:data:a4");
+    for (int i=0;i<METER_COUNT;i++)
+    {
+        addParameter(TABLE_B[i], TABLE_PATHS_B[i]);
+        addParameter(TABLE_A[i], TABLE_PATHS_A[i]);
+    }
     }
 
     MeterMessage(Packet packet)
@@ -47,14 +52,27 @@ public class MeterMessage extends MidiMessage
 	this();
 	setAll(packet);
     }
-
-    public List<BitStream> getBitStream()
-	throws Exception
+    
+    public int getStartIndex()
     {
-	throw new MidiException("MeterMessage::getBitStream not implemented.",
-				0);
+        return get("startIndex");
     }
     
+    public int getMeterA(int index)
+    {
+        return get(TABLE_A[index]);
+    }
+    
+    public int getMeterB(int index)
+    {
+        return get(TABLE_B[index]);
+    }
+    
+    public int getMeterCount()
+    {
+        return METER_COUNT;
+    }
+
     public void notifyListener(NmProtocolListener listener)
     {
 	listener.messageReceived(this);

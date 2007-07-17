@@ -39,10 +39,15 @@ public class MoveModuleMessage extends MidiMessage
     }
 
     MoveModuleMessage(Packet packet)
-	throws Exception
+    throws MidiException
     {
 	throw new MidiException
 	    ("MoveModuleMessage(Packet packet) not implemented", 0);
+    }
+
+    public void setPid(int pid)
+    {
+        set("pid", pid);
     }
 
     public void moveModule(int section, int module, int xpos, int ypos)
@@ -55,17 +60,10 @@ public class MoveModuleMessage extends MidiMessage
     }
 
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
 	appendChecksum(intStream);
 	
     return createBitstreamList(getBitStream(intStream));
-    }
-    
-    public void notifyListener(NmProtocolListener listener)
-	throws Exception
-    {
-	throw new MidiException
-	    ("MoveModuleMessage.notifyListener() not implemented", 0);
     }
 }

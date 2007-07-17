@@ -39,10 +39,14 @@ public class DeleteCableMessage extends MidiMessage
     }
 
     DeleteCableMessage(Packet packet)
-	throws Exception
     {
-	throw new MidiException
-	    ("DeleteCableMessage(Packet packet) not implemented", 0);
+        throw new UnsupportedOperationException(
+                getClass().getName()+"(Packet packet) not implemented");
+    }
+
+    public void setPid(int pid)
+    {
+        set("pid", pid);
     }
 
     public void deleteCable(int section,
@@ -60,16 +64,10 @@ public class DeleteCableMessage extends MidiMessage
     }
     
     public List<BitStream> getBitStream()
-	throws Exception
+	throws MidiException
     {
 	appendChecksum(intStream);
 	return createBitstreamList(getBitStream(intStream));
     }
     
-    public void notifyListener(NmProtocolListener listener)
-	throws Exception
-    {
-	throw new MidiException
-	    ("DeleteCableMessage.notifyListener() not implemented", 0);
-    }
 }

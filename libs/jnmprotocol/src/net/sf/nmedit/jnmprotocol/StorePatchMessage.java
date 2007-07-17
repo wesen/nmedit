@@ -40,25 +40,27 @@ public class StorePatchMessage extends MidiMessage
 	expectsreply = true;
     }
 
+    public StorePatchMessage(int storeSlot, int section, int position)
+    {
+        this();
+        set("storeslot", storeSlot);
+        set("section", section);
+        set("position", position);
+    }
+    
     StorePatchMessage(Packet packet)
-	throws Exception
+    throws MidiException
     {
 	throw new MidiException
 	    ("StorePatchMessage(Packet packet) not implemented", 0);
     }
 
     public List<BitStream> getBitStream()
-	throws Exception
+	throws MidiException
     {
 	IntStream intStream = appendAll();
 	appendChecksum(intStream);
     return createBitstreamList(getBitStream(intStream));
     }
     
-    public void notifyListener(NmProtocolListener listener)
-	throws Exception
-    {
-	throw new MidiException
-	    ("StorePatchMessage.notifyListener() not implemented", 0);
-    }
 }

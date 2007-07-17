@@ -101,7 +101,7 @@ public class IAmMessage extends MidiMessage
     }
 
     public List<BitStream> getBitStream()
-	throws Exception
+    throws MidiException
     {
         return createBitstreamList(getBitStream(appendAll()));
     }

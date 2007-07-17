@@ -19,8 +19,7 @@
 
 package net.sf.nmedit.jnmprotocol;
 
-import java.util.*;
-import net.sf.nmedit.jpdl.*;
+import net.sf.nmedit.jpdl.Packet;
 
 public class VoiceCountMessage extends MidiMessage
 {
@@ -34,20 +33,17 @@ public class VoiceCountMessage extends MidiMessage
 	addParameter("voiceCount3", "data:data:c3");
     }
 
+    public int getVoiceCount(int slot)
+    {
+        return get("voiceCount"+slot);
+    }
+    
     VoiceCountMessage(Packet packet)
     {
 	this();
 	setAll(packet);
     }
 
-    public List<BitStream> getBitStream()
-	throws Exception
-    {
-	throw new
-	    MidiException("VoiceCountMessage::getBitStream not implemented.", 0);
-
-    }
-    
     public void notifyListener(NmProtocolListener listener)
     {
 	listener.messageReceived(this);
