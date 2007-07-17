@@ -47,6 +47,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
+import javax.swing.UIDefaults;
 
 import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnector;
@@ -70,6 +71,7 @@ import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.JTPatch;
 import net.sf.nmedit.jtheme.store2.ModuleElement;
+import net.sf.nmedit.nmutils.graphics.GraphicsToolkit;
 
 public class JTNMPatch extends JTPatch implements Transferable
 {
@@ -117,13 +119,37 @@ public class JTNMPatch extends JTPatch implements Transferable
         public static final String DELETE = "remove";
         public static final String RENAME = "rename";
         public static final String HELP = "help";
-        public static final String COLOR_DEFAULT = "color.default";
-        public static final String COLOR_R = "Red";
-        public static final String COLOR_B = "Blue";
-        public static final String COLOR_G = "Green";
-        public static final String COLOR_Y = "Yellow";
+        public static final String COLOR = "color";
         
         private JTModule module;
+        
+        private static ImageIcon[] moduleColors;
+        
+        private static ImageIcon[] getModuleColors(JTModule module)
+        {
+            if (moduleColors != null)
+                return moduleColors;
+
+            List<ImageIcon> list = new ArrayList<ImageIcon>();
+            
+            UIDefaults def = module.getContext().getUIDefaults();
+
+            Color defaultColor = def.getColor("module.background$default");
+            if (defaultColor != null)
+                list.add(GraphicsToolkit.renderColorIcon(defaultColor));
+            int i=1;
+            while (true)
+            {
+                Color c = def.getColor("module.background$"+i);
+                if (c == null) break;
+                list.add(GraphicsToolkit.renderColorIcon(c));
+                i++;
+            }
+            
+            moduleColors = list.<ImageIcon>toArray(new ImageIcon[list.size()]);
+            
+            return moduleColors;
+        }
         
         public static JPopupMenu createPopup(JTModule module)
         {
@@ -131,14 +157,29 @@ public class JTNMPatch extends JTPatch implements Transferable
             popup.add(new ModuleAction(DELETE, module));
             popup.add(new ModuleAction(RENAME, module));
             popup.addSeparator();
-            JMenu colorMenu = new JMenu("Color");
-            popup.add(colorMenu);
-            colorMenu.add(new ModuleAction(COLOR_R, module));
-            colorMenu.add(new ModuleAction(COLOR_B, module));
-            colorMenu.add(new ModuleAction(COLOR_G, module));
-            colorMenu.add(new ModuleAction(COLOR_Y, module));
             
-            popup.addSeparator();
+            
+            ImageIcon[] colors = getModuleColors(module);
+        
+            if (colors.length>0)
+            {
+                JMenu colorMenu = new JMenu("Color");
+                popup.add(colorMenu);
+                
+                for (int i=0;i<colors.length;i++)
+                {
+                    ModuleAction a = new ModuleAction(COLOR, module);
+                    a.putValue(ModuleAction.SMALL_ICON, colors[i]);
+                    a.putValue("bg.colorindex", i);
+                    if (i == 0)
+                        a.putValue(ModuleAction.NAME, "Default Color");
+                    else
+                        a.putValue(ModuleAction.NAME, "Color "+(i+1));
+                    colorMenu.add(a);
+                }
+                
+                popup.addSeparator();
+            }
             popup.add(new ModuleAction(HELP, module));
             return popup;
         }
@@ -162,9 +203,9 @@ public class JTNMPatch extends JTPatch implements Transferable
                 putValue(NAME, "Help");
                 setEnabled(false);
             }
-            else if (action == COLOR_R || action == COLOR_G || action == COLOR_B || action == COLOR_Y)
+            else if (action == COLOR)
             {
-                putValue(NAME, action);
+                putValue(NAME, "color");
             }
             else setEnabled(false);
         }
@@ -184,22 +225,17 @@ public class JTNMPatch extends JTPatch implements Transferable
                 throw new UnsupportedOperationException("command not supported: "+command);
             else if (command == HELP)
                 throw new UnsupportedOperationException("command not supported: "+command);
-            else setColor(command);
+            else setColor();
         }
         
-        private void setColor(String color)
+        private void setColor()
         {
-            Color c = null;
-            if (color == COLOR_R) c = net.sf.nmedit.jpatch.clavia.nordmodular.Signal.AUDIO.getColor().brighter().brighter();
-            else if (color == COLOR_G) c = Color.CYAN;
-            else if (color == COLOR_B) c = net.sf.nmedit.jpatch.clavia.nordmodular.Signal.CONTROL.getColor().brighter();
-            else if (color == COLOR_Y) c = net.sf.nmedit.jpatch.clavia.nordmodular.Signal.LOGIC.getColor().brighter().brighter();
-            else return;
-            if (c != null)
-                setColor(c);
+            Integer colorIndex = (Integer) getValue("bg.colorindex");
+            if (colorIndex != null)
+                setColor(colorIndex.intValue());
         }
         
-        private void setColor(Color color)
+        private void setColor(int colorIndex)
         {
             for (Component c : module.getParent().getComponents())
             {
@@ -207,7 +243,24 @@ public class JTNMPatch extends JTPatch implements Transferable
                 {
                     JTModule m = (JTModule) c;
                     if (m.isSelected() || m == module)
-                        m.setBackground(color);
+                    {
+                        PModule pm = m.getModule();
+                        if (pm != null)
+                        {
+                            String t = pm.getTitle();
+                            if (t == null)
+                                continue;
+                            int sep = t.lastIndexOf('$');
+                            
+                            if (sep>=0)
+                                t = t.substring(0, sep);
+                            
+                            if (colorIndex>0)
+                                t += "$"+colorIndex;
+                            
+                            pm.setTitle(t);
+                        }
+                    }
                 }
             }
         }

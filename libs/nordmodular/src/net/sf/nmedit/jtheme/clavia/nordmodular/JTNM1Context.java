@@ -207,6 +207,15 @@ public class JTNM1Context extends JTCustomContext
         uidefaults.put(NoteSeqEditorUI.borderKey, new BorderUIResource(JTNM1BorderFactory.createNordEditor311Border()));
         
         uidefaults.put(NMNoteSeqEditor.uiClassID, NoteSeqEditorUI.class.getName());
+        
+
+        uidefaults.put("module.background$default", new ColorUIResource(0xC0C0C0));
+        uidefaults.put("module.background$1", new ColorUIResource(0xE5777A));
+        uidefaults.put("module.background$2", new ColorUIResource(0xE7D14B));
+        uidefaults.put("module.background$3", new ColorUIResource(0x93D162));
+        uidefaults.put("module.background$4", new ColorUIResource(0x69D6C7));
+        uidefaults.put("module.background$5", new ColorUIResource(0x74A0D4));
+        uidefaults.put("module.background$6", new ColorUIResource(0xD673C7));
     }
 
 }

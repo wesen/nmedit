@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.plaf.ColorUIResource;
+
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jtheme.JTContext;
@@ -162,6 +164,7 @@ public class ModuleElement extends AbstractElement implements Serializable, Iter
         if (fill != null)
         {
             jtmodule.setBackground(fill);
+            jtmodule.putClientProperty("fill", new ColorUIResource(fill));
         }
     }
 
