@@ -27,7 +27,7 @@ public class FilterF extends Curve {
 	float cutOff =0.5f;
 	int cutOffInt = 64;
 	
-	float resAmplitude = 0.4f;
+	float resAmplitude = 0.45f;
 	float resonance= resAmplitude; //compirsed between 0 and res
 	public FilterF(){
 		super(6);
@@ -78,7 +78,7 @@ public class FilterF extends Curve {
 	}
 	
 	public void setResonance(float resonance) {
-		this.resonance = resonance*resAmplitude;
+		this.resonance = (1-resonance)*resAmplitude;
 		update();				
 	}
 	

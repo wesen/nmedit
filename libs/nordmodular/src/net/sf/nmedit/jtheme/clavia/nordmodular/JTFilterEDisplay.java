@@ -43,6 +43,7 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
     private JTControlAdapter resonanceAdapter;
     private JTControlAdapter typeAdapter;
     private JTControlAdapter slopeAdapter;
+    private JTControlAdapter gainControlAdapter;
 
     public JTFilterEDisplay(JTContext context)
     {
@@ -60,7 +61,7 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
         int h = getHeight()-insets.top-insets.bottom;
         
         g.setColor(JTNM1Context.GRAPH_DISPLAY_LINE);
-        int y = insets.top+h/2;
+        int y = (int)(insets.top+h*.45);
         g.drawLine(insets.left, y, w-1, y);
         
         g.setClip(insets.left, insets.top, w, h);
@@ -93,6 +94,11 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
     {
         return filterE.getSlope();
     }
+    
+    public int getGainControl(){
+    	return filterE.getGainControl();
+    }
+    
     
     public void setCutoff(float value)
     {
@@ -128,6 +134,14 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
             filterE.setSlope(value);
             repaint();
         }
+    }
+    
+    public void setGainControl(int value){
+    	if (getGainControl() != value)
+    	{
+    		filterE.setGainControl(value);
+    		repaint();
+    	}
     }
     
     public JTControlAdapter getCutoffAdapter()
@@ -214,6 +228,22 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
         }
     }
 
+    public void setGainControlAdapter(JTControlAdapter adapter)
+    {
+        JTControlAdapter oldAdapter = this.gainControlAdapter;
+        
+        if (oldAdapter != adapter)
+        {
+            if (oldAdapter != null)
+                oldAdapter.setChangeListener(null);
+            this.gainControlAdapter = adapter;
+            if (adapter != null)
+                adapter.setChangeListener(this);
+            
+            updateGainControl();
+        }
+    }
+    
     protected void updateCutoff()
     {
         if (cutoffAdapter != null)
@@ -239,6 +269,14 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
     	}
     }
 
+    protected void updateGainControl()
+    {
+    	if (gainControlAdapter!= null){    		
+    		setGainControl(gainControlAdapter.getValue());
+    		System.out.println("GC = "+gainControlAdapter.getValue());
+    	}
+    }
+    
     public void stateChanged(ChangeEvent e)
     {
         if (e.getSource() == cutoffAdapter)
@@ -260,6 +298,12 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
         if (e.getSource() == slopeAdapter)
         {
             updateSlope();
+            return;
+        }
+        
+        if (e.getSource() == gainControlAdapter)
+        {
+            updateGainControl();
             return;
         }
     }

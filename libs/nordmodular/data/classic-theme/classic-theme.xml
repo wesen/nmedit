@@ -1303,7 +1303,7 @@ label{fill:#000;}
 			<btn index="3"><image xlink:href="./images/slice/wf_saw_inv.png" /></btn>
 			<btn index="4"><image xlink:href="./images/slice/wf_square.png" /></btn>
 		</button>
-		<knob x="50" y="44" size="21">
+		<knob x="50" y="45" size="21">
 			<parameter component-id="p4" alt="rate mod" />
 		</knob>
 		<button x="111" y="2" width="26" height="18" cyclic="true" landscape="false">
@@ -1445,10 +1445,10 @@ label{fill:#000;}
 			<btn index="1">M</btn>
 		</button>
 		<label x="4" y="23">Destination</label>
-		<label x="176" y="9">Mix Bus</label>
-		<label x="170" y="25">L</label>
-		<label x="192" y="25">R</label>
-		<label x="222" y="1">Level</label>
+		<label x="179" y="9">Mix Bus</label>
+		<label x="169" y="26">L</label>
+		<label x="192" y="26">R</label>
+		<label x="222" y="-1">Level</label>
 	</module>
 	<module component-id="m36" width="255" height="30">
 		<name>PosEdgeDelay</name>
@@ -1821,7 +1821,7 @@ label{fill:#000;}
 		<connector x="236" y="25" size="13" class="cAUDIO">
 			<connector component-id="c3" alt="out" />
 		</connector>
-		<knob x="92" y="16" size="21">
+		<knob x="94" y="16" size="21">
 			<parameter component-id="p1" alt="wrap mod" />
 		</knob>
 		<knob x="121" y="12" size="29">
@@ -2135,7 +2135,7 @@ label{fill:#000;}
 		<knob x="77" y="18" size="29">
 			<parameter component-id="p2" alt="freq coarse" />
 		</knob>
-		<knob x="113" y="24" size="21">
+		<knob x="113" y="22" size="21">
 			<parameter component-id="p3" alt="freq fine" />
 		</knob>
 		<knob x="172" y="23" size="21">
@@ -2155,7 +2155,7 @@ label{fill:#000;}
 		<knob x="106" y="50" size="21">
 			<parameter component-id="p8" alt="fma" />
 		</knob>
-		<knob x="181" y="47" size="21">
+		<knob x="182" y="48" size="21">
 			<parameter component-id="p9" alt="spectral shape mod" />
 		</knob>
 		<button x="137" y="52" width="24" height="16" cyclic="true" landscape="false">
@@ -2180,7 +2180,7 @@ label{fill:#000;}
 		<label x="1" y="42">Pitch</label>
 		<label x="41" y="43">Pitch</label>
 		<label x="85" y="46">FMA</label>
-		<resetButton x="118" y="17" width="9" height="6">
+		<resetButton x="118" y="16" width="9" height="6">
 			<parameter component-id="p3" alt="freq fine" />
 		</resetButton>
 		<textDisplay x="139" y="12" width="27" height="16">
@@ -2468,13 +2468,13 @@ label{fill:#000;}
 		<knob x="18" y="74" size="21">
 			<parameter component-id="p2" alt="osc1 fine" />
 		</knob>
-		<knob x="17" y="106" size="21">
+		<knob x="17" y="107" size="21">
 			<parameter component-id="p3" alt="osc1 level" />
 		</knob>
 		<knob x="51" y="50" size="21">
 			<parameter component-id="p4" alt="osc2 coarse" />
 		</knob>
-		<knob x="59" y="74" size="21">
+		<knob x="58" y="74" size="21">
 			<parameter component-id="p5" alt="osc2 fine" />
 		</knob>
 		<knob x="58" y="107" size="21">
@@ -2483,7 +2483,7 @@ label{fill:#000;}
 		<knob x="92" y="50" size="21">
 			<parameter component-id="p7" alt="osc3 coarse" />
 		</knob>
-		<knob x="100" y="74" size="21">
+		<knob x="102" y="74" size="21">
 			<parameter component-id="p8" alt="osc3 fine" />
 		</knob>
 		<knob x="99" y="107" size="21">
@@ -2501,13 +2501,13 @@ label{fill:#000;}
 		<knob x="177" y="50" size="21">
 			<parameter component-id="p13" alt="osc5 coarse" />
 		</knob>
-		<knob x="185" y="74" size="21">
+		<knob x="187" y="74" size="21">
 			<parameter component-id="p14" alt="osc5 fine" />
 		</knob>
 		<knob x="186" y="107" size="21">
 			<parameter component-id="p15" alt="osc5 level" />
 		</knob>
-		<knob x="216" y="50" size="21">
+		<knob x="219" y="50" size="21">
 			<parameter component-id="p16" alt="osc6 coarse" />
 		</knob>
 		<knob x="227" y="74" size="21">
@@ -2561,7 +2561,7 @@ label{fill:#000;}
 		<textDisplay x="170" y="23" width="36" height="16">
 			<parameter component-id="p13" alt="osc5 coarse" />
 		</textDisplay>
-		<textDisplay x="209" y="23" width="36" height="16">
+		<textDisplay x="211" y="23" width="36" height="16">
 			<parameter component-id="p16" alt="osc6 coarse" />
 		</textDisplay>
 		<label x="105" y="1">Sine slave oscillator bank</label>
@@ -2570,7 +2570,7 @@ label{fill:#000;}
 		<label x="89" y="12">Osc3</label>
 		<label x="134" y="12">Osc4</label>
 		<label x="176" y="12">Osc5</label>
-		<label x="214" y="12">Osc6</label>
+		<label x="216" y="12">Osc6</label>
 		<label x="9" y="38">Tune</label>
 		<label x="48" y="38">Tune</label>
 		<label x="90" y="38">Tune</label>
@@ -2582,13 +2582,13 @@ label{fill:#000;}
 		<label x="165" y="133">Mix in</label>
 		<label x="2" y="99">am</label>
 		<label x="43" y="99">am</label>
-		<label x="84" y="99">am</label>
+		<label x="83" y="99">am</label>
 		<label x="127" y="99">am</label>
 		<label x="171" y="99">am</label>
 		<label x="211" y="99">am</label>
 		<label x="18" y="95">level</label>
-		<label x="57" y="95">level</label>
-		<label x="102" y="95">level</label>
+		<label x="59" y="95">level</label>
+		<label x="103" y="95">level</label>
 		<label x="144" y="95">level</label>
 		<label x="188" y="95">level</label>
 		<label x="227" y="95">level</label>
@@ -2610,10 +2610,10 @@ label{fill:#000;}
 		<connector x="238" y="43" size="13" class="cAUDIO">
 			<connector component-id="c5" alt="out" />
 		</connector>
-		<knob x="94" y="20" size="29">
+		<knob x="94" y="21" size="29">
 			<parameter component-id="p2" alt="detune coarse" />
 		</knob>
-		<knob x="126" y="28" size="21">
+		<knob x="126" y="29" size="21">
 			<parameter component-id="p3" alt="detune fine" />
 		</knob>
 		<button x="159" y="3" width="90" height="16" cyclic="false" landscape="true">
@@ -2924,7 +2924,7 @@ label{fill:#000;}
 		<knob x="73" y="13" size="29">
 			<parameter component-id="p2" alt="detune coarse" />
 		</knob>
-		<knob x="106" y="19" size="21">
+		<knob x="106" y="21" size="21">
 			<parameter component-id="p3" alt="detune fine" />
 		</knob>
 		<knob x="169" y="9" size="21">
@@ -3124,7 +3124,7 @@ label{fill:#000;}
 		<knob x="73" y="13" size="29">
 			<parameter component-id="p2" alt="detune coarse" />
 		</knob>
-		<knob x="107" y="20" size="21">
+		<knob x="107" y="21" size="21">
 			<parameter component-id="p3" alt="detune fine" />
 		</knob>
 		<knob x="157" y="9" size="21">
@@ -3332,6 +3332,7 @@ label{fill:#000;}
 			<btn index="1">BP</btn>
 			<btn index="0">LP</btn>
 		</button>
+		
 		<button x="138" y="14" width="24" height="16" cyclic="true" landscape="false">
 			<parameter component-id="p3" alt="gain control" />
 			<btn index="0">GC</btn>
@@ -3343,7 +3344,7 @@ label{fill:#000;}
 		<knob x="49" y="34" size="28">
 			<parameter component-id="p5" alt="frequency" />
 		</knob>
-		<knob x="78" y="59" size="20">
+		<knob x="78" y="61" size="20">
 			<parameter component-id="p6" alt="kbt" />
 		</knob>
 		<knob x="163" y="61" size="20">
@@ -3372,17 +3373,18 @@ label{fill:#000;}
 			<parameter component-id="p8" alt="resonance" />
 		</textDisplay>
 		<label x="153" y="3">Res</label>
-		<resetButton x="84" y="52" width="9" height="6">
+		<resetButton x="83" y="54" width="9" height="6">
 			<parameter component-id="p6" alt="kbt" />
 		</resetButton>
 		<label x="20" y="16">Freq</label>
-		<label x="82" y="40">Kbt</label>
+		<label x="81" y="43">Kbt</label>
 		<label x="206" y="37">dB/Oct</label>
 		<filter-e-display x="192" y="2" width="60" height="34">
 			<cutoff component-id="p5" alt="frequency" />
 			<resonance component-id="p8" alt="resonance" />
 			<type component-id="p2" alt="type" />
 			<slope component-id="p9" alt="slope" />
+			<gain-control component-id="p3" alt="gain control" />
 	    </filter-e-display>
 	</module>
 	<module component-id="m8" width="255" height="90">
@@ -3621,7 +3623,7 @@ label{fill:#000;}
 		<connector x="235" y="8" size="13" class="cCONTROL">
 			<connector component-id="c2" alt="out" />
 		</connector>
-		<knob x="150" y="4" size="21">
+		<knob x="154" y="4" size="21">
 			<parameter component-id="p1" alt="transpose" />
 		</knob>
 		<textDisplay x="91" y="7" width="50" height="16">
@@ -3748,7 +3750,7 @@ label{fill:#000;}
 		<knob x="50" y="31" size="21">
 			<parameter component-id="p5" alt="pitch mod amount" />
 		</knob>
-		<knob x="182" y="33" size="21">
+		<knob x="182" y="32" size="21">
 			<parameter component-id="p6" alt="FMA" />
 		</knob>
 		<button x="215" y="39" width="18" height="16" cyclic="true" landscape="false">
@@ -3878,7 +3880,7 @@ label{fill:#000;}
 		<knob x="58" y="18" size="21">
 			<parameter component-id="p1" alt="modulation" />
 		</knob>
-		<knob x="157" y="10" size="21">
+		<knob x="157" y="12" size="21">
 			<parameter component-id="p2" alt="time" />
 		</knob>
 		<textDisplay x="95" y="15" width="50" height="16">
@@ -4275,7 +4277,7 @@ label{fill:#000;}
 		<knob x="75" y="13" size="29">
 			<parameter component-id="p2" alt="detune coarse" />
 		</knob>
-		<knob x="108" y="19" size="21">
+		<knob x="108" y="21" size="21">
 			<parameter component-id="p3" alt="detune fine" />
 		</knob>
 		<knob x="171" y="9" size="21">
@@ -4316,7 +4318,7 @@ label{fill:#000;}
 		<knob x="51" y="21" size="29">
 			<parameter component-id="p2" alt="freq" />
 		</knob>
-		<knob x="137" y="25" size="29">
+		<knob x="137" y="23" size="29">
 			<parameter component-id="p3" alt="resonance" />
 		</knob>
 		<button x="100" y="41" width="26" height="16" cyclic="true" landscape="false">

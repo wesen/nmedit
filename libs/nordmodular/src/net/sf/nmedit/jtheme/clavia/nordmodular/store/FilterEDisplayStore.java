@@ -38,16 +38,18 @@ public class FilterEDisplayStore extends AbstractMultiParameterElement
      * 
      */
     private static final long serialVersionUID = -3756936306341643552L;
-    private static final String[] PARAMETERS = {"cutoff", "resonance", "type", "slope"};
+    private static final String[] PARAMETERS = {"cutoff", "resonance", "type", "slope","gain-control"};
 
     protected FilterEDisplayStore()
     {
         super(PARAMETERS);
+        System.out.println("###create filter");
     }
 
     public static FilterEDisplayStore createElement(StorageContext context, Element element)
     {
         FilterEDisplayStore e = new FilterEDisplayStore();
+        
         e.initElement(context, element);
         e.checkDimensions();
         e.checkLocation();
@@ -71,6 +73,7 @@ public class FilterEDisplayStore extends AbstractMultiParameterElement
         PParameter resonance = module.getParameterByComponentId(componentIdList[1]);
         PParameter type = module.getParameterByComponentId(componentIdList[2]);
         PParameter slope = module.getParameterByComponentId(componentIdList[3]);
+        PParameter gainControl = module.getParameterByComponentId(componentIdList[4]);
         
         JTFilterEDisplay disp = (JTFilterEDisplay) component;
         
@@ -82,6 +85,8 @@ public class FilterEDisplayStore extends AbstractMultiParameterElement
             disp.setTypeAdapter(new JTParameterControlAdapter(type));
         if (slope != null)
             disp.setSlopeAdapter(new JTParameterControlAdapter(slope));
+        if (gainControl != null)
+            disp.setGainControlAdapter(new JTParameterControlAdapter(gainControl));
                    
     }
 
