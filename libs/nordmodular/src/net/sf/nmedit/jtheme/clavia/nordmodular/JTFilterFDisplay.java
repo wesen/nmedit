@@ -59,7 +59,7 @@ public class JTFilterFDisplay extends JTDisplay implements ChangeListener {
         int h = getHeight()-insets.top-insets.bottom;
         
 		g.setColor(JTNM1Context.GRAPH_DISPLAY_LINE);
-		int y = insets.top + h / 2;
+		int y = (int)(insets.top+h*.45);
 		g.drawLine(insets.left, y, w-1, y);
 
         g.setClip(insets.left, insets.top, w, h);
