@@ -49,7 +49,8 @@ public class MultiEnvDisplayStore extends AbstractMultiParameterElement
         "t2",
         "t3",
         "t4",
-        "t5"
+        "t5",
+        "curve"
     };
    
     protected MultiEnvDisplayStore()
@@ -85,6 +86,10 @@ public class MultiEnvDisplayStore extends AbstractMultiParameterElement
         PParameter sustain = module.getParameterByComponentId(componentIdList[0]);
         if (sustain != null)
             disp.setSustainAdapter(new JTParameterControlAdapter(sustain));
+        
+        PParameter curve = module.getParameterByComponentId(componentIdList[10]);
+        if (curve != null)
+            disp.setCurveAdapter(new JTParameterControlAdapter(curve));
         
         for (int i = 1 ; i <= 4  ; i++){
             PParameter p = module.getParameterByComponentId(componentIdList[i]);

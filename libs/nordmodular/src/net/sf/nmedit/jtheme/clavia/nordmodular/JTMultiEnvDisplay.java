@@ -18,6 +18,7 @@
  */package net.sf.nmedit.jtheme.clavia.nordmodular;
 
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.RenderingHints;
 
 import javax.swing.event.ChangeEvent;
@@ -40,6 +41,7 @@ public class JTMultiEnvDisplay extends JTDisplay implements ChangeListener {
 	private JTControlAdapter levelAdapter[];
 	private JTControlAdapter timeAdapter[];
 	private JTControlAdapter sustainAdapter;
+	private JTControlAdapter curveAdapter;
 	
 
 	public JTMultiEnvDisplay(JTContext context) {
@@ -56,12 +58,25 @@ public class JTMultiEnvDisplay extends JTDisplay implements ChangeListener {
 	protected void paintDynamicLayer(Graphics2D g) {
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
-
+		
+		if (multiEnv.getCurve() == 0){ 
+			//lin curve type, draw the ref line
+			int h = getHeight();
+			int w = getWidth();
+			Insets insets = getInsets();
+			g.setColor(JTNM1Context.GRAPH_DISPLAY_LINE);
+	        int y = (int)(insets.top+h*.45);
+	        g.drawLine(insets.left, y, w-1, y);
+		}
 		g.setColor(getForeground());
 		multiEnv.setBounds(0, 0, getWidth(), getHeight());				
 		g.draw(multiEnv);
 	}
 
+	public int getCurve(){
+		return multiEnv.getCurve();
+	}
+	
 	public int getLevel(int seg) {
 		return multiEnv.getLevel(seg+1);
 	}
@@ -97,6 +112,14 @@ public class JTMultiEnvDisplay extends JTDisplay implements ChangeListener {
 		}
 	}
 	
+	public void setCurve(int value) {
+		if (getCurve() != value) {
+			multiEnv.setCurve(value);
+			repaint();
+		}
+	}
+	
+	
 	public JTControlAdapter getLevelAdapter(int seg) {
 		return levelAdapter[seg];
 	}
@@ -105,6 +128,10 @@ public class JTMultiEnvDisplay extends JTDisplay implements ChangeListener {
 		return sustainAdapter;		
 	}
 
+	public JTControlAdapter getCurveAdapter() {
+		return curveAdapter;		
+	}
+	
 	public JTControlAdapter getTimeAdapter(int seg) {
 		return timeAdapter[seg];
 	}
@@ -152,6 +179,20 @@ public class JTMultiEnvDisplay extends JTDisplay implements ChangeListener {
 		}
 	}
 
+	public void setCurveAdapter(JTControlAdapter adapter) {
+		JTControlAdapter oldAdapter = this.curveAdapter;
+
+		if (oldAdapter != adapter) {
+			if (oldAdapter != null)
+				oldAdapter.setChangeListener(null);
+			this.curveAdapter = adapter;
+			if (adapter != null)
+				adapter.setChangeListener(this);
+
+			updateCurve();
+		}
+	}
+	
 	protected void updateLevel(int seg) {		
 		if (levelAdapter[seg] != null)
 			setLevel(seg,levelAdapter[seg].getValue());
@@ -167,6 +208,11 @@ public class JTMultiEnvDisplay extends JTDisplay implements ChangeListener {
 			setSustain(sustainAdapter.getValue());
 	}
 
+	protected void updateCurve(){
+		if (sustainAdapter != null)
+			setCurve(curveAdapter.getValue());
+	}
+	
 	public void stateChanged(ChangeEvent e) {
 		for (int i = 0 ; i < levelAdapter.length ; i++)
 		{
@@ -187,6 +233,11 @@ public class JTMultiEnvDisplay extends JTDisplay implements ChangeListener {
 		if (e.getSource() == sustainAdapter) {
 			updateSustain();
 			return;
-		}		
+		}	
+		
+		if (e.getSource() == curveAdapter) {
+			updateCurve();
+			return;
+		}	
 	}
 }

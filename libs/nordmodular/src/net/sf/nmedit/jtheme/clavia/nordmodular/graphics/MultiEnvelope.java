@@ -23,6 +23,7 @@ package net.sf.nmedit.jtheme.clavia.nordmodular.graphics;
 public class MultiEnvelope extends Envelope{
 	
 	protected int sustainSeg = 2;
+	protected int curveType = 0;
 	
 	protected MultiEnvelope(int nbPoints)
     {
@@ -59,14 +60,22 @@ public class MultiEnvelope extends Envelope{
     /* 
      * This function update the curve type when the level of a point is changed
      */    
-    private void update_curve( int segment){
+    private void update_curve(){
     	for (int i = 1; i <= nbSegment; i++){
     		// we must iterate over ALL segments, so we use the getLevel method 
     		// of the Enveloppe class and not the method of the multiEnvClass
-    		if (super.getLevel(i) > super.getLevel(i-1)){
-    			setCurveType(i, LOG);
-    		} else {
-    			setCurveType(i, EXP);
+    		if (curveType == 0) { //set all linear
+    			setCurveType(i, LIN);
+    		}
+    		else {
+	    		if (super.getLevel(i) > super.getLevel(i-1)){
+	    			setCurveType(i, LOG);
+	    		} else {
+	    			if (curveType == 1)
+	    				setCurveType(i, EXP);
+	    			else if (curveType == 2)
+	    				setCurveType(i, LIN);
+	    		}
     		}
     	}   	
     }
@@ -86,7 +95,8 @@ public class MultiEnvelope extends Envelope{
     		super.setLevel(segment + 1, level);    		
     	}
     	
-    	update_curve(segment);
+    	
+    	update_curve();
     	    	
     }
     
@@ -155,8 +165,10 @@ public class MultiEnvelope extends Envelope{
 	}
 
 	public void setSustainSeg(int sustainSeg) {
+		System.out.println(sustainSeg);
 		
-//		 in the NM editor the -- value actually corresponds to the 5th segment
+		
+        // in the NM editor the -- value actually corresponds to the 5th segment
 		if(sustainSeg == 0)
 			sustainSeg = 5;		
 		
@@ -171,7 +183,7 @@ public class MultiEnvelope extends Envelope{
 		}
 		
 		// update them with respect to the new sustain segment
-		for(int i = 0 ; i < nbSegment ; i++){		
+		for(int i = 0 ; i <= nbSegment ; i++){		
 			if(i < sustainSeg ){
 				super.setLevel(i,levels[i]);
 				super.setTime(i, times[i]);
@@ -186,9 +198,31 @@ public class MultiEnvelope extends Envelope{
 				super.setLevel(i,levels[i-1]);
 				super.setTime(i,times[i-1]);
 			}
-			update_curve(i);
+			
 		}
-	
+
+		update_curve();
 		this.sustainSeg = sustainSeg;			
-	}        
+	}
+	
+	public int getCurve(){
+		return this.curveType;
+	}
+	
+	public void setCurve(int curve){
+		this.curveType = curve;
+		switch (curve) {
+		case 0:
+			super.setLevel(0,64);
+			super.setLevel(nbSegment,64);
+			break;
+		case 1:			
+		case 2:
+			super.setLevel(0,127);
+			super.setLevel(nbSegment,127);
+						
+			break;
+		}
+		update_curve();
+	}
 }
