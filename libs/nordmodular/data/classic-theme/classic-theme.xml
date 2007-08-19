@@ -3936,10 +3936,11 @@ label{fill:#000;}
 		</knob>
 		<button x="200" y="38" width="34" height="19" cyclic="true" landscape="false">
 			<parameter component-id="p10" alt="sustain" />
-			<btn index="0">1</btn>
-			<btn index="1">2</btn>
-			<btn index="2">3</btn>
-			<btn index="3">4</btn>
+			<btn index="0">--</btn>
+			<btn index="1">1</btn>
+			<btn index="2">2</btn>
+			<btn index="3">3</btn>
+			<btn index="4">4</btn>
 		</button>
 		<button x="90" y="2" width="68" height="16" cyclic="false" landscape="true">
 			<parameter component-id="p11" alt="curve" />
@@ -3999,6 +4000,7 @@ label{fill:#000;}
 			<t4 component-id="p8" alt="Time  4" />
 			<t5 component-id="p9" alt="Time  5" />
 			<sustain component-id="p10" alt="Sustain seg." />
+			<curve component-id="p11" alt="Curve type" />
    	    </multi-env-display>
         <light component-id="ledGateIn" type="led" x="8" y="40" width="7" height="7" /> 
 	</module>
