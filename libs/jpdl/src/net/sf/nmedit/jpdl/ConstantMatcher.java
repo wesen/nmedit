@@ -29,10 +29,11 @@ public class ConstantMatcher extends Matcher
 	this.size = size;
     }
 
-    public boolean match(Protocol protocol, BitStream data, Packet result)
+    public boolean match(Protocol protocol, BitStream data,
+			 Packet result, int reserved)
     {
 	trace(protocol);
-	return data.isAvailable(size) && data.getInt(size) == value;
+	return data.isAvailable(size + reserved) && data.getInt(size) == value;
     }
 
     public boolean apply(Protocol protocol, Packet packet,
@@ -41,6 +42,16 @@ public class ConstantMatcher extends Matcher
 	trace(protocol);
 	result.append(value, size);
 	return true;
+    }
+
+    public int minimumSize()
+    {
+	if (isOptional()) {
+	    return 0;
+	}
+	else {
+	    return size;
+	}
     }
 
     private int value;

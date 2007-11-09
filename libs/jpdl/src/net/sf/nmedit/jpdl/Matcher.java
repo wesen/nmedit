@@ -43,9 +43,10 @@ public abstract class Matcher
     }
   
     public abstract boolean match(Protocol protocol, BitStream data,
-				  Packet result);
+				  Packet result, int reserved);
     public abstract boolean apply(Protocol protocol, Packet packet,
 				  IntStream data, BitStream result);
+    public abstract int minimumSize();
 
     private boolean optional;
     private Condition condition;

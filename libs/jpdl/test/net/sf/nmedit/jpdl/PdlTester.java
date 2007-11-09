@@ -24,38 +24,45 @@ public class PdlTester extends TestCase
     public void testDecode()
 	throws Exception
     {
-	try{
-	Protocol p = new Protocol(getTestPdlFileName());
-	p.useTracer(new TestTracer());
-	
-	BitStream stream = new BitStream();
-	Packet packet = new Packet();
-
-	stream.append(0xf0, 8);
-	stream.append(0x33, 8);
-	stream.append(   0, 1);
-	stream.append(0x16, 5);
-	stream.append(   0, 2);
-	stream.append(0x06, 8);
-	stream.append(   0, 1);
-	stream.append(  15, 7);
-	stream.append(   0, 1);
-	stream.append(0x7f, 7);
-	stream.append(   0, 1);
-	stream.append(  16, 7);
-	stream.append(   0, 1);
-	stream.append( 127, 7);
-	stream.append(0xf7, 8);
-	
-	p.getPacketParser("Sysex").parse(stream, packet);
-
-	Assert.assertEquals(0x16, packet.getVariable("cc"));
-	Assert.assertEquals(0, packet.getVariable("slot"));
-	Assert.assertEquals("ACK", packet.getPacket("data").getName());
-	Assert.assertEquals(15, packet.getPacket("data").getVariable("pid1"));
-	Assert.assertEquals(16, packet.getPacket("data").getVariable("pid2"));
-	Assert.assertEquals(127, packet.getPacket("data").getVariable("checksum"));
-	}catch(Exception e) {e.printStackTrace();}
+	try {
+	    Protocol p = new Protocol(getTestPdlFileName());
+	    p.useTracer(new TestTracer());
+	    
+	    BitStream stream = new BitStream();
+	    Packet packet = new Packet();
+	    
+	    stream.append(0xf0, 8);
+	    stream.append(0x33, 8);
+	    stream.append(   0, 1);
+	    stream.append(0x16, 5);
+	    stream.append(   0, 2);
+	    stream.append(0x06, 8);
+	    stream.append(   0, 1);
+	    stream.append(  15, 7);
+	    stream.append(   0, 1);
+	    stream.append(0x7f, 7);
+	    stream.append(   0, 1);
+	    stream.append(  16, 7);
+	    stream.append(   0, 1);
+	    stream.append( 127, 7);
+	    stream.append(0xf7, 8);
+	    
+	    p.getPacketParser("Sysex").parse(stream, packet);
+	    
+	    Assert.assertEquals(0x16, packet.getVariable("cc"));
+	    Assert.assertEquals(0, packet.getVariable("slot"));
+	    Assert.assertEquals("ACK", packet.getPacket("data").getName());
+	    Assert.assertEquals(15, packet.getPacket("data")
+				.getVariable("pid1"));
+	    Assert.assertEquals(16, packet.getPacket("data")
+				.getVariable("pid2"));
+	    Assert.assertEquals(127, packet.getPacket("data")
+				.getVariable("checksum"));
+	}
+	catch(Exception e) {
+	    e.printStackTrace();
+	    throw e;
+	}
     }
 
     public void testEncode()
@@ -86,6 +93,31 @@ public class PdlTester extends TestCase
 	Assert.assertEquals(5, bstream.getInt(8));
 	Assert.assertEquals(6, bstream.getInt(8));
 	Assert.assertEquals(0xf7, bstream.getInt(8));
+    }
+
+    public void testGreedy()
+	throws Exception
+    {
+	try {
+	    Protocol p = new Protocol(getTestPdlFileName());
+	    p.useTracer(new TestTracer());
+	    
+	    BitStream stream = new BitStream();
+	    Packet packet = new Packet();
+	    
+	    stream.append(1, 8);
+	    stream.append(2, 8);
+	    stream.append(3, 8);
+	    stream.append(4, 8);
+	    stream.append(5, 8);
+	    stream.append(6, 8);
+	    
+	    p.getPacketParser("Variable").parse(stream, packet);
+	}
+	catch(Exception e) {
+	    e.printStackTrace();
+	    throw e;
+	}
     }
 
     class TestTracer implements Tracer

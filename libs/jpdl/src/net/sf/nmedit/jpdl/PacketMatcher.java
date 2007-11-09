@@ -32,7 +32,8 @@ public class PacketMatcher extends Matcher
 	this.binding = binding;
     }
 
-    public boolean match(Protocol protocol, BitStream data, Packet result)
+    public boolean match(Protocol protocol, BitStream data,
+			 Packet result, int reserved)
     {
 	int iterations;
 	List<Packet> packetList = new LinkedList<Packet>();
@@ -56,7 +57,7 @@ public class PacketMatcher extends Matcher
 	
 	for (int i = 0; i < iterations; i++) {
 	    Packet packet = new Packet();
-	    if (packetParser.parse(data, packet)) {
+	    if (packetParser.parse(data, packet, reserved)) {
 		packetList.add(packet);
 	    }
 	    else {
@@ -103,6 +104,11 @@ public class PacketMatcher extends Matcher
 	return true;
     }
     
+    public int minimumSize()
+    {
+	return 0;
+    }
+
     private String count;
     private String parserName;
     private String binding;

@@ -33,14 +33,15 @@ public class VariableMatcher extends Matcher
 	this.terminal = terminal;
     }
 
-    public boolean match(Protocol protocol, BitStream data, Packet result)
+    public boolean match(Protocol protocol, BitStream data,
+			 Packet result, int reserved)
     {
 	List<Integer> variableList = new LinkedList<Integer>();
 	
 	trace(protocol);
 
 	for (int i = 0; i < count; i++) {
-	    if (data.isAvailable(size)) {
+	    if (data.isAvailable(size + reserved)) {
 		int value = data.getInt(size);
 		variableList.add(value);
 		
@@ -97,6 +98,16 @@ public class VariableMatcher extends Matcher
 	return true;
     }
   
+    public int minimumSize()
+    {
+	if (isOptional()) {
+	    return 0;
+	}
+	else {
+	    return size;
+	}
+    }
+
     private void trace(Protocol protocol, int value)
     {
         if (protocol.isTraceEnabled())
