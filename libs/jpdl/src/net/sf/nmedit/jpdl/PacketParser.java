@@ -28,33 +28,42 @@ public class PacketParser
 	this.name = name;
 	this.padding = padding;
 	this.protocol = protocol;
+	this.totalMinimumSize = 0;
     }
 
     public boolean parse(BitStream data, Packet result)
+    {
+	return parse(data, result, 0);
+    }
+
+    public boolean parse(BitStream data, Packet result, int reserved)
     {
 	boolean conditional = false;
 	boolean conditionalMatch = false;
 	int dataPos = data.getPosition();
 	
-    if (protocol.isTraceEnabled())
-    {
-        protocol.trace("PARSE PACKET " + name);
-    }
+	if (protocol.isTraceEnabled()) {
+	    protocol.trace("PARSE PACKET " + name);
+	}
 	
 	result.setName(name);
 	
+	int minimumSize = totalMinimumSize + reserved;
 	for (Matcher matcher: matchers) {
+	    minimumSize -= matcher.minimumSize();
 	    if (matcher.isConditional()) {
 		conditional = true;
 		if (matcher.trueCondition(result)) {
-		    boolean success = matcher.match(protocol, data, result);
+		    boolean success = matcher.match(protocol, data,
+						    result, minimumSize);
 		    if (success) {
 			conditionalMatch = true;
 		    }
 		}
 	    }
 	    else {
-		boolean success = matcher.match(protocol, data, result);
+		boolean success = matcher.match(protocol, data,
+						result, minimumSize);
 		if (!success && !matcher.isOptional()) {
             if (protocol.isTraceEnabled())
             {
@@ -71,17 +80,15 @@ public class PacketParser
 	    data.getInt(((data.getPosition()-dataPos) % padding) == 0 ?
 			 0 :
 			padding - ((data.getPosition()-dataPos) % padding));
-        if (protocol.isTraceEnabled())
-        {
-            protocol.trace("MATCHED " + name);
-        }
+	    if (protocol.isTraceEnabled()) {
+		protocol.trace("MATCHED " + name);
+	    }
 	    return true;
 	}
 	
-    if (protocol.isTraceEnabled())
-    {
-        protocol.trace("FAILED " + name);
-    }
+	if (protocol.isTraceEnabled()) {
+	    protocol.trace("FAILED " + name);
+	}
 	data.setPosition(dataPos);
 	result.clear();
 	return false;
@@ -95,10 +102,9 @@ public class PacketParser
 	int dataPos = data.getPosition();
 	int resultSize = result.getSize();
 	
-    if (protocol.isTraceEnabled())
-    {
-        protocol.trace("GENERATE PACKET " + name);
-    }
+	if (protocol.isTraceEnabled()) {
+	    protocol.trace("GENERATE PACKET " + name);
+	}
 
 	for (Matcher matcher: matchers) {
 	    if (matcher.isConditional()) {
@@ -132,17 +138,15 @@ public class PacketParser
 			  ((result.getSize()-resultSize) % padding) == 0 ?
 			  0 :
 			  padding - ((result.getSize()-resultSize) % padding));
-        if (protocol.isTraceEnabled())
-        {
-            protocol.trace("MATCHED " + name);
-        }
+	    if (protocol.isTraceEnabled()) {
+		protocol.trace("MATCHED " + name);
+	    }
 	    return true;
 	}
 	
-    if (protocol.isTraceEnabled())
-    {
-        protocol.trace("FAILED " + name);
-    }
+	if (protocol.isTraceEnabled()) {
+	    protocol.trace("FAILED " + name);
+	}
 	data.setPosition(dataPos);
 	result.setSize(resultSize);
 	return false;
@@ -160,18 +164,24 @@ public class PacketParser
 				   int terminal, Condition condition,
 				   boolean optional)
     {
-	matchers.add(new VariableMatcher(count, variable, size, terminal,
-					 condition, optional));
+	Matcher matcher = new VariableMatcher(count, variable, size,
+					      terminal, condition, optional);
+	matchers.add(matcher);
+	totalMinimumSize += matcher.minimumSize();
     }
 
     public void addConstantMatcher(int constant, int size,
 				   Condition condition, boolean optional)
     {
-	matchers.add(new ConstantMatcher(constant, size, condition, optional));
+	Matcher matcher = new ConstantMatcher(constant, size,
+					      condition, optional);
+	matchers.add(matcher); 
+	totalMinimumSize += matcher.minimumSize();
     }
   
     private String name;
     private int padding;
     private Protocol protocol;
     private List<Matcher> matchers = new LinkedList<Matcher>();
+    private int totalMinimumSize;
 }
