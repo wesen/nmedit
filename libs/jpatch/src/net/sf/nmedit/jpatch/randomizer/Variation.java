@@ -18,8 +18,6 @@ import javax.swing.JComponent;
 import javax.swing.JSlider;
 import javax.swing.TransferHandler;
 
-import org.apache.batik.css.engine.value.svg.StrokeWidthManager;
-
 public class Variation extends JComponent { 
 	/**
 	 * 
