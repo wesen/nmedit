@@ -246,9 +246,9 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
         {
             module.removeAllConnections();
             modules.remove(index);
-            unregisterModule(module);
-            revertConfigure(module);
+            unregisterModule(module);           
             fireModuleRemoved(module, index);
+            revertConfigure(module);
             return true;
         }
         else
