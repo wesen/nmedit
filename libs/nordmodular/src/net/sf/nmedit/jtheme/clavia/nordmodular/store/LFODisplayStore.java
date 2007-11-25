@@ -61,14 +61,16 @@ public class LFODisplayStore extends AbstractMultiParameterElement
     public JTComponent createComponent(JTContext context, PModuleDescriptor descriptor, PModule module)
     throws JTException
     {
-        JTComponent component = context.createComponentInstance(LFODisplay.class);
+        LFODisplay component = context.createComponentInstance(LFODisplay.class);
         setName(component);
         setBounds(component);
+        link(component,module);
         return component;
     }
 
-    protected void link(JTComponent component, PModule module) throws JTException
+    protected void link(LFODisplay component, PModule module) throws JTException
     {
+    	
         PParameter phase = module.getParameterByComponentId(componentIdList[0]);
         PParameter shape = module.getParameterByComponentId(componentIdList[1]);
         
@@ -82,6 +84,7 @@ public class LFODisplayStore extends AbstractMultiParameterElement
         
         disp.setPhaseAdapter(new JTParameterControlAdapter(phase));
         if (shape != null) disp.setWaveAdapter(new JTParameterControlAdapter(shape));
+
     }
 
 }
