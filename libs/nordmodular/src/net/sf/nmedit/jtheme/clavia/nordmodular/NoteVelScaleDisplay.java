@@ -31,6 +31,7 @@ import javax.swing.event.ChangeListener;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.JTControlAdapter;
 import net.sf.nmedit.jtheme.component.JTDisplay;
+import net.sf.nmedit.jtheme.store2.BindParameter;
 
 public class NoteVelScaleDisplay extends JTDisplay implements ChangeListener
 { 
@@ -67,7 +68,8 @@ public class NoteVelScaleDisplay extends JTDisplay implements ChangeListener
     {
         return breakPointAdapter;
     }
-    
+
+    @BindParameter(name="left-gain")
     public void setLeftGainAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.leftGainAdapter;
@@ -84,6 +86,7 @@ public class NoteVelScaleDisplay extends JTDisplay implements ChangeListener
         }
     }
 
+    @BindParameter(name="right-gain")
     public void setRightGainAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.rightGainAdapter;
@@ -100,6 +103,7 @@ public class NoteVelScaleDisplay extends JTDisplay implements ChangeListener
         }
     }
 
+    @BindParameter(name="break-point")
     public void setBreakPointAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.breakPointAdapter;

@@ -28,6 +28,7 @@ import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.clavia.nordmodular.graphics.Phaser;
 import net.sf.nmedit.jtheme.component.JTControlAdapter;
 import net.sf.nmedit.jtheme.component.JTDisplay;
+import net.sf.nmedit.jtheme.store2.BindParameter;
 
 public class JTPhaserDisplay extends JTDisplay implements ChangeListener
 {
@@ -130,6 +131,7 @@ public class JTPhaserDisplay extends JTDisplay implements ChangeListener
         return spreadAdapter;
     }
 
+    @BindParameter(name="feedback")
     public void setFeedbackAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.feedbackAdapter;
@@ -146,6 +148,7 @@ public class JTPhaserDisplay extends JTDisplay implements ChangeListener
         }
     }
 
+    @BindParameter(name="peaks")
     public void setPeakCountAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.peakCountAdapter;
@@ -162,6 +165,7 @@ public class JTPhaserDisplay extends JTDisplay implements ChangeListener
         }
     }
 
+    @BindParameter(name="spread")
     public void setSpreadAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.spreadAdapter;

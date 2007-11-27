@@ -28,6 +28,7 @@ import javax.swing.event.ChangeListener;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.JTControlAdapter;
 import net.sf.nmedit.jtheme.component.JTDisplay;
+import net.sf.nmedit.jtheme.store2.BindParameter;
 
 /*
  * Created on Jul 24, 2006
@@ -101,6 +102,7 @@ public class ClipDisp extends JTDisplay implements ChangeListener
         return Math.max(0, Math.min(v, 1));
     }
 
+    @BindParameter(name="clip")
     public void setCliParameterAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = clipParam;
@@ -111,7 +113,8 @@ public class ClipDisp extends JTDisplay implements ChangeListener
         if (adapter != null)
             adapter.setChangeListener(this);
     }
-    
+
+    @BindParameter(name="symmetry")
     public void setSymmetricParameterAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = symParam;

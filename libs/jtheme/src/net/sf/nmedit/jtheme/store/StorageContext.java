@@ -21,6 +21,7 @@ package net.sf.nmedit.jtheme.store;
 import java.awt.Image;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.SoftReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -30,10 +31,12 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import net.sf.nmedit.jtheme.JTException;
+import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.css.FakeRule;
 import net.sf.nmedit.jtheme.image.ImageCache;
 import net.sf.nmedit.jtheme.image.ImageResource;
 import net.sf.nmedit.jtheme.store2.ComponentElement;
+import net.sf.nmedit.jtheme.store2.DefaultStore;
 import net.sf.nmedit.jtheme.store2.ModuleElement;
 
 import org.apache.commons.logging.Log;
@@ -57,7 +60,8 @@ public abstract class StorageContext
     }
 
     private Map<String, Class<? extends ComponentElement>> storeClassMap = new HashMap<String, Class<? extends ComponentElement>>();
-    private Map<String, Method> storeMethodMap = new HashMap<String, Method>(); 
+    private Map<String, Class<? extends JTComponent>> storeClassMap2 = new HashMap<String, Class<? extends JTComponent>>();
+    private SoftReference<Map<String, Method>> storeMethodMap = null; 
 
     public abstract CSSStyleSheet getStyleSheet();
     
@@ -110,6 +114,11 @@ public abstract class StorageContext
         styleRuleMap.put(name, rule);
         return rule;
         
+    }
+    
+    public void installJTClass(String elementName, Class<? extends JTComponent> uiClass)
+    {
+        storeClassMap2.put(elementName, uiClass);
     }
     
     public void installStore(String elementName, Class<? extends ComponentElement> storeClass)
@@ -168,10 +177,21 @@ public abstract class StorageContext
     {
         return getContextClassLoader().getResourceAsStream(name);
     }
-    
+
     protected Method getStoreCreateMethod(String elementName) throws JTException
     {
-        Method create = storeMethodMap.get(elementName);
+        Map<String, Method> map = null;
+        if (storeMethodMap != null)
+        {
+            map = storeMethodMap.get();
+        }
+        if (map == null)
+        {
+            map = new HashMap<String, Method>(160);
+            storeMethodMap = new SoftReference<Map<String,Method>>(map);
+        }
+        
+        Method create = map.get(elementName);
         if (create == null)
         {
             Class<? extends ComponentElement> storeClass = getStoreClass(elementName);
@@ -180,7 +200,7 @@ public abstract class StorageContext
             
             try
             {
-                create = storeClass.getMethod("createElement", new Class<?>[]{StorageContext.class, Element.class});
+                create = storeClass.getDeclaredMethod("createElement", new Class<?>[]{StorageContext.class, Element.class});
             }
             catch (SecurityException e)
             {
@@ -191,7 +211,7 @@ public abstract class StorageContext
                 throw new JTException("method createElement() not found in "+storeClass,e);
             }
             
-            storeMethodMap.put(elementName, create);
+            map.put(elementName, create);
         }
         return create;
     }
@@ -199,11 +219,20 @@ public abstract class StorageContext
     public ComponentElement createStore(Element element)
       throws JTException
     {
+        
+        // fallback
+        Class<? extends JTComponent> jtclass = storeClassMap2.get(element.getName());
+        
+        if (jtclass != null)
+        {
+            DefaultStore fb = new DefaultStore(this, element, jtclass);
+            return fb;
+        }
+        
         Method create = getStoreCreateMethod(element.getName());
         try
         {
             ComponentElement store = (ComponentElement) create.invoke(null, new Object[] {this, element});
-            
             return store;
         }
         catch (IllegalArgumentException e)

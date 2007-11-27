@@ -18,27 +18,38 @@
  */
 package net.sf.nmedit.jtheme.clavia.nordmodular.store;
 
+import org.jdom.Element;
+
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
+import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTEnvelopeDisplay;
+import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
 import net.sf.nmedit.jtheme.store.StorageContext;
+import net.sf.nmedit.jtheme.store2.AbstractMultiParameterElement;
 import net.sf.nmedit.jtheme.store2.ComponentElement;
 
-import org.jdom.Element;
-
-public class ADSRModEnvelopeStore extends AbstractEnvelopeStore
+public class EnvelopeStore extends AbstractMultiParameterElement
 {
 
     /**
      * 
      */
-    private static final long serialVersionUID = -166723543228791475L;
+    private static final long serialVersionUID = -207922282356444796L;
+
+    private String elementName;
+    
+    protected EnvelopeStore(String elementName)
+    {
+        super(JTEnvelopeDisplay.class);
+        this.elementName = elementName;
+    }
 
     public static ComponentElement createElement(StorageContext context, Element element)
     {
-        ADSRModEnvelopeStore e = new ADSRModEnvelopeStore();
+        EnvelopeStore e = new EnvelopeStore(element.getName());
         e.initElement(context, element);
         e.checkDimensions();
         e.checkLocation();
@@ -49,9 +60,18 @@ public class ADSRModEnvelopeStore extends AbstractEnvelopeStore
     public JTEnvelopeDisplay createComponent(JTContext context, PModuleDescriptor descriptor, PModule module)
         throws JTException
     {
-        JTEnvelopeDisplay component = super.createComponent(context, descriptor, module);
-        component.configureADSR();
+        JTEnvelopeDisplay component = context.createComponentInstance(JTEnvelopeDisplay.class);
+        setName(component);
+        setBounds(component);
+        link(component, module);
+        
+        if ("ad-envelope".equals(elementName)) component.configureAD();
+        else if ("adsr-envelope".equals(elementName)) component.configureADSR();
+        else if ("ahd-envelope".equals(elementName)) component.configureAHD();
+        else if ("adsr-mod-envelope".equals(elementName)) component.configureADSR();
+        else component.configureADSR();
+        
         return component; 
     }
-
+    
 }

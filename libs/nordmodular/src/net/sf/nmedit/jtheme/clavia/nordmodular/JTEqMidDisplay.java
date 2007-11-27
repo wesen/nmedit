@@ -30,6 +30,7 @@ import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.clavia.nordmodular.graphics.EqualizerMid;
 import net.sf.nmedit.jtheme.component.JTControlAdapter;
 import net.sf.nmedit.jtheme.component.JTDisplay;
+import net.sf.nmedit.jtheme.store2.BindParameter;
 
 public class JTEqMidDisplay extends JTDisplay implements ChangeListener
 {
@@ -144,6 +145,7 @@ public class JTEqMidDisplay extends JTDisplay implements ChangeListener
         return bwAdapter;
     }
 
+    @BindParameter(name="frequency")
     public void setFreqAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.freqAdapter;
@@ -160,6 +162,7 @@ public class JTEqMidDisplay extends JTDisplay implements ChangeListener
         }
     }
 
+    @BindParameter(name="gain")
     public void setGainAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.gainAdapter;
@@ -176,6 +179,7 @@ public class JTEqMidDisplay extends JTDisplay implements ChangeListener
         }
     }
 
+    @BindParameter(name="bandwidth")
     public void setBWAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.bwAdapter;

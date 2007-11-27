@@ -30,6 +30,7 @@ import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.clavia.nordmodular.graphics.Expander;
 import net.sf.nmedit.jtheme.component.JTControlAdapter;
 import net.sf.nmedit.jtheme.component.JTDisplay;
+import net.sf.nmedit.jtheme.store2.BindParameter;
 
 public class JTExpanderDisplay extends JTDisplay implements ChangeListener
 {
@@ -122,7 +123,7 @@ public class JTExpanderDisplay extends JTDisplay implements ChangeListener
 		return thresholdAdapter;
 	}
 
-	
+    @BindParameter(name="ratio")
     public void setRatioAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.ratioAdapter;
@@ -139,6 +140,7 @@ public class JTExpanderDisplay extends JTDisplay implements ChangeListener
         }
     }
 
+    @BindParameter(name="threshold")
     public void setThresholdAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.thresholdAdapter;
@@ -154,9 +156,8 @@ public class JTExpanderDisplay extends JTDisplay implements ChangeListener
             updateThreshold();
         }
     }
-    
-  
-    
+
+    @BindParameter(name="gate")
     public void setGateAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.gateAdapter;

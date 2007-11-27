@@ -20,8 +20,14 @@ package net.sf.nmedit.jtheme.store2;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.Iterator;
 import java.util.List;
 
+import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PParameter;
+import net.sf.nmedit.jtheme.component.JTComponent;
+import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
 import net.sf.nmedit.jtheme.store.StorageContext;
 
 import org.jdom.Attribute;
@@ -33,11 +39,25 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
 
     protected transient String[] parameterElementNames;
     protected transient String[] componentIdList;
+    protected BindParameterInfo bindings = null;
     
     public AbstractMultiParameterElement(String[] parameterElementNames)
     {
         this.parameterElementNames = parameterElementNames;
         componentIdList = new String[parameterElementNames.length];
+    }
+    
+    public AbstractMultiParameterElement(Class<? extends JTComponent> jtclass)
+    {
+        BindParameterInfo info = BindParameterInfo.forClass(jtclass);
+        this.bindings = info;
+        parameterElementNames = new String[info.getAdapterCount()];
+        componentIdList = new String[info.getAdapterCount()];
+        
+        Iterator<String> iter = info.parameters();
+        int i=0;
+        while (iter.hasNext())
+            parameterElementNames[i++] = iter.next();
     }
     
     @Override
@@ -68,7 +88,37 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
             }
         }
     }
+    
 
+    protected void link(JTComponent component, PModule module)
+    {
+        if (bindings == null)
+            throw new UnsupportedOperationException();
+        
+        for (int i=0;i<parameterElementNames.length;i++)
+        {
+            String name = parameterElementNames[i];
+            PParameter param = module.getParameterByComponentId(componentIdList[i]);
+            if (param != null)
+            {
+                Method setter = bindings.getSetter(name);
+                try
+                {
+                    setter.invoke(component, new Object[]{new JTParameterControlAdapter(param)});
+                }
+                catch (Exception e)
+                {
+                    // TODO log exception instead of stack trace
+                    e.printStackTrace();
+                }
+            }
+            else
+            {
+                // log: parameter not found
+            }
+        }
+    }
+    
     private void writeObject(java.io.ObjectOutputStream out)
         throws IOException
     {
@@ -142,5 +192,4 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
         }
         
     }
-    
 }

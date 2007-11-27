@@ -29,6 +29,7 @@ import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.clavia.nordmodular.graphics.Compressor;
 import net.sf.nmedit.jtheme.component.JTControlAdapter;
 import net.sf.nmedit.jtheme.component.JTDisplay;
+import net.sf.nmedit.jtheme.store2.BindParameter;
 
 public class JTCompressorDisplay extends JTDisplay implements ChangeListener
 {
@@ -139,7 +140,7 @@ public class JTCompressorDisplay extends JTDisplay implements ChangeListener
 		return thresholdAdapter;
 	}
 
-	
+    @BindParameter(name="ratio")
     public void setRatioAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.ratioAdapter;
@@ -156,6 +157,7 @@ public class JTCompressorDisplay extends JTDisplay implements ChangeListener
         }
     }
 
+    @BindParameter(name="threshold")
     public void setThresholdAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.thresholdAdapter;
@@ -171,7 +173,8 @@ public class JTCompressorDisplay extends JTDisplay implements ChangeListener
             updateThreshold();
         }
     }
-    
+
+    @BindParameter(name="ref-level")
     public void setRefLevelAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.refLevelAdapter;
@@ -187,7 +190,8 @@ public class JTCompressorDisplay extends JTDisplay implements ChangeListener
             updateRefLevel();
         }
     }
-    
+
+    @BindParameter(name="limiter")
     public void setLimiterAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.limiterAdapter;
