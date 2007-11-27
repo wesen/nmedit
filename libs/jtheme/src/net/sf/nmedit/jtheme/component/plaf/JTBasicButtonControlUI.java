@@ -241,7 +241,10 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
             
             if (control.isToggleEnabledRequested() && (!control.isIncrementModeEnabled()))
             {
-                defaultSelection = control.getDefaultValue()-min+1;
+                // TODO 
+                defaultSelection = control.getDefaultValue()-min;
+                if (defaultSelection>control.getMaxValue()-min)
+                    defaultSelection = control.getMaxValue()-min;
             }
             
             paintButton(g, defaultSelection, intSelectionIndex, icon, label, 0, 0, btnw, btnh);
