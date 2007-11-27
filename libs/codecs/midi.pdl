@@ -168,8 +168,16 @@ ACKChecksum % 1 :=
 	0:1 checksum:7
 	;
 
+// note: (reply case 1)
+//  received as reply after loading a patch from a bank to a slot
+//  - pid2 : destination slot index
+//  - pid3 : patch id
+//  - section/position: bank position
+//  - unknown2 always 13(dec) 
+//  - unknown5 always 0
+// note: further situations where this message is sent are possible
 PatchLoadResponse % 1 :=
-	0:1 unknown1:7 0:1 unknown2:7 0:1 unknown3:7 0:1 unknown4:7
+	0:1 pid3:7 0:1 unknown2:7 0:1 section:7 0:1 position:7
 	0:1 unknown5:7 0:1 unknown6:7 0:1 checksum:7
 	;
 

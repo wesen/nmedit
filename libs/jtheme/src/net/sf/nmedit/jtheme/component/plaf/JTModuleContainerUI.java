@@ -713,6 +713,8 @@ public class JTModuleContainerUI extends ComponentUI
                     return;
                 }
                 mc.add(module);
+                // TODO short after dropping a new module and then moving it
+                // causes a NullPointerException in the next line
                 MoveOperation move = module.getParentComponent().createMoveOperation();
                 move.setScreenOffset(0, 0);
                 move.add(module);
