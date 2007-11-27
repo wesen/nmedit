@@ -70,7 +70,7 @@ public class CallDescriptor
         {
             try
             {
-                tmethod = target.getClass().getMethod(method, new Class[0]);
+                tmethod = target.getClass().getDeclaredMethod(method, new Class[0]);
             }
             catch (Exception e)
             {
