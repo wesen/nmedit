@@ -1221,6 +1221,11 @@ label{fill:#000;}
 		<label x="188" y="50">Hold</label>
 		<label x="227" y="65">L</label>
 		<label x="227" y="84">R</label>
+		<expander-display x="91" y="4" width="46" height="46">
+			<threshold component-id="p3" alt="threshold" />
+			<ratio component-id="p4" alt="ratio" />
+			<gate component-id="p5" alt="gate" />						
+	    </expander-display>
 	</module>
 	<module component-id="m53" width="255" height="30">
 		<name>Sample&amp;Hold</name>
