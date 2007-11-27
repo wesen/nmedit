@@ -135,6 +135,11 @@ public class Packet
 	}
 	return intLists.get(name);
     }
+    
+    public Iterator<Packet> packets()
+    {
+        return packets.values().iterator();
+    }
 
     private Map<String, Integer> variables = new HashMap<String, Integer>();
     private List<String> allVariables = new LinkedList<String>();
