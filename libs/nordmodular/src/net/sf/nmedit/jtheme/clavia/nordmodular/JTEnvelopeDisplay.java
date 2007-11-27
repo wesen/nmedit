@@ -31,6 +31,7 @@ import javax.swing.event.ChangeListener;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.JTControlAdapter;
 import net.sf.nmedit.jtheme.component.JTDisplay;
+import net.sf.nmedit.jtheme.store2.BindParameter;
 
 /*
  * Created on Jul 24, 2006
@@ -122,6 +123,7 @@ public class JTEnvelopeDisplay extends JTDisplay implements ChangeListener
         return inverseAdapter;
     }
     
+    @BindParameter(name="attack")
     public void setAttackAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.attackAdapter;
@@ -137,7 +139,8 @@ public class JTEnvelopeDisplay extends JTDisplay implements ChangeListener
             updateAttack();
         }
     }
-    
+
+    @BindParameter(name="attack-type")
     public void setAttackTypeAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.attackTypeAdapter;
@@ -153,7 +156,8 @@ public class JTEnvelopeDisplay extends JTDisplay implements ChangeListener
             updateAttackType();
         }
     }
-    
+
+    @BindParameter(name="decay")
     public void setDecayAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.decayAdapter;
@@ -170,6 +174,7 @@ public class JTEnvelopeDisplay extends JTDisplay implements ChangeListener
         }
     }
 
+    @BindParameter(name="hold")
     public void setHoldAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.holdAdapter;
@@ -186,6 +191,7 @@ public class JTEnvelopeDisplay extends JTDisplay implements ChangeListener
         }
     }
 
+    @BindParameter(name="sustain")
     public void setSustainAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.sustainAdapter;
@@ -202,6 +208,7 @@ public class JTEnvelopeDisplay extends JTDisplay implements ChangeListener
         }
     }
 
+    @BindParameter(name="release")
     public void setReleaseAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.releaseAdapter;
@@ -218,6 +225,7 @@ public class JTEnvelopeDisplay extends JTDisplay implements ChangeListener
         }
     }
 
+    @BindParameter(name="inverse")
     public void setInverseAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.inverseAdapter;

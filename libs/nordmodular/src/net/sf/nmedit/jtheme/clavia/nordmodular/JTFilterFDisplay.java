@@ -28,6 +28,7 @@ import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.clavia.nordmodular.graphics.FilterF;
 import net.sf.nmedit.jtheme.component.JTControlAdapter;
 import net.sf.nmedit.jtheme.component.JTDisplay;
+import net.sf.nmedit.jtheme.store2.BindParameter;
 
 public class JTFilterFDisplay extends JTDisplay implements ChangeListener {
 
@@ -118,6 +119,7 @@ public class JTFilterFDisplay extends JTDisplay implements ChangeListener {
 		return slopeAdapter;
 	}
 
+    @BindParameter(name="cutoff")
 	public void setCutoffAdapter(JTControlAdapter adapter) {
 		JTControlAdapter oldAdapter = this.cutoffAdapter;
 
@@ -132,6 +134,7 @@ public class JTFilterFDisplay extends JTDisplay implements ChangeListener {
 		}
 	}
 
+    @BindParameter(name="resonance")
 	public void setResonanceAdapter(JTControlAdapter adapter) {
 		JTControlAdapter oldAdapter = this.resonanceAdapter;
 
@@ -146,6 +149,7 @@ public class JTFilterFDisplay extends JTDisplay implements ChangeListener {
 		}
 	}
 
+    @BindParameter(name="slope")
 	public void setSlopeAdapter(JTControlAdapter adapter) {
 		JTControlAdapter oldAdapter = this.slopeAdapter;
 

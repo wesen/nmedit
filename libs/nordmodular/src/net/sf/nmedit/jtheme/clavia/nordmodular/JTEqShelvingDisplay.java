@@ -29,6 +29,7 @@ import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.clavia.nordmodular.graphics.EqualizerShelve;
 import net.sf.nmedit.jtheme.component.JTControlAdapter;
 import net.sf.nmedit.jtheme.component.JTDisplay;
+import net.sf.nmedit.jtheme.store2.BindParameter;
 
 public class JTEqShelvingDisplay extends JTDisplay implements ChangeListener
 {
@@ -107,6 +108,7 @@ public class JTEqShelvingDisplay extends JTDisplay implements ChangeListener
         return gainAdapter;
     }
 
+    @BindParameter(name="frequency")
     public void setFreqAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.freqAdapter;
@@ -123,6 +125,7 @@ public class JTEqShelvingDisplay extends JTDisplay implements ChangeListener
         }
     }
 
+    @BindParameter(name="gain")
     public void setGainAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.gainAdapter;

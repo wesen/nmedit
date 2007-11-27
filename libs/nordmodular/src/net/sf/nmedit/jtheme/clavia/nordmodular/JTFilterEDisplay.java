@@ -28,6 +28,7 @@ import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.clavia.nordmodular.graphics.FilterE;
 import net.sf.nmedit.jtheme.component.JTControlAdapter;
 import net.sf.nmedit.jtheme.component.JTDisplay;
+import net.sf.nmedit.jtheme.store2.BindParameter;
 
 public class JTFilterEDisplay extends JTDisplay implements ChangeListener
 {
@@ -164,6 +165,7 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
         return slopeAdapter;
     }
 
+    @BindParameter(name="cutoff")
     public void setCutoffAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.cutoffAdapter;
@@ -180,6 +182,7 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
         }
     }
 
+    @BindParameter(name="resonance")
     public void setResonanceAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.resonanceAdapter;
@@ -196,6 +199,7 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
         }
     }
 
+    @BindParameter(name="type")
     public void setTypeAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.typeAdapter;
@@ -211,7 +215,8 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
             updateType();
         }
     }
-    
+
+    @BindParameter(name="slope")
     public void setSlopeAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.slopeAdapter;
@@ -228,6 +233,7 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
         }
     }
 
+    @BindParameter(name="gain-control")
     public void setGainControlAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.gainControlAdapter;
@@ -273,7 +279,6 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
     {
     	if (gainControlAdapter!= null){    		
     		setGainControl(gainControlAdapter.getValue());
-    		System.out.println("GC = "+gainControlAdapter.getValue());
     	}
     }
     
