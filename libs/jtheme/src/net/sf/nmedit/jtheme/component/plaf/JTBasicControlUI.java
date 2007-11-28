@@ -41,6 +41,8 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 
+import org.jdom.Element;
+
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTControl;
@@ -54,7 +56,11 @@ public abstract class JTBasicControlUI extends JTControlUI
     protected static final String INCREASE_FAST = "increase.fast";
     protected static final String DECREASE_FAST = "decrease.fast";
     protected static final String DEFAULTVALUE = "default.value";
-
+    protected static final String MOVE_UP = "move.up";
+    protected static final String MOVE_DOWN = "move.down";
+    protected static final String MOVE_RIGHT = "move.right";
+    protected static final String MOVE_LEFT = "move.left";
+    
     public static final String knobActionMapKey = "knob.actionMap";
 
     private boolean defaultsInitialized = false;
@@ -225,6 +231,10 @@ public abstract class JTBasicControlUI extends JTControlUI
             map.put(new Actions(INCREASE_FAST));
             map.put(new Actions(DECREASE_FAST));
             map.put(new Actions(DEFAULTVALUE));
+            map.put(new Actions(MOVE_UP));
+            map.put(new Actions(MOVE_DOWN));
+            map.put(new Actions(MOVE_RIGHT));
+            map.put(new Actions(MOVE_LEFT));
         }
         
         public void mouseClicked( MouseEvent e )
@@ -267,7 +277,24 @@ public abstract class JTBasicControlUI extends JTControlUI
             KeyStroke decreaseValueFast = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.SHIFT_MASK);
             map.put(decreaseValueFast, DECREASE_FAST);
 
+            addEditAction(map);
+            
             addDefaultValueKS(map);
+        }
+        
+        protected void addEditAction(InputMap map)
+        {
+        	 KeyStroke moveUp = KeyStroke.getKeyStroke(KeyEvent.VK_U, 0);
+             map.put(moveUp, MOVE_UP);
+             
+             KeyStroke moveDown = KeyStroke.getKeyStroke(KeyEvent.VK_J, 0);
+             map.put(moveDown, MOVE_DOWN);
+             
+             KeyStroke moveRight = KeyStroke.getKeyStroke(KeyEvent.VK_K, 0);
+             map.put(moveRight, MOVE_RIGHT);
+             
+             KeyStroke moveLeft = KeyStroke.getKeyStroke(KeyEvent.VK_H, 0);
+             map.put(moveLeft, MOVE_LEFT);
         }
         
         protected void addDefaultValueKS(InputMap map)
@@ -333,6 +360,9 @@ public abstract class JTBasicControlUI extends JTControlUI
                     control.setExtensionValue(control.getExtDefaultValue());
                 else
                     control.setValue(control.getDefaultValue());   
+            } else if (e.isPopupTrigger())
+            {
+                control.showControlPopup(e);
             }
         }
 
@@ -424,6 +454,30 @@ public abstract class JTBasicControlUI extends JTControlUI
                     control.setValue(control.getValue()-5);
                 else if (key == DEFAULTVALUE)
                     control.setValue(control.getDefaultValue());
+//                else if (key == MOVE_UP){
+//                	Element docEl = control.getDocumentElement();
+//                	Integer y = control.getLocation().y -1;
+//                	control.setLocation(control.getLocation().x, y);
+//                	docEl.setAttribute("y",y.toString());
+//                }
+//                else if (key == MOVE_DOWN){
+//                	Element docEl = control.getDocumentElement();
+//                	Integer y = control.getLocation().y + 1;
+//                	control.setLocation(control.getLocation().x, y);
+//                	docEl.setAttribute("y",y.toString());
+//                }
+//                else if (key == MOVE_RIGHT){
+//                	Element docEl = control.getDocumentElement();
+//                	Integer x = control.getLocation().x +1;
+//                	control.setLocation(x,control.getLocation().y);
+//                	docEl.setAttribute("x",x.toString());
+//                }
+//                else if (key == MOVE_LEFT){
+//                	Element docEl = control.getDocumentElement();
+//                	Integer x = control.getLocation().x -1;
+//                	control.setLocation(x,control.getLocation().y);
+//                	docEl.setAttribute("x",x.toString());
+//                }
             }
 
             public boolean isEnabled(Object sender) 
@@ -449,7 +503,7 @@ public abstract class JTBasicControlUI extends JTControlUI
         }
         */
 
-        private JTControl controlFor(EventObject e)
+        protected JTControl controlFor(EventObject e)
         {
             return castControl(e.getSource());
         }
@@ -458,6 +512,8 @@ public abstract class JTBasicControlUI extends JTControlUI
         {
             return (src instanceof JTControl) ? (JTControl) src : null;
         }
+        
+		
         
         /*
         // should be in UIDefaults
