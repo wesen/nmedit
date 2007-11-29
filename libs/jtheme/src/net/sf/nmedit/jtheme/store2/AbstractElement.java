@@ -39,6 +39,7 @@ public abstract class AbstractElement extends ComponentElement
     public static final String ATT_HEIGHT= "height";
     public static final String ATT_SIZE  = "size";
     public static final String ATT_COMPONENT_ID  = "component-id";
+    public static final String ATT_VALUE  = "value";
     public static final String ATT_STYLE  = "style";
     public static final String ATT_CLASS  = "class";
 
