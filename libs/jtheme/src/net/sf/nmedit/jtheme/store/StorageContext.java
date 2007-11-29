@@ -30,8 +30,8 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
-import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.css.FakeRule;
 import net.sf.nmedit.jtheme.image.ImageCache;
 import net.sf.nmedit.jtheme.image.ImageResource;
@@ -58,9 +58,10 @@ public abstract class StorageContext
             log = LogFactory.getLog(StorageContext.class);
         return log;
     }
+    
+    public abstract JTContext getContext();
 
     private Map<String, Class<? extends ComponentElement>> storeClassMap = new HashMap<String, Class<? extends ComponentElement>>();
-    private Map<String, Class<? extends JTComponent>> storeClassMap2 = new HashMap<String, Class<? extends JTComponent>>();
     private SoftReference<Map<String, Method>> storeMethodMap = null; 
 
     public abstract CSSStyleSheet getStyleSheet();
@@ -116,11 +117,6 @@ public abstract class StorageContext
         
     }
     
-    public void installJTClass(String elementName, Class<? extends JTComponent> uiClass)
-    {
-        storeClassMap2.put(elementName, uiClass);
-    }
-    
     public void installStore(String elementName, Class<? extends ComponentElement> storeClass)
     {
         storeClassMap.put(elementName, storeClass);
@@ -128,7 +124,10 @@ public abstract class StorageContext
     
     public Class<? extends ComponentElement> getStoreClass(String elementName)
     {
-        return storeClassMap.get(elementName);
+        Class<? extends ComponentElement> storeClass = storeClassMap.get(elementName);
+        if (storeClass == null)
+            storeClass = DefaultStore.class;
+        return storeClass;
     }
     
     public abstract ModuleElement getModuleStoreById(Object id);
@@ -219,7 +218,7 @@ public abstract class StorageContext
     public ComponentElement createStore(Element element)
       throws JTException
     {
-        
+        /*
         // fallback
         Class<? extends JTComponent> jtclass = storeClassMap2.get(element.getName());
         
@@ -227,7 +226,7 @@ public abstract class StorageContext
         {
             DefaultStore fb = new DefaultStore(this, element, jtclass);
             return fb;
-        }
+        }*/
         
         Method create = getStoreCreateMethod(element.getName());
         try

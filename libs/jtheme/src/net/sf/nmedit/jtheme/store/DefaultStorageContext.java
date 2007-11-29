@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.image.ImageCache;
 import net.sf.nmedit.jtheme.image.ImageResource;
@@ -40,7 +41,6 @@ import net.sf.nmedit.jtheme.store2.ButtonElement;
 import net.sf.nmedit.jtheme.store2.ComponentElement;
 import net.sf.nmedit.jtheme.store2.ConnectorElement;
 import net.sf.nmedit.jtheme.store2.ImageElement;
-import net.sf.nmedit.jtheme.store2.KnobElement;
 import net.sf.nmedit.jtheme.store2.LabelElement;
 import net.sf.nmedit.jtheme.store2.LightElement;
 import net.sf.nmedit.jtheme.store2.ModuleElement;
@@ -78,18 +78,26 @@ public class DefaultStorageContext extends StorageContext
             _logger = LogFactory.getLog(DefaultStorageContext.class);
         return _logger;
     }
-    
+
     public ImageCache getImageCache()
     {
         return imageCache;
     }
     
-    public DefaultStorageContext(ClassLoader classLoader)
+    public DefaultStorageContext(JTContext context, ClassLoader classLoader)
     {
         this.classLoader = classLoader;
+        this.context = context;
         installDefaults();
     }
 
+    private JTContext context;
+
+    public JTContext getContext()
+    {
+        return context;
+    }
+    
     public ImageResource getCachedImage(Object source)
     {
         return imageResourceMap.get(source);
@@ -140,7 +148,6 @@ public class DefaultStorageContext extends StorageContext
     protected void installDefaults()
     {
         installStore("module", ModuleElement.class);
-        installStore("knob", KnobElement.class);
         installStore("label", LabelElement.class);
         installStore("image", ImageElement.class);
         installStore("connector", ConnectorElement.class);
