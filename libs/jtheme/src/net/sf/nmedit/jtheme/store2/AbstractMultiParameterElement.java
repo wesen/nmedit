@@ -39,6 +39,8 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
 
     protected transient String[] parameterElementNames;
     protected transient String[] componentIdList;
+    protected transient Object[] valueList; // (String,Integer) pairs
+    
     protected BindParameterInfo bindings = null;
     
     public AbstractMultiParameterElement(String[] parameterElementNames)
@@ -58,6 +60,17 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
         int i=0;
         while (iter.hasNext())
             parameterElementNames[i++] = iter.next();
+
+        int cnt = info.getAdapterCount();
+        if (cnt>0) valueList = new Object[cnt*2];
+        iter = info.values();
+        i=0;
+        while (iter.hasNext())
+        {
+            String name = iter.next();
+            valueList[i++] = name;
+            valueList[i++] = null;
+        }
     }
     
     @Override
@@ -83,13 +96,43 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
                     {
                         componentIdList[index] = a.getValue();   
                     }
+                    
                     break;
                 }
+            }
+            
+            // default values for component
+            Attribute a = p.getAttribute(ATT_VALUE);
+            if (a != null)
+            {
+                int intValue;
+                try
+                {
+                    intValue = Integer.parseInt(a.getValue());
+                } 
+                catch (NumberFormatException nfe)
+                {
+                    continue;
+                }
+                
+
+                if (valueList != null)
+                {
+                    for (int index=0;index<valueList.length;index+=2)
+                    {
+                        String name = (String) valueList[index];
+                        if (name.equals(p.getName()))
+                        {
+                            valueList[index+1] = intValue;
+                            break;
+                        }
+                    }
+                }
+
             }
         }
     }
     
-
     protected void link(JTComponent component, PModule module)
     {
         if (bindings == null)
@@ -101,10 +144,14 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
             PParameter param = module.getParameterByComponentId(componentIdList[i]);
             if (param != null)
             {
-                Method setter = bindings.getSetter(name);
+                // set adapter
+                Method setter = bindings.getAdapterSetter(name);
                 try
                 {
-                    setter.invoke(component, new Object[]{new JTParameterControlAdapter(param)});
+                    int index = bindings.getAdapterSetterIndex(name);
+                    JTParameterControlAdapter adapter = new JTParameterControlAdapter(param);
+                    Object[] args = index < 0 ? new Object[]{adapter} : new Object[]{index, adapter};
+                    setter.invoke(component, args);
                 }
                 catch (Exception e)
                 {
@@ -117,6 +164,29 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
                 // log: parameter not found
             }
         }
+        
+        if (valueList != null)
+        {
+            for (int i=0;i<valueList.length;i+=2)
+            {
+                String name = (String) valueList[i];
+                Integer value = (Integer) valueList[i+1];
+                if (value != null)
+                {
+                    Method setter = bindings.getValueSetter(name);
+
+                    try
+                    {
+                        setter.invoke(component, new Object[]{value});
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        
     }
     
     private void writeObject(java.io.ObjectOutputStream out)
@@ -163,6 +233,30 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
                 out.writeObject(n);
             }
         }
+
+        size = 0;
+        if (valueList != null)
+        {
+            for (int i=1;i<valueList.length;i+=2)
+            {
+                if (valueList[i] != null)
+                    size++;
+            }
+        }   
+        out.writeInt(size);
+        if (valueList!=null)
+        {
+            for (int i=0;i<valueList.length;i+=2)
+            {
+                String n = (String) valueList[i];
+                Integer v = (Integer) valueList[i+1];
+                if (v != null)
+                {
+                    out.writeObject(n);
+                    out.writeInt(v.intValue());
+                }
+            }
+        }
     }
     
     private void readObject(java.io.ObjectInputStream in)
@@ -189,6 +283,19 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
             int index = in.readInt();
             String n = (String) in.readObject();
             componentIdList[index] = n;
+        }
+        
+        size = in.readInt();
+        if (size>0)
+        {
+            valueList = new Integer[size*2];
+            for (int i=0;i<size;i+=2)
+            {
+                String name = (String) in.readObject();
+                int value = in.readInt();
+                valueList[i] = name;
+                valueList[i+1] = value;
+            }
         }
         
     }
