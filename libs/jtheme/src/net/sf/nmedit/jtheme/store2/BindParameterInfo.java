@@ -28,6 +28,7 @@ import java.util.Map;
 
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTControlAdapter;
+import net.sf.nmedit.nmutils.collections.EmptyIterator;
 
 /**
  * Caches all methods void (JTControlAdapter) of a specified class
@@ -47,7 +48,10 @@ public class BindParameterInfo implements Serializable
     private static SoftReference<Map<Class<? extends JTComponent>, BindParameterInfo>> mapref = new SoftReference<Map<Class<? extends JTComponent>,BindParameterInfo>>(null);
 
     private transient Map<String, Method> adapterSetters;
+    private transient Map<String, Integer> adapterSetterIndices;
+    private transient Map<String, Method> valueSetters;
     private transient Class<? extends JTComponent> jtclass;
+    private transient boolean initialized = false;
     
     protected BindParameterInfo(Class<? extends JTComponent> jtclass)
     {
@@ -56,44 +60,112 @@ public class BindParameterInfo implements Serializable
     
     protected void lazyInitialisation()
     {
-        if (adapterSetters != null)
-            return;
+        if (initialized) return;
+        initialized = true;
         
         for (Method m: jtclass.getMethods())
         {   
             if (Void.TYPE.equals(m.getReturnType()) && m.isAnnotationPresent(BindParameter.class))
             {
                 Class<?>[] params = m.getParameterTypes();
-                if (params.length == 1 && JTControlAdapter.class.equals(params[0]))
+                if (params.length == 1)
                 {
-                    // arguments ok
-                    if (adapterSetters == null)
-                        adapterSetters = new HashMap<String, Method>();
-                    
-                    BindParameter binding = m.getAnnotation(BindParameter.class);
-                    
-                    adapterSetters.put(binding.name(), m);
+                    // adapter setter
+                    if (JTControlAdapter.class.equals(params[0]))
+                    {
+                        // argument: JTControlAdapter
+                        if (adapterSetters == null)
+                            adapterSetters = new HashMap<String, Method>();
+                        
+                        BindParameter binding = m.getAnnotation(BindParameter.class);
+                        
+                        adapterSetters.put(binding.name(), m);
+                    }
+                    else if (Integer.TYPE.equals(params[0]))
+                    {
+                        // argument: int
+                        if (valueSetters == null)
+                            valueSetters = new HashMap<String, Method>();
+                        
+                        BindParameter binding = m.getAnnotation(BindParameter.class);
+                        valueSetters.put(binding.name(), m);
+                    }
+                }
+                else if (params.length==2)
+                {
+                    // adapter setter
+                    if (Integer.TYPE.equals(params[0]) && JTControlAdapter.class.equals(params[1]))
+                    {
+                        // arguments: index, adapter
+
+                        BindParameter binding = m.getAnnotation(BindParameter.class);
+                        
+                        if (binding.count() > 0)
+                        {
+                            // argument: JTControlAdapter
+                            if (adapterSetters == null)
+                                adapterSetters = new HashMap<String, Method>();
+
+                            if (adapterSetterIndices == null)
+                                adapterSetterIndices = new HashMap<String, Integer>();
+                            
+                            for (int i=0;i<binding.count();i++)
+                            {
+                                String name = binding.name()+i;
+                                adapterSetters.put(name, m);
+                                adapterSetterIndices.put(name, i);
+                            }
+                        }
+                    }
                 }
             }
         }
+        
     }
-    
+
     public int getAdapterCount()
     {
         lazyInitialisation();
-        return adapterSetters.size();
+        return adapterSetters == null ? 0 : adapterSetters.size();
+    }
+
+    public int getValuesCount()
+    {
+        lazyInitialisation();
+        return valueSetters == null ? 0 : valueSetters.size();
     }
     
     public Iterator<String> parameters()
     {
         lazyInitialisation();
-        return adapterSetters.keySet().iterator();
+        return adapterSetters == null ? EmptyIterator.<String>getInstance() : adapterSetters.keySet().iterator();
     }
     
-    public Method getSetter(String parameterName)
+    public int getAdapterSetterIndex(String parameterName)
     {
         lazyInitialisation();
-        return adapterSetters.get(parameterName);
+        if (adapterSetterIndices == null)
+            return -1;
+        Integer v = adapterSetterIndices.get(parameterName);
+        return v == null ? -1 : v.intValue();
+    }
+    
+    public Method getAdapterSetter(String parameterName)
+    {
+        lazyInitialisation();
+        return adapterSetters == null ? null : adapterSetters.get(parameterName);
+    }
+
+    public Iterator<String> values()
+    {
+        lazyInitialisation();
+        return valueSetters == null ? EmptyIterator.<String>getInstance() : valueSetters.keySet().iterator();
+    }
+
+    public Method getValueSetter(String parameterName)
+    {
+        lazyInitialisation();
+        return valueSetters == null ? null : valueSetters.get(parameterName);
     }
     
     private static Map<Class<? extends JTComponent>, BindParameterInfo> getMap()
@@ -131,6 +203,7 @@ public class BindParameterInfo implements Serializable
     {
         in.defaultReadObject();
         jtclass = (Class<? extends JTComponent>) in.readObject();
+        this.initialized = false;
         getMap().put(jtclass, this);
     }
 }

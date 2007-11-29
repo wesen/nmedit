@@ -33,8 +33,17 @@ public class DefaultStore extends AbstractMultiParameterElement
     /**
      * 
      */
-    private static final long serialVersionUID = 9210495862666368191L;
+    private static final long serialVersionUID = -6054952214662350115L;
     private Class<? extends JTComponent> jtclass;
+
+    public static ComponentElement createElement(StorageContext context, Element element) throws JTException
+    {
+        Class<? extends JTComponent> jtclass = context.getContext().getComponentType(element.getName());
+        if (jtclass == null)
+                throw new JTException("no component class for element: "+element.getName());
+       
+        return new DefaultStore(context, element, jtclass);
+    }
 
     public DefaultStore(StorageContext context, Element element, Class<? extends JTComponent> jtclass)
     {
