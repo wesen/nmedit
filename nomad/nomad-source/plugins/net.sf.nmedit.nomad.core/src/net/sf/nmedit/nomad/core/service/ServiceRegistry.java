@@ -56,7 +56,7 @@ public class ServiceRegistry
     private <T extends Service> Iterator<T> _getServices(Class<T> serviceClass)
     {
         ServiceManager<T> manager = getManager(serviceClass);
-        return (manager == null) ? new EmptyIterator<T>(): manager.iterator();
+        return (manager == null) ? EmptyIterator.<T>getInstance(): manager.iterator();
     }
 
     public static <T extends Service> void addService(Class<T> serviceClass, T service) throws ServiceException

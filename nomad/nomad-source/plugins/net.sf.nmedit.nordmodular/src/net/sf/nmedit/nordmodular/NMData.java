@@ -193,6 +193,8 @@ public class NMData
 
     private JTNM1Context initContext() throws Exception
     {
+        JTNM1Context jtcontext = new JTNM1Context(null);
+        
         InputStream source;
         
         DefaultStorageContext storageContext;
@@ -203,7 +205,7 @@ public class NMData
         {
             URL relative = getClass().getClassLoader().getResource(ctf);
             
-            storageContext = new NMStorageContext(RelativeClassLoader.fromPath(getClass().getClassLoader(), relative));
+            storageContext = new NMStorageContext(jtcontext, RelativeClassLoader.fromPath(getClass().getClassLoader(), relative));
 
             ClassLoader loader = getClass().getClassLoader();
 
@@ -219,7 +221,7 @@ public class NMData
             source.close();
         }
         
-        JTNM1Context jtcontext = new JTNM1Context(storageContext);
+        jtcontext.setStorageContext(storageContext);
         
         jtcontext.setUIDefaultsClassLoader(getClass().getClassLoader());
         

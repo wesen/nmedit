@@ -93,11 +93,11 @@ public class Test
         
         MWPatch patch = new MWPatch(md);
         
-        
-        DefaultStorageContext context = MWHelper.createStorageContext(classLoader);
-        context.parseStore(source);
 
         WMContext jtcontext = new WMContext();
+
+        DefaultStorageContext context = MWHelper.createStorageContext(jtcontext, classLoader);
+        context.parseStore(source);
 
         JTMWPatch jtpatch = new JTMWPatch(context, jtcontext, md, patch);
         

@@ -21,6 +21,7 @@ package net.waldorf.miniworks4pole;
 import net.sf.nmedit.jpatch.Formatter;
 import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.PParameter;
+import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.clavia.nordmodular.NMStorageContext;
 import net.sf.nmedit.jtheme.store.DefaultStorageContext;
 public class MWHelper
@@ -44,9 +45,9 @@ public class MWHelper
 
     }
     
-    public static DefaultStorageContext createStorageContext(ClassLoader loader)
+    public static DefaultStorageContext createStorageContext(JTContext context, ClassLoader loader)
     {
-        return new NMStorageContext(loader);
+        return new NMStorageContext(context, loader);
     }
     
 }

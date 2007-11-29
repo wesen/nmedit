@@ -477,8 +477,10 @@ public class UITest
         {
             throw new RuntimeException(e);
         }
-        
-        DefaultStorageContext dsc = new NMStorageContext(relLoader);
+
+        uicontext = new JTNM1Context(null);
+        DefaultStorageContext dsc = new NMStorageContext(uicontext, relLoader);
+        uicontext.setStorageContext(dsc);
         
         InputStream in = null;
         try
@@ -496,7 +498,6 @@ public class UITest
         {
             close(in);
         }
-        uicontext = new JTNM1Context(dsc);
     }
 
     // helper
