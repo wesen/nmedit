@@ -439,7 +439,7 @@ public class SynthDeviceContext extends ContainerNode
     
     private void installSlot(Slot slot)
     {
-        SlotLeaf leaf = new SlotLeaf(slotsRoot, slot);
+        SlotLeaf leaf = new SlotLeaf(slotsRoot, slot, this);
         
         if (slotsRoot.isLeaf())
             addChild(slotsRoot);
@@ -521,6 +521,7 @@ public class SynthDeviceContext extends ContainerNode
             this.port = port;
             updatePortText();
             install();
+            
         }
         
         private void install()
@@ -588,17 +589,20 @@ public class SynthDeviceContext extends ContainerNode
         return patch+" ("+slot.getName()+")";
     }
     
-    protected class SlotLeaf extends LeafNode implements SlotListener
+    protected class SlotLeaf extends LeafNode implements SlotListener, MouseListener
     {
 
         private Slot slot;
-
-        public SlotLeaf(TreeNode parent, Slot slot)
+        private SynthDeviceContext context;
+        
+        
+        public SlotLeaf(TreeNode parent, Slot slot, SynthDeviceContext context)
         {
             super(parent);
             this.slot = slot;
             install();
-            updateSlotText();
+            updateSlotText();    
+            this.context = context;
         }
         
         public void install()
@@ -629,6 +633,39 @@ public class SynthDeviceContext extends ContainerNode
             setText(getTitleFor(slot));
             etree.fireNodeChanged(this);
         }
+
+        public void processEvent(MouseEvent e)
+        {
+            if (eventHandler!=null)
+                EventDispatcher.dispatchEvent(this, e);
+        }
+        
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void mousePressed(MouseEvent e) {			
+			if (e.isPopupTrigger())
+                context.showContextMenu(e, this);
+        
+		}
+
+		public void mouseReleased(MouseEvent e) {
+			if (e.isPopupTrigger())
+                context.showContextMenu(e, this);
+			
+		}
         
     }
 
@@ -782,17 +819,29 @@ public class SynthDeviceContext extends ContainerNode
                 return;
             
             Object o = path.getLastPathComponent();
-            if (o instanceof TreeNode)
+            
+            if (o instanceof TreeNode || o  instanceof LeafNode) 
             {
                 TreeNode node = (TreeNode) o;
-                if (SwingUtilities.isRightMouseButton(e))
+                if (e.isPopupTrigger())
                     context.showContextMenu(e, node);
             }
         }
 
         public void mouseReleased(MouseEvent e)
         {
-            // TODO Auto-generated method stub
+        	TreePath path = context.getTree().getSelectionPath();
+            if (path == null)
+                return;
+            
+            Object o = path.getLastPathComponent();
+            
+            if (o instanceof TreeNode || o  instanceof LeafNode) 
+            {
+                TreeNode node = (TreeNode) o;
+                if (e.isPopupTrigger())
+                    context.showContextMenu(e, node);
+            }
             
         }
 
