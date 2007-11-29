@@ -88,6 +88,11 @@ public class JTNM1Context extends JTCustomContext
         return popupHandler;
     }
     
+    public void setStorageContext(StorageContext stc)
+    {
+        this.stc = stc;
+    }
+    
     public StorageContext getStorageContext()
     {
         return stc;
@@ -110,6 +115,22 @@ public class JTNM1Context extends JTCustomContext
         installComponentType(TYPE_RESET_BUTTON, JTNM1ResetButton.class);
         installComponentType(TYPE_TEXTDISPLAY, JTTextDisplay.class);
         installComponentType(TYPE_LIGHT, JTLight.class);
+        
+
+        installComponentType("clip-display", ClipDisp.class);
+        installComponentType("compressor-display", JTCompressorDisplay.class);
+        installComponentType("expander-display", JTExpanderDisplay.class);
+        installComponentType("filter-e-display", JTFilterEDisplay.class);
+        installComponentType("filter-f-display", JTFilterFDisplay.class);
+        installComponentType("NoteVelScaleDisplay", NoteVelScaleDisplay.class);
+        installComponentType("eq-mid-display", JTEqMidDisplay.class);
+        installComponentType("eq-shelving-display", JTEqShelvingDisplay.class);
+        installComponentType("phaser-display", JTPhaserDisplay.class);
+        installComponentType("LFODisplay", LFODisplay.class);
+        installComponentType("multi-env-display", JTMultiEnvDisplay.class);
+        installComponentType("note-seq-editor", NMNoteSeqEditor.class);
+        installComponentType("vocoder-display", VocoderDisplay.class);
+        installComponentType("wavewrap-display", WaveWrapDisp.class);
     }
 
     @Override

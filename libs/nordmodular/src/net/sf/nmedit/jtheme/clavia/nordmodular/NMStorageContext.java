@@ -18,50 +18,28 @@
  */
 package net.sf.nmedit.jtheme.clavia.nordmodular;
 
+import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.clavia.nordmodular.store.EnvelopeStore;
-import net.sf.nmedit.jtheme.clavia.nordmodular.store.LFODisplayStore;
-import net.sf.nmedit.jtheme.clavia.nordmodular.store.MultiEnvDisplayStore;
-import net.sf.nmedit.jtheme.clavia.nordmodular.store.NoteSeqEditorStore;
-import net.sf.nmedit.jtheme.clavia.nordmodular.store.ResetButtonStore;
 import net.sf.nmedit.jtheme.clavia.nordmodular.store.ScrollbarSliderElement;
-import net.sf.nmedit.jtheme.clavia.nordmodular.store.VocoderDisplayStore;
-import net.sf.nmedit.jtheme.clavia.nordmodular.store.WaveWrapDisplayStore;
 import net.sf.nmedit.jtheme.store.DefaultStorageContext;
 
 public class NMStorageContext extends DefaultStorageContext
 {
 
-    public NMStorageContext(ClassLoader classLoader)
+    public NMStorageContext(JTContext context, ClassLoader classLoader)
     {
-        super(classLoader);
+        super(context, classLoader);
     }
 
     protected void installDefaults()
     {
         super.installDefaults();
-        // using net.sf.nmedit.jtheme.store2.DefaultStore class:
-        installJTClass("clip-display", ClipDisp.class);
-        installJTClass("compressor-display", JTCompressorDisplay.class);
-        installJTClass("expander-display", JTExpanderDisplay.class);
-        installJTClass("filter-e-display", JTFilterEDisplay.class);
-        installJTClass("filter-f-display", JTFilterFDisplay.class);
-        installJTClass("NoteVelScaleDisplay", NoteVelScaleDisplay.class);
-        installJTClass("eq-mid-display", JTEqMidDisplay.class);
-        installJTClass("eq-shelving-display", JTEqShelvingDisplay.class);
-        installJTClass("phaser-display", JTPhaserDisplay.class);
-        
         // using customized store class:
-        installStore("resetButton", ResetButtonStore.class); // TODO use DefaultStore
         installStore("adsr-envelope", EnvelopeStore.class);
         installStore("ahd-envelope", EnvelopeStore.class);
         installStore("adsr-mod-envelope", EnvelopeStore.class);
-        installStore("ad-envelope", EnvelopeStore.class);
-        installStore("wavewrap-display", WaveWrapDisplayStore.class); // TODO use DefaultStore
-        installStore("LFODisplay", LFODisplayStore.class); // TODO DefaultStore should support default values for parameters
+        installStore("ad-envelope", EnvelopeStore.class); // TODO use DefaultStore
         
-        installStore("note-seq-editor", NoteSeqEditorStore.class);
-        installStore("multi-env-display", MultiEnvDisplayStore.class);
-        installStore("vocoder-display", VocoderDisplayStore.class);
         installStore("scrollbar", ScrollbarSliderElement.class);
     }
 }

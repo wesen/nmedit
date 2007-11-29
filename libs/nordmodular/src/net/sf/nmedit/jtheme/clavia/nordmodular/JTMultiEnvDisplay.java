@@ -28,6 +28,7 @@ import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.clavia.nordmodular.graphics.MultiEnvelope;
 import net.sf.nmedit.jtheme.component.JTControlAdapter;
 import net.sf.nmedit.jtheme.component.JTDisplay;
+import net.sf.nmedit.jtheme.store2.BindParameter;
 
 public class JTMultiEnvDisplay extends JTDisplay implements ChangeListener {
 
@@ -136,7 +137,7 @@ public class JTMultiEnvDisplay extends JTDisplay implements ChangeListener {
 		return timeAdapter[seg];
 	}
 	
-
+	@BindParameter(name="l", count=4)
 	public void setLevelAdapter(int seg, JTControlAdapter adapter) {
 		JTControlAdapter oldAdapter = this.levelAdapter[seg];
 
@@ -151,6 +152,7 @@ public class JTMultiEnvDisplay extends JTDisplay implements ChangeListener {
 		}
 	}
 
+    @BindParameter(name="t", count=5)
 	public void setTimeAdapter(int seg, JTControlAdapter adapter) {
 		JTControlAdapter oldAdapter = this.timeAdapter[seg];
 
@@ -164,7 +166,8 @@ public class JTMultiEnvDisplay extends JTDisplay implements ChangeListener {
 			updateTime(seg);
 		}
 	}	
-	
+
+    @BindParameter(name="sustain")
 	public void setSustainAdapter(JTControlAdapter adapter) {
 		JTControlAdapter oldAdapter = this.sustainAdapter;
 
@@ -179,6 +182,7 @@ public class JTMultiEnvDisplay extends JTDisplay implements ChangeListener {
 		}
 	}
 
+    @BindParameter(name="curve")
 	public void setCurveAdapter(JTControlAdapter adapter) {
 		JTControlAdapter oldAdapter = this.curveAdapter;
 
