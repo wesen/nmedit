@@ -32,6 +32,7 @@ import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.NoteSeqEditorUI;
 import net.sf.nmedit.jtheme.component.JTControl;
 import net.sf.nmedit.jtheme.component.JTControlAdapter;
+import net.sf.nmedit.jtheme.store2.BindParameter;
 
 public class NMNoteSeqEditor extends JTControl implements ChangeListener
 {
@@ -117,7 +118,7 @@ public class NMNoteSeqEditor extends JTControl implements ChangeListener
 
     }
     
-
+    @BindParameter(name="step",count=16)
     public void setControlAdapter(int i, JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = controlAdapters[i];

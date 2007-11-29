@@ -32,6 +32,7 @@ import javax.swing.event.ChangeListener;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.JTControlAdapter;
 import net.sf.nmedit.jtheme.component.JTDisplay;
+import net.sf.nmedit.jtheme.store2.BindParameter;
 
 
 public class LFODisplay extends JTDisplay implements ChangeListener
@@ -73,6 +74,7 @@ public class LFODisplay extends JTDisplay implements ChangeListener
         return waveAdapter;
     }
     
+    @BindParameter(name="phase")
     public void setPhaseAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.phaseAdapter;
@@ -88,7 +90,8 @@ public class LFODisplay extends JTDisplay implements ChangeListener
             updatePhase();
         }
     }
-    
+
+    @BindParameter(name="shape")
     public void setWaveAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.waveAdapter;
@@ -212,6 +215,7 @@ public class LFODisplay extends JTDisplay implements ChangeListener
         return Math.max(0, Math.min(v, 1.0d));
     }
 
+    @BindParameter(name="waveform") // TODO name=shape
     public void setWaveForm( int v )
     {
         if (this.vwf!=v)

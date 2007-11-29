@@ -31,6 +31,7 @@ import javax.swing.event.ChangeListener;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.JTControlAdapter;
 import net.sf.nmedit.jtheme.component.JTDisplay;
+import net.sf.nmedit.jtheme.store2.BindParameter;
 
 /*
  * Created on Jul 24, 2006
@@ -167,7 +168,8 @@ public class WaveWrapDisp extends JTDisplay implements ChangeListener
     {
         return waveWrapAdapter;
     }
-    
+
+    @BindParameter(name="wavewrap")
     public void setWaveWrapAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.waveWrapAdapter;

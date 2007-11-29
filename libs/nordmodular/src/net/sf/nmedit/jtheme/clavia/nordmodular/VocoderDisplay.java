@@ -28,6 +28,7 @@ import javax.swing.event.ChangeListener;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.JTControlAdapter;
 import net.sf.nmedit.jtheme.component.JTDisplay;
+import net.sf.nmedit.jtheme.store2.BindParameter;
 
 public class VocoderDisplay extends JTDisplay implements ChangeListener
 {
@@ -72,6 +73,7 @@ public class VocoderDisplay extends JTDisplay implements ChangeListener
             adapter.setValue(value);
     }
     
+    @BindParameter(name="band", count=16)
     public void setBandAdapter(int band, JTControlAdapter adapter)
     {
         JTControlAdapter old = adapters[band];

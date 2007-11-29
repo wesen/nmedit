@@ -40,6 +40,6 @@ public class JTNM1ResetButton extends JTControl
     {
         return uiClassID;
     }
-    
+
 }
 
