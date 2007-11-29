@@ -18,18 +18,16 @@
  */
 package net.sf.nmedit.jtheme.clavia.nordmodular.store;
 
-import org.jdom.Element;
-
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
-import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTEnvelopeDisplay;
-import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
 import net.sf.nmedit.jtheme.store.StorageContext;
 import net.sf.nmedit.jtheme.store2.AbstractMultiParameterElement;
 import net.sf.nmedit.jtheme.store2.ComponentElement;
+
+import org.jdom.Element;
 
 public class EnvelopeStore extends AbstractMultiParameterElement
 {
