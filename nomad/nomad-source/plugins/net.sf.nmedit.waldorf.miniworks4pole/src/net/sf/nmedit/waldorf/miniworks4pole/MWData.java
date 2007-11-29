@@ -75,8 +75,10 @@ public class MWData
         File themeFile = new File(themeURL.getPath());
    
         ClassLoader loader = new RelativeClassLoader(themeFile.getParentFile());
-        
-        storageContext = MWHelper.createStorageContext(loader);
+
+        jtcontext = new WMContext();
+        storageContext = MWHelper.createStorageContext(jtcontext, loader);
+        jtcontext.setStorageContext(storageContext);
         
         Reader reader;
         reader = new BufferedReader(new FileReader(themeFile));
@@ -89,7 +91,6 @@ public class MWData
             reader.close();
         }
 
-        jtcontext = new WMContext();
         jtcontext.setUIDefaultsClassLoader(MWData.class.getClassLoader());
 
         reader = new InputStreamReader(MWData.class.getResourceAsStream("/codecs/waldorf-miniworks-4pole.pdl")); 
