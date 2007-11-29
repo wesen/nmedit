@@ -24,7 +24,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used to annotate methods with the signature void (JTControlAdapter).
+ * Used to annotate methods with the signature void (JTControlAdapter) or
+ * void (int, JTControlAdapter) where the first argument is an integer in the range 0,1,...,count()-1
  *  
  * @author Christian Schneider
  */
@@ -34,8 +35,19 @@ public @interface BindParameter
 {
 
     /**
+     * If count()&lt;0 then name() returns the xml element name.
+     * Otherwise valid the parameter names are name()+String.valueOf(i) where i is in the range [0,1,...,count()-1].
+     * 
+     * Example: for name = "time", count = 5 the parameter names are: time0,time1,...,time4
+     * 
      * @return parameter / xml element name
      */
     String name();
+    
+    /**
+     * If the count parameter is specified then the first argument of the
+     * annotated method must be an integer in the range 0,1,...,count()-1.
+     */
+    int count() default -1;
     
 }
