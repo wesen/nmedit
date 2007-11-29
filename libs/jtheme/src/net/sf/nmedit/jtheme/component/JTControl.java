@@ -32,6 +32,7 @@ import javax.swing.event.ChangeListener;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTPopupHandler;
 import net.sf.nmedit.jtheme.component.plaf.JTControlUI;
+import net.sf.nmedit.jtheme.store2.BindParameter;
 
 public abstract class JTControl extends JTComponent implements ChangeListener
 {
@@ -137,6 +138,7 @@ public abstract class JTControl extends JTComponent implements ChangeListener
         return extensionAdapter;
     }
 
+    @BindParameter(name="parameter")
     public void setAdapter(JTControlAdapter adapter)
     {
         JTControlAdapter oldAdapter = this.adapter;
