@@ -102,6 +102,8 @@ public abstract class JTContext
     {
         return (JTSlider) createComponent(TYPE_SLIDER);
     }
+
+    public abstract Class<? extends JTComponent> getComponentType(String type);
     
     public abstract JTComponent createComponent(String type) throws JTException;
     
