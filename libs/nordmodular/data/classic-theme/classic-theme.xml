@@ -1345,7 +1345,6 @@ label{fill:#000;}
 		<LFODisplay x="200" y="7" width="46" height="20">
 			<phase component-id="p7" alt="phase" />
 			<shape component-id="p3" alt="waveform" />
-			<waveform value="2" />
 		</LFODisplay>
 		<light component-id="ledControlOut" type="led" x="240" y="50" width="7" height="7" /> 
 	</module>
@@ -1611,22 +1610,22 @@ label{fill:#000;}
 			<btn index="1">Mon</btn>
 		</button>
 		<vocoder-display name="vocoderDisp" x="26" y="25" width="192" height="50">
-			<parameter component-id="p1" band="0" alt="vocoder band 1" />
-			<parameter component-id="p2" band="1" alt="vocoder band 2" />
-			<parameter component-id="p3" band="2" alt="vocoder band 3" />
-			<parameter component-id="p4" band="3" alt="vocoder band 4" />
-			<parameter component-id="p5" band="4" alt="vocoder band 5" />
-			<parameter component-id="p6" band="5" alt="vocoder band 6" />
-			<parameter component-id="p7" band="6" alt="vocoder band 7" />
-			<parameter component-id="p8" band="7" alt="vocoder band 8" />
-			<parameter component-id="p9" band="8" alt="vocoder band 9" />
-			<parameter component-id="p10" band="9" alt="vocoder band 10" />
-			<parameter component-id="p11" band="10" alt="vocoder band 11" />
-			<parameter component-id="p12" band="11" alt="vocoder band 12" />
-			<parameter component-id="p13" band="12" alt="vocoder band 13" />
-			<parameter component-id="p14" band="13" alt="vocoder band 14" />
-			<parameter component-id="p15" band="14" alt="vocoder band 15" />
-			<parameter component-id="p16" band="15" alt="vocoder band 16" />
+			<band0 component-id="p1" band="0" alt="vocoder band 1" />
+			<band1 component-id="p2" band="1" alt="vocoder band 2" />
+			<band2 component-id="p3" band="2" alt="vocoder band 3" />
+			<band3 component-id="p4" band="3" alt="vocoder band 4" />
+			<band4 component-id="p5" band="4" alt="vocoder band 5" />
+			<band5 component-id="p6" band="5" alt="vocoder band 6" />
+			<band6 component-id="p7" band="6" alt="vocoder band 7" />
+			<band7 component-id="p8" band="7" alt="vocoder band 8" />
+			<band8 component-id="p9" band="8" alt="vocoder band 9" />
+			<band9 component-id="p10" band="9" alt="vocoder band 10" />
+			<band10 component-id="p11" band="10" alt="vocoder band 11" />
+			<band11 component-id="p12" band="11" alt="vocoder band 12" />
+			<band12 component-id="p13" band="12" alt="vocoder band 13" />
+			<band13 component-id="p14" band="13" alt="vocoder band 14" />
+			<band14 component-id="p15" band="14" alt="vocoder band 15" />
+			<band15 component-id="p16" band="15" alt="vocoder band 16" />
 		</vocoder-display>
 		<button x="27" y="75" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p1" alt="vocoder band 1" />
@@ -1835,7 +1834,7 @@ label{fill:#000;}
 		<label x="126" y="2">Wrap</label>
 		<image x="211" y="26" width="25" height="11" xlink:href="./images/single/decoration-6.png" />
 		<wavewrap-display x="156" y="4" width="38" height="38">
-			<parameter component-id="p2" alt="wrap" />
+			<wavewrap component-id="p2" alt="wrap" />
 		</wavewrap-display>
 	</module>
 	<module component-id="m46" width="255" height="75">
@@ -2361,7 +2360,6 @@ label{fill:#000;}
 		<LFODisplay x="200" y="7" width="46" height="20">
 			<phase component-id="p3" alt="phase" />
 			<shape component-id="p4" alt="waveform" />
-			<waveform value="2" />
 		</LFODisplay>
 		<light component-id="ledControlOut" type="led" x="240" y="30" width="7" height="7" /> 
 	</module>
@@ -3995,15 +3993,15 @@ label{fill:#000;}
 		<label x="213" y="61">Env</label>
 		<image x="209" y="80" width="27" height="19" xlink:href="./images/single/decoration-15.png" />
 		<multi-env-display x="162" y="2" width="85" height="33">
-			<l1 component-id="p1" alt="Level 1" />
-			<l2 component-id="p2" alt="Level 2" />
-			<l3 component-id="p3" alt="Level 3" />
-			<l4 component-id="p4" alt="Level 4" />
-			<t1 component-id="p5" alt="Time  1" />
-			<t2 component-id="p6" alt="Time  2" />
-			<t3 component-id="p7" alt="Time  3" />
-			<t4 component-id="p8" alt="Time  4" />
-			<t5 component-id="p9" alt="Time  5" />
+			<l0 component-id="p1" alt="Level 1" />
+			<l1 component-id="p2" alt="Level 2" />
+			<l2 component-id="p3" alt="Level 3" />
+			<l3 component-id="p4" alt="Level 4" />
+			<t0 component-id="p5" alt="Time  1" />
+			<t1 component-id="p6" alt="Time  2" />
+			<t2 component-id="p7" alt="Time  3" />
+			<t3 component-id="p8" alt="Time  4" />
+			<t4 component-id="p9" alt="Time  5" />
 			<sustain component-id="p10" alt="Sustain seg." />
 			<curve component-id="p11" alt="Curve type" />
    	    </multi-env-display>
@@ -4092,22 +4090,22 @@ label{fill:#000;}
 		</button> 
 		
 		<note-seq-editor name="note-seq-display" x="25" y="37" width="192" height="74">
-			<step1 component-id="p3" alt="note 1" />
-			<step2 component-id="p4" alt="note 2" />
-			<step3 component-id="p5" alt="note 3" />
-			<step4 component-id="p6" alt="note 4" />
-			<step5 component-id="p7" alt="note 5" />
-			<step6 component-id="p8" alt="note 6" />
-			<step7 component-id="p9" alt="note 7" />
-			<step8 component-id="p10" alt="note 8" />
-			<step9 component-id="p11" alt="note 9" />
-			<step10 component-id="p12" alt="note 10" />
-			<step11 component-id="p13" alt="note 11" />
-			<step12 component-id="p14" alt="note 12" />
-			<step13 component-id="p15" alt="note 13" />
-			<step14 component-id="p16" alt="note 14" />
-			<step15 component-id="p17" alt="note 15" />
-			<step16 component-id="p18" alt="note 16" />
+			<step0 component-id="p3" alt="note 1" />
+			<step1 component-id="p4" alt="note 2" />
+			<step2 component-id="p5" alt="note 3" />
+			<step3 component-id="p6" alt="note 4" />
+			<step4 component-id="p7" alt="note 5" />
+			<step5 component-id="p8" alt="note 6" />
+			<step6 component-id="p9" alt="note 7" />
+			<step7 component-id="p10" alt="note 8" />
+			<step8 component-id="p11" alt="note 9" />
+			<step9 component-id="p12" alt="note 10" />
+			<step10 component-id="p13" alt="note 11" />
+			<step11 component-id="p14" alt="note 12" />
+			<step12 component-id="p15" alt="note 13" />
+			<step13 component-id="p16" alt="note 14" />
+			<step14 component-id="p17" alt="note 15" />
+			<step15 component-id="p18" alt="note 16" />
 		</note-seq-editor>
 		
 		<button x="25" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
