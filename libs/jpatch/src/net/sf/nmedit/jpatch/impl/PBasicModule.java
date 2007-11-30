@@ -20,6 +20,8 @@ package net.sf.nmedit.jpatch.impl;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.lang.ref.SoftReference;
+import java.util.List;
 
 import javax.swing.event.EventListenerList;
 
@@ -40,6 +42,9 @@ import net.sf.nmedit.jpatch.PParameterDescriptor;
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.event.PModuleEvent;
 import net.sf.nmedit.jpatch.event.PModuleListener;
+import net.sf.nmedit.jpatch.util.ObjectCache;
+import net.sf.nmedit.jpatch.util.ObjectFilter;
+import net.sf.nmedit.jpatch.util.ObjectFilterResult;
 
 /**
  * The reference implementation of interface {@link PModule}.
@@ -53,7 +58,6 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
     private static final PLight[] EMPTYL = new PLight[0];
     
     
-    
     private String title;
     private PBasicParameter[] parameters;
     private PConnector[] connectors;
@@ -62,12 +66,30 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
     private EventListenerList listenerList = new EventListenerList();
     protected int sx = 0;
     protected int sy = 0;
+    private SoftReference<ParameterCache> paramCacheRef = null;
 
     public PBasicModule(PModuleDescriptor descriptor)
     {
         super(descriptor, -1);
         this.title = descriptor.getName();
         createComponents();
+    }
+    
+    public List<PParameter> getParameters(ObjectFilter<PParameter> filter)
+    {
+        ParameterCache cache;
+        if (paramCacheRef == null || (cache = paramCacheRef.get()) == null)
+            paramCacheRef = new SoftReference<ParameterCache>(cache = new ParameterCache());
+        return cache.getItems(filter);
+    }
+    
+    private class ParameterCache extends ObjectCache<PParameter>
+    {
+        @Override
+        protected List<PParameter> applyFilter(ObjectFilter<PParameter> filter)
+        {
+            return ObjectFilterResult.filter(parameters, filter);
+        }
     }
     
     void setComponentIndex(int index)
