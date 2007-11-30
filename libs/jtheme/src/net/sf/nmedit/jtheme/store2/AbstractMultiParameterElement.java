@@ -18,8 +18,10 @@
  */
 package net.sf.nmedit.jtheme.store2;
 
+import java.awt.print.Paper;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
@@ -142,22 +144,52 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
         {
             String name = parameterElementNames[i];
             PParameter param = module.getParameterByComponentId(componentIdList[i]);
+            
             if (param != null)
             {
-                // set adapter
+                // set adapter            	
+            	
                 Method setter = bindings.getAdapterSetter(name);
-                try
-                {
-                    int index = bindings.getAdapterSetterIndex(name);
-                    JTParameterControlAdapter adapter = new JTParameterControlAdapter(param);
-                    Object[] args = index < 0 ? new Object[]{adapter} : new Object[]{index, adapter};
-                    setter.invoke(component, args);
-                }
-                catch (Exception e)
-                {
-                    // TODO log exception instead of stack trace
-                    e.printStackTrace();
-                }
+                
+                 int index = bindings.getAdapterSetterIndex(name);
+                    
+                    try {
+						JTParameterControlAdapter adapter = new JTParameterControlAdapter(param);
+						
+						if (index < 0) {
+							// one arg
+							Object[] args = new Object[]{adapter} ;
+						    setter.invoke(component, args);
+						    
+						    PParameter extParam = param.getExtensionParameter();
+						    if (extParam != null) {
+						    	JTParameterControlAdapter extParamAdapt = new JTParameterControlAdapter(extParam);
+						    	
+						    	Method setterExt = bindings.getAdapterSetter(name+"Extension");
+						    	Object[] argsExt = new Object[]{extParamAdapt} ;
+						    	setterExt.invoke(component, argsExt);
+						    }
+						} 
+						else {
+							// several args
+							Object[] args =  new Object[]{index, adapter};
+						    setter.invoke(component, args);
+						}
+					} catch (IllegalArgumentException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InvocationTargetException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+                    	
+                    
+                                        
+                
+             
             }
             else
             {
@@ -171,6 +203,7 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
             {
                 String name = (String) valueList[i];
                 Integer value = (Integer) valueList[i+1];
+               
                 if (value != null)
                 {
                     Method setter = bindings.getValueSetter(name);
