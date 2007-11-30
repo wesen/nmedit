@@ -45,9 +45,13 @@ public class Protocol
     parser.yyparse();
     }
 
-    public PacketParser newPacketParser(String name, int padding)
+    public PacketParser newPacketParser(String name, int padding) 
     {
 	PacketParser packetParser = new PacketParser(name, padding, this);
+    
+    if (packetParsers.containsKey(name))
+        throw new RuntimeException("packet already defined: "+name); // TODO throw PDLException / PDLRuntimeException
+    
 	packetParsers.put(name, packetParser);
 	return packetParser;
 	
@@ -73,6 +77,11 @@ public class Protocol
 	if (tracer != null) {
 	    tracer.trace(message);
 	}	
+    }
+    
+    public Iterator<PacketParser> packetParsers()
+    {
+        return packetParsers.values().iterator();
     }
 
     private Map<String, PacketParser> packetParsers = new HashMap<String, PacketParser>();
