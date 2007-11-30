@@ -179,6 +179,16 @@ public class PacketParser
 	totalMinimumSize += matcher.minimumSize();
     }
   
+    public String getName()
+    {
+        return name;
+    }
+    
+    public List<Matcher> getMatchers()
+    {
+        return Collections.unmodifiableList(matchers);
+    }
+    
     private String name;
     private int padding;
     private Protocol protocol;
