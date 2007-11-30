@@ -20,12 +20,16 @@ package net.sf.nmedit.jpatch;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.util.List;
 
 import net.sf.nmedit.jpatch.event.PModuleListener;
+import net.sf.nmedit.jpatch.util.ObjectFilter;
 
 
 public interface PModule extends PComponent
 {
+
+    List<PParameter> getParameters(ObjectFilter<PParameter> filter);
     
     PModuleMetrics getModuleMetrics();
     

@@ -22,7 +22,7 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.parser;
 
-import java.util.Map;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
@@ -233,15 +233,15 @@ public class PatchBuilder implements PContentHandler
         if (module.getIntAttribute("index", -1)!=record[1])
             emiterror(module+" has different id than "+record[1]+" in ParameterDump");
 
-        Map map = Helper.getParameterClassMap(module, "parameter");
-        int paramClassCount = map.size();
+        List<PParameter> plist =  Helper.getParametersByClass(module, "parameter");
+        int paramClassCount = plist.size();
         
         if (record[2]!=paramClassCount)
             emiterror("invalid number of parameters[class='parameter'] "+record[2]+" expected "+paramClassCount);
         
         for (int i=0;i<paramClassCount;i++)
         {
-            ((PParameter)map.get(i)).setValue(record[3+i]);
+            plist.get(i).setValue(record[3+i]);
         }
     }
 
@@ -249,15 +249,15 @@ public class PatchBuilder implements PContentHandler
     {
         PModule module = voiceArea.getModule(record[0]);
 
-        Map map = Helper.getParameterClassMap(module, "custom");
-        int customCount = map.size();
+        List<PParameter> plist =  Helper.getParametersByClass(module, "custom");
+        int customCount = plist.size();
         
         if (record[1]!=customCount)
             emiterror("invalid number of parameters[class=custom] "+record[2]+" expected "+customCount);
         
         for (int i=0;i<customCount;i++)
         {
-            ((PParameter)map.get(i)).setValue(record[2+i]);
+            plist.get(i).setValue(record[2+i]);
         }
     }
 

@@ -18,8 +18,9 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.parser;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Comparator;
+import java.util.List;
+import java.util.ListIterator;
 
 import net.sf.nmedit.jpatch.PComponent;
 import net.sf.nmedit.jpatch.PDescriptor;
@@ -27,9 +28,60 @@ import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.PParameterDescriptor;
 import net.sf.nmedit.jpatch.PRuntimeException;
+import net.sf.nmedit.jpatch.util.ObjectFilter;
 
 public class Helper
 {
+    
+    private static class ParameterClassFilter implements ObjectFilter<PParameter>, Comparator<PParameter>
+    {
+        private String classname;
+        
+        private ParameterClassFilter(String classname)
+        {
+            this.classname = classname;
+        }
+        public boolean accepts(PParameter o)
+        {
+            return classname.equals(o.getAttribute("class"));
+        }
+
+        public Object getIdentifier()
+        {
+            return this;
+        }
+        
+        public int hashCode()
+        {
+            return classname.hashCode();
+        }
+        
+        public boolean equals(Object o)
+        {
+            if (o == null) return false;
+            ParameterClassFilter f2;
+            try
+            {
+                f2 = (ParameterClassFilter) o;
+            }
+            catch(ClassCastException e)
+            {
+                return false;
+            }
+            return f2.classname.equals(classname);
+        }
+        
+        public String toString()
+        {
+            return getClass().getName()+"[class="+classname+"]";
+        }
+        
+        public int compare(PParameter a, PParameter b)
+        {
+            return a.getComponentIndex() - b.getComponentIndex();
+        }
+        
+    }
 
     public static String pclass(PParameter parameter)
     {
@@ -57,42 +109,29 @@ public class Helper
     
     public static PParameter getParameter(PModule module, String paramClass, int index)
     {
-        Object o = getParameterClassMap(module, paramClass).get(index);
-        if (o == null || (! (o instanceof PParameter)))
+        List<PParameter> list = getParametersByClass(module, paramClass);
+        if (index<0 || index>list.size())
             throw new PRuntimeException("parameter[class="+paramClass+",index="+index+"] not found in "+module);
-        return (PParameter) o;
+        return list.get(index);
     }
     
     public static int getParameterClassCount(PModule module, String name)
     {
-        return getParameterClassMap(module, name).size();
+        return getParametersByClass(module, name).size();
     }
 
-    @SuppressWarnings("unchecked")
-    public static Map<Object, Object> getParameterClassMap(PModule module, String name)
+    public static List<PParameter> getParametersByClass(PModule module, String name)
     {
-        String key = PDescriptor.CACHE_KEY_PREFIX+"parameter-map="+name;
-        Object value = module.getAttribute(key);
-        if (value instanceof Map) return (Map) value;
-        Map<Object, Object> map = new HashMap<Object, Object>(module.getParameterCount()/2);
-        for (int i=module.getParameterCount()-1;i>=0;i--)
-        {
-            PParameter p = module.getParameter(i);
-            if (name.equals(p.getAttribute("class")))
-                map.put(index(p), p);
-        }
-        module.getDescriptor().setAttribute(key, map);        
-        return map;
+        return module.getParameters(new ParameterClassFilter(name));
     }
 
     public static int[] paramValues(PModule module, String name)
     {
-        Map<Object, Object> map = getParameterClassMap(module, name);
-        int[] data = new int[map.size()];
-        for (int i=data.length-1;i>=0;i--)
-        {
-            data[i]=((PParameter)map.get(i)).getValue();
-        }
+        List<PParameter> list = getParametersByClass(module, name);
+        int[] data = new int[list.size()];
+        ListIterator<PParameter> iter = list.listIterator();
+        while (iter.hasNext())
+            data[iter.nextIndex()] = iter.next().getValue();
         return data;
     }
 

@@ -24,7 +24,6 @@ package net.sf.nmedit.jsynth.clavia.nordmodular.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import net.sf.nmedit.jnmprotocol.PDLData;
 import net.sf.nmedit.jpatch.PConnector;
@@ -408,15 +407,15 @@ public class Patch2BitstreamBuilder
       
         for (PModule m : va)
         {
-            Map map = Helper.getParameterClassMap(m, "parameter");
-            int size = map.size();
+            List<PParameter> plist = Helper.getParametersByClass(m, "parameter");
+            int size = plist.size();
             if (size>0)
             {
                 append(m.getComponentIndex());
                 append(Helper.index(m));
                 for (int i=0;i<size;i++)
                 {
-                    append(((PParameter)map.get(i)).getValue());
+                    append(plist.get(i).getValue());
                 }
             }
         }
@@ -440,8 +439,8 @@ public class Patch2BitstreamBuilder
 
         for (PModule m : va)
         {
-            Map map = Helper.getParameterClassMap(m, "custom");
-            int size = map.size();
+            List<PParameter> plist = Helper.getParametersByClass(m, "custom");
+            int size = plist.size();
             if (size>0)
             {
                 append(m.getComponentIndex());
@@ -449,7 +448,7 @@ public class Patch2BitstreamBuilder
                 append(size);
                 for (int i=0;i<size;i++)
                 {
-                    append(((PParameter)map.get(i)).getValue());
+                    append(plist.get(i).getValue());
                 }
             }
         }
