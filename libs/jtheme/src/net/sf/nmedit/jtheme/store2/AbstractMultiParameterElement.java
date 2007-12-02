@@ -85,12 +85,14 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
     protected void initComponentIdList(Element e)
     {
         List<?> children = e.getChildren();
+       
         for (int i=children.size()-1;i>=0;i--)
         {
             Element p = (Element) children.get(i);
             for (int index=parameterElementNames.length-1;index>=0;index--)
             {
                 String n = parameterElementNames[index];
+                
                 if (n.equals(p.getName()))
                 {
                     Attribute a = p.getAttribute(ATT_COMPONENT_ID);
@@ -167,7 +169,13 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
 						    	
 						    	Method setterExt = bindings.getAdapterSetter(name+"Extension");
 						    	Object[] argsExt = new Object[]{extParamAdapt} ;
-						    	setterExt.invoke(component, argsExt);
+						    	if (setterExt != null)
+						    		setterExt.invoke(component, argsExt);
+						    	else {
+						    		// TODO: detect which component don't handle morph
+						    		// for example: curves
+						    		//System.out.println(extParam.getName()+" "+component);
+						    	}
 						    }
 						} 
 						else {
