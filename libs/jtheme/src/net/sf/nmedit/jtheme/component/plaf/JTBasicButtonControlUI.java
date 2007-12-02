@@ -27,6 +27,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -36,15 +37,22 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
+import javax.swing.InputMap;
 import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.border.Border;
 
 import net.sf.nmedit.jtheme.JTContext;
+import net.sf.nmedit.jtheme.clavia.nordmodular.NMNoteSeqEditor;
+import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.NoteSeqEditorUI;
+import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.NoteSeqEditorUI.NoteSeqEditorListener.NoteSeqActions;
 import net.sf.nmedit.jtheme.component.JTButtonControl;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTControl;
@@ -53,6 +61,10 @@ import net.sf.nmedit.jtheme.component.misc.CallDescriptor;
 public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingConstants
 {
 
+	protected static final String INCREASE = "increase";
+	protected static final String DECREASE = "decrease";
+	protected static final String DEFAULTVALUE = "default.value";
+	 
     protected JTButtonControl control;
     
     private Insets paddingInsets = new Insets(0,0,0,0); // inside border
@@ -602,7 +614,7 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
     }
     
     protected static class BasicButtonListener implements MouseListener, 
-        MouseMotionListener, FocusListener, KeyListener
+        MouseMotionListener, FocusListener
     {
 
         protected JTButtonControl getControl(ComponentEvent e)
@@ -628,7 +640,7 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
             btn.addMouseMotionListener(this);
             btn.addFocusListener(this);
             // component repaints itself btn.addChangeListener(this);
-            btn.addKeyListener(this);
+            installKeyboardActions(btn);
         }
         
         public void uninstall(JTButtonControl btn)
@@ -637,7 +649,7 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
             btn.removeMouseMotionListener(this);
             btn.removeFocusListener(this);
             // component repaints itself btn.removeChangeListener(this);
-            btn.removeKeyListener(this);
+            
         }
 
         transient JTButtonControl selectedControl;
@@ -805,56 +817,87 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
                 ((Component)o).repaint();
         }*/
 
-        public void keyPressed(KeyEvent e)
+        public void installKeyboardActions( JTControl control )
         {
-            // if (e.getModifiers() == 0)
+        	// create action map that associates action and values
+        	ActionMap actionMap = new ActionMap();
+        	actionMap.put(DEFAULTVALUE,new BasicButtonActions (DEFAULTVALUE)); 
+            actionMap.put(INCREASE,new BasicButtonActions (INCREASE));
+            actionMap.put(DECREASE,new BasicButtonActions (DECREASE));
+            
+            SwingUtilities.replaceUIActionMap(control, actionMap);
+            
+            // create input map that associates keystrokes and value
+            InputMap im = new InputMap();
+            
+            KeyStroke increaseValue = KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0);
+            im.put(increaseValue, INCREASE);
+            
+            KeyStroke decreaseValue = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0);
+            im.put(decreaseValue, DECREASE);
+            
+            KeyStroke defaultValue = KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0);
+            im.put(defaultValue, DEFAULTVALUE);
+            
+            SwingUtilities.replaceUIInputMap(control, JComponent.WHEN_FOCUSED, im);
+        }
+        
+
+//        private void incValue(JTButtonControl control)
+//        {
+//            control.setValue(control.getValue()+1);
+//        }
+//
+//        private void decValue(JTButtonControl control)
+//        {
+//            control.setValue(control.getValue()-1);
+//        }
+//
+//        private void defaultValue(JTButtonControl control)
+//        {
+//            control.setValue(control.getDefaultValue());
+//        }
+
+       
+
+        public static class BasicButtonActions extends AbstractAction 
+        {
+            
+            // private String action;
+
+            /**
+             * 
+             */
+            private static final long serialVersionUID = -2104045982638755995L;
+
+            public BasicButtonActions (String name)
             {
-                JTButtonControl control = getControl(e);
-                if (control != null)
+                super(name);
+            }
+
+            public String getName()
+            {
+                return (String) super.getValue(NAME);
+            }
+            
+            public void actionPerformed(ActionEvent e)
+            {
+            	JTButtonControl control = (JTButtonControl) e.getSource();
+            
+                String key = getName();
+                                
+                if (key == INCREASE){
+                	control.setValue(control.getValue()+1);
+                }
+                else if (key == DECREASE) {
+                	control.setValue(control.getValue()-1);                
+                }               
+                else if (key == DEFAULTVALUE)
                 {
-                    switch (e.getKeyCode())
-                    {
-                        case KeyEvent.VK_UP:
-                            //if (ui.btn.getOrientation() == SwingConstants.VERTICAL)
-                                incValue(control);
-                            break;
-                        case KeyEvent.VK_DOWN:
-                            //if (ui.btn.getOrientation() == SwingConstants.VERTICAL)
-                                decValue(control);
-                            break;
-                        case KeyEvent.VK_SPACE:
-                            defaultValue(control);
-                            break;
-                    }
+                	control.setValue(control.getDefaultValue());
                 }
             }
         }
-
-        private void incValue(JTButtonControl control)
-        {
-            control.setValue(control.getValue()+1);
-        }
-
-        private void decValue(JTButtonControl control)
-        {
-            control.setValue(control.getValue()-1);
-        }
-
-        private void defaultValue(JTButtonControl control)
-        {
-            control.setValue(control.getDefaultValue());
-        }
-
-        public void keyReleased(KeyEvent e)
-        {
-            // no op
-        }
-
-        public void keyTyped(KeyEvent e)
-        {
-            // no op
-        }
-
     }
     
     private void computePreferedButtonSize()
