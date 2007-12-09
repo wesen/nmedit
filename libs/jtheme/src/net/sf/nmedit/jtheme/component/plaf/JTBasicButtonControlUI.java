@@ -36,6 +36,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.EventObject;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -719,15 +720,29 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
 
         public void mousePressed(MouseEvent e)
         {
-            checkArmedHoveredState(e);
-            if (!e.getComponent().hasFocus())
-                e.getComponent().requestFocus();
+        	System.out.println("pressed");
+        	if (e.isPopupTrigger())
+            {
+        		System.out.println("pop");
+        		JTButtonControl control = getControl(e);
+                control.showControlPopup(e);
+            } 
+        	else {
+            	checkArmedHoveredState(e);
+            	if (!e.getComponent().hasFocus())
+            		e.getComponent().requestFocus();
+        	}
+            
         }
 
         public void mouseReleased(MouseEvent e)
         {
-        	
-            if (select(e))
+        	if (e.isPopupTrigger())
+            {	
+        		JTControl control = getControl(e);
+                control.showControlPopup(e);
+            } 
+        	else if (select(e))
             {
             	
                 if (SwingUtilities.isLeftMouseButton(e) )//&& e.getClickCount() == 1)
@@ -952,5 +967,6 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
 
         preferredButtonSize.setSize(pw, ph);
     }
-
+    
+   
 }
