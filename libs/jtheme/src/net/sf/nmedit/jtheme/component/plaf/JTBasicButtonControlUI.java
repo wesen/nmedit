@@ -50,9 +50,6 @@ import javax.swing.UIDefaults;
 import javax.swing.border.Border;
 
 import net.sf.nmedit.jtheme.JTContext;
-import net.sf.nmedit.jtheme.clavia.nordmodular.NMNoteSeqEditor;
-import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.NoteSeqEditorUI;
-import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.NoteSeqEditorUI.NoteSeqEditorListener.NoteSeqActions;
 import net.sf.nmedit.jtheme.component.JTButtonControl;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTControl;
