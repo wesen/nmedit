@@ -256,7 +256,9 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
                 // TODO 
                 defaultSelection = control.getDefaultValue()-min;
                 if (defaultSelection>control.getMaxValue()-min)
-                    defaultSelection = control.getMaxValue()-min;
+                   defaultSelection = control.getMaxValue()-min;
+                
+                	
             }
             
             paintButton(g, defaultSelection, intSelectionIndex, icon, label, 0, 0, btnw, btnh);
@@ -350,7 +352,9 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
         }
         else
         {
-            index = control.getValue()-control.getMinValue(); 
+        	
+            index = control.getValue()-control.getMinValue();
+            
         }
         return index;
     }
@@ -366,15 +370,17 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
         
         boolean armed = internalArmedIndex == intBtnIndex;
         boolean hovered = internalHoverIndex == intBtnIndex;
-        
-        if (intBtnSelIndex == intBtnIndex || armed)
-        {
+  
+        if ( (!control.isIncrementModeEnabled() && !control.isCyclic() && intBtnSelIndex == intBtnIndex)
+        		|| (intBtnSelIndex != intBtnIndex && control.isCyclic()) 
+        	    || armed)
+        {        	
             selected = true;
             border = selectedBorder;
             borderInsets = getSelectedBorderInsets();
         }
         else
-        {
+        {        	
             selected = false;
             border = this.border;
             borderInsets = getBorderInsets();
@@ -723,9 +729,11 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
 
         public void mouseReleased(MouseEvent e)
         {
+        	
             if (select(e))
             {
-                if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1)
+            	
+                if (SwingUtilities.isLeftMouseButton(e) )//&& e.getClickCount() == 1)
                 {
                     
                     CallDescriptor call = selectedControl.getCall();
@@ -887,10 +895,16 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
                 String key = getName();
                                 
                 if (key == INCREASE){
-                	control.setValue(control.getValue()+1);
+                	if(control.getOrientation() == HORIZONTAL)
+                		control.setValue(control.getValue()+1);
+                	else 
+                		control.setValue(control.getValue()-1);
                 }
                 else if (key == DECREASE) {
-                	control.setValue(control.getValue()-1);                
+                	if(control.getOrientation() == HORIZONTAL)
+                		control.setValue(control.getValue()-1);
+                	else 
+                		control.setValue(control.getValue()+1);              
                 }               
                 else if (key == DEFAULTVALUE)
                 {
