@@ -314,14 +314,16 @@ public class PatchBuilder implements PContentHandler
                         +" value out of range ["+m.getMinValue()+".."+m.getMaxValue()+"]: "+value);
         }
     }
-
+    // TODO: check for this +1 on line 3 is it normal ? 
     public void morphMapDump( int[] record ) throws ParseException
     {
         VoiceArea voiceArea = getVoiceArea(record[0]);
         PModule module = voiceArea.getModule(record[1]);
-        PParameter p = module.getParameter(record[2]);
-        PParameter morphRange = module.getParameter(record[2]);
+        PParameter p = module.getParameter(record[2]+1);
+        PParameter morphRange = p.getExtensionParameter();
         patch.getMorphSection().assign(record[3], p);
+       // System.out.println(record[2]);
+       // System.out.println("setting morph for "+morphRange.getName()+" "+record[4]);
         morphRange.setValue(record[4]);
     }
 
