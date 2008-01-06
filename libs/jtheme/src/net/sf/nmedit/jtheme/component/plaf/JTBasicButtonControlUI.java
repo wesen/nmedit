@@ -27,30 +27,18 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.util.EventObject;
 
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
-import javax.swing.InputMap;
 import javax.swing.JComponent;
-import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.border.Border;
 
-import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.JTButtonControl;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTControl;
@@ -59,9 +47,9 @@ import net.sf.nmedit.jtheme.component.misc.CallDescriptor;
 public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingConstants
 {
 
-	protected static final String INCREASE = "increase";
-	protected static final String DECREASE = "decrease";
-	protected static final String DEFAULTVALUE = "default.value";
+//	protected static final String INCREASE = "increase";
+//	protected static final String DECREASE = "decrease";
+//	protected static final String DEFAULTVALUE = "default.value";
 	 
     protected JTButtonControl control;
     
@@ -84,8 +72,9 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
     public JTBasicButtonControlUI(JTButtonControl control)
     {
         this.control = control;
+        
     }
-   
+    
     public static JTComponentUI createUI(JComponent c)
     {
         return new JTBasicButtonControlUI((JTButtonControl) c);
@@ -154,6 +143,7 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
     
     public void installUI(JComponent c)
     {
+    	super.installUI(c);
         checkComponent(c);
         UIDefaults defaults = control.getContext().getUIDefaults();
         
@@ -179,19 +169,16 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
             border = BorderFactory.createEmptyBorder();
         if (selectedBorder == null)
             selectedBorder = border;
-        
-        
-        BasicButtonListener bbl = createBasicButtonListener(control);
-        if (bbl != null)
-            bbl.install(control);
+   
     }
+    
+   
     
     public void uninstallUI(JComponent c)
     {
         checkComponent(c);
-        BasicButtonListener bbl = getBasicButtonListener(control);
-        if (bbl != null)
-            bbl.uninstall(control);
+        
+        super.uninstallUI(c);
     }
 
     private void checkComponent(JComponent c)
@@ -211,7 +198,7 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
         }
     }
 
-    private static final Composite overlayComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f);
+    private static final Composite overlayComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f);
     
     public void paintDynamicLayer(Graphics2D g, JTComponent c)
     {
@@ -230,17 +217,7 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
         final int min = control.getMinValue();
         final int value = control.getValue();
         final int intSelectionIndex = min+value;
-        
-        if (control.isExtensionAdapterSet() && control.getExtensionValue()!=0)
-        {
-            Color overlay = Color.RED;
-            
-            Composite tmpComposite = g.getComposite();
-            g.setComposite(overlayComposite);
-            g.setColor(overlay);
-            g.fillRect(0, 0, w, h);
-            g.setComposite(tmpComposite);
-        }
+
         
         if (control.isCyclic())
         {
@@ -258,6 +235,18 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
                 
                 	
             }
+            
+            if (control.isExtensionAdapterSet() && control.getExtensionValue()!=0)
+            {
+                Color overlay = getExtensionColor(control.getControlAdapter().getParameter());
+                
+                Composite tmpComposite = g.getComposite();
+                g.setComposite(overlayComposite);
+                g.setColor(overlay);
+                g.fillRect(0, 0, btnw, btnh);
+                g.setComposite(tmpComposite);
+            }
+            
             
             paintButton(g, defaultSelection, intSelectionIndex, icon, label, 0, 0, btnw, btnh);
         }
@@ -282,6 +271,64 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
             
             float x = 0;
             float y = 0;
+            
+            // paint the overlay to represent the morph value
+            if (control.isExtensionAdapterSet() && control.getExtensionValue()!=0)
+            {
+                Color overlay = getExtensionColor(control.getControlAdapter().getParameter());
+                
+                Composite tmpComposite = g.getComposite();
+                g.setComposite(overlayComposite);
+                g.setColor(overlay);
+                
+                int extension = control.getExtensionValue();
+                
+                int xRect, yRect, wRect,hRect;
+                
+                if (extension > 0) 
+                {
+                	if (control.isIncrementModeEnabled())
+                	{ // overlay on the + button
+                		xRect = (int)dx;
+	                	yRect = (int)dy;
+	                	wRect = btnw;
+	                	hRect = btnh;
+                	} 
+                	else
+                	{
+	                	xRect = (int)(dx*(control.getValue()+1));
+	                	yRect = (int)(dy*(control.getValue()+1));
+	                	wRect = (int)(dx*extension);
+	                	hRect = (int)(dy*extension);
+                	}
+                	
+                }
+                else 
+                {
+                	if (control.isIncrementModeEnabled()) {
+                		xRect = 0;
+	                	yRect = 0;
+	                	wRect = btnw;
+	                	hRect = btnh;
+                		
+                	}
+                	else 
+                	{
+                		xRect = (int)(dx*control.getValue()+dx*extension);
+                    	yRect = (int)(dy*control.getValue()+dy*extension);
+                    	wRect = (int)(-dx*extension);
+                    	hRect = (int)(-dy*extension);
+                	}
+                	
+                }
+                
+                wRect = wRect == 0 ? btnw : wRect;
+                hRect = hRect == 0 ? btnh : hRect;
+                
+            	g.fillRect(xRect,yRect,wRect,hRect);
+                g.setComposite(tmpComposite);
+                
+            }
             
             for (int i=0;i<range;i++)
             {
@@ -572,32 +619,14 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
         return fontMetrics;
     }
 
-    private static final String CONTROL_LISTENER_KEY = JTBasicButtonControlUI.class.getName()
-        +".CONTROL_LISTENER";
+    //private static final String CONTROL_LISTENER_KEY = JTBasicButtonControlUI.class.getName()
+      //  +".CONTROL_LISTENER";
+    
     private transient BasicButtonListener bblInstance;
     
-    protected BasicButtonListener createBasicButtonListener(JTControl control) 
+    protected BasicButtonListener createControlListener(JTControl control) 
     {
-        if (bblInstance != null)
-            return bblInstance; 
-        
-        JTContext context = control.getContext();
-        UIDefaults defaults = (context != null) ? context.getUIDefaults() : null;
-        
-        if (defaults != null)
-        {
-            Object l = defaults.get(CONTROL_LISTENER_KEY);
-            if ((l != null) && (l instanceof BasicButtonListener))
-            {
-                bblInstance = (BasicButtonListener) l;
-            }
-            else
-            {
-                bblInstance = new BasicButtonListener();
-                defaults.put(CONTROL_LISTENER_KEY, bblInstance);
-            }
-        }
-        else
+        if (bblInstance == null)   
         {
             bblInstance = new BasicButtonListener();
         }
@@ -617,8 +646,7 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
         return null;
     }
     
-    protected static class BasicButtonListener implements MouseListener, 
-        MouseMotionListener, FocusListener
+    protected static class BasicButtonListener extends BasicControlListener
     {
 
         protected JTButtonControl getControl(ComponentEvent e)
@@ -638,24 +666,6 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
                 return null;
         }
         
-        public void install(JTButtonControl btn)
-        {
-            btn.addMouseListener(this);
-            btn.addMouseMotionListener(this);
-            btn.addFocusListener(this);
-            // component repaints itself btn.addChangeListener(this);
-            installKeyboardActions(btn);
-        }
-        
-        public void uninstall(JTButtonControl btn)
-        {
-            btn.removeMouseListener(this);
-            btn.removeMouseMotionListener(this);
-            btn.removeFocusListener(this);
-            // component repaints itself btn.removeChangeListener(this);
-            
-        }
-
         transient JTButtonControl selectedControl;
         transient JTBasicButtonControlUI selectedUI;
         transient int internalSelectedButtonIndex;
@@ -679,9 +689,7 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
             return index>=0;
         }
         
-        public void mouseClicked(MouseEvent e)
-        {
-        }
+    
         
         protected void checkArmedHoveredState(MouseEvent e)
         {
@@ -718,19 +726,23 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
             checkArmedHoveredState(e);
         }
 
+        boolean wasPopupTrigger = false;
+        
         public void mousePressed(MouseEvent e)
         {
-        	System.out.println("pressed");
         	if (e.isPopupTrigger())
             {
-        		System.out.println("pop");
+        		
         		JTButtonControl control = getControl(e);
                 control.showControlPopup(e);
+                wasPopupTrigger = true;
             } 
-        	else {
+        	else 
+        	{
             	checkArmedHoveredState(e);
             	if (!e.getComponent().hasFocus())
             		e.getComponent().requestFocus();
+            	wasPopupTrigger = false;
         	}
             
         }
@@ -742,7 +754,7 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
         		JTControl control = getControl(e);
                 control.showControlPopup(e);
             } 
-        	else if (select(e))
+        	else if (select(e) && wasPopupTrigger == false)
             {
             	
                 if (SwingUtilities.isLeftMouseButton(e) )//&& e.getClickCount() == 1)
@@ -756,7 +768,7 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
                     else
                     {
                         
-                        if (selectedControl.isExtensionAdapterSet() && e.isControlDown())
+                        if (selectedControl.isExtensionAdapterSet() && e.isAltDown())
                         {
 
                             // TODO compute extension value
@@ -775,7 +787,7 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
                             }
                             else
                             {
-                                newValue = selectedControl.getExtMinValue()+internalSelectedButtonIndex;
+                                newValue = internalSelectedButtonIndex - selectedControl.getValue();
                             }
                             
                             selectedControl.setExtensionValue(newValue);
@@ -817,112 +829,6 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
         public void mouseMoved(MouseEvent e)
         {
             checkArmedHoveredState(e);
-        }
-
-        public void focusGained(FocusEvent e)
-        {
-            e.getComponent().repaint();
-        }
-
-        public void focusLost(FocusEvent e)
-        {
-            e.getComponent().repaint();
-        }
-
-        /*
-        public void stateChanged(ChangeEvent e)
-        {
-            Object o = e.getSource();
-            if (o instanceof Component)
-                ((Component)o).repaint();
-        }*/
-
-        public void installKeyboardActions( JTControl control )
-        {
-        	// create action map that associates action and values
-        	ActionMap actionMap = new ActionMap();
-        	actionMap.put(DEFAULTVALUE,new BasicButtonActions (DEFAULTVALUE)); 
-            actionMap.put(INCREASE,new BasicButtonActions (INCREASE));
-            actionMap.put(DECREASE,new BasicButtonActions (DECREASE));
-            
-            SwingUtilities.replaceUIActionMap(control, actionMap);
-            
-            // create input map that associates keystrokes and value
-            InputMap im = new InputMap();
-            
-            KeyStroke increaseValue = KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0);
-            im.put(increaseValue, INCREASE);
-            
-            KeyStroke decreaseValue = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0);
-            im.put(decreaseValue, DECREASE);
-            
-            KeyStroke defaultValue = KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0);
-            im.put(defaultValue, DEFAULTVALUE);
-            
-            SwingUtilities.replaceUIInputMap(control, JComponent.WHEN_FOCUSED, im);
-        }
-        
-
-//        private void incValue(JTButtonControl control)
-//        {
-//            control.setValue(control.getValue()+1);
-//        }
-//
-//        private void decValue(JTButtonControl control)
-//        {
-//            control.setValue(control.getValue()-1);
-//        }
-//
-//        private void defaultValue(JTButtonControl control)
-//        {
-//            control.setValue(control.getDefaultValue());
-//        }
-
-       
-
-        public static class BasicButtonActions extends AbstractAction 
-        {
-            
-            // private String action;
-
-            /**
-             * 
-             */
-            private static final long serialVersionUID = -2104045982638755995L;
-
-            public BasicButtonActions (String name)
-            {
-                super(name);
-            }
-
-            public String getName()
-            {
-                return (String) super.getValue(NAME);
-            }
-            
-            public void actionPerformed(ActionEvent e)
-            {
-            	JTButtonControl control = (JTButtonControl) e.getSource();
-            
-                String key = getName();
-                                
-                if (key == INCREASE){
-                	if(control.getOrientation() == HORIZONTAL)
-                		control.setValue(control.getValue()+1);
-                	else 
-                		control.setValue(control.getValue()-1);
-                }
-                else if (key == DECREASE) {
-                	if(control.getOrientation() == HORIZONTAL)
-                		control.setValue(control.getValue()-1);
-                	else 
-                		control.setValue(control.getValue()+1);              
-                }               
-                else if (key == DEFAULTVALUE)
-                {
-                	control.setValue(control.getDefaultValue());
-                }
-            }
         }
     }
     

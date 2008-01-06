@@ -45,6 +45,9 @@ label{fill:#000;}
 		</knob>
 		<label x="114" y="2">Overdrive</label>
 		<image x="211" y="26" width="25" height="11" xlink:href="./images/single/decoration-6.png" />
+		<overdrive-display  x="156" y="4" width="38" height="38">
+			<overdrive component-id="p2" alt="overdrive" />
+		</overdrive-display>
 	</module>
 	<module component-id="m30" width="255" height="30">
 		<name>LFOSlvE</name>

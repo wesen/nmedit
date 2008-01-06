@@ -111,6 +111,7 @@ public class BindParameterInfo implements Serializable
                             
                             for (int i=0;i<binding.count();i++)
                             {
+                            	
                                 String name = binding.name()+i;
                                 adapterSetters.put(name, m);
                                 adapterSetterIndices.put(name, i);

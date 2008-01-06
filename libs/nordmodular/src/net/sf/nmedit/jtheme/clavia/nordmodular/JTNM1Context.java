@@ -131,6 +131,8 @@ public class JTNM1Context extends JTCustomContext
         installComponentType("note-seq-editor", NMNoteSeqEditor.class);
         installComponentType("vocoder-display", VocoderDisplay.class);
         installComponentType("wavewrap-display", WaveWrapDisp.class);
+        installComponentType("overdrive-display", JTOverdriveDisplay.class);
+        
     }
 
     @Override
@@ -159,6 +161,7 @@ public class JTNM1Context extends JTCustomContext
         installComponentClass(VocoderDisplay.class);
         installComponentClass(JTLight.class);
         installComponentClass(NMScrollbar.class);
+        installComponentClass(JTOverdriveDisplay.class);
     }
 
     @Override
@@ -237,6 +240,12 @@ public class JTNM1Context extends JTCustomContext
         uidefaults.put("module.background$4", new ColorUIResource(0x69D6C7));
         uidefaults.put("module.background$5", new ColorUIResource(0x74A0D4));
         uidefaults.put("module.background$6", new ColorUIResource(0xD673C7));
+        
+        uidefaults.put("morph.color$0", new ColorUIResource(0xCB4F4F));
+        uidefaults.put("morph.color$1", new ColorUIResource(0x9AC889));
+        uidefaults.put("morph.color$2", new ColorUIResource(0x5A5FB3));
+        uidefaults.put("morph.color$3", new ColorUIResource(0xE5DE45));
+        
     }
 
 }

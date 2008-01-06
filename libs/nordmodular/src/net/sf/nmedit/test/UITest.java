@@ -81,6 +81,7 @@ public class UITest
 
     public static void main(String[] args)
     {   
+    	files.add(new File("/Users/distrinet/Documents/patch/test.pch"));
         updateUI();
     }
     

@@ -2403,24 +2403,24 @@
     </parameter>
     <parameter component-id="p2" index="1" name="sliderposition" class="custom" minValue="6" maxValue="117">
       <attribute name="custom" type="boolean" value="yes" />
-    </parameter>
+    </parameter> 
     <!-- parameter(s) -->
-    <parameter component-id="p3" index="0" name="note 1" class="parameter" extension="m3" />
-    <parameter component-id="p4" index="1" name="note 2" class="parameter" extension="m4" />
-    <parameter component-id="p5" index="2" name="note 3" class="parameter" extension="m5" />
-    <parameter component-id="p6" index="3" name="note 4" class="parameter" extension="m6" />
-    <parameter component-id="p7" index="4" name="note 5" class="parameter" extension="m7" />
-    <parameter component-id="p8" index="5" name="note 6" class="parameter" extension="m8" />
-    <parameter component-id="p9" index="6" name="note 7" class="parameter" extension="m9" />
-    <parameter component-id="p10" index="7" name="note 8" class="parameter" extension="m10" />
-    <parameter component-id="p11" index="8" name="note 9" class="parameter" extension="m11" />
-    <parameter component-id="p12" index="9" name="note 10" class="parameter" extension="m12" />
-    <parameter component-id="p13" index="10" name="note 11" class="parameter" extension="m13" />
-    <parameter component-id="p14" index="11" name="note 12" class="parameter" extension="m14" />
-    <parameter component-id="p15" index="12" name="note 13" class="parameter" extension="m15" />
-    <parameter component-id="p16" index="13" name="note 14" class="parameter" extension="m16" />
-    <parameter component-id="p17" index="14" name="note 15" class="parameter" extension="m17" />
-    <parameter component-id="p18" index="15" name="note 16" class="parameter" extension="m18" />
+    <parameter component-id="p3" index="0" name="note 1" class="parameter" defaultValue="60" extension="m3" />
+    <parameter component-id="p4" index="1" name="note 2" class="parameter" defaultValue="60" extension="m4" />
+    <parameter component-id="p5" index="2" name="note 3" class="parameter" defaultValue="60" extension="m5" />
+    <parameter component-id="p6" index="3" name="note 4" class="parameter" defaultValue="60" extension="m6" />
+    <parameter component-id="p7" index="4" name="note 5" class="parameter" defaultValue="60" extension="m7" />
+    <parameter component-id="p8" index="5" name="note 6" class="parameter" defaultValue="60" extension="m8" />
+    <parameter component-id="p9" index="6" name="note 7" class="parameter" defaultValue="60" extension="m9" />
+    <parameter component-id="p10" index="7" name="note 8" class="parameter" defaultValue="60" extension="m10" />
+    <parameter component-id="p11" index="8" name="note 9" class="parameter" defaultValue="60" extension="m11" />
+    <parameter component-id="p12" index="9" name="note 10" class="parameter" defaultValue="60" extension="m12" />
+    <parameter component-id="p13" index="10" name="note 11" class="parameter" defaultValue="60" extension="m13" />
+    <parameter component-id="p14" index="11" name="note 12" class="parameter" defaultValue="60" extension="m14" />
+    <parameter component-id="p15" index="12" name="note 13" class="parameter" defaultValue="60" extension="m15" />
+    <parameter component-id="p16" index="13" name="note 14" class="parameter" defaultValue="60" extension="m16" />
+    <parameter component-id="p17" index="14" name="note 15" class="parameter" defaultValue="60" extension="m17" />
+    <parameter component-id="p18" index="15" name="note 16" class="parameter" defaultValue="60" extension="m18" />
     <parameter component-id="p19" index="16" name="step" class="parameter" defaultValue="15" formatter="value+1" extension="m19" />
     <parameter component-id="p20" index="17" name="currentstep" class="parameter" maxValue="16" extension="m20" />
     <parameter component-id="p21" index="18" name="record" class="parameter" maxValue="1" formatter="fmtOffOn" />

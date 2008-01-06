@@ -145,6 +145,7 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
         for (int i=0;i<parameterElementNames.length;i++)
         {
             String name = parameterElementNames[i];
+           
             PParameter param = module.getParameterByComponentId(componentIdList[i]);
             
             if (param != null)
@@ -172,6 +173,7 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
 						    	if (setterExt != null)
 						    		setterExt.invoke(component, argsExt);
 						    	else {
+						    		
 						    		// TODO: detect which component don't handle morph
 						    		// for example: curves
 						    		//System.out.println(extParam.getName()+" "+component);
@@ -182,6 +184,32 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
 							// several args
 							Object[] args =  new Object[]{index, adapter};
 						    setter.invoke(component, args);
+						    PParameter extParam = param.getExtensionParameter();
+						    if (extParam != null) {
+						    	JTParameterControlAdapter extParamAdapt = new JTParameterControlAdapter(extParam);
+						    	
+						    	String extName;
+						    	if( index > 9) {
+						    		extName = name.substring(0,name.length()-2)+"Extension"+index;
+						    		
+						    	} else{
+						    		extName = name.substring(0,name.length()-1)+"Extension"+index;
+						    		
+						    	}
+						    	
+						    	Method setterExt = bindings.getAdapterSetter(extName);
+						    	Object[] argsExt = new Object[]{index,extParamAdapt} ;
+						    	if (setterExt != null) {
+						    		setterExt.invoke(component, argsExt);
+						    		
+						    	}
+						    	else {
+						    		
+						    		// TODO: detect which component don't handle morph
+						    		// for example: curves
+						    		//System.out.println(extParam.getName()+" "+component);
+						    	}
+						    }
 						}
 					} catch (IllegalArgumentException e) {
 						// TODO Auto-generated catch block
@@ -193,10 +221,6 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-                    	
-                    
-                                        
-                
              
             }
             else

@@ -95,6 +95,7 @@ public class JTBasicKnobUI extends JTBasicControlUI
         return "knob.";
     }
 
+    
     public void paintStaticLayer(Graphics2D g, JTComponent c)
     {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -164,7 +165,8 @@ public class JTBasicKnobUI extends JTBasicControlUI
                 if (d>0)
                 {
                     float rnorm = (relative-control.getMinValue())/d;
-                    paintExtensionGrip(g, control, Color.RED, value, rnorm);
+                    
+                    paintExtensionGrip(g, control, getExtensionColor(control.getControlAdapter().getParameter()), value, rnorm);
                 }
             }
         }
@@ -179,7 +181,7 @@ public class JTBasicKnobUI extends JTBasicControlUI
         paintKnobGrip(g, control, gripColor, value);
     }
     
-    private static final Composite extComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f);
+    private static final Composite extComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f);
 
     private void paintExtensionGrip(Graphics2D g, JTControl control, Color fill, double start, double stop)
     {

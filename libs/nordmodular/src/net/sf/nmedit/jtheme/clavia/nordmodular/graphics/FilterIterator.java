@@ -30,17 +30,19 @@ public class FilterIterator extends CurvePathIterator {
 	public int currentSegment( float[] fcoords )
     {
    	    if(points[index].getCurve_type() == EqualizerMid.LIN) {
-    		fcoords[0] = points[index].getX()*(bounds.width-1);
-        	fcoords[1] = points[index].getY()*(bounds.height-1);
+    		fcoords[0] = points[index].getX()*(bounds.width-1)+bounds.x;
+        	fcoords[1] = points[index].getY()*(bounds.height-1)+bounds.y;
     	} else if(points[index].getCurve_type() == EqualizerMid.EXP || 
     			  points[index].getCurve_type() == EqualizerMid.LOG) {        	
-        	fcoords[0] = points[index].getX1()*(bounds.width-1);
-        	fcoords[1] = points[index].getY1()*(bounds.height-1);
-        	fcoords[2] = points[index].getX2()*(bounds.width-1);
-        	fcoords[3] = points[index].getY2()*(bounds.height-1);
-        	fcoords[4] = points[index].getX()*(bounds.width-1);
-        	fcoords[5] = points[index].getY()*(bounds.height-1);    	
-    	}    	
+        	fcoords[0] = points[index].getX1()*(bounds.width-1)+bounds.x;
+        	fcoords[1] = points[index].getY1()*(bounds.height-1)+bounds.y;
+        	fcoords[2] = points[index].getX2()*(bounds.width-1)+bounds.x;
+        	fcoords[3] = points[index].getY2()*(bounds.height-1)+bounds.y;
+        	fcoords[4] = points[index].getX()*(bounds.width-1)+bounds.x;
+        	fcoords[5] = points[index].getY()*(bounds.height-1)+bounds.y;  
+        	
+    	}   
+   	   
     	applytransform(fcoords, points[index].getPoint_type());
     	return points[index].getPoint_type();
     }

@@ -29,12 +29,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -43,21 +40,13 @@ import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ComponentUI;
 
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.clavia.nordmodular.NMNoteSeqEditor;
-import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.JTNM1ResetButtonUI.ResetButtonControlListener;
-import net.sf.nmedit.jtheme.component.JTButtonControl;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTControl;
-import net.sf.nmedit.jtheme.component.plaf.JTBasicButtonControlUI;
 import net.sf.nmedit.jtheme.component.plaf.JTBasicControlUI;
-import net.sf.nmedit.jtheme.component.plaf.JTComponentUI;
-import net.sf.nmedit.jtheme.component.plaf.JTBasicControlUI.BasicControlListener;
-import net.sf.nmedit.jtheme.component.plaf.JTBasicControlUI.BasicControlListener.Actions;
 import net.sf.nmedit.nmutils.swing.NMLazyActionMap;
 
 
@@ -65,6 +54,11 @@ public class NoteSeqEditorUI extends JTBasicControlUI
 {
 	protected static final String COL_LEFT = "col.right";
 	protected static final String COL_RIGHT = "col.left";
+	protected static final String INCREASE_EXT = "increase.ext";
+	protected static final String DECREASE_EXT = "decrease.ext";
+	protected static final String INCREASE_EXT_FAST = "increase.ext.fast";
+	protected static final String DECREASE_EXT_FAST = "decrease.ext.fast";
+	
 	
 	protected NMNoteSeqEditor control;
 	
@@ -214,7 +208,7 @@ public class NoteSeqEditorUI extends JTBasicControlUI
         
         for (int octave = -4; octave<=6; octave++)
         {
-        	int oy = mid - octave * noteHeight*12 - (ed.getTranslation()- ed.getMaxTranslation()/2)*noteHeight;
+        	int oy = mid - octave * noteHeight*12 + (ed.getTranslation()- ed.getMaxTranslation()/2)*noteHeight;
         	
         	// draw keyboard
         	if (noteHeight>=3)
@@ -249,7 +243,8 @@ public class NoteSeqEditorUI extends JTBasicControlUI
     }
     
     private static final AlphaComposite NOTE_HIGHLIGHT_COMPOSITE 
-        = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.25f);
+        = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.5f);
+	
 
     private void paintForeground(Graphics2D g, NMNoteSeqEditor ed, int x, int y, int w, int h)
     {
@@ -266,7 +261,7 @@ public class NoteSeqEditorUI extends JTBasicControlUI
             int nx = ((i*(w+1))/16) + (i>0?1:0);
             int note = ed.getNote(i);
             
-            int ny = mid-(note-60+ ed.getTranslation()- ed.getMaxTranslation()/2)*noteHeight ;
+            int ny = mid-(note-60- ed.getTranslation()+ ed.getMaxTranslation()/2)*noteHeight ;
             
             if (0<=ny && ny<y+h)
             {
@@ -279,6 +274,20 @@ public class NoteSeqEditorUI extends JTBasicControlUI
                 paintArrow(g, ny<0, nx+x, cw, h);
                 
             }
+            
+            Composite oldComposite = g.getComposite();
+        	g.setComposite(NOTE_HIGHLIGHT_COMPOSITE);
+        	
+        	
+	        g.setColor(getExtensionColor(ed.getControlAdapter(i).getParameter()));
+	        
+	        int extension = ed.getExtension(i);	 
+	        if (extension >=0)
+	        	g.fillRect(x+ (i * (w+1)/16)+(i>0?1:0), ny-extension*noteHeight, (w+1)/16, extension*noteHeight);
+	        else
+	        	g.fillRect(x+ (i * (w+1)/16)+(i>0?1:0), ny+noteHeight, (w+1)/16, -extension*noteHeight);
+            g.setComposite(oldComposite); // restore previous composite            
+            
         }
     }
 
@@ -309,7 +318,7 @@ public class NoteSeqEditorUI extends JTBasicControlUI
     {
         if (seqControlListenerInstance == null)
             seqControlListenerInstance = new NoteSeqEditorListener(this);
-        System.out.println("yiyi");
+       
         return seqControlListenerInstance;
     }
     
@@ -342,21 +351,39 @@ public class NoteSeqEditorUI extends JTBasicControlUI
             map.put(DECREASE_FAST,new NoteSeqActions(DECREASE_FAST));
             map.put(COL_LEFT,new NoteSeqActions(COL_LEFT));
             map.put(COL_RIGHT,new NoteSeqActions(COL_RIGHT));
+            map.put(INCREASE_EXT,new NoteSeqActions(INCREASE_EXT));
+            map.put(DECREASE_EXT,new NoteSeqActions(DECREASE_EXT));
+            map.put(INCREASE_EXT_FAST,new NoteSeqActions(INCREASE_EXT_FAST));
+            map.put(DECREASE_EXT_FAST,new NoteSeqActions(DECREASE_EXT_FAST));
+
             SwingUtilities.replaceUIActionMap(control, map);
             
             InputMap im = createInputMapWhenFocused();
-            addColSectionKS(im);
+            addSeqEditorKS(im);
             SwingUtilities.replaceUIInputMap(control, JComponent.WHEN_FOCUSED, im);
         }
         
-        protected void addColSectionKS(InputMap map)
+        protected void addSeqEditorKS(InputMap map)
         {
         	 KeyStroke left = KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0);
              map.put(left, COL_LEFT);
              
              KeyStroke right= KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0);
              map.put(right, COL_RIGHT);
-                          
+             
+             KeyStroke upExt = KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.ALT_DOWN_MASK);
+             map.put(upExt, INCREASE_EXT);
+             
+             KeyStroke downExt = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.ALT_DOWN_MASK);
+             map.put(downExt, DECREASE_EXT);
+             
+             KeyStroke upExtFast = KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.ALT_DOWN_MASK+InputEvent.SHIFT_DOWN_MASK);
+             map.put(upExtFast, INCREASE_EXT_FAST);
+             
+             KeyStroke downExtFast = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.ALT_DOWN_MASK+InputEvent.SHIFT_DOWN_MASK);
+             map.put(downExtFast, DECREASE_EXT_FAST);
+             
+             
         }
         
         protected NMNoteSeqEditor getControl(ComponentEvent e)
@@ -368,14 +395,30 @@ public class NoteSeqEditorUI extends JTBasicControlUI
 	    }
         
         
-        private int oldNote = 0;
+        private int oldNote = 0, oldExtension = 0;
         private int y;
+        
         public void mousePressed(MouseEvent e)
 	    {
-	    	if (SwingUtilities.isLeftMouseButton(e)){
+        	if(e.isPopupTrigger())
+        	{
+        		NMNoteSeqEditor ed = getControl(e);
+        		
+        		controlUI.editedNote = e.getX() / controlUI.columnWidth;
+	    		
+	    		 if (!e.getComponent().hasFocus())
+	                 e.getComponent().requestFocus();
+	    		 e.getComponent().repaint();
+	    		 
+	    		 ed.showControlPopup(e, controlUI.editedNote);
+        		
+        	}
+        	else if (SwingUtilities.isLeftMouseButton(e))
+        	{
 	    		controlUI.editedNote = e.getX() / controlUI.columnWidth;
 	    		y = e.getY();
 	    		oldNote = getControl(e).getNote(controlUI.editedNote);
+	    		oldExtension = getControl(e).getExtension(controlUI.editedNote);
 	    		
 	    		 if (!e.getComponent().hasFocus())
 	                 e.getComponent().requestFocus();
@@ -383,16 +426,47 @@ public class NoteSeqEditorUI extends JTBasicControlUI
 	    	}
 	    }
         
+        public void mouseReleased(MouseEvent e)
+	    {
+        	if(e.isPopupTrigger())
+        	{
+        		NMNoteSeqEditor ed = getControl(e);
+        		
+        		controlUI.editedNote = e.getX() / controlUI.columnWidth;
+	    		
+	    		 if (!e.getComponent().hasFocus())
+	                 e.getComponent().requestFocus();
+	    		 e.getComponent().repaint();
+	    		 
+	    		 ed.showControlPopup(e, controlUI.editedNote);
+        		
+        	}
+	    }
+        
         public void mouseDragged(MouseEvent e)
 	    {
 	    	//System.out.print("dragged");
 	    	NMNoteSeqEditor ed = getControl(e);
 
-	    	ed.setNote(controlUI.editedNote, oldNote - (e.getY()-y)/controlUI.getNoteHeight());
-
+	    	if (e.isAltDown()) {
+	    		ed.setExtension(controlUI.editedNote, oldExtension - (e.getY()-y)/controlUI.getNoteHeight());
+	    	} else {
+	    		ed.setNote(controlUI.editedNote, oldNote - (e.getY()-y)/controlUI.getNoteHeight());
+	    	}
 	    }
         
-        public static class NoteSeqActions extends AbstractAction 
+        
+        
+        @Override
+		public void focusLost(FocusEvent e) {
+			controlUI.editedNote = -1;
+			super.focusLost(e);
+			
+		}
+
+
+
+		public static class NoteSeqActions extends AbstractAction 
         {
             
             // private String action;
@@ -433,6 +507,22 @@ public class NoteSeqEditorUI extends JTBasicControlUI
                 else if (key == DECREASE_FAST)
                 {
                 	ed.setNote(editedNote, ed.getNote(editedNote) - 12 );
+                }
+                else if (key == INCREASE_EXT)
+                {
+                	ed.setExtension(editedNote, ed.getExtension(editedNote)+1);
+                }
+                else if (key == DECREASE_EXT)
+                {
+                	ed.setExtension(editedNote, ed.getExtension(editedNote)-1);
+                }
+                else if (key == INCREASE_EXT_FAST)
+                {
+                	ed.setExtension(editedNote, ed.getExtension(editedNote)+12);
+                }
+                else if (key == DECREASE_EXT_FAST)
+                {
+                	ed.setExtension(editedNote, ed.getExtension(editedNote)-12);
                 }
                 else if (key == COL_LEFT){
                 	ui.editedNote--;

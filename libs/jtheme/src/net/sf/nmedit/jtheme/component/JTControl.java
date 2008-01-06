@@ -26,6 +26,7 @@ import java.awt.Color;
 import java.awt.event.MouseEvent;
 
 import javax.swing.SwingConstants;
+
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -39,12 +40,15 @@ public abstract class JTControl extends JTComponent implements ChangeListener
 
     private JTControlAdapter adapter;
     private JTControlAdapter extensionAdapter;
-    private Color extensionColor = Color.BLACK;
+    private Color extensionColor = Color.black;
     private boolean extensionEnabled = false;
+    
 
     public JTControl(JTContext context)
     {
         super(context);
+        
+        
     }
     
     public void requestFocus()
@@ -70,8 +74,12 @@ public abstract class JTControl extends JTComponent implements ChangeListener
         }
     }
     
+    
+    
     public Color getExtensionColor()
     {
+    	
+    	
         return extensionColor;
     }
     
@@ -108,7 +116,7 @@ public abstract class JTControl extends JTComponent implements ChangeListener
     protected void fireStateChanged()
     {
         repaint();
-        
+   
         // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
         // Process the listeners last to first, notifying
@@ -125,12 +133,17 @@ public abstract class JTControl extends JTComponent implements ChangeListener
     
     public void stateChanged(ChangeEvent e)
     {
+    	
         fireStateChanged();
     }
     
     public JTControlAdapter getControlAdapter()
     {
         return adapter;
+    }
+    
+    public JTControlAdapter getControlAdapter(int i){
+    	return null;
     }
     
     public JTControlAdapter getExtensiondapter()

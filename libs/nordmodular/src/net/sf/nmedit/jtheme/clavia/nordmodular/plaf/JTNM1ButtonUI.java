@@ -16,17 +16,31 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.nmedit.jtheme.component.plaf;
+package net.sf.nmedit.jtheme.clavia.nordmodular.plaf;
 
+import javax.swing.JComponent;
 
-public class JTButtonControlUI extends JTBasicControlUI
+import net.sf.nmedit.jtheme.component.JTButtonControl;
+import net.sf.nmedit.jtheme.component.plaf.JTBasicButtonControlUI;
+
+public class JTNM1ButtonUI extends JTBasicButtonControlUI
 {
 
-    public static final String BORDER_KEY = "buttons.border";
-    public static final String SELECTED_BORDER_KEY = "buttons.border.selected";
-    public static final String BACKGROUND_KEY = "buttons.background";
-    public static final String BACKGROUND_SELECTED_KEY = "buttons.background.selected";
-    public static final String BACKGROUND_STATE_KEY = "buttons.background.state";
+	public JTNM1ButtonUI(JTButtonControl control) 
+	{
+		super(control);
+	}
+	
+	
+	public static JTNM1ButtonUI createUI(JComponent c) 
+    {
+        return new JTNM1ButtonUI((JTButtonControl)c);
+    }
+    
+    public void installUI(JComponent c)
+    {
+        super.installUI(c);
+    }
     
 }
 

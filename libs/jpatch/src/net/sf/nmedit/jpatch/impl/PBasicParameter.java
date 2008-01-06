@@ -41,6 +41,7 @@ public class PBasicParameter
     private PModule parent;
     // the parameter value
     private int value;
+    private int morphGroup; 
     private EventListenerList listenerList = new EventListenerList();
     
     private PParameter extensionParameter;
@@ -51,6 +52,8 @@ public class PBasicParameter
         super(descriptor, componentIndex);
         this.value = getDefaultValue();
         this.parent = parent;
+        // initially the parameter is not assigned to a morph group
+        this.morphGroup = -1;
     }
     
     public PModule getParentComponent()
@@ -213,5 +216,36 @@ public class PBasicParameter
             }
         }
     }
+
+    public int getMorphGroup()
+    {
+    	return morphGroup;
+    }
+    
+	public void setMorphGroup(int group) {
+		
+		if (group != morphGroup)
+		{
+			morphGroup = group;
+
+			PParameterEvent parameterEvent = null;
+			// Guaranteed to return a non-null array
+			Object[] listeners = listenerList.getListenerList();
+			// Process the listeners last to first, notifying
+			// those that are interested in this event
+			for (int i = listeners.length-2; i>=0; i-=2) 
+			{
+				if (listeners[i]==PParameterListener.class) 
+				{
+					// Lazily create the event:
+					if (parameterEvent == null)
+						parameterEvent = new PParameterEvent(this, PParameterEvent.MORPH_GROUP_CHANGED);
+					((PParameterListener)listeners[i+1]).parameterValueChanged(parameterEvent);
+				}
+			}
+		}
+	}
+
+
 
 }

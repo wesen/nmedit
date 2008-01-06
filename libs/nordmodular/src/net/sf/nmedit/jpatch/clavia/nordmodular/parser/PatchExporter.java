@@ -45,7 +45,7 @@ import net.sf.nmedit.jpatch.PParameter;
 public class PatchExporter
 {
     
-    private final boolean MorphMapDumpBugEnabled = false;
+    private final boolean MorphMapDumpBugEnabled = true;//false;
     private final boolean sortCables = true;
 
     public void export (NMPatch p, PContentHandler handler) throws ParseException
@@ -130,18 +130,21 @@ public class PatchExporter
                 {
                     Assignments assignments = morphs.getAssignments(i);
                     PParameter morph = morphs.getMorph(i);
+                    
                     if (assignments.size()>0)
                     {
                         
                         for (PParameter pp : assignments)
                         {
-                            int pindex = Helper.index(pp);
-                            
+                        	// TODO: in the presence of custo; parameter helper.index does not return
+                        	// the same value as getDescriptorindex
+                            int pindex = pp.getDescriptor().getDescriptorIndex();//Helper.index(pp);
+                            System.out.println(pp.getDescriptor().getDescriptorIndex()+" "+pindex);
                             PModule m = pp.getParentComponent();
                             PParameter morphRange;
                             try
                             {
-                                morphRange = Helper.getParameter(m, "morph", pindex);
+                                morphRange = Helper.getParameter(m, "morph", Helper.index(pp));
                             }
                             catch (InvalidDescriptorException e)
                             {
@@ -149,10 +152,11 @@ public class PatchExporter
                             }
                             
                             record[0] = m.getParentComponent().getComponentIndex();
-                            record[1] = Helper.index(m);
+                            record[1] = m.getComponentIndex();
                             record[2] = pindex;
                             record[3] = i;
                             record[4] = morphRange.getValue();
+                            handler.morphMapDump(record);
                         }
                     }
                 }
