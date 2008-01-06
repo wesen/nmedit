@@ -22,6 +22,7 @@
  */
 package net.sf.nmedit.jtheme.component.plaf;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
@@ -41,8 +42,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 
-import org.jdom.Element;
-
+import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTControl;
@@ -61,13 +61,20 @@ public abstract class JTBasicControlUI extends JTControlUI
     protected static final String MOVE_RIGHT = "move.right";
     protected static final String MOVE_LEFT = "move.left";
     
+   
+    
     public static final String knobActionMapKey = "knob.actionMap";
 
     private boolean defaultsInitialized = false;
 
+    protected static final String CONTROL_LISTENER_CLASS_KEY = JTBasicControlUI.class.getName()
+    +".CONTROL_LISTENER_CLASS";
+    
+    private JTControl control;
+    
     public void installUI(JComponent c)
     {
-        JTControl control = (JTControl) c;
+        control = (JTControl) c;
         
         if (!defaultsInitialized)
         {
@@ -78,18 +85,23 @@ public abstract class JTBasicControlUI extends JTControlUI
         installDefaults(control);
         
 
-        BasicControlListener listener = createControlListener(control);
-        if (listener != null)
+        BasicControlListener listener;
+	
+		listener = createControlListener(control);
+		if (listener != null)
         {
             installListeners(listener, control);
             installKeyboardActions(listener, control); 
         }
+	
+	
+       
         c.setFocusable(true);
     }
 
     protected void initUIDefaults(UIDefaults defaults)
     {
-        // read the defaults here
+    	 // read the defaults here
     }
 
     public void uninstallUI(JComponent c)
@@ -106,7 +118,7 @@ public abstract class JTBasicControlUI extends JTControlUI
 
     protected void installDefaults( JTControl control )
     {
-        // no op
+    	
     }
 
     protected void uninstallDefaults( JTControl control )
@@ -140,6 +152,25 @@ public abstract class JTBasicControlUI extends JTControlUI
         listener.uninstallKeyboardActions(b);
     }
 
+    protected Color getExtensionColor(PParameter parameter) {
+
+    	JTContext context = control.getContext();
+    	UIDefaults defaults = (context != null) ? context.getUIDefaults() : null;
+
+    	if (defaults != null) {
+    		String colorKey = "morph.color$"+parameter.getMorphGroup();
+    		Color color = defaults.getColor(colorKey);
+    		//System.out.println(color.toString());	
+    		if (color != null)
+    			return color;
+    		else
+    			return Color.magenta;
+    	} else
+    		return Color.magenta;	
+    	//return Helper.getMorphColor(parameter, c);
+
+    }
+    
     public void paintStaticLayer(Graphics2D g, JTComponent c)
     {
         // no op
@@ -183,29 +214,34 @@ public abstract class JTBasicControlUI extends JTControlUI
     }
 
     
-    private static final String CONTROL_LISTENER_KEY = JTBasicControlUI.class.getName()
+    protected static final String CONTROL_LISTENER_KEY = JTBasicControlUI.class.getName()
         +".CONTROL_LISTENER";
+    
+    
     private transient BasicControlListener bclInstance;
     
-    protected BasicControlListener createControlListener(JTControl control) 
+    //protected <T extends BasicControlListener > BasicControlListener createControlListener( JTControl control) throws JTException
+    protected  BasicControlListener createControlListener( JTControl control) 
     {
         if (bclInstance != null)
-            return bclInstance; 
+            return  bclInstance; 
         
         JTContext context = control.getContext();
         UIDefaults defaults = (context != null) ? context.getUIDefaults() : null;
         
         if (defaults != null)
         {
+        	
             Object l = defaults.get(CONTROL_LISTENER_KEY);
             if ((l != null) && (l instanceof BasicControlListener))
             {
                 bclInstance = (BasicControlListener) l;
             }
             else
-            {
+            {     
                 bclInstance = new BasicControlListener();
                 defaults.put(CONTROL_LISTENER_KEY, bclInstance);
+         
             }
         }
         else
@@ -332,19 +368,20 @@ public abstract class JTBasicControlUI extends JTControlUI
             JTControl control = controlFor(e);
             if (control == null) return;
             
-            if (SwingUtilities.isLeftMouseButton(e))
-            {
-            
-                selectExtensionAdapter = e.isControlDown();
-            
-            pressedValue = selectExtensionAdapter ? control.getExtNormalizedValue() :
-                control.getNormalizedValue();
-            pressedModifier = getValueModifier(control, e);
-            }
-            else if (e.isPopupTrigger())
+            if (e.isPopupTrigger())
             {
                 control.showControlPopup(e);
+            } 
+            else if (SwingUtilities.isLeftMouseButton(e))
+            {
+            
+                selectExtensionAdapter = e.isAltDown();
+                
+                pressedValue = selectExtensionAdapter ? control.getExtNormalizedValue() :
+                control.getNormalizedValue();
+                pressedModifier = getValueModifier(control, e);
             }
+            
             
             if (!control.hasFocus())
                 control.requestFocus();
@@ -354,16 +391,17 @@ public abstract class JTBasicControlUI extends JTControlUI
         {
             JTControl control = controlFor(e);
             
-            if (e.getClickCount()>=2 && control != null)
+            if (e.isPopupTrigger())
+            {
+                control.showControlPopup(e);
+            }
+            else if (e.getClickCount()>=2 && control != null)
             {
                 if (selectExtensionAdapter)
                     control.setExtensionValue(control.getExtDefaultValue());
                 else
                     control.setValue(control.getDefaultValue());   
-            } else if (e.isPopupTrigger())
-            {
-                control.showControlPopup(e);
-            }
+            }  
         }
 
         public void mouseEntered( MouseEvent e )
@@ -388,7 +426,8 @@ public abstract class JTBasicControlUI extends JTControlUI
                     updateValue(control, currentModifier, pressedModifier, pressedValue);
                 else // horizontal
                     updateValue(control, pressedModifier, currentModifier, pressedValue);
-            }
+               
+            } 
         }
 
         public void updateValue(JTControl control, double currentModifier, double pressedModifier, double pressedValue)
@@ -397,10 +436,14 @@ public abstract class JTBasicControlUI extends JTControlUI
             // assure value in range [0..1]
             double nvalue = Math.max(0, Math.min(pressedValue+modifier, 1));
             
-            if (selectExtensionAdapter)
+            if (selectExtensionAdapter) {
                 control.setExtNormalizedValue(nvalue);
-            else
+                
+            }
+            else {
                 control.setNormalizedValue(nvalue);
+                
+            }
         }
 
         public void mouseMoved( MouseEvent e )

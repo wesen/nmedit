@@ -75,6 +75,8 @@ public class PPatchEvent extends Event
      */
     public static final int CUSTOM_EVENT_START = 3000;
     
+    public static final int MORPH_GROUP_CHANGED = 3001;
+    
     protected PPatchEvent( Object target, long when, int id, int x, int y, int key,
             int modifiers, Object arg )
     {

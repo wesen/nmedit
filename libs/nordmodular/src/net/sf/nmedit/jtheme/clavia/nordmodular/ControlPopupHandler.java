@@ -49,7 +49,24 @@ public class ControlPopupHandler implements JTPopupHandler
             
             if (parameter != null)
             {
-                ControlPopup popup = new ControlPopup(parameter);
+                ControlPopup popup = new ControlPopup(control,parameter);
+                popup.show(e, component);
+            }
+        }
+    }
+    
+    // used for multiparameters components e.g. seq editor
+    public void showPopup(MouseEvent e, JTComponent component, int parameterIndex)
+    {
+        if (component instanceof JTControl)
+        {
+            JTControl control = (JTControl) component;
+            JTControlAdapter adapter = control.getControlAdapter(parameterIndex);
+            PParameter parameter = adapter == null ? null : adapter.getParameter();
+            
+            if (parameter != null)
+            {
+                ControlPopup popup = new ControlPopup(control,parameter);
                 popup.show(e, component);
             }
         }
@@ -68,6 +85,8 @@ public class ControlPopupHandler implements JTPopupHandler
         private PParameter parameter;
         
         private NMPatch patch;
+
+		private JTControl control;
         
         NMPatch getPatch()
         {
@@ -92,9 +111,10 @@ public class ControlPopupHandler implements JTPopupHandler
             return (parameter == null) ? null : parameter.getExtensionParameter();
         }
         
-        public ControlPopup(PParameter parameter)
+        public ControlPopup(JTControl control, PParameter parameter)
         {
             this.parameter = parameter;
+            this.control = control;
             AbstractAction tmpa;
             int tmp;
             
@@ -409,6 +429,10 @@ public class ControlPopupHandler implements JTPopupHandler
                     deassignMorph();
                 else assignMorph();
             }
+            else if (command == ZEROMORPH)
+            {
+            	parent.getMorphParameter().setValue(0);
+            }
             else if (command == DEFAULTVALUE)
             {
                 PParameter p = getParameter();
@@ -460,12 +484,20 @@ public class ControlPopupHandler implements JTPopupHandler
             int group = m.getAssignedMorph(getParameter());
             if (group>=0)
                 m.getAssignments(group).remove(getParameter());
+            
+            parent.getMorphParameter().setValue(0);
         }
 
         public void assignMorph()
         {
+        	
+        	PParameter parameter = getParameter();
             PNMMorphSection m = getPatch().getMorphSection();
-            m.getAssignments(index).add(getParameter());
+            int group = m.getAssignedMorph(parameter);
+            if (group>=0)
+                m.getAssignments(group).remove(parameter);
+            m.getAssignments(index).add(parameter);
+              
         }
         
     }

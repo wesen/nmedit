@@ -39,6 +39,8 @@ public class JTNM1KnobUI extends JTBasicKnobUI
 /*
     private BasicStroke thinStroke = new BasicStroke(0.6f);
 */
+	
+	 
     public static JTBasicKnobUI createUI(JComponent c) 
     {
         JTBasicKnobUI ui = uiInstance.getInstance(c);

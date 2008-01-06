@@ -25,8 +25,6 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollBar;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.clavia.nordmodular.plaf.NoteSeqEditorUI;
@@ -34,7 +32,7 @@ import net.sf.nmedit.jtheme.component.JTControl;
 import net.sf.nmedit.jtheme.component.JTControlAdapter;
 import net.sf.nmedit.jtheme.store2.BindParameter;
 
-public class NMNoteSeqEditor extends JTControl implements ChangeListener
+public class NMNoteSeqEditor extends JTControl
 {
     
     private static final long serialVersionUID = -737910030163291008L;
@@ -44,6 +42,7 @@ public class NMNoteSeqEditor extends JTControl implements ChangeListener
     
     private int zoom = 5, maxZoom = 5, minZoom = 1;
     private JTControlAdapter[] controlAdapters = new JTControlAdapter[STEPS];
+    private JTControlAdapter[] controlExtensionAdapters = new JTControlAdapter[STEPS];
     
     private int maxTranslation = 10;
     private int translation = 0;
@@ -54,6 +53,7 @@ public class NMNoteSeqEditor extends JTControl implements ChangeListener
         computeMaxTranslation();
         setTranslation(maxTranslation/2);
         clear();
+        System.out.println("cons");
     }
     
     private void computeMaxTranslation()
@@ -102,21 +102,21 @@ public class NMNoteSeqEditor extends JTControl implements ChangeListener
         }
     }
 
-    protected class NoteListener implements ChangeListener{
-    	int note;
-    	boolean isPlus;
-    	public NoteListener(int note, boolean isPlus) {
-    		this.note = note;
-    		this.isPlus = isPlus;
-		}
-		public void stateChanged(ChangeEvent e) {
-			if (isPlus)
-				setNote(note, getNote(note)+1);
-			else 
-				setNote(note, getNote(note)-1);
-		}
-
-    }
+//    protected class NoteListener implements ChangeListener{
+//    	int note;
+//    	boolean isPlus;
+//    	public NoteListener(int note, boolean isPlus) {
+//    		this.note = note;
+//    		this.isPlus = isPlus;
+//		}
+//		public void stateChanged(ChangeEvent e) {
+//			if (isPlus)
+//				setNote(note, getNote(note)+1);
+//			else 
+//				setNote(note, getNote(note)-1);
+//		}
+//
+//    }
     
     @BindParameter(name="step",count=16)
     public void setControlAdapter(int i, JTControlAdapter adapter)
@@ -128,11 +128,31 @@ public class NMNoteSeqEditor extends JTControl implements ChangeListener
         }
         
         controlAdapters[i] = adapter;
+        
         if (adapter != null)
             installAdapter(adapter);
     }
-
-
+    
+    public JTControlAdapter getControlAdapter(int i){
+    	return controlAdapters[i];
+    }
+    
+    @BindParameter(name="stepExtension",count=16)
+    public void setControlExtensionAdapter(int i, JTControlAdapter adapter)
+    {
+    	JTControlAdapter oldAdapter = controlExtensionAdapters[i];
+        if (oldAdapter != null)
+        {
+            uninstallAdapter(oldAdapter);
+        }
+        
+        controlExtensionAdapters[i] = adapter;
+        
+        if (adapter != null)
+            installAdapter(adapter);
+    }
+    
+    
     private void uninstallAdapter(JTControlAdapter adapter)
     {
         adapter.setComponent(null);
@@ -198,8 +218,9 @@ public class NMNoteSeqEditor extends JTControl implements ChangeListener
     
     public void clear()
     {
+    	
     	for (int i=0;i<getNoteCount();i++)
-            setNote(i, 60);
+            setNote(i, 64);
     }
     
     public int getNoteCount()
@@ -219,11 +240,38 @@ public class NMNoteSeqEditor extends JTControl implements ChangeListener
         JTControlAdapter ca = controlAdapters[index];
         if (ca != null)
         {
+        	System.out.println("set");
             ca.setValue(value);
-            //repaint();
+           
+            repaint();
         }
     }
-
+    
+    public int getExtension(int index)
+    {
+        JTControlAdapter ca = controlExtensionAdapters[index];
+        
+        return ca == null ? 0 : ca.getValue();
+    }
+    
+    public void setExtension(int index, int value)
+    {
+        JTControlAdapter ca = controlExtensionAdapters[index];
+        if (ca != null)
+        {
+            ca.setValue(value);
+           
+            repaint();
+        }
+    }
+    
+    public void showControlPopup(MouseEvent e, int parameterIndex)
+    {
+        JTContext c = getContext();
+        if (c == null) return;
+        ControlPopupHandler popup = (ControlPopupHandler) c.getPopupHandler(this);
+        if (popup != null) popup.showPopup(e, this, parameterIndex);
+    }
     
     public static void main(String[] args)
     {

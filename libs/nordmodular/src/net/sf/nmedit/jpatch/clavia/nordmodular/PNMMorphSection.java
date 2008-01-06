@@ -63,6 +63,7 @@ public class PNMMorphSection extends PBasicModuleContainer
         {
             if (__add(parameter))
             {
+            	parameter.setMorphGroup(group);
                 fireAssigned(parameter);
                 return true;
             }
@@ -90,6 +91,7 @@ public class PNMMorphSection extends PBasicModuleContainer
         {
             if (assignmentList.remove(parameter))
             {
+            	parameter.setMorphGroup(-1);
                 fireDeassigned(parameter);
                 return true;
             }

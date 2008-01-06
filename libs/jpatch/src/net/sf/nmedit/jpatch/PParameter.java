@@ -25,6 +25,10 @@ import net.sf.nmedit.jpatch.event.PParameterListener;
  * 
  * @author Christian Schneider
  */
+/**
+ * @author distrinet
+ *
+ */
 public interface PParameter extends PComponent
 {
     
@@ -160,5 +164,15 @@ public interface PParameter extends PComponent
     PParameter getExtensionParameter();
     
     void requestFocus();
+
+    /**
+     * @return the morph group this parameter belongs to. < 0 if not assigned to a group.  
+     */
+    int getMorphGroup();
     
+    /**
+     * Set the morph group of this parameter.
+     * @param group index of the group. If group < 0, parameter is not part of a group 
+     */
+    void setMorphGroup(int group);
 }
