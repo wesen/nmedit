@@ -138,8 +138,8 @@ public class PatchExporter
                         {
                         	// TODO: in the presence of custo; parameter helper.index does not return
                         	// the same value as getDescriptorindex
-                            int pindex = pp.getDescriptor().getDescriptorIndex();//Helper.index(pp);
-                            System.out.println(pp.getDescriptor().getDescriptorIndex()+" "+pindex);
+                            int pindex = Helper.index(pp); //pp.getDescriptor().getDescriptorIndex();
+                            //System.out.println(pp.getDescriptor().getDescriptorIndex()+" "+pindex);
                             PModule m = pp.getParentComponent();
                             PParameter morphRange;
                             try
