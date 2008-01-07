@@ -107,11 +107,13 @@ public class NmPatchSynchronizer extends AllEventsListener
         PModule module = e.getModule();            
         try
         {
-            synth.getProtocol().send(NmUtils.createNewModuleMessage(slot.getPatchId(), module));
+        	System.out.println("adding a module "+ module.getName() );
+            synth.getProtocol().send(NmUtils.createNewModuleMessage(slot.getPatchId(), module,slot.getSlotId()));
         }
         catch (Exception er)
         {
             // TODO handle error
+        	System.err.println(er.getStackTrace());
         }
     }
 
