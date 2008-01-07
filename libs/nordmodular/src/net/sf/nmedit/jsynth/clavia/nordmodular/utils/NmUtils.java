@@ -199,11 +199,11 @@ public class NmUtils
         return msg;
     }
     
-    public static MidiMessage createNewModuleMessage(int pid, PModule module) throws MidiException
+    public static MidiMessage createNewModuleMessage(int pid, PModule module, int slotId) throws MidiException
     {
         NewModuleMessage msg = new NewModuleMessage();
         msg.setPid(pid);
-
+        msg.setSlot(slotId); 
         // get data
         int section = module.getParentComponent().getComponentIndex();
         
@@ -223,8 +223,8 @@ public class NmUtils
             Helper.paramValues(module, "parameter"),
             Helper.paramValues(module, "custom")
         );
-/*
-        System.out.println(msg);
+
+       /* System.out.println(msg);
 
         System.out.println(Helper.index(module));
         System.out.println(section);
@@ -232,7 +232,7 @@ public class NmUtils
         System.out.println(module.getInternalX());
         System.out.println(module.getInternalY());
         System.out.println(name);
-  */      
+        */
         return msg;
     }
 
