@@ -74,8 +74,36 @@ Note:
     	    </fileset>
         </classpath>
     </java>
-  </target>
+  	
+  </target >
 	
+	
+	<target name="dist">
+		<!-- Define custom JPF specific Ant tasks -->
+			<typedef 
+				resource="org/java/plugin/tools/ant/jpf-tasks.properties" 
+				classpath="${nomad-source}/libs/jpf-tools.jar"
+			/>
+			<!-- Call "jpf-zip" task to process plug-ins packaging every plug-in as
+			  single ZIP file -->
+		<!--	<jpf-zip
+				basedir="${nomad-source}/plugins"
+				includes="*/*.xml"
+						destdir="${nomad-dist}/"/>	-->
+				
+		<copy todir="${nomad-dist}/nomad" >
+			<fileset dir="${nomad-source}" >
+				
+				<exclude name="*.java **/net.sf.nmedit.nomad.boot.splash/ CVS **/temp/"/>
+			</fileset>
+		</copy>
+		<copy tofile="${nomad-dist}/nomad/nomad.jar" file="${nomad-dist}/nomad/libs/jpf-boot.jar"/>
+		
+		<zip destfile="${nomad-dist}/nomad.zip">
+			<zipfileset dir="${nomad-dist}/nomad"/>
+		</zip>
+		
+	</target>
   <!-- building nomad -->
 
 	<!--
