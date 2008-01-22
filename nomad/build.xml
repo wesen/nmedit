@@ -97,7 +97,8 @@ Note:
 				<exclude name="*.java **/net.sf.nmedit.nomad.boot.splash/ CVS **/temp/"/>
 			</fileset>
 		</copy>
-		<copy tofile="${nomad-dist}/nomad/nomad.jar" file="${nomad-dist}/nomad/libs/jpf-boot.jar"/>
+		<move tofile="${nomad-dist}/nomad/nomad.jar" file="${nomad-dist}/nomad/jpf-boot.jar">
+		</move>
 		
 		<zip destfile="${nomad-dist}/nomad.zip">
 			<zipfileset dir="${nomad-dist}/nomad"/>
