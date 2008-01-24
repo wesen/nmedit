@@ -22,6 +22,7 @@ Following targets are available:
   build*    - builds nomad (not implemented)
   dist*     - distributes nomad (not implemented)
   clean     - cleans the build/dist files (not implemented)
+  nomadjar  - creates the nomad.jar file 
 
   * you have to call the 'configure' target once before you call one of the
   targets listed above
@@ -74,9 +75,7 @@ Note:
     	    </fileset>
         </classpath>
     </java>
-  	
-  </target >
-	
+  </target>
 	
 	<target name="dist">
 		<!-- Define custom JPF specific Ant tasks -->
@@ -105,6 +104,16 @@ Note:
 		</zip>
 		
 	</target>
+
+  <target name="nomadjar">
+  	<jar destfile="${nomad-source}/nomad.jar">
+  	    <manifest>
+  	        <attribute name="Main-class" value="org.java.plugin.boot.Boot"/>
+  	        <attribute name="Class-Path" value="libs/nomad-splash.jar libs/jpf-boot.jar"/>
+  	    </manifest>
+  	</jar>
+  </target>
+	
   <!-- building nomad -->
 
 	<!--
