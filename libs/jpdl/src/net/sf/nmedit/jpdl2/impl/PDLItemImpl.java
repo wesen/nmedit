@@ -22,6 +22,7 @@ import net.sf.nmedit.jpdl2.PDLBlock;
 import net.sf.nmedit.jpdl2.PDLCallback;
 import net.sf.nmedit.jpdl2.PDLConditional;
 import net.sf.nmedit.jpdl2.PDLConstant;
+import net.sf.nmedit.jpdl2.PDLImplicitVariable;
 import net.sf.nmedit.jpdl2.PDLItem;
 import net.sf.nmedit.jpdl2.PDLLabel;
 import net.sf.nmedit.jpdl2.PDLOptional;
@@ -46,6 +47,11 @@ public abstract class PDLItemImpl implements PDLItem
     public PDLVariable asVariable()
     {
         return PDLVariable.class.cast(this);
+    }
+
+    public PDLImplicitVariable asImplicitVariable()
+    {
+        return PDLImplicitVariable.class.cast(this);
     }
 
     public PDLPacketRef asPacketRef()

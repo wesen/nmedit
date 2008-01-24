@@ -16,37 +16,42 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.impl;
 
-public class PDLUtils
+import net.sf.nmedit.jpdl2.PDLFunctionRef;
+
+public class PDLFunctionRefImpl implements PDLFunctionRef
 {
     
-    public static String getBinding(PDLPacketRef packetReference)
+    private String startLabel;
+    private String endLabel;
+    private String functionName;
+
+    public PDLFunctionRefImpl(String startLabel, String endLabel, String functionName)
     {
-        String binding = packetReference.getBinding();
-        if (binding == null)
-            binding = packetReference.getPacketName();
-        return binding;
+        this.startLabel = startLabel;
+        this.endLabel = endLabel;
+        this.functionName = functionName;
     }
 
-    public static int getMinMultiplicity(PDLMultiplicity multiplicity)
+    public String getEndLabel()
     {
-        if (multiplicity == null)
-            return 1;
-        if (multiplicity.getConstant()>=0)
-            return multiplicity.getConstant();
-        else
-            return 0;
+        return endLabel;
     }
 
-    public static int getMultiplicity(PDLPacket context, PDLMultiplicity multiplicity)
+    public String getFunctionName()
     {
-        if (multiplicity == null)
-            return 1;
-        if (multiplicity.getConstant()>=0)
-            return multiplicity.getConstant();
-        else
-            return context.getVariable(multiplicity.getVariable());
+        return functionName;
+    }
+
+    public String getStartLabel()
+    {
+        return startLabel;
+    }
+
+    public String toString()
+    {
+        return functionName+"(@"+startLabel+",@"+endLabel+")";
     }
     
 }

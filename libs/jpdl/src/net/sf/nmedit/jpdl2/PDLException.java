@@ -18,35 +18,30 @@
 */
 package net.sf.nmedit.jpdl2;
 
-public class PDLUtils
+public class PDLException extends Exception
 {
-    
-    public static String getBinding(PDLPacketRef packetReference)
+
+    public PDLException()
     {
-        String binding = packetReference.getBinding();
-        if (binding == null)
-            binding = packetReference.getPacketName();
-        return binding;
+        // TODO Auto-generated constructor stub
     }
 
-    public static int getMinMultiplicity(PDLMultiplicity multiplicity)
+    public PDLException(String message)
     {
-        if (multiplicity == null)
-            return 1;
-        if (multiplicity.getConstant()>=0)
-            return multiplicity.getConstant();
-        else
-            return 0;
+        super(message);
+        // TODO Auto-generated constructor stub
     }
 
-    public static int getMultiplicity(PDLPacket context, PDLMultiplicity multiplicity)
+    public PDLException(Throwable cause)
     {
-        if (multiplicity == null)
-            return 1;
-        if (multiplicity.getConstant()>=0)
-            return multiplicity.getConstant();
-        else
-            return context.getVariable(multiplicity.getVariable());
+        super(cause);
+        // TODO Auto-generated constructor stub
     }
-    
+
+    public PDLException(String message, Throwable cause)
+    {
+        super(message, cause);
+        // TODO Auto-generated constructor stub
+    }
+
 }
