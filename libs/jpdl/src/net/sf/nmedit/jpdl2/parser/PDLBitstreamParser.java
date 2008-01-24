@@ -18,12 +18,19 @@
 */
 package net.sf.nmedit.jpdl2.parser;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.sf.nmedit.jpdl.BitStream;
 import net.sf.nmedit.jpdl2.PDLBlock;
 import net.sf.nmedit.jpdl2.PDLCallback;
 import net.sf.nmedit.jpdl2.PDLConditional;
 import net.sf.nmedit.jpdl2.PDLConstant;
 import net.sf.nmedit.jpdl2.PDLDocument;
+import net.sf.nmedit.jpdl2.PDLException;
+import net.sf.nmedit.jpdl2.PDLFunction;
+import net.sf.nmedit.jpdl2.PDLFunctionRef;
+import net.sf.nmedit.jpdl2.PDLImplicitVariable;
 import net.sf.nmedit.jpdl2.PDLItem;
 import net.sf.nmedit.jpdl2.PDLOptional;
 import net.sf.nmedit.jpdl2.PDLPacket;
@@ -38,9 +45,20 @@ import net.sf.nmedit.jpdl2.impl.PDLPacketImpl;
 public class PDLBitstreamParser
 {
 
+    private Map<String, PDLFunction> implicitFunctions = new HashMap<String, PDLFunction>();
     private BitStream stream;
     protected int reserved;
     private int beginBlockAtIndex = 0;
+    
+    public void defineFunction(String name, PDLFunction f)
+    {
+        implicitFunctions.put(name, f);
+    }
+    
+    public PDLFunction getFunction(String name) 
+    {
+        return implicitFunctions.get(name);
+    }
     
     public PDLPacket parse(BitStream stream, PDLDocument document, String packetName) throws PDLParseException
     {
@@ -48,15 +66,25 @@ public class PDLBitstreamParser
         if (packetDecl == null)
             throw new PDLParseException("undefined packet: "+packetName);
 
-        this.stream = stream;
         this.reserved = packetDecl.getMinimumSize();
+        if (!stream.isAvailable(reserved))
+            throw new PDLParseException("required number of bits unavailable: "+reserved);
+        
+        this.stream = stream;
         this.beginBlockAtIndex = 0;
 
         try
         {
-            PDLPacketImpl packet = new PDLPacketImpl();
-            parseBlock(packet, packetDecl);
-            return packet;
+            try
+            {
+                PDLPacketImpl packet = new PDLPacketImpl();
+                parseBlock(packet, packetDecl);
+                return packet;
+            }
+            catch (PDLParseException pdle)
+            {
+                throw new PDLParseException(pdle, packetDecl);
+            }
         }
         finally
         {
@@ -89,6 +117,8 @@ public class PDLBitstreamParser
                 
                 case Constant:
                 {
+                    reserved -= item.getMinimumSize();
+                    
                     PDLConstant constant = item.asConstant();
 
                     int multiplicity = PDLUtils.getMultiplicity(context, constant.getMultiplicity());
@@ -105,12 +135,30 @@ public class PDLBitstreamParser
                         
                         multiplicity--;
                     }
-                    reserved -= bitcount;
+                    break;
+                }
+
+                case ImplicitVariable:
+                {
+                    reserved -= item.getMinimumSize();
+                    
+                    PDLImplicitVariable variable = item.asImplicitVariable();
+                    ensureBitsAvailable(item, variable.getSize());
+
+                    
+                    int value = stream.getInt(variable.getSize());
+                    
+                    checksum(variable, context, value);
+                    
+                    context.setVariable(variable.getName(), value);
+                    reserved -= variable.getSize();
                     break;
                 }
                 
                 case Variable:
                 {
+                    reserved -= item.getMinimumSize();
+                    
                     PDLVariable variable = item.asVariable();
                     ensureBitsAvailable(item, variable.getSize());
                     
@@ -121,6 +169,8 @@ public class PDLBitstreamParser
                 
                 case VariableList:
                 {
+                    reserved -= item.getMinimumSize();
+                    
                     PDLVariableList variable = item.asVariableList(); 
 
                     int multiplicity = PDLUtils.getMultiplicity(context, variable.getMultiplicity()); 
@@ -138,6 +188,8 @@ public class PDLBitstreamParser
                 
                 case PacketRef:
                 {
+                    reserved -= item.getMinimumSize();
+                    
                     PDLPacketRef packetRef = item.asPacketRef();
                     PDLPacketDecl packetDecl = packetRef.getReferencedPacket();
                     int bitcount = packetDecl.getMinimumSize();
@@ -160,6 +212,8 @@ public class PDLBitstreamParser
                 
                 case PacketRefList:
                 {
+                    reserved -= item.getMinimumSize();
+                    
                     PDLPacketRefList packetRefList = item.asPacketRefList();
                     PDLPacketDecl packetDecl = packetRefList.getReferencedPacket();
                     int multiplicity = PDLUtils.getMultiplicity(context, packetRefList.getMultiplicity());
@@ -189,6 +243,8 @@ public class PDLBitstreamParser
                 
                 case Conditional:
                 {
+                    reserved -= item.getMinimumSize();
+                    
                     PDLConditional conditional = item.asConditional();
                     ensureBitsAvailable(item, conditional.getMinimumSize());
                     if (conditional.getCondition().isConditionTrue(context))
@@ -198,6 +254,9 @@ public class PDLBitstreamParser
                 
                 case Optional:
                 {
+
+                    reserved -= item.getMinimumSize();
+                    
                     PDLOptional optional = item.asOptional();
                     
                     if (!isAvailable(optional.getMinimumSize()))
@@ -233,6 +292,40 @@ public class PDLBitstreamParser
                     }
                 }
             }
+        }
+        
+    }
+
+    private void checksum(PDLImplicitVariable item, PDLPacketImpl context, final int value)
+        throws PDLParseException
+    {
+        PDLFunctionRef functionRef = item.getFunctionRef();
+        
+        int startPos = context.getLabel(functionRef.getStartLabel());
+        int endPos = context.getLabel(functionRef.getEndLabel());
+        PDLFunction function = getFunction(functionRef.getFunctionName());
+        if (function == null)
+            throw new PDLParseException("undefined function: "+functionRef.getFunctionName());
+
+        int savePos = stream.getPosition();
+        int expected;
+        try
+        {
+            expected = function.compute(context, stream, startPos, endPos);
+        }
+        catch (PDLException pdle)
+        {
+            throw new PDLParseException(pdle);
+        }
+        finally
+        {
+            stream.setPosition(savePos);
+        }
+        
+        if (value != expected)
+        {
+            throw new PDLParseException(item, "implicit value different from stream value: "+
+                    value+" (stream), "+expected+" (expected)");
         }
         
     }

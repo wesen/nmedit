@@ -19,12 +19,15 @@
 package net.sf.nmedit.jpdl2.parser;
 
 import net.sf.nmedit.jpdl2.PDLConstant;
+import net.sf.nmedit.jpdl2.PDLException;
+import net.sf.nmedit.jpdl2.PDLFunctionRef;
+import net.sf.nmedit.jpdl2.PDLImplicitVariable;
 import net.sf.nmedit.jpdl2.PDLItem;
 import net.sf.nmedit.jpdl2.PDLPacketDecl;
 import net.sf.nmedit.jpdl2.PDLPacketRef;
 import net.sf.nmedit.jpdl2.PDLVariable;
 
-public class PDLParseException extends Exception
+public class PDLParseException extends PDLException
 {
 
     /**
@@ -36,20 +39,25 @@ public class PDLParseException extends Exception
     {
         super(message);
     }
+    
+    public PDLParseException(PDLException e)
+    {
+        super(e);
+    }
 
     public PDLParseException(PDLItem item, String message)
     {
         super(toString(item)+": "+message);
     }
 
-    public PDLParseException(PDLParseException parent, PDLPacketDecl packet)
+    public PDLParseException(PDLException parent, PDLPacketDecl packet)
     {
-        super("packet "+packet.getName());
+        super("packet "+packet.getName(), parent);
     }
 
-    public PDLParseException(PDLParseException parent, PDLItem item)
+    public PDLParseException(PDLException parent, PDLItem item)
     {
-        super(toString(item));
+        super(toString(item), parent);
     }
     
     private static String toString(PDLItem item)
@@ -89,6 +97,13 @@ public class PDLParseException extends Exception
             {
                 PDLVariable variable = item.asVariableList();
                 return "List "+variable.getName()+":"+variable.getSize();                
+            }
+            case ImplicitVariable:
+            {
+                PDLImplicitVariable variable = item.asImplicitVariable();
+                PDLFunctionRef f = variable.getFunctionRef();
+                return variable.getName()+":"+variable.getSize()
+                +"="+f.getFunctionName()+"(@"+f.getStartLabel()+",@"+f.getEndLabel()+")";
             }
             default:
                 throw new InternalError("unknown item: "+item);

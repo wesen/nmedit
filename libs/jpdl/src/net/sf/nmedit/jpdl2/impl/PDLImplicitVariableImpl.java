@@ -16,37 +16,42 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.impl;
 
-public class PDLUtils
+import net.sf.nmedit.jpdl2.PDLFunctionRef;
+import net.sf.nmedit.jpdl2.PDLImplicitVariable;
+import net.sf.nmedit.jpdl2.PDLItemType;
+
+public class PDLImplicitVariableImpl extends PDLVariableImpl implements
+        PDLImplicitVariable
 {
     
-    public static String getBinding(PDLPacketRef packetReference)
-    {
-        String binding = packetReference.getBinding();
-        if (binding == null)
-            binding = packetReference.getPacketName();
-        return binding;
-    }
+    private PDLFunctionRef functionRef;
 
-    public static int getMinMultiplicity(PDLMultiplicity multiplicity)
+    public PDLImplicitVariableImpl(String name, int size, PDLFunctionRef functionRef)
     {
-        if (multiplicity == null)
-            return 1;
-        if (multiplicity.getConstant()>=0)
-            return multiplicity.getConstant();
-        else
-            return 0;
-    }
-
-    public static int getMultiplicity(PDLPacket context, PDLMultiplicity multiplicity)
-    {
-        if (multiplicity == null)
-            return 1;
-        if (multiplicity.getConstant()>=0)
-            return multiplicity.getConstant();
-        else
-            return context.getVariable(multiplicity.getVariable());
+        super(name, size);
+        this.functionRef = functionRef;
     }
     
+    public PDLImplicitVariableImpl(String name, int size)
+    {
+        this(name, size, null);
+    }
+
+    public PDLItemType getType()
+    {
+        return PDLItemType.ImplicitVariable;
+    }
+    
+    public void setFunctionRef(PDLFunctionRef functionRef)
+    {
+        this.functionRef = functionRef;
+    }
+
+    public PDLFunctionRef getFunctionRef()
+    {
+        return functionRef;
+    }
+
 }

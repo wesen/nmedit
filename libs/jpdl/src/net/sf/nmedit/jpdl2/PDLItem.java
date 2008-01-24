@@ -51,6 +51,12 @@ public interface PDLItem
      * Casts this item to the desired item type.
      * @throws ClassCastException if the item is not of the desired type
      */
+    PDLImplicitVariable asImplicitVariable();
+
+    /**
+     * Casts this item to the desired item type.
+     * @throws ClassCastException if the item is not of the desired type
+     */
     PDLVariable asVariable();
 
     /**

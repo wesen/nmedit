@@ -22,6 +22,7 @@ import net.sf.nmedit.jpdl2.PDLCallback;
 import net.sf.nmedit.jpdl2.PDLCondition;
 import net.sf.nmedit.jpdl2.PDLConditional;
 import net.sf.nmedit.jpdl2.PDLConstant;
+import net.sf.nmedit.jpdl2.PDLImplicitVariable;
 import net.sf.nmedit.jpdl2.PDLItemType;
 import net.sf.nmedit.jpdl2.PDLLabel;
 import net.sf.nmedit.jpdl2.PDLOptional;
@@ -53,6 +54,11 @@ public class PDLConditionalImpl extends PDLBlockImpl implements PDLConditional
     public PDLConditional asConditional()
     {
         return this;
+    }
+    
+    public PDLImplicitVariable asImplicitVariable()
+    {
+        return PDLImplicitVariable.class.cast(this);
     }
 
     public PDLCallback asCallback()

@@ -29,6 +29,7 @@ package net.sf.nmedit.jpdl2;
  * <tr><td>Label</td><td>PDLLabel</td></tr> 
  * <tr><td>Constant</td><td>PDLConstant</td></tr>
  * <tr><td>Variable</td><td>PDLVariable</td></tr>
+ * <tr><td>ImplicitVariable</td><td>PDLImplicitVariable</td></tr>
  * <tr><td>VariableList</td><td>PDLVariableList</td></tr> 
  * <tr><td>PacketRef</td><td>PDLPacketRef</td></tr>
  * <tr><td>PacketRefList</td><td>PDLPacketRefList</td></tr> 
@@ -42,6 +43,7 @@ public enum PDLItemType
 {
     Label, 
     Constant,
+    ImplicitVariable,
     Variable,
     VariableList, 
     PacketRef,
