@@ -1,0 +1,91 @@
+
+protocol:
+	protocol_header
+	packet_list
+	;
+
+protocol_header
+	'version' VERSION
+	;
+	
+packet_list:
+    packet  packet_list |
+    ;
+
+packet:
+    PACKET '%' PAD ':=' block ';'
+
+block:
+	item | '{' itemList '}'
+    ;
+
+itemList:
+	item itemList |
+	;
+
+item:
+    label |
+    constant |
+    variable |
+    variableList |
+    packetRef |
+    packetRefList |
+    conditional |
+    optional
+
+label:
+    '@' LABEL
+    ;
+
+constant:
+    CONSTANT ':' SIZE
+    ;
+
+variable:
+    VARIABLE ':' SIZE
+    ;
+
+variableList:
+	multiplicity '*' variable
+	;
+
+packetRef:
+    PACKET '$' IDENTIFIER
+    ;
+
+packetRefList:
+	multiplicity '*' packetRef
+	;
+
+multiplicity:
+	VARIABLE | CONSTANT
+	;
+
+conditional:
+    condition block
+    ;
+
+optional:
+    '?' block
+    ;
+
+condition:
+    '#' VARIABLE '=' NUMBER '=>' |
+    '#' VARIABLE '!' NUMBER '=>' 
+    ;
+
+--------------------------------------------------------------------
+
+ideas for future changes:
+
+- variable concatenation:
+  example: a1:4 0:1 a2:4 [a:=a1++a2]
+  description: the example defines the variable 'a' which is not part of the
+  stream, but is defined by the concatenation of the variables a1 and a2.
+
+  concatenation(a, a_bitcount, b) := (a<<a_bitcount) | b;
+
+  The concatenation might be useful in cases where a variable is split in two
+  parts by a constant.
+
+    
