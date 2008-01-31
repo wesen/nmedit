@@ -1,0 +1,20 @@
+
+jPDL - Protocol Defintion Language for Java
+-------------------------------------------
+
+Copyright (C) 2003-2006 Marcus Andersson
+
+http://nmedit.sf.net
+
+Version 1.2
+-----------
+* PDL parser can read files with '\r\n' line termination.
+
+Version 1.1
+-----------
+* First tries to open a pdl file as resource, then as absolute filename.
+
+
+Version 1.0
+-----------
+* Feature set suitable to handle the Nord Modular midi protocol.

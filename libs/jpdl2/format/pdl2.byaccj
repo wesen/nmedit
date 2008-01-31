@@ -1,0 +1,381 @@
+%{
+import java.io.*;
+import net.sf.nmedit.jpdl2.impl.*;
+import java.util.ArrayList;
+import java.util.List;
+import net.sf.nmedit.jpdl2.*;
+%}
+      
+%token NL          /* newline  */
+
+%token <ival> DEC_INTEGER_LITERAL;
+%token <ival> HEX_INTEGER_LITERAL;
+%token <ival> DUAL_INTEGER_LITERAL;
+%token <sval> STRING_LITERAL;
+%token <ival> BOOLEAN_LITERAL;
+
+%token <sval> LABEL
+%token <sval> PACKETREF
+%token <sval> IDENTIFIER
+%token LSHIFT
+%token RSHIFT
+%token URSHIFT
+%token CMP_EQ
+%token CMP_NEQ
+%token CMP_LT
+%token CMP_LEQ
+%token CMP_GT
+%token CMP_GEQ
+%token ASSIGN
+%token CAST_TO_INT
+%token CAST_TO_BOOLEAN
+%token IF
+%token TKDOLLAR
+%token RARROW
+%token TK_MESSAGEID;
+
+%type <ival> INTEGER_LITERAL 
+%type <obj> PacketDecl PacketDeclStart PacketDeclList NextExpression StreamOp 
+%type <obj> expression CompareExpr MultiplicativeExpr AdditiveExpr ConstExpr UnaryExpr compiled_expression 
+%type <obj> pdldocument  Constant  Multiplicity ConstantWithoutMuliplicity   
+%type <obj> RawVariable Variable RawVariableList VariableList ImplicitVariable
+%type <obj> IfStatement IfExpression
+%type <obj> PacketRef pdlheader pdlbody
+%type <obj> Block   Item BlockItem  ItemList SimpleItem TypeCastExpr MessageId
+%type <sval> PacketName
+%type <ival> StreamOpToken
+
+%nonassoc IF
+%right '~' '!' CAST_TO_INT CAST_TO_BOOLEAN
+%left '+' '-'
+%left '*' '/' '%'
+%left '&' '|' '^'
+%nonassoc CMP_EQ CMP_NEQ CMP_LT CMP_LEQ CMP_GT CMP_GEQ 
+
+%start pdldocument
+
+%%
+
+pdldocument:
+          /* empty */    {}
+       | pdlbody {}
+       | pdlheader pdlbody {}
+       ;
+
+pdlheader:
+        IDENTIFIER IDENTIFIER ';' { if (!$1.equals("start")) throw new PDLException("'start' expected"); pdldoc.setStartPacketName($2); }
+	;
+
+pdlbody:
+		PacketDeclList { $$=$1; }
+	;
+
+PacketDeclList:
+            PacketDecl                
+          | PacketDecl PacketDeclList 
+       ;
+
+PacketDecl:
+          PacketDeclStart ASSIGN 
+                                         
+                                         { /* action:before ItemList */
+                                           PDLPacketDeclImpl pdecl = (PDLPacketDeclImpl)$1;
+                                           bpush(pdecl);
+                                           $$ = pdecl;
+                                           registerPacketDecl(pdecl); 
+                                         }
+                                         
+                                         ItemList ";" 
+                                         
+                                         { /* action:after ItemList */
+                                           bpop();
+                                         }
+       |  /* empty packet */ 
+          PacketDeclStart ASSIGN ';' { registerPacketDecl((PDLPacketDeclImpl)$1);  }
+       ;
+
+PacketDeclStart:
+          PacketName '%' INTEGER_LITERAL { int padding = $3;
+                                           if(padding<1)
+                                             yyerror("padding must >=1: "+padding);
+                                              
+                                           $$ = new PDLPacketDeclImpl($1, padding); }
+       |  PacketName                     { $$ = new PDLPacketDeclImpl($1, 1); /* default padding = 1 */ }
+       ;
+
+Multiplicity:
+         IDENTIFIER '*'              { $$ = new PDLMultiplicityImpl($1); }
+       | INTEGER_LITERAL '*'         { $$ = new PDLMultiplicityImpl($1); }
+       | '*'                         { yyerror("*-multiplicity not implemented");
+                                       //$$ = new PDLMultiplicityImpl(PDLMultiplicityType.NoneOrMany); 
+                                     }
+       | '+'                         { yyerror("+-multiplicity not implemented");
+                                       //$$ = new PDLMultiplicityImpl(PDLMultiplicityType.OneOrMany); 
+                                     }
+       ;
+
+PacketName:
+          IDENTIFIER 
+       ;
+       
+SimpleItem:
+          LABEL     { badd(new PDLLabelImpl($1)); }
+       |  PacketRef 
+       |  Variable  
+       |  VariableList
+       |  ImplicitVariable
+       |  Constant  
+       |  MessageId
+       ;
+
+MessageId:
+          TK_MESSAGEID '(' STRING_LITERAL ')' { badd(new PDLMessageIdImpl($3)); }
+       ;
+
+Variable:
+          RawVariable { badd($1); }
+       ;
+
+RawVariable:
+          IDENTIFIER ':' INTEGER_LITERAL { PDLUtils.checkBitcount($3);
+                                           $$=new PDLVariableImpl($1, $3); }
+       ;
+
+ImplicitVariable:
+          RawVariable '=' '(' expression ')' { badd(new PDLImplicitVariableImpl((PDLVariable)$1, new PDLFunctionImpl((Expression)$4)));  }
+       ;
+
+VariableList:
+          RawVariableList { badd($1); }
+       |  RawVariableList '/' INTEGER_LITERAL { PDLVariableListImpl v = (PDLVariableListImpl) $1; v.setTerminal($3); badd($1); }
+       ;
+
+RawVariableList:
+          Multiplicity RawVariable { $$=new PDLVariableListImpl((PDLVariable)$2, (PDLMultiplicity)$1); }
+       ;
+
+Constant:
+          ConstantWithoutMuliplicity {  badd($1); }
+       |  Multiplicity ConstantWithoutMuliplicity { ((PDLConstantImpl)$2).setMultiplicity((PDLMultiplicityImpl)$1); badd($2); }
+       ;
+
+ConstantWithoutMuliplicity:
+          INTEGER_LITERAL ':' INTEGER_LITERAL { PDLUtils.checkBounds($1, $3);
+                                                $$ = new PDLConstantImpl($1, $3); }  
+       ;
+
+PacketRef:
+          PACKETREF { badd(textToPacketRef($1)); }
+       ;
+
+Item: 
+          BlockItem     
+       |  SimpleItem
+       ;
+
+BlockItem:
+          IfStatement   { $$=$1; }
+       |  '?' { PDLOptionalImpl o = new PDLOptionalImpl(); badd(o); bpush(o); }  Block { bpop(); }
+       ;
+
+IfStatement:
+           IF '(' IfExpression ')'   {  PDLConditionalImpl c = new PDLConditionalImpl((PDLCondition) $3); badd(c); bpush(c); $$ = c;  }
+                                     Block { bpop(); }
+       |   '#' IDENTIFIER '=' INTEGER_LITERAL RARROW 
+                                     {  PDLConditionalImpl c = new PDLConditionalImpl(new PDLConditionImpl($2, $4, false)); badd(c); bpush(c); $$ = c;  }
+                                     Block { bpop(); }
+       |   '#' IDENTIFIER '!' INTEGER_LITERAL RARROW 
+                                     {  PDLConditionalImpl c = new PDLConditionalImpl(new PDLConditionImpl($2, $4, true)); badd(c); bpush(c); $$ = c;  }
+                                     Block { bpop(); }
+       ;
+
+Block:     SimpleItem           { }
+       |   '{' ItemList '}'     { }
+       ;
+
+ItemList:
+         Item ItemList 
+       | Item
+       ;
+
+IfExpression:
+         compiled_expression         { $$ = new PDLCompiledCondition((Expression)$1); }  
+       ;
+
+INTEGER_LITERAL:  
+         DEC_INTEGER_LITERAL
+       | HEX_INTEGER_LITERAL 
+       | DUAL_INTEGER_LITERAL 
+	   ;
+
+compiled_expression:
+          expression                { $$ = $1; }
+       ;
+
+expression: 
+          '(' expression ')'            { $$ = $2; }
+       |  MultiplicativeExpr
+       |  AdditiveExpr
+       |  UnaryExpr
+       |  ConstExpr
+       |  StreamOp   
+       |  CompareExpr
+       |  TypeCastExpr 
+       ;
+
+CompareExpr: 
+          expression CMP_EQ expression      { $$ = Opcode.cmpEq( (Expression) $1, (Expression) $3 ); }
+       |  expression CMP_NEQ expression      { $$ = Opcode.cmpNeq( (Expression) $1, (Expression) $3 ); }
+       |  expression CMP_LT expression      { $$ = Opcode.cmpLt( (Expression) $1, (Expression) $3 ); }
+       |  expression CMP_LEQ expression      { $$ = Opcode.cmpLEq( (Expression) $1, (Expression) $3 ); }
+       |  expression CMP_GT expression      { $$ = Opcode.cmpGt( (Expression) $1, (Expression) $3 ); }
+       |  expression CMP_GEQ expression      { $$ = Opcode.cmpGEq( (Expression) $1, (Expression) $3 ); }
+       ;
+
+MultiplicativeExpr:
+          expression '*' expression         { $$ = Opcode.mul( (Expression) $1, (Expression) $3 ); }
+       |  expression '/' expression         { $$ = Opcode.div( (Expression) $1, (Expression) $3 ); }
+       |  expression '%' expression         { $$ = Opcode.mod( (Expression) $1, (Expression) $3 ); }
+       |  expression '^' expression         { $$ = Opcode.xor( (Expression) $1, (Expression) $3 ); }
+       ;
+
+AdditiveExpr:
+          expression '+' expression {  $$ = Opcode.add( (Expression) $1, (Expression) $3 ); }
+       |  expression '-' expression { $$ = Opcode.minus( (Expression) $1, (Expression) $3 ); }
+       |  expression '&' expression { $$ = Opcode.and( (Expression) $1, (Expression) $3 ); }
+       |  expression '|' expression { $$ = Opcode.or ( (Expression) $1, (Expression) $3 ); }
+       ;
+
+ConstExpr:
+          TKDOLLAR                  { $$ = new Expression(Opcodes.lpush); }
+       |  INTEGER_LITERAL           { $$ = new Expression(Opcodes.ipush, $1 ); }
+       |  BOOLEAN_LITERAL           { $$ = new Expression(Opcodes.bpush, $1==1?true:false); }
+       |  LABEL                     { $$ = new Expression(Opcodes.lpush, (String)$1); }
+       |  IDENTIFIER                { $$ = new Expression(Opcodes.vpush, (String)$1); }
+       ;
+
+UnaryExpr:
+          '~' expression        { $$ = Opcode.inv( (Expression) $2 ); }
+       |  '!' expression        { $$ = Opcode.inv( (Expression) $2 ); }
+       |  '-' expression        { $$ = Opcode.neg( (Expression) $2 ); }
+       ;
+
+TypeCastExpr:
+          CAST_TO_INT expression { $$ = Opcode.castToInt((Expression) $2); }
+       |  CAST_TO_BOOLEAN expression { $$ = Opcode.castToBoolean((Expression) $2); }
+       ;
+
+StreamOp: 
+          '[' StreamOpToken 
+          NextExpression 
+          NextExpression 
+          NextExpression
+          NextExpression 
+          ']'                   {   $$ = new Expression($2, 
+                                           (Expression)$3, (Expression)$4, 
+                                           (Expression)$5, (Expression)$6); }
+       ;
+
+NextExpression:   
+          ';' expression  { $$=$2; }
+       ;
+       
+StreamOpToken:
+           '&' { $$=Opcodes.land; }
+       |   '|' { $$=Opcodes.lor; }
+       |   '^' { $$=Opcodes.lxor; }
+       |   '*' { $$=Opcodes.lmul; }
+       |   '+' { $$=Opcodes.ladd; }
+       ;
+
+%%
+  /* a reference to the lexer object */
+  private PDL2Lexer lexer;
+  
+  private PDLDocumentImpl pdldoc = new PDLDocumentImpl();
+
+  public PDLDocument getDocument()
+  {
+     return pdldoc;
+  }
+
+  private List<PDLBlock> bstack = new ArrayList<PDLBlock>();
+  
+  private static final boolean PDLDebug = false;
+  
+  private void bpush(Object b)
+  {
+    if (PDLDebug) System.out.println("bpush:"+b);
+    bstack.add((PDLBlock)b);
+  }
+  
+  private void bpop()
+  {
+    if (PDLDebug) System.out.println("bpop");
+    bstack.remove(bstack.size()-1);
+  }
+  
+  private void badd(Object item) throws PDLException
+  {
+    if (item == null) throw new PDLException("error in parser: cannot add null to parent block");
+  
+    if (PDLDebug) System.out.println("badd:"+item);
+    bstack.get(bstack.size()-1).add((PDLItem)item);
+  }
+
+  private PDLPacketRefImpl textToPacketRef(String s)
+  {
+    int i = s.indexOf('$');
+    return new PDLPacketRefImpl(pdldoc, s.substring(0,i), s.substring(i+1));
+  }
+
+  private void registerPacketDecl(PDLPacketDecl p) throws PDLException
+  {
+     try
+     {
+        pdldoc.add(p);
+     }
+     catch (IllegalArgumentException e)
+     {
+        yyerror("multiple declarations of packet: "+p.getName());
+        throw e; // in case no exception is thrown
+     }
+  }
+
+  public void parse() throws PDLException
+  {
+     yyparse();
+     PDLDocumentVerifier verifier = new PDLDocumentVerifier(pdldoc);
+     verifier.verify();
+  }
+
+  /* interface to the lexer */
+  private int yylex () {
+    int yyl_return = -1;
+    try {
+      yyl_return = lexer.yylex();
+    }
+    catch (IOException e) {
+      System.err.println("IO error :"+e);
+    }
+    return yyl_return;
+  }
+	
+
+  /* error reporting */
+  public void yyerror (String error) throws PDLException
+  {
+    throw new PDLException(
+      "[line "+ lexer.getLineNumber()+":"+lexer.getColumnNumber()+"] "+error);
+  }
+
+  /* lexer is created in the constructor */
+  public PDL2Parser(Reader r) {
+    lexer = new PDL2Lexer(r, this);
+  }
+
+  /* that's how you use the parser */
+  public static void main(String args[]) throws IOException, PDLException {
+    PDL2Parser yyparser = new PDL2Parser(new FileReader(args[0]));
+    yyparser.yyparse();    
+  }
