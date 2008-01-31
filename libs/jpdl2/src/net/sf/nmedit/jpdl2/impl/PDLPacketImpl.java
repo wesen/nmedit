@@ -35,6 +35,11 @@ public class PDLPacketImpl implements PDLPacket
     {
         return age;
     }
+
+    public final int incrementAge()
+    {
+        return age++;
+    }
     
     public void removeItemsOlderThan(int minAge)
     {
@@ -54,7 +59,7 @@ public class PDLPacketImpl implements PDLPacket
         }
     }
     
-    private boolean contains(String name)
+    protected boolean contains(String name)
     {
         return packetObjects.get(name) != null;
     }
@@ -79,11 +84,6 @@ public class PDLPacketImpl implements PDLPacket
         return contains(name, PacketObjectType.Variable);
     }
 
-    public boolean hasLabel(String name)
-    {
-        return contains(name, PacketObjectType.Label);
-    }
-
     public boolean hasPacket(String name)
     {
         return contains(name, PacketObjectType.Packet);
@@ -104,11 +104,6 @@ public class PDLPacketImpl implements PDLPacket
         packetObjects.put(name, o);
     }
 
-    public void setLabel(String name, int value)
-    {
-        setPacketObject(name, new Label(value));
-    }
-
     public void setVariable(String name, int value)
     {
         setPacketObject(name, new Variable(value));
@@ -127,14 +122,6 @@ public class PDLPacketImpl implements PDLPacket
     public void setPacketList(String name, PDLPacket[] packets)
     {
         setPacketObject(name, new PacketList(packets));
-    }
-
-    public int getLabel(String name)
-    {
-        PacketObject o = getPacketObject(name, PacketObjectType.Label);
-        if (o == null) 
-            throw new IllegalArgumentException("label not defined: "+name);
-        return ((Label)o).value;
     }
 
     public int getVariable(String name)
@@ -178,23 +165,15 @@ public class PDLPacketImpl implements PDLPacket
         Variable,
         VariableList,
         Packet,
-        PacketList,
-        Label
+        PacketList
     }
 
     private abstract class PacketObject
     {
-        int age = PDLPacketImpl.this.age++;
+        int age = PDLPacketImpl.this.incrementAge();
         public abstract PacketObjectType getType();
     }
     
-    private class Label extends PacketObject
-    {
-        int value;
-        public Label(int value) { this.value = value; }
-        public PacketObjectType getType() { return PacketObjectType.Label; }   
-    }
-
     private class Variable extends PacketObject
     {
         int value;

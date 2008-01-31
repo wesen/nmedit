@@ -24,7 +24,7 @@ public interface PDLCondition
     /**
      * Evaluates the condition.
      */
-    boolean isConditionTrue(PDLPacket context);
+    boolean isConditionTrue(PDLParseContext context);
 
     String getSource();
     

@@ -18,10 +18,9 @@
 */
 package net.sf.nmedit.jpdl2.impl;
 
-import net.sf.nmedit.jpdl2.bitstream.BitStream;
 import net.sf.nmedit.jpdl2.PDLException;
 import net.sf.nmedit.jpdl2.PDLFunction;
-import net.sf.nmedit.jpdl2.PDLPacket;
+import net.sf.nmedit.jpdl2.PDLParseContext;
 import net.sf.nmedit.jpdl2.format.Expression;
 
 public class PDLFunctionImpl implements PDLFunction
@@ -34,9 +33,9 @@ public class PDLFunctionImpl implements PDLFunction
         this.e = e;
     }
 
-    public int compute(PDLPacket packet, BitStream stream) throws PDLException
+    public int compute(PDLParseContext context) throws PDLException
     {
-        return e.computeInt(stream, packet);
+        return e.computeInt(context);
     }
     
     public String toString()

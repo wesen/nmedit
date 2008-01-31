@@ -18,11 +18,9 @@
 */
 package net.sf.nmedit.jpdl2;
 
-import net.sf.nmedit.jpdl2.bitstream.BitStream;
-
 public interface PDLFunction
 {
 
-    int compute(PDLPacket packet, BitStream stream) throws PDLException;
+    int compute(PDLParseContext context) throws PDLException;
     
 }

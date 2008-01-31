@@ -14,7 +14,7 @@ import net.sf.nmedit.jpdl2.impl.PDLPacketRefImpl;
 import net.sf.nmedit.jpdl2.impl.PDLPacketRefListImpl;
 import net.sf.nmedit.jpdl2.impl.PDLVariableImpl;
 import net.sf.nmedit.jpdl2.impl.PDLVariableListImpl;
-import net.sf.nmedit.jpdl2.parser.PDLParseException;
+import net.sf.nmedit.jpdl2.PDLException;
 
 import org.junit.Test;
 
@@ -56,7 +56,7 @@ public class PDLItemTests
         for (PDLItemType type: PDLItemType.values())
         {
             PDLItem instance = getInstance(type);
-            new PDLParseException(instance, "some message");
+            new PDLException(instance, "some message");
         }
     }
     

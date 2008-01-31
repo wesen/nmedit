@@ -19,7 +19,7 @@
 package net.sf.nmedit.jpdl2.impl;
 
 import net.sf.nmedit.jpdl2.PDLCondition;
-import net.sf.nmedit.jpdl2.PDLPacket;
+import net.sf.nmedit.jpdl2.PDLParseContext;
 import net.sf.nmedit.jpdl2.format.Expression;
 
 public class PDLCompiledCondition implements PDLCondition
@@ -37,9 +37,9 @@ public class PDLCompiledCondition implements PDLCondition
         return e.getSource();
     }
 
-    public boolean isConditionTrue(PDLPacket context)
+    public boolean isConditionTrue(PDLParseContext context)
     {
-        return e.computeBoolean(null, context);
+        return e.computeBoolean(context);
     }
     
     public String toString()
