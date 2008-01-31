@@ -310,6 +310,8 @@ public class BitStream implements Cloneable
      * Sets the size of the bitstream. This method only
      * makes the bitstream smaller.
      * @param size number of valid bits
+     * 
+     * TODO there seems to be a bug where the remaining bits are not cleared (set to 0)
      */
     public void setSize(int size)
     {
