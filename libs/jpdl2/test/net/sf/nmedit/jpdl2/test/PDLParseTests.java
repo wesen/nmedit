@@ -5,7 +5,6 @@ import java.io.StringReader;
 import net.sf.nmedit.jpdl2.PDLDocument;
 import net.sf.nmedit.jpdl2.PDLException;
 import net.sf.nmedit.jpdl2.format.PDL2Parser;
-import net.sf.nmedit.jpdl2.parser.PDLParseException;
 
 import org.junit.Test;
 
@@ -112,7 +111,7 @@ public class PDLParseTests
         test("A := B$binding ;");
     }
     
-    @Test(expected=PDLParseException.class) // infinite recursion
+    @Test(expected=PDLException.class) // infinite recursion
     public void infiniteRecursion() throws PDLException
     {
         test("A := B$binding ; B := A$binding ;");
@@ -234,7 +233,7 @@ public class PDLParseTests
         test("Packet := 0:8;");
     }
 
-    @Test(expected=PDLParseException.class) // variable referenced before assignment
+    @Test(expected=PDLException.class) // variable referenced before assignment
     public void constant_variableReferencedBeforeAssignment() throws PDLException
     {
         test("Packet := v * 0:8 v:8;");
@@ -244,7 +243,7 @@ public class PDLParseTests
     // names
     // ************************************************************************************
 
-    @Test(expected=PDLParseException.class) // variable / label with same name
+    @Test(expected=PDLException.class) // variable / label with same name
     public void nameAlreadyInUse() throws PDLException
     {
         test("Packet := v:8 @v;");
@@ -257,7 +256,7 @@ public class PDLParseTests
     @Test // packet with message id
     public void messageId() throws PDLException
     {
-        test("Packet := messageid(\"themessageid\");");
+        test("Packet := messageId(\"themessageid\");");
     }
     
 }

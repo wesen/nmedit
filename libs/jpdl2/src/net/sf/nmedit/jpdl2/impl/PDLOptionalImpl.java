@@ -29,9 +29,4 @@ public class PDLOptionalImpl extends PDLBlockItemImpl implements PDLOptional
         return PDLItemType.Optional;
     }
 
-    public int getMinimumSize()
-    {
-        return 0;
-    }
-
 }

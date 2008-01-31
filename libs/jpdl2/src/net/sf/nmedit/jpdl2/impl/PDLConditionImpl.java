@@ -20,7 +20,7 @@
 package net.sf.nmedit.jpdl2.impl;
 
 import net.sf.nmedit.jpdl2.PDLCondition;
-import net.sf.nmedit.jpdl2.PDLPacket;
+import net.sf.nmedit.jpdl2.PDLParseContext;
 
 public class PDLConditionImpl implements PDLCondition
 {
@@ -46,9 +46,9 @@ public class PDLConditionImpl implements PDLCondition
         return variable;
     }
 
-    public boolean isConditionTrue(PDLPacket context)
+    public boolean isConditionTrue(PDLParseContext context)
     {
-        return (context.getVariable(variable) == value) ^ negative;
+        return (context.getPacket().getVariable(variable) == value) ^ negative;
     }
 
     public boolean isNegative()

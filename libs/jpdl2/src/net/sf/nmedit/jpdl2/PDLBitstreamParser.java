@@ -16,29 +16,15 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2.parser;
+package net.sf.nmedit.jpdl2;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import net.sf.nmedit.jpdl2.bitstream.BitStream;
-import net.sf.nmedit.jpdl2.PDLBlock;
-import net.sf.nmedit.jpdl2.PDLConditional;
-import net.sf.nmedit.jpdl2.PDLConstant;
-import net.sf.nmedit.jpdl2.PDLDocument;
-import net.sf.nmedit.jpdl2.PDLException;
-import net.sf.nmedit.jpdl2.PDLFunction;
-import net.sf.nmedit.jpdl2.PDLImplicitVariable;
-import net.sf.nmedit.jpdl2.PDLItem;
-import net.sf.nmedit.jpdl2.PDLOptional;
-import net.sf.nmedit.jpdl2.PDLPacket;
-import net.sf.nmedit.jpdl2.PDLPacketDecl;
-import net.sf.nmedit.jpdl2.PDLPacketRef;
-import net.sf.nmedit.jpdl2.PDLPacketRefList;
-import net.sf.nmedit.jpdl2.PDLUtils;
-import net.sf.nmedit.jpdl2.PDLVariable;
-import net.sf.nmedit.jpdl2.PDLVariableList;
+import net.sf.nmedit.jpdl2.impl.PDLMessageImpl;
 import net.sf.nmedit.jpdl2.impl.PDLPacketImpl;
+import net.sf.nmedit.jpdl2.impl.PDLParseContextImpl;
 
 public class PDLBitstreamParser
 {
@@ -47,6 +33,9 @@ public class PDLBitstreamParser
     private BitStream stream;
     protected int reserved;
     private int beginBlockAtIndex = 0;
+    private String messageId;
+    
+    private PDLParseContextImpl context = new PDLParseContextImpl();
     
     public void defineFunction(String name, PDLFunction f)
     {
@@ -57,26 +46,46 @@ public class PDLBitstreamParser
     {
         return implicitFunctions.get(name);
     }
+    
+    public String getLatestMessageId()
+    {
+        return messageId;
+    }
+    
+    public PDLMessage parseMessage(BitStream stream, PDLDocument document) throws PDLException
+    {
+        PDLPacket packet = parse(stream, document);
+        return new PDLMessageImpl(packet, messageId);
+    }
+    
+    public PDLMessage parseMessage(BitStream stream, PDLDocument document, String packetName) throws PDLException
+    {
+        PDLPacket packet = parse(stream, document, packetName);
+        return new PDLMessageImpl(packet, messageId);
+    }
 
-    public PDLPacket parse(BitStream stream, PDLDocument document) throws PDLParseException
+    public PDLPacket parse(BitStream stream, PDLDocument document) throws PDLException
     {
         if (document.getStartPacketName() == null)
-            throw new PDLParseException("start packet not defined");
+            throw new PDLException("start packet not defined");
         return parse(stream, document, document.getStartPacketName());
     }
     
-    public PDLPacket parse(BitStream stream, PDLDocument document, String packetName) throws PDLParseException
+    public PDLPacket parse(BitStream stream, PDLDocument document, String packetName) throws PDLException
     {
         PDLPacketDecl packetDecl = document.getPacketDecl(packetName);
         if (packetDecl == null)
-            throw new PDLParseException("undefined packet: "+packetName);
+            throw new PDLException("undefined packet: "+packetName);
 
         this.reserved = packetDecl.getMinimumSize();
         if (!stream.isAvailable(reserved))
-            throw new PDLParseException("required number of bits unavailable: "+reserved);
+            throw new PDLException("required number of bits unavailable: "+reserved);
         
         this.stream = stream;
         this.beginBlockAtIndex = 0;
+        this.messageId = null;
+        context.stream = stream;
+        context.clearLabels();
 
         try
         {
@@ -86,9 +95,9 @@ public class PDLBitstreamParser
                 parseBlock(packet, packetDecl);
                 return packet;
             }
-            catch (PDLParseException pdle)
+            catch (PDLException pdle)
             {
-                throw new PDLParseException(pdle, packetDecl);
+                throw new PDLException(pdle, packetDecl);
             }
         }
         finally
@@ -97,7 +106,7 @@ public class PDLBitstreamParser
         }
     }
 
-    void parseBlock(PDLPacketImpl context, PDLBlock block) throws PDLParseException
+    void parseBlock(PDLPacketImpl packet, PDLBlock block) throws PDLException
     {
         int index = beginBlockAtIndex;
         beginBlockAtIndex = 0;
@@ -110,13 +119,13 @@ public class PDLBitstreamParser
             {
                 case MessageId:
                 {
-                    //  TODO store messageid
+                    messageId = item.asMessageId().getMessageId();
                     break;
                 }
 
                 case Label:
                 {
-                    context.setLabel(item.asLabel().getName(), stream.getPosition());
+                    context.setLabel(item.asLabel().getName(), packet.incrementAge(), stream.getPosition());
                     break;
                 }
                 
@@ -126,7 +135,7 @@ public class PDLBitstreamParser
                     
                     PDLConstant constant = item.asConstant();
 
-                    int multiplicity = PDLUtils.getMultiplicity(context, constant.getMultiplicity());
+                    int multiplicity = PDLUtils.getMultiplicity(packet, constant.getMultiplicity());
                     final int bitcount = constant.getSize()*multiplicity;
                     ensureBitsAvailable(item, bitcount);
 
@@ -135,7 +144,7 @@ public class PDLBitstreamParser
                         int value = stream.getInt(constant.getSize());
                         if (value != constant.getValue())
                         {
-                            throw new PDLParseException(constant, "constant mismatch: "+value);
+                            throw new PDLException(constant, "constant mismatch: "+value);
                         }
                         
                         multiplicity--;
@@ -153,10 +162,10 @@ public class PDLBitstreamParser
                     
                     int value = stream.getInt(variable.getSize());
                     
+                    context.packet = packet;
                     checksum(variable, context, value);
                     
-                    context.setVariable(variable.getName(), value);
-                    reserved -= variable.getSize();
+                    packet.setVariable(variable.getName(), value);
                     break;
                 }
                 
@@ -167,8 +176,7 @@ public class PDLBitstreamParser
                     PDLVariable variable = item.asVariable();
                     ensureBitsAvailable(item, variable.getSize());
                     
-                    context.setVariable(variable.getName(), stream.getInt(variable.getSize()));
-                    reserved -= variable.getSize();
+                    packet.setVariable(variable.getName(), stream.getInt(variable.getSize()));
                     break;
                 }
                 
@@ -178,7 +186,7 @@ public class PDLBitstreamParser
                     
                     PDLVariableList variable = item.asVariableList(); 
 
-                    int multiplicity = PDLUtils.getMultiplicity(context, variable.getMultiplicity()); 
+                    int multiplicity = PDLUtils.getMultiplicity(packet, variable.getMultiplicity()); 
                     final int bitcount = variable.getSize() * multiplicity;
                     ensureBitsAvailable(item, bitcount);
                     
@@ -206,8 +214,7 @@ public class PDLBitstreamParser
                         }
                     }
                     
-                    context.setVariableList(variable.getName(), values);
-                    reserved -= bitcount;
+                    packet.setVariableList(variable.getName(), values);
                     break;
                 }
                 
@@ -225,12 +232,12 @@ public class PDLBitstreamParser
                     {
                         parseBlock(context2, packetDecl);
                     }
-                    catch (PDLParseException pdle)
+                    catch (PDLException pdle)
                     {
-                        throw new PDLParseException(pdle, packetRef);
+                        throw new PDLException(pdle, packetRef);
                     }
                     
-                    context.setPacket(packetRef.getBinding(), context2);
+                    packet.setPacket(packetRef.getBinding(), context2);
                     
                     break;
                 }
@@ -241,7 +248,7 @@ public class PDLBitstreamParser
                     
                     PDLPacketRefList packetRefList = item.asPacketRefList();
                     PDLPacketDecl packetDecl = packetRefList.getReferencedPacket();
-                    int multiplicity = PDLUtils.getMultiplicity(context, packetRefList.getMultiplicity());
+                    int multiplicity = PDLUtils.getMultiplicity(packet, packetRefList.getMultiplicity());
                     int bitcount = packetDecl.getMinimumSize()*multiplicity;
                     ensureBitsAvailable(item, bitcount);
                     PDLPacketImpl[] packetList = new PDLPacketImpl[multiplicity];
@@ -257,12 +264,12 @@ public class PDLBitstreamParser
                             packetList[i] = context2;
                         }
                     }
-                    catch (PDLParseException pdle)
+                    catch (PDLException pdle)
                     {
-                        throw new PDLParseException(pdle, packetRefList);
+                        throw new PDLException(pdle, packetRefList);
                     }
                     
-                    context.setPacketList(packetRefList.getBinding(), packetList);
+                    packet.setPacketList(packetRefList.getBinding(), packetList);
                     break; 
                 }
                 
@@ -272,16 +279,15 @@ public class PDLBitstreamParser
                     
                     PDLConditional conditional = item.asConditional();
                     ensureBitsAvailable(item, conditional.getMinimumSize());
+                    context.packet = packet; // set the packet field
                     if (conditional.getCondition().isConditionTrue(context))
-                        parseBlock(context, conditional);
+                        parseBlock(packet, conditional);
                     break;
                 }
                 
                 case Optional:
                 {
 
-                    reserved -= item.getMinimumSize();
-                    
                     PDLOptional optional = item.asOptional();
                     
                     if (!isAvailable(optional.getMinimumSize()))
@@ -289,40 +295,44 @@ public class PDLBitstreamParser
                         // necessary number of bits unavailable
                         break; // case statement
                     }
-                    
+                 
                     int storeReserved = reserved;
-                    int storeAge = context.getCurrentAge();
+                    int storeAge = packet.getCurrentAge();
                     int storePos = stream.getPosition();
+                    String storeMessageId = this.messageId;
+
+                    reserved -= item.getMinimumSize();
                     
                     try
                     {
-                        parseBlock(context, optional);
+                        parseBlock(packet, optional);
                         
                         // try to parse remaining message
                         beginBlockAtIndex = index+1; // start at next index
-                        parseBlock(context, block);
+                        parseBlock(packet, block);
 
                         // remaining message successfully parsed
                         return ;
                     }
-                    catch (PDLParseException pdle)
+                    catch (PDLException pdle)
                     {
                         // undo optional item
                         reserved = storeReserved; // restore
-                        context.removeItemsOlderThan(storeAge);
+                        packet.removeItemsOlderThan(storeAge);
                         stream.setPosition(storePos);
-                     
+                        this.messageId = storeMessageId;
+                        context.deleteLabelsOlderThan(storeAge);
                         // continue parsing
-                        break;
                     }
+                    break;
                 }
             }
         }
         
     }
 
-    private void checksum(PDLImplicitVariable item, PDLPacketImpl context, final int value)
-        throws PDLParseException
+    private void checksum(PDLImplicitVariable item, PDLParseContext context, final int value)
+        throws PDLException
     {
         PDLFunction function = item.getFunction();
         
@@ -330,11 +340,11 @@ public class PDLBitstreamParser
         int expected;
         try
         {
-            expected = function.compute(context, stream);
+            expected = function.compute(context);
         }
         catch (PDLException pdle)
         {
-            throw new PDLParseException(pdle);
+            throw new PDLException(pdle);
         }
         finally
         {
@@ -343,7 +353,7 @@ public class PDLBitstreamParser
         
         if (value != expected)
         {
-            throw new PDLParseException(item, "implicit value different from stream value: "+
+            throw new PDLException(item, "implicit value different from stream value: "+
                     value+" (stream), "+expected+" (expected)");
         }
         
@@ -354,10 +364,10 @@ public class PDLBitstreamParser
         return stream.isAvailable(reserved+bitcount);
     }
 
-    private void ensureBitsAvailable(PDLItem item, int bitcount) throws PDLParseException
+    private void ensureBitsAvailable(PDLItem item, int bitcount) throws PDLException
     {
         if (!isAvailable(bitcount))
-            throw new PDLParseException(item, "required number of bits unavailable: "
+            throw new PDLException(item, "required number of bits unavailable: "
                     +(bitcount+reserved)+"="+bitcount+" + "+reserved+" (reserved)");
     }
 

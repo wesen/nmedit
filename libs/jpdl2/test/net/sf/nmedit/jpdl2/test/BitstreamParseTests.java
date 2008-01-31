@@ -2,18 +2,20 @@ package net.sf.nmedit.jpdl2.test;
 
 import java.io.StringReader;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import net.sf.nmedit.jpdl2.bitstream.BitStream;
+import net.sf.nmedit.jpdl2.PDLBitstreamParser;
 import net.sf.nmedit.jpdl2.PDLDocument;
 import net.sf.nmedit.jpdl2.PDLException;
+import net.sf.nmedit.jpdl2.PDLMessage;
 import net.sf.nmedit.jpdl2.PDLPacket;
 import net.sf.nmedit.jpdl2.format.PDL2Parser;
-import net.sf.nmedit.jpdl2.parser.PDLBitstreamParser;
 
 public class BitstreamParseTests
 {
-
+    
     public PDLPacket test(BitStream stream, String pdlsrc) throws PDLException
     {
         PDL2Parser parser = new PDL2Parser(new StringReader("start start;"+pdlsrc));
@@ -22,6 +24,16 @@ public class BitstreamParseTests
         
         PDLBitstreamParser bsparse = new PDLBitstreamParser();
         return bsparse.parse(stream, doc);
+    }
+
+    public PDLMessage mtest(BitStream stream, String pdlsrc) throws PDLException
+    {
+        PDL2Parser parser = new PDL2Parser(new StringReader("start start;"+pdlsrc));
+        parser.parse();
+        PDLDocument doc = parser.getDocument();
+        
+        PDLBitstreamParser bsparse = new PDLBitstreamParser();
+        return bsparse.parseMessage(stream, doc);
     }
     
     private BitStream stream(int ... data)
@@ -84,4 +96,49 @@ public class BitstreamParseTests
                 throw new PDLException("variable has wrong value: "+packet.getVariable("v"+i)+" expected:"+v[i-1]);
     }
 
+    @Test
+    public void parseMessageId() throws PDLException
+    {
+        for (int i=-1;i<=4;i++)
+        {
+            PDLMessage msg = mtest(stream(i,8), 
+                "start := v:8 \n" +
+                " messageId(\"-1\") \n" +
+                " #v = 0 => messageId(\"0\") \n" +
+                " #v = 1 => messageId(\"1\") \n" +
+                " #v = 2 => messageId(\"2\") \n" +
+                " #v = 3 => messageId(\"3\") \n" +
+                " #v = 4 => messageId(\"4\") \n" +
+                ";" 
+            );
+            
+            int msgId = Integer.parseInt(msg.getMessageId());
+            
+            Assert.assertEquals(i, msgId);
+        }
+    }
+
+    @Test
+    public void unsetMessageId() throws PDLException
+    {
+        for (int i=0;i<=4;i++)
+        {
+            // at first messageId("abc") is defined, but later it is undefined because the optional
+            // part is not included in the message
+            PDLMessage msg = mtest(stream(i,8),
+                "start := v:8 ? { messageId(\"abc\") c:4} \n" +
+                " #v = 0 => messageId(\"0\") \n" +
+                " #v = 1 => messageId(\"1\") \n" +
+                " #v = 2 => messageId(\"2\") \n" +
+                " #v = 3 => messageId(\"3\") \n" +
+                " #v = 4 => messageId(\"4\") \n" +
+                ";" 
+            );
+
+            int msgId = Integer.parseInt(msg.getMessageId());
+            
+            Assert.assertEquals(i, msgId);
+        }
+    }
+    
 }

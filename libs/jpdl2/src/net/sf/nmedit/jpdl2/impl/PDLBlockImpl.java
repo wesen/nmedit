@@ -72,6 +72,7 @@ public class PDLBlockImpl implements PDLBlock
                         break;
                     default:
                         minimumSize+=item.getMinimumSize();
+                        break;
                 }
             }
         }

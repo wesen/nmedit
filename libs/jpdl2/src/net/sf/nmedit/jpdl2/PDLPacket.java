@@ -25,11 +25,8 @@ public interface PDLPacket
 {
     
     int getVariable(String name);
-    int getLabel(String name);
 
     boolean hasVariable(String name);
-
-    boolean hasLabel(String name);
 
     boolean hasPacket(String name);
     boolean hasVariableList(String name);

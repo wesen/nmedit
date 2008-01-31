@@ -33,7 +33,6 @@ import net.sf.nmedit.jpdl2.PDLPacketDecl;
 import net.sf.nmedit.jpdl2.PDLPacketRef;
 import net.sf.nmedit.jpdl2.PDLPacketRefList;
 import net.sf.nmedit.jpdl2.PDLUtils;
-import net.sf.nmedit.jpdl2.parser.PDLParseException;
 
 public class PDLDocumentVerifier
 {
@@ -65,9 +64,9 @@ public class PDLDocumentVerifier
             {
                 verifyPacket(packet);
             }
-            catch (PDLParseException e)
+            catch (PDLException e)
             {
-                throw new PDLParseException(e, packet);
+                throw new PDLException(e, packet);
             }
         }
         
@@ -83,7 +82,7 @@ public class PDLDocumentVerifier
         
     }
 
-    private void detectRecursion() throws PDLParseException
+    private void detectRecursion() throws PDLException
     {
         Set<String> visited = new HashSet<String>();
         for (PDLPacketDecl packet: doc)
@@ -93,7 +92,7 @@ public class PDLDocumentVerifier
         }
     }
 
-    private void detectRecursion(Set<String> visited, PDLBlock block, boolean conditionalPath) throws PDLParseException
+    private void detectRecursion(Set<String> visited, PDLBlock block, boolean conditionalPath) throws PDLException
     {
         Iterator<PDLItem> iter = block.iterator();
         while (iter.hasNext())
@@ -167,7 +166,7 @@ public class PDLDocumentVerifier
         
     }
 
-    public void verifyPacket(PDLPacketDecl packet) throws PDLParseException
+    public void verifyPacket(PDLPacketDecl packet) throws PDLException
     {
         verifyReferences(packet);
     }
@@ -182,7 +181,7 @@ public class PDLDocumentVerifier
     final String VARIABLE = "variable";
     final String LABEL = "label";
     
-    public void verifyReferences(PDLPacketDecl packet) throws PDLParseException
+    public void verifyReferences(PDLPacketDecl packet) throws PDLException
     {
         Map<String, String> defined = null;
         Iterator<PDLItem> iter = PDLUtils.flatten(packet);
@@ -244,9 +243,9 @@ public class PDLDocumentVerifier
         }
     }
     
-    private void error(PDLItem item, String message) throws PDLParseException
+    private void error(PDLItem item, String message) throws PDLException
     {
-        throw new PDLParseException(item, message);
+        throw new PDLException(item, message);
     }
     
     private void warning(PDLItem item, String message)
@@ -256,23 +255,23 @@ public class PDLDocumentVerifier
     }
 
     private Map<String, String> define(PDLItem item, Map<String, String> defined,
-            String type, String name) throws PDLParseException
+            String type, String name) throws PDLException
     {
         defined = map(defined);
         if (defined.containsKey(name))
-            throw new PDLParseException(item, "name already defined: "+name);
+            throw new PDLException(item, "name already defined: "+name);
         defined.put(name, type);
         return defined;
     }
 
     private void checkMultiplicity(Map<String, String> defined,
             PDLItem item,
-            PDLMultiplicity m) throws PDLParseException
+            PDLMultiplicity m) throws PDLException
     {
         if (m != null && m.getVariable() != null)
         {
             if (defined == null || !VARIABLE.equals(defined.get(m.getVariable())))
-                throw new PDLParseException(item, "variable referenced before assignment:"+m.getVariable());
+                throw new PDLException(item, "variable referenced before assignment:"+m.getVariable());
         }
     }
 

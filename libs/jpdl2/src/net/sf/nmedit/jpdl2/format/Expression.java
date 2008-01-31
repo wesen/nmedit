@@ -19,7 +19,7 @@
 package net.sf.nmedit.jpdl2.format;
 
 import net.sf.nmedit.jpdl2.bitstream.BitStream;
-import net.sf.nmedit.jpdl2.PDLPacket;
+import net.sf.nmedit.jpdl2.PDLParseContext;
 
 public class Expression implements Opcodes
 {
@@ -120,14 +120,14 @@ public class Expression implements Opcodes
         return "Expr[description='"+describe()+"']";
     }
 
-    private int left(BitStream stream, PDLPacket packet, int fieldRegister)
+    private int left(PDLParseContext context, int fieldRegister)
     {
-        return args[0].ev(stream, packet, fieldRegister);
+        return args[0].ev(context, fieldRegister);
     }
 
-    private int right(BitStream stream, PDLPacket packet, int fieldRegister)
+    private int right(PDLParseContext context, int fieldRegister)
     {
-        return args[1].ev(stream, packet, fieldRegister);
+        return args[1].ev(context, fieldRegister);
     }
     
     private int b2i(boolean value)
@@ -140,77 +140,78 @@ public class Expression implements Opcodes
         return (value&1) == 1;
     }
     
-    public int computeInt(BitStream s, PDLPacket p)
+    public int computeInt(PDLParseContext context)
     {
-        return ev(s, p, null);
+        return ev(context, null);
     }
     
-    public boolean computeBoolean(BitStream s, PDLPacket p)
+    public boolean computeBoolean(PDLParseContext context)
     {
         // TODO stream=null case
-        return i2b(ev(s, p, null));
+        return i2b(ev(context, null));
     }
     
-    private int ev(BitStream s, PDLPacket p, Integer f)
+    private int ev(PDLParseContext c, Integer f)
     {
         switch (opcode)
         {
             case ipush:
             case bpush: return ival;
-            case lpush: return p.getLabel(sval);
-            case vpush: return p.getVariable(sval);
+            case lpush: return c.getLabel(sval);
+            case vpush: return c.getPacket().getVariable(sval);
             case fpush:
                 if (f == null)
                     throw new RuntimeException("field register not accessible");
                 return f.intValue();
-            case ineg: return -left(s, p, f);
-            case binv: return 1-left(s, p, f); // 1-1 = 0, 1-0 = 1  => 1-(int)<boolean> == !<boolean>
-            case iinv: return -left(s, p, f);
-            case i2b:  return left(s, p, f)&1;
-            case b2i:  return left(s, p, f);
-            case imul: return left(s, p, f)*right(s, p, f);
-            case idiv: return left(s, p, f)/right(s, p, f);
-            case imod: return left(s, p, f)%right(s, p, f);
-            case iadd: return left(s, p, f)+right(s, p, f);
-            case isub: return left(s, p, f)-right(s, p, f);
-            case ishl: return left(s, p, f)<<right(s, p, f);
-            case ishr: return left(s, p, f)>>right(s, p, f);
-            case iushr: return left(s, p, f)>>>right(s, p, f);
-            case ilt: return b2i(left(s, p, f)<right(s, p, f));
-            case igt: return b2i(left(s, p, f)>right(s, p, f));
-            case ileq: return b2i(left(s, p, f)<=right(s, p, f));
-            case igeq: return b2i(left(s, p, f)>=right(s, p, f));
+            case ineg: return -left(c, f);
+            case binv: return 1-left(c, f); // 1-1 = 0, 1-0 = 1  => 1-(int)<boolean> == !<boolean>
+            case iinv: return -left(c, f);
+            case i2b:  return left(c, f)&1;
+            case b2i:  return left(c, f);
+            case imul: return left(c, f)*right(c, f);
+            case idiv: return left(c, f)/right(c, f);
+            case imod: return left(c, f)%right(c, f);
+            case iadd: return left(c, f)+right(c, f);
+            case isub: return left(c, f)-right(c, f);
+            case ishl: return left(c, f)<<right(c, f);
+            case ishr: return left(c, f)>>right(c, f);
+            case iushr: return left(c, f)>>>right(c, f);
+            case ilt: return b2i(left(c, f)<right(c, f));
+            case igt: return b2i(left(c, f)>right(c, f));
+            case ileq: return b2i(left(c, f)<=right(c, f));
+            case igeq: return b2i(left(c, f)>=right(c, f));
             case beq:
-            case ieq: return b2i(left(s, p, f)==right(s, p, f));
+            case ieq: return b2i(left(c, f)==right(c, f));
             case bneq:
-            case ineq: return b2i(left(s, p, f)!=right(s, p, f));
+            case ineq: return b2i(left(c, f)!=right(c, f));
             case band:
-            case iand: return left(s, p, f)&right(s, p, f);
-            case bxor: return b2i(i2b(left(s, p, f))^i2b(right(s, p, f)));
-            case ixor: return left(s, p, f)^right(s, p, f);
-            case bor: return b2i(i2b(left(s, p, f))|i2b(right(s, p, f)));
-            case ior: return left(s, p, f)|right(s, p, f);
+            case iand: return left(c, f)&right(c, f);
+            case bxor: return b2i(i2b(left(c, f))^i2b(right(c, f)));
+            case ixor: return left(c, f)^right(c, f);
+            case bor: return b2i(i2b(left(c, f))|i2b(right(c, f)));
+            case ior: return left(c, f)|right(c, f);
             case ladd: 
             case lmul:
             case land:
             case lxor:
             case lor: 
-                return evalListOperator(s, p, f);
+                return evalListOperator(c, f);
             default: 
                 throw Opcode.invalidOpcodeError(opcode);
         }
     }
 
-    private int evalListOperator(BitStream s, PDLPacket p, Integer fieldRegister)
+    private int evalListOperator(PDLParseContext c, Integer fieldRegister)
     {
+        BitStream s = c.getBitStream();
         final int spos = s.getPosition();
         int result = 0;
         try
         {
             // TODO check start, end, size
-            int start = args[0].ev(s, p, fieldRegister);
-            int end = args[1].ev(s, p, fieldRegister);
-            int size = args[2].ev(s, p, fieldRegister);
+            int start = args[0].ev(c, fieldRegister);
+            int end = args[1].ev(c, fieldRegister);
+            int size = args[2].ev(c, fieldRegister);
             Expression field = args[3];
             
             int fieldIndex = 0;
@@ -218,7 +219,7 @@ public class Expression implements Opcodes
             while (start<end)
             {
                 s.setPosition(start); // ensure the stream position is correct
-                int newFieldValue = field.ev(s, p, s.getInt(size));
+                int newFieldValue = field.ev(c, s.getInt(size));
                 
                 if (fieldIndex == 0)
                 {
