@@ -30,8 +30,12 @@ import java.beans.PropertyChangeListener;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -59,6 +63,8 @@ import org.java.plugin.PluginManager;
 import org.java.plugin.boot.Boot;
 import org.java.plugin.boot.SplashHandler;
 import org.java.plugin.registry.PluginDescriptor;
+import org.java.plugin.registry.PluginPrerequisite;
+import org.java.plugin.registry.PluginRegistry;
 
 import com.jgoodies.looks.Options;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
@@ -158,13 +164,59 @@ public class NomadLoader
         return nomad;
     }
     
+    public static <T> Collection<T> jpfOrderByDepencies(Iterator<T> iter)
+    {
+        List<T> list = new ArrayList<T>();
+        while (iter.hasNext())
+            list.add(iter.next());
+        
+        if (list.size()<=1)
+            return list;
+
+        Collections.sort(list, new DependenciesComparator(PluginManager.lookup(list.get(0))));
+        return list;
+    }
+    
+    private static class DependenciesComparator implements Comparator<Object>
+    {
+        private PluginManager manager;
+        private PluginRegistry registry;
+
+        public DependenciesComparator(PluginManager manager)
+        {
+            this.manager = manager;
+            this.registry = manager.getRegistry();
+        }
+
+        public int compare(Object a, Object b)
+        {
+            Plugin pa = manager.getPluginFor(a);
+            Plugin pb = manager.getPluginFor(b);
+            PluginDescriptor da = pa.getDescriptor();
+            PluginDescriptor db = pb.getDescriptor();
+
+            if (pa == pb || pa.equals(pb))
+                return 0;
+
+            if (registry.getDependingPlugins(da).contains(db))
+                return -1;
+            if (registry.getDependingPlugins(db).contains(da))
+                return +1;
+            return 0;
+        }
+    }
+    
     public void initServices()
     {
-        for (Iterator<InitService> i=ServiceRegistry.getServices(InitService.class); i.hasNext();)
+        Collection<InitService> orderedServices =
+            jpfOrderByDepencies(ServiceRegistry.getServices(InitService.class));
+        
+        for (Iterator<InitService> i=orderedServices.iterator(); i.hasNext();)
         {
+            InitService s = i.next();
             try
             {
-                i.next().init();
+                s.init();
             }
             catch (Throwable t)
             {
