@@ -2086,8 +2086,8 @@
     <image type="screenshot" src="img/modules/module-77.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-77.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-77.png" width="32" height="32" />
-    <connector component-id="c1" index="0" name="reset" type="input" signal="logic" />
-    <connector component-id="c2" index="1" name="midiclock" type="input" signal="logic" />
+    <connector component-id="c1" index="1" name="reset" type="input" signal="logic" />
+    <connector component-id="c2" index="0" name="midiclock" type="input" signal="logic" />
     <connector component-id="c3" index="0" name="16" type="output" signal="logic" />
     <connector component-id="c4" index="1" name="T8" type="output" signal="logic" />
     <connector component-id="c5" index="2" name="8" type="output" signal="logic" />
