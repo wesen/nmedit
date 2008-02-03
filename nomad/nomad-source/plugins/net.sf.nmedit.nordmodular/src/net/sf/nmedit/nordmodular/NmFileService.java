@@ -33,6 +33,7 @@ import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTNM1Context;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTNMPatch;
 import net.sf.nmedit.nomad.core.Nomad;
+import net.sf.nmedit.nomad.core.forms.ExceptionDialog;
 import net.sf.nmedit.nomad.core.service.Service;
 import net.sf.nmedit.nomad.core.service.fileService.FSFileFilter;
 import net.sf.nmedit.nomad.core.service.fileService.FileService;
@@ -84,11 +85,17 @@ public class NmFileService implements FileService
         }
         catch (Exception e)
         {
+            
+            
             Log log = LogFactory.getLog(getClass());
             if (log.isWarnEnabled())
             {
                 log.warn("open failed: "+file, e);
             }
+
+            ExceptionDialog.showErrorDialog(Nomad.sharedInstance().getWindow().getRootPane(), 
+                    "Could not open file '"+file+"'", "Could not open file.", e);
+            
             return;
         }
     }
