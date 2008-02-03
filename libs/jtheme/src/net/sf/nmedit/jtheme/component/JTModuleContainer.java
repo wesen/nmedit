@@ -22,21 +22,31 @@
  */
 package net.sf.nmedit.jtheme.component;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
 import javax.swing.border.Border;
 
+import net.sf.nmedit.jpatch.PConnection;
+import net.sf.nmedit.jpatch.PConnectionManager;
+import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PModuleMetrics;
+import net.sf.nmedit.jpatch.event.PConnectionEvent;
+import net.sf.nmedit.jpatch.event.PConnectionListener;
 import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
 import net.sf.nmedit.jpatch.event.PModuleContainerListener;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
+import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.plaf.JTModuleContainerUI;
 import net.sf.nmedit.jtheme.store2.ModuleElement;
@@ -162,9 +172,10 @@ public class JTModuleContainer extends JTBaseComponent
         return new ContentSynchronisation();
     }
     
-    protected class ContentSynchronisation implements PModuleContainerListener
+    protected class ContentSynchronisation implements PModuleContainerListener, PConnectionListener
     {
         private PModuleContainer mc;
+        private PConnectionManager pc;
         //private boolean oneUpdate = false;
         
         public void install()
@@ -189,11 +200,17 @@ public class JTModuleContainer extends JTBaseComponent
         protected void install(PModuleContainer mc)
         {
             mc.addModuleContainerListener(this);
+            pc = mc.getConnectionManager();
+            if (pc != null)
+                pc.addConnectionListener(this);
         }
 
         protected void uninstall(PModuleContainer mc)
         {
             mc.removeModuleContainerListener(this);
+            if (pc != null)
+                pc.removeConnectionListener(this);
+            pc = null;
         }
 
         public void moduleAdded(PModuleContainerEvent e)
@@ -253,6 +270,71 @@ public class JTModuleContainer extends JTBaseComponent
             }
         }
 
+        public void connectionAdded(PConnectionEvent e)
+        {
+            colorCables(e, true);
+        }
+
+        public void connectionRemoved(PConnectionEvent e)
+        {
+            colorCables(e, false);
+        }
+
+        public void colorCables(PConnectionEvent e, boolean joined)
+        {
+            if (joined)
+            {
+                Color color = e.getDestination().getSignalType().getColor();
+
+                // set colors
+                Collection<Cable> cables = getCables(e.getSource()); 
+                for (Cable cable: cables)
+                {
+                    cable.setColor(color);
+                }
+                getCableManager().update(cables);
+            }
+            else
+            {
+                // make grey
+                Collection<Cable> cables = getCables(e.getSource()); 
+                for (Cable cable: cables)
+                {
+                    // TODO lookup correct color in patch 
+                    cable.setColor(Color.WHITE);
+                }
+                getCableManager().update(cables);
+            }
+        }
+        
+        private Collection<Cable> getCables(PConnector c)
+        {
+            Collection<Cable> cables = new ArrayList<Cable>(getCableManager().size());
+            Collection<PConnection> connections = mc.getConnectionManager().connections(c);
+            for (Cable cable: getCableManager())
+            {
+                for (Iterator<PConnection> iter=connections.iterator();iter.hasNext();)
+                {
+                    if (isSameConnection(iter.next(), cable))
+                        cables.add(cable);
+                }
+            }
+            return cables;
+        }
+
+        private boolean isSameConnection(PConnection c, Cable cable)
+        {
+            return isSameConnection(c.getA(), c.getB(), cable.getSource(), cable.getDestination())
+            || isSameConnection(c.getA(), c.getB(), cable.getDestination(), cable.getSource());
+        }
+
+        private boolean isSameConnection(PConnector a1, PConnector b1,
+                PConnector a2, PConnector b2)
+        {
+            // TODO Auto-generated method stub
+            return a2==a2 && b1==b2;
+        }
+        
     }
     
     public void setModuleContainer(PModuleContainer mc)
