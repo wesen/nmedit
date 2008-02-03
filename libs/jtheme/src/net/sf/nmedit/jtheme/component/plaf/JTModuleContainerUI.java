@@ -221,13 +221,6 @@ public class JTModuleContainerUI extends ComponentUI
     private transient Rectangle dndBox;
     private transient Point dndInitialScrollLocation;
     
-    private void revalidateParent()
-    {
-        JComponent parent = (JComponent) getModuleContainer().getParent();
-        if (parent != null)
-            parent.revalidate();
-    }
-    
     public void updateDnDBoundingBox(Rectangle box)
     {
         Rectangle repaint;
@@ -273,7 +266,6 @@ public class JTModuleContainerUI extends ComponentUI
                 getModuleContainer().computePreferredSize(null)        
             );            
             dndInitialScrollLocation = null;
-            revalidateParent();
         }
         else
         {
@@ -300,7 +292,6 @@ public class JTModuleContainerUI extends ComponentUI
             {
                 getModuleContainer()
                 .setPreferredSize(new Dimension(r, b));
-                revalidateParent();
             }
             
             getModuleContainer().scrollRectToVisible(dndBox);
@@ -866,8 +857,6 @@ public class JTModuleContainerUI extends ComponentUI
                 }
             }
             
-            jtmc.setPreferredSize(new Dimension(maxx, maxy));
-            
             JTCableManager cman = jtmc.getCableManager();
                       
             //ConnectionManager cm = jtmc.getModuleContainer().getConnectionManager();
@@ -882,6 +871,8 @@ public class JTModuleContainerUI extends ComponentUI
                 c.updateEndPoints();
             
             cman.update(cables);
+            
+            jtmc.updateModuleContainerDimensions();
         }
 
         public void dropActionChanged(DropTargetDragEvent dtde)
