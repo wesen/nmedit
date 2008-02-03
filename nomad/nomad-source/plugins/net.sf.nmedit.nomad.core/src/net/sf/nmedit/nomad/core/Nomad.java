@@ -417,7 +417,16 @@ public class Nomad
         {
             File newFile = chooser.getSelectedFile();
             if (newFile == null) return;
+            
+            if (newFile.exists() && JOptionPane.showConfirmDialog(mainWindow, "Overwrite existing file '"+newFile.getAbsolutePath()
+                    +"' ?", "File already exists.", JOptionPane.YES_NO_OPTION)==JOptionPane.NO_OPTION)
+                return;
+
             service.save(d, newFile);
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(mainWindow, "Could not find service to save file.");
         }
     }
 
@@ -460,7 +469,10 @@ public class Nomad
                 service.open(file);
             }
         }
-        
+        else
+        {
+            JOptionPane.showMessageDialog(mainWindow, "Could not find service to open file.");
+        }
     }
     
     public ExplorerTree getExplorer()
