@@ -732,7 +732,6 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
 
     private void updateCables()
     {
-        System.out.println("update");
         JTModuleContainer parent;
         try
         {
