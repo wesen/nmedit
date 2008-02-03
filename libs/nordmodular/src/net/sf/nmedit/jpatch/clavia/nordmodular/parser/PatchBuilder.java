@@ -291,7 +291,13 @@ public class PatchBuilder implements PContentHandler
         else
         {
             PModule module = va.getModule(modIndex);
+            if (module == null)
+                throw new ParseException("[KnobMapDump] Module does not exist at index:"+modIndex);
+            
             p = module.getParameter(paramIndex);
+            if (p == null)
+                throw new ParseException("[KnobMapDump] Parameter does not exist at index:"+paramIndex+" (module index: "+modIndex+")");
+            
         }
         Knob knob = patch.getKnobs().getByID(record[3]);
         knob.setParameter(p);
