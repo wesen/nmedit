@@ -69,7 +69,6 @@ public class NmFileService implements FileService
             
             patch.setProperty("file", file);
 
-            patch.setName(NmUtils.getPatchNameFromfileName(file));
             final PatchDocument pd = createPatchDoc(patch);
             pd.setURI(file);
 
