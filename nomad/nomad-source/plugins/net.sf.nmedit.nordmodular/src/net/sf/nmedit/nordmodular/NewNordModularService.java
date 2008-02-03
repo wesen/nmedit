@@ -61,8 +61,7 @@ public class NewNordModularService
 
     public void newSynth()
     {
-        NordModular nm = new NordModular(NMData.sharedInstance().getModuleDescriptions());
-        newContext(nm);
+        newContext(createSynth());
     }
 
     public Class<? extends Service> getServiceClass()
@@ -81,15 +80,25 @@ public class NewNordModularService
         et.getRoot().add(sdc);
         et.fireRootChanged();
     }
+    
+    private static NordModular createSynth()
+    {NordModular synth = new NordModular(NMData.sharedInstance().getModuleDescriptions());
+
+    synth.putClientProperty("icon.nm.micro", NMData.sharedInstance().getMicroIcon());
+    synth.putClientProperty("icon.nm.keyboard", NMData.sharedInstance().getModularIcon());
+    synth.putClientProperty("icon.nm.rack", NMData.sharedInstance().getModularRackIcon());
+    
+
+    Registry<Synthesizer> sreg = GlobalRegistry.getInstance().getRegistry(Synthesizer.class);
+    sreg.add(synth);
+    
+    return synth;
+    }
 
     public static void newSynth(String name, MidiPlug input, MidiPlug output)
     {
         ExplorerTree etree = Nomad.sharedInstance().getExplorer();  
-        NordModular synth = new NordModular(NMData.sharedInstance().getModuleDescriptions());
-
-        synth.putClientProperty("icon.nm.micro", NMData.sharedInstance().getMicroIcon());
-        synth.putClientProperty("icon.nm.keyboard", NMData.sharedInstance().getModularIcon());
-        synth.putClientProperty("icon.nm.rack", NMData.sharedInstance().getModularRackIcon());
+        NordModular synth = createSynth();
 
         try
         {
@@ -100,10 +109,6 @@ public class NewNordModularService
         {
             // ignore - should not happen
         }
-
-        Registry<Synthesizer> sreg = GlobalRegistry.getInstance().getRegistry(Synthesizer.class);
-        sreg.add(synth);
-        
         etree.addRootNode(new NMSynthDeviceContext(etree, synth, name));
     }
     
