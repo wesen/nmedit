@@ -41,6 +41,7 @@ import net.sf.nmedit.jpatch.history.HistoryImpl;
 import net.sf.nmedit.jpatch.history.Synchronizer;
 import net.sf.nmedit.jpatch.impl.PBasicPatch;
 import net.sf.nmedit.jsynth.Slot;
+import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 
 /**
  * Implementation of the (virtual) patch according to the patch file format 3.0 specification.
@@ -378,6 +379,11 @@ public class NMPatch extends PBasicPatch implements PPatch
             {
                 properties.put(name, value);
                 firePropertyChanged(name, oldValue, value);
+                
+                if (name.equals("file") && (value instanceof File))
+                {
+                    setName(NmUtils.getPatchNameFromfileName((File) value));
+                }
             }
         }
     }
