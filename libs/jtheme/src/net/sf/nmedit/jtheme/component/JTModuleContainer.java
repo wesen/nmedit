@@ -25,6 +25,7 @@ package net.sf.nmedit.jtheme.component;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
 import net.sf.nmedit.jpatch.PConnection;
@@ -88,6 +90,32 @@ public class JTModuleContainer extends JTBaseComponent
     protected boolean isRepaintOrigin()
     {
         return true;
+    }
+    
+    public void updateModuleContainerDimensions()
+    {
+        SwingUtilities.invokeLater( new Runnable() {
+
+            long time = System.currentTimeMillis();
+            
+            public void run()
+            {
+                if (time>lastModuleContainerDimensionUpdate)
+                    updateModuleContainerDimensionsNow();
+                
+            }} );
+    }
+    
+    private long lastModuleContainerDimensionUpdate = 0;
+
+    private void updateModuleContainerDimensionsNow()
+    {
+        lastModuleContainerDimensionUpdate = System.currentTimeMillis();
+        
+        Dimension d = computePreferredSize(null);
+        setPreferredSize(d);
+        setSize(d);   
+        repaint();
     }
     
 /*
