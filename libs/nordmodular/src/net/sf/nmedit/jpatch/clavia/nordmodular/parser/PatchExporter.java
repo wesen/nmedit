@@ -210,7 +210,7 @@ public class PatchExporter
                         PParameter pp = k.getParameter();
                         PModule m = pp.getParentComponent();
                         record[0] = m.getParentComponent().getComponentIndex();
-                        record[1] = Helper.index(m);
+                        record[1] = m.getComponentIndex();
                         record[2] = Helper.index(pp);
                         record[3] = k.getID();
                         handler.knobMapDump(record);
