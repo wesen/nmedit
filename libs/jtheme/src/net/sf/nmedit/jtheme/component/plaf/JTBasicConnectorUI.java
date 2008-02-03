@@ -457,6 +457,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
             
             if (connectedCables != null)
             {
+                cableManager.update(connectedCables);
                 for (Cable cable:connectedCables)
                 {
                     Point cstart = cable.getStart();
@@ -467,29 +468,23 @@ public class JTBasicConnectorUI extends JTConnectorUI
                     else
                         cstop.setLocation(stop);
                     
-                    cableManager.markDirty(cable);
                     cable.setEndPoints(cstart, cstop);
-                    cableManager.markDirty(cable);
                 }
-
-               // cableManager.markCompletelyDirty();
-                cableManager.notifyRepaintManager();
+                cableManager.update(connectedCables);
                 
                 scrollToVisible(cableManager.getOwner(), c, x, y);
                 
                 return;
             }
-            
+
+            cableManager.update(cables);
             for (int i=cables.length-1;i>=0;i--)
             {
                 Cable cable = cables[i];
-                cableManager.markDirty(cable);
                 cable.setEndPoints(cable.getStart(), new Point(stop));
-                cableManager.markDirty(cable);
             }
+            cableManager.update(cables);
             
-            //cableManager.markCompletelyDirty();
-            cableManager.notifyRepaintManager();
             
             scrollToVisible(cableManager.getOwner(), c, x, y);
         }
@@ -527,18 +522,18 @@ public class JTBasicConnectorUI extends JTConnectorUI
 
             Point stop = SwingUtilities.convertPoint(c, new Point(x, y), cableManager.getOwner());
             JTConnector target = findConnectorAt(c, stop.x, stop.y);
-            
+
             if (connectedCables != null)
             {
                 PConnectionManager cm =
                     c.getConnector().getConnectionManager();
 
+                cableManager.update(connectedCables);
                 for (Cable cable: connectedCables)
                 {
-                    cableManager.markDirty(cable);
                     cable.updateEndPoints();
-                    cableManager.markDirty(cable);
                 }
+                cableManager.update(connectedCables);
                 
                 
                 History history = 
@@ -571,16 +566,13 @@ public class JTBasicConnectorUI extends JTConnectorUI
                         history.endRecord();
                 }
 
-                cableManager.notifyRepaintManager();
                 connectedCables = null;
                 return;
             }
 
             if (cableManager != null)
             {
-                for (Cable cable : cables)
-                    cableManager.remove(cable);
-                cableManager.notifyRepaintManager();
+                cableManager.remove(cables);
             }
             cables = NO_CABLES;
 
@@ -595,7 +587,6 @@ public class JTBasicConnectorUI extends JTConnectorUI
                         Cable cable = cableManager.createCable(c, target);
                      
                         cableManager.add(cable);
-                        cableManager.notifyRepaintManager();
                     }
                     else if (a != null && b != null)
                     {

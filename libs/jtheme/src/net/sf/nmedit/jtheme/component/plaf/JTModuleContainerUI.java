@@ -873,13 +873,11 @@ public class JTModuleContainerUI extends ComponentUI
             Collection<Cable> cables = new LinkedList<Cable>();
             cman.getCables(cables, moved);
             
-            for (Cable cable: cables)
-            {   
-                cman.update(cable);
-            }
+            cman.update(cables);
+            for (Cable c: cables)
+                c.updateEndPoints();
             
-            if (!cables.isEmpty())
-                cman.notifyRepaintManager();
+            cman.update(cables);
         }
 
         public void dropActionChanged(DropTargetDragEvent dtde)

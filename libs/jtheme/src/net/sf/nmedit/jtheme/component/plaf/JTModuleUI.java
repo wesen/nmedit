@@ -40,6 +40,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
@@ -61,10 +62,13 @@ import net.sf.nmedit.jpatch.transform.PTBasicTransformations;
 import net.sf.nmedit.jpatch.transform.PTModuleMapping;
 import net.sf.nmedit.jpatch.transform.PTTransformations;
 import net.sf.nmedit.jtheme.JTContext;
+import net.sf.nmedit.jtheme.cable.Cable;
+import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTImage;
 import net.sf.nmedit.jtheme.component.JTLabel;
 import net.sf.nmedit.jtheme.component.JTModule;
+import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.nmutils.swing.EscapeKeyListener;
 import net.sf.nmedit.nmutils.swing.LimitedText;
 import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
@@ -383,6 +387,8 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
 
         public void componentMoved(ComponentEvent e)
         {
+            ((JTModule)e.getComponent()).getUI().updateCables();
+
             /*  update cables (done in module container ui)
             if (!(e.getComponent() instanceof JTModule))
                 return;
@@ -724,6 +730,33 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
 
     }
 
+    private void updateCables()
+    {
+        System.out.println("update");
+        JTModuleContainer parent;
+        try
+        {
+            parent = (JTModuleContainer) module.getParent();
+        }
+        catch (ClassCastException cce)
+        {
+            // ignore
+            parent = null;
+        }
+        
+        if (parent != null)
+        {
+            JTCableManager cm = parent.getCableManager();
+            PModule pmodule = module.getModule();
+            if (cm != null && pmodule != null)
+            {
+                java.util.List<Cable> cables = new LinkedList<Cable>();
+                cm.getCables(cables, pmodule);
+                cm.update(cables);
+            }
+        }
+    }
+    
     public void moduleMoved(PModuleEvent e)
     {
         /*
