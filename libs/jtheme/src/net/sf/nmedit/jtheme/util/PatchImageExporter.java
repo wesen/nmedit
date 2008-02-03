@@ -138,17 +138,17 @@ public abstract class PatchImageExporter
                             JTCableManager cm = container.getCableManager();
                             if (cm != null)
                             {
-                                Rectangle vr = cm.getVisibleRegion();
+                                //Rectangle vr = cm.getVisibleRegion();
                                 try
                                 {
-                                    cm.setVisibleRegion(minx, miny, w, h);
+                                  //  cm.setVisibleRegion(minx, miny, w, h);
                                     g2.translate(-minx, -miny);
                                     cm.paintCables(g2);
                                     g2.translate(minx, miny);
                                 }
                                 finally
                                 {
-                                    cm.setVisibleRegion(vr);
+                                    //cm.setVisibleRegion(vr);
                                 }
                             }
                         }
