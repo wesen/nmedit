@@ -72,6 +72,7 @@ import net.sf.nmedit.jtheme.component.JTImage;
 import net.sf.nmedit.jtheme.component.JTLabel;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
+import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.swing.EscapeKeyListener;
 import net.sf.nmedit.nmutils.swing.LimitedText;
 import net.sf.nmedit.nmutils.swing.NMLazyActionMap;
@@ -362,8 +363,13 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         
         protected void fillInputMap(InputMap map)
         {
-            KeyStroke increaseValue = KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0);
-            map.put(increaseValue, DELETE);
+            int vk_delete = KeyEvent.VK_DELETE;
+            
+            if (Platform.flavor() == Platform.OS.MacOSFlavor)
+                vk_delete = KeyEvent.VK_BACK_SPACE;
+            
+            KeyStroke deleteModules = KeyStroke.getKeyStroke(vk_delete, 0);
+            map.put(deleteModules, DELETE);
         }
         
         public void installKeyboardActions( JTModule module )
