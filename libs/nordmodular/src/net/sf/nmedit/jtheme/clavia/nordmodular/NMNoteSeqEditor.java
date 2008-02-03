@@ -53,7 +53,6 @@ public class NMNoteSeqEditor extends JTControl
         computeMaxTranslation();
         setTranslation(maxTranslation/2);
         clear();
-        System.out.println("cons");
     }
     
     private void computeMaxTranslation()
