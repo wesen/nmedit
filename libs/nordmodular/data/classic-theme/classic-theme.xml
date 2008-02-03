@@ -1632,83 +1632,83 @@ label{fill:#000;}
 		</vocoder-display>
 		<button x="27" y="75" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p1" alt="vocoder band 1" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="39" y="75" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p2" alt="vocoder band 2" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="51" y="75" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p3" alt="vocoder band 3" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="63" y="75" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p4" alt="vocoder band 4" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="75" y="75" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p5" alt="vocoder band 5" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="87" y="75" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p6" alt="vocoder band 6" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="99" y="75" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p7" alt="vocoder band 7" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="111" y="75" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p8" alt="vocoder band 8" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="123" y="75" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p9" alt="vocoder band 9" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="135" y="75" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p10" alt="vocoder band 10" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="147" y="75" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p11" alt="vocoder band 11" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="159" y="75" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p12" alt="vocoder band 12" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="171" y="75" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p13" alt="vocoder band 13" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="183" y="75" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p14" alt="vocoder band 14" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="195" y="75" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p15" alt="vocoder band 15" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="207" y="75" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p16" alt="vocoder band 16" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="171" y="102" width="16" height="12" cyclic="true" landscape="true">
 			<call component="vocoderDisp" method="rnd" />
@@ -4113,100 +4113,100 @@ label{fill:#000;}
 		
 		<button x="25" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter component-id="p3" alt="note 1" />
-        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
-	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+        	    <btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+	            <btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 
 		<scrollbar x="217" y="37" width="11" height="74" note-sequencer="note-seq-display" />
 		
 		<button x="37" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter component-id="p4" alt="note 1" />
-        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
-	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 		<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
         	<button x="49" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter component-id="p5" alt="note 1" />
-        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
-	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+			 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
         	<button x="61" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter component-id="p6" alt="note 1" />
-        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
-	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+			 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
         	<button x="73" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter component-id="p7" alt="note 1" />
-        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
-	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+			 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
         	<button x="85" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter component-id="p8" alt="note 1" />
-        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
-	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+			 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
         	<button x="97" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter component-id="p9" alt="note 1" />
-        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
-	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+			 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
         	<button x="109" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter component-id="p10" alt="note 1" />
-        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
-	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+			 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
         	<button x="121" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter component-id="p11" alt="note 1" />
-        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
-	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+			 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
         	<button x="133" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter component-id="p12" alt="note 1" />
-        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
-	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+			 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
         	<button x="145" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter component-id="p13" alt="note 1" />
-        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
-	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+			 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
         	<button x="157" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter component-id="p14" alt="note 1" />
-        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
-	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+			 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
         	<button x="169" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter component-id="p15" alt="note 1" />
-        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
-	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+			 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
         	<button x="181" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter component-id="p16" alt="note 1" />
-        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
-	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+			 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
         	<button x="193" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter component-id="p17" alt="note 1" />
-        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
-	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+			 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
         	
         	<button x="205" y="110" width="12" height="23" cyclic="false" landscape="false" mode="increment">
 	            <parameter component-id="p18" alt="note 1" />
-        	    <btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
-	            <btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
+			 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+			 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
         	</button>
 		
 		
@@ -4455,83 +4455,83 @@ label{fill:#000;}
 		
 		<button x="24" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p1" alt="ctrl 1" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="35" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p2" alt="ctrl 2" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="47" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p3" alt="ctrl 3" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="59" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p4" alt="ctrl 4" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="71" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p5" alt="ctrl 5" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="83" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p6" alt="ctrl 6" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="95" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p7" alt="ctrl 7" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="107" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p8" alt="ctrl 8" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="119" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p9" alt="ctrl 9" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="131" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p10" alt="ctrl 10" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="143" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p11" alt="ctrl 11" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="155" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p12" alt="ctrl 12" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="167" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p13" alt="ctrl 13" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="179" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p14" alt="ctrl 14" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="191" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p15" alt="ctrl 15" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		<button x="203" y="84" width="12" height="19" cyclic="false" landscape="false" mode="increment">
 			<parameter component-id="p16" alt="ctrl 16" />
-			<btn index="0"><image xlink:href="url(#btn-down-arrow)" /></btn>
-			<btn index="1"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
+		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
 		
 	</module>
