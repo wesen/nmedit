@@ -721,6 +721,10 @@ public class JTModuleContainerUI extends ComponentUI
                 move.move();
                 
                 dtde.acceptDrop(DnDConstants.ACTION_COPY);
+                
+                // compute dimensions of container
+                jtcUI.jtc.updateModuleContainerDimensions();
+                
                 return;
             }
             

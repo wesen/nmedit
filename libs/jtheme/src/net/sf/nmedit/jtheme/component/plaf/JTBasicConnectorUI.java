@@ -507,6 +507,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
         public void startDragCurrentCables(JTConnector c, int x, int y)
         {
             connectedCables = getConnectedCables(c);
+            
             if (connectedCables.length>0)
                 dragSource = c;
         }
@@ -558,7 +559,11 @@ public class JTBasicConnectorUI extends JTConnectorUI
                             b.connect(target.getConnector());
                         }
                     }
-                    
+                    else
+                    {
+                        // TODO disconnect conenctor
+                        System.out.println("TODO: should disconnect now");
+                    }
                 }
                 finally
                 {

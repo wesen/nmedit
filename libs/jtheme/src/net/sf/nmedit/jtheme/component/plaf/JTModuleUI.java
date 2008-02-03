@@ -890,6 +890,16 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
     
     public void moduleMoved(PModuleEvent e)
     {
+        try
+        {
+            JTModuleContainer jtc = (JTModuleContainer) module.getParent();
+            jtc.updateModuleContainerDimensions();
+        }
+        catch (ClassCastException cce)
+        {
+            // ignore
+        }
+        
         /*
         Module m = e.getModule();
         History h = m.getPatch().getHistory();
