@@ -41,6 +41,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 import net.sf.nmedit.nmutils.FileSort;
+import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nomad.core.Nomad;
 
 public class FileNode implements ETreeNode, MouseListener,
@@ -204,17 +205,24 @@ public class FileNode implements ETreeNode, MouseListener,
         // no op
     }
 
-    public void mousePressed(MouseEvent e)
-    {
+    private void openAction(MouseEvent e)
+    {     
         if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount()==2)
         {
             Nomad.sharedInstance().openOrSelect(file);
         }
     }
+    
+    public void mousePressed(MouseEvent e)
+    {
+        if (!Platform.isFlavor(Platform.OS.MacOSFlavor))
+            openAction(e);
+    }
 
     public void mouseReleased(MouseEvent e)
     {
-        // no op
+        if (Platform.isFlavor(Platform.OS.MacOSFlavor))
+            openAction(e);
     }
 
     private static DataFlavor fileFlavor = new DataFlavor(File.class, "File");
