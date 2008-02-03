@@ -19,9 +19,7 @@
 package net.sf.nmedit.jtheme.cable;
 
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.util.Collection;
-import java.util.Iterator;
 
 import javax.swing.JComponent;
 
@@ -33,36 +31,37 @@ public interface JTCableManager extends Iterable<Cable>
 
     void add(Cable cable);
     void remove(Cable cable);
-    
-    void markDirty(Cable cable);
-    void markCompletelyDirty();
+    void remove(Cable[] cables);
+    void remove(Collection<Cable> cables);
+
     void update(Cable cable);
+    void update(Cable[] cables);
+    void update(Collection<Cable> cables);
     
     int size();
     void clear();
     
-    boolean hasDirtyRegion();
-
-    void getVisible(Collection<Cable> c);
+ //   void getVisible(Collection<Cable> c);
+    
     void getCables(Collection<Cable> c, PModule module);
     void getCables(Collection<Cable> c, Collection<? extends PModule> modules);
-
+    /*
     Iterator<Cable> getCables();
-
+*//*
     void setVisibleRegion(int x, int y, int width, int height);
     void setVisibleRegion(Rectangle r);
     
     Rectangle getVisibleRegion();
     Rectangle getVisibleRegion(Rectangle r);
-
+*/
     void paintCables(Graphics2D g2, CableRenderer cableRenderer);
     void paintCables(Graphics2D g2);
     
     void setCableRenderer(CableRenderer cr);
     CableRenderer getCableRenderer();
-    
+  /*  
     void notifyRepaintManager();
-
+*/
     void setView(JComponent view);
     JComponent getView();
 
