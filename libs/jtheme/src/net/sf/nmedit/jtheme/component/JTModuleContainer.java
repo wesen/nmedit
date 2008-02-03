@@ -25,7 +25,6 @@ package net.sf.nmedit.jtheme.component;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -156,45 +155,7 @@ public class JTModuleContainer extends JTBaseComponent
     {
         /*overlay.*/repaint(x, y, width, height);
     }
-    /*
-    public void setPreferredSize(Dimension d)
-    {
-        super.setPreferredSize(d);
-        overlay.setPreferredSize(d);
-    }
     
-    public Component add(Component c, int index)
-    {
-        if (index==getComponentCount())
-            index--;
-        
-        return super.add(c, index);
-    }*/
-    /*
-    public void setBounds(int x, int y, int width, int height)
-    {
-        overlay.setBounds(0, 0, width, height);
-        super.setBounds(x, y, width, height);
-    }
-
-    private class CableOverlay extends OverlayComponent
-    {
-        
-        
-        protected void paintComponent(Graphics g)
-        {
-            if (cableManager != null)
-            {
-                cableManager.paintCables((Graphics2D) g);
-            }
-        }
-        
-        protected void paintChildren(Graphics g)
-        {
-            // no op
-        }
-    }
-    */
     protected ContentSynchronisation createContentSynchronisation()
     {
         return new ContentSynchronisation();
@@ -312,20 +273,45 @@ public class JTModuleContainer extends JTBaseComponent
         {
             if (joined)
             {
-                Color color = e.getDestination().getSignalType().getColor();
-
-                // set colors
-                Collection<Cable> cables = getCables(e.getSource()); 
-                for (Cable cable: cables)
+                Color color = null;
+                PConnector graph = null;
+                if (e.getDestination().getOutputConnector() != null)
                 {
-                    cable.setColor(color);
+                    graph = e.getSource();
+                    color = e.getDestination().getOutputConnector().getSignalType().getColor();
+                    
                 }
-                getCableManager().update(cables);
+                else if (e.getSource().getOutputConnector() != null)
+                {
+                    graph = e.getDestination();
+                    color = e.getSource().getOutputConnector().getSignalType().getColor();
+                }
+                
+                if (graph != null) 
+                {
+                    
+                    Collection<Cable> cables = getCables(graph); 
+                    for (Cable cable: cables)
+                    {
+                        cable.setColor(color);
+                    }
+                    getCableManager().update(cables);
+                }
             }
             else
             {
+                PConnector graph = null;
+                if (e.getDestination().getOutputConnector() != null)
+                {
+                    graph = e.getSource();
+                }
+                else if (e.getSource().getOutputConnector() != null)
+                {
+                    graph = e.getDestination();
+                }
+                
                 // make grey
-                Collection<Cable> cables = getCables(e.getSource()); 
+                Collection<Cable> cables = getCables(graph); 
                 for (Cable cable: cables)
                 {
                     // TODO lookup correct color in patch 
@@ -338,7 +324,8 @@ public class JTModuleContainer extends JTBaseComponent
         private Collection<Cable> getCables(PConnector c)
         {
             Collection<Cable> cables = new ArrayList<Cable>(getCableManager().size());
-            Collection<PConnection> connections = mc.getConnectionManager().connections(c);
+            Collection<PConnection> connections = c.getGraphConnections();
+            
             for (Cable cable: getCableManager())
             {
                 for (Iterator<PConnection> iter=connections.iterator();iter.hasNext();)
