@@ -600,7 +600,6 @@ public class JTNMPatch extends JTPatch implements Transferable
             }
             
             cont.getCableManager().add(cable);
-            cont.getCableManager().notifyRepaintManager();
         }
 
         public void connectionRemoved(PConnectionEvent e)
@@ -610,7 +609,6 @@ public class JTNMPatch extends JTPatch implements Transferable
                 if (compareEq(cable.getSource(), cable.getDestination(), e.getSource(), e.getDestination()))
                 {
                     cont.getCableManager().remove(cable);
-                    cont.getCableManager().notifyRepaintManager();
                     break;
                 }
             }
