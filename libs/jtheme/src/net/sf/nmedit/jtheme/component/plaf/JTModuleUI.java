@@ -753,6 +753,9 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
                 java.util.List<Cable> cables = new LinkedList<Cable>();
                 cm.getCables(cables, pmodule);
                 cm.update(cables);
+                for (Cable cable: cables)
+                    cable.updateEndPoints();
+                cm.update(cables);
             }
         }
     }
