@@ -784,7 +784,11 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
                             int newValue;
                             if (selectedControl.isIncrementModeEnabled())
                             {
-                                newValue = selectedControl.getExtensionValue()+(internalSelectedButtonIndex>0?+1:-1);
+                            	if (selectedControl.getOrientation() == SwingConstants.VERTICAL) {
+                            		newValue = selectedControl.getExtensionValue()+(internalSelectedButtonIndex>0?-1:+1);
+                            	} else {
+                            		newValue = selectedControl.getExtensionValue()+(internalSelectedButtonIndex>0?+1:-1);
+                                }
                             }
                             else
                             if (selectedControl.isCyclic())
@@ -806,7 +810,11 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
                             int newValue;
                             if (selectedControl.isIncrementModeEnabled())
                             {
-                                newValue = selectedControl.getValue()+(internalSelectedButtonIndex>0?+1:-1);
+                            	if (selectedControl.getOrientation() == SwingConstants.VERTICAL) {
+                            		newValue = selectedControl.getValue()+(internalSelectedButtonIndex>0?-1:+1);
+                            	} else {
+                            		newValue = selectedControl.getValue()+(internalSelectedButtonIndex>0?+1:-1);
+                            	}
                             }
                             else
                             if (selectedControl.isCyclic())
