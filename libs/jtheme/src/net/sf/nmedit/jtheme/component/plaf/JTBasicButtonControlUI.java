@@ -693,6 +693,14 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
         
         protected void checkArmedHoveredState(MouseEvent e)
         {
+            // ensure that armed/hovered state does not change while
+            // dragging over button
+            
+            if(SwingUtilities.isLeftMouseButton(e)
+            || SwingUtilities.isMiddleMouseButton(e)
+            || SwingUtilities.isRightMouseButton(e))
+                return ;
+            
             if (select(e))
             {
                 if (selectedControl.contains(e.getX(), e.getY()))
