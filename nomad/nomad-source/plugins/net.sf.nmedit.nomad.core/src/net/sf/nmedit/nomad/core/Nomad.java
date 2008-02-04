@@ -391,8 +391,30 @@ public class Nomad
     {
         Document d = pageContainer.getSelection();
         if (d == null) return;
+        
+        if (!saveAs)
+        {
+            Iterator<FileService> iter = ServiceRegistry.getServices(FileService.class);
+            FileService useService = null;
+            while (iter.hasNext())
+            {
+                FileService fs = iter.next();
+                if (fs.isDirectSaveOperationSupported(d))
+                {
+                    useService = fs;
+                    break;
+                }
+            }
+            
+            if (useService != null)
+            {
+                useService.save(d, useService.getAssociatedFile(d));
+                return ;
+            }
+        }
+        
 
-        JFileChooser chooser = new JFileChooser(d.getFile());
+        JFileChooser chooser = new JFileChooser();
         chooser.setMultiSelectionEnabled(false);
 
         Iterator<FileService> iter = ServiceRegistry.getServices(FileService.class);
@@ -402,16 +424,18 @@ public class Nomad
             
             boolean add = 
                 (saveAs && fs.isSaveOperationSupported(d))
-                || ((!saveAs)&&fs.isSaveOperationSupported(d));
+                || ((!saveAs)&&fs.isDirectSaveOperationSupported(d));
             
             if (add)
                 chooser.addChoosableFileFilter(fs.getFileFilter());
         }
 
+        chooser.setSelectedFile(d.getFile());
         
         if (!(chooser.showSaveDialog(mainWindow)==JFileChooser.APPROVE_OPTION)) return;
         
         FileService service = FileServiceTool.lookupFileService(chooser);
+        
         
         if (service != null)
         {
