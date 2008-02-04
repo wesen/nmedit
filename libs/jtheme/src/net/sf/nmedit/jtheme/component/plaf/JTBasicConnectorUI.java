@@ -575,8 +575,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
                     }
                     else
                     {
-                    	Collection<PConnection> cc = cm.connections(c.getConnector());
-                    	cm.removeAllConnections(cc);
+                    	c.getConnector().disconnect();
                     }
                 }
                 finally
