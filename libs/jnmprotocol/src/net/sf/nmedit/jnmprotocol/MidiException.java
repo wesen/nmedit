@@ -52,8 +52,12 @@ public class MidiException extends Exception
     public String getMessage()
     {
         StringBuilder sb = new StringBuilder();
-        sb.append(message);
-        sb.append(" [error=");
+        if (message != null)
+        {
+            sb.append(message);
+            sb.append(" ");
+        }
+        sb.append("error=");
         sb.append(Integer.toString(getError()));
         if (midiMessage != null)
         {
