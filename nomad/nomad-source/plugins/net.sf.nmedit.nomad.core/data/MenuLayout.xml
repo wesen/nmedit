@@ -3,7 +3,7 @@
 	<!ENTITY ipath "icons/">
 	<!ENTITY etool "&ipath;etool16">
 	<!ENTITY dtool "&ipath;dtool16">
-	<!ENTITY tango "&ipath;tango/16x16/">
+	<!ENTITY tango "&ipath;tango/16x16">
 ]>
 <entry entryPoint="nomad"
 	xmlns="http://nmedit.sf.net/MenuLayout"
@@ -95,6 +95,14 @@
 		<entry entryPoint="settings" />
 		<entry entryPoint="randomize" />
 	</entry>
+	<!--
+	<entry entryPoint="window">
+		<entry entryPoint="language">
+			<entry entryPoint="de_DE" />
+			<entry entryPoint="en" />
+			<entry entryPoint="fr_FR" />
+		</entry>
+	</entry> -->
 	<entry entryPoint="help">
 		<entry entryPoint="plugins">
 			<icon type="enabledIcon" src="&etool;/plugin.gif" />

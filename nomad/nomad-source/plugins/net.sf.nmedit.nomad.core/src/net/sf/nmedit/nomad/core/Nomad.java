@@ -76,6 +76,7 @@ import net.sf.nmedit.nomad.core.helpers.RuntimeMenuBuilder;
 import net.sf.nmedit.nomad.core.i18n.LocaleConfiguration;
 import net.sf.nmedit.nomad.core.jpf.PluginView;
 import net.sf.nmedit.nomad.core.menulayout.ActionHandler;
+import net.sf.nmedit.nomad.core.menulayout.MLEntry;
 import net.sf.nmedit.nomad.core.menulayout.MenuBuilder;
 import net.sf.nmedit.nomad.core.menulayout.MenuLayout;
 import net.sf.nmedit.nomad.core.service.ServiceRegistry;
@@ -524,6 +525,14 @@ public class Nomad
 
         menuLayout.getEntry(MENU_FILE_EXPORT)
         .addActionListener(new ActionHandler(this, true, "export"));
+        /*
+        MLEntry mnLang = menuLayout.getEntry("nomad.menu.window.language");
+        
+        for (int i=0;i<mnLang.size();i++)
+        {
+            MLEntry lang = mnLang.getEntryAt(i);
+            lang.addActionListener(new LocaleSwitcher(lang.getLocalEntryPoint()));
+        }*/
         
         menuBuilder.setResourceBundle(localizedMessages);
         LocaleConfiguration.getLocaleConfiguration().addLocaleChangeListener(new LocaleHandler(menuBuilder));
