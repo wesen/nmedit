@@ -47,6 +47,7 @@ import net.sf.nmedit.jtheme.clavia.nordmodular.NMNoteSeqEditor;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTControl;
 import net.sf.nmedit.jtheme.component.plaf.JTBasicControlUI;
+import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.swing.NMLazyActionMap;
 
 
@@ -398,19 +399,24 @@ public class NoteSeqEditorUI extends JTBasicControlUI
         private int oldNote = 0, oldExtension = 0;
         private int y;
         
+        private void popupTriggered(MouseEvent e)
+        {
+            NMNoteSeqEditor ed = getControl(e);
+            
+            controlUI.editedNote = e.getX() / controlUI.columnWidth;
+            
+             if (!e.getComponent().hasFocus())
+                 e.getComponent().requestFocus();
+             e.getComponent().repaint();
+             
+             ed.showControlPopup(e, controlUI.editedNote);
+        }
+        
         public void mousePressed(MouseEvent e)
 	    {
-        	if(e.isPopupTrigger())
+        	if (Platform.isPopupTrigger(e))
         	{
-        		NMNoteSeqEditor ed = getControl(e);
-        		
-        		controlUI.editedNote = e.getX() / controlUI.columnWidth;
-	    		
-	    		 if (!e.getComponent().hasFocus())
-	                 e.getComponent().requestFocus();
-	    		 e.getComponent().repaint();
-	    		 
-	    		 ed.showControlPopup(e, controlUI.editedNote);
+        	    popupTriggered(e);
         		
         	}
         	else if (SwingUtilities.isLeftMouseButton(e))
@@ -428,18 +434,9 @@ public class NoteSeqEditorUI extends JTBasicControlUI
         
         public void mouseReleased(MouseEvent e)
 	    {
-        	if(e.isPopupTrigger())
+            if (Platform.isPopupTrigger(e))
         	{
-        		NMNoteSeqEditor ed = getControl(e);
-        		
-        		controlUI.editedNote = e.getX() / controlUI.columnWidth;
-	    		
-	    		 if (!e.getComponent().hasFocus())
-	                 e.getComponent().requestFocus();
-	    		 e.getComponent().repaint();
-	    		 
-	    		 ed.showControlPopup(e, controlUI.editedNote);
-        		
+                popupTriggered(e);
         	}
 	    }
         

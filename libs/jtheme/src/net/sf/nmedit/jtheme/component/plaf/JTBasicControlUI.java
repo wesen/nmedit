@@ -46,6 +46,7 @@ import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTControl;
+import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.swing.NMLazyActionMap;
 
 public abstract class JTBasicControlUI extends JTControlUI
@@ -368,7 +369,7 @@ public abstract class JTBasicControlUI extends JTControlUI
             JTControl control = controlFor(e);
             if (control == null) return;
             
-            if (e.isPopupTrigger())
+            if (Platform.isPopupTrigger(e))
             {
                 control.showControlPopup(e);
             } 
@@ -391,7 +392,7 @@ public abstract class JTBasicControlUI extends JTControlUI
         {
             JTControl control = controlFor(e);
             
-            if (e.isPopupTrigger())
+            if (Platform.isPopupTrigger(e))
             {
                 control.showControlPopup(e);
             }
