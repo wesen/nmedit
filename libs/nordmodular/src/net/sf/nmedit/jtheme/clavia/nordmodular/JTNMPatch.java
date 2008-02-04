@@ -186,11 +186,13 @@ public class JTNMPatch extends JTPatch implements Transferable
         
         public ModuleAction(String action, JTModule module)
         {
+            
             this.module = module;
             putValue(ACTION_COMMAND_KEY, action);
 
             if (action == DELETE)
             {
+                // TODO rely on actionmap see: ModuleAction.ACTION_COMMAND_KEY
                 putValue(NAME, "Delete");
             }
             else if (action == RENAME)
