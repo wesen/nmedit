@@ -642,7 +642,7 @@ public class JTModuleContainerUI extends ComponentUI
         public void drop(DropTargetDropEvent dtde)
         {
             jtcUI.updateDnDBoundingBox(null);
-            
+ 
             
             DataFlavor chosen = null;
             Object data = null;
@@ -710,9 +710,9 @@ public class JTModuleContainerUI extends ComponentUI
                 move.setScreenOffset(0, 0);
                 move.add(module);
                 move.move();
-                
+       
                 dtde.acceptDrop(DnDConstants.ACTION_COPY);
-                
+         
                 // compute dimensions of container
                 jtcUI.jtc.updateModuleContainerDimensions();
                 
@@ -856,21 +856,6 @@ public class JTModuleContainerUI extends ComponentUI
                     maxy = Math.max(jtmodule.getY(), maxy)+jtmodule.getHeight();
                 }
             }
-            
-            JTCableManager cman = jtmc.getCableManager();
-                      
-            //ConnectionManager cm = jtmc.getModuleContainer().getConnectionManager();
-            
-            // TODO faster search of cables 
-            
-            Collection<Cable> cables = new LinkedList<Cable>();
-            cman.getCables(cables, moved);
-            
-            cman.update(cables);
-            for (Cable c: cables)
-                c.updateEndPoints();
-            
-            cman.update(cables);
             
             jtmc.updateModuleContainerDimensions();
         }

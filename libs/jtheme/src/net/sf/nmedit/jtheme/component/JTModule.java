@@ -22,6 +22,7 @@
  */
 package net.sf.nmedit.jtheme.component;
 
+import java.awt.AWTEvent;
 import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -31,6 +32,8 @@ import java.awt.Transparency;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.Collection;
+import java.util.LinkedList;
 
 import javax.swing.JComponent;
 import javax.swing.RepaintManager;
@@ -38,6 +41,8 @@ import javax.swing.RepaintManager;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.event.PModuleEvent;
 import net.sf.nmedit.jpatch.event.PModuleListener;
+import net.sf.nmedit.jtheme.cable.Cable;
+import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.plaf.JTModuleUI;
 
@@ -61,17 +66,53 @@ public class JTModule extends JTComponent
         setOpaque(true);
     }
     
-    protected void processEvent(ComponentEvent e)
+    protected void processEvent(AWTEvent e)
     {
         if (e.getID() == ComponentEvent.COMPONENT_MOVED
                 && module != null)
         {
             module.setScreenLocation(getX(), getY());
+            super.processEvent(e);
+            updateCablesForThisModule();
+        } else {
+        	super.processEvent(e);
         }
-        super.processEvent(e);
     }
     
-    public void setSelected(boolean selected)
+    private JTCableManager getCableManager() {
+        JTModuleContainer mc;
+        try
+        {
+            mc = (JTModuleContainer) getParent();
+        }
+        catch (ClassCastException e)
+        {
+            // parent not a module container
+            mc = null;
+        }
+        return mc == null ? null : mc.getCableManager();
+    }
+    
+    protected void updateCablesForThisModule() {
+    	Collection<Cable> cables = new LinkedList<Cable>();
+    	JTCableManager cman = getCableManager();
+    	if (cman == null)
+    		return;
+    	if (module == null)
+    		return;
+    	
+        cman.getCables(cables, module);
+
+        if (!cables.isEmpty()) {
+        	cman.update(cables);
+        	for (Cable c: cables)
+        		c.updateEndPoints();
+
+        	cman.update(cables);
+        }
+	}
+
+	public void setSelected(boolean selected)
     {
         if (this.selected != selected)
         {
