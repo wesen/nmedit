@@ -475,6 +475,8 @@ public class PBasicConnectionManager implements PConnectionManager
     public PConnector output(PConnector c)
     {
         PConnector root = root(c);
+        if (root == null)
+        	return null;
         return root.isOutput() ? root : null;
     }
 
