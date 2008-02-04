@@ -47,6 +47,8 @@ public interface FileService extends Service
     
     boolean isSaveOperationSupported(Object source);
 
+    File getAssociatedFile(Object source);
+    
     void save(Object source, File as);
     
     boolean isEditPropertiesSupported(Object source);
