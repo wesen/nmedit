@@ -36,6 +36,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.event.EventListenerList;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.sf.nmedit.nmutils.iterator.BFSIterator;
 
 /**
@@ -161,12 +164,29 @@ public class MLEntry extends AbstractAction
         return getClass().getClassLoader().getResource(iconName);
     }
 
+    private static Log log = LogFactory.getLog(MLEntry.class);
+    
+    private ImageIcon getImageIcon(String src)
+    {
+        URL url = getIconURL(src);
+        if (url == null)
+        {
+            if (log.isWarnEnabled())
+            {
+                log.debug("MLEntry:getImageIcon, could not find '"+src+"'.");
+            }
+            
+            return null;
+        }
+        return new ImageIcon(url);
+    }
+    
     public ImageIcon getEnabledIcon()
     {
         if (enabledIcon == null)
         {
             if (enabledIconSrc != null)
-                enabledIcon = new ImageIcon(getIconURL(enabledIconSrc));
+                enabledIcon = getImageIcon(enabledIconSrc);
         }
         return enabledIcon;
     }
@@ -176,7 +196,7 @@ public class MLEntry extends AbstractAction
         if (disabledIcon == null)
         {
             if (disabledIconSrc != null)
-                disabledIcon = new ImageIcon(getIconURL(disabledIconSrc));
+                disabledIcon = getImageIcon(disabledIconSrc);
         }
         return disabledIcon;
     }
