@@ -119,5 +119,11 @@ public class WMFileService implements FileService
         return false;
     }
 
+    public File getAssociatedFile(Object source)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
 

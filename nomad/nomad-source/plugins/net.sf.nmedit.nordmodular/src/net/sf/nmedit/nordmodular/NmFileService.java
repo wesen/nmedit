@@ -54,7 +54,7 @@ public class NmFileService implements FileService
     {
         return PATCH_DESCRIPTION;
     }
-
+    
     public void open(File file)
     {
 
@@ -170,6 +170,14 @@ public class NmFileService implements FileService
         if (source instanceof JTNMPatch) return ((JTNMPatch) source).getPatch();
         if (source instanceof PatchDocument) return ((PatchDocument)source).getComponent().getPatch();
         return null;
+    }
+
+    public File getAssociatedFile(Object source)
+    {
+        NMPatch patch = getPatch(source);
+        if (patch == null)
+            return null;
+        return patch.getFile();
     }
 
     public static void selectOrOpen(NMPatch patch)
