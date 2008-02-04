@@ -57,10 +57,11 @@ public class JTBaseComponent extends JComponent
      */
     private static final long serialVersionUID = 4189716019536899996L;
 
+//    private transient JTBaseComponent repaintOrigin;
+    
     // the context
     private JTContext context;
     
-    private transient JTBaseComponent repaintOrigin;
     private transient int roDX;
     private transient int roDY;
 
@@ -79,7 +80,7 @@ public class JTBaseComponent extends JComponent
     }
     
     private void clearRepaintOrigin()
-    {
+    {/*
         repaintOrigin = null;
         for (int i=getComponentCount()-1;i>=0;i--)
         {
@@ -88,7 +89,7 @@ public class JTBaseComponent extends JComponent
             {
                 ((JTBaseComponent)c).clearRepaintOrigin();
             }
-        }
+        }*/
     }
 
     protected void processHierarchyEvent(HierarchyEvent e) 
@@ -363,7 +364,7 @@ public class JTBaseComponent extends JComponent
     {
         repaint(0,r.x,r.y,r.width,r.height);
     }
-    
+    /*
     private JTBaseComponent findRepaintOrigin()
     {
         if (repaintOrigin == null)
@@ -388,11 +389,12 @@ public class JTBaseComponent extends JComponent
         }
         return repaintOrigin;
     }
-    
+    */
     /**
      * Sets the double buffer needs update flag.
      * @see Component#repaint(long, int, int, int, int)
      */
+    /*
     public void repaint(long tm, int x, int y, int width, int height) 
     {   
         JTBaseComponent origin = findRepaintOrigin();
@@ -404,11 +406,11 @@ public class JTBaseComponent extends JComponent
                 x+=c.getX();
                 y+=c.getY();
                 c = c.getParent();
-            }*/
+            }*//*
             origin.repaint(tm, roDX, roDY, width, height);
         }
         else
             super.repaint(tm, x, y, width, height);
-    }
+    }*/
 
 }

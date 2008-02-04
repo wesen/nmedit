@@ -26,7 +26,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,29 +62,62 @@ public class JTModuleContainer extends JTBaseComponent
     public static final String uiClassId = "ModuleContainerUI";
     
     private boolean optimizedDrawing;
-    private JTCableManager cableManager;
     private JTPatch patchContainer;
     private PModuleContainer moduleContainer;
     private ContentSynchronisation cs;
     //private CableOverlay overlay;
+    
+    private JTCableLayer cableLayer;
 
     public JTModuleContainer(JTContext context, JTCableManager cableManager)
     {
         super(context);
         setOpaque(true);
         setFocusable(true);
-        optimizedDrawing = true;// 'true' does not work: !context.hasModuleContainerOverlay();
+        optimizedDrawing = false;// 'true' does not work: !context.hasModuleContainerOverlay();
                                 // we have to overwrite boolean isPaintingOrigin() which is package private
         /*overlay = new CableOverlay();
         super.add(overlay, 0);
         overlay.setEnabled(false);*/
 
+        this.cableLayer = new JTCableLayer(context);
+        add(cableLayer);
+        
         setCableManager(cableManager);
         cs = createContentSynchronisation();
         if (cs != null)
             cs.install();
     }
 
+    public void setSize(Dimension size)
+    {
+        cableLayer.setSize(size);
+        super.setSize(size);
+    }
+    
+    public void setMinimumSize(Dimension minimumSize)
+    {
+        cableLayer.setMinimumSize(minimumSize);
+        super.setMinimumSize(minimumSize);
+    }
+    
+    public void setMaximumSize(Dimension maximumSize)
+    {
+        cableLayer.setMaximumSize(maximumSize);
+        super.setMaximumSize(maximumSize);
+    }
+
+    public void setBounds(Rectangle r)
+    {
+        this.setBounds(r.x, r.y, r.width, r.height);
+    }
+    
+    public void setBounds(int x, int y, int width, int height)
+    {
+        cableLayer.setBounds(0, 0, width, height);
+        super.setBounds(x, y, width, height);
+    }
+    
     protected boolean isRepaintOrigin()
     {
         return true;
@@ -106,6 +138,8 @@ public class JTModuleContainer extends JTBaseComponent
     }
     
     private long lastModuleContainerDimensionUpdate = 0;
+
+    private JTCableManager cableManager;
 
     private void updateModuleContainerDimensionsNow()
     {
@@ -400,26 +434,13 @@ public class JTModuleContainer extends JTBaseComponent
 
     protected void setCableManager(JTCableManager cableManager)
     {
-        JTCableManager oldManager = this.cableManager;
-        if (oldManager != cableManager)
-        {
-            if (oldManager != null)
-            {
-                oldManager.setOwner(null);
-                oldManager.setView(null);
-            }
-            this.cableManager = cableManager;
-            if (cableManager != null)
-            {
-                cableManager.setOwner(this);
-                cableManager.setView(this);
-            }
-        }
+        this.cableManager = cableManager;
+        cableLayer.setCableManager(cableManager);
     }
     
     public JTCableManager getCableManager()
     {
-        return cableManager;
+        return  cableManager;
     }
     
     public boolean isOptimizedDrawingEnabled()
@@ -460,28 +481,16 @@ public class JTModuleContainer extends JTBaseComponent
     protected void paintChildren(Graphics g)
     {
         super.paintChildren(g);
-        if (cableManager != null)
-        {
-            Graphics gs = g.create();
-            try
-            {
-                cableManager.paintCables((Graphics2D) gs);
-            }
-            finally
-            {
-                gs.dispose();
-            }
-        }
         if (ui != null)
         {
             getUI().paintChildrenHack(g);
         }
     }
-    
+    /*
     protected void paintComponent(Graphics g)
     {
         super.paintComponent(g);
-    }
+    }*/
 
     public Dimension computePreferredSize(Dimension dim)
     {
