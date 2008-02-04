@@ -463,10 +463,11 @@ public class JTBasicConnectorUI extends JTConnectorUI
                     Point cstart = cable.getStart();
                     Point cstop = cable.getStop();
                     
-                    if (cable.getSource() != c)
+                    if (cable.getSource() == c.getConnector()) {
                         cstart.setLocation(stop);
-                    else
+                    } else {
                         cstop.setLocation(stop);
+                    }
                     
                     cable.setEndPoints(cstart, cstop);
                 }
