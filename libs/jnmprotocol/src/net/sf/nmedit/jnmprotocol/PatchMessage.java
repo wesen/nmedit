@@ -59,56 +59,40 @@ public class PatchMessage extends MidiMessage
 	
     }
 
-    public PatchMessage(BitStream patchStream, List<Integer> sectionEndPositions,
-			int slot)
-    throws MidiException
+    public PatchMessage(BitStream section, int slot, int sectionIndex, int sectionCount) throws MidiException
     {
 	this();
 	set("slot", slot);
 
 	// Create sysex messages
-	int first = 1;
-	int last = 0;
-	int messageNumber = 0;
-	while (patchStream.isAvailable(8)) {
-	    
-	    // Get data for one sysex packet
+
+	    int first = sectionIndex == 0 ? 1 : 0;
+	    int last = sectionIndex == (sectionCount-1) ? 1 : 0;
+	    int sectionsEnded = sectionIndex+1;
+        BitStream patchStream = section;
 	    BitStream partialPatchStream = new BitStream();
-	    int sectionsEnded = 0;
-	    int n = 0;
-	    while (patchStream.isAvailable(8) && n < 166) {
-		partialPatchStream.append(patchStream.getInt(8), 8);
-		if (n == ((sectionEndPositions.get(0))
-			  - 166*messageNumber)) {
-		    sectionsEnded++;
-		    sectionEndPositions.remove(0);
-		}
-		n++;
-	    }
-	    messageNumber++;
-	    
-	    if (!patchStream.isAvailable(8)) {
-		last = 1;
-	    }
-	    
-	    // Pad. Extra bits are ignored later.
-	    partialPatchStream.append(0, 6);
-	    
-	    // Generate sysex bistream
-	    IntStream intStream = new IntStream();
-	    intStream.append(get("cc") + first + 2*last);
-	    first = 0;
-	    intStream.append(get("slot"));
-	    intStream.append(0x01);
-	    intStream.append(sectionsEnded);
-	    while (partialPatchStream.isAvailable(7)) {
-		intStream.append(partialPatchStream.getInt(7));
-	    }
-	    appendChecksum(intStream);
-	    
-	    // Generate sysex bitstream
-	    bitStreamList.add(getBitStream(intStream));
-	}
+
+        while (patchStream.isAvailable(8)) {
+            partialPatchStream.append(patchStream.getInt(8), 8);
+        }
+
+        // Pad. Extra bits are ignored later.
+        partialPatchStream.append(0, 6);
+
+        // Generate sysex bistream
+        IntStream intStream = new IntStream();
+        intStream.append(get("cc") + first + 2*last);
+        first = 0;
+        intStream.append(get("slot"));
+        intStream.append(0x01);
+        intStream.append(sectionsEnded);
+        while (partialPatchStream.isAvailable(7)) {
+        intStream.append(partialPatchStream.getInt(7));
+        }
+        appendChecksum(intStream);
+        
+        // Generate sysex bitstream
+        bitStreamList.add(getBitStream(intStream));
     }
 
     public List<BitStream> getBitStream()

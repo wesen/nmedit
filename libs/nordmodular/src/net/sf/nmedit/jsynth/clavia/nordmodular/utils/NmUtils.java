@@ -424,11 +424,10 @@ public class NmUtils
         return names;
     }
 
-    public static MidiMessage createPatchMessage(NMPatch patch, int slotId) throws MidiException 
+    public static PatchMessage[] createPatchMessages(NMPatch patch, int slotId) throws MidiException 
     {
         Patch2BitstreamBuilder builder = new Patch2BitstreamBuilder(patch);
-        builder.generate();
-        return new PatchMessage(builder.getBitStream(), builder.getSectionEndPositions(), slotId);
+        return builder.createMessages(slotId);
     }
 
     public static Charset getPatchFileCharset()
@@ -436,14 +435,12 @@ public class NmUtils
         return Charset.forName("ISO-8859-1");
     }
     
-    public static MidiMessage createPatchSettingsMessage(NMPatch patch, int slotId) throws MidiException
+    public static PatchMessage[] createPatchSettingsMessages(NMPatch patch, int slotId) throws MidiException
     {
         Patch2BitstreamBuilder builder = new Patch2BitstreamBuilder(patch);
         builder.setHeaderOnly(true);
-        builder.generate();
-        
         // TODO PatchMessage not working yet, sectionsEnded must be != 1
-        return new PatchMessage(builder.getBitStream(), builder.getSectionEndPositions(), slotId);
+        return builder.createMessages(slotId);
     }
     
     public static NMPatch parsePatch(NM1ModuleDescriptions modules, InputStream source) 
