@@ -43,12 +43,23 @@ public class NmBank extends AbstractBank<NordModular>
 
     public String getPatchLocationName(int position)
     {
+        if ( getSynthesizer().isMicroModular() )
+        {
+            if (position<9)
+                return "0"+(1+position);
+            else
+                return Integer.toString(1+position);
+        }
         return Integer.toString(getSection()*100+1+position);
     }
 
     public String getName()
-    {
-        return Integer.toString(getSection()*100+1)+"-"+Integer.toString(getSection()*100+99);
+    {    
+        int section = getSection();
+        if ( getSynthesizer().isMicroModular() )
+            section --;
+        section = section * 100;
+        return Integer.toString(section+1)+"-"+Integer.toString(section+99);
     }
 
     public int getPatchCount()
