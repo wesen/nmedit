@@ -35,7 +35,6 @@ import javax.swing.tree.TreeNode;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.java.plugin.PluginManager;
 
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.jpf.TempDir;
@@ -51,8 +50,7 @@ public class ExplorerLocationMemory implements InitService
 
     private File getTempFile()
     {
-        TempDir tmp = new TempDir(PluginManager.lookup(this).getPluginFor(this));
-        return tmp.getTempFile(EXPLORER_LOCATIONS);
+        return TempDir.forObject(this).getTempFile(EXPLORER_LOCATIONS);
     }
     
     public void init()

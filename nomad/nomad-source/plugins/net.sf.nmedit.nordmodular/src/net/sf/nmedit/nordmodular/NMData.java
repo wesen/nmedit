@@ -25,8 +25,6 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 
-import org.java.plugin.Plugin;
-import org.java.plugin.PluginManager;
 import org.xml.sax.InputSource;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
@@ -185,10 +183,7 @@ public class NMData
     
     private TempDir getTempDir()
     {
-        PluginManager manager = PluginManager.lookup(this); 
-        Plugin plugin = manager.getPluginFor(this);   
-        TempDir tmp = new TempDir(plugin);
-        return tmp;
+        return TempDir.forObject(this);
     }
 
     private JTNM1Context initContext() throws Exception
