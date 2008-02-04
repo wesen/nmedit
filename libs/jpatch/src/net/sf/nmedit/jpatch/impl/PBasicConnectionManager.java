@@ -487,7 +487,7 @@ public class PBasicConnectionManager implements PConnectionManager
     public PConnector root(PConnector c)
     {
         Node n = nodemap.get(c);
-        return n == null ? null : n.root().c;
+        return n == null ? c : n.root().c;
     }
 
     public boolean pathExists(PConnector a, PConnector b)

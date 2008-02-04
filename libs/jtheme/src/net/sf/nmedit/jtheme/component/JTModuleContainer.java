@@ -311,13 +311,16 @@ public class JTModuleContainer extends JTBaseComponent
                 }
                 
                 // make grey
-                Collection<Cable> cables = getCables(graph); 
-                for (Cable cable: cables)
+                if (graph != null)
                 {
-                    // TODO lookup correct color in patch 
-                    cable.setColor(Color.WHITE);
+                    Collection<Cable> cables = getCables(graph); 
+                    for (Cable cable: cables)
+                    {
+                        // TODO lookup correct color in patch 
+                        cable.setColor(Color.WHITE);
+                    }
+                    getCableManager().update(cables);
                 }
-                getCableManager().update(cables);
             }
         }
         
