@@ -79,7 +79,7 @@ Brackets = [\[\]\{\}\(\)]
                              return yyparser.BOOLEAN_LITERAL;}
 <YYINITIAL> "false"        { yyparser.yylval = new PDL2ParserVal(0);
                              return yyparser.BOOLEAN_LITERAL;}
-<YYINITIAL> "messageid"    { return yyparser.TK_MESSAGEID;}
+<YYINITIAL> "messageId"    { return yyparser.TK_MESSAGEID;}
 
 <YYINITIAL> "(int)"        { return yyparser.CAST_TO_INT; }
 <YYINITIAL> "(boolean)"    { return yyparser.CAST_TO_BOOLEAN; }
