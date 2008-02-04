@@ -448,14 +448,14 @@ public class JTBasicConnectorUI extends JTConnectorUI
             if (cableManager == null)
                 return;
 
-            Point stop = SwingUtilities.convertPoint(c, new Point(x, y), cableManager.getOwner()); 
+            Point stop = SwingUtilities.convertPoint(c, new Point(x, y), cableManager.getOwner());
             
             JTConnector target = findConnectorAt(c, stop.x, stop.y);
             
             if (target != null)
                 DragCable.setLocation(stop, target);
             
-            if (connectedCables != null)
+           if (connectedCables != null)
             {
                 cableManager.update(connectedCables);
                 for (Cable cable:connectedCables)
@@ -507,6 +507,9 @@ public class JTBasicConnectorUI extends JTConnectorUI
         
         public void startDragCurrentCables(JTConnector c, int x, int y)
         {
+        	if (!isDragging())
+        		return;
+        	
             connectedCables = getConnectedCables(c);
             
             if (connectedCables.length>0)
@@ -515,8 +518,9 @@ public class JTBasicConnectorUI extends JTConnectorUI
         
         public void stopDrag(JTConnector c, int x, int y)
         {
-            if (!isDragging())
+            if (!isDragging()) {
                 return ;
+            }
             
             dragSource = null;
 
@@ -525,7 +529,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
             Point stop = SwingUtilities.convertPoint(c, new Point(x, y), cableManager.getOwner());
             JTConnector target = findConnectorAt(c, stop.x, stop.y);
 
-            if (connectedCables != null)
+             if (connectedCables != null)
             {
                 PConnectionManager cm =
                     c.getConnector().getConnectionManager();
