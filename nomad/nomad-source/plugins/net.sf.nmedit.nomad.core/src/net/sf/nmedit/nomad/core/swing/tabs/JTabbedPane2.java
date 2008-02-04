@@ -229,16 +229,19 @@ public class JTabbedPane2 extends JComponent
             if (currentComponent == c)
                 return;
             
-            if (currentComponent != null)
+            synchronized (tp.getTreeLock())
             {
-                tp.remove(currentComponent);
-            }
-            
-            currentComponent = c;
-
-            if (currentComponent != null)
-            {
-                tp.add(currentComponent, BorderLayout.CENTER);
+                if (currentComponent != null)
+                {
+                    tp.remove(currentComponent);
+                }
+                
+                currentComponent = c;
+    
+                if (currentComponent != null)
+                {
+                    tp.add(currentComponent, BorderLayout.CENTER);
+                }
             }
 
             tp.validate();

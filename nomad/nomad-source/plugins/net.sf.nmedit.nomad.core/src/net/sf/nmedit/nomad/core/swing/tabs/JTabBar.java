@@ -28,6 +28,7 @@ import java.util.Vector;
 import javax.swing.DefaultSingleSelectionModel;
 import javax.swing.Icon;
 import javax.swing.JComponent;
+import javax.swing.JTabbedPane;
 import javax.swing.SingleSelectionModel;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
@@ -529,6 +530,10 @@ public class JTabBar<T> extends JComponent
 
          if (previouslySelected>selected && previouslySelected>0)
          {
+             // !!! important if previouslySelected-1 == index
+             // then the selection model does not change and
+             // then it does not fire an event
+             setSelectedIndexImpl(-1); // set to value(-1)!= previouslySelected-1
              setSelectedIndexImpl(previouslySelected-1);
          }
          else if (previouslySelected>= 0 && previouslySelected<selected)
