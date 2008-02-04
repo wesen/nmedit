@@ -65,6 +65,7 @@ import net.sf.nmedit.jsynth.event.SynthesizerEvent;
 import net.sf.nmedit.jsynth.event.SynthesizerStateListener;
 import net.sf.nmedit.jsynth.worker.PatchLocation;
 import net.sf.nmedit.jsynth.worker.StorePatchWorker;
+import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.forms.ExceptionDialog;
 import net.sf.nmedit.nomad.core.menulayout.MLEntry;
@@ -655,16 +656,22 @@ public class SynthDeviceContext extends ContainerNode
 			
 		}
 
-		public void mousePressed(MouseEvent e) {			
-			if (e.isPopupTrigger())
-                context.showContextMenu(e, this);
-        
+		public void mousePressed(MouseEvent e) {	
+            handlePopup(e);
 		}
 
 		public void mouseReleased(MouseEvent e) {
-			if (e.isPopupTrigger())
+		    handlePopup(e);
+		}
+		
+		public boolean handlePopup(MouseEvent e)
+		{
+		    if (Platform.isPopupTrigger(e))
+		    {
                 context.showContextMenu(e, this);
-			
+		        return true;
+		    }
+		    return false;
 		}
         
     }
