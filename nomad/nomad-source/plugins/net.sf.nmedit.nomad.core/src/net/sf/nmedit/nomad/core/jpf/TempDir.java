@@ -19,20 +19,27 @@
 package net.sf.nmedit.nomad.core.jpf;
 
 import java.io.File;
-import java.net.URISyntaxException;
 
 import org.java.plugin.Plugin;
+import org.java.plugin.PluginManager;
+import org.java.plugin.registry.PluginDescriptor;
 
 public class TempDir
 {
 
     private Plugin plugin;
    
-    private transient File pluginTempFile;
+    private File root;
     
-    public TempDir(Plugin plugin)
+    protected TempDir(Plugin plugin)
     {
         this.plugin = plugin;
+    }
+    
+    public static TempDir forObject(Object o)
+    {
+        TempDir tmp = new TempDir(PluginManager.lookup(o).getPluginFor(o));
+        return tmp;
     }
     
     public Plugin getPlugin()
@@ -42,26 +49,24 @@ public class TempDir
     
     private File getPluginTempFile()
     {
-        if (pluginTempFile != null)
-            return pluginTempFile;
+        if (root != null)
+            return root;
         
-        File pluginFile = null;
-        try
-        {
-            pluginFile = new File(plugin.getDescriptor().getLocation().toURI()); // the xml file
-        }
-        catch (URISyntaxException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        PluginDescriptor pd = plugin.getDescriptor();
+        
+        String name;
+        
+        String s = pd.getPluginClassName();
+        if (s == null)
+            throw new IllegalStateException("plugin class name not specified in plugin: "+pd);
+        
+        name = s+"-"+pd.getVersion();
+        
+        root = new File("plugin-tmp"+File.separatorChar+name);
+        if (!root.exists())
+            root.mkdir();
 
-        pluginTempFile = new File(pluginFile.getParentFile(), "temp/"+File.separatorChar);
-        
-        if (!pluginTempFile.exists())
-            pluginTempFile.mkdir();
-        
-        return pluginTempFile;
+        return root;
     }
     
     public File getTempFile(String path)

@@ -45,8 +45,6 @@ import net.sf.nmedit.nomad.core.jpf.TempDir;
 import net.sf.nmedit.nomad.core.service.Service;
 import net.sf.nmedit.nomad.core.service.initService.InitService;
 
-import org.java.plugin.PluginManager;
-
 public class Installer implements InitService
 {
 
@@ -251,8 +249,7 @@ public class Installer implements InitService
 
     private File getSynthPropertyFile()
     {
-        TempDir temp = new TempDir(PluginManager.lookup(this).getPluginFor(this));
-        return temp.getTempFile("synth.properties"); 
+        return TempDir.forObject(this).getTempFile("synth.properties"); 
     }
 
 }
