@@ -893,7 +893,8 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         try
         {
             JTModuleContainer jtc = (JTModuleContainer) module.getParent();
-            jtc.updateModuleContainerDimensions();
+            if (jtc != null)
+                jtc.updateModuleContainerDimensions();
         }
         catch (ClassCastException cce)
         {
