@@ -20,7 +20,9 @@
 import net.sf.nmedit.jnmprotocol.AckMessage;
 import net.sf.nmedit.jnmprotocol.MidiException;
 import net.sf.nmedit.jnmprotocol.MidiMessage;
+import net.sf.nmedit.jnmprotocol.NmProtocol;
 import net.sf.nmedit.jnmprotocol.NmProtocolListener;
+import net.sf.nmedit.jnmprotocol.PatchMessage;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NmSlot;
@@ -33,7 +35,7 @@ public class StorePatchInSlotWorker extends NmProtocolListener implements Schedu
     private NordModular synth;
     private NMPatch patch;
     private int slotId;
-    private MidiMessage message;
+    private PatchMessage[] messages;
     private boolean aborted = false;
     private boolean sent = false;
     private long timeout;
@@ -119,7 +121,9 @@ public class StorePatchInSlotWorker extends NmProtocolListener implements Schedu
     {
         try
         {
-            synth.getProtocol().send(message);
+            NmProtocol protocol = synth.getProtocol();
+            for (int i=0;i<messages.length;i++)
+                protocol.send(messages[i]);
         }
         catch (Exception e)
         {
@@ -129,7 +133,7 @@ public class StorePatchInSlotWorker extends NmProtocolListener implements Schedu
 
     public void forceCreateMessage()
     {
-        if (message != null)
+        if (messages != null)
             return;
         
         prepareMessage();
@@ -137,9 +141,11 @@ public class StorePatchInSlotWorker extends NmProtocolListener implements Schedu
     
     private void prepareMessage()  
     {
+        if (messages != null)
+            return;
         try
         {
-            message = NmUtils.createPatchMessage(patch, slotId);
+            messages = NmUtils.createPatchMessages(patch, slotId);
         }
         catch (MidiException e)
         {

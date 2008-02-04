@@ -22,6 +22,8 @@
  */
 package net.sf.nmedit.jsynth.clavia.nordmodular.utils;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import net.sf.nmedit.jnmprotocol.PDLData;
@@ -216,16 +218,17 @@ public class BitstreamPatchParser
                             module_index = 0;
                         }
                         Packet parameters = modules.getPacket("parameters");
-                        List<String> param = parameters.getAllVariables();
+                        Collection<String> param = parameters.getAllVariables();
                         
                         int [] record = getData(3+param.size());
                         record[Format.PARAMETER_DUMP_MODULE_INDEX]= module_index;
                         record[Format.PARAMETER_DUMP_MODULE_TYPE]= module_type; // TODO read variable
                         record[Format.PARAMETER_DUMP_PARAMETER_COUNT]= param.size(); // implied
                         
+                        Iterator<String> iter = param.iterator();
                         for (int i=0;i<param.size();i++)
                         {
-                            record[Format.PARAMETER_DUMP_PARAMETER_BASE+i] = parameters.getVariable(param.get(i));
+                            record[Format.PARAMETER_DUMP_PARAMETER_BASE+i] = parameters.getVariable(iter.next());
                         }
                         
                         callback.parameterDump(record);
@@ -317,13 +320,14 @@ public class BitstreamPatchParser
                     int module_index = modules.getVariable("index");
 
                     Packet parameters = modules.getPacket("customValues");
-                    List<String> param = parameters.getAllVariables();
+                    Collection<String> param = parameters.getAllVariables();
                     
                     int[] data = getData(2+param.size());
                     data[Format.CUSTOM_DUMP_MODULE_INDEX] = module_index;
                     data[Format.CUSTOM_DUMP_PARAMETER_COUNT] = param.size();
+                    Iterator<String> iter = param.iterator();
                     for (int i=0;i<param.size();i++)
-                        data[Format.CUSTOM_DUMP_PARAMETER_BASE+i] = parameters.getVariable(param.get(i));
+                        data[Format.CUSTOM_DUMP_PARAMETER_BASE+i] = parameters.getVariable(iter.next());
 
                     callback.customDump(data);
                 }

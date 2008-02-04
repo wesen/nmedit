@@ -25,7 +25,9 @@ package net.sf.nmedit.jsynth.clavia.nordmodular.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.nmedit.jnmprotocol.MidiException;
 import net.sf.nmedit.jnmprotocol.PDLData;
+import net.sf.nmedit.jnmprotocol.PatchMessage;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Format;
@@ -46,13 +48,13 @@ public class Patch2BitstreamBuilder
 {
 
     private IntStream intStream;
-    private BitStream bitStream = null;
     private PacketParser patchParser =  PDLData.getPatchParser();
-    private List<Integer> sectionEndPositions = new ArrayList<Integer>();
-
+    private List<BitStream> sections = new ArrayList<BitStream>(); 
     private final NMPatch patch;
     
     private boolean headerOnly = false;
+    
+    private boolean generated = false;
     
     public void setHeaderOnly(boolean enable)
     {
@@ -63,6 +65,16 @@ public class Patch2BitstreamBuilder
     {
         this.patch = patch;
         intStream = new IntStream();
+    }
+    
+    public PatchMessage[] createMessages(int slot) throws MidiException
+    {
+        if (!generated) generate();
+        
+        List<PatchMessage> messages = new ArrayList<PatchMessage>();
+        for (int i=0;i<sections.size();i++)
+            messages.add(new PatchMessage(sections.get(i), slot, i, sections.size()));        
+        return messages.toArray(new PatchMessage[messages.size()]);
     }
 
     private void append(int value)
@@ -80,42 +92,9 @@ public class Patch2BitstreamBuilder
         }
     }
     
-    public List<Integer> getSectionEndPositions()
+    public BitStream[] getBitStreams()
     {
-        return sectionEndPositions;
-    }
-
-
-    public BitStream getBitStream()
-    {
-        if (bitStream==null)
-        {
-            bitStream = new BitStream();
-            intStream.setPosition(0);
-            if (!patchParser.generate(intStream, bitStream))
-                throw new RuntimeException("generate failed");
-            
-        }
-        return bitStream;
-    }
-    
-
-    protected void storeEndPosition(IntStream intStream, List<Integer> sectionEndPositions)
-    {        
-        sep(intStream, patchParser, sectionEndPositions);
-    }
-
-    protected static void sep(IntStream is, 
-            PacketParser patchParser,
-            List<Integer> sep)
-    {
-        IntStream isCopy = new IntStream(is);
-        BitStream bs = new BitStream();
-        boolean result = patchParser.generate(isCopy, bs);
-        if (!result)
-            throw new RuntimeException("store end position: generate failed");
-        
-        sep.add((bs.getSize()/8)-1);
+        return sections.toArray(new BitStream[sections.size()]);
     }
     
     public void appendName( String s )
@@ -136,11 +115,18 @@ public class Patch2BitstreamBuilder
     
     private void endSection()
     {
-        storeEndPosition(intStream, sectionEndPositions);
+        BitStream bitStream = new BitStream();
+        intStream.setPosition(0);
+        if (!patchParser.generate(intStream, bitStream))
+            throw new RuntimeException("generate failed");
+        
+        sections.add(bitStream);
+        intStream = new IntStream();
     }
 
-    public void generate()
+    private void generate()
     {
+        if(generated) return;
         
       // Create patch bitstream
      
@@ -290,6 +276,8 @@ public class Patch2BitstreamBuilder
       // Module name section
       moduleNameSection(patch.getPolyVoiceArea());
       moduleNameSection(patch.getCommonVoiceArea());
+      
+      generated = true;
     }
 
     protected void generateHeader()

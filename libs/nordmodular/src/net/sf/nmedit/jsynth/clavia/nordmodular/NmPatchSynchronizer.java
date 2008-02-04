@@ -23,6 +23,7 @@ import java.beans.PropertyChangeListener;
 
 import net.sf.nmedit.jnmprotocol.MidiMessage;
 import net.sf.nmedit.jnmprotocol.MorphAssignmentMessage;
+import net.sf.nmedit.jnmprotocol.NmProtocol;
 import net.sf.nmedit.jnmprotocol.SetPatchTitleMessage;
 import net.sf.nmedit.jpatch.AllEventsListener;
 import net.sf.nmedit.jpatch.PModule;
@@ -371,8 +372,10 @@ public class NmPatchSynchronizer extends AllEventsListener
     {
         try
         {
-            MidiMessage msg = NmUtils.createPatchSettingsMessage(patch, slot.getSlotId());
-            synth.getProtocol().send(msg);
+            MidiMessage[] messages = NmUtils.createPatchSettingsMessages(patch, slot.getSlotId());
+            NmProtocol protocol = synth.getProtocol();
+            for (int i=0;i<messages.length;i++)
+                protocol.send(messages[i]);
         }
         catch (Exception e1)
         {
