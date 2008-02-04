@@ -42,7 +42,6 @@ import java.util.ResourceBundle;
 
 import javax.swing.JFrame;
 import javax.swing.LookAndFeel;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.MetalTheme;
@@ -63,7 +62,6 @@ import org.java.plugin.PluginManager;
 import org.java.plugin.boot.Boot;
 import org.java.plugin.boot.SplashHandler;
 import org.java.plugin.registry.PluginDescriptor;
-import org.java.plugin.registry.PluginPrerequisite;
 import org.java.plugin.registry.PluginRegistry;
 
 import com.jgoodies.looks.Options;
