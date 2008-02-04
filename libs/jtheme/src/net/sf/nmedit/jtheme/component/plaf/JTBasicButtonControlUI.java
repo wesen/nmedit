@@ -43,6 +43,7 @@ import net.sf.nmedit.jtheme.component.JTButtonControl;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTControl;
 import net.sf.nmedit.jtheme.component.misc.CallDescriptor;
+import net.sf.nmedit.nmutils.Platform;
 
 public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingConstants
 {
@@ -736,14 +737,23 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
 
         boolean wasPopupTrigger = false;
         
+        public boolean handlePopup(MouseEvent e)
+        {
+            if (Platform.isPopupTrigger(e))
+            {
+                wasPopupTrigger = true;
+                JTButtonControl control = getControl(e);
+                control.showControlPopup(e);
+                return true;
+            } 
+            return false;
+        }
+        
         public void mousePressed(MouseEvent e)
         {
-        	if (e.isPopupTrigger())
+        	if (handlePopup(e))
             {
-        		
-        		JTButtonControl control = getControl(e);
-                control.showControlPopup(e);
-                wasPopupTrigger = true;
+        		// popup is shown
             } 
         	else 
         	{
@@ -757,10 +767,9 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
 
         public void mouseReleased(MouseEvent e)
         {
-        	if (e.isPopupTrigger())
-            {	
-        		JTControl control = getControl(e);
-                control.showControlPopup(e);
+            if (handlePopup(e))
+            {
+                // popup is shown
             } 
         	else if (select(e) && wasPopupTrigger == false)
             {
