@@ -575,8 +575,8 @@ public class JTBasicConnectorUI extends JTConnectorUI
                     }
                     else
                     {
-                        // TODO disconnect conenctor
-                        System.out.println("TODO: should disconnect now");
+                    	Collection<PConnection> cc = cm.connections(c.getConnector());
+                    	cm.removeAllConnections(cc);
                     }
                 }
                 finally
