@@ -575,6 +575,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
                     }
                     else
                     {
+                    	// disconnect cables connected to this connector
                     	c.getConnector().disconnect();
                     }
                 }
