@@ -1,5 +1,7 @@
 package net.sf.nmedit.nmutils;
 
+import java.awt.event.MouseEvent;
+
 /* Copyright (C) 2006 Christian Schneider
  * 
  * This file is part of Nomad.
@@ -91,6 +93,18 @@ public class Platform
     public static boolean isFlavor(OS flavor)
     {
         return Platform.flavor == flavor;
+    }
+    
+    public static boolean isPopupTrigger(MouseEvent e)
+    {
+        if (Platform.isFlavor(OS.MacOSFlavor))
+        {
+            return (e.getID() == MouseEvent.MOUSE_RELEASED) && e.isPopupTrigger();
+        }
+        else
+        {
+            return (e.getID() == MouseEvent.MOUSE_PRESSED) && e.isPopupTrigger();
+        }
     }
   
 }
