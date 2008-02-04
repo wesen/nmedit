@@ -207,7 +207,7 @@ public class ExplorerTree extends JTree
             collapseRow( i-- );
         }
     }
-
+/*
     public boolean isPopupTrigger(MouseEvent e, TreeNode treeNode, 
             boolean exactNodeLocation)
     {
@@ -232,7 +232,7 @@ public class ExplorerTree extends JTree
             }
         }
         return false;
-    }
+    }*/
     
     
   /*
