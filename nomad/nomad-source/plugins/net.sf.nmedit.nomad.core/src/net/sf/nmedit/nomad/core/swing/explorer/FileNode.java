@@ -26,6 +26,7 @@ import java.awt.Event;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.ByteArrayInputStream;
@@ -35,7 +36,9 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
+import javax.swing.AbstractAction;
 import javax.swing.Icon;
+import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -48,9 +51,9 @@ public class FileNode implements ETreeNode, MouseListener,
     Transferable
 {
 
-    private final static TreeNode[] EMPTY = new TreeNode[0];
+    private final static FileNode[] EMPTY = new FileNode[0];
     private File file;
-    private TreeNode[] children = null;
+    private FileNode[] children = null;
     private TreeNode parent;
     
     public FileNode(TreeNode parent, File file)
@@ -85,6 +88,34 @@ public class FileNode implements ETreeNode, MouseListener,
     public void notifyDropChildren()
     {
         children = null;
+    }
+    
+    private void notifyChildFilesRemoved(ExplorerTree et)
+    {
+        if (children != null)
+        {
+            int removed = 0;
+            for (int i=children.length-1;i>=0;i--)
+            {
+                FileNode fn = children[i];
+                if (!fn.getFile().exists())
+                {
+                    children[i] = null;
+                    removed ++;
+                }
+            }
+            if (removed>0)
+            {
+                FileNode[] a = new FileNode[children.length-removed];
+                int ai = 0;
+                for (int i=0;i<children.length;i++)
+                    if (children[i] != null)
+                        a[ai++] = children[i];
+                children = a;
+                
+                et.fireNodeStructureChanged(this);
+            }
+        }
     }
     
     private TreeNode[] getChildren()
@@ -217,14 +248,106 @@ public class FileNode implements ETreeNode, MouseListener,
     {
         if (!Platform.isFlavor(Platform.OS.MacOSFlavor))
             openAction(e);
+        handlePopupTrigger(e);
     }
 
     public void mouseReleased(MouseEvent e)
     {
         if (Platform.isFlavor(Platform.OS.MacOSFlavor))
             openAction(e);
+        handlePopupTrigger(e);
     }
 
+    private boolean handlePopupTrigger(MouseEvent e)
+    {
+        if ((e.getComponent() instanceof ExplorerTree))
+        {
+            ExplorerTree et = (ExplorerTree) e.getComponent();
+            if (et.isPopupTrigger(e, this, true))
+            {
+                createPopup(e, et);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    protected void createPopup(MouseEvent e, ExplorerTree et)
+    {
+        JPopupMenu popup = new JPopupMenu();
+        populatePopup(popup, e, et);
+        popup.show(et, e.getX(), e.getY());
+    }
+    
+    protected void populatePopup(JPopupMenu popup, MouseEvent e, ExplorerTree et)
+    {
+        if (file.isDirectory())
+        {
+            popup.add(new FileNodeAction(et, FileNodeAction.REFRESH));
+        }
+        else
+        {
+            popup.add(new FileNodeAction(et, FileNodeAction.OPEN));
+            popup.add(new FileNodeAction(et, FileNodeAction.DELETE_PERMANENTLY));
+        }
+        
+        if (getParent() == et.getRoot())
+        {
+            popup.addSeparator();
+            popup.add(new FileNodeAction(et, FileNodeAction.REMOVE_EXPLORER_ENTRY));
+        }
+    }
+    
+    private class FileNodeAction extends AbstractAction
+    {
+
+        public static final String OPEN = "Open";
+        public static final String REFRESH = "Refresh";
+        public static final String DELETE_PERMANENTLY = "Delete (Permanently)";
+        public static final String REMOVE_EXPLORER_ENTRY = "Remove Entry";
+
+        private ExplorerTree et;
+        
+        public FileNodeAction(ExplorerTree et, String command){
+            this.et = et;
+            putValue(ACTION_COMMAND_KEY, command); 
+            putValue(NAME, command); 
+            if (command == OPEN)
+                setEnabled(false); // not implemented yet
+        }
+        
+        public void actionPerformed(ActionEvent e)
+        {
+            if (e.getActionCommand() == REFRESH)
+            {
+                notifyDropChildren();
+                et.fireNodeStructureChanged(FileNode.this);
+            }
+            else if (e.getActionCommand() == DELETE_PERMANENTLY && getFile().isFile())
+            {
+                if (getFile().delete())
+                {
+                    if (FileNode.this.getParent() instanceof FileNode)
+                        ((FileNode)FileNode.this.getParent()).notifyChildFilesRemoved(et);
+                }
+            }
+            else if (e.getActionCommand() == DELETE_PERMANENTLY && getFile().isDirectory())
+            {
+                // todo
+            }
+            else if (e.getActionCommand() == REMOVE_EXPLORER_ENTRY)
+            {
+                if (getParent() == et.getRoot())
+                {
+                    et.getRoot().remove(FileNode.this);
+                    et.fireRootChanged();
+                }
+                
+            }
+        }
+        
+    }
+    
     private static DataFlavor fileFlavor = new DataFlavor(File.class, "File");
     private static DataFlavor uriFlavor =
         new DataFlavor("text/uri-list; charset=utf-16", "uri list");

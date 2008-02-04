@@ -35,6 +35,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import net.sf.nmedit.nmutils.Platform;
+
 public class ExplorerTree extends JTree
 {
     
@@ -207,11 +209,11 @@ public class ExplorerTree extends JTree
             collapseRow( i-- );
         }
     }
-/*
+
     public boolean isPopupTrigger(MouseEvent e, TreeNode treeNode, 
             boolean exactNodeLocation)
     {
-        if (SwingUtilities.isRightMouseButton(e))
+        if (Platform.isPopupTrigger(e))
         {            
             TreePath path = getPathForLocation(e.getX(), e.getY());
             if (path == null)
@@ -232,7 +234,7 @@ public class ExplorerTree extends JTree
             }
         }
         return false;
-    }*/
+    }
     
     
   /*
