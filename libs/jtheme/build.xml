@@ -15,7 +15,6 @@
         <pathelement path="."/>
         <pathelement location="../jpatch/dist/lib/jpatch.jar"/>
         <pathelement location="../nmutils/dist/lib/nmutils.jar"/>
-      	<pathelement location="../nordmodular/dist/lib/nordmodular.jar"/>
         <pathelement location="../java_depencies/cssparser/cssparser.jar"/>
         <pathelement location="../java_depencies/jdom/jdom.jar"/>
         <pathelement location="../java_depencies/sac/sac.jar"/>
