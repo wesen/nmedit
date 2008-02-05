@@ -62,7 +62,11 @@ public class TempDir
         
         name = s+"-"+pd.getVersion();
         
-        root = new File("plugin-tmp"+File.separatorChar+name);
+        File base = new File("plugin-tmp");
+        if (!base.exists())
+            base.mkdir();
+        
+        root = new File(base,name);
         if (!root.exists())
             root.mkdir();
 
