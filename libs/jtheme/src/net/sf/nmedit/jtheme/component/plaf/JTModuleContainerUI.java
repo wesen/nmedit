@@ -1046,8 +1046,6 @@ public class JTModuleContainerUI extends ComponentUI
             {
                 if (e.getComponent() == getModuleContainer())
                     mouseClickedAtModuleContainer(e);
-                else if (e.getComponent() instanceof JTModule)
-                    mouseClickedAtModule(e);
             }
         }
 
