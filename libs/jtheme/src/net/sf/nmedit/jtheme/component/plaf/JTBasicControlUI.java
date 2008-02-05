@@ -433,7 +433,7 @@ public abstract class JTBasicControlUI extends JTControlUI
 
         public void updateValue(JTControl control, double currentModifier, double pressedModifier, double pressedValue)
         {
-            double modifier = (currentModifier-pressedModifier)/127d;
+            double modifier = (currentModifier-pressedModifier)/128d;
             // assure value in range [0..1]
             double nvalue = Math.max(0, Math.min(pressedValue+modifier, 1));
             
