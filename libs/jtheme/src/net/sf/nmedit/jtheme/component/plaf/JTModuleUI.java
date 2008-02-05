@@ -22,6 +22,7 @@
  */
 package net.sf.nmedit.jtheme.component.plaf;
 
+import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -774,25 +775,21 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
             super.paint(g);
         }
         
-        protected void processMouseMotionEvent(MouseEvent e)
+        protected void processEvent(AWTEvent e)
         {
-            NmSwingUtilities.redispatchMouseEvent(e, getParent());
-            super.processMouseEvent(e);
-        }
-
-        protected void processMouseEvent(MouseEvent e)
-        {
-            boolean redispatch = true;
-            if (e.getID() == MouseEvent.MOUSE_CLICKED && 
-                    e.getClickCount()==2 && SwingUtilities.isLeftMouseButton(e))
+            if (e instanceof MouseEvent)
             {
-                editModuleName();
-                redispatch = false;
+                MouseEvent me = (MouseEvent)e;
+                
+                if (me.getID() == MouseEvent.MOUSE_CLICKED && 
+                        me.getClickCount()==2 && SwingUtilities.isLeftMouseButton(me))
+                {
+                    editModuleName();
+                    return;
+                }
             }
 
-            if (redispatch)
-                NmSwingUtilities.redispatchMouseEvent(e, getParent());
-            super.processMouseEvent(e);
+            super.processEvent(e);
         }
         
         private void editModuleName()
