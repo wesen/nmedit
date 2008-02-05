@@ -18,7 +18,12 @@
  */
 package net.sf.nmedit.jtheme.component;
 
+import java.awt.AWTEvent;
+import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+
+import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.jpatch.PLight;
 import net.sf.nmedit.jpatch.PLightDescriptor;
@@ -47,8 +52,24 @@ implements PLightListener
     {
         super(context);
         setOpaque(false);
+        enableEvents(AWTEvent.MOUSE_EVENT_MASK|AWTEvent.MOUSE_MOTION_EVENT_MASK);
     }
-    
+
+    protected void processEvent(AWTEvent e)
+    {
+        Component parent = getParent();
+        if (parent != null && e instanceof MouseEvent)
+        {
+            // retarget mouse events
+            MouseEvent me = SwingUtilities.convertMouseEvent(this, (MouseEvent) e, parent);
+            parent.dispatchEvent(me);
+        }
+        else
+        {
+            super.processEvent(e);
+        }
+    }
+
     protected void renderBorder(Graphics g)
     {
         if (type == METER)
