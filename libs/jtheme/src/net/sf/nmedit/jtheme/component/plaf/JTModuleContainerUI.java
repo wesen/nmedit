@@ -559,8 +559,7 @@ public class JTModuleContainerUI extends ComponentUI
         
         public void dragEnter(DropTargetDragEvent dtde)
         {
-        	System.out.println("dragenter");
-            if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable()))
+        	if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable()))
             {
                 dtde.acceptDrag(DnDConstants.ACTION_COPY);
                 return;
