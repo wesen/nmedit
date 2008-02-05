@@ -215,7 +215,6 @@ public class JTModuleContainerUI extends ComponentUI
         
         g.setColor(Color.BLUE);
         g.drawRect(box.x, box.y, box.width-1, box.height-1);
-        // System.out.println("paintbox: "+box);
     }
     
     private transient Rectangle dndBox;
@@ -223,7 +222,7 @@ public class JTModuleContainerUI extends ComponentUI
     
     public void updateDnDBoundingBox(Rectangle box)
     {
-        Rectangle repaint;
+    	Rectangle repaint;
         if (dndBox != null)
         {
             repaint = dndBox;
@@ -243,7 +242,7 @@ public class JTModuleContainerUI extends ComponentUI
             repaint.y-= enlarge;
             repaint.width+= enlarge*2;
             repaint.height+= enlarge*2;*/
-            getModuleContainer().repaintOverlay(repaint);
+        	getModuleContainer().repaintOverlay(repaint);
         }
         
         if (box == null)
@@ -1066,13 +1065,12 @@ public class JTModuleContainerUI extends ComponentUI
             {
                 jtcUI.createPopupMenu(mc, e);
             }
-            if (e.getComponent() instanceof JTModule)
-                mouseClickedAtModule(e);
         }
 
         public void mouseReleased(MouseEvent e)
         {
-            // no op
+            if (e.getComponent() instanceof JTModule)
+                mouseClickedAtModule(e);
         }
         
     }

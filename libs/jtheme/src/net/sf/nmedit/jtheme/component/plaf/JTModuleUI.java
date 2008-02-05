@@ -730,8 +730,10 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         {
             // TODO lookup selection color
             
-            final Color selection = Color.blue;
-            g.setColor(selection);
+        	// System.out.println("iwdthL " + module.getWidth() + " height " + module.getHeight());
+        	
+            final Color selection = Color.BLUE;
+        	g.setColor(selection);
             g.drawRect(0, 0, module.getWidth()-1, module.getHeight()-1);
         }
     }
