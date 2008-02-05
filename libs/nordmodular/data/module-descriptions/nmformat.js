@@ -169,10 +169,10 @@ function fmtFilterHz1(value)
         return ""+roundTo(aFloat, 0)+" Hz";
 
     else if (aFloat<10000)
-        return ""+roundTo(aFloat, -2)+" Hz";
+        return ""+roundTo(aFloat, -2)+" kHz";
 
     else
-        return ""+roundTo(aFloat, -1)+" Hz";
+        return ""+roundTo(aFloat, -1)+" kHz";
 }
 // FilterHz2 
 function fmtFilterHz2(value)
@@ -183,10 +183,10 @@ function fmtFilterHz2(value)
         return ""+roundTo(aFloat, 0)+" Hz";
 
     else if (aFloat<10000)
-        return ""+roundTo(aFloat/1000, -2)+" Hz";
+        return ""+roundTo(aFloat/1000, -2)+" kHz";
 
     else
-        return ""+roundTo(aFloat/1000, -1)+" Hz";
+        return ""+roundTo(aFloat/1000, -1)+" kHz";
 }
 // Freqkbt
 function fmtFreqkbt(value)
