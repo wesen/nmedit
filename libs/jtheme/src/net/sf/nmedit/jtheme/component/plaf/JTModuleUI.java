@@ -582,7 +582,7 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         {
             if ((!e.isConsumed()) && e.getID() == MouseEvent.MOUSE_PRESSED && SwingUtilities.isLeftMouseButton(e))
             {
-            	if (transformPopupMenu != null && transformPopupMenu.isVisible()) {
+            	if (transformPopupMenu != null && transformPopupMenu.getInvoker()==e.getComponent()) {
             		transformPopupMenu.setVisible(false);
             		transformPopupMenu = null;
             		return;
@@ -632,7 +632,6 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
                     }
                     transformPopupMenu.add(new TransformAction(loader, source, mappings[i]));
                 }
-                
                 transformPopupMenu.show(e.getComponent(), e.getX(), e.getY());
             }
         }
