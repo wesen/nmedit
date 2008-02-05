@@ -98,6 +98,7 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
     
     private JTModule module;
     private TitleLabel titleLabel;
+    private static JPopupMenu transformPopupMenu;
     
     protected JTModuleUI(JTModule module)
     {
@@ -580,6 +581,11 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         {
             if ((!e.isConsumed()) && e.getID() == MouseEvent.MOUSE_PRESSED && SwingUtilities.isLeftMouseButton(e))
             {
+            	if (transformPopupMenu != null && transformPopupMenu.isVisible()) {
+            		transformPopupMenu.setVisible(false);
+            		transformPopupMenu = null;
+            		return;
+            	}
                 Container p = getParent();
                 if (p instanceof JTModule)
                 {
@@ -615,17 +621,18 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
 
             PTBasicTransformations.sort(mappings);
             
-            JPopupMenu popup = null;
+            transformPopupMenu = null;
             if (mappings.length>0)
             {
                 for (int i=0;i<mappings.length;i++)
                 {
-                    if (popup == null)
-                        popup = new JPopupMenu();
-                    popup.add(new TransformAction(loader, source, mappings[i]));
+                	if (transformPopupMenu == null) {
+                        transformPopupMenu = new JPopupMenu();
+                    }
+                    transformPopupMenu.add(new TransformAction(loader, source, mappings[i]));
                 }
                 
-                popup.show(e.getComponent(), e.getX(), e.getY());
+                transformPopupMenu.show(e.getComponent(), e.getX(), e.getY());
             }
         }
 
