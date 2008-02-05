@@ -133,11 +133,13 @@ label{fill:#000;}
 	</module>
 	<module component-id="m113" width="255" height="30">
 		<name>1to2Fade</name>
+		<image x="83" y="7" width="35" height="16" xlink:href="./images/single/decoration-7.png" />
+		<image x="165" y="4" width="59" height="13" xlink:href="./images/single/decoration-8.png" />
 		<connector x="159" y="8" size="13" class="cAUDIO">
 			<connector component-id="c1" alt="in" />
 		</connector>
 		<connector x="194" y="8" size="13" class="cAUDIO">
-			<connector component-id="c1" alt="in" />
+			<connector component-id="c2" alt="out 1" />
 		</connector>
 		<connector x="234" y="8" size="13" class="cAUDIO">
 			<connector component-id="c3" alt="out 2" />
@@ -145,8 +147,6 @@ label{fill:#000;}
 		<knob x="88" y="2" size="21">
 			<parameter component-id="p1" alt="fade" />
 		</knob>
-		<image x="83" y="7" width="35" height="16" xlink:href="./images/single/decoration-7.png" />
-		<image x="165" y="4" width="59" height="13" xlink:href="./images/single/decoration-8.png" />
 		<label x="185" y="9">1</label>
 		<label x="226" y="9">2</label>
 		<label x="78" y="13">1</label>
