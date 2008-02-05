@@ -559,6 +559,7 @@ public class JTModuleContainerUI extends ComponentUI
         
         public void dragEnter(DropTargetDragEvent dtde)
         {
+        	System.out.println("dragenter");
             if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable()))
             {
                 dtde.acceptDrag(DnDConstants.ACTION_COPY);
@@ -1042,7 +1043,7 @@ public class JTModuleContainerUI extends ComponentUI
         
         public void mouseClicked(MouseEvent e)
         {
-            if (dndAllowed)
+        	if (dndAllowed)
             {
                 if (e.getComponent() == getModuleContainer())
                     mouseClickedAtModuleContainer(e);
@@ -1063,11 +1064,13 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void mousePressed(MouseEvent e)
         {
-            JTModuleContainer mc = jtcUI.getModuleContainer();
+        	JTModuleContainer mc = jtcUI.getModuleContainer();
             if (SwingUtilities.isRightMouseButton(e) && e.getComponent() == mc)
             {
                 jtcUI.createPopupMenu(mc, e);
             }
+            if (e.getComponent() instanceof JTModule)
+                mouseClickedAtModule(e);
         }
 
         public void mouseReleased(MouseEvent e)
