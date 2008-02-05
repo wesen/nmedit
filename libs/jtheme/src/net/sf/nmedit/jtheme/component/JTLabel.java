@@ -22,6 +22,11 @@
  */
 package net.sf.nmedit.jtheme.component;
 
+import java.awt.AWTEvent;
+import java.awt.Component;
+import java.awt.event.MouseEvent;
+import javax.swing.SwingUtilities;
+
 import net.sf.nmedit.jtheme.JTContext;
 
 public class JTLabel extends JTComponent
@@ -38,6 +43,29 @@ public class JTLabel extends JTComponent
     {
         super( context );
         setOpaque(false);
+        // capture mouse events for retargeting
+        enableEvents(AWTEvent.MOUSE_EVENT_MASK|AWTEvent.MOUSE_MOTION_EVENT_MASK);
+    }
+    
+    protected boolean retargetMouseEvent(MouseEvent e)
+    {
+        // retarget mouse events
+        MouseEvent me = SwingUtilities.convertMouseEvent(this, (MouseEvent) e, getParent());
+        getParent().dispatchEvent(me);
+        return true;
+    }
+    
+    protected void processEvent(AWTEvent e)
+    {
+        Component parent = getParent();
+        if (parent != null && e instanceof MouseEvent && retargetMouseEvent((MouseEvent)e))
+        {
+            // done
+        }
+        else
+        {
+            super.processEvent(e);
+        }
     }
 
     public String getUIClassID() 
