@@ -39,6 +39,7 @@ import net.sf.nmedit.nomad.core.service.fileService.FSFileFilter;
 import net.sf.nmedit.nomad.core.service.fileService.FileService;
 import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
 import net.sf.nmedit.nomad.core.swing.document.Document;
+import net.sf.nmedit.nomad.core.swing.document.DocumentManager;
 
 public class NmFileService implements FileService
 {
@@ -75,9 +76,12 @@ public class NmFileService implements FileService
             SwingUtilities.invokeLater(new Runnable(){
                 public void run()
                 {
+                    DocumentManager dm = 
                     Nomad.sharedInstance()
-                    .getDocumentManager()
-                    .add(pd);
+                    .getDocumentManager();
+                    dm.add(pd);
+                    dm.setSelection(pd);
+                    
                 }
             });
         
