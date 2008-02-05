@@ -76,7 +76,6 @@ import net.sf.nmedit.nomad.core.helpers.RuntimeMenuBuilder;
 import net.sf.nmedit.nomad.core.i18n.LocaleConfiguration;
 import net.sf.nmedit.nomad.core.jpf.PluginView;
 import net.sf.nmedit.nomad.core.menulayout.ActionHandler;
-import net.sf.nmedit.nomad.core.menulayout.MLEntry;
 import net.sf.nmedit.nomad.core.menulayout.MenuBuilder;
 import net.sf.nmedit.nomad.core.menulayout.MenuLayout;
 import net.sf.nmedit.nomad.core.service.ServiceRegistry;
@@ -826,6 +825,18 @@ public class Nomad
         if (file.isDirectory())
             return;
         
+        // find out if file is already open
+        
+        for (Document d: getDocumentManager().getDocuments())
+        {
+            if (file.equals(d.getFile()))
+            {
+                getDocumentManager().setSelection(d);
+                return ;
+            }
+        }
+        
+        
         Iterator<FileService> iter = ServiceRegistry.getServices(FileService.class);
         while (iter.hasNext())
         {
@@ -837,8 +848,13 @@ public class Nomad
                     int count = pageContainer.getDocumentCount();
                     
                     fs.open(file);
-                    if (pageContainer.getDocumentCount()>count)
-                        pageContainer.setSelectedIndex(pageContainer.getDocumentCount()-1);
+                    int newCount = pageContainer.getDocumentCount(); 
+                    if (newCount>count)
+                    {
+                        // condition may be false if fs.open() creates the document
+                        // on the event dispatch thread
+                        pageContainer.setSelectedIndex(newCount-1);
+                    }
                     return;
                 }
             }

@@ -246,16 +246,18 @@ public class FileNode implements ETreeNode, MouseListener,
     
     public void mousePressed(MouseEvent e)
     {
+        if (handlePopupTrigger(e))
+            return;
         if (!Platform.isFlavor(Platform.OS.MacOSFlavor))
             openAction(e);
-        handlePopupTrigger(e);
     }
 
     public void mouseReleased(MouseEvent e)
     {
+        if (handlePopupTrigger(e))
+            return;
         if (Platform.isFlavor(Platform.OS.MacOSFlavor))
             openAction(e);
-        handlePopupTrigger(e);
     }
 
     private boolean handlePopupTrigger(MouseEvent e)
