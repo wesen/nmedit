@@ -137,7 +137,9 @@ public class Nomad
     
     public void pluginsHelp()
     {
-        getDocumentManager().add(new PluginView());
+        Document d = new PluginView();
+        getDocumentManager().add(d);
+        getDocumentManager().setSelection(d);
     }
     
     private class DocumentSelectionHandler implements DocumentListener
