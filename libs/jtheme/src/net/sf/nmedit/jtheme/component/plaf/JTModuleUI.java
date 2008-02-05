@@ -567,7 +567,7 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
             super(context);
             enableEvents(MouseEvent.MOUSE_EVENT_MASK|MouseEvent.MOUSE_MOTION_EVENT_MASK);
         }
-        
+
         public boolean isReducible()
         {
             return false;
@@ -578,29 +578,41 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
             getIcon().paintIcon(this, g2, 0, 0);
         }
 */
-        protected void processMouseEvent(MouseEvent e)
+        protected void processEvent(AWTEvent e)
         {
-            if ((!e.isConsumed()) && e.getID() == MouseEvent.MOUSE_PRESSED && SwingUtilities.isLeftMouseButton(e))
+            if (!(e instanceof MouseEvent))
             {
-            	if (transformPopupMenu != null && transformPopupMenu.getInvoker()==e.getComponent()) {
+                super.processEvent(e);
+                return;
+            }
+            
+            MouseEvent me = (MouseEvent) e;
+            
+            if ((!me.isConsumed()) && e.getID() == MouseEvent.MOUSE_PRESSED && SwingUtilities.isLeftMouseButton(me))
+            {
+            	if (transformPopupMenu != null && transformPopupMenu.getInvoker()==me.getComponent()) 
+            	{
+            	    // close popup
             		transformPopupMenu.setVisible(false);
             		transformPopupMenu = null;
-            		return;
             	}
-                Container p = getParent();
-                if (p instanceof JTModule)
-                {
-                    PModule m = ((JTModule) p).getModule();
-                    if (m != null)
+            	else
+            	{
+            	    // show popup
+                    Container p = getParent();
+                    if (p instanceof JTModule)
                     {
-                        createPopup(e, m);
-                        super.processMouseEvent(e);
-                        return;
+                        PModule m = ((JTModule) p).getModule();
+                        if (m != null)
+                        {
+                            createPopup(me, m);
+                            return;
+                        }
                     }
-                }
+            	}
             }
-
-            NmSwingUtilities.redispatchMouseEvent(e, getParent());
+            
+            super.processEvent(e);
         }
 
         protected void processMouseMotionEvent(MouseEvent e)
