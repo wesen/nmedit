@@ -68,15 +68,12 @@ public class JTModule extends JTComponent
     
     protected void processEvent(AWTEvent e)
     {
-        if (e.getID() == ComponentEvent.COMPONENT_MOVED
-                && module != null)
+        if (e.getID() == ComponentEvent.COMPONENT_MOVED && module != null)
         {
             module.setScreenLocation(getX(), getY());
-            super.processEvent(e);
             updateCablesForThisModule();
-        } else {
-        	super.processEvent(e);
-        }
+        } 
+        super.processEvent(e);
     }
     
     private JTCableManager getCableManager() {
@@ -94,13 +91,13 @@ public class JTModule extends JTComponent
     }
     
     protected void updateCablesForThisModule() {
-    	Collection<Cable> cables = new LinkedList<Cable>();
     	JTCableManager cman = getCableManager();
     	if (cman == null)
     		return;
     	if (module == null)
     		return;
-    	
+
+        Collection<Cable> cables = new LinkedList<Cable>();
         cman.getCables(cables, module);
 
         if (!cables.isEmpty()) {
@@ -276,12 +273,12 @@ public class JTModule extends JTComponent
             this.module = module;
             if (module != null)
             {
-                module.addModuleListener(this);
-                
+                // set bounds before adding listener
                 setBounds(module.getScreenX(),
                         module.getScreenY(),
                         module.getScreenWidth(),
                         module.getScreenHeight());
+                module.addModuleListener(this);
             }
             if (ui != null)
                 getUI().moduleChanged(this, oldModule, module);
