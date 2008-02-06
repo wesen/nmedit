@@ -54,7 +54,6 @@ import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
