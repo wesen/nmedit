@@ -97,7 +97,9 @@ public class Platform
     
     public static boolean isPopupTrigger(MouseEvent e)
     {
-        if (Platform.isFlavor(OS.MacOSFlavor))
+    	return e.isPopupTrigger();
+    	/*
+    	if (Platform.isFlavor(OS.MacOSFlavor))
         {
             return (e.getID() == MouseEvent.MOUSE_RELEASED) && e.isPopupTrigger();
         }
@@ -105,6 +107,7 @@ public class Platform
         {
             return (e.getID() == MouseEvent.MOUSE_PRESSED) && e.isPopupTrigger();
         }
+        */
     }
   
 }
