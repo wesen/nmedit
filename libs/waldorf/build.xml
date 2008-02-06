@@ -10,7 +10,7 @@
   </target>
 
   <target name="compile" depends="init" description="compile the source">
-    <javac srcdir="${src}" destdir="${build}" debug="true">
+    <javac srcdir="${src}" destdir="${build}" debug="true" target="1.5" source="1.5">
       <classpath>
         <pathelement path="."/>
         <pathelement location="../jpatch/dist/lib/jpatch.jar"/>
