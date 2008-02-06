@@ -219,7 +219,7 @@ public class JTModuleContainerUI extends ComponentUI
     
     private transient Rectangle dndBox;
     private transient Point dndInitialScrollLocation;
-    
+	
     public void updateDnDBoundingBox(Rectangle box)
     {
     	Rectangle repaint;
@@ -258,7 +258,6 @@ public class JTModuleContainerUI extends ComponentUI
                 r.x = dndInitialScrollLocation.x;
                 r.y = dndInitialScrollLocation.y;
                 
-                getModuleContainer().scrollRectToVisible(r);
             }
             
             getModuleContainer().setPreferredSize(
@@ -268,7 +267,7 @@ public class JTModuleContainerUI extends ComponentUI
         }
         else
         {
-            if (dndInitialScrollLocation == null)
+        	if (dndInitialScrollLocation == null)
             {
                 Rectangle r = 
                     getModuleContainer()
@@ -293,8 +292,9 @@ public class JTModuleContainerUI extends ComponentUI
                 .setPreferredSize(new Dimension(r, b));
             }
             
-            getModuleContainer().scrollRectToVisible(dndBox);
+            //getModuleContainer().scrollRectToVisible(dndBox);
         }
+
     }
     
     private void installEventHandler(JTModuleContainer jtc, boolean dndAllowed)
@@ -342,7 +342,7 @@ public class JTModuleContainerUI extends ComponentUI
     {
         private EventHandler delegate;
         private Point dragStartLocation;
-
+        
         public ModuleTransferDataWrapper(EventHandler delegate, Point dragStartLocation)
         {
             this.delegate = delegate;
@@ -583,11 +583,33 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void dragOver(DropTargetDragEvent dtde)
         {
-            if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable()))
+        	if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable()))
             {
                 dtde.acceptDrag(DnDConstants.ACTION_COPY);
                 return ;
             }
+            
+            Rectangle visible = getModuleContainer().getVisibleRect();
+            Point location = dtde.getLocation();
+            int wScroll = Math.min(visible.width / 3, 40);
+            int hScroll = Math.min(visible.height / 3, 40);
+            // System.out.println("w " + wScroll + " h " + hScroll);
+            
+            Rectangle scrollTo = new Rectangle(location);
+            if (location.x < (visible.x + wScroll))
+            	scrollTo.x = Math.max(location.x - wScroll, 0);
+            if (location.x > (visible.x + visible.width - wScroll))
+            	scrollTo.x = location.x + wScroll;
+            
+            if (location.y < (visible.y + hScroll))
+            	scrollTo.y = Math.max(location.y - hScroll, 0);
+            if (location.y > (visible.y + visible.height - hScroll))
+            	scrollTo.y = location.y + hScroll;
+            
+            // System.out.println("location " + location.x + " " + location.y + " visible " + visible.x + " " + visible.y + " scrollto " + scrollTo.x + " " + scrollTo.y);
+            
+            getModuleContainer().scrollRectToVisible(scrollTo);
+                    
             
             /*if (dtde.getCurrentDataFlavorsAsList().contains(ModuleDragSource.ModuleInfoFlavor))
             {
@@ -614,7 +636,7 @@ public class JTModuleContainerUI extends ComponentUI
                     ;
                 }
             }
-            
+
             jtcUI.updateDnDBoundingBox(null);
             
             dtde.rejectDrag();       
@@ -1019,7 +1041,7 @@ public class JTModuleContainerUI extends ComponentUI
         
         public void mouseClickedAtModule(MouseEvent e)
         {
-            if (!SwingUtilities.isLeftMouseButton(e))
+        	if (!SwingUtilities.isLeftMouseButton(e))
                 return;
             
             boolean shift = e.isShiftDown();
@@ -1041,11 +1063,6 @@ public class JTModuleContainerUI extends ComponentUI
         
         public void mouseClicked(MouseEvent e)
         {
-        	if (dndAllowed)
-            {
-                if (e.getComponent() == getModuleContainer())
-                    mouseClickedAtModuleContainer(e);
-            }
         }
 
         public void mouseEntered(MouseEvent e)
@@ -1060,7 +1077,7 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void mousePressed(MouseEvent e)
         {
-        	JTModuleContainer mc = jtcUI.getModuleContainer();
+            JTModuleContainer mc = jtcUI.getModuleContainer();
             if (SwingUtilities.isRightMouseButton(e) && e.getComponent() == mc)
             {
                 jtcUI.createPopupMenu(mc, e);
@@ -1069,8 +1086,14 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void mouseReleased(MouseEvent e)
         {
+        	if (dndAllowed)
+            {
+                if (e.getComponent() == getModuleContainer())
+                    mouseClickedAtModuleContainer(e);
+            }
             if (e.getComponent() instanceof JTModule)
                 mouseClickedAtModule(e);
+
         }
         
     }
