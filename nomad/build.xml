@@ -20,7 +20,7 @@ Following targets are available:
   [nomad]
   run*      - starts nomad
   build     - builds nomad (not implemented)
-  dist*     - distributes nomad
+  dist      - distributes nomad
   clean     - cleans the build/dist files (not implemented)
   nomadjar  - creates the nomad.jar file
 
@@ -90,7 +90,39 @@ Note:
 	
   <!-- building nomad -->
   <typedef classpath="jpf/jpf-tools.jar:nomad-source/libs/jpf.jar" resource="org/java/plugin/tools/ant/jpf-tasks.properties" />
-  <target name="dist"   depends="configure">
+	
+
+  <target name="check"
+	        description="Checks plug-ins integrity">
+		<jpf-check basedir="${nomad-source}/plugins"
+		           includes="*/plugin.xml,*/plugin-fragment.xml"
+		           verbose="true"
+		           usepathresolver="true" />
+  </target>
+
+  <!-- compiles the classes and bundles them in a jar, afterwards delete classes and source -->
+  <target name="make_jar_for_plugin_and_clean">
+  	<!-- requires parameter plugin_id -->
+  	<property name="plugin_dir" value="${dist}/plugins/${plugin_id}" />
+  	<!-- switch jpf-plugin configuration 'plugin.dist.xml' to 'plugin.xml' -->
+  	<delete file="${plugin_dir}/plugin.xml" />
+  	<rename src="${plugin_dir}/plugin.dist.xml" dest="${plugin_dir}/plugin.xml" />
+
+  	<!-- call build script -->
+    <ant antfile="build.xml" dir="${plugin_dir}" target="pluginjar" />
+  	<!-- delete src -->
+  	<delete dir="${plugin_dir}/src" />
+  	<!-- delete classes -->
+  	<delete dir="${plugin_dir}/classes" />
+  </target>
+	
+  <target name="clean-dist">
+  	<!-- delete previous dist dir -->
+  	<delete dir="${dist}" />
+  </target>
+
+  <target name="dist" depends="clean-libs,revert,clean-dist,configure">
+  	
   	<!-- creating dist root -->
 	<mkdir dir="${dist}"/>
   	<!-- plugin directory -->
@@ -112,22 +144,45 @@ Note:
   		<fileset dir="${nomad-source}/plugins" />
   	</copy>
 
+  	<!-- order is importent due to plugin dependencies -->
+  	<antcall target="make_jar_for_plugin_and_clean">
+  	  <param name="plugin_id" value="net.sf.nmedit.nomad.core" />
+  	</antcall>
+  	<antcall target="make_jar_for_plugin_and_clean">
+  	  <param name="plugin_id" value="net.sf.nmedit.jtheme" />
+  	</antcall>
+  	<antcall target="make_jar_for_plugin_and_clean">
+  	  <param name="plugin_id" value="net.sf.nmedit.jsynth" />
+  	</antcall>
+  	<antcall target="make_jar_for_plugin_and_clean">
+  	  <param name="plugin_id" value="net.sf.nmedit.nordmodular" />
+  	</antcall>
+  	
   	<!-- dont include miniworks plugin -->
   	<delete includeEmptyDirs="true" dir="${dist}/plugins/net.sf.nmedit.waldorf.miniworks4pole" />
-  	<!-- delete src files -->
-  	<delete includeEmptyDirs="true" dir="${dist}/plugins/net.sf.nmedit.nordmodular/src" />
-  	<delete includeEmptyDirs="true" dir="${dist}/plugins/net.sf.nmedit.jsynth/src" />
-  	<delete includeEmptyDirs="true" dir="${dist}/plugins/net.sf.nmedit.jtheme/src" />
-  	<delete includeEmptyDirs="true" dir="${dist}/plugins/net.sf.nmedit.nomad.core/src" />
+  	<!-- delete unused files -->
+  	<delete includeEmptyDirs="true" dir="${dist}/plugins/net.sf.nmedit.nomad.core/forms" />
+  	<delete includeEmptyDirs="true" dir="${dist}/plugins/net.sf.nmedit.jsynth/forms" />
+  	<delete includeEmptyDirs="true" dir="${dist}/plugins/net.sf.nmedit.nordmodular/forms" />
+  	
+  	<!-- delete remaining build scripts -->
+  	<delete>    
+  		<fileset dir="${dist}/plugins" includes="**/build.xml"/>
+  	</delete>
+  	
   	<!-- zip plugins -->
-  	<!--
-  	<jpf-zip basedir="${dist}/plugins" includes="*/*.xml" excludes="CVS"
+  	<!-- broken:
+  	<jpf-zip basedir="${dist}/plugins" 
+  		includes="*/plugin.xml,*/plugin-fragment.xml" 
   		destdir="${dist}/plugins">
-  	</jpf-zip> -->
+  	</jpf-zip>
+	<delete includeemptydirs="true">
+		<fileset dir="${dist}/plugins">
+			<include name="**/*" />
+			<exclude name="*.zip" />
+		</fileset>
+	</delete>  -->
 
-  	<!-- delete tmp dir -->
-  	<delete includeEmptyDirs="true" defaultexcludes="false" dir="${dist}/plugins/tmp" />
-  
   	<!-- fixing dist -->
   	<echo>fixing dist</echo>
   	<delete file="${dist}/libs/README_jpf.txt" />
