@@ -50,6 +50,7 @@ import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -226,6 +227,9 @@ public class JTModuleContainerUI extends ComponentUI
     private transient Point dndInitialScrollLocation;
 	private EventHandler eventHandler;
 	public ModuleTransferDataWrapper transferData;
+	public boolean selectBoxActive;
+	public Point selectStartPoint;
+	public Rectangle selectRectangle;
     
     public void updateDnDBoundingBox(Rectangle box)
     {
@@ -435,7 +439,7 @@ public class JTModuleContainerUI extends ComponentUI
     public static class EventHandler
       implements ContainerListener, 
       DropTargetListener, DragGestureListener, DragSourceListener,
-      MouseListener
+      MouseListener, MouseMotionListener
     {
 
         private JTModuleContainerUI jtcUI;
@@ -518,6 +522,7 @@ public class JTModuleContainerUI extends ComponentUI
         protected void installAtModuleContainer(JTModuleContainer jtc)
         {
             jtc.addMouseListener(this);
+            jtc.addMouseMotionListener(this);
             if (dndAllowed)
             {
                 jtc.addContainerListener(this);
@@ -598,27 +603,7 @@ public class JTModuleContainerUI extends ComponentUI
                 return ;
             }
             
-            Rectangle visible = getModuleContainer().getVisibleRect();
-            Point location = dtde.getLocation();
-            int wScroll = Math.min(visible.width / 3, 40);
-            int hScroll = Math.min(visible.height / 3, 40);
-            // System.out.println("w " + wScroll + " h " + hScroll);
-            
-            Rectangle scrollTo = new Rectangle(location);
-            if (location.x < (visible.x + wScroll))
-            	scrollTo.x = Math.max(location.x - wScroll, 0);
-            if (location.x > (visible.x + visible.width - wScroll))
-            	scrollTo.x = location.x + wScroll;
-            
-            if (location.y < (visible.y + hScroll))
-            	scrollTo.y = Math.max(location.y - hScroll, 0);
-            if (location.y > (visible.y + visible.height - hScroll))
-            	scrollTo.y = location.y + hScroll;
-            
-            // System.out.println("location " + location.x + " " + location.y + " visible " + visible.x + " " + visible.y + " scrollto " + scrollTo.x + " " + scrollTo.y);
-            
-            getModuleContainer().scrollRectToVisible(scrollTo);
-                    
+        	jtcUI.updateScrollPosition(dtde.getLocation());
             
             /*if (dtde.getCurrentDataFlavorsAsList().contains(ModuleDragSource.ModuleInfoFlavor))
             {
@@ -1024,7 +1009,7 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void dragEnter(DragSourceDragEvent dsde)
         {
-            // no op
+        	// no op
         }
 
         public void dragExit(DragSourceEvent dse)
@@ -1044,7 +1029,7 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void mouseClickedAtModuleContainer(MouseEvent e)
         {
-            if (SwingUtilities.isLeftMouseButton(e))
+            if (SwingUtilities.isLeftMouseButton(e) && !jtcUI.selectBoxActive)
                 clearSelection();
         }
         
@@ -1073,12 +1058,14 @@ public class JTModuleContainerUI extends ComponentUI
         public void mouseClicked(MouseEvent e)
         {
         }
-
+        
         public void mouseEntered(MouseEvent e)
         {
             // no op
         }
 
+        
+        
         public void mouseExited(MouseEvent e)
         {
             // no op
@@ -1091,6 +1078,7 @@ public class JTModuleContainerUI extends ComponentUI
             {
                 jtcUI.createPopupMenu(mc, e);
             }
+            
         }
 
         public void mouseReleased(MouseEvent e)
@@ -1102,9 +1090,85 @@ public class JTModuleContainerUI extends ComponentUI
             }
             if (e.getComponent() instanceof JTModule)
                 mouseClickedAtModule(e);
+            
+            JTModuleContainer mc = jtcUI.getModuleContainer();
+            if (SwingUtilities.isLeftMouseButton(e) && e.getComponent() == mc && jtcUI.selectBoxActive) {
+            	jtcUI.selectBoxActive = false;
+            	mc.repaint();
+            }
 
         }
+
+        public void mouseDragged(MouseEvent e) {
+        	// TODO Auto-generated method stub
+        	jtcUI.updateScrollPosition(e.getPoint());
+        	JTModuleContainer mc = jtcUI.getModuleContainer();
+        	if (SwingUtilities.isLeftMouseButton(e) && e.getComponent() == mc) {
+        		if (!jtcUI.selectBoxActive) {
+        			jtcUI.selectBoxActive = true;
+        			jtcUI.selectStartPoint = new Point(e.getPoint());
+        			jtcUI.selectRectangle = new Rectangle(jtcUI.selectStartPoint);
+        			mc.repaintOverlay(jtcUI.selectRectangle);
+        		}
+        		
+        		updateSelectionRectangle(e.getPoint());
+        	}
+		}
+
+		private void updateSelectionRectangle(Point point) {
+			Rectangle select = jtcUI.selectRectangle;
+    		Point start = jtcUI.selectStartPoint;
+    		JTModuleContainer mc = jtcUI.getModuleContainer();
+        	mc.repaintOverlay(select);
+    		int x1, x2, y1, y2;
+    		x1 = Math.min(start.x, point.x);
+    		x2 = Math.max(start.x, point.x);
+    		y1 = Math.min(start.y, point.y);
+    		y2 = Math.max(start.y, point.y);
+    		select.setRect(x1, y1, x2-x1, y2-y1);
+    		mc.repaintOverlay(select);
+    		clearSelection();
+    		Component[] components = mc.getComponents();
+    		for (int i=components.length-1;i>=0;i--)
+    		{
+    			Component c = components[i];
+    			if (c instanceof JTModule)
+    			{
+    				JTModule mui = (JTModule) c;
+    				if (select.intersects(mui.getBounds())) {
+    					addSelection(mui);
+    				}
+    			}
+    		}
+
+		}
+
+		public void mouseMoved(MouseEvent e) {
+			// TODO Auto-generated method stub
+		}
         
     }
+
+	public void updateScrollPosition(Point location) {
+		Rectangle visible = getModuleContainer().getVisibleRect();
+        int wScroll = Math.min(visible.width / 3, 40);
+        int hScroll = Math.min(visible.height / 3, 40);
+        // System.out.println("w " + wScroll + " h " + hScroll);
+        
+        Rectangle scrollTo = new Rectangle(location);
+        if (location.x < (visible.x + wScroll))
+        	scrollTo.x = Math.max(location.x - wScroll, 0);
+        if (location.x > (visible.x + visible.width - wScroll))
+        	scrollTo.x = location.x + wScroll;
+        
+        if (location.y < (visible.y + hScroll))
+        	scrollTo.y = Math.max(location.y - hScroll, 0);
+        if (location.y > (visible.y + visible.height - hScroll))
+        	scrollTo.y = location.y + hScroll;
+        
+        // System.out.println("location " + location.x + " " + location.y + " visible " + visible.x + " " + visible.y + " scrollto " + scrollTo.x + " " + scrollTo.y);
+        
+        getModuleContainer().scrollRectToVisible(scrollTo);
+	}
     
 }
