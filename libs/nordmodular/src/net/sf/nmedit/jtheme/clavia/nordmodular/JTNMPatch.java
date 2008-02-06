@@ -71,6 +71,7 @@ import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.JTPatch;
 import net.sf.nmedit.jtheme.store2.ModuleElement;
+import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.graphics.GraphicsToolkit;
 
 public class JTNMPatch extends JTPatch implements Transferable
@@ -562,7 +563,7 @@ public class JTNMPatch extends JTPatch implements Transferable
 
         public void mousePressed(MouseEvent e)
         {
-            if (!SwingUtilities.isRightMouseButton(e)) return;
+            if (!Platform.isPopupTrigger(e)) return;
             
             Component c = e.getComponent();
             if (c instanceof JTModule)
