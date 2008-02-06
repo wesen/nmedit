@@ -586,7 +586,7 @@ public class JTModuleContainerUI extends ComponentUI
         public void dragExit(DropTargetEvent dte)
         {
             jtcUI.updateDnDBoundingBox(null);
-            jtcUI.transferData = null;
+//            jtcUI.transferData = null;
             
         }
 
