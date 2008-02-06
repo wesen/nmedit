@@ -206,11 +206,19 @@ public class JTModuleContainerUI extends ComponentUI
     
     public void paint(Graphics g, JComponent c) 
     {
-        //
+    	super.paint(g, c);
     }
+    
+    
 
     public void paintChildrenHack(Graphics g)
     {
+        if (selectBoxActive) {
+        	g.setColor(Color.BLUE);
+        	Rectangle r = selectRectangle;
+        	g.drawRect(r.x, r.y, r.width - 1, r.height - 1);
+        }    
+
         Rectangle box = dndBox;
         if (box == null) return;
         Rectangle bbox = transferData.getBoundingBox();
