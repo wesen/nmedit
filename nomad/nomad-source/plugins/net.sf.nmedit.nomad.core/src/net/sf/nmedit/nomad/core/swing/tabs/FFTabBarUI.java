@@ -1175,15 +1175,6 @@ public class FFTabBarUI extends TabBarUI
                     return;
                 }   
             }
-            else
-            if (Platform.isPopupTrigger(e))
-            {   
-                int tabIndex = ui.getTabIndexForLocation(e.getX(), e.getY());
-                if (tabIndex>=0)
-                {
-                    tabBar.showContextMenuForTab(e, tabIndex);
-                }
-            }
         }
 
         public void mouseEntered(MouseEvent e)
@@ -1197,9 +1188,26 @@ public class FFTabBarUI extends TabBarUI
             ui.setHoverIndex(-1);
             ui.setCloseButtonHoverIndex(-1);
         }
+        
+        private boolean handlePopupTrigger(MouseEvent e)
+        {
+            if (Platform.isPopupTrigger(e))
+            {   
+                int tabIndex = ui.getTabIndexForLocation(e.getX(), e.getY());
+                if (tabIndex>=0)
+                {
+                    tabBar.showContextMenuForTab(e, tabIndex);
+                }
+                return true;
+            }
+            return false;
+        }
 
         public void mousePressed(MouseEvent e)
         {   
+            if (handlePopupTrigger(e))
+                return;
+            
             if (!tabBar.hasFocus())
                 tabBar.requestFocus();
             
@@ -1233,7 +1241,8 @@ public class FFTabBarUI extends TabBarUI
 
         public void mouseReleased(MouseEvent e)
         {
-            // TODO Auto-generated method stub
+            if (handlePopupTrigger(e))
+                return;
         }
 
         public void mouseDragged(MouseEvent e)
