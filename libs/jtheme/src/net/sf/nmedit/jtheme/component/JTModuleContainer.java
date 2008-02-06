@@ -456,16 +456,6 @@ public class JTModuleContainer extends JTBaseComponent
         paint(g);
     }
     
-    public void paint(Graphics g)
-    {
-    	super.paint(g);
-        if (ui != null && getUI().selectBoxActive) {
-        	g.setColor(Color.BLUE);
-        	Rectangle r = getUI().selectRectangle;
-        	g.drawRect(r.x, r.y, r.width - 1, r.height - 1);
-        }
-    }
-    
     public void setBorder(Border border)
     {
         if (border != null)
