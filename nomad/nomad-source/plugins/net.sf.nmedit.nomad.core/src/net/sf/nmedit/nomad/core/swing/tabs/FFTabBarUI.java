@@ -76,6 +76,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
 
+import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.swing.NMLazyActionMap;
 import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
 import net.sf.nmedit.nomad.core.menulayout.MLEntry;
@@ -1175,7 +1176,7 @@ public class FFTabBarUI extends TabBarUI
                 }   
             }
             else
-            if (SwingUtilities.isRightMouseButton(e))
+            if (Platform.isPopupTrigger(e))
             {   
                 int tabIndex = ui.getTabIndexForLocation(e.getX(), e.getY());
                 if (tabIndex>=0)

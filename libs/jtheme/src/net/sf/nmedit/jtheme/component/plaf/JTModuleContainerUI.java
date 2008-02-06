@@ -76,6 +76,7 @@ import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.dnd.JTDragDrop;
+import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
 
 public class JTModuleContainerUI extends ComponentUI
@@ -1087,7 +1088,7 @@ public class JTModuleContainerUI extends ComponentUI
         public void mousePressed(MouseEvent e)
         {
             JTModuleContainer mc = jtcUI.getModuleContainer();
-            if (SwingUtilities.isRightMouseButton(e) && e.getComponent() == mc)
+            if (Platform.isPopupTrigger(e) && e.getComponent() == mc)
             {
                 jtcUI.createPopupMenu(mc, e);
             }
