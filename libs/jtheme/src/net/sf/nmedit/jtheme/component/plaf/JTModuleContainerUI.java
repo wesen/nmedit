@@ -206,10 +206,8 @@ public class JTModuleContainerUI extends ComponentUI
     
     public void paint(Graphics g, JComponent c) 
     {
-    	super.paint(g, c);
+        // nothing happens here
     }
-    
-    
 
     public void paintChildrenHack(Graphics g)
     {
@@ -221,13 +219,16 @@ public class JTModuleContainerUI extends ComponentUI
 
         Rectangle box = dndBox;
         if (box == null) return;
-        Rectangle bbox = transferData.getBoundingBox();
-        g.setColor(Color.BLUE);
-        for (JTModule m : eventHandler.getModules()) {
-            Rectangle boundingBox = m.getBounds();
-               	 
-            g.drawRect(box.x + m.getX() - bbox.x, box.y + m.getY() - bbox.y, 
-            		m.getWidth() - 1, m.getHeight() - 1);
+        
+        if (eventHandler.getSelectionCount()>0)
+        {
+            Rectangle bbox = transferData.getBoundingBox();
+            g.setColor(Color.BLUE);
+            for (JTModule m : eventHandler.getModules()) {
+                // Rectangle boundingBox = m.getBounds();
+                g.drawRect(box.x + m.getX() - bbox.x, box.y + m.getY() - bbox.y, 
+                		m.getWidth() - 1, m.getHeight() - 1);
+            }
         }
     }
     
@@ -993,6 +994,11 @@ public class JTModuleContainerUI extends ComponentUI
                 jtcUI.transferData = new ModuleTransferDataWrapper(this, dndOrigin);
                 dge.startDrag(DragSource.DefaultMoveDrop, jtcUI.transferData, this);
             }
+        }
+        
+        public int getSelectionCount()
+        {
+            return selectionSet.size();
         }
 
         public JTModule[] getModules()
