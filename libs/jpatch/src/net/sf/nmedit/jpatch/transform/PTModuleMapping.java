@@ -20,6 +20,7 @@ package net.sf.nmedit.jpatch.transform;
 
 import java.util.Collection;
 
+import net.sf.nmedit.jpatch.MoveOperation;
 import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnectionManager;
 import net.sf.nmedit.jpatch.PConnector;
@@ -306,6 +307,11 @@ public class PTModuleMapping
         // replace module
         if (!container.remove(m1)) return;
         container.add(m1index, m2);
+        MoveOperation move = m2.getParentComponent().createMoveOperation();
+        move.setScreenOffset(0, 0);
+        move.add(m2);
+        move.move();
+
         
         // recreate connections
         if (connections != null)
