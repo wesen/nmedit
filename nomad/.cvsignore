@@ -6,3 +6,4 @@ bin
 .fbwarnings
 ant.*
 nomad-offline
+nomad-dist
