@@ -24,7 +24,7 @@
 
   <target name="compile" depends="init"
           description="compile the source">
-    <javac srcdir="${src}" destdir="${build}" debug="true"/>
+    <javac srcdir="${src}" destdir="${build}" debug="true" target="1.5" source="1.5"/>
     <copy todir="${build}">
       <fileset dir=".">
         <include name="CHANGELOG"/>
