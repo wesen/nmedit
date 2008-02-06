@@ -55,6 +55,7 @@ public class FileNode implements ETreeNode, MouseListener,
     private File file;
     private FileNode[] children = null;
     private TreeNode parent;
+	private JPopupMenu filePopup;
     
     public FileNode(TreeNode parent, File file)
     {
@@ -265,10 +266,19 @@ public class FileNode implements ETreeNode, MouseListener,
         if ((e.getComponent() instanceof ExplorerTree))
         {
             ExplorerTree et = (ExplorerTree) e.getComponent();
+            
             if (et.isPopupTrigger(e, this, true))
             {
-                createPopup(e, et);
-                return true;
+            	if (filePopup != null && filePopup.getInvoker()== e.getComponent()) 
+            	{
+            	    // close popup
+            		filePopup.setVisible(false);
+            		filePopup = null;
+            		return true;
+            	} else { 
+            	    createPopup(e, et);
+                	return true;
+            	}
             }
         }
         return false;
@@ -276,9 +286,9 @@ public class FileNode implements ETreeNode, MouseListener,
     
     protected void createPopup(MouseEvent e, ExplorerTree et)
     {
-        JPopupMenu popup = new JPopupMenu();
-        populatePopup(popup, e, et);
-        popup.show(et, e.getX(), e.getY());
+        filePopup = new JPopupMenu();
+        populatePopup(filePopup, e, et);
+        filePopup.show(et, e.getX(), e.getY());
     }
     
     protected void populatePopup(JPopupMenu popup, MouseEvent e, ExplorerTree et)

@@ -59,7 +59,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.plaf.TreeUI;
+import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.plaf.metal.MetalTreeUI;
 import javax.swing.tree.TreePath;
 
@@ -402,7 +405,14 @@ public class ExplorerTreeUI extends MetalTreeUI
     {   
         return super.getClosestPathForLocation(tree, x, y);
     }
-
+    protected void selectPathForEvent(TreePath path, MouseEvent event) {
+    	if (getSelectionModel().isPathSelected(path) && event.isPopupTrigger()) {
+    		// we don't want to deselect with right clicking
+    		return;
+    	}
+    	super.selectPathForEvent(path, event);
+    }
+    
     int hoveredRow = -1;
     int hovx = 0;
     int hovy = 0;
@@ -412,23 +422,25 @@ public class ExplorerTreeUI extends MetalTreeUI
     {
         public void mousePressed(MouseEvent e)
         {
-            forwardMouseEvent(e);
+        	forwardMouseEvent(e);
             
             Component c = e.getComponent();
             if (!(c instanceof JTree)) return;
             JTree tree = (JTree) c;
             TreeUI treeUI = tree.getUI();
             
+            // XXX this is not portable to macosx i guess, what's the point of this exactly
             if (SwingUtilities.isRightMouseButton(e) && treeUI != null)
             {
                 // selection also by right click 
                 TreePath tp = treeUI.getClosestPathForLocation(tree, e.getX(), e.getY());
-                if (tp != null)
-                    tree.setSelectionPath(tp);
+                if (tp != null) {
+                	tree.addSelectionPath(tp);
+                }
                 if (!tree.hasFocus())
                     tree.requestFocus();
             }
-
+            
             // event redirection
             if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount()==2)
             {
@@ -454,7 +466,7 @@ public class ExplorerTreeUI extends MetalTreeUI
                     Rectangle bounds = tree.getPathBounds(tp);
                     if (e.getY()<bounds.y+bounds.height)
                     {
-                        tree.setSelectionPath(tp);
+                    	tree.setSelectionPath(tp);
 
                         if (e.getClickCount()>=2)
                         {
@@ -547,7 +559,7 @@ public class ExplorerTreeUI extends MetalTreeUI
             
             if (o instanceof ETreeNode)
             {
-                ((ETreeNode)o).processEvent(e);
+                 ((ETreeNode)o).processEvent(e);
             }
         }
     }
