@@ -1,13 +1,13 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 0.4" "http://jpf.sourceforge.net/plugin_0_4.dtd">
-<plugin id="com.jgoodies.forms" version="1.0.7">
+<plugin id="com.jgoodies.forms" version="1.1.0">
 	<attributes>
 		<attribute id="description" value="JGoodies Forms" />
-		<attribute id="vendor" value="http://www.jgoodies.com/" />
-		<attribute id="license" value="BSD License" />
+                <attribute id="vendor" value="http://www.jgoodies.com/" />
+                <attribute id="license-location" value="lib/LICENSE.txt" />
 	</attributes>
 	<runtime>
-		<library id="jgoodies.forms" path="lib/forms-1.0.7.jar" type="code">
+		<library id="jgoodies.forms" path="lib/forms-1.1.0.jar" type="code">
 			<export prefix="*"/>
 		</library>
 	</runtime>
