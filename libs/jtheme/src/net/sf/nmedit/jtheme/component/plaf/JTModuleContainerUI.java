@@ -212,14 +212,21 @@ public class JTModuleContainerUI extends ComponentUI
     {
         Rectangle box = dndBox;
         if (box == null) return;
-        
+        Rectangle bbox = transferData.getBoundingBox();
         g.setColor(Color.BLUE);
-        g.drawRect(box.x, box.y, box.width-1, box.height-1);
+        for (JTModule m : eventHandler.getModules()) {
+            Rectangle boundingBox = m.getBounds();
+               	 
+            g.drawRect(box.x + m.getX() - bbox.x, box.y + m.getY() - bbox.y, 
+            		m.getWidth() - 1, m.getHeight() - 1);
+        }
     }
     
     private transient Rectangle dndBox;
     private transient Point dndInitialScrollLocation;
-	
+	private EventHandler eventHandler;
+	public ModuleTransferDataWrapper transferData;
+    
     public void updateDnDBoundingBox(Rectangle box)
     {
     	Rectangle repaint;
@@ -299,7 +306,7 @@ public class JTModuleContainerUI extends ComponentUI
     
     private void installEventHandler(JTModuleContainer jtc, boolean dndAllowed)
     {
-        createEventHandler(jtc, dndAllowed);
+        eventHandler = createEventHandler(jtc, dndAllowed);
     }
 
     private void uninstallEventHandler(JTModuleContainer jtc)
@@ -579,6 +586,8 @@ public class JTModuleContainerUI extends ComponentUI
         public void dragExit(DropTargetEvent dte)
         {
             jtcUI.updateDnDBoundingBox(null);
+            jtcUI.transferData = null;
+            
         }
 
         public void dragOver(DropTargetDragEvent dtde)
@@ -663,7 +672,7 @@ public class JTModuleContainerUI extends ComponentUI
         public void drop(DropTargetDropEvent dtde)
         {
             jtcUI.updateDnDBoundingBox(null);
- 
+            jtcUI.transferData = null;
             
             DataFlavor chosen = null;
             Object data = null;
@@ -900,7 +909,7 @@ public class JTModuleContainerUI extends ComponentUI
         }
 
         protected Set<JTModule> selectionSet = new HashSet<JTModule>();
-        
+		
         protected int getSelectionSize()
         {
             return selectionSet.size();
@@ -988,8 +997,8 @@ public class JTModuleContainerUI extends ComponentUI
                     dndOrigin = SwingUtilities.convertPoint(c, dndOrigin, getModuleContainer());
                 }
                 
-                ModuleTransferData transferData = new ModuleTransferDataWrapper(this, dndOrigin);
-                dge.startDrag(DragSource.DefaultMoveDrop, transferData, this);
+                jtcUI.transferData = new ModuleTransferDataWrapper(this, dndOrigin);
+                dge.startDrag(DragSource.DefaultMoveDrop, jtcUI.transferData, this);
             }
         }
 
@@ -1020,7 +1029,7 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void dragExit(DragSourceEvent dse)
         {
-            // no op
+        	// no op 
         }
 
         public void dragOver(DragSourceDragEvent dsde)
