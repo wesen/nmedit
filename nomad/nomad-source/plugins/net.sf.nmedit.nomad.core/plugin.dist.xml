@@ -1,0 +1,54 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 0.4" "http://jpf.sourceforge.net/plugin_0_4.dtd">
+<plugin id="net.sf.nmedit.nomad.core" version="0.2.2" class="net.sf.nmedit.nomad.core.NomadPlugin">
+	<attributes>
+<!--		
+# look and feel configuration - please do not change the value
+javax.swing.LookAndFeel=com.jgoodies.looks.plastic.PlasticXPLookAndFeel
+javax.swing.plaf.metal.MetalTheme=com.jgoodies.looks.plastic.theme.DesertBlue
+
+# other look and feels ...
+#javax.swing.LookAndFeel=javax.swing.plaf.metal.MetalLookAndFeel
+#javax.swing.LookAndFeel=com.sun.java.swing.plaf.motif.MotifLookAndFeel
+#javax.swing.LookAndFeel=com.sun.java.swing.plaf.gtk.GTKLookAndFeel
+-->
+		<attribute id="javax.swing.LookAndFeel" value="com.jgoodies.looks.plastic.Plastic3DLookAndFeel" />
+		<attribute id="javax.swing.plaf.metal.MetalTheme" value="com.jgoodies.looks.plastic.theme.DesertBluer" />
+		<attribute id="icon" value="data/icons/nomad-icon.png" />
+		<attribute id="description" value="Nomad Modular Editor" />
+		<attribute id="vendor" value="http://nmedit.sf.net/" />
+		<attribute id="license" value="GPL 2" />
+	</attributes>
+	
+	<requires>
+		<import plugin-id="net.sf.nmedit.nmutils"  />
+		<import plugin-id="org.apache.xerces" />
+		<import plugin-id="com.jgoodies.forms" />
+		<import plugin-id="com.jgoodies.looks" />
+	</requires>
+	<runtime>
+		<library id="core" path="classes.jar" type="code">
+			<export prefix="*"/>
+		</library>
+		<library type="resources" path="data/" id="data">
+			<export prefix="*"/>
+		</library>
+	</runtime>
+	<extension-point id="Nomad">
+		<parameter-def id="class"/>
+		<parameter-def id="name"/>
+		<parameter-def id="description" multiplicity="none-or-one"/>
+		<parameter-def id="icon" multiplicity="none-or-one"/>
+	</extension-point>
+	<extension-point id="Service">
+		<parameter-def id="class"/>
+		<parameter-def id="service" />
+		<parameter-def id="description" multiplicity="none-or-one"/>
+	</extension-point>
+	<extension plugin-id="net.sf.nmedit.nomad.core"
+	  point-id="Service" id="ExplorerLocationMemory">
+		<parameter id="class" value="net.sf.nmedit.nomad.core.service.initService.ExplorerLocationMemory"/>
+		<parameter id="service" value="net.sf.nmedit.nomad.core.service.initService.InitService"/>
+		<parameter id="description" value="remembers explorer locations"/>
+	</extension>
+</plugin>

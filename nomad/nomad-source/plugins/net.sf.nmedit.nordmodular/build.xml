@@ -1,0 +1,48 @@
+<project name="jtheme" basedir=".">
+  <typedef classpath="../../../jpf/jpf-tools.jar:../../libs/jpf.jar" 
+  	resource="org/java/plugin/tools/ant/jpf-tasks.properties" />
+
+  <!-- jpf-plugin-id -->
+  <property name="plugin_id" value="net.sf.nmedit.nordmodular" />
+  <!-- jpf-specific: compiled java classes -->
+  <property name="classes" value="classes" />
+  <!-- src directory -->
+  <property name="src" value="src" />
+
+  <target name="init">
+  	<mkdir dir="${classes}" />
+  </target>
+	
+  <target name="clean">
+  	<!-- only delete contents of classes folder, not the folder itself -->
+    <delete includeEmptyDirs="true">
+      <fileset dir="${classes}" includes="**/*"/>
+    </delete>
+  	<delete file="classes.jar" />
+  </target>
+
+  <target name="compile" depends="init">
+  	<!-- creates classpath for plugin, stored in ${plugin.classpath} -->
+  	<jpf-path
+  		basedir=".."
+  		includes="*/plugin.xml,*/plugin-fragment.xml"
+  		pathid="plugin.classpath"
+  		pluginid="${plugin_id}"/>
+  	
+    <property name="classpath_string1" refid="plugin.classpath"/>
+  	<property name="classpath_string" value="${classpath_string1}:../../libs/jpf.jar"/>
+    <echo message="classpath=${classpath_string}"/>
+
+    <javac srcdir="${src}" destdir="${classes}" debug="true"
+    	classpath="${classpath_string}"
+    	target="1.5" source="1.5">
+    </javac>
+  </target>
+
+  <target name="clean_compile" depends="clean,compile">
+  </target>
+
+  <target name="pluginjar" depends="clean_compile">
+    <jar jarfile="classes.jar" basedir="${classes}"/>
+  </target>
+</project>
