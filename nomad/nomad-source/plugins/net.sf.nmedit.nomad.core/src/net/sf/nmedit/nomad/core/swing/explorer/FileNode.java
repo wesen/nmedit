@@ -91,7 +91,7 @@ public class FileNode implements ETreeNode, MouseListener,
         children = null;
     }
     
-    private void notifyChildFilesRemoved(ExplorerTree et)
+    public void notifyChildFilesRemoved(ExplorerTree et)
     {
         if (children != null)
         {
@@ -361,6 +361,7 @@ public class FileNode implements ETreeNode, MouseListener,
     }
     
     private static DataFlavor fileFlavor = new DataFlavor(File.class, "File");
+    private static DataFlavor fileNodeFlavor = new DataFlavor(FileNode.class, "FileNode");
     private static DataFlavor uriFlavor =
         new DataFlavor("text/uri-list; charset=utf-16", "uri list");
  
@@ -375,12 +376,15 @@ public class FileNode implements ETreeNode, MouseListener,
                 file.getAbsoluteFile().toURI().toString();
             return new ByteArrayInputStream(path.getBytes("utf-16"));
         }
+        
+        if (fileNodeFlavor.match(flavor))
+        	return this;
         throw new UnsupportedFlavorException(flavor); 
     }
 
     public DataFlavor[] getTransferDataFlavors()
     {
-        DataFlavor[] flavors = {fileFlavor, uriFlavor};
+        DataFlavor[] flavors = {fileFlavor, uriFlavor, fileNodeFlavor};
         return flavors;
     }
 
