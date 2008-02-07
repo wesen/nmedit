@@ -14,6 +14,19 @@ javax.swing.plaf.metal.MetalTheme=com.jgoodies.looks.plastic.theme.DesertBlue
 -->
 		<attribute id="javax.swing.LookAndFeel" value="com.jgoodies.looks.plastic.Plastic3DLookAndFeel" />
 		<attribute id="javax.swing.plaf.metal.MetalTheme" value="com.jgoodies.looks.plastic.theme.DesertBluer" />
+		
+<!--
+  value is a comma separated list of the following values
+    mac
+    unix
+    windows
+    all
+  
+  all means that on all platforms the default look and feel must be is used
+  
+-->
+		<attribute id="nomad.plaf.usePlatformDefault" value="mac" />
+
 		<attribute id="icon" value="data/icons/nomad-icon.png" />
 		<attribute id="description" value="Nomad Modular Editor" />
 		<attribute id="vendor" value="http://nmedit.sf.net/" />
