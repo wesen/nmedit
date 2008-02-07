@@ -94,6 +94,9 @@ import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 import net.sf.nmedit.nomad.core.swing.tabs.JTabbedPane2;
 import net.sf.nmedit.nomad.core.utils.ClonedAction;
 
+import net.sf.nmedit.nmutils.Platform;
+import net.sf.nmedit.nmutils.Platform.OS;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.java.plugin.PluginManager;
@@ -577,11 +580,11 @@ public class Nomad
         
         Action newLocAction = new ClonedAction(RuntimeMenuBuilder.getNewLocationAction(menuLayout));
         newLocAction.putValue(Action.NAME, null);
-        
+
         ebuttonBar.add(newLocAction);
         ebuttonBar.addBox();
         ebuttonBar.addFlatButton(explorerTree.createCollapseAllAction());
-        
+
         explorerPane.add(ebuttonBar.getContainer(), BorderLayout.NORTH);
         explorerPane.add(explorerTreeScroller, BorderLayout.CENTER);
         
@@ -612,43 +615,46 @@ public class Nomad
         splitLR.setDividerLocation(200);
         splitLR.setRightComponent(pageContainer);
         splitLR.setLeftComponent(toolPane);
-        
+            
         contentPane.setLayout(new BorderLayout());
         contentPane.add(splitLR, BorderLayout.CENTER);
         
-        JToolBar toolbar = new JToolBar();
-        toolbar.setFloatable(false);
-        toolbar.add(Factory.createToolBarButton(menuLayout.getEntry(MENU_FILE_OPEN)));
-        toolbar.addSeparator();
-        toolbar.add(Factory.createToolBarButton(menuLayout.getEntry(MENU_FILE_SAVE))) ;
-        contentPane.add(toolbar, BorderLayout.NORTH);
+        if (!Platform.isFlavor(OS.MacOSFlavor)) {
+        	JToolBar toolbar = new JToolBar();
+        	toolbar.setFloatable(false);
+        	toolbar.add(Factory.createToolBarButton(menuLayout.getEntry(MENU_FILE_OPEN)));
+        	toolbar.addSeparator();
+        	toolbar.add(Factory.createToolBarButton(menuLayout.getEntry(MENU_FILE_SAVE))) ;
+        	contentPane.add(toolbar, BorderLayout.NORTH);
 
-        
-        JPopupMenu pop = new JPopupMenu();
-        Iterator<FileService> iter = ServiceRegistry.getServices(FileService.class);
-        
-        JRadioButtonMenuItem rfirst = null;
-        SelectedAction sa = new SelectedAction();
-        
-        
-        sa.putValue(AbstractAction.SMALL_ICON, getImage("/icons/tango/16x16/actions/document-new.png"));
-        
-        while (iter.hasNext())
-        {
-            FileService fs = iter.next();
-            if (fs.isNewFileOperationSupported())
-            {
-                JRadioButtonMenuItem rb = new JRadioButtonMenuItem(new AHAction(fs.getName(), fs.getIcon(), fs, "newFile"));
-                sa.add(rb);
-                pop.add(rb);
-                if (rfirst == null)
-                    rfirst = rb;
-            }
+
+        	JPopupMenu pop = new JPopupMenu();
+        	Iterator<FileService> iter = ServiceRegistry.getServices(FileService.class);
+
+        	JRadioButtonMenuItem rfirst = null;
+        	SelectedAction sa = new SelectedAction();
+
+
+        	sa.putValue(AbstractAction.SMALL_ICON, getImage("/icons/tango/16x16/actions/document-new.png"));
+
+        	while (iter.hasNext())
+        	{
+        		FileService fs = iter.next();
+        		if (fs.isNewFileOperationSupported())
+        		{
+        			JRadioButtonMenuItem rb = new JRadioButtonMenuItem(new AHAction(fs.getName(), fs.getIcon(), fs, "newFile"));
+        			sa.add(rb);
+        			pop.add(rb);
+        			if (rfirst == null)
+        				rfirst = rb;
+        		}
+        	}
+
+        	JButton btn = Factory.createToolBarButton(sa);
+        	toolbar.add(btn);
+
+        	new JDropDownButtonControl(btn, pop);
         }
-
-        JButton btn = Factory.createToolBarButton(sa);
-        toolbar.add(btn);
-        new JDropDownButtonControl(btn, pop);
     }
     
     private static class SelectedAction extends AbstractAction implements ItemListener
