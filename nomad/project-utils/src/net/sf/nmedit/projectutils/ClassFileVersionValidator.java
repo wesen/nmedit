@@ -182,6 +182,11 @@ public class ClassFileVersionValidator
             System.err.println(e.getMessage());
             System.exit(1);
         }
+        catch (VersionError e)
+        {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
         System.out.println("Done.");
         System.out.println(".classes-files: "+classesCount);
         System.out.println(".jar-files: "+jarCount);
@@ -189,7 +194,7 @@ public class ClassFileVersionValidator
         System.out.println("No nested jar files found.");
     }
 
-    private static void validate(String fileName) throws IOException
+    private static void validate(String fileName) throws IOException, VersionError
     {
         File file = new File(fileName);
         
@@ -202,7 +207,7 @@ public class ClassFileVersionValidator
             validateFile(file);
     }
 
-    private static void validateDir(File file) throws IOException
+    private static void validateDir(File file) throws IOException, VersionError
     {
         boolean first = false;
         for (File f: file.listFiles())
@@ -224,7 +229,7 @@ public class ClassFileVersionValidator
     }
     
     
-    private static void validateJar(File f) throws IOException
+    private static void validateJar(File f) throws IOException, VersionError
     {   
         System.out.println("jar: "+f.getAbsolutePath());
         JarFile jar = new JarFile(f);
@@ -232,7 +237,7 @@ public class ClassFileVersionValidator
     }
     
     // TODO check jar files inside jar files
-    private static void validateJar(JarFile jar) throws IOException
+    private static void validateJar(JarFile jar) throws IOException, VersionError
     {
         jarCount++;
         for (Enumeration<JarEntry> en=jar.entries();en.hasMoreElements();)
@@ -256,7 +261,7 @@ public class ClassFileVersionValidator
             }
         }
     }
-    private static void validateFile(String name, InputStream in) throws IOException
+    private static void validateFile(String name, InputStream in) throws IOException, VersionError
     {
         ClassFileInfo info = getInfo(name, in);
         
@@ -269,12 +274,12 @@ public class ClassFileVersionValidator
             classesCount ++;
             // System.out.println(info);
             if (info.majorVersion>maxVersionId)
-                throw new RuntimeException("invalid major version: "+info);
+                throw new VersionError("invalid major version: "+info);
             
         }
     }
 
-    private static boolean validateFile(File file) throws IOException
+    private static boolean validateFile(File file) throws IOException, VersionError
     {
         String n = file.getName();
         
@@ -289,12 +294,20 @@ public class ClassFileVersionValidator
         InputStream in = new FileInputStream(file);
         try
         {
-            validateFile(file.getName(), in);
+            validateFile(file.getAbsolutePath(), in);
             return true;
         }
         finally
         {
             in.close();
+        }
+    }
+    
+    private static class VersionError extends Exception
+    {
+        public VersionError(String message)
+        {
+            super(message);
         }
     }
     
