@@ -46,6 +46,8 @@ import javax.swing.UIManager;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.MetalTheme;
 
+import net.sf.nmedit.nmutils.Platform;
+import net.sf.nmedit.nmutils.Platform.OS;
 import net.sf.nmedit.nomad.core.i18n.LocaleConfiguration;
 import net.sf.nmedit.nomad.core.jpf.JPFServiceInstallerTool;
 import net.sf.nmedit.nomad.core.menulayout.MenuBuilder;
@@ -347,47 +349,62 @@ public class NomadLoader
         UIManager.put("Menu.margin", new InsetsUIResource(1,2,1,2));
         */
         // set the metal theme
-        MetalTheme theme = null;
-        if (themeClassName != null)
-        {
-            try
-            {
-                theme = (MetalTheme) Class.forName(themeClassName).newInstance();
-                UIManager.put("Plastic.theme", themeClassName);
-                
-                if (theme instanceof PlasticTheme) 
-                {
-                    PlasticLookAndFeel.setPlasticTheme((PlasticTheme)theme);
-                    // PlasticLookAndFeel.setTabStyle(settings.getPlasticTabStyle());
-                } 
-                else if (theme instanceof MetalTheme) 
-                {
-                    MetalLookAndFeel.setCurrentTheme(theme);
-                }
-                
-                
-            }
-            catch (Throwable e)
-            {
-                Log log = LogFactory.getLog(getClass());
-                log.warn("could not set look and feel theme" ,e);
-            }
-        }
-        // set the look and feel
-        if (lafClassName != null)
-        {
-            try
-            {
-                LookAndFeel LAF = (LookAndFeel)Class.forName(lafClassName).newInstance();
-                // it is very important to set the classloader  
-                UIManager.getDefaults().put("ClassLoader",getClass().getClassLoader());
-                UIManager.setLookAndFeel(LAF);
-            }
-            catch (Throwable e)
-            {
-                Log log = LogFactory.getLog(getClass());
-                log.warn("could not set custom look and feel" ,e);
-            }
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.indexOf("mac")>=0) {
+        	try
+        	{
+        		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        		System.setProperty("apple.laf.useScreenMenuBar", "true");
+
+        	} catch (Throwable e) {
+        		Log log = LogFactory.getLog(getClass());
+        		log.warn("could not set look and feel theme" ,e);
+
+        	}
+        } else {
+
+        	MetalTheme theme = null;
+        	if (themeClassName != null)
+        	{
+        		try
+        		{
+        			theme = (MetalTheme) Class.forName(themeClassName).newInstance();
+        			UIManager.put("Plastic.theme", themeClassName);
+
+        			if (theme instanceof PlasticTheme) 
+        			{
+        				PlasticLookAndFeel.setPlasticTheme((PlasticTheme)theme);
+        				// PlasticLookAndFeel.setTabStyle(settings.getPlasticTabStyle());
+        			} 
+        			else if (theme instanceof MetalTheme) 
+        			{
+        				MetalLookAndFeel.setCurrentTheme(theme);
+        			}
+
+
+        		}
+        		catch (Throwable e)
+        		{
+        			Log log = LogFactory.getLog(getClass());
+        			log.warn("could not set look and feel theme" ,e);
+        		}
+        	}
+        	// set the look and feel
+        	if (lafClassName != null)
+        	{
+        		try
+        		{
+        			LookAndFeel LAF = (LookAndFeel)Class.forName(lafClassName).newInstance();
+        			// it is very important to set the classloader  
+        			UIManager.getDefaults().put("ClassLoader",getClass().getClassLoader());
+        			UIManager.setLookAndFeel(LAF);
+        		}
+        		catch (Throwable e)
+        		{
+        			Log log = LogFactory.getLog(getClass());
+        			log.warn("could not set custom look and feel" ,e);
+        		}
+        	}
         }
         
     }
