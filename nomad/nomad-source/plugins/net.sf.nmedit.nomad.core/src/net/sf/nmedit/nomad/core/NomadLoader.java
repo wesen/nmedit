@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -47,7 +48,6 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.MetalTheme;
 
 import net.sf.nmedit.nmutils.Platform;
-import net.sf.nmedit.nmutils.Platform.OS;
 import net.sf.nmedit.nomad.core.i18n.LocaleConfiguration;
 import net.sf.nmedit.nomad.core.jpf.JPFServiceInstallerTool;
 import net.sf.nmedit.nomad.core.menulayout.MenuBuilder;
@@ -137,8 +137,9 @@ public class NomadLoader
         
         String lafClassName = plugin.getDescriptor().getAttribute("javax.swing.LookAndFeel").getValue();
         String themeClassName = plugin.getDescriptor().getAttribute("javax.swing.plaf.metal.MetalTheme").getValue();
+        String defaultLafOnPlatform = plugin.getDescriptor().getAttribute("nomad.plaf.usePlatformDefault").getValue();
         
-        initLookAndFeel(lafClassName, themeClassName);
+        initLookAndFeel(lafClassName, themeClassName, defaultLafOnPlatform);
         // 1.6 initialize main window's menu
         progress.setProgress(0.3f);
         
@@ -332,8 +333,38 @@ public class NomadLoader
         target.setBounds(b);
     }
 
-    private void initLookAndFeel(String lafClassName, String themeClassName)
+    private void initLookAndFeel(String lafClassName, String themeClassName, String defaultLafOnPlatform)
     {
+        EnumSet<Platform.OS> defaultLafPlatforms = EnumSet.noneOf(Platform.OS.class);
+        {   
+            // remove whitespace + lowercase
+            defaultLafOnPlatform = defaultLafOnPlatform.replaceAll("\\s", "").toLowerCase();
+            // split comma separated list
+            String[] dlop = defaultLafOnPlatform.split(",");
+            // check items
+            for (String s: dlop)
+            {
+                if (s.equals("all"))
+                {
+                    // on all platforms
+                    defaultLafPlatforms.addAll(EnumSet.allOf(Platform.OS.class));
+                    break;
+                }
+                else if (s.equals("mac"))
+                {
+                    defaultLafPlatforms.add(Platform.OS.MacOSFlavor);
+                }
+                else if (s.equals("unix"))
+                {
+                    defaultLafPlatforms.add(Platform.OS.UnixFlavor);
+                }
+                else if (s.equals("windows"))
+                {
+                    defaultLafPlatforms.add(Platform.OS.WindowsFlavor);
+                }
+            }   
+        }
+        
 
         // jgoodies specific properties
         
@@ -349,19 +380,29 @@ public class NomadLoader
         UIManager.put("Menu.margin", new InsetsUIResource(1,2,1,2));
         */
         // set the metal theme
-        String os = System.getProperty("os.name").toLowerCase();
-        if (os.indexOf("mac")>=0) {
-        	try
-        	{
-        		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        		System.setProperty("apple.laf.useScreenMenuBar", "true");
+        
+        if (defaultLafPlatforms.contains(Platform.flavor()))
+        {
+            // use default LAF on current platform
 
-        	} catch (Throwable e) {
-        		Log log = LogFactory.getLog(getClass());
-        		log.warn("could not set look and feel theme" ,e);
+            try
+            {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Throwable e) {
+                Log log = LogFactory.getLog(getClass());
+                log.warn("could not set look and feel theme" ,e);
 
-        	}
-        } else {
+            }
+            
+            if (Platform.isFlavor(Platform.OS.MacOSFlavor))
+            {
+                System.setProperty("apple.laf.useScreenMenuBar", "true");
+            }
+            
+        } 
+        else 
+        {
+            // use LAF setting
 
         	MetalTheme theme = null;
         	if (themeClassName != null)
