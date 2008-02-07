@@ -41,25 +41,25 @@ Note:
   </target>
 
   <target name="configure" description="configure project" depends="validate-libs-path">
-      <ant antfile="${installer-script}" dir="${installer-script-path}" target="install" />
-  	  <ant antfile="build.xml" dir="${nomad-source}/net.sf.nmedit.nomad.boot.splash" target="install" />
+    <ant inheritAll="false" antfile="${installer-script}" dir="${installer-script-path}" target="install" />
+    <ant inheritAll="false" antfile="build.xml" dir="${nomad-source}/net.sf.nmedit.nomad.boot.splash" target="install" />
       <!-- create nomad.jar -->
-  	  <antcall target="nomadjar"></antcall>
+      <antcall inheritAll="false" target="nomadjar"></antcall>
   </target>
   
   <target name="revert" description="reverts 'configure'">
     <!--
       <fail>TODO disabled for safety reasons</fail>-->
       	
-      <ant antfile="${installer-script}" dir="${installer-script-path}" target="uninstall" />
-	  <ant antfile="build.xml" dir="${nomad-source}/net.sf.nmedit.nomad.boot.splash" target="uninstall" />
+      <ant inheritAll="false" antfile="${installer-script}" dir="${installer-script-path}" target="uninstall" />
+      <ant inheritAll="false" antfile="build.xml" dir="${nomad-source}/net.sf.nmedit.nomad.boot.splash" target="uninstall" />
   </target>
   
   <target name="clean-libs" description="clean-libs">
     <!--
     <fail>TODO disabled for safety reasons</fail>
   	-->
-      <ant antfile="${installer-script}" dir="${installer-script-path}" target="reverse-clean" />
+    <ant inheritAll="false" antfile="${installer-script}" dir="${installer-script-path}" target="reverse-clean" />
       
   </target>
 
@@ -121,7 +121,7 @@ Note:
   	<delete dir="${dist}" />
   </target>
 
-  <target name="dist" depends="clean-libs,revert,clean-dist,configure">
+  <target name="dist" depends="clean-libs,revert,clean-dist,configure,nomadjar">
   	
   	<!-- creating dist root -->
 	<mkdir dir="${dist}"/>
