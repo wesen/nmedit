@@ -43,6 +43,9 @@
   </target>
 
   <target name="pluginjar" depends="clean_compile">
-    <jar jarfile="classes.jar" basedir="${classes}"/>
+    <jar jarfile="classes.jar" basedir="${classes}">
+        <fileset dir="." includes="**/*.png" />
+        <fileset dir="." includes="**/*.class" />
+  	</jar>
   </target>
 </project>
