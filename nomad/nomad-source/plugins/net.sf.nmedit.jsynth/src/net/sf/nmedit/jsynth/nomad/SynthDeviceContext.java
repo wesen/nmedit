@@ -78,6 +78,8 @@ import net.sf.nmedit.nomad.core.swing.explorer.TreeContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.java.plugin.Plugin;
+import org.java.plugin.PluginManager;
 
 public class SynthDeviceContext extends ContainerNode
     implements TreeContext, SynthesizerStateListener,
@@ -93,9 +95,22 @@ public class SynthDeviceContext extends ContainerNode
     
     private static Icon getIcon(String name)
     {
-        URL location =
-            SynthDeviceContext.class.getResource(name);
+        // TODO icons are not loaded in dist version
+        PluginManager manager =
+        PluginManager.lookup(SynthDeviceContext.class)
+        ;
+        ClassLoader loader = manager.getPluginClassLoader(
+        manager.getPluginFor(SynthDeviceContext.class)
+        .getDescriptor());
+        
+        URL location = loader.getResource(name);
+        
      
+        if (location == null)
+        {
+            return null;
+        }
+        
         return new ImageIcon(location);
     }
     
