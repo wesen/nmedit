@@ -25,9 +25,11 @@ package net.sf.nmedit.nomad.core.swing.explorer;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.SystemColor;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
@@ -44,6 +46,8 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -59,6 +63,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.plaf.TreeUI;
@@ -110,8 +115,6 @@ public class ExplorerTreeUI extends MetalTreeUI
         tree.setScrollsOnExpand(false);
         
         DND dnd = new DND();
-        
-        
         dnd.dragSource = new DragSource();
         DragGestureRecognizer dgr = 
             dnd.dragSource.createDefaultDragGestureRecognizer(tree, 
@@ -140,6 +143,42 @@ public class ExplorerTreeUI extends MetalTreeUI
         DragSource dragSource;
         DropTarget dropTarget;
 
+		private Rectangle 	cueLine		= new Rectangle();
+		private Color		colorCueLine;
+		private Timer		timerHover;
+		private TreePath		pathLast		= null;
+		
+		protected DND() {
+			colorCueLine = new Color(
+					SystemColor.controlShadow.getRed(),
+					SystemColor.controlShadow.getGreen(),
+					SystemColor.controlShadow.getBlue(),
+					64
+				  );
+			
+			timerHover = new Timer(1000, new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					if (isRootPath(pathLast))
+						return;	// Do nothing if we are hovering over the root node
+					if (tree.isExpanded(pathLast))
+						tree.collapsePath(pathLast);
+					else
+						tree.expandPath(pathLast);
+				}
+			});
+			timerHover.setRepeats(false);	// Set timer to one-shot mode
+
+		}
+		
+		public boolean isRootPath(TreePath path)
+		{
+			return isRootVisible() &&  tree.getRowForPath(path) == 0;
+		}
+	    
+
+		
         public void dragGestureRecognized(DragGestureEvent dge)
         {
             Point p = dge.getDragOrigin();
@@ -193,45 +232,152 @@ public class ExplorerTreeUI extends MetalTreeUI
             return false;
         }
         
+        private boolean isFilesTransferable(Transferable t) {
+        	DataFlavor flavors[] = t.getTransferDataFlavors();
+        	DataFlavor fileFlavor = getFileFlavor(flavors);
+        	
+        	if (fileFlavor == null)
+        		return false;
+
+        	try {
+        		BufferedReader r = new BufferedReader(fileFlavor.getReaderForText(t));
+        		String line;
+
+        		while ((line=r.readLine())!=null)
+        		{
+        			if (line.startsWith("file:"))
+        			{
+        				File file = new File(URI.create(line));
+        				if (!file.exists())
+        					return false;
+        			}
+        		}
+        	} catch (Throwable e) {
+        		return false;
+        	}
+
+            return true;
+        }
+        
+        private boolean isDirectoryTransferable(Transferable t) {
+        	DataFlavor flavors[] = t.getTransferDataFlavors();
+        	DataFlavor fileFlavor = getFileFlavor(flavors);
+        	
+        	if (fileFlavor == null)
+        		return false;
+
+        	try {
+        		BufferedReader r = new BufferedReader(fileFlavor.getReaderForText(t));
+        		String line;
+
+        		while ((line=r.readLine())!=null)
+        		{
+        			if (line.startsWith("file:"))
+        			{
+        				File file = new File(URI.create(line));
+        				if (!file.isDirectory())
+        					return false;
+        			}
+        		}
+        	} catch (Throwable e) {
+        		return false;
+        	}
+
+            return true;
+        }
+        
+        private boolean isDropOnExplorer(Point location) {
+            TreePath path = tree.getPathForLocation(location.x, location.y);
+            return (path == null);
+        }
+        
+        private boolean isDropFilesOnDir(Point location, Transferable t) {
+        	TreePath path = tree.getPathForLocation(location.x, location.y);
+            if (path == null)
+            	return false;
+            
+            if (!isFilesTransferable(t))
+            	return false;
+            
+            Object c = path.getLastPathComponent();
+            // System.out.println("c " + c + " class " + c.getClass());
+            return true;    
+		}
+        
         public void dragEnter(DropTargetDragEvent dtde)
         {
-            if (testFileFlavor(dtde.getCurrentDataFlavors()))
+            if (isDropOnExplorer(dtde.getLocation()) && isDirectoryTransferable(dtde.getTransferable())) 
                 dtde.acceptDrag(DnDConstants.ACTION_LINK);
-            else
+            else if (isDropFilesOnDir(dtde.getLocation(), dtde.getTransferable()))
+            	dtde.acceptDrag(DnDConstants.ACTION_MOVE);
+            else 
                 dtde.rejectDrag();
         }
 
         public void dragExit(DropTargetEvent dte)
         {
+//        	System.out.println("dragExit");
+    		tree.repaint(cueLine.getBounds());				
             // no op
         }
 
         public void dragOver(DropTargetDragEvent dtde)
         {
-            if (testFileFlavor(dtde.getCurrentDataFlavors()))
+            if (isDropOnExplorer(dtde.getLocation()) && isDirectoryTransferable(dtde.getTransferable())) { 
                 dtde.acceptDrag(DnDConstants.ACTION_LINK);
-            else
-                dtde.rejectDrag();
-        }
+        	} if (isDropFilesOnDir(dtde.getLocation(), dtde.getTransferable())) {
+        		dtde.acceptDrag(DnDConstants.ACTION_MOVE);
+                
+        		Point location = dtde.getLocation();
+                TreePath path = tree.getPathForLocation(location.x, location.y);
+                
+    			
+    			TreePath path2 = tree.getClosestPathForLocation(location.x, location.y);
+    			if (!(path2 == pathLast))			
+    			{
+    				pathLast = path2;
+    				timerHover.restart();
+    			}
 
-        public void drop(DropTargetDropEvent dtde)
-        {
-            DataFlavor flavor = null;
-            for (DataFlavor f: dtde.getCurrentDataFlavors())
-                if (f.isMimeTypeEqual("text/uri-list"))
-                {
-                    flavor = f;
-                    break;
+
+                Rectangle raPath = tree.getPathBounds(path);
+                // Cue line bounds (2 pixels beneath the drop target)
+                Rectangle rect = new Rectangle(0,  raPath.y+(int)raPath.getHeight(), tree.getWidth(), 2);
+                if (!cueLine.contains(rect)) {
+                	tree.paintImmediately(cueLine.getBounds());				
                 }
-            if (flavor == null)
-            {
-                dtde.rejectDrop();
+                cueLine.setRect(rect);
+
+    			Graphics2D g2 = (Graphics2D) tree.getGraphics();
+                g2.setColor(colorCueLine); // The cue line color
+                g2.fill(cueLine);         // Draw the cue line
+        	} else {
+                dtde.rejectDrag();
                 return;
             }
+        }
 
+
+		public void drop(DropTargetDropEvent dtde)
+        {
+			tree.repaint(cueLine.getBounds());
+			timerHover.stop();
             
-            dtde.acceptDrop(DnDConstants.ACTION_LINK);
-            List<File> files = new ArrayList<File>();
+			Point location = dtde.getLocation();
+			
+			if (isDropOnExplorer(location) && isDirectoryTransferable(dtde.getTransferable())) { 
+				dtde.acceptDrop(DnDConstants.ACTION_LINK);
+			} else if (isDropFilesOnDir(location, dtde.getTransferable())) {
+				//dtde.acceptDrop(DnDConstants.ACTION_MOVE);
+				dtde.rejectDrop();
+				return;
+			} else {
+				dtde.rejectDrop();
+				return;
+            }
+
+			DataFlavor flavor = getFileFlavor(dtde.getCurrentDataFlavors());
+             List<File> files = new ArrayList<File>();
 
             try
             {
@@ -268,7 +414,17 @@ public class ExplorerTreeUI extends MetalTreeUI
             }
         }
 
-        public void dropActionChanged(DropTargetDragEvent dtde)
+        private DataFlavor getFileFlavor(DataFlavor[] flavors) {
+            for (DataFlavor f: flavors) { 
+                if (f.isMimeTypeEqual("text/uri-list"))
+                {
+                	return f;
+                }
+            }
+			return null;
+		}
+
+		public void dropActionChanged(DropTargetDragEvent dtde)
         {
             // TODO Auto-generated method stub
             
