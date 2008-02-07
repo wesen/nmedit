@@ -6,6 +6,8 @@
 
   <property name="nomad-source" value="./nomad-source/" />
   <property name="dist" value="./nomad-dist/" />
+  <property name="projectutils" location="project-utils"/>
+  <property name="libprojectutils" location="${projectutils}/project-utils.jar"/>
 	
   <target name="check-libs-path">
       <condition property="libs-path.exists"><available file="${libs-path}"/></condition>
@@ -121,7 +123,7 @@ Note:
   	<delete dir="${dist}" />
   </target>
 
-  <target name="dist" depends="clean-libs,revert,clean-dist,configure,nomadjar">
+  <target name="dist" depends="clean-libs,revert,clean-dist,configure,nomadjar,buildutils">
   	
   	<!-- creating dist root -->
 	<mkdir dir="${dist}"/>
@@ -190,9 +192,29 @@ Note:
   	<delete file="${dist}/libs/NOTICE_log4j.txt" />
   	<delete file="${dist}/libs/NOTICE_commons-logging.txt" />
   	
+  	<!-- validate dist -->
+    <antcall inheritAll="false" target="validate-dist"></antcall>
+  	
   </target>
   
+  <target name="buildutils">
+  	<!-- make build utils -->
+    <ant inheritAll="false" antfile="${projectutils}/build.xml" dir="${projectutils}" target="build" />
+  </target>
   
+  <target name="validate-dist">
+    <!-- validate class files -->
+  	<java jar="${libprojectutils}" dir="." failonerror="true" fork="true">
+  	  <arg line="-validate-class-version -version J2SE_5.0 nomad-dist"/>
+  	</java>
+  </target>
+	
+  <target name="src-license" depends="buildutils">
+    <!-- validate .java file license statements -->
+  	<java jar="${libprojectutils}" dir="." failonerror="true" fork="true">
+  	  <arg line="-license . ../libs -not ./nomad-offline"/>
+  	</java>
+  </target>
 	
 	<!--
   <target name="clean-nomad">
