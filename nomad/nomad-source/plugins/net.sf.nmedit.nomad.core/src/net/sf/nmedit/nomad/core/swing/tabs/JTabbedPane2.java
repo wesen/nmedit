@@ -19,6 +19,7 @@
 package net.sf.nmedit.nomad.core.swing.tabs;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -32,6 +33,8 @@ import javax.swing.JComponent;
 import javax.swing.SingleSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import net.sf.nmedit.nmutils.Platform;
 
 public class JTabbedPane2 extends JComponent
 {
@@ -196,8 +199,13 @@ public class JTabbedPane2 extends JComponent
             if (selected != null && selected.isOpaque())
                 return;
         }
-        
-        g.setColor(getBackground());
+
+        // TODO use UIDefaults
+        if (Platform.isFlavor(Platform.OS.MacOSFlavor)) {
+        	g.setColor(Color.DARK_GRAY);
+        } else {
+        	g.setColor(getBackground());
+        }
         g.fillRect(0, 0, getWidth(), getHeight());
     }
 
