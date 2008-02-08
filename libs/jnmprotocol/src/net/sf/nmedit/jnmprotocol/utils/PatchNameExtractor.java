@@ -2,14 +2,15 @@ package net.sf.nmedit.jnmprotocol.utils;
 
 import net.sf.nmedit.jnmprotocol.PDLData;
 import net.sf.nmedit.jnmprotocol.PatchMessage;
-import net.sf.nmedit.jpatch.clavia.nordmodular.Format;
 import net.sf.nmedit.jpdl.BitStream;
 import net.sf.nmedit.jpdl.Packet;
 import net.sf.nmedit.jpdl.PacketParser;
 
 public class PatchNameExtractor
 {
-    
+
+    public final static int S_NAME_1 = 55;
+    public final static int S_NAME_2 = 39;
     private static PatchNameExtractor instance = new PatchNameExtractor();
     
     /**
@@ -61,8 +62,8 @@ public class PatchNameExtractor
         switch (section)
         {
             // Name section
-            case Format.S_NAME_1:
-            case Format.S_NAME_2:
+            case S_NAME_1:
+            case S_NAME_2:
                 // patch name
                 return NmCharacter.extractName(sectionData.getPacket("name"));
             default:
