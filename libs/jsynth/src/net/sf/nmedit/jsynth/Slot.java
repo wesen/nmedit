@@ -30,18 +30,31 @@ import net.sf.nmedit.jsynth.worker.RequestPatchWorker;
 public interface Slot
 {
 
+    public static final String ENABLED_PROPERTY = "slot.enabled";
+    public static final String PATCHNAME_PROPERTY = "slot.patch.name";
+
     Synthesizer getSynthesizer();
     
     public int getSlotIndex();
 
     String getName();
     
+    /**
+     * might return null
+     * @return
+     */
     String getPatchName();
     
     // TODO better way ?
     RequestPatchWorker createRequestPatchWorker();
     
    //Object getPatch();
+    
+    boolean isPropertyModifiable(String propertyName);
+    
+    boolean isEnabled();
+    
+    void setEnabled(boolean enabled);
     
     void addSlotListener(SlotListener l);
     void removeSlotListener(SlotListener l);

@@ -84,4 +84,19 @@ public abstract class AbstractSlot implements Slot
         }
     }
 
+    protected void firePropertyChange(String propertyName, Object oldValue, Object newValue)
+    {
+        changeSupport.firePropertyChange(propertyName, oldValue, newValue);
+    }
+
+    protected void firePropertyChange(String propertyName, int oldValue, int newValue)
+    {
+        changeSupport.firePropertyChange(propertyName, oldValue, newValue);
+    }
+
+    protected void firePropertyChange(String propertyName, boolean oldValue, boolean newValue)
+    {
+        changeSupport.firePropertyChange(propertyName, oldValue, newValue);
+    }
+    
 }
