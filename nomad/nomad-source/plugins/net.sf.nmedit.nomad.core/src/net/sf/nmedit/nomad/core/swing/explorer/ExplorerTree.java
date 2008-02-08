@@ -51,13 +51,15 @@ public class ExplorerTree extends JTree
     
     public ExplorerTree()
     {
-        setModel(new DefaultTreeModel(root, true));
+    	DefaultTreeModel model = new DefaultTreeModel(root, true);
+    	model.setAsksAllowsChildren(false);
+        setModel(model);
         setUI(new ExplorerTreeUI());
         setFocusable(true);
         
         ToolTipManager.sharedInstance().registerComponent(this);
     }
-
+    
     public void addRootNode(TreeNode node)
     {
         getRoot().add(node);

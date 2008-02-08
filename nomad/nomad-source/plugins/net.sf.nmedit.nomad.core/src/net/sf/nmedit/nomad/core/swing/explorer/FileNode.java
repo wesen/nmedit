@@ -125,7 +125,7 @@ public class FileNode implements ETreeNode, MouseListener,
         {
             FileFilter filter = getFileFilter();
             File[] files = filter == null ? this.file.listFiles() : this.file.listFiles(filter);
-            if (files.length>0)
+            if (files != null && files.length>0)
             {
                 FileSort.sortDirectoriesFiles(files);
                 children = new FileNode[files.length];
@@ -171,7 +171,7 @@ public class FileNode implements ETreeNode, MouseListener,
 
     public boolean isLeaf()
     {
-        return getChildCount()>0;
+    	return getChildCount() == 0;
     }
 
     public Enumeration children()
@@ -360,9 +360,9 @@ public class FileNode implements ETreeNode, MouseListener,
         
     }
     
-    private static DataFlavor fileFlavor = new DataFlavor(File.class, "File");
-    private static DataFlavor fileNodeFlavor = new DataFlavor(FileNode.class, "FileNode");
-    private static DataFlavor uriFlavor =
+    protected static DataFlavor fileFlavor = new DataFlavor(File.class, "File");
+    protected static DataFlavor fileNodeFlavor = new DataFlavor(FileNode.class, "FileNode");
+    protected static DataFlavor uriFlavor =
         new DataFlavor("text/uri-list; charset=utf-16", "uri list");
  
     public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException
