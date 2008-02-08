@@ -74,6 +74,7 @@ import javax.swing.plaf.metal.MetalTreeUI;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import net.sf.nmedit.jtheme.dnd.JTDragDrop;
 import net.sf.nmedit.nomad.core.swing.explorer.helpers.ExplorerCellRenderer;
 import net.sf.nmedit.nomad.core.swing.explorer.helpers.TreeDynamicTreeExpansion;
 
@@ -329,7 +330,7 @@ public class ExplorerTreeUI extends MetalTreeUI
         
         public void dragEnter(DropTargetDragEvent dtde)
         {
-            if (isDropOnExplorer(dtde.getLocation()) && isDirectoryTransferable(dtde.getTransferable())) 
+        	if (isDropOnExplorer(dtde.getLocation()) && isDirectoryTransferable(dtde.getTransferable())) 
                 dtde.acceptDrag(DnDConstants.ACTION_LINK);
             else if (isDropFilesOnDir(dtde.getLocation(), dtde.getTransferable()))
             	dtde.acceptDrag(DnDConstants.ACTION_MOVE);
@@ -349,12 +350,14 @@ public class ExplorerTreeUI extends MetalTreeUI
     		Point location = dtde.getLocation();
             TreePath path = tree.getPathForLocation(location.x, location.y);
             
-            if (isDropOnExplorer(dtde.getLocation()) && isDirectoryTransferable(dtde.getTransferable())) { 
+            if (isDropOnExplorer(dtde.getLocation()) && isDirectoryTransferable(dtde.getTransferable())) {
                 dtde.acceptDrag(DnDConstants.ACTION_LINK);
-        	} if (isDropFilesOnDir(dtde.getLocation(), dtde.getTransferable())) {
+        	} else if (isDropFilesOnDir(dtde.getLocation(), dtde.getTransferable())) {
         		dtde.acceptDrag(DnDConstants.ACTION_MOVE);
         	} else {
                 dtde.rejectDrag();
+            	tree.paintImmediately(cueLine.getBounds());				
+				timerHover.stop();
                 return;
             }
 
@@ -406,11 +409,13 @@ public class ExplorerTreeUI extends MetalTreeUI
 			if (flavor == null)
             	return;
             DataFlavor nodeFlavor = new DataFlavor(FileNode.class, "FileNode");
+            Point location = dtde.getLocation();
             
-            File dest = getFileAtLocation(dtde.getLocation());
+            File dest = getFileAtLocation(location);
             if ((dest == null) || !dest.isDirectory())
             	return; // never too sure
-            TreeNode destNode = getNodeAtLocation(dtde.getLocation());
+            TreePath destPath = getClosestPathForLocation(tree, location.x, location.y);
+            TreeNode destNode = getNodeAtLocation(location);
             if (!(destNode instanceof FileNode))
             	return;
             
@@ -442,24 +447,33 @@ public class ExplorerTreeUI extends MetalTreeUI
 				e.printStackTrace();
 			}
 			((FileNode)destNode).notifyDropChildren();
+			tree.expandPath(destPath);
 			((ExplorerTree)tree).fireNodeStructureChanged(destNode);
 		}
 
 		private void createNewDirectoryLink(DropTargetDropEvent dtde) {
-			DataFlavor flavor = getFileFlavor(dtde.getCurrentDataFlavors());
-            if (flavor == null)
-            	return;
-			 List<File> files = getTransferableFiles(flavor, dtde.getTransferable());
+			DataFlavor fileNodeFlavor = FileNode.fileNodeFlavor;
+			Transferable t = dtde.getTransferable();
+			try {
+				Object o = t.getTransferData(fileNodeFlavor);
+				if (o != null && o instanceof FileNode) {
+					FileNode node = (FileNode)o;
+					File file = node.getFile();
+					if (file.isDirectory())
+					{
+						FileContext fc = new FileContext((ExplorerTree)tree, node.getFileFilter(), file);
+						((ExplorerTree)tree).getRoot().add(fc);
+						((ExplorerTree)tree).fireRootChanged();
+					}
+				}
+			} catch (Throwable e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
-			 for (File file: files)
-             {
-                 if (file.isDirectory())
-                 {
-                     FileContext fc = new FileContext((ExplorerTree)tree, file);
-                     ((ExplorerTree)tree).getRoot().add(fc);
-                     ((ExplorerTree)tree).fireRootChanged();
-                 }
+			/*
              }
+             */
 		}
 
 		private List<File> getTransferableFiles(DataFlavor flavor,
