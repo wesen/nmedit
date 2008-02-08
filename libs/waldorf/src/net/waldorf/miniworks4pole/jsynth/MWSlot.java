@@ -91,4 +91,22 @@ public class MWSlot extends AbstractSlot implements Slot
         return patch;
     }
 
+    public boolean isEnabled()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public void setEnabled(boolean enabled)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public boolean isPropertyModifiable(String propertyName)
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }
