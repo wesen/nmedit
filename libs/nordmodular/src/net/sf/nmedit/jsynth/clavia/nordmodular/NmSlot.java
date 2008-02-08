@@ -22,6 +22,7 @@
  */
 package net.sf.nmedit.jsynth.clavia.nordmodular;
 
+import net.sf.nmedit.jnmprotocol.GetPatchMessage;
 import net.sf.nmedit.jnmprotocol.MidiMessage;
 import net.sf.nmedit.jnmprotocol.SlotActivatedMessage;
 import net.sf.nmedit.jnmprotocol.SlotsSelectedMessage;
@@ -38,7 +39,6 @@ public class NmSlot extends AbstractSlot implements Slot
 
     public static final String PROPERTY_VOICECOUNT = "voicecount";
     public static final String PROPERTY_ACTIVESLOT = "active";
-    public static final String PROPERTY_ENABLEDSLOT = "enabled";
     public static final String PROPERTY_PATCH_ID = "pid";
 
     private static final char[] slotIdLetter = new char[] {'A', 'B', 'C', 'D'};
@@ -46,6 +46,7 @@ public class NmSlot extends AbstractSlot implements Slot
     private NordModular synth;
     private NMPatch patch;
     private int voiceCount = 0;
+    private String patchName;
 
     private boolean activated = false;
     private boolean enabled = false;
@@ -58,9 +59,23 @@ public class NmSlot extends AbstractSlot implements Slot
         this.slotId = slotId;
     }
     
+    void updatePatchName()
+    {
+        if (isEnabled() && patchName == null)
+            requestPatchName();
+    }
+
+    public boolean isPropertyModifiable(String propertyName)
+    {
+        if (ENABLED_PROPERTY.equals(propertyName))
+            return true;
+        
+        return false;
+    }
+    
     public String getPatchName()
     {
-        return patch!= null ? patch.getName() : null;
+        return patchName;
     }
     
     public int getVoiceCount()
@@ -78,7 +93,18 @@ public class NmSlot extends AbstractSlot implements Slot
         return activated;
     }
     
-    void setEnabled(boolean enabled)
+    public void setEnabled(boolean enabled)
+    {
+        boolean oldValue = this.enabled;
+        boolean newValue = enabled;
+        
+        if (oldValue != newValue)
+        {
+            requestEnableSlot(newValue);
+        }
+    }
+
+    void setEnabledValue(boolean enabled)
     {
         boolean oldValue = this.enabled;
         boolean newValue = enabled;
@@ -87,6 +113,7 @@ public class NmSlot extends AbstractSlot implements Slot
         {
             this.enabled = enabled;
             fireSlotEnabledChange(oldValue, newValue);
+            synth.fireSlotEnabledChange(getSlotIndex(), oldValue, newValue);
         }
     }
     
@@ -102,12 +129,9 @@ public class NmSlot extends AbstractSlot implements Slot
         }
     }
 
-    public void requestEnableSlot(boolean enable)
+    private void requestEnableSlot(boolean enable)
     {
         // enable == selected
-        
-        if (isEnabled() == enable)
-            return;
         
         boolean[] selection = new boolean[]{false, false, false, false};
         SlotManager<NmSlot> manager = synth.getSlotManager();
@@ -131,6 +155,24 @@ public class NmSlot extends AbstractSlot implements Slot
             synth.getScheduler().offer(new ScheduledMessage(synth, 
                     new SlotActivatedMessage(getSlotId())
             ));
+        }
+    }
+    
+    void requestPatchName()
+    {
+        synth.getScheduler().offer(new ScheduledMessage(synth, 
+                new GetPatchMessage(getSlotIndex(), getPatchId(),
+                GetPatchMessage.PatchPart.HEADER)));
+    }
+
+    void setPatchNameValue(String patchName)
+    {
+        String oldValue = this.patchName;
+        String newValue = patchName;
+        if (oldValue != newValue || (oldValue != null && oldValue.equals(newValue)))
+        {
+            this.patchName = newValue;
+            firePropertyChange(Slot.PATCHNAME_PROPERTY, oldValue, newValue);
         }
     }
     
@@ -159,7 +201,7 @@ public class NmSlot extends AbstractSlot implements Slot
 
     public String getName()
     {
-        return "Slot "+slotIdLetter[slotId];
+        return ""+slotIdLetter[slotId];
     }
 
     public String toString()
@@ -204,6 +246,14 @@ public class NmSlot extends AbstractSlot implements Slot
             this.patch = patch;
             if (patch != null)
                 patch.setSlot(this);
+            
+            if (patch != null)
+            {
+                String name = patch.getName();
+                if (name == null) name = "";
+                setPatchNameValue(name);
+            }
+            
             fireNewPatchInSlotEvent(old, patch);
         }
     }
@@ -225,7 +275,7 @@ public class NmSlot extends AbstractSlot implements Slot
 
     protected void fireSlotEnabledChange(boolean oldEnabled, boolean newEnabled)
     {
-        changeSupport.firePropertyChange(PROPERTY_ENABLEDSLOT,  oldEnabled, newEnabled);
+        changeSupport.firePropertyChange(ENABLED_PROPERTY,  oldEnabled, newEnabled);
     }
 
     protected void firePatchIdChange(int oldPid, int newPid)

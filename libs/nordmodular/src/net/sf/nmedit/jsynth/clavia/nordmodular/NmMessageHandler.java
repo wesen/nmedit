@@ -41,6 +41,7 @@ import net.sf.nmedit.jnmprotocol.SlotActivatedMessage;
 import net.sf.nmedit.jnmprotocol.SlotsSelectedMessage;
 import net.sf.nmedit.jnmprotocol.SynthSettingsMessage;
 import net.sf.nmedit.jnmprotocol.VoiceCountMessage;
+import net.sf.nmedit.jnmprotocol.utils.PatchNameExtractor;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PParameter;
@@ -49,6 +50,7 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.Knob;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.Helper;
+import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.GetPatchWorker;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.ScheduledMessage;
 import net.sf.nmedit.jsynth.event.SlotEvent;
@@ -75,9 +77,9 @@ public class NmMessageHandler extends NmProtocolListener
         return 0<=slotId && slotId<synth.getSlotCount();
     }
 
-    public void messageReceived(SynthSettingsMessage msg)
+    public void messageReceived(SynthSettingsMessage message)
     {
-        synth.setSettings(msg);
+        synth.setSettings(message);
     }
 
     public void messageReceived(MorphRangeChangeMessage message) 
@@ -139,7 +141,15 @@ public class NmMessageHandler extends NmProtocolListener
      */
     public void messageReceived(PatchMessage message) 
     {
-        // no op 
+        // get patch name
+        String patchName = PatchNameExtractor.extractPatchName(message);
+        if (patchName != null)
+        {
+            // patch name is part of message
+            synth
+            .getSlot(message.getSlot())
+            .setPatchNameValue(patchName);
+        }
     }
 
     /**
@@ -178,6 +188,10 @@ public class NmMessageHandler extends NmProtocolListener
         // -> this is not implied by the received message
         if (!isValidSlot(slotId))
             return;
+        
+        // request patch name
+        NmSlot slot = synth.getSlot(slotId);
+        slot.updatePatchName();
         
         /*
         NmSlot slot = synth.getSlot(slotId);
@@ -237,7 +251,10 @@ public class NmMessageHandler extends NmProtocolListener
     {
         for (int i=0;i<synth.getSlotCount();i++)
         {
-            synth.getSlot(i).setEnabled(message.isSlotSelected(i));
+            NmSlot slot = synth.getSlot(i); 
+            boolean enabled = message.isSlotSelected(i);
+            slot.setEnabledValue(enabled);
+            slot.updatePatchName();
         }
     }
 
@@ -425,7 +442,7 @@ public class NmMessageHandler extends NmProtocolListener
     private void installSlot(NmSlot slot)
     {
         slot.addSlotListener(this);
-        slot.addPropertyChangeListener(NmSlot.PROPERTY_ENABLEDSLOT, this);
+        slot.addPropertyChangeListener(Slot.ENABLED_PROPERTY, this);
     }
 
     private void uninstallSlot(NmSlot slot)
@@ -438,7 +455,7 @@ public class NmMessageHandler extends NmProtocolListener
     {
         NmSlot slot = (NmSlot) evt.getSource();
         
-        if (evt.getPropertyName() == NmSlot.PROPERTY_ENABLEDSLOT)
+        if (evt.getPropertyName() == Slot.ENABLED_PROPERTY)
         {
             if ((Boolean)evt.getNewValue())
             {
@@ -493,7 +510,7 @@ public class NmMessageHandler extends NmProtocolListener
     {
         if (synth.isConnected())
         {
-            // reply will update the slot.enabled properties
+            // reply are ACK messages
             for (int i=0;i<synth.getSlotCount();i++)
                 NmMessageHandler.requestPatch(synth, i);
         }

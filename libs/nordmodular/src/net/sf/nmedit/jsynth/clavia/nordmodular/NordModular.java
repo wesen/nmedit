@@ -115,13 +115,7 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
         new Property("midiChannelSlot2", 0, 16, 2),
         new Property("midiChannelSlot3", 0, 16, 3)      
     };
-    private Property[] slotEnabled = 
-    {
-        new Property("slot0Selected", false),
-        new Property("slot1Selected", false),
-        new Property("slot2Selected", false),
-        new Property("slot3Selected", false)      
-    };
+    
     private Property[] slotVoiceCount = 
     {
         new Property("slot0VoiceCount", 0, 255, 0),
@@ -376,6 +370,7 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
         
         // now everything is fine - start the protocol thread
         protocolThread.start();
+
     }
     
     public boolean getMidiClockSource()
@@ -529,13 +524,13 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
     public boolean isSlotEnabled(int slot)
     {
         checkSlot(slot);
-        return slotEnabled[slot].getBooleanValue();
+        return slotManager.getSlot(slot).isEnabled();
     }
     
     public void setSlotEnabled(int slot, boolean enable)
     {
         checkSlot(slot);
-        slotEnabled[slot].setValue(enable);
+        slotManager.getSlot(slot).setEnabled(enable);
     }
     
     public int getVoiceCount(int slot)
@@ -606,7 +601,22 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
             for (int i=0;i<slotManager.getSlotCount();i++)
             {
                 boolean disabled = i>=slotManager.getSlotCount();
-                slotEnabled[i].readValue(settings, disabled);
+                
+                int value = 0;
+                
+                if (!disabled)
+                {
+                    Object e = settings.get(slotEnabledPropertyName(i));
+                    try
+                    {
+                        value = Math.max(0, Math.min(1, ((Integer)e).intValue()));
+                    }
+                    catch (ClassCastException cce)
+                    {
+                        // ignore
+                    }
+                }
+                slotManager.getSlot(i).setEnabledValue(value>0);
                 slotVoiceCount[i].readValue(settings, disabled);
             }
             // TODO check if slot is available
@@ -618,6 +628,11 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
             settingsChangedFlag = false;
             firePropertyChange("settings", null, "settings");
         }
+    }
+    
+    private String slotEnabledPropertyName(int slotIndex)
+    {
+        return "slot"+slotIndex+"Selected";
     }
     
     public Object getClientProperty(Object key)
@@ -933,6 +948,11 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
     public MidiPort getDefaultMidiOutPort()
     {
         return getPCOutPort();
+    }
+
+    protected void fireSlotEnabledChange(int slotIndex, boolean oldEnabled, boolean newEnabled)
+    {
+        firePropertyChange(slotEnabledPropertyName(slotIndex), oldEnabled, newEnabled);
     }
     
     private class Property

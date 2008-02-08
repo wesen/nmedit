@@ -114,11 +114,11 @@ public class NmUtils
         se.initCause(e);
         return se;
     }
-    
+    /*
     public static String getPatchBankLocation(int section, int position)
     {        
         return Integer.toString(((section+1)*100)+(position+1));
-    }
+    }*/
     
     /*
     public static MidiMessage createMorphRangeMessage(PParameter parameter, int span, int direction)
