@@ -30,8 +30,12 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jsynth.Slot;
@@ -43,43 +47,156 @@ import net.sf.nmedit.jsynth.event.SlotListener;
 import net.sf.nmedit.jsynth.event.SlotManagerListener;
 import net.sf.nmedit.jsynth.event.SynthesizerEvent;
 import net.sf.nmedit.jsynth.event.SynthesizerStateListener;
-import net.sf.nmedit.jsynth.nomad.SynthDeviceContext;
+import net.sf.nmedit.jsynth.nomad.SynthObjectForm;
 import net.sf.nmedit.jsynth.nomad.SynthPropertiesDialog;
 import net.sf.nmedit.jsynth.nomad.SynthPropertiesDialog.DialogPane;
 import net.sf.nmedit.jsynth.worker.RequestPatchWorker;
+import net.sf.nmedit.nomad.core.Nomad;
+import net.sf.nmedit.nomad.core.forms.ExceptionDialog;
+import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
+import net.sf.nmedit.nomad.core.swing.document.Document;
+import net.sf.nmedit.nomad.core.swing.document.DocumentManager;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 
-public class NMSynthDeviceContext extends SynthDeviceContext 
+public class NMSynthDeviceContext extends SynthObjectForm<NordModular>
 {
 
-    public NMSynthDeviceContext(ExplorerTree etree, NordModular synth,
-            String title)
+    public NMSynthDeviceContext(NordModular synth)
     {
-        super(etree, title);
-
-        setSynth(synth);
+        super(synth);
         (new PatchOpener(synth)).install();
-
     }
 
-    public NordModular getSynthesizer()
+
+    protected NmEventHandler createEventHandler()
     {
-        return (NordModular) super.getSynth();
+        return new NmEventHandler();
     }
 
+    public void openOrSelectPatch(Slot slot)
+    {
+        NmSlot nmslot = (NmSlot) slot;
+        
+        NMPatch patch = nmslot.getPatch();
+        
+        if (patch != null)
+        {
+            // find out if patch is open
+            
+            DefaultDocumentManager dm = Nomad.sharedInstance().getDocumentManager();
+            
+            for (Document d: dm.getDocuments())
+            {
+                if ( d instanceof PatchDocument )
+                {
+                    PatchDocument pd = (PatchDocument) d;
+                    if (pd.getPatch() == patch)
+                    {
+                        // found -> select
+                        
+                        dm.setSelection(d);
+                        
+                        return ;
+                    }
+                }
+            }
+            
+            // not found -> create document
+
+            try
+            {
+                final PatchDocument pd = NmFileService.createPatchDoc(patch);
+    
+                SwingUtilities.invokeLater(new Runnable(){
+                    public void run()
+                    {
+                        DocumentManager dm = 
+                        Nomad.sharedInstance()
+                        .getDocumentManager();
+                        dm.add(pd);
+                        dm.setSelection(pd);
+                        
+                    }
+                });
+
+            }
+            catch (Exception e)
+            {
+                
+                Log log = LogFactory.getLog(getClass());
+                if (log.isWarnEnabled())
+                {
+                    log.warn(e);
+                }
+                
+
+                ExceptionDialog.showErrorDialog(
+                        Nomad.sharedInstance().getWindow().getRootPane(),
+                        
+                        e.getMessage(), "could not open patch", e);
+                
+                
+                return;
+            }
+            
+            return;
+        }
+        
+        try
+        {
+            slot.createRequestPatchWorker().requestPatch();
+        }
+        catch (SynthException e1)
+        {
+            e1.printStackTrace();
+        }
+    }
+
+    protected class NmEventHandler extends EventHandler
+    {
+        public void install()
+        {
+            super.install();
+            //getSynthesizer().addPropertyChangeListener(this);
+        }
+/*
+        public void propertyChange(PropertyChangeEvent evt)
+        {
+            super.propertyChange(evt);
+            s
+            
+            
+        }*/
+    }
+
+    protected SlotObject<NordModular> createSlotObject(Slot slot)
+    {
+        return new NmSlotObject(this, slot);
+    }
+    
+    protected static class NmSlotObject extends SlotObject<NordModular>
+    {
+
+        public NmSlotObject(NMSynthDeviceContext sdc, Slot slot)
+        {
+            super(sdc, slot);
+        }
+        
+        public NmSlot getSlot()
+        {
+            return (NmSlot) super.getSlot();
+        }
+
+    }
+    
+    
+    
+    /*
     protected EventHandler createEventHandler()
     {
         return new NMEventHandler(this);
     }
 
-    private static class NMEventHandler extends EventHandler
-    {
-
-        public NMEventHandler(SynthDeviceContext context)
-        {
-            super(context);
-        }
-        
         public JPopupMenu getSlotPopup(SlotLeaf leaf)
         {
             JPopupMenu menu = new JPopupMenu();
@@ -93,9 +210,7 @@ public class NMSynthDeviceContext extends SynthDeviceContext
             return menu;
             
         }
-        
-    }
-    
+  */  
 
     private static class SlotAction extends AbstractAction
     {
@@ -112,7 +227,7 @@ public class NMSynthDeviceContext extends SynthDeviceContext
         //private SlotLeaf leaf;
         private NmSlot slot;
         
-        public SlotAction(SlotLeaf leaf, String command)
+        public SlotAction(SlotObject leaf, String command)
         {
             //this.leaf = leaf;
             this.slot = (NmSlot) leaf.getSlot();
@@ -156,7 +271,7 @@ public class NMSynthDeviceContext extends SynthDeviceContext
             }
             else if (cmd == NEW_PATCH);
             else if (cmd == ENABLE_DISABLE_SLOT)
-                slot.requestEnableSlot(!slot.isEnabled());
+                slot.setEnabled(!slot.isEnabled());
             else if (cmd == SELECT_SLOT)
                 slot.requestSelectSlot();
         }

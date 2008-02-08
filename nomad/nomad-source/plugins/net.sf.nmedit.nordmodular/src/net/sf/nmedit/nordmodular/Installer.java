@@ -18,6 +18,7 @@
  */
 package net.sf.nmedit.nordmodular;
 
+import java.awt.Component;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -27,14 +28,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiDevice.Info;
-import javax.swing.tree.TreeNode;
 
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
 import net.sf.nmedit.jsynth.midi.MidiPlug;
@@ -44,6 +43,7 @@ import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.jpf.TempDir;
 import net.sf.nmedit.nomad.core.service.Service;
 import net.sf.nmedit.nomad.core.service.initService.InitService;
+import net.sf.nmedit.nomad.core.swing.tabs.JTabbedPane2;
 
 public class Installer implements InitService
 {
@@ -70,14 +70,14 @@ public class Installer implements InitService
     {
         List<NordModular> synthList = new ArrayList<NordModular>();
         
-        Enumeration<TreeNode> en = Nomad.sharedInstance().getExplorer().getRoot().children();
-        while (en.hasMoreElements())
+        JTabbedPane2 tb = Nomad.sharedInstance().getSynthTabbedPane();
+        
+        for (int i=0;i<tb.getTabCount();i++)
         {
-            TreeNode node = en.nextElement();
-            
-            if (node instanceof NMSynthDeviceContext)
+            Component c = tb.getComponentAt(i);
+            if (c instanceof NMSynthDeviceContext)
             {
-                synthList.add(((NMSynthDeviceContext)node).getSynthesizer()); 
+                synthList.add(((NMSynthDeviceContext)c).getSynthesizer()); 
             }
         }
         

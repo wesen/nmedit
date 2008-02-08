@@ -22,13 +22,14 @@ import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.Synthesizer;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
 import net.sf.nmedit.jsynth.midi.MidiPlug;
-import net.sf.nmedit.jsynth.nomad.SynthDeviceContext;
+import net.sf.nmedit.jsynth.nomad.SynthObjectForm;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.registry.GlobalRegistry;
 import net.sf.nmedit.nomad.core.registry.Registry;
 import net.sf.nmedit.nomad.core.service.Service;
 import net.sf.nmedit.nomad.core.service.synthService.NewSynthService;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
+import net.sf.nmedit.nomad.core.swing.tabs.JTabbedPane2;
 
 public class NewNordModularService
     implements NewSynthService
@@ -74,11 +75,10 @@ public class NewNordModularService
         ExplorerTree et =
             Nomad.sharedInstance().getExplorer();
 
-        SynthDeviceContext sdc = new NMSynthDeviceContext(et, nm,
-               getSynthName());
+        SynthObjectForm<NordModular> sof = new NMSynthDeviceContext(nm);
         
-        et.getRoot().add(sdc);
-        et.fireRootChanged();
+        JTabbedPane2 dst = Nomad.sharedInstance().getSynthTabbedPane();
+        dst.addTab("Nord Modular", sof);
     }
     
     private static NordModular createSynth()
@@ -109,7 +109,15 @@ public class NewNordModularService
         {
             // ignore - should not happen
         }
-        etree.addRootNode(new NMSynthDeviceContext(etree, synth, name));
+
+        ExplorerTree et =
+            Nomad.sharedInstance().getExplorer();
+
+        SynthObjectForm<NordModular> sof = new NMSynthDeviceContext(synth);
+        
+        JTabbedPane2 dst = Nomad.sharedInstance().getSynthTabbedPane();
+        dst.addTab("Nord Modular", sof);
+        
     }
     
 }
