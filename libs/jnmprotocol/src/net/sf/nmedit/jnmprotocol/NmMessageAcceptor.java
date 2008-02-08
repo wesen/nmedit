@@ -97,11 +97,20 @@ public class NmMessageAcceptor<M extends MidiMessage> extends NmProtocolListener
         if (messageClass.isInstance(message))
         {
             M instance = messageClass.cast(message);
+            
+            if (!acceptsMessage(instance))
+                return;
+            
             if (firstMessage == null)
                 firstMessage = instance;
             recentMessage = instance;
             acceptedCount ++;
         }
+    }
+    
+    protected boolean acceptsMessage(M message)
+    {
+        return true;
     }
     
     public int getAcceptedCount()
