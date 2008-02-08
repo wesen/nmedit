@@ -54,10 +54,10 @@ public class NewMiniworks
     }
 
     public void newSynth()
-    {
+    {/*
         ExplorerTree etree = Nomad.sharedInstance().getExplorer();
         Miniworks4Pole synth = MWData.createSynth();
-        etree.addRootNode(new WMSynthDeviceContext(etree, synth, getSynthName()));
+        etree.addRootNode(new WMSynthDeviceContext(etree, synth, getSynthName()));*/
     }
 
     public Class<? extends Service> getServiceClass()

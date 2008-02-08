@@ -28,7 +28,6 @@ import net.sf.nmedit.jsynth.event.SlotEvent;
 import net.sf.nmedit.jsynth.event.SlotListener;
 import net.sf.nmedit.jsynth.event.SlotManagerListener;
 import net.sf.nmedit.jsynth.midi.MidiPlug;
-import net.sf.nmedit.jsynth.nomad.SynthDeviceContext;
 import net.sf.nmedit.jsynth.worker.RequestPatchWorker;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.forms.NomadMidiDialog;
@@ -38,9 +37,9 @@ import net.waldorf.miniworks4pole.jpatch.MWPatch;
 import net.waldorf.miniworks4pole.jsynth.MWSlot;
 import net.waldorf.miniworks4pole.jsynth.Miniworks4Pole;
 
-public class WMSynthDeviceContext extends SynthDeviceContext 
+public class WMSynthDeviceContext //extends SynthDeviceContext 
 {
-    
+    /*
     public WMSynthDeviceContext(ExplorerTree etree, Miniworks4Pole synth,
             String title)
     {
@@ -54,22 +53,22 @@ public class WMSynthDeviceContext extends SynthDeviceContext
     {
         return (Miniworks4Pole) super.getSynth();
     }
-
+*/
 
     protected void connect()
-    {
+    {/*
         super.connect();
         
         if (getSynth().isConnected())
         {
-            /*
-            ((MWSlot)getSynth().getSlot(0))
-            .setPatch(MWData.createPatch());
             
-            System.out.println(((MWSlot)getSynth().getSlot(0)).getPatch());*/
-        }
+          //  ((MWSlot)getSynth().getSlot(0))
+        //    .setPatch(MWData.createPatch());
+            
+     //       System.out.println(((MWSlot)getSynth().getSlot(0)).getPatch());
+        }*/
     }
-    
+    /*
     private static class PatchOpener implements SlotManagerListener,
         SlotListener
     {
@@ -124,10 +123,10 @@ public class WMSynthDeviceContext extends SynthDeviceContext
             {
                 installDoc(new MWPatchDoc(patch));
             }
-            /*uninstallDoc(slot);
+            /uninstallDoc(slot);
             
             if (slot.getPatch()!= null)
-                installDoc(slot);*/
+                installDoc(slot);
         }
 
         public void uninstallDoc(MWPatchDoc doc)
@@ -142,8 +141,8 @@ public class WMSynthDeviceContext extends SynthDeviceContext
             .getDocumentManager().add(doc);
         }
         
-    }
-
+    }*/
+/*
     protected boolean showSettings()
     {
         Miniworks4Pole synth = getSynthesizer();
@@ -200,6 +199,6 @@ public class WMSynthDeviceContext extends SynthDeviceContext
         }
     }
 
-    
+  */  
 }
 

@@ -57,7 +57,6 @@ public class Installer implements InitService
             {
                 fileSaveInSynth();
             }});
-
     }
 
     void fileSaveInSynth()

@@ -123,6 +123,7 @@ public class Nomad
     private MenuBuilder menuBuilder;
     private ExplorerTree explorerTree;
     private JTabbedPane2 toolPane;
+    private JTabbedPane2 synthPane;
     
     public DefaultDocumentManager getDocumentManager()
     {
@@ -509,6 +510,11 @@ public class Nomad
         return explorerTree;
     }
     
+    public JTabbedPane2 getSynthTabbedPane()
+    {
+        return synthPane;
+    }
+    
     void setupUI()
     {
         // before menu builder is used
@@ -608,13 +614,22 @@ public class Nomad
             }
         });
         
+        synthPane = new JTabbedPane2();
+        synthPane.setCloseActionEnabled(true);
+        
+        JSplitPane sidebar = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
+        sidebar.setTopComponent(toolPane);
+        sidebar.setBottomComponent(synthPane);
+        sidebar.setResizeWeight(0.8);
+        
+        
         new DocumentActionActivator(pageContainer, menuLayout);
         
         JSplitPane splitLR = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitLR.setResizeWeight(0);
         splitLR.setDividerLocation(200);
         splitLR.setRightComponent(pageContainer);
-        splitLR.setLeftComponent(toolPane);
+        splitLR.setLeftComponent(sidebar);
             
         contentPane.setLayout(new BorderLayout());
         contentPane.add(splitLR, BorderLayout.CENTER);
