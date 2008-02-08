@@ -32,11 +32,18 @@ public class GetPatchMessage extends MidiMessage
     
     private PatchPart part;
 
+
     public GetPatchMessage(int slot, int pid)
+    {
+        this(slot, pid, PatchPart.ALL);
+    }
+    
+    public GetPatchMessage(int slot, int pid, PatchPart part)
     {
         this();
         setSlot(slot);
         set("pid", pid);
+        this.part = part;
     }
     
     public GetPatchMessage()
