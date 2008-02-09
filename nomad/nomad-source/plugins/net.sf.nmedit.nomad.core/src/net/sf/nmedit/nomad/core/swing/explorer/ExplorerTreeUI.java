@@ -479,14 +479,14 @@ public class ExplorerTreeUI extends MetalTreeUI
 					
 					if (parent instanceof FileNode) {
 						FileNode parNode = (FileNode)parent;
-						parNode.notifyDropChildren();
+						parNode.updateChildrenNodes();
 						((ExplorerTree)tree).fireNodeStructureChanged(parNode);
 					}
 				}
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-			((FileNode)destNode).notifyDropChildren();
+			((FileNode)destNode).updateChildrenNodes();
 			tree.expandPath(destPath);
 			((ExplorerTree)tree).fireNodeStructureChanged(destNode);
 		}
