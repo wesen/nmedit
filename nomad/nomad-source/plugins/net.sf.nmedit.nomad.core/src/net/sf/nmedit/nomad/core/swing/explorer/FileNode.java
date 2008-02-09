@@ -45,6 +45,7 @@ import javax.swing.tree.TreeNode;
 
 import net.sf.nmedit.nmutils.FileSort;
 import net.sf.nmedit.nmutils.Platform;
+import net.sf.nmedit.nmutils.io.FileUtils;
 import net.sf.nmedit.nomad.core.Nomad;
 
 public class FileNode implements ETreeNode, MouseListener,
@@ -296,6 +297,7 @@ public class FileNode implements ETreeNode, MouseListener,
         if (file.isDirectory())
         {
             popup.add(new FileNodeAction(et, FileNodeAction.REFRESH));
+            popup.add(new FileNodeAction(et, FileNodeAction.DELETE_PERMANENTLY));
         }
         else
         {
@@ -345,7 +347,9 @@ public class FileNode implements ETreeNode, MouseListener,
             }
             else if (e.getActionCommand() == DELETE_PERMANENTLY && getFile().isDirectory())
             {
-                // todo
+            	FileUtils.deleteDirectory(getFile());
+                if (FileNode.this.getParent() instanceof FileNode)
+                    ((FileNode)FileNode.this.getParent()).notifyChildFilesRemoved(et);
             }
             else if (e.getActionCommand() == REMOVE_EXPLORER_ENTRY)
             {
