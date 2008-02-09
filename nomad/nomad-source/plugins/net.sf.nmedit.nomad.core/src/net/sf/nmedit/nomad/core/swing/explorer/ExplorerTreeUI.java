@@ -38,6 +38,7 @@ import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragGestureRecognizer;
 import java.awt.dnd.DragSource;
+import java.awt.dnd.DragSourceContext;
 import java.awt.dnd.DragSourceDragEvent;
 import java.awt.dnd.DragSourceDropEvent;
 import java.awt.dnd.DragSourceEvent;
@@ -75,6 +76,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import net.sf.nmedit.jtheme.dnd.JTDragDrop;
+import net.sf.nmedit.nmutils.io.FileUtils;
 import net.sf.nmedit.nomad.core.swing.explorer.helpers.ExplorerCellRenderer;
 import net.sf.nmedit.nomad.core.swing.explorer.helpers.TreeDynamicTreeExpansion;
 
@@ -197,7 +199,7 @@ public class ExplorerTreeUI extends MetalTreeUI
             Transferable transferable = (Transferable) node;
             
             dragSource.startDrag(dge, 
-                    DragSource.DefaultMoveDrop,
+                    DragSource.DefaultMoveNoDrop,
                     transferable,
                     this
                     );
@@ -210,7 +212,16 @@ public class ExplorerTreeUI extends MetalTreeUI
 
         public void dragEnter(DragSourceDragEvent dsde)
         {
-            // no op
+        	// XXX needed ??
+            DragSourceContext context = dsde.getDragSourceContext();
+            int action = dsde.getDropAction();
+            if ((action & DnDConstants.ACTION_COPY) != 0) {
+            	context.setCursor(DragSource.DefaultCopyDrop);
+            } else if ((action & DnDConstants.ACTION_MOVE) != 0) {
+            	context.setCursor(DragSource.DefaultMoveDrop);
+            } else if ((action & DnDConstants.ACTION_LINK) != 0) {
+            	context.setCursor(DragSource.DefaultLinkDrop);
+            }
         }
 
         public void dragExit(DragSourceEvent dse)
@@ -328,14 +339,22 @@ public class ExplorerTreeUI extends MetalTreeUI
             }
         }
         
-        public void dragEnter(DropTargetDragEvent dtde)
-        {
+        protected boolean updateDropAction(DropTargetDragEvent dtde) {
         	if (isDropOnExplorer(dtde.getLocation()) && isDirectoryTransferable(dtde.getTransferable())) 
                 dtde.acceptDrag(DnDConstants.ACTION_LINK);
             else if (isDropFilesOnDir(dtde.getLocation(), dtde.getTransferable()))
-            	dtde.acceptDrag(DnDConstants.ACTION_MOVE);
-            else 
+            	dtde.acceptDrag(dtde.getDropAction() & (DnDConstants.ACTION_MOVE | DnDConstants.ACTION_COPY));
+            else {
                 dtde.rejectDrag();
+                return false;
+            }
+        	
+        	return true;
+        }
+        
+        public void dragEnter(DropTargetDragEvent dtde)
+        {
+        	updateDropAction(dtde);
         }
 
         public void dragExit(DropTargetEvent dte)
@@ -344,18 +363,20 @@ public class ExplorerTreeUI extends MetalTreeUI
     		tree.repaint(cueLine.getBounds());				
             // no op
         }
+        
+		public void dropActionChanged(DropTargetDragEvent dtde)
+        {
+			updateDropAction(dtde);
+        }
+        
+
 
         public void dragOver(DropTargetDragEvent dtde)
         {
     		Point location = dtde.getLocation();
             TreePath path = tree.getPathForLocation(location.x, location.y);
             
-            if (isDropOnExplorer(dtde.getLocation()) && isDirectoryTransferable(dtde.getTransferable())) {
-                dtde.acceptDrag(DnDConstants.ACTION_LINK);
-        	} else if (isDropFilesOnDir(dtde.getLocation(), dtde.getTransferable())) {
-        		dtde.acceptDrag(DnDConstants.ACTION_MOVE);
-        	} else {
-                dtde.rejectDrag();
+            if (!updateDropAction(dtde)) {
             	tree.paintImmediately(cueLine.getBounds());				
 				timerHover.stop();
                 return;
@@ -394,8 +415,14 @@ public class ExplorerTreeUI extends MetalTreeUI
 				dtde.acceptDrop(DnDConstants.ACTION_LINK);
 				createNewDirectoryLink(dtde);
 			} else if (isDropFilesOnDir(location, dtde.getTransferable())) {
-				dtde.acceptDrop(DnDConstants.ACTION_MOVE);
-				dropFilesInDir(dtde);
+				// check copy, move
+				if ((dtde.getDropAction() & DnDConstants.ACTION_MOVE) != 0) {
+					dtde.acceptDrop(DnDConstants.ACTION_MOVE);
+					dropFilesInDir(dtde, true);
+				} else if  ((dtde.getDropAction() & DnDConstants.ACTION_COPY) != 0) {
+					dtde.acceptDrop(DnDConstants.ACTION_COPY);
+					dropFilesInDir(dtde, false);
+				}
 				return;
 			} else {
 				dtde.rejectDrop();
@@ -404,7 +431,7 @@ public class ExplorerTreeUI extends MetalTreeUI
 
         }
 
-        private void dropFilesInDir(DropTargetDropEvent dtde) {
+        private void dropFilesInDir(DropTargetDropEvent dtde, boolean move) {
 			DataFlavor flavor = getFileFlavor(dtde.getCurrentDataFlavors());
 			if (flavor == null)
             	return;
@@ -424,9 +451,22 @@ public class ExplorerTreeUI extends MetalTreeUI
             
             for (File f : files) {
             	if (f.exists()) {
-            		f.renameTo(new File(dest, f.getName()));
-            		// XXX catch errors here
-            		// System.out.println("rename " + f + " to " + new File(dest, f.getName()));
+            		try {
+            			if (move) {
+            				boolean success = f.renameTo(new File(dest, f.getName()));
+            			} else {
+            				if (f.isDirectory()) {
+            					// recursively copy directory with only filtered files
+            					FileUtils.copy(f, new File(dest, f.getName()));
+            				} else {
+            					FileUtils.copyFile(f, new File(dest, f.getName()));
+            				}
+            			}
+            		} catch (Throwable e) {
+                		// XXX catch errors here
+                		// System.out.println("rename " + f + " to " + new File(dest, f.getName()));
+            			e.printStackTrace();
+            		}
             	}
             }
             
@@ -514,12 +554,6 @@ public class ExplorerTreeUI extends MetalTreeUI
 			return null;
 		}
 
-		public void dropActionChanged(DropTargetDragEvent dtde)
-        {
-            // TODO Auto-generated method stub
-            
-        }
-        
     }
 
     protected void paintRow(Graphics g, Rectangle clipBounds,
