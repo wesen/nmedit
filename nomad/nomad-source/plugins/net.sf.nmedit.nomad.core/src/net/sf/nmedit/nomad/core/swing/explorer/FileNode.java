@@ -33,7 +33,12 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.NoSuchElementException;
 
 import javax.swing.AbstractAction;
@@ -87,9 +92,78 @@ public class FileNode implements ETreeNode, MouseListener,
         }
     }
 
+    public boolean updateChildrenNodes() {
+    	boolean updated = false;
+    	
+    	if (children != null) {
+    		File files[] = getChildrenFiles();
+    		Hashtable<String, File> fileNames = new Hashtable<String, File>();
+    		Hashtable<String, FileNode> childrenNames = new Hashtable<String, FileNode>();
+    		ArrayList<FileNode> newChildren = new ArrayList<FileNode>();
+
+    		for (File fn : files) {
+    			try {
+    				fileNames.put(fn.getCanonicalPath(), fn);
+    			} catch (Throwable e) {
+    				updated = true;
+    			}
+    		}
+
+    		for (FileNode child : children) {
+                try {
+                	String name = child.getFile().getCanonicalPath();
+                	if (fileNames.containsKey(name)) {
+                		childrenNames.put(name, child);
+                		newChildren.add(child);
+        				updated = true;
+                	}
+    			} catch (Throwable e) {
+    				updated = true;
+    			}
+    		}
+    		
+    		for (File f: files) {
+    			try {
+    				String name = f.getCanonicalPath();
+    				if (!childrenNames.containsKey(name)) {
+    					newChildren.add(new FileNode(this, f));
+        				updated = true;
+    				}
+    			} catch (Throwable e) {
+    				updated = true;
+    			}
+    		}
+
+    		if (updated) {
+    			Collections.sort(newChildren, new Comparator<FileNode>() {
+    				public int compare(FileNode o1, FileNode o2) {
+    					return o1.getFile().getName().compareTo(o2.getFile().getName());
+    				}
+    			});
+
+    			children = new FileNode[newChildren.size()];
+    			int i = 0;
+    			for (FileNode child : newChildren) {
+    				children[i++] = child;
+    			}
+    		}
+    	}
+
+    	return updated;
+    }
+    
     public void notifyDropChildren()
     {
         children = null;
+    }
+    
+    private void updateChildrenArray(int removed) {
+        FileNode[] a = new FileNode[children.length-removed];
+        int ai = 0;
+        for (int i=0;i<children.length;i++)
+            if (children[i] != null)
+                a[ai++] = children[i];
+        children = a;
     }
     
     public void notifyChildFilesRemoved(ExplorerTree et)
@@ -108,24 +182,23 @@ public class FileNode implements ETreeNode, MouseListener,
             }
             if (removed>0)
             {
-                FileNode[] a = new FileNode[children.length-removed];
-                int ai = 0;
-                for (int i=0;i<children.length;i++)
-                    if (children[i] != null)
-                        a[ai++] = children[i];
-                children = a;
-                
+            	updateChildrenArray(removed);
                 et.fireNodeStructureChanged(this);
             }
         }
+    }
+
+    private File[] getChildrenFiles() {
+        FileFilter filter = getFileFilter();
+        File[] files = filter == null ? this.file.listFiles() : this.file.listFiles(filter);
+        return files;
     }
     
     private TreeNode[] getChildren()
     {
         if (children == null)
         {
-            FileFilter filter = getFileFilter();
-            File[] files = filter == null ? this.file.listFiles() : this.file.listFiles(filter);
+        	File[] files = getChildrenFiles();
             if (files != null && files.length>0)
             {
                 FileSort.sortDirectoriesFiles(files);
@@ -334,7 +407,7 @@ public class FileNode implements ETreeNode, MouseListener,
         {
             if (e.getActionCommand() == REFRESH)
             {
-                notifyDropChildren();
+                updateChildrenNodes();
                 et.fireNodeStructureChanged(FileNode.this);
             }
             else if (e.getActionCommand() == DELETE_PERMANENTLY && getFile().isFile())
