@@ -18,6 +18,7 @@
  */
 package net.sf.nmedit.nomad.core.service.fileService;
 
+import java.io.File;
 import java.util.Iterator;
 
 import javax.swing.JFileChooser;
@@ -50,6 +51,19 @@ public class FileServiceTool
     { 
         return (fileFilter instanceof FSFileFilter) ?
                 ((FSFileFilter) fileFilter).getService() : null;
+    }
+    
+    public static FileService lookupFileService(File file) {
+    	for (Iterator<FileService> i = ServiceRegistry.getServices(FileService.class);
+    	i.hasNext();)
+    	{
+    		FileService service = i.next();
+    		FSFileFilter filter = service.getFileFilter();
+    		if (filter.accept(file)) {
+    			return service;
+    		}
+    	}
+    	return null;
     }
     
 }

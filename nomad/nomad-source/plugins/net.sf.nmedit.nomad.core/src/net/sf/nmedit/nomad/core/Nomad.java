@@ -93,6 +93,7 @@ import net.sf.nmedit.nomad.core.swing.document.DocumentListener;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 import net.sf.nmedit.nomad.core.swing.tabs.JTabbedPane2;
 import net.sf.nmedit.nomad.core.utils.ClonedAction;
+import net.sf.nmedit.nomad.core.utils.OSXAdapter;
 
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.Platform.OS;
@@ -669,8 +670,40 @@ public class Nomad
         	toolbar.add(btn);
 
         	new JDropDownButtonControl(btn, pop);
+        } else {
+        	registerForMacOSXEvents();
         }
     }
+    
+    public void registerForMacOSXEvents() {
+    	try {
+    		// Generate and register the OSXAdapter, passing it a hash of all the methods we wish to
+    		// use as delegates for various com.apple.eawt.ApplicationListener methods
+    		OSXAdapter.setQuitHandler(this, getClass().getDeclaredMethod("handleExit", (Class[])null));
+    		OSXAdapter.setFileHandler(this, getClass().getDeclaredMethod("loadOSXFile", new Class[] { String.class }));
+    	} catch (Exception e) {
+    		System.err.println("Error while loading the OSXAdapter:");
+    		e.printStackTrace();
+    	}
+
+    }
+	
+    public void loadOSXFile(String path) {
+    	File file = new File(path);
+    	FileService service =
+    		FileServiceTool.lookupFileService(file);
+
+    	if (service != null)
+    	{
+    		service.open(file);
+    	}
+    	else
+    	{
+    		JOptionPane.showMessageDialog(mainWindow, "Could not find service to open file.");
+    	}
+    }
+    
+
     
     private static class SelectedAction extends AbstractAction implements ItemListener
     {
