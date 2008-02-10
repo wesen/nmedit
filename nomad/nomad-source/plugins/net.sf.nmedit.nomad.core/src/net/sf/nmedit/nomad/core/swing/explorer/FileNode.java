@@ -112,10 +112,11 @@ public class FileNode implements ETreeNode, MouseListener,
     		for (FileNode child : children) {
                 try {
                 	String name = child.getFile().getCanonicalPath();
+            		childrenNames.put(name, child);
                 	if (fileNames.containsKey(name)) {
-                		childrenNames.put(name, child);
                 		newChildren.add(child);
-        				updated = true;
+                	} else {
+                		updated = true;
                 	}
     			} catch (Throwable e) {
     				updated = true;
@@ -125,6 +126,7 @@ public class FileNode implements ETreeNode, MouseListener,
     		for (File f: files) {
     			try {
     				String name = f.getCanonicalPath();
+    				
     				if (!childrenNames.containsKey(name)) {
     					newChildren.add(new FileNode(this, f));
         				updated = true;
@@ -145,6 +147,14 @@ public class FileNode implements ETreeNode, MouseListener,
     			int i = 0;
     			for (FileNode child : newChildren) {
     				children[i++] = child;
+    			}
+    		}
+    		
+    		for (FileNode child : children) {
+    			if (child.getChildCount() > 0) {
+    				if (child.updateChildrenNodes()) {
+    					updated = true;
+    				}
     			}
     		}
     	}
@@ -407,8 +417,9 @@ public class FileNode implements ETreeNode, MouseListener,
         {
             if (e.getActionCommand() == REFRESH)
             {
-                updateChildrenNodes();
-                et.fireNodeStructureChanged(FileNode.this);
+                if (updateChildrenNodes()) {
+                	et.fireNodeStructureChanged(FileNode.this);
+                }
             }
             else if (e.getActionCommand() == DELETE_PERMANENTLY && getFile().isFile())
             {
