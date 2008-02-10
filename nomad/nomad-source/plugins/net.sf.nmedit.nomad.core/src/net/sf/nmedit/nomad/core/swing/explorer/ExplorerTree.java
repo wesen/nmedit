@@ -24,6 +24,7 @@ package net.sf.nmedit.nomad.core.swing.explorer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.util.Enumeration;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -31,6 +32,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -89,7 +91,16 @@ public class ExplorerTree extends JTree
     
     public void fireNodeStructureChanged(TreeNode node)
     {
-        getModel().nodeStructureChanged(node);
+    	if (node instanceof FileNode) {
+    		Enumeration<TreePath> paths = getExpandedDescendants(new TreePath(((FileNode)node).getPath()));
+        	getModel().nodeStructureChanged(node);
+
+    		while (paths.hasMoreElements()) {
+    			expandPath(paths.nextElement());
+    		}
+    	} else {
+    		getModel().nodeStructureChanged(node);
+    	}
     }
     
     public void fireNodeChanged(TreeNode node)
