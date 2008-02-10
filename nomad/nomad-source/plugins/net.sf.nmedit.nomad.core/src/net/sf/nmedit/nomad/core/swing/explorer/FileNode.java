@@ -47,6 +47,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import net.sf.nmedit.nmutils.FileSort;
 import net.sf.nmedit.nmutils.Platform;
@@ -72,6 +73,29 @@ public class FileNode implements ETreeNode, MouseListener,
     public File getFile()
     {
         return file;
+    }
+
+    protected TreeNode[] getPathToRoot(TreeNode aNode, int depth) {
+    	TreeNode[]              retNodes;
+
+    	/* Check for null, in case someone passed in a null node, or
+    	   they passed in an element that isn't rooted at root. */
+    	if(aNode == null) {
+    		if(depth == 0)
+    			return null;
+    		else
+    			retNodes = new TreeNode[depth];
+    	}
+    	else {
+    		depth++;
+    		retNodes = getPathToRoot(aNode.getParent(), depth);
+    		retNodes[retNodes.length - depth] = aNode;
+    	}
+    	return retNodes;
+    }
+    
+    public TreeNode[] getPath() {
+    	return getPathToRoot(this, 0);
     }
 
     public void processEvent(Event event)
@@ -417,7 +441,7 @@ public class FileNode implements ETreeNode, MouseListener,
         {
             if (e.getActionCommand() == REFRESH)
             {
-                if (updateChildrenNodes()) {
+            	if (updateChildrenNodes()) {
                 	et.fireNodeStructureChanged(FileNode.this);
                 }
             }
