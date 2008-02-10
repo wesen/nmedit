@@ -1,6 +1,8 @@
 package net.sf.nmedit.nmutils;
 
 import java.awt.event.MouseEvent;
+import javax.swing.SwingUtilities;
+
 
 /* Copyright (C) 2006 Christian Schneider
  * 
@@ -109,5 +111,13 @@ public class Platform
         }
         */
     }
+
+	public static boolean isToggleSelectionEvent(MouseEvent e) {
+    	if (Platform.isFlavor(OS.MacOSFlavor)) {
+    		return SwingUtilities.isLeftMouseButton(e) && e.isMetaDown();
+    	} else {
+    		return SwingUtilities.isLeftMouseButton(e) && e.isControlDown();
+    	}
+	}
   
 }
