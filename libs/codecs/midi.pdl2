@@ -1,0 +1,446 @@
+start Sysex;
+
+Sysex :=
+    messageId("sysex")
+
+	0xf0:8 0x33:8 0:1 cc:5 slot:2 0x06:8
+	#cc=0x00 => IAm$data
+	#cc=0x13 => Parameter$data
+	#cc=0x14 => NMInfo$data
+	#cc=0x16 => ACK$data
+	#cc=0x17 => PatchHandling$data
+	#cc=0x1c => PatchPacket$data
+	#cc=0x1d => PatchPacket$data
+	#cc=0x1e => PatchPacket$data
+	#cc=0x1f => PatchPacket$data
+	0xf7:8
+	;
+
+IAm :=
+    messageId("iam")
+	0:1 sender:7 0:1 versionHigh:7 0:1 versionLow:7
+	#sender=0 => 0:0
+	#sender=1 => IAmIdentification$identification
+	;
+
+// reserved:
+//     reserved byte (usually zero)
+// serial1, serial2:
+//     serial = ((serial1&0x7F)<<7) | (serial2&0x7F)
+//     computes the last four digits of the serial number
+// deviceId:
+//     0x00 = Nord Modular Keyboard
+//     0x01 = Nord Modular Rack
+//     0x02 = Micro Modular
+IAmIdentification :=
+	0:1 reserved:7 
+	0:1 serial1:7 
+	0:1 serial2:7 
+	0:1 deviceId:7
+	;
+
+Parameter :=
+	0:1 pid:7 0:1 sc:7
+	#sc=0x2f => ParameterSelect$data
+	#sc=0x40 => ParameterChange$data
+	#sc=0x43 => MorphRangeChange$data
+	
+	@lblDataEnd
+	
+	0:1 checksum:7 = ([+;0;@lblDataEnd;8;$]%128)
+	;
+
+ParameterSelect :=
+	0:1 unknown1:7 0:1 section:7 0:1 module:7 0:1 parameter:7
+	;
+
+ParameterChange :=
+	0:1 section:7 0:1 module:7 0:1 parameter:7 0:1 value:7
+	;
+
+MorphRangeChange :=
+	0:1 section:7 0:1 module:7 0:1 parameter:7 0:1 span:7 0:1 direction:7
+	;
+
+NMInfo :=
+    messageId("nminfo")
+
+	0:1 pid:7 0:1 sc:7
+	#sc=0x05 => VoiceCount$data
+	#sc=0x07 => SlotsSelected$data
+	#sc=0x09 => SlotActivated$data
+	#sc=0x13 => UnknownNMInfo$data
+	#sc=0x25 => KnobAssignment$data
+	#sc=0x26 => KnobAssignmentChange$data
+	#sc=0x27 => SetPatchTitle$data
+	#sc=0x2f => ParameterSelect$data
+	#sc=0x38 => NewPatchInSlot$data
+	#sc=0x39 => { messageId("lights") Lights$data }
+	#sc=0x3a => { messageId("meters") Meters$data }
+	#sc=0x40 => KnobChange$data
+	#sc=0x43 => MorphRangeChange$data
+	#sc=0x41 => VUMeters$data
+	#sc=0x7e => Error$data
+	
+	@lblDataEnd
+	
+	0:1 checksum:7 = ([+;0;@lblDataEnd;8;$]%128)
+	;
+
+// cause of message: unknown (I believe I only had turned the knobs at the synth ?)
+// example: F0 33 50 06 04 13 (51 06 16 00 03 02 56 45 6C 70 69 61 6E 6F 20 36 00 05) 7B F7 (name='VElpiano 6')
+UnknownNMInfo :=
+	0:1 unknown1:7
+	0:1 unknown2:7
+	0:1 unknown3:7
+	0:1 unknown4:7
+	0:1 unknown5:7
+	0:1 unknown6:7
+	0:1 unknown7:7
+	String$name
+	0:1 unknown8:7
+	;
+
+VoiceCount :=
+	0:1 c0:7 0:1 c1:7 0:1 c2:7 0:1 c3:7
+	;
+
+SlotsSelected :=
+	0:4 slot0:1 slot1:1 slot2:1 slot3:1
+	;
+
+SlotActivated :=
+	0:1 slot:7
+	;
+
+NewPatchInSlot :=
+	0:1 slot:7 0:1 pid:7
+	;
+
+Lights :=
+	0:1 startIndex:7
+	0:2 l2:2 l1:2 l0:2
+	0:2 l5:2 l4:2 l3:2
+	0:2 l8:2 l7:2 l6:2
+	0:2 l11:2 l10:2 l9:2
+	0:2 l14:2 l13:2 l12:2
+	0:2 l17:2 l16:2 l15:2
+	0:4 l19:2 l18:2
+	;
+
+Meters :=
+	0:1 startIndex:7
+	0:1 b0:7 0:1 a0:7 
+	0:1 b1:7 0:1 a1:7 
+	0:1 b2:7 0:1 a2:7 
+	0:1 b3:7 0:1 a3:7 
+	0:1 b4:7 0:1 a4:7 
+	;
+
+VUMeters :=
+	0:1 vui:7 0:1 u0r:7 0:1 vu0l:7 0:1 vu1r:7 0:1 vu1l:7 0:1
+	vu2r:7 0:1 vu2l:7 0:1 vu3r:7 0:1 vu3l:7 0:1 vu4r:7 0:1 vu4l:7
+	;
+
+Error :=
+	0:1 code:7
+	;
+
+KnobChange :=
+	0:1 section:7 0:1 module:7 0:1 parameter:7 0:1 value:7
+	;
+
+ACK :=
+    messageId("ack")
+	0:1 pid1:7 0:1 type:7 0:1 pid2:7
+	#type=0x7f => 0:0
+	#type=0x0d => UnknownACKReply$data
+	#type=0x36 => ACKChecksum$checksum
+	#type=0x13 => PatchListResponse$patchList
+	#type=0x15 => PatchListResponse$patchList
+	#type=0x38 => PatchLoadResponse$patchLoad
+	;
+
+// Note:
+// The UnknownACKReply is sent as reply to a LoadPatchMessage
+// where the source (bank, position) contained no patch.
+// The operation is probably not valid, the ACK might contain an error message.
+// In each recorded sample message (about 20) unknown1 is alway 0, unknown2 always 1.
+// The last variable (unknown3) is probably a checksum.
+// 'pid2' contains the bank index, 'pid3' contains the bank position.
+// A slot index was not included in this message.
+// Example message: F0 33 58 06 08 0D 08 (21 00 01 40) F7
+UnknownACKReply :=
+	0:1 pid3:7
+	0:1 unknown1:7
+	0:1 unknown2:7
+	0:1 unknown3:7
+	;
+
+ACKChecksum :=
+	
+	@lblDataEnd
+	
+	0:1 checksum:7 = ([+;0;@lblDataEnd;8;$]%128)
+	;
+
+// note: (reply case 1)
+//  received as reply after loading a patch from a bank to a slot
+//  - pid2 : destination slot index
+//  - pid3 : patch id
+//  - section/position: bank position
+//  - unknown2 always 13(dec) 
+//  - unknown5 always 0
+// note: further situations where this message is sent are possible
+PatchLoadResponse :=
+	0:1 pid3:7 0:1 unknown2:7 0:1 section:7 0:1 position:7
+	0:1 unknown5:7 0:1 unknown6:7 0:1 
+	
+	
+	@lblDataEnd
+	
+	0:1 checksum:7 = ([+;0;@lblDataEnd;8;$]%128)
+	;
+
+PatchHandling :=
+	?PatchCommand$data ?PatchModification$data
+	;
+
+PatchCommand :=
+	0:1 pp:7
+	#pp=0x41 => PatchManagerCommand$command
+	#pp=0x44 => GetSynthSettings$command
+	
+	@lblDataEnd
+	
+	0:1 checksum:7 = ([+;0;@lblDataEnd;8;$]%128)
+	;
+
+GetSynthSettings  :=
+    0:1 0x02:7 0:1 0x06:7 0:1 0x08:7 0:1 0x04:7
+    ;
+
+PatchManagerCommand :=
+	0:1 ssc:7
+	#ssc=0x07 => SelectSlots$data
+	#ssc=0x09 => ActivateSlot$data
+	#ssc=0x0a => LoadPatch$data
+	#ssc=0x0b => StorePatch$data
+	#ssc=0x0c => DeletePatch$data
+	#ssc=0x35 => RequestPatch$data
+	#ssc=0x14 => GetPatchList$data
+	;
+
+SelectSlots :=
+	0:4 slot0:1 slot1:1 slot2:1 slot3:1
+	;
+
+ActivateSlot :=
+	0:1 slot:7
+	;
+
+LoadPatch :=
+	0:1 slot:7 0:1 section:7 0:1 position:7
+	;
+
+StorePatch :=
+	0:1 slot:7 0:1 section:7 0:1 position:7
+	;
+
+DeletePatch :=
+	0:1 section:7 0:1 position:7 0:8
+	;
+
+RequestPatch :=
+	;
+
+GetPatchList :=
+	0:1 section:7 0:1 position:7
+	;
+
+PatchModification :=
+	0:1 pid:7 0:1 sc:7
+
+	#sc=0x64 => MorphAssignment$data
+	#sc=0x20 => GetPatchPartExtra$data
+	#sc=0x41 => NoteEvent$data
+	#sc=0x4b => GetPatchPartExtra$data
+	#sc=0x4c => GetPatchPartExtra$data
+	#sc=0x4e => GetPatchPartExtra$data
+	#sc=0x53 => GetPatchPartExtra$data
+	#sc=0x61 => GetPatchPart$data
+	#sc=0x63 => GetPatchPart$data
+	#sc=0x66 => GetPatchPart$data
+	#sc=0x68 => GetPatchPart$data
+	
+	#sc=0x22 => MidiCtrlAssignment$data
+	#sc=0x23 => MidiCtrlAssignmentChange$data
+	#sc=0x25 => KnobAssignment$data
+	#sc=0x26 => KnobAssignmentChange$data
+	#sc=0x27 => SetPatchTitle$data
+	#sc=0x32 => ModuleDeletion$data
+	#sc=0x33 => SetModuleTitle$data
+	#sc=0x34 => ModuleMove$data
+	#sc=0x50 => CableInsert$data
+	#sc=0x51 => CableDelete$data
+	#sc=0x54 => CableMove$data
+	#sc=0x55 => SendControllerSnapshot$data
+	#sc=0x56 => Note$data
+	#sc=0x58 => GetCurrentNotes$data
+	#sc=0x67 => MorphKeyboardAssignment$data
+	
+	
+	@lblDataEnd
+	
+	0:1 checksum:7 = ([+;0;@lblDataEnd;8;$]%128)
+	;
+
+MorphKeyboardAssignment :=
+	0:1 morph:7 0:1 keyboard:7 ?NextMorphKeyboardAssignment$data
+	;
+
+NextMorphKeyboardAssignment :=
+	0:1 0x67:7 MorphKeyboardAssignment$data
+	;
+
+SetPatchTitle :=
+	String$name
+	;
+
+SetModuleTitle :=
+	0:1 section:7 0:1 module:7 String$name 
+	;
+
+NoteEvent :=
+	0:1 velocity:7 0:1 onoff:7 0:1 note:7
+	;
+	
+MorphAssignment :=
+	0:1 0x01:6 section:1 0:1 module:7 0:1 parameter:7
+	0:1 morph:7 0:1 0x0:7 0:1 0x0:7
+	;
+
+GetPatchPartExtra :=
+	0:1 payload:7
+	;
+
+GetPatchPart :=
+	;
+
+KnobAssignment :=
+	0:1 module:7 0:1 parameter:7 0:1 section:2 knob:5
+	;
+
+KnobAssignmentChange :=
+	0:1 prevknob:7 ?NewKnobAssignmentPacket$data
+	;
+
+NewKnobAssignmentPacket :=
+	0:1 0x25:7 KnobAssignment$data
+	;
+
+MidiCtrlAssignment :=
+	0:1 section:7 0:1 module:7 0:1 parameter:7 0:1 midictrl:7
+	;
+
+MidiCtrlAssignmentChange :=
+	0:1 prevmidictrl:7 ?NewMidiCtrlAssignmentPacket$data
+	;
+
+NewMidiCtrlAssignmentPacket :=
+	0:1 0x22:7 MidiCtrlAssignment$data
+	;
+
+ModuleDeletion :=
+	0:1 section:7 0:1 module:7
+	?NextModuleDeletion$next
+	;
+
+NextModuleDeletion :=
+	0:1 0x32:7 ModuleDeletion$data
+	;
+
+ModuleMove :=
+	0:1 section:7 0:1 module:7 0:1 xpos:7 0:1 ypos:7
+	?NextModuleMove$next
+	;
+
+NextModuleMove :=
+	0:1 0x34:7 ModuleMove$data
+	;
+
+CableInsert :=
+	0:1 1:3 section:1 color:3
+        0:1 module1:7 0:1 type1:1 connector1:6
+        0:1 module2:7 0:1 type2:1 connector2:6
+	;
+
+CableDelete :=
+	0:1 1:6 section:1
+        0:1 module1:7 0:1 type1:1 connector1:6
+        0:1 module2:7 0:1 type2:1 connector2:6
+	;
+
+CableMove :=
+	;
+
+SendControllerSnapshot :=
+	;
+
+Note :=
+	0:1 onOff:7 0:1 note:7
+	;
+
+GetCurrentNotes :=
+	;
+
+PatchPacket :=
+	0:1 command:1 pid:6 ?PatchData$next
+	;
+
+PatchData :=
+	0:1 data:7 ?PatchData$next
+	;
+
+PatchListResponse :=
+	unknown1:8 unknown2:8 unknown3:8
+	?StringList$data
+	0:1 endmarker:7
+	
+	@lblDataEnd
+	
+	0:1 checksum:7 = ([+;0;@lblDataEnd;8;$]%128)
+	;
+	
+StringList :=
+	?ListCmd$cmd
+	String$name
+	?StringList$next
+	;
+
+ListCmd :=
+	0:1 code:7
+	#code=0x01 => NextPosition$nextposition
+	#code=0x02 => EmptyPosition$emptyposition
+	#code=0x03 => NextSection$nextsection
+	;
+
+NextPosition :=
+	0:1 position:7
+	;
+
+EmptyPosition :=
+	0:0
+	;
+
+NextSection :=
+	0:1 section:7 0:1 position:7
+	;
+
+PatchListEnd :=
+	0:0
+	;
+
+String :=
+	16*chars:8/0
+	;
