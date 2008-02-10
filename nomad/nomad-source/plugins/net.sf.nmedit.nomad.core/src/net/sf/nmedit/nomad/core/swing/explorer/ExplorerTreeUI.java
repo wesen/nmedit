@@ -64,6 +64,7 @@ import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -76,6 +77,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import net.sf.nmedit.jtheme.dnd.JTDragDrop;
+import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.io.FileUtils;
 import net.sf.nmedit.nomad.core.swing.explorer.helpers.ExplorerCellRenderer;
 import net.sf.nmedit.nomad.core.swing.explorer.helpers.TreeDynamicTreeExpansion;
@@ -191,6 +193,11 @@ public class ExplorerTreeUI extends MetalTreeUI
             TreePath path = getClosestPathForLocation(tree, p.x, p.y);
             if (path == null)
                 return;
+            
+            TreePath paths[] = tree.getSelectionPaths();
+//            for (TreePath path2 : paths) {
+//          	System.out.println("selected " + path2);
+//            }
             
             Object node = path.getLastPathComponent();
             if (!(node instanceof Transferable))
@@ -621,9 +628,9 @@ public class ExplorerTreeUI extends MetalTreeUI
     ExpandControlHoverEffect eche = new ExpandControlHoverEffect();
     protected void installListeners() 
     {
-        super.installListeners();
         tree.addMouseListener(eche);
         tree.addMouseMotionListener(eche);
+        super.installListeners();
     }
 
     protected void uninstallListeners() 
@@ -694,6 +701,12 @@ public class ExplorerTreeUI extends MetalTreeUI
     	super.selectPathForEvent(path, event);
     }
     
+    protected boolean isToggleSelectionEvent(MouseEvent event) {
+    	return Platform.isToggleSelectionEvent(event);
+    }
+
+
+    
     int hoveredRow = -1;
     int hovx = 0;
     int hovy = 0;
@@ -704,61 +717,87 @@ public class ExplorerTreeUI extends MetalTreeUI
         public void mousePressed(MouseEvent e)
         {
         	forwardMouseEvent(e);
-            
-            Component c = e.getComponent();
-            if (!(c instanceof JTree)) return;
-            JTree tree = (JTree) c;
-            TreeUI treeUI = tree.getUI();
-            
-            // XXX this is not portable to macosx i guess, what's the point of this exactly
-            if (SwingUtilities.isRightMouseButton(e) && treeUI != null)
-            {
-                // selection also by right click 
-                TreePath tp = treeUI.getClosestPathForLocation(tree, e.getX(), e.getY());
-                if (tp != null) {
-                	tree.addSelectionPath(tp);
-                }
-                if (!tree.hasFocus())
-                    tree.requestFocus();
-            }
-            
-            // event redirection
-            if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount()==2)
-            {
-                TreePath path = tree.getPathForLocation(e.getX(), e.getY());
-                if (path != null)
-                {
-                    Object tnode = path.getLastPathComponent();
-                    if (tnode instanceof ETreeNode)
-                    {
-                        ETreeNode etn = (ETreeNode) tnode;
-                        ContextEvent event = new ContextEvent((ExplorerTree)tree, ExplorerTree.ACTION_OPEN, etn);
-                        etn.processEvent(event);
-                    }
-                }
-            }
-            
-            // selection fix
-            if (tree.getPathForLocation(e.getX(), e.getY())==null)
-            {
-                TreePath tp = tree.getUI().getClosestPathForLocation(tree, e.getX(), e.getY());
-                if (tp!=null)
-                {
-                    Rectangle bounds = tree.getPathBounds(tp);
-                    if (e.getY()<bounds.y+bounds.height)
-                    {
-                    	tree.setSelectionPath(tp);
+        	
+        	// avoid having a mouse press select, do it on mouse release
+        	if (Platform.isFlavor(Platform.OS.MacOSFlavor))
+        		e.consume();
+        }
 
-                        if (e.getClickCount()>=2)
-                        {
-                            if (tree.isExpanded(tp))
-                                tree.collapsePath(tp);
-                            else
-                                tree.expandPath(tp);
-                        }
-                    }
-                }
-            }
+        public void mouseReleased(MouseEvent e)
+        {
+            forwardMouseEvent(e);
+            
+            // XXX I don't get this part - m-odendahl
+            //
+            //
+            
+//            Component c = e.getComponent();
+//            if (!(c instanceof JTree)) return;
+//            JTree tree = (JTree) c;
+//            TreeUI treeUI = tree.getUI();
+//            
+////            System.out.println("mouse " + e.getModifiersEx() + " " + MouseEvent.getModifiersExText(e.getModifiersEx()));
+////            System.out.println("meta " + e.isMetaDown());
+////            System.out.println("alt " + e.isAltDown());           
+////            System.out.println("shit " + e.isShiftDown());
+////            System.out.println("control " + e.isControlDown());
+////            System.out.println("right : " +SwingUtilities.isRightMouseButton(e));
+////            System.out.println("middle : " +SwingUtilities.isMiddleMouseButton(e));
+////            System.out.println("left : " +SwingUtilities.isLeftMouseButton(e));
+//            
+//            // XXX this is not portable to macosx i guess, what's the point of this exactly
+//            if (Platform.isAddSelectClick(e) && treeUI != null)
+//            {
+//                // selection also by right click 
+//                TreePath tp = treeUI.getClosestPathForLocation(tree, e.getX(), e.getY());
+//                if (tp != null) {
+//                	tree.addSelectionPath(tp);
+//                	System.out.println("add " + tp);
+//                	for (TreePath path : tree.getSelectionPaths()) {
+//                		System.out.println("selected " + path);
+//                	}
+//                }
+//                if (!tree.hasFocus())
+//                    tree.requestFocus();
+//            }
+//            
+////            // event redirection
+////            if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount()==2)
+////            {
+////                TreePath path = tree.getPathForLocation(e.getX(), e.getY());
+////                if (path != null)
+////                {
+////                    Object tnode = path.getLastPathComponent();
+////                    if (tnode instanceof ETreeNode)
+////                    {
+////                        ETreeNode etn = (ETreeNode) tnode;
+////                        ContextEvent event = new ContextEvent((ExplorerTree)tree, ExplorerTree.ACTION_OPEN, etn);
+////                        etn.processEvent(event);
+////                    }
+////                }
+////            }
+////            
+//            // selection fix
+//            if (tree.getPathForLocation(e.getX(), e.getY())==null)
+//            {
+//                TreePath tp = tree.getUI().getClosestPathForLocation(tree, e.getX(), e.getY());
+//                if (tp!=null)
+//                {
+//                    Rectangle bounds = tree.getPathBounds(tp);
+//                    if (e.getY()<bounds.y+bounds.height)
+//                    {
+//                    	tree.setSelectionPath(tp);
+//
+//                        if (e.getClickCount()>=2)
+//                        {
+//                            if (tree.isExpanded(tp))
+//                                tree.collapsePath(tp);
+//                            else
+//                                tree.expandPath(tp);
+//                        }
+//                    }
+//                }
+//            }
             
         }
         
@@ -807,11 +846,6 @@ public class ExplorerTreeUI extends MetalTreeUI
         }
 
         public void mouseClicked(MouseEvent e)
-        {
-            forwardMouseEvent(e);
-        }
-
-        public void mouseReleased(MouseEvent e)
         {
             forwardMouseEvent(e);
         }
