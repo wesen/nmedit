@@ -33,11 +33,12 @@ public class Main
         }
         
         // copy filed 1,2,... (if existing)
-        String[] args2 = Arrays.copyOfRange(args, 1, args.length);
+        String[] args2 = new String[args.length-1];
+        System.arraycopy(args, 1, args2, 0, args.length - 1);
         
         if ("-validate-class-version".equals(args[0]))
             ClassFileVersionValidator.main(args2);
-        if ("-license".equals(args[0]))
+        else if ("-license".equals(args[0]))
             LicenseValidator.main(args2);
         else
         {
