@@ -221,10 +221,11 @@ Note:
 	     classpath="ant/jarbundler-1.9.jar"
          classname="net.sourceforge.jarbundler.JarBundler" />
          
-  <target name="osx-dist" depends="dist,clean-osx-dist">
+  <target name="osx-dist" depends="clean-osx-dist">
 	<mkdir dir="${osxdist}"/>
   	<jarbundler dir="${osxdist}"
             name="Nomad"
+            icon="artwork/icns/nomad.icns"
             mainclass="org.java.plugin.boot.Boot"
             jvmversion="1.5*"
             workingdirectory="$APP_PACKAGE/Contents/Resources/Java">
