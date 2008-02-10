@@ -34,8 +34,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 import net.sf.nmedit.nmutils.Platform;
 
@@ -55,6 +57,9 @@ public class ExplorerTree extends JTree
     {
     	DefaultTreeModel model = new DefaultTreeModel(root, true);
     	model.setAsksAllowsChildren(false);
+    	TreeSelectionModel selectModel = new DefaultTreeSelectionModel();
+    	selectModel.setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
+    	setSelectionModel(selectModel);
         setModel(model);
         setUI(new ExplorerTreeUI());
         setFocusable(true);
