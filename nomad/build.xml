@@ -221,7 +221,7 @@ Note:
 	     classpath="ant/jarbundler-1.9.jar"
          classname="net.sourceforge.jarbundler.JarBundler" />
          
-  <target name="osx-dist" depends="clean-osx-dist">
+  <target name="osx-dist" depends="dist,clean-osx-dist">
 	<mkdir dir="${osxdist}"/>
   	<jarbundler dir="${osxdist}"
             name="Nomad"
@@ -233,7 +233,9 @@ Note:
        <javaproperty name="apple.laf.useScreenMenuBar" value="true"/>
        <javafileset dir="${dist}">
          <include name="**/*"/>
-       </javafileset>    
+       </javafileset>
+       
+       <documenttype name="Nord Modular Patch" extensions="pch" role="Editor"/>
     </jarbundler>
   </target>	
   
