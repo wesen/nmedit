@@ -6,6 +6,7 @@
 
   <property name="nomad-source" value="./nomad-source/" />
   <property name="dist" value="./nomad-dist/" />
+  <property name="osxdist" value="./osx-dist/" />
   <property name="projectutils" location="project-utils"/>
   <property name="libprojectutils" location="${projectutils}/project-utils.jar"/>
 	
@@ -215,7 +216,29 @@ Note:
   	  <arg line="-license . ../libs -not ./nomad-offline"/>
   	</java>
   </target>
-	
+
+	<taskdef name="jarbundler"
+	     classpath="ant/jarbundler-1.9.jar"
+         classname="net.sourceforge.jarbundler.JarBundler" />
+         
+  <target name="osx-dist" depends="dist,clean-osx-dist">
+	<mkdir dir="${osxdist}"/>
+  	<jarbundler dir="${osxdist}"
+            name="Nomad"
+            mainclass="org.java.plugin.boot.Boot"
+            jvmversion="1.5*"
+            workingdirectory="$APP_PACKAGE/Contents/Resources/Java">
+       <jarfilelist dir="${dist}" files="nomad.jar"/>
+       <javaproperty name="apple.laf.useScreenMenuBar" value="true"/>
+       <javafileset dir="${dist}">
+         <include name="**/*"/>
+       </javafileset>    
+    </jarbundler>
+  </target>	
+  
+  <target name="clean-osx-dist">
+     <delete dir="${osxdist}"/>
+  </target>
 	<!--
   <target name="clean-nomad">
   	<delete dir="${nomad-dist}" />

@@ -7,3 +7,4 @@ bin
 ant.*
 nomad-offline
 nomad-dist
+osx-dist
