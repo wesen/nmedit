@@ -1,6 +1,7 @@
 package net.sf.nmedit.nmutils.io;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,8 +22,13 @@ public class FileUtils {
 	public static boolean USE_NIO = true;
 
 	public static boolean copy(File from, File to) {
+		return FileUtils.copy(from, to, (FileFilter)null);
+	}
+
+	public static boolean copy(File from, File to, FileFilter filter) {
 		if (from.isDirectory()) {
-			for (String name : Arrays.asList(from.list())) {
+			for (File f : Arrays.asList(filter == null ? from.listFiles() : from.listFiles(filter))) {
+				String name = f.getName();
 				if (!copy(from, to, name)){
 					return false;
 				}
