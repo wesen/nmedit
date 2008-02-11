@@ -53,6 +53,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 import net.sf.nmedit.jpatch.ImageSource;
 import net.sf.nmedit.jpatch.ModuleDescriptions;
@@ -88,7 +89,8 @@ public class ModulePane extends JPanel
         options.setLayout(new BorderLayout());
         
         tree = new ExplorerTree();
-        
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+    	
         preview = new ModulePreview();
         
         Color c = preview.getBackground();
