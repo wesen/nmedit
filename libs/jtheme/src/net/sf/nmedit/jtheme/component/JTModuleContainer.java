@@ -497,12 +497,17 @@ public class JTModuleContainer extends JTBaseComponent
         for (int i=getComponentCount()-1;i>=0;i--)
         {
             Component c = getComponent(i);
+            if (c instanceof JTCableLayer)
+            	continue;
+            
 
             dim.width = Math.max(dim.width, c.getX()+c.getWidth());
             dim.height = Math.max(dim.height, c.getY()+c.getHeight());
             
         }
-        
+
+        dim.height += 50;
+        dim.width += 50;
         return dim;
     }
 
