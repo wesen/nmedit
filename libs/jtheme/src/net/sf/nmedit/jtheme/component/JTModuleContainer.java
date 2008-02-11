@@ -515,5 +515,34 @@ public class JTModuleContainer extends JTBaseComponent
     {
         return getContext().isDnDAllowed();
     }
+    
+    public JTConnector findJTConnector(PConnector c)
+    {
+        PModule m = c.getParentComponent();
+        for (int i= getComponentCount()-1;i>=0;i--)
+        {
+            Component cc = getComponent(i);
+            if (cc instanceof JTModule && ((JTModule) cc).getModule() == m )
+            {
+                JTModule mc = (JTModule)cc;
+                for (int j=mc.getComponentCount()-1;j>=0;j--)
+                {
+                    cc = mc.getComponent(j);
+                    
+                    if (cc instanceof JTConnector)
+                    {
+                        JTConnector jtc = (JTConnector) cc;
+                        if (jtc.getConnector() == c)
+                            return jtc;
+                    }
+                    
+                }
+                
+                break;
+            }
+        }
+        return null;
+    }
+
 
 }
