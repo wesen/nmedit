@@ -729,8 +729,8 @@ public class JTNMPatch extends JTPatch implements Transferable
         
         for (PConnection c: va.getConnectionManager())
         {
-            JTConnector con1 = find(cont, c.getA());
-            JTConnector con2 = find(cont, c.getB());
+            JTConnector con1 = cont.findJTConnector(c.getA());
+            JTConnector con2 = cont.findJTConnector(c.getB());
             
             if (con1 != null && con2 != null)
             { 
@@ -739,34 +739,6 @@ public class JTNMPatch extends JTPatch implements Transferable
                 cm.add(cable);
             }
         }
-    }
-
-    private JTConnector find(JTModuleContainer cont, PConnector c)
-    {
-        PModule m = c.getParentComponent();
-        for (int i=cont.getComponentCount()-1;i>=0;i--)
-        {
-            Component cc = cont.getComponent(i);
-            if (cc instanceof JTModule && ((JTModule) cc).getModule() == m )
-            {
-                JTModule mc = (JTModule)cc;
-                for (int j=mc.getComponentCount()-1;j>=0;j--)
-                {
-                    cc = mc.getComponent(j);
-                    
-                    if (cc instanceof JTConnector)
-                    {
-                        JTConnector jtc = (JTConnector) cc;
-                        if (jtc.getConnector() == c)
-                            return jtc;
-                    }
-                    
-                }
-                
-                break;
-            }
-        }
-        return null;
     }
 
     public void dispose()
