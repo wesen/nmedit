@@ -22,6 +22,7 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular;
 
+import net.sf.nmedit.jpatch.CopyOperation;
 import net.sf.nmedit.jpatch.MoveOperation;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainerDescriptor;
@@ -183,6 +184,11 @@ public class VoiceArea extends PBasicModuleContainer
     public MoveOperation createMoveOperation()
     {
         return new NMMoveOperation(this);
+    }
+    
+    public CopyOperation createCopyOperation()
+    {
+    	return new NMCopyOperation(this);
     }
 
 }
