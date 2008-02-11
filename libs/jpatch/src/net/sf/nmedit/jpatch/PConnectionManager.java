@@ -175,6 +175,14 @@ public interface PConnectionManager extends Iterable<PConnection>
     Collection<PConnection> connections(PModule m); 
 
     /**
+     * Returns all connections containing at least one connector
+     * of the specified module.
+     * @param m
+     * @return
+     */
+    Collection<PConnection> connections(Collection<? extends PModule> ms); 
+
+    /**
      * Returns all connections of the tree containing the specified connector.
      */
     Collection<PConnection> graphConnections(PConnector c);
