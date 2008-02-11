@@ -1453,11 +1453,13 @@ public class FFTabBarUI extends TabBarUI
             catch (Exception e)
             {
                 e.printStackTrace();
+                dtde.dropComplete(false);
                 return;
             }
             
             tabBar.moveTab(target, source);
             ui.setHoverIndex(target);
+            dtde.dropComplete(true);
         }
 
         public void dropActionChanged(DropTargetDragEvent dtde)

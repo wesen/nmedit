@@ -117,6 +117,7 @@ public class URIListDropHandler implements DropTargetListener
                 catch (URISyntaxException e)
                 {
                     // not a URI => unknown data => abort
+                    dtde.dropComplete(false);
                     return;
                 }   
             }
@@ -131,6 +132,8 @@ public class URIListDropHandler implements DropTargetListener
         }
         if (uris.size()>0)
             uriListDropped(uris.toArray(new URI[uris.size()]));
+        
+        dtde.dropComplete(true);
     }
 
     public void uriListDropped(URI[] uriList)
