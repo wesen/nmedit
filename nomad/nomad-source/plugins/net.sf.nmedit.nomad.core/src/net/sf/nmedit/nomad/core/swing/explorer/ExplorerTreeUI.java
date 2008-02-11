@@ -54,6 +54,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -77,6 +79,8 @@ import javax.swing.plaf.metal.MetalTreeUI;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import net.sf.nmedit.jtheme.component.plaf.JTModuleContainerUI.ModuleTransferData;
+import net.sf.nmedit.jtheme.dnd.JTDragDrop;
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.io.FileUtils;
 import net.sf.nmedit.nomad.core.swing.explorer.helpers.ExplorerCellRenderer;
@@ -142,6 +146,79 @@ public class ExplorerTreeUI extends MetalTreeUI
         
     }
     
+	public static final DataFlavor FileSelectionFlavor 
+    = new DataFlavor(FileSelectionTransferable.class, "Nomad FileSelectionFlavor");
+	protected static DataFlavor uriFlavor =
+        new DataFlavor("text/uri-list; charset=utf-8", "uri list");
+
+	protected class FileSelectionTransferable implements Transferable {
+		
+		TreePath[] getSelectedPaths() {
+            return tree.getSelectionPaths();
+		}
+
+		Transferable[] getSelectedTransferables() {
+          TreePath paths[] = tree.getSelectionPaths();
+          ArrayList<Transferable> result = new ArrayList<Transferable>();
+          for (TreePath path : paths) {
+        	  Object node = path.getLastPathComponent();
+              if (node instanceof Transferable)
+                  result.add((Transferable)node);
+          }
+          
+          Transferable returnValue[] = new Transferable[result.size()];
+          return result.toArray(returnValue);
+		}
+		
+		FileNode[] getSelectedFileNodes() {
+			TreePath paths[] = tree.getSelectionPaths();
+			ArrayList<FileNode> result = new ArrayList<FileNode>();
+			for (TreePath path : paths) {
+				Object node = path.getLastPathComponent();
+				if (node instanceof FileNode)
+					result.add((FileNode)node);
+			}
+
+			FileNode returnValue[] = new FileNode[result.size()];
+			return result.toArray(returnValue);
+		}
+		
+		public Object getTransferData(DataFlavor flavor)
+				throws UnsupportedFlavorException, IOException {
+			if (FileSelectionFlavor.match(flavor)) {
+            return this;
+			} else if (uriFlavor.match(flavor)) {
+				ByteArrayOutputStream os = new ByteArrayOutputStream();
+				
+				for (Transferable t : getSelectedTransferables()) {
+					Object o = t.getTransferData(FileNode.fileFlavor);
+					if (o instanceof File) {
+						File f = (File)o;
+						String path = f.getAbsoluteFile().toURI().toString() + "\n";
+						os.write(path.getBytes("utf-8"));
+					}
+				}
+				return new ByteArrayInputStream(os.toByteArray());
+			} else {
+				return null;
+			}
+		}
+
+		public DataFlavor[] getTransferDataFlavors() {
+            DataFlavor[] flavors = {FileSelectionFlavor, uriFlavor};
+            return flavors;
+		}
+
+		public boolean isDataFlavorSupported(DataFlavor flavor) {
+	        for (DataFlavor f: getTransferDataFlavors())
+	            if (f.equals(flavor))
+	                return true;
+	        return false;
+		}
+	}
+    
+
+
     private class DND implements 
         DragGestureListener,
         DragSourceListener,
@@ -184,7 +261,6 @@ public class ExplorerTreeUI extends MetalTreeUI
 		{
 			return isRootVisible() &&  tree.getRowForPath(path) == 0;
 		}
-	    
 
 		
         public void dragGestureRecognized(DragGestureEvent dge)
@@ -197,17 +273,8 @@ public class ExplorerTreeUI extends MetalTreeUI
             	tree.setSelectionPath(path);
             }
             
-            TreePath paths[] = tree.getSelectionPaths();
-//            for (TreePath path2 : paths) {
-//          	System.out.println("selected " + path2);
-//            }
-            
-            Object node = path.getLastPathComponent();
-            if (!(node instanceof Transferable))
-                return;
-            
-            Transferable transferable = (Transferable) node;
-            
+            Transferable transferable = new FileSelectionTransferable();
+
             dragSource.startDrag(dge, 
                     DragSource.DefaultMoveNoDrop,
                     transferable,
@@ -363,6 +430,13 @@ public class ExplorerTreeUI extends MetalTreeUI
         	return true;
         }
         
+        protected void dumpTransferable(Transferable t) {
+        	System.out.println("dump");
+        	for (DataFlavor f : t.getTransferDataFlavors()) {
+        		System.out.println("flavor " + f.getMimeType() + f.getPrimaryType() + " " + f.getSubType());
+        	}
+        }
+        
         public void dragEnter(DropTargetDragEvent dtde)
         {
         	updateDropAction(dtde);
@@ -419,7 +493,7 @@ public class ExplorerTreeUI extends MetalTreeUI
         {
 			tree.repaint(cueLine.getBounds());
 			timerHover.stop();
-            
+			
 			Point location = dtde.getLocation();
 			
 			if (isDropOnExplorer(location) && isDirectoryTransferable(dtde.getTransferable())) { 
@@ -483,17 +557,17 @@ public class ExplorerTreeUI extends MetalTreeUI
             }
             
             try {
-            	if (t.isDataFlavorSupported(nodeFlavor)) {
-            		Object o = t.getTransferData(nodeFlavor);
-            		// System.out.println("node transfer " + o + " class " + o.getClass());
-            		if (o instanceof FileNode) {
-            			FileNode node = (FileNode)o;
-            			TreeNode parent = node.getParent();
+            	if (t.isDataFlavorSupported(FileSelectionFlavor)) {
+            		Object o = t.getTransferData(FileSelectionFlavor);
+            		if (o instanceof FileSelectionTransferable) {
+            			for (FileNode node : ((FileSelectionTransferable)o).getSelectedFileNodes()) {
+            				TreeNode parent = node.getParent();
 
-            			if (parent instanceof FileNode) {
-            				FileNode parNode = (FileNode)parent;
-            				if (parNode.updateChildrenNodes()) {
-            					((ExplorerTree)tree).fireNodeStructureChanged(parNode);
+            				if (parent instanceof FileNode) {
+            					FileNode parNode = (FileNode)parent;
+            					if (parNode.updateChildrenNodes()) {
+            						((ExplorerTree)tree).fireNodeStructureChanged(parNode);
+            					}
             				}
             			}
             		}
@@ -542,10 +616,11 @@ public class ExplorerTreeUI extends MetalTreeUI
                 String line;
                 while ((line=r.readLine())!=null)
                 {
-                    if (line.startsWith("file:"))
+                	if (line.startsWith("file:"))
                     {
                     	URI uri = URI.create(line);
-                    	if (uri.getAuthority().equals("localhost") && uri.getScheme().equals("file")) {
+                    	if (uri.getAuthority() != null && uri.getAuthority().equals("localhost") && 
+                    			uri.getScheme() != null && uri.getScheme().equals("file")) {
                     		// OSX has file://localhost/bla uris, transform them for java.io.File
                     		uri = new URI(uri.getScheme(), uri.getPath(), uri.getFragment());
                     	}
@@ -554,6 +629,7 @@ public class ExplorerTreeUI extends MetalTreeUI
                         if (file.exists())
                         {
                             files.add(file);
+                        } else {
                         }
                     }
                 }

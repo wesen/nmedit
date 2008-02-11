@@ -484,8 +484,12 @@ public class FileNode implements ETreeNode, MouseListener,
 
         if (uriFlavor.match(flavor))
         {
-            String path = file == null ? null : 
-                file.getAbsoluteFile().toURI().toString();
+        	String path;
+        	if (file == null) {
+        		path = null;
+        	} else {
+        		path = file.getAbsoluteFile().toURI().toString();
+        	}
             return new ByteArrayInputStream(path.getBytes("utf-16"));
         }
         
