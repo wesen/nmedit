@@ -18,8 +18,10 @@
  */
 package net.sf.nmedit.jtheme.component;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
@@ -73,6 +75,10 @@ public class JTCableLayer extends JTBaseComponent
                 gs.dispose();
             }
         }
+    }
+    
+    public void setSize(Dimension r) {
+    	super.setSize(r);
     }
     
     protected void paintChildren(Graphics g)
