@@ -22,6 +22,7 @@ import java.util.Iterator;
 
 import javax.swing.event.EventListenerList;
 
+import net.sf.nmedit.jpatch.CopyOperation;
 import net.sf.nmedit.jpatch.MoveOperation;
 import net.sf.nmedit.jpatch.PConnectionManager;
 import net.sf.nmedit.jpatch.PModule;
@@ -281,5 +282,11 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
     {
         return null;
     }
+
+    public CopyOperation createCopyOperation()
+    {
+        return null;
+    }
+
 
 }
