@@ -52,6 +52,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -63,7 +64,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.plaf.ComponentUI;
 
+import net.sf.nmedit.jpatch.CopyOperation;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
+import net.sf.nmedit.jpatch.PConnection;
+import net.sf.nmedit.jpatch.PConnectionManager;
+import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
@@ -73,6 +78,7 @@ import net.sf.nmedit.jpatch.history.History;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
+import net.sf.nmedit.jtheme.component.JTConnector;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.dnd.JTDragDrop;
@@ -308,8 +314,7 @@ public class JTModuleContainerUI extends ComponentUI
             || b>getModuleContainer().getHeight()
             ) 
             {
-                getModuleContainer()
-                .setPreferredSize(new Dimension(r, b));
+                getModuleContainer().setPreferredSize(new Dimension(r, b));
             }
             
             //getModuleContainer().scrollRectToVisible(dndBox);
@@ -581,37 +586,26 @@ public class JTModuleContainerUI extends ComponentUI
         {
         	DataFlavor flavors[] = dtde.getTransferable().getTransferDataFlavors();
 
-        	if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable()))
-            {
-                dtde.acceptDrag(DnDConstants.ACTION_COPY);
-                return;
+        	if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable())) {
+        		dtde.acceptDrag(DnDConstants.ACTION_COPY);
+        	} else if (dtde.getTransferable().isDataFlavorSupported(JTDragDrop.ModuleSelectionFlavor)) {
+        		dtde.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
+        	} else {
+        		dtde.rejectDrag();
             }
-            
-            if (dtde.getTransferable().isDataFlavorSupported(JTDragDrop.ModuleSelectionFlavor))
-            {
-                dtde.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
-                return;
-            }
-
-            dtde.rejectDrag();
-            
-            // no op
-            //dragOver(dtde);
         }
 
         public void dragExit(DropTargetEvent dte)
         {
             jtcUI.updateDnDBoundingBox(null);
 //            jtcUI.transferData = null;
-            
         }
 
         public void dragOver(DropTargetDragEvent dtde)
         {
-        	if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable()))
-            {
+        	if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable())) {
                 dtde.acceptDrag(DnDConstants.ACTION_COPY);
-                return ;
+                return;
             }
             
         	jtcUI.updateScrollPosition(dtde.getLocation());
@@ -623,7 +617,7 @@ public class JTModuleContainerUI extends ComponentUI
             else*/
             if (dtde.getCurrentDataFlavorsAsList().contains(JTDragDrop.ModuleSelectionFlavor))
             {
-                dtde.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
+                dtde.acceptDrag(dtde.getDropAction() & (DnDConstants.ACTION_MOVE | DnDConstants.ACTION_COPY));
 
                 ModuleTransferData data;
                 try
@@ -741,23 +735,18 @@ public class JTModuleContainerUI extends ComponentUI
          
                 // compute dimensions of container
                 jtcUI.jtc.updateModuleContainerDimensions();
-                
-                return;
-            }
-            
-            if (dtde.isDataFlavorSupported(JTDragDrop.ModuleSelectionFlavor)
+                dtde.dropComplete(true);
+            } else if (dtde.isDataFlavorSupported(JTDragDrop.ModuleSelectionFlavor)
                     && dtde.isLocalTransfer())
             {
                 chosen = JTDragDrop.ModuleSelectionFlavor;
 
-
                 Transferable transfer = dtde.getTransferable();
                 try {
                     // Get the data
-                    dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+                    dtde.acceptDrop(dtde.getDropAction() & (DnDConstants.ACTION_MOVE | DnDConstants.ACTION_COPY));
                     data = transfer.getTransferData(chosen);
-                }
-                catch (Throwable t) {
+                } catch (Throwable t) {
                     t.printStackTrace();
                     dtde.dropComplete(false);
                     return;
@@ -774,12 +763,13 @@ public class JTModuleContainerUI extends ComponentUI
 
                     if (tdata.getSource() == getModuleContainer() && ((action&DnDConstants.ACTION_MOVE)!=0))
                     {
-                        moveSelection(tdata, dtde);
-                        //jtcUI.updateDnDBoundingBox(null);
+                        executeOperationOnSelection(tdata, dtde, 
+                        		getModuleContainer().getModuleContainer().createMoveOperation());
                     }
                     else
                     {
-                        copySelection(tdata, dtde);
+                        executeOperationOnSelection(tdata, dtde,
+                        		getModuleContainer().getModuleContainer().createCopyOperation());
                     }
 
                 }
@@ -792,60 +782,7 @@ public class JTModuleContainerUI extends ComponentUI
             jtcUI.updateDnDBoundingBox(null);
         }
 
-        private void copySelection(ModuleTransferData tdata, DropTargetDropEvent dtde)
-        {
-          //  JTModuleContainer jtcontainer = tdata.getSource();
-            
-        }
-        
-        /*
-        public void copyTo(ModuleContainer v, int dx, int dy)
-        {
-    
-            Point tl = getTopLeft();
-    
-            Set<Module> modules = modules();
-    
-            if (modules.isEmpty())
-                return ;
-    
-            Map<Module,Module> clonemap = new HashMap<Module,Module>();
-            for (Module m : modules)
-            {
-                Module clone = m.clone();
-                clone.setIndex(-1);
-    
-                clone.setLocation(clone.getX()-tl.x+dx, clone.getY()-tl.y+dy);
-                clonemap.put(m, clone);
-    
-                v.add(clone);
-            }
-    
-            for (Module m : modules)
-            {
-                Module clone = clonemap.get(m);
-                for (int i=m.getConnectorCount()-1;i>=0;i--)
-                {
-                    Connector c1 = m.getConnector(i);
-                    Iterator<Connector> i2 = c1.childIterator();
-                    while (i2.hasNext())
-                    {
-                        Connector c2 = i2.next();
-                        Module m2 = c2.getModule();
-                        Module clone2 = clonemap.get(m2);
-                        if (clone2!=null)
-                        {
-                            Connector c1Clone = clone.getConnector(i);
-                            Connector c2Clone = clone2.getConnector(c2.getDefinition().getContextId());
-                            Connector.connect(c1Clone, c2Clone, null);
-                        }
-                    }
-                }
-            }
-    
-        }*/
-       
-        private void moveSelection(ModuleTransferData tdata, DropTargetDropEvent dtde)
+        private void executeOperationOnSelection(ModuleTransferData tdata, DropTargetDropEvent dtde, MoveOperation op)
         {
             Point o = tdata.getDragStartLocation();
             Point p = new Point(dtde.getLocation());
@@ -856,17 +793,16 @@ public class JTModuleContainerUI extends ComponentUI
             JTModuleContainer jtmc = getModuleContainer();
             PModuleContainer mc = jtmc.getModuleContainer();
             
-            MoveOperation moveop = mc.createMoveOperation();
-
             JTModule[] modules = tdata.getModules();
-            for (JTModule jtmodule: modules)
-                moveop.add(jtmodule.getModule());
+            for (JTModule jtmodule: modules) {
+                op.add(jtmodule.getModule());
+            }
             
-            moveop.setScreenOffset(p.x, p.y);
+            op.setScreenOffset(p.x, p.y);
             
-            moveop.move();
+            op.move();
             
-            Collection<? extends PModule> moved = moveop.getMovedModules();
+            Collection<? extends PModule> moved = op.getMovedModules();
                         
             int maxx = 0;
             int maxy = 0;
@@ -881,6 +817,7 @@ public class JTModuleContainerUI extends ComponentUI
                     maxx = Math.max(jtmodule.getX(), maxx)+jtmodule.getWidth();
                     maxy = Math.max(jtmodule.getY(), maxy)+jtmodule.getHeight();
                 }
+                
             }
             
             jtmc.updateModuleContainerDimensions();
@@ -1167,6 +1104,7 @@ public class JTModuleContainerUI extends ComponentUI
 
 	public void updateScrollPosition(Point location) {
 		Rectangle visible = getModuleContainer().getVisibleRect();
+		Dimension dim = getModuleContainer().getSize();
         int wScroll = Math.min(visible.width / 3, 40);
         int hScroll = Math.min(visible.height / 3, 40);
         // System.out.println("w " + wScroll + " h " + hScroll);
@@ -1176,11 +1114,13 @@ public class JTModuleContainerUI extends ComponentUI
         	scrollTo.x = Math.max(location.x - wScroll, 0);
         if (location.x > (visible.x + visible.width - wScroll))
         	scrollTo.x = location.x + wScroll;
+        scrollTo.x = Math.min(scrollTo.x, dim.width);
         
         if (location.y < (visible.y + hScroll))
         	scrollTo.y = Math.max(location.y - hScroll, 0);
         if (location.y > (visible.y + visible.height - hScroll))
         	scrollTo.y = location.y + hScroll;
+        scrollTo.y = Math.min(scrollTo.y, dim.height);
         
         // System.out.println("location " + location.x + " " + location.y + " visible " + visible.x + " " + visible.y + " scrollto " + scrollTo.x + " " + scrollTo.y);
         
