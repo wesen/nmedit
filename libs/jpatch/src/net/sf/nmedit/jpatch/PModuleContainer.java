@@ -55,5 +55,6 @@ public interface PModuleContainer extends PComponent, Iterable<PModule>
     PModuleMetrics getModuleMetrics();
 
     MoveOperation createMoveOperation();
+    CopyOperation createCopyOperation();
     
 }
