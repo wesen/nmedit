@@ -37,6 +37,8 @@ public interface PModule extends PComponent
     
     PModuleContainer getParentComponent();
     
+    PModule cloneModule();
+    
     int getComponentCount();
     
     PComponent getComponent(int index);
