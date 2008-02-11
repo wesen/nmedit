@@ -61,7 +61,7 @@ public class ExplorerTree extends JTree
     	selectModel.setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
     	setSelectionModel(selectModel);
         setModel(model);
-        setUI(new ExplorerTreeUI());
+        installUI();
         setFocusable(true);
         
         ToolTipManager.sharedInstance().registerComponent(this);
@@ -89,6 +89,11 @@ public class ExplorerTree extends JTree
         return (ExplorerTreeModel) super.getModel();
     }
  */
+    
+    public void installUI() {
+    	setUI(new ExplorerTreeUI());
+    }
+
     public void updateUI() 
     {
         // ignore - we use custom TreeUI
