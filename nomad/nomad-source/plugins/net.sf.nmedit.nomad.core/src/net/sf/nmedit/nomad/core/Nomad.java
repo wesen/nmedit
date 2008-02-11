@@ -91,6 +91,7 @@ import net.sf.nmedit.nomad.core.swing.document.Document;
 import net.sf.nmedit.nomad.core.swing.document.DocumentEvent;
 import net.sf.nmedit.nomad.core.swing.document.DocumentListener;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
+import net.sf.nmedit.nomad.core.swing.explorer.FileExplorerTree;
 import net.sf.nmedit.nomad.core.swing.tabs.JTabbedPane2;
 import net.sf.nmedit.nomad.core.utils.ClonedAction;
 import net.sf.nmedit.nomad.core.utils.OSXAdapter;
@@ -574,7 +575,7 @@ public class Nomad
 
         Container contentPane = mainWindow.getContentPane();
         
-        explorerTree = new ExplorerTree();
+        explorerTree = new FileExplorerTree();
         explorerTree.setFont(new Font("Arial", Font.PLAIN, 11));
         JScrollPane explorerTreeScroller = new JScrollPane(explorerTree);
         toolPane = new JTabbedPane2();
