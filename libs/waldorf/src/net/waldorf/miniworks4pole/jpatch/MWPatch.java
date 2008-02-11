@@ -18,6 +18,7 @@
  */
 package net.waldorf.miniworks4pole.jpatch;
 
+import net.sf.nmedit.jpatch.CopyOperation;
 import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.MoveOperation;
 import net.sf.nmedit.jpatch.PConnectionManager;
@@ -139,6 +140,11 @@ public class MWPatch extends PBasicPatch implements PPatch
         public MoveOperation createMoveOperation()
         {
             throw new UnsupportedOperationException("operation 'move' not supported");
+        }
+
+        public CopyOperation createCopyOperation()
+        {
+            throw new UnsupportedOperationException("operation 'copy' not supported");
         }
 
     }
