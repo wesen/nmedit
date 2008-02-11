@@ -330,50 +330,25 @@ public class ExplorerTreeUI extends MetalTreeUI
         	
         	if (fileFlavor == null)
         		return false;
+        	List<File> files = getTransferableFiles(fileFlavor, t);
 
-        	try {
-        		BufferedReader r = new BufferedReader(fileFlavor.getReaderForText(t));
-        		String line;
-
-        		while ((line=r.readLine())!=null)
-        		{
-        			if (line.startsWith("file:"))
-        			{
-        				File file = new File(URI.create(line));
-        				if (!file.exists())
-        					return false;
-        			}
-        		}
-        	} catch (Throwable e) {
-        		e.printStackTrace();
+        	if (files.isEmpty())
         		return false;
-        	}
-
-            return true;
+        	
+        	return true;
         }
         
         private boolean isDirectoryTransferable(Transferable t) {
         	DataFlavor flavors[] = t.getTransferDataFlavors();
         	DataFlavor fileFlavor = getFileFlavor(flavors);
-        	
         	if (fileFlavor == null)
         		return false;
-
-        	try {
-        		BufferedReader r = new BufferedReader(fileFlavor.getReaderForText(t));
-        		String line;
-
-        		while ((line=r.readLine())!=null)
-        		{
-        			if (line.startsWith("file:"))
-        			{
-        				File file = new File(URI.create(line));
-        				if (!file.isDirectory())
-        					return false;
-        			}
-        		}
-        	} catch (Throwable e) {
-        		return false;
+        	
+        	List<File> files = getTransferableFiles(fileFlavor, t);
+        	
+        	for (File file : files) {
+        		if (!file.isDirectory())
+        			return false;
         	}
 
             return true;
@@ -418,7 +393,7 @@ public class ExplorerTreeUI extends MetalTreeUI
         }
         
         protected boolean updateDropAction(DropTargetDragEvent dtde) {
-        	if (isDropOnExplorer(dtde.getLocation()) && isDirectoryTransferable(dtde.getTransferable())) 
+        	if (isDropOnExplorer(dtde.getLocation())) 
                 dtde.acceptDrag(DnDConstants.ACTION_LINK);
             else if (isDropFilesOnDir(dtde.getLocation(), dtde.getTransferable()))
             	dtde.acceptDrag(dtde.getDropAction() & (DnDConstants.ACTION_MOVE | DnDConstants.ACTION_COPY));
@@ -496,7 +471,7 @@ public class ExplorerTreeUI extends MetalTreeUI
 			
 			Point location = dtde.getLocation();
 			
-			if (isDropOnExplorer(location) && isDirectoryTransferable(dtde.getTransferable())) { 
+			if (isDropOnExplorer(location)) { 
 				dtde.acceptDrop(DnDConstants.ACTION_LINK);
 				createNewDirectoryLink(dtde);
 			} else if (isDropFilesOnDir(location, dtde.getTransferable())) {
@@ -581,33 +556,48 @@ public class ExplorerTreeUI extends MetalTreeUI
 		}
 
 		private void createNewDirectoryLink(DropTargetDropEvent dtde) {
-			DataFlavor fileNodeFlavor = FileNode.fileNodeFlavor;
 			Transferable t = dtde.getTransferable();
 			try {
-				Object o = t.getTransferData(fileNodeFlavor);
-				if (o != null && o instanceof FileNode) {
-					FileNode node = (FileNode)o;
-					File file = node.getFile();
-					if (file.isDirectory())
-					{
-						FileContext fc = new FileContext((ExplorerTree)tree, node.getFileFilter(), file);
-						((ExplorerTree)tree).getRoot().add(fc);
-						((ExplorerTree)tree).fireRootChanged();
+				if (t.isDataFlavorSupported(FileSelectionFlavor)) {
+					Object o = t.getTransferData(FileSelectionFlavor);
+					if (o instanceof FileSelectionTransferable) {
+						Transferable ts[] = ((FileSelectionTransferable)o).getSelectedTransferables();
+						for (Transferable t2: ts) {
+							Object o2 = t2.getTransferData(FileNode.fileNodeFlavor);
+							FileNode node = (FileNode)o2;
+							DataFlavor fileFlavor = getFileFlavor(t2.getTransferDataFlavors());
+							List<File> files = getTransferableFiles(fileFlavor, t2);
+
+							for (File file: files) {
+								if (file.isDirectory()) {
+									FileContext fc = new FileContext((ExplorerTree)tree, node == null ? null : node.getFileFilter(), file);
+									((ExplorerTree)tree).getRoot().add(fc);
+									((ExplorerTree)tree).fireRootChanged();
+								}
+							}
+						}
+					}
+				} else {
+					DataFlavor fileFlavor = getFileFlavor(t.getTransferDataFlavors());
+					List<File> files = getTransferableFiles(fileFlavor, t);
+					
+					for (File file: files) {
+						if (file.isDirectory()) {
+							FileContext fc = new FileContext((ExplorerTree)tree, null, file);
+							((ExplorerTree)tree).getRoot().add(fc);
+							((ExplorerTree)tree).fireRootChanged();
+						}
 					}
 				}
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-
-			/*
-             }
-             */
+    		}
 		}
 
 		private List<File> getTransferableFiles(DataFlavor flavor,
 				Transferable transferable) {
 
+			flavor = getFileFlavor(transferable.getTransferDataFlavors());
 			List<File> files = new ArrayList<File>();
 
             try
@@ -644,10 +634,10 @@ public class ExplorerTreeUI extends MetalTreeUI
 		}
 
 		private DataFlavor getFileFlavor(DataFlavor[] flavors) {
-            for (DataFlavor f: flavors) { 
-                if (f.isMimeTypeEqual("text/uri-list") && f.isFlavorTextType())
+            for (DataFlavor f: flavors) {
+            	if (f.isMimeTypeEqual("text/uri-list") && f.isFlavorTextType())
                 {
-                	return f;
+            		return f;
                 }
             }
 			return null;
