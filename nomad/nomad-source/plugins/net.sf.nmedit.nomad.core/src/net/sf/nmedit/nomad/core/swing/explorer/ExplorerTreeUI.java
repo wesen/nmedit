@@ -218,6 +218,28 @@ public class ExplorerTreeUI extends MetalTreeUI
 	}
     
 
+	public void updateScrollPosition(Point location) {
+		Rectangle visible = tree.getVisibleRect();
+        int wScroll = Math.min(visible.width / 3, 40);
+        int hScroll = Math.min(visible.height / 3, 40);
+        // System.out.println("w " + wScroll + " h " + hScroll);
+        
+        Rectangle scrollTo = new Rectangle(location);
+//        if (location.x < (visible.x + wScroll))
+//        	scrollTo.x = Math.max(location.x - wScroll, 0);
+//        if (location.x > (visible.x + visible.width - wScroll))
+//        	scrollTo.x = location.x + wScroll;
+//        
+        if (location.y < (visible.y + hScroll))
+        	scrollTo.y = Math.max(location.y - hScroll, 0);
+        if (location.y > (visible.y + visible.height - hScroll))
+        	scrollTo.y = location.y + hScroll;
+        
+        // System.out.println("location " + location.x + " " + location.y + " visible " + visible.x + " " + visible.y + " scrollto " + scrollTo.x + " " + scrollTo.y);
+        
+        tree.scrollRectToVisible(scrollTo);
+	}
+    
 
     private class DND implements 
         DragGestureListener,
@@ -232,6 +254,7 @@ public class ExplorerTreeUI extends MetalTreeUI
 		private Color		colorCueLine;
 		private Timer		timerHover;
 		private TreePath		pathLast		= null;
+		private TreePath pathLastExpanded = null;
 		
 		protected DND() {
 			colorCueLine = new Color(
@@ -247,10 +270,12 @@ public class ExplorerTreeUI extends MetalTreeUI
 				{
 					if (isRootPath(pathLast))
 						return;	// Do nothing if we are hovering over the root node
-					if (tree.isExpanded(pathLast))
-						tree.collapsePath(pathLast);
-					else
+					if (!tree.isExpanded(pathLast)) {
 						tree.expandPath(pathLast);
+						if (pathLastExpanded == null || !pathLast.isDescendant(pathLastExpanded)) {
+							pathLastExpanded = pathLast;
+						}
+					}
 				}
 			});
 			timerHover.setRepeats(false);	// Set timer to one-shot mode
@@ -315,7 +340,7 @@ public class ExplorerTreeUI extends MetalTreeUI
         {
             // no op
         }
-
+        
         private boolean testFileFlavor(DataFlavor[] list)
         {
             for (DataFlavor f: list)
@@ -419,9 +444,13 @@ public class ExplorerTreeUI extends MetalTreeUI
 
         public void dragExit(DropTargetEvent dte)
         {
-//        	System.out.println("dragExit");
-    		tree.repaint(cueLine.getBounds());				
-            // no op
+        	tree.repaint(cueLine.getBounds());
+    		timerHover.stop();
+    		if (pathLastExpanded != null) {
+    			// tree.collapsePath(pathLastExpanded);
+    			pathLastExpanded = null;
+    		}
+    		pathLast = null;
         }
         
 		public void dropActionChanged(DropTargetDragEvent dtde)
@@ -434,34 +463,47 @@ public class ExplorerTreeUI extends MetalTreeUI
         public void dragOver(DropTargetDragEvent dtde)
         {
     		Point location = dtde.getLocation();
-            TreePath path = tree.getPathForLocation(location.x, location.y);
-            
+     	   TreeUI treeUI = tree.getUI();
+           if (!(treeUI instanceof ExplorerTreeUI)) return;
+           ExplorerTreeUI etUI = (ExplorerTreeUI) treeUI;
+           etUI.updateScrollPosition(location);
+
+           TreePath path = tree.getPathForLocation(location.x, location.y);
             if (!updateDropAction(dtde)) {
             	tree.paintImmediately(cueLine.getBounds());				
 				timerHover.stop();
                 return;
+            } else {
+                if (pathLastExpanded != null && pathLastExpanded != path && !pathLastExpanded.isDescendant(path)) {
+             	   // tree.collapsePath(pathLastExpanded);
+             	   // pathLastExpanded = null;
+                }
+
+        		TreePath path2 = tree.getClosestPathForLocation(location.x, location.y);
+        		if (!(path2 == pathLast))			
+        		{
+        			pathLast = path2;
+        			timerHover.restart();
+        		}
+
+            	if (path != null) {
+            		Rectangle raPath = tree.getPathBounds(path);
+            		if (raPath != null) {
+            			// Cue line bounds (2 pixels beneath the drop target)
+            			Rectangle rect = new Rectangle(0,  raPath.y+(int)raPath.getHeight(), tree.getWidth(), 2);
+            			if (!cueLine.contains(rect)) {
+            				tree.paintImmediately(cueLine.getBounds());				
+            			}
+            			cueLine.setRect(rect);
+
+            			Graphics2D g2 = (Graphics2D) tree.getGraphics();
+            			g2.setColor(colorCueLine); // The cue line color
+            			g2.fill(cueLine);         // Draw the cue line
+            		}
+            	}
             }
 
-			TreePath path2 = tree.getClosestPathForLocation(location.x, location.y);
-			if (!(path2 == pathLast))			
-			{
-				pathLast = path2;
-				timerHover.restart();
-			}
-
-        	if (path != null) {
-                Rectangle raPath = tree.getPathBounds(path);
-                // Cue line bounds (2 pixels beneath the drop target)
-                Rectangle rect = new Rectangle(0,  raPath.y+(int)raPath.getHeight(), tree.getWidth(), 2);
-                if (!cueLine.contains(rect)) {
-                	tree.paintImmediately(cueLine.getBounds());				
-                }
-                cueLine.setRect(rect);
-
-    			Graphics2D g2 = (Graphics2D) tree.getGraphics();
-                g2.setColor(colorCueLine); // The cue line color
-                g2.fill(cueLine);         // Draw the cue line
-        	}
+            
         }
 
 		public void drop(DropTargetDropEvent dtde)
@@ -927,8 +969,7 @@ public class ExplorerTreeUI extends MetalTreeUI
 
         public void mouseDragged(MouseEvent e)
         {
-            // TODO Auto-generated method stub
-            
+        		// nothing
         }
 
         public void mouseClicked(MouseEvent e)
