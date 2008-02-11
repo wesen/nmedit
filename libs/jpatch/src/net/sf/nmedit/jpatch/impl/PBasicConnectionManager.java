@@ -405,6 +405,17 @@ public class PBasicConnectionManager implements PConnectionManager
         return Collections.<PConnection>unmodifiableCollection(r);
     }
 
+    public Collection<PConnection> connections(Collection<? extends PModule> ms) {
+    	Collection<PConnection> r = new LinkedList<PConnection>();
+    	
+    	for (PModule m : ms) {
+    		r.addAll(connections(m));
+    	}
+        
+    	return Collections.<PConnection>unmodifiableCollection(r);
+	}
+    
+
     public boolean isConnected(PModule m)
     {
         for (int i=m.getConnectorCount()-1;i>=0;i--)
@@ -766,5 +777,5 @@ public class PBasicConnectionManager implements PConnectionManager
         }
         
     }
-    
+
 }
