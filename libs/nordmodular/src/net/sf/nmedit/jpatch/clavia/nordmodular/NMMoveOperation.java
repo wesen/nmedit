@@ -30,18 +30,18 @@ import net.sf.nmedit.jpatch.PModule;
 public class NMMoveOperation extends AbstractMoveOperation
 {
     
-    private VoiceArea va;
-    private int dx;
-    private int dy;
-    private boolean offsetSet = false;
-    private Collection<PModule> moved = null;
+    protected VoiceArea va;
+    protected int dx;
+    protected int dy;
+    protected boolean offsetSet = false;
+    protected Collection<PModule> opModules = null;
     
     public NMMoveOperation(VoiceArea va)
     {
         this.va = va;
     }
     
-    private void checkOffset()
+    protected void checkOffset()
     {
         if (!offsetSet)
             throw new IllegalStateException("offset not set");
@@ -70,7 +70,7 @@ public class NMMoveOperation extends AbstractMoveOperation
             tmpMoved.add(m);
         }
         
-        moved = tmpMoved;
+        opModules = tmpMoved;
     }
 
     public Point getScreenOffset(Point dst)
@@ -91,9 +91,9 @@ public class NMMoveOperation extends AbstractMoveOperation
 
     public Collection<? extends PModule> getMovedModules()
     {
-        if (moved == null)
+        if (opModules == null)
             throw new IllegalStateException("move not called");
-        return moved;
+        return opModules;
     }
 
 }
