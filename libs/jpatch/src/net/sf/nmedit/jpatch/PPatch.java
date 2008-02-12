@@ -45,4 +45,7 @@ public interface PPatch
     boolean setFocusedComponent(Object f);
     Object getFocusedComponent();
     
+    String patchFileString();
+        
+    
 }
