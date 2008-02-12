@@ -25,7 +25,11 @@ import java.util.List;
 
 import net.sf.nmedit.jpatch.AbstractMoveOperation;
 import net.sf.nmedit.jpatch.LayoutTool;
+import net.sf.nmedit.jpatch.PConnection;
+import net.sf.nmedit.jpatch.PConnectionManager;
+import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleContainer;
 
 public class NMMoveOperation extends AbstractMoveOperation
 {
@@ -39,6 +43,7 @@ public class NMMoveOperation extends AbstractMoveOperation
     public NMMoveOperation(VoiceArea va)
     {
         this.va = va;
+        setDestination(va);
     }
     
     protected void checkOffset()
@@ -57,7 +62,24 @@ public class NMMoveOperation extends AbstractMoveOperation
         if (isEmpty())
             return;
         
-        LayoutTool layoutTool = new LayoutTool(va, modules);
+        if (va != destination) {
+    		PConnectionManager com = va.getConnectionManager();
+        	Collection<PConnection> connections = com.connections(modules);
+        	for (PModule m : this) {
+        		va.remove(m);
+        		destination.add(m);
+        		// XXX cables ??
+        	}
+
+        	PConnectionManager com2 = destination.getConnectionManager();
+        	for (PConnection c : connections) {
+        		PConnector ca = c.getA();
+    			PConnector cb = c.getB();
+    			com2.add(ca, cb);	
+        	}
+        }
+        
+        LayoutTool layoutTool = new LayoutTool(destination, modules);
         layoutTool.setDelta(dx, dy);
         Object[] data = layoutTool.move();
         List<PModule> tmpMoved = new ArrayList<PModule>(data.length/3);

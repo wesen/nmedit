@@ -42,14 +42,15 @@ public class NMCopyOperation extends NMMoveOperation implements CopyOperation {
         for (PModule m : modules) {
         	PModule newM = m.cloneModule();
         	copiedModules.add(newM);
-        	m.getParentComponent().add(newM);
+        	destination.add(newM);
         	mapNew.put(m, newM);
         }
 
         for (PModule m : modules) {
         	if (m.getParentComponent() != null)
         	{
-        		PConnectionManager com = m.getParentComponent().getConnectionManager();
+        		PConnectionManager com = va.getConnectionManager();
+        		PConnectionManager com2 = destination.getConnectionManager();
             	Collection<PConnection> connections = com.connections(modules);
             	for (PConnection c : connections) {
             		PModule a = c.getModuleA();
@@ -63,26 +64,27 @@ public class NMCopyOperation extends NMMoveOperation implements CopyOperation {
             		if (a2 != null && b2 != null) {
             			ca2 = a2.getConnectorByComponentId(ca.getComponentId());
             			cb2 = b2.getConnectorByComponentId(cb.getComponentId());
-            		} else if (a2 != null) {
-            			if (!ca.isOutput()) {
-            				ca2 = a2.getConnectorByComponentId(ca.getComponentId());
-            				cb2 = cb;
-            			}
-            		} else if (b2 != null) {
-            			if (!cb.isOutput()) {
-            				ca2 = ca;
-            				cb2 = b2.getConnectorByComponentId(cb.getComponentId());
-            			}
+            			// comment for now, this allows to "duplicate" (like in reaktor) modules
+//            		} else if (a2 != null) {
+//            			if (!ca.isOutput()) {
+//            				ca2 = a2.getConnectorByComponentId(ca.getComponentId());
+//            				cb2 = cb;
+//            			}
+//            		} else if (b2 != null) {
+//            			if (!cb.isOutput()) {
+//            				ca2 = ca;
+//            				cb2 = b2.getConnectorByComponentId(cb.getComponentId());
+//            			}
             		}
             		if (ca2 != null && cb2 != null) {
-            			com.add(ca2, cb2);
+            			com2.add(ca2, cb2);
             			conNew.add(new PConnection(ca2, cb2));
             		}
             	}
         	}
         }
         
-        LayoutTool layoutTool = new LayoutTool(va, copiedModules);
+        LayoutTool layoutTool = new LayoutTool(destination, copiedModules);
         layoutTool.setDelta(dx, dy);
         Object[] data = layoutTool.move();
         List<PModule> tmpMoved = new ArrayList<PModule>(data.length/3);
