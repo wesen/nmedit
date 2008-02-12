@@ -79,8 +79,6 @@ import javax.swing.plaf.metal.MetalTreeUI;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import net.sf.nmedit.jtheme.component.plaf.JTModuleContainerUI.ModuleTransferData;
-import net.sf.nmedit.jtheme.dnd.JTDragDrop;
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.io.FileUtils;
 import net.sf.nmedit.nomad.core.swing.explorer.helpers.ExplorerCellRenderer;
@@ -291,7 +289,7 @@ public class ExplorerTreeUI extends MetalTreeUI
         return super.getClosestPathForLocation(tree, x, y);
     }
     protected void selectPathForEvent(TreePath path, MouseEvent event) {
-    	if (getSelectionModel().isPathSelected(path) && event.isPopupTrigger()) {
+    	if (getSelectionModel().isPathSelected(path) && Platform.isPopupTrigger(event)) {
     		// we don't want to deselect with right clicking
     		return;
     	}
@@ -319,10 +317,11 @@ public class ExplorerTreeUI extends MetalTreeUI
         	Point p = e.getPoint();
             if (!(c instanceof JTree)) return;
             JTree tree = (JTree) c;
+
             // avoid having a mouse press select, do it on mouse release
-            TreePath path = tree.getClosestPathForLocation(p.x, p.y);
-            if (path != null && tree.isPathSelected(path) && Platform.isFlavor(Platform.OS.MacOSFlavor))
-        		e.consume();
+//            TreePath path = tree.getClosestPathForLocation(p.x, p.y);
+//            if (path != null && tree.isPathSelected(path) && Platform.isFlavor(Platform.OS.MacOSFlavor))
+//        		e.consume();
         }
 
         public void mouseReleased(MouseEvent e)
