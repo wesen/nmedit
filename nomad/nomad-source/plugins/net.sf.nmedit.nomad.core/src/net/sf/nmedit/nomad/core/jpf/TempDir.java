@@ -19,6 +19,9 @@
 package net.sf.nmedit.nomad.core.jpf;
 
 import java.io.File;
+import java.util.prefs.Preferences;
+
+import net.sf.nmedit.nmutils.Platform;
 
 import org.java.plugin.Plugin;
 import org.java.plugin.PluginManager;
@@ -61,10 +64,18 @@ public class TempDir
             throw new IllegalStateException("plugin class name not specified in plugin: "+pd);
         
         name = s+"-"+pd.getVersion();
+       
+        File base;
+        if (Platform.isFlavor(Platform.OS.MacOSFlavor)) {
+        	String userPath = System.getProperty("user.home");
+        	base = new File(userPath, "Library/Application Support/Nomad");
+        } else {
+        	base = new File("plugin-tmp");
+        }
         
-        File base = new File("plugin-tmp");
-        if (!base.exists())
-            base.mkdir();
+        if (!base.exists()) {
+            boolean result = base.mkdirs();
+        }
         
         root = new File(base,name);
         if (!root.exists())
