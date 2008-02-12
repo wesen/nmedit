@@ -202,7 +202,8 @@ public class MenuBuilder
             }
             else
             {
-                m.add(new JMenuItem(childEntry));
+            	JMenuItem item = new JMenuItem(childEntry);
+                m.add(item);
             }
         }
     }

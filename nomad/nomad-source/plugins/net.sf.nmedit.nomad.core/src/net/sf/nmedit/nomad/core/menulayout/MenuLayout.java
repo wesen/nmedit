@@ -22,11 +22,15 @@
  */
 package net.sf.nmedit.nomad.core.menulayout;
 
+import java.awt.event.InputEvent;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.swing.KeyStroke;
+
+import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nomad.core.xml.ApplicationXMLReaderFactory;
 
 import org.xml.sax.Attributes;
@@ -125,6 +129,7 @@ public class MenuLayout implements Iterable<MLEntry>
         public final static int ID_VAL_DISABLEDICON = 7;
         public final static int ID_VAL_TRUE = 8;
         public final static int ID_VAL_FALSE = 9;
+        public final static int ID_ACCELERATOR = 10;
         
         static {
             toInt.put("entry", ID_ENTRY);
@@ -139,6 +144,7 @@ public class MenuLayout implements Iterable<MLEntry>
             toInt.put("1", ID_VAL_TRUE);
             toInt.put("false", ID_VAL_FALSE);
             toInt.put("0", ID_VAL_FALSE);
+            toInt.put("accelerator", ID_ACCELERATOR);
         }
 
         public MLEntry getRoot()
@@ -195,6 +201,21 @@ public class MenuLayout implements Iterable<MLEntry>
                         currentEntry.setDisabledIconSrc(src);
 
                     break;
+                    
+                case ID_ACCELERATOR:
+                	String desc;
+            		desc = atts.getValue("desc");
+
+            		if (Platform.isFlavor(Platform.OS.MacOSFlavor) && atts.getValue("descmac") != null) {
+                		desc = atts.getValue("descmac");
+                	} 
+            		if (Platform.isFlavor(Platform.OS.WindowsFlavor) && atts.getValue("descwin") != null) {
+                		desc = atts.getValue("descwin");
+                	} 
+            		
+                	KeyStroke key = KeyStroke.getKeyStroke(desc);
+                	currentEntry.putValue(MLEntry.ACCELERATOR_KEY, key);
+                	break;
             }
         }
 
