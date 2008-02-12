@@ -134,5 +134,9 @@ public class PBasicPatch implements PPatch
     {
         return focusedComponent;
     }
+
+	public String patchFileString() {
+		return null;
+	}
     
 }
