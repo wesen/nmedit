@@ -46,6 +46,10 @@ public final class JTDragDrop
 
     public static final DataFlavor ModuleSelectionFlavor 
         = new DataFlavor(ModuleTransferData.class, "Nomad ModuleSelectionFlavor");
+
+    private static final String charset = "ISO-8859-1";
+    public static DataFlavor PatchFileFlavor =
+        new DataFlavor("text/plain; charset="+charset+"", "Nord Modular patch 3.0");
     
     public static boolean isModuleDescriptorFlavorSupported(Transferable t)
     {

@@ -665,7 +665,7 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         {
             this.source = source;
             this.mapping = mapping;
-            
+
             PModuleDescriptor md = mapping.getTarget(source.getDescriptor());
             if (md == null)
             {
@@ -694,8 +694,21 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
 
         public void actionPerformed(ActionEvent e)
         {
-            if (isEnabled())
-                mapping.transform(source);
+            if (isEnabled()) {
+            	// XXX color hack
+                String t1 = source.getTitle();
+                
+                PModule result = mapping.transform(source);
+
+                if (result != null) {
+                	String t2 = result.getTitle();
+                	int sep = t1.lastIndexOf('$');
+                	if (sep>=0) {
+                		t2 = t2 + t1.substring(sep);
+                	}
+                	result.setTitle(t2);
+                }
+            }
         }
     }
     
