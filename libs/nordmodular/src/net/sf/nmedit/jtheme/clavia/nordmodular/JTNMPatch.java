@@ -53,6 +53,7 @@ import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.PSignal;
 import net.sf.nmedit.jpatch.PSignalTypes;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
@@ -761,6 +762,17 @@ public class JTNMPatch extends JTPatch implements Transferable
         new DataFlavor("text/uri-list; charset=utf-8", "uri list");
     private static DataFlavor imageFlavor =
         DataFlavor.imageFlavor;
+    
+    public PPatch newPatchWithModules(JTModule modules[]) {
+    	NMPatch nPatch = new NMPatch(patch.getModuleDescriptions());
+    	for (JTModule jm : modules) {
+    		PModule module = jm.getModule();
+    		PModule mod2 = module.cloneModule();
+    		nPatch.getCommonVoiceArea().add(mod2);
+    		// XXX add cables
+    	}
+    	return nPatch;
+    }
 
     public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException
     {
