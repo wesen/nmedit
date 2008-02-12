@@ -44,8 +44,11 @@ public class JTPatch extends JComponent
 
     public PPatch getPatch()
     {
-        // TODO Auto-generated method stub
         return null;
+    }
+    
+    public PPatch newPatchWithModules(JTModule modules[]) {
+    	return null;
     }
 
 }
