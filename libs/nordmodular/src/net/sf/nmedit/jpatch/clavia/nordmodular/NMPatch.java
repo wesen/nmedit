@@ -24,6 +24,9 @@ package net.sf.nmedit.jpatch.clavia.nordmodular;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +40,9 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentEvent;
 import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.event.PPatchSettingsEvent;
 import net.sf.nmedit.jpatch.clavia.nordmodular.event.PPatchSettingsListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.parser.ParseException;
+import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchExporter;
+import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchFileWriter;
 import net.sf.nmedit.jpatch.history.HistoryImpl;
 import net.sf.nmedit.jpatch.history.Synchronizer;
 import net.sf.nmedit.jpatch.impl.PBasicPatch;
@@ -458,6 +464,20 @@ public class NMPatch extends PBasicPatch implements PPatch
     public LightProcessor getLightProcessor()
     {
         return lightProcessor;
+    }
+    
+    public String patchFileString() {
+    	ByteArrayOutputStream os = new ByteArrayOutputStream();
+    	PatchFileWriter fileWriter = new PatchFileWriter(os);
+    	PatchExporter export = new PatchExporter();
+    	try {
+			export.export(this, fileWriter);
+			return os.toString();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
     }
     
 }
