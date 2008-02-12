@@ -44,7 +44,7 @@ public class PTModuleMapping
     private PParameterDescriptor[] parameters;
     private PConnectorDescriptor[] connectors;
     private double covering = -1;
-
+    
     /**
      * Creates a new mapping of the two modules a and b.
      * The specified parameter/connector arrays must contains the component pairs of both modules.
@@ -254,7 +254,7 @@ public class PTModuleMapping
      *  or the neither module A nor module B describe the specified source module,
      *  thus if this mapping is not able to transform the source module 
      */
-    public void transform(PModule source)
+    public PModule transform(PModule source)
     {
         int offset1;
         int offset2;
@@ -305,14 +305,13 @@ public class PTModuleMapping
         }
         
         // replace module
-        if (!container.remove(m1)) return;
+        if (!container.remove(m1)) return null;
         container.add(m1index, m2);
         MoveOperation move = m2.getParentComponent().createMoveOperation();
         move.setScreenOffset(0, 0);
         move.add(m2);
         move.move();
 
-        
         // recreate connections
         if (connections != null)
         {
@@ -347,6 +346,8 @@ public class PTModuleMapping
                 }
             }
         }
+        
+        return m2;
     }
 
     private PConnectorDescriptor getDestination(PConnectorDescriptor d)
