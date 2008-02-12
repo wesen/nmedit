@@ -436,38 +436,47 @@ public class FileNode implements ETreeNode, MouseListener,
             if (command == OPEN)
                 setEnabled(false); // not implemented yet
         }
-        
-        public void actionPerformed(ActionEvent e)
-        {
-            if (e.getActionCommand() == REFRESH)
-            {
-            	if (updateChildrenNodes()) {
-                	et.fireNodeStructureChanged(FileNode.this);
+
+        public void actionPerformed(FileNode node, ActionEvent e) {
+            if (e.getActionCommand() == REFRESH) {
+            	if (node.updateChildrenNodes()) {
+                	et.fireNodeStructureChanged(node);
                 }
-            }
-            else if (e.getActionCommand() == DELETE_PERMANENTLY && getFile().isFile())
-            {
-                if (getFile().delete())
-                {
-                    if (FileNode.this.getParent() instanceof FileNode)
-                        ((FileNode)FileNode.this.getParent()).notifyChildFilesRemoved(et);
-                }
-            }
-            else if (e.getActionCommand() == DELETE_PERMANENTLY && getFile().isDirectory())
-            {
-            	FileUtils.deleteDirectory(getFile());
-                if (FileNode.this.getParent() instanceof FileNode)
-                    ((FileNode)FileNode.this.getParent()).notifyChildFilesRemoved(et);
+            } else if (e.getActionCommand() == DELETE_PERMANENTLY) {
+        		File f = node.getFile();
+    			if (f.isFile()) {
+    				if (f.delete())
+    				{
+    					if (node.getParent() instanceof FileNode)
+    						((FileNode)node.getParent()).notifyChildFilesRemoved(et);
+    				}
+    			} else if (f.isDirectory())
+    			{
+    				FileUtils.deleteDirectory(f);
+    				if (node.getParent() instanceof FileNode)
+    					((FileNode)node.getParent()).notifyChildFilesRemoved(et);
+    			}
             }
             else if (e.getActionCommand() == REMOVE_EXPLORER_ENTRY)
             {
-                if (getParent() == et.getRoot())
+                if (node.getParent() == et.getRoot())
                 {
-                    et.getRoot().remove(FileNode.this);
+                    et.getRoot().remove(node);
                     et.fireRootChanged();
                 }
-                
             }
+        }
+        
+        public void actionPerformed(ActionEvent e)
+        {
+        	TreePath paths[] = et.getSelectionPaths();
+        	for (TreePath path : paths) {
+        		Object o = path.getLastPathComponent();
+        		if (o instanceof FileNode) {
+        			FileNode node = (FileNode)o;
+        			actionPerformed(node, e);
+        		}
+        	}
         }
         
     }
