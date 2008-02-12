@@ -73,6 +73,7 @@ import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.MoveOperation;
+import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.PatchUtils;
 import net.sf.nmedit.jpatch.history.History;
 import net.sf.nmedit.jtheme.JTContext;
@@ -434,19 +435,35 @@ public class JTModuleContainerUI extends ComponentUI
         {
             if (!isDataFlavorSupported(flavor))
                 throw new UnsupportedFlavorException(flavor);
-            return this;
+            if (flavor.equals(JTDragDrop.ModuleSelectionFlavor))
+            	return this;
+            if (flavor.equals(JTDragDrop.PatchFileFlavor)) {
+                // NMData data2 = NMData.sharedInstance();
+
+            	JTModuleContainer jmc = delegate.getModuleContainer();
+            	PModuleContainer mc = jmc.getModuleContainer();
+            	PPatch patch = mc.getPatch();
+            	// construct new patch and add modules XXX
+            	// System.out.println("patch file " + patch.patchFileString());
+
+            	return null;
+            }
+            
+            return null;
         }
 
         public DataFlavor[] getTransferDataFlavors()
         {
-            DataFlavor[] flavors = {JTDragDrop.ModuleSelectionFlavor};
+            DataFlavor[] flavors = {JTDragDrop.ModuleSelectionFlavor, JTDragDrop.PatchFileFlavor};
             return flavors;
         }
 
         public boolean isDataFlavorSupported(DataFlavor flavor)
         {
-            // DropTarget gives his flavors. DropSource looks if it can be dropped on the target.
-            return flavor != null && flavor.equals(JTDragDrop.ModuleSelectionFlavor);
+	        for (DataFlavor f: getTransferDataFlavors())
+	            if (f.equals(flavor))
+	                return true;
+	        return false;
         }
     }
     
