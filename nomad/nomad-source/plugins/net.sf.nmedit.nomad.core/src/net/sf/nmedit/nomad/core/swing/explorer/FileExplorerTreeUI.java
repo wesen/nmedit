@@ -200,16 +200,7 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
 
     public void dragEnter(DragSourceDragEvent dsde)
     {
-    	// XXX needed ??
-        DragSourceContext context = dsde.getDragSourceContext();
-        int action = dsde.getDropAction();
-        if ((action & DnDConstants.ACTION_COPY) != 0) {
-        	context.setCursor(DragSource.DefaultCopyDrop);
-        } else if ((action & DnDConstants.ACTION_MOVE) != 0) {
-        	context.setCursor(DragSource.DefaultMoveDrop);
-        } else if ((action & DnDConstants.ACTION_LINK) != 0) {
-        	context.setCursor(DragSource.DefaultLinkDrop);
-        }
+    	// no op
     }
 
     public void dragExit(DragSourceEvent dse)
@@ -233,36 +224,6 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
             if(f.isMimeTypeEqual("text/uri-list") && f.isFlavorTextType())
                 return true;
         return false;
-    }
-    
-    private boolean isFilesTransferable(Transferable t) {
-    	DataFlavor flavors[] = t.getTransferDataFlavors();
-    	DataFlavor fileFlavor = getFileFlavor(flavors);
-    	
-    	if (fileFlavor == null)
-    		return false;
-    	List<File> files = getTransferableFiles(fileFlavor, t);
-
-    	if (files.isEmpty())
-    		return false;
-    	
-    	return true;
-    }
-    
-    private boolean isDirectoryTransferable(Transferable t) {
-    	DataFlavor flavors[] = t.getTransferDataFlavors();
-    	DataFlavor fileFlavor = getFileFlavor(flavors);
-    	if (fileFlavor == null)
-    		return false;
-    	
-    	List<File> files = getTransferableFiles(fileFlavor, t);
-    	
-    	for (File file : files) {
-    		if (!file.isDirectory())
-    			return false;
-    	}
-
-        return true;
     }
     
     private boolean isDropOnExplorer(Point location) {
