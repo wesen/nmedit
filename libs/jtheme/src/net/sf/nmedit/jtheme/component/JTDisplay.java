@@ -29,6 +29,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.jtheme.JTContext;
+import net.sf.nmedit.jtheme.util.JThemeUtils;
 
 public class JTDisplay extends JTComponent
 {
@@ -52,7 +53,7 @@ public class JTDisplay extends JTComponent
         if (parent != null && e instanceof MouseEvent)
         {
             // retarget mouse events
-            MouseEvent me = SwingUtilities.convertMouseEvent(this, (MouseEvent) e, parent);
+            MouseEvent me = JThemeUtils.convertMouseEvent(this, (MouseEvent) e, parent);
             parent.dispatchEvent(me);
         }
         else

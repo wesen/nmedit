@@ -28,6 +28,7 @@ import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.jtheme.JTContext;
+import net.sf.nmedit.jtheme.util.JThemeUtils;
 
 public class JTImage extends JTComponent
 {
@@ -49,7 +50,7 @@ public class JTImage extends JTComponent
     protected boolean retargetMouseEvent(MouseEvent e)
     {
         // retarget mouse events
-        MouseEvent me = SwingUtilities.convertMouseEvent(this, (MouseEvent) e, getParent());
+        MouseEvent me = JThemeUtils.convertMouseEvent(this, (MouseEvent) e, getParent());
         getParent().dispatchEvent(me);
         return true;
     }

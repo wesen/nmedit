@@ -30,6 +30,7 @@ import net.sf.nmedit.jpatch.PLightDescriptor;
 import net.sf.nmedit.jpatch.event.PLightEvent;
 import net.sf.nmedit.jpatch.event.PLightListener;
 import net.sf.nmedit.jtheme.JTContext;
+import net.sf.nmedit.jtheme.util.JThemeUtils;
 
 public class JTLight extends JTComponent
 implements PLightListener
@@ -61,7 +62,7 @@ implements PLightListener
         if (parent != null && e instanceof MouseEvent)
         {
             // retarget mouse events
-            MouseEvent me = SwingUtilities.convertMouseEvent(this, (MouseEvent) e, parent);
+            MouseEvent me = JThemeUtils.convertMouseEvent(this, (MouseEvent) e, parent);
             parent.dispatchEvent(me);
         }
         else
