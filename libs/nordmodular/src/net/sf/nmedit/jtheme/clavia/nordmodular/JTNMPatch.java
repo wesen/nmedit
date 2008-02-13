@@ -666,6 +666,7 @@ public class JTNMPatch extends JTPatch implements Transferable
     {
         JTModuleContainer cont = getContext().createModuleContainer();
         cont.setPatchContainer(this);
+        addModuleContainer(cont);
         cont.setModuleContainer(va);
         
         ModuleContainerEventHandler eh = new ModuleContainerEventHandler(cont);
