@@ -27,6 +27,8 @@ import java.util.Collection;
 
 import javax.swing.SwingUtilities;
 
+import net.sf.nmedit.jtheme.util.JThemeUtils;
+
 import gnu.classpath.javax.swing.plaf.basic.BasicGraphicsUtils;
 
 public class NmSwingUtilities
@@ -66,7 +68,7 @@ public class NmSwingUtilities
 
     public static void redispatchMouseEvent(MouseEvent e, Component target)
     {
-        MouseEvent me = SwingUtilities.convertMouseEvent(e.getComponent(), e, target);
+        MouseEvent me = JThemeUtils.convertMouseEvent(e.getComponent(), e, target);
         target.dispatchEvent(me);
 
     }
