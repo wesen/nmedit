@@ -1002,18 +1002,36 @@ public class JTModuleContainerUI extends ComponentUI
         {
         	if (!SwingUtilities.isLeftMouseButton(e))
                 return;
+
+        	JTModule module = (JTModule) e.getComponent();
             
             boolean shift = e.isShiftDown();
-            boolean ctrl = e.isControlDown();
-            
-            if (shift && ctrl) return;
-            
-            JTModule module = (JTModule) e.getComponent();
+            if (Platform.isFlavor(Platform.OS.MacOSFlavor)) {
+            	// apple key has a different behaviour under osx
+            	boolean meta = e.isMetaDown();
+            	if (meta && shift)
+            		return;
+            	
+            	if (meta) {
+            		if (isInSelection(module)) {
+            			removeSelection(module);
+            		} else {
+            			addSelection(module);
+            		}
+            		return;
+            	}
+            } else {
+            	boolean ctrl = e.isControlDown();
+                if (shift && ctrl) return;
+                
+            	if (ctrl) { 
+            		removeSelection(module);
+            		return;
+            	}
+            }
             
             if (shift)
                 addSelection(module);
-            else if (ctrl)
-                removeSelection(module);
             else // !(shift||ctrl)
             {
                 selectOnly(module);
@@ -1048,7 +1066,7 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void mouseReleased(MouseEvent e)
         {
-        	if (dndAllowed)
+            if (dndAllowed)
             {
                 if (e.getComponent() == getModuleContainer())
                     mouseClickedAtModuleContainer(e);
@@ -1061,7 +1079,6 @@ public class JTModuleContainerUI extends ComponentUI
             	jtcUI.selectBoxActive = false;
             	mc.repaint();
             }
-
         }
 
         public void mouseDragged(MouseEvent e) {

@@ -29,6 +29,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.jtheme.JTContext;
+import net.sf.nmedit.jtheme.util.JThemeUtils;
 
 public class JTLabel extends JTComponent
 {
@@ -51,18 +52,7 @@ public class JTLabel extends JTComponent
     protected boolean retargetMouseEvent(MouseEvent e)
     {
         // retarget mouse events
-        //MouseEvent me = SwingUtilities.convertMouseEvent(this, (MouseEvent) e, getParent());
-    	// Work around SwingUtilities bug that doesn't take into account extended modifiers (needed on mac)
-        Point p = SwingUtilities.convertPoint(this,new Point(e.getX(),
-        		e.getY()),
-        		getParent());
-        MouseEvent me = new MouseEvent(getParent(),
-			      e.getID(),
-			      e.getWhen(),
-			      e.getModifiersEx(),
-			      p.x,p.y,
-			      e.getClickCount(),
-			      e.isPopupTrigger(), e.getButton());
+        MouseEvent me = JThemeUtils.convertMouseEvent(this, (MouseEvent) e, getParent());
         getParent().dispatchEvent(me);
         return true;
     }
