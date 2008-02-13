@@ -18,6 +18,8 @@
  */
 package net.sf.nmedit.jtheme.component;
 
+import java.util.ArrayList;
+
 import javax.swing.JComponent;
 
 import net.sf.nmedit.jpatch.PPatch;
@@ -31,12 +33,27 @@ public class JTPatch extends JComponent
      */
     private static final long serialVersionUID = 794652007213898614L;
     private JTContext context;
+    protected ArrayList<JTModuleContainer> moduleContainers;
 
     public JTPatch(JTContext context)
     {
+    	moduleContainers = new ArrayList<JTModuleContainer>();
         this.context = context;
     }
     
+    public JTModuleContainer[] getModuleContainers() {
+    	JTModuleContainer []res = new JTModuleContainer[1];
+    	return (JTModuleContainer[]) moduleContainers.toArray(res);
+    }
+    
+    public void addModuleContainer(JTModuleContainer container) {
+    	moduleContainers.add(container);
+    }
+
+    public void removeModuleContainer(JTModuleContainer container) {
+    	moduleContainers.remove(container);
+    }
+
     public JTContext getContext()
     {
         return context;
