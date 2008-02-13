@@ -28,7 +28,7 @@ public class JThemeUtils {
 			newEvent = new MouseWheelEvent(newSource,
 					sourceWheelEvent.getID(),
 					sourceWheelEvent.getWhen(),
-					sourceWheelEvent.getModifiersEx(),
+					sourceWheelEvent.getModifiers(),
 					p.x,p.y,
 					sourceWheelEvent.getClickCount(),
 					sourceWheelEvent.isPopupTrigger(),
@@ -41,7 +41,7 @@ public class JThemeUtils {
 			newEvent = new MenuDragMouseEvent(newSource,
 					sourceMenuDragEvent.getID(),
 					sourceMenuDragEvent.getWhen(),
-					sourceMenuDragEvent.getModifiersEx(),
+					sourceMenuDragEvent.getModifiers(),
 					p.x,p.y,
 					sourceMenuDragEvent.getClickCount(),
 					sourceMenuDragEvent.isPopupTrigger(),
@@ -55,7 +55,8 @@ public class JThemeUtils {
 					sourceEvent.getModifiersEx(),
 					p.x,p.y,
 					sourceEvent.getClickCount(),
-					sourceEvent.isPopupTrigger());
+					sourceEvent.isPopupTrigger(),
+					sourceEvent.getButton());
 		}
 		return newEvent;
 	}
