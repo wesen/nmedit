@@ -24,6 +24,7 @@ package net.sf.nmedit.jtheme.component.plaf;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -82,6 +83,7 @@ import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.JTConnector;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
+import net.sf.nmedit.jtheme.component.JTPatch;
 import net.sf.nmedit.jtheme.dnd.JTDragDrop;
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
@@ -242,7 +244,7 @@ public class JTModuleContainerUI extends ComponentUI
     
     private transient Rectangle dndBox;
     private transient Point dndInitialScrollLocation;
-	private EventHandler eventHandler;
+	protected EventHandler eventHandler;
 	public ModuleTransferDataWrapper transferData;
 	public boolean selectBoxActive;
 	public Point selectStartPoint;
@@ -870,6 +872,13 @@ public class JTModuleContainerUI extends ComponentUI
         
         protected void addSelection(JTModule module)
         {
+        	JTPatch patch = getModuleContainer().getPatchContainer();
+        	for (JTModuleContainer c : patch.getModuleContainers()) {
+        		JTModuleContainerUI cUI = c.getUI();
+        		if (cUI != null & cUI != jtcUI && cUI.eventHandler != null) {
+        			cUI.eventHandler.clearSelection();
+        		}
+        	}
             selectionSet.add(module);
             module.setSelected(true);
         }
