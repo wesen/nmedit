@@ -1000,7 +1000,7 @@ public class JTModuleContainerUI extends ComponentUI
         
         public void mouseClickedAtModule(MouseEvent e)
         {
-        	if (!SwingUtilities.isLeftMouseButton(e))
+        	if (Platform.isPopupTrigger(e))
                 return;
 
         	JTModule module = (JTModule) e.getComponent();

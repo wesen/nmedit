@@ -52,8 +52,9 @@ public class JTLabel extends JTComponent
     protected boolean retargetMouseEvent(MouseEvent e)
     {
         // retarget mouse events
-        MouseEvent me = JThemeUtils.convertMouseEvent(this, (MouseEvent) e, getParent());
-        getParent().dispatchEvent(me);
+       MouseEvent me = JThemeUtils.convertMouseEvent(this, (MouseEvent) e, getParent());
+    	// Work around SwingUtilities bug that doesn't take into account extended modifiers (needed on mac)
+       getParent().dispatchEvent(me);
         return true;
     }
     
