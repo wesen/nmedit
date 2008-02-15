@@ -73,6 +73,7 @@ import net.sf.nmedit.jtheme.component.JTImage;
 import net.sf.nmedit.jtheme.component.JTLabel;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
+import net.sf.nmedit.jtheme.util.JThemeUtils;
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.swing.EscapeKeyListener;
 import net.sf.nmedit.nmutils.swing.LimitedText;
@@ -617,7 +618,8 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
 
         protected void processMouseMotionEvent(MouseEvent e)
         {
-            NmSwingUtilities.redispatchMouseEvent(e, getParent());
+            MouseEvent me = JThemeUtils.convertMouseEvent(e.getComponent(), e, getParent());
+            getParent().dispatchEvent(me);
         }
         
         private void createPopup(MouseEvent e, PModule source)
