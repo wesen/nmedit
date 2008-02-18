@@ -19,6 +19,8 @@
 
 package net.sf.nmedit.jnmprotocol;
 
+import net.sf.nmedit.jnmprotocol.MidiMessage;
+
 
 
 /**

@@ -21,6 +21,12 @@ package net.sf.nmedit.jnmprotocol;
 
 import javax.swing.event.EventListenerList;
 
+import net.sf.nmedit.jnmprotocol.ActivePidListener;
+import net.sf.nmedit.jnmprotocol.ErrorMessage;
+import net.sf.nmedit.jnmprotocol.MessageHandler;
+import net.sf.nmedit.jnmprotocol.MidiMessage;
+import net.sf.nmedit.jnmprotocol.NmProtocolListener;
+
 /**
  * Broadcasts midi messages to subscribed listeners. 
  */
@@ -31,10 +37,15 @@ public class MessageMulticaster implements MessageHandler
     private ActivePidListener activePidListener;
     private boolean errorMessageCausesException = true;
     
+    public MessageMulticaster(ActivePidListener apl)
+    {
+        this.activePidListener = apl;
+        addProtocolListener(activePidListener);
+    }
+    
     public MessageMulticaster()
     {
-        activePidListener = new ActivePidListener();
-        addProtocolListener(activePidListener);
+        this(new ActivePidListener());
     }
 
     public void setErrorMessageCausesExceptionEnabled(boolean enabled)
@@ -64,6 +75,9 @@ public class MessageMulticaster implements MessageHandler
 
     public void processMessage( MidiMessage message )
     {
+        // if (!(message instanceof LightMessage))
+        //    System.out.println(message);
+        
         // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
         // Process the listeners last to first, notifying

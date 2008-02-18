@@ -19,9 +19,41 @@
 
 package net.sf.nmedit.jnmprotocol;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
-import net.sf.nmedit.jpdl.*;
+import com.sun.xml.internal.ws.util.StringUtils;
+
+import net.sf.nmedit.jnmprotocol.AckMessage;
+import net.sf.nmedit.jnmprotocol.ErrorMessage;
+import net.sf.nmedit.jnmprotocol.IAmMessage;
+import net.sf.nmedit.jnmprotocol.KnobAssignmentMessage;
+import net.sf.nmedit.jnmprotocol.LightMessage;
+import net.sf.nmedit.jnmprotocol.MeterMessage;
+import net.sf.nmedit.jnmprotocol.MidiException;
+import net.sf.nmedit.jnmprotocol.MidiMessage;
+import net.sf.nmedit.jnmprotocol.MorphRangeChangeMessage;
+import net.sf.nmedit.jnmprotocol.NewPatchInSlotMessage;
+import net.sf.nmedit.jnmprotocol.NmProtocolListener;
+import net.sf.nmedit.jnmprotocol.NoteMessage;
+import net.sf.nmedit.jnmprotocol.PDLData;
+import net.sf.nmedit.jnmprotocol.ParameterMessage;
+import net.sf.nmedit.jnmprotocol.ParameterSelectMessage;
+import net.sf.nmedit.jnmprotocol.PatchListMessage;
+import net.sf.nmedit.jnmprotocol.PatchMessage;
+import net.sf.nmedit.jnmprotocol.SetPatchTitleMessage;
+import net.sf.nmedit.jnmprotocol.SlotActivatedMessage;
+import net.sf.nmedit.jnmprotocol.SlotsSelectedMessage;
+import net.sf.nmedit.jnmprotocol.SynthSettingsMessage;
+import net.sf.nmedit.jnmprotocol.VoiceCountMessage;
+import net.sf.nmedit.jpdl.BitStream;
+import net.sf.nmedit.jpdl.IntStream;
+import net.sf.nmedit.jpdl.Packet;
 
 public abstract class MidiMessage
 {
@@ -76,6 +108,7 @@ public abstract class MidiMessage
     private static MidiMessage createImpl(BitStream bitStream)
         throws MidiException
     {
+        
 	String error;
 	Packet packet = new Packet();
 	boolean success = 
@@ -315,6 +348,7 @@ public abstract class MidiMessage
     protected BitStream getBitStream(IntStream intStream)
 	throws MidiException
     {
+        
 	BitStream bitStream = new BitStream();
 	boolean success = PDLData
         .getMidiSysexParser()
@@ -347,7 +381,6 @@ public abstract class MidiMessage
 	intStream.append(checksum);
 	
 	BitStream bitStream = getBitStream(intStream);
-	
 	checksum = calculateChecksum(bitStream);
 	
 	intStream.setSize(intStream.getSize()-1);

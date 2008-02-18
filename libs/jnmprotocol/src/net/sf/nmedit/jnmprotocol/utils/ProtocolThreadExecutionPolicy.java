@@ -20,6 +20,7 @@
 package net.sf.nmedit.jnmprotocol.utils;
 
 import net.sf.nmedit.jnmprotocol.NmProtocol;
+import net.sf.nmedit.jnmprotocol.utils.ThreadExecutionPolicy;
 
 /**
  * A policy to control the calls to {@link net.sf.nmedit.jnmprotocol.NmProtocol#heartbeat()}

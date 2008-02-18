@@ -20,6 +20,9 @@
 package net.sf.nmedit.jnmprotocol;
 
 import java.util.*;
+
+import net.sf.nmedit.jnmprotocol.MidiException;
+import net.sf.nmedit.jnmprotocol.MidiMessage;
 import net.sf.nmedit.jpdl.*;
 
 public class MoveModuleMessage extends MidiMessage

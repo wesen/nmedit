@@ -19,21 +19,20 @@
 
 package net.sf.nmedit.jnmprotocol;
 
+import net.sf.nmedit.jnmprotocol.AckMessage;
+import net.sf.nmedit.jnmprotocol.LightMessage;
+import net.sf.nmedit.jnmprotocol.NmProtocolListener;
+
 public class ActivePidListener extends NmProtocolListener
 {
-    public ActivePidListener()
-    {
-	activePidMap = new int[4];
-    }
-    
     public void messageReceived(AckMessage message)
     {
-	activePidMap[message.get("slot")] = message.get("pid1");
+        setPid(message.get("slot"), message.get("pid1"));
     }
     
     public void messageReceived(LightMessage message)
     {
-	activePidMap[message.get("slot")] = message.get("pid");
+        setPid(message.get("slot"), message.get("pid"));
     }
     
     public int getActivePid(int slot)
@@ -41,5 +40,21 @@ public class ActivePidListener extends NmProtocolListener
 	return activePidMap[slot];
     }
     
-    private int[] activePidMap;
+    private void setPid(int slotId, int pid)
+    {
+        int oldPid = activePidMap[slotId];
+        int newPid = pid;
+        if (oldPid != newPid)
+        {
+            activePidMap[slotId] = pid;
+            pidChanged(slotId, pid);
+        }
+    }
+    
+    protected void pidChanged(int slotId, int pid)
+    {
+        // no op
+    }
+
+    private int[] activePidMap = {0,0,0,0};
 }

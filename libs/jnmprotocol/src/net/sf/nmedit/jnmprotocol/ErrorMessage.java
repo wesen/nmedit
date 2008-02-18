@@ -19,6 +19,8 @@
 
 package net.sf.nmedit.jnmprotocol;
 
+import net.sf.nmedit.jnmprotocol.MidiMessage;
+import net.sf.nmedit.jnmprotocol.NmProtocolListener;
 import net.sf.nmedit.jpdl.*;
 
 public class ErrorMessage extends MidiMessage

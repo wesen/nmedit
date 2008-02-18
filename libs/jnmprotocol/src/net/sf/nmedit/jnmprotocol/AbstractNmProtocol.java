@@ -26,6 +26,11 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.Transmitter;
 
+import net.sf.nmedit.jnmprotocol.AbstractNmProtocol;
+import net.sf.nmedit.jnmprotocol.EnqueuedPacket;
+import net.sf.nmedit.jnmprotocol.MessageHandler;
+import net.sf.nmedit.jnmprotocol.MidiException;
+import net.sf.nmedit.jnmprotocol.MidiMessage;
 import net.sf.nmedit.jnmprotocol.utils.QueueBuffer;
 import net.sf.nmedit.jpdl.BitStream;
 

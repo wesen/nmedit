@@ -19,6 +19,8 @@
 
 package net.sf.nmedit.jnmprotocol.utils;
 
+import net.sf.nmedit.jnmprotocol.utils.ThreadExecutionPolicy;
+
 public class StoppableThread implements Runnable
 {
 
