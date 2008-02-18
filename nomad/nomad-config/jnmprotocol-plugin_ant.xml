@@ -9,7 +9,7 @@
     <!-- the base path -->
     <property name="base-path" value="../../"/>
     <!-- the path to the referenced project -->
-    <property name="build-path" value="${base-path}/libs/jnmprotocol/"/>
+    <property name="build-path" value="${base-path}/libs/jnmprotocol2/"/>
     <property name="codec-path" value="${base-path}/libs/codecs/"/>
     <!-- the referenced ant build file -->
     <property name="build-file" value="${build-path}/build.xml"/>
@@ -48,9 +48,9 @@ No target specified.
     -->
     <target name="install" description="install libarary" depends="compile">
       <echo>installing library</echo>
-      <copy file="${build-path}/dist/lib/jnmprotocol.jar" todir="${plugin-path}/lib/" overwrite="true" />
-      <copy file="${codec-path}/midi.pdl" todir="${plugin-path}/codecs/" overwrite="true" />
-      <copy file="${codec-path}/patch.pdl" todir="${plugin-path}/codecs/" overwrite="true" />
+      <copy file="${build-path}/dist/lib/jnmprotocol2.jar" todir="${plugin-path}/lib/" overwrite="true" />
+        <copy file="${codec-path}/midi.pdl2" todir="${plugin-path}/codecs/" overwrite="true" />
+        <copy file="${codec-path}/patch.pdl2" todir="${plugin-path}/codecs/" overwrite="true" />
     </target>
 
     <!-- 
@@ -58,7 +58,7 @@ No target specified.
     -->
     <target name="uninstall" description="uninstall libarary">
       <echo>uninstalling library</echo>
-      <delete file="${plugin-path}/lib/jnmprotocol.jar" />
+      <delete file="${plugin-path}/lib/jnmprotocol2.jar" />
       <delete dir="${plugin-path}/codecs" />
     </target>
 

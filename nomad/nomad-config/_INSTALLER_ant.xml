@@ -39,7 +39,7 @@ No target specified.
       <ant antfile="./jtheme-plugin_ant.xml" dir="." target="install" />
       <ant antfile="./jsynth-plugin_ant.xml" dir="." target="install" />
       <ant antfile="./nordmodular-plugin_ant.xml" dir="." target="install" />
-      <ant antfile="./miniworks4pole-plugin_ant.xml" dir="." target="install" />
+      <!-- <ant antfile="./miniworks4pole-plugin_ant.xml" dir="." target="install" /> -->
     </target>
 
     <!-- 
@@ -65,7 +65,7 @@ No target specified.
       <ant antfile="./jtheme-plugin_ant.xml" dir="." target="uninstall" />
       <ant antfile="./jsynth-plugin_ant.xml" dir="." target="uninstall" />
       <ant antfile="./nordmodular-plugin_ant.xml" dir="." target="uninstall" />
-      <ant antfile="./miniworks4pole-plugin_ant.xml" dir="." target="uninstall" />
+      <!-- <ant antfile="./miniworks4pole-plugin_ant.xml" dir="." target="uninstall" /> -->
     </target>
 
     <!-- 
@@ -80,7 +80,7 @@ No target specified.
       <ant antfile="./jtheme-plugin_ant.xml" dir="." target="reverse-clean" />
       <ant antfile="./nordmodular-plugin_ant.xml" dir="." target="reverse-clean" />
       <ant antfile="./jsynth-plugin_ant.xml" dir="." target="reverse-clean" />
-      <ant antfile="./miniworks4pole-plugin_ant.xml" dir="." target="reverse-clean" />
+      <!-- <ant antfile="./miniworks4pole-plugin_ant.xml" dir="." target="reverse-clean" /> -->
     </target>
 
 </project>

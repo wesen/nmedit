@@ -12,7 +12,7 @@
 		<import plugin-id="net.sf.nmedit.jpatch" />
 		<import plugin-id="net.sf.nmedit.jtheme" />
 		<import plugin-id="net.sf.nmedit.nmutils" />
-		<import plugin-id="net.sf.nmedit.jpdl" />
+		<import plugin-id="net.sf.nmedit.jpdl2" />
 		<import plugin-id="org.apache.xerces" />
 		<import plugin-id="com.jgoodies.forms" />
 		<import plugin-id="com.jgoodies.looks" />
@@ -31,7 +31,7 @@
 		<library id="nordmodular" path="lib/nordmodular.jar" type="code" >
 		<export prefix="*"/>
 		</library>
-		<library id="jnmprotocol" path="lib/jnmprotocol.jar" type="code" >
+		<library id="jnmprotocol" path="lib/jnmprotocol2.jar" type="code" >
 		<export prefix="*"/>
 		</library>
 	</runtime>
