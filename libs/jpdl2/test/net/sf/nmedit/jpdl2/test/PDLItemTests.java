@@ -1,17 +1,40 @@
+/*
+    Protocol Definition Language
+    Copyright (C) 2003-2006 Marcus Andersson
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
 package net.sf.nmedit.jpdl2.test;
 
 import net.sf.nmedit.jpdl2.PDLItem;
 import net.sf.nmedit.jpdl2.PDLItemType;
+import net.sf.nmedit.jpdl2.format.Expression;
+import net.sf.nmedit.jpdl2.format.Opcodes;
+import net.sf.nmedit.jpdl2.impl.PDLBlockItemImpl;
 import net.sf.nmedit.jpdl2.impl.PDLConditionImpl;
 import net.sf.nmedit.jpdl2.impl.PDLConditionalImpl;
 import net.sf.nmedit.jpdl2.impl.PDLConstantImpl;
 import net.sf.nmedit.jpdl2.impl.PDLImplicitVariableImpl;
+import net.sf.nmedit.jpdl2.impl.PDLInstructionImpl;
 import net.sf.nmedit.jpdl2.impl.PDLLabelImpl;
-import net.sf.nmedit.jpdl2.impl.PDLMessageIdImpl;
 import net.sf.nmedit.jpdl2.impl.PDLMultiplicityImpl;
+import net.sf.nmedit.jpdl2.impl.PDLMutualExclusionImpl;
 import net.sf.nmedit.jpdl2.impl.PDLOptionalImpl;
 import net.sf.nmedit.jpdl2.impl.PDLPacketRefImpl;
 import net.sf.nmedit.jpdl2.impl.PDLPacketRefListImpl;
+import net.sf.nmedit.jpdl2.impl.PDLSwitchStatementImpl;
 import net.sf.nmedit.jpdl2.impl.PDLVariableImpl;
 import net.sf.nmedit.jpdl2.impl.PDLVariableListImpl;
 import net.sf.nmedit.jpdl2.PDLException;
@@ -44,7 +67,17 @@ public class PDLItemTests
             case ImplicitVariable:
                 return new PDLImplicitVariableImpl("name",1);
             case MessageId:
-                return new PDLMessageIdImpl("messageid");
+                return new PDLInstructionImpl(PDLItemType.MessageId, "messageid");
+            case Block:
+                return new PDLBlockItemImpl();
+            case SwitchStatement:
+                return new PDLSwitchStatementImpl(new Expression(Opcodes.ipush, 0));
+            case MutualExclusion:
+                return new PDLMutualExclusionImpl(new PDLConstantImpl(0,0), new PDLConstantImpl(0,0));
+            case Break:
+                return new PDLInstructionImpl(PDLItemType.Break);
+            case Fail:
+                return new PDLInstructionImpl(PDLItemType.Fail);
             default:
                 throw new InternalError("unknown type: "+type);
         }
