@@ -22,11 +22,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Event;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
@@ -53,6 +53,7 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import net.sf.nmedit.jsynth.Bank;
 import net.sf.nmedit.jsynth.Port;
@@ -67,6 +68,7 @@ import net.sf.nmedit.jsynth.event.SynthesizerEvent;
 import net.sf.nmedit.jsynth.event.SynthesizerStateListener;
 import net.sf.nmedit.jsynth.worker.PatchLocation;
 import net.sf.nmedit.jsynth.worker.StorePatchWorker;
+import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.forms.ExceptionDialog;
 import net.sf.nmedit.nomad.core.swing.explorer.ContainerNode;
@@ -119,6 +121,10 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
             {
                 setSynthName((String)evt.getNewValue());
             }
+            else if (Synthesizer.DSP_GLOBAL.equals(evt.getPropertyName()))
+            {
+                updateDSPUsageGlobalLabel();
+            }
         }
         
     }
@@ -137,9 +143,7 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         }
     }*/
 
-    protected void processEvent(Event event, 
-            Bank<? extends Synthesizer> bank, 
-            int index)
+    protected void bankPatchLoadEvent( Bank<S> bank,  int index)
     {
         // no op
 
@@ -277,10 +281,10 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
     private class BankLeaf extends ContainerNode implements BankUpdateListener
     {
 
-        private Bank<? extends Synthesizer> bank;
+        private Bank<S> bank;
         private boolean dropped = true;
 
-        public BankLeaf(TreeNode parent, Bank<? extends Synthesizer> bank)
+        public BankLeaf(TreeNode parent, Bank<S> bank)
         {
             super(parent, bank.getName());
             this.bank = bank;
@@ -349,6 +353,21 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
     private JComponent slotContainer;
     private JToggleButton tbConnect; 
     private ExplorerTree banksTree;
+    private JLabel dspUsageGlobal = null;
+    
+    private void updateDSPUsageGlobalLabel()
+    {
+        if (dspUsageGlobal != null)
+            dspUsageGlobal.setText("DSP: "+getDSPPercentage());
+    }
+
+    private String getDSPPercentage()
+    {
+        int idsp = (int)(synth.getDoubleProperty(Synthesizer.DSP_GLOBAL)*10000);
+        double ddsp = ((double)idsp)/100;
+        
+        return ddsp+"%";
+    }
     
     public JComponent create()
     {
@@ -361,8 +380,7 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         
         synthIconLabel = new JLabel(icon);
         TopLeft(synthIconLabel);
-        JLabel dspUsageGlobal = new JLabel("DSP: 76%");
-        TopLeft(dspUsageGlobal);
+
         // name
         synthNameLabel = new JLabel(synth.getName());
         TopLeft(synthNameLabel);
@@ -375,7 +393,14 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
 
         Box propertyBox = Box.createVerticalBox();
         propertyBox.add(synthNameLabel);
-        propertyBox.add(dspUsageGlobal);
+        
+        if (synth.hasProperty(Synthesizer.DSP_GLOBAL))
+        {
+            dspUsageGlobal = new JLabel();
+            updateDSPUsageGlobalLabel();
+            TopLeft(dspUsageGlobal);
+            propertyBox.add(dspUsageGlobal);
+        }
         propertyBox.add(Box.createVerticalGlue());
         propertyBox.add(lastLine);
         TopLeft(propertyBox);
@@ -441,7 +466,48 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         
         
         banksTree = new ExplorerTree();
+        banksTree.addMouseListener(new MouseAdapter()
+        {
 
+            public void mousePressed(MouseEvent e)
+            {
+                if (!Platform.isFlavor(Platform.OS.MacOSFlavor))
+                    handleDblClick(e);
+            }
+
+            public void mouseReleased(MouseEvent e)
+            {
+                if (Platform.isFlavor(Platform.OS.MacOSFlavor))
+                    handleDblClick(e);
+            }
+            
+            public void handleDblClick(MouseEvent e)
+            {
+                if (e.getClickCount()!=2)
+                    return;
+                
+                TreePath path =
+                banksTree.getClosestPathForLocation(e.getX(), e.getY());
+                if (path == null)
+                    return;
+
+                Object node = path.getLastPathComponent();
+
+                if (!(node instanceof LeafNode))
+                    return;
+
+                LeafNode leaf = (LeafNode) node;
+                if (!BankLeaf.class.isInstance(leaf.getParent()))
+                    return;
+
+                BankLeaf bl = (BankLeaf)leaf.getParent();
+                
+                int index = bl.getIndex(leaf);
+                
+                bankPatchLoadEvent(bl.bank, index);
+            }
+            
+        });
         
         
         JScrollPane sp = new JScrollPane(banksTree);
