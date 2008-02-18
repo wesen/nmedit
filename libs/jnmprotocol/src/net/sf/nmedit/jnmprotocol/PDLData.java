@@ -27,6 +27,7 @@ import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import net.sf.nmedit.jnmprotocol.PDLData;
 import net.sf.nmedit.jpdl.PacketParser;
 import net.sf.nmedit.jpdl.Protocol;
 
@@ -46,7 +47,7 @@ public final class PDLData
     
     private static PacketParser midiSysexParser;
     private static PacketParser patchParser;
-
+    
     /**
      * Returns the midi protocol.
      * @throws RuntimeException if initializing the protocol failed

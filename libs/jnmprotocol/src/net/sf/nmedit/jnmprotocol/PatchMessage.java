@@ -20,6 +20,10 @@
 package net.sf.nmedit.jnmprotocol;
 
 import java.util.*;
+
+import net.sf.nmedit.jnmprotocol.MidiException;
+import net.sf.nmedit.jnmprotocol.MidiMessage;
+import net.sf.nmedit.jnmprotocol.NmProtocolListener;
 import net.sf.nmedit.jpdl.*;
 
 public class PatchMessage extends MidiMessage
@@ -91,6 +95,8 @@ public class PatchMessage extends MidiMessage
         }
         appendChecksum(intStream);
         
+        
+        intStream.setPosition(0);
         // Generate sysex bitstream
         bitStreamList.add(getBitStream(intStream));
     }

@@ -19,6 +19,10 @@
 
 package net.sf.nmedit.jnmprotocol;
 
+import net.sf.nmedit.jnmprotocol.AbstractNmProtocol;
+import net.sf.nmedit.jnmprotocol.EnqueuedPacket;
+import net.sf.nmedit.jnmprotocol.MidiException;
+import net.sf.nmedit.jnmprotocol.MidiMessage;
 import net.sf.nmedit.jpdl.BitStream;
 
 public class NmProtocol extends AbstractNmProtocol

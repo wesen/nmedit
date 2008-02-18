@@ -26,10 +26,12 @@ import java.util.NoSuchElementException;
 
 import static junit.framework.Assert.*;
 
+import net.sf.nmedit.jnmprotocol2.utils.QueueBuffer;
+
 import org.junit.Test;
 
 /**
- * JUnit tests for {@link net.sf.nmedit.jnmprotocol.utils.QueueBuffer}
+ * JUnit tests for {@link net.sf.nmedit.jnmprotocol2.utils.QueueBuffer}
  * @author Christian Schneider
  */
 public class QueueBufferTest

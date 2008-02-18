@@ -18,6 +18,30 @@
 */
 package net.sf.nmedit.jnmprotocol;
 
+import net.sf.nmedit.jnmprotocol.AckMessage;
+import net.sf.nmedit.jnmprotocol.ErrorMessage;
+import net.sf.nmedit.jnmprotocol.IAmMessage;
+import net.sf.nmedit.jnmprotocol.KnobAssignmentMessage;
+import net.sf.nmedit.jnmprotocol.LightMessage;
+import net.sf.nmedit.jnmprotocol.MeterMessage;
+import net.sf.nmedit.jnmprotocol.MidiException;
+import net.sf.nmedit.jnmprotocol.MidiMessage;
+import net.sf.nmedit.jnmprotocol.MorphAssignmentMessage;
+import net.sf.nmedit.jnmprotocol.MorphRangeChangeMessage;
+import net.sf.nmedit.jnmprotocol.NewPatchInSlotMessage;
+import net.sf.nmedit.jnmprotocol.NmProtocol;
+import net.sf.nmedit.jnmprotocol.NmProtocolListener;
+import net.sf.nmedit.jnmprotocol.NoteMessage;
+import net.sf.nmedit.jnmprotocol.ParameterMessage;
+import net.sf.nmedit.jnmprotocol.ParameterSelectMessage;
+import net.sf.nmedit.jnmprotocol.PatchListMessage;
+import net.sf.nmedit.jnmprotocol.PatchMessage;
+import net.sf.nmedit.jnmprotocol.SetPatchTitleMessage;
+import net.sf.nmedit.jnmprotocol.SlotActivatedMessage;
+import net.sf.nmedit.jnmprotocol.SlotsSelectedMessage;
+import net.sf.nmedit.jnmprotocol.SynthSettingsMessage;
+import net.sf.nmedit.jnmprotocol.VoiceCountMessage;
+
 /**
  * This class can be used to accept a specific midi message.
  * 
