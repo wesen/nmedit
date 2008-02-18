@@ -25,6 +25,61 @@ import java.util.NoSuchElementException;
 
 public class PDLUtils
 {
+    
+    private static void toString(PDLPacket packet, StringBuilder sb, final int depth)
+    {
+        sb.append(packet.getName());
+        if (packet.getBinding() != null)
+            sb.append("$"+packet.getBinding());
+        sb.append(" {");
+
+        List<String> members;
+        
+        members = packet.getAllVariables();
+        if (!members.isEmpty())
+        {
+            sb.append(" ");
+            for (String variable: members) sb.append(variable+"="+packet.getVariable(variable)+";");
+        }
+        members = packet.getAllVariableLists();
+        
+        if (!members.isEmpty())
+        {
+            sb.append("\nvariable lists: ");
+            for (String vlist: members) sb.append(vlist+";");
+        }
+        members = packet.getAllPacketLists();
+        if (!members.isEmpty())
+        {
+            sb.append("\npacket lists:\n");
+            for (String plist: members) 
+            {
+                sb.append(plist+"=[\n");
+                PDLPacket[] list = packet.getPacketList(plist);
+                for (PDLPacket p: list)
+                    toString(p, sb, depth+1);
+                sb.append("]\n");
+            }
+        }
+        members = packet.getAllPackets();
+        if (!members.isEmpty())
+        {
+            sb.append("\npackets: ");
+            for (String p: members) 
+            {
+                toString(packet.getPacket(p), sb, depth+1);
+            }
+        }
+        
+        sb.append("}\n");
+    }
+
+    public static String toString(PDLPacket packet)
+    {
+        StringBuilder sb = new StringBuilder();
+        toString(packet, sb, 0);
+        return sb.toString();
+    }
 
     public static int parseHex(String s)
     {
@@ -189,8 +244,14 @@ public class PDLUtils
                     case VariableList:
                     case PacketRef:
                     case PacketRefList:
+                    case Fail:
+                        break;
+                    // children but not a sequence
+                    case MutualExclusion:
+                    case SwitchStatement:
                         break;
                     // have children
+                    case Block:
                     case Conditional:
                     case Optional:
                     {

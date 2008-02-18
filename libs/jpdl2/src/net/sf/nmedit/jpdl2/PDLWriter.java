@@ -18,6 +18,8 @@
 */
 package net.sf.nmedit.jpdl2;
 
+import java.util.Iterator;
+
 
 /**
  * TODO 
@@ -206,9 +208,73 @@ public class PDLWriter
             case ImplicitVariable:
                 append(item.asImplicitVariable());
                 break;
+            case MutualExclusion:
+                append(item.asMutualExclusion());
+                break;
+            case SwitchStatement:
+                append(item.asSwitchStatement());
+                break;
+            case Fail:
+                s.append("fail()");
+                break;
+            case Block:
+                append(item.asBlock());
+                break;
+            case MessageId:
+                s.append("messageId(\""+item.asInstruction().getString()+"\") ");
+                break;
             default:
                 throw new InternalError("unsupported type: "+item.getType());
         }    
+    }
+    
+    private void append(PDLBlockItem block)
+    {
+        if (block.getItemCount()==1)
+        {
+            append(block.getItem(0));
+            return;
+        }
+        
+        s.append('{');
+        for (PDLItem item: block)
+        {
+            append(item);
+            s.append(' ');
+        }
+        s.append('}');
+    }
+    
+    private void append(PDLSwitchStatement sw)
+    {
+        s.append("switch ("+sw.getFunction()+")\n{\n");
+        for (PDLCaseStatement cs: sw)
+        {
+            if (cs.isDefaultCase())
+                s.append("default:");
+            else
+                s.append("case "+cs.getValue()+":");
+            append(cs.getBlock());
+        }
+        s.append("}\n");
+    }
+    
+    private void append(PDLMutualExclusion m)
+    {
+        s.append('(');
+        Iterator<PDLBlockItem> b = m.iterator();
+        
+        if (b.hasNext())
+        {
+            append(b.next());
+            while (b.hasNext())
+            {
+                s.append('|');
+                append(b.next());
+            }
+        }
+        
+        s.append(')');
     }
 
     public void append(PDLPacketDecl pdecl)

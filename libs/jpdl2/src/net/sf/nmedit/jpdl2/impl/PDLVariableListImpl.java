@@ -74,7 +74,9 @@ public class PDLVariableListImpl extends PDLItemImpl implements PDLVariableList
 
     public int getMinimumSize()
     {
-        return PDLUtils.getMinMultiplicity(multiplicity) * variable.getMinimumSize();
+        int m = PDLUtils.getMinMultiplicity(multiplicity);
+        if (m!=0 && hasTerminal) return variable.getMinimumSize();
+        return m * variable.getMinimumSize();
     }
 
     public String toString()
@@ -104,6 +106,13 @@ public class PDLVariableListImpl extends PDLItemImpl implements PDLVariableList
     public int getTerminal()
     {
         return terminal;
+    }
+
+    public int getMinimumCount()
+    {
+        int m = PDLUtils.getMinMultiplicity(multiplicity);
+        if (m != 0 && hasTerminal) return 1;
+        return m;
     }
     
 }

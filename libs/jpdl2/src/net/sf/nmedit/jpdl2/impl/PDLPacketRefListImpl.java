@@ -78,4 +78,14 @@ public class PDLPacketRefListImpl extends PDLItemImpl implements PDLPacketRefLis
         return PDLUtils.getMinMultiplicity(multiplicity) * getReferencedPacket().getMinimumSize();
     }
 
+    public int getMinimumCount()
+    {
+        return PDLUtils.getMinMultiplicity(multiplicity) * getReferencedPacket().getMinimumCount();
+    }
+    
+    public String toString()
+    {
+        return multiplicity +"*"+ packetRef;
+    }
+
 }

@@ -66,5 +66,10 @@ public class PDLPacketRefImpl extends PDLItemImpl implements PDLPacketRef
     {
         return packetName+"$"+binding;
     }
+
+    public int getMinimumCount()
+    {
+        return getReferencedPacket().getMinimumCount();
+    }
     
 }

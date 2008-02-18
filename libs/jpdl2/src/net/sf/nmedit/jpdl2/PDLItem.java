@@ -29,6 +29,9 @@ public interface PDLItem
      */
     int getMinimumSize();
 
+    // number of values, TODO documentation
+    int getMinimumCount();
+    
     /**
      * Returns the type of this item 
      * @return the type of this item
@@ -87,12 +90,30 @@ public interface PDLItem
      * Casts this item to the desired item type.
      * @throws ClassCastException if the item is not of the desired type
      */
-    PDLMessageId asMessageId();
+    PDLOptional asOptional();
 
     /**
      * Casts this item to the desired item type.
      * @throws ClassCastException if the item is not of the desired type
      */
-    PDLOptional asOptional();
+    PDLMutualExclusion asMutualExclusion();
 
+    /**
+     * Casts this item to the desired item type.
+     * @throws ClassCastException if the item is not of the desired type
+     */
+    PDLBlockItem asBlock();
+
+    /**
+     * Casts this item to the desired item type.
+     * @throws ClassCastException if the item is not of the desired type
+     */
+    PDLInstruction asInstruction();
+
+    /**
+     * Casts this item to the desired item type.
+     * @throws ClassCastException if the item is not of the desired type
+     */
+    PDLSwitchStatement asSwitchStatement();
+    
 }

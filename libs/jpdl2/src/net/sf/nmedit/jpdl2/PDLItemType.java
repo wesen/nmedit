@@ -48,8 +48,14 @@ public enum PDLItemType
     VariableList, 
     PacketRef,
     PacketRefList, 
-    Conditional,
-    MessageId, 
-    Optional
+    Conditional, 
+    Optional,
+    MutualExclusion,
+    Block,
+    SwitchStatement,
     
+    // instructions
+    MessageId,
+    Break,
+    Fail
 }

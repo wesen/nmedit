@@ -18,16 +18,13 @@
 */
 package net.sf.nmedit.jpdl2;
 
-/**
- * Conditional block
- */
-public interface PDLConditional extends PDLBlockItem 
+public interface PDLCaseStatement
 {
 
-    /**
-     * Returns the condition.
-     * @return the condition
-     */
-    PDLCondition getCondition();
+    PDLBlockItem getBlock();
+    
+    boolean isDefaultCase();
+    
+    int getValue();
     
 }

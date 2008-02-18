@@ -18,7 +18,7 @@
 */
 package net.sf.nmedit.jpdl2.format;
 
-import net.sf.nmedit.jpdl2.bitstream.BitStream;
+import net.sf.nmedit.jpdl2.stream.BitStream;
 import net.sf.nmedit.jpdl2.PDLParseContext;
 
 public class Expression implements Opcodes
@@ -120,12 +120,12 @@ public class Expression implements Opcodes
         return "Expr[description='"+describe()+"']";
     }
 
-    private int left(PDLParseContext context, int fieldRegister)
+    private int left(PDLParseContext context, Integer fieldRegister)
     {
         return args[0].ev(context, fieldRegister);
     }
 
-    private int right(PDLParseContext context, int fieldRegister)
+    private int right(PDLParseContext context, Integer fieldRegister)
     {
         return args[1].ev(context, fieldRegister);
     }
@@ -153,6 +153,9 @@ public class Expression implements Opcodes
     
     private int ev(PDLParseContext c, Integer f)
     {
+        if (c == null)
+            throw new NullPointerException("context not specified");
+        
         switch (opcode)
         {
             case ipush:

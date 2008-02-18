@@ -16,18 +16,19 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.stream;
 
-/**
- * Conditional block
- */
-public interface PDLConditional extends PDLBlockItem 
+public interface PDLDataSource
 {
 
-    /**
-     * Returns the condition.
-     * @return the condition
-     */
-    PDLCondition getCondition();
+    int getSize();
+    
+    int getPosition();
+    
+    void setPosition(int position);
+    
+    boolean isAvailable(int size);
+    
+    int getInt(int bitcount);
     
 }

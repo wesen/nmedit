@@ -29,4 +29,9 @@ public class PDLOptionalImpl extends PDLBlockItemImpl implements PDLOptional
         return PDLItemType.Optional;
     }
 
+    public String toString()
+    {
+        return "Optional";
+    }
+    
 }

@@ -18,11 +18,17 @@
 */
 package net.sf.nmedit.jpdl2.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import net.sf.nmedit.jpdl2.PDLPacket;
+import net.sf.nmedit.jpdl2.PDLPacketDecl;
 
 public class PDLPacketImpl implements PDLPacket
 {
@@ -30,6 +36,26 @@ public class PDLPacketImpl implements PDLPacket
     private Map<String, PacketObject> packetObjects = new HashMap<String, PacketObject>();
     
     private int age = 0;
+
+    private PDLPacketDecl decl;
+
+    private String binding;
+
+    public PDLPacketImpl(PDLPacketDecl decl, String binding)
+    {
+        this.decl = decl;
+        this.binding = binding;
+    }
+    
+    public String getBinding()
+    {
+        return binding;
+    }
+    
+    public String getName()
+    {
+        return decl.getName();
+    }
 
     public int getCurrentAge()
     {
@@ -58,7 +84,33 @@ public class PDLPacketImpl implements PDLPacket
                 this.age = minAge+1;
         }
     }
-    
+
+    public boolean containsPacket(String packetName)
+    {
+    if (decl.getName().equals(packetName)) {
+        return true;
+    }
+    else {
+        for (PacketObject o: packetObjects.values())
+        {
+            if (o instanceof Packet)
+            {
+                PDLPacket p = ((Packet)o).packet;
+                if (p.containsPacket(packetName))
+                    return true;
+            }
+            else if (o instanceof PacketList)
+            {
+                PDLPacket[] list = ((PacketList)o).packets;
+                for (int i=0;i<list.length;i++)
+                    if (list[i].containsPacket(packetName))
+                        return true;
+            }
+        }
+    }
+    return false;
+    }
+
     protected boolean contains(String name)
     {
         return packetObjects.get(name) != null;
@@ -106,26 +158,36 @@ public class PDLPacketImpl implements PDLPacket
 
     public void setVariable(String name, int value)
     {
-        setPacketObject(name, new Variable(value));
+        setPacketObject(name, new Variable(name, value));
     }
 
     public void setVariableList(String name, int[] values)
     {
-        setPacketObject(name, new VariableList(values));
+        if (values == null)
+            throw new NullPointerException();
+        setPacketObject(name, new VariableList(name, values));
     }
 
     public void setPacket(String name, PDLPacket packet)
     {
-        setPacketObject(name, new Packet(packet));
+        if (packet == null)
+            throw new NullPointerException();
+        setPacketObject(name, new Packet(name, packet));
     }
 
     public void setPacketList(String name, PDLPacket[] packets)
     {
-        setPacketObject(name, new PacketList(packets));
+        if (packets == null)
+            throw new NullPointerException();
+        setPacketObject(name, new PacketList(name, packets));
     }
-
+    
     public int getVariable(String name)
     {
+        int pos = name.indexOf(":");
+        if (pos >= 0) {
+            return getPacket(name.substring(0, pos)).getVariable(name.substring(pos+1));
+        }
         PacketObject o = getPacketObject(name, PacketObjectType.Variable);
         if (o == null) 
             throw new IllegalArgumentException("variable not defined: "+name);
@@ -134,6 +196,10 @@ public class PDLPacketImpl implements PDLPacket
 
     public int getVariable(String name, int defaultValue)
     {
+        int pos = name.indexOf(":");
+        if (pos >= 0) {
+            return getPacket(name.substring(0, pos)).getVariable(name.substring(pos+1), defaultValue);
+        }
         PacketObject o = getPacketObject(name, PacketObjectType.Variable);
         if (o == null) return defaultValue;
         return ((Variable)o).value;
@@ -141,13 +207,25 @@ public class PDLPacketImpl implements PDLPacket
 
     public int[] getVariableList(String name)
     {
+        int pos = name.indexOf(":");
+        if (pos >= 0) {
+            return getPacket(name.substring(0, pos)).getVariableList(name.substring(pos+1));
+        }
         PacketObject o = getPacketObject(name, PacketObjectType.VariableList);
         if (o == null) return null;
-        return ((VariableList)o).values;
+        int[] list = ((VariableList)o).values;
+        return Arrays.copyOf(list, list.length);
     }
 
     public PDLPacket getPacket(String name)
     {
+        int pos = name.indexOf(":");
+        if (pos >= 0) {
+            String packetName = name.substring(0, pos); 
+
+            PacketObject o = getPacketObject(packetName, PacketObjectType.Packet);
+            return ((Packet)o).packet.getPacket(name.substring(pos+1));
+        }
         PacketObject o = getPacketObject(name, PacketObjectType.Packet);
         if (o == null) return null;
         return ((Packet)o).packet;
@@ -155,11 +233,17 @@ public class PDLPacketImpl implements PDLPacket
 
     public PDLPacket[] getPacketList(String name)
     {
+        int pos = name.indexOf(":");
+        if (pos >= 0) {
+            return getPacket(name.substring(0, pos)).getPacketList(name.substring(pos+1));
+        }
         PacketObject o = getPacketObject(name, PacketObjectType.PacketList);
         if (o == null) return null;
-        return ((PacketList)o).packets;
+        
+        PDLPacket[] list = ((PacketList)o).packets;
+        return Arrays.copyOf(list, list.length);
     }
-    
+
     private static enum PacketObjectType
     {
         Variable,
@@ -167,39 +251,94 @@ public class PDLPacketImpl implements PDLPacket
         Packet,
         PacketList
     }
+    
+    private List<String> getAllKeys(PacketObjectType type)
+    {
+        PacketObject[] items = new PacketObject[packetObjects.size()];
+        int size = 0;
+        for (PacketObject po:packetObjects.values())
+            if (po.getType() == type)
+            {
+                items[size++] = po;
+            }
+        
+        Arrays.sort(items, 0, size, AgeComparator.instance);
+        
+        List<String> names = new ArrayList<String>(size);
+        for (int i=0;i<size;i++)
+            names.add(items[i].name);
+        names = Collections.unmodifiableList(names);
+        return names;
+    }
+
+    public List<String> getAllVariables()
+    {
+        return getAllKeys(PacketObjectType.Variable);
+    }
+    
+    private static class AgeComparator implements Comparator<PacketObject>
+    {
+        private static AgeComparator instance = new AgeComparator();
+        public int compare(PacketObject a, PacketObject b)
+        {
+            return a.age-b.age;
+        }
+    }
 
     private abstract class PacketObject
     {
         int age = PDLPacketImpl.this.incrementAge();
+        String name;
+        public PacketObject(String name){this.name = name;}
         public abstract PacketObjectType getType();
     }
     
     private class Variable extends PacketObject
     {
         int value;
-        public Variable(int value) { this.value = value; }
+        public Variable(String name, int value) { super(name); this.value = value; }
         public PacketObjectType getType() { return PacketObjectType.Variable; }
     }
 
     private class VariableList extends PacketObject
     {
         int[] values;
-        public VariableList(int[] values) { this.values = values; }
+        public VariableList(String name, int[] values) { super(name); this.values = values; }
         public PacketObjectType getType() { return PacketObjectType.VariableList; }
     }
 
     private class Packet extends PacketObject
     {
         PDLPacket packet;
-        public Packet(PDLPacket packet) { this.packet = packet; }
+        public Packet(String name, PDLPacket packet) { super(name); this.packet = packet; }
         public PacketObjectType getType() { return PacketObjectType.Packet; }
     }
 
     private class PacketList extends PacketObject
     {
         PDLPacket[] packets;
-        public PacketList(PDLPacket[] packets) { this.packets = packets; }
+        public PacketList(String name, PDLPacket[] packets) { super(name); this.packets = packets; }
         public PacketObjectType getType() { return PacketObjectType.PacketList; }
+    }
+    
+    public String toString()
+    {
+        return "packet "+decl.getName();
+    }
+
+    public List<String> getAllPacketLists()
+    {
+        return getAllKeys(PacketObjectType.PacketList);
+    }
+
+    public List<String> getAllPackets()
+    {
+        return getAllKeys(PacketObjectType.Packet);
+    }
+
+    public List<String> getAllVariableLists()
+    {
+        return getAllKeys(PacketObjectType.VariableList);
     }
     
 }

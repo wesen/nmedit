@@ -21,19 +21,26 @@ package net.sf.nmedit.jpdl2.format;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import net.sf.nmedit.jpdl2.PDLBlock;
+import net.sf.nmedit.jpdl2.PDLBlockItem;
+import net.sf.nmedit.jpdl2.PDLCaseStatement;
 import net.sf.nmedit.jpdl2.PDLDocument;
 import net.sf.nmedit.jpdl2.PDLException;
 import net.sf.nmedit.jpdl2.PDLItem;
+import net.sf.nmedit.jpdl2.PDLItemType;
 import net.sf.nmedit.jpdl2.PDLMultiplicity;
+import net.sf.nmedit.jpdl2.PDLMutualExclusion;
 import net.sf.nmedit.jpdl2.PDLPacketDecl;
 import net.sf.nmedit.jpdl2.PDLPacketRef;
 import net.sf.nmedit.jpdl2.PDLPacketRefList;
+import net.sf.nmedit.jpdl2.PDLSwitchStatement;
 import net.sf.nmedit.jpdl2.PDLUtils;
 
+// TODO validation is incomplete
 public class PDLDocumentVerifier
 {
     
@@ -88,7 +95,8 @@ public class PDLDocumentVerifier
         for (PDLPacketDecl packet: doc)
         {
             visited.add(packet.getName());
-            detectRecursion(visited, packet, false);            
+            detectRecursion(visited, packet, false);
+            visited.clear();
         }
     }
 
@@ -114,6 +122,37 @@ public class PDLDocumentVerifier
             case Variable:
             case VariableList:
                 break;
+            case MutualExclusion:
+            {
+                if (detectConditionalRecursion && !conditionalRecursionDeteced)
+                {
+                    PDLMutualExclusion m = item.asMutualExclusion();
+                    for (PDLItem choice: m)
+                    {
+                        if (choice instanceof PDLBlock)
+                            detectRecursion(visited, (PDLBlock) choice, true);
+                    }
+                }
+                break;
+            }
+            case Fail:
+            {
+                break;
+            }
+            case SwitchStatement:
+            {
+                if (detectConditionalRecursion && !conditionalRecursionDeteced)
+                {
+                    PDLSwitchStatement s = item.asSwitchStatement();
+                    for (PDLCaseStatement c: s)
+                    {
+                        PDLBlock choice = c.getBlock();
+                        if (choice instanceof PDLBlock)
+                            detectRecursion(visited, (PDLBlock) choice, true);
+                    }
+                }
+                break;
+            }
             // detect recursion
             case PacketRef:
             case PacketRefList:
@@ -140,6 +179,10 @@ public class PDLDocumentVerifier
                 }
                 
                 break;
+            }
+            case Block:
+            {
+                break; // TODO
             }
             // have children
             case Conditional:
@@ -195,6 +238,17 @@ public class PDLDocumentVerifier
                   break;
               case Conditional:
                   break;
+              case MutualExclusion:
+              {
+                  verifyMutualExclusion(item.asMutualExclusion());
+                  // TODO verify references
+                  break;
+              }
+              case SwitchStatement:
+              {
+                  // TODO
+                  break;
+              }
               case Constant:
               {
                   // check multiplicity
@@ -208,6 +262,8 @@ public class PDLDocumentVerifier
                   defined = define(item, defined, LABEL, item.asLabel().getName());
                   break;
               case Optional:
+                  break;
+              case Fail:
                   break;
               case PacketRef:
               {
@@ -236,6 +292,11 @@ public class PDLDocumentVerifier
                   checkMultiplicity(defined, item, item.asVariableList().getMultiplicity());
                   break;
               }
+              case Block:
+              {
+                  // TODO
+                  break;
+              }
               default:
                   throw new InternalError("unknown item type: "+item.getType());
             }
@@ -243,6 +304,114 @@ public class PDLDocumentVerifier
         }
     }
     
+    private void verifyMutualExclusion(PDLMutualExclusion m) throws PDLException
+    {
+        List<PDLBlockItem> list = m.getItems();
+
+        if (list.size()<2)
+            throw new PDLException("mutual exclusion has less than two elements");
+        
+
+        for (int i=0;i<list.size()-1;i++)
+        {
+            PDLItem a = meGetItem(list.get(i));
+            PDLItem sa = getSimpleDataTypeFor(a);
+
+            int sza = getSimpleDataItemSize(sa);
+            for (int j=i+1;j<list.size();j++)
+            {
+                PDLItem b = meGetItem(list.get(j));
+                PDLItem sb = getSimpleDataTypeFor(b);
+                
+                // now compare pair (a,b)
+                // a parsed/tested before b
+
+                boolean moreTests = true;
+
+                int szb = getSimpleDataItemSize(sb);
+                if (sza<=szb && sza>0 && szb>0)
+                {   
+                    // but if a is constant and b is not a constant, then we accept 
+                    if (sa.getType() == PDLItemType.Constant
+                            && sb.getType() != PDLItemType.Constant)
+                    {
+                        // ok
+                        moreTests = false;
+                    }
+                    else
+                    {
+                        throw new PDLException(b, "item never reached");
+                    }
+                }
+                else
+                {
+                    moreTests = sa==null || sb==null;
+                }
+
+                if (moreTests)
+                {
+                    
+                    // now test for variable list/constant list
+                    // TODO
+
+                    // now test minimum size property
+                    if (a.getMinimumSize()<b.getMinimumSize())
+                        throw new PDLException(b, "elements must be ordered by getMinimumSize()");
+                    if (a.getMinimumCount()<b.getMinimumCount())
+                        throw new PDLException(b, "elements must be ordered by getMinimumCount()");
+                }
+            }
+        }
+    }
+    
+    private PDLItem meGetItem(PDLBlockItem item)
+    {
+        if (item.getType() == PDLItemType.Block && item.getItemCount()==1)
+        {
+            return item.getItem(0);
+        }
+        return item;
+    }
+
+    private PDLItem getSimpleDataTypeFor(PDLItem item)
+    {
+        switch (item.getType())
+        {
+            case Constant:
+                return item;
+            case Variable:
+                return item;
+            case ImplicitVariable:
+                return item;
+        }
+        
+        if (item instanceof PDLBlock)
+        {
+            PDLBlock block = (PDLBlock) item;
+            if (block.getItemCount() == 1)
+                return getSimpleDataTypeFor(block.getItem(0));
+        }
+        return null;
+    }
+
+    private int getSimpleDataItemSize(PDLItem item)
+    {
+        if (item == null) return -1;
+        switch (item.getType())
+        {
+            case Constant:
+                if(item.asConstant().getMultiplicity() != null)
+                    return -1; // constant list
+                return item.asConstant().getSize();
+            case Variable:
+                return item.asVariable().getSize();
+            case ImplicitVariable:
+                return item.asImplicitVariable().getSize();
+            default:
+                return -1;
+        }
+    }
+
     private void error(PDLItem item, String message) throws PDLException
     {
         throw new PDLException(item, message);

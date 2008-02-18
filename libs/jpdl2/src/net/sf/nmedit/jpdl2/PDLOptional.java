@@ -21,7 +21,7 @@ package net.sf.nmedit.jpdl2;
 /**
  * Optional item
  */
-public interface PDLOptional extends PDLItem, PDLBlock
+public interface PDLOptional extends PDLBlockItem
 {
 
 }

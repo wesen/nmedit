@@ -47,4 +47,9 @@ public class PDLConditionalImpl extends PDLBlockItemImpl implements PDLCondition
         return this;
     }
     
+    public String toString()
+    {
+        return "condition: "+condition;
+    }
+    
 }

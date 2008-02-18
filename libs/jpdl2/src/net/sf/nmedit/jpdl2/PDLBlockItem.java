@@ -18,16 +18,7 @@
 */
 package net.sf.nmedit.jpdl2;
 
-/**
- * Conditional block
- */
-public interface PDLConditional extends PDLBlockItem 
+public interface PDLBlockItem extends PDLBlock, PDLItem
 {
 
-    /**
-     * Returns the condition.
-     * @return the condition
-     */
-    PDLCondition getCondition();
-    
 }

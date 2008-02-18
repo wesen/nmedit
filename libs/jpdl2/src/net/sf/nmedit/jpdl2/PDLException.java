@@ -18,24 +18,31 @@
 */
 package net.sf.nmedit.jpdl2;
 
+import java.util.Iterator;
+
 public class PDLException extends Exception
 {
 
+    private Object item;
+    
+    public Object getItem()
+    {
+        return item;
+    }
+    
     public PDLException()
     {
-        // TODO Auto-generated constructor stub
+        super();
     }
 
     public PDLException(Throwable cause)
     {
         super(cause);
-        // TODO Auto-generated constructor stub
     }
 
     public PDLException(String message, Throwable cause)
     {
         super(message, cause);
-        // TODO Auto-generated constructor stub
     }
 
     public PDLException(String message)
@@ -51,16 +58,25 @@ public class PDLException extends Exception
     public PDLException(PDLItem item, String message)
     {
         super(toString(item)+": "+message);
+        this.item = item;
     }
 
     public PDLException(PDLException parent, PDLPacketDecl packet)
     {
         super("packet "+packet.getName(), parent);
+        this.item = packet;
+    }
+
+    public PDLException(String message, PDLPacketDecl packet)
+    {
+        super("packet "+packet.getName()+"\n"+message);
+        this.item = packet;
     }
 
     public PDLException(PDLException parent, PDLItem item)
     {
         super(toString(item), parent);
+        this.item = item;
     }
     
     private static String toString(PDLItem item)
@@ -68,7 +84,7 @@ public class PDLException extends Exception
         switch (item.getType())
         {
             case MessageId:
-                return "messageid '"+item.asMessageId().getMessageId()+"'";
+                return "messageid '"+item.asInstruction().getString()+"'";
             case Conditional:
                 return "condition "+String.valueOf(item.asConditional().getCondition());
             case Constant:
@@ -106,6 +122,48 @@ public class PDLException extends Exception
                 PDLImplicitVariable variable = item.asImplicitVariable();
                 PDLFunction f = variable.getFunction();
                 return variable.getName()+":"+variable.getSize()+"="+f;
+            }
+            case MutualExclusion:
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.append('(');
+                PDLMutualExclusion m = item.asMutualExclusion();
+                Iterator<PDLBlockItem> iter = m.getItems().iterator();
+                
+                sb.append(toString(iter.next()));
+                while(iter.hasNext())
+                {
+                    sb.append(" | ");
+                    sb.append(toString(iter.next()));
+                }
+                
+                sb.append(')');
+                return sb.toString();
+            }
+            case Block:
+            {
+                PDLBlock block = item.asBlock();
+                if (block.getItemCount() == 1)
+                    return toString(block.getItem(0));
+                
+                StringBuilder sb = new StringBuilder();
+                sb.append('{');
+                for (PDLItem i: block)
+                    sb.append(" "+toString(i));
+                sb.append('}');
+                return sb.toString();
+            }
+            case Fail:
+            {
+                return "fail";
+            }
+            case SwitchStatement:
+            {
+                return "switch("+item.asSwitchStatement().getFunction()+")";
+            }
+            case Break:
+            {
+                return "break";
             }
             default:
                 throw new InternalError("unknown item: "+item);
