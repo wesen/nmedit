@@ -27,6 +27,8 @@ public abstract class AbstractMoveOperation implements MoveOperation
 {
 
     protected LinkedList<PModule> modules = new LinkedList<PModule>();
+    protected PModuleContainer destination;
+
     
     public boolean add(PModule module)
     {
@@ -92,4 +94,14 @@ public abstract class AbstractMoveOperation implements MoveOperation
     {
         return getScreenOffset(null);
     }
+    
+	public PModuleContainer getDestination() {
+		return destination;
+	}
+
+	public void setDestination(PModuleContainer destination) {
+		this.destination = destination;
+	}
+
+
 }
