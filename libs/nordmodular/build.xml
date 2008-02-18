@@ -15,8 +15,8 @@
         <pathelement path="."/>
         <pathelement location="../jpatch/dist/lib/jpatch.jar"/>
         <pathelement location="../jsynth/dist/lib/jsynth.jar"/>
-        <pathelement location="../jnmprotocol/dist/lib/jnmprotocol.jar"/>
-        <pathelement location="../jpdl/dist/lib/jpdl.jar"/>
+        <pathelement location="../jnmprotocol2/dist/lib/jnmprotocol2.jar"/>
+        <pathelement location="../jpdl2/dist/lib/jpdl2.jar"/>
         <pathelement location="../jtheme/dist/lib/jtheme.jar"/>
         <pathelement location="../nmutils/dist/lib/nmutils.jar"/>
         <pathelement location="../java_depencies/jdom/jdom.jar"/>
