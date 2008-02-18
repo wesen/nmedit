@@ -33,6 +33,10 @@ import net.sf.nmedit.jpdl2.*;
 %token TKDOLLAR
 %token RARROW
 %token TK_MESSAGEID;
+%token TK_FAIL;
+%token TK_SWITCH;
+%token TK_CASE;
+%token TK_DEFAULT;
 
 %type <ival> INTEGER_LITERAL 
 %type <obj> PacketDecl PacketDeclStart PacketDeclList NextExpression StreamOp 
@@ -40,8 +44,9 @@ import net.sf.nmedit.jpdl2.*;
 %type <obj> pdldocument  Constant  Multiplicity ConstantWithoutMuliplicity   
 %type <obj> RawVariable Variable RawVariableList VariableList ImplicitVariable
 %type <obj> IfStatement IfExpression
-%type <obj> PacketRef pdlheader pdlbody
-%type <obj> Block   Item BlockItem  ItemList SimpleItem TypeCastExpr MessageId
+%type <obj> PacketRef PacketRefList pdlheader pdlbody
+%type <obj> Block   Item BlockItem  ItemList SimpleItem TypeCastExpr MessageId MutualExclusion MutualExclusionStatement
+%type <obj> FailStatement SwitchStatement SwitchStatementHeader SwitchCaseList CaseStatement
 %type <sval> PacketName
 %type <ival> StreamOpToken
 
@@ -121,15 +126,50 @@ PacketName:
 SimpleItem:
           LABEL     { badd(new PDLLabelImpl($1)); }
        |  PacketRef 
+       |  PacketRefList
        |  Variable  
        |  VariableList
        |  ImplicitVariable
        |  Constant  
        |  MessageId
+       |  MutualExclusionStatement
+       |  FailStatement
+       |  SwitchStatement
+       ;
+
+FailStatement:
+         TK_FAIL    { badd(new PDLInstructionImpl(PDLItemType.Fail)); }
+       ;
+
+SwitchStatement:
+         SwitchStatementHeader '{' SwitchCaseList '}' { bpop(); }
+       ;
+
+SwitchStatementHeader:
+         TK_SWITCH '(' expression ')' { PDLSwitchStatementImpl s = new PDLSwitchStatementImpl((Expression)$3); badd(s); bpush(s); }
+       ;
+
+SwitchCaseList:
+         CaseStatement              
+       | CaseStatement SwitchCaseList
+	   ;
+
+CaseStatement:
+         TK_CASE INTEGER_LITERAL ':' { PDLCaseStatementImpl c = new PDLCaseStatementImpl(false, $2); badd(c); bpush(c); } Block { $$=$4; bpop(); }
+       | TK_DEFAULT ':'              { PDLCaseStatementImpl c = new PDLCaseStatementImpl(true, -1);  badd(c); bpush(c); } Block { $$=$3; bpop(); }
+       ;
+
+MutualExclusionStatement:
+       '(' MutualExclusion ')'          { $$=$2; }
+       ;
+
+MutualExclusion:
+          { PDLMutualExclusionImpl m = new PDLMutualExclusionImpl(); badd(m); bpush(m); } Item '|' Item { bpop(); }
+       |  MutualExclusion '|' Item      { $$ = $1; }
        ;
 
 MessageId:
-          TK_MESSAGEID '(' STRING_LITERAL ')' { badd(new PDLMessageIdImpl($3)); }
+          TK_MESSAGEID '(' STRING_LITERAL ')' { badd(new PDLInstructionImpl(PDLItemType.MessageId, $3)); }
        ;
 
 Variable:
@@ -168,6 +208,10 @@ PacketRef:
           PACKETREF { badd(textToPacketRef($1)); }
        ;
 
+PacketRefList:
+          Multiplicity PACKETREF { badd(new PDLPacketRefListImpl(textToPacketRef($2), (PDLMultiplicity)$1)); }
+       ;
+
 Item: 
           BlockItem     
        |  SimpleItem
@@ -190,7 +234,7 @@ IfStatement:
        ;
 
 Block:     SimpleItem           { }
-       |   '{' ItemList '}'     { }
+       |   '{' { PDLBlockItemImpl b = new PDLBlockItemImpl(); badd(b); bpush(b); } ItemList '}' { bpop(); }
        ;
 
 ItemList:
@@ -247,7 +291,7 @@ AdditiveExpr:
        ;
 
 ConstExpr:
-          TKDOLLAR                  { $$ = new Expression(Opcodes.lpush); }
+          TKDOLLAR                  { $$ = new Expression(Opcodes.fpush); }
        |  INTEGER_LITERAL           { $$ = new Expression(Opcodes.ipush, $1 ); }
        |  BOOLEAN_LITERAL           { $$ = new Expression(Opcodes.bpush, $1==1?true:false); }
        |  LABEL                     { $$ = new Expression(Opcodes.lpush, (String)$1); }
@@ -299,14 +343,21 @@ StreamOpToken:
      return pdldoc;
   }
 
-  private List<PDLBlock> bstack = new ArrayList<PDLBlock>();
+  // PDLBlock and mutualExclusion elements
+  private List<Object> bstack = new ArrayList<Object>();
   
   private static final boolean PDLDebug = false;
   
   private void bpush(Object b)
   {
     if (PDLDebug) System.out.println("bpush:"+b);
-    bstack.add((PDLBlock)b);
+    
+    if ((b instanceof PDLBlock) || (b instanceof PDLMutualExclusionImpl)
+     || (b instanceof PDLSwitchStatementImpl)
+     || (b instanceof PDLCaseStatementImpl))
+        bstack.add(b);
+    else
+        throw new ClassCastException();
   }
   
   private void bpop()
@@ -320,7 +371,17 @@ StreamOpToken:
     if (item == null) throw new PDLException("error in parser: cannot add null to parent block");
   
     if (PDLDebug) System.out.println("badd:"+item);
-    bstack.get(bstack.size()-1).add((PDLItem)item);
+    Object p = bstack.get(bstack.size()-1);
+    
+    if (p instanceof PDLBlock)
+    	((PDLBlock)p).add((PDLItem)item);
+    else if (p instanceof PDLMutualExclusionImpl)
+        ((PDLMutualExclusionImpl)p).add((PDLItem)item);
+    else if (p instanceof PDLCaseStatementImpl)
+        ((PDLCaseStatementImpl)p).add((PDLItem)item);
+    else if (p instanceof PDLSwitchStatementImpl)
+        ((PDLSwitchStatementImpl)p).add((PDLCaseStatementImpl)item);
+    else throw new ClassCastException("could not determine type of"+item.getClass());
   }
 
   private PDLPacketRefImpl textToPacketRef(String s)
