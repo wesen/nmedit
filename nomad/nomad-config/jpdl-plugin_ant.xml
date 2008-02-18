@@ -4,13 +4,13 @@
     <!-- the base path -->
     <property name="base-path" value="../../"/>
     <!-- the path to the referenced project -->
-    <property name="build-path" value="${base-path}/libs/jpdl/"/>
+    <property name="build-path" value="${base-path}/libs/jpdl2/"/>
     <!-- the referenced ant build file -->
     <property name="build-file" value="${build-path}/build.xml"/>
     <!-- the ant target of the referenced build file -->
     <property name="build-target" value="dist"/>
     <!-- name of the plugin folder -->
-    <property name="plugin-name" value="net.sf.nmedit.jpdl" />
+    <property name="plugin-name" value="net.sf.nmedit.jpdl2" />
     <!-- path to the plugin folder -->
     <property name="plugin-path" value="${base-path}/nomad/nomad-source/plugins/${plugin-name}/" />
 
@@ -42,7 +42,7 @@ No target specified.
     -->
     <target name="install" description="install libarary" depends="compile">
       <echo>installing library</echo>
-      <copy file="${build-path}/dist/lib/jpdl.jar" todir="${plugin-path}/lib/" overwrite="true" />
+      <copy file="${build-path}/dist/lib/jpdl2.jar" todir="${plugin-path}/lib/" overwrite="true" />
     </target>
 
     <!-- 
@@ -50,7 +50,7 @@ No target specified.
     -->
     <target name="uninstall" description="uninstall libarary">
       <echo>uninstalling library</echo>
-      <delete file="${plugin-path}/lib/jpdl.jar" />
+      <delete file="${plugin-path}/lib/jpdl2.jar" />
     </target>
 
     <!-- 

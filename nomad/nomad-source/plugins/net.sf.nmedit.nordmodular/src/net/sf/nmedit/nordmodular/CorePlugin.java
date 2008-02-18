@@ -18,7 +18,7 @@
  */
 package net.sf.nmedit.nordmodular;
 
-import net.sf.nmedit.jnmprotocol.PDLData;
+import net.sf.nmedit.jnmprotocol2.PDLData;
 
 import org.java.plugin.Plugin;
 
@@ -31,10 +31,10 @@ public class CorePlugin extends Plugin
         ClassLoader loader =
             getManager().getPluginClassLoader(getDescriptor());
 
-        PDLData.setSource(loader, "midi.pdl", "patch.pdl");
+        PDLData.setSource(loader, "midi.pdl2", "patch.pdl2");
         
-        PDLData.getPatchProtocol();
-        PDLData.getMidiProtocol();
+        PDLData.getPatchParser();
+        PDLData.getMidiParser();
     }
 
     @Override
