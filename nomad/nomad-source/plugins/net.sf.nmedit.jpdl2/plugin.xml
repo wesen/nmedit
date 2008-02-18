@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 0.4" "http://jpf.sourceforge.net/plugin_0_4.dtd">
+<plugin id="net.sf.nmedit.jpdl2" version="2">
+     <attributes>
+		<attribute id="description" value="JPDL2" />
+		<attribute id="vendor" value="http://nmedit.sf.net/" />
+	</attributes>
+	<runtime>
+	    <library id="jpdl-lib" path="lib/jpdl2.jar" type="code">
+			<export prefix="*"/>
+		</library> 
+	<!--
+		<library id="jpdl-classes" path="../../../../libs/jpdl2/bin/" type="code">
+			<export prefix="*"/>
+		</library> 
+		-->
+	</runtime>
+</plugin>
