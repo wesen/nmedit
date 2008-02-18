@@ -21,27 +21,27 @@ package net.sf.nmedit.jsynth.clavia.nordmodular;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import net.sf.nmedit.jnmprotocol.AckMessage;
-import net.sf.nmedit.jnmprotocol.ErrorMessage;
-import net.sf.nmedit.jnmprotocol.IAmMessage;
-import net.sf.nmedit.jnmprotocol.KnobAssignmentMessage;
-import net.sf.nmedit.jnmprotocol.LightMessage;
-import net.sf.nmedit.jnmprotocol.MeterMessage;
-import net.sf.nmedit.jnmprotocol.MorphRangeChangeMessage;
-import net.sf.nmedit.jnmprotocol.NewPatchInSlotMessage;
-import net.sf.nmedit.jnmprotocol.NmProtocolListener;
-import net.sf.nmedit.jnmprotocol.NoteMessage;
-import net.sf.nmedit.jnmprotocol.ParameterMessage;
-import net.sf.nmedit.jnmprotocol.ParameterSelectMessage;
-import net.sf.nmedit.jnmprotocol.PatchListMessage;
-import net.sf.nmedit.jnmprotocol.PatchMessage;
-import net.sf.nmedit.jnmprotocol.RequestPatchMessage;
-import net.sf.nmedit.jnmprotocol.SetPatchTitleMessage;
-import net.sf.nmedit.jnmprotocol.SlotActivatedMessage;
-import net.sf.nmedit.jnmprotocol.SlotsSelectedMessage;
-import net.sf.nmedit.jnmprotocol.SynthSettingsMessage;
-import net.sf.nmedit.jnmprotocol.VoiceCountMessage;
-import net.sf.nmedit.jnmprotocol.utils.PatchNameExtractor;
+import net.sf.nmedit.jnmprotocol2.RequestPatchMessage;
+import net.sf.nmedit.jnmprotocol2.AckMessage;
+import net.sf.nmedit.jnmprotocol2.ErrorMessage;
+import net.sf.nmedit.jnmprotocol2.IAmMessage;
+import net.sf.nmedit.jnmprotocol2.KnobAssignmentMessage;
+import net.sf.nmedit.jnmprotocol2.LightMessage;
+import net.sf.nmedit.jnmprotocol2.MeterMessage;
+import net.sf.nmedit.jnmprotocol2.MorphRangeChangeMessage;
+import net.sf.nmedit.jnmprotocol2.NewPatchInSlotMessage;
+import net.sf.nmedit.jnmprotocol2.NmProtocolListener;
+import net.sf.nmedit.jnmprotocol2.NoteMessage;
+import net.sf.nmedit.jnmprotocol2.ParameterMessage;
+import net.sf.nmedit.jnmprotocol2.ParameterSelectMessage;
+import net.sf.nmedit.jnmprotocol2.PatchListMessage;
+import net.sf.nmedit.jnmprotocol2.PatchMessage;
+import net.sf.nmedit.jnmprotocol2.SetPatchTitleMessage;
+import net.sf.nmedit.jnmprotocol2.SlotActivatedMessage;
+import net.sf.nmedit.jnmprotocol2.SlotsSelectedMessage;
+import net.sf.nmedit.jnmprotocol2.SynthSettingsMessage;
+import net.sf.nmedit.jnmprotocol2.VoiceCountMessage;
+import net.sf.nmedit.jnmprotocol2.utils.PatchNameExtractor;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PParameter;
@@ -51,6 +51,7 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.Helper;
 import net.sf.nmedit.jsynth.Slot;
+import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.GetPatchWorker;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.ScheduledMessage;
 import net.sf.nmedit.jsynth.event.SlotEvent;
@@ -192,13 +193,6 @@ public class NmMessageHandler extends NmProtocolListener
         // request patch name
         NmSlot slot = synth.getSlot(slotId);
         slot.updatePatchName();
-        
-        /*
-        NmSlot slot = synth.getSlot(slotId);
-        if (slot.getPatchId() != message.getPid1())
-        {
-            slot.setPatchId(message.getPid1());
-        }*/
     }
 
     public void messageReceived(NewPatchInSlotMessage message) 
@@ -215,12 +209,26 @@ public class NmMessageHandler extends NmProtocolListener
         
         NmSlot slot = synth.getSlot(slotId);
 
+        NMPatch patch = slot.getPatch();
+        if (patch != null) patch.setSlot(null);
         slot.setPatch(null);
         //slot.setPatchId(patchId);
         
-        getPatch(slotId, patchId);
+        //getPatch(slotId, patchId);
+        
+        try
+        {
+            slot.requestPatch();
+        } catch (SynthException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        
     }
 
+    /*
     private void getPatch(int slot, int patchId)
     {
         if (!synth.isConnected())
@@ -228,12 +236,11 @@ public class NmMessageHandler extends NmProtocolListener
         
         GetPatchWorker worker = new GetPatchWorker(synth, slot, patchId);
         synth.getScheduler().offer(worker);
-    }
+    }*/
     
     public static void requestPatch(NordModular synth, int slotId)
     {
-        synth.getScheduler().offer(new ScheduledMessage(synth, 
-                new RequestPatchMessage(slotId)));
+        synth.getScheduler().offer(new ScheduledMessage(synth, new RequestPatchMessage(slotId)));
     }
     
     public void messageReceived(VoiceCountMessage message) 
@@ -271,12 +278,13 @@ public class NmMessageHandler extends NmProtocolListener
     public void messageReceived(LightMessage message) 
     {
         int slotId = message.getSlot();
-        
+
         if (!isValidSlot(slotId))
             return;
         NmSlot slot = synth.getSlot(slotId);
         NMPatch patch = slot.getPatch();
         if (patch == null) return;
+        
         patch.getLightProcessor().processLightMessage(message);
     }
 
@@ -426,7 +434,8 @@ public class NmMessageHandler extends NmProtocolListener
     
     public void messageReceived(ErrorMessage message) 
     {
-        throw new RuntimeException(message.toString());
+        // TODO let other listeners receive error message
+        //throw new RuntimeException(message.toString());
     }
 
     public void slotAdded(SlotEvent e)

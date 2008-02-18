@@ -24,18 +24,18 @@ package net.sf.nmedit.jsynth.clavia.nordmodular.utils;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
-import net.sf.nmedit.jnmprotocol.PDLData;
-import net.sf.nmedit.jnmprotocol.utils.NmCharacter;
+import net.sf.nmedit.jnmprotocol2.PDLData;
+import net.sf.nmedit.jnmprotocol2.utils.NmCharacter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Format;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PContentHandler;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PParser;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.ParseException;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchBuilder;
-import net.sf.nmedit.jpdl.BitStream;
-import net.sf.nmedit.jpdl.Packet;
-import net.sf.nmedit.jpdl.PacketParser;
+import net.sf.nmedit.jpdl2.stream.BitStream;
+import net.sf.nmedit.jpdl2.PDLException;
+import net.sf.nmedit.jpdl2.PDLPacket;
+import net.sf.nmedit.jpdl2.PDLPacketParser;
 
 /**
  * Uses a {@link net.sf.nmedit.jpdl.BitStream} as source and
@@ -63,27 +63,29 @@ public class BitstreamPatchParser
 
     public void transcode(BitStream stream, PatchBuilder callback) throws ParseException
     {
-        Packet packet = new Packet();
-        PacketParser parser = PDLData.getPatchParser();
+        PDLPacketParser parser = PDLData.getPatchParser();
+        PDLPacket packet;
     
-        if (parser.parse(stream, packet)) 
+        try
         {
-            do 
-            {
-                Packet section = packet.getPacket("section");
-                Packet sectionData = section.getPacket("data");
-                transcodeSection(section.getVariable("type"), sectionData, callback);
-                packet = packet.getPacket("next");
-            } 
-            while (packet != null);
-        } 
-        else 
-        {
-            throw new ParseException("Illegal patch format.");
+            packet = parser.parse(stream);
         }
+        catch (PDLException e)
+        {
+            throw new ParseException("Illegal patch format.", e);
+        }
+
+        do 
+        {
+            PDLPacket section = packet.getPacket("section");
+            PDLPacket sectionData = section.getPacket("data");
+            transcodeSection(section.getVariable("type"), sectionData, callback);
+            packet = packet.getPacket("next");
+        } 
+        while (packet != null);
     }
 
-    private void transcodeSection(int section, Packet sectionData, PatchBuilder callback) throws ParseException
+    private void transcodeSection(int section, PDLPacket sectionData, PatchBuilder callback) throws ParseException
     {
         switch (section)
         {
@@ -137,7 +139,7 @@ public class BitstreamPatchParser
                 callback.beginSection(PParser.IMODULEDUMP, va);
                 
                 int[] record = getData(4);
-                for (Packet p : (List<Packet>) sectionData.getPacketList("modules")) 
+                for (PDLPacket p : sectionData.getPacketList("modules")) 
                 {
                     record[Format.MODULE_DUMP_MODULE_INDEX] = p.getVariable("index");
                     record[Format.MODULE_DUMP_MODULE_TYPE] = p.getVariable("type");
@@ -158,14 +160,14 @@ public class BitstreamPatchParser
                 
                 for (int i=1;i<=2;i++) 
                 {
-                    Packet note = sectionData.getPacket("note"+i);
+                    PDLPacket note = sectionData.getPacket("note"+i);
                     record[Format.CURRENT_NOTE_DUMP_NOTE] = note.getVariable("value");
                     record[Format.CURRENT_NOTE_DUMP_ATTACK_VELOCITY] = note.getVariable("attack");
                     record[Format.CURRENT_NOTE_DUMP_RELEASE_VELOCITY] = note.getVariable("release");
                     callback.currentNoteDump(record);
                 }
                 
-                for (Packet note: (List<Packet>) sectionData.getPacketList("notes")) 
+                for (PDLPacket note: sectionData.getPacketList("notes")) 
                 {
                     record[Format.CURRENT_NOTE_DUMP_NOTE] = note.getVariable("value");
                     record[Format.CURRENT_NOTE_DUMP_ATTACK_VELOCITY] = note.getVariable("attack");
@@ -184,7 +186,7 @@ public class BitstreamPatchParser
                 callback.beginSection(PParser.ICABLEDUMP, va);
 
                 int[] record = getData(Format.VALUE_COUNT_CABLE_DUMP);
-                for (Packet note: (List<Packet>) sectionData.getPacketList("cables")) {
+                for (PDLPacket note: sectionData.getPacketList("cables")) {
                     record[Format.CABLE_DUMP_COLOR]=note.getVariable("color");
                     record[Format.CABLE_DUMP_MODULE_INDEX_DESTINATION]=note.getVariable("destination");
                     record[Format.CABLE_DUMP_CONNECTOR_INDEX_DESTINATION]=note.getVariable("input");
@@ -209,7 +211,7 @@ public class BitstreamPatchParser
                 {
                     callback.beginSection(PParser.IPARAMETERDUMP, va);
 
-                    for (Packet modules: (List<Packet>) sectionData.getPacketList("parameters")) { 
+                    for (PDLPacket modules: sectionData.getPacketList("parameters")) { 
                         int module_index = modules.getVariable("index"); 
                         int module_type = modules.getVariable("type");
                         if (section==Format.VALUE_SECTION_MORPH)
@@ -217,7 +219,7 @@ public class BitstreamPatchParser
                             //module_type = 0;
                             module_index = 0;
                         }
-                        Packet parameters = modules.getPacket("parameters");
+                        PDLPacket parameters = modules.getPacket("parameters");
                         Collection<String> param = parameters.getAllVariables();
                         
                         int [] record = getData(3+param.size());
@@ -262,7 +264,7 @@ public class BitstreamPatchParser
 
                 // parameter assignments
                 data = getData(5);
-                for (Packet p : (List<Packet>) sectionData.getPacketList("morphs")) 
+                for (PDLPacket p : sectionData.getPacketList("morphs")) 
                 {
                     data[Format.MORPH_MAP_DUMP_MORPH_INDEX] = p.getVariable("morph");
                     data[Format.MORPH_MAP_DUMP_SECTION] = p.getVariable("section");
@@ -281,10 +283,10 @@ public class BitstreamPatchParser
              
                 int[] data = getData(4); //new int[5];
                 for (int i = 0; i < 23; i++) {
-                    Packet knob = sectionData.getPacket("knob"+i);
+                    PDLPacket knob = sectionData.getPacket("knob"+i);
                     boolean assigned = knob.getVariable("assigned")==1;
                     if (assigned) {
-                        Packet assignment = (Packet) knob.getPacketList("assignment").get(0); // .front()
+                        PDLPacket assignment = knob.getPacketList("assignment")[0]; // .front()
                         data[Format.KNOB_MAP_DUMP_SECTION_INDEX] = assignment.getVariable("section");
                         data[Format.KNOB_MAP_DUMP_KNOB_INDEX] = i;
                         data[Format.KNOB_MAP_DUMP_MODULE_INDEX] = assignment.getVariable("module"); 
@@ -300,7 +302,7 @@ public class BitstreamPatchParser
             case Format.S_CTRLMAP: {
                 callback.beginSection(PParser.ICTRLMAPDUMP, -1);
                 int[] data = getData(4);
-                for (Packet p : (List<Packet>) sectionData.getPacketList("controls")) {
+                for (PDLPacket p : sectionData.getPacketList("controls")) {
 
                     data[Format.CTRL_MAP_DUMP_SECTION_INDEX] = p.getVariable("section");
                     data[Format.CTRL_MAP_DUMP_MODULE_INDEX] = p.getVariable("module");
@@ -316,10 +318,10 @@ public class BitstreamPatchParser
                 int va = sectionData.getVariable("section");
                 callback.beginSection(PParser.ICUSTOMDUMP, va);
 
-                for (Packet modules: (List<Packet>) sectionData.getPacketList("customModules")) { 
+                for (PDLPacket modules: sectionData.getPacketList("customModules")) { 
                     int module_index = modules.getVariable("index");
 
-                    Packet parameters = modules.getPacket("customValues");
+                    PDLPacket parameters = modules.getPacket("customValues");
                     Collection<String> param = parameters.getAllVariables();
                     
                     int[] data = getData(2+param.size());
@@ -339,7 +341,7 @@ public class BitstreamPatchParser
                 int va = sectionData.getVariable("section");
                 callback.beginSection(PParser.INAMEDUMP, va);
 
-                for (Packet p : (List<Packet>)sectionData.getPacketList("moduleNames")) 
+                for (PDLPacket p : sectionData.getPacketList("moduleNames")) 
                 {
                     int moduleIndex = p.getVariable("index");
                     String moduleName = NmCharacter.extractName(p.getPacket("name"));

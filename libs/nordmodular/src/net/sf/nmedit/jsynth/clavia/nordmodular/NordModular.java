@@ -28,20 +28,21 @@ import java.util.Map;
 
 import javax.sound.midi.MidiUnavailableException;
 
-import net.sf.nmedit.jnmprotocol.ErrorMessage;
-import net.sf.nmedit.jnmprotocol.IAmMessage;
-import net.sf.nmedit.jnmprotocol.MessageMulticaster;
-import net.sf.nmedit.jnmprotocol.MidiDriver;
-import net.sf.nmedit.jnmprotocol.MidiException;
-import net.sf.nmedit.jnmprotocol.NmMessageAcceptor;
-import net.sf.nmedit.jnmprotocol.NmProtocol;
-import net.sf.nmedit.jnmprotocol.NmProtocolListener;
-import net.sf.nmedit.jnmprotocol.RequestSynthSettingsMessage;
-import net.sf.nmedit.jnmprotocol.SynthSettingsMessage;
-import net.sf.nmedit.jnmprotocol.utils.ProtocolRunner;
-import net.sf.nmedit.jnmprotocol.utils.ProtocolThreadExecutionPolicy;
-import net.sf.nmedit.jnmprotocol.utils.StoppableThread;
-import net.sf.nmedit.jnmprotocol.utils.ProtocolRunner.ProtocolErrorHandler;
+import net.sf.nmedit.jnmprotocol2.ActivePidListener;
+import net.sf.nmedit.jnmprotocol2.ErrorMessage;
+import net.sf.nmedit.jnmprotocol2.IAmMessage;
+import net.sf.nmedit.jnmprotocol2.MessageMulticaster;
+import net.sf.nmedit.jnmprotocol2.MidiDriver;
+import net.sf.nmedit.jnmprotocol2.MidiException;
+import net.sf.nmedit.jnmprotocol2.NmMessageAcceptor;
+import net.sf.nmedit.jnmprotocol2.NmProtocol;
+import net.sf.nmedit.jnmprotocol2.NmProtocolListener;
+import net.sf.nmedit.jnmprotocol2.RequestSynthSettingsMessage;
+import net.sf.nmedit.jnmprotocol2.SynthSettingsMessage;
+import net.sf.nmedit.jnmprotocol2.utils.ProtocolRunner;
+import net.sf.nmedit.jnmprotocol2.utils.ProtocolThreadExecutionPolicy;
+import net.sf.nmedit.jnmprotocol2.utils.StoppableThread;
+import net.sf.nmedit.jnmprotocol2.utils.ProtocolRunner.ProtocolErrorHandler;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
 import net.sf.nmedit.jsynth.AbstractSynthesizer;
 import net.sf.nmedit.jsynth.DefaultMidiPorts;
@@ -60,6 +61,8 @@ import org.apache.commons.logging.LogFactory;
 public class NordModular extends AbstractSynthesizer implements Synthesizer, DefaultMidiPorts
 {
 
+    private double dspGlobal = 0;
+    
     private NmProtocol protocol;
     private StoppableThread protocolThread;
     private boolean connected = false;
@@ -175,6 +178,14 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
         return serial;
     }
     
+    private class NMActivePidListener extends ActivePidListener
+    {
+        protected void pidChanged(int slotId, int pid)
+        {
+            // no op
+        }
+    }
+    
     public NordModular(NM1ModuleDescriptions moduleDescriptions)
     {
         banks = new NmBank[0];
@@ -184,7 +195,7 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
         
         midiports = new MidiPortSupport(this, "pc-in", "pc-out");
         
-        multicaster = new MessageMulticaster();
+        multicaster = new MessageMulticaster(new NMActivePidListener());
         multicaster.addProtocolListener(new NmProtocolListener(){
            public void messageReceived(ErrorMessage m)
            {
@@ -222,6 +233,9 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
             }
             catch (SynthException e)
             {
+                if (e.getCause() != null && e.getCause() instanceof MidiException)
+                    throw (MidiException)e.getCause();
+                
                 MidiException me = new MidiException(e.getMessage(), -1);
                 me.initCause(e);
                 
@@ -371,6 +385,15 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
         // now everything is fine - start the protocol thread
         protocolThread.start();
 
+        // request patches 
+        
+        for (int i=0;i<slotManager.getSlotCount();i++)
+        {
+            NmSlot slot = slotManager.getSlot(i);
+            
+            if (slot.isEnabled())
+                slot.requestPatch();
+        }
     }
     
     public boolean getMidiClockSource()
@@ -503,9 +526,14 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
         knobMode.setValue(hook);
     }
     
+    private boolean isValidSlot(int slot)
+    {
+        return slot>=0 && slot<slotManager.getSlotCount();
+    }
+    
     private void checkSlot(int slot)
     {
-        if (slot>slotManager.getSlotCount() || slot<0)
+        if (!isValidSlot(slot))
             throw new IndexOutOfBoundsException("invalid slot index: "+slot);
     }
 
@@ -1066,6 +1094,30 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
     public StorePatchWorker createStorePatchWorker()
     {
         return new NMStorePatchWorker(this);
+    }
+
+    public double getDoubleProperty(String propertyName)
+    {
+        if (DSP_GLOBAL.equals(propertyName))
+        {
+            return dspGlobal;
+        }
+        
+        throw new IllegalArgumentException("no such property: "+propertyName);
+    }
+
+    public Object getProperty(String propertyName)
+    {
+        if (DSP_GLOBAL.equals(propertyName))
+        {
+            return dspGlobal;
+        }
+        return null;
+    }
+
+    public boolean hasProperty(String propertyName)
+    {
+        return DSP_GLOBAL.equals(propertyName);
     }
 
 }

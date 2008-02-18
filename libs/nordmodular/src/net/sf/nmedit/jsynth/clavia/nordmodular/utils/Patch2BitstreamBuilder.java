@@ -25,11 +25,12 @@ package net.sf.nmedit.jsynth.clavia.nordmodular.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.nmedit.jnmprotocol.MidiException;
-import net.sf.nmedit.jnmprotocol.PDLData;
-import net.sf.nmedit.jnmprotocol.PatchMessage;
+import net.sf.nmedit.jnmprotocol2.MidiException;
+import net.sf.nmedit.jnmprotocol2.PDLData;
+import net.sf.nmedit.jnmprotocol2.PatchMessage;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Format;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Header;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Knob;
@@ -39,16 +40,16 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.PNMMorphSection;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.Helper;
-import net.sf.nmedit.jpatch.PParameter;
-import net.sf.nmedit.jpdl.BitStream;
-import net.sf.nmedit.jpdl.IntStream;
-import net.sf.nmedit.jpdl.PacketParser;
+import net.sf.nmedit.jpdl2.PDLException;
+import net.sf.nmedit.jpdl2.PDLPacketParser;
+import net.sf.nmedit.jpdl2.stream.BitStream;
+import net.sf.nmedit.jpdl2.stream.IntStream;
 
 public class Patch2BitstreamBuilder
 {
 
     private IntStream intStream;
-    private PacketParser patchParser =  PDLData.getPatchParser();
+    private PDLPacketParser patchParser =  PDLData.getPatchParser();
     private List<BitStream> sections = new ArrayList<BitStream>(); 
     private final NMPatch patch;
     
@@ -73,7 +74,9 @@ public class Patch2BitstreamBuilder
         
         List<PatchMessage> messages = new ArrayList<PatchMessage>();
         for (int i=0;i<sections.size();i++)
-            messages.add(new PatchMessage(sections.get(i), slot, i, sections.size()));        
+        {
+            messages.add(new PatchMessage(sections.get(i), slot, i, sections.size()));
+        }
         return messages.toArray(new PatchMessage[messages.size()]);
     }
 
@@ -115,10 +118,21 @@ public class Patch2BitstreamBuilder
     
     private void endSection()
     {
-        BitStream bitStream = new BitStream();
         intStream.setPosition(0);
-        if (!patchParser.generate(intStream, bitStream))
+        
+        try
+        {
+            patchParser.parse(intStream);
+        }
+        catch (PDLException e)
+        {
             throw new RuntimeException("generate failed");
+        }
+        
+        BitStream bitStream = patchParser.getBitStream();
+        
+        bitStream.setPosition(0);
+        
         
         sections.add(bitStream);
         intStream = new IntStream();
@@ -424,7 +438,7 @@ public class Patch2BitstreamBuilder
         }
         
         append(nmodules);
-
+        
         for (PModule m : va)
         {
             List<PParameter> plist = Helper.getParametersByClass(m, "custom");

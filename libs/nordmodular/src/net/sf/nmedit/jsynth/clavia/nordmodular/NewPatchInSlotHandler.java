@@ -18,7 +18,7 @@
  */
 package net.sf.nmedit.jsynth.clavia.nordmodular;
 
-import net.sf.nmedit.jnmprotocol.NewPatchInSlotMessage;
+import net.sf.nmedit.jnmprotocol2.NewPatchInSlotMessage;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 
 public class NewPatchInSlotHandler

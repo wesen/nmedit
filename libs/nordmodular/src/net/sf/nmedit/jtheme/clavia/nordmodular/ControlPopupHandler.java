@@ -25,7 +25,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 
-import net.sf.nmedit.jnmprotocol.MorphKeyboardAssignmentMessage;
+import net.sf.nmedit.jnmprotocol2.MorphKeyboardAssignmentMessage;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Knob;
 import net.sf.nmedit.jpatch.clavia.nordmodular.MidiController;
