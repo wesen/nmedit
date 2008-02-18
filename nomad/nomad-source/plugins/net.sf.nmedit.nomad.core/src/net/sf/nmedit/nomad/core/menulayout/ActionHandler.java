@@ -28,21 +28,21 @@ public class ActionHandler implements ActionListener
     
     private static final boolean DEBUG = true;
     
-    public static final Class[] NO_ARGS_SIGNATURE = new Class[0];
+    public static final Class<?>[] NO_ARGS_SIGNATURE = new Class[0];
     public static final Object[] NO_ARGS = new Object[0];
     
     private Object implementor;
     private String methodName;
-    private Class[] signature;
+    private Class<?>[] signature;
     private Object[] args;
     private boolean invocationDelayed;
 
-    public static Class[] getSignatureFor(Object ... args)
+    public static Class<?>[] getSignatureFor(Object ... args)
     {
         if (args.length == 0)
             return NO_ARGS_SIGNATURE;
         
-        Class[] signature = new Class[args.length];
+        Class<?>[] signature = new Class[args.length];
         for (int i=0;i<args.length;i++)
         {
             Object a = args[i];
@@ -64,7 +64,7 @@ public class ActionHandler implements ActionListener
         this(implementor, false, method, args);
     }
 
-    public ActionHandler(Object implementor, String method, Class[] signature, Object[] args)
+    public ActionHandler(Object implementor, String method, Class<?>[] signature, Object[] args)
     {
         this(implementor, false, method, signature, args);
     }
@@ -79,7 +79,7 @@ public class ActionHandler implements ActionListener
         this(implementor, invocationDelayed, method, getSignatureFor(args), args);
     }
 
-    public ActionHandler(Object implementor, boolean invocationDelayed, String method, Class[] signature, Object[] args)
+    public ActionHandler(Object implementor, boolean invocationDelayed, String method, Class<?>[] signature, Object[] args)
     {
         this.invocationDelayed = invocationDelayed;
         if (implementor == null)
