@@ -30,6 +30,7 @@ public class PDLBlockImpl implements PDLBlock
     
     private List<PDLItem> items;
     private int minimumSize = -1;
+    private int minimumCount = -1;
 
     public PDLBlockImpl()
     {
@@ -40,6 +41,7 @@ public class PDLBlockImpl implements PDLBlock
     {
         items.add(item);
         this.minimumSize = -1;
+        this.minimumCount = -1;
     }
 
     public PDLItem getItem(int index)
@@ -55,6 +57,28 @@ public class PDLBlockImpl implements PDLBlock
     public Iterator<PDLItem> iterator()
     {
         return items.iterator();
+    }
+
+    public int getMinimumCount()
+    {
+        if (minimumCount < 0)
+        {
+            minimumCount = 0;
+            for (PDLItem item: items)
+            {
+                switch (item.getType())
+                {
+                    case Conditional:
+                        break;
+                    case Optional:
+                        break;
+                    default:
+                        minimumCount+=item.getMinimumCount();
+                        break;
+                }
+            }
+        }
+        return minimumCount;
     }
 
     public int getMinimumSize()

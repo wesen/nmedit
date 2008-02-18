@@ -20,9 +20,10 @@
 /*
  * Created on Dec 17, 2006
  */
-package net.sf.nmedit.jpdl2.bitstream;
+package net.sf.nmedit.jpdl2.stream;
 
 import java.util.Arrays;
+
 
 /**
  * A stream for bitwise writing and reading.
@@ -47,7 +48,7 @@ import java.util.Arrays;
  * 
  * @author Christian Schneider
  */
-public class BitStream implements Cloneable
+public class BitStream implements Cloneable, PDLDataSource
 {
     // empty byte[] array
     static final byte[] EMPTY_BYTES = new byte[0];
@@ -165,6 +166,15 @@ public class BitStream implements Cloneable
                   b+3<end?data[b+3]:0);
         }
         return new BitStream(idata, bytes*8);
+    }
+    
+    public static BitStream copyOf(BitStream src)
+    {
+        BitStream copy = new BitStream(src.data.length);
+        System.arraycopy(src.data, 0, copy.data, 0, src.data.length);
+        copy.position = src.position;
+        copy.size = src.size;
+        return copy;
     }
 
     // ****** read / write functions ******

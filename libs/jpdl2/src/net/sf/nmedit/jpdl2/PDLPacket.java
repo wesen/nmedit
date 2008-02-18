@@ -18,13 +18,16 @@
 */
 package net.sf.nmedit.jpdl2;
 
+import java.util.List;
+
 /**
  * A packet.
  */
 public interface PDLPacket 
 {
-    
+
     int getVariable(String name);
+    int getVariable(String name, int defaultValue);
 
     boolean hasVariable(String name);
 
@@ -33,4 +36,19 @@ public interface PDLPacket
 
     boolean hasPacketList(String name);
 
+    int[] getVariableList(String name);
+    
+    PDLPacket getPacket(String name);
+    PDLPacket[] getPacketList(String name);
+ 
+    String getName();
+    
+    String getBinding();
+    
+    boolean containsPacket(String name);
+    List<String> getAllVariables();
+    List<String> getAllVariableLists();
+    List<String> getAllPackets();
+    List<String> getAllPacketLists();
+    
 }

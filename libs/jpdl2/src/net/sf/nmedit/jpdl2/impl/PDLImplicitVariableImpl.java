@@ -54,5 +54,10 @@ public class PDLImplicitVariableImpl extends PDLVariableImpl implements
     {
         return function;
     }
+    
+    public int getMinimumCount()
+    {
+        return 0;
+    }
 
 }

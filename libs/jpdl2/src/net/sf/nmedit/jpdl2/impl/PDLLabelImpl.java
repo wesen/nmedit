@@ -55,5 +55,10 @@ public class PDLLabelImpl extends PDLItemImpl implements PDLLabel
     {
         return "@"+name;
     }
+
+    public int getMinimumCount()
+    {
+        return 0;
+    }
     
 }

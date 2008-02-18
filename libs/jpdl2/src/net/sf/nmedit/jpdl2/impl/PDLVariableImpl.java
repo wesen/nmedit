@@ -63,4 +63,9 @@ public class PDLVariableImpl extends PDLItemImpl implements PDLVariable
         return name+":"+size;
     }
 
+    public int getMinimumCount()
+    {
+        return 1;
+    }
+
 }

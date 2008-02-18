@@ -16,11 +16,44 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.impl;
 
-public interface PDLMessageId extends PDLItem
+import net.sf.nmedit.jpdl2.PDLBlockItem;
+import net.sf.nmedit.jpdl2.PDLCaseStatement;
+import net.sf.nmedit.jpdl2.PDLItem;
+
+public class PDLCaseStatementImpl implements PDLCaseStatement
 {
-
-    String getMessageId();
     
+    private PDLBlockItem block = new PDLBlockItemImpl();
+    
+    private int value = -1;
+    private boolean defaultCase = false;
+
+    public PDLCaseStatementImpl(boolean defaultCase, int value)
+    {
+        this.defaultCase = defaultCase;
+        this.value = value;
+    }
+    
+    public void add(PDLItem item)
+    {
+        block.add(item);
+    }
+
+    public PDLBlockItem getBlock()
+    {
+        return block;
+    }
+
+    public int getValue()
+    {
+        return value;
+    }
+
+    public boolean isDefaultCase()
+    {
+        return defaultCase;
+    }
+
 }

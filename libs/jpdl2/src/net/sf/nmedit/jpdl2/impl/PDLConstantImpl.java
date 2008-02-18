@@ -65,6 +65,11 @@ public class PDLConstantImpl extends PDLItemImpl implements PDLConstant
     {
         return PDLUtils.getMinMultiplicity(multiplicity) * size;
     }
+
+    public int getMinimumCount()
+    {
+        return 0;
+    }
     
     public String toString()
     {

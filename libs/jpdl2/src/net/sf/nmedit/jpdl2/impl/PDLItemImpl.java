@@ -18,16 +18,18 @@
 */
 package net.sf.nmedit.jpdl2.impl;
 
-import net.sf.nmedit.jpdl2.PDLBlock;
-import net.sf.nmedit.jpdl2.PDLMessageId;
+import net.sf.nmedit.jpdl2.PDLBlockItem;
 import net.sf.nmedit.jpdl2.PDLConditional;
 import net.sf.nmedit.jpdl2.PDLConstant;
+import net.sf.nmedit.jpdl2.PDLInstruction;
 import net.sf.nmedit.jpdl2.PDLImplicitVariable;
 import net.sf.nmedit.jpdl2.PDLItem;
 import net.sf.nmedit.jpdl2.PDLLabel;
+import net.sf.nmedit.jpdl2.PDLMutualExclusion;
 import net.sf.nmedit.jpdl2.PDLOptional;
 import net.sf.nmedit.jpdl2.PDLPacketRef;
 import net.sf.nmedit.jpdl2.PDLPacketRefList;
+import net.sf.nmedit.jpdl2.PDLSwitchStatement;
 import net.sf.nmedit.jpdl2.PDLVariable;
 import net.sf.nmedit.jpdl2.PDLVariableList;
 
@@ -64,19 +66,14 @@ public abstract class PDLItemImpl implements PDLItem
         return PDLPacketRef.class.cast(this);
     }
 
-    public PDLBlock asBlock()
+    public PDLBlockItem asBlock()
     {
-        return PDLBlock.class.cast(this);
+        return PDLBlockItem.class.cast(this);
     }
 
     public PDLConditional asConditional()
     {
         return PDLConditional.class.cast(this);
-    }
-
-    public PDLMessageId asMessageId()
-    {
-        return PDLMessageId.class.cast(this);
     }
 
     public PDLOptional asOptional()
@@ -93,5 +90,20 @@ public abstract class PDLItemImpl implements PDLItem
     {
         return PDLVariableList.class.cast(this);
     }
-    
+
+    public PDLMutualExclusion asMutualExclusion()
+    {
+        return PDLMutualExclusion.class.cast(this);
+    }
+
+    public PDLInstruction asInstruction()
+    {
+        return PDLInstruction.class.cast(this);
+    }
+
+    public PDLSwitchStatement asSwitchStatement()
+    {
+        return PDLSwitchStatement.class.cast(this);
+    }
+
 }

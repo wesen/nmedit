@@ -40,6 +40,7 @@ public interface PDLBlock extends Iterable<PDLItem>
      * @return the minimum number of bits of this block
      */
     int getMinimumSize();
+    int getMinimumCount();
     
     void add(PDLItem item);
     

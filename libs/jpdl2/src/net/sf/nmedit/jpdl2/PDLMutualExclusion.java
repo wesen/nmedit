@@ -16,34 +16,13 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2.impl;
+package net.sf.nmedit.jpdl2;
 
-import net.sf.nmedit.jpdl2.PDLItemType;
-import net.sf.nmedit.jpdl2.PDLMessageId;
+import java.util.List;
 
-public class PDLMessageIdImpl extends PDLItemImpl implements PDLMessageId
+public interface PDLMutualExclusion extends PDLItem, Iterable<PDLBlockItem>
 {
 
-    private String messageId;
-
-    public PDLMessageIdImpl(String messageId)
-    {
-        this.messageId = messageId;
-    }
-    
-    public String getMessageId()
-    {
-        return messageId;
-    }
-
-    public int getMinimumSize()
-    {
-        return 0;
-    }
-
-    public PDLItemType getType()
-    {
-        return PDLItemType.MessageId;
-    }
+    List<PDLBlockItem> getItems();
 
 }

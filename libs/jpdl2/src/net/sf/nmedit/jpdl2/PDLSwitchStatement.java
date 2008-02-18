@@ -18,16 +18,15 @@
 */
 package net.sf.nmedit.jpdl2;
 
-/**
- * Conditional block
- */
-public interface PDLConditional extends PDLBlockItem 
-{
+import java.util.List;
 
-    /**
-     * Returns the condition.
-     * @return the condition
-     */
-    PDLCondition getCondition();
+public interface PDLSwitchStatement extends PDLItem, Iterable<PDLCaseStatement>
+{
     
+    PDLFunction getFunction();
+    
+    List<PDLCaseStatement> getItems();
+
+    PDLBlockItem getItemForCase(int value);
+
 }
