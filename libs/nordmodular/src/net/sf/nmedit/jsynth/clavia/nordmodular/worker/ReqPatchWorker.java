@@ -18,9 +18,9 @@
  */
 package net.sf.nmedit.jsynth.clavia.nordmodular.worker;
 
-import net.sf.nmedit.jnmprotocol.AckMessage;
-import net.sf.nmedit.jnmprotocol.NmProtocolListener;
-import net.sf.nmedit.jnmprotocol.RequestPatchMessage;
+import net.sf.nmedit.jnmprotocol2.AckMessage;
+import net.sf.nmedit.jnmprotocol2.NmProtocolListener;
+import net.sf.nmedit.jnmprotocol2.RequestPatchMessage;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
 import net.sf.nmedit.jsynth.worker.RequestPatchWorker;

@@ -17,12 +17,12 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */package net.sf.nmedit.jsynth.clavia.nordmodular.worker;
 
-import net.sf.nmedit.jnmprotocol.AckMessage;
-import net.sf.nmedit.jnmprotocol.MidiException;
-import net.sf.nmedit.jnmprotocol.MidiMessage;
-import net.sf.nmedit.jnmprotocol.NmProtocol;
-import net.sf.nmedit.jnmprotocol.NmProtocolListener;
-import net.sf.nmedit.jnmprotocol.PatchMessage;
+import net.sf.nmedit.jnmprotocol2.AckMessage;
+import net.sf.nmedit.jnmprotocol2.ErrorMessage;
+import net.sf.nmedit.jnmprotocol2.MidiException;
+import net.sf.nmedit.jnmprotocol2.NmProtocol;
+import net.sf.nmedit.jnmprotocol2.NmProtocolListener;
+import net.sf.nmedit.jnmprotocol2.PatchMessage;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NmSlot;
@@ -59,6 +59,11 @@ public class StorePatchInSlotWorker extends NmProtocolListener implements Schedu
         synth.getScheduler().offer(this);
     }
     
+    public void messageReceived(ErrorMessage error)
+    {
+        aborted();
+    }
+    
     public void messageReceived(AckMessage message) 
     {
         // int cc = message.get("cc");
@@ -71,7 +76,6 @@ public class StorePatchInSlotWorker extends NmProtocolListener implements Schedu
         if (this.slotId == slotId && (!ackReply))
         {
             ackReply = true;
-            
             //slot.setPatchId(pid1);
             slot.setPatch(patch);
         }
@@ -123,7 +127,9 @@ public class StorePatchInSlotWorker extends NmProtocolListener implements Schedu
         {
             NmProtocol protocol = synth.getProtocol();
             for (int i=0;i<messages.length;i++)
+            {
                 protocol.send(messages[i]);
+            }
         }
         catch (Exception e)
         {
@@ -149,7 +155,7 @@ public class StorePatchInSlotWorker extends NmProtocolListener implements Schedu
         }
         catch (MidiException e)
         {
-            throw new RuntimeException(e);
+            NmUtils.transformException(e);
         }
     }
     

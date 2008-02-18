@@ -18,12 +18,13 @@
  */
 package net.sf.nmedit.jsynth.clavia.nordmodular.worker;
 
-import net.sf.nmedit.jnmprotocol.LoadPatchMessage;
-import net.sf.nmedit.jnmprotocol.StorePatchMessage;
+import net.sf.nmedit.jnmprotocol2.LoadPatchMessage;
+import net.sf.nmedit.jnmprotocol2.StorePatchMessage;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jsynth.Bank;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SynthException;
+import net.sf.nmedit.jsynth.clavia.nordmodular.NmSlot;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
 import net.sf.nmedit.jsynth.worker.PatchLocation;
 import net.sf.nmedit.jsynth.worker.StorePatchWorker;
@@ -107,6 +108,10 @@ public class NMStorePatchWorker implements StorePatchWorker
                         srcLocation.getPosition()
                 );
                 synth.getScheduler().offer(new ScheduledMessage(synth, message));
+                
+                NmSlot slot = synth.getSlot(dstLocation.getSlot());
+                slot.setPatch(null);
+                slot.requestPatch();
             }
             return;
         }

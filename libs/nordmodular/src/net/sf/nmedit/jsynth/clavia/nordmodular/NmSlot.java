@@ -22,14 +22,15 @@
  */
 package net.sf.nmedit.jsynth.clavia.nordmodular;
 
-import net.sf.nmedit.jnmprotocol.GetPatchMessage;
-import net.sf.nmedit.jnmprotocol.MidiMessage;
-import net.sf.nmedit.jnmprotocol.SlotActivatedMessage;
-import net.sf.nmedit.jnmprotocol.SlotsSelectedMessage;
+import net.sf.nmedit.jnmprotocol2.GetPatchMessage;
+import net.sf.nmedit.jnmprotocol2.MidiMessage;
+import net.sf.nmedit.jnmprotocol2.SlotActivatedMessage;
+import net.sf.nmedit.jnmprotocol2.SlotsSelectedMessage;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jsynth.AbstractSlot;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SlotManager;
+import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.ReqPatchWorker;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.ScheduledMessage;
 import net.sf.nmedit.jsynth.worker.RequestPatchWorker;
@@ -230,6 +231,11 @@ public class NmSlot extends AbstractSlot implements Slot
     {
         return new ReqPatchWorker(synth, getSlotId(), patch!=null);
     }
+
+    public void requestPatch() throws SynthException
+    {
+        createRequestPatchWorker().requestPatch();
+    }
     
     public NMPatch getPatch()
     {
@@ -253,7 +259,7 @@ public class NmSlot extends AbstractSlot implements Slot
                 if (name == null) name = "";
                 setPatchNameValue(name);
             }
-            
+
             fireNewPatchInSlotEvent(old, patch);
         }
     }

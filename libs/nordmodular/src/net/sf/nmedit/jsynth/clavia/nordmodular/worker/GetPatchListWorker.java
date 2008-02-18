@@ -21,10 +21,10 @@ package net.sf.nmedit.jsynth.clavia.nordmodular.worker;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.nmedit.jnmprotocol.GetPatchListMessage;
-import net.sf.nmedit.jnmprotocol.NmProtocolListener;
-import net.sf.nmedit.jnmprotocol.PatchListEntry;
-import net.sf.nmedit.jnmprotocol.PatchListMessage;
+import net.sf.nmedit.jnmprotocol2.GetPatchListMessage;
+import net.sf.nmedit.jnmprotocol2.NmProtocolListener;
+import net.sf.nmedit.jnmprotocol2.PatchListEntry;
+import net.sf.nmedit.jnmprotocol2.PatchListMessage;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NmBank;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;

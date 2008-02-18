@@ -20,7 +20,7 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
-import net.sf.nmedit.jnmprotocol.NmProtocol;
+import net.sf.nmedit.jnmprotocol2.NmProtocol;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 

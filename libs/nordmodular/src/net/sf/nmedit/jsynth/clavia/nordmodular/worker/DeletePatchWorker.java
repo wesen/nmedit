@@ -18,7 +18,7 @@
  */
 package net.sf.nmedit.jsynth.clavia.nordmodular.worker;
 
-import net.sf.nmedit.jnmprotocol.DeletePatchMessage;
+import net.sf.nmedit.jnmprotocol2.DeletePatchMessage;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
 

@@ -18,9 +18,10 @@
  */
 package net.sf.nmedit.jsynth.clavia.nordmodular.worker;
 
-import net.sf.nmedit.jnmprotocol.GetPatchMessage;
-import net.sf.nmedit.jnmprotocol.NmProtocolListener;
-import net.sf.nmedit.jnmprotocol.PatchMessage;
+import net.sf.nmedit.jnmprotocol2.ErrorMessage;
+import net.sf.nmedit.jnmprotocol2.GetPatchMessage;
+import net.sf.nmedit.jnmprotocol2.NmProtocolListener;
+import net.sf.nmedit.jnmprotocol2.PatchMessage;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.ParseException;
@@ -51,6 +52,11 @@ public class GetPatchWorker extends NmProtocolListener implements ScheduledWorke
         this.synth = synth;
         this.slotId = slotId;
         this.patchId = patchId;
+    }
+    
+    public void messageReceived(ErrorMessage error)
+    {
+        aborted();
     }
 
     public void aborted()
@@ -99,7 +105,8 @@ public class GetPatchWorker extends NmProtocolListener implements ScheduledWorke
     {
         try
         {
-            synth.getProtocol().send(new GetPatchMessage(slotId, patchId));
+            for (GetPatchMessage m: GetPatchMessage.forAllParts(slotId, patchId))
+                synth.getProtocol().send(m);
         }
         catch (Exception e)
         {

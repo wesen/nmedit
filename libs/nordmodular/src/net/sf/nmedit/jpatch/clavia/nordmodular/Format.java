@@ -29,7 +29,7 @@ import java.util.Map;
  * Constants of the Clavia Nord Modular patch file format 3.0
  * 
  * TODO defined section constants are different than the   
- *  {@link net.sf.nmedit.jnmprotocol.PatchMessage} constants
+ *  {@link net.sf.nmedit.jnmprotocol2.PatchMessage} constants
  * 
  * @author Christian Schneider
  */

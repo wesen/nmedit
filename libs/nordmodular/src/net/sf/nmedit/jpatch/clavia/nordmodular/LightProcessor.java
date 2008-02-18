@@ -18,8 +18,8 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular;
 
-import net.sf.nmedit.jnmprotocol.LightMessage;
-import net.sf.nmedit.jnmprotocol.MeterMessage;
+import net.sf.nmedit.jnmprotocol2.LightMessage;
+import net.sf.nmedit.jnmprotocol2.MeterMessage;
 import net.sf.nmedit.jpatch.PLight;
 import net.sf.nmedit.jpatch.PLightDescriptor;
 import net.sf.nmedit.jpatch.PModule;

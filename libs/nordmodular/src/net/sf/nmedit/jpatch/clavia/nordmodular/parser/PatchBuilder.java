@@ -25,6 +25,9 @@ package net.sf.nmedit.jpatch.clavia.nordmodular.parser;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
 import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.PConnector;
@@ -43,6 +46,8 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
 
 public class PatchBuilder implements PContentHandler
 {
+    
+    private static Log log = LogFactory.getLog(PatchBuilder.class);
     
     private NMPatch patch;
     private VoiceArea voiceArea;
@@ -327,8 +332,16 @@ public class PatchBuilder implements PContentHandler
         PModule module = voiceArea.getModule(record[1]);
         PParameter p = Helper.getParameter(module, "parameter", record[2]); 
         PParameter morphRange = p.getExtensionParameter();
-        patch.getMorphSection().assign(record[3], p);
-        morphRange.setValue(record[4]);
+        if (morphRange == null)
+        {
+            if (log.isDebugEnabled())
+                log.debug("morphMapDump, morph parameter not found for parameter "+p);
+        }
+        else
+        {
+            patch.getMorphSection().assign(record[3], p);
+            morphRange.setValue(record[4]);
+        }
     }
 
     public void ctrlMapDump( int[] record ) throws ParseException

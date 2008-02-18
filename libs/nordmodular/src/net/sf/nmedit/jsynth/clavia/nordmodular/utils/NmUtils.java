@@ -38,23 +38,23 @@ import java.util.Collection;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import net.sf.nmedit.jnmprotocol.DeleteCableMessage;
-import net.sf.nmedit.jnmprotocol.DeleteModuleMessage;
-import net.sf.nmedit.jnmprotocol.KnobAssignmentMessage;
-import net.sf.nmedit.jnmprotocol.MidiCtrlAssignmentMessage;
-import net.sf.nmedit.jnmprotocol.MidiException;
-import net.sf.nmedit.jnmprotocol.MidiMessage;
-import net.sf.nmedit.jnmprotocol.MorphAssignmentMessage;
-import net.sf.nmedit.jnmprotocol.MorphRangeChangeMessage;
-import net.sf.nmedit.jnmprotocol.MoveModuleMessage;
-import net.sf.nmedit.jnmprotocol.NewCableMessage;
-import net.sf.nmedit.jnmprotocol.NewModuleMessage;
-import net.sf.nmedit.jnmprotocol.ParameterMessage;
-import net.sf.nmedit.jnmprotocol.ParameterSelectMessage;
-import net.sf.nmedit.jnmprotocol.PatchListEntry;
-import net.sf.nmedit.jnmprotocol.PatchListMessage;
-import net.sf.nmedit.jnmprotocol.PatchMessage;
-import net.sf.nmedit.jnmprotocol.SetModuleTitleMessage;
+import net.sf.nmedit.jnmprotocol2.DeleteCableMessage;
+import net.sf.nmedit.jnmprotocol2.DeleteModuleMessage;
+import net.sf.nmedit.jnmprotocol2.KnobAssignmentMessage;
+import net.sf.nmedit.jnmprotocol2.MidiCtrlAssignmentMessage;
+import net.sf.nmedit.jnmprotocol2.MidiException;
+import net.sf.nmedit.jnmprotocol2.MidiMessage;
+import net.sf.nmedit.jnmprotocol2.MorphAssignmentMessage;
+import net.sf.nmedit.jnmprotocol2.MorphRangeChangeMessage;
+import net.sf.nmedit.jnmprotocol2.MoveModuleMessage;
+import net.sf.nmedit.jnmprotocol2.NewCableMessage;
+import net.sf.nmedit.jnmprotocol2.NewModuleMessage;
+import net.sf.nmedit.jnmprotocol2.ParameterMessage;
+import net.sf.nmedit.jnmprotocol2.ParameterSelectMessage;
+import net.sf.nmedit.jnmprotocol2.PatchListEntry;
+import net.sf.nmedit.jnmprotocol2.PatchListMessage;
+import net.sf.nmedit.jnmprotocol2.PatchMessage;
+import net.sf.nmedit.jnmprotocol2.SetModuleTitleMessage;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
@@ -468,7 +468,7 @@ public class NmUtils
     public static void parsePatchMessage(PatchMessage message, PatchBuilder patchBuilder) throws ParseException
     {
         BitstreamPatchParser bsParser = new BitstreamPatchParser();
-        bsParser.transcode(message.getPatchStream(), patchBuilder);
+        bsParser.transcode(message.getBitStream(), patchBuilder);
     }
 
     public static boolean writePatchSavely(NMPatch patch, File file)

@@ -21,10 +21,10 @@ package net.sf.nmedit.jsynth.clavia.nordmodular;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import net.sf.nmedit.jnmprotocol.MidiMessage;
-import net.sf.nmedit.jnmprotocol.MorphAssignmentMessage;
-import net.sf.nmedit.jnmprotocol.NmProtocol;
-import net.sf.nmedit.jnmprotocol.SetPatchTitleMessage;
+import net.sf.nmedit.jnmprotocol2.MidiMessage;
+import net.sf.nmedit.jnmprotocol2.MorphAssignmentMessage;
+import net.sf.nmedit.jnmprotocol2.NmProtocol;
+import net.sf.nmedit.jnmprotocol2.SetPatchTitleMessage;
 import net.sf.nmedit.jpatch.AllEventsListener;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PParameter;
