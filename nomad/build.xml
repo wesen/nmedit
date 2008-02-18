@@ -26,6 +26,7 @@ Following targets are available:
   dist      - distributes nomad
   clean     - cleans the build/dist files (not implemented)
   nomadjar  - creates the nomad.jar file
+  src-license - checks if the GPL license is present in all .java files
 
   * you have to call the 'configure' target once before you call this target
 
