@@ -29,8 +29,8 @@ import net.sf.nmedit.jpdl2.utils.StringUtils;
 public class PDLPacketParser
 {
     
-    private static final boolean DEBUG = true;
-    public static boolean LOG_ONLY_ERRORS = true;
+    private static final boolean DEBUG = false;
+    private static final boolean LOG_ONLY_ERRORS = true;
     
     private PDLDataSource input;
     private BitStream bitstream;
@@ -254,7 +254,8 @@ public class PDLPacketParser
         {
             StackTraceElement[] aste = t.getStackTrace();
             StackTraceElement ste = aste[0];
-            msg.append("\tat "+t.getMessage()+" ("+ste.getFileName()+":"+ste.getLineNumber()+")"); 
+            
+            msg.append("\tat "+t+" ("+ste.getFileName()+":"+ste.getLineNumber()+")"); 
             t=t.getCause();
             if (t != null) msg.append('\n');
         }
