@@ -80,6 +80,10 @@ Brackets = [\[\]\{\}\(\)]
 <YYINITIAL> "false"        { yyparser.yylval = new PDL2ParserVal(0);
                              return yyparser.BOOLEAN_LITERAL;}
 <YYINITIAL> "messageId"    { return yyparser.TK_MESSAGEID;}
+<YYINITIAL> "fail"         { return yyparser.TK_FAIL;}
+<YYINITIAL> "switch"       { return yyparser.TK_SWITCH;}
+<YYINITIAL> "case"       { return yyparser.TK_CASE;}
+<YYINITIAL> "default"       { return yyparser.TK_DEFAULT;}
 
 <YYINITIAL> "(int)"        { return yyparser.CAST_TO_INT; }
 <YYINITIAL> "(boolean)"    { return yyparser.CAST_TO_BOOLEAN; }
