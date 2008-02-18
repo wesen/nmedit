@@ -49,6 +49,10 @@ import net.sf.nmedit.jsynth.worker.StorePatchWorker;
  */
 public interface Synthesizer
 {
+    
+    // global dsp usage, double value
+    public static final String DSP_GLOBAL = "synth.dsp.global";
+    
     /*
     PortManager getPortManager();
     BankManager getBankManager();*/
@@ -72,6 +76,12 @@ public interface Synthesizer
     String getDeviceName();
 
     StorePatchWorker createStorePatchWorker();
+    
+    boolean hasProperty(String propertyName);
+    
+    double getDoubleProperty(String propertyName);
+    
+    Object getProperty(String propertyName);
     
     void putClientProperty(Object key, Object value);
     Object getClientProperty(Object key);
