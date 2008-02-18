@@ -23,6 +23,9 @@ import java.util.Collection;
 
 public interface MoveOperation extends Iterable<PModule>
 {
+	void setDestination(PModuleContainer destination);
+	
+	PModuleContainer getDestination();
 
     boolean add(PModule module);
     
