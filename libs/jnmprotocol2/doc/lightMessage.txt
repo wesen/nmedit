@@ -1,0 +1,137 @@
+description of the light messages
+
+
+LightMessage
+------------
+
+	addParameter("startIndex", "data:data:startIndex");
+	addParameter("light0", "data:data:l0");
+	addParameter("light1", "data:data:l1");
+	addParameter("light2", "data:data:l2");
+	addParameter("light3", "data:data:l3");
+	addParameter("light4", "data:data:l4");
+	addParameter("light5", "data:data:l5");
+	addParameter("light6", "data:data:l6");
+	addParameter("light7", "data:data:l7");
+	addParameter("light8", "data:data:l8");
+	addParameter("light9", "data:data:l9");
+	addParameter("light10", "data:data:l10");
+	addParameter("light11", "data:data:l11");
+	addParameter("light12", "data:data:l12");
+	addParameter("light13", "data:data:l13");
+	addParameter("light14", "data:data:l14");
+	addParameter("light15", "data:data:l15");
+	addParameter("light16", "data:data:l16");
+	addParameter("light17", "data:data:l17");
+	addParameter("light18", "data:data:l18");
+	addParameter("light19", "data:data:l19");
+
+Meter Message
+-------------
+
+> The index (startIndex+Offset) is not equal
+> to the module indices. It seems that the modules containing a light are
+> kept in a second list. The modules in the second list are in ascending ordered
+> by the module index.
+>
+> For example: ( M=Module without light, L=Module with light,
+> [number]=module index )
+>
+> Modules in a patch:
+>
+> module section (list 1): M[1],M[2],L[3],M[4],L[5],L[6]
+> then the second list is: L[3],L[5],L[6] (because 3<5<6)
+>
+> The second list also contains the modules of both, the poly- and common
+> voice area (in this order).
+>
+> I have also found out some things which might help you understanding the
+> missing messages. It seems that only modules with exactly one light on
+> them are adressed by the light message. None of the four sequencer
+> modules  cause light messages and the Expander, Compressor and
+> PolyAreaIn modules also cause no light messages. (I have not tried the
+> AudioIn yet, but it is obvious it will not cause light messages either)
+>
+> I think it makes sense that the modules with level meters do not cause
+> light messages. The level meter messages might also have information
+> about the light status. Thus less messages have to be sent for such modules.
+>
+> The message adressing the sequencer lights could have  4-bit fields
+> containing the active light index (0-15). This would require only one
+> message instead of 16 per sequencer to be sent.
+>
+> Probably there are three different kind of light messages:
+> - for modules with single light
+> - for modules with level meter
+> - for sequencer modules
+>
+> For the other two kinds of light messages there might be also a list
+> like the one described above. Then the messages might have also
+> startIndex and a list of values.
+>
+Mail 2
+>
+>
+> The Modules
+> - EventSequencer
+> - CtrlSequencer
+> - NoteSeqA
+> - NoteSeqB
+> - PolyAreaIn
+> - AudioIn (?unconfirmed?)
+> - Compressor
+> - Expander
+>
+> are handled by the same message. Here's some example data (One EventSequencer)
+>
+>  unsupported packet:  240 51 80 6 6 58 0 0 0 0 0 0 0 0 0 0 0 57 247
+>  unsupported packet:  240 51 80 6 6 58 0 1 0 0 0 0 0 0 0 0 0 58 247
+>  unsupported packet:  240 51 80 6 6 58 0 2 0 0 0 0 0 0 0 0 0 59 247
+>  unsupported packet:  240 51 80 6 6 58 0 3 0 0 0 0 0 0 0 0 0 60 247
+>  unsupported packet:  240 51 80 6 6 58 0 4 0 0 0 0 0 0 0 0 0 61 247
+>  unsupported packet:  240 51 80 6 6 58 0 5 0 0 0 0 0 0 0 0 0 62 247
+>  unsupported packet:  240 51 80 6 6 58 0 6 0 0 0 0 0 0 0 0 0 63 247
+>  unsupported packet:  240 51 80 6 6 58 0 7 0 0 0 0 0 0 0 0 0 64 247
+>  unsupported packet:  240 51 80 6 6 58 0 8 0 0 0 0 0 0 0 0 0 65 247
+>  unsupported packet:  240 51 80 6 6 58 0 9 0 0 0 0 0 0 0 0 0 66 247
+>  unsupported packet:  240 51 80 6 6 58 0 10 0 0 0 0 0 0 0 0 0 67 247
+>  unsupported packet:  240 51 80 6 6 58 0 11 0 0 0 0 0 0 0 0 0 68 247
+>  unsupported packet:  240 51 80 6 6 58 0 12 0 0 0 0 0 0 0 0 0 69 247
+>  unsupported packet:  240 51 80 6 6 58 0 13 0 0 0 0 0 0 0 0 0 70 247
+>  unsupported packet:  240 51 80 6 6 58 0 14 0 0 0 0 0 0 0 0 0 71 247
+>  unsupported packet:  240 51 80 6 6 58 0 15 0 0 0 0 0 0 0 0 0 72 247
+>
+> The area with bold font contains information about the lights/level meters and the checksum. The other parts are constant (I have no idea where slot and pid are stored).
+>
+> The bold area has following structure:
+>
+> 240 51 80 6 6 58 {startIndex} (B  A) (B  A) (B  A) (B  A) (B  A) {checksum} 247
+>
+> {startIndex} = 5*k  (a multiple of five, 0, 5, 10, ...)
+> {checksum} = no idea how it is calculated
+> (B A) = level meter / light status of one module
+>
+> The (B A) pairs have have following meanings:
+>
+> 1. Sequencer Modules ( EventSequencer, CtrlSequencer, NoteSeqA, NoteSeqB)
+>
+> B = 0 .. 16 where B=16 means the sequencer is disabled, otherwise it's the index of the active light
+> A = 0 (always)
+>
+> 2. PolyAreaIn, AudioIn
+> B = Right Channel
+> A = Left Channel
+>
+> A, B is one of following values {0, 16, 32, 48, 64, 80, 96, 112, 122, 127}
+>
+> I am not sure but probably
+> B=127 means right light on
+> A=127 means left light on
+>
+> 3. Compressor, Expander
+> B = level meter / light
+> A = 0 (always)
+>
+> It seams that an increasing level means a lower value.
+
+	
