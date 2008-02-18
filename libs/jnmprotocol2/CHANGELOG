@@ -1,0 +1,44 @@
+
+jnmprotocol - Nord Modular Protocol for Java
+--------------------------------------------
+
+Copyright (C) 2003-2006 Marcus Andersson
+
+http://nmedit.sf.net
+
+Version 0.4
+-----------
+* Depends on jpdl2
+* Simplified midi messages
+
+Version 0.3
+-----------
+* DeleteCableMessage
+* DeleteModuleMessage
+* MoveModuleMessage
+* NewCableMessage
+* NewModuleMessage
+* ErrorMessage
+
+Version 0.2
+-----------
+* Compiled with jpdl-1.1.jar
+* Included midi.pdl and patch.pdl in jar.
+
+
+Version 0.1
+-----------
+* Compiled with jpdl-1.0.jar
+* AckMessage
+* GetPatchListMessage
+* GetPatchMessage
+* IAmMessage
+* LightMessage
+* NewPatchInSlotMessage
+* ParameterMessage
+* PatchListMessage
+* PatchMessage
+* RequestPatchMessage
+* SlotActivatedMessage
+* SlotsSelectedMessage
+* VoiceCountMessage

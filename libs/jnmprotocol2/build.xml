@@ -1,0 +1,68 @@
+<project name="jnmprotocol2" default="dist" basedir=".">
+
+  <property name="src" location="src"/>
+  <property name="test" location="test"/>
+  <property name="build" location="build"/>
+  <property name="dist" location="dist"/>
+
+
+  <target name="init">
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends="init"
+          description="compile the source">
+    <javac srcdir="${src}" destdir="${build}" debug="true" target="1.5" source="1.5">
+      <classpath>
+        <pathelement path="."/>
+        <pathelement location="../jpdl2/dist/lib/jpdl2.jar"/>
+      </classpath>
+    </javac>
+    <copy todir="${build}">
+      <fileset dir=".">
+        <include name="CHANGELOG"/>
+        <include name="LICENSE"/>
+      </fileset>
+    </copy>
+    <copy todir="${build}">
+      <fileset dir="../codecs">
+        <include name="midi.pdl2"/>
+        <include name="patch.pdl2"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="dist" depends="compile"
+          description="generate the distribution">
+    <mkdir dir="${dist}/lib"/>
+    <jar jarfile="${dist}/lib/jnmprotocol2.jar" basedir="${build}"/>
+  </target>
+
+  <target name="compile-test" depends="init"
+          description="compile the test source">
+    <javac srcdir="${test}" destdir="${build}" debug="true">
+      <classpath>
+        <pathelement path="."/>
+        <pathelement location="../jpdl/dist/lib/jpdl2.jar"/>
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="test" depends="compile, compile-test"
+          description="run unit tests">
+    <junit showoutput="true" printsummary="on">
+      <classpath>
+        <pathelement path="${build}"/>
+        <pathelement location="../jpdl/dist/lib/jpdl2.jar"/>
+      </classpath>
+      <test name="net.sf.nmedit.jnmprotocol.ProtocolTester"/>
+    </junit>
+  </target>
+
+  <target name="clean"
+          description="clean up">
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+</project>
+
