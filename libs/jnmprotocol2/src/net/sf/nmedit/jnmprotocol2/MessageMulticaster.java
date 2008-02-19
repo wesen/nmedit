@@ -73,7 +73,7 @@ public class MessageMulticaster implements MessageHandler
         listenerList.remove(NmProtocolListener.class, l);
     }
 
-    public void processMessage( MidiMessage message )
+    public void processMessage( MidiMessage message ) 
     {
         // if (!(message instanceof LightMessage))
         //    System.out.println(message);
@@ -90,7 +90,11 @@ public class MessageMulticaster implements MessageHandler
         
         // if the message is an ErrorMessage throw a RuntimeException
         if (errorMessageCausesException && message instanceof ErrorMessage)
-            throw new RuntimeException(message.toString());
+        {
+            ErrorMessage e = (ErrorMessage) message;
+            //if (e.isFatal())
+                throw new RuntimeException(e.getErrorMessage());
+        }
     }
 
 }
