@@ -23,10 +23,28 @@ import net.sf.nmedit.jnmprotocol2.MidiMessage;
 import net.sf.nmedit.jnmprotocol2.NmProtocolListener;
 import net.sf.nmedit.jpdl2.*;
 
-public class ErrorMessage extends MidiMessage
+public class ErrorMessage extends MidiMessage implements ErrorCodes
 {
-    // net.sf.nmedit.jnmprotocol2.ErrorMessage[sc=126,pid=1,code=5,slot=0,cc=20] / NM Display shows "No Slot Focused"
-    
+    /**
+     * Error codes and reasons
+     * 
+     * code | reason
+     * ------------------------------------------------------------
+     *    3 | store patch and set in PatchMessage 
+     *      | intStream.append(get("cc") + first + 2*last)
+     *      | where first:=0.
+     * -----|------------------------------------------------------
+     *    4 | wrong checksum
+     * -----|------------------------------------------------------
+     *    5 | Nord Modular displays "No Slot Focused"
+     * -----|------------------------------------------------------
+     *    6 | store patch and set in PatchMessage 
+     *      | intStream.append(get("cc") + first + 2*last)
+     *      | where last:=0. then select another patch on the synth
+     * -----|------------------------------------------------------
+     * 
+     */
+
     // checksum error: sc=126,pid=16,code=4,slot=0,cc=20
     public ErrorMessage()
     {
@@ -57,4 +75,38 @@ public class ErrorMessage extends MidiMessage
     {
 	listener.messageReceived(this);
     }
+    
+    public String getErrorMessage()
+    {
+        String prefix = "[ERROR:"+getError()+"] ";
+        String suffix = " (slot="+getSlot()+", pid="+get("pid")+")";
+        
+        String msg = "unknown error";
+        
+        switch (getError())
+        {
+          case NM_CHECKSUM_ERROR:
+              msg = "checksum error";
+              break;
+        }
+        return prefix+msg+suffix;
+    }
+    
+    public boolean isFatal()
+    {
+        switch (getError())
+        {
+          case NM_CHECKSUM_ERROR:
+              return false;
+          default:
+              //return true;
+              return false;
+        }
+    }
+    
+    public String toString()
+    {
+        return getClass().getName()+" "+getErrorMessage();
+    }
+    
 }
