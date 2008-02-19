@@ -18,6 +18,11 @@
 */
 package net.sf.nmedit.jpdl2.impl;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import net.sf.nmedit.jpdl2.PDLException;
 import net.sf.nmedit.jpdl2.PDLFunction;
 import net.sf.nmedit.jpdl2.PDLParseContext;
@@ -32,6 +37,11 @@ public class PDLFunctionImpl implements PDLFunction
     {
         this.e = e;
     }
+    
+    public Expression getExpression()
+    {
+        return e;
+    }
 
     public int compute(PDLParseContext context) throws PDLException
     {
@@ -41,6 +51,13 @@ public class PDLFunctionImpl implements PDLFunction
     public String toString()
     {
         return e.getSource();
+    }
+
+    public Collection<String> getDependencies()
+    {
+        Set<String> set = new HashSet<String>();
+        e.collectDepencies(set);
+        return Collections.unmodifiableSet(set);
     }
     
 }
