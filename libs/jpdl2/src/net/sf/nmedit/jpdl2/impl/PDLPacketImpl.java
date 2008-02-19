@@ -214,7 +214,10 @@ public class PDLPacketImpl implements PDLPacket
         PacketObject o = getPacketObject(name, PacketObjectType.VariableList);
         if (o == null) return null;
         int[] list = ((VariableList)o).values;
-        return Arrays.copyOf(list, list.length);
+        int[] copy = new int[list.length];
+        for (int i = 0; i < list.length; i++) 
+        	copy[i] = list[i];
+        return copy;
     }
 
     public PDLPacket getPacket(String name)
@@ -241,7 +244,10 @@ public class PDLPacketImpl implements PDLPacket
         if (o == null) return null;
         
         PDLPacket[] list = ((PacketList)o).packets;
-        return Arrays.copyOf(list, list.length);
+        PDLPacket[] copy = new PDLPacket[list.length];
+        for (int i = 0; i < list.length; i++) 
+        	copy[i] = list[i];
+        return copy;
     }
 
     private static enum PacketObjectType
