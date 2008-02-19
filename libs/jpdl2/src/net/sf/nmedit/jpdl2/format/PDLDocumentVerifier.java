@@ -18,300 +18,282 @@
 */
 package net.sf.nmedit.jpdl2.format;
 
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import net.sf.nmedit.jpdl2.PDLBlock;
 import net.sf.nmedit.jpdl2.PDLBlockItem;
 import net.sf.nmedit.jpdl2.PDLCaseStatement;
+import net.sf.nmedit.jpdl2.PDLCondition;
 import net.sf.nmedit.jpdl2.PDLDocument;
 import net.sf.nmedit.jpdl2.PDLException;
+import net.sf.nmedit.jpdl2.PDLFunction;
 import net.sf.nmedit.jpdl2.PDLItem;
 import net.sf.nmedit.jpdl2.PDLItemType;
 import net.sf.nmedit.jpdl2.PDLMultiplicity;
+import net.sf.nmedit.jpdl2.PDLMultiplicityType;
 import net.sf.nmedit.jpdl2.PDLMutualExclusion;
 import net.sf.nmedit.jpdl2.PDLPacketDecl;
 import net.sf.nmedit.jpdl2.PDLPacketRef;
 import net.sf.nmedit.jpdl2.PDLPacketRefList;
-import net.sf.nmedit.jpdl2.PDLSwitchStatement;
-import net.sf.nmedit.jpdl2.PDLUtils;
+import net.sf.nmedit.jpdl2.impl.PDLCompiledCondition;
 
-// TODO validation is incomplete
+/**
+ * ensures
+ * - start packet exists (if the start statement is present)
+ * detects:
+ * - mutual packet references
+ * - unreachable code (after fail statements)
+ * - variable(-list) name, label name, packet(-list)-binding collisions
+ * - mutual exclusive statement: unreachable optional items (only a few cases are tested yet)
+ * - invalid variable / label references
+ * TODO:
+ * - test that each path is tagged by a messageId (optional)
+ */
 public class PDLDocumentVerifier
 {
     
     private PDLDocument doc;
 
-    private boolean detectConditionalRecursion = true;
-    private boolean conditionalRecursionDeteced = false;
-
-    private int warningMessageCount = 0;
-    
     public PDLDocumentVerifier(PDLDocument doc)
     {
         this.doc = doc;
     }
-    
+
     public void verify() throws PDLException
+    {
+        verifyStartDecl();
+        verifyPacketDecl();
+        // verifyPaths(); // test if each possible path contains a message() statement
+    }
+    
+    private void verifyStartDecl() throws PDLException
     {
         // verify start packet
         if (doc.getStartPacketName()!=null && doc.getPacketDecl(doc.getStartPacketName())==null)
         {
             throw new PDLException("start packet not declared: "+doc.getStartPacketName());
         }
-        
-        // verify packets
-        for (PDLPacketDecl packet: doc)
+    }
+
+    private void verifyPacketDecl() throws PDLException
+    {
+        Set<String> visitedPackets = new HashSet<String>();
+        for (PDLPacketDecl decl: doc)
         {
+            // verify local declaration of packet
+            verifyPacketDecl(decl);
+            // verify packet references and detect unconditional mutual recursion
+            visitedPackets.clear();
+            verifyMutualRecursion(visitedPackets, decl, false);
+        }
+    }
+
+    private void verifyPacketDecl(PDLPacketDecl decl) throws PDLException
+    {
+        try
+        {
+            verifyBlock(Collections.<String>emptySet(), decl, false);
+        }
+        catch (PDLException e)
+        {
+            throw new PDLException(e, decl);
+        }
+    }
+
+    private boolean verifyBlock(Set<String> declared, PDLBlock block, boolean conditionalPath) throws PDLException
+    {
+        // after 'break' or 'fail' statement, no further statements are allowed (in unconditional paths)
+        boolean allowMoreStatements = true;
+        
+        // declarations in current block
+        declared = new HashSet<String>(declared);
+        
+        for (int index = 0;index<block.getItemCount();index++)
+        {
+            PDLItem item = block.getItem(index);
+            
+            if ((!allowMoreStatements) )
+            {
+                error(item, "unreachable code");
+            }
             try
             {
-                verifyPacket(packet);
+                switch (item.getType())
+                {
+                    // store reference names
+                    case Label:
+                        declare(declared, item, "@", item.asLabel().getName());
+                        break;
+                    case Variable:
+                        declare(declared, item, null, item.asVariable().getName());
+                        break;
+                    // items referencing other items
+                    case Constant:
+                        verifyMultiplicativeReference(declared, item, item.asConstant().getMultiplicity());
+                        break;
+                    case ImplicitVariable:
+                        // use unique prefix "%" for variables which can not be referenced
+                        declare(declared, item, "%", item.asImplicitVariable().getName());
+                        verifyFunction(declared, item, item.asImplicitVariable().getFunction());
+                        break;
+                    case VariableList:
+                        // use unique prefix "%" for variables which can not be referenced
+                        declare(declared, item, "%", item.asVariableList().getName());
+                        verifyMultiplicativeReference(declared, item, item.asVariableList().getMultiplicity());
+                        break;
+                    case PacketRef:
+                    {
+                        PDLPacketRef ref = item.asPacketRef();
+                        declare(declared, item, "$", ref.getBinding());
+                        verifyPacketReference(item, ref);
+                        break;
+                    }
+                    case PacketRefList:
+                    {
+                        PDLPacketRefList ref = item.asPacketRefList();
+                        declare(declared, item, "$", ref.getBinding());
+                        verifyPacketReference(item, ref);
+                        verifyMultiplicativeReference(declared, item, ref.getMultiplicity());
+                        break;
+                    }
+                    case Conditional:
+                    {
+                        PDLCondition condition = item.asConditional().getCondition();
+                        verifyCondition(declared, item, condition);
+                        verifyBlock(declared, item.asConditional(), true);
+                        break;
+                    }
+                    case Optional:
+                        verifyBlock(declared, item.asOptional(), true);
+                        break;
+                    case MutualExclusion:
+                        for (PDLBlockItem nested: item.asMutualExclusion().getItems())
+                            verifyBlock(declared, nested, true);
+                        break;
+                    case Block:
+                        allowMoreStatements =
+                            verifyBlock(declared, item.asBlock(), conditionalPath);
+                        break;
+                    case SwitchStatement:
+                        for (PDLCaseStatement nested: item.asSwitchStatement().getItems())
+                            verifyBlock(declared, nested.getBlock(), true);
+                        break;
+                    // no references
+                    case MessageId: break;
+                    case Fail:
+                        allowMoreStatements = false;
+                        break;
+                    default:
+                        unknownItemTypeError(item);
+                }
             }
             catch (PDLException e)
             {
-                throw new PDLException(e, packet);
+                throw new PDLException(e, item);
             }
         }
         
-        detectReferencesBeforeAssignment();
-        detectRecursion();
-        verifyPaths(); // test if each possible path contains a message() statement
+        return allowMoreStatements;
+    }
+
+    private void declare(Set<String> declared, PDLItem item, Object prefix, String name) throws PDLException
+    {
+        String fullName = prefix == null ? name : (prefix+name);
         
+        if (declared.contains(name)
+                ||declared.contains("@"+name)
+                ||declared.contains("$"+name)
+                ||declared.contains("%"+name))
+            error(item, "name already in use: "+fullName);
+        declared.add(fullName);
     }
 
-    private void verifyPaths()
+    private void unknownItemTypeError(PDLItem item)
     {
-        // TODO Auto-generated method stub
-        
+        throw new InternalError("unknown item type "+item.getType());
     }
 
-    private void detectRecursion() throws PDLException
+    private void verifyMutualRecursion(Set<String> visitedPackets,
+            PDLPacketDecl packet, boolean conditionalPath) throws PDLException
     {
-        Set<String> visited = new HashSet<String>();
-        for (PDLPacketDecl packet: doc)
+        if (conditionalPath) return;
+        if (visitedPackets.contains(packet.getName()))
+            error(packet, "mutual recursion detected in packet "+packet.getName());
+        visitedPackets.add(packet.getName());
+        verifyMutualRecursionInBlock(visitedPackets, packet, conditionalPath);
+        visitedPackets.remove(packet.getName());
+    }
+
+    private void verifyMutualRecursionInBlock(Set<String> visitedPackets,
+            PDLBlock block, boolean conditionalPath) throws PDLException
+    {
+
+        for (int index = 0;index<block.getItemCount();index++)
         {
-            visited.add(packet.getName());
-            detectRecursion(visited, packet, false);
-            visited.clear();
-        }
-    }
-
-    private void detectRecursion(Set<String> visited, PDLBlock block, boolean conditionalPath) throws PDLException
-    {
-        Iterator<PDLItem> iter = block.iterator();
-        while (iter.hasNext())
-        {
-            if (conditionalPath && conditionalRecursionDeteced)
-            {
-                // no need to examin conditional paths any further
-                break;
-            }
-            
-            PDLItem item = iter.next();
-            switch (item.getType())
-            {
-            // no children
-            case MessageId:
-            case Constant:
-            case ImplicitVariable:
-            case Label:
-            case Variable:
-            case VariableList:
-                break;
-            case MutualExclusion:
-            {
-                if (detectConditionalRecursion && !conditionalRecursionDeteced)
+            PDLItem item = block.getItem(index);
+                switch (item.getType())
                 {
-                    PDLMutualExclusion m = item.asMutualExclusion();
-                    for (PDLItem choice: m)
+                    // no children
+                    case Label: break;
+                    case Variable: break;
+                    case Constant: break;
+                    case ImplicitVariable: break;
+                    case VariableList: break;
+                    case MessageId: break;
+                    case Fail: break;
+                    // packets
+                    case PacketRef:
+                        verifyMutualRecursion(visitedPackets, 
+                                item.asPacketRef().getReferencedPacket(), conditionalPath);
+                        break;
+                    case PacketRefList:
+                        verifyMutualRecursion(visitedPackets, 
+                                item.asPacketRefList().getReferencedPacket(), true);
+                        break;
+                    // blocks
+                    case Conditional:
+                        verifyMutualRecursionInBlock(visitedPackets, 
+                                item.asConditional(), true);
+                        break;
+                    case Optional:
+                        verifyMutualRecursionInBlock(visitedPackets, 
+                                item.asOptional(), true);
+                        break;
+                    case MutualExclusion:
                     {
-                        if (choice instanceof PDLBlock)
-                            detectRecursion(visited, (PDLBlock) choice, true);
+                        PDLMutualExclusion me = item.asMutualExclusion();
+                        for (PDLBlockItem nested: me.getItems())
+                            verifyMutualRecursionInBlock(visitedPackets, nested, true);
+                        verifyNoUnrechableCode(me);
+                        break;
                     }
+                    case Block:
+                        verifyMutualRecursionInBlock(visitedPackets, 
+                                item.asBlock(), conditionalPath);
+                        break;
+                    case SwitchStatement:
+                        for (PDLCaseStatement nested: item.asSwitchStatement().getItems())
+                            verifyMutualRecursionInBlock(visitedPackets, 
+                                    nested.getBlock(), true);
+                        break;
+                    // no references
+                    default:
+                        unknownItemTypeError(item);
                 }
-                break;
-            }
-            case Fail:
-            {
-                break;
-            }
-            case SwitchStatement:
-            {
-                if (detectConditionalRecursion && !conditionalRecursionDeteced)
-                {
-                    PDLSwitchStatement s = item.asSwitchStatement();
-                    for (PDLCaseStatement c: s)
-                    {
-                        PDLBlock choice = c.getBlock();
-                        if (choice instanceof PDLBlock)
-                            detectRecursion(visited, (PDLBlock) choice, true);
-                    }
-                }
-                break;
-            }
-            // detect recursion
-            case PacketRef:
-            case PacketRefList:
-            {
-                PDLPacketRef packetRef = item.asPacketRef();
-                if (visited.contains(packetRef.getPacketName()))
-                {
-                    // recursion detected
-                    if (!conditionalPath)
-                        error(item, "recursion detected");
-                    
-                    // path is conditional
-                    conditionalRecursionDeteced = true;
-                    
-                    // conditional recursion
-                    // no error in pdl2: error(item, "recursion detected");
-                }
-                else
-                {
-                    // not visited yet
-                    visited.add(packetRef.getPacketName()); // remember visited packet
-                    detectRecursion(visited, packetRef.getReferencedPacket(), false);
-                    visited.remove(packetRef.getPacketName()); // remove visited packet
-                }
-                
-                break;
-            }
-            case Block:
-            {
-                break; // TODO
-            }
-            // have children
-            case Conditional:
-            case Optional:
-            {
-                if (detectConditionalRecursion && !conditionalRecursionDeteced)
-                {
-                    detectRecursion(visited, (PDLBlock) item, true);
-                }
-                break;
-            }
-            // error: item is undefined
-            default:
-                throw new InternalError("unknown item type: "+item.getType());
-            }
-        
-            
-        }
-    }
-
-    private void detectReferencesBeforeAssignment()
-    {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public void verifyPacket(PDLPacketDecl packet) throws PDLException
-    {
-        verifyReferences(packet);
-    }
-    
-    private static <A,B> Map<A,B> map(Map<A,B> map)
-    {
-        if (map == null)
-            return new HashMap<A,B>();
-        return map;
-    }
-
-    final String VARIABLE = "variable";
-    final String LABEL = "label";
-    
-    public void verifyReferences(PDLPacketDecl packet) throws PDLException
-    {
-        Map<String, String> defined = null;
-        Iterator<PDLItem> iter = PDLUtils.flatten(packet);
-        while (iter.hasNext())
-        {
-            PDLItem item = iter.next();
-            
-            switch (item.getType())
-            {
-              case MessageId:
-                  break;
-              case Conditional:
-                  break;
-              case MutualExclusion:
-              {
-                  verifyMutualExclusion(item.asMutualExclusion());
-                  // TODO verify references
-                  break;
-              }
-              case SwitchStatement:
-              {
-                  // TODO
-                  break;
-              }
-              case Constant:
-              {
-                  // check multiplicity
-                  checkMultiplicity(defined, item, item.asConstant().getMultiplicity());
-                  break;
-              }
-              case ImplicitVariable:
-                  defined = define(item, defined, VARIABLE, item.asImplicitVariable().getName());
-                  break;
-              case Label:
-                  defined = define(item, defined, LABEL, item.asLabel().getName());
-                  break;
-              case Optional:
-                  break;
-              case Fail:
-                  break;
-              case PacketRef:
-              {
-                  PDLPacketRef p = item.asPacketRef();
-                  if (doc.getPacketDecl(p)==null)
-                      error(item, "referenced packet does not exist: "+p.getPacketName());
-                  
-                  break;
-              }
-              case PacketRefList:
-              {
-                  PDLPacketRefList p = item.asPacketRefList();
-                  if (doc.getPacketDecl(p)==null)
-                      error(item, "referenced packet does not exist: "+p.getPacketName());
-                  
-                  // check multiplicity
-                  checkMultiplicity(defined, item, p.getMultiplicity());
-                  break;
-              }
-              case Variable:
-                  defined = define(item, defined, VARIABLE, item.asVariable().getName());
-                  break;
-              case VariableList:
-              {
-                  // check multiplicity
-                  checkMultiplicity(defined, item, item.asVariableList().getMultiplicity());
-                  break;
-              }
-              case Block:
-              {
-                  // TODO
-                  break;
-              }
-              default:
-                  throw new InternalError("unknown item type: "+item.getType());
-            }
-            
         }
     }
     
-    private void verifyMutualExclusion(PDLMutualExclusion m) throws PDLException
+    private void verifyNoUnrechableCode(PDLMutualExclusion m) throws PDLException
     {
         List<PDLBlockItem> list = m.getItems();
 
         if (list.size()<2)
-            throw new PDLException("mutual exclusion has less than two elements");
+            error(m, "mutual exclusion has less than two elements");
         
-
         for (int i=0;i<list.size()-1;i++)
         {
             PDLItem a = meGetItem(list.get(i));
@@ -356,14 +338,14 @@ public class PDLDocumentVerifier
 
                     // now test minimum size property
                     if (a.getMinimumSize()<b.getMinimumSize())
-                        throw new PDLException(b, "elements must be ordered by getMinimumSize()");
+                        error(b, "elements must be ordered by getMinimumSize()");
                     if (a.getMinimumCount()<b.getMinimumCount())
-                        throw new PDLException(b, "elements must be ordered by getMinimumCount()");
+                        error(b, "elements must be ordered by getMinimumCount()");
                 }
             }
         }
     }
-    
+
     private PDLItem meGetItem(PDLBlockItem item)
     {
         if (item.getType() == PDLItemType.Block && item.getItemCount()==1)
@@ -412,36 +394,57 @@ public class PDLDocumentVerifier
         }
     }
 
-    private void error(PDLItem item, String message) throws PDLException
+    private void verifyCondition(Set<String> declared, PDLItem item, PDLCondition condition) throws PDLException
     {
-        throw new PDLException(item, message);
-    }
-    
-    private void warning(PDLItem item, String message)
-    {
-        warningMessageCount++;
-        System.err.println("["+warningMessageCount+"] "+item+": "+message);
-    }
-
-    private Map<String, String> define(PDLItem item, Map<String, String> defined,
-            String type, String name) throws PDLException
-    {
-        defined = map(defined);
-        if (defined.containsKey(name))
-            throw new PDLException(item, "name already defined: "+name);
-        defined.put(name, type);
-        return defined;
-    }
-
-    private void checkMultiplicity(Map<String, String> defined,
-            PDLItem item,
-            PDLMultiplicity m) throws PDLException
-    {
-        if (m != null && m.getVariable() != null)
+        if (condition instanceof PDLCompiledCondition)
         {
-            if (defined == null || !VARIABLE.equals(defined.get(m.getVariable())))
-                throw new PDLException(item, "variable referenced before assignment:"+m.getVariable());
+            ensureReferencedExist(declared, item, ((PDLCompiledCondition) condition).getDependencies());
         }
     }
 
+    private void verifyFunction(Set<String> declared, PDLItem item, PDLFunction function) throws PDLException
+    {
+        ensureReferencedExist(declared, item, function.getDependencies());
+    }
+
+    private void ensureReferencedExist(Set<String> declared, PDLItem item,
+            Collection<String> dependencies) throws PDLException
+    {
+        for (String name: dependencies)
+            ensureReferencedExists(declared, item, name);
+    }
+
+    private void verifyPacketReference(PDLItem item, PDLPacketRef packetRef) throws PDLException
+    {
+        if (doc.getPacketDecl(packetRef.getPacketName())==null)
+            error(item, "packet referenced but not declared:"+packetRef.getPacketName());
+    }
+
+    private void verifyMultiplicativeReference(Set<String> declared,
+            PDLItem item, PDLMultiplicity multiplicity) throws PDLException
+    {
+        if (multiplicity == null)
+            return;
+        if (multiplicity.getType() == PDLMultiplicityType.Variable)
+            ensureReferencedExists(declared, item, multiplicity.getVariable());
+    }
+
+    private void ensureReferencedExists(Set<String> declared, PDLItem item, String name) throws PDLException
+    {
+        if (name == null)
+            throw new NullPointerException("reference name must not be null");
+        if (!declared.contains(name))
+            error(item, "item references '"+name+"' before assignment");
+    }
+
+    private void error(PDLPacketDecl item, String string) throws PDLException
+    {
+        throw new PDLException(string, item);
+    }
+
+    private void error(PDLItem item, String string) throws PDLException
+    {
+        throw new PDLException(item, string);
+    }
+    
 }
