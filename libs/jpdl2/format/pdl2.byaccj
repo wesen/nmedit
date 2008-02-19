@@ -31,7 +31,6 @@ import net.sf.nmedit.jpdl2.*;
 %token CAST_TO_BOOLEAN
 %token IF
 %token TKDOLLAR
-%token RARROW
 %token TK_MESSAGEID;
 %token TK_FAIL;
 %token TK_SWITCH;
@@ -40,7 +39,7 @@ import net.sf.nmedit.jpdl2.*;
 
 %type <ival> INTEGER_LITERAL 
 %type <obj> PacketDecl PacketDeclStart PacketDeclList NextExpression StreamOp 
-%type <obj> expression CompareExpr MultiplicativeExpr AdditiveExpr ConstExpr UnaryExpr compiled_expression 
+%type <obj> expression ConstExpr compiled_expression 
 %type <obj> pdldocument  Constant  Multiplicity ConstantWithoutMuliplicity   
 %type <obj> RawVariable Variable RawVariableList VariableList ImplicitVariable
 %type <obj> IfStatement IfExpression
@@ -51,11 +50,13 @@ import net.sf.nmedit.jpdl2.*;
 %type <ival> StreamOpToken
 
 %nonassoc IF
-%right '~' '!' CAST_TO_INT CAST_TO_BOOLEAN
+/* groups of equal precedence, increasing priority from top to bottom */
+%left CMP_EQ CMP_NEQ CMP_LT CMP_LEQ CMP_GT CMP_GEQ 
+%left '&' '|' '^'
 %left '+' '-'
 %left '*' '/' '%'
-%left '&' '|' '^'
-%nonassoc CMP_EQ CMP_NEQ CMP_LT CMP_LEQ CMP_GT CMP_GEQ 
+%left NEG
+%right '~' '!' CAST_TO_INT CAST_TO_BOOLEAN
 
 %start pdldocument
 
@@ -225,15 +226,10 @@ BlockItem:
 IfStatement:
            IF '(' IfExpression ')'   {  PDLConditionalImpl c = new PDLConditionalImpl((PDLCondition) $3); badd(c); bpush(c); $$ = c;  }
                                      Block { bpop(); }
-       |   '#' IDENTIFIER '=' INTEGER_LITERAL RARROW 
-                                     {  PDLConditionalImpl c = new PDLConditionalImpl(new PDLConditionImpl($2, $4, false)); badd(c); bpush(c); $$ = c;  }
-                                     Block { bpop(); }
-       |   '#' IDENTIFIER '!' INTEGER_LITERAL RARROW 
-                                     {  PDLConditionalImpl c = new PDLConditionalImpl(new PDLConditionImpl($2, $4, true)); badd(c); bpush(c); $$ = c;  }
-                                     Block { bpop(); }
        ;
 
 Block:     SimpleItem           { }
+       |   '{' '}'              { badd(new PDLBlockItemImpl()); }
        |   '{' { PDLBlockItemImpl b = new PDLBlockItemImpl(); badd(b); bpush(b); } ItemList '}' { bpop(); }
        ;
 
@@ -257,37 +253,32 @@ compiled_expression:
        ;
 
 expression: 
-          '(' expression ')'            { $$ = $2; }
-       |  MultiplicativeExpr
-       |  AdditiveExpr
-       |  UnaryExpr
-       |  ConstExpr
-       |  StreamOp   
-       |  CompareExpr
+          ConstExpr
+       |  StreamOp
        |  TypeCastExpr 
-       ;
-
-CompareExpr: 
-          expression CMP_EQ expression      { $$ = Opcode.cmpEq( (Expression) $1, (Expression) $3 ); }
-       |  expression CMP_NEQ expression      { $$ = Opcode.cmpNeq( (Expression) $1, (Expression) $3 ); }
-       |  expression CMP_LT expression      { $$ = Opcode.cmpLt( (Expression) $1, (Expression) $3 ); }
-       |  expression CMP_LEQ expression      { $$ = Opcode.cmpLEq( (Expression) $1, (Expression) $3 ); }
-       |  expression CMP_GT expression      { $$ = Opcode.cmpGt( (Expression) $1, (Expression) $3 ); }
-       |  expression CMP_GEQ expression      { $$ = Opcode.cmpGEq( (Expression) $1, (Expression) $3 ); }
-       ;
-
-MultiplicativeExpr:
-          expression '*' expression         { $$ = Opcode.mul( (Expression) $1, (Expression) $3 ); }
-       |  expression '/' expression         { $$ = Opcode.div( (Expression) $1, (Expression) $3 ); }
-       |  expression '%' expression         { $$ = Opcode.mod( (Expression) $1, (Expression) $3 ); }
-       |  expression '^' expression         { $$ = Opcode.xor( (Expression) $1, (Expression) $3 ); }
-       ;
-
-AdditiveExpr:
-          expression '+' expression {  $$ = Opcode.add( (Expression) $1, (Expression) $3 ); }
-       |  expression '-' expression { $$ = Opcode.minus( (Expression) $1, (Expression) $3 ); }
-       |  expression '&' expression { $$ = Opcode.and( (Expression) $1, (Expression) $3 ); }
-       |  expression '|' expression { $$ = Opcode.or ( (Expression) $1, (Expression) $3 ); }
+       /* CompareExpr */ 
+       |  expression CMP_EQ expression  { $$ = Expression.cmpEq ( (Expression) $1, (Expression) $3 ); }
+       |  expression CMP_NEQ expression { $$ = Expression.cmpNeq( (Expression) $1, (Expression) $3 ); }
+       |  expression CMP_LT expression  { $$ = Expression.cmpLt ( (Expression) $1, (Expression) $3 ); }
+       |  expression CMP_LEQ expression { $$ = Expression.cmpLEq( (Expression) $1, (Expression) $3 ); }
+       |  expression CMP_GT expression  { $$ = Expression.cmpGt ( (Expression) $1, (Expression) $3 ); }
+       |  expression CMP_GEQ expression { $$ = Expression.cmpGEq( (Expression) $1, (Expression) $3 ); }
+       /* AdditiveExpr */
+       |  expression '+' expression     { $$ = Expression.add   ( (Expression) $1, (Expression) $3 ); }
+       |  expression '-' expression     { $$ = Expression.minus ( (Expression) $1, (Expression) $3 ); }
+       |  expression '&' expression     { $$ = Expression.and   ( (Expression) $1, (Expression) $3 ); }
+       |  expression '|' expression     { $$ = Expression.or    ( (Expression) $1, (Expression) $3 ); }
+	   /* MultiplicativeExpr */
+       |  expression '*' expression     { $$ = Expression.mul   ( (Expression) $1, (Expression) $3 ); }
+       |  expression '/' expression     { $$ = Expression.div   ( (Expression) $1, (Expression) $3 ); }
+       |  expression '%' expression     { $$ = Expression.mod   ( (Expression) $1, (Expression) $3 ); }
+       |  expression '^' expression     { $$ = Expression.xor   ( (Expression) $1, (Expression) $3 ); }
+       /* UnaryExpr */
+       |  '~' expression %prec NEG      { $$ = Expression.inv( (Expression) $2 ); }
+       |  '!' expression %prec NEG      { $$ = Expression.inv( (Expression) $2 ); }
+       |  '-' expression %prec NEG      { $$ = Expression.neg( (Expression) $2 ); }
+       /* brackets */
+       |  '(' expression ')'            { $$ = $2; }
        ;
 
 ConstExpr:
@@ -298,15 +289,9 @@ ConstExpr:
        |  IDENTIFIER                { $$ = new Expression(Opcodes.vpush, (String)$1); }
        ;
 
-UnaryExpr:
-          '~' expression        { $$ = Opcode.inv( (Expression) $2 ); }
-       |  '!' expression        { $$ = Opcode.inv( (Expression) $2 ); }
-       |  '-' expression        { $$ = Opcode.neg( (Expression) $2 ); }
-       ;
-
 TypeCastExpr:
-          CAST_TO_INT expression { $$ = Opcode.castToInt((Expression) $2); }
-       |  CAST_TO_BOOLEAN expression { $$ = Opcode.castToBoolean((Expression) $2); }
+          CAST_TO_INT expression { $$ = Expression.castToInt((Expression) $2); }
+       |  CAST_TO_BOOLEAN expression { $$ = Expression.castToBoolean((Expression) $2); }
        ;
 
 StreamOp: 

@@ -137,8 +137,6 @@ Brackets = [\[\]\{\}\(\)]
   "?"                           { return (int) yycharat(0); }
   "/"                           { return (int) yycharat(0); }
   
-  "=>"                           { return yyparser.RARROW; }
-
   /* special chars */
   ";"                            { return (int) yycharat(0); }
   ":"                            { return (int) yycharat(0); }
