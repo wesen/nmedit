@@ -1455,7 +1455,7 @@ label{fill:#000;}
 		<label x="179" y="9">Mix Bus</label>
 		<label x="169" y="26">L</label>
 		<label x="192" y="26">R</label>
-		<label x="222" y="-1">Level</label>
+		<label x="222" y="0">Level</label>
 	</module>
 	<module component-id="m36" width="255" height="30">
 		<name>PosEdgeDelay</name>
