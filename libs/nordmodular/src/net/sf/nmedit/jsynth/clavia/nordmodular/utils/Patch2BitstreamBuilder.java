@@ -49,7 +49,7 @@ public class Patch2BitstreamBuilder
 {
 
     private IntStream intStream;
-    private PDLPacketParser patchParser =  PDLData.getPatchParser();
+    private PDLPacketParser patchParser =   new PDLPacketParser( PDLData.getPatchDoc() );
     private List<BitStream> sections = new ArrayList<BitStream>(); 
     private final NMPatch patch;
     

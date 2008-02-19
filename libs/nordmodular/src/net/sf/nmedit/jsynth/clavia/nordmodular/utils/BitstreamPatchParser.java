@@ -63,7 +63,7 @@ public class BitstreamPatchParser
 
     public void transcode(BitStream stream, PatchBuilder callback) throws ParseException
     {
-        PDLPacketParser parser = PDLData.getPatchParser();
+        PDLPacketParser parser = new PDLPacketParser( PDLData.getPatchDoc() );
         PDLPacket packet;
     
         try
