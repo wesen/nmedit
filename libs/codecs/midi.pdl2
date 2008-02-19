@@ -1,3 +1,9 @@
+/*
+ * parse failed:
+ *   F0 33 50 06 07 3A 00 07 00 00 00 00 00 00 00 00 00 41 F7
+ *
+ */
+
 start Sysex;
 
 Sysex :=
@@ -59,14 +65,12 @@ Parameter :=
 		case 0x43: MorphRangeChange$data
 		default: fail
 	}
-	
-	@lblDataEnd
-	
-	0:1 checksum:7 = ([+;0;@lblDataEnd;8;$]%128)
+	checksum$checksum
 	;
 
 ParameterSelect :=
     messageId("ParameterSelect")
+    /* unknown1 always zero ??? */
 	0:1 unknown1:7 0:1 section:7 0:1 module:7 0:1 parameter:7
 	;
 
@@ -87,7 +91,7 @@ NMInfo :=
 	  case 0x05: { messageId("voicecount") VoiceCount$data }
 	  case 0x07: { messageId("slotsselected") SlotsSelected$data }
 	  case 0x09: { messageId("slotactivated") SlotActivated$data }
-	  case 0x13: UnknownNMInfo$data
+	  case 0x13: { messageId("unknownNMInfo") UnknownNMInfo$data }
 	  case 0x25: { messageId("knobAssignment") KnobAssignment$data }
 	  case 0x26: { messageId("knobAssignment") KnobAssignmentChange$data }
 	  case 0x27: { messageId("SetPatchTitle") SetPatchTitle$data }
@@ -101,9 +105,7 @@ NMInfo :=
 	  case 0x7e: Error$data
 	  default: fail
 	}
-	@lblDataEnd
-	
-	0:1 checksum:7 = ([+;0;@lblDataEnd;8;$]%128)
+	checksum$checksum
 	;
 
 // cause of message: unknown (I believe I only had turned the knobs at the synth ?)
@@ -173,16 +175,22 @@ KnobChange :=
 ACK :=
     messageId("ack")
 	0:1 pid1:7 0:1 type:7 0:1 pid2:7
+	
 	switch(type)
 	{
-	  case 0x7f: 0:0
-	  case 0x0d: UnknownACKReply$data
-      case 0x36: ACKChecksum$checksum
-	  case 0x13: PatchListResponse$patchList
-	  case 0x15: PatchListResponse$patchList
-	  case 0x38: PatchLoadResponse$patchLoad
+	  case 0x7f: {} /* parsing of packet is complete => no checksum */
+	  case 0x0d: { UnknownACKReply$data        checksum$checksum }
+      case 0x36: { /* no data */               checksum$checksum }
+	  case 0x13: { PatchListResponse$patchList checksum$checksum }
+	  case 0x15: { PatchListResponse$patchList checksum$checksum }
+	  case 0x38: { PatchLoadResponse$patchLoad checksum$checksum }
 	  default: fail
 	}
+	;
+
+checksum :=
+	@lblDataEnd
+	0:1 checksum:7 = ([+;0;@lblDataEnd;8;$]%128)
 	;
 
 // Note:
@@ -190,22 +198,13 @@ ACK :=
 // where the source (bank, position) contained no patch.
 // The operation is probably not valid, the ACK might contain an error message.
 // In each recorded sample message (about 20) unknown1 is alway 0, unknown2 always 1.
-// The last variable (unknown3) is probably a checksum.
 // 'pid2' contains the bank index, 'pid3' contains the bank position.
 // A slot index was not included in this message.
-// Example message: F0 33 58 06 08 0D 08 (21 00 01 40) F7
+// Example message: F0 33 58 06 08 0D 08 (21 00 01) 40 F7
 UnknownACKReply :=
 	0:1 pid3:7
 	0:1 unknown1:7
 	0:1 unknown2:7
-	0:1 unknown3:7
-	;
-
-ACKChecksum :=
-	
-	@lblDataEnd
-	
-	0:1 checksum:7 = ([+;0;@lblDataEnd;8;$]%128)
 	;
 
 // note: (reply case 1)
@@ -219,16 +218,12 @@ ACKChecksum :=
 PatchLoadResponse :=
 	0:1 pid3:7 0:1 unknown2:7 0:1 section:7 0:1 position:7
 	0:1 unknown5:7 0:1 unknown6:7 
-	
-	@lblDataEnd
-	0:1 checksum:7 = ([+;0;@lblDataEnd;8;$]%128)
 	;
 
 PatchHandling :=
 	(	PatchModification$data
 	|   PatchCommand$data )
-	@lblDataEnd
-	0:1 checksum:7 = ([+;0;@lblDataEnd;8;$]%128)
+	checksum$checksum
 	;
 
 PatchCommand :=
@@ -425,8 +420,7 @@ GetCurrentNotes :=
 PatchPacket :=
     messageId("PatchPacket")
 	0:1 command:1 pid:6 ?PatchData$next
-	@lblDataEnd
-	0:1 checksum:7 = ([+;0;@lblDataEnd;8;$]%128)
+	checksum$checksum
 	;
 
 PatchData :=
@@ -436,13 +430,10 @@ PatchData :=
 PatchListResponse :=
     messageId("PatchListResponse")
 
+    /* the values seem always to be unknown[1..3] = {6,22,1}  */
 	unknown1:8 unknown2:8 unknown3:8
 	?StringList$data
 	0:1 endmarker:7
-	
-	@lblDataEnd
-	
-	0:1 checksum:7 = ([+;0;@lblDataEnd;8;$]%128)
 	;
 	
 StringList :=
