@@ -76,4 +76,9 @@ public class PDLConstantImpl extends PDLItemImpl implements PDLConstant
         return (multiplicity != null ? (String.valueOf(multiplicity) + "*") : "") + value+":"+size;
     }
 
+    public PDLConstant asConstant()
+    {
+        return this;
+    }
+
 }
