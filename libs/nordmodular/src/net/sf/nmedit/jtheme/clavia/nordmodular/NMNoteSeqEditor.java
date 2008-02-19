@@ -239,7 +239,6 @@ public class NMNoteSeqEditor extends JTControl
         JTControlAdapter ca = controlAdapters[index];
         if (ca != null)
         {
-        	System.out.println("set");
             ca.setValue(value);
            
             repaint();
