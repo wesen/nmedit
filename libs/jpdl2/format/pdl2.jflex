@@ -111,31 +111,30 @@ Brackets = [\[\]\{\}\(\)]
                                    return yyparser.LABEL; }
 
   /* operators */
-  "+"                            { return (int) yycharat(0); }
-  "-"                            { return (int) yycharat(0); }
-  "*"                            { return (int) yycharat(0); }
-  "\/"                            { return (int) yycharat(0); }
-  "%"                            { return (int) yycharat(0); }
-  "&"                            { return (int) yycharat(0); }
-  "|"                            { return (int) yycharat(0); }
-  "\^"                            { return (int) yycharat(0); }
-  "~"                            { return (int) yycharat(0); }
-  "!"                            { return (int) yycharat(0); }
+  "+"                            { return yyparser.TK_PLUS; }
+  "-"                            { return yyparser.TK_MINUS; }
+  "*"                            { return yyparser.TK_TIMES; }
+  "/"                            { return yyparser.TK_DIVIDE; }
+  "%"                            { return yyparser.TK_PERCENT; }
+  "&"                            { return yyparser.TK_AND; }
+  "|"                            { return yyparser.TK_OR; }
+  "\^"                            { return yyparser.TK_XOR; }
+  "~"                            { return yyparser.TK_TILDE; }
+  "!"                            { return yyparser.TK_NOT; }
   
   /* special operators */
-  "<<"                           { return yyparser.LSHIFT; }
-  ">>"                           { return yyparser.RSHIFT; }
-  ">>>"                          { return yyparser.URSHIFT; }
+  "<<"                           { return yyparser.TK_LSHIFT; }
+  ">>>"                          { return yyparser.TK_URSHIFT; }
+  ">>"                           { return yyparser.TK_RSHIFT; }
   "=="                           { return yyparser.CMP_EQ; }
   "!="                           { return yyparser.CMP_NEQ; }
-  ">"                           { return yyparser.CMP_GT; }
   ">="                           { return yyparser.CMP_GEQ; }
-  "<"                           { return yyparser.CMP_LT; }
   "<="                           { return yyparser.CMP_LEQ; }
+  ">"                           { return yyparser.CMP_GT; }
+  "<"                           { return yyparser.CMP_LT; }
   ":="                           { return yyparser.ASSIGN; }
-  "="                           { return (int) yycharat(0); }
-  "?"                           { return (int) yycharat(0); }
-  "/"                           { return (int) yycharat(0); }
+  "="                           { return yyparser.TK_EQ; }
+  "?"                           { return yyparser.TK_INTERROGATIONMARK; }
   
   /* special chars */
   ";"                            { return (int) yycharat(0); }

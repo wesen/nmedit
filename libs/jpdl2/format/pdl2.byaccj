@@ -17,10 +17,10 @@ import net.sf.nmedit.jpdl2.*;
 %token <sval> LABEL
 %token <sval> PACKETREF
 %token <sval> IDENTIFIER
-%token LSHIFT
-%token RSHIFT
-%token URSHIFT
-%token CMP_EQ
+%token TK_LSHIFT
+%token TK_RSHIFT
+%token TK_URSHIFT
+%token CMP_EQ // '=='
 %token CMP_NEQ
 %token CMP_LT
 %token CMP_LEQ
@@ -36,6 +36,18 @@ import net.sf.nmedit.jpdl2.*;
 %token TK_SWITCH;
 %token TK_CASE;
 %token TK_DEFAULT;
+%token TK_PLUS;
+%token TK_TIMES;
+%token TK_MINUS;
+%token TK_DIVIDE;
+%token TK_PERCENT;
+%token TK_AND; // &
+%token TK_OR; // |
+%token TK_XOR; // ^
+%token TK_TILDE; // ~
+%token TK_NOT; // !
+%token TK_EQ; // '='
+%token TK_INTERROGATIONMARK; // '?'
 
 %type <ival> INTEGER_LITERAL 
 %type <obj> PacketDecl PacketDeclStart PacketDeclList NextExpression StreamOp 
@@ -51,12 +63,13 @@ import net.sf.nmedit.jpdl2.*;
 
 %nonassoc IF
 /* groups of equal precedence, increasing priority from top to bottom */
-%left CMP_EQ CMP_NEQ CMP_LT CMP_LEQ CMP_GT CMP_GEQ 
-%left '&' '|' '^'
-%left '+' '-'
-%left '*' '/' '%'
+%left CMP_EQ CMP_NEQ CMP_LT CMP_LEQ CMP_GT CMP_GEQ
+%left TK_LSHIFT TK_RSHIFT TK_URSHIFT 
+%left TK_AND TK_OR TK_XOR
+%left TK_PLUS TK_MINUS
+%left TK_TIMES TK_DIVIDE TK_PERCENT
 %left NEG
-%right '~' '!' CAST_TO_INT CAST_TO_BOOLEAN
+%right TK_TILDE TK_NOT CAST_TO_INT CAST_TO_BOOLEAN
 
 %start pdldocument
 
@@ -101,7 +114,7 @@ PacketDecl:
        ;
 
 PacketDeclStart:
-          PacketName '%' INTEGER_LITERAL { int padding = $3;
+          PacketName TK_PERCENT INTEGER_LITERAL { int padding = $3;
                                            if(padding<1)
                                              yyerror("padding must >=1: "+padding);
                                               
@@ -110,12 +123,12 @@ PacketDeclStart:
        ;
 
 Multiplicity:
-         IDENTIFIER '*'              { $$ = new PDLMultiplicityImpl($1); }
-       | INTEGER_LITERAL '*'         { $$ = new PDLMultiplicityImpl($1); }
-       | '*'                         { yyerror("*-multiplicity not implemented");
+         IDENTIFIER TK_TIMES              { $$ = new PDLMultiplicityImpl($1); }
+       | INTEGER_LITERAL TK_TIMES         { $$ = new PDLMultiplicityImpl($1); }
+       | TK_TIMES                         { yyerror("*-multiplicity not implemented");
                                        //$$ = new PDLMultiplicityImpl(PDLMultiplicityType.NoneOrMany); 
                                      }
-       | '+'                         { yyerror("+-multiplicity not implemented");
+       | TK_PLUS                         { yyerror("+-multiplicity not implemented");
                                        //$$ = new PDLMultiplicityImpl(PDLMultiplicityType.OneOrMany); 
                                      }
        ;
@@ -165,8 +178,8 @@ MutualExclusionStatement:
        ;
 
 MutualExclusion:
-          { PDLMutualExclusionImpl m = new PDLMutualExclusionImpl(); badd(m); bpush(m); } Item '|' Item { bpop(); }
-       |  MutualExclusion '|' Item      { $$ = $1; }
+          { PDLMutualExclusionImpl m = new PDLMutualExclusionImpl(); badd(m); bpush(m); } Item TK_OR Item { bpop(); }
+       |  MutualExclusion TK_OR Item      { $$ = $1; }
        ;
 
 MessageId:
@@ -183,12 +196,12 @@ RawVariable:
        ;
 
 ImplicitVariable:
-          RawVariable '=' '(' expression ')' { badd(new PDLImplicitVariableImpl((PDLVariable)$1, new PDLFunctionImpl((Expression)$4)));  }
+          RawVariable TK_EQ '(' expression ')' { badd(new PDLImplicitVariableImpl((PDLVariable)$1, new PDLFunctionImpl((Expression)$4)));  }
        ;
 
 VariableList:
           RawVariableList { badd($1); }
-       |  RawVariableList '/' INTEGER_LITERAL { PDLVariableListImpl v = (PDLVariableListImpl) $1; v.setTerminal($3); badd($1); }
+       |  RawVariableList TK_DIVIDE INTEGER_LITERAL { PDLVariableListImpl v = (PDLVariableListImpl) $1; v.setTerminal($3); badd($1); }
        ;
 
 RawVariableList:
@@ -220,7 +233,7 @@ Item:
 
 BlockItem:
           IfStatement   { $$=$1; }
-       |  '?' { PDLOptionalImpl o = new PDLOptionalImpl(); badd(o); bpush(o); }  Block { bpop(); }
+       |  TK_INTERROGATIONMARK { PDLOptionalImpl o = new PDLOptionalImpl(); badd(o); bpush(o); }  Block { bpop(); }
        ;
 
 IfStatement:
@@ -256,28 +269,32 @@ expression:
           ConstExpr
        |  StreamOp
        |  TypeCastExpr 
-       /* CompareExpr */ 
-       |  expression CMP_EQ expression  { $$ = Expression.cmpEq ( (Expression) $1, (Expression) $3 ); }
-       |  expression CMP_NEQ expression { $$ = Expression.cmpNeq( (Expression) $1, (Expression) $3 ); }
-       |  expression CMP_LT expression  { $$ = Expression.cmpLt ( (Expression) $1, (Expression) $3 ); }
-       |  expression CMP_LEQ expression { $$ = Expression.cmpLEq( (Expression) $1, (Expression) $3 ); }
-       |  expression CMP_GT expression  { $$ = Expression.cmpGt ( (Expression) $1, (Expression) $3 ); }
-       |  expression CMP_GEQ expression { $$ = Expression.cmpGEq( (Expression) $1, (Expression) $3 ); }
-       /* AdditiveExpr */
-       |  expression '+' expression     { $$ = Expression.add   ( (Expression) $1, (Expression) $3 ); }
-       |  expression '-' expression     { $$ = Expression.minus ( (Expression) $1, (Expression) $3 ); }
-       |  expression '&' expression     { $$ = Expression.and   ( (Expression) $1, (Expression) $3 ); }
-       |  expression '|' expression     { $$ = Expression.or    ( (Expression) $1, (Expression) $3 ); }
-	   /* MultiplicativeExpr */
-       |  expression '*' expression     { $$ = Expression.mul   ( (Expression) $1, (Expression) $3 ); }
-       |  expression '/' expression     { $$ = Expression.div   ( (Expression) $1, (Expression) $3 ); }
-       |  expression '%' expression     { $$ = Expression.mod   ( (Expression) $1, (Expression) $3 ); }
-       |  expression '^' expression     { $$ = Expression.xor   ( (Expression) $1, (Expression) $3 ); }
-       /* UnaryExpr */
-       |  '~' expression %prec NEG      { $$ = Expression.inv( (Expression) $2 ); }
-       |  '!' expression %prec NEG      { $$ = Expression.inv( (Expression) $2 ); }
-       |  '-' expression %prec NEG      { $$ = Expression.neg( (Expression) $2 ); }
-       /* brackets */
+       // CompareExpr  
+       |  expression CMP_EQ expression  { $$ = Expression.cmpEq  ( (Expression) $1, (Expression) $3 ); }
+       |  expression CMP_NEQ expression { $$ = Expression.cmpNeq ( (Expression) $1, (Expression) $3 ); }
+       |  expression CMP_LT expression  { $$ = Expression.cmpLt  ( (Expression) $1, (Expression) $3 ); }
+       |  expression CMP_LEQ expression { $$ = Expression.cmpLEq ( (Expression) $1, (Expression) $3 ); }
+       |  expression CMP_GT expression  { $$ = Expression.cmpGt  ( (Expression) $1, (Expression) $3 ); }
+       |  expression CMP_GEQ expression { $$ = Expression.cmpGEq ( (Expression) $1, (Expression) $3 ); }
+       // bitshift 
+       |  expression TK_LSHIFT expression { $$ = Expression.shl  ( (Expression) $1, (Expression) $3 ); }
+       |  expression TK_RSHIFT expression { $$ = Expression.shr  ( (Expression) $1, (Expression) $3 ); }
+       |  expression TK_URSHIFT expression{ $$ = Expression.ushr ( (Expression) $1, (Expression) $3 ); }       
+       // AdditiveExpr 
+       |  expression TK_PLUS expression  { $$ = Expression.add   ( (Expression) $1, (Expression) $3 ); }
+       |  expression TK_MINUS expression { $$ = Expression.minus ( (Expression) $1, (Expression) $3 ); }
+       |  expression TK_AND expression   { $$ = Expression.and   ( (Expression) $1, (Expression) $3 ); }
+       |  expression TK_OR expression    { $$ = Expression.or    ( (Expression) $1, (Expression) $3 ); }
+	   // MultiplicativeExpr 
+       |  expression TK_TIMES expression { $$ = Expression.mul   ( (Expression) $1, (Expression) $3 ); }
+       |  expression TK_DIVIDE expression{ $$ = Expression.div   ( (Expression) $1, (Expression) $3 ); }
+       |  expression TK_PERCENT expression { $$ = Expression.mod ( (Expression) $1, (Expression) $3 ); }
+       |  expression TK_XOR expression     { $$ = Expression.xor ( (Expression) $1, (Expression) $3 ); }
+       // UnaryExpr 
+       |  TK_TILDE expression %prec NEG    { $$ = Expression.inv ( (Expression) $2 ); }
+       |  TK_NOT expression %prec NEG      { $$ = Expression.inv ( (Expression) $2 ); }
+       |  TK_MINUS expression %prec NEG    { $$ = Expression.neg ( (Expression) $2 ); }
+       // brackets 
        |  '(' expression ')'            { $$ = $2; }
        ;
 
@@ -310,11 +327,11 @@ NextExpression:
        ;
        
 StreamOpToken:
-           '&' { $$=Opcodes.land; }
-       |   '|' { $$=Opcodes.lor; }
-       |   '^' { $$=Opcodes.lxor; }
-       |   '*' { $$=Opcodes.lmul; }
-       |   '+' { $$=Opcodes.ladd; }
+           TK_AND { $$=Opcodes.land; }
+       |   TK_OR { $$=Opcodes.lor; }
+       |   TK_XOR { $$=Opcodes.lxor; }
+       |   TK_TIMES { $$=Opcodes.lmul; }
+       |   TK_PLUS { $$=Opcodes.ladd; }
        ;
 
 %%
