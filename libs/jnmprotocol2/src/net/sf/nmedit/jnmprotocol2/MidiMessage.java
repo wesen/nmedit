@@ -75,7 +75,7 @@ public abstract class MidiMessage
     public static MidiMessage create(BitStream bitStream)
         throws MidiException
     {   
-    	PDLPacketParser parser = PDLData.getMidiParser();
+        PDLPacketParser parser = new PDLPacketParser(PDLData.getMidiDoc());
     	
     	PDLMessage message;
     	try
@@ -93,6 +93,12 @@ public abstract class MidiMessage
     	{
     	    bitStream.setPosition(0);
     	}
+    	
+    	/*
+    	if ("unknownNMInfo".equals(message.getMessageId()))
+    	{
+    	    System.out.println(PDLUtils.toString(message.getPacket()));
+    	}*/
     	
     	if ("PatchPacket".equals(message.getMessageId()))
     	{
@@ -264,16 +270,15 @@ public abstract class MidiMessage
 	addParameter("slot", "slot");
 	set("slot", 0);
     }
-  
+
     protected BitStream getBitStream(IntStream intStream)
 	throws MidiException
     {
-        PDLPacketParser parser = PDLData.getMidiParser();
-        
+        PDLPacketParser parser = new PDLPacketParser(PDLData.getMidiDoc());
+
         BitStream bitStream = null;
         try
         {
-            PDLPacket packet =
             parser.parse(intStream);
             bitStream = parser.getBitStream();
         }

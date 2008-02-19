@@ -44,8 +44,6 @@ public final class PDLData
 
     private static PDLDocument midiDoc;
     private static PDLDocument patchDoc;
-    private static PDLPacketParser midiParser;
-    private static PDLPacketParser patchParser;
     
     private static PDLDocument parseDoc(String file)
     {
@@ -113,20 +111,6 @@ public final class PDLData
         return patchDoc;
     }
 
-    public static PDLPacketParser getMidiParser()
-    {
-        if (midiParser == null)
-            midiParser = new PDLPacketParser(getMidiDoc());
-        return midiParser;
-    }
-
-    public static PDLPacketParser getPatchParser()
-    {
-        if (patchParser == null)
-            patchParser = new PDLPacketParser(getPatchDoc());
-        return patchParser;
-    }
-    
     /**
      * Sets the locations of the pdl files and the class loader which
      * is used to locate the files.
@@ -156,8 +140,6 @@ public final class PDLData
     {
         patchDoc = null;
         midiDoc = null;
-        midiParser = null;
-        patchParser = null;
     }
     
     /**

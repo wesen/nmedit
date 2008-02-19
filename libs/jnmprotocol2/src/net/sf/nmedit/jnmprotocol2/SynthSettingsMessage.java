@@ -113,7 +113,7 @@ public class SynthSettingsMessage extends MidiMessage
     
     public static BitStream createBitStream(IntStream data)
     {
-        PDLPacketParser patchParser = PDLData.getPatchParser();
+        PDLPacketParser patchParser = new PDLPacketParser(PDLData.getPatchDoc());
         
         try
         {
@@ -202,7 +202,7 @@ public class SynthSettingsMessage extends MidiMessage
         
         parameterMap = new HashMap<String, Object>();
         
-        PDLPacketParser parser = PDLData.getPatchParser();
+        PDLPacketParser parser = new PDLPacketParser(PDLData.getPatchDoc());
     
         PDLPacket packet;
         
