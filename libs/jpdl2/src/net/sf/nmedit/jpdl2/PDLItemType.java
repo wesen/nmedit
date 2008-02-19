@@ -56,6 +56,5 @@ public enum PDLItemType
     
     // instructions
     MessageId,
-    Break,
     Fail
 }

@@ -31,7 +31,6 @@ public class PDLInstructionImpl extends PDLItemImpl implements PDLInstruction
     {
         types = EnumSet.noneOf(PDLItemType.class);
         types.add(PDLItemType.MessageId);
-        types.add(PDLItemType.Break);
         types.add(PDLItemType.Fail);
     }
 
@@ -86,8 +85,6 @@ public class PDLInstructionImpl extends PDLItemImpl implements PDLInstruction
         {
             case MessageId:
                 return "messageId(\""+string+"\")";
-            case Break:
-                return "break";
             case Fail:
                 return "fail";
             default:
