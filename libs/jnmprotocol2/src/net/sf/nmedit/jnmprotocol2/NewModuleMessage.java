@@ -117,7 +117,7 @@ public class NewModuleMessage extends MidiMessage
 
 	// Encode patch data
 	BitStream patchStream;
-	PDLPacketParser parser = PDLData.getPatchParser();
+	PDLPacketParser parser = new PDLPacketParser(PDLData.getPatchDoc());
 	try
 	{
 	    parser.parse(patchData);
