@@ -18,6 +18,11 @@
 */
 package net.sf.nmedit.jpdl2.impl;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import net.sf.nmedit.jpdl2.PDLCondition;
 import net.sf.nmedit.jpdl2.PDLParseContext;
 import net.sf.nmedit.jpdl2.format.Expression;
@@ -45,6 +50,13 @@ public class PDLCompiledCondition implements PDLCondition
     public String toString()
     {
         return "if("+getSource()+")";
+    }
+
+    public Collection<String> getDependencies()
+    {
+        Set<String> set = new HashSet<String>();
+        e.collectDepencies(set);
+        return Collections.unmodifiableSet(set);
     }
     
 }
