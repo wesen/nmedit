@@ -29,6 +29,8 @@ public class PDLVariableImpl extends PDLItemImpl implements PDLVariable
     
     public PDLVariableImpl(String name, int size)
     {
+        if (name == null)
+            throw new NullPointerException("name must not be null");
         this.name = name;
         this.size = size;
     }
