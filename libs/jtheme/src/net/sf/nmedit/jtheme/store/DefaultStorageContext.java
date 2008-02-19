@@ -522,7 +522,7 @@ public class DefaultStorageContext extends StorageContext
             
             if (!dontLoad)
             {
-                ComponentElement childStore = tryBuildComponentStore(child);
+                ComponentElement childStore = tryBuildComponentStore(moduleElement, child);
                 
                 if (childStore != null)
                 {
@@ -534,7 +534,7 @@ public class DefaultStorageContext extends StorageContext
         moduleStoreMap.put(moduleStore.getId(), moduleStore);
     }
     
-    private ComponentElement tryBuildComponentStore(Element element)
+    private ComponentElement tryBuildComponentStore(Element moduleElement, Element element)
     {
         try
         {
@@ -545,7 +545,9 @@ public class DefaultStorageContext extends StorageContext
             Log log = getLogger();
             if (log.isWarnEnabled())
             {
-                log.warn(this, e);
+                log.warn("could not create component store for element "+
+                        element.getName()+
+                        " (parent "+moduleElement.getAttributeValue("component-id")+")", e);
             }
             return null;
         }
