@@ -27,6 +27,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import net.sf.nmedit.nmutils.Arrays15;
+
 public class InsertInsertionSet<E> extends AbstractSet<E> implements Set<E>, Serializable
 {
 
@@ -113,24 +115,9 @@ public class InsertInsertionSet<E> extends AbstractSet<E> implements Set<E>, Ser
                 newCapacity = minCapacity;
             // minCapacity is usually close to size, so this is a win:
             // Java 6 only: elements = Arrays.copyOf(elements, newCapacity);
-            elements = copyOf(elements, newCapacity);
+            elements = Arrays15.copyOf(elements, newCapacity);
             
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> T[] copyOf(T[] original, int newLength) {
-        return (T[]) copyOf(original, newLength, original.getClass());
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) {
-        T[] copy = ((Object)newType == (Object)Object[].class)
-            ? (T[]) new Object[newLength]
-            : (T[]) Array.newInstance(newType.getComponentType(), newLength);
-        System.arraycopy(original, 0, copy, 0,
-                         Math.min(original.length, newLength));
-        return copy;
     }
     
     public boolean add(E e)
@@ -242,7 +229,7 @@ public class InsertInsertionSet<E> extends AbstractSet<E> implements Set<E>, Ser
 
     public Object[] toArray()
     {
-        return copyOf(elements, size);
+        return Arrays15.copyOf(elements, size);
     }
 
     @SuppressWarnings("unchecked")
@@ -250,7 +237,7 @@ public class InsertInsertionSet<E> extends AbstractSet<E> implements Set<E>, Ser
     {
         if (a.length < size)
             // Make a new array of a's runtime type, but my contents:
-            return (T[]) copyOf(elements, size, a.getClass());
+            return (T[]) Arrays15.copyOf(elements, size, a.getClass());
         System.arraycopy(elements, 0, a, 0, size);
         if (a.length > size)
             a[size] = null;
