@@ -161,10 +161,6 @@ public class PDLException extends Exception
             {
                 return "switch("+item.asSwitchStatement().getFunction()+")";
             }
-            case Break:
-            {
-                return "break";
-            }
             default:
                 throw new InternalError("unknown item: "+item);
         }
