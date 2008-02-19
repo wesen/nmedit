@@ -39,28 +39,57 @@ public class Expression implements Opcodes
     public Expression[] args;
     public String sval;
     public int ival;
+    
+    private static int count = 0;
+    private Expression()
+    {
+        count ++;
+        System.out.println("new expression: "+count);
+    }
+    
+    public Expression(Expression src)
+    {
+        this();
+        this.args = src.args;
+        this.opcode = src.opcode;
+        this.sval = src.sval;
+        this.ival = src.ival;
+        validateExpression();
+    }
 
     public Expression(int opcode, Expression ... args)
     {
+        this();
         if (args == null)
             throw new NullPointerException("args must not be null");
+/*
+        for (int i=0;i<args.length-1;i++)
+            for (int j=i+1;j<args.length;j++)
+                if (args[i] == args[j])
+                    throw new IllegalArgumentException("eq "+args[i]+", "+args[j]);
+        */
         this.opcode = opcode;
         this.args = args;
         validateExpression();
+        System.out.println("EX: "+this);
     }
 
     public Expression(int opcode, String value)
     {
+        this();
         this.opcode = opcode;
         this.sval = value;
         validateExpression();
+        System.out.println("EX: "+this);
     }
 
     public Expression(int opcode, int value)
     {
+        this();
         this.opcode = opcode;
         this.ival = value;
         validateExpression();
+        System.out.println("EX: "+this);
     }
 
     public void collectDepencies(Collection<String> dst)
@@ -583,7 +612,6 @@ public class Expression implements Opcodes
 
     public static Expression mul(Expression a, Expression b)
     {
-        System.out.println("mul "+a+", "+b);
         return new Expression(imul, a, b);
     }
 
@@ -599,7 +627,6 @@ public class Expression implements Opcodes
 
     public static Expression add(Expression a, Expression b)
     {
-        System.out.println("mul "+a+", "+b);
         return new Expression(iadd, a, b);
     }
     
@@ -660,7 +687,7 @@ public class Expression implements Opcodes
 
     public static Expression cmpGt(Expression a, Expression b)
     {
-        return new Expression(ilt, a, b);
+        return new Expression(igt, a, b);
     }
 
     public static Expression cmpLEq(Expression a, Expression b)
@@ -671,6 +698,21 @@ public class Expression implements Opcodes
     public static Expression cmpGEq(Expression a, Expression b)
     {
         return new Expression(igeq, a, b);
+    }
+
+    public static Expression shl(Expression a, Expression b)
+    {
+        return new Expression(ishl, a, b);
+    }
+
+    public static Expression shr(Expression a, Expression b)
+    {
+        return new Expression(ishr, a, b);
+    }
+
+    public static Expression ushr(Expression a, Expression b)
+    {
+        return new Expression(iushr, a, b);
     }
 
   
