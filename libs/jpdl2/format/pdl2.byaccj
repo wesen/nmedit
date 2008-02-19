@@ -295,7 +295,7 @@ expression:
        |  TK_NOT expression %prec NEG      { $$ = Expression.inv ( (Expression) $2 ); }
        |  TK_MINUS expression %prec NEG    { $$ = Expression.neg ( (Expression) $2 ); }
        // brackets 
-       |  '(' expression ')'            { $$ = $2; }
+       |  '(' expression ')'            { $$ = new Expression((Expression)$2); }
        ;
 
 ConstExpr:

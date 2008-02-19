@@ -479,7 +479,7 @@ public class PDLParseTests
         {
             int a = 3, b = 4, c = 5;
             System.out.println("yystart1 ****");
-            Assert.assertFalse(isConditionTrue(" (23) ==  ((a*b)+24)", a, b, c));
+            Assert.assertFalse(isConditionTrue(" (23) ==  (24*(a*b))", a, b, c));
             //Assert.assertTrue(isConditionTrue(((b*c)+a)+"==((b*c)+a)", a, b, c));
             System.out.println("yystop");
             if (true) return;
