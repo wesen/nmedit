@@ -54,6 +54,11 @@ public class PDLPacketParser
         this.doc = doc;
     }
     
+    public PDLDocument getDocument()
+    {
+        return doc;
+    }
+    
     public String getLatestMessageId()
     {
         return messageId;
@@ -524,7 +529,6 @@ public class PDLPacketParser
                             PDLPacketImpl context2 = new PDLPacketImpl(packetDecl, packetRefList.getBinding());
 
                                 parseBlock(context2, packetDecl);
-                            
                             packetList[i] = context2;
                             padding(packetDecl, packetStart);
                         }
@@ -543,6 +547,7 @@ public class PDLPacketParser
                 {   
                     PDLConditional conditional = item.asConditional();
                     context.packet = packet; // set the packet field
+                    
                     if (conditional.getCondition().isConditionTrue(context))
                     {
                         if (DEBUG) printItem(item);
@@ -585,11 +590,11 @@ public class PDLPacketParser
                     try
                     {
                         parseBlock(packet, optional);
- 
+
                         // try to parse remaining items in this block
                         beginBlockAtIndex = index+1; // start at next index
                         parseBlock(packet, block);
-
+                        
                         // try to parse the tails
                         
                         
@@ -638,23 +643,16 @@ public class PDLPacketParser
                             addReserved(+getMinSize(choice));                    
                             try
                             {
-                                println("********* "+choice);
-                                
                                 parseBlock(packet, choice);
 
-                                println("********* 2");
-                                
                                 // try to parse remaining items in this block
                                 beginBlockAtIndex = index+1; // start at next index
                                 parseBlock(packet, block);
-
-                                println("********* 3");
                                 // accepted
                                 return;
                             }
                             catch (PDLException pdle)
                             {
-                                println("********* 4");
                                 tabs = st_tabs;
                                 if (DEBUG) println("not chosen ("+choice+"), reason:"+toString(pdle));
                                 
