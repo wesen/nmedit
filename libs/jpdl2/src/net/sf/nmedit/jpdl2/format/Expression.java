@@ -18,11 +18,22 @@
 */
 package net.sf.nmedit.jpdl2.format;
 
+import java.util.Collection;
+
 import net.sf.nmedit.jpdl2.stream.BitStream;
 import net.sf.nmedit.jpdl2.PDLParseContext;
 
 public class Expression implements Opcodes
 {
+    public static enum Type
+    {
+        None,
+        Integer,
+        Boolean
+    };
+
+    public static final int OPCODE_COUNT = 32;
+    
     
     public int opcode;
     public Expression[] args;
@@ -52,6 +63,19 @@ public class Expression implements Opcodes
         validateExpression();
     }
 
+    public void collectDepencies(Collection<String> dst)
+    {
+        switch (opcode)
+        {
+            case vpush:
+                dst.add(sval);
+                break;
+            case lpush:
+                dst.add("@"+sval);
+                break;
+        }
+    }
+
     public Expression(int opcode, boolean value)
     {
         this(opcode, value?1:0);
@@ -59,19 +83,19 @@ public class Expression implements Opcodes
     
     public String describe()
     {
-        return Opcode.describe(opcode);
+        return Expression.describe(opcode);
     }
     
-    public Opcode.Type getResultType()
+    public Type getResultType()
     {
-        return Opcode.getResultType(opcode);
+        return Expression.getResultType(opcode);
     }
 
     private void validateExpression()
     {
         if (args != null)
         {
-            if (args.length != Opcode.getArgumentCount(opcode))
+            if (args.length != Expression.getArgumentCount(opcode))
                 throw new IllegalArgumentException("invalid argument count for "+
                         describe()+": "+args.length);
             
@@ -81,13 +105,14 @@ public class Expression implements Opcodes
                 if (e == null)
                     throw new IllegalArgumentException("argument list of "+describe()+" contains null-value");
             
-                if (Opcode.getArgumentType(opcode, i) != e.getResultType())
+                if (Expression.getArgumentType(opcode, i) != e.getResultType())
                     throw new IllegalArgumentException("argument for "+describe()
                             +" has the wrong type: "+args[i]);            
                 
             }
+            
         }
-        
+     
         // no argument case:
         switch (opcode)
         {
@@ -117,7 +142,7 @@ public class Expression implements Opcodes
 
     public String toString()
     {
-        return "Expr[description='"+describe()+"']";
+        return getSource();//"Expr[description='"+describe()+"']";
     }
 
     private int left(PDLParseContext context, Integer fieldRegister)
@@ -200,7 +225,7 @@ public class Expression implements Opcodes
             case lor: 
                 return evalListOperator(c, f);
             default: 
-                throw Opcode.invalidOpcodeError(opcode);
+                throw Expression.invalidOpcodeError(opcode);
         }
     }
 
@@ -255,7 +280,7 @@ public class Expression implements Opcodes
     private String a(int index)
     {
         Expression e = args[index];
-        if (Opcode.getArgumentCount(e.opcode)==0)
+        if (Expression.getArgumentCount(e.opcode)==0)
             return e.toString();
         else
             return "("+e+")";
@@ -302,8 +327,397 @@ public class Expression implements Opcodes
             case land: return "[&;"+args[0]+";"+args[1]+";"+args[2]+";"+args[3]+"]";
             case lxor: return "[^;"+args[0]+";"+args[1]+";"+args[2]+";"+args[3]+"]";
             case lor:  return "[|;"+args[0]+";"+args[1]+";"+args[2]+";"+args[3]+"]";
-            default: throw Opcode.invalidOpcodeError(opcode);
+            default: throw Expression.invalidOpcodeError(opcode);
         }
     }
+
+    public static String describe(int opcode)
+    {
+        return "opcode <"+opcode+"> ("+Expression.toString(opcode)+")";
+    }
+    
+    public static String toString(int opcode)
+    {
+        switch (opcode)
+        {
+            case ipush: return "<integer>";
+            case bpush: return "<boolean>";
+            case lpush: return "<label>";
+            case vpush: return "<variable>";
+            case fpush: return "$";
+            case ineg: return "-<integer>";
+            case binv: return "!<boolean>";
+            case iinv: return "~<integer>";
+            case i2b: return "typecast (int)";
+            case b2i: return "typecast (boolean)";
+            case imul: return "*";
+            case idiv: return "/";
+            case imod: return "%";
+            case iadd: return "+";
+            case isub: return "-";
+            case ishl: return "<<";
+            case ishr: return ">>";
+            case iushr: return ">>>";
+            case ilt: return "<";
+            case igt: return ">";
+            case ileq: return "<=";
+            case igeq: return ">=";
+            case ieq: return "==";
+            case ineq: return "!=";
+            case beq: return "==";
+            case bneq: return "!=";
+            case iand: return "&";
+            case ixor: return "^";
+            case ior: return "|";
+            case band: return "&";
+            case bor: return "|";
+            case bxor: return "^";
+            case ladd: return "[+;...]";
+            case lmul: return "[*;...]";
+            case land: return "[&;...]";
+            case lxor: return "[^;...]";
+            case lor:  return "[|;...]";
+            default: 
+                throw invalidOpcodeError(opcode);
+        }
+    }
+    
+    public static boolean isOpcodeDefined(int opcode)
+    {
+        return 0<=opcode && opcode<OPCODE_COUNT;
+    }
+    
+    public static int getArgumentCount(int opcode)
+    {
+        switch (opcode)
+        {
+            case ipush:
+            case bpush:
+            case lpush:
+            case vpush:
+            case fpush:
+                return 0;
+            case ineg:
+            case binv:
+            case iinv:
+            case i2b:
+            case b2i:
+                return 1;
+            case imul:
+            case idiv:
+            case imod:
+            case iadd:
+            case isub:
+            case ishl:
+            case ishr:
+            case iushr:
+            case ilt:
+            case igt:
+            case ileq:
+            case igeq:
+            case ieq:
+            case ineq:
+            case beq:
+            case bneq:
+            case iand:
+            case ixor:
+            case ior:
+            case band:
+            case bor:
+            case bxor:
+                return 2;
+            case ladd:
+            case lmul:
+            case land:
+            case lxor:
+            case lor: 
+                return 4; // start, end, size, field
+            default: 
+                throw invalidOpcodeError(opcode);
+        }
+    }
+    
+    public static Type getResultType(int opcode)
+    {
+        switch (opcode)
+        {
+            case bpush:
+            case binv:
+            case i2b:
+            case beq:
+            case bneq:
+            case band:
+            case bor:
+            case bxor:
+                return Type.Boolean;
+            case ipush:
+            case lpush:
+            case vpush:
+            case fpush:
+            case ineg:
+            case iinv:
+            case b2i:
+            case imul:
+            case idiv:
+            case imod:
+            case iadd:
+            case isub:
+            case ishl:
+            case ishr:
+            case iushr:
+            case ilt:
+            case igt:
+            case ileq:
+            case igeq:
+            case ieq:
+            case ineq:
+            case iand:
+            case ixor:
+            case ior:
+            case ladd:
+            case lmul:
+            case land:
+            case lxor:
+            case lor: 
+                return Type.Integer;
+            default: 
+                throw invalidOpcodeError(opcode);
+        }
+    }
+
+    public static Type getArgumentType(int opcode, int argumentIndex)
+    {
+        if (argumentIndex<0||argumentIndex>=getArgumentCount(opcode))
+            throw new IllegalArgumentException( 
+                    "invalid argument index: "+argumentIndex
+                    +" for "+describe(opcode));
+        
+        switch (opcode)
+        {
+            case lpush:
+            case vpush:
+            case fpush:
+            case bpush:
+            case ipush:
+                // code should never be reached because opcode has not arguments
+                return Type.None;
+
+            case i2b:
+            case ineg:
+            case iinv:
+            case imul:
+            case idiv:
+            case imod:
+            case iadd:
+            case isub:
+            case ishl:
+            case ishr:
+            case iushr:
+            case ilt:
+            case igt:
+            case ileq:
+            case igeq:
+            case ieq:
+            case ineq:
+            case iand:
+            case ixor:
+            case ior:
+                return Type.Integer;
+            case ladd:
+            case lmul:
+            case land:
+            case lxor:
+            case lor: 
+                return Type.Integer;
+            case b2i:
+            case binv:
+            case beq:
+            case bneq:
+            case band:
+            case bor:
+            case bxor:
+                return Type.Boolean;
+            default: 
+                throw invalidOpcodeError(opcode);
+        }
+    }
+
+    public static IllegalArgumentException invalidOpcodeError(int opcode)
+    {
+        return new IllegalArgumentException("unknown opcode: "+describe(opcode));
+    }
+
+    public static boolean checkResult(Expression e)
+    {
+        switch (e.getResultType())
+        {
+            case Boolean:
+                return false;
+            case Integer:
+                return true;
+            default:
+                throw new RuntimeException("invalid result type: "+e.getResultType());
+        }
+    }
+    
+    public static boolean checkResult(Expression a, Expression b)
+    {
+        boolean type = checkResult(a);
+        if (type!=checkResult(b))
+            throw new IllegalArgumentException("incompatible return types: "+a.getResultType()+", "+b.getResultType());
+        return type;
+    }
+
+    public static void checkType(Expression a, Expression b, boolean type)
+    {
+        if (checkResult(a)!=type || checkResult(b)!=type)
+            throw new IllegalArgumentException("expected type: "+(type?"int":"boolean"));
+    }
+
+    public static void checkType(Expression a, boolean type)
+    {
+        if (checkResult(a)!=type)
+            throw new IllegalArgumentException("expected type: "+(type?"int":"boolean"));
+    }
+
+
+    public static Expression mul(Expression a, Expression b)
+    {
+        System.out.println("mul "+a+", "+b);
+        return new Expression(imul, a, b);
+    }
+
+    public static Expression div(Expression a, Expression b)
+    {
+        return new Expression(idiv, a, b);
+    }
+
+    public static Expression mod(Expression a, Expression b)
+    {
+        return new Expression(imod, a, b);
+    }
+
+    public static Expression add(Expression a, Expression b)
+    {
+        System.out.println("mul "+a+", "+b);
+        return new Expression(iadd, a, b);
+    }
+    
+    public static Expression castToInt(Expression a)
+    {
+        return new Expression(b2i, a);
+    }
+    
+    public static Expression castToBoolean(Expression a)
+    {
+        return new Expression(i2b, a);
+    }
+
+    public static Expression minus(Expression a, Expression b)
+    {
+        return new Expression(isub, a, b);
+    }
+
+    public static Expression neg(Expression a)
+    {
+        return new Expression(ineg, a);
+    }
+
+    public static Expression inv(Expression a)
+    {
+        return new Expression(checkResult(a)?iinv:binv, a);
+    }
+
+    public static Object cmpEq(Expression a, Expression b)
+    {
+        return new Expression(checkResult(a,b) ? ieq : beq, a, b);
+    }
+
+    public static Object cmpNeq(Expression a, Expression b)
+    {
+        return new Expression(checkResult(a,b) ? ineq : bneq, a, b);
+    }
+
+    public static Expression xor(Expression a, Expression b)
+    {
+        return new Expression(checkResult(a,b) ? ixor : bxor, a, b);
+    }
+
+    public static Expression and(Expression a, Expression b)
+    {
+        return new Expression(checkResult(a,b) ? iand : band, a, b);
+    }
+
+    public static Expression or(Expression a, Expression b)
+    {
+        return new Expression(checkResult(a,b) ? ior : bor, a, b);
+    }
+
+    public static Expression cmpLt(Expression a, Expression b)
+    {
+        return new Expression(ilt, a, b);
+    }
+
+    public static Expression cmpGt(Expression a, Expression b)
+    {
+        return new Expression(ilt, a, b);
+    }
+
+    public static Expression cmpLEq(Expression a, Expression b)
+    {
+        return new Expression(ileq, a, b);
+    }
+
+    public static Expression cmpGEq(Expression a, Expression b)
+    {
+        return new Expression(igeq, a, b);
+    }
+
+  
+    /**
+     * for copy and paste:
+        switch (opcode)
+        {
+            case ipush:
+            case bpush:
+            case lpush:
+            case vpush:
+            case fpush:
+            case ineg:
+            case binv:
+            case iinv:
+            case i2b:
+            case b2i:
+            case imul:
+            case idiv:
+            case imod:
+            case iadd:
+            case isub:
+            case ishl:
+            case ishr:
+            case iushr:
+            case ilt:
+            case igt:
+            case ileq:
+            case igeq:
+            case ieq:
+            case ineq:
+            case beq:
+            case bneq:
+            case iand:
+            case ixor:
+            case ior:
+            case band:
+            case bor:
+            case bxor:
+            case ladd:
+            case lmul:
+            case land:
+            case lxor:
+            case lor: 
+            default: 
+                throw invalidOpcodeError(opcode);
+        }
+     */
     
 }
