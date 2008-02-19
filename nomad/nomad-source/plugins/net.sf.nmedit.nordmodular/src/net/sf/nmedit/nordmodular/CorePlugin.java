@@ -33,8 +33,8 @@ public class CorePlugin extends Plugin
 
         PDLData.setSource(loader, "midi.pdl2", "patch.pdl2");
         
-        PDLData.getPatchParser();
-        PDLData.getMidiParser();
+        PDLData.getPatchDoc();
+        PDLData.getMidiDoc();
     }
 
     @Override
