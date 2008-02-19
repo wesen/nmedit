@@ -18,9 +18,19 @@
 */
 package net.sf.nmedit.jpdl2;
 
+import java.util.Collection;
+
 public interface PDLFunction
 {
 
     int compute(PDLParseContext context) throws PDLException;
+    
+    /**
+     * Returns the names of variables and labels on which this function
+     * depends. Label names have an @ (at)-sign as prefix.
+     * 
+     * @return the names of variables and labels on which this function depends 
+     */
+    Collection<String> getDependencies();
     
 }
