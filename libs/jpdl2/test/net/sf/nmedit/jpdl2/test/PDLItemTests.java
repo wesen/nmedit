@@ -23,7 +23,7 @@ import net.sf.nmedit.jpdl2.PDLItemType;
 import net.sf.nmedit.jpdl2.format.Expression;
 import net.sf.nmedit.jpdl2.format.Opcodes;
 import net.sf.nmedit.jpdl2.impl.PDLBlockItemImpl;
-import net.sf.nmedit.jpdl2.impl.PDLConditionImpl;
+import net.sf.nmedit.jpdl2.impl.PDLCompiledCondition;
 import net.sf.nmedit.jpdl2.impl.PDLConditionalImpl;
 import net.sf.nmedit.jpdl2.impl.PDLConstantImpl;
 import net.sf.nmedit.jpdl2.impl.PDLImplicitVariableImpl;
@@ -63,7 +63,7 @@ public class PDLItemTests
             case PacketRefList:
                 return new PDLPacketRefListImpl(null, "name", "binding", new PDLMultiplicityImpl(2));
             case Conditional:
-                return new PDLConditionalImpl(new PDLConditionImpl("name",0,true));
+                return new PDLConditionalImpl(new PDLCompiledCondition(new Expression(Opcodes.vpush, "v")));
             case ImplicitVariable:
                 return new PDLImplicitVariableImpl("name",1);
             case MessageId:
@@ -74,8 +74,6 @@ public class PDLItemTests
                 return new PDLSwitchStatementImpl(new Expression(Opcodes.ipush, 0));
             case MutualExclusion:
                 return new PDLMutualExclusionImpl(new PDLConstantImpl(0,0), new PDLConstantImpl(0,0));
-            case Break:
-                return new PDLInstructionImpl(PDLItemType.Break);
             case Fail:
                 return new PDLInstructionImpl(PDLItemType.Fail);
             default:
