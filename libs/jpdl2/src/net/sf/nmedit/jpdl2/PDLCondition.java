@@ -18,6 +18,8 @@
 */
 package net.sf.nmedit.jpdl2;
 
+import java.util.Collection;
+
 public interface PDLCondition
 {
 
@@ -27,5 +29,13 @@ public interface PDLCondition
     boolean isConditionTrue(PDLParseContext context);
 
     String getSource();
+
+    /**
+     * Returns the names of variables and labels on which this condition
+     * depends. Label names have an @ (at)-sign as prefix.
+     * 
+     * @return the names of variables and labels on which this condition depends 
+     */
+    Collection<String> getDependencies();
     
 }
