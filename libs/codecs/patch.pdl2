@@ -83,6 +83,7 @@ Parameter :=
 	  case 3: Param3$parameters
 	  case 4: Param4$parameters
 	  case 5: Param5$parameters
+	  /* case 6 no such module */
 	  case 7: Param7$parameters
 	  case 8: Param8$parameters
 	  case 9: Param9$parameters
@@ -117,6 +118,8 @@ Parameter :=
 	  case 38: Param38$parameters
 	  case 39: Param39$parameters
 	  case 40: Param40$parameters
+	  /* case 41 no such module */
+	  /* case 42 no such module */
 	  case 43: Param43$parameters
 	  case 44: Param44$parameters
 	  case 45: Param45$parameters
@@ -128,10 +131,12 @@ Parameter :=
 	  case 51: Param51$parameters
 	  case 52: Param52$parameters
 	  case 54: Param54$parameters
+	  /* case 55 no such module */
+	  /* case 56 no such module */
 	  case 57: Param57$parameters
 	  case 58: Param58$parameters
 	  case 59: Param59$parameters
-	  case 60: Param60$parameters
+	  /* case 60 no such module */
 	  case 61: Param61$parameters
 	  case 62: Param62$parameters
 	  case 64: Param64$parameters
@@ -159,6 +164,7 @@ Parameter :=
 	  case 90: Param90$parameters
 	  case 91: Param91$parameters
 	  case 92: Param92$parameters
+	  /* case 93 no such module */
 	  case 94: Param94$parameters
 	  case 95: Param95$parameters
 	  case 96: Param96$parameters
@@ -166,6 +172,7 @@ Parameter :=
 	  case 98: Param98$parameters
 	  case 99: Param99$parameters
 	  case 100: Param100$parameters
+	  /* case 101 no such module */
 	  case 102: Param102$parameters
 	  case 103: Param103$parameters
 	  case 104: Param104$parameters
@@ -173,14 +180,17 @@ Parameter :=
 	  case 106: Param106$parameters
 	  case 107: Param107$parameters
 	  case 108: Param108$parameters
+	  /* case 109 no such module */
 	  case 110: Param110$parameters
 	  case 111: Param111$parameters
 	  case 112: Param112$parameters
 	  case 113: Param113$parameters
 	  case 114: Param114$parameters
 	  case 115: Param115$parameters
+	  /* case 116 no such module */
 	  case 117: Param117$parameters
 	  case 118: Param118$parameters
+	  /* case 119-126 no such module */
 	  case 127: Param127$parameters
 	  default: fail
 	}
@@ -410,10 +420,6 @@ Param58 :=
 Param59 :=
 	level:7
 	;
-	
-Param60 :=
-     /* TODO declaration missing */
-    ;
 	
 Param61 :=
 	clipMod:7 clip:7 sym:1

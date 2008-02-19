@@ -124,7 +124,6 @@ Parameter % 1 :=
 	#type=57 => Param57$parameters
 	#type=58 => Param58$parameters
 	#type=59 => Param59$parameters
-	#type=60 => Param60$parameters
 	#type=61 => Param61$parameters
 	#type=62 => Param62$parameters
 	#type=64 => Param64$parameters
@@ -337,8 +336,8 @@ Param39 % 1 :=
 	;
 
 Param40 % 1 :=
-	inSense1:7 inSense1:7 inSense1:7 inSense1:7 inSense1:7 inSense1:7 
-	inSense1:7 inSense1:7 attenuate:1
+	inSense1:7 inSense2:7 inSense3:7 inSense4:7 inSense5:7 inSense6:7 
+	inSense7:7 inSense8:7 attenuate:1
 	;
 
 Param43 % 1 :=
