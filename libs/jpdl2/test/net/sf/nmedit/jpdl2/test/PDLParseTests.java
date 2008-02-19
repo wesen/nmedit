@@ -22,8 +22,12 @@ import java.io.StringReader;
 
 import net.sf.nmedit.jpdl2.PDLDocument;
 import net.sf.nmedit.jpdl2.PDLException;
+import net.sf.nmedit.jpdl2.PDLMessage;
+import net.sf.nmedit.jpdl2.PDLPacketParser;
 import net.sf.nmedit.jpdl2.format.PDL2Parser;
+import net.sf.nmedit.jpdl2.stream.BitStream;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class PDLParseTests
@@ -316,5 +320,169 @@ public class PDLParseTests
     {
         test("Packet := (a:8|1:8);");
     }
+    
+    /*
+     * unreachable code tests
+     */
+    @Test(expected=PDLException.class)
+    public void unreachAbleCode1() throws PDLException
+    {
+        test("Packet := break v:8;");
+    }
+    
+    @Test(expected=PDLException.class)
+    public void unreachAbleCode2() throws PDLException
+    {
+        test("Packet := fail v:8;");
+    }
+    
+    @Test(expected=PDLException.class)
+    public void unreachAbleCode3() throws PDLException
+    {
+        test("Packet := {break} v:8;");
+    }
+    
+    @Test(expected=PDLException.class)
+    public void unreachAbleCode4() throws PDLException
+    {
+        test("Packet := {fail} v:8;");
+    }
 
+    @Test(expected=PDLException.class)
+    public void unreachAbleCode5() throws PDLException
+    {
+        test("Packet := if(true) {break v:8};");
+    }
+
+    @Test(expected=PDLException.class)
+    public void unreachAbleCode6() throws PDLException
+    {
+        test("Packet := if(true) {fail v:8};");
+    }
+
+    @Test(expected=PDLException.class)
+    public void unreachAbleCode7() throws PDLException
+    {
+        test("Packet := switch(1) {default:{break v:8}};");
+    }
+
+    @Test(expected=PDLException.class)
+    public void unreachAbleCode8() throws PDLException
+    {
+        test("Packet := switch(1) {default:{fail v:8}};");
+    }
+
+    @Test(expected=PDLException.class)
+    public void unreachAbleCode9() throws PDLException
+    {
+        test("Packet := ?{break v:8};");
+    }
+
+    @Test(expected=PDLException.class)
+    public void unreachAbleCode10() throws PDLException
+    {
+        test("Packet := ?{fail v:8};");
+    }
+    
+    public void unreachAbleCodeNoError1() throws PDLException
+    {
+        test("Packet := if(true) {break} v:8;");
+    }
+    
+    public void unreachAbleCodeNoError2() throws PDLException
+    {
+        test("Packet := if(true) {fail} v:8;");
+    }
+
+    public void unreachAbleCodeNoError3() throws PDLException
+    {
+        test("Packet := switch(1) {default:{break}} v:8;");
+    }
+
+    public void unreachAbleCodeNoError4() throws PDLException
+    {
+        test("Packet := switch(1) {default:{fail}} v:8;");
+    }
+
+    public void unreachAbleCodeNoError5() throws PDLException
+    {
+        test("Packet := ?break v:8;");
+    }
+
+    public void unreachAbleCodeNoError6() throws PDLException
+    {
+        test("Packet := ?fail  v:8;");
+    }
+    
+    
+    
+    
+    /*
+     * operator precedence:
+     * operator                                    |  associativity
+     * ------------------------------------------------------------
+     * + - unary plus, minus                       |  right
+     * ~ bitwise NOT                               |
+     * ! boolean (logical) NOT                     |
+     * (type) type cast                            |
+     * ------------------------------------------------------------      
+     * * / % multiplication, division, remainder   |   left
+     * + - addition, substraction                  |
+     * + string concatenation                      |
+     * << signed bit shift left                    |
+     * >> signed bit shift right                   |
+     * >>> unsigned bit shift right                |
+     * < <= less than, less than or equal to       |
+     * > >= greater than, greater than or equal to |
+     * == equal to                                 |
+     * != not equal to                             |
+     * & bitwise AND                               |
+     * & boolean (logical) AND                     |
+     * ^ bitwise XOR                               |
+     * ^ boolean (logical) XOR                     |
+     * | bitwise OR                                |
+     * |  boolean (logical) OR                     |
+     * && boolean (logical) AND                    |
+     * || boolean (logical) OR                     |
+     * ------------------------------------------------------------
+     */
+    
+    public boolean isConditionTrue(String condition, int a, int b, int c) throws PDLException
+    {
+        final String OK_RESULT = "OK"; 
+        String src = "start Packet; Packet := a:8 b:8 c:8 if("+condition+") { messageId(\""+OK_RESULT+"\") };";
+        System.out.println(src);
+        PDL2Parser parser = new PDL2Parser(new StringReader(src));
+        parser.parse();
+        PDLDocument doc = parser.getDocument();
+        
+        BitStream bs = new BitStream();
+        bs.append(a, 8);
+        bs.append(b, 8);
+        bs.append(c, 8);
+        
+        System.out.println("isConditionTrue:....");
+        PDLPacketParser packetParser = new PDLPacketParser(doc);
+        PDLMessage message = packetParser.parseMessage(bs);
+        return OK_RESULT.equals(message.getMessageId());
+    }
+    
+    @Test
+    public void testPrec1() throws PDLException
+    {
+        {
+            int a = 3, b = 4, c = 5;
+            Assert.assertTrue(isConditionTrue(((b*c)+a)+"==((b*c)+a)", a, b, c));
+            Assert.assertTrue(isConditionTrue((a+(b*c))+"==(a+(b*c))", a, b, c));
+            Assert.assertTrue(isConditionTrue("(b*c+a)==(a+(b*c))", a, b, c));
+            Assert.assertTrue(isConditionTrue("(a+b*c)==(a+(b*c))", a, b, c));
+            Assert.assertFalse(isConditionTrue("(a+b*c)!=((a+b)*c)", a, b, c));
+        }
+        {
+            int a = 2, b = 8, c = 2;
+            Assert.assertTrue(isConditionTrue("(a+b/c)==(a+(b/c))", a, b, c));
+            Assert.assertFalse(isConditionTrue("(a+b/c)!=((a+b)/c)", a, b, c));
+        }
+    }
+    
 }

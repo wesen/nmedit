@@ -122,12 +122,13 @@ public class BitstreamParseTests
             PDLMessage msg = mtest(stream(i,8), 
                 "start := v:8 \n" +
                 " messageId(\"-1\") \n" +
-                " #v = 0 => messageId(\"0\") \n" +
-                " #v = 1 => messageId(\"1\") \n" +
-                " #v = 2 => messageId(\"2\") \n" +
-                " #v = 3 => messageId(\"3\") \n" +
-                " #v = 4 => messageId(\"4\") \n" +
-                ";" 
+                " switch(v){\n" +
+                "   case 0: messageId(\"0\") \n" +
+                "   case 1: messageId(\"1\") \n" +
+                "   case 2: messageId(\"2\") \n" +
+                "   case 3: messageId(\"3\") \n" +
+                "   case 4: messageId(\"4\") \n" +
+                " };"
             );
             
             int msgId = Integer.parseInt(msg.getMessageId());
@@ -145,12 +146,13 @@ public class BitstreamParseTests
             // part is not included in the message
             PDLMessage msg = mtest(stream(i,8),
                 "start := v:8 ? { messageId(\"abc\") c:4} \n" +
-                " #v = 0 => messageId(\"0\") \n" +
-                " #v = 1 => messageId(\"1\") \n" +
-                " #v = 2 => messageId(\"2\") \n" +
-                " #v = 3 => messageId(\"3\") \n" +
-                " #v = 4 => messageId(\"4\") \n" +
-                ";" 
+                " switch(v) {\n"+
+                " case 0: messageId(\"0\") \n" +
+                " case 1: messageId(\"1\") \n" +
+                " case 2: messageId(\"2\") \n" +
+                " case 3: messageId(\"3\") \n" +
+                " case 4: messageId(\"4\") \n" +
+                "};"
             );
 
             int msgId = Integer.parseInt(msg.getMessageId());
