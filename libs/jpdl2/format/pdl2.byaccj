@@ -160,7 +160,7 @@ SwitchStatement:
        ;
 
 SwitchStatementHeader:
-         TK_SWITCH '(' expression ')' { PDLSwitchStatementImpl s = new PDLSwitchStatementImpl((Expression)$3); badd(s); bpush(s); }
+         TK_SWITCH '(' expression ')' { PDLSwitchStatementImpl s = new PDLSwitchStatementImpl(epopFinal()); badd(s); bpush(s); }
        ;
 
 SwitchCaseList:
@@ -196,7 +196,7 @@ RawVariable:
        ;
 
 ImplicitVariable:
-          RawVariable TK_EQ '(' expression ')' { badd(new PDLImplicitVariableImpl((PDLVariable)$1, new PDLFunctionImpl((Expression)$4)));  }
+          RawVariable TK_EQ '(' expression ')' { badd(new PDLImplicitVariableImpl((PDLVariable)$1, new PDLFunctionImpl(epopFinal())));  }
        ;
 
 VariableList:
@@ -262,7 +262,7 @@ INTEGER_LITERAL:
 	   ;
 
 compiled_expression:
-          expression                { $$ = $1; }
+          expression                { $$ = epopFinal(); }
        ;
 
 expression: 
@@ -270,40 +270,40 @@ expression:
        |  StreamOp
        |  TypeCastExpr 
        // CompareExpr  
-       |  expression CMP_EQ expression  { $$ = Expression.cmpEq  ( (Expression) $1, (Expression) $3 ); }
-       |  expression CMP_NEQ expression { $$ = Expression.cmpNeq ( (Expression) $1, (Expression) $3 ); }
-       |  expression CMP_LT expression  { $$ = Expression.cmpLt  ( (Expression) $1, (Expression) $3 ); }
-       |  expression CMP_LEQ expression { $$ = Expression.cmpLEq ( (Expression) $1, (Expression) $3 ); }
-       |  expression CMP_GT expression  { $$ = Expression.cmpGt  ( (Expression) $1, (Expression) $3 ); }
-       |  expression CMP_GEQ expression { $$ = Expression.cmpGEq ( (Expression) $1, (Expression) $3 ); }
+       |  expression CMP_EQ expression  { epush(Expression.cmpEq  ( epop1(), epop() )); }
+       |  expression CMP_NEQ expression { epush(Expression.cmpNeq ( epop1(), epop() )); }
+       |  expression CMP_LT expression  { epush(Expression.cmpLt  ( epop1(), epop() )); }
+       |  expression CMP_LEQ expression { epush(Expression.cmpLEq ( epop1(), epop() )); }
+       |  expression CMP_GT expression  { epush(Expression.cmpGt  ( epop1(), epop() )); }
+       |  expression CMP_GEQ expression { epush(Expression.cmpGEq ( epop1(), epop() )); }
        // bitshift 
-       |  expression TK_LSHIFT expression { $$ = Expression.shl  ( (Expression) $1, (Expression) $3 ); }
-       |  expression TK_RSHIFT expression { $$ = Expression.shr  ( (Expression) $1, (Expression) $3 ); }
-       |  expression TK_URSHIFT expression{ $$ = Expression.ushr ( (Expression) $1, (Expression) $3 ); }       
+       |  expression TK_LSHIFT expression { epush(Expression.shl  ( epop1(), epop() )); }
+       |  expression TK_RSHIFT expression { epush(Expression.shr  ( epop1(), epop() )); }
+       |  expression TK_URSHIFT expression{ epush(Expression.ushr ( epop1(), epop() )); }       
        // AdditiveExpr 
-       |  expression TK_PLUS expression  { $$ = Expression.add   ( (Expression) $1, (Expression) $3 ); }
-       |  expression TK_MINUS expression { $$ = Expression.minus ( (Expression) $1, (Expression) $3 ); }
-       |  expression TK_AND expression   { $$ = Expression.and   ( (Expression) $1, (Expression) $3 ); }
-       |  expression TK_OR expression    { $$ = Expression.or    ( (Expression) $1, (Expression) $3 ); }
+       |  expression TK_PLUS expression  { epush(Expression.add   ( epop1(), epop() )); }
+       |  expression TK_MINUS expression { epush(Expression.minus ( epop1(), epop() )); }
+       |  expression TK_AND expression   { epush(Expression.and   ( epop1(), epop() )); }
+       |  expression TK_OR expression    { epush(Expression.or    ( epop1(), epop() )); }
 	   // MultiplicativeExpr 
-       |  expression TK_TIMES expression { $$ = Expression.mul   ( (Expression) $1, (Expression) $3 ); }
-       |  expression TK_DIVIDE expression{ $$ = Expression.div   ( (Expression) $1, (Expression) $3 ); }
-       |  expression TK_PERCENT expression { $$ = Expression.mod ( (Expression) $1, (Expression) $3 ); }
-       |  expression TK_XOR expression     { $$ = Expression.xor ( (Expression) $1, (Expression) $3 ); }
+       |  expression TK_TIMES expression { epush(Expression.mul   ( epop1(), epop() )); }
+       |  expression TK_DIVIDE expression{ epush(Expression.div   ( epop1(), epop() )); }
+       |  expression TK_PERCENT expression { epush(Expression.mod ( epop1(), epop() )); }
+       |  expression TK_XOR expression     { epush(Expression.xor ( epop1(), epop() )); }
        // UnaryExpr 
-       |  TK_TILDE expression %prec NEG    { $$ = Expression.inv ( (Expression) $2 ); }
-       |  TK_NOT expression %prec NEG      { $$ = Expression.inv ( (Expression) $2 ); }
-       |  TK_MINUS expression %prec NEG    { $$ = Expression.neg ( (Expression) $2 ); }
+       |  TK_TILDE expression %prec NEG    { epush(Expression.inv ( epop() )); }
+       |  TK_NOT expression %prec NEG      { epush(Expression.inv ( epop() )); }
+       |  TK_MINUS expression %prec NEG    { epush(Expression.neg ( epop() )); }
        // brackets 
-       |  '(' expression ')'            { $$ = new Expression((Expression)$2); }
+       |  '(' expression ')'            { epush(new Expression( epop() )); }
        ;
 
 ConstExpr:
-          TKDOLLAR                  { $$ = new Expression(Opcodes.fpush); }
-       |  INTEGER_LITERAL           { $$ = new Expression(Opcodes.ipush, $1 ); }
-       |  BOOLEAN_LITERAL           { $$ = new Expression(Opcodes.bpush, $1==1?true:false); }
-       |  LABEL                     { $$ = new Expression(Opcodes.lpush, (String)$1); }
-       |  IDENTIFIER                { $$ = new Expression(Opcodes.vpush, (String)$1); }
+          TKDOLLAR                  { epush(new Expression(Opcodes.fpush)); }
+       |  INTEGER_LITERAL           { epush(new Expression(Opcodes.ipush, $1 )); }
+       |  BOOLEAN_LITERAL           { epush(new Expression(Opcodes.bpush, $1==1?true:false)); }
+       |  LABEL                     { epush(new Expression(Opcodes.lpush, (String)$1)); }
+       |  IDENTIFIER                { epush(new Expression(Opcodes.vpush, (String)$1)); }
        ;
 
 TypeCastExpr:
@@ -344,6 +344,33 @@ StreamOpToken:
   {
      return pdldoc;
   }
+  
+  private List<Expression> exprStack = new ArrayList<Expression>();
+  
+  private void epush(Expression e)
+  {
+    exprStack.add(e);
+  }
+  
+  public Expression epop1()
+  {
+    Expression e = exprStack.remove(exprStack.size()-2);
+    return e;
+  }
+  
+  public Expression epop()
+  {
+    Expression e = exprStack.remove(exprStack.size()-1);
+    return e;
+  }
+  
+  public Expression epopFinal()
+  {
+    if(exprStack.size()>1)
+      throw new IllegalStateException();
+    return epop();
+  }
+  
 
   // PDLBlock and mutualExclusion elements
   private List<Object> bstack = new ArrayList<Object>();

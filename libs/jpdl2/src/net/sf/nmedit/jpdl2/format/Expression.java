@@ -40,16 +40,8 @@ public class Expression implements Opcodes
     public String sval;
     public int ival;
     
-    private static int count = 0;
-    private Expression()
-    {
-        count ++;
-        System.out.println("new expression: "+count);
-    }
-    
     public Expression(Expression src)
     {
-        this();
         this.args = src.args;
         this.opcode = src.opcode;
         this.sval = src.sval;
@@ -59,7 +51,6 @@ public class Expression implements Opcodes
 
     public Expression(int opcode, Expression ... args)
     {
-        this();
         if (args == null)
             throw new NullPointerException("args must not be null");
 /*
@@ -71,25 +62,20 @@ public class Expression implements Opcodes
         this.opcode = opcode;
         this.args = args;
         validateExpression();
-        System.out.println("EX: "+this);
     }
 
     public Expression(int opcode, String value)
     {
-        this();
         this.opcode = opcode;
         this.sval = value;
         validateExpression();
-        System.out.println("EX: "+this);
     }
 
     public Expression(int opcode, int value)
     {
-        this();
         this.opcode = opcode;
         this.ival = value;
         validateExpression();
-        System.out.println("EX: "+this);
     }
 
     public void collectDepencies(Collection<String> dst)
@@ -171,7 +157,7 @@ public class Expression implements Opcodes
 
     public String toString()
     {
-        return getSource();//"Expr[description='"+describe()+"']";
+        return getSource();
     }
 
     private int left(PDLParseContext context, Integer fieldRegister)
@@ -655,12 +641,12 @@ public class Expression implements Opcodes
         return new Expression(checkResult(a)?iinv:binv, a);
     }
 
-    public static Object cmpEq(Expression a, Expression b)
+    public static Expression cmpEq(Expression a, Expression b)
     {
         return new Expression(checkResult(a,b) ? ieq : beq, a, b);
     }
 
-    public static Object cmpNeq(Expression a, Expression b)
+    public static Expression cmpNeq(Expression a, Expression b)
     {
         return new Expression(checkResult(a,b) ? ineq : bneq, a, b);
     }
@@ -761,5 +747,7 @@ public class Expression implements Opcodes
                 throw invalidOpcodeError(opcode);
         }
      */
+    
+    
     
 }
