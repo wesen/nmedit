@@ -56,7 +56,7 @@ import net.sf.nmedit.jpdl2.*;
 %type <obj> RawVariable Variable RawVariableList VariableList ImplicitVariable
 %type <obj> IfStatement IfExpression
 %type <obj> PacketRef PacketRefList pdlheader pdlbody
-%type <obj> Block   Item BlockItem  ItemList SimpleItem TypeCastExpr MessageId MutualExclusion MutualExclusionStatement
+%type <obj> Block   Item BlockItem  ItemList SimpleItem TypeCastExpr MessageId Choice ChoiceStatement
 %type <obj> FailStatement SwitchStatement SwitchStatementHeader SwitchCaseList CaseStatement
 %type <sval> PacketName
 %type <ival> StreamOpToken
@@ -146,7 +146,7 @@ SimpleItem:
        |  ImplicitVariable
        |  Constant  
        |  MessageId
-       |  MutualExclusionStatement
+       |  ChoiceStatement
        |  FailStatement
        |  SwitchStatement
        ;
@@ -173,13 +173,13 @@ CaseStatement:
        | TK_DEFAULT ':'              { PDLCaseStatementImpl c = new PDLCaseStatementImpl(true, -1);  badd(c); bpush(c); } Block { $$=$3; bpop(); }
        ;
 
-MutualExclusionStatement:
-       '(' MutualExclusion ')'          { $$=$2; }
+ChoiceStatement:
+       '(' Choice ')'          { $$=$2; }
        ;
 
-MutualExclusion:
-          { PDLMutualExclusionImpl m = new PDLMutualExclusionImpl(); badd(m); bpush(m); } Item TK_OR Item { bpop(); }
-       |  MutualExclusion TK_OR Item      { $$ = $1; }
+Choice:
+          { PDLChoiceImpl m = new PDLChoiceImpl(); badd(m); bpush(m); } Item TK_OR Item { bpop(); }
+       |  Choice TK_OR Item      { $$ = $1; }
        ;
 
 MessageId:
@@ -196,7 +196,9 @@ RawVariable:
        ;
 
 ImplicitVariable:
-          RawVariable TK_EQ '(' expression ')' { badd(new PDLImplicitVariableImpl((PDLVariable)$1, new PDLFunctionImpl(epopFinal())));  }
+          RawVariable TK_EQ '(' expression ')' { PDLFunction function;
+                                                 try { function = new PDLFunctionImpl(epopFinal()); } catch(IllegalArgumentException iae) {throw new PDLException(iae);}
+                                                 badd(new PDLImplicitVariableImpl((PDLVariable)$1, function));  }
        ;
 
 VariableList:
@@ -252,7 +254,7 @@ ItemList:
        ;
 
 IfExpression:
-         compiled_expression         { $$ = new PDLCompiledCondition((Expression)$1); }  
+         compiled_expression         { try {$$ = new PDLCompiledCondition((Expression)$1);} catch(IllegalArgumentException iae) {throw new PDLException(iae);} }  
        ;
 
 INTEGER_LITERAL:  
@@ -307,8 +309,8 @@ ConstExpr:
        ;
 
 TypeCastExpr:
-          CAST_TO_INT expression { $$ = Expression.castToInt((Expression) $2); }
-       |  CAST_TO_BOOLEAN expression { $$ = Expression.castToBoolean((Expression) $2); }
+          CAST_TO_INT expression { epush(Expression.castToInt((Expression) $2)); }
+       |  CAST_TO_BOOLEAN expression { epush(Expression.castToBoolean((Expression) $2)); }
        ;
 
 StreamOp: 
@@ -317,13 +319,13 @@ StreamOp:
           NextExpression 
           NextExpression
           NextExpression 
-          ']'                   {   $$ = new Expression($2, 
+          ']'                   {   epush(new Expression($2, 
                                            (Expression)$3, (Expression)$4, 
-                                           (Expression)$5, (Expression)$6); }
+                                           (Expression)$5, (Expression)$6)); }
        ;
 
 NextExpression:   
-          ';' expression  { $$=$2; }
+          ';' expression  { $$=epopFinal(); }
        ;
        
 StreamOpToken:
@@ -372,7 +374,7 @@ StreamOpToken:
   }
   
 
-  // PDLBlock and mutualExclusion elements
+  // PDLBlock and choice elements
   private List<Object> bstack = new ArrayList<Object>();
   
   private static final boolean PDLDebug = false;
@@ -381,7 +383,7 @@ StreamOpToken:
   {
     if (PDLDebug) System.out.println("bpush:"+b);
     
-    if ((b instanceof PDLBlock) || (b instanceof PDLMutualExclusionImpl)
+    if ((b instanceof PDLBlock) || (b instanceof PDLChoiceImpl)
      || (b instanceof PDLSwitchStatementImpl)
      || (b instanceof PDLCaseStatementImpl))
         bstack.add(b);
@@ -404,8 +406,8 @@ StreamOpToken:
     
     if (p instanceof PDLBlock)
     	((PDLBlock)p).add((PDLItem)item);
-    else if (p instanceof PDLMutualExclusionImpl)
-        ((PDLMutualExclusionImpl)p).add((PDLItem)item);
+    else if (p instanceof PDLChoiceImpl)
+        ((PDLChoiceImpl)p).add((PDLItem)item);
     else if (p instanceof PDLCaseStatementImpl)
         ((PDLCaseStatementImpl)p).add((PDLItem)item);
     else if (p instanceof PDLSwitchStatementImpl)
