@@ -19,9 +19,11 @@
 package net.sf.nmedit.jsynth.clavia.nordmodular.worker;
 
 import net.sf.nmedit.jnmprotocol2.AckMessage;
+import net.sf.nmedit.jnmprotocol2.ErrorMessage;
 import net.sf.nmedit.jnmprotocol2.NmProtocolListener;
 import net.sf.nmedit.jnmprotocol2.RequestPatchMessage;
 import net.sf.nmedit.jsynth.SynthException;
+import net.sf.nmedit.jsynth.clavia.nordmodular.NmSlot;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
 import net.sf.nmedit.jsynth.worker.RequestPatchWorker;
 
@@ -42,7 +44,6 @@ public class ReqPatchWorker extends
     private static final int ACK_RECEIVED = 2;
     private static final int DONE = 3;
     
-
     public ReqPatchWorker(NordModular synth, int slotId, boolean fakeWorker)
     {
         this.synth = synth;
@@ -56,25 +57,42 @@ public class ReqPatchWorker extends
             throw new SynthException("not connected");
         
         if (called)
-            throw new SynthException("worker already used");
+            return; // "worker already used
         
         called = true;
         
-        if (fakeWorker)
-            return;
+        if (fakeWorker) return;
         
+        NmSlot slot = getSlotOrNull();
+        if (slot == null) return;
+        slot.setPatchRequestInProgress(true);
         synth.getScheduler().offer(this);
+    }
+    
+    private NmSlot getSlotOrNull()
+    {
+        if (slotId>=0 && slotId<synth.getSlotCount())
+            return synth.getSlot(slotId);
+        return null;
     }
 
     public void aborted()
     {
+        NmSlot slot = getSlotOrNull();
+        if (slot != null) slot.setPatchRequestInProgress(false);
         error = true;
         synth.removeProtocolListener(this);
     }
 
     public boolean isWorkerFinished()
     {
-        return error || (!synth.isConnected()) || state>=DONE;
+        boolean finished = error || (!synth.isConnected()) || state>=DONE;
+        if (finished)
+        {
+            NmSlot slot = getSlotOrNull();
+            if (slot != null) slot.setPatchRequestInProgress(false);
+        }
+        return finished;
     }
     
     private long ackTimeout = 0;
@@ -110,12 +128,20 @@ public class ReqPatchWorker extends
         {
             synth.removeProtocolListener(this);
             state = DONE;
+
+            NmSlot slot = getSlotOrNull();
+            if (slot != null) slot.setPatchRequestInProgress(false);
             
             GetPatchWorker worker = new GetPatchWorker(synth, slotId, patchId);
             synth.getScheduler().offer(worker);
         }
     }
 
+    public void messageReceived(ErrorMessage message)
+    {
+        aborted();
+    }
+    
     public void messageReceived(AckMessage message)
     {
         if (slotId == message.get("slot"))
