@@ -208,8 +208,8 @@ public class PDLWriter
             case ImplicitVariable:
                 append(item.asImplicitVariable());
                 break;
-            case MutualExclusion:
-                append(item.asMutualExclusion());
+            case Choice:
+                append(item.asChoice());
                 break;
             case SwitchStatement:
                 append(item.asSwitchStatement());
@@ -259,7 +259,7 @@ public class PDLWriter
         s.append("}\n");
     }
     
-    private void append(PDLMutualExclusion m)
+    private void append(PDLChoice m)
     {
         s.append('(');
         Iterator<PDLBlockItem> b = m.iterator();

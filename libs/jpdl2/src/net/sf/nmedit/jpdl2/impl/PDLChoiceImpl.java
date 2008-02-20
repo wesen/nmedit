@@ -26,9 +26,9 @@ import java.util.List;
 import net.sf.nmedit.jpdl2.PDLBlockItem;
 import net.sf.nmedit.jpdl2.PDLItem;
 import net.sf.nmedit.jpdl2.PDLItemType;
-import net.sf.nmedit.jpdl2.PDLMutualExclusion;
+import net.sf.nmedit.jpdl2.PDLChoice;
 
-public class PDLMutualExclusionImpl extends PDLItemImpl implements PDLMutualExclusion
+public class PDLChoiceImpl extends PDLItemImpl implements PDLChoice
 {
     
     private List<PDLBlockItem> elements = new ArrayList<PDLBlockItem>(2);
@@ -36,7 +36,7 @@ public class PDLMutualExclusionImpl extends PDLItemImpl implements PDLMutualExcl
     private int minimumCount = -1;
     private int minimumSize = -1;
     
-    public PDLMutualExclusionImpl()
+    public PDLChoiceImpl()
     {
         super();
     }
@@ -48,7 +48,7 @@ public class PDLMutualExclusionImpl extends PDLItemImpl implements PDLMutualExcl
         return block;
     }
     
-    public PDLMutualExclusionImpl(PDLItem a, PDLItem b)
+    public PDLChoiceImpl(PDLItem a, PDLItem b)
     {
         if (a == null || b ==null)
             throw new NullPointerException("element can not be null");
@@ -135,17 +135,17 @@ public class PDLMutualExclusionImpl extends PDLItemImpl implements PDLMutualExcl
 
     public PDLItemType getType()
     {
-        return PDLItemType.MutualExclusion;
+        return PDLItemType.Choice;
     }
 
-    public PDLMutualExclusion asMutualExclusion()
+    public PDLChoice asChoice()
     {
         return this;
     }
     
     public String toString()
     {
-        return PDLMutualExclusion.class.getSimpleName()+" (itemcount: "+elements.size()+")";
+        return PDLChoice.class.getSimpleName()+" (itemcount: "+elements.size()+")";
     }
     
 }
