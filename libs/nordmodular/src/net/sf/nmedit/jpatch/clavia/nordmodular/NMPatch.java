@@ -24,8 +24,6 @@ package net.sf.nmedit.jpatch.clavia.nordmodular;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.HashMap;
@@ -47,6 +45,7 @@ import net.sf.nmedit.jpatch.history.HistoryImpl;
 import net.sf.nmedit.jpatch.history.Synchronizer;
 import net.sf.nmedit.jpatch.impl.PBasicPatch;
 import net.sf.nmedit.jsynth.Slot;
+import net.sf.nmedit.jsynth.clavia.nordmodular.NmSlot;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 
 /**
@@ -255,6 +254,10 @@ public class NMPatch extends PBasicPatch implements PPatch
         if (old != slot)
         {
             this.slot = slot;
+            if (old != null)
+            {
+                ((NmSlot)old).setPatch(null);
+            }
             firePropertyChanged("slot", old, slot);
         }
     }
