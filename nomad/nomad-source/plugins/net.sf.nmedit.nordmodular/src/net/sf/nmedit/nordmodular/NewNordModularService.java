@@ -18,17 +18,24 @@
  */
 package net.sf.nmedit.nordmodular;
 
+import java.awt.Component;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.JOptionPane;
+
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.Synthesizer;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
 import net.sf.nmedit.jsynth.midi.MidiPlug;
 import net.sf.nmedit.jsynth.nomad.SynthObjectForm;
+import net.sf.nmedit.jsynth.nomad.SynthRegistry;
 import net.sf.nmedit.nomad.core.Nomad;
+import net.sf.nmedit.nomad.core.forms.ExceptionDialog;
 import net.sf.nmedit.nomad.core.registry.GlobalRegistry;
 import net.sf.nmedit.nomad.core.registry.Registry;
 import net.sf.nmedit.nomad.core.service.Service;
 import net.sf.nmedit.nomad.core.service.synthService.NewSynthService;
-import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 import net.sf.nmedit.nomad.core.swing.tabs.JTabbedPane2;
 
 public class NewNordModularService
@@ -70,15 +77,12 @@ public class NewNordModularService
         return NewSynthService.class;
     }
     
-    private void newContext(NordModular nm)
+    private static void newContext(NordModular nm)
     {
-        ExplorerTree et =
-            Nomad.sharedInstance().getExplorer();
-
         SynthObjectForm<NordModular> sof = new NMSynthDeviceContext(nm);
-        
         JTabbedPane2 dst = Nomad.sharedInstance().getSynthTabbedPane();
         dst.addTab("Nord Modular", sof);
+        dst.addAskRemoveListener(new RemoveChecker(sof));
     }
     
     private static NordModular createSynth()
@@ -97,7 +101,6 @@ public class NewNordModularService
 
     public static void newSynth(String name, MidiPlug input, MidiPlug output)
     {
-        ExplorerTree etree = Nomad.sharedInstance().getExplorer();  
         NordModular synth = createSynth();
 
         try
@@ -110,14 +113,66 @@ public class NewNordModularService
             // ignore - should not happen
         }
 
-        ExplorerTree et =
-            Nomad.sharedInstance().getExplorer();
+        newContext(synth);
+    }
+    
+    private static class RemoveChecker implements PropertyChangeListener
+    {
 
-        SynthObjectForm<NordModular> sof = new NMSynthDeviceContext(synth);
-        
-        JTabbedPane2 dst = Nomad.sharedInstance().getSynthTabbedPane();
-        dst.addTab("Nord Modular", sof);
-        
+        private SynthObjectForm<NordModular> sof;
+
+        public RemoveChecker(SynthObjectForm<NordModular> sof)
+        {
+            this.sof = sof;
+        }
+
+        public void propertyChange(PropertyChangeEvent evt)
+        {
+            if (!(evt.getNewValue() != null && evt.getNewValue() instanceof Integer))
+                return;
+            int index = (Integer) evt.getNewValue();
+
+            JTabbedPane2 dst = Nomad.sharedInstance().getSynthTabbedPane();
+            Component c = dst.getComponentAt(index);
+            if (c != sof) return;
+            
+            if (sof.getSynthesizer().isConnected())
+            {
+                if (
+                JOptionPane.showConfirmDialog(sof, 
+                  "The device '"+sof.getSynthesizer().getName()+"' is connected. "+
+                  "Do you want to disconnect and remove the device ?",
+                  "Removing device",
+                  JOptionPane.YES_NO_OPTION
+                ) == JOptionPane.NO_OPTION )
+                {
+                    return;
+                }
+                
+                // disconnect
+                try
+                {
+                    sof.getSynthesizer().setConnected(false);
+                } 
+                catch (SynthException e)
+                {
+                    ExceptionDialog.showErrorDialog(Nomad.sharedInstance().getWindow().getRootPane(), 
+                      "Could not disconnect device '"+sof.getSynthesizer().getName()+"'.",
+                      "Disconnect",
+                      e);
+                    return;
+                }
+            }
+            
+            // remove tab
+            dst.removeTabAt(index);
+            
+            // uninstall listener
+            dst.removeAskRemoveListener(this);
+            
+            // uninstall synthesizer
+            SynthRegistry.sharedInstance().remove(sof.getSynthesizer());
+        }
     }
     
 }

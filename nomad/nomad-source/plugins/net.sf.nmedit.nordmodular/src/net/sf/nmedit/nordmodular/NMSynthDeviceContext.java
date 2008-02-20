@@ -19,14 +19,17 @@
 package net.sf.nmedit.nordmodular;
 
 import java.awt.Event;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -42,6 +45,7 @@ import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NmSlot;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
+import net.sf.nmedit.jsynth.clavia.nordmodular.worker.StorePatchInSlotWorker;
 import net.sf.nmedit.jsynth.event.SlotEvent;
 import net.sf.nmedit.jsynth.event.SlotListener;
 import net.sf.nmedit.jsynth.event.SlotManagerListener;
@@ -51,12 +55,12 @@ import net.sf.nmedit.jsynth.nomad.SynthObjectForm;
 import net.sf.nmedit.jsynth.nomad.SynthPropertiesDialog;
 import net.sf.nmedit.jsynth.nomad.SynthPropertiesDialog.DialogPane;
 import net.sf.nmedit.jsynth.worker.RequestPatchWorker;
+import net.sf.nmedit.jtheme.clavia.nordmodular.JTNMPatch;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.forms.ExceptionDialog;
 import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
 import net.sf.nmedit.nomad.core.swing.document.Document;
 import net.sf.nmedit.nomad.core.swing.document.DocumentManager;
-import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 
 public class NMSynthDeviceContext extends SynthObjectForm<NordModular>
 {
@@ -188,8 +192,50 @@ public class NMSynthDeviceContext extends SynthObjectForm<NordModular>
         }
 
     }
+
+    protected void dropTransfer(SlotObject<NordModular> s, DropTargetDropEvent dtde)
+    {
+        if (!acceptsDropData(s, dtde.getCurrentDataFlavors()))
+        {
+            dtde.rejectDrop();
+            return;
+        }
+        
+        if (!dtde.isLocalTransfer())
+        {
+            dtde.rejectDrop();
+            return;
+        }
+        
+        try
+        {
+        NMPatch patch = (NMPatch) dtde
+            .getTransferable()
+            .getTransferData(JTNMPatch.nmPatchFlavor);
+        
+        if (patch.getSlot() != null)
+            patch.setSlot(null);
+        
+          (new StorePatchInSlotWorker((NmSlot)s.getSlot(), patch)).store();
+        }
+        catch (IOException e)
+        {
+            dtde.rejectDrop();
+        }
+        catch (UnsupportedFlavorException e)
+        {
+            dtde.rejectDrop();
+        }
+    }
     
-    
+    protected boolean acceptsDropData(SlotObject<NordModular> s, DataFlavor[] flavors)
+    {
+        for (int i=0;i<flavors.length;i++)
+            if (JTNMPatch.nmPatchFlavor.equals(flavors[i]))
+                return true;
+        return false;
+    }
+
     
     /*
     protected EventHandler createEventHandler()
@@ -273,7 +319,7 @@ public class NMSynthDeviceContext extends SynthObjectForm<NordModular>
             else if (cmd == ENABLE_DISABLE_SLOT)
                 slot.setEnabled(!slot.isEnabled());
             else if (cmd == SELECT_SLOT)
-                slot.requestSelectSlot();
+                slot.setSelected(true);
         }
         
     }
