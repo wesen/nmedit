@@ -24,7 +24,6 @@ import net.sf.nmedit.jpdl2.PDLDocument;
 import net.sf.nmedit.jpdl2.PDLException;
 import net.sf.nmedit.jpdl2.PDLMessage;
 import net.sf.nmedit.jpdl2.PDLPacketParser;
-import net.sf.nmedit.jpdl2.PDLWriter;
 import net.sf.nmedit.jpdl2.format.PDL2Parser;
 import net.sf.nmedit.jpdl2.stream.BitStream;
 
@@ -442,8 +441,6 @@ public class PDLParseTests
      * ^ boolean (logical) XOR                     |
      * | bitwise OR                                |
      * |  boolean (logical) OR                     |
-     * && boolean (logical) AND                    |
-     * || boolean (logical) OR                     |
      * ------------------------------------------------------------
      */
     
@@ -463,44 +460,61 @@ public class PDLParseTests
         PDLPacketParser packetParser = new PDLPacketParser(doc);
         PDLMessage message = packetParser.parseMessage(bs);
 
-        System.out.println("src:"+src);
-        System.out.println("doc:"+PDLWriter.toString(doc));
-        
-        if (!OK_RESULT.equals(message.getMessageId()))
-        {
-        //System.out.println("failed:"+src);
-        }
         return OK_RESULT.equals(message.getMessageId());
     }
     
+    @Test(expected=PDLException.class)
+    public void testConditionNoBooleanExpression1() throws PDLException
+    {
+        isConditionTrue("5", 0, 0, 0);
+    }
+    
+    @Test(expected=PDLException.class)
+    public void testConditionNoBooleanExpression2() throws PDLException
+    {
+        isConditionTrue("5<<2", 0, 0, 0);
+    }
+    
     @Test
-    public void testPrec1() throws PDLException
+    public void testBooleanExpr() throws PDLException
     {
         {
             int a = 3, b = 4, c = 5;
-            System.out.println("yystart1 ****");
-            Assert.assertFalse(isConditionTrue(" (23) ==  (24*(a*b))", a, b, c));
-            //Assert.assertTrue(isConditionTrue(((b*c)+a)+"==((b*c)+a)", a, b, c));
-            System.out.println("yystop");
-            if (true) return;
             Assert.assertTrue(isConditionTrue((a+(b*c))+"==(a+(b*c))", a, b, c));
-            Assert.assertTrue(isConditionTrue((b*c+a)+"==(a+(b*c))", a, b, c));
-            Assert.assertTrue(isConditionTrue((a+b*c)+"==(a+(b*c))", a, b, c));
-            Assert.assertFalse(isConditionTrue((a+b*c)+"!=((a+b)*c)", a, b, c));
+            Assert.assertTrue(isConditionTrue(((a+b)*c)+"!=(a+(b*c))", a, b, c));
+            Assert.assertTrue(isConditionTrue((a+(b*c))+"==(a+b*c)", a, b, c));
+            Assert.assertTrue(isConditionTrue(((a+b)*c)+"!=(a+b*c)", a, b, c));;
         }
         {
             int a = 2, b = 8, c = 2;
             Assert.assertTrue(isConditionTrue("(a+b/c)==(a+(b/c))", a, b, c));
-            Assert.assertFalse(isConditionTrue("(a+b/c)!=((a+b)/c)", a, b, c));
+
+            Assert.assertTrue(isConditionTrue("(a+b/c)!=((a+b)/c)", a, b, c));
+            Assert.assertTrue(isConditionTrue("(b/c+a)!=((a+b)/c)", a, b, c));
         }
+        Assert.assertTrue(isConditionTrue("1<2", 0,0,0));
+        Assert.assertFalse(isConditionTrue("1>2", 0,0,0));
+        Assert.assertTrue(isConditionTrue("1<=2", 0,0,0));
+        Assert.assertFalse(isConditionTrue("1>=2", 0,0,0));
+        Assert.assertTrue(isConditionTrue("1<=1", 0,0,0));
+        Assert.assertTrue(isConditionTrue("1>=1", 0,0,0));
+        Assert.assertTrue(isConditionTrue("1==1", 0,0,0));
+        Assert.assertFalse(isConditionTrue("1==2", 0,0,0));
+        Assert.assertTrue(isConditionTrue("1!=2", 0,0,0));
+        Assert.assertFalse(isConditionTrue("1!=1", 0,0,0));
+        Assert.assertTrue(isConditionTrue("-1==-1", 0,0,0));
+        Assert.assertTrue(isConditionTrue("1!=-1", 0,0,0));
+        Assert.assertTrue(isConditionTrue("0xFfFfFfFf==(~0)", 0,0,0));
     }
     
     @Test
-    public void testPrec2() throws PDLException
+    public void testPrec() throws PDLException
     {
             int a = 3, b = 4, c = 5;
-            Assert.assertTrue(isConditionTrue("1<=2", a, b, c));
-            Assert.assertFalse(isConditionTrue("1>2", a, b, c));
+            Assert.assertTrue(isConditionTrue((a*b+c)+"==a*b+c", a, b, c));
+            Assert.assertTrue(isConditionTrue((a<<b+c)+"==a<<b+c", a, b, c));
+            Assert.assertTrue(isConditionTrue((c+a<<b)+"==c+a<<b", a, b, c));
+            Assert.assertTrue(isConditionTrue((a&b|c)+"==a&b|c", a, b, c));
     }
     
 }
