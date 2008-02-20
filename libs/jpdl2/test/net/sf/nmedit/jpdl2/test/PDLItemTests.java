@@ -30,7 +30,7 @@ import net.sf.nmedit.jpdl2.impl.PDLImplicitVariableImpl;
 import net.sf.nmedit.jpdl2.impl.PDLInstructionImpl;
 import net.sf.nmedit.jpdl2.impl.PDLLabelImpl;
 import net.sf.nmedit.jpdl2.impl.PDLMultiplicityImpl;
-import net.sf.nmedit.jpdl2.impl.PDLMutualExclusionImpl;
+import net.sf.nmedit.jpdl2.impl.PDLChoiceImpl;
 import net.sf.nmedit.jpdl2.impl.PDLOptionalImpl;
 import net.sf.nmedit.jpdl2.impl.PDLPacketRefImpl;
 import net.sf.nmedit.jpdl2.impl.PDLPacketRefListImpl;
@@ -72,8 +72,8 @@ public class PDLItemTests
                 return new PDLBlockItemImpl();
             case SwitchStatement:
                 return new PDLSwitchStatementImpl(new Expression(Opcodes.ipush, 0));
-            case MutualExclusion:
-                return new PDLMutualExclusionImpl(new PDLConstantImpl(0,0), new PDLConstantImpl(0,0));
+            case Choice:
+                return new PDLChoiceImpl(new PDLConstantImpl(0,0), new PDLConstantImpl(0,0));
             case Fail:
                 return new PDLInstructionImpl(PDLItemType.Fail);
             default:
