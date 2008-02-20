@@ -28,7 +28,6 @@ import java.util.Vector;
 import javax.swing.DefaultSingleSelectionModel;
 import javax.swing.Icon;
 import javax.swing.JComponent;
-import javax.swing.JTabbedPane;
 import javax.swing.SingleSelectionModel;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
