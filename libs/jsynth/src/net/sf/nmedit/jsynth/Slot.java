@@ -31,6 +31,7 @@ public interface Slot
 {
 
     public static final String ENABLED_PROPERTY = "slot.enabled";
+    public static final String SELECTED_PROPERTY = "slot.selected";
     public static final String PATCHNAME_PROPERTY = "slot.patch.name";
 
     Synthesizer getSynthesizer();
@@ -63,5 +64,9 @@ public interface Slot
     void addPropertyChangeListener(String propertyName, PropertyChangeListener l);
     void removePropertyChangeListener(PropertyChangeListener l);
     void removePropertyChangeListener(String propertyName, PropertyChangeListener l);
+
+    boolean isSelected();
+    
+    void setSelected(boolean selected);
     
 }
