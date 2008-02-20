@@ -27,6 +27,7 @@ import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.LayoutManager2;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -58,6 +59,16 @@ public class JTabbedPane2 extends JComponent
     public JTabBar<Component> getTabBar()
     {
         return tabBar;
+    }
+
+    public void addAskRemoveListener(PropertyChangeListener l)
+    {
+        tabBar.addPropertyChangeListener("ask-remove", l);
+    }
+
+    public void removeAskRemoveListener(PropertyChangeListener l)
+    {
+        tabBar.removePropertyChangeListener("ask-remove", l);
     }
     
     private static class TabbedPane2Layout implements LayoutManager2
