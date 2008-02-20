@@ -52,7 +52,6 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.Helper;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SynthException;
-import net.sf.nmedit.jsynth.clavia.nordmodular.worker.GetPatchWorker;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.ScheduledMessage;
 import net.sf.nmedit.jsynth.event.SlotEvent;
 import net.sf.nmedit.jsynth.event.SlotListener;
