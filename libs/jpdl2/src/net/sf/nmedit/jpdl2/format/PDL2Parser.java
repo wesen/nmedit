@@ -513,7 +513,7 @@ final static String yyrule[] = {
 "SimpleItem : ImplicitVariable",
 "SimpleItem : Constant",
 "SimpleItem : MessageId",
-"SimpleItem : MutualExclusionStatement",
+"SimpleItem : ChoiceStatement",
 "SimpleItem : FailStatement",
 "SimpleItem : SwitchStatement",
 "FailStatement : TK_FAIL",
@@ -525,10 +525,10 @@ final static String yyrule[] = {
 "CaseStatement : TK_CASE INTEGER_LITERAL ':' $$2 Block",
 "$$3 :",
 "CaseStatement : TK_DEFAULT ':' $$3 Block",
-"MutualExclusionStatement : '(' MutualExclusion ')'",
+"ChoiceStatement : '(' Choice ')'",
 "$$4 :",
-"MutualExclusion : $$4 Item TK_OR Item",
-"MutualExclusion : MutualExclusion TK_OR Item",
+"Choice : $$4 Item TK_OR Item",
+"Choice : Choice TK_OR Item",
 "MessageId : TK_MESSAGEID '(' STRING_LITERAL ')'",
 "Variable : RawVariable",
 "RawVariable : IDENTIFIER ':' INTEGER_LITERAL",
@@ -599,7 +599,7 @@ final static String yyrule[] = {
 "StreamOpToken : TK_PLUS",
 };
 
-//#line 338 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 340 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
   /* a reference to the lexer object */
   private PDL2Lexer lexer;
   
@@ -637,7 +637,7 @@ final static String yyrule[] = {
   }
   
 
-  // PDLBlock and mutualExclusion elements
+  // PDLBlock and choice elements
   private List<Object> bstack = new ArrayList<Object>();
   
   private static final boolean PDLDebug = false;
@@ -646,7 +646,7 @@ final static String yyrule[] = {
   {
     if (PDLDebug) System.out.println("bpush:"+b);
     
-    if ((b instanceof PDLBlock) || (b instanceof PDLMutualExclusionImpl)
+    if ((b instanceof PDLBlock) || (b instanceof PDLChoiceImpl)
      || (b instanceof PDLSwitchStatementImpl)
      || (b instanceof PDLCaseStatementImpl))
         bstack.add(b);
@@ -669,8 +669,8 @@ final static String yyrule[] = {
     
     if (p instanceof PDLBlock)
     	((PDLBlock)p).add((PDLItem)item);
-    else if (p instanceof PDLMutualExclusionImpl)
-        ((PDLMutualExclusionImpl)p).add((PDLItem)item);
+    else if (p instanceof PDLChoiceImpl)
+        ((PDLChoiceImpl)p).add((PDLItem)item);
     else if (p instanceof PDLCaseStatementImpl)
         ((PDLCaseStatementImpl)p).add((PDLItem)item);
     else if (p instanceof PDLSwitchStatementImpl)
@@ -997,7 +997,7 @@ case 38:
 break;
 case 39:
 //#line 181 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
-{ PDLMutualExclusionImpl m = new PDLMutualExclusionImpl(); badd(m); bpush(m); }
+{ PDLChoiceImpl m = new PDLChoiceImpl(); badd(m); bpush(m); }
 break;
 case 40:
 //#line 181 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
@@ -1022,228 +1022,230 @@ case 44:
 break;
 case 45:
 //#line 199 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
-{ badd(new PDLImplicitVariableImpl((PDLVariable)val_peek(4).obj, new PDLFunctionImpl(epopFinal())));  }
+{ PDLFunction function;
+                                                 try { function = new PDLFunctionImpl(epopFinal()); } catch(IllegalArgumentException iae) {throw new PDLException(iae);}
+                                                 badd(new PDLImplicitVariableImpl((PDLVariable)val_peek(4).obj, function));  }
 break;
 case 46:
-//#line 203 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 205 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { badd(val_peek(0).obj); }
 break;
 case 47:
-//#line 204 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 206 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { PDLVariableListImpl v = (PDLVariableListImpl) val_peek(2).obj; v.setTerminal(val_peek(0).ival); badd(val_peek(2).obj); }
 break;
 case 48:
-//#line 208 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 210 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { yyval.obj=new PDLVariableListImpl((PDLVariable)val_peek(0).obj, (PDLMultiplicity)val_peek(1).obj); }
 break;
 case 49:
-//#line 212 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 214 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 {  badd(val_peek(0).obj); }
 break;
 case 50:
-//#line 213 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 215 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { ((PDLConstantImpl)val_peek(0).obj).setMultiplicity((PDLMultiplicityImpl)val_peek(1).obj); badd(val_peek(0).obj); }
 break;
 case 51:
-//#line 217 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 219 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { PDLUtils.checkBounds(val_peek(2).ival, val_peek(0).ival);
                                                 yyval.obj = new PDLConstantImpl(val_peek(2).ival, val_peek(0).ival); }
 break;
 case 52:
-//#line 222 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 224 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { badd(textToPacketRef(val_peek(0).sval)); }
 break;
 case 53:
-//#line 226 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 228 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { badd(new PDLPacketRefListImpl(textToPacketRef(val_peek(0).sval), (PDLMultiplicity)val_peek(1).obj)); }
 break;
 case 56:
-//#line 235 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 237 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { yyval.obj=val_peek(0).obj; }
 break;
 case 57:
-//#line 236 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 238 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { PDLOptionalImpl o = new PDLOptionalImpl(); badd(o); bpush(o); }
 break;
 case 58:
-//#line 236 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 238 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { bpop(); }
 break;
 case 59:
-//#line 240 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 242 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 {  PDLConditionalImpl c = new PDLConditionalImpl((PDLCondition) val_peek(1).obj); badd(c); bpush(c); yyval.obj = c;  }
 break;
 case 60:
-//#line 241 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 243 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { bpop(); }
 break;
 case 61:
-//#line 244 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 246 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { }
 break;
 case 62:
-//#line 245 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 247 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { badd(new PDLBlockItemImpl()); }
 break;
 case 63:
-//#line 246 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 248 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { PDLBlockItemImpl b = new PDLBlockItemImpl(); badd(b); bpush(b); }
 break;
 case 64:
-//#line 246 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 248 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { bpop(); }
 break;
 case 67:
-//#line 255 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
-{ yyval.obj = new PDLCompiledCondition((Expression)val_peek(0).obj); }
+//#line 257 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+{ try {yyval.obj = new PDLCompiledCondition((Expression)val_peek(0).obj);} catch(IllegalArgumentException iae) {throw new PDLException(iae);} }
 break;
 case 71:
-//#line 265 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 267 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { yyval.obj = epopFinal(); }
 break;
 case 75:
-//#line 273 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 275 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(Expression.cmpEq  ( epop1(), epop() )); }
 break;
 case 76:
-//#line 274 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 276 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(Expression.cmpNeq ( epop1(), epop() )); }
 break;
 case 77:
-//#line 275 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 277 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(Expression.cmpLt  ( epop1(), epop() )); }
 break;
 case 78:
-//#line 276 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 278 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(Expression.cmpLEq ( epop1(), epop() )); }
 break;
 case 79:
-//#line 277 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 279 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(Expression.cmpGt  ( epop1(), epop() )); }
 break;
 case 80:
-//#line 278 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 280 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(Expression.cmpGEq ( epop1(), epop() )); }
 break;
 case 81:
-//#line 280 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 282 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(Expression.shl  ( epop1(), epop() )); }
 break;
 case 82:
-//#line 281 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 283 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(Expression.shr  ( epop1(), epop() )); }
 break;
 case 83:
-//#line 282 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 284 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(Expression.ushr ( epop1(), epop() )); }
 break;
 case 84:
-//#line 284 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 286 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(Expression.add   ( epop1(), epop() )); }
 break;
 case 85:
-//#line 285 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 287 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(Expression.minus ( epop1(), epop() )); }
 break;
 case 86:
-//#line 286 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 288 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(Expression.and   ( epop1(), epop() )); }
 break;
 case 87:
-//#line 287 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 289 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(Expression.or    ( epop1(), epop() )); }
 break;
 case 88:
-//#line 289 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 291 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(Expression.mul   ( epop1(), epop() )); }
 break;
 case 89:
-//#line 290 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 292 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(Expression.div   ( epop1(), epop() )); }
 break;
 case 90:
-//#line 291 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 293 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(Expression.mod ( epop1(), epop() )); }
 break;
 case 91:
-//#line 292 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 294 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(Expression.xor ( epop1(), epop() )); }
 break;
 case 92:
-//#line 294 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 296 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(Expression.inv ( epop() )); }
 break;
 case 93:
-//#line 295 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 297 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(Expression.inv ( epop() )); }
 break;
 case 94:
-//#line 296 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 298 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(Expression.neg ( epop() )); }
 break;
 case 95:
-//#line 298 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 300 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(new Expression( epop() )); }
 break;
 case 96:
-//#line 302 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 304 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(new Expression(Opcodes.fpush)); }
 break;
 case 97:
-//#line 303 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 305 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(new Expression(Opcodes.ipush, val_peek(0).ival )); }
 break;
 case 98:
-//#line 304 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 306 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(new Expression(Opcodes.bpush, val_peek(0).ival==1?true:false)); }
 break;
 case 99:
-//#line 305 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 307 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(new Expression(Opcodes.lpush, (String)val_peek(0).sval)); }
 break;
 case 100:
-//#line 306 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 308 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { epush(new Expression(Opcodes.vpush, (String)val_peek(0).sval)); }
 break;
 case 101:
-//#line 310 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
-{ yyval.obj = Expression.castToInt((Expression) val_peek(0).obj); }
+//#line 312 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+{ epush(Expression.castToInt((Expression) val_peek(0).obj)); }
 break;
 case 102:
-//#line 311 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
-{ yyval.obj = Expression.castToBoolean((Expression) val_peek(0).obj); }
+//#line 313 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+{ epush(Expression.castToBoolean((Expression) val_peek(0).obj)); }
 break;
 case 103:
-//#line 320 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
-{   yyval.obj = new Expression(val_peek(5).ival, 
+//#line 322 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+{   epush(new Expression(val_peek(5).ival, 
                                            (Expression)val_peek(4).obj, (Expression)val_peek(3).obj, 
-                                           (Expression)val_peek(2).obj, (Expression)val_peek(1).obj); }
+                                           (Expression)val_peek(2).obj, (Expression)val_peek(1).obj)); }
 break;
 case 104:
-//#line 326 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
-{ yyval.obj=val_peek(0).obj; }
+//#line 328 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+{ yyval.obj=epopFinal(); }
 break;
 case 105:
-//#line 330 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 332 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { yyval.ival=Opcodes.land; }
 break;
 case 106:
-//#line 331 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 333 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { yyval.ival=Opcodes.lor; }
 break;
 case 107:
-//#line 332 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 334 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { yyval.ival=Opcodes.lxor; }
 break;
 case 108:
-//#line 333 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 335 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { yyval.ival=Opcodes.lmul; }
 break;
 case 109:
-//#line 334 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
+//#line 336 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { yyval.ival=Opcodes.ladd; }
 break;
-//#line 1177 "PDL2Parser.java"
+//#line 1179 "PDL2Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

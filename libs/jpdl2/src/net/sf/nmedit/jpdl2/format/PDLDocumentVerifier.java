@@ -35,7 +35,7 @@ import net.sf.nmedit.jpdl2.PDLItem;
 import net.sf.nmedit.jpdl2.PDLItemType;
 import net.sf.nmedit.jpdl2.PDLMultiplicity;
 import net.sf.nmedit.jpdl2.PDLMultiplicityType;
-import net.sf.nmedit.jpdl2.PDLMutualExclusion;
+import net.sf.nmedit.jpdl2.PDLChoice;
 import net.sf.nmedit.jpdl2.PDLPacketDecl;
 import net.sf.nmedit.jpdl2.PDLPacketRef;
 import net.sf.nmedit.jpdl2.PDLPacketRefList;
@@ -170,8 +170,8 @@ public class PDLDocumentVerifier
                     case Optional:
                         verifyBlock(declared, item.asOptional(), true);
                         break;
-                    case MutualExclusion:
-                        for (PDLBlockItem nested: item.asMutualExclusion().getItems())
+                    case Choice:
+                        for (PDLBlockItem nested: item.asChoice().getItems())
                             verifyBlock(declared, nested, true);
                         break;
                     case Block:
@@ -263,9 +263,9 @@ public class PDLDocumentVerifier
                         verifyMutualRecursionInBlock(visitedPackets, 
                                 item.asOptional(), true);
                         break;
-                    case MutualExclusion:
+                    case Choice:
                     {
-                        PDLMutualExclusion me = item.asMutualExclusion();
+                        PDLChoice me = item.asChoice();
                         for (PDLBlockItem nested: me.getItems())
                             verifyMutualRecursionInBlock(visitedPackets, nested, true);
                         verifyNoUnrechableCode(me);
@@ -287,12 +287,12 @@ public class PDLDocumentVerifier
         }
     }
     
-    private void verifyNoUnrechableCode(PDLMutualExclusion m) throws PDLException
+    private void verifyNoUnrechableCode(PDLChoice m) throws PDLException
     {
         List<PDLBlockItem> list = m.getItems();
 
         if (list.size()<2)
-            error(m, "mutual exclusion has less than two elements");
+            error(m, "choice statement has less than two elements");
         
         for (int i=0;i<list.size()-1;i++)
         {
