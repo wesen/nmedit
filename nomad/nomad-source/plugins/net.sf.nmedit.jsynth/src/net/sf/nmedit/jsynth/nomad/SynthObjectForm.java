@@ -22,8 +22,14 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -341,6 +347,7 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
 
     static ImageIcon icfolder = getIcon("tango-icon-theme/16x16/places/folder.png");
     static ImageIcon icfolderopen = getIcon("tango-icon-theme/16x16/status/folder-open.png");
+    static ImageIcon icfolderDragAccept = getIcon("tango-icon-theme/16x16/status/folder-drag-accept.png");
     static ImageIcon icstart = getIcon("tango-icon-theme/16x16/actions/media-playback-start.png");
     static ImageIcon icstop = getIcon("tango-icon-theme/16x16/actions/media-playback-stop.png");
     static ImageIcon icsystem = getIcon("tango-icon-theme/16x16/emblems/emblem-system.png");
@@ -431,6 +438,14 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
                 }
                 );
             }});
+        
+        btnSystem.addActionListener(new ActionListener(){
+
+            public void actionPerformed(ActionEvent e)
+            {
+                SynthObjectForm.this.showSettings();
+            }
+        });
         
         lastLine.add(btnSystem);
         lastLine.add(tbConnect);
@@ -527,6 +542,10 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         public static final String CLICK = "click";
         private boolean clickAble;
         private Color defaultForeground;
+
+        private static final Color CLICKABLE_COLOR = Color.decode("#00286E");
+        private static final Color HOVERED_COLOR = CLICKABLE_COLOR.brighter().brighter();
+        
         private ActionListener l;
         
         public ClickableLabel(ActionListener l)
@@ -547,11 +566,11 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
             }
             else if (e.getID() == MouseEvent.MOUSE_ENTERED)
             {
-                
+                if (clickAble) setForeground(HOVERED_COLOR);
             }
             else if (e.getID() == MouseEvent.MOUSE_EXITED)
             {
-                
+                if (clickAble) setForeground(CLICKABLE_COLOR);   
             }
             
             super.processMouseEvent(e);
@@ -562,7 +581,7 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
             this.clickAble = enabled;
             if (clickAble)
             {
-                setForeground(Color.BLUE);
+                setForeground(CLICKABLE_COLOR);
             }
             else
             {
@@ -574,9 +593,16 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
     
     protected void trySetConnectedState(boolean connect)
     {
+        boolean no = false;
         if (connect && (!arePlugsConfigured()))
         {
-            showSettings();
+            no = showSettings();
+        }
+        
+        if (no || (!arePlugsConfigured()))
+        {
+            tbConnect.setSelected(false);
+            return;
         }
         
         try
@@ -607,13 +633,14 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         return new SlotObject<S>(this, slot);
     }
     
-    protected static class SlotObject<S extends Synthesizer> implements SlotListener, ActionListener, PropertyChangeListener
+    protected static class SlotObject<S extends Synthesizer> implements SlotListener, ActionListener, PropertyChangeListener, DropTargetListener
     {
         JComponent root;
         private Slot slot;
         private ClickableLabel lblSlotPatchName;
         private SynthObjectForm<S> form;
         private JToggleButton tbToggleSlotEnabledState;
+        private DropTarget dt;
         
         public SlotObject(SynthObjectForm<S> form, Slot slot)
         {
@@ -649,13 +676,13 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         {
             // slot box 1
             Box slotBox = Box.createHorizontalBox();
+            
+            this.dt = new DropTarget(slotBox, this);
+            
             TopLeft(slotBox);
             
             lblSlotPatchName = new ClickableLabel(this);
-            lblSlotPatchName.setIcon(icfolder);
             Left(lblSlotPatchName);
-            Font f = lblSlotPatchName.getFont();
-            lblSlotPatchName.setFont(new Font(f.getName(), f.getStyle()|Font.ITALIC, f.getSize()));
             updateSlotPatchName();
 
             slotBox.add(lblSlotPatchName);
@@ -666,8 +693,10 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
                 JToggleButton tb = new JToggleButton();
                 Right(tb);
                 tb.setToolTipText("Enable/Disable Slot");
-                tb.setBorder(null);
-                tb.setOpaque(false);
+                /*
+                tb.setOpaque(false);*/
+
+                tb.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
                 tb.setBorderPainted(false);
                 tbToggleSlotEnabledState = tb;
 
@@ -693,7 +722,20 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
             String name = slot.getPatchName();
             if (name == null)
                 name = "";
-            name = slot.getName()+" : "+name;
+            
+            name = "<html><body>"+slot.getName()+" : <u>"+name+"</u>";
+            
+            if (slot.isSelected())
+            {
+                name += " *";
+                lblSlotPatchName.setIcon(icfolderopen);
+            }
+            else
+            {
+                lblSlotPatchName.setIcon(icfolder);
+            }
+            name += "</body></html>";
+            
             lblSlotPatchName.setText(name);
         }
 
@@ -707,7 +749,8 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
             }
             else if (ClickableLabel.CLICK.equals(e.getActionCommand()))
             {
-                form.openOrSelectPatch(slot);
+                slot.setSelected(true);
+                updateSlotPatchName();
             }
         }
 
@@ -723,7 +766,72 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
             {
                 updateSlotPatchName();
             }
+            else if (Slot.SELECTED_PROPERTY.equals(evt.getPropertyName()))
+            {
+                updateSlotPatchName();
+                if (evt.getNewValue() != null && ((Boolean) evt.getNewValue()).booleanValue())
+                  form.openOrSelectPatch(slot);
+            }
         }
+
+        public void dragEnter(DropTargetDragEvent dtde)
+        {
+            if (form.acceptsDropData(this, dtde.getCurrentDataFlavors()))
+            {
+                lblSlotPatchName.setIcon(icfolderDragAccept);
+                dtde.acceptDrag(DnDConstants.ACTION_LINK);
+            }
+            else
+            {
+                dtde.rejectDrag();
+            }
+        }
+
+        public void dragExit(DropTargetEvent dte)
+        {
+            updateSlotPatchName(); // update label
+        }
+
+        public void dragOver(DropTargetDragEvent dtde)
+        {
+            if (form.acceptsDropData(this, dtde.getCurrentDataFlavors()))
+            {
+                lblSlotPatchName.setIcon(icfolderDragAccept);
+                dtde.acceptDrag(DnDConstants.ACTION_LINK);
+            }
+            else
+            {
+                dtde.rejectDrag();
+            }
+        }
+
+        public void drop(DropTargetDropEvent dtde)
+        {
+            if (form.acceptsDropData(this, dtde.getCurrentDataFlavors()))
+            {
+                form.dropTransfer(this, dtde);
+            }
+            else
+            {
+                dtde.rejectDrop();
+            }
+        }
+
+        public void dropActionChanged(DropTargetDragEvent dtde)
+        {
+            // TODO Auto-generated method stub
+            
+        }
+    }
+    
+    protected void dropTransfer(SlotObject<S> s, DropTargetDropEvent dtde)
+    {
+        dtde.rejectDrop();
+    }
+    
+    protected boolean acceptsDropData(SlotObject<S> s, DataFlavor[] flavors)
+    {
+        return false;
     }
     
     private static String titleForSlot(int index)
@@ -796,6 +904,7 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         d.getContentPane().add(spd);
         d.setBounds((ss.width-ds.width)/2, (ss.height-ds.height)/2, ds.width, ds.height);
       
+        
         spd.addButton(new AbstractAction(){
             /**
              * 
