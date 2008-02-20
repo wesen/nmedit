@@ -622,13 +622,13 @@ public class PDLPacketParser
                     }
                     break;
                 }
-                case MutualExclusion:
+                case Choice:
                 {
                     addReserved(-getMinSize(item));
                     
-                    PDLMutualExclusion mexclusion = item.asMutualExclusion();
+                    PDLChoice mchoice = item.asChoice();
                     
-                    ensureBitsAvailable(mexclusion, getMinSize(mexclusion));
+                    ensureBitsAvailable(mchoice, getMinSize(mchoice));
                     int st_reserved = reserved;
                     int st_age = packet.getCurrentAge();
                     int st_inputPos = input.getPosition();
@@ -636,7 +636,7 @@ public class PDLPacketParser
                     int st_tabs = tabs;
                     String st_messageId = this.messageId;
                     
-                    for (PDLBlockItem choice: mexclusion)
+                    for (PDLBlockItem choice: mchoice)
                     {
                         if (isAvailable(getMinSize(choice)))
                         {
@@ -668,7 +668,7 @@ public class PDLPacketParser
                         }
                     }
                     
-                    throw new PDLException(mexclusion, "no elements were chosen");
+                    throw new PDLException(mchoice, "no elements were chosen");
                     
                 }
                 case Block:

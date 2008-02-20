@@ -50,7 +50,7 @@ public enum PDLItemType
     PacketRefList, 
     Conditional, 
     Optional,
-    MutualExclusion,
+    Choice,
     Block,
     SwitchStatement,
     

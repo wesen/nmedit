@@ -20,7 +20,7 @@ package net.sf.nmedit.jpdl2;
 
 import java.util.List;
 
-public interface PDLMutualExclusion extends PDLItem, Iterable<PDLBlockItem>
+public interface PDLChoice extends PDLItem, Iterable<PDLBlockItem>
 {
 
     List<PDLBlockItem> getItems();

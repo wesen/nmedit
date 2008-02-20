@@ -247,7 +247,7 @@ public class PDLUtils
                     case Fail:
                         break;
                     // children but not a sequence
-                    case MutualExclusion:
+                    case Choice:
                     case SwitchStatement:
                         break;
                     // have children

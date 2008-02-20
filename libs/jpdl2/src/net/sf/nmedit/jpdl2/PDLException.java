@@ -123,11 +123,11 @@ public class PDLException extends Exception
                 PDLFunction f = variable.getFunction();
                 return variable.getName()+":"+variable.getSize()+"="+f;
             }
-            case MutualExclusion:
+            case Choice:
             {
                 StringBuilder sb = new StringBuilder();
                 sb.append('(');
-                PDLMutualExclusion m = item.asMutualExclusion();
+                PDLChoice m = item.asChoice();
                 Iterator<PDLBlockItem> iter = m.getItems().iterator();
                 
                 sb.append(toString(iter.next()));

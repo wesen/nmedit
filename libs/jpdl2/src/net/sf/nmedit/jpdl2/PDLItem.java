@@ -118,7 +118,7 @@ public interface PDLItem
      * Casting this item directly to the desired item type is not guaranteed to be successful.
      * @throws ClassCastException if the item is not of the desired type
      */
-    PDLMutualExclusion asMutualExclusion();
+    PDLChoice asChoice();
 
     /**
      * Casts this item to the desired item type.

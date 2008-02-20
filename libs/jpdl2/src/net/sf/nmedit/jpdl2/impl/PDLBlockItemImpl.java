@@ -25,7 +25,7 @@ import net.sf.nmedit.jpdl2.PDLInstruction;
 import net.sf.nmedit.jpdl2.PDLImplicitVariable;
 import net.sf.nmedit.jpdl2.PDLItemType;
 import net.sf.nmedit.jpdl2.PDLLabel;
-import net.sf.nmedit.jpdl2.PDLMutualExclusion;
+import net.sf.nmedit.jpdl2.PDLChoice;
 import net.sf.nmedit.jpdl2.PDLOptional;
 import net.sf.nmedit.jpdl2.PDLPacketRef;
 import net.sf.nmedit.jpdl2.PDLPacketRefList;
@@ -81,9 +81,9 @@ public class PDLBlockItemImpl extends PDLBlockImpl implements PDLBlockItem
         return PDLVariableList.class.cast(this);
     }
 
-    public PDLMutualExclusion asMutualExclusion()
+    public PDLChoice asChoice()
     {
-        return PDLMutualExclusion.class.cast(this);
+        return PDLChoice.class.cast(this);
     }
 
     public PDLInstruction asInstruction()
