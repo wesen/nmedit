@@ -208,7 +208,7 @@ public class Expression implements Opcodes
                 return f.intValue();
             case ineg: return -left(c, f);
             case binv: return 1-left(c, f); // 1-1 = 0, 1-0 = 1  => 1-(int)<boolean> == !<boolean>
-            case iinv: return -left(c, f);
+            case iinv: return ~left(c, f);
             case i2b:  return left(c, f)&1;
             case b2i:  return left(c, f);
             case imul: return left(c, f)*right(c, f);
@@ -312,7 +312,7 @@ public class Expression implements Opcodes
             case fpush: return "$";
             case ineg: return "-"+a(0);
             case binv: return "!"+a(0);
-            case iinv: return "-"+a(0);
+            case iinv: return "~"+a(0);
             case i2b:  return "(boolean)"+a(0);
             case b2i:  return "(int)"+a(0);
             case imul: return a(0)+"*"+a(1);
@@ -464,6 +464,12 @@ public class Expression implements Opcodes
             case band:
             case bor:
             case bxor:
+            case ilt:
+            case igt:
+            case ileq:
+            case igeq:
+            case ieq:
+            case ineq:
                 return Type.Boolean;
             case ipush:
             case lpush:
@@ -480,12 +486,6 @@ public class Expression implements Opcodes
             case ishl:
             case ishr:
             case iushr:
-            case ilt:
-            case igt:
-            case ileq:
-            case igeq:
-            case ieq:
-            case ineq:
             case iand:
             case ixor:
             case ior:
