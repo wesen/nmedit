@@ -24,7 +24,6 @@ package net.sf.nmedit.jsynth.clavia.nordmodular;
 
 import net.sf.nmedit.jnmprotocol2.GetPatchMessage;
 import net.sf.nmedit.jnmprotocol2.MidiMessage;
-import net.sf.nmedit.jnmprotocol2.SlotActivatedMessage;
 import net.sf.nmedit.jnmprotocol2.SlotsSelectedMessage;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jsynth.AbstractSlot;
@@ -39,7 +38,6 @@ public class NmSlot extends AbstractSlot implements Slot
 {
 
     public static final String PROPERTY_VOICECOUNT = "voicecount";
-    public static final String PROPERTY_ACTIVESLOT = "active";
     public static final String PROPERTY_PATCH_ID = "pid";
 
     private static final char[] slotIdLetter = new char[] {'A', 'B', 'C', 'D'};
@@ -49,8 +47,21 @@ public class NmSlot extends AbstractSlot implements Slot
     private int voiceCount = 0;
     private String patchName;
 
-    private boolean activated = false;
     private boolean enabled = false;
+    
+    private boolean patchRequestInProgress = false;
+    
+    // for internal use only
+    public boolean isPatchRequestInProgress()
+    {
+        return patchRequestInProgress;
+    }
+
+    // for internal use only
+    public void setPatchRequestInProgress(boolean prip)
+    {
+        this.patchRequestInProgress = prip;
+    }
     
     public NmSlot(NordModular synth, int slotId)
     {
@@ -91,7 +102,7 @@ public class NmSlot extends AbstractSlot implements Slot
     
     public boolean isActivated()
     {
-        return activated;
+        return synth.getActiveSlot() == slotId;
     }
     
     public void setEnabled(boolean enabled)
@@ -120,14 +131,7 @@ public class NmSlot extends AbstractSlot implements Slot
     
     public void setActivated(boolean activated)
     {
-        boolean oldValue = this.activated;
-        boolean newValue = activated;
-        
-        if (oldValue != newValue)
-        {
-            this.activated = activated;
-            fireActiveSlotChange(oldValue, newValue);
-        }
+        if (activated) synth.setActiveSlot(slotId);
     }
 
     private void requestEnableSlot(boolean enable)
@@ -146,19 +150,17 @@ public class NmSlot extends AbstractSlot implements Slot
         
         synth.getScheduler().offer(new ScheduledMessage(synth, message));
     }
-
-    public void requestSelectSlot()
+    
+    public boolean isSelected()
     {
-        // select == activated
-        
-        if (!isActivated())
-        {
-            synth.getScheduler().offer(new ScheduledMessage(synth, 
-                    new SlotActivatedMessage(getSlotId())
-            ));
-        }
+        return isActivated();
     }
     
+    public void setSelected(boolean selected)
+    {
+        setActivated(selected);
+    }
+
     void requestPatchName()
     {
         synth.getScheduler().offer(new ScheduledMessage(synth, 
@@ -251,7 +253,13 @@ public class NmSlot extends AbstractSlot implements Slot
                 old.setSlot(null);
             this.patch = patch;
             if (patch != null)
+            {
+                Slot osl = patch.getSlot();
+                if (osl != null)
+                    ((NmSlot)osl).setPatch(null); // remove patch from prev. slot
+                
                 patch.setSlot(this);
+            }
             
             if (patch != null)
             {
@@ -274,9 +282,9 @@ public class NmSlot extends AbstractSlot implements Slot
         changeSupport.firePropertyChange(PROPERTY_VOICECOUNT, oldVoiceCount, newVoiceCount);
     }
 
-    protected void fireActiveSlotChange(boolean oldActivated, boolean newActivated)
+    protected void fireSelectedSlotChange(boolean oldActivated, boolean newActivated)
     {
-        changeSupport.firePropertyChange(PROPERTY_ACTIVESLOT,  oldActivated, newActivated);
+        changeSupport.firePropertyChange(SELECTED_PROPERTY,  oldActivated, newActivated);
     }
 
     protected void fireSlotEnabledChange(boolean oldEnabled, boolean newEnabled)
