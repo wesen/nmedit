@@ -46,7 +46,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JViewport;
-import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 
 import net.sf.nmedit.jpatch.PConnection;
@@ -757,6 +756,8 @@ public class JTNMPatch extends JTPatch implements Transferable
 
     private static final String charset = "ISO-8859-1";
 
+    public static DataFlavor nmPatchFlavor = 
+        new DataFlavor("ppatch/nmpatch", "Nord Modular patch 3.0");
     private static DataFlavor inputStreamFlavor =
         new DataFlavor("text/plain; charset="+charset+"", "Nord Modular patch 3.0");
     private static DataFlavor uriFlavor =
@@ -805,6 +806,11 @@ public class JTNMPatch extends JTPatch implements Transferable
             return createPatchImageExporter().export();
         }
         
+        if (nmPatchFlavor.equals(flavor))
+        {
+            return patch;
+        }
+        
         throw new UnsupportedFlavorException(flavor);
     }
 
@@ -815,6 +821,7 @@ public class JTNMPatch extends JTPatch implements Transferable
         flavorList.add(imageFlavor);
         if (patch.getFile() != null)
             flavorList.add(uriFlavor);
+        flavorList.add(nmPatchFlavor);
         return flavorList.toArray(new DataFlavor[flavorList.size()]);
     }
 
