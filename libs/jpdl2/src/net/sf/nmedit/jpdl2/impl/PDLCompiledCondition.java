@@ -34,6 +34,10 @@ public class PDLCompiledCondition implements PDLCondition
 
     public PDLCompiledCondition(Expression e)
     {
+        if (e.getResultType() != Expression.Type.Boolean)
+            throw new IllegalArgumentException("invalid result type: "+e.getResultType()+", "+
+                    e.getSource());
+        
         this.e = e;
     }
 

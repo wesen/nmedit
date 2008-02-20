@@ -35,6 +35,10 @@ public class PDLFunctionImpl implements PDLFunction
     
     public PDLFunctionImpl(Expression e)
     {
+        if (e.getResultType() != Expression.Type.Integer)
+            throw new IllegalArgumentException("invalid result type: "+e.getResultType()
+                    +", "+e.getSource());
+        
         this.e = e;
     }
     
