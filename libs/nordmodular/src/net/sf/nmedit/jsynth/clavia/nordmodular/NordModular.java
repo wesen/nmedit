@@ -38,6 +38,7 @@ import net.sf.nmedit.jnmprotocol2.NmMessageAcceptor;
 import net.sf.nmedit.jnmprotocol2.NmProtocol;
 import net.sf.nmedit.jnmprotocol2.NmProtocolListener;
 import net.sf.nmedit.jnmprotocol2.RequestSynthSettingsMessage;
+import net.sf.nmedit.jnmprotocol2.SlotActivatedMessage;
 import net.sf.nmedit.jnmprotocol2.SynthSettingsMessage;
 import net.sf.nmedit.jnmprotocol2.utils.ProtocolRunner;
 import net.sf.nmedit.jnmprotocol2.utils.ProtocolThreadExecutionPolicy;
@@ -51,6 +52,7 @@ import net.sf.nmedit.jsynth.SlotManager;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.Synthesizer;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.NMStorePatchWorker;
+import net.sf.nmedit.jsynth.clavia.nordmodular.worker.ScheduledMessage;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.Scheduler;
 import net.sf.nmedit.jsynth.midi.MidiPort;
 import net.sf.nmedit.jsynth.worker.StorePatchWorker;
@@ -578,9 +580,16 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
         return activeSlot.getValue();
     }
 
-    public void getActiveSlot(int value)
+    public void setActiveSlot(int selectSlot)
     {
-        activeSlot.setValue(value);
+        checkSlot(selectSlot);
+        int oldValue = activeSlot.getValue();
+        activeSlot.setValue(selectSlot);
+
+        getScheduler().offer(new ScheduledMessage(this,new SlotActivatedMessage(selectSlot)));
+        
+        slotManager.getSlot(oldValue).fireSelectedSlotChange(true, false);
+        slotManager.getSlot(selectSlot).fireSelectedSlotChange(false, true);
     }
     
     public void setName(String name)
@@ -812,6 +821,12 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
     private void disconnected()
     {
         scheduler.clear();
+        
+        for (NmSlot slot: slotManager)
+        {
+            // unregister patch
+            slot.setPatch(null);
+        }
         
         slotManager.setSlots(new NmSlot[0]);
     }
