@@ -16,23 +16,24 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.dom;
 
-import java.util.List;
-
-public interface PDLSwitchStatement extends PDLItem, Iterable<PDLCaseStatement>
+/**
+ * Packet declaration.
+ */
+public interface PDLPacketDecl extends PDLBlock
 {
     
-    PDLFunction getFunction();
-    
-    List<PDLCaseStatement> getItems();
-
-    PDLBlockItem getItemForCase(int value);
-
     /**
-     * Returns {@link PDLItemType#SwitchStatement}
-     * @return {@link PDLItemType#SwitchStatement}
+     * The name of this packet
+     * @return name of this packet.
      */
-    PDLItemType getType();
+    String getName();
     
+    /**
+     * The padding value
+     * @return the padding value
+     */
+    int getPadding();
+
 }

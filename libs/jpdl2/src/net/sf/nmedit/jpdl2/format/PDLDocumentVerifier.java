@@ -24,21 +24,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.nmedit.jpdl2.PDLBlock;
-import net.sf.nmedit.jpdl2.PDLBlockItem;
-import net.sf.nmedit.jpdl2.PDLCaseStatement;
-import net.sf.nmedit.jpdl2.PDLCondition;
-import net.sf.nmedit.jpdl2.PDLDocument;
 import net.sf.nmedit.jpdl2.PDLException;
-import net.sf.nmedit.jpdl2.PDLFunction;
-import net.sf.nmedit.jpdl2.PDLItem;
-import net.sf.nmedit.jpdl2.PDLItemType;
-import net.sf.nmedit.jpdl2.PDLMultiplicity;
-import net.sf.nmedit.jpdl2.PDLMultiplicityType;
-import net.sf.nmedit.jpdl2.PDLChoice;
-import net.sf.nmedit.jpdl2.PDLPacketDecl;
-import net.sf.nmedit.jpdl2.PDLPacketRef;
-import net.sf.nmedit.jpdl2.PDLPacketRefList;
+import net.sf.nmedit.jpdl2.dom.PDLBlock;
+import net.sf.nmedit.jpdl2.dom.PDLBlockItem;
+import net.sf.nmedit.jpdl2.dom.PDLCaseStatement;
+import net.sf.nmedit.jpdl2.dom.PDLChoice;
+import net.sf.nmedit.jpdl2.dom.PDLCondition;
+import net.sf.nmedit.jpdl2.dom.PDLDocument;
+import net.sf.nmedit.jpdl2.dom.PDLFunction;
+import net.sf.nmedit.jpdl2.dom.PDLItem;
+import net.sf.nmedit.jpdl2.dom.PDLItemType;
+import net.sf.nmedit.jpdl2.dom.PDLMultiplicity;
+import net.sf.nmedit.jpdl2.dom.PDLPacketDecl;
+import net.sf.nmedit.jpdl2.dom.PDLPacketRef;
+import net.sf.nmedit.jpdl2.dom.PDLPacketRefList;
 import net.sf.nmedit.jpdl2.impl.PDLCompiledCondition;
 
 /**
@@ -425,7 +424,7 @@ public class PDLDocumentVerifier
     {
         if (multiplicity == null)
             return;
-        if (multiplicity.getType() == PDLMultiplicityType.Variable)
+        if (multiplicity.getType() == PDLMultiplicity.Type.Variable)
             ensureReferencedExists(declared, item, multiplicity.getVariable());
     }
 

@@ -16,25 +16,23 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.dom;
 
 import java.util.Collection;
 
-public interface PDLCondition
+import net.sf.nmedit.jpdl2.PDLException;
+import net.sf.nmedit.jpdl2.PDLParseContext;
+
+public interface PDLFunction
 {
 
+    int compute(PDLParseContext context) throws PDLException;
+    
     /**
-     * Evaluates the condition.
-     */
-    boolean isConditionTrue(PDLParseContext context);
-
-    String getSource();
-
-    /**
-     * Returns the names of variables and labels on which this condition
+     * Returns the names of variables and labels on which this function
      * depends. Label names have an @ (at)-sign as prefix.
      * 
-     * @return the names of variables and labels on which this condition depends 
+     * @return the names of variables and labels on which this function depends 
      */
     Collection<String> getDependencies();
     

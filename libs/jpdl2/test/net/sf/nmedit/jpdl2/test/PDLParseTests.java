@@ -20,10 +20,10 @@ package net.sf.nmedit.jpdl2.test;
 
 import java.io.StringReader;
 
-import net.sf.nmedit.jpdl2.PDLDocument;
 import net.sf.nmedit.jpdl2.PDLException;
 import net.sf.nmedit.jpdl2.PDLMessage;
 import net.sf.nmedit.jpdl2.PDLPacketParser;
+import net.sf.nmedit.jpdl2.dom.PDLDocument;
 import net.sf.nmedit.jpdl2.format.PDL2Parser;
 import net.sf.nmedit.jpdl2.stream.BitStream;
 

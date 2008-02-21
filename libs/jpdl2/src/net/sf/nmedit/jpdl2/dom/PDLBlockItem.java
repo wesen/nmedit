@@ -16,15 +16,15 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.dom;
 
-public interface PDLCaseStatement
+public interface PDLBlockItem extends PDLBlock, PDLItem
 {
 
-    PDLBlockItem getBlock();
-    
-    boolean isDefaultCase();
-    
-    int getValue();
+    /**
+     * Returns {@link PDLItemType#Block}
+     * @return {@link PDLItemType#Block}
+     */
+    PDLItemType getType();
     
 }

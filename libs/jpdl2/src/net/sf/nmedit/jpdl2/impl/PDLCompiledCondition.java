@@ -23,8 +23,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.nmedit.jpdl2.PDLCondition;
 import net.sf.nmedit.jpdl2.PDLParseContext;
+import net.sf.nmedit.jpdl2.dom.PDLCondition;
 import net.sf.nmedit.jpdl2.format.Expression;
 
 public class PDLCompiledCondition implements PDLCondition

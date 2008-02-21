@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.nmedit.jpdl2.PDLPacket;
-import net.sf.nmedit.jpdl2.PDLPacketDecl;
+import net.sf.nmedit.jpdl2.dom.PDLPacketDecl;
 
 public class PDLPacketImpl implements PDLPacket
 {

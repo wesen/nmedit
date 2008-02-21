@@ -19,7 +19,19 @@ package net.sf.nmedit.jpdl2.format;
 
 //#line 2 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 import java.io.*;
+
+import net.sf.nmedit.jpdl2.dom.PDLBlock;
+import net.sf.nmedit.jpdl2.dom.PDLCondition;
+import net.sf.nmedit.jpdl2.dom.PDLDocument;
+import net.sf.nmedit.jpdl2.dom.PDLFunction;
+import net.sf.nmedit.jpdl2.dom.PDLItem;
+import net.sf.nmedit.jpdl2.dom.PDLItemType;
+import net.sf.nmedit.jpdl2.dom.PDLMultiplicity;
+import net.sf.nmedit.jpdl2.dom.PDLPacketDecl;
+import net.sf.nmedit.jpdl2.dom.PDLVariable;
 import net.sf.nmedit.jpdl2.impl.*;
+import net.sf.nmedit.jpdl2.utils.PDLUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import net.sf.nmedit.jpdl2.*;

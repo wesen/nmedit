@@ -16,24 +16,18 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.dom;
 
 /**
- * Packet declaration.
+ * Optional item
  */
-public interface PDLPacketDecl extends PDLBlock
+public interface PDLOptional extends PDLBlockItem
 {
-    
-    /**
-     * The name of this packet
-     * @return name of this packet.
-     */
-    String getName();
-    
-    /**
-     * The padding value
-     * @return the padding value
-     */
-    int getPadding();
 
+    /**
+     * Returns {@link PDLItemType#Optional}
+     * @return {@link PDLItemType#Optional}
+     */
+    PDLItemType getType();
+    
 }

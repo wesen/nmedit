@@ -27,8 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import net.sf.nmedit.jnmprotocol2.PDLData;
-import net.sf.nmedit.jpdl2.PDLDocument;
-import net.sf.nmedit.jpdl2.PDLPacketParser;
+import net.sf.nmedit.jpdl2.dom.PDLDocument;
 import net.sf.nmedit.jpdl2.format.PDL2Parser;
 
 public final class PDLData

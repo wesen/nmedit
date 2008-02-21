@@ -20,8 +20,8 @@ package net.sf.nmedit.jpdl2.impl;
 
 import java.util.EnumSet;
 
-import net.sf.nmedit.jpdl2.PDLInstruction;
-import net.sf.nmedit.jpdl2.PDLItemType;
+import net.sf.nmedit.jpdl2.dom.PDLInstruction;
+import net.sf.nmedit.jpdl2.dom.PDLItemType;
 
 public class PDLInstructionImpl extends PDLItemImpl implements PDLInstruction
 {

@@ -16,18 +16,32 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.dom;
 
-/**
- * Optional item
- */
-public interface PDLOptional extends PDLBlockItem
+public interface PDLBlock extends Iterable<PDLItem>
 {
 
     /**
-     * Returns {@link PDLItemType#Optional}
-     * @return {@link PDLItemType#Optional}
+     * Number of items in this block.
+     * @return the number of items in this block
      */
-    PDLItemType getType();
+    int getItemCount();
+    
+    /**
+     * Returns the item at the specified index
+     * @param index the item index
+     * @return the item at the specified index
+     */
+    PDLItem getItem(int index);
+ 
+    /**
+     * Returns the minimum number of bits of this block.
+     * Optional or conditional items are not included in the return value.
+     * @return the minimum number of bits of this block
+     */
+    int getMinimumSize();
+    int getMinimumCount();
+    
+    void add(PDLItem item);
     
 }

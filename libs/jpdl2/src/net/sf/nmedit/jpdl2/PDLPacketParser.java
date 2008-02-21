@@ -18,13 +18,27 @@
 */
 package net.sf.nmedit.jpdl2;
 
+import net.sf.nmedit.jpdl2.dom.PDLBlock;
+import net.sf.nmedit.jpdl2.dom.PDLBlockItem;
+import net.sf.nmedit.jpdl2.dom.PDLChoice;
+import net.sf.nmedit.jpdl2.dom.PDLConditional;
+import net.sf.nmedit.jpdl2.dom.PDLConstant;
+import net.sf.nmedit.jpdl2.dom.PDLDocument;
+import net.sf.nmedit.jpdl2.dom.PDLFunction;
+import net.sf.nmedit.jpdl2.dom.PDLItem;
+import net.sf.nmedit.jpdl2.dom.PDLOptional;
+import net.sf.nmedit.jpdl2.dom.PDLPacketDecl;
+import net.sf.nmedit.jpdl2.dom.PDLPacketRef;
+import net.sf.nmedit.jpdl2.dom.PDLPacketRefList;
+import net.sf.nmedit.jpdl2.dom.PDLSwitchStatement;
+import net.sf.nmedit.jpdl2.dom.PDLVariable;
 import net.sf.nmedit.jpdl2.impl.PDLMessageImpl;
 import net.sf.nmedit.jpdl2.impl.PDLPacketImpl;
 import net.sf.nmedit.jpdl2.impl.PDLParseContextImpl;
 import net.sf.nmedit.jpdl2.stream.BitStream;
 import net.sf.nmedit.jpdl2.stream.IntStream;
 import net.sf.nmedit.jpdl2.stream.PDLDataSource;
-import net.sf.nmedit.jpdl2.utils.StringUtils;
+import net.sf.nmedit.jpdl2.utils.PDLUtils;
 
 public class PDLPacketParser
 {
@@ -126,10 +140,10 @@ public class PDLPacketParser
             println("parse new message, start="+packetName);
             
             if (input instanceof BitStream)
-                println("bitstream: "+StringUtils.toHexadecimal(((BitStream)input).toByteArray()));
+                println("bitstream: "+PDLUtils.toHexadecimal(((BitStream)input).toByteArray()));
             else
             {
-                println("intstream: "+StringUtils.toHexadecimal(((IntStream)input).toArray()));
+                println("intstream: "+PDLUtils.toHexadecimal(((IntStream)input).toArray()));
             }
             
         }
@@ -178,7 +192,7 @@ public class PDLPacketParser
                 if (DEBUG && (!LOG_ONLY_ERRORS))
                 {
                     if (generate)
-                        println("generated bitstream: "+StringUtils.toHexadecimal(bitstream.toByteArray()));   
+                        println("generated bitstream: "+PDLUtils.toHexadecimal(bitstream.toByteArray()));   
                     println("parsing successful");
                     println("+++++++++++++++++++++++++++++++++++++");
                     System.out.println(logString);
@@ -201,7 +215,7 @@ public class PDLPacketParser
                     
                     println("message: "+sb.toString());
                     if (generate)
-                        println("generated bitstream (incomplete): "+StringUtils.toHexadecimal(bitstream.toByteArray()));
+                        println("generated bitstream (incomplete): "+PDLUtils.toHexadecimal(bitstream.toByteArray()));
                     println("error: "+toString(t));
                     println("+++++++++++++++++++++++++++++++++++++");
                     System.out.println(logString);

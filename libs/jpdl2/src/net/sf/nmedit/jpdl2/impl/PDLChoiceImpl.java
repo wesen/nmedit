@@ -23,10 +23,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import net.sf.nmedit.jpdl2.PDLBlockItem;
-import net.sf.nmedit.jpdl2.PDLItem;
-import net.sf.nmedit.jpdl2.PDLItemType;
-import net.sf.nmedit.jpdl2.PDLChoice;
+import net.sf.nmedit.jpdl2.dom.PDLBlockItem;
+import net.sf.nmedit.jpdl2.dom.PDLChoice;
+import net.sf.nmedit.jpdl2.dom.PDLItem;
+import net.sf.nmedit.jpdl2.dom.PDLItemType;
 
 public class PDLChoiceImpl extends PDLItemImpl implements PDLChoice
 {

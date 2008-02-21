@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.sf.nmedit.jpdl2.PDLBlock;
-import net.sf.nmedit.jpdl2.PDLItem;
+import net.sf.nmedit.jpdl2.dom.PDLBlock;
+import net.sf.nmedit.jpdl2.dom.PDLItem;
 
 public class PDLBlockImpl implements PDLBlock
 {

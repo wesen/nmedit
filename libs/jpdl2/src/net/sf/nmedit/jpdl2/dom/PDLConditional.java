@@ -16,37 +16,24 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.dom;
 
 /**
- * A PDL document
+ * Conditional block
  */
-public interface PDLDocument extends Iterable<PDLPacketDecl>
+public interface PDLConditional extends PDLBlockItem 
 {
 
-    String getStartPacketName();
-    
     /**
-     * Returns the packet declaration with the specified packet name.
-     * Returns null if the packet name is undefined.
-     * 
-     * @param packetName name of the packet
-     * @return the packet declaration with the specified packet name
+     * Returns the condition.
+     * @return the condition
      */
-    PDLPacketDecl getPacketDecl(String packetName);
-    
+    PDLCondition getCondition();
+
     /**
-     * Returns the referenced packet or null if the referenced packet is undefined
-     * 
-     * @param packetReference the packet reference
-     * @return the referenced packet
+     * Returns {@link PDLItemType#Conditional}
+     * @return {@link PDLItemType#Conditional}
      */
-    PDLPacketDecl getPacketDecl(PDLPacketRef packetReference);
-    
-    /**
-     * Returns the number of packets in this document.
-     * @return the number of packets in this document
-     */
-    int getPacketCount();
+    PDLItemType getType();
     
 }

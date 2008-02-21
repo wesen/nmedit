@@ -16,25 +16,36 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.dom;
 
-public enum PDLMultiplicityType
+/**
+ * References another packet.
+ */
+public interface PDLPacketRef extends PDLItem
 {
 
-    Constant,
-    Variable,
-    
-    /*
-    NoneOrMany,
-    OneOrMany */
-    
+    /**
+     * Returns the name of the referenced packet.
+     * @return the name of the referenced packet
+     */
+    String getPacketName();
     
     /**
-     * 5*packet
-     * v*packet
-     * {5,v}*packet
-     * (+packet)
-     * (*packet)
+     * Returns the binding/identifier of the referenced packet.
+     * @return the binding/identifier of the referenced packet
      */
+    String getBinding();
+
+    /**
+     * Returns the referenced packet. 
+     * @return the referenced packet
+     */
+    PDLPacketDecl getReferencedPacket();
+
+    /**
+     * Returns {@link PDLItemType#PacketRef}
+     * @return {@link PDLItemType#PacketRef}
+     */
+    PDLItemType getType();
     
 }

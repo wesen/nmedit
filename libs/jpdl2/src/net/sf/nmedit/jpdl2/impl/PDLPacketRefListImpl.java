@@ -18,13 +18,13 @@
 */
 package net.sf.nmedit.jpdl2.impl;
 
-import net.sf.nmedit.jpdl2.PDLDocument;
-import net.sf.nmedit.jpdl2.PDLItemType;
-import net.sf.nmedit.jpdl2.PDLMultiplicity;
-import net.sf.nmedit.jpdl2.PDLPacketDecl;
-import net.sf.nmedit.jpdl2.PDLPacketRef;
-import net.sf.nmedit.jpdl2.PDLPacketRefList;
-import net.sf.nmedit.jpdl2.PDLUtils;
+import net.sf.nmedit.jpdl2.dom.PDLDocument;
+import net.sf.nmedit.jpdl2.dom.PDLItemType;
+import net.sf.nmedit.jpdl2.dom.PDLMultiplicity;
+import net.sf.nmedit.jpdl2.dom.PDLPacketDecl;
+import net.sf.nmedit.jpdl2.dom.PDLPacketRef;
+import net.sf.nmedit.jpdl2.dom.PDLPacketRefList;
+import net.sf.nmedit.jpdl2.utils.PDLUtils;
 
 public class PDLPacketRefListImpl extends PDLItemImpl implements PDLPacketRefList
 {

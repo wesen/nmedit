@@ -16,36 +16,37 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.dom;
 
-public interface PDLConstant extends PDLItem
+/**
+ * A PDL document
+ */
+public interface PDLDocument extends Iterable<PDLPacketDecl>
 {
 
-    /**
-     * The constant value.
-     * @return the constant value
-     */
-    int getValue();
+    String getStartPacketName();
     
     /**
-     * Size of the constant value
-     * @return size
-     */
-    int getSize();
-    
-    /**
-     * If null is returned then the constant appears
-     * exactly one time in the stream. Otherwise it depends
-     * on the mulitplicity value.
+     * Returns the packet declaration with the specified packet name.
+     * Returns null if the packet name is undefined.
      * 
-     * @return multiplicity of this constant
+     * @param packetName name of the packet
+     * @return the packet declaration with the specified packet name
      */
-    PDLMultiplicity getMultiplicity();
-
+    PDLPacketDecl getPacketDecl(String packetName);
+    
     /**
-     * Returns {@link PDLItemType#Constant}
-     * @return {@link PDLItemType#Constant}
+     * Returns the referenced packet or null if the referenced packet is undefined
+     * 
+     * @param packetReference the packet reference
+     * @return the referenced packet
      */
-    PDLItemType getType();
+    PDLPacketDecl getPacketDecl(PDLPacketRef packetReference);
+    
+    /**
+     * Returns the number of packets in this document.
+     * @return the number of packets in this document
+     */
+    int getPacketCount();
     
 }
