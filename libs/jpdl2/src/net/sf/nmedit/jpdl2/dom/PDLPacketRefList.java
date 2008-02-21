@@ -16,18 +16,28 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.dom;
 
-import java.util.List;
-
-public interface PDLChoice extends PDLItem, Iterable<PDLBlockItem>
+/**
+ * Packet List
+ */
+public interface PDLPacketRefList extends PDLItem, PDLPacketRef
 {
-
-    List<PDLBlockItem> getItems();
+    
+    /**
+     * Returns the packet reference.
+     * @return the packet reference
+     */
+    PDLPacketRef getPacketRef();
 
     /**
-     * Returns {@link PDLItemType#Choice}
-     * @return {@link PDLItemType#Choice}
+     * The multiplicity.
+     */
+    PDLMultiplicity getMultiplicity();
+
+    /**
+     * Returns {@link PDLItemType#PacketRefList}
+     * @return {@link PDLItemType#PacketRefList}
      */
     PDLItemType getType();
     

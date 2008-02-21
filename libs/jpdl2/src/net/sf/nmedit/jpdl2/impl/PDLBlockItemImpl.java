@@ -18,17 +18,17 @@
 */
 package net.sf.nmedit.jpdl2.impl;
 
-import net.sf.nmedit.jpdl2.PDLBlockItem;
-import net.sf.nmedit.jpdl2.PDLConditional;
-import net.sf.nmedit.jpdl2.PDLConstant;
-import net.sf.nmedit.jpdl2.PDLInstruction;
-import net.sf.nmedit.jpdl2.PDLItemType;
-import net.sf.nmedit.jpdl2.PDLChoice;
-import net.sf.nmedit.jpdl2.PDLOptional;
-import net.sf.nmedit.jpdl2.PDLPacketRef;
-import net.sf.nmedit.jpdl2.PDLPacketRefList;
-import net.sf.nmedit.jpdl2.PDLSwitchStatement;
-import net.sf.nmedit.jpdl2.PDLVariable;
+import net.sf.nmedit.jpdl2.dom.PDLBlockItem;
+import net.sf.nmedit.jpdl2.dom.PDLChoice;
+import net.sf.nmedit.jpdl2.dom.PDLConditional;
+import net.sf.nmedit.jpdl2.dom.PDLConstant;
+import net.sf.nmedit.jpdl2.dom.PDLInstruction;
+import net.sf.nmedit.jpdl2.dom.PDLItemType;
+import net.sf.nmedit.jpdl2.dom.PDLOptional;
+import net.sf.nmedit.jpdl2.dom.PDLPacketRef;
+import net.sf.nmedit.jpdl2.dom.PDLPacketRefList;
+import net.sf.nmedit.jpdl2.dom.PDLSwitchStatement;
+import net.sf.nmedit.jpdl2.dom.PDLVariable;
 
 public class PDLBlockItemImpl extends PDLBlockImpl implements PDLBlockItem
 {

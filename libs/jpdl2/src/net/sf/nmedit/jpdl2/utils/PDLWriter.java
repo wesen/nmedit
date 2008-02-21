@@ -16,9 +16,25 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.utils;
 
 import java.util.Iterator;
+
+import net.sf.nmedit.jpdl2.dom.PDLBlock;
+import net.sf.nmedit.jpdl2.dom.PDLBlockItem;
+import net.sf.nmedit.jpdl2.dom.PDLCaseStatement;
+import net.sf.nmedit.jpdl2.dom.PDLChoice;
+import net.sf.nmedit.jpdl2.dom.PDLConditional;
+import net.sf.nmedit.jpdl2.dom.PDLConstant;
+import net.sf.nmedit.jpdl2.dom.PDLDocument;
+import net.sf.nmedit.jpdl2.dom.PDLItem;
+import net.sf.nmedit.jpdl2.dom.PDLMultiplicity;
+import net.sf.nmedit.jpdl2.dom.PDLOptional;
+import net.sf.nmedit.jpdl2.dom.PDLPacketDecl;
+import net.sf.nmedit.jpdl2.dom.PDLPacketRef;
+import net.sf.nmedit.jpdl2.dom.PDLPacketRefList;
+import net.sf.nmedit.jpdl2.dom.PDLSwitchStatement;
+import net.sf.nmedit.jpdl2.dom.PDLVariable;
 
 
 /**

@@ -18,6 +18,8 @@
 */
 package net.sf.nmedit.jpdl2;
 
+
+
 public interface PDLMessage
 {
 

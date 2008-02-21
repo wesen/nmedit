@@ -16,24 +16,15 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.dom;
 
-/**
- * Conditional block
- */
-public interface PDLConditional extends PDLBlockItem 
+public interface PDLCaseStatement
 {
 
-    /**
-     * Returns the condition.
-     * @return the condition
-     */
-    PDLCondition getCondition();
-
-    /**
-     * Returns {@link PDLItemType#Conditional}
-     * @return {@link PDLItemType#Conditional}
-     */
-    PDLItemType getType();
+    PDLBlockItem getBlock();
+    
+    boolean isDefaultCase();
+    
+    int getValue();
     
 }

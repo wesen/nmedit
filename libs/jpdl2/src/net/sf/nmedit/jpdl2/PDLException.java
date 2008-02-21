@@ -20,6 +20,16 @@ package net.sf.nmedit.jpdl2;
 
 import java.util.Iterator;
 
+import net.sf.nmedit.jpdl2.dom.PDLBlock;
+import net.sf.nmedit.jpdl2.dom.PDLBlockItem;
+import net.sf.nmedit.jpdl2.dom.PDLChoice;
+import net.sf.nmedit.jpdl2.dom.PDLConstant;
+import net.sf.nmedit.jpdl2.dom.PDLFunction;
+import net.sf.nmedit.jpdl2.dom.PDLItem;
+import net.sf.nmedit.jpdl2.dom.PDLPacketDecl;
+import net.sf.nmedit.jpdl2.dom.PDLPacketRef;
+import net.sf.nmedit.jpdl2.dom.PDLVariable;
+
 public class PDLException extends Exception
 {
 

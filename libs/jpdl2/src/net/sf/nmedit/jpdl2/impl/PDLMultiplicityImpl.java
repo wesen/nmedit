@@ -18,31 +18,30 @@
 */
 package net.sf.nmedit.jpdl2.impl;
 
-import net.sf.nmedit.jpdl2.PDLMultiplicity;
-import net.sf.nmedit.jpdl2.PDLMultiplicityType;
+import net.sf.nmedit.jpdl2.dom.PDLMultiplicity;
 
 public class PDLMultiplicityImpl implements PDLMultiplicity
 {
 
     public static final PDLMultiplicityImpl ONE = new PDLMultiplicityImpl(1);
     
-    private PDLMultiplicityType type;
+    private PDLMultiplicity.Type type;
     private String variable = null;
     private int constant = -1;
 
     public PDLMultiplicityImpl(String variable)
     {
-        this.type = PDLMultiplicityType.Variable;
+        this.type = PDLMultiplicity.Type.Variable;
         this.variable = variable;
     }
     
     public PDLMultiplicityImpl(int constant)
     {
-        this.type = PDLMultiplicityType.Constant;
+        this.type = PDLMultiplicity.Type.Constant;
         this.constant = constant;
     }
     
-    public PDLMultiplicityImpl(PDLMultiplicityType type)
+    public PDLMultiplicityImpl(PDLMultiplicity.Type type)
     {
         this.type = type;
         switch (type)
@@ -82,7 +81,7 @@ public class PDLMultiplicityImpl implements PDLMultiplicity
         }
     }
     
-    public PDLMultiplicityType getType()
+    public PDLMultiplicity.Type getType()
     {
         return type;
     }

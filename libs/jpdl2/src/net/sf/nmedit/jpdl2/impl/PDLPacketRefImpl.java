@@ -18,10 +18,10 @@
 */
 package net.sf.nmedit.jpdl2.impl;
 
-import net.sf.nmedit.jpdl2.PDLDocument;
-import net.sf.nmedit.jpdl2.PDLItemType;
-import net.sf.nmedit.jpdl2.PDLPacketDecl;
-import net.sf.nmedit.jpdl2.PDLPacketRef;
+import net.sf.nmedit.jpdl2.dom.PDLDocument;
+import net.sf.nmedit.jpdl2.dom.PDLItemType;
+import net.sf.nmedit.jpdl2.dom.PDLPacketDecl;
+import net.sf.nmedit.jpdl2.dom.PDLPacketRef;
 
 public class PDLPacketRefImpl extends PDLItemImpl implements PDLPacketRef
 {

@@ -16,29 +16,28 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.dom;
 
-/**
- * Packet List
- */
-public interface PDLPacketRefList extends PDLItem, PDLPacketRef
+import java.util.Collection;
+
+import net.sf.nmedit.jpdl2.PDLParseContext;
+
+public interface PDLCondition
 {
-    
-    /**
-     * Returns the packet reference.
-     * @return the packet reference
-     */
-    PDLPacketRef getPacketRef();
 
     /**
-     * The multiplicity.
+     * Evaluates the condition.
      */
-    PDLMultiplicity getMultiplicity();
+    boolean isConditionTrue(PDLParseContext context);
+
+    String getSource();
 
     /**
-     * Returns {@link PDLItemType#PacketRefList}
-     * @return {@link PDLItemType#PacketRefList}
+     * Returns the names of variables and labels on which this condition
+     * depends. Label names have an @ (at)-sign as prefix.
+     * 
+     * @return the names of variables and labels on which this condition depends 
      */
-    PDLItemType getType();
+    Collection<String> getDependencies();
     
 }

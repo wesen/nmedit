@@ -24,8 +24,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.nmedit.jpdl2.PDLException;
-import net.sf.nmedit.jpdl2.PDLFunction;
 import net.sf.nmedit.jpdl2.PDLParseContext;
+import net.sf.nmedit.jpdl2.dom.PDLFunction;
 import net.sf.nmedit.jpdl2.format.Expression;
 
 public class PDLFunctionImpl implements PDLFunction

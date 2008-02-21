@@ -16,35 +16,18 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.dom;
 
-/**
- * References another packet.
- */
-public interface PDLPacketRef extends PDLItem
+import java.util.List;
+
+public interface PDLChoice extends PDLItem, Iterable<PDLBlockItem>
 {
 
-    /**
-     * Returns the name of the referenced packet.
-     * @return the name of the referenced packet
-     */
-    String getPacketName();
-    
-    /**
-     * Returns the binding/identifier of the referenced packet.
-     * @return the binding/identifier of the referenced packet
-     */
-    String getBinding();
+    List<PDLBlockItem> getItems();
 
     /**
-     * Returns the referenced packet. 
-     * @return the referenced packet
-     */
-    PDLPacketDecl getReferencedPacket();
-
-    /**
-     * Returns {@link PDLItemType#PacketRef}
-     * @return {@link PDLItemType#PacketRef}
+     * Returns {@link PDLItemType#Choice}
+     * @return {@link PDLItemType#Choice}
      */
     PDLItemType getType();
     

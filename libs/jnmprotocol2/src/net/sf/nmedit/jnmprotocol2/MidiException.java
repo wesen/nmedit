@@ -20,7 +20,7 @@
 package net.sf.nmedit.jnmprotocol2;
 
 import net.sf.nmedit.jnmprotocol2.utils.NmCharacter;
-import net.sf.nmedit.jpdl2.utils.StringUtils;
+import net.sf.nmedit.jpdl2.utils.PDLUtils;
 
 public class MidiException extends Exception
 {
@@ -63,7 +63,7 @@ public class MidiException extends Exception
         if (midiMessage != null)
         {
             sb.append(",message={");
-            sb.append(StringUtils.toHexadecimal(midiMessage));
+            sb.append(PDLUtils.toHexadecimal(midiMessage));
             sb.append("}");
             sb.append(",text={");
             sb.append(NmCharacter.toText(midiMessage));

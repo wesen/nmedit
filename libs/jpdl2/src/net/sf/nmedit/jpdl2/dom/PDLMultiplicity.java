@@ -16,21 +16,43 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.dom;
 
-import java.util.Collection;
-
-public interface PDLFunction
+/**
+ * The multiplicity is specified as constant (=&gt; variable==null) or as variable (=&gt; constant&lt;0)
+ */
+public interface PDLMultiplicity
 {
 
-    int compute(PDLParseContext context) throws PDLException;
+    public enum Type
+    {
+        Constant,
+        Variable
+        /*
+        NoneOrMany,
+        OneOrMany */
+        
+        
+        /**
+         * 5*packet
+         * v*packet
+         * {5,v}*packet
+         * (+packet)
+         * (*packet)
+         */
+        
+    }
+    
+    Type getType();
+
+    /**
+     * Returns the multiplicity constant.
+     */
+    int getConstant();
     
     /**
-     * Returns the names of variables and labels on which this function
-     * depends. Label names have an @ (at)-sign as prefix.
-     * 
-     * @return the names of variables and labels on which this function depends 
+     * Returns the multiplicity variable.
      */
-    Collection<String> getDependencies();
+    String getVariable();
     
 }

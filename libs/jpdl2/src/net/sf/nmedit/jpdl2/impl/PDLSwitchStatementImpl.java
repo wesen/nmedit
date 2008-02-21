@@ -25,12 +25,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.nmedit.jpdl2.PDLBlockItem;
-import net.sf.nmedit.jpdl2.PDLCaseStatement;
-import net.sf.nmedit.jpdl2.PDLFunction;
-import net.sf.nmedit.jpdl2.PDLItem;
-import net.sf.nmedit.jpdl2.PDLItemType;
-import net.sf.nmedit.jpdl2.PDLSwitchStatement;
+import net.sf.nmedit.jpdl2.dom.PDLBlockItem;
+import net.sf.nmedit.jpdl2.dom.PDLCaseStatement;
+import net.sf.nmedit.jpdl2.dom.PDLFunction;
+import net.sf.nmedit.jpdl2.dom.PDLItem;
+import net.sf.nmedit.jpdl2.dom.PDLItemType;
+import net.sf.nmedit.jpdl2.dom.PDLSwitchStatement;
 import net.sf.nmedit.jpdl2.format.Expression;
 
 public class PDLSwitchStatementImpl extends PDLItemImpl implements PDLSwitchStatement

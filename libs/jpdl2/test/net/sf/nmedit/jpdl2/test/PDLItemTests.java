@@ -18,8 +18,8 @@
 */
 package net.sf.nmedit.jpdl2.test;
 
-import net.sf.nmedit.jpdl2.PDLItem;
-import net.sf.nmedit.jpdl2.PDLItemType;
+import net.sf.nmedit.jpdl2.dom.PDLItem;
+import net.sf.nmedit.jpdl2.dom.PDLItemType;
 import net.sf.nmedit.jpdl2.format.Expression;
 import net.sf.nmedit.jpdl2.format.Opcodes;
 import net.sf.nmedit.jpdl2.impl.PDLBlockItemImpl;

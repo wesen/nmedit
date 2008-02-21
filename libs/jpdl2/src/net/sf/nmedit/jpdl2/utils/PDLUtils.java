@@ -16,15 +16,63 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.utils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import net.sf.nmedit.jpdl2.PDLException;
+import net.sf.nmedit.jpdl2.PDLPacket;
+import net.sf.nmedit.jpdl2.dom.PDLBlock;
+import net.sf.nmedit.jpdl2.dom.PDLItem;
+import net.sf.nmedit.jpdl2.dom.PDLItemType;
+import net.sf.nmedit.jpdl2.dom.PDLMultiplicity;
+import net.sf.nmedit.jpdl2.dom.PDLPacketRef;
+
 public class PDLUtils
 {
+
+    public static String toHexadecimal( int[] b )
+    {
+        if (b.length == 0)
+            return "[]";
+        
+        StringBuilder sb = new StringBuilder(b.length*3+1);
+        sb.append('[');
+        sb.append(Integer.toHexString(b[0]).toUpperCase());
+        for (int i=1;i<b.length;i++)
+        {
+            sb.append(' ');
+            sb.append(Integer.toHexString(b[i]).toUpperCase());
+        }
+        sb.append(']');
+        return sb.toString();
+    }
+
+    public static String toHexadecimal( byte[] b )
+    {
+        if (b.length == 0)
+            return "[]";
+        
+        StringBuilder sb = new StringBuilder(b.length*3+1);
+        sb.append('[');
+        sb.append(toHexadecimal(b[0]));
+        for (int i=1;i<b.length;i++)
+        {
+            sb.append(' ');
+            sb.append(toHexadecimal(b[i]));
+        }
+        sb.append(']');
+        return sb.toString();
+    }
+
+    private static String toHexadecimal(byte b)
+    {
+        int unsignedbyte = (int)(b&0xFF);
+        return (unsignedbyte<=0xF ? "0" : "") + Integer.toHexString(unsignedbyte).toUpperCase();
+    }
     
     private static void toString(PDLPacket packet, StringBuilder sb, final int depth)
     {

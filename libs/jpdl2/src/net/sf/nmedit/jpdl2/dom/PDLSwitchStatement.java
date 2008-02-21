@@ -16,24 +16,23 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.dom;
 
-/**
- * The multiplicity is specified as constant (=&gt; variable==null) or as variable (=&gt; constant&lt;0)
- */
-public interface PDLMultiplicity
+import java.util.List;
+
+public interface PDLSwitchStatement extends PDLItem, Iterable<PDLCaseStatement>
 {
     
-    PDLMultiplicityType getType();
+    PDLFunction getFunction();
+    
+    List<PDLCaseStatement> getItems();
+
+    PDLBlockItem getItemForCase(int value);
 
     /**
-     * Returns the multiplicity constant.
+     * Returns {@link PDLItemType#SwitchStatement}
+     * @return {@link PDLItemType#SwitchStatement}
      */
-    int getConstant();
-    
-    /**
-     * Returns the multiplicity variable.
-     */
-    String getVariable();
+    PDLItemType getType();
     
 }

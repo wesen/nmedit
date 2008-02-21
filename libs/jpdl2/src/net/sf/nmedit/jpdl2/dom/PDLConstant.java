@@ -16,32 +16,36 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package net.sf.nmedit.jpdl2;
+package net.sf.nmedit.jpdl2.dom;
 
-public interface PDLBlock extends Iterable<PDLItem>
+public interface PDLConstant extends PDLItem
 {
 
     /**
-     * Number of items in this block.
-     * @return the number of items in this block
+     * The constant value.
+     * @return the constant value
      */
-    int getItemCount();
+    int getValue();
     
     /**
-     * Returns the item at the specified index
-     * @param index the item index
-     * @return the item at the specified index
+     * Size of the constant value
+     * @return size
      */
-    PDLItem getItem(int index);
- 
-    /**
-     * Returns the minimum number of bits of this block.
-     * Optional or conditional items are not included in the return value.
-     * @return the minimum number of bits of this block
-     */
-    int getMinimumSize();
-    int getMinimumCount();
+    int getSize();
     
-    void add(PDLItem item);
+    /**
+     * If null is returned then the constant appears
+     * exactly one time in the stream. Otherwise it depends
+     * on the mulitplicity value.
+     * 
+     * @return multiplicity of this constant
+     */
+    PDLMultiplicity getMultiplicity();
+
+    /**
+     * Returns {@link PDLItemType#Constant}
+     * @return {@link PDLItemType#Constant}
+     */
+    PDLItemType getType();
     
 }

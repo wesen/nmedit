@@ -32,9 +32,6 @@ import net.sf.nmedit.jnmprotocol2.MidiException;
 import net.sf.nmedit.jnmprotocol2.MidiMessage;
 import net.sf.nmedit.jnmprotocol2.utils.QueueBuffer;
 import net.sf.nmedit.jpdl2.stream.BitStream;
-import net.sf.nmedit.jsynth.SynthException;
-import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
-import net.sf.nmedit.nmutils.Arrays15;
 import net.sf.nmedit.nmutils.Platform;
 
 /**

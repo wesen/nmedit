@@ -24,7 +24,7 @@ import net.sf.nmedit.jnmprotocol2.PatchMessage;
 import net.sf.nmedit.jnmprotocol2.utils.NmCharacter;
 import net.sf.nmedit.jnmprotocol2.utils.PatchNameExtractor;
 import net.sf.nmedit.jpdl2.stream.BitStream;
-import net.sf.nmedit.jpdl2.PDLDocument;
+import net.sf.nmedit.jpdl2.dom.PDLDocument;
 import net.sf.nmedit.jpdl2.PDLException;
 import net.sf.nmedit.jpdl2.PDLMessage;
 import net.sf.nmedit.jpdl2.PDLPacket;
