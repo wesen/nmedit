@@ -137,7 +137,8 @@ public class GetPatchListWorker extends NmProtocolListener implements ScheduledW
         // request complete
         state = COMPLETE;
         uninstall();
-        updateBank();
+        // should all work through callbacks from messages
+//        updateBank();
     }
     
     private int updateBeginIndex = -1;
