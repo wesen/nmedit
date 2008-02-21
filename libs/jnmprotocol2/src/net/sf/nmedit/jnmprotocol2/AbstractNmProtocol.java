@@ -156,10 +156,6 @@ public abstract class AbstractNmProtocol
             {
                 // call the heartbeat implementation
                 heartbeatImpl();
-            } catch (MidiException e) {
-            	// XXX ignore for now
-            	System.out.println("catch midi exception");
-            	e.printStackTrace();
             }
             finally
             {
