@@ -18,21 +18,79 @@
 */
 package net.sf.nmedit.jpdl2.impl;
 
+import net.sf.nmedit.jpdl2.PDLFunction;
 import net.sf.nmedit.jpdl2.PDLItemType;
+import net.sf.nmedit.jpdl2.PDLMultiplicity;
+import net.sf.nmedit.jpdl2.PDLUtils;
 import net.sf.nmedit.jpdl2.PDLVariable;
 
 public class PDLVariableImpl extends PDLItemImpl implements PDLVariable
 {
     
+    private PDLItemType type;
     private String name;
     private int size;
     
-    public PDLVariableImpl(String name, int size)
+    // implicit variable
+    private PDLFunction function;
+    
+    // variable list
+    private PDLMultiplicity multiplicity;
+    private int terminal;
+    private boolean hasTerminal = false; 
+    
+    private PDLVariableImpl(PDLItemType type, String name, int size)
     {
+        this.type = type;
+        if (type == null)
+            throw new NullPointerException("type must not be null");
         if (name == null)
             throw new NullPointerException("name must not be null");
         this.name = name;
         this.size = size;
+    }
+    
+    public static PDLVariable create(String name, int size)
+    {
+        return new PDLVariableImpl(PDLItemType.Variable, name, size);
+    }
+    
+    public static PDLVariable createVariableList(PDLVariable variable, PDLMultiplicity multiplicity)
+    {
+        return createVariableList(variable.getName(), variable.getSize(), multiplicity);
+    }
+
+    public static PDLVariable createVariableList(String name, int size, PDLMultiplicity multiplicity)
+    {
+        if (multiplicity == null)
+            throw new NullPointerException();
+        PDLVariableImpl v = new PDLVariableImpl(PDLItemType.VariableList, name, size);
+        v.multiplicity = multiplicity;
+        return v;
+    }
+    
+    public static PDLVariable createImplicit(PDLVariable variable, PDLFunction function)
+    {
+        return createImplicit(variable.getName(), variable.getSize(), function);
+    }
+
+    public static PDLVariable createImplicit(String name, int size, PDLFunction function)
+    {
+        if (function == null)
+            throw new NullPointerException();
+        PDLVariableImpl v = new PDLVariableImpl(PDLItemType.ImplicitVariable, name, size);
+        v.function = function;
+        return v;
+    }
+    
+    public PDLFunction getFunction()
+    {
+        return function;
+    }
+
+    public PDLMultiplicity getMultiplicity()
+    {
+        return multiplicity;
     }
 
     public String getName()
@@ -52,22 +110,70 @@ public class PDLVariableImpl extends PDLItemImpl implements PDLVariable
 
     public PDLItemType getType()
     {
-        return PDLItemType.Variable;
+        return type;
     }
 
     public int getMinimumSize()
     {
-        return size;
+        if (type == PDLItemType.VariableList)
+        {
+            int m = PDLUtils.getMinMultiplicity(multiplicity);
+            if (m!=0 && hasTerminal) return size;
+            return m * size;
+        }
+        else
+        {
+            return size;
+        }
     }
     
     public String toString()
     {
-        return name+":"+size;
+        String s = name+":"+size;
+        if (type == PDLItemType.VariableList)
+            return String.valueOf(multiplicity)+"*"+s;
+        else if (type == PDLItemType.ImplicitVariable)
+            return s+"=("+function+")";
+        else
+            return s;
     }
 
     public int getMinimumCount()
     {
-        return 1;
+        if (type == PDLItemType.VariableList)
+        {
+            int m = PDLUtils.getMinMultiplicity(multiplicity);
+            if (m != 0 && hasTerminal) return 1;
+            return m;
+        }
+        else if (type == PDLItemType.ImplicitVariable)
+            return 0;
+        else
+            return 1;
+    }
+
+    public void setTerminal(Integer terminal)
+    {
+        if (terminal != null)
+        {
+            this.terminal = terminal;
+            this.hasTerminal = true;
+        }
+        else
+        {
+            this.terminal = -1;
+            this.hasTerminal = false;
+        }
+    }
+
+    public boolean hasTerminal()
+    {
+        return hasTerminal;
+    }
+    
+    public int getTerminal()
+    {
+        return terminal;
     }
 
 }

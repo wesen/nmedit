@@ -29,6 +29,10 @@ import java.util.Arrays;
  * A stream for bitwise writing and reading.
  * 
  * <h1>History</h1>
+ * <h3>2008-02-20</h3>
+ * <ul>
+ *   <li>implements PDLDataSource</li>
+ * </ul>
  * <h3>2007-01-02</h3>
  * <ul>
  *   <li>getInt(0) and append(data, 0) cases are now working</li>

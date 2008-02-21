@@ -21,14 +21,37 @@ package net.sf.nmedit.jpdl2.stream;
 public interface PDLDataSource
 {
 
+    /**
+     * Returns the data size.
+     * @return the data size
+     */
     int getSize();
-    
+
+    /**
+     * Returns the current position.
+     * @return the current position
+     */
     int getPosition();
-    
+
+    /**
+     * Sets the current position.
+     * @return the current position
+     */
     void setPosition(int position);
     
+    /**
+     * Returns true if the specified amount of data is available. 
+     * @param size amount of data
+     * @return true if the specified amount of data is available
+     */
     boolean isAvailable(int size);
     
+    /**
+     * Returns the next integer of the specified number of bits.
+     * 
+     * @param bitcount size of the integer (0 &lt;= bitcount &lt;= 32)
+     * @return the next integer of the specified number of bits
+     */
     int getInt(int bitcount);
     
 }

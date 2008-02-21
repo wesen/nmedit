@@ -29,7 +29,7 @@ import net.sf.nmedit.jpdl2.utils.StringUtils;
 public class PDLPacketParser
 {
     
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     private static final boolean LOG_ONLY_ERRORS = true;
     
     private PDLDataSource input;
@@ -350,7 +350,7 @@ public class PDLPacketParser
                 }
                 case Label:
                 {
-                    context.setLabel(item.asLabel().getName(), packet.incrementAge(), getStreamPosition());
+                    context.setLabel(item.asInstruction().getString(), packet.incrementAge(), getStreamPosition());
                     break;
                 }
                 
@@ -389,7 +389,7 @@ public class PDLPacketParser
                 {
                     addReserved(-getMinSize(item));
                     
-                    PDLImplicitVariable variable = item.asImplicitVariable();
+                    PDLVariable variable = item.asVariable();
                     int value;
                     if (generate)
                     {
@@ -432,7 +432,7 @@ public class PDLPacketParser
                 {
                     addReserved(-getMinSize(item));
                     
-                    PDLVariableList variable = item.asVariableList(); 
+                    PDLVariable variable = item.asVariable(); 
 
                     int multiplicity = PDLUtils.getMultiplicity(packet, variable.getMultiplicity()); 
                     final int bitcount = (generate?1:variable.getSize()) * multiplicity;
@@ -709,7 +709,7 @@ public class PDLPacketParser
         return generate ? item.getMinimumCount() : item.getMinimumSize();
     }
     
-    private int computeChecksum(PDLImplicitVariable item, PDLParseContext context) throws PDLException
+    private int computeChecksum(PDLVariable item, PDLParseContext context) throws PDLException
     {
         PDLFunction function = item.getFunction();
         
@@ -730,7 +730,7 @@ public class PDLPacketParser
         return expected;
     }
 
-    private void checksum(PDLImplicitVariable item, PDLParseContext context, final int value)
+    private void checksum(PDLVariable item, PDLParseContext context, final int value)
         throws PDLException
     {
         int expected = computeChecksum(item, context);

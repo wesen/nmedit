@@ -25,4 +25,10 @@ public interface PDLChoice extends PDLItem, Iterable<PDLBlockItem>
 
     List<PDLBlockItem> getItems();
 
+    /**
+     * Returns {@link PDLItemType#Choice}
+     * @return {@link PDLItemType#Choice}
+     */
+    PDLItemType getType();
+    
 }

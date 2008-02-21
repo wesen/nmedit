@@ -30,6 +30,30 @@
 	<echo level="info">[Done]</echo>
   </target>
 
+	<target name="javadoc" description="Generates the JavaDoc for JPDL2">
+	  <javadoc
+	  	sourcepath="src"
+	  	destdir="docs/api" author="true" version="true" use="true" windowtitle="JPDL2">
+	      <classpath>
+	        <pathelement path="."/>
+	      </classpath>
+
+	    <fileset dir="src" defaultexcludes="yes">
+	      <include name="net/sf/nmedit/jpatch/**"/>
+	      <exclude name="net/sf/nmedit/jpatch/**/*.html"/>
+	    </fileset>
+
+	    <doctitle><![CDATA[<h1>JPDL 2</h1>]]></doctitle>
+	    <bottom><![CDATA[<i>Copyright &#169; 2007 <a href="http://nmedit.sourceforge.net>nmedit project</a>.</i>]]></bottom>
+	    <group title="JPDL2 Package" packages="net.sf.nmedit.jpdl2" />
+
+	    <!-- <tag name="todo" scope="all" description="To do:"/>
+	    <group title="Group 1 Packages" packages="com.dummy.test.a*"/>
+	    <group title="Group 2 Packages" packages="com.dummy.test.b*:com.dummy.test.c*"/> -->
+	    <!-- <link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/> -->
+	  </javadoc>
+	</target>
+
   <target name="compile" depends="init"
           description="compile the source">
     <javac srcdir="${src}" destdir="${build}" debug="true" target="1.5" source="1.5" />

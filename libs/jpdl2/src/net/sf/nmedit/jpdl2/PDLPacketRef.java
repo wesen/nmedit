@@ -41,5 +41,11 @@ public interface PDLPacketRef extends PDLItem
      * @return the referenced packet
      */
     PDLPacketDecl getReferencedPacket();
+
+    /**
+     * Returns {@link PDLItemType#PacketRef}
+     * @return {@link PDLItemType#PacketRef}
+     */
+    PDLItemType getType();
     
 }

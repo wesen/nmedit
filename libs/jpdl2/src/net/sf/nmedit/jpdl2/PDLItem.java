@@ -21,6 +21,9 @@ package net.sf.nmedit.jpdl2;
 import net.sf.nmedit.jpdl2.stream.BitStream;
 import net.sf.nmedit.jpdl2.stream.IntStream;
 
+/**
+ * A item/statement in a packet declaration.
+ */
 public interface PDLItem 
 {
     
@@ -29,6 +32,8 @@ public interface PDLItem
      * 
      * The return value is used by the packet parser to estimate the number of required
      * bits in the {@link BitStream BitStream}.
+     * 
+     * Conditional children are not included in the calculation.
      * 
      * @return the minimum size of this item and it's children 
      */
@@ -39,6 +44,8 @@ public interface PDLItem
      * 
      * The return value is used by the packet parser to estimate the number of required
      * values in the {@link IntStream IntStream}.
+     * 
+     * Conditional children are not included in the calculation.
      * 
      * @return the minimum number of values of this item and it's children
      */
@@ -52,13 +59,6 @@ public interface PDLItem
     
     /**
      * Casts this item to the desired item type.
-     * Casting this item directly to the desired item type is not guaranteed to work.
-     * @throws ClassCastException if the item is not of the desired type
-     */
-    PDLLabel asLabel();
-
-    /**
-     * Casts this item to the desired item type.
      * Casting this item directly to the desired item type is not guaranteed to be successful.
      * @throws ClassCastException if the item is not of the desired type
      */
@@ -69,21 +69,7 @@ public interface PDLItem
      * Casting this item directly to the desired item type is not guaranteed to be successful.
      * @throws ClassCastException if the item is not of the desired type
      */
-    PDLImplicitVariable asImplicitVariable();
-
-    /**
-     * Casts this item to the desired item type.
-     * Casting this item directly to the desired item type is not guaranteed to be successful.
-     * @throws ClassCastException if the item is not of the desired type
-     */
     PDLVariable asVariable();
-
-    /**
-     * Casts this item to the desired item type.
-     * Casting this item directly to the desired item type is not guaranteed to be successful.
-     * @throws ClassCastException if the item is not of the desired type
-     */
-    PDLVariableList asVariableList();
 
     /**
      * Casts this item to the desired item type.

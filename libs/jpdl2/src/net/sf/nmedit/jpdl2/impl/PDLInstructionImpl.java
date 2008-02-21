@@ -32,6 +32,7 @@ public class PDLInstructionImpl extends PDLItemImpl implements PDLInstruction
         types = EnumSet.noneOf(PDLItemType.class);
         types.add(PDLItemType.MessageId);
         types.add(PDLItemType.Fail);
+        types.add(PDLItemType.Label);
     }
 
     private PDLItemType type;
@@ -49,7 +50,7 @@ public class PDLInstructionImpl extends PDLItemImpl implements PDLInstruction
         
         if (!types.contains(type))
             throw new IllegalArgumentException("invalid type: "+type);
-        if (type == PDLItemType.MessageId)
+        if (type == PDLItemType.MessageId || type==PDLItemType.Label)
         {
             if (stringValue == null) throw new IllegalArgumentException("type "+type+" requires string argument");
         }
@@ -87,6 +88,8 @@ public class PDLInstructionImpl extends PDLItemImpl implements PDLInstruction
                 return "messageId(\""+string+"\")";
             case Fail:
                 return "fail";
+            case Label:
+                return "@"+string;
             default:
                 throw new InternalError("unsupported type: "+type);
         }

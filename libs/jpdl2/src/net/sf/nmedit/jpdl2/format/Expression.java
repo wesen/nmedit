@@ -23,23 +23,59 @@ import java.util.Collection;
 import net.sf.nmedit.jpdl2.stream.BitStream;
 import net.sf.nmedit.jpdl2.PDLParseContext;
 
+/**
+ * Arithmetic or Boolean expression.
+ */
 public class Expression implements Opcodes
 {
+    /**
+     * Expression Type 
+     */
     public static enum Type
     {
+        /**
+         * No type. Used to detect invalid situations.
+         */
         None,
+        /**
+         * integer expression
+         */
         Integer,
+        /**
+         * boolean expression
+         */
         Boolean
     };
 
+    /**
+     * Number of defined opcodes.
+     */
     public static final int OPCODE_COUNT = 32;
     
-    
+    /**
+     * The opcode of this expression
+     */
     public int opcode;
+    
+    /**
+     * The arguments of this expression
+     */
     public Expression[] args;
+
+    /**
+     * Expression has a string argument (variable or label name)
+     */
     public String sval;
+
+    /**
+     * Constant argument.
+     */
     public int ival;
     
+    /**
+     * Creates a copy of the specified expression.
+     * @param src source expression
+     */
     public Expression(Expression src)
     {
         this.args = src.args;
@@ -49,6 +85,11 @@ public class Expression implements Opcodes
         validateExpression();
     }
 
+    /**
+     * Creates a new expression.
+     * @param opcode the operator
+     * @param args the arguments
+     */
     public Expression(int opcode, Expression ... args)
     {
         if (args == null)
@@ -64,6 +105,11 @@ public class Expression implements Opcodes
         validateExpression();
     }
 
+    /**
+     * Creates a new expression.
+     * @param opcode the operator
+     * @param value the argument
+     */
     public Expression(int opcode, String value)
     {
         this.opcode = opcode;
@@ -71,6 +117,11 @@ public class Expression implements Opcodes
         validateExpression();
     }
 
+    /**
+     * Creates a new expression.
+     * @param opcode the operator
+     * @param value the argument
+     */
     public Expression(int opcode, int value)
     {
         this.opcode = opcode;
@@ -78,6 +129,16 @@ public class Expression implements Opcodes
         validateExpression();
     }
 
+    /**
+     * Creates a new expression.
+     * @param opcode the operator
+     * @param value the argument
+     */
+    public Expression(int opcode, boolean value)
+    {
+        this(opcode, value?1:0);
+    }
+    
     public void collectDepencies(Collection<String> dst)
     {
         switch (opcode)
@@ -91,11 +152,6 @@ public class Expression implements Opcodes
         }
     }
 
-    public Expression(int opcode, boolean value)
-    {
-        this(opcode, value?1:0);
-    }
-    
     public String describe()
     {
         return Expression.describe(opcode);

@@ -84,12 +84,6 @@ public class PDLWriter
             s.append('*');
         }
     }
-
-    public void append(PDLLabel label)
-    {
-        s.append('@');
-        s.append(label.getName());
-    }
     
     public void append(PDLConstant constant)
     {
@@ -102,23 +96,18 @@ public class PDLWriter
 
     public void append(PDLVariable variable)
     {
+        if (variable.getMultiplicity() != null)
+            append(variable.getMultiplicity());
         s.append(variable.getName());
         s.append(':');
         s.append(Integer.valueOf(variable.getSize()));
+        if (variable.getFunction() != null)
+        {
+            s.append('=');
+            s.append(variable.getFunction());
+        }
     }
 
-    public void append(PDLImplicitVariable variable)
-    {
-        append((PDLVariable)variable);
-        s.append('=');
-        s.append(variable.getFunction());
-    }
-    
-    public void append(PDLVariableList variableList)
-    {
-        append(variableList.getMultiplicity());
-        append(variableList.getVariable());
-    }
 
     public void append(PDLPacketRef packetReference)
     {
@@ -184,9 +173,6 @@ public class PDLWriter
             case Conditional:
                 append(item.asConditional(), indent+indentIncrement);
                 break;
-            case Label:
-                append(item.asLabel());
-                break;
             case Constant:
                 append(item.asConstant());
                 break;
@@ -197,16 +183,12 @@ public class PDLWriter
                 append(item.asPacketRefList());
                 break;
             case Variable:
-                append(item.asVariable());
-                break;
             case VariableList:
-                append(item.asVariableList());
+            case ImplicitVariable:
+                append(item.asVariable());
                 break;
             case Optional:
                 append(item.asOptional());
-                break;
-            case ImplicitVariable:
-                append(item.asImplicitVariable());
                 break;
             case Choice:
                 append(item.asChoice());
@@ -219,6 +201,9 @@ public class PDLWriter
                 break;
             case Block:
                 append(item.asBlock());
+                break;
+            case Label:
+                s.append("@"+item.asInstruction().getString());
                 break;
             case MessageId:
                 s.append("messageId(\""+item.asInstruction().getString()+"\") ");

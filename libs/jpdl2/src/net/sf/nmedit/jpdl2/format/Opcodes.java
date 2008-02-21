@@ -18,73 +18,204 @@
 */
 package net.sf.nmedit.jpdl2.format;
 
-/**
- * @see http://java.sun.com/docs/books/tutorial/java/nutsandbolts/operators.html
- */
 public interface Opcodes
 {
 
     // "no args"
-    public static final int
-    ipush = 0, // push integer constant
-    bpush = 1, // push boolean
-    lpush = 2, // push label
-    vpush = 3, // push variable
-    fpush = 4  // push field in stream
-    ;
+    /**
+     * push integer constant.
+     */
+    public static final int ipush = 0;
+    /**
+     * push boolean constant.
+     */
+    public static final int bpush = 1;
+    /**
+     * push label value.
+     */
+    public static final int lpush = 2;
+    /**
+     * push variable value.
+     */
+    public static final int vpush = 3;
+    /**
+     * push field value (stream operator).
+     */
+    public static final int fpush = 4;
     
     // unary
-    public static final int
-    ineg = 5, // - (int)
-    binv = 6, // ! (boolean)
-    iinv = 7, // ~ (int)
-    i2b  = 8, // (int) boolean
-    b2i  = 9 // (boolean) int 
+    
+    /**
+     * unary minus '-'.
+     */
+    public static final int ineg = 5;
+    
+    /**
+     * boolean (logical) NOT '!'
+     */
+    public static final int binv = 6;
+
+    /**
+     * bitwise NOT '~'
+     */
+    public static final int iinv = 7;
+    
+    /**
+     * typecast int-to-boolean
+     */
+    public static final int i2b  = 8;
+
+    /**
+     * typecast boolean-to-int
+     */
+    public static final int b2i  = 9; 
     ;
     
-    // binary
-    public static final int
+    // integer operators
+    
     // multiplicative
-    imul = 10,
-    idiv = 11,
-    imod = 12,
-    // additive
-    iadd = 13,
-    isub = 14,
-    // shift
-    ishl = 15, // signed shift left
-    ishr = 16, // shift right
-    iushr = 17, // unsigned shift right
-    // relational
-    ilt = 18,
-    igt = 19,
-    ileq = 20,
-    igeq = 21,
-    // equality
-    ieq = 22,
-    ineq = 23,
-    beq = 24,
-    bneq = 25,
-    // bitwise AND
-    iand = 26,
-    // bitwise xor
-    ixor = 27,
-    // bitwise or
-    ior = 28,
-    // logical and
-    band = 29,
-    // logical or
-    bor = 30,
-    // logical xor
-    bxor = 31
-    ;
+    /**
+     * integer multiplication
+     */
+    public static final int imul = 10;
     
-    // list expression [[+*^|&], <start>, <end>, <size>, $]
-    public static final int
-    ladd = 32,
-    lmul = 33,
-    land = 34,
-    lxor = 35,
-    lor  = 36
-    ;
+    /**
+     * integer division
+     */
+    public static final int idiv = 11;
+    
+    /**
+     * integer remainder
+     */
+    public static final int imod = 12;
+    // additive
+    
+    /**
+     * integer sum
+     */
+    public static final int iadd = 13;
+    
+    /**
+     * integer minus
+     */
+    public static final int isub = 14;
+    // shift
+    
+    /**
+     * signed bitshift left
+     */
+    public static final int ishl = 15;
+
+    /**
+     * signed bitshift right
+     */
+    public static final int ishr = 16; 
+
+    /**
+     * unsigned bitshift right
+     */
+    public static final int iushr = 17;
+    
+    // relational
+    /**
+     * compare integer: less than
+     */
+    public static final int ilt = 18;
+
+    /**
+     * compare integer: greater than
+     */
+    public static final int igt = 19;
+
+    /**
+     * compare integer: less than or equals 
+     */
+    public static final int ileq = 20;
+
+    /**
+     * compare integer: greater than or equals 
+     */
+    public static final int igeq = 21;
+    
+    // equality
+    
+    /**
+     * compare integer: equals
+     */
+    public static final int ieq = 22;
+    
+    /**
+     * compare integer: not equals
+     */
+    public static final int ineq = 23;
+
+    /**
+     * compare boolean: equals
+     */
+    public static final int beq = 24;
+
+    /**
+     * compare boolean: not equals
+     */
+    public static final int bneq = 25;
+
+    /**
+     * bitwise and
+     */
+    public static final int iand = 26;
+
+    /**
+     * bitwise xor
+     */
+    public static final int ixor = 27;
+
+    /**
+     * bitwise or
+     */
+    public static final int ior = 28;
+
+    /**
+     * boolean (logical) and
+     */
+    public static final int band = 29;
+
+    /**
+     * boolean (logical) or
+     */
+    public static final int bor = 30;
+
+    /**
+     * boolean (logical) xor
+     */
+    public static final int bxor = 31;
+    
+    /**
+     * Stream operator '+'.
+     * stream expression [[+*^|&]; &lt;start&gt;; &lt;end&gt;; &lt;size&gt;; $]
+     */
+    public static final int ladd = 32;
+
+    /**
+     * Stream operator '*'.
+     * stream expression [[+*^|&]; &lt;start&gt;; &lt;end&gt;; &lt;size&gt;; $]
+     */
+    public static final int lmul = 33;
+
+    /**
+     * Stream operator '&'.
+     * stream expression [[+*^|&]; &lt;start&gt;; &lt;end&gt;; &lt;size&gt;; $]
+     */
+    public static final int land = 34;
+
+    /**
+     * Stream operator '^'.
+     * stream expression [[+*^|&]; &lt;start&gt;; &lt;end&gt;; &lt;size&gt;; $]
+     */
+    public static final int lxor = 35;
+
+    /**
+     * Stream operator '|'.
+     * stream expression [[+*^|&]; &lt;start&gt;; &lt;end&gt;; &lt;size&gt;; $]
+     */
+    public static final int lor  = 36;
 }

@@ -22,24 +22,16 @@ import net.sf.nmedit.jpdl2.PDLBlockItem;
 import net.sf.nmedit.jpdl2.PDLConditional;
 import net.sf.nmedit.jpdl2.PDLConstant;
 import net.sf.nmedit.jpdl2.PDLInstruction;
-import net.sf.nmedit.jpdl2.PDLImplicitVariable;
 import net.sf.nmedit.jpdl2.PDLItemType;
-import net.sf.nmedit.jpdl2.PDLLabel;
 import net.sf.nmedit.jpdl2.PDLChoice;
 import net.sf.nmedit.jpdl2.PDLOptional;
 import net.sf.nmedit.jpdl2.PDLPacketRef;
 import net.sf.nmedit.jpdl2.PDLPacketRefList;
 import net.sf.nmedit.jpdl2.PDLSwitchStatement;
 import net.sf.nmedit.jpdl2.PDLVariable;
-import net.sf.nmedit.jpdl2.PDLVariableList;
 
 public class PDLBlockItemImpl extends PDLBlockImpl implements PDLBlockItem
 {
-
-    public PDLLabel asLabel()
-    {
-        return PDLLabel.class.cast(this);
-    }
     
     public PDLConstant asConstant()
     {
@@ -49,11 +41,6 @@ public class PDLBlockItemImpl extends PDLBlockImpl implements PDLBlockItem
     public PDLVariable asVariable()
     {
         return PDLVariable.class.cast(this);
-    }
-
-    public PDLImplicitVariable asImplicitVariable()
-    {
-        return PDLImplicitVariable.class.cast(this);
     }
 
     public PDLPacketRef asPacketRef()
@@ -74,11 +61,6 @@ public class PDLBlockItemImpl extends PDLBlockImpl implements PDLBlockItem
     public PDLPacketRefList asPacketRefList()
     {
         return PDLPacketRefList.class.cast(this);
-    }
-
-    public PDLVariableList asVariableList()
-    {
-        return PDLVariableList.class.cast(this);
     }
 
     public PDLChoice asChoice()
