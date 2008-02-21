@@ -132,13 +132,16 @@ public class MidiID
             }
         }
         
+        MidiDevice.Info firstInfo = null;
         for (MidiDevice.Info info: list)
         {
+        	if (firstInfo == null)
+        		firstInfo = info;
             if (getID(info) == ID)
                 return info;
         }
         
-        return null;
+        return firstInfo;
     }
     
     public static void main(String[] args)
