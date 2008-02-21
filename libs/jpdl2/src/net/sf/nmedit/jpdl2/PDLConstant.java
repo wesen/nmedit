@@ -41,5 +41,11 @@ public interface PDLConstant extends PDLItem
      * @return multiplicity of this constant
      */
     PDLMultiplicity getMultiplicity();
+
+    /**
+     * Returns {@link PDLItemType#Constant}
+     * @return {@link PDLItemType#Constant}
+     */
+    PDLItemType getType();
     
 }

@@ -961,7 +961,7 @@ case 16:
 break;
 case 18:
 //#line 141 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
-{ badd(new PDLLabelImpl(val_peek(0).sval)); }
+{ badd(new PDLInstructionImpl(PDLItemType.Label, val_peek(0).sval)); }
 break;
 case 29:
 //#line 155 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
@@ -1018,13 +1018,13 @@ break;
 case 44:
 //#line 194 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { PDLUtils.checkBitcount(val_peek(0).ival);
-                                           yyval.obj=new PDLVariableImpl(val_peek(2).sval, val_peek(0).ival); }
+                                           yyval.obj=PDLVariableImpl.create(val_peek(2).sval, val_peek(0).ival); }
 break;
 case 45:
 //#line 199 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
 { PDLFunction function;
                                                  try { function = new PDLFunctionImpl(epopFinal()); } catch(IllegalArgumentException iae) {throw new PDLException(iae);}
-                                                 badd(new PDLImplicitVariableImpl((PDLVariable)val_peek(4).obj, function));  }
+                                                 badd(PDLVariableImpl.createImplicit((PDLVariable)val_peek(4).obj, function));  }
 break;
 case 46:
 //#line 205 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
@@ -1032,11 +1032,11 @@ case 46:
 break;
 case 47:
 //#line 206 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
-{ PDLVariableListImpl v = (PDLVariableListImpl) val_peek(2).obj; v.setTerminal(val_peek(0).ival); badd(val_peek(2).obj); }
+{ PDLVariableImpl v = (PDLVariableImpl) val_peek(2).obj; v.setTerminal(val_peek(0).ival); badd(val_peek(2).obj); }
 break;
 case 48:
 //#line 210 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"
-{ yyval.obj=new PDLVariableListImpl((PDLVariable)val_peek(0).obj, (PDLMultiplicity)val_peek(1).obj); }
+{ yyval.obj= PDLVariableImpl.createVariableList((PDLVariable)val_peek(0).obj, (PDLMultiplicity)val_peek(1).obj); }
 break;
 case 49:
 //#line 214 "/home/christian/dev/nmedit/libs/jpdl2/format/pdl2.byaccj"

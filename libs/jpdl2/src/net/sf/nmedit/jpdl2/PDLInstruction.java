@@ -21,6 +21,41 @@ package net.sf.nmedit.jpdl2;
 public interface PDLInstruction extends PDLItem
 {
  
+    /**
+     * Returns the string value.
+     * 
+     * If the {{@link PDLItem#getType() type} of this item is
+     * {@link PDLItemType#MessageId MessageId} then the 
+     * message-id string value is returned.
+     * 
+     * If the {{@link PDLItem#getType() type} of this item is
+     * {@link PDLItemType#Label Label} then the 
+     * label name is returned.
+     * 
+     * Otherwise the <code>null</code> is returned.
+     * @return the string value
+     */
     String getString();
+
+    /**
+     * Returns zero.
+     * @return returns zero
+     */
+    int getMinimumSize();
+
+    /**
+     * Returns zero.
+     * @return returns zero
+     */
+    int getMinimumCount();
+    
+    /**
+     * Returns one of the valid instruction item types:
+     * {@link PDLItemType#Label},
+     * {@link PDLItemType#MessageId},
+     * {@link PDLItemType#Fail}
+     * @return returns the type of this item.
+     */
+    PDLItemType getType();
     
 }

@@ -19,42 +19,100 @@
 package net.sf.nmedit.jpdl2;
 
 /**
- * Identifier of the various {@link PDLItem item} types.
+ * Identifier of the various item types.
  * 
  * <table>
  * <thead>
- * <tr><th>PDLItemType</th><th>PDLItem</th></tr>
+ * <tr><th>PDLItemType</th><th>{@link PDLItem}</th></tr>
  * </thead>
  * <tbody>
- * <tr><td>Label</td><td>PDLLabel</td></tr> 
- * <tr><td>Constant</td><td>PDLConstant</td></tr>
- * <tr><td>Variable</td><td>PDLVariable</td></tr>
- * <tr><td>ImplicitVariable</td><td>PDLImplicitVariable</td></tr>
- * <tr><td>VariableList</td><td>PDLVariableList</td></tr> 
- * <tr><td>PacketRef</td><td>PDLPacketRef</td></tr>
- * <tr><td>PacketRefList</td><td>PDLPacketRefList</td></tr> 
- * <tr><td>Conditional</td><td>PDLConditional</td></tr>
- * <tr><td>MessageId</td><td>PDLMessageId</td></tr> 
- * <tr><td>Optional</td><td>PDLOptional</td></tr>
+ * <tr><td>Constant</td><td>{@link PDLConstant}</td></tr>
+ * <tr><td>Variable</td><td>{@link PDLVariable}</td></tr>
+ * <tr><td>ImplicitVariable</td><td>{@link PDLVariable}</td></tr>
+ * <tr><td>VariableList</td><td>{@link PDLVariable}</td></tr> 
+ * <tr><td>PacketRef</td><td>{@link PDLPacketRef}</td></tr>
+ * <tr><td>PacketRefList</td><td>{@link PDLPacketRefList}</td></tr> 
+ * <tr><td>Conditional</td><td>{@link PDLConditional}</td></tr>
+ * <tr><td>Block</td><td>{@link PDLBlockItem}</td></tr>
+ * <tr><td>Choice</td><td>{@link PDLChoice}</td></tr>
+ * <tr><td>SwitchStatement</td><td>{@link PDLSwitchStatement}</td></tr>
+ * <tr><td>Label</td><td>{@link PDLInstruction}</td></tr> 
+ * <tr><td>MessageId</td><td>{@link PDLInstruction}</td></tr>
+ * <tr><td>Fail</td><td>{@link PDLInstruction}</td></tr> 
  * </tbody>
  * </table>
  */
 public enum PDLItemType
 {
+    /**
+     * Label 
+     */
     Label, 
+    
+    /**
+     * Constant
+     */
     Constant,
-    ImplicitVariable,
+    
+    /**
+     * Variable
+     */
     Variable,
+    
+    /**
+     * Implicit Variable / Checksum
+     */
+    ImplicitVariable,
+    
+    /**
+     * Variable List
+     */
     VariableList, 
+    
+    /**
+     * Packet Reference
+     */
     PacketRef,
-    PacketRefList, 
-    Conditional, 
+    
+    /**
+     * Packet List
+     */
+    PacketRefList,
+    
+    /**
+     * Condition
+     */
+    Conditional,
+    
+    /**
+     * optional block
+     */
     Optional,
+    
+    /**
+     * choice-Statement
+     */
     Choice,
+    
+    /**
+     * Block
+     */
     Block,
+    
+    /**
+     * switch-Statement
+     */
     SwitchStatement,
     
     // instructions
+    
+    /**
+     * messageId instruction
+     */
     MessageId,
+    
+    /**
+     * fail instruction
+     */
     Fail
 }

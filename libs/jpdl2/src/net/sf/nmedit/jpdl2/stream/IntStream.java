@@ -22,7 +22,15 @@ package net.sf.nmedit.jpdl2.stream;
 import java.io.Serializable;
 import java.io.IOException;
 
-
+/**
+ * Stream of integer values.
+ * 
+ * <h1>History</h1>
+ * <h3>2008-02-20</h3>
+ * <ul>
+ *   <li>implements PDLDataSource</li>
+ * </ul>
+ */
 public class IntStream implements Serializable, PDLDataSource
 {
     

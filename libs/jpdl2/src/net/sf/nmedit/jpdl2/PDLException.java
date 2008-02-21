@@ -94,7 +94,7 @@ public class PDLException extends Exception
                 return "constant "+constant.getValue() + ":" + constant.getSize();
             }
             case Label:
-                return "@"+item.asLabel().getName();
+                return "@"+item.asInstruction().getString();
             case Optional:
                 return "Optional";
             case PacketRef:
@@ -114,12 +114,12 @@ public class PDLException extends Exception
             }
             case VariableList:
             {
-                PDLVariable variable = item.asVariableList();
+                PDLVariable variable = item.asVariable();
                 return "List "+variable.getName()+":"+variable.getSize();                
             }
             case ImplicitVariable:
             {
-                PDLImplicitVariable variable = item.asImplicitVariable();
+                PDLVariable variable = item.asVariable();
                 PDLFunction f = variable.getFunction();
                 return variable.getName()+":"+variable.getSize()+"="+f;
             }

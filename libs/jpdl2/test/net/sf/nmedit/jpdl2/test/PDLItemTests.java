@@ -26,9 +26,8 @@ import net.sf.nmedit.jpdl2.impl.PDLBlockItemImpl;
 import net.sf.nmedit.jpdl2.impl.PDLCompiledCondition;
 import net.sf.nmedit.jpdl2.impl.PDLConditionalImpl;
 import net.sf.nmedit.jpdl2.impl.PDLConstantImpl;
-import net.sf.nmedit.jpdl2.impl.PDLImplicitVariableImpl;
+import net.sf.nmedit.jpdl2.impl.PDLFunctionImpl;
 import net.sf.nmedit.jpdl2.impl.PDLInstructionImpl;
-import net.sf.nmedit.jpdl2.impl.PDLLabelImpl;
 import net.sf.nmedit.jpdl2.impl.PDLMultiplicityImpl;
 import net.sf.nmedit.jpdl2.impl.PDLChoiceImpl;
 import net.sf.nmedit.jpdl2.impl.PDLOptionalImpl;
@@ -36,7 +35,6 @@ import net.sf.nmedit.jpdl2.impl.PDLPacketRefImpl;
 import net.sf.nmedit.jpdl2.impl.PDLPacketRefListImpl;
 import net.sf.nmedit.jpdl2.impl.PDLSwitchStatementImpl;
 import net.sf.nmedit.jpdl2.impl.PDLVariableImpl;
-import net.sf.nmedit.jpdl2.impl.PDLVariableListImpl;
 import net.sf.nmedit.jpdl2.PDLException;
 
 import org.junit.Test;
@@ -49,13 +47,13 @@ public class PDLItemTests
         switch (type)
         {
             case Label:
-                return new PDLLabelImpl("label");
+                return new PDLInstructionImpl(PDLItemType.Label, "label");
             case Constant:
                 return new PDLConstantImpl(0,0);
             case Variable:
-                return new PDLVariableImpl("name",1);
+                return PDLVariableImpl.create("name",1);
             case VariableList:
-                return new PDLVariableListImpl("name",1, new PDLMultiplicityImpl(2));
+                return PDLVariableImpl.createVariableList("name",1, new PDLMultiplicityImpl(2));
             case Optional:
                 return new PDLOptionalImpl();
             case PacketRef:
@@ -63,9 +61,9 @@ public class PDLItemTests
             case PacketRefList:
                 return new PDLPacketRefListImpl(null, "name", "binding", new PDLMultiplicityImpl(2));
             case Conditional:
-                return new PDLConditionalImpl(new PDLCompiledCondition(new Expression(Opcodes.vpush, "v")));
+                return new PDLConditionalImpl(new PDLCompiledCondition(new Expression(Opcodes.bpush,true)));
             case ImplicitVariable:
-                return new PDLImplicitVariableImpl("name",1);
+                return PDLVariableImpl.createImplicit("name",1, new PDLFunctionImpl(new Expression(Opcodes.vpush, "v")));
             case MessageId:
                 return new PDLInstructionImpl(PDLItemType.MessageId, "messageid");
             case Block:

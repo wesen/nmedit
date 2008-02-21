@@ -29,5 +29,11 @@ public interface PDLConditional extends PDLBlockItem
      * @return the condition
      */
     PDLCondition getCondition();
+
+    /**
+     * Returns {@link PDLItemType#Conditional}
+     * @return {@link PDLItemType#Conditional}
+     */
+    PDLItemType getType();
     
 }

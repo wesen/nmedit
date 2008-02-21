@@ -138,7 +138,7 @@ PacketName:
        ;
        
 SimpleItem:
-          LABEL     { badd(new PDLLabelImpl($1)); }
+          LABEL     { badd(new PDLInstructionImpl(PDLItemType.Label, $1)); }
        |  PacketRef 
        |  PacketRefList
        |  Variable  
@@ -192,22 +192,22 @@ Variable:
 
 RawVariable:
           IDENTIFIER ':' INTEGER_LITERAL { PDLUtils.checkBitcount($3);
-                                           $$=new PDLVariableImpl($1, $3); }
+                                           $$=PDLVariableImpl.create($1, $3); }
        ;
 
 ImplicitVariable:
           RawVariable TK_EQ '(' expression ')' { PDLFunction function;
                                                  try { function = new PDLFunctionImpl(epopFinal()); } catch(IllegalArgumentException iae) {throw new PDLException(iae);}
-                                                 badd(new PDLImplicitVariableImpl((PDLVariable)$1, function));  }
+                                                 badd(PDLVariableImpl.createImplicit((PDLVariable)$1, function));  }
        ;
 
 VariableList:
           RawVariableList { badd($1); }
-       |  RawVariableList TK_DIVIDE INTEGER_LITERAL { PDLVariableListImpl v = (PDLVariableListImpl) $1; v.setTerminal($3); badd($1); }
+       |  RawVariableList TK_DIVIDE INTEGER_LITERAL { PDLVariableImpl v = (PDLVariableImpl) $1; v.setTerminal($3); badd($1); }
        ;
 
 RawVariableList:
-          Multiplicity RawVariable { $$=new PDLVariableListImpl((PDLVariable)$2, (PDLMultiplicity)$1); }
+          Multiplicity RawVariable { $$= PDLVariableImpl.createVariableList((PDLVariable)$2, (PDLMultiplicity)$1); }
        ;
 
 Constant:

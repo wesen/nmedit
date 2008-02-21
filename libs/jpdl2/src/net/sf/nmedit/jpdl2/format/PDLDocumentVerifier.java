@@ -126,7 +126,7 @@ public class PDLDocumentVerifier
                 {
                     // store reference names
                     case Label:
-                        declare(declared, item, "@", item.asLabel().getName());
+                        declare(declared, item, "@", item.asInstruction().getString());
                         break;
                     case Variable:
                         declare(declared, item, null, item.asVariable().getName());
@@ -137,13 +137,13 @@ public class PDLDocumentVerifier
                         break;
                     case ImplicitVariable:
                         // use unique prefix "%" for variables which can not be referenced
-                        declare(declared, item, "%", item.asImplicitVariable().getName());
-                        verifyFunction(declared, item, item.asImplicitVariable().getFunction());
+                        declare(declared, item, "%", item.asVariable().getName());
+                        verifyFunction(declared, item, item.asVariable().getFunction());
                         break;
                     case VariableList:
                         // use unique prefix "%" for variables which can not be referenced
-                        declare(declared, item, "%", item.asVariableList().getName());
-                        verifyMultiplicativeReference(declared, item, item.asVariableList().getMultiplicity());
+                        declare(declared, item, "%", item.asVariable().getName());
+                        verifyMultiplicativeReference(declared, item, item.asVariable().getMultiplicity());
                         break;
                     case PacketRef:
                     {
@@ -388,7 +388,7 @@ public class PDLDocumentVerifier
             case Variable:
                 return item.asVariable().getSize();
             case ImplicitVariable:
-                return item.asImplicitVariable().getSize();
+                return item.asVariable().getSize();
             default:
                 return -1;
         }

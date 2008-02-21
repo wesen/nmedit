@@ -29,4 +29,10 @@ public interface PDLSwitchStatement extends PDLItem, Iterable<PDLCaseStatement>
 
     PDLBlockItem getItemForCase(int value);
 
+    /**
+     * Returns {@link PDLItemType#SwitchStatement}
+     * @return {@link PDLItemType#SwitchStatement}
+     */
+    PDLItemType getType();
+    
 }

@@ -21,4 +21,10 @@ package net.sf.nmedit.jpdl2;
 public interface PDLBlockItem extends PDLBlock, PDLItem
 {
 
+    /**
+     * Returns {@link PDLItemType#Block}
+     * @return {@link PDLItemType#Block}
+     */
+    PDLItemType getType();
+    
 }

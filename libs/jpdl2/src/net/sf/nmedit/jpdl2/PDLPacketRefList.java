@@ -34,5 +34,11 @@ public interface PDLPacketRefList extends PDLItem, PDLPacketRef
      * The multiplicity.
      */
     PDLMultiplicity getMultiplicity();
+
+    /**
+     * Returns {@link PDLItemType#PacketRefList}
+     * @return {@link PDLItemType#PacketRefList}
+     */
+    PDLItemType getType();
     
 }
