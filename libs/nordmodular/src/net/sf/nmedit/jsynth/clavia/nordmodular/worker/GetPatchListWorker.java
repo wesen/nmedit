@@ -21,6 +21,8 @@ package net.sf.nmedit.jsynth.clavia.nordmodular.worker;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 import net.sf.nmedit.jnmprotocol2.GetPatchListMessage;
 import net.sf.nmedit.jnmprotocol2.NmProtocolListener;
 import net.sf.nmedit.jnmprotocol2.PatchListEntry;
@@ -136,9 +138,15 @@ public class GetPatchListWorker extends NmProtocolListener implements ScheduledW
         
         // request complete
         state = COMPLETE;
-        uninstall();
-        // should all work through callbacks from messages
-//        updateBank();
+        
+        SwingUtilities.invokeLater(new Runnable(){
+         public void run(){
+            uninstall();
+            // should all work through callbacks from messages
+            updateBank();
+        }
+        }   
+        );
     }
     
     private int updateBeginIndex = -1;
