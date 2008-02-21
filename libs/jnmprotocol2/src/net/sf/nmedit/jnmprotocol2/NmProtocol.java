@@ -71,7 +71,7 @@ public class NmProtocol extends AbstractNmProtocol
             }
         }
 
-        byte[] receiveBytes = getReceivedBytes();
+        byte[] receiveBytes = getNextReceivedSysexBytes();
         while (receiveBytes.length > 0) 
         {
             MidiMessage midiMessage = MidiMessage.create(BitStream.wrap(receiveBytes));
