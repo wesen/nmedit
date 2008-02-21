@@ -33,8 +33,8 @@ No target specified.
 
       <echo>compiling/installing project libraries</echo>
       <ant antfile="./jpdl-plugin_ant.xml" dir="." target="install" />
-      <ant antfile="./jnmprotocol-plugin_ant.xml" dir="." target="install" />
       <ant antfile="./nmutils-plugin_ant.xml" dir="." target="install" />
+        <ant antfile="./jnmprotocol-plugin_ant.xml" dir="." target="install" />
       <ant antfile="./jpatch-plugin_ant.xml" dir="." target="install" />
       <ant antfile="./jtheme-plugin_ant.xml" dir="." target="install" />
       <ant antfile="./jsynth-plugin_ant.xml" dir="." target="install" />
@@ -59,8 +59,8 @@ No target specified.
 
       <echo>uninstalling project libraries</echo>
       <ant antfile="./jpdl-plugin_ant.xml" dir="." target="uninstall" />
-      <ant antfile="./jnmprotocol-plugin_ant.xml" dir="." target="uninstall" />
       <ant antfile="./nmutils-plugin_ant.xml" dir="." target="uninstall" />
+        <ant antfile="./jnmprotocol-plugin_ant.xml" dir="." target="uninstall" />
       <ant antfile="./jpatch-plugin_ant.xml" dir="." target="uninstall" />
       <ant antfile="./jtheme-plugin_ant.xml" dir="." target="uninstall" />
       <ant antfile="./jsynth-plugin_ant.xml" dir="." target="uninstall" />
