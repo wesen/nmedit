@@ -32,6 +32,10 @@ import net.sf.nmedit.jnmprotocol2.MidiException;
 import net.sf.nmedit.jnmprotocol2.MidiMessage;
 import net.sf.nmedit.jnmprotocol2.utils.QueueBuffer;
 import net.sf.nmedit.jpdl2.stream.BitStream;
+import net.sf.nmedit.jsynth.SynthException;
+import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
+import net.sf.nmedit.nmutils.Arrays15;
+import net.sf.nmedit.nmutils.Platform;
 
 /**
  * Receives and sends javax.sound.midi.MidiMessage.
@@ -64,6 +68,8 @@ public abstract class AbstractNmProtocol
     private QueueBuffer<byte[]> receivedQueue = new QueueBuffer<byte[]>();
     // queue containing incoming net.sf.nmedit.jnmprotocol2.MidiMessages
     private QueueBuffer<MidiMessage> eventQueue = new QueueBuffer<MidiMessage>();
+    private QueueBuffer<byte[]> sysexReceiveQueue = new QueueBuffer<byte[]>();
+    private byte[] tmpSysexData = null;
 
     // remembers when activity() was called the last time
     private volatile long recentActivity = 0;
@@ -153,6 +159,10 @@ public abstract class AbstractNmProtocol
             {
                 // call the heartbeat implementation
                 heartbeatImpl();
+            } catch (MidiException e) {
+            	// XXX ignore for now
+            	System.out.println("catch midi exception");
+            	e.printStackTrace();
             }
             finally
             {
@@ -286,6 +296,104 @@ public abstract class AbstractNmProtocol
         }
     }
     
+    private int indexOfByte(byte[] data, byte search, int start) {
+    	for (int i = start; i < data.length; i++) {
+    		if (data[i] == search)
+    			return i;
+    	}
+    	return -1;
+    }
+    
+    private int indexOfByte(byte[] data, byte search) {
+    	return indexOfByte(data, search, 0);
+    }
+    
+    protected void dumpByteArray(String s, byte []arr) {
+    	System.out.print(s + " [");
+    	int i = 0;
+    	for (byte b : arr) {
+    		if (i++ == 16) {
+    			System.out.println();
+    			i = 0;
+    		}
+    		System.out.print(Integer.toHexString(b) + ", ");
+    	}
+    	System.out.println("]");
+    }
+    
+    /*
+     * with mmj under macosx, when a sysex is so long that it has to be split across multiple messages, sysex handling is not correct.
+     * We get split sysex across receivedBytes() boundaries, and the following receivedBytes() start with 0xF7
+     * Handle this until there is a mmj workaround
+     */
+    protected byte[] getNextReceivedSysexBytes() {
+    	byte[] data = null;
+    	if (sysexReceiveQueue.isEmpty()) {
+    		byte bytes[];
+			synchronized (receiveLock) {
+				bytes= getReceivedBytes();
+			}
+//			if (bytes != null && bytes.length > 0)
+//				dumpByteArray("receivedBytes ", bytes);
+    		if (bytes == NO_BYTES)
+    			return NO_BYTES;
+			int startRcv = 0;
+			if (Platform.isFlavor(Platform.OS.MacOSFlavor)) {
+				if (bytes[0] == (byte)0xf7) {
+					startRcv = 1;
+				}
+			}
+    		if (tmpSysexData != null) {
+    			byte newSysex[] = new byte[tmpSysexData.length + bytes.length - startRcv];
+    			System.arraycopy(tmpSysexData, 0, newSysex, 0, tmpSysexData.length);
+    			System.arraycopy(bytes, startRcv, newSysex, tmpSysexData.length, bytes.length - startRcv);
+    			tmpSysexData = newSysex;
+    		} else {
+    			byte newSysex[] = new byte[bytes.length - startRcv];
+    			tmpSysexData = newSysex;
+    			System.arraycopy(bytes, startRcv, tmpSysexData, 0, bytes.length - startRcv);
+    		}
+    		if (tmpSysexData == null)
+    			return NO_BYTES;
+
+//			if (bytes != null && bytes.length > 0)
+//				dumpByteArray("tmpSysexData ", tmpSysexData);
+
+    		int start = 0;
+    		do {
+    			int startIdx = indexOfByte(tmpSysexData, (byte)0xF0, start);
+    			if (startIdx < 0) {
+    				// 	discard
+    				tmpSysexData = null;
+    				break;
+    			}
+    			int endIdx = indexOfByte(tmpSysexData, (byte)0xF7, startIdx);
+    			if (endIdx < 0) {
+    				start = startIdx;
+    				break;
+    			} else {
+    				byte result[] = new byte[endIdx + 1 - startIdx];
+    				System.arraycopy(tmpSysexData, startIdx, result, 0, endIdx - startIdx + 1);
+    				// dumpByteArray("result ", result);	
+    				sysexReceiveQueue.offer(result);
+    			}
+    			start = endIdx + 1;
+    		} while ((tmpSysexData != null) && (start < tmpSysexData.length));
+    		if (tmpSysexData != null) {
+    			if (start < tmpSysexData.length) {
+    				byte newSysex[] = new byte[tmpSysexData.length - start];
+    				System.arraycopy(tmpSysexData, start, newSysex, 0, tmpSysexData.length - start);
+    				tmpSysexData = newSysex;
+    			} else if (start == tmpSysexData.length) {
+    				tmpSysexData = null;
+    			}
+    		}
+    	}
+
+    	data = sysexReceiveQueue.poll();
+    	return data != null ? data : NO_BYTES;
+    }
+    
     /**
      * Removes and returns the next message in the received queue.
      * If the queue was empty then an empty byte array is returned. 
@@ -293,11 +401,22 @@ public abstract class AbstractNmProtocol
      */
     protected byte[] getReceivedBytes()
     {
-        byte[] data;
+        byte[] data = null;
         synchronized(receiveLock)
         {
-            data = receivedQueue.poll();
+        	byte[] tmpData = null;
+        	while ((tmpData = receivedQueue.poll()) != null) {
+        		if (data == null) {
+        			data = tmpData;
+        		} else {
+        			byte []tmpData2= new byte[data.length + tmpData.length];
+        			System.arraycopy(data, 0, tmpData2, 0, data.length);
+        			System.arraycopy(tmpData, 0, tmpData2, data.length, tmpData.length);
+        			data = tmpData2;
+        		}
+        	}
         }
+        
         return (data != null) ? data : NO_BYTES;
     }
 
