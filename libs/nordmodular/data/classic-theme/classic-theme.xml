@@ -1297,7 +1297,7 @@ label{fill:#000;}
 		<knob x="75" y="37" size="29">
 			<parameter component-id="p1" alt="rate" />
 		</knob>
-		<button x="110" y="22" width="26" height="50" cyclic="false" landscape="false">
+		<button x="110" y="22" width="26" height="50" cyclic="false" reverse="true" landscape="false">
 			<parameter component-id="p2" alt="range" />
 			<btn index="0">Hi</btn>
 			<btn index="1">Lo</btn>
@@ -1535,11 +1535,11 @@ label{fill:#000;}
 			<btn index="0">Mono</btn>
 			<btn index="1">Mono</btn>
 		</button>
-		<button x="122" y="7" width="26" height="50" cyclic="false" landscape="false">
+		<button x="122" y="7" width="26" height="50" cyclic="false" landscape="false" reverse="true">
 			<parameter component-id="p2" alt="range" />
-			<btn index="0">Hi</btn>
+			<btn index="2">Hi</btn>
 			<btn index="1">Lo</btn>
-			<btn index="2">Sub</btn>
+			<btn index="0">Sub</btn>
 		</button>
 		<light component-id="ledControlOut" type="led" x="240" y="35" width="7" height="7" /> 
 	</module>
@@ -1959,7 +1959,7 @@ label{fill:#000;}
 			<btn index="0">Mono</btn>
 			<btn index="1">Mono</btn>
 		</button>
-		<button x="103" y="23" width="24" height="46" cyclic="false" landscape="false">
+		<button x="103" y="23" width="24" height="46" cyclic="false" landscape="false" reverse="true">
 			<parameter component-id="p2" alt="range" />
 			<btn index="0">Hi</btn>
 			<btn index="1">Lo</btn>
