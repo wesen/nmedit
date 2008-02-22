@@ -5,7 +5,7 @@
  * This class is a simple example lexer.
  */
 package net.sf.nmedit.jpdl2.format;
-import net.sf.nmedit.jpdl2.PDLUtils;
+import net.sf.nmedit.jpdl2.utils.PDLUtils;
 
 @SuppressWarnings({"unused", "static-access"})
 %%
@@ -60,6 +60,8 @@ Identifier = [:jletter:] [:jletterdigit:]*
 
 PacketRef = [:jletter:] [:jletterdigit:]* \$ [:jletter:] [:jletterdigit:]*
 
+InlinePacketRef = [:jletter:] [:jletterdigit:]* \$ \$
+
 LabelName = @ {Identifier}
 
 DecIntegerLiteral = 0 | [1-9][0-9]*
@@ -91,6 +93,8 @@ Brackets = [\[\]\{\}\(\)]
 <YYINITIAL> {
   \$                           { return yyparser.TKDOLLAR; }
   
+  {InlinePacketRef}        { yyparser.yylval = new PDL2ParserVal(yytext());
+                             return yyparser.INLINEPACKETREF; }
   {PacketRef}              { yyparser.yylval = new PDL2ParserVal(yytext());
                              return yyparser.PACKETREF; }
   

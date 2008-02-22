@@ -4,6 +4,8 @@ import net.sf.nmedit.jpdl2.impl.*;
 import java.util.ArrayList;
 import java.util.List;
 import net.sf.nmedit.jpdl2.*;
+import net.sf.nmedit.jpdl2.dom.*;
+import net.sf.nmedit.jpdl2.utils.*;
 %}
       
 %token NL          /* newline  */
@@ -16,6 +18,7 @@ import net.sf.nmedit.jpdl2.*;
 
 %token <sval> LABEL
 %token <sval> PACKETREF
+%token <sval> INLINEPACKETREF
 %token <sval> IDENTIFIER
 %token TK_LSHIFT
 %token TK_RSHIFT
@@ -52,10 +55,10 @@ import net.sf.nmedit.jpdl2.*;
 %type <ival> INTEGER_LITERAL 
 %type <obj> PacketDecl PacketDeclStart PacketDeclList NextExpression StreamOp 
 %type <obj> expression ConstExpr compiled_expression 
-%type <obj> pdldocument  Constant  Multiplicity ConstantWithoutMuliplicity   
-%type <obj> RawVariable Variable RawVariableList VariableList ImplicitVariable
+%type <obj> pdldocument  Constant  Multiplicity ConstantWithoutMuliplicity  StringDef  
+%type <obj> RawVariable Variable RawVariableList VariableList GetImplicitVariable ImplicitVariable ImplicitAnonymVariable
 %type <obj> IfStatement IfExpression
-%type <obj> PacketRef PacketRefList pdlheader pdlbody
+%type <obj> PacketRef InlinePacketRef PacketRefList pdlheader pdlbody
 %type <obj> Block   Item BlockItem  ItemList SimpleItem TypeCastExpr MessageId Choice ChoiceStatement
 %type <obj> FailStatement SwitchStatement SwitchStatementHeader SwitchCaseList CaseStatement
 %type <sval> PacketName
@@ -140,15 +143,18 @@ PacketName:
 SimpleItem:
           LABEL     { badd(new PDLInstructionImpl(PDLItemType.Label, $1)); }
        |  PacketRef 
+       |  InlinePacketRef
        |  PacketRefList
        |  Variable  
        |  VariableList
        |  ImplicitVariable
+       |  ImplicitAnonymVariable
        |  Constant  
        |  MessageId
        |  ChoiceStatement
        |  FailStatement
        |  SwitchStatement
+       |  StringDef
        ;
 
 FailStatement:
@@ -186,6 +192,10 @@ MessageId:
           TK_MESSAGEID '(' STRING_LITERAL ')' { badd(new PDLInstructionImpl(PDLItemType.MessageId, $3)); }
        ;
 
+StringDef:
+          IDENTIFIER ASSIGN STRING_LITERAL { badd(new PDLInstructionImpl(PDLItemType.StringDef, $1, $3)); }
+       ;
+
 Variable:
           RawVariable { badd($1); }
        ;
@@ -196,9 +206,18 @@ RawVariable:
        ;
 
 ImplicitVariable:
+          GetImplicitVariable { badd($1);  }
+       ;
+
+
+ImplicitAnonymVariable:
+          TK_PERCENT GetImplicitVariable { PDLVariableImpl v = (PDLVariableImpl) $2; v.setAnonym(); badd(v); }
+       ;
+
+GetImplicitVariable:
           RawVariable TK_EQ '(' expression ')' { PDLFunction function;
                                                  try { function = new PDLFunctionImpl(epopFinal()); } catch(IllegalArgumentException iae) {throw new PDLException(iae);}
-                                                 badd(PDLVariableImpl.createImplicit((PDLVariable)$1, function));  }
+                                                 $$ = PDLVariableImpl.createImplicit((PDLVariable)$1, function, false);  }
        ;
 
 VariableList:
@@ -224,8 +243,12 @@ PacketRef:
           PACKETREF { badd(textToPacketRef($1)); }
        ;
 
+InlinePacketRef:
+         INLINEPACKETREF { badd(textToInlinePacketRef($1)); }
+       ;
+
 PacketRefList:
-          Multiplicity PACKETREF { badd(new PDLPacketRefListImpl(textToPacketRef($2), (PDLMultiplicity)$1)); }
+          Multiplicity PACKETREF { badd(new PDLPacketRefImpl(pdldoc, textToPacketRef($2), (PDLMultiplicity)$1)); }
        ;
 
 Item: 
@@ -244,8 +267,8 @@ IfStatement:
        ;
 
 Block:     SimpleItem           { }
-       |   '{' '}'              { badd(new PDLBlockItemImpl()); }
-       |   '{' { PDLBlockItemImpl b = new PDLBlockItemImpl(); badd(b); bpush(b); } ItemList '}' { bpop(); }
+       |   '{' '}'              { badd(new PDLBlockImpl()); }
+       |   '{' { PDLBlockImpl b = new PDLBlockImpl(); badd(b); bpush(b); } ItemList '}' { bpop(); }
        ;
 
 ItemList:
@@ -418,7 +441,12 @@ StreamOpToken:
   private PDLPacketRefImpl textToPacketRef(String s)
   {
     int i = s.indexOf('$');
-    return new PDLPacketRefImpl(pdldoc, s.substring(0,i), s.substring(i+1));
+    return new PDLPacketRefImpl(pdldoc, s.substring(0,i), s.substring(i+1), false);
+  }
+  
+  private PDLPacketRefImpl textToInlinePacketRef(String s)
+  {
+    return new PDLPacketRefImpl(pdldoc, s.substring(0,s.length()-2), null, true);
   }
 
   private void registerPacketDecl(PDLPacketDecl p) throws PDLException
