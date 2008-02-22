@@ -42,6 +42,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedList;
 
 import javax.swing.AbstractAction;
@@ -622,7 +624,7 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
             getParent().dispatchEvent(me);
         }
         
-        private void createPopup(MouseEvent e, PModule source)
+        private void createPopup(MouseEvent e, final PModule source)
         {
             ModuleDescriptions md = source.getDescriptor().getModules();
             
@@ -634,7 +636,14 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
             
             PTModuleMapping[] mappings = t.getMappings(source.getDescriptor());
 
-            PTBasicTransformations.sort(mappings);
+            // PTBasicTransformations.sort(mappings);
+            Arrays.sort(mappings, new Comparator<PTModuleMapping>() {
+            	public int compare(PTModuleMapping o1, PTModuleMapping o2) {
+                    PModuleDescriptor md1 = o1.getTarget(source.getDescriptor());
+                    PModuleDescriptor md2 = o2.getTarget(source.getDescriptor());
+            		return md1.getName().compareTo(md2.getName());
+            	}
+            });
             
             transformPopupMenu = null;
             if (mappings.length>0)
@@ -678,7 +687,7 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
             
             float covering = ((int)(mapping.getCovering()*10000))/100f;
             
-            putValue(NAME, md.getName()+" ("+covering+"%)");
+          putValue(NAME, md.getName());
             
             String hint =
                 "<html><body><strong>transformed</strong><br/>connector(s): "+mapping.getConnectorCount()
