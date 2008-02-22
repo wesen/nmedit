@@ -91,7 +91,7 @@ public class JTModuleContainer extends JTBaseComponent
 
     public void setSize(Dimension size)
     {
-        cableLayer.setSize(size);
+    	cableLayer.setSize(size);
         super.setSize(size);
     }
     
@@ -277,6 +277,7 @@ public class JTModuleContainer extends JTBaseComponent
         public void removeUI(PModule module)
         {
             Component[] components = JTModuleContainer.this.getComponents();
+
             for (int i=components.length-1;i>=0;i--)
             {
                 Component c = components[i];
@@ -294,6 +295,8 @@ public class JTModuleContainer extends JTBaseComponent
                     }
                 }
             }
+
+            updateModuleContainerDimensions();
         }
 
         public void connectionAdded(PConnectionEvent e)
