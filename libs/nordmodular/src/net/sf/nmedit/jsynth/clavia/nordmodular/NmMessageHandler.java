@@ -367,12 +367,18 @@ public class NmMessageHandler extends NmProtocolListener
         
         NmSlot slot = synth.getSlot(slotId);
         NMPatch patch = slot.getPatch();
-        
+
+        String parameterClass = "parameter";
         VoiceArea va = null;
         if (vaId == Format.VALUE_SECTION_VOICE_AREA_POLY)
             va = patch.getPolyVoiceArea();
         else if (vaId == Format.VALUE_SECTION_VOICE_AREA_COMMON)
             va = patch.getCommonVoiceArea();
+        else if (vaId == Format.VALUE_SECTION_MORPH)
+        {
+            parameterClass = "morph";
+            va = patch.getPolyVoiceArea();
+        }
         
         if (va == null)
             return;
@@ -382,7 +388,7 @@ public class NmMessageHandler extends NmProtocolListener
         PParameter p;
         try
         {
-            p = Helper.getParameter(module, "parameter", paramId);
+            p = Helper.getParameter(module, parameterClass, paramId);
         }
         catch (InvalidDescriptorException e)
         {
