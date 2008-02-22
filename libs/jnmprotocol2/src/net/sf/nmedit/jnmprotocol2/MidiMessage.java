@@ -31,6 +31,7 @@ import net.sf.nmedit.jpdl2.PDLPacket;
 import net.sf.nmedit.jpdl2.PDLPacketParser;
 import net.sf.nmedit.jpdl2.stream.BitStream;
 import net.sf.nmedit.jpdl2.stream.IntStream;
+import net.sf.nmedit.jpdl2.utils.PDLUtils;
 
 public abstract class MidiMessage
 {
