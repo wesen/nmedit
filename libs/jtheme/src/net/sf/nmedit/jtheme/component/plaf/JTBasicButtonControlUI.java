@@ -333,10 +333,14 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
             
             for (int i=0;i<range;i++)
             {
-                Icon icon = btnIcons[i];
-                String label = btnLabels[i];
+            	int idx = i;
+            	if (control.isReversed()) {
+            		idx = range - i -1 ;
+            	}
+                Icon icon = btnIcons[idx];
+                String label = btnLabels[idx];
              
-                paintButton(g, intSelectionIndex, min+i, icon, label, (int)x, (int)y, btnw, btnh);
+                paintButton(g, intSelectionIndex, min+idx, icon, label, (int)x, (int)y, btnw, btnh);
                 
                 x+=dx; 
                 y+=dy;
@@ -402,7 +406,11 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
             index = control.getValue()-control.getMinValue();
             
         }
-        return index;
+        if (control.isReversed()) {
+        	return range() - index - 1;
+        } else {
+        	return index;
+        }
     }
     
     private void paintButton(Graphics2D g, int intBtnSelIndex, 
