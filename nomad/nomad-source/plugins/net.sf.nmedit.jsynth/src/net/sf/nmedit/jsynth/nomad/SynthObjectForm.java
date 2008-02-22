@@ -154,17 +154,24 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         // no op
 
         List<Synthesizer> list = new LinkedList<Synthesizer>();
-        list.add(bank.getSynthesizer());
+        Synthesizer synth = bank.getSynthesizer();
+        Slot dst = null;
+        list.add(synth);
         
-        SaveInSynthDialog ssd = new SaveInSynthDialog(list);
-        ssd.setTitle("Save In Slot");
-        ssd.setSaveInBankAllowed(false);
-        ssd.invoke();
-        
-        if (!ssd.isSaveOption())
-            return;
+        if (synth.getSlotCount() > 1) {
 
-        Slot dst = ssd.getSelectedSlot();
+        	SaveInSynthDialog ssd = new SaveInSynthDialog(list);
+        	ssd.setTitle("Save In Slot");
+        	ssd.setSaveInBankAllowed(false);
+        	ssd.invoke();
+
+        	if (!ssd.isSaveOption())
+        		return;
+
+        	dst = ssd.getSelectedSlot();
+        } else {
+        	dst = synth.getSlot(0);
+        }
     
         if (dst == null)
             return;
@@ -325,6 +332,9 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
 
         public void bankUpdated(BankUpdateEvent e)
         {
+//        	System.out.println("update bank start " + Thread.currentThread()); 
+//        	Throwable ex = new Throwable();
+//        	ex.printStackTrace();
             if (dropped) return;
             for (int i=e.getBeginIndex();i<e.getEndIndex();i++)
             {
@@ -340,6 +350,7 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
                 l.setText(name);
             }
             banksTree.fireNodeStructureChanged(this);
+//            System.out.println("update bank stop " + Thread.currentThread());
         }
         
     }
