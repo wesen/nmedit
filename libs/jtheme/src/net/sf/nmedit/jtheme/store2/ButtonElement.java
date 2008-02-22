@@ -46,12 +46,14 @@ public class ButtonElement extends ControlElement
      */
     private static final long serialVersionUID = -6842481386886896976L;
     public static final String ATT_LANDSCAPE = "landscape";
+    public static final String ATT_REVERSE = "reverse";
     public static final String ATT_CYCLIC = "cyclic";
     public static final String ATT_MODE = "mode";
     
     private int orientation = SwingConstants.VERTICAL;
     private boolean cyclic ;
     private boolean incrementMode;
+	private boolean reverse;
     
     private String callComponent;
     private String callMethod;
@@ -101,6 +103,10 @@ public class ButtonElement extends ControlElement
         else if (ATT_CYCLIC.equals(name))
         {
             this.cyclic = Boolean.parseBoolean(att.getValue());  
+        }
+        else if (ATT_REVERSE.equals(name))
+        {
+        	this.reverse = Boolean.parseBoolean(att.getValue());
         }
         else
         {
@@ -163,6 +169,7 @@ public class ButtonElement extends ControlElement
         buttons.setIncrementModeEnabled(incrementMode);
         buttons.setOrientation(orientation);
         buttons.setCyclic(cyclic);
+        buttons.setReversed(reverse);
 
         for (Integer key: images.keySet())
         {

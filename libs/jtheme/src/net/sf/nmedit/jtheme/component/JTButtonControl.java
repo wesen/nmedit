@@ -40,6 +40,7 @@ public class JTButtonControl extends JTControl
     private Map<Integer, String> textMap;
     private Map<Integer, Icon> iconMap;
     private boolean cyclic = false;
+    private boolean reversed = false;
     private int orientation = SwingConstants.VERTICAL;
     private int spacing = 2;
     private boolean toggleEnabledRequested = true;
@@ -108,6 +109,14 @@ public class JTButtonControl extends JTControl
     public void setCyclic(boolean cyclic)
     {
         this.cyclic = cyclic;
+    }
+    
+    public boolean isReversed() {
+    	return reversed;
+    }
+    
+    public void setReversed(boolean reverse) {
+    	this.reversed = reverse;
     }
     
     public void setOrientation(int orientation)
