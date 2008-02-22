@@ -44,6 +44,7 @@ import net.sf.nmedit.jnmprotocol2.VoiceCountMessage;
 import net.sf.nmedit.jnmprotocol2.utils.PatchNameExtractor;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Format;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Knob;
@@ -408,27 +409,38 @@ public class NmMessageHandler extends NmProtocolListener
         NmSlot slot = synth.getSlot(slotId);
         NMPatch patch = slot.getPatch();
         
-        VoiceArea va = null;
+        PModuleContainer va = null;
+        String parameterClass = "parameter";
+        
         if (vaId == Format.VALUE_SECTION_VOICE_AREA_POLY)
             va = patch.getPolyVoiceArea();
         else if (vaId == Format.VALUE_SECTION_VOICE_AREA_COMMON)
             va = patch.getCommonVoiceArea();
-        
-        if (va == null)
+        else if (vaId == Format.VALUE_SECTION_MORPH)
+        {
+            parameterClass = "morph";
+            va = patch.getMorphSection();
+        }
+        else
+        {
+            // should not happen
             return;
+        }
         
         PModule module = va.getModule(moduleId);
         
         PParameter p;
         try
         {
-            p = Helper.getParameter(module, "parameter", paramId);
+            p = Helper.getParameter(module, parameterClass, paramId);
         }
         catch (InvalidDescriptorException e)
         {
             return;
         }
-        p.setValue(value);        
+        p.setValue(value);
+        return;
+        
     }
     
     public void messageReceived(ErrorMessage message) 
