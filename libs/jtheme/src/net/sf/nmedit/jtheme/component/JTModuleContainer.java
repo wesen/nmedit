@@ -146,7 +146,10 @@ public class JTModuleContainer extends JTBaseComponent
         lastModuleContainerDimensionUpdate = System.currentTimeMillis();
         
         Dimension d = computePreferredSize(null);
+        Dimension parentSize = getParent().getSize();
         setPreferredSize(d);
+        d.width = Math.max(parentSize.width, d.width);
+        d.height = Math.max(parentSize.height, d.height);
         setSize(d);   
         repaint();
     }
