@@ -7,10 +7,13 @@
 start Sysex;
 
 Sysex :=
+	0xf0:8 // status byte
     messageId("sysex")
-
-	0xf0:8 0x33:8 0:1 cc:5 slot:2 0x06:8
+	0x33:8 // manufacturer id
+	manufacturer := "Clavia Digital Instruments"
 	
+	0:1 cc:5 slot:2
+	0x06:8
 	switch(cc)
 	{
 		case 0x00: IAm$data
@@ -65,7 +68,7 @@ Parameter :=
 		case 0x43: MorphRangeChange$data
 		default: fail
 	}
-	checksum$checksum
+	checksum$$
 	;
 
 ParameterSelect :=
@@ -105,7 +108,7 @@ NMInfo :=
 	  case 0x7e: Error$data
 	  default: fail
 	}
-	checksum$checksum
+	checksum$$
 	;
 
 // cause of message: unknown (I believe I only had turned the knobs at the synth ?)
@@ -179,11 +182,11 @@ ACK :=
 	switch(type)
 	{
 	  case 0x7f: {} /* parsing of packet is complete => no checksum */
-	  case 0x0d: { UnknownACKReply$data        checksum$checksum }
-      case 0x36: { /* no data */               checksum$checksum }
-	  case 0x13: { PatchListResponse$patchList checksum$checksum }
-	  case 0x15: { PatchListResponse$patchList checksum$checksum }
-	  case 0x38: { PatchLoadResponse$patchLoad checksum$checksum }
+	  case 0x0d: { UnknownACKReply$data        checksum$$ }
+      case 0x36: { /* no data */               checksum$$ }
+	  case 0x13: { PatchListResponse$patchList checksum$$ }
+	  case 0x15: { PatchListResponse$patchList checksum$$ }
+	  case 0x38: { PatchLoadResponse$patchLoad checksum$$ }
 	  default: fail
 	}
 	;
@@ -223,7 +226,7 @@ PatchLoadResponse :=
 PatchHandling :=
 	(	PatchModification$data
 	|   PatchCommand$data )
-	checksum$checksum
+	checksum$$
 	;
 
 PatchCommand :=
@@ -420,7 +423,7 @@ GetCurrentNotes :=
 PatchPacket :=
     messageId("PatchPacket")
 	0:1 command:1 pid:6 ?PatchData$next
-	checksum$checksum
+	checksum$$
 	;
 
 PatchData :=
