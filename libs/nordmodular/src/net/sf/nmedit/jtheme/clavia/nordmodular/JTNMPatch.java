@@ -155,10 +155,8 @@ public class JTNMPatch extends JTPatch implements Transferable
         public static JPopupMenu createPopup(JTModule module)
         {
             JPopupMenu popup = new JPopupMenu();
-            popup.add(new ModuleAction(DELETE, module));
             popup.add(new ModuleAction(RENAME, module));
             popup.addSeparator();
-            
             
             ImageIcon[] colors = getModuleColors(module);
         
@@ -182,6 +180,8 @@ public class JTNMPatch extends JTPatch implements Transferable
                 popup.addSeparator();
             }
             popup.add(new ModuleAction(HELP, module));
+            popup.addSeparator();
+            popup.add(new ModuleAction(DELETE, module));
             return popup;
         }
         
