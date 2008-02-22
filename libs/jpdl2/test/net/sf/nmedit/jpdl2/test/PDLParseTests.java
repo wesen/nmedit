@@ -22,8 +22,10 @@ import java.io.StringReader;
 
 import net.sf.nmedit.jpdl2.PDLException;
 import net.sf.nmedit.jpdl2.PDLMessage;
+import net.sf.nmedit.jpdl2.PDLPacket;
 import net.sf.nmedit.jpdl2.PDLPacketParser;
 import net.sf.nmedit.jpdl2.dom.PDLDocument;
+import net.sf.nmedit.jpdl2.dom.PDLItemType;
 import net.sf.nmedit.jpdl2.format.PDL2Parser;
 import net.sf.nmedit.jpdl2.stream.BitStream;
 
@@ -280,7 +282,22 @@ public class PDLParseTests
     {
         test("Packet := messageId(\"themessageid\");");
     }
+    // ************************************************************************************
+    // anonym implicit variable
+    // ************************************************************************************
 
+    @Test
+    public void anonymVarTest() throws PDLException
+    {
+        int a = 1;
+        int b = 1;
+        int c = (((a&0xF)<<4) | (b&0xF));
+
+        Assert.assertTrue(isConditionTrue("anonym == c", "%anonym:8=(((a&0xF)<<4)|(b&0xF))", a, b, c));
+        Assert.assertFalse(isConditionTrue("anonym != c", "%anonym:8=(((a&0xF)<<4)|(b&0xF))", a, b, c));
+        
+    }
+    
     // ************************************************************************************
     // mutual exclusion
     // ************************************************************************************
@@ -443,14 +460,28 @@ public class PDLParseTests
      * |  boolean (logical) OR                     |
      * ------------------------------------------------------------
      */
-    
+
     public boolean isConditionTrue(String condition, int a, int b, int c) throws PDLException
     {
+        return isConditionTrue(condition, "", a, b, c);
+    }
+    
+    public boolean isConditionTrue(String condition, String extra, int a, int b, int c) throws PDLException
+    {
         final String OK_RESULT = "OK"; 
-        String src = "start Packet; Packet := a:8 b:8 c:8 if("+condition+") { messageId(\""+OK_RESULT+"\") };";
+        String src = "start Packet; Packet := a:8 b:8 c:8 "+extra+" if("+condition+") { messageId(\""+OK_RESULT+"\") };";
 
         PDL2Parser parser = new PDL2Parser(new StringReader(src));
+        try
+        {
         parser.parse();
+        }
+        catch (PDLException e)
+        {
+            //System.out.println("error parsing:\n"+src);
+            
+            throw e;
+        }
         PDLDocument doc = parser.getDocument();
         
         BitStream bs = new BitStream();
@@ -516,5 +547,76 @@ public class PDLParseTests
             Assert.assertTrue(isConditionTrue((c+a<<b)+"==c+a<<b", a, b, c));
             Assert.assertTrue(isConditionTrue((a&b|c)+"==a&b|c", a, b, c));
     }
+    
+    /**
+     * inline packets 
+     */
+    @Test
+    public void testInlinePacketRef() throws PDLException
+    {
+        String pdl = "start Start; Start:= a:8 b:8 Inline$$ ; Inline:= @lblEnd %inline:8=(1);";
+        
+        PDL2Parser parser = new PDL2Parser(new StringReader(pdl));
+        parser.parse();
+        PDLDocument doc = parser.getDocument();
+        
+        PDLPacketParser pp = new PDLPacketParser(doc);
+        
+        BitStream bs = new BitStream();
+        bs.append(0, 8); // a
+        bs.append(0, 8); // b
+        
+        PDLPacket packet = pp.parse(bs);
+        
+        Assert.assertTrue("if defined: anonym variable", packet.getAllVariables().contains("inline"));
+        Assert.assertTrue("anonym variable value", packet.getVariable("inline")==1);
+    }
+ 
+    
+    /**
+     * String def
+     */
+    @Test
+    public void testStringDef() throws PDLException
+    {
+        String pdl = "start Start; Start:= a:8 string:=\"TEXT\";";
+        
+        PDL2Parser parser = new PDL2Parser(new StringReader(pdl));
+        parser.parse();
+        PDLDocument doc = parser.getDocument();
+        
+        PDLPacketParser pp = new PDLPacketParser(doc);
+        
+        BitStream bs = new BitStream();
+        bs.append(0, 8); // a
+        
+        PDLPacket packet = pp.parse(bs);
+        
+        Assert.assertTrue("if defined: string", packet.getAllStrings().contains("string"));
+        Assert.assertTrue("string value", "TEXT".equals(packet.getString("string")));
+    }
+    
+    public static String generateCodeForItem(PDLItemType type)
+    {
+        switch (type)
+        {
+            case AnonymousVariable: 
+                return "%anonym=(4)";
+            case Block:
+                return "{}";
+            case Choice:
+                return "(v:7 | 0x1:1)";
+            case Conditional:
+                return "if (true) fail";
+            case Constant:
+                return "3*0xF:8";
+            //case
+            
+            default:
+                throw new InternalError();
+        }
+        
+    }
+    
     
 }
