@@ -87,6 +87,8 @@ public class NmPatchSynchronizer extends AllEventsListener
 
         uninstallModuleContainer(patch.getPolyVoiceArea());
         uninstallModuleContainer(patch.getCommonVoiceArea());
+        
+        uninstallParameters(patch.getMorphSection().getMorphModule());
     }
     
     public void install()
@@ -100,6 +102,8 @@ public class NmPatchSynchronizer extends AllEventsListener
         
         installModuleContainer(patch.getPolyVoiceArea());
         installModuleContainer(patch.getCommonVoiceArea());
+        
+        installParameters(patch.getMorphSection().getMorphModule());
     }
 
     public void moduleAdded(PModuleContainerEvent e)
@@ -173,7 +177,7 @@ public class NmPatchSynchronizer extends AllEventsListener
         PParameter parameter = e.getParameter();
         try
         {
-            if ("parameter".equals(parameter.getAttribute("class")))
+            if (isMorphParameter(e.getParameter()) || "parameter".equals(parameter.getAttribute("class")))
             {   
                 MidiMessage message =
                     NmUtils.createSelectParameterMessage(parameter, 
@@ -188,6 +192,11 @@ public class NmPatchSynchronizer extends AllEventsListener
         }
     }
     
+    private boolean isMorphParameter(PParameter p)
+    {
+        return p.getParentComponent() == patch.getMorphSection().getMorphModule();
+    }
+    
     public void parameterValueChanged(PParameterEvent e)
     {
         PParameter parameter = e.getParameter();
@@ -195,7 +204,7 @@ public class NmPatchSynchronizer extends AllEventsListener
 
         try
         {
-            if ("parameter".equals(pclass))
+            if (isMorphParameter(e.getParameter()) || "parameter".equals(pclass))
             {   
                 MidiMessage message =
                     NmUtils.createParameterChangedMessage(parameter, 
