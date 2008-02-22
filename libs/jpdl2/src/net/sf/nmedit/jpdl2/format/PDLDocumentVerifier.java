@@ -26,7 +26,6 @@ import java.util.Set;
 
 import net.sf.nmedit.jpdl2.PDLException;
 import net.sf.nmedit.jpdl2.dom.PDLBlock;
-import net.sf.nmedit.jpdl2.dom.PDLBlockItem;
 import net.sf.nmedit.jpdl2.dom.PDLCaseStatement;
 import net.sf.nmedit.jpdl2.dom.PDLChoice;
 import net.sf.nmedit.jpdl2.dom.PDLCondition;
@@ -37,8 +36,8 @@ import net.sf.nmedit.jpdl2.dom.PDLItemType;
 import net.sf.nmedit.jpdl2.dom.PDLMultiplicity;
 import net.sf.nmedit.jpdl2.dom.PDLPacketDecl;
 import net.sf.nmedit.jpdl2.dom.PDLPacketRef;
-import net.sf.nmedit.jpdl2.dom.PDLPacketRefList;
 import net.sf.nmedit.jpdl2.impl.PDLCompiledCondition;
+import net.sf.nmedit.jpdl2.utils.PDLUtils;
 
 /**
  * ensures
@@ -135,8 +134,8 @@ public class PDLDocumentVerifier
                         verifyMultiplicativeReference(declared, item, item.asConstant().getMultiplicity());
                         break;
                     case ImplicitVariable:
-                        // use unique prefix "%" for variables which can not be referenced
-                        declare(declared, item, "%", item.asVariable().getName());
+                    case AnonymousVariable:
+                        declare(declared, item, null, item.asVariable().getName());
                         verifyFunction(declared, item, item.asVariable().getFunction());
                         break;
                     case VariableList:
@@ -151,9 +150,18 @@ public class PDLDocumentVerifier
                         verifyPacketReference(item, ref);
                         break;
                     }
+                    case InlinePacketRef:
+                    {
+                        PDLPacketRef ref = item.asPacketRef();
+                        declare(declared, item, "$", "$");
+                        verifyPacketReference(item, ref);
+                        allowMoreStatements =
+                            verifyBlock(declared, ref.getReferencedPacket(), conditionalPath);
+                        break;
+                    }
                     case PacketRefList:
                     {
-                        PDLPacketRefList ref = item.asPacketRefList();
+                        PDLPacketRef ref = item.asPacketRef();
                         declare(declared, item, "$", ref.getBinding());
                         verifyPacketReference(item, ref);
                         verifyMultiplicativeReference(declared, item, ref.getMultiplicity());
@@ -170,7 +178,7 @@ public class PDLDocumentVerifier
                         verifyBlock(declared, item.asOptional(), true);
                         break;
                     case Choice:
-                        for (PDLBlockItem nested: item.asChoice().getItems())
+                        for (PDLBlock nested: item.asChoice().getItems())
                             verifyBlock(declared, nested, true);
                         break;
                     case Block:
@@ -183,11 +191,13 @@ public class PDLDocumentVerifier
                         break;
                     // no references
                     case MessageId: break;
+                    case StringDef: break;
                     case Fail:
                         allowMoreStatements = false;
                         break;
                     default:
-                        unknownItemTypeError(item);
+                        PDLUtils.unknownItemTypeError(item);
+                        break;
                 }
             }
             catch (PDLException e)
@@ -209,11 +219,6 @@ public class PDLDocumentVerifier
                 ||declared.contains("%"+name))
             error(item, "name already in use: "+fullName);
         declared.add(fullName);
-    }
-
-    private void unknownItemTypeError(PDLItem item)
-    {
-        throw new InternalError("unknown item type "+item.getType());
     }
 
     private void verifyMutualRecursion(Set<String> visitedPackets,
@@ -241,17 +246,23 @@ public class PDLDocumentVerifier
                     case Variable: break;
                     case Constant: break;
                     case ImplicitVariable: break;
+                    case AnonymousVariable: break;
                     case VariableList: break;
                     case MessageId: break;
+                    case StringDef: break;
                     case Fail: break;
                     // packets
+                    case InlinePacketRef:
+                        verifyMutualRecursion(visitedPackets, 
+                                item.asPacketRef().getReferencedPacket(), conditionalPath);
+                        break;
                     case PacketRef:
                         verifyMutualRecursion(visitedPackets, 
                                 item.asPacketRef().getReferencedPacket(), conditionalPath);
                         break;
                     case PacketRefList:
                         verifyMutualRecursion(visitedPackets, 
-                                item.asPacketRefList().getReferencedPacket(), true);
+                                item.asPacketRef().getReferencedPacket(), true);
                         break;
                     // blocks
                     case Conditional:
@@ -265,7 +276,7 @@ public class PDLDocumentVerifier
                     case Choice:
                     {
                         PDLChoice me = item.asChoice();
-                        for (PDLBlockItem nested: me.getItems())
+                        for (PDLBlock nested: me.getItems())
                             verifyMutualRecursionInBlock(visitedPackets, nested, true);
                         verifyNoUnrechableCode(me);
                         break;
@@ -281,14 +292,15 @@ public class PDLDocumentVerifier
                         break;
                     // no references
                     default:
-                        unknownItemTypeError(item);
+                        PDLUtils.unknownItemTypeError(item);
+                        break;
                 }
         }
     }
     
     private void verifyNoUnrechableCode(PDLChoice m) throws PDLException
     {
-        List<PDLBlockItem> list = m.getItems();
+        List<PDLBlock> list = m.getItems();
 
         if (list.size()<2)
             error(m, "choice statement has less than two elements");
@@ -345,7 +357,7 @@ public class PDLDocumentVerifier
         }
     }
 
-    private PDLItem meGetItem(PDLBlockItem item)
+    private PDLItem meGetItem(PDLBlock item)
     {
         if (item.getType() == PDLItemType.Block && item.getItemCount()==1)
         {

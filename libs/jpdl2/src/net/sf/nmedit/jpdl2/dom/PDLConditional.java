@@ -21,7 +21,7 @@ package net.sf.nmedit.jpdl2.dom;
 /**
  * Conditional block
  */
-public interface PDLConditional extends PDLBlockItem 
+public interface PDLConditional extends PDLBlock
 {
 
     /**

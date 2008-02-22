@@ -20,10 +20,10 @@ package net.sf.nmedit.jpdl2.dom;
 
 import java.util.List;
 
-public interface PDLChoice extends PDLItem, Iterable<PDLBlockItem>
+public interface PDLChoice extends PDLItem, Iterable<PDLBlock>
 {
 
-    List<PDLBlockItem> getItems();
+    List<PDLBlock> getItems();
 
     /**
      * Returns {@link PDLItemType#Choice}

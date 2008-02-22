@@ -37,7 +37,7 @@ public class PDLVariableImpl extends PDLItemImpl implements PDLVariable
     // variable list
     private PDLMultiplicity multiplicity;
     private int terminal;
-    private boolean hasTerminal = false; 
+    private boolean hasTerminal = false;
     
     private PDLVariableImpl(PDLItemType type, String name, int size)
     {
@@ -48,6 +48,18 @@ public class PDLVariableImpl extends PDLItemImpl implements PDLVariable
             throw new NullPointerException("name must not be null");
         this.name = name;
         this.size = size;
+    }
+    
+    public void setAnonym()
+    {
+        if (type == PDLItemType.AnonymousVariable)
+            return;
+        if (type == PDLItemType.ImplicitVariable)
+        {
+            this.type = PDLItemType.AnonymousVariable;
+            return;
+        }
+        throw new IllegalStateException("no anonym equivalent for type: "+type);
     }
     
     public static PDLVariable create(String name, int size)
@@ -69,16 +81,18 @@ public class PDLVariableImpl extends PDLItemImpl implements PDLVariable
         return v;
     }
     
-    public static PDLVariable createImplicit(PDLVariable variable, PDLFunction function)
+    public static PDLVariable createImplicit(PDLVariable variable, PDLFunction function, boolean anonym)
     {
-        return createImplicit(variable.getName(), variable.getSize(), function);
+        return createImplicit(variable.getName(), variable.getSize(), function, anonym);
     }
 
-    public static PDLVariable createImplicit(String name, int size, PDLFunction function)
+    public static PDLVariable createImplicit(String name, int size, PDLFunction function, boolean anonym)
     {
         if (function == null)
             throw new NullPointerException();
-        PDLVariableImpl v = new PDLVariableImpl(PDLItemType.ImplicitVariable, name, size);
+        PDLVariableImpl v = new PDLVariableImpl(
+                anonym ? PDLItemType.AnonymousVariable
+                       : PDLItemType.ImplicitVariable, name, size);
         v.function = function;
         return v;
     }
@@ -121,6 +135,8 @@ public class PDLVariableImpl extends PDLItemImpl implements PDLVariable
             if (m!=0 && hasTerminal) return size;
             return m * size;
         }
+        else if (type == PDLItemType.AnonymousVariable)
+            return 0;
         else
         {
             return size;
@@ -134,6 +150,8 @@ public class PDLVariableImpl extends PDLItemImpl implements PDLVariable
             return String.valueOf(multiplicity)+"*"+s;
         else if (type == PDLItemType.ImplicitVariable)
             return s+"=("+function+")";
+        else if (type == PDLItemType.AnonymousVariable)
+            return "%"+s+"=("+function+")";
         else
             return s;
     }
@@ -147,6 +165,8 @@ public class PDLVariableImpl extends PDLItemImpl implements PDLVariable
             return m;
         }
         else if (type == PDLItemType.ImplicitVariable)
+            return 0;
+        else if (type == PDLItemType.AnonymousVariable)
             return 0;
         else
             return 1;

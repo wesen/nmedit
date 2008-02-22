@@ -89,8 +89,15 @@ public class PDLUtils
             sb.append(" ");
             for (String variable: members) sb.append(variable+"="+packet.getVariable(variable)+";");
         }
+        members = packet.getAllStrings();
+        if (!members.isEmpty())
+        {
+            for (String s: members) 
+            {
+                sb.append(s+":=\""+packet.getString(s)+"\";");
+            }
+        }
         members = packet.getAllVariableLists();
-        
         if (!members.isEmpty())
         {
             sb.append("\nvariable lists: ");
@@ -315,7 +322,8 @@ public class PDLUtils
                     }
                     // error: item is undefined
                     default:
-                        throw new InternalError("unknown item type: "+item.getType());
+                        PDLUtils.unknownItemTypeError(item.getType());
+                        break;
                 }
                 return item;
             }
@@ -328,6 +336,16 @@ public class PDLUtils
             
             
         };
+    }
+    
+    public static void unknownItemTypeError(PDLItem item)
+    {
+        throw new InternalError("unknown item type: "+item.getType()+"; item: "+item);
+    }
+    
+    public static void unknownItemTypeError(PDLItemType type)
+    {
+        throw new InternalError("unknown item type: "+type);
     }
     
 }

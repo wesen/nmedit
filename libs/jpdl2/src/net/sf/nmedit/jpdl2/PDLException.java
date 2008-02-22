@@ -21,7 +21,6 @@ package net.sf.nmedit.jpdl2;
 import java.util.Iterator;
 
 import net.sf.nmedit.jpdl2.dom.PDLBlock;
-import net.sf.nmedit.jpdl2.dom.PDLBlockItem;
 import net.sf.nmedit.jpdl2.dom.PDLChoice;
 import net.sf.nmedit.jpdl2.dom.PDLConstant;
 import net.sf.nmedit.jpdl2.dom.PDLFunction;
@@ -29,6 +28,7 @@ import net.sf.nmedit.jpdl2.dom.PDLItem;
 import net.sf.nmedit.jpdl2.dom.PDLPacketDecl;
 import net.sf.nmedit.jpdl2.dom.PDLPacketRef;
 import net.sf.nmedit.jpdl2.dom.PDLVariable;
+import net.sf.nmedit.jpdl2.utils.PDLUtils;
 
 public class PDLException extends Exception
 {
@@ -107,6 +107,13 @@ public class PDLException extends Exception
                 return "@"+item.asInstruction().getString();
             case Optional:
                 return "Optional";
+            case StringDef:
+                return String.valueOf(item);
+            case InlinePacketRef:
+            {
+                PDLPacketRef packetRef = item.asPacketRef();
+                return packetRef.getPacketName()+"$$";
+            }
             case PacketRef:
             {
                 PDLPacketRef packetRef = item.asPacketRef();
@@ -114,8 +121,8 @@ public class PDLException extends Exception
             }
             case PacketRefList:
             {
-                PDLPacketRef packetRef = item.asPacketRefList();
-                return "List "+packetRef.getPacketName()+"$"+packetRef.getBinding();
+                PDLPacketRef packetRef = item.asPacketRef();
+                return packetRef.getMultiplicity()+"*"+packetRef.getPacketName()+"$"+packetRef.getBinding();
             }
             case Variable:
             {
@@ -133,12 +140,18 @@ public class PDLException extends Exception
                 PDLFunction f = variable.getFunction();
                 return variable.getName()+":"+variable.getSize()+"="+f;
             }
+            case AnonymousVariable:
+            {
+                PDLVariable variable = item.asVariable();
+                PDLFunction f = variable.getFunction();
+                return "%"+variable.getName()+":"+variable.getSize()+"="+f;
+            }
             case Choice:
             {
                 StringBuilder sb = new StringBuilder();
                 sb.append('(');
                 PDLChoice m = item.asChoice();
-                Iterator<PDLBlockItem> iter = m.getItems().iterator();
+                Iterator<PDLBlock> iter = m.getItems().iterator();
                 
                 sb.append(toString(iter.next()));
                 while(iter.hasNext())
@@ -172,7 +185,8 @@ public class PDLException extends Exception
                 return "switch("+item.asSwitchStatement().getFunction()+")";
             }
             default:
-                throw new InternalError("unknown item: "+item);
+                PDLUtils.unknownItemTypeError(item);
+                return null; // never reacheds
         }
     }
 

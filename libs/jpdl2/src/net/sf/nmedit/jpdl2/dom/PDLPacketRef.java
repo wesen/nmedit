@@ -43,9 +43,15 @@ public interface PDLPacketRef extends PDLItem
     PDLPacketDecl getReferencedPacket();
 
     /**
-     * Returns {@link PDLItemType#PacketRef}
-     * @return {@link PDLItemType#PacketRef}
+     * Returns {@link PDLItemType#PacketRef},
+     * {@link PDLItemType#PacketRefList} or
+     * {@link PDLItemType#InlinePacketRef}
+     * @return {@link PDLItemType#PacketRef},
+     * {@link PDLItemType#PacketRefList} or
+     * {@link PDLItemType#InlinePacketRef}
      */
     PDLItemType getType();
+
+    public PDLMultiplicity getMultiplicity();
     
 }

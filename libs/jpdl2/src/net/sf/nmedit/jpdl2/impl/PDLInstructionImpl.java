@@ -33,26 +33,42 @@ public class PDLInstructionImpl extends PDLItemImpl implements PDLInstruction
         types.add(PDLItemType.MessageId);
         types.add(PDLItemType.Fail);
         types.add(PDLItemType.Label);
+        types.add(PDLItemType.StringDef);
     }
 
     private PDLItemType type;
     private String string;
+    private String string2;
 
     public PDLInstructionImpl(PDLItemType type)
     {
-        this(type, null);
+        this(type, null, null);
+    }
+
+    public PDLInstructionImpl(PDLItemType type, String stringValue)
+    {
+        this(type, stringValue, null);
     }
     
-    public PDLInstructionImpl(PDLItemType type, String stringValue)
+    public PDLInstructionImpl(PDLItemType type, String stringValue, String string2)
     {
         this.type = type;
         this.string = stringValue;
+        this.string2 = string2;
         
         if (!types.contains(type))
             throw new IllegalArgumentException("invalid type: "+type);
-        if (type == PDLItemType.MessageId || type==PDLItemType.Label)
+        if (type == PDLItemType.MessageId || type==PDLItemType.Label
+                || type == PDLItemType.StringDef)
         {
             if (stringValue == null) throw new IllegalArgumentException("type "+type+" requires string argument");
+            
+            if (type == PDLItemType.StringDef)
+            {
+                if (string2 == null)
+                    throw new IllegalArgumentException("type "+type+" requires second string argument");
+            }
+            
         }
         else
         {
@@ -80,6 +96,11 @@ public class PDLInstructionImpl extends PDLItemImpl implements PDLInstruction
         return string;
     }
 
+    public String getString2()
+    {
+        return string2;
+    }
+
     public String toString()
     {
         switch (type)
@@ -90,6 +111,8 @@ public class PDLInstructionImpl extends PDLItemImpl implements PDLInstruction
                 return "fail";
             case Label:
                 return "@"+string;
+            case StringDef:
+                return string+":=\""+string2+"\"";
             default:
                 throw new InternalError("unsupported type: "+type);
         }

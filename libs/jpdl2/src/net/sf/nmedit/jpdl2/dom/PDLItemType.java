@@ -28,10 +28,12 @@ package net.sf.nmedit.jpdl2.dom;
  * <tbody>
  * <tr><td>Constant</td><td>{@link PDLConstant}</td></tr>
  * <tr><td>Variable</td><td>{@link PDLVariable}</td></tr>
- * <tr><td>ImplicitVariable</td><td>{@link PDLVariable}</td></tr>
+ * <tr><td>ImplicitVariable</td><td>{@link PDLVariable}</td></tr> 
+ * <tr><td>AnonymVariable</td><td>{@link PDLVariable}</td></tr>
  * <tr><td>VariableList</td><td>{@link PDLVariable}</td></tr> 
- * <tr><td>PacketRef</td><td>{@link PDLPacketRef}</td></tr>
- * <tr><td>PacketRefList</td><td>{@link PDLPacketRefList}</td></tr> 
+ * <tr><td>PacketRef</td><td>{@link PDLPacketRef}</td></tr> 
+ * <tr><td>InlinePacketRef</td><td>{@link PDLPacketRef}</td></tr>
+ * <tr><td>PacketRefList</td><td>{@link PDLPacketRef}</td></tr> 
  * <tr><td>Conditional</td><td>{@link PDLConditional}</td></tr>
  * <tr><td>Block</td><td>{@link PDLBlockItem}</td></tr>
  * <tr><td>Choice</td><td>{@link PDLChoice}</td></tr>
@@ -65,6 +67,11 @@ public enum PDLItemType
     ImplicitVariable,
     
     /**
+     * Implicit Variable which is not part of the stream
+     */
+    AnonymousVariable,
+
+    /**
      * Variable List
      */
     VariableList, 
@@ -73,6 +80,11 @@ public enum PDLItemType
      * Packet Reference
      */
     PacketRef,
+
+    /**
+     * Inline referenced packet
+     */
+    InlinePacketRef,
     
     /**
      * Packet List
@@ -114,5 +126,10 @@ public enum PDLItemType
     /**
      * fail instruction
      */
-    Fail
+    Fail,
+    
+    /**
+     * string definition
+     */
+    StringDef
 }

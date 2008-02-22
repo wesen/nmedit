@@ -29,6 +29,7 @@ public interface PDLVariable extends PDLItem
      * <tbody>
      *  <tr><td>{@link PDLItemType#Variable Variable}</td><td>{@link #getSize() size}</td></tr>
      *  <tr><td>{@link PDLItemType#ImplicitVariable ImplicitVariable}</td><td>{@link #getSize() size}</td></tr>
+     *  <tr><td>{@link PDLItemType#AnonymousVariable ImplicitAnonymVariable}</td><td>0</td></tr>
      *  <tr><td style="vertical-align:top;">{@link PDLItemType#VariableList VariableList}</td><td>
      *  
      *  <table style="border:solid black 1px;">
@@ -58,6 +59,7 @@ public interface PDLVariable extends PDLItem
      * <tbody>
      *  <tr><td>{@link PDLItemType#Variable Variable}</td><td>1</td></tr>
      *  <tr><td>{@link PDLItemType#ImplicitVariable ImplicitVariable}</td><td>0</td></tr>
+     *  <tr><td>{@link PDLItemType#AnonymousVariable ImplicitAnonymVariable}</td><td>0</td></tr>
      *  <tr><td style="vertical-align:top;">{@link PDLItemType#VariableList VariableList}</td><td>
      *  
      *  <table style="border:solid black 1px;">

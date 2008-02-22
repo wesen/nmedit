@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import net.sf.nmedit.jpdl2.dom.PDLBlockItem;
+import net.sf.nmedit.jpdl2.dom.PDLBlock;
 import net.sf.nmedit.jpdl2.dom.PDLChoice;
 import net.sf.nmedit.jpdl2.dom.PDLItem;
 import net.sf.nmedit.jpdl2.dom.PDLItemType;
@@ -31,8 +31,8 @@ import net.sf.nmedit.jpdl2.dom.PDLItemType;
 public class PDLChoiceImpl extends PDLItemImpl implements PDLChoice
 {
     
-    private List<PDLBlockItem> elements = new ArrayList<PDLBlockItem>(2);
-    private List<PDLBlockItem> publicCollection = Collections.unmodifiableList(elements);
+    private List<PDLBlock> elements = new ArrayList<PDLBlock>(2);
+    private List<PDLBlock> publicCollection = Collections.unmodifiableList(elements);
     private int minimumCount = -1;
     private int minimumSize = -1;
     
@@ -41,9 +41,9 @@ public class PDLChoiceImpl extends PDLItemImpl implements PDLChoice
         super();
     }
 
-    private PDLBlockItem blockItem(PDLItem o)
+    private PDLBlock blockItem(PDLItem o)
     {
-        PDLBlockItemImpl block = new PDLBlockItemImpl();
+        PDLBlock block = new PDLBlockImpl();
         block.add(o);
         return block;
     }
@@ -65,12 +65,12 @@ public class PDLChoiceImpl extends PDLItemImpl implements PDLChoice
         this.minimumSize = -1;
     }
 
-    public Iterator<PDLBlockItem> iterator()
+    public Iterator<PDLBlock> iterator()
     {
         return publicCollection.iterator();
     }
     
-    public List<PDLBlockItem> getItems()
+    public List<PDLBlock> getItems()
     {
         return publicCollection;
     }

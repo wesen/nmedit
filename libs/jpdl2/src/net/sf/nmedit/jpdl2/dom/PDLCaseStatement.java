@@ -21,7 +21,7 @@ package net.sf.nmedit.jpdl2.dom;
 public interface PDLCaseStatement
 {
 
-    PDLBlockItem getBlock();
+    PDLBlock getBlock();
     
     boolean isDefaultCase();
     

@@ -22,7 +22,7 @@ import net.sf.nmedit.jpdl2.dom.PDLCondition;
 import net.sf.nmedit.jpdl2.dom.PDLConditional;
 import net.sf.nmedit.jpdl2.dom.PDLItemType;
 
-public class PDLConditionalImpl extends PDLBlockItemImpl implements PDLConditional
+public class PDLConditionalImpl extends PDLBlockImpl implements PDLConditional
 {
 
     private PDLCondition condition;

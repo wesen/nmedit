@@ -18,14 +18,14 @@
 */
 package net.sf.nmedit.jpdl2.impl;
 
-import net.sf.nmedit.jpdl2.dom.PDLBlockItem;
+import net.sf.nmedit.jpdl2.dom.PDLBlock;
 import net.sf.nmedit.jpdl2.dom.PDLCaseStatement;
 import net.sf.nmedit.jpdl2.dom.PDLItem;
 
 public class PDLCaseStatementImpl implements PDLCaseStatement
 {
     
-    private PDLBlockItem block = new PDLBlockItemImpl();
+    private PDLBlock block = new PDLBlockImpl();
     
     private int value = -1;
     private boolean defaultCase = false;
@@ -41,7 +41,7 @@ public class PDLCaseStatementImpl implements PDLCaseStatement
         block.add(item);
     }
 
-    public PDLBlockItem getBlock()
+    public PDLBlock getBlock()
     {
         return block;
     }

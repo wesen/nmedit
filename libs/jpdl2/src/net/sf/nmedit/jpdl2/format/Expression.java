@@ -74,6 +74,7 @@ public class Expression implements Opcodes
     
     /**
      * Creates a copy of the specified expression.
+     * 
      * @param src source expression
      */
     public Expression(Expression src)
@@ -87,8 +88,12 @@ public class Expression implements Opcodes
 
     /**
      * Creates a new expression.
+     *
      * @param opcode the operator
      * @param args the arguments
+     * @throws IllegalArgumentException if the number of specified arguments
+     * does not match the required number of arguments (opcode) or their
+     * return type does not match the argument type of the operator (opcode).
      */
     public Expression(int opcode, Expression ... args)
     {
@@ -107,6 +112,11 @@ public class Expression implements Opcodes
 
     /**
      * Creates a new expression.
+     * 
+     * Accepts opcodes with a string argument:
+     * {@link Opcodes#lpush} and
+     * {@link Opcodes#vpush}.
+     * 
      * @param opcode the operator
      * @param value the argument
      */
@@ -119,6 +129,9 @@ public class Expression implements Opcodes
 
     /**
      * Creates a new expression.
+     * 
+     * Accepts opcodes with an integer argument.
+     * 
      * @param opcode the operator
      * @param value the argument
      */
@@ -131,6 +144,9 @@ public class Expression implements Opcodes
 
     /**
      * Creates a new expression.
+     * 
+     * Accepts opcodes with a boolean argument.
+     * 
      * @param opcode the operator
      * @param value the argument
      */
@@ -139,7 +155,13 @@ public class Expression implements Opcodes
         this(opcode, value?1:0);
     }
     
-    public void collectDepencies(Collection<String> dst)
+    /**
+     * Adds the names of variables and labels on which
+     * this expression and it's children depends to the
+     * specified collection.
+     * @param dst destination collection
+     */
+    public void collectDependencies(Collection<String> dst)
     {
         switch (opcode)
         {
@@ -149,6 +171,13 @@ public class Expression implements Opcodes
             case lpush:
                 dst.add("@"+sval);
                 break;
+            default:
+                if (args != null && args.length>0)
+                {
+                    for (int i=0;i<args.length;i++)
+                        args[i].collectDependencies(dst);
+                }
+                break;
         }
     }
 
@@ -157,11 +186,23 @@ public class Expression implements Opcodes
         return Expression.describe(opcode);
     }
     
+    /**
+     * Returns the result type of this expression.
+     * @return the result type of this expression
+     */
     public Type getResultType()
     {
         return Expression.getResultType(opcode);
     }
 
+    /**
+     * Validates the expression.
+     * Ensures the arguments match the opcode specifications (number of arguments, return type).
+     * 
+     * Used internally, called by the constructors.
+     * 
+     * @throws IllegalArgumentException error in arguments 
+     */
     private void validateExpression()
     {
         if (args != null)
