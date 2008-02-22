@@ -60,7 +60,7 @@ public class PDLFunctionImpl implements PDLFunction
     public Collection<String> getDependencies()
     {
         Set<String> set = new HashSet<String>();
-        e.collectDepencies(set);
+        e.collectDependencies(set);
         return Collections.unmodifiableSet(set);
     }
     

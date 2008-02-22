@@ -146,6 +146,11 @@ public class PDLPacketImpl implements PDLPacket
         return contains(name, PacketObjectType.VariableList);
     }
 
+    public boolean hasString(String name)
+    {
+        return contains(name, PacketObjectType.String);
+    }
+
     public boolean hasPacketList(String name)
     {
         return contains(name, PacketObjectType.PacketList);
@@ -182,6 +187,25 @@ public class PDLPacketImpl implements PDLPacket
         setPacketObject(name, new PacketList(name, packets));
     }
     
+    public void setString(String name, String value)
+    {
+        if (value == null)
+            throw new NullPointerException();
+        setPacketObject(name, new POString(name, value));
+    }
+
+    public String getString(String name)
+    {
+        int pos = name.indexOf(":");
+        if (pos >= 0) {
+            return getPacket(name.substring(0, pos)).getString(name.substring(pos+1));
+        }
+        PacketObject o = getPacketObject(name, PacketObjectType.String);
+        if (o == null) 
+            throw new IllegalArgumentException("string not defined: "+name);
+        return ((POString)o).value;
+    }
+
     public int getVariable(String name)
     {
         int pos = name.indexOf(":");
@@ -255,7 +279,8 @@ public class PDLPacketImpl implements PDLPacket
         Variable,
         VariableList,
         Packet,
-        PacketList
+        PacketList,
+        String
     }
     
     private List<String> getAllKeys(PacketObjectType type)
@@ -297,6 +322,13 @@ public class PDLPacketImpl implements PDLPacket
         String name;
         public PacketObject(String name){this.name = name;}
         public abstract PacketObjectType getType();
+    }
+    
+    private class POString extends PacketObject
+    {
+        String value;
+        public POString(String name, String value) { super(name); this.value = value; }
+        public PacketObjectType getType() { return PacketObjectType.String; }
     }
     
     private class Variable extends PacketObject
@@ -345,6 +377,11 @@ public class PDLPacketImpl implements PDLPacket
     public List<String> getAllVariableLists()
     {
         return getAllKeys(PacketObjectType.VariableList);
+    }
+
+    public List<String> getAllStrings()
+    {
+        return getAllKeys(PacketObjectType.String);
     }
     
 }

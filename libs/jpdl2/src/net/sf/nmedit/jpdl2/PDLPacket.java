@@ -33,8 +33,8 @@ public interface PDLPacket
 
     boolean hasPacket(String name);
     boolean hasVariableList(String name);
-
     boolean hasPacketList(String name);
+    boolean hasString(String name);
 
     int[] getVariableList(String name);
     
@@ -45,10 +45,13 @@ public interface PDLPacket
     
     String getBinding();
     
+    String getString(String name);
+    
     boolean containsPacket(String name);
     List<String> getAllVariables();
     List<String> getAllVariableLists();
     List<String> getAllPackets();
     List<String> getAllPacketLists();
+    List<String> getAllStrings();
     
 }

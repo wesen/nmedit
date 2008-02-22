@@ -83,13 +83,6 @@ public interface PDLItem
      * Casting this item directly to the desired item type is not guaranteed to be successful.
      * @throws ClassCastException if the item is not of the desired type
      */
-    PDLPacketRefList asPacketRefList();
-
-    /**
-     * Casts this item to the desired item type.
-     * Casting this item directly to the desired item type is not guaranteed to be successful.
-     * @throws ClassCastException if the item is not of the desired type
-     */
     PDLConditional asConditional();
 
     /**
@@ -111,7 +104,7 @@ public interface PDLItem
      * Casting this item directly to the desired item type is not guaranteed to be successful.
      * @throws ClassCastException if the item is not of the desired type
      */
-    PDLBlockItem asBlock();
+    PDLBlock asBlock();
 
     /**
      * Casts this item to the desired item type.

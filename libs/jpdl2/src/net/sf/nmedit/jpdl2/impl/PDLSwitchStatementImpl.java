@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.nmedit.jpdl2.dom.PDLBlockItem;
+import net.sf.nmedit.jpdl2.dom.PDLBlock;
 import net.sf.nmedit.jpdl2.dom.PDLCaseStatement;
 import net.sf.nmedit.jpdl2.dom.PDLFunction;
 import net.sf.nmedit.jpdl2.dom.PDLItem;
@@ -194,7 +194,7 @@ public class PDLSwitchStatementImpl extends PDLItemImpl implements PDLSwitchStat
         return "switch ("+function+")";
     }
 
-    public PDLBlockItem getItemForCase(int value)
+    public PDLBlock getItemForCase(int value)
     {
         PDLCaseStatement cs = caseList.get(value);
         if (cs != null) return cs.getBlock();

@@ -19,17 +19,16 @@
 package net.sf.nmedit.jpdl2;
 
 import net.sf.nmedit.jpdl2.dom.PDLBlock;
-import net.sf.nmedit.jpdl2.dom.PDLBlockItem;
 import net.sf.nmedit.jpdl2.dom.PDLChoice;
 import net.sf.nmedit.jpdl2.dom.PDLConditional;
 import net.sf.nmedit.jpdl2.dom.PDLConstant;
 import net.sf.nmedit.jpdl2.dom.PDLDocument;
 import net.sf.nmedit.jpdl2.dom.PDLFunction;
+import net.sf.nmedit.jpdl2.dom.PDLInstruction;
 import net.sf.nmedit.jpdl2.dom.PDLItem;
 import net.sf.nmedit.jpdl2.dom.PDLOptional;
 import net.sf.nmedit.jpdl2.dom.PDLPacketDecl;
 import net.sf.nmedit.jpdl2.dom.PDLPacketRef;
-import net.sf.nmedit.jpdl2.dom.PDLPacketRefList;
 import net.sf.nmedit.jpdl2.dom.PDLSwitchStatement;
 import net.sf.nmedit.jpdl2.dom.PDLVariable;
 import net.sf.nmedit.jpdl2.impl.PDLMessageImpl;
@@ -340,7 +339,7 @@ public class PDLPacketParser
                     context.packet = packet; // set packet if not done already
                     PDLSwitchStatement sw = item.asSwitchStatement();
                     int value = sw.getFunction().compute(context);
-                    PDLBlockItem bi = sw.getItemForCase(value);
+                    PDLBlock bi = sw.getItemForCase(value);
                     if (bi != null)
                     {
                         if (DEBUG)
@@ -362,6 +361,14 @@ public class PDLPacketParser
                     messageId = item.asInstruction().getString();
                     break;
                 }
+                
+                case StringDef:
+                {
+                    PDLInstruction ins = item.asInstruction();
+                    packet.setString(ins.getString(), ins.getString2());
+                    break;
+                }
+                
                 case Label:
                 {
                     context.setLabel(item.asInstruction().getString(), packet.incrementAge(), getStreamPosition());
@@ -415,9 +422,19 @@ public class PDLPacketParser
                     {
                         ensureBitsAvailable(item, generate?1:variable.getSize());
                         value = input.getInt(variable.getSize());
-                        context.packet = packet;
+                        context.packet = packet; // set packet if not done already
                         checksum(variable, context, value);
                     }
+                    packet.setVariable(variable.getName(), value);
+                    break;
+                }
+
+                case AnonymousVariable:
+                {
+                    context.packet = packet; // set packet if not done already
+                    // only add value to packet, not part of stream
+                    PDLVariable variable = item.asVariable();
+                    int value = computeChecksum(variable, context);
                     packet.setVariable(variable.getName(), value);
                     break;
                 }
@@ -494,6 +511,30 @@ public class PDLPacketParser
                     packet.setVariableList(variable.getName(), values);
                     break;
                 }
+
+                case InlinePacketRef:
+                {
+                    // do not modify 'reserved' 
+                    PDLPacketRef packetRef = item.asPacketRef();
+                    PDLPacketDecl packetDecl = packetRef.getReferencedPacket();
+                    //int bitcount = packetDecl.getMinimumSize();
+                    //ensureBitsAvailable(item, bitcount);
+
+                    int packetStart = getPaddingStartValue(); 
+                    try
+                    {
+                        // use the same packet rather then a new one
+                        parseBlock(packet, packetDecl);
+                    }
+                    catch (PDLException pdle)
+                    {
+                        throw new PDLException(pdle, packetRef);
+                    }
+                    
+                    padding(packetDecl, packetStart);
+
+                    break;
+                }
                 
                 case PacketRef:
                 {
@@ -525,7 +566,7 @@ public class PDLPacketParser
                 {
                     addReserved(-getMinSize(item));
                     
-                    PDLPacketRefList packetRefList = item.asPacketRefList();
+                    PDLPacketRef packetRefList = item.asPacketRef();
                     PDLPacketDecl packetDecl = packetRefList.getReferencedPacket();
                     int multiplicity = PDLUtils.getMultiplicity(packet, packetRefList.getMultiplicity());
                     int bitcount = getMinSize(packetDecl)*multiplicity;
@@ -650,7 +691,7 @@ public class PDLPacketParser
                     int st_tabs = tabs;
                     String st_messageId = this.messageId;
                     
-                    for (PDLBlockItem choice: mchoice)
+                    for (PDLBlock choice: mchoice)
                     {
                         if (isAvailable(getMinSize(choice)))
                         {
@@ -687,7 +728,7 @@ public class PDLPacketParser
                 }
                 case Block:
                 {
-                    PDLBlockItem b = item.asBlock();
+                    PDLBlock b = item.asBlock();
                     parseBlock(packet, b);
                     break;
                 }

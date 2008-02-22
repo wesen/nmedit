@@ -24,8 +24,9 @@ import java.util.List;
 
 import net.sf.nmedit.jpdl2.dom.PDLBlock;
 import net.sf.nmedit.jpdl2.dom.PDLItem;
+import net.sf.nmedit.jpdl2.dom.PDLItemType;
 
-public class PDLBlockImpl implements PDLBlock
+public class PDLBlockImpl extends PDLItemImpl implements PDLBlock
 {
     
     private List<PDLItem> items;
@@ -101,6 +102,16 @@ public class PDLBlockImpl implements PDLBlock
             }
         }
         return minimumSize;
+    }
+
+    public PDLBlock asBlock()
+    {
+        return this;
+    }
+
+    public PDLItemType getType()
+    {
+        return PDLItemType.Block;
     }
 
 }

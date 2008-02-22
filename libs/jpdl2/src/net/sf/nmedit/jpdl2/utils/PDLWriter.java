@@ -21,18 +21,17 @@ package net.sf.nmedit.jpdl2.utils;
 import java.util.Iterator;
 
 import net.sf.nmedit.jpdl2.dom.PDLBlock;
-import net.sf.nmedit.jpdl2.dom.PDLBlockItem;
 import net.sf.nmedit.jpdl2.dom.PDLCaseStatement;
 import net.sf.nmedit.jpdl2.dom.PDLChoice;
 import net.sf.nmedit.jpdl2.dom.PDLConditional;
 import net.sf.nmedit.jpdl2.dom.PDLConstant;
 import net.sf.nmedit.jpdl2.dom.PDLDocument;
 import net.sf.nmedit.jpdl2.dom.PDLItem;
+import net.sf.nmedit.jpdl2.dom.PDLItemType;
 import net.sf.nmedit.jpdl2.dom.PDLMultiplicity;
 import net.sf.nmedit.jpdl2.dom.PDLOptional;
 import net.sf.nmedit.jpdl2.dom.PDLPacketDecl;
 import net.sf.nmedit.jpdl2.dom.PDLPacketRef;
-import net.sf.nmedit.jpdl2.dom.PDLPacketRefList;
 import net.sf.nmedit.jpdl2.dom.PDLSwitchStatement;
 import net.sf.nmedit.jpdl2.dom.PDLVariable;
 
@@ -127,17 +126,17 @@ public class PDLWriter
 
     public void append(PDLPacketRef packetReference)
     {
+        if (packetReference.getType() == PDLItemType.PacketRefList)
+            append(packetReference.getMultiplicity());
+        
         s.append(packetReference.getPacketName());
         s.append('$');
-        s.append(packetReference.getBinding());
+        
+        if (packetReference.getType() == PDLItemType.InlinePacketRef)
+            s.append('$');
+        else
+            s.append(packetReference.getBinding());
     }
-
-    public void append(PDLPacketRefList packetRefList)
-    {
-        append(packetRefList.getMultiplicity());
-        append(packetRefList.getPacketRef());
-    }
-    
 
     public void append(PDLConditional conditionalBlock)
     {
@@ -192,11 +191,10 @@ public class PDLWriter
             case Constant:
                 append(item.asConstant());
                 break;
+            case InlinePacketRef:
             case PacketRef:
-                append(item.asPacketRef());
-                break;
             case PacketRefList:
-                append(item.asPacketRefList());
+                append(item.asPacketRef());
                 break;
             case Variable:
             case VariableList:
@@ -229,7 +227,7 @@ public class PDLWriter
         }    
     }
     
-    private void append(PDLBlockItem block)
+    private void append(PDLBlock block)
     {
         if (block.getItemCount()==1)
         {
@@ -263,7 +261,7 @@ public class PDLWriter
     private void append(PDLChoice m)
     {
         s.append('(');
-        Iterator<PDLBlockItem> b = m.iterator();
+        Iterator<PDLBlock> b = m.iterator();
         
         if (b.hasNext())
         {

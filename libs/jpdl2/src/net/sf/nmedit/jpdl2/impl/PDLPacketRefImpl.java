@@ -20,21 +20,37 @@ package net.sf.nmedit.jpdl2.impl;
 
 import net.sf.nmedit.jpdl2.dom.PDLDocument;
 import net.sf.nmedit.jpdl2.dom.PDLItemType;
+import net.sf.nmedit.jpdl2.dom.PDLMultiplicity;
 import net.sf.nmedit.jpdl2.dom.PDLPacketDecl;
 import net.sf.nmedit.jpdl2.dom.PDLPacketRef;
+import net.sf.nmedit.jpdl2.utils.PDLUtils;
 
 public class PDLPacketRefImpl extends PDLItemImpl implements PDLPacketRef
 {
     
+    private PDLItemType type;
     private String packetName;
     private String binding;
     private PDLDocument document;
+    private PDLMultiplicity multiplicity;
 
-    public PDLPacketRefImpl(PDLDocument document, String packetName, String binding)
+    public PDLPacketRefImpl(PDLDocument document, String packetName, String binding, boolean inline)
     {
+        this.type = inline ? PDLItemType.InlinePacketRef : PDLItemType.PacketRef;
+        
+        if (type != PDLItemType.InlinePacketRef && binding == null)
+            throw new NullPointerException("binding must not be null");
+        
         this.packetName = packetName;
         this.binding = binding;
         this.document = document;
+    }
+    
+    public PDLPacketRefImpl(PDLDocument document, PDLPacketRef ref, PDLMultiplicity m)
+    {
+        this(document, ref.getPacketName(), ref.getBinding(), false);
+        this.type = PDLItemType.PacketRefList;
+        this.multiplicity = m;
     }
     
     public String getBinding()
@@ -49,7 +65,7 @@ public class PDLPacketRefImpl extends PDLItemImpl implements PDLPacketRef
 
     public PDLItemType getType()
     {
-        return PDLItemType.PacketRef;
+        return type;
     }
 
     public PDLPacketDecl getReferencedPacket()
@@ -57,19 +73,35 @@ public class PDLPacketRefImpl extends PDLItemImpl implements PDLPacketRef
         return document.getPacketDecl(this);
     }
 
-    public int getMinimumSize()
+    public PDLMultiplicity getMultiplicity()
     {
-        return getReferencedPacket().getMinimumSize();
+        return multiplicity;
     }
 
     public String toString()
     {
-        return packetName+"$"+binding;
+        if (type == PDLItemType.InlinePacketRef)
+            return packetName+"$$";
+        else if (type == PDLItemType.PacketRefList)
+            return multiplicity +"*"+ packetName+"$"+binding;
+        else
+            return packetName+"$"+binding;
+    }
+
+    public int getMinimumSize()
+    {
+        if (type == PDLItemType.PacketRefList)
+            return PDLUtils.getMinMultiplicity(multiplicity) * getReferencedPacket().getMinimumSize();
+        else
+            return getReferencedPacket().getMinimumSize();
     }
 
     public int getMinimumCount()
     {
-        return getReferencedPacket().getMinimumCount();
+        if (type == PDLItemType.PacketRefList)
+            return PDLUtils.getMinMultiplicity(multiplicity) * getReferencedPacket().getMinimumCount();
+        else
+            return getReferencedPacket().getMinimumCount();
     }
     
 }

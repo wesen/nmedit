@@ -32,11 +32,25 @@ public interface PDLInstruction extends PDLItem
      * {@link PDLItemType#Label Label} then the 
      * label name is returned.
      * 
+     * If the {{@link PDLItem#getType() type} of this item is
+     * {@link PDLItemType#StringDef StringDef} then the 
+     * string name is returned.
+     * 
      * Otherwise the <code>null</code> is returned.
      * @return the string value
      */
     String getString();
-
+    
+    /**
+     * If the {{@link PDLItem#getType() type} of this item is
+     * {@link PDLItemType#StringDef StringDef} then the 
+     * string value is returned.
+     * 
+     * Otherwise the <code>null</code> is returned.
+     * @return the string value
+     */
+    String getString2();
+    
     /**
      * Returns zero.
      * @return returns zero
@@ -54,6 +68,7 @@ public interface PDLInstruction extends PDLItem
      * {@link PDLItemType#Label},
      * {@link PDLItemType#MessageId},
      * {@link PDLItemType#Fail}
+     * {@link PDLItemType#StringDef}
      * @return returns the type of this item.
      */
     PDLItemType getType();

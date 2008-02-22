@@ -18,7 +18,7 @@
 */
 package net.sf.nmedit.jpdl2.impl;
 
-import net.sf.nmedit.jpdl2.dom.PDLBlockItem;
+import net.sf.nmedit.jpdl2.dom.PDLBlock;
 import net.sf.nmedit.jpdl2.dom.PDLChoice;
 import net.sf.nmedit.jpdl2.dom.PDLConditional;
 import net.sf.nmedit.jpdl2.dom.PDLConstant;
@@ -26,7 +26,6 @@ import net.sf.nmedit.jpdl2.dom.PDLInstruction;
 import net.sf.nmedit.jpdl2.dom.PDLItem;
 import net.sf.nmedit.jpdl2.dom.PDLOptional;
 import net.sf.nmedit.jpdl2.dom.PDLPacketRef;
-import net.sf.nmedit.jpdl2.dom.PDLPacketRefList;
 import net.sf.nmedit.jpdl2.dom.PDLSwitchStatement;
 import net.sf.nmedit.jpdl2.dom.PDLVariable;
 
@@ -53,9 +52,9 @@ public abstract class PDLItemImpl implements PDLItem
         return PDLPacketRef.class.cast(this);
     }
 
-    public PDLBlockItem asBlock()
+    public PDLBlock asBlock()
     {
-        return PDLBlockItem.class.cast(this);
+        return PDLBlock.class.cast(this);
     }
 
     public PDLConditional asConditional()
@@ -66,11 +65,6 @@ public abstract class PDLItemImpl implements PDLItem
     public PDLOptional asOptional()
     {
         return PDLOptional.class.cast(this);
-    }
-
-    public PDLPacketRefList asPacketRefList()
-    {
-        return PDLPacketRefList.class.cast(this);
     }
 
     public PDLChoice asChoice()

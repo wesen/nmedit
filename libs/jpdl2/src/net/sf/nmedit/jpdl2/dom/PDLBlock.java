@@ -18,7 +18,7 @@
 */
 package net.sf.nmedit.jpdl2.dom;
 
-public interface PDLBlock extends Iterable<PDLItem>
+public interface PDLBlock extends PDLItem, Iterable<PDLItem>
 {
 
     /**
@@ -34,14 +34,12 @@ public interface PDLBlock extends Iterable<PDLItem>
      */
     PDLItem getItem(int index);
  
-    /**
-     * Returns the minimum number of bits of this block.
-     * Optional or conditional items are not included in the return value.
-     * @return the minimum number of bits of this block
-     */
-    int getMinimumSize();
-    int getMinimumCount();
-    
     void add(PDLItem item);
+
+    /**
+     * Returns {@link PDLItemType#Block}
+     * @return {@link PDLItemType#Block}
+     */
+    PDLItemType getType();
     
 }
