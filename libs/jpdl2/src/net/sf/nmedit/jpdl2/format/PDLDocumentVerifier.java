@@ -37,6 +37,7 @@ import net.sf.nmedit.jpdl2.dom.PDLMultiplicity;
 import net.sf.nmedit.jpdl2.dom.PDLPacketDecl;
 import net.sf.nmedit.jpdl2.dom.PDLPacketRef;
 import net.sf.nmedit.jpdl2.impl.PDLCompiledCondition;
+import net.sf.nmedit.jpdl2.impl.PDLPacketDeclImpl;
 import net.sf.nmedit.jpdl2.utils.PDLUtils;
 
 /**
@@ -94,7 +95,7 @@ public class PDLDocumentVerifier
     {
         try
         {
-            verifyBlock(Collections.<String>emptySet(), decl, false);
+            verifyBlock(decl, Collections.<String>emptySet(), decl, false);
         }
         catch (PDLException e)
         {
@@ -102,7 +103,7 @@ public class PDLDocumentVerifier
         }
     }
 
-    private boolean verifyBlock(Set<String> declared, PDLBlock block, boolean conditionalPath) throws PDLException
+    private boolean verifyBlock(PDLPacketDecl root, Set<String> declared, PDLBlock block, boolean conditionalPath) throws PDLException
     {
         // after 'break' or 'fail' statement, no further statements are allowed (in unconditional paths)
         boolean allowMoreStatements = true;
@@ -131,17 +132,17 @@ public class PDLDocumentVerifier
                         break;
                     // items referencing other items
                     case Constant:
-                        verifyMultiplicativeReference(declared, item, item.asConstant().getMultiplicity());
+                        verifyMultiplicativeReference(root, declared, item, item.asConstant().getMultiplicity());
                         break;
                     case ImplicitVariable:
                     case AnonymousVariable:
                         declare(declared, item, null, item.asVariable().getName());
-                        verifyFunction(declared, item, item.asVariable().getFunction());
+                        verifyFunction(root, declared, item, item.asVariable().getFunction());
                         break;
                     case VariableList:
                         // use unique prefix "%" for variables which can not be referenced
                         declare(declared, item, "%", item.asVariable().getName());
-                        verifyMultiplicativeReference(declared, item, item.asVariable().getMultiplicity());
+                        verifyMultiplicativeReference(root, declared, item, item.asVariable().getMultiplicity());
                         break;
                     case PacketRef:
                     {
@@ -156,7 +157,7 @@ public class PDLDocumentVerifier
                         declare(declared, item, "$", "$");
                         verifyPacketReference(item, ref);
                         allowMoreStatements =
-                            verifyBlock(declared, ref.getReferencedPacket(), conditionalPath);
+                            verifyBlock(root, declared, ref.getReferencedPacket(), conditionalPath);
                         break;
                     }
                     case PacketRefList:
@@ -164,30 +165,30 @@ public class PDLDocumentVerifier
                         PDLPacketRef ref = item.asPacketRef();
                         declare(declared, item, "$", ref.getBinding());
                         verifyPacketReference(item, ref);
-                        verifyMultiplicativeReference(declared, item, ref.getMultiplicity());
+                        verifyMultiplicativeReference(root, declared, item, ref.getMultiplicity());
                         break;
                     }
                     case Conditional:
                     {
                         PDLCondition condition = item.asConditional().getCondition();
-                        verifyCondition(declared, item, condition);
-                        verifyBlock(declared, item.asConditional(), true);
+                        verifyCondition(root, declared, item, condition);
+                        verifyBlock(root, declared, item.asConditional(), true);
                         break;
                     }
                     case Optional:
-                        verifyBlock(declared, item.asOptional(), true);
+                        verifyBlock(root, declared, item.asOptional(), true);
                         break;
                     case Choice:
                         for (PDLBlock nested: item.asChoice().getItems())
-                            verifyBlock(declared, nested, true);
+                            verifyBlock(root, declared, nested, true);
                         break;
                     case Block:
                         allowMoreStatements =
-                            verifyBlock(declared, item.asBlock(), conditionalPath);
+                            verifyBlock(root, declared, item.asBlock(), conditionalPath);
                         break;
                     case SwitchStatement:
                         for (PDLCaseStatement nested: item.asSwitchStatement().getItems())
-                            verifyBlock(declared, nested.getBlock(), true);
+                            verifyBlock(root, declared, nested.getBlock(), true);
                         break;
                     // no references
                     case MessageId: break;
@@ -405,47 +406,65 @@ public class PDLDocumentVerifier
         }
     }
 
-    private void verifyCondition(Set<String> declared, PDLItem item, PDLCondition condition) throws PDLException
+    private void verifyCondition(PDLPacketDecl root, Set<String> declared, PDLItem item, PDLCondition condition) throws PDLException
     {
         if (condition instanceof PDLCompiledCondition)
         {
-            ensureReferencedExist(declared, item, ((PDLCompiledCondition) condition).getDependencies());
+            ensureReferencedExist(root, declared, item, ((PDLCompiledCondition) condition).getDependencies());
         }
     }
 
-    private void verifyFunction(Set<String> declared, PDLItem item, PDLFunction function) throws PDLException
+    private void verifyFunction(PDLPacketDecl root, Set<String> declared, PDLItem item, PDLFunction function) throws PDLException
     {
-        ensureReferencedExist(declared, item, function.getDependencies());
+        ensureReferencedExist(root, declared, item, function.getDependencies());
     }
 
-    private void ensureReferencedExist(Set<String> declared, PDLItem item,
+    private void ensureReferencedExist(PDLPacketDecl root, Set<String> declared, PDLItem item,
             Collection<String> dependencies) throws PDLException
     {
         for (String name: dependencies)
-            ensureReferencedExists(declared, item, name);
+            ensureReferencedExists(root, declared, item, name);
     }
 
     private void verifyPacketReference(PDLItem item, PDLPacketRef packetRef) throws PDLException
     {
         if (doc.getPacketDecl(packetRef.getPacketName())==null)
             error(item, "packet referenced but not declared:"+packetRef.getPacketName());
+        
+        // TODO ensure packetRef is not inlined
+        
     }
 
-    private void verifyMultiplicativeReference(Set<String> declared,
+    private void verifyMultiplicativeReference(PDLPacketDecl root, Set<String> declared,
             PDLItem item, PDLMultiplicity multiplicity) throws PDLException
     {
         if (multiplicity == null)
             return;
         if (multiplicity.getType() == PDLMultiplicity.Type.Variable)
-            ensureReferencedExists(declared, item, multiplicity.getVariable());
+            ensureReferencedExists(root, declared, item, multiplicity.getVariable());
     }
 
-    private void ensureReferencedExists(Set<String> declared, PDLItem item, String name) throws PDLException
+    private void ensureReferencedExists(PDLPacketDecl root, Set<String> declared, PDLItem item, String name) throws PDLException
     {
         if (name == null)
             throw new NullPointerException("reference name must not be null");
+
         if (!declared.contains(name))
-            error(item, "item references '"+name+"' before assignment");
+        {
+            boolean allowInlining = true;
+            if (root.getName().equals(doc.getStartPacketName()))
+                allowInlining = false;
+            
+            if (allowInlining)
+            {
+                ((PDLPacketDeclImpl) root).setInlined(true);
+                // TODO warn
+            }
+            else
+            {
+                error(item, "item references '"+name+"' before assignment");
+            }
+        }
     }
 
     private void error(PDLPacketDecl item, String string) throws PDLException

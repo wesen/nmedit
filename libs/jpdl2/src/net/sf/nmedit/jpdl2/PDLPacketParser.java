@@ -131,6 +131,9 @@ public class PDLPacketParser
         if (packetDecl == null)
             throw new PDLException("undefined packet: "+packetName);
 
+        if (packetDecl.isInlined())
+            throw new PDLException("packet can only be used inline: "+packetName);
+        
         if (DEBUG)
         {
             logString.setLength(0);

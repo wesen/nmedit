@@ -25,6 +25,7 @@ public class PDLPacketDeclImpl extends PDLBlockImpl implements PDLPacketDecl
     
     private String packetName;
     private int padding;
+    private boolean inlined;
 
     public PDLPacketDeclImpl(String packetName, int padding)
     {
@@ -45,6 +46,16 @@ public class PDLPacketDeclImpl extends PDLBlockImpl implements PDLPacketDecl
     public String toString()
     {
         return packetName+"%"+padding;
+    }
+    
+    public void setInlined(boolean inlined)
+    {
+        this.inlined = inlined;
+    }
+
+    public boolean isInlined()
+    {
+        return inlined;
     }
 
 }
