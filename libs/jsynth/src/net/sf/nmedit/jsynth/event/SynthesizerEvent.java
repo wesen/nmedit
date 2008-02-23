@@ -42,6 +42,7 @@ public class SynthesizerEvent extends Event
     public static final int SYNTH_SLOT_REMOVED = 6;
     public static final int SYNTH_SLOT_NEWPATCH = 7;
     public static final int SYNTH_BANK_UPDATE = 8;
+    public static final int SYNTH_COM_STATUS_CHANGED = 9;
 
     public SynthesizerEvent( Synthesizer synth )
     {

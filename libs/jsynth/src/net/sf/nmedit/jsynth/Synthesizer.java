@@ -24,6 +24,7 @@ package net.sf.nmedit.jsynth;
 
 import java.beans.PropertyChangeListener;
 
+import net.sf.nmedit.jsynth.event.ComStatusListener;
 import net.sf.nmedit.jsynth.event.SynthesizerStateListener;
 import net.sf.nmedit.jsynth.worker.StorePatchWorker;
 
@@ -85,7 +86,9 @@ public interface Synthesizer
     
     void putClientProperty(Object key, Object value);
     Object getClientProperty(Object key);
-    
+
+    ComStatus getComStatus();
+
     void setConnected(boolean connected) throws SynthException;
     boolean isConnected();
 
@@ -98,4 +101,7 @@ public interface Synthesizer
     void addPropertyChangeListener(String propertyName, PropertyChangeListener l);
     void removePropertyChangeListener(String propertyName, PropertyChangeListener l);
 
+    void addComStatusListener(ComStatusListener l);
+    void removeComStatusListener(ComStatusListener l);
+    
 }
