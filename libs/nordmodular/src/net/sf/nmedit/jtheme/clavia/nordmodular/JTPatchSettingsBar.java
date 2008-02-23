@@ -48,13 +48,16 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
+import net.sf.nmedit.jpatch.clavia.nordmodular.event.PPatchSettingsEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.event.PPatchSettingsListener;
 import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
 import net.sf.nmedit.jpatch.event.PModuleContainerListener;
+import net.sf.nmedit.jsynth.clavia.nordmodular.NmSlot;
 import net.sf.nmedit.jtheme.clavia.nordmodular.misc.GradientProgressBar;
 import net.sf.nmedit.nmutils.math.Math2;
 import net.sf.nmedit.nmutils.swing.LimitedText;
 
-public class JTPatchSettingsBar extends JPanel implements PModuleContainerListener 
+public class JTPatchSettingsBar extends JPanel implements PModuleContainerListener, PropertyChangeListener, PPatchSettingsListener 
 
 /*implements PatchListener */
 {
@@ -81,9 +84,9 @@ public class JTPatchSettingsBar extends JPanel implements PModuleContainerListen
     
     private JTNMPatch pui;
     
-    
     public JTPatchSettingsBar(JTNMPatch patchUI)
     {
+        final int STRUT = 3;
         this.pui = patchUI;
         this.patch = patchUI.getPatch();
          
@@ -92,9 +95,6 @@ public class JTPatchSettingsBar extends JPanel implements PModuleContainerListen
         setMinimumSize(new Dimension(100,28));
        // setPreferredSize(new Dimension(100,28));
         setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
-
-        Font smallFont = new Font("sansserif", Font.PLAIN, 10);
-        setFont(smallFont);
         
         patch.getPolyVoiceArea().addModuleContainerListener(this);
         patch.getCommonVoiceArea().addModuleContainerListener(this);
@@ -112,11 +112,9 @@ public class JTPatchSettingsBar extends JPanel implements PModuleContainerListen
         );
         
         
-        
         pName = new JTextField(new LimitedText(16), "Name", 16);
         pName.setToolTipText("Patch Name");
-        pName.setMaximumSize(new Dimension(200,28));
-        pName.setFont(smallFont);
+        pName.setMaximumSize(new Dimension(160,28));
         pName.addKeyListener(new PatchNameKeyAdapter());
         pName.addActionListener(new ActionListener() {
             public void actionPerformed( ActionEvent e )
@@ -126,7 +124,6 @@ public class JTPatchSettingsBar extends JPanel implements PModuleContainerListen
         
         pVoices = new JSpinner(); 
         voices = new VoicesNumberModel(1, 1, 32);
-        pVoices.setFont(smallFont);
         pVoices.setMaximumSize(new Dimension(90,28));
         pVoices.setToolTipText("requested voices / available voices");
         pVoices.setModel(voices);
@@ -141,30 +138,48 @@ public class JTPatchSettingsBar extends JPanel implements PModuleContainerListen
         });
 
         JLabel l;
-        l = new JLabel("Name:");
+        l = new JLabel("Patch:");
         l.setLabelFor(pName);
-        l.setFont(smallFont);
         add(l);
         add(pName);
         //pane.add(Box.createHorizontalGlue());
         
+        add(Box.createHorizontalStrut(STRUT));
+        
         l = new JLabel("Voices:");
         l.setLabelFor(pVoices);
-        l.setFont(smallFont);
         add(l);
-        add(pVoices);
+        Box b = Box.createVerticalBox();
+        b.add(Box.createVerticalGlue());
+        b.add(pVoices);
+        b.add(Box.createVerticalGlue());
+        add(b);
         l = null;
+        add(Box.createHorizontalStrut(STRUT));
         
-        JComponent dsp = Box.createVerticalBox();
+        add (new JLabel("Load:"));
+        add(Box.createHorizontalStrut(STRUT));
+        
         dspPoly = createBar();
         dspTotal = createBar();
         dspPoly.setToolTipText("dsp load: poly voice area");
         dspTotal.setToolTipText("dsp load: total");
+
+        add(new JLabel("PVA:"));
+        b = Box.createVerticalBox();
+        b.add(Box.createVerticalGlue());
+        b.add(dspPoly);
+        b.add(Box.createVerticalGlue());
         
-        dsp.add(dspPoly);
-        dsp.add(dspTotal);
-        
-        add(dsp);
+        add(b);
+        add(Box.createHorizontalStrut(STRUT));
+        add(new JLabel("E:"));
+        b = Box.createVerticalBox();
+        b.add(Box.createVerticalGlue());
+        b.add(dspTotal);
+        b.add(Box.createVerticalGlue());
+        add(b);
+        add(Box.createHorizontalStrut(STRUT));
         
         Action showNoteDialogA = null;
         
@@ -176,7 +191,10 @@ public class JTPatchSettingsBar extends JPanel implements PModuleContainerListen
         morphModule.setModule(patch.getMorphSection().getMorphModule());
         add(morphModule);
 
+        add(Box.createHorizontalGlue());
+        
         updateValues();
+        installListeners();
     } 
     
     private class PatchNameKeyAdapter extends KeyAdapter
@@ -211,14 +229,19 @@ public class JTPatchSettingsBar extends JPanel implements PModuleContainerListen
     private JProgressBar createBar()
     {
         GradientProgressBar gp = new GradientProgressBar();
-        gp.setBackground(NomadClassicColors.TEXT_DISPLAY_BACKGROUND);
+        // gp.setBackground(NomadClassicColors.TEXT_DISPLAY_BACKGROUND);
         gp.setForeground(Color.GREEN);
         gp.setGradient(Color.RED);
         gp.setEnabled(true);
         gp.setMinimum(0);
-        gp.setMaximum(100);
+        gp.setMaximum(100);/*
         gp.setPreferredSize(new Dimension(40,4));
-        gp.setMaximumSize(new Dimension(40,10));
+        gp.setMaximumSize(new Dimension(40,10));*/
+        gp.setMinimumSize(new Dimension(40, 12));
+        gp.setPreferredSize(new Dimension(40, 14));
+        gp.setMaximumSize(new Dimension(40, Short.MAX_VALUE));
+        gp.setAlignmentY(JComponent.CENTER_ALIGNMENT);
+        gp.setStringPainted(true);
         return gp;
     }
     
@@ -237,10 +260,10 @@ public class JTPatchSettingsBar extends JPanel implements PModuleContainerListen
         pName.setEnabled(true);
         String n = patch.getName();
         pName.setText(n == null ? "" : n);
-/*
-        Slot slot = null;//doc.getSlot();
+
+        NmSlot slot = (NmSlot) patch.getSlot();
         voices.setVoiceCount(slot==null?null:slot.getVoiceCount());
-        
+        /*
         if (patch!=null)
             patch.addPatchListener(this);
 */
@@ -263,7 +286,21 @@ public class JTPatchSettingsBar extends JPanel implements PModuleContainerListen
 
             dspPoly.setValue((int)pva);
             dspTotal.setValue((int)total);
+
+            percentString(dspPoly);
+            percentString(dspTotal);
         }
+    }
+    
+    private static void percentString(JProgressBar bar)
+    {
+        int d = (bar.getMaximum()-bar.getMinimum());
+        if (d <= 0)
+        {
+            bar.setString(null);
+        }
+        int f = (int) Math.round((100*(bar.getValue()-bar.getMinimum()))/(double)d);
+        bar.setString(f+"%");
     }
     
     private void disableView()
@@ -382,7 +419,44 @@ public class JTPatchSettingsBar extends JPanel implements PModuleContainerListen
 
     public void dispose()
     {
-        // TODO uninstall listeners 
+        uninstallListeners(); 
+    }
+
+    private void uninstallListeners()
+    {
+        patch.removePropertyChangeListener(NMPatch.SLOT_PROPERTY, this);   
+        patch.removePatchSettingsListener(this);
+        NmSlot slot = (NmSlot) patch.getSlot();
+        if (slot != null) slot.removePropertyChangeListener(this);
+    }
+    
+    private void installListeners()
+    {
+        patch.addPropertyChangeListener(NMPatch.SLOT_PROPERTY, this);   
+        patch.addPatchSettingsListener(this);
+        NmSlot slot = (NmSlot) patch.getSlot();
+        if (slot != null) slot.addPropertyChangeListener(this);
+    }
+
+    public void propertyChange(PropertyChangeEvent evt)
+    {
+        if (NMPatch.SLOT_PROPERTY == evt.getPropertyName())
+        {
+            NmSlot slot = (NmSlot) evt.getOldValue();
+            if (slot != null) slot.removePropertyChangeListener(this);
+            slot = (NmSlot) evt.getNewValue();
+            if (slot != null) slot.addPropertyChangeListener(this);
+            updateValues();
+        }
+        else if (NmSlot.PROPERTY_VOICECOUNT == evt.getPropertyName())
+        {
+            updateValues();
+        }
+    }
+
+    public void patchSettingsChanged(PPatchSettingsEvent e)
+    {
+        updateValues();
     }
 
 /*
