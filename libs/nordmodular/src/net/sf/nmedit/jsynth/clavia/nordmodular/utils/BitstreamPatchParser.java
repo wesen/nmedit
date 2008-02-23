@@ -47,9 +47,26 @@ import net.sf.nmedit.jpdl2.PDLPacketParser;
 public class BitstreamPatchParser 
 {
 
+    private int[] recognizeSections = null; 
+    
     public BitstreamPatchParser()
     {
         super();
+    }
+    
+    public void setRecognizedSections(int ...sections)
+    {
+        this.recognizeSections = sections;
+    }
+    
+    private boolean isSectionRecognized(int id)
+    {
+        if (recognizeSections == null) return true;
+        
+        for (int i=0;i<recognizeSections.length;i++)
+            if (recognizeSections[i]==id)
+                return true;
+        return false;
     }
 
     private int[] data = new int[100];
@@ -87,6 +104,9 @@ public class BitstreamPatchParser
 
     private void transcodeSection(int section, PDLPacket sectionData, PatchBuilder callback) throws ParseException
     {
+        if (!isSectionRecognized(section))
+            return;
+        
         switch (section)
         {
             // Name section
