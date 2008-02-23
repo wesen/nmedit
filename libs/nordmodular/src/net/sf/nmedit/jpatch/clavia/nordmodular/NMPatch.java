@@ -56,6 +56,8 @@ import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
  */
 public class NMPatch extends PBasicPatch implements PPatch
 {
+    
+    public static final String SLOT_PROPERTY = "slot";
 
     //   setPolyphonie(1-32)
     
@@ -258,7 +260,7 @@ public class NMPatch extends PBasicPatch implements PPatch
             {
                 ((NmSlot)old).setPatch(null);
             }
-            firePropertyChanged("slot", old, slot);
+            firePropertyChanged(SLOT_PROPERTY, old, slot);
         }
     }
     
