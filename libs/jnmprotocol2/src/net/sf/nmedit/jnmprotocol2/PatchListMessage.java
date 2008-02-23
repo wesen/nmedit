@@ -70,24 +70,35 @@ public class PatchListMessage extends MidiMessage
     {
 	this();
 	setAll(packet);
-	int section = 0;
-	int position = 0;
+    int section = 0;
+    int position = 0;
+    int oldsection = 0;
+    int oldposition = 0;
 	PDLPacket entry = packet.getPacket("data:patchList:data");
 	
 	while (entry != null) {
 	    PDLPacket cmd = entry.getPacket("cmd");
 	    if (cmd != null) {
-		if (cmd.containsPacket("NextPosition")) {
-		    position = cmd.getVariable("nextposition:position");
-		}
-		else if (cmd.containsPacket("EmptyPosition")) {
-		    position++;
-		}
-		else if (cmd.containsPacket("NextSection")) {
-		    section = cmd.getVariable("nextsection:section");
-		    position = cmd.getVariable("nextsection:position");
-		}
-	    }
+	        int code = cmd.getVariable("code");
+	        
+	        switch (code)
+	        {
+	            case 0x01:
+	                position = cmd.getVariable("nextposition:position");
+	                break;
+	            case 0x02:
+	                position++;
+	                break;
+	            case 0x03:
+	                section = cmd.getVariable("nextsection:section");
+	                position = cmd.getVariable("nextsection:position");
+	                break;
+	            case 0x05:
+	                oldsection = cmd.getVariable("repeatedsection:section");
+	                oldposition = cmd.getVariable("repeatedsection:position");
+	                break;
+	        }
+	    }	        
 	    names.add(new PatchListEntry(NmCharacter.extractName(entry.getPacket("name")),
 					 section,
 					 position));
