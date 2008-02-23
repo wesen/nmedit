@@ -291,6 +291,17 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         banksTree.fireRootChanged();
     }
 
+    private class BankPosition extends LeafNode
+    {
+        private int position;
+
+        public BankPosition(BankLeaf bankNode, String text, int position)
+        {
+            super(bankNode, text);
+            this.position = position;
+        }
+    }
+    
     private class BankLeaf extends ContainerNode implements BankUpdateListener
     {
 
@@ -301,11 +312,43 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         {
             super(parent, bank.getName());
             this.bank = bank;
-            for (int i=0;i<bank.getPatchCount();i++)
-                addChild(new LeafNode(this, "?"));
             bank.addBankUpdateListener(this);
+            regenerate();
+        }
+        
+        private void regenerate()
+        {
+            if (!synth.isConnected())
+            {
+                this.clear();
+                banksTree.fireNodeStructureChanged(this);
+                return;
+            }
+
+            this.clear();
+            boolean hasEmpty = false;
+            for (int i=0;i<bank.getPatchCount();i++)
+                if (!bank.containsPatch(i))
+                {
+                    hasEmpty = true;
+                    addChild(new BankPosition(this, "<empty>", i));
+                    break;
+                }
+            
+            for (int i=0;i<bank.getPatchCount();i++)
+            {
+                if (bank.containsPatch(i) && bank.isPatchInfoAvailable(i))
+                    addChild(new BankPosition(this, bank.getPatchLocationName(i)
+                            +": "+ bank.getPatchName(i), i));
+            }
+            banksTree.fireNodeStructureChanged(this);
         }
 
+        public boolean getAllowsChildren()
+        {
+            return synth.isConnected();
+        }
+        
         public TreeNode getChildAt(int childIndex)
         {
             if (dropped)
@@ -336,6 +379,8 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
 //        	Throwable ex = new Throwable();
 //        	ex.printStackTrace();
             if (dropped) return;
+            regenerate();
+            /*
             for (int i=e.getBeginIndex();i<e.getEndIndex();i++)
             {
                 LeafNode l = (LeafNode) getChildAt(i);
@@ -349,7 +394,7 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
                     name = bank.getPatchName(i);
                 l.setText(name);
             }
-            banksTree.fireNodeStructureChanged(this);
+            */
 //            System.out.println("update bank stop " + Thread.currentThread());
         }
         
