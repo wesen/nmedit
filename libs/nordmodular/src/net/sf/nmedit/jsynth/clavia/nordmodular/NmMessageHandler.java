@@ -41,7 +41,6 @@ import net.sf.nmedit.jnmprotocol2.SlotActivatedMessage;
 import net.sf.nmedit.jnmprotocol2.SlotsSelectedMessage;
 import net.sf.nmedit.jnmprotocol2.SynthSettingsMessage;
 import net.sf.nmedit.jnmprotocol2.VoiceCountMessage;
-import net.sf.nmedit.jnmprotocol2.utils.PatchNameExtractor;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
@@ -51,8 +50,13 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.Knob;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.Helper;
+import net.sf.nmedit.jpatch.clavia.nordmodular.parser.ParseException;
+import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchBuilder;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SynthException;
+import net.sf.nmedit.jsynth.clavia.nordmodular.utils.BitstreamPatchParser;
+import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
+import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils.ParserErrorHandler;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.ScheduledMessage;
 import net.sf.nmedit.jsynth.event.SlotEvent;
 import net.sf.nmedit.jsynth.event.SlotListener;
@@ -143,13 +147,35 @@ public class NmMessageHandler extends NmProtocolListener
     public void messageReceived(PatchMessage message) 
     {
         // get patch name
-        String patchName = PatchNameExtractor.extractPatchName(message);
+        String patchName = message.getPatchNameIfPresent();
         if (patchName != null)
         {
             // patch name is part of message
             synth
             .getSlot(message.getSlot())
             .setPatchNameValue(patchName);
+        }
+
+        if (message.containsSection(Format.S_HEADER))
+        {
+            int slotId = message.getSlot();
+            
+            NmSlot slot = synth.getSlot(slotId);
+            NMPatch patch = slot.getPatch();
+            if (patch == null)
+                return;
+            
+            PatchBuilder builder = new PatchBuilder(patch, new ParserErrorHandler(), synth.getModuleDescriptions());
+            
+            BitstreamPatchParser bpp = new BitstreamPatchParser();
+            bpp.setRecognizedSections(Format.S_HEADER);
+            try
+            {
+                bpp.transcode(message.getPatchStream(), builder);
+            } catch (ParseException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
