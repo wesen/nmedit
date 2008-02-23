@@ -457,6 +457,7 @@ public class NmUtils
         return patch;
     }
 
+    
     public static PatchBuilder parsePatchMessage(PatchMessage message, NM1ModuleDescriptions modules) throws ParseException
     {
         PatchBuilder patchBuilder = new PatchBuilder(new ParserErrorHandler(), modules);
@@ -468,7 +469,7 @@ public class NmUtils
     public static void parsePatchMessage(PatchMessage message, PatchBuilder patchBuilder) throws ParseException
     {
         BitstreamPatchParser bsParser = new BitstreamPatchParser();
-        bsParser.transcode(message.getBitStream(), patchBuilder);
+        bsParser.transcode(message.getPatchStream(), patchBuilder);
     }
 
     public static boolean writePatchSavely(NMPatch patch, File file)
@@ -532,7 +533,7 @@ public class NmUtils
         return sb.toString();
     }*/
     
-    private static class ParserErrorHandler implements ErrorHandler
+    public static class ParserErrorHandler implements ErrorHandler
     {
 
         public void warning( ParseException e ) throws ParseException
