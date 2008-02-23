@@ -19,6 +19,7 @@
 
 package net.sf.nmedit.jnmprotocol2;
 
+import net.sf.nmedit.jnmprotocol2.utils.Hexdump;
 import net.sf.nmedit.jpdl2.stream.BitStream;
 
 public class NmProtocol extends AbstractNmProtocol
@@ -74,6 +75,8 @@ public class NmProtocol extends AbstractNmProtocol
         byte[] receiveBytes = getNextReceivedSysexBytes();
         while (receiveBytes.length > 0) 
         {
+//            System.out.println("receive bytes ");
+//            Hexdump.printHex(receiveBytes);
             MidiMessage midiMessage = MidiMessage.create(BitStream.wrap(receiveBytes));
             if (midiMessage != null) 
             {
@@ -97,7 +100,7 @@ public class NmProtocol extends AbstractNmProtocol
                 send(peekSendQueue());
                 timeout = time() + TIMEOUT_INTERVAL;
             }
-            receiveBytes = getReceivedBytes();
+            receiveBytes = getNextReceivedSysexBytes();
         }
         
         // dispatches all events in the event queue
