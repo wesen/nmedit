@@ -19,13 +19,22 @@
 
 package net.sf.nmedit.jnmprotocol2;
 
+import net.sf.nmedit.jnmprotocol2.utils.NmCharacter;
+import net.sf.nmedit.jpdl2.PDLException;
+import net.sf.nmedit.jpdl2.PDLMessage;
 import net.sf.nmedit.jpdl2.PDLPacket;
+import net.sf.nmedit.jpdl2.PDLPacketParser;
+import net.sf.nmedit.jpdl2.dom.PDLDocument;
 import net.sf.nmedit.jpdl2.stream.BitStream;
 import net.sf.nmedit.jpdl2.stream.IntStream;
+import net.sf.nmedit.jpdl2.utils.PDLUtils;
 
 public class PatchMessage extends MidiMessage
 {
+    private BitStream bitstream;
     private BitStream patchStream;
+    private boolean isFirstInSequence;
+    private boolean isLastInSequence;
     
     private PatchMessage()
     {
@@ -41,8 +50,13 @@ public class PatchMessage extends MidiMessage
     public PatchMessage(PDLPacket packet)
     {
 	this();
+	bitstream = new BitStream(); // not really ok
     patchStream = new BitStream();
 	setAll(packet);
+	
+	System.out.println(PDLUtils.toString(packet));
+    isFirstInSequence = packet.getVariable("first")>0;
+    isLastInSequence = packet.getVariable("last")>0;
 	
 	packet = packet.getPacket("data:next");
 	while (packet != null) {
@@ -62,8 +76,12 @@ public class PatchMessage extends MidiMessage
 
 	    int first = sectionIndex == 0 ? 1 : 0;
 	    int last = sectionIndex == (sectionCount-1) ? 1 : 0;
+	    isFirstInSequence = first>0;
+	    isLastInSequence = last>0;
+	    
 	    int sectionsEnded = sectionIndex+1;
-        BitStream partialPatchStream = BitStream.copyOf(section);
+        this.patchStream = BitStream.copyOf(section);
+        BitStream partialPatchStream = patchStream;
         partialPatchStream.setSize((partialPatchStream.getSize()/8)*8);
         // Pad. Extra bits are ignored later.
         partialPatchStream.append(0, 6);
@@ -83,16 +101,126 @@ public class PatchMessage extends MidiMessage
         intStream.setPosition(0);
         
         // Generate sysex bitstream
-        this.patchStream = getBitStream(intStream);
+        this.bitstream = getBitStream(intStream);
     }
 
+    public boolean isFirstInSequence()
+    {
+        return this.isFirstInSequence;
+    }
+
+    public boolean isLastInSequence()
+    {
+        return this.isLastInSequence;
+    }
+    
+    public boolean isSingleMessage()
+    {
+        return isFirstInSequence && isLastInSequence;
+    }
+    
     public BitStream getBitStream() 
     {
-    return patchStream;
+    return bitstream;
     }
     
     public void notifyListener(NmProtocolListener listener)
     {
 	listener.messageReceived(this);
     }
+    
+    private PDLMessage patchMessage = null;
+    
+    public PDLMessage getPatchMessage() throws PDLException
+    {
+        if (patchMessage == null)
+        {
+            PDLDocument doc = PDLData.getPatchDoc();
+            PDLPacketParser parser = new PDLPacketParser(doc);
+            patchStream.setPosition(0);
+            try
+            {
+                patchMessage = parser.parseMessage(patchStream);
+            }
+            finally
+            {
+                patchStream.setPosition(0); 
+            }
+        }
+        return patchMessage;
+    }
+
+    public BitStream getPatchStream()
+    {
+        return patchStream;
+    }
+
+    public boolean containsSection(int sectionId)
+    {
+        try
+        {
+            PDLMessage message = getPatchMessage();
+            PDLPacket packet = message.getPacket();
+            do 
+            {
+                PDLPacket section = packet.getPacket("section");
+                // PDLPacket sectionData = section.getPacket("data");
+                int foundSectionId = section.getVariable("type");
+
+                if (sectionId == foundSectionId)
+                    return true;
+                packet = packet.getPacket("next");
+                
+            } 
+            while (packet != null);
+        }
+        catch (PDLException e)
+        {
+            // ignore
+        }
+        return false;
+    }
+
+    public final static int S_NAME_1 = 55;
+    public final static int S_NAME_2 = 39;
+    private String patchName;
+    private static final String NO_PATCHNAME_PRESENT = "------------------";
+    public String getPatchNameIfPresent()
+    {
+        if (patchName == NO_PATCHNAME_PRESENT)
+            return null;
+        if (patchName != null)
+            return patchName;
+     
+        try
+        {
+            PDLMessage message = getPatchMessage();
+            PDLPacket packet = message.getPacket();
+            do 
+            {
+                PDLPacket section = packet.getPacket("section");
+                PDLPacket sectionData = section.getPacket("data");
+                
+                switch (section.getVariable("type"))
+                {
+                    // Name section
+                    case S_NAME_1:
+                    case S_NAME_2:
+                        // patch name
+                        patchName = NmCharacter.extractName(sectionData.getPacket("name"));
+                        return patchName;
+                }
+                
+                packet = packet.getPacket("next");
+            } 
+            while (packet != null);
+        }
+        catch (PDLException e)
+        {
+            // ignore
+        }
+        patchName = NO_PATCHNAME_PRESENT;
+        return null;
+    }
+
 }
