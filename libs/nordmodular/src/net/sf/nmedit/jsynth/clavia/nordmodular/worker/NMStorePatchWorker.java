@@ -82,12 +82,19 @@ public class NMStorePatchWorker implements StorePatchWorker
             Slot slot = nmpatch.getSlot();
             if (slot != null)
             {
-                srcLocation = new PatchLocation(slot.getSlotIndex());
+                if (dstLocation.inSlot())
+                {
+                    nmpatch.setSlot(null); // delete reference to old slot
+                }
+                else
+                {
+                    srcLocation = new PatchLocation(slot.getSlotIndex());
+                }
             }
         }
         if (dstLocation != null && srcLocation != null)
         {
-            if (dstLocation.inSlot() && srcLocation.inSlot())
+            if (dstLocation.inSlot() && srcLocation.inSlot()) 
                 throw new RuntimeException("cannot transfer a patch from one slot to another slot");
             if (dstLocation.inBank() && srcLocation.inBank())
                 throw new RuntimeException("cannot transfer a patch from one bank position to another bank position");
