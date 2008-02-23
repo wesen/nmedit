@@ -29,6 +29,8 @@ import java.util.Map;
 
 import javax.swing.event.EventListenerList;
 
+import net.sf.nmedit.jsynth.event.ComStatusEvent;
+import net.sf.nmedit.jsynth.event.ComStatusListener;
 import net.sf.nmedit.jsynth.event.SynthesizerEvent;
 import net.sf.nmedit.jsynth.event.SynthesizerStateListener;
 
@@ -59,6 +61,22 @@ public abstract class AbstractSynthesizer implements Synthesizer
         return map == null ? null : map.get(key);
     }
 
+    protected void fireComStatusChanged(ComStatus status)
+    {
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        ComStatusEvent e = null;
+        for (int i = listeners.length-2; i>=0; i-=2) {
+            if (listeners[i]==ComStatusListener.class) {
+                // Lazily create the event:
+                if (e == null) e = new ComStatusEvent(this, status);
+                ((ComStatusListener)listeners[i+1]).comStatusChanged(e);
+            }
+        }
+    }
+
     protected void fireSynthesizerStateChanged()
     {
         SynthesizerStateListener[] list = 
@@ -87,6 +105,16 @@ public abstract class AbstractSynthesizer implements Synthesizer
     public void removeSynthesizerStateListener( SynthesizerStateListener l )
     {
         listenerList.remove(SynthesizerStateListener.class, l);
+    }
+    
+    public void addComStatusListener( ComStatusListener l )
+    {
+        listenerList.add(ComStatusListener.class, l);
+    }
+
+    public void removeComStatusListener( ComStatusListener l )
+    {
+        listenerList.remove(ComStatusListener.class, l);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener l)

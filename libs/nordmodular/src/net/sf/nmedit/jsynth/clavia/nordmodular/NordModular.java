@@ -34,6 +34,7 @@ import net.sf.nmedit.jnmprotocol2.IAmMessage;
 import net.sf.nmedit.jnmprotocol2.MessageMulticaster;
 import net.sf.nmedit.jnmprotocol2.MidiDriver;
 import net.sf.nmedit.jnmprotocol2.MidiException;
+import net.sf.nmedit.jnmprotocol2.MidiMessage;
 import net.sf.nmedit.jnmprotocol2.NmMessageAcceptor;
 import net.sf.nmedit.jnmprotocol2.NmProtocol;
 import net.sf.nmedit.jnmprotocol2.NmProtocolListener;
@@ -42,10 +43,12 @@ import net.sf.nmedit.jnmprotocol2.SlotActivatedMessage;
 import net.sf.nmedit.jnmprotocol2.SynthSettingsMessage;
 import net.sf.nmedit.jnmprotocol2.utils.ProtocolRunner;
 import net.sf.nmedit.jnmprotocol2.utils.ProtocolThreadExecutionPolicy;
+import net.sf.nmedit.jnmprotocol2.utils.QueueBuffer;
 import net.sf.nmedit.jnmprotocol2.utils.StoppableThread;
 import net.sf.nmedit.jnmprotocol2.utils.ProtocolRunner.ProtocolErrorHandler;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
 import net.sf.nmedit.jsynth.AbstractSynthesizer;
+import net.sf.nmedit.jsynth.ComStatus;
 import net.sf.nmedit.jsynth.DefaultMidiPorts;
 import net.sf.nmedit.jsynth.MidiPortSupport;
 import net.sf.nmedit.jsynth.SlotManager;
@@ -68,6 +71,7 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
     private NmProtocol protocol;
     private StoppableThread protocolThread;
     private boolean connected = false;
+    private ComStatus comStatus = ComStatus.Offline;
     private MessageMulticaster multicaster;
     private MidiDriver midiDriver;
     private MidiPortSupport midiports;
@@ -131,6 +135,8 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
     private Property activeSlot = new Property("activeSlot", 0, 3, 0);
 
     private NmBank[] banks;
+    
+    
     
     public int getMaxSlotCount()
     {
@@ -244,6 +250,32 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
                 throw me;
             }
             super.heartbeatImpl();
+            comUpdateStatus();
+        }
+        
+
+        protected void send(javax.sound.midi.MidiMessage message)
+        {
+            super.send(message);
+            comTransmit();
+        }
+
+        public void send(MidiMessage midiMessage) throws MidiException
+        {
+            super.send(midiMessage);
+            comTransmit();
+        }
+
+        protected void received(byte[] data)
+        {
+            super.received(data);
+            comReceive();
+        }
+
+        protected void dispatchEvents(QueueBuffer<MidiMessage> events)
+        {
+            super.dispatchEvents(events);
+            comReceive();
         }
     }
     
@@ -720,6 +752,11 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
             updateBanks();
             
             fireSynthesizerStateChanged();
+            
+            if (connected)
+                setComStatus(ComStatus.Idle);
+            else
+                setComStatus(ComStatus.Offline);
         }
     }
     
@@ -1135,6 +1172,87 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
         return DSP_GLOBAL.equals(propertyName);
     }
 
+    public ComStatus getComStatus()
+    {
+        return comStatus;
+    }
+    
+    protected void setComStatus(ComStatus status)
+    {
+        ComStatus newValue = connected ? status : ComStatus.Offline;
+        ComStatus oldValue = this.comStatus;
+        
+        if (oldValue != newValue)
+        {
+            this.comStatus = newValue;
+            fireComStatusChanged(newValue);
+        }
+    }
+    
+    long comLastReceiveDisableAt = 0;
+    long comLastTransmitDisableAt = 0;
+    static final long COM_THRESHOLD = 75; // milliseconds
+    
+    protected void comReceive()
+    {
+        comLastReceiveDisableAt = System.currentTimeMillis()+COM_THRESHOLD;
+        comUpdateStatus();
+    }
+    
+    protected void comTransmit()
+    {
+        comLastTransmitDisableAt = System.currentTimeMillis()+COM_THRESHOLD;
+        comUpdateStatus();
+    }
+
+    public void comUpdateStatus()
+    {
+        if (EventQueue.isDispatchThread())
+        {
+            __comUpdateStatusImpl();
+        }
+        else
+        {
+            EventQueue.invokeLater(new Runnable(){
+                public void run()
+                {
+                    __comUpdateStatusImpl();
+                }});
+        }
+    }
+    
+    private void __comUpdateStatusImpl()
+    {
+        long t = System.currentTimeMillis();
+        boolean receive = comLastReceiveDisableAt>t;
+        boolean transmit = comLastTransmitDisableAt>t;
+        ComStatus newStatus;
+        if (transmit)
+        {
+            if (receive)
+            {
+                newStatus = ComStatus.TransmitReceive;
+            }
+            else
+            {
+                newStatus = ComStatus.Transmit;
+            }
+        }
+        else
+        {
+            if (receive)
+            {
+                newStatus = ComStatus.Receive;
+            }
+            else
+            {
+                newStatus = ComStatus.Idle;
+            }
+        }
+        
+        setComStatus(newStatus);
+    }
+    
 }
 
 
