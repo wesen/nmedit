@@ -35,7 +35,6 @@ public class SetPatchTitleMessage extends MidiMessage
 
 	addParameter("pid", "data:pid");
 	addParameter("sc", "data:sc");
-	addParameter("name", "data:data:name");
 	set("cc", 0x14);
     set("sc", 0x27);
     }
