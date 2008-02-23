@@ -1,7 +1,7 @@
 /*
  * parse failed:
  *   F0 33 50 06 07 3A 00 07 00 00 00 00 00 00 00 00 00 41 F7
- *
+ *   F0 33 50 06 20 3A 00 07 00 F0 33 50 06 20 39 00 11 00 00 00 00 00 00 63 F7
  */
 
 start Sysex;
@@ -21,15 +21,26 @@ Sysex :=
 		case 0x14: NMInfo$data
 		case 0x16: ACK$data
 		case 0x17: PatchHandling$data
-		case 0x1c: PatchPacket$data 
-		case 0x1d: PatchPacket$data 
-		case 0x1e: PatchPacket$data
-		case 0x1f: PatchPacket$data
+		case 0x1c: PatchPacketExtra$$ 
+		case 0x1d: PatchPacketExtra$$
+		case 0x1e: PatchPacketExtra$$
+		case 0x1f: PatchPacketExtra$$
 		default:   fail
 	}
 
 	0xf7:8
 	;
+
+/**
+ * Adds anonym variables to PatchPacket messages. Computes the first/last variables from the cc value.
+ * @variable first 1 (true) if this is the first PatchMessage in a sequence of PatchMessage, 0 (false) otherwise 
+ * @variable last  1 (true) if this is the last PatchMessage in a sequence of PatchMessage, 0 (false) otherwise 
+ */
+PatchPacketExtra :=
+        %first:1 = (cc&1)
+        %last:1  = ((cc>>1)&1)
+        PatchPacket$data
+    ;
 
 IAm :=
     messageId("iam")
