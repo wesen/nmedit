@@ -68,6 +68,8 @@ import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.Synthesizer;
 import net.sf.nmedit.jsynth.event.BankUpdateEvent;
 import net.sf.nmedit.jsynth.event.BankUpdateListener;
+import net.sf.nmedit.jsynth.event.ComStatusEvent;
+import net.sf.nmedit.jsynth.event.ComStatusListener;
 import net.sf.nmedit.jsynth.event.SlotEvent;
 import net.sf.nmedit.jsynth.event.SlotListener;
 import net.sf.nmedit.jsynth.event.SynthesizerEvent;
@@ -102,13 +104,14 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         return new EventHandler();
     }
     
-    protected class EventHandler implements SynthesizerStateListener, PropertyChangeListener
+    protected class EventHandler implements SynthesizerStateListener, PropertyChangeListener, ComStatusListener
     {
 
         public void install()
         {
             synth.addSynthesizerStateListener(this);
             synth.addPropertyChangeListener(this);
+            synth.addComStatusListener(this);
         }
 
         public void synthConnectionStateChanged(SynthesizerEvent e)
@@ -131,6 +134,11 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
             {
                 updateDSPUsageGlobalLabel();
             }
+        }
+
+        public void comStatusChanged(ComStatusEvent e)
+        {
+            updateSynthStatusLabel();
         }
         
     }
@@ -417,6 +425,15 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
     static ImageIcon icconnected = getIcon("tango-icon-theme/16x16/emotes/face-angel.png");
     static ImageIcon icdisconnected = icconnected;
 
+
+    static ImageIcon icComIdle = getIcon("tango-icon-theme/16x16/status/network-idle.png");
+    static ImageIcon icComOffline = getIcon("tango-icon-theme/16x16/status/network-offline.png");
+    static ImageIcon icComError = getIcon("tango-icon-theme/16x16/status/network-error.png");
+    static ImageIcon icComReceive = getIcon("tango-icon-theme/16x16/status/network-receive.png");
+    static ImageIcon icComTransmit = getIcon("tango-icon-theme/16x16/status/network-transmit.png");
+    static ImageIcon icComTransmitReceive = getIcon("tango-icon-theme/16x16/status/network-transmit-receive.png");
+    
+    private JLabel synthStatusLabel;
     private JLabel synthIconLabel;
     private JLabel synthNameLabel;
     private JComponent slotContainer;
@@ -470,6 +487,11 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
             TopLeft(dspUsageGlobal);
             propertyBox.add(dspUsageGlobal);
         }
+        synthStatusLabel = new JLabel();
+        TopLeft(synthStatusLabel);
+        updateSynthStatusLabel();
+        propertyBox.add(synthStatusLabel);
+        
         propertyBox.add(Box.createVerticalGlue());
         propertyBox.add(lastLine);
         TopLeft(propertyBox);
@@ -511,6 +533,7 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         
         lastLine.add(btnSystem);
         lastLine.add(tbConnect);
+        lastLine.add(Box.createHorizontalGlue());
         
         mainLine.add(iconBox);  // left
         mainLine.add(propertyBox);// rightx
@@ -592,6 +615,31 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         return synthpane;
     }
     
+    private void updateSynthStatusLabel()
+    {
+        switch (synth.getComStatus())
+        {
+            case Idle: 
+                synthStatusLabel.setIcon(icComIdle);
+                break;
+            case Offline:
+                synthStatusLabel.setIcon(icComOffline);
+                break;
+            case Error:
+                synthStatusLabel.setIcon(icComError);
+                break;
+            case Receive:
+                synthStatusLabel.setIcon(icComReceive);
+                break;
+            case Transmit:
+                synthStatusLabel.setIcon(icComTransmit);
+                break;
+            case TransmitReceive:
+                synthStatusLabel.setIcon(icComTransmitReceive);
+                break;
+        }    
+    }
+
     protected static class ClickableLabel extends JLabel
     {
         public static final String CLICK = "click";
