@@ -45,7 +45,6 @@ public class Expander extends Curve {
 			float intersectGate = ratio*(-gate+threshold)-threshold+1f;			
 			points[1].setLocation(gate,intersectGate); // gate inter
 			points[2].setLocation(threshold,1f-threshold);
-			System.out.println(threshold + " " + (1-threshold));
 		}
 		else {
 			points[0].setLocation(gate,1.1f);
