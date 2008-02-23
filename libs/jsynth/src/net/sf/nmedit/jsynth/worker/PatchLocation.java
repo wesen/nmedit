@@ -61,4 +61,9 @@ public class PatchLocation
         return slot;
     }
     
+    public String toString()
+    {
+        return getClass().getName()+"[bank="+bank+",position="+position+",slot="+slot+"]";
+    }
+    
 }
