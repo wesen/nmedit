@@ -158,10 +158,16 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         Slot dst = null;
         list.add(synth);
         
+        if (!bank.containsPatch(index))
+        {
+            // no patch => nothing to open
+            return;
+        }
+        
         if (synth.getSlotCount() > 1) {
 
         	SaveInSynthDialog ssd = new SaveInSynthDialog(list);
-        	ssd.setTitle("Save In Slot");
+        	ssd.setTitle("Open Patch...");
         	ssd.setSaveInBankAllowed(false);
         	ssd.invoke();
 
@@ -564,18 +570,11 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
 
                 Object node = path.getLastPathComponent();
 
-                if (!(node instanceof LeafNode))
+                if (!BankPosition.class.isInstance(node))
                     return;
-
-                LeafNode leaf = (LeafNode) node;
-                if (!BankLeaf.class.isInstance(leaf.getParent()))
-                    return;
-
+                BankPosition leaf = (BankPosition) node;
                 BankLeaf bl = (BankLeaf)leaf.getParent();
-                
-                int index = bl.getIndex(leaf);
-                
-                bankPatchLoadEvent(bl.bank, index);
+                bankPatchLoadEvent(bl.bank, leaf.position);
             }
             
         });
