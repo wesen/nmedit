@@ -103,9 +103,8 @@ public class PDLUtils
         memberCount += members.size();
         if (!members.isEmpty())
         {
-            if (memberCount>0) sb.append("\n  ");
-            sb.append("variable lists: ");
-            for (String vlist: members) sb.append(vlist+";");
+            if (memberCount>1) sb.append("\n  ");
+            for (String vlist: members) sb.append(variableListToString(vlist, packet)+";");
         }
         members = packet.getAllPacketLists();
         memberCount += members.size();
@@ -135,6 +134,28 @@ public class PDLUtils
         sb.append("}");
         if (memberCount>2)
             sb.append("\n  ");
+    }
+
+    private static String variableListToString(String vlist, PDLPacket packet)
+    {
+        String defaultResult =  vlist+"[]";
+        int[] data = packet.getVariableList(vlist);
+        
+        if (data.length<=16)
+        {
+            StringBuilder sb = new StringBuilder();
+            StringBuilder ints = new StringBuilder();
+            for (int i=0;i<data.length;i++)
+            {
+                if (!Character.isDefined((char)data[i]))
+                    return defaultResult;
+                sb.append((char)data[i]);
+                if (i>0) ints.append(", ");
+                ints.append(Integer.toString(data[i]));
+            }
+            return vlist="[\""+sb+"\"|"+ints+"]";
+        }
+        return defaultResult;
     }
 
     public static String toString(PDLPacket packet)
