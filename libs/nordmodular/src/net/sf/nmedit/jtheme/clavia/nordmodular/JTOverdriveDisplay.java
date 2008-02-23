@@ -80,12 +80,12 @@ public class JTOverdriveDisplay extends JTDisplay implements ChangeListener
         int y = insets.top + h/2;
         g.drawLine(insets.left, y, w-1, y);
 
-        g.setClip(insets.left, insets.top, w, h);
         g.translate(insets.left, insets.top);
         g.setColor(getForeground());
         
-        overdrive.setBounds(insets.left, insets.top,w,h-1 );
+        overdrive.setBounds(insets.left, insets.top,w, h-1);
         g.draw(overdrive);
+        g.translate(-insets.left, -insets.top); // undo translation
     }
     
     public float getOverdrive()
