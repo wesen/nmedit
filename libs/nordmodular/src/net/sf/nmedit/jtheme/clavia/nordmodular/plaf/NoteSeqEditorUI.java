@@ -334,8 +334,7 @@ public class NoteSeqEditorUI extends JTBasicControlUI
     	
         public static void loadActionMap(NMLazyActionMap map) 
         {  
-        	System.out.println("loading actions");
-            map.put(new NoteSeqActions(DEFAULTVALUE)); 
+        	map.put(new NoteSeqActions(DEFAULTVALUE)); 
             map.put(new NoteSeqActions(INCREASE));
             map.put(new NoteSeqActions(DECREASE));
             map.put(new NoteSeqActions(INCREASE_FAST));
