@@ -36,4 +36,9 @@ public interface PDLPacketDecl extends PDLBlock
      */
     int getPadding();
 
+    /**
+     * Returns true, if this packet declaration can only be used inline.
+     */
+    boolean isInlined();
+    
 }
