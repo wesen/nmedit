@@ -22,7 +22,9 @@ package net.sf.nmedit.jnmprotocol2;
 import java.awt.EventQueue;
 import java.util.concurrent.locks.ReentrantLock;
 
+import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Receiver;
+import javax.sound.midi.SysexMessage;
 import javax.sound.midi.Transmitter;
 
 import net.sf.nmedit.jnmprotocol2.AbstractNmProtocol;
@@ -30,9 +32,9 @@ import net.sf.nmedit.jnmprotocol2.EnqueuedPacket;
 import net.sf.nmedit.jnmprotocol2.MessageHandler;
 import net.sf.nmedit.jnmprotocol2.MidiException;
 import net.sf.nmedit.jnmprotocol2.MidiMessage;
+import net.sf.nmedit.jnmprotocol2.utils.Hexdump;
 import net.sf.nmedit.jnmprotocol2.utils.QueueBuffer;
 import net.sf.nmedit.jpdl2.stream.BitStream;
-import net.sf.nmedit.nmutils.Platform;
 
 /**
  * Receives and sends javax.sound.midi.MidiMessage.
@@ -58,7 +60,7 @@ public abstract class AbstractNmProtocol
     private final Object eventsLock = new Object();
     // lock for heartbeat() calls
     private ReentrantLock heartbeatLock = new ReentrantLock(false);
-
+    
     // queue containing the outgoing packets
     private QueueBuffer<EnqueuedPacket> sendQueue = new QueueBuffer<EnqueuedPacket>();
     // queue containing the data of incoming javax.sound.midi.MidiMessages
@@ -88,7 +90,7 @@ public abstract class AbstractNmProtocol
      */
     public void reset()
     {
-        synchronized (sendLock)
+		synchronized (sendLock)
         {
             sendQueue.clear();
         }
@@ -326,25 +328,23 @@ public abstract class AbstractNmProtocol
 			synchronized (receiveLock) {
 				bytes= getReceivedBytes();
 			}
+//	        if (bytes!= null) {
+//	            System.out.println("getReceived ");
+//	            Hexdump.printHex(bytes);
+//	            }
 //			if (bytes != null && bytes.length > 0)
 //				dumpByteArray("receivedBytes ", bytes);
     		if (bytes == NO_BYTES)
     			return NO_BYTES;
-			int startRcv = 0;
-			if (Platform.isFlavor(Platform.OS.MacOSFlavor)) {
-				if (bytes[0] == (byte)0xf7) {
-					startRcv = 1;
-				}
-			}
     		if (tmpSysexData != null) {
-    			byte newSysex[] = new byte[tmpSysexData.length + bytes.length - startRcv];
+    			byte newSysex[] = new byte[tmpSysexData.length + bytes.length];
     			System.arraycopy(tmpSysexData, 0, newSysex, 0, tmpSysexData.length);
-    			System.arraycopy(bytes, startRcv, newSysex, tmpSysexData.length, bytes.length - startRcv);
+    			System.arraycopy(bytes, 0, newSysex, tmpSysexData.length, bytes.length);
     			tmpSysexData = newSysex;
     		} else {
-    			byte newSysex[] = new byte[bytes.length - startRcv];
+    			byte newSysex[] = new byte[bytes.length];
     			tmpSysexData = newSysex;
-    			System.arraycopy(bytes, startRcv, tmpSysexData, 0, bytes.length - startRcv);
+    			System.arraycopy(bytes, 0, tmpSysexData, 0, bytes.length);
     		}
     		if (tmpSysexData == null)
     			return NO_BYTES;
@@ -409,7 +409,7 @@ public abstract class AbstractNmProtocol
         		}
         	}
         }
-        
+
         return (data != null) ? data : NO_BYTES;
     }
 
@@ -573,7 +573,17 @@ public abstract class AbstractNmProtocol
         {/*
             if (closed)
                 throw new IllegalStateException("receiver closed");*/
-            receiver.received(message.getMessage());
+        	if (message instanceof SysexMessage) {
+//        		System.out.println("sysex message status " + message.getStatus());
+//        		Hexdump.printHex(((SysexMessage)message).getMessage());
+        		if (message.getStatus() == 0xf7){
+        			receiver.received(((SysexMessage)message).getData());
+        		} else {
+        			receiver.received(message.getMessage());
+        		}
+        	} else {
+        		receiver.received(message.getMessage());
+        	}
         }
         
         public void close()
