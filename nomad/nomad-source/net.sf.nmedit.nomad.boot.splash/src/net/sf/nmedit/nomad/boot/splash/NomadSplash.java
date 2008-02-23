@@ -20,6 +20,7 @@ package net.sf.nmedit.nomad.boot.splash;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Frame;
@@ -100,7 +101,7 @@ public class NomadSplash implements SplashHandler
     private SplashImageObserver spImageObserver;
     
     // meter properties
-    private float spMeterProgress = 0f;
+    private volatile float spMeterProgress = 0f;
     private boolean spMeterEnabled = false;
     private Rectangle spMeterBounds;
     private boolean spMeterRoundRect = false;
@@ -108,7 +109,7 @@ public class NomadSplash implements SplashHandler
 
     // text properties
     private boolean spTextEnabled = false;
-    private String spText = null;
+    private volatile String spText = null;
     private Rectangle spTextBounds;
     private Color spTextFill;
     private Font spTextFont;
@@ -438,7 +439,7 @@ public class NomadSplash implements SplashHandler
         }
     }
 
-    private synchronized void checkFlags()
+    private void checkFlags()
     {
         if (getFlag(SP_IMAGE_PAINTED_ONCE))
         {
@@ -549,18 +550,26 @@ public class NomadSplash implements SplashHandler
     }
 
     private void disposeWindow()
-    {
-        synchronized (windowLock)
+    {   
+        Runnable r = new Runnable() { public void run()
         {
-            if (spSplashWindow != null)
+            synchronized (windowLock)
             {
-                spSplashWindow.dispose();
-                spSplashWindow = null;
-                setFlag(SP_VISIBLE, false);
+                if (spSplashWindow != null)
+                {
+                    spSplashWindow.dispose();
+                    spSplashWindow = null;
+                    setFlag(SP_VISIBLE, false);
+                }
+                setFlag(SP_DISPOSING_WINDOW, false);
+                windowLock.notifyAll();
             }
-            setFlag(SP_DISPOSING_WINDOW, false);
-            windowLock.notifyAll();
-        }     
+            }}; 
+     
+        if (EventQueue.isDispatchThread())
+            EventQueue.invokeLater(r);
+        else
+            r.run();
     }
     
     private static boolean eq(Object a, Object b)
