@@ -54,7 +54,6 @@ public class PatchMessage extends MidiMessage
     patchStream = new BitStream();
 	setAll(packet);
 	
-	System.out.println(PDLUtils.toString(packet));
     isFirstInSequence = packet.getVariable("first")>0;
     isLastInSequence = packet.getVariable("last")>0;
 	
