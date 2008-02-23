@@ -463,6 +463,7 @@ ListCmd :=
 	  case 0x01: NextPosition$nextposition
       case 0x02: EmptyPosition$emptyposition
 	  case 0x03: NextSection$nextsection
+	  case 0x05: {0:1 unknown:7 NextSection$repeatedsection } // after overwriting existing patch 
 	  default: fail
 	}
 	;
