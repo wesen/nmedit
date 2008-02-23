@@ -37,8 +37,6 @@ import javax.swing.JProgressBar;
 import javax.swing.plaf.ProgressBarUI;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 
-import sun.swing.SwingUtilities2;
-
 public class GradientProgressBar extends JProgressBar
 {
     
