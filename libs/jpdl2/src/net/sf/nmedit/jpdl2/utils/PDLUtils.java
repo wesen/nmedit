@@ -79,17 +79,19 @@ public class PDLUtils
         sb.append(packet.getName());
         if (packet.getBinding() != null)
             sb.append("$"+packet.getBinding());
-        sb.append(" {");
+        sb.append("{");
 
         List<String> members;
         
+        int memberCount = 0;
         members = packet.getAllVariables();
+        memberCount += members.size();
         if (!members.isEmpty())
         {
-            sb.append(" ");
             for (String variable: members) sb.append(variable+"="+packet.getVariable(variable)+";");
         }
         members = packet.getAllStrings();
+        memberCount += members.size();
         if (!members.isEmpty())
         {
             for (String s: members) 
@@ -98,18 +100,21 @@ public class PDLUtils
             }
         }
         members = packet.getAllVariableLists();
+        memberCount += members.size();
         if (!members.isEmpty())
         {
-            sb.append("\nvariable lists: ");
+            if (memberCount>0) sb.append("\n  ");
+            sb.append("variable lists: ");
             for (String vlist: members) sb.append(vlist+";");
         }
         members = packet.getAllPacketLists();
+        memberCount += members.size();
         if (!members.isEmpty())
         {
-            sb.append("\npacket lists:\n");
+            if (memberCount>2) sb.append("\n  ");
             for (String plist: members) 
             {
-                sb.append(plist+"=[\n");
+                sb.append(plist+"=[\n  ");
                 PDLPacket[] list = packet.getPacketList(plist);
                 for (PDLPacket p: list)
                     toString(p, sb, depth+1);
@@ -117,16 +122,19 @@ public class PDLUtils
             }
         }
         members = packet.getAllPackets();
+        memberCount += members.size();
         if (!members.isEmpty())
         {
-            sb.append("\npackets: ");
+            if (memberCount>2) sb.append("\n  ");
             for (String p: members) 
             {
                 toString(packet.getPacket(p), sb, depth+1);
             }
         }
         
-        sb.append("}\n");
+        sb.append("}");
+        if (memberCount>2)
+            sb.append("\n  ");
     }
 
     public static String toString(PDLPacket packet)
