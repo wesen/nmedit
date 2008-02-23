@@ -69,23 +69,24 @@ public class JTEqMidDisplay extends JTDisplay implements ChangeListener
     }
     
     protected void paintDynamicLayer(Graphics2D g)
-    {
+    {        
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         Insets insets = getInsets();
         int w = getWidth()-insets.left-insets.right;
         int h = getHeight()-insets.top-insets.bottom;
-        
         Color outline = getShapeOutlineColor();
-        g.setColor(outline);
-        int y = insets.top + h/2;
-        g.drawLine(insets.left, y, w-1, y);
-
-        g.setClip(insets.left, insets.top, w, h);
+        if (outline != null)
+        {
+            g.setColor(outline);
+            int y = insets.top + h/2;
+            g.drawLine(insets.left, y, w-1, y);
+        }
         g.translate(insets.left, insets.top);
         g.setColor(getForeground());
-        equalizerMid.setBounds(0, 0, getWidth(), getHeight());
+        equalizerMid.setBounds(insets.left, insets.top, w, h);
         g.draw(equalizerMid);
+        g.translate(-insets.left,-insets.top); // undo translation
     }
     
     public float getFreq()

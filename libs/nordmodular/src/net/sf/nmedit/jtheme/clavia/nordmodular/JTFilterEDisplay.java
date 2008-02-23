@@ -64,16 +64,15 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
         g.setColor(JTNM1Context.GRAPH_DISPLAY_LINE);
         int y = (int)(insets.top+h*.45);
         g.drawLine(insets.left, y, w-1, y);
-        
-        g.setClip(insets.left, insets.top, w, h);
-        
+
         g.setColor(getForeground());
         filterE.setBounds(0, 0, w, h);
         g.translate(insets.left, insets.top);
-    	g.setColor(JTNM1Context.GRAPH_DISPLAY_FILL);
-    	g.fill(filterE);
-    	g.setColor(JTNM1Context.GRAPH_DISPLAY_FILL_LINE);
+        g.setColor(JTNM1Context.GRAPH_DISPLAY_FILL);
+        g.fill(filterE);
+        g.setColor(JTNM1Context.GRAPH_DISPLAY_FILL_LINE);
         g.draw(filterE);
+        g.translate(-insets.left, -insets.top); // undo translation
     }
     
     public float getCutoff()

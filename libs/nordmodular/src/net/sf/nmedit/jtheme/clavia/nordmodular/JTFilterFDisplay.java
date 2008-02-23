@@ -63,8 +63,6 @@ public class JTFilterFDisplay extends JTDisplay implements ChangeListener {
 		int y = (int)(insets.top+h*.45);
 		g.drawLine(insets.left, y, w-1, y);
 
-        g.setClip(insets.left, insets.top, w, h);
-
 		g.setColor(getForeground());
 		filterF.setBounds(0, 0, w, h);
         g.translate(insets.left, insets.top);		
@@ -72,6 +70,7 @@ public class JTFilterFDisplay extends JTDisplay implements ChangeListener {
 		g.fill(filterF);
 		g.setColor(JTNM1Context.GRAPH_DISPLAY_FILL_LINE);
 		g.draw(filterF);
+        g.translate(-insets.left, -insets.top); // undo translation
 	}
 
 	public float getCutoff() {

@@ -63,11 +63,11 @@ public class JTEqShelvingDisplay extends JTDisplay implements ChangeListener
         int y = insets.top+h/2;
         g.drawLine(insets.left, y, w-1, y);
         
-        g.setClip(insets.left, insets.top, w, h);
         g.translate(insets.left, insets.top);
         g.setColor(getForeground());
         equalizerShelve.setBounds(0, 0, w, h);
         g.draw(equalizerShelve);
+        g.translate(-insets.left, -insets.top); // undo translation
     }
     
     public float getFreq()
