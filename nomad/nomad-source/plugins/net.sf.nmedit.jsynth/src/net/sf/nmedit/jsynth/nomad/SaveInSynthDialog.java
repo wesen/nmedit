@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -42,6 +43,8 @@ import javax.swing.JScrollPane;
 import net.sf.nmedit.jsynth.Bank;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.Synthesizer;
+import net.sf.nmedit.jsynth.event.BankUpdateEvent;
+import net.sf.nmedit.jsynth.event.BankUpdateListener;
 import net.sf.nmedit.jsynth.worker.PatchLocation;
 
 public class SaveInSynthDialog extends JDialog 
@@ -57,6 +60,8 @@ public class SaveInSynthDialog extends JDialog
     private boolean saveInBankAllowed = true;
     private boolean saveInSlotAllowed = true;
     private boolean openPatchAllowed = false;
+    
+    private BankComboBoxModel usedBankModel;
     
     public SaveInSynthDialog(Collection<Synthesizer> synths)
     {
@@ -251,7 +256,12 @@ public class SaveInSynthDialog extends JDialog
         if (model != null)
             form.cbSlot.setModel(model);
 
-        model = getBankModel(synth);
+        if (usedBankModel != null)
+        {
+            usedBankModel.uninstallListeners();
+        }
+        
+        model = createBankModel(synth);
         if (model != null)
             form.cbBank.setModel(model);
     }
@@ -295,22 +305,92 @@ public class SaveInSynthDialog extends JDialog
         return null;
     }
 
-    private ComboBoxModel getBankModel(Synthesizer synth)
+    private ComboBoxModel createBankModel(Synthesizer synth)
     {
         if (synth != null)
         {
-            List<PatchLocation> banks = new ArrayList<PatchLocation>(synth.getBankCount()*100);
-            for (int i=0;i<synth.getBankCount();i++)
-            {
-                Bank<?> b = synth.getBank(i);
-                for (int j=0;j<b.getPatchCount();j++)
-                {
-                    banks.add(new BankPatchLocation(b, j));
-                }
-            }
-            return new DefaultComboBoxModel(banks.toArray());
+            return new BankComboBoxModel(synth);
         }
         return null;
+    }
+    
+    private class BankComboBoxModel extends AbstractListModel implements ComboBoxModel, BankUpdateListener
+    {
+        Object selectedObject;
+        private Bank<?>[] banks;
+        private List<PatchLocation> data;
+        private Synthesizer synth;
+        
+        public BankComboBoxModel(Synthesizer synth)
+        {
+            this.synth = synth;
+            this.banks = synth.getBanks();
+            List<PatchLocation> data = new ArrayList<PatchLocation>(banks.length*100);
+            for (int i=0;i<synth.getBankCount();i++)
+            {
+                Bank<?> b = banks[i];
+                for (int j=0;j<b.getPatchCount();j++)
+                {
+                    data.add(new BankPatchLocation(b, j));
+                }
+            }
+            this.data = data;
+            if (!data.isEmpty())
+                selectedObject = data.get(0);
+            
+            installListeners();
+            
+            // now check if updates are necessary
+            for (Bank<?> b: banks)
+            {
+                for (int i=0;i<b.getPatchCount();i++)
+                    if (!b.isPatchInfoAvailable(i))
+                    {
+                        b.update(i, b.getPatchCount()-1);
+                        break;
+                    }
+            }
+        }
+        
+        public void installListeners()
+        {
+            for (Bank<?> b: banks)
+                b.addBankUpdateListener(this);
+        }
+        
+        public void uninstallListeners()
+        {
+            for (Bank<?> b: banks)
+                b.removeBankUpdateListener(this);   
+        }
+
+        public void bankUpdated(BankUpdateEvent e)
+        {
+            fireContentsChanged(this, 0, data.size());
+        }
+
+        public void setSelectedItem(Object anObject) {
+            if ((selectedObject != null && !selectedObject.equals( anObject )) ||
+            selectedObject == null && anObject != null) {
+            selectedObject = anObject;
+            fireContentsChanged(this, -1, -1);
+            }
+        }
+
+        public Object getSelectedItem() {
+            return selectedObject;
+        }
+        
+        public Object getElementAt(int index)
+        {
+            return data.get(index);
+        }
+
+        public int getSize()
+        {
+            return data.size();
+        }
+        
     }
     
     private static class BankPatchLocation extends PatchLocation
