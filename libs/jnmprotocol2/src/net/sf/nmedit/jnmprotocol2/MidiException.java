@@ -58,7 +58,7 @@ public class MidiException extends Exception
             sb.append(message);
             sb.append(" ");
         }
-        sb.append("error=");
+        sb.append("[error=");
         sb.append(Integer.toString(getError()));
         if (midiMessage != null)
         {
