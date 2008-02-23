@@ -55,8 +55,16 @@ public class PatchBuilder implements PContentHandler
     private ErrorHandler errorHandler;
     private String patchName = null;
 
+
     public PatchBuilder(ErrorHandler errorHandler, ModuleDescriptions modules)
     {
+        this(null, errorHandler, modules);
+    }
+    
+    
+    public PatchBuilder(NMPatch patch, ErrorHandler errorHandler, ModuleDescriptions modules)
+    {
+        this.patch = patch;
         this.errorHandler = errorHandler;
         this.modules = modules;
         reset();
