@@ -183,7 +183,7 @@ public class SynthSettingsMessage extends MidiMessage
         intStream.append(get("cc") + first + 2*last);
         intStream.append(get("slot"));
         intStream.append(0x01); // command
-        intStream.append(0x01); // pp = 1
+        intStream.append(0x01); // sectionsEnded = 1
 
         // Pad. Extra bits are ignored later.
         bs.append(0, 6);
