@@ -96,6 +96,12 @@ public abstract class MidiMessage
     	}
     	
     	/*
+    	if (!("meters".equals(message.getMessageId())||"lights".equals(message.getMessageId())))
+    	{
+    	    System.out.println(message.getMessageId()+": "+PDLUtils.toString(message.getPacket()));
+    	}*/
+    	
+    	/*
     	if ("unknownNMInfo".equals(message.getMessageId()))
     	{
     	    System.out.println(PDLUtils.toString(message.getPacket()));
@@ -130,7 +136,9 @@ public abstract class MidiMessage
             return mconstructor.newInstance(new Object[]{message.getPacket()});
         } catch (Exception e)
         {
-            throw new MidiException("could not create instance for messageId "+message.getMessageId(), 0);
+            MidiException me = new MidiException("could not create instance for messageId "+message.getMessageId(), 0);
+            me.initCause(e);
+            throw me;
         }
 	
     }
@@ -281,6 +289,7 @@ public abstract class MidiMessage
         try
         {
             parser.parse(intStream);
+            
             bitStream = parser.getBitStream();
         }
         catch (PDLException e)
