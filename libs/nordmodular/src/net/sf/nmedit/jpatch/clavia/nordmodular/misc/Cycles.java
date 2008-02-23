@@ -37,7 +37,7 @@ public class Cycles
 
         this.fixpointValue = 0;
         this.precision = precision;
-        this.toFixedPointFactor = Math.pow(10, -precision);
+        this.toFixedPointFactor = Math.pow(10, precision);
     }
     
     public int getPrecision()
