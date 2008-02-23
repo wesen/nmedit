@@ -357,9 +357,11 @@ public class NmPatchSynchronizer extends AllEventsListener
     {
         if (isProperty(NMPatch.NAME, e))
         {
+            String name = (String) e.getNewValue();
             MidiMessage msg = new SetPatchTitleMessage( 
                     slot.getSlotId(), slot.getPatchId(), (String)e.getNewValue());
-
+            slot.setPatchNameValue(name);
+            
             try
             {
                 synth.getProtocol().send(msg);
@@ -370,7 +372,7 @@ public class NmPatchSynchronizer extends AllEventsListener
             }
         }
     }
-   
+
     private boolean isProperty(String name, PropertyChangeEvent e)
     {
         String n = e.getPropertyName();

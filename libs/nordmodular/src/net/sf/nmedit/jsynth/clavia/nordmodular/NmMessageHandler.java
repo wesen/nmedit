@@ -21,7 +21,6 @@ package net.sf.nmedit.jsynth.clavia.nordmodular;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import net.sf.nmedit.jnmprotocol2.RequestPatchMessage;
 import net.sf.nmedit.jnmprotocol2.AckMessage;
 import net.sf.nmedit.jnmprotocol2.ErrorMessage;
 import net.sf.nmedit.jnmprotocol2.IAmMessage;
@@ -36,6 +35,7 @@ import net.sf.nmedit.jnmprotocol2.ParameterMessage;
 import net.sf.nmedit.jnmprotocol2.ParameterSelectMessage;
 import net.sf.nmedit.jnmprotocol2.PatchListMessage;
 import net.sf.nmedit.jnmprotocol2.PatchMessage;
+import net.sf.nmedit.jnmprotocol2.RequestPatchMessage;
 import net.sf.nmedit.jnmprotocol2.SetPatchTitleMessage;
 import net.sf.nmedit.jnmprotocol2.SlotActivatedMessage;
 import net.sf.nmedit.jnmprotocol2.SlotsSelectedMessage;
@@ -55,7 +55,6 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchBuilder;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.BitstreamPatchParser;
-import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils.ParserErrorHandler;
 import net.sf.nmedit.jsynth.clavia.nordmodular.worker.ScheduledMessage;
 import net.sf.nmedit.jsynth.event.SlotEvent;
@@ -200,8 +199,8 @@ public class NmMessageHandler extends NmProtocolListener
         NmSlot slot = synth.getSlot(slotId);
         NMPatch patch = slot.getPatch();
         String title = message.getTitle();
-        if (patch != null)
-        patch.setName(title);
+        if (patch != null) patch.setName(title);
+        slot.setPatchNameValue(title);
     }
     
     /**
