@@ -19,6 +19,7 @@
 package net.sf.nmedit.jsynth.clavia.nordmodular.worker;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
@@ -158,9 +159,14 @@ public class GetPatchListWorker extends NmProtocolListener implements ScheduledW
         int updateEndIndex = beginIndex+patches.size();
         
         if (updateBeginIndex<updateEndIndex)
-            bank.updatePatchList(updateBeginIndex, 
-                    patches.subList(updateBeginIndex-beginIndex, updateEndIndex-beginIndex));
-        
+        {
+            Collection<String> c = patches.subList(updateBeginIndex-beginIndex, updateEndIndex-beginIndex);
+            
+            if (updateBeginIndex+c.size()<=bank.getPatchCount()) // avoid IllegalArgumentException
+                bank.updatePatchList(updateBeginIndex, c);
+            //else
+                // TODO debug this case: happens if storing patch over existing bank position
+        }
         updateBeginIndex = updateEndIndex;
     }
     
