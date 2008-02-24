@@ -347,62 +347,12 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         ComponentListener
     {
 
-        public static void loadActionMap(NMLazyActionMap map) 
-        {  
-            map.put(new Actions(DELETE));
-        }
-        
-
-        private transient InputMap inputMapWhenFocused ;
-        protected InputMap createInputMapWhenFocused()
-        {
-            if (inputMapWhenFocused == null)
-            {
-                inputMapWhenFocused = new InputMap();
-                fillInputMap(inputMapWhenFocused);
-            }
-            return inputMapWhenFocused;
-        }
-        
-        protected void fillInputMap(InputMap map)
-        {
-            int vk_delete = KeyEvent.VK_DELETE;
-            
-            if (Platform.flavor() == Platform.OS.MacOSFlavor)
-                vk_delete = KeyEvent.VK_BACK_SPACE;
-            
-            KeyStroke deleteModules = KeyStroke.getKeyStroke(vk_delete, 0);
-            map.put(deleteModules, DELETE);
-        }
-        
-        public void installKeyboardActions( JTModule module )
-        {
-            NMLazyActionMap.installLazyActionMap(module.getContext().getUIDefaults(), 
-                    module, BasicEventHandler.class, moduleActionMapKey);
-
-            InputMap im = createInputMapWhenFocused();
-            SwingUtilities.replaceUIInputMap(module, JComponent.WHEN_FOCUSED, im);
-        }
-
-        public void uninstallKeyboardActions(JTModule module)
-        {
-            SwingUtilities.replaceUIInputMap(module, JComponent.WHEN_IN_FOCUSED_WINDOW, null);
-            SwingUtilities.replaceUIInputMap(module, JComponent.WHEN_FOCUSED, null);
-
-            // TODO this line shouldn't be necessary, but if setUI() was called twice
-            // each time with a new ui instance then the input map will cause a StackOverflowError
-            // if a key was pressed
-            module.setInputMap(JComponent.WHEN_FOCUSED, new InputMap());
-            
-            SwingUtilities.replaceUIActionMap(module, null);
-        }
-
         public void install(JTModule module)
         {
             //module.addComponentListener(this);
             module.addMouseListener(this);
             
-            installKeyboardActions(module);
+//            installKeyboardActions(module);
         }
 
         public void uninstall(JTModule module)
@@ -410,7 +360,7 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
             //module.removeComponentListener(this);
             module.removeMouseListener(this);
             
-            uninstallKeyboardActions(module);
+//            uninstallKeyboardActions(module);
         }
 
         public void mousePressed(MouseEvent e)
@@ -485,74 +435,6 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         public void componentShown(ComponentEvent e)
         {
             // no op
-        }
-
-        public static class Actions extends AbstractAction 
-        {
-            
-            // private String action;
-
-            /**
-             * 
-             */
-            private static final long serialVersionUID = -2104045982638755995L;
-
-            public Actions(String name)
-            {
-                super(name);
-            }
-
-            public String getName()
-            {
-                return (String) super.getValue(NAME);
-            }
-            
-            public void actionPerformed(ActionEvent e)
-            {
-                JTModule module = (JTModule) e.getSource();
-                
-                String key = getName();
-                
-                if (key == DELETE)
-                {
-                    for (Component c : module.getParent().getComponents())
-                    {
-                        if (c instanceof JTModule)
-                        {
-                            JTModule mm = (JTModule) c;
-                            
-                            if (mm == module || mm.isSelected())
-                                removeModule(mm);
-                        }
-                    }
-                    
-                    
-                }
-            }
-            
-            private static void removeModule(JTModule m)
-            {
-                PModule nm = m.getModule();
-                
-                if (nm != null && nm.getParentComponent() != null)
-                {
-                    nm.getParentComponent().remove(nm);
-                }
-            }
-
-            public boolean isEnabled(Object sender) 
-            {
-                
-                if (sender != null && (sender instanceof JTModule)
-                        && !((JTModule)sender).isEnabled())
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
-            }
         }
     }
     
