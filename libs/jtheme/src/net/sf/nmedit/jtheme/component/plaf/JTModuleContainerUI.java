@@ -1052,6 +1052,8 @@ public class JTModuleContainerUI extends ComponentUI
                 jtcUI.createPopupMenu(mc, e);
             }
             
+            if (e.getComponent() instanceof JTModule)
+                mouseClickedAtModule(e);
         }
 
         public void mouseReleased(MouseEvent e)
@@ -1061,9 +1063,7 @@ public class JTModuleContainerUI extends ComponentUI
                 if (e.getComponent() == getModuleContainer())
                     mouseClickedAtModuleContainer(e);
             }
-            if (e.getComponent() instanceof JTModule)
-                mouseClickedAtModule(e);
-            
+
             JTModuleContainer mc = jtcUI.getModuleContainer();
             if (SwingUtilities.isLeftMouseButton(e) && e.getComponent() == mc && jtcUI.selectBoxActive) {
             	jtcUI.selectBoxActive = false;
