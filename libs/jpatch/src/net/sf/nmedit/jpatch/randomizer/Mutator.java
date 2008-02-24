@@ -133,11 +133,11 @@ public class Mutator {
         probBox.setMaximumSize(new Dimension(100, Short.MAX_VALUE));
         rangeBox.setMaximumSize(new Dimension(100, Short.MAX_VALUE));
 	    
-	    Box spinBox = bottom(Box.createHorizontalBox());
+	    Box spinBox = (bottom(Box.createHorizontalBox()));
 	    
-	    spinBox.add(left(probBox));
+	    spinBox.add(left(bottom(probBox)));
 	    spinBox.add(Box.createHorizontalStrut(STRUT));
-	    spinBox.add(left(rangeBox));
+	    spinBox.add(left(bottom(rangeBox)));
         spinBox.add(Box.createHorizontalStrut(STRUT));
 	    
 	    Box varBox = Box.createHorizontalBox();
