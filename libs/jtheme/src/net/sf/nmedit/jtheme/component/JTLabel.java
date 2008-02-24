@@ -37,12 +37,14 @@ public class JTLabel extends JTComponent
      */
     private static final long serialVersionUID = -4347651399715148385L;
     final public static String uiClassID = "LabelUI";
-    private String text = "label";
+    private String text;
+    private String splitText[];
 
     public JTLabel( JTContext context )
     {
         super( context );
         setOpaque(false);
+        setText("label");
         // capture mouse events for retargeting
         enableEvents(AWTEvent.MOUSE_EVENT_MASK|AWTEvent.MOUSE_MOTION_EVENT_MASK);
     }
@@ -83,9 +85,12 @@ public class JTLabel extends JTComponent
     {
         String oldText = this.text;
         
+       text = text.replace("\\n", "\n");
+        
         if (text==null||oldText==null||(!text.equals(oldText)))
         {
             this.text = text;
+            splitText = text.split("\n");
             
             revalidate();
             repaint();
@@ -95,6 +100,11 @@ public class JTLabel extends JTComponent
     public String getText()
     {
         return this.text;
+    }
+
+    public String[] getSplitText()
+    {
+        return this.splitText;
     }
 
 }
