@@ -23,8 +23,10 @@
 package net.sf.nmedit.jtheme.clavia.nordmodular;
 
 import java.awt.Color;
+import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -37,13 +39,15 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -84,6 +88,30 @@ public class JTPatchSettingsBar extends JPanel implements PModuleContainerListen
     
     private JTNMPatch pui;
     
+    private static Font smallFont = null;
+    
+    private static Font getSmallFont()
+    {
+        Font f = smallFont;
+        if (f != null) return f;
+        
+        f = UIManager.getDefaults().getFont("Label.font");
+        if (f == null) f = new Font("sansserif", Font.PLAIN, 10);
+        else
+        {
+            // make font appear smaller
+            float oldSize = f.getSize2D();
+            int newSize = (int) Math.floor((oldSize*.8f));
+            final int minSize = 8;
+            if (newSize<minSize)
+                newSize = minSize;
+            f = new Font(f.getName(), f.getStyle(), newSize);
+        }
+        smallFont = f; // store font
+        return f;
+    }
+    
+    
     public JTPatchSettingsBar(JTNMPatch patchUI)
     {
         final int STRUT = 3;
@@ -92,7 +120,8 @@ public class JTPatchSettingsBar extends JPanel implements PModuleContainerListen
          
         // panel
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        setMinimumSize(new Dimension(100,28));
+        setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+        //setMinimumSize(new Dimension(100,28));
        // setPreferredSize(new Dimension(100,28));
         setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
         
@@ -111,10 +140,10 @@ public class JTPatchSettingsBar extends JPanel implements PModuleContainerListen
         }
         );
         
-        
-        pName = new JTextField(new LimitedText(16), "Name", 16);
+        pName = left(centery(new JTextField(new LimitedText(16), "Name", 16)));
         pName.setToolTipText("Patch Name");
-        pName.setMaximumSize(new Dimension(160,28));
+        pName.setMargin(new Insets(1,1,1,1));
+        pName.setMaximumSize(new Dimension(140,Short.MAX_VALUE));
         pName.addKeyListener(new PatchNameKeyAdapter());
         pName.addActionListener(new ActionListener() {
             public void actionPerformed( ActionEvent e )
@@ -122,80 +151,123 @@ public class JTPatchSettingsBar extends JPanel implements PModuleContainerListen
                 if (patch!=null) patch.setName(pName.getText());
             }});
         
-        pVoices = new JSpinner(); 
+        pVoices = centery(new JSpinner());
         voices = new VoicesNumberModel(1, 1, 32);
-        pVoices.setMaximumSize(new Dimension(90,28));
         pVoices.setToolTipText("requested voices / available voices");
         pVoices.setModel(voices);
         pVoices.setValue(1);//voices.getMinimum());
+        pVoices.setMinimumSize(new Dimension(20,10));
+        pVoices.setMaximumSize(new Dimension(140,Short.MAX_VALUE));
+        pVoices.setSize(pVoices.getPreferredSize());
+        
+        try
+        {
+            JFormattedTextField spinnerText = ((JSpinner.DefaultEditor)pVoices.getEditor()).getTextField();
+            spinnerText.setMargin(new Insets(1,1,1,1));
+        }
+        catch (NullPointerException e)
+        {
+            // ignore
+        }
+        catch (ClassCastException e)
+        {
+            // ignore
+        }
         
         voices.addChangeListener(new ChangeListener() {
             public void stateChanged( ChangeEvent e )
             {
                 if (patch!=null) patch.getHeader().setRequestedVoices(voices.getRequestedVoices());
             }
-            
         });
 
-        JLabel l;
-        l = new JLabel("Patch:");
-        l.setLabelFor(pName);
-        add(l);
-        add(pName);
-        //pane.add(Box.createHorizontalGlue());
-        
-        add(Box.createHorizontalStrut(STRUT));
-        
-        l = new JLabel("Voices:");
-        l.setLabelFor(pVoices);
-        add(l);
-        Box b = Box.createVerticalBox();
-        b.add(Box.createVerticalGlue());
-        b.add(pVoices);
-        b.add(Box.createVerticalGlue());
-        add(b);
-        l = null;
-        add(Box.createHorizontalStrut(STRUT));
-        
-        add (new JLabel("Load:"));
-        add(Box.createHorizontalStrut(STRUT));
-        
         dspPoly = createBar();
         dspTotal = createBar();
         dspPoly.setToolTipText("dsp load: poly voice area");
         dspTotal.setToolTipText("dsp load: total");
 
-        add(new JLabel("PVA:"));
-        b = Box.createVerticalBox();
-        b.add(Box.createVerticalGlue());
-        b.add(dspPoly);
-        b.add(Box.createVerticalGlue());
-        
-        add(b);
-        add(Box.createHorizontalStrut(STRUT));
-        add(new JLabel("E:"));
-        b = Box.createVerticalBox();
-        b.add(Box.createVerticalGlue());
-        b.add(dspTotal);
-        b.add(Box.createVerticalGlue());
-        add(b);
-        add(Box.createHorizontalStrut(STRUT));
-        
-        Action showNoteDialogA = null;
-        
-        add(new JButton(showNoteDialogA));
-        //pane.add(cableToggler);
-
         // morphs
         JTMorphModule morphModule = new JTMorphModule(patchUI.getContext());
         morphModule.setModule(patch.getMorphSection().getMorphModule());
-        add(morphModule);
+        morphModule.setMinimumSize(new Dimension(160, 10));
+        
+        
+        Box loadContainer = Box.createHorizontalBox();
+        loadContainer.setMaximumSize(new Dimension(100, 30));
+        
+        Font sf = getSmallFont();
+        setFont(sf);
+        dspPoly.setFont(sf);
+        dspTotal.setFont(sf);
+        loadContainer.setFont(sf);
 
+        Box lcLeft = Box.createVerticalBox();
+        lcLeft.add(left(label("PVA:", dspPoly, sf)));
+        lcLeft.add(Box.createVerticalStrut(1));
+        lcLeft.add(left(label("E:", dspPoly, sf)));
+        Box lcMain = Box.createVerticalBox();
+        lcMain.add(left(dspPoly));
+        lcMain.add(Box.createVerticalStrut(1));
+        lcMain.add(left(dspTotal));
+
+        loadContainer.add(lcLeft);
+        loadContainer.add(Box.createHorizontalStrut(1));
+        loadContainer.add(lcMain);
+        
+        
+        add(((label("Patch:", pName))));
+        add(Box.createHorizontalStrut(STRUT));
+        add(((pName)));
+        
+        add(Box.createHorizontalStrut(STRUT));
+        add(left(centery(label("Voices:", pVoices))));
+        add(Box.createHorizontalStrut(STRUT));
+        add(centery(left(pVoices)));
+        add(Box.createHorizontalStrut(STRUT));
+        add (left(centery(new JLabel("Load:"))));
+        add(Box.createHorizontalStrut(STRUT));
+        add(left(centery(loadContainer)));
+        add(Box.createHorizontalStrut(STRUT));
+        Box mbox = Box.createVerticalBox();
+        mbox.add(centery(morphModule));
+        add(left(centery(mbox)));
+         
         add(Box.createHorizontalGlue());
+        
+        Action showNoteDialogA = null;
+        //add(new JButton(showNoteDialogA));
+        //pane.add(cableToggler);
+
         
         updateValues();
         installListeners();
     } 
+    
+    private JLabel label(String title, JComponent forComponent, Font font)
+    {
+        JLabel label = label(title, forComponent);
+        label.setFont(font);
+        return label;
+    }
+    
+    private JLabel label(String title, JComponent forComponent)
+    {
+        JLabel label = new JLabel(title);
+        label.setLabelFor(forComponent);
+        return label;
+    }
+    
+    private <T extends JComponent> T left(T c)
+    {
+        c.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        return c;
+    }
+    
+    private <T extends JComponent> T centery(T c)
+    {
+        c.setAlignmentY(JComponent.CENTER_ALIGNMENT);
+        return c;
+    }
     
     private class PatchNameKeyAdapter extends KeyAdapter
     {
@@ -225,21 +297,27 @@ public class JTPatchSettingsBar extends JPanel implements PModuleContainerListen
             }   
         }
     }
-    
+
+    private static final Color GP_BLUE_BRIGHT = Color.decode("#92C5FF");
+    private static final Color GP_BLUE_DARK = Color.decode("#567597");
+    private static final Border GP_BORDER = BorderFactory.createMatteBorder(1,1,1,1,GP_BLUE_DARK);
     private JProgressBar createBar()
     {
         GradientProgressBar gp = new GradientProgressBar();
         // gp.setBackground(NomadClassicColors.TEXT_DISPLAY_BACKGROUND);
+        gp.setBorder(GP_BORDER);
+        gp.setBackground(GP_BLUE_BRIGHT);
         gp.setForeground(Color.GREEN);
         gp.setGradient(Color.RED);
         gp.setEnabled(true);
         gp.setMinimum(0);
-        gp.setMaximum(100);/*
-        gp.setPreferredSize(new Dimension(40,4));
-        gp.setMaximumSize(new Dimension(40,10));*/
+        gp.setMaximum(100);
+        gp.setMaximumSize(new Dimension(40,12));/*
+        gp.setPreferredSize(new Dimension(40,4));*/
+        /*
         gp.setMinimumSize(new Dimension(40, 12));
-        gp.setPreferredSize(new Dimension(40, 14));
-        gp.setMaximumSize(new Dimension(40, Short.MAX_VALUE));
+        gp.setMaximumSize(new Dimension(40, Short.MAX_VALUE));*/
+        gp.setPreferredSize(new Dimension(40, 10));
         gp.setAlignmentY(JComponent.CENTER_ALIGNMENT);
         gp.setStringPainted(true);
         return gp;
