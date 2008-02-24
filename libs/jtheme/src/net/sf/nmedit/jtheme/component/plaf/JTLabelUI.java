@@ -179,7 +179,7 @@ public class JTLabelUI extends JTComponentUI implements SwingConstants
         for (String elt : splitText) {
         	layout(label, fm, elt, label.getWidth(), label.getHeight());
 
-        	int textX = paintViewR.x + paintTextR.x;
+        	int textX = paintViewR.x; //  + paintTextR.x;
         	int textY = paintViewR.y + fm.getAscent(); // + paintTextR.y + fm.getAscent();
         	
         	if (label.isEnabled()) {
