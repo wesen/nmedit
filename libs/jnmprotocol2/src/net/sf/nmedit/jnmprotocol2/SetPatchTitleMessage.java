@@ -29,10 +29,9 @@ public class SetPatchTitleMessage extends MidiMessage
     
     private String title = null;
     
-    public SetPatchTitleMessage()
+    private SetPatchTitleMessage()
     {
 	super();
-
 	addParameter("pid", "data:pid");
 	addParameter("sc", "data:sc");
 	set("cc", 0x14);
@@ -49,6 +48,16 @@ public class SetPatchTitleMessage extends MidiMessage
     public SetPatchTitleMessage(int slot, int pid, String title)
     {
         this();
+        
+        if (!NmCharacter.isValid(title))
+        {
+            throw new IllegalArgumentException("Invalid characters found: "+title);
+        }
+        if (title.length()>16)
+        {
+            title = title.substring(0, 16);
+        }
+        
         setTitle(slot, pid, title);
     }
     
@@ -57,7 +66,7 @@ public class SetPatchTitleMessage extends MidiMessage
         return title;
     }
     
-    public void setTitle(int slot, int pid, String title)
+    private void setTitle(int slot, int pid, String title)
     {
         set("cc", 0x17);
         set("sc", 0x27);
@@ -83,4 +92,11 @@ public class SetPatchTitleMessage extends MidiMessage
     {
         listener.messageReceived(this);
     }
+
+    protected void toStringArgs(StringBuilder sb)
+    {
+        super.toStringArgs(sb);
+        sb.append(",title=\""+title+"\"");
+    }
+    
 }

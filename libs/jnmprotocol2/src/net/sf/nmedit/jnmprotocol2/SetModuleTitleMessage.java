@@ -56,6 +56,12 @@ public class SetModuleTitleMessage extends MidiMessage
     
     public void setTitle(int slot, int pid, int section, int module, String title)
     {
+        if (title == null) title = "";
+        
+        if (!NmCharacter.isValid(title))
+            throw new IllegalArgumentException("invalid characters in title: "+title);
+        if (title.length()>16)
+            title = title.substring(0,16);
         setSlot(slot);
         set("pid", pid);
         set("section", section);
