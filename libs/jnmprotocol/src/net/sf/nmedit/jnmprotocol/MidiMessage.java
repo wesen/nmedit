@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import com.sun.xml.internal.ws.util.StringUtils;
-
 import net.sf.nmedit.jnmprotocol.AckMessage;
 import net.sf.nmedit.jnmprotocol.ErrorMessage;
 import net.sf.nmedit.jnmprotocol.IAmMessage;
