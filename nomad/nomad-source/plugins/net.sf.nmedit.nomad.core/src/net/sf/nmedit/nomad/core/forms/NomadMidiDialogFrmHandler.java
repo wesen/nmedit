@@ -37,7 +37,7 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
-import net.sf.nmedit.nmutils.midi.MidiUtils;
+import net.sf.nmedit.jsynth.midi.MidiUtils;
 
 public class NomadMidiDialogFrmHandler extends NomadMidiDialogFrm implements ItemListener
 {
