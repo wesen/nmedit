@@ -162,6 +162,7 @@ public class JTLabelUI extends JTComponentUI implements SwingConstants
         if ((text == null)) {
             return;
         }
+
         String splitText[] = label.getSplitText();
         if (splitText == null)
         	return;
@@ -171,16 +172,26 @@ public class JTLabelUI extends JTComponentUI implements SwingConstants
 
         paintViewR.x = insets.left;
         paintViewR.y = insets.top;
-        paintViewR.width = Short.MAX_VALUE;
-        paintViewR.height = Short.MAX_VALUE;
+        paintViewR.width = c.getWidth() - (insets.left + insets.right);
+        paintViewR.height = c.getHeight() - (insets.top + insets.bottom);
+//        paintViewR.width = Short.MAX_VALUE;
+//        paintViewR.height = Short.MAX_VALUE;
 
         paintTextR.x = paintTextR.y = paintTextR.width = paintTextR.height = 0;
 
+        int yHeight = 0;
+        
         for (String elt : splitText) {
-        	layout(label, fm, elt, label.getWidth(), label.getHeight());
-
-        	int textX = paintViewR.x; //  + paintTextR.x;
-        	int textY = paintViewR.y + fm.getAscent(); // + paintTextR.y + fm.getAscent();
+        	if (alignLabel)
+        		layout(label, fm, elt, label.getWidth(), label.getHeight());
+        	
+        	if (splitText.length > 1) {
+        		layout(label, fm, elt, 0, 0);
+        		paintTextR.y = 0;
+        	}
+        	
+        	int textX = paintTextR.x;
+        	int textY = yHeight + paintTextR.y + fm.getAscent(); // + paintTextR.y + fm.getAscent();
         	
         	if (label.isEnabled()) {
         		paintEnabledText(label, g, elt, textX, textY);
@@ -188,12 +199,19 @@ public class JTLabelUI extends JTComponentUI implements SwingConstants
         	else {
         		paintDisabledText(label, g, elt, textX, textY);
         	}
-        	paintViewR.y += paintTextR.height;
+        	yHeight += paintTextR.height;
         }
     }
     private String layout(JTLabel label, FontMetrics fm, String text,
             int width, int height) {
+        Insets insets = label.getInsets(paintViewInsets);
         Icon icon = null;
+        paintViewR.x = insets.left;
+        paintViewR.y = insets.top;
+        paintViewR.width = width - (insets.left + insets.right);
+        paintViewR.height = height - (insets.top + insets.bottom);
+        paintIconR.x = paintIconR.y = paintIconR.width = paintIconR.height = 0;
+        paintTextR.x = paintTextR.y = paintTextR.width = paintTextR.height = 0;
         return layoutCL(label, fm, text, icon, paintViewR, paintIconR,
                   paintTextR);
     }
@@ -204,43 +222,42 @@ public class JTLabelUI extends JTComponentUI implements SwingConstants
     
     public Dimension getPreferredSize(JComponent c) 
     {
-        JTLabel label = (JTLabel)c;
-        String splitText[] = label.getSplitText();
-        Insets insets = label.getInsets(viewInsets);
-        Font font = label.getFont();
+    	JTLabel label = (JTLabel)c;
+    	String splitText[] = label.getSplitText();
+    	Insets insets = label.getInsets(viewInsets);
+    	Font font = label.getFont();
 
-        int dx = insets.left + insets.right;
-        int dy = insets.top + insets.bottom;
+    	int dx = insets.left + insets.right;
+    	int dy = insets.top + insets.bottom;
 
-        if (((splitText == null) || 
-             ((splitText != null) && (font == null)))) {
-            return new Dimension(dx, dy);
-        } else {
-            FontMetrics fm = label.getFontMetrics(font);
+    	if (((splitText == null) || 
+    			((splitText != null) && (font == null)))) {
+    		return new Dimension(dx, dy);
+    	} else {
+    		FontMetrics fm = label.getFontMetrics(font);
 
-            textR.x = textR.y = textR.width = textR.height = 0;
-            viewR.x = dx;
-            viewR.y = dy;
-            viewR.width = viewR.height = Short.MAX_VALUE;
+    		textR.x = textR.y = textR.width = textR.height = 0;
+    		viewR.x = dx;
+    		viewR.y = dy;
+    		viewR.width = viewR.height = Short.MAX_VALUE;
 
-            Dimension rv = new Dimension(0, 0);
-            for (String elt : splitText) {
-            	layoutCL(label, fm, elt, null, viewR, iconR, textR);
-            	int right = textR.x + textR.width;
-            	if (right > rv.width) {
-            		rv.width = right;
-            	}
-            	rv.height += textR.height;
-            	viewR.y += textR.height;
-            }
+    		Dimension rv = new Dimension(0, 0);
+    		for (String elt : splitText) {
+    			layoutCL(label, fm, elt, null, viewR, iconR, textR);
+    			int right = textR.x + textR.width;
+    			if (right > rv.width) {
+    				rv.width = right;
+    			}
+    			rv.height += textR.height;
+    			viewR.y += textR.height;
+    		}
 
-            rv.width += dx;
-        	rv.height += dy;
+    		rv.width += dx;
+    		rv.height += dy;
 
-            return rv;
-        }
+    		return rv;
+    	}
     }
-
     protected String layoutCL(
         JTLabel label,                  
         FontMetrics fontMetrics, 
