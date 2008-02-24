@@ -20,8 +20,12 @@ package net.sf.nmedit.jsynth.nomad;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.ComponentOrientation;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.DnDConstants;
@@ -35,6 +39,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URL;
@@ -88,6 +93,10 @@ import net.sf.nmedit.nomad.core.swing.explorer.RootNode;
 public class SynthObjectForm<S extends Synthesizer> extends JPanel
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 9030717642000065819L;
     private S synth;
     private List<SlotObject<S>> slotObjects = new ArrayList<SlotObject<S>>();
     
@@ -261,7 +270,20 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
 
     public void setSynthIcon(Icon icon)
     {
+        icon = ensureIsSmallIcon(icon);
         synthIconLabel.setIcon(icon);
+        if (icon != null)
+        {
+            int w = icon.getIconWidth();
+            int h = icon.getIconHeight();
+            synthIconLabel.setPreferredSize(new Dimension(w, h));
+            synthIconLabel.setMaximumSize(new Dimension(w, h));
+            synthIconLabel.setVisible(true);
+        }
+        else
+        {
+            synthIconLabel.setVisible(false);
+        }
         revalidate();
         repaint();
     }
@@ -293,6 +315,27 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         banksTree.fireRootChanged();
     }
 
+    private void setBanksFilter(String filter)
+    {
+        RootNode root = banksTree.getRoot();
+        for (int i=0;i<root.getChildCount();i++)
+        {
+            TreeNode tn = root.getChildAt(i);
+            if (BankLeaf.class.isInstance(tn))
+            {
+                ((BankLeaf)tn).setFilter(filter);
+            }
+        }
+        for (int i=0;i<root.getChildCount();i++)
+        {
+            TreeNode tn = root.getChildAt(i);
+            if (BankLeaf.class.isInstance(tn))
+            {
+                ((BankLeaf)tn).regenerate();
+            }
+        }
+    }
+    
     private void uninstallBanks()
     {
         RootNode banksRoot = banksTree.getRoot();
@@ -321,7 +364,8 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
 
         private Bank<S> bank;
         private boolean dropped = true;
-
+        private SimpleTextFilter nameFilter = new SimpleTextFilter();
+        
         public BankLeaf(TreeNode parent, Bank<S> bank)
         {
             super(parent, bank.getName());
@@ -330,6 +374,25 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
             regenerate();
         }
         
+        public void setFilter(String filter)
+        {
+            nameFilter.setFilter(filter);
+            if (nameFilter.isFiltering())
+            {
+                // ensure that all patches are loaded
+                
+                for (int i=0;i<bank.getPatchCount();i++)
+                {
+                    if (!bank.isPatchInfoAvailable(i))
+                    {
+                        bank.update(i, bank.getPatchCount());
+                        return;
+                    }
+                }
+                // all patches available
+            }
+        }
+
         private void regenerate()
         {
             if (!synth.isConnected())
@@ -338,23 +401,30 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
                 banksTree.fireNodeStructureChanged(this);
                 return;
             }
-
+            
             this.clear();
             boolean hasEmpty = false;
             for (int i=0;i<bank.getPatchCount();i++)
                 if (!bank.containsPatch(i))
                 {
                     hasEmpty = true;
-                    addChild(new BankPosition(this, "<empty>", i));
+                    String name = "<empty>";
+                    if (nameFilter.contains(name))
+                        addChild(new BankPosition(this, name, i));
                     break;
                 }
             
             for (int i=0;i<bank.getPatchCount();i++)
             {
                 if (bank.containsPatch(i) && bank.isPatchInfoAvailable(i))
-                    addChild(new BankPosition(this, bank.getPatchLocationName(i)
-                            +": "+ bank.getPatchName(i), i));
+                {
+                    String patchname = bank.getPatchName(i);
+                    String name = bank.getPatchLocationName(i) +": "+ patchname;
+                    if (nameFilter.contains(patchname))
+                        addChild(new BankPosition(this, name, i));
+                }
             }
+            
             banksTree.fireNodeStructureChanged(this);
         }
 
@@ -393,7 +463,11 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
 //        	Throwable ex = new Throwable();
 //        	ex.printStackTrace();
             if (dropped) return;
+            
+            
+            SwingUtilities.invokeLater(new Runnable(){public void run(){
             regenerate();
+            }});
             /*
             for (int i=e.getBeginIndex();i<e.getEndIndex();i++)
             {
@@ -459,55 +533,24 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
     {
         JPanel synthpane = this;
         synthpane.setLayout(new BoxLayout(synthpane, BoxLayout.Y_AXIS));
+        synthpane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+        synthpane.setBorder(BorderFactory.createEmptyBorder(2,4,2,4));
         
-        // icon
-        
+        // create components
+
         Icon icon = (Icon) synth.getClientProperty("icon");
-        
-        synthIconLabel = new JLabel(icon);
-        TopLeft(synthIconLabel);
-
-        // name
+        synthIconLabel = new JLabel();
+        setSynthIcon(ensureIsSmallIcon(icon));
         synthNameLabel = new JLabel(synth.getName());
-        TopLeft(synthNameLabel);
-
-        Box mainLine = Box.createHorizontalBox();
-        TopLeft(mainLine);
-
-        Box lastLine = Box.createHorizontalBox();
-        TopLeft(lastLine);
-
-        Box propertyBox = Box.createVerticalBox();
-        propertyBox.add(synthNameLabel);
-        
-        if (synth.hasProperty(Synthesizer.DSP_GLOBAL))
-        {
-            dspUsageGlobal = new JLabel();
-            updateDSPUsageGlobalLabel();
-            TopLeft(dspUsageGlobal);
-            propertyBox.add(dspUsageGlobal);
-        }
         synthStatusLabel = new JLabel();
-        TopLeft(synthStatusLabel);
         updateSynthStatusLabel();
-        propertyBox.add(synthStatusLabel);
-        
-        propertyBox.add(Box.createVerticalGlue());
-        propertyBox.add(lastLine);
-        TopLeft(propertyBox);
-        Box iconBox = Box.createVerticalBox();
-        iconBox.add(synthIconLabel);
-        TopLeft(iconBox);
-
-        
         JButton btnSystem = new JButton(icsystem);
-        TopLeft(btnSystem);
-        Right(btnSystem);
+
+        JLabel lblBanks = new JLabel();
+        lblBanks.setText("Banks");
+        lblBanks.setIcon(icfolder);
         
         tbConnect = new JToggleButton(icdisconnected);
-        TopLeft(tbConnect);
-        Right(tbConnect);
-        
         tbConnect.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e)
             {
@@ -530,42 +573,21 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
                 SynthObjectForm.this.showSettings();
             }
         });
-        
-        lastLine.add(btnSystem);
-        lastLine.add(tbConnect);
-        lastLine.add(Box.createHorizontalGlue());
-        
-        mainLine.add(iconBox);  // left
-        mainLine.add(propertyBox);// rightx
-        
-        slotContainer = Box.createVerticalBox();
-        TopLeft(slotContainer);
-        
-        synthpane.add(mainLine);
-        synthpane.add(slotContainer);
 
-        Box banksBox = Box.createHorizontalBox();
-        TopLeft(banksBox);
-        
-        JLabel lblBanks = new JLabel();
-        lblBanks.setText("Banks");
-        lblBanks.setIcon(icfolder);
-        
-        JTextField filter = new JTextField("*");
-        
+        final JTextField filter = new JTextField("*");
+        filter.setMaximumSize(new Dimension(Short.MAX_VALUE, 30));
+        filter.addActionListener(new ActionListener(){
+            
+            public void actionPerformed(ActionEvent e)
+            {
+                setBanksFilter(filter.getText());
+                
+            }
+            
+        });
 
-        banksBox.add(lblBanks);
-        banksBox.add(Box.createHorizontalStrut(10));
-        banksBox.add(filter);
-        
-        synthpane.add(banksBox);
-        synthpane.add(Box.createVerticalStrut(2));
-        
-        Box box = Box.createHorizontalBox();
-        TopLeft(box);
-        
-        
         banksTree = new ExplorerTree();
+        
         banksTree.addMouseListener(new MouseAdapter()
         {
 
@@ -603,18 +625,171 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         });
         
         
-        JScrollPane sp = new JScrollPane(banksTree);
+        JScrollPane spBanksTree = new JScrollPane(banksTree);
       
-        TopLeft(sp);
         
-        box.add(sp);
+        // layout components
+        
+        /* PropertiesMain:
+         * 
+         * +------------+------------------+
+         * |   ^        |     ^            |
+         * |   |        |     |            |
+         * | SynIconBox | <- SynPropBox -> |
+         * |   |        |     |            |
+         * |   ^        |     ^            |
+         * |------------+------------------+
+         * 
+         */
+        
+        Box PropertiesMain = Box.createHorizontalBox();
+        Box SynIconBox = top(left(Box.createVerticalBox()));
+        Box SynPropBox = top(left(Box.createVerticalBox()));
 
-        synthpane.add(box);
+        PropertiesMain.add(SynIconBox);
+        PropertiesMain.add(hgap());
+        PropertiesMain.add(SynPropBox);
         
-        synthpane.setBorder(BorderFactory.createEmptyBorder(2,8,2,8));
+        // add syn icon label
+        SynIconBox.add(top(left(synthIconLabel)));
+        SynIconBox.add(vgap());
+        //SynIconBox.add(Box.createVerticalGlue());
+        {   /* SynPropBox :
+             * +-----------------------------------------------------------------+
+             * | SynthNameLabel <---------[SynTitleBox]------> SynthStatusIcon   |
+             * |-----------------------------------------------------------------+
+             * | ... dsp, other properties ...                                   |
+             * |-----------------------------------------------------------------+
+             * | <--- [SynActionBox] ---> | Properties        | Disconnect       |
+             * |-----------------------------------------------------------------+
+             */
+
+            Box SynTitleBox = top(left(Box.createHorizontalBox()));
+            SynTitleBox.add(top(left(synthNameLabel)));
+            SynTitleBox.add(hgap());
+            SynTitleBox.add(Box.createHorizontalGlue());
+            SynTitleBox.add(top(right(synthStatusLabel)));
+
+            Box SynActionBox = top(left(Box.createHorizontalBox()));
+            SynActionBox.add(Box.createHorizontalGlue()); 
+            SynActionBox.add(hgap());
+            SynActionBox.add(btnSystem);
+            SynActionBox.add(hgap());
+            SynActionBox.add(tbConnect);
+
+            SynPropBox.add(SynTitleBox);
+            SynPropBox.add(vgap());
+            SynPropBox.add(SynActionBox);
+            /* TODO support for other properties
+            if (synth.hasProperty(Synthesizer.DSP_GLOBAL))
+            {
+                dspUsageGlobal = new JLabel();
+                updateDSPUsageGlobalLabel();
+                propertyBox.add(dspUsageGlobal);
+            }*/
+        }
+        
+        /*
+         * synthpane:
+         * +---------------------------+
+         * | <-- PropertiesMain -->    |
+         * +---------------------------+
+         * |          ^                |
+         * |          |                |
+         * |        [vglue]            |
+         * |          |                |
+         * |          ^                |
+         * +---------------------------+
+         * |        Slot               |
+         * +---------------------------+
+         * |        Banks              |
+         * +---------------------------+
+         */
+
+        synthpane.add(top(left(PropertiesMain)));
+        synthpane.add(vgap());
+        // Slot
+        slotContainer = top(left(Box.createVerticalBox()));
+        synthpane.add(slotContainer);
+        
+        synthpane.add(vgap());
+        // Bank
+        
+        Box BanksExtra = Box.createHorizontalBox();
+        BanksExtra.add(lblBanks);
+        BanksExtra.add(hgap());
+        BanksExtra.add(filter);
+        synthpane.add(top(left(BanksExtra)));
+        synthpane.add(vgap());
+        synthpane.add(top(left(spBanksTree)));
+        spBanksTree.setMaximumSize(null);
+        spBanksTree.setPreferredSize(null);
+
+        // ... layout complete!
+        
         return synthpane;
     }
+
     
+    final int GAP = 2;
+    private Component hgap() { return Box.createRigidArea(new Dimension(GAP,0)); }
+    private Component vgap() { return Box.createRigidArea(new Dimension(0, GAP)); }
+
+    private static <T extends JComponent> T left(T c)
+    {
+        c.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        return c;
+    }
+    private static <T extends JComponent> T right(T c)
+    {
+        c.setAlignmentX(JComponent.RIGHT_ALIGNMENT);
+        return c;
+    }
+    private static <T extends JComponent> T top(T c)
+    {
+        c.setAlignmentY(JComponent.TOP_ALIGNMENT);
+        return c;
+    }
+    
+    private Icon ensureIsSmallIcon(Icon icon)
+    {
+        final int SZ = 64;
+        final float SZf = (float) SZ;
+        
+        BufferedImage b = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = b.createGraphics();
+        try
+        {
+            icon.paintIcon(this, g2, 0, 0);
+        }
+        finally
+        {
+            g2.dispose();
+            g2 = null;
+        }
+        // aspect ratio
+        float wf = b.getWidth()/SZf;
+        float hf = b.getHeight()/SZf;
+        float maxf = Math.max(wf, hf);
+
+        int nw = (int) Math.floor(b.getWidth()/maxf);
+        int nh = (int) Math.floor(b.getHeight()/maxf);
+
+        BufferedImage nb = new BufferedImage(nw, nh, BufferedImage.TYPE_INT_ARGB);
+        g2 = nb.createGraphics();
+        try
+        {
+            g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            g2.drawImage(b, 0, 0, nw, nh, 0, 0, b.getWidth(), b.getHeight(), null);
+        }
+        finally
+        {
+            g2.dispose();
+            g2 = null;
+        }
+        return new ImageIcon(nb);
+    }
+
     private void updateSynthStatusLabel()
     {
         switch (synth.getComStatus())
@@ -642,6 +817,10 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
 
     protected static class ClickableLabel extends JLabel
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -6967218815458151086L;
         public static final String CLICK = "click";
         private boolean clickAble;
         private Color defaultForeground;
@@ -782,10 +961,9 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
             
             this.dt = new DropTarget(slotBox, this);
             
-            TopLeft(slotBox);
+            left(top(slotBox));
             
-            lblSlotPatchName = new ClickableLabel(this);
-            Left(lblSlotPatchName);
+            lblSlotPatchName = left(new ClickableLabel(this));
             updateSlotPatchName();
 
             slotBox.add(lblSlotPatchName);
@@ -794,7 +972,7 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
             if (slot.isPropertyModifiable(Slot.ENABLED_PROPERTY))
             {   
                 JToggleButton tb = new JToggleButton();
-                Right(tb);
+                right(tb);
                 tb.setToolTipText("Enable/Disable Slot");
                 /*
                 tb.setOpaque(false);*/
@@ -947,21 +1125,6 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         //
     }
 
-    private static void Right(JComponent component)
-    {
-        component.setAlignmentX(JComponent.RIGHT_ALIGNMENT);
-    }
-
-    private static void Left(JComponent component)
-    {
-        component.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-    }
-
-    private static void TopLeft(JComponent component)
-    {
-        component.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-        component.setAlignmentY(JComponent.TOP_ALIGNMENT);
-    }
     
     protected boolean arePlugsConfigured()
     {
@@ -977,7 +1140,7 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
     
     protected boolean showSettings()
     {
-        final SynthPropertiesDialog spd = new SynthPropertiesDialog(synth);
+        final SynthPropertiesDialog<S> spd = new SynthPropertiesDialog<S>(synth);
         
         
         addForms(spd);
@@ -986,6 +1149,10 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         final JDialog d = new JDialog(Nomad.sharedInstance().getWindow(), 
                 "Properties for "+synth.getDeviceName())
         {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = -8324075575952331093L;
             {
                 enableEvents(WindowEvent.WINDOW_EVENT_MASK);
             }
