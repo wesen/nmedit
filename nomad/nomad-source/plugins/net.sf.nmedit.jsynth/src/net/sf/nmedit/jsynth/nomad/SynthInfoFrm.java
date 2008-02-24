@@ -25,14 +25,17 @@ import java.awt.Container;
 import java.awt.Dimension;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
 public class SynthInfoFrm extends JPanel
 {
-   JLabel lblSynthName = new JLabel();
+   /**
+     * 
+     */
+    private static final long serialVersionUID = -261273249512302024L;
+JLabel lblSynthName = new JLabel();
    JLabel lblDeviceName = new JLabel();
    JLabel lblVendor = new JLabel();
    JLabel lblSlotCount = new JLabel();

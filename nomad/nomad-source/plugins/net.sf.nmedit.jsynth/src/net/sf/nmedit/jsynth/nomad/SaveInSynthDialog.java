@@ -316,6 +316,10 @@ public class SaveInSynthDialog extends JDialog
     
     private class BankComboBoxModel extends AbstractListModel implements ComboBoxModel, BankUpdateListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1400245057461209914L;
         Object selectedObject;
         private Bank<?>[] banks;
         private List<PatchLocation> data;

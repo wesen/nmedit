@@ -38,6 +38,7 @@ public class BankUpdateEvent extends SynthesizerEvent
         this.endIndex = endIndex;
     }
     
+    @SuppressWarnings("unchecked")
     public Bank<? extends Synthesizer> getBank()
     {
         return (Bank) arg;

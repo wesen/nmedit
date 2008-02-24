@@ -16,7 +16,11 @@ import javax.swing.JPanel;
 
 public class SaveInSynthFrm extends JPanel
 {
-   JComboBox cbSynth = new JComboBox();
+   /**
+     * 
+     */
+    private static final long serialVersionUID = -6750958734378239943L;
+JComboBox cbSynth = new JComboBox();
    JComboBox cbSlot = new JComboBox();
    JComboBox cbBank = new JComboBox();
    JCheckBox cbSaveInSlot = new JCheckBox();
