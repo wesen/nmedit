@@ -286,7 +286,6 @@ public class NmPatchSynchronizer extends AllEventsListener
             case PAssignmentEvent.MIDICTRL_ASSIGNED:
                 msg = NmUtils.createMidiCtrlAssignmentMessage(e.getParameter(), -1, e.getMidiControllerId(),
                         slot.getSlotIndex(), slot.getPatchId());
-                System.out.println("assigned:"+msg);
                 
                 break;
         }
@@ -335,7 +334,6 @@ public class NmPatchSynchronizer extends AllEventsListener
             case PAssignmentEvent.MIDICTRL_DEASSIGNED:
                 msg = NmUtils.createMidiCtrlDeAssignmentMessage(e.getMidiControllerId(), slot.getSlotIndex(), slot.getPatchId());
 
-                System.out.println("deassigned:"+msg);
                 break;
         }
         
