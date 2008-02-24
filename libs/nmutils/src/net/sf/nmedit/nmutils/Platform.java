@@ -97,6 +97,13 @@ public class Platform
         return Platform.flavor == flavor;
     }
     
+    public static boolean couldBePopupTrigger(MouseEvent e) {
+    	if (Platform.isFlavor(Platform.OS.MacOSFlavor)) {
+    		return (e.isControlDown() && (e.getButton() == MouseEvent.BUTTON1)) || e.isPopupTrigger();
+    	} else {
+    		return (e.getButton() == MouseEvent.BUTTON3) || isPopupTrigger(e);
+    	}
+    }
     public static boolean isPopupTrigger(MouseEvent e)
     {
     	return e.isPopupTrigger();
@@ -110,6 +117,7 @@ public class Platform
             return (e.getID() == MouseEvent.MOUSE_PRESSED) && e.isPopupTrigger();
         }
         */
+    	
     }
 
 	public static boolean isToggleSelectionEvent(MouseEvent e) {
