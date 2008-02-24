@@ -32,6 +32,8 @@ import java.awt.event.ContainerListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -55,6 +57,7 @@ import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.PSignal;
 import net.sf.nmedit.jpatch.PSignalTypes;
+import net.sf.nmedit.jpatch.clavia.nordmodular.Format;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.ParseException;
@@ -74,7 +77,7 @@ import net.sf.nmedit.jtheme.store2.ModuleElement;
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.graphics.GraphicsToolkit;
 
-public class JTNMPatch extends JTPatch implements Transferable
+public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeListener
 {
 
     /**
@@ -87,18 +90,23 @@ public class JTNMPatch extends JTPatch implements Transferable
     private ModuleContainerEventHandler ehCommon;
     private JScrollPane spPoly;
     private JScrollPane spCommon;
+    private NMSplitPane split;
 
     public JTNMPatch(JTNM1Context context, NMPatch patch) throws Exception
     {
         super(context);
         this.patch = patch;
-        JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        
+        split = new NMSplitPane(JSplitPane.VERTICAL_SPLIT);
         split.setOneTouchExpandable(true);
         split.setContinuousLayout(false);
         split.setTopComponent(spPoly = createVoiceArea(patch.getPolyVoiceArea()));
         split.setBottomComponent(spCommon = createVoiceArea(patch.getCommonVoiceArea()));
         split.setResizeWeight(1);
         split.setDividerLocation(patch.getHeader().getSeparatorPosition());
+        split.setStoredDividerLocation(patch.getHeader().getSeparatorPosition());
+        split.setDividerSize(12);
+        split.addPropertyChangeListener(NMSplitPane.STORED_SPLIT_PROPERTY, this);
         
         settings = new JTPatchSettingsBar(this);
         setLayout(new BorderLayout());
@@ -738,6 +746,24 @@ public class JTNMPatch extends JTPatch implements Transferable
         settings.dispose();
         ehPoly.uninstall();
         ehCommon.uninstall();
+    }
+
+    public void propertyChange(PropertyChangeEvent evt)
+    {
+         if (NMSplitPane.STORED_SPLIT_PROPERTY == evt.getPropertyName())
+         {
+             int separator;
+             if (split.isTopHidden())
+                 separator = Format.HEADER_SECTION_SEPARATOR_POSITION_TOP_MOST;
+             else if (split.isBottomHidden())
+                 separator = Format.HEADER_SECTION_SEPARATOR_POSITION_BOTTOM_MOST;
+             else
+             {
+                 separator = Math.max(1, Math.min(Format.HEADER_SECTION_SEPARATOR_POSITION_BOTTOM_MOST-1, 
+                         split.getStoredDividerLocation()));
+             }
+             patch.getHeader().setSeparatorPosition(separator);
+         }
     }
 
     // transferable
