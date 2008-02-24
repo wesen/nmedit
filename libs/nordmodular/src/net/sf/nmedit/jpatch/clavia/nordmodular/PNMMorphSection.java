@@ -48,14 +48,18 @@ public class PNMMorphSection extends PBasicModuleContainer
             this.group = group;
         }
         
+        public boolean isFull()
+        {
+            return assignmentList.size()>=25;
+        }
+        
         private boolean __add(PParameter parameter)
         {
             if (parameter == null)
                 throw new NullPointerException("parameter must not be null");
                 
             // max capacity/assignments = 25
-            if (assignmentList.size()<25)
-                return assignmentList.add(parameter);
+            if (!isFull()) return assignmentList.add(parameter);
             return false;
         }
 
