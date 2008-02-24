@@ -717,10 +717,16 @@ public class JTModuleContainerUI extends ComponentUI
                 mc.add(module);
                 // TODO short after dropping a new module and then moving it
                 // causes a NullPointerException in the next line
-                MoveOperation move = module.getParentComponent().createMoveOperation();
-                move.setScreenOffset(0, 0);
-                move.add(module);
-                move.move();
+                PModuleContainer parent = module.getParentComponent();
+                if (parent != null) {
+                	MoveOperation move = parent.createMoveOperation();
+                	move.setScreenOffset(0, 0);
+                	move.add(module);
+                	move.move();
+                } else {
+                	// XXX concurrency problems probably ?!
+                	throw new RuntimeException("Drop problem on illegal modules: for example 2 midi globals");
+                }
        
                 dtde.acceptDrop(DnDConstants.ACTION_COPY);
          
@@ -990,9 +996,13 @@ public class JTModuleContainerUI extends ComponentUI
         
         public void mouseClickedAtModule(MouseEvent e)
         {
-        	if (Platform.isPopupTrigger(e))
+        	// this is a real dilemma here. THe good way would be to do this through mouseClicked, 
+        	// but at least under OSX< this is not reliable.
+        	// on mouseReleased is the better way to go, because mousePressed starts a drag and we don't want to deselect on that
+        	// so we need to check by hand if a popup menu was opened by this click, because isPopupTrigger is on mousePressed
+        	if (Platform.couldBePopupTrigger(e))
                 return;
-
+        	
         	JTModule module = (JTModule) e.getComponent();
             
             boolean shift = e.isShiftDown();
@@ -1052,8 +1062,6 @@ public class JTModuleContainerUI extends ComponentUI
                 jtcUI.createPopupMenu(mc, e);
             }
             
-            if (e.getComponent() instanceof JTModule)
-                mouseClickedAtModule(e);
         }
 
         public void mouseReleased(MouseEvent e)
@@ -1063,6 +1071,9 @@ public class JTModuleContainerUI extends ComponentUI
                 if (e.getComponent() == getModuleContainer())
                     mouseClickedAtModuleContainer(e);
             }
+
+            if (e.getComponent() instanceof JTModule)
+                mouseClickedAtModule(e);
 
             JTModuleContainer mc = jtcUI.getModuleContainer();
             if (SwingUtilities.isLeftMouseButton(e) && e.getComponent() == mc && jtcUI.selectBoxActive) {
