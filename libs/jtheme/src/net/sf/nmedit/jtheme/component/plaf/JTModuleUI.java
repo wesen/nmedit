@@ -179,11 +179,11 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
     protected void updateTitle()
     {
         PModule m = module.getModule();
-        
-        String title = m != null ? m.getTitle() : null;
-        
-        if (title != null)
-            setTitleLabelText(title);
+        if (m != null)
+        {
+            setTitleLabelText(m.getShortTitle());
+            setModuleColor(m.getColorCode());
+        }
     }
         
 
@@ -287,10 +287,12 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         titleLabel.setSize(60, 13);
         module.add(titleLabel, 0);
         
-        if (module.getModule()!=null)
+        PModule mod = module.getModule();
+        if (mod!=null)
         {
-            setTitleLabelText(module.getModule().getTitle());
-            module.getModule().addModuleListener(this);
+            setTitleLabelText(mod.getShortTitle());
+            mod.addModuleListener(this);
+            setModuleColor(mod.getColorCode());
         }
     }
     
