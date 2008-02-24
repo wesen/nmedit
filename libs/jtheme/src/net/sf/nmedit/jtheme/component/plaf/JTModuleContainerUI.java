@@ -1070,24 +1070,35 @@ public class JTModuleContainerUI extends ComponentUI
             	mc.repaint();
             }
         }
-
+        
         public void mouseDragged(MouseEvent e) {
         	jtcUI.updateScrollPosition(e.getPoint());
         
         	JTModuleContainer mc = jtcUI.getModuleContainer();
         	if (SwingUtilities.isLeftMouseButton(e) && e.getComponent() == mc) {
         		if (!jtcUI.selectBoxActive) {
-        			jtcUI.selectBoxActive = true;
-        			jtcUI.selectStartPoint = new Point(e.getPoint());
-        			jtcUI.selectRectangle = new Rectangle(jtcUI.selectStartPoint);
-        			mc.repaintOverlay(jtcUI.selectRectangle);
+        			startNewSelectionRectangle(e);
         		}
         		
-        		updateSelectionRectangle(e.getPoint());
+        		updateSelectionRectangle(e);
         	}
 		}
 
-		private void updateSelectionRectangle(Point point) {
+        HashSet<JTModule> oldSelection = null;
+        
+
+        
+        private void startNewSelectionRectangle(MouseEvent e) {
+        	JTModuleContainer mc = jtcUI.getModuleContainer();
+			jtcUI.selectBoxActive = true;
+			oldSelection = new HashSet<JTModule>(selectionSet);
+			jtcUI.selectStartPoint = new Point(e.getPoint());
+			jtcUI.selectRectangle = new Rectangle(jtcUI.selectStartPoint);
+			mc.repaintOverlay(jtcUI.selectRectangle);
+        }
+
+        private void updateSelectionRectangle(MouseEvent e) {
+			Point point = e.getPoint();
 			Rectangle select = jtcUI.selectRectangle;
     		Point start = jtcUI.selectStartPoint;
     		JTModuleContainer mc = jtcUI.getModuleContainer();
@@ -1099,7 +1110,23 @@ public class JTModuleContainerUI extends ComponentUI
     		y2 = Math.max(start.y, point.y);
     		select.setRect(x1, y1, x2-x1, y2-y1);
     		mc.repaintOverlay(select);
-    		clearSelection();
+            boolean shift = e.isShiftDown();
+            boolean meta = false;
+            boolean ctrl = false;
+            
+            if (Platform.isFlavor(Platform.OS.MacOSFlavor)) {
+            	// apple key has a different behaviour under osx
+            	meta = e.isMetaDown();
+            	if (meta && shift)
+            		return;
+            } else {
+            	ctrl = e.isControlDown();
+                if (shift && ctrl) return;
+            }
+
+    		if (!meta && !shift && !ctrl) {
+    			clearSelection();
+    		}
     		Component[] components = mc.getComponents();
     		for (int i=components.length-1;i>=0;i--)
     		{
@@ -1108,7 +1135,24 @@ public class JTModuleContainerUI extends ComponentUI
     			{
     				JTModule mui = (JTModule) c;
     				if (select.intersects(mui.getBounds())) {
-    					addSelection(mui);
+    					if (meta) {
+    						if (oldSelection.contains(mui)) {
+    							removeSelection(mui);
+    						} else {
+    							addSelection(mui);
+    						}
+    					} else if (ctrl) {
+    						if (oldSelection.contains(mui))
+    							removeSelection(mui);
+    					} else {
+    						addSelection(mui);
+    					}
+    				} else {
+    					if (oldSelection.contains(mui)) {
+    						addSelection(mui);
+    					} else {
+    						removeSelection(mui);
+    					}
     				}
     			}
     		}
