@@ -444,7 +444,7 @@ public class NoteSeqEditorUI extends JTBasicControlUI
 	    	//System.out.print("dragged");
 	    	NMNoteSeqEditor ed = getControl(e);
 
-	    	if (e.isAltDown()) {
+	    	if (isExtensionSelected(e)) {
 	    		ed.setExtension(controlUI.editedNote, oldExtension - (e.getY()-y)/controlUI.getNoteHeight());
 	    	} else {
 	    		ed.setNote(controlUI.editedNote, oldNote - (e.getY()-y)/controlUI.getNoteHeight());
