@@ -250,18 +250,7 @@ public class JTNMPatch extends JTPatch implements Transferable
                         PModule pm = m.getModule();
                         if (pm != null)
                         {
-                            String t = pm.getTitle();
-                            if (t == null)
-                                continue;
-                            int sep = t.lastIndexOf('$');
-                            
-                            if (sep>=0)
-                                t = t.substring(0, sep);
-                            
-                            if (colorIndex>0)
-                                t += "$"+colorIndex;
-                            
-                            pm.setTitle(t);
+                        	pm.setColorCode(Integer.toString(colorIndex));
                         }
                     }
                 }
