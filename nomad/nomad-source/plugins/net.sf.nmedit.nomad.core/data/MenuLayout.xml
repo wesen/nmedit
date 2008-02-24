@@ -24,26 +24,21 @@
 		</entry>
 		<entry entryPoint="open">
 		  <icon type="enabledIcon" src="&tango;/actions/document-open.png" />
-		  <accelerator desc="control O" descmac="meta O"/>
 		</entry>
 		<entry entryPoint="close" flat="true">
 			<entry entryPoint="close">
-		  		<accelerator desc="control W" descmac="meta W"/>
 		    </entry>
 			<entry entryPoint="closeall">
-		  		<accelerator desc="shift control W" descmac="shift meta W"/>
 		    </entry>
 		</entry>
 		<entry entryPoint="save" flat="true">
 			<entry entryPoint="save">
 				<icon type="enabledIcon" src="&etool;/save_edit.gif" />
 				<icon type="disabledIcon" src="&dtool;/save_edit.gif" />
-		  		<accelerator desc="control S" descmac="meta S"/>
 			</entry>
 			<entry entryPoint="saveas">
 				<icon type="enabledIcon" src="&etool;/saveas_edit.gif" />
 				<icon type="disabledIcon" src="&dtool;/saveas_edit.gif" />
-		  		<accelerator desc="shift control S" descmac="shift meta S"/>
 			</entry>
 			<entry entryPoint="saveall">
 				<icon type="enabledIcon" src="&etool;/saveall_edit.gif" />
@@ -71,43 +66,41 @@
 			<entry entryPoint="undo">
 				<icon type="enabledIcon" src="&etool;/undo_edit.gif"/>
 				<icon type="disabledIcon" src="&dtool;/undo_edit.gif"/>
-				<accelerator desc="control Z" descmac="meta Z"/>
 			</entry>
 			<entry entryPoint="redo">
 				<icon type="enabledIcon" src="&etool;/redo_edit.gif" />
 				<icon type="disabledIcon" src="&dtool;/redo_edit.gif" />
-				<accelerator desc="control Y" descmac="meta Y"/>
 			</entry>
 		</entry>
 		<entry entryPoint="edit" flat="true">
 			<entry entryPoint="cut">
 				<icon type="enabledIcon" src="&etool;/cut_edit.gif" />
 				<icon type="disabledIcon" src="&dtool;/cut_edit.gif" />
-				<accelerator desc="control X" descmac="meta X"/>
 			</entry>
 			<entry entryPoint="copy">
 				<icon type="enabledIcon" src="&etool;/copy_edit.gif" />
 				<icon type="disabledIcon" src="&dtool;/copy_edit.gif" />
-				<accelerator desc="control C" descmac="meta C"/>
 			</entry>
 			<entry entryPoint="paste">
 				<icon type="enabledIcon" src="&etool;/paste_edit.gif" />
 				<icon type="disabledIcon" src="&dtool;/paste_edit.gif" />
-				<accelerator desc="control V" descmac="meta V"/>
 			</entry>
 		</entry>
 		<entry entryPoint="app" flat="true">
 			<entry entryPoint="preferences" />
 		</entry>
 	</entry>
+	<!--
 	<entry entryPoint="synth">
 		<entry entryPoint="new" />
 		<entry entryPoint="setup" />
 	</entry>
+	-->
 	<entry entryPoint="patch">
 		<entry entryPoint="notes" />
 		<entry entryPoint="settings" />
-		<entry entryPoint="randomize" />
+		<entry entryPoint="randomize">
+		</entry>
 	</entry>
 	<!--
 	<entry entryPoint="window">
