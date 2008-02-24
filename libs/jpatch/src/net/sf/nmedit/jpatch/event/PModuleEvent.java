@@ -37,6 +37,7 @@ public class PModuleEvent extends PPatchEvent
      */
     private static final long serialVersionUID = 7313259477979546246L;
     private String oldName;
+    private String oldColor;
 
     protected PModuleEvent( Object target, long when, int id, int x, int y, int key,
             int modifiers, Object arg )
@@ -91,6 +92,18 @@ public class PModuleEvent extends PPatchEvent
     {
         this.id = MODULE_RENAMED;
         this.oldName = oldName;
+    }
+    
+    public String getOldColor()
+    {
+        if (getId() != MODULE_COLOR_CHANGED)
+            throw new UnsupportedOperationException("undefined property");
+        return oldColor;
+    }
+
+    public void moduleColorChanged(String oldColor) {
+    	this.id = MODULE_COLOR_CHANGED;
+    	this.oldColor = oldColor;
     }
 
     /**
