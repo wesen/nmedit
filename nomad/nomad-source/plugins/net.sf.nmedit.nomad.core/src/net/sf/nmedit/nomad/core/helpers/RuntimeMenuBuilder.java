@@ -29,14 +29,17 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 
+import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.menulayout.MLEntry;
+import net.sf.nmedit.nomad.core.menulayout.MenuBuilder;
 import net.sf.nmedit.nomad.core.menulayout.MenuLayout;
 import net.sf.nmedit.nomad.core.service.ServiceRegistry;
 import net.sf.nmedit.nomad.core.service.fileService.FileService;
 import net.sf.nmedit.nomad.core.service.synthService.NewSynthService;
 import net.sf.nmedit.nomad.core.swing.ExtensionFilter;
 import net.sf.nmedit.nomad.core.swing.explorer.FileContext;
+import net.sf.nmedit.nordmodular.NmFileService;
 
 public class RuntimeMenuBuilder
 {   
@@ -71,7 +74,7 @@ public class RuntimeMenuBuilder
         return layout.getEntry(NEW_LOCATION_ROOT_KEY);
     }
     
-    public static void buildNewMenuEntries(MenuLayout layout)
+    public static void buildNewMenuEntries(MenuLayout layout, String mainPatchName, String mainSynthName)
     {
         {
             // new location
@@ -98,6 +101,16 @@ public class RuntimeMenuBuilder
                 {
                     MLEntry entry = new MLEntry(uniqueKey(root));
                     
+                    if (service.getName().equals(mainPatchName)) {
+                    	String keyBinding = null;
+                    	if (Platform.isFlavor(Platform.OS.MacOSFlavor)) {
+                    		keyBinding = "META+N";
+                    	} else {
+                    		keyBinding = "CTRL+N";
+                    	}
+                    	entry.putValue(MLEntry.ACCELERATOR_KEY, MenuBuilder.extractKeyStroke(keyBinding));
+                    }
+                    
                     entry.putValue(MLEntry.NAME, service.getName());
                     entry.putValue(MLEntry.SHORT_DESCRIPTION, service.getDescription());
                     Icon icon = service.getIcon();
@@ -119,10 +132,20 @@ public class RuntimeMenuBuilder
             
             while (iter.hasNext())
             {
-                NewSynthService service = iter.next();
-                
                 MLEntry entry = new MLEntry(uniqueKey(root));
                 
+                NewSynthService service = iter.next();
+                
+                if (service.getSynthName().equals(mainSynthName)) {
+                	String keyBinding = null;
+                	if (Platform.isFlavor(Platform.OS.MacOSFlavor)) {
+                		keyBinding = "SHIFT+META+N";
+                	} else {
+                		keyBinding = "SHIFT+CTRL+N";
+                	}
+                	entry.putValue(MLEntry.ACCELERATOR_KEY, MenuBuilder.extractKeyStroke(keyBinding));
+                }
+             
                 entry.putValue(MLEntry.NAME, service.getSynthName());
 
                 entry.putValue(MLEntry.SHORT_DESCRIPTION, synthTooltip(service));
