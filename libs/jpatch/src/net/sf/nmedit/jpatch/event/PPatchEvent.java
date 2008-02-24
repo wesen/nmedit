@@ -66,6 +66,11 @@ public class PPatchEvent extends Event
     public static final int MODULE_RENAMED = 101;
 
     /**
+     * The title/name property of a {@link PModule module} was changed.
+     */
+    public static final int MODULE_COLOR_CHANGED = 102;
+
+    /**
      * Value of a {@link PLight light} was changed.
      */
     public static final int LIGHT = 110;
