@@ -64,7 +64,6 @@ import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.event.PModuleEvent;
 import net.sf.nmedit.jpatch.event.PModuleListener;
-import net.sf.nmedit.jpatch.transform.PTBasicTransformations;
 import net.sf.nmedit.jpatch.transform.PTModuleMapping;
 import net.sf.nmedit.jpatch.transform.PTTransformations;
 import net.sf.nmedit.jtheme.JTContext;
@@ -80,7 +79,6 @@ import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.swing.EscapeKeyListener;
 import net.sf.nmedit.nmutils.swing.LimitedText;
 import net.sf.nmedit.nmutils.swing.NMLazyActionMap;
-import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
 
 public class JTModuleUI extends JTComponentUI implements PModuleListener
 {

@@ -25,6 +25,10 @@ import net.sf.nmedit.jpdl2.utils.PDLUtils;
 public class MidiException extends Exception
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5967172605877128644L;
     // the midi message which caused this exception
     private byte[] midiMessage;
     

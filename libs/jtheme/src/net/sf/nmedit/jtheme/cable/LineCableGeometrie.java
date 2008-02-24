@@ -27,6 +27,10 @@ import java.awt.geom.Line2D.Float;
 public class LineCableGeometrie extends Float implements CableGeometrie
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1531914634168898089L;
     private boolean boundaryChanged = true;
     private transient Rectangle2D cachedBounds;
     

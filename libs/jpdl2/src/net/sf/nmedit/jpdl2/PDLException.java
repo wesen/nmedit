@@ -33,6 +33,10 @@ import net.sf.nmedit.jpdl2.utils.PDLUtils;
 public class PDLException extends Exception
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1441057047102733845L;
     private Object item;
     
     public Object getItem()

@@ -33,6 +33,10 @@ public class Pseudo3DCableGeometrie extends CubicCurve2D.Float
     implements CableGeometrie
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2686151817733494025L;
     private boolean boundaryChanged = true;
     private transient Rectangle2D cachedBounds;
 

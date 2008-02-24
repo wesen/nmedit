@@ -21,14 +21,16 @@ package net.sf.nmedit.jtheme.component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 
 public class JTCableLayer extends JTBaseComponent
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5019537573216055625L;
     public JTCableLayer(JTContext context)
     {
         super(context);

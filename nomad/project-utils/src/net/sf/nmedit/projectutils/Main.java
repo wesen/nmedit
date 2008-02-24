@@ -19,8 +19,6 @@
 
 package net.sf.nmedit.projectutils;
 
-import java.util.Arrays;
-
 public class Main
 {
 

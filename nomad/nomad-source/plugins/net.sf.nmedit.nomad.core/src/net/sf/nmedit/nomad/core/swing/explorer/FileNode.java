@@ -34,7 +34,6 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
@@ -422,6 +421,10 @@ public class FileNode implements ETreeNode, MouseListener,
     private class FileNodeAction extends AbstractAction
     {
 
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -1190272224899920323L;
         public static final String OPEN = "Open";
         public static final String REFRESH = "Refresh";
         public static final String DELETE_PERMANENTLY = "Delete (Permanently)";

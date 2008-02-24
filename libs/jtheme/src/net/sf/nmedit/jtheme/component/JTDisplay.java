@@ -26,8 +26,6 @@ import java.awt.AWTEvent;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 
-import javax.swing.SwingUtilities;
-
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.util.JThemeUtils;
 

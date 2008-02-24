@@ -31,7 +31,6 @@ import net.sf.nmedit.jpdl2.PDLPacket;
 import net.sf.nmedit.jpdl2.PDLPacketParser;
 import net.sf.nmedit.jpdl2.stream.BitStream;
 import net.sf.nmedit.jpdl2.stream.IntStream;
-import net.sf.nmedit.jpdl2.utils.PDLUtils;
 
 public abstract class MidiMessage
 {
@@ -99,10 +98,11 @@ public abstract class MidiMessage
     	if (!("meters".equals(message.getMessageId())||"lights".equals(message.getMessageId())))
     	{
     	    System.out.println(message.getMessageId()+": "+PDLUtils.toString(message.getPacket()));
-    	}*/
+    	    System.out.println(PDLUtils.toHexadecimal(bitStream.toByteArray()));
+    	}
+    	*/
     	
-    	/*
-    	if ("unknownNMInfo".equals(message.getMessageId()))
+    	/*if ("unknownNMInfo".equals(message.getMessageId()))
     	{
     	    System.out.println(PDLUtils.toString(message.getPacket()));
     	}*/

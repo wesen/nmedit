@@ -22,7 +22,6 @@
  */
 package net.sf.nmedit.nomad.core.menulayout;
 
-import java.awt.event.InputEvent;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;

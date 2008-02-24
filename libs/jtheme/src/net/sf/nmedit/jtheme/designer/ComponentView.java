@@ -32,6 +32,10 @@ import javax.swing.JComponent;
 public class ComponentView extends JComponent
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1038186567981622867L;
     private JComponent view;
     private ComponentBounds selectedComponent;
 
