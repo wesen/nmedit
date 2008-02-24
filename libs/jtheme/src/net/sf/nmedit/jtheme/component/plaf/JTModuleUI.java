@@ -782,6 +782,22 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         {
             return isOpaque;
         }
+        
+        public String getText() {
+        	String text = super.getText();
+            int colorSeparator = text.lastIndexOf('$');
+            
+            if (colorSeparator>=0)
+            {
+            	return text.substring(0, colorSeparator);
+            } else
+
+        	return text;
+        }
+        
+        public String[] getSplitText() {
+        	return new String[] { getText() };
+        }
 
         protected void paintStaticLayerOrBackingStore(Graphics2D g2)
         {
@@ -833,7 +849,7 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
             if (m == null)
                 return ;
 
-            JTextField tf = new JTextField(new LimitedText(16), m.getTitle(), 16);
+            JTextField tf = new JTextField(new LimitedText(16), m.getShortTitle(), 16);
             tf.setLocation(getLocation());
             module.add(tf, 0);
             tf.setSize(tf.getPreferredSize());
@@ -965,7 +981,11 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
 
     public void moduleRenamed(PModuleEvent e)
     {
-        setTitleLabelText(e.getModule().getTitle());
+        setTitleLabelText(e.getModule().getShortTitle());
+    }
+    
+    public void moduleColorChanged(PModuleEvent e) {
+        setModuleColor(e.getModule().getColorCode());
     }
     
     private Color fill = null;
@@ -985,26 +1005,20 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         if (text == null)
             text = "";
         titleLabel.setText(text);
-        
-        int colorSeparator = text.lastIndexOf('$');
-        
+    }
+    
+    protected void setModuleColor(String colorCode){
         Color bg = getFill();
         if (bg == null)
             return;
         
-        if (colorSeparator>=0)
-        {
-            String code = text.substring(colorSeparator+1);
-            if (code.length()>0)
-            {
-                code = "module.background$"+code;
-                UIDefaults defaults = module.getContext().getUIDefaults();
-                Color c = defaults.getColor(code);
-                if (c != null)
-                    bg = c;
-            }
+        if (colorCode.length() > 0) {
+        	colorCode = "module.background$"+colorCode;
+        	UIDefaults defaults = module.getContext().getUIDefaults();
+        	Color c = defaults.getColor(colorCode);
+        	if (c != null)
+        		bg = c;
         }
         module.setBackground(bg);
     }
-    
 }
