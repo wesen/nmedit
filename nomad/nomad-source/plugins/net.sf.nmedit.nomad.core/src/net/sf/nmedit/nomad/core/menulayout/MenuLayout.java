@@ -128,8 +128,7 @@ public class MenuLayout implements Iterable<MLEntry>
         public final static int ID_VAL_DISABLEDICON = 7;
         public final static int ID_VAL_TRUE = 8;
         public final static int ID_VAL_FALSE = 9;
-        public final static int ID_ACCELERATOR = 10;
-        
+
         static {
             toInt.put("entry", ID_ENTRY);
             toInt.put("icon", ID_ICON);
@@ -143,7 +142,6 @@ public class MenuLayout implements Iterable<MLEntry>
             toInt.put("1", ID_VAL_TRUE);
             toInt.put("false", ID_VAL_FALSE);
             toInt.put("0", ID_VAL_FALSE);
-            toInt.put("accelerator", ID_ACCELERATOR);
         }
 
         public MLEntry getRoot()
@@ -201,20 +199,6 @@ public class MenuLayout implements Iterable<MLEntry>
 
                     break;
                     
-                case ID_ACCELERATOR:
-                	String desc;
-            		desc = atts.getValue("desc");
-
-            		if (Platform.isFlavor(Platform.OS.MacOSFlavor) && atts.getValue("descmac") != null) {
-                		desc = atts.getValue("descmac");
-                	} 
-            		if (Platform.isFlavor(Platform.OS.WindowsFlavor) && atts.getValue("descwin") != null) {
-                		desc = atts.getValue("descwin");
-                	} 
-            		
-                	KeyStroke key = KeyStroke.getKeyStroke(desc);
-                	currentEntry.putValue(MLEntry.ACCELERATOR_KEY, key);
-                	break;
             }
         }
 

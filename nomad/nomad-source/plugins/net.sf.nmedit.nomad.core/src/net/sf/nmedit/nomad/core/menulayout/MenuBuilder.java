@@ -40,6 +40,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
+import net.sf.nmedit.nmutils.Platform;
+
 /**
  * The menu builder class. Uses a {@link net.sf.nmedit.nomad.core.menulayout.MenuLayout} and 
  * a {@link java.util.ResourceBundle} to setup the {@link javax.swing.Action}s. When the ResourceBundle
@@ -243,6 +245,7 @@ public class MenuBuilder
     // utils
 
     public final static String SUFFIX_KEYBINDING = "$keybinding";
+    public final static String SUFFIX_KEYBINDING_OSX = "$keybinding.osx";
     public final static String SUFFIX_SHORT_DESC = "$description";
     public final static String SUFFIX_LONG_DESC = "$long-description";
 
@@ -318,7 +321,14 @@ public class MenuBuilder
             // get descriptions
             eShortDesc = getStringOrNull(bundleID+SUFFIX_SHORT_DESC);
             eLongDesc = getStringOrNull(bundleID+SUFFIX_LONG_DESC);
-            String keybinding = getStringOrNull(bundleID+SUFFIX_KEYBINDING);
+            String keybinding = null;
+            if (Platform.isFlavor(Platform.OS.MacOSFlavor)) {
+                keybinding = getStringOrNull(bundleID+SUFFIX_KEYBINDING_OSX);
+            } 
+            
+            if (keybinding == null) {
+                keybinding = getStringOrNull(bundleID+SUFFIX_KEYBINDING);
+            }
             
             if (keybinding != null)
                 eAcceleratorKey = extractKeyStroke(keybinding);
