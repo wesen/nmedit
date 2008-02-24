@@ -26,6 +26,7 @@ import java.util.List;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.Synthesizer;
+import net.sf.nmedit.jsynth.nomad.forms.SaveInSynthDialog;
 import net.sf.nmedit.jsynth.worker.PatchLocation;
 import net.sf.nmedit.jsynth.worker.StorePatchWorker;
 import net.sf.nmedit.nomad.core.Nomad;

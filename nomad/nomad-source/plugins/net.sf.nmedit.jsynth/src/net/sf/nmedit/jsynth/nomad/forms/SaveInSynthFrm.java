@@ -1,4 +1,4 @@
-package net.sf.nmedit.jsynth.nomad;
+package net.sf.nmedit.jsynth.nomad.forms;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
