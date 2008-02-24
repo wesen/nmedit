@@ -346,7 +346,7 @@ public class MenuBuilder
             entry.putValue(Action.LONG_DESCRIPTION, eLongDesc);
     }
     
-    private static KeyStroke extractKeyStroke(String keybinding)
+    public static KeyStroke extractKeyStroke(String keybinding)
     {
         Matcher m = kbPattern.matcher(keybinding);
 

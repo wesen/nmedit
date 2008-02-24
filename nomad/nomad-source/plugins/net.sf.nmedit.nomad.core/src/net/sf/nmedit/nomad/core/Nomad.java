@@ -526,7 +526,7 @@ public class Nomad
     void setupUI()
     {
         // before menu builder is used
-        RuntimeMenuBuilder.buildNewMenuEntries(menuLayout);
+        RuntimeMenuBuilder.buildNewMenuEntries(menuLayout, "Nord Modular patch 3.0", "Nord Modular");
 
         ResourceBundle localizedMessages = NomadLoader.getResourceBundle();
 
