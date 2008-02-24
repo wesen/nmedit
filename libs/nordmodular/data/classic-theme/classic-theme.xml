@@ -144,7 +144,7 @@ label{fill:#000;}
 		<connector x="234" y="8" size="13" class="cAUDIO">
 			<connector component-id="c3" alt="out 2" />
 		</connector>
-		<knob x="88" y="2" size="21">
+		<knob x="88" y="4" size="21">
 			<parameter component-id="p1" alt="fade" />
 		</knob>
 		<label x="185" y="9">1</label>
@@ -188,6 +188,11 @@ label{fill:#000;}
 	</module>
 	<module component-id="m118" width="255" height="45">
 		<name>Digitizer</name>
+		<label x="6" y="12">Quant</label>
+		<label x="42" y="12">Bits</label>
+		<label x="70" y="7">Sample</label>
+		<label x="163" y="3">Rate</label>
+		<image x="210" y="28" width="25" height="11" xlink:href="./images/single/decoration-6.png" />
 		<connector x="197" y="27" size="13" class="cAUDIO">
 			<connector component-id="c1" alt="in" />
 		</connector>
@@ -219,18 +224,13 @@ label{fill:#000;}
 		<textDisplay x="107" y="3" width="50" height="16">
 			<parameter component-id="p2" alt="sample rate" />
 		</textDisplay>
-		<label x="6" y="12">Quant</label>
-		<label x="42" y="12">Bits</label>
-		<label x="70" y="7">Sample</label>
-		<label x="163" y="3">Rate</label>
-		<image x="210" y="28" width="25" height="11" xlink:href="./images/single/decoration-6.png" />
 		<textDisplay x="34" y="25" width="27" height="16">
 			<parameter component-id="p1" alt="quant bits" />
 		</textDisplay>
 	</module>
 	<module component-id="m32" width="255" height="105">
 		<name>FilterBank</name>
-		<image x="6" y="8" width="242" height="70" xlink:href="url(#groupbox)" />
+		<image x="6" y="14" width="256" height="72" xlink:href="url(#groupbox)" />
 		<connector x="194" y="87" size="13" class="cAUDIO">
 			<connector component-id="c1" alt="in" />
 		</connector>
@@ -242,60 +242,60 @@ label{fill:#000;}
 			<btn index="1">B</btn>
 			<btn index="0">B</btn>
 		</button>
-		<label x="9" y="8">50</label>
-		<label x="26" y="8">75</label>
-		<label x="40" y="8">110</label>
-		<label x="75" y="8">250</label>
-		<label x="93" y="8">380</label>
-		<label x="109" y="8">570</label>
-		<label x="127" y="8">850</label>
-		<label x="144" y="8">1.3</label>
-		<label x="162" y="8">1.9</label>
-		<label x="178" y="8">2.9</label>
-		<label x="196" y="8">4.2</label>
-		<label x="212" y="8">6.4</label>
-		<label x="230" y="8">8.3</label>
-		<label x="58" y="8">170</label>
-		<slider x="11" y="24" width="12" height="50" orientation="vertical">
+		<label x="9"  y="14">50</label>
+		<label x="26" y="14">75</label>
+		<label x="40" y="14">110</label>
+		<label x="58" y="14">170</label>
+		<label x="75" y="14">250</label>
+		<label x="93" y="14">380</label>
+		<label x="109" y="14">570</label>
+		<label x="127" y="14">850</label>
+		<label x="144" y="14">1.3</label>
+		<label x="162" y="14">1.9</label>
+		<label x="178" y="14">2.9</label>
+		<label x="196" y="14">4.2</label>
+		<label x="212" y="14">6.4</label>
+		<label x="230" y="14">8.3</label>
+		<slider x="11" y="28" width="12" height="50" orientation="vertical">
 			<parameter component-id="p1" alt="50" />
 		</slider>
-		<slider x="27" y="24" width="12" height="50" orientation="vertical">
+		<slider x="27" y="28" width="12" height="50" orientation="vertical">
 			<parameter component-id="p2" alt="75" />
 		</slider>
-		<slider x="45" y="24" width="12" height="50" orientation="vertical">
+		<slider x="45" y="28" width="12" height="50" orientation="vertical">
 			<parameter component-id="p3" alt="110" />
 		</slider>
-		<slider x="62" y="24" width="12" height="50" orientation="vertical">
+		<slider x="62" y="28" width="12" height="50" orientation="vertical">
 			<parameter component-id="p4" alt="170" />
 		</slider>
-		<slider x="79" y="24" width="12" height="50" orientation="vertical">
+		<slider x="79" y="28" width="12" height="50" orientation="vertical">
 			<parameter component-id="p5" alt="250" />
 		</slider>
-		<slider x="95" y="24" width="12" height="50" orientation="vertical">
+		<slider x="95" y="28" width="12" height="50" orientation="vertical">
 			<parameter component-id="p6" alt="380" />
 		</slider>
-		<slider x="112" y="24" width="12" height="50" orientation="vertical">
+		<slider x="112" y="28" width="12" height="50" orientation="vertical">
 			<parameter component-id="p7" alt="570" />
 		</slider>
-		<slider x="129" y="24" width="12" height="50" orientation="vertical">
+		<slider x="129" y="28" width="12" height="50" orientation="vertical">
 			<parameter component-id="p8" alt="850" />
 		</slider>
-		<slider x="146" y="24" width="12" height="50" orientation="vertical">
+		<slider x="146" y="28" width="12" height="50" orientation="vertical">
 			<parameter component-id="p9" alt="1" />
 		</slider>
-		<slider x="163" y="24" width="12" height="50" orientation="vertical">
+		<slider x="163" y="28" width="12" height="50" orientation="vertical">
 			<parameter component-id="p10" alt="1" />
 		</slider>
-		<slider x="180" y="24" width="12" height="50" orientation="vertical">
+		<slider x="180" y="28" width="12" height="50" orientation="vertical">
 			<parameter component-id="p11" alt="2" />
 		</slider>
-		<slider x="197" y="24" width="12" height="50" orientation="vertical">
+		<slider x="197" y="28" width="12" height="50" orientation="vertical">
 			<parameter component-id="p12" alt="4" />
 		</slider>
-		<slider x="214" y="24" width="12" height="50" orientation="vertical">
+		<slider x="214" y="28" width="12" height="50" orientation="vertical">
 			<parameter component-id="p13" alt="6" />
 		</slider>
-		<slider x="231" y="24" width="12" height="50" orientation="vertical">
+		<slider x="231" y="28" width="12" height="50" orientation="vertical">
 			<parameter component-id="p14" alt="8" />
 		</slider>
 	</module>
@@ -1475,6 +1475,12 @@ label{fill:#000;}
 	</module>
 	<module component-id="m114" width="255" height="30">
 		<name>2to1Fade</name>
+		<label x="76" y="14">1</label>
+		<label x="118" y="13">2</label>
+		<label x="149" y="11">1</label>
+		<label x="186" y="11">2</label>
+		<image x="83" y="7" width="35" height="16" xlink:href="./images/single/decoration-7.png" />
+		<image x="172" y="3" width="68" height="13" xlink:href="./images/single/decoration-9.png" />
 		<connector x="159" y="8" size="13" class="cAUDIO">
 			<connector component-id="c1" alt="in 1" />
 		</connector>
@@ -1484,15 +1490,9 @@ label{fill:#000;}
 		<connector x="234" y="8" size="13" class="cAUDIO">
 			<connector component-id="c3" alt="out" />
 		</connector>
-		<knob x="88" y="2" size="21">
+		<knob x="88" y="4" size="21">
 			<parameter component-id="p1" alt="fade" />
 		</knob>
-		<label x="76" y="14">1</label>
-		<label x="118" y="13">2</label>
-		<label x="149" y="11">1</label>
-		<label x="186" y="11">2</label>
-		<image x="83" y="7" width="35" height="16" xlink:href="./images/single/decoration-7.png" />
-		<image x="172" y="3" width="-1" height="-1" xlink:href="./images/single/decoration-9.png" />
 	</module>
 	<module component-id="m26" width="255" height="60">
 		<name>LFOC</name>
