@@ -36,9 +36,10 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiDevice.Info;
 
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
+import net.sf.nmedit.jsynth.midi.MidiID;
 import net.sf.nmedit.jsynth.midi.MidiPlug;
+import net.sf.nmedit.jsynth.midi.MidiDescription;
 import net.sf.nmedit.jtheme.ModulePane;
-import net.sf.nmedit.nmutils.midi.MidiID;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.jpf.TempDir;
 import net.sf.nmedit.nomad.core.service.Service;
@@ -129,9 +130,6 @@ public class Installer implements InitService
         if (count <= 0)
             return ;
      
-        MidiDevice.Info[] list = MidiSystem.getMidiDeviceInfo();
-
-        MidiID midiID = new MidiID(list);
         
         for (int i=0;i<count;i++)
         {
@@ -139,8 +137,8 @@ public class Installer implements InitService
 
             String name = properties.getProperty(prefix+"name");
             
-            MidiDevice.Info in = readMidiInfo(properties, prefix+"midi.in.", list, midiID, true);
-            MidiDevice.Info out = readMidiInfo(properties, prefix+"midi.out.", list, midiID, false);
+            MidiDescription in = readMidiInfo(properties, prefix+"midi.in.", true);
+            MidiDescription out = readMidiInfo(properties, prefix+"midi.out.", false);
 
             MidiPlug pin = in == null ? null : new MidiPlug(in);
             MidiPlug pout = out == null ? null : new MidiPlug(out);
@@ -149,7 +147,7 @@ public class Installer implements InitService
         }
     }
 
-    private Info readMidiInfo(Properties properties, String prefix, Info[] list, MidiID midiID, boolean input)
+    private MidiDescription readMidiInfo(Properties properties, String prefix,  boolean input)
     {
         int id = str2int(properties.getProperty(prefix+"id"), -1);
         String name = properties.getProperty(prefix+"name");
@@ -160,8 +158,8 @@ public class Installer implements InitService
         
         if (isInput < 0 || ((isInput==1)!=input) )
             return null;
-
-        return midiID.findDeviceInfo(name, vendor, version, description, input, id);
+        
+        return new MidiDescription(name, vendor, version, description, isInput, id);
     }
     
     private int str2boolean(String value)
