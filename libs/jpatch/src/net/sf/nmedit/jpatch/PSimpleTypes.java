@@ -26,6 +26,11 @@ package net.sf.nmedit.jpatch;
 public class PSimpleTypes extends PTypes<PType>
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8056560014022443769L;
+
     public PSimpleTypes( String name )
     {
         super(name);
