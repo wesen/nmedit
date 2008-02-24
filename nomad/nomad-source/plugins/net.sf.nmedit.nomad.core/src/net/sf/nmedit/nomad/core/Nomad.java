@@ -57,6 +57,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -205,6 +206,11 @@ public class Nomad
         
         JComboBox src = new JComboBox(transferable.getTransferDataFlavors());
         src.setRenderer(new DefaultListCellRenderer(){
+            /**
+             * 
+             */
+            private static final long serialVersionUID = -4553255745845039428L;
+
             public Component getListCellRendererComponent(
                 JList list,
             Object value,
@@ -619,12 +625,23 @@ public class Nomad
         synthPane = new JTabbedPane2();
         synthPane.setCloseActionEnabled(true);
         
-        JSplitPane sidebar = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
-        sidebar.setTopComponent(toolPane);
-        sidebar.setBottomComponent(synthPane);
-        sidebar.setResizeWeight(0.8);
+        JSplitPane sidebarSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
+        sidebarSplit.setTopComponent(toolPane);
+        sidebarSplit.setBottomComponent(synthPane);
+        sidebarSplit.setResizeWeight(0.8);
+        sidebarSplit.setOneTouchExpandable(true);
         
-        
+        JComponent sidebar = new JPanel(new BorderLayout());
+        sidebar.setBorder(null);
+        sidebar.add(sidebarSplit, BorderLayout.CENTER);
+
+        if (!Platform.isFlavor(OS.MacOSFlavor)) {
+            JToolBar tb = createQuickActionToolbar();
+            sidebar.add(tb, BorderLayout.NORTH);
+
+        } else {
+            registerForMacOSXEvents();
+        }
         new DocumentActionActivator(pageContainer, menuLayout);
         
         JSplitPane splitLR = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -635,45 +652,48 @@ public class Nomad
             
         contentPane.setLayout(new BorderLayout());
         contentPane.add(splitLR, BorderLayout.CENTER);
+        if (contentPane instanceof JComponent)
+            ((JComponent)contentPane).revalidate();
+    }
+    
+    private JToolBar createQuickActionToolbar()
+    {
+        JToolBar toolbar = new JToolBar();
+        toolbar.setBorderPainted(false);
+        toolbar.setFloatable(false);
+        toolbar.add(Factory.createSmallToolBarButton(menuLayout.getEntry(MENU_FILE_OPEN)));
+        toolbar.addSeparator();
+        toolbar.add(Factory.createSmallToolBarButton(menuLayout.getEntry(MENU_FILE_SAVE)));
+        toolbar.addSeparator();
         
-        if (!Platform.isFlavor(OS.MacOSFlavor)) {
-        	JToolBar toolbar = new JToolBar();
-        	toolbar.setFloatable(false);
-        	toolbar.add(Factory.createToolBarButton(menuLayout.getEntry(MENU_FILE_OPEN)));
-        	toolbar.addSeparator();
-        	toolbar.add(Factory.createToolBarButton(menuLayout.getEntry(MENU_FILE_SAVE))) ;
-        	contentPane.add(toolbar, BorderLayout.NORTH);
+
+        JPopupMenu pop = new JPopupMenu();
+        Iterator<FileService> iter = ServiceRegistry.getServices(FileService.class);
+
+        JRadioButtonMenuItem rfirst = null;
+        SelectedAction sa = new SelectedAction();
 
 
-        	JPopupMenu pop = new JPopupMenu();
-        	Iterator<FileService> iter = ServiceRegistry.getServices(FileService.class);
+        sa.putValue(AbstractAction.SMALL_ICON, getImage("/icons/tango/16x16/actions/document-new.png"));
 
-        	JRadioButtonMenuItem rfirst = null;
-        	SelectedAction sa = new SelectedAction();
-
-
-        	sa.putValue(AbstractAction.SMALL_ICON, getImage("/icons/tango/16x16/actions/document-new.png"));
-
-        	while (iter.hasNext())
-        	{
-        		FileService fs = iter.next();
-        		if (fs.isNewFileOperationSupported())
-        		{
-        			JRadioButtonMenuItem rb = new JRadioButtonMenuItem(new AHAction(fs.getName(), fs.getIcon(), fs, "newFile"));
-        			sa.add(rb);
-        			pop.add(rb);
-        			if (rfirst == null)
-        				rfirst = rb;
-        		}
-        	}
-
-        	JButton btn = Factory.createToolBarButton(sa);
-        	toolbar.add(btn);
-
-        	new JDropDownButtonControl(btn, pop);
-        } else {
-        	registerForMacOSXEvents();
+        while (iter.hasNext())
+        {
+            FileService fs = iter.next();
+            if (fs.isNewFileOperationSupported())
+            {
+                JRadioButtonMenuItem rb = new JRadioButtonMenuItem(new AHAction(fs.getName(), fs.getIcon(), fs, "newFile"));
+                sa.add(rb);
+                pop.add(rb);
+                if (rfirst == null)
+                    rfirst = rb;
+            }
         }
+
+        JButton btn = Factory.createSmallToolBarButton(sa);
+        toolbar.add(btn);
+
+        new JDropDownButtonControl(btn, pop);
+        return toolbar;
     }
     
     public void registerForMacOSXEvents() {
@@ -708,6 +728,10 @@ public class Nomad
     
     private static class SelectedAction extends AbstractAction implements ItemListener
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -2469667964205220429L;
         private ButtonGroup bg;
         private Action currentAction;
 
@@ -767,6 +791,10 @@ public class Nomad
     private static class AHAction extends AbstractAction
     {
         
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 3827015254600154428L;
         private ActionHandler actionHandler;
         
         public AHAction(String title, Icon icon, Object imp, String method)
