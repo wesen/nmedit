@@ -56,9 +56,8 @@ public class NmFileService implements FileService
         return PATCH_DESCRIPTION;
     }
     
-    public void open(File file)
+    public static NMPatch openPatch(File file, File sourceFile, final String title, boolean showExceptionDialog)
     {
-
         NMData data = NMData.sharedInstance();
 
         try
@@ -67,12 +66,23 @@ public class NmFileService implements FileService
 
             NMPatch patch = NmUtils.parsePatch(data.getModuleDescriptions(), in);
             in.close();
+
+            if (title != null)
+                patch.setName(title);
             
-            patch.setProperty("file", file);
-
             final PatchDocument pd = createPatchDoc(patch);
-            pd.setURI(file);
-
+            
+            if (sourceFile!=null)
+            {
+                patch.setProperty("file", sourceFile);
+                pd.setURI(sourceFile);
+            }
+            else
+            {
+                patch.setProperty("file", null);
+                pd.setURI((File)null);
+            }
+                
             SwingUtilities.invokeLater(new Runnable(){
                 public void run()
                 {
@@ -84,23 +94,30 @@ public class NmFileService implements FileService
                     
                 }
             });
+            
+            return patch;
         
         }
         catch (Exception e)
         {
-            
-            
-            Log log = LogFactory.getLog(getClass());
+            Log log = LogFactory.getLog(NmFileService.class);
             if (log.isWarnEnabled())
             {
                 log.warn("open failed: "+file, e);
             }
-
-            ExceptionDialog.showErrorDialog(Nomad.sharedInstance().getWindow().getRootPane(), 
+            if (showExceptionDialog)
+            {
+                ExceptionDialog.showErrorDialog(Nomad.sharedInstance().getWindow().getRootPane(), 
                     "Could not open file '"+file+"'", "Could not open file.", e);
-            
-            return;
+            }
         }
+        
+        return null;
+    }
+    
+    public void open(File file)
+    {
+        openPatch(file, file, null, true);
     }
     
     public static PatchDocument createPatchDoc(NMPatch patch) throws Exception

@@ -32,9 +32,13 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.sound.midi.MidiDevice;
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.MidiDevice.Info;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
+import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchExporter;
+import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchFileWriter;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
 import net.sf.nmedit.jsynth.midi.MidiID;
 import net.sf.nmedit.jsynth.midi.MidiPlug;
@@ -44,10 +48,14 @@ import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.jpf.TempDir;
 import net.sf.nmedit.nomad.core.service.Service;
 import net.sf.nmedit.nomad.core.service.initService.InitService;
+import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
+import net.sf.nmedit.nomad.core.swing.document.Document;
 import net.sf.nmedit.nomad.core.swing.tabs.JTabbedPane2;
 
 public class Installer implements InitService
 {
+    
+    
 
     // TempDir temp = new TempDir(this);
     public Class<? extends Service> getServiceClass()
@@ -65,10 +73,14 @@ public class Installer implements InitService
         pane.setModules(data.getModuleDescriptions());
         pane.setTheme(data.getJTContext());
         
+        loadLastSession();
     }
 
     public void shutdown()
     {
+        
+        saveCurrentSession();
+        
         List<NordModular> synthList = new ArrayList<NordModular>();
         
         JTabbedPane2 tb = Nomad.sharedInstance().getSynthTabbedPane();
@@ -83,6 +95,194 @@ public class Installer implements InitService
         }
         
         storeSynthConfiguration(synthList);
+        
+    }
+
+    private File getSessionFile(TempDir dir)
+    {
+        return dir.getTempFile("session.properties");
+    }
+    
+    
+    private void loadLastSession()
+    {
+        TempDir tmpDir = TempDir.forObject(this);
+        File sessionFile = getSessionFile(tmpDir);
+        
+        if (!sessionFile.exists())
+            return;
+
+        Properties props = new Properties();
+        InputStream in;
+        try
+        {
+            in = new BufferedInputStream(new FileInputStream(sessionFile));
+            try
+            {
+                props.load(in);
+            }
+            finally
+            {
+                in.close();
+            }
+        } 
+        catch (Exception e)
+        {
+            Log log = LogFactory.getLog(getClass());
+            if (log.isDebugEnabled())
+            {
+                log.debug("exception while loading session file", e);
+            }
+            
+            e.printStackTrace();
+            // ignore
+            // delete corrupt session file
+            sessionFile.delete();
+            return ;
+        }
+        
+        loadSessionFromProperties(tmpDir, props);
+        
+    }
+    
+    private static final String SESSION_PATCHCOUNT = "session.patchcount";
+
+    private void loadSessionFromProperties(TempDir tmpDir, Properties props)
+    {
+        String PCountString = props.getProperty(SESSION_PATCHCOUNT);
+        if (PCountString == null) return;
+        
+        int patchcount;
+        try
+        {
+            patchcount = Integer.parseInt(PCountString);
+        }
+        catch (NumberFormatException e)
+        {
+            Log log = LogFactory.getLog(getClass());
+            if (log.isDebugEnabled())
+            {
+                log.debug("exception while loading session file", e);
+            }
+            
+            return ;
+        }
+        
+        for (int i=0;i<patchcount;i++)
+        {
+            File sourceFile = null;
+            String keySourceFile = getSourceFileKey(i);
+            String sourceFileString = props.getProperty(keySourceFile);
+            if (sourceFileString != null) sourceFile = new File(sourceFileString);
+            File tmpFile = getPatchTmpFile(tmpDir, i);
+            String title = props.getProperty(getTitleKey(i));
+            NMPatch patch = tryOpenSessionPatch(tmpFile, sourceFile, title);
+        }
+        
+    }
+
+    private String getTitleKey(int index)
+    {
+        return "patch."+index+".title";
+    }
+    
+    private String getSourceFileKey(int index)
+    {
+        return "patch."+index+".sourcefile";
+    }
+    
+    private File getPatchTmpFile(TempDir tmpDir, int index)
+    {
+        return tmpDir.getTempFile("temp_"+index+".pch");
+    }
+
+    private NMPatch tryOpenSessionPatch(File file, File sourceFile, String title)
+    {
+        if (!file.exists()) return null;
+        return NmFileService.openPatch(file, sourceFile, title, false);
+    }
+
+    private void saveCurrentSession()
+    {
+        DefaultDocumentManager dm = Nomad.sharedInstance().getDocumentManager();
+        
+        List<NMPatch> patches = new ArrayList<NMPatch>();
+        
+        for (Document doc : dm.getDocuments())
+        {
+            if (doc instanceof PatchDocument)   
+            {
+                patches.add(((PatchDocument)doc).getPatch());
+            }
+        }
+        
+
+        TempDir tmpDir = TempDir.forObject(this);
+        
+        Properties props = new Properties();
+        int pcount = 0;
+        
+        for (NMPatch patch: patches)
+        {
+            File saveAs = getPatchTmpFile(tmpDir, pcount); 
+            
+            try
+            {
+                OutputStream out = new BufferedOutputStream(new FileOutputStream(saveAs));
+                
+                PatchFileWriter pfw = new PatchFileWriter(out);
+                PatchExporter export = new PatchExporter();
+                export.export(patch, pfw);
+                
+                out.flush();
+                out.close();
+            }
+            catch (Exception e)
+            {
+                Log log = LogFactory.getLog(getClass());
+                if (log.isDebugEnabled())
+                {
+                    log.debug("exception while storing session file", e);
+                }
+                
+                e.printStackTrace();
+                continue;
+            }
+            
+            // tmp file written
+            File sourceFile = patch.getFile();
+            if (sourceFile != null)
+                props.put(getSourceFileKey(pcount), sourceFile.getAbsolutePath());
+            else
+            {
+                // source file unknown, since patch file contains no title we have to remember it
+                String name = patch.getName();
+                if (name != null) props.put(getTitleKey(pcount), name);
+            }
+            pcount++;
+        }
+        
+        props.put(SESSION_PATCHCOUNT, String.valueOf(pcount));
+
+        File sessionFile = getSessionFile(tmpDir);
+        
+        try
+        {
+            OutputStream out = new BufferedOutputStream(new FileOutputStream(sessionFile));
+            props.store(out, "generated file - do not edit manually");
+            out.close();
+        }
+        catch (Exception e)
+        {
+            Log log = LogFactory.getLog(getClass());
+            if (log.isDebugEnabled())
+            {
+                log.debug("exception while storing session file", e);
+            }
+            
+            e.printStackTrace();
+            // ignore   
+        }
         
     }
 
