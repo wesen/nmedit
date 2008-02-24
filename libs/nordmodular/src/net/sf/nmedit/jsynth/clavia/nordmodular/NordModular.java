@@ -1169,7 +1169,7 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
 
     public boolean hasProperty(String propertyName)
     {
-        return DSP_GLOBAL.equals(propertyName);
+        return false;// DSP_GLOBAL.equals(propertyName);
     }
 
     public ComStatus getComStatus()
