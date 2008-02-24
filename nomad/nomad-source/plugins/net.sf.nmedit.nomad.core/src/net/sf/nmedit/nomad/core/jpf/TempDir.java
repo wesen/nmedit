@@ -19,8 +19,6 @@
 package net.sf.nmedit.nomad.core.jpf;
 
 import java.io.File;
-import java.util.prefs.Preferences;
-
 import net.sf.nmedit.nmutils.Platform;
 
 import org.java.plugin.Plugin;

@@ -65,6 +65,11 @@ import net.sf.nmedit.nomad.core.swing.document.DocumentManager;
 public class NMSynthDeviceContext extends SynthObjectForm<NordModular>
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6337542133829436194L;
+
     public NMSynthDeviceContext(NordModular synth)
     {
         super(synth);

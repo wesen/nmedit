@@ -23,7 +23,6 @@
 package net.sf.nmedit.jtheme.component;
 
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.LayoutManager;
 import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;

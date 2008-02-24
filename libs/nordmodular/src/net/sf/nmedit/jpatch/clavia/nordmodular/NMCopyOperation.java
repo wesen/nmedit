@@ -3,7 +3,6 @@ package net.sf.nmedit.jpatch.clavia.nordmodular;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.List;
 
 import net.sf.nmedit.jpatch.CopyOperation;
@@ -12,10 +11,6 @@ import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnectionManager;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PModule;
-import net.sf.nmedit.jpatch.PModuleContainer;
-import net.sf.nmedit.jpatch.impl.PBasicModule;
-import net.sf.nmedit.jtheme.cable.Cable;
-import net.sf.nmedit.jtheme.cable.JTCableManager;
 
 public class NMCopyOperation extends NMMoveOperation implements CopyOperation {
 

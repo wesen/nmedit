@@ -25,8 +25,6 @@ import java.awt.Transparency;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
-import javax.swing.SwingUtilities;
-
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.util.JThemeUtils;
 

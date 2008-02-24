@@ -32,7 +32,11 @@ import javax.swing.JPanel;
 
 public class NomadMidiDialogFrm extends JPanel
 {
-   JLabel lblInVendor = new JLabel();
+   /**
+     * 
+     */
+    private static final long serialVersionUID = -9067659231459021778L;
+JLabel lblInVendor = new JLabel();
    JLabel lblInVersion = new JLabel();
    JLabel lblOutVendor = new JLabel();
    JLabel lblOutDescription = new JLabel();

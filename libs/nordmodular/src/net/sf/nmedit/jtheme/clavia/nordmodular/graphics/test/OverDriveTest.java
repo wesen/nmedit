@@ -36,7 +36,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import net.sf.nmedit.jtheme.clavia.nordmodular.graphics.Overdrive;
-import net.sf.nmedit.jtheme.clavia.nordmodular.graphics.Phaser;
 
 
 public class OverDriveTest

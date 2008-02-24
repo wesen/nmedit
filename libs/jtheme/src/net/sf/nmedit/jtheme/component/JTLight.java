@@ -23,8 +23,6 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
-import javax.swing.SwingUtilities;
-
 import net.sf.nmedit.jpatch.PLight;
 import net.sf.nmedit.jpatch.PLightDescriptor;
 import net.sf.nmedit.jpatch.event.PLightEvent;

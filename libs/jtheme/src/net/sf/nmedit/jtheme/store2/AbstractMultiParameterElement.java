@@ -18,7 +18,6 @@
  */
 package net.sf.nmedit.jtheme.store2;
 
-import java.awt.print.Paper;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;

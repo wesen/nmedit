@@ -27,7 +27,6 @@ import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -37,7 +36,11 @@ import javax.swing.JTextField;
 
 public class SynthSettingsFrm extends JPanel
 {
-   JPanel SynthSettingsFrm = new JPanel();
+   /**
+     * 
+     */
+    private static final long serialVersionUID = -3312251676984503718L;
+JPanel SynthSettingsFrm = new JPanel();
    JSpinner spChannelSlotA = new JSpinner();
    JSpinner spChannelSlotB = new JSpinner();
    JSpinner spChannelSlotC = new JSpinner();

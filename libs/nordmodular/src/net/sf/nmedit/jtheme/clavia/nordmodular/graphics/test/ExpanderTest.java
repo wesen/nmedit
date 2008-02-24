@@ -34,7 +34,6 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import net.sf.nmedit.jtheme.clavia.nordmodular.graphics.Compressor;
 import net.sf.nmedit.jtheme.clavia.nordmodular.graphics.Expander;
 
 

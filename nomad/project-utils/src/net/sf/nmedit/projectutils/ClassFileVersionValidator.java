@@ -305,6 +305,11 @@ public class ClassFileVersionValidator
     
     private static class VersionError extends Exception
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -8031013124643544471L;
+
         public VersionError(String message)
         {
             super(message);

@@ -51,14 +51,13 @@ AND WHETHER UNDER THEORY OF CONTRACT, TORT (INCLUDING NEGLIGENCE),
 STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 
-Copyright © 2003-2007 Apple, Inc., All Rights Reserved
+Copyright ï¿½ 2003-2007 Apple, Inc., All Rights Reserved
 
 */
 
 package net.sf.nmedit.nomad.core.utils;
 
 import java.lang.reflect.*;
-import java.util.HashMap;
 
 
 public class OSXAdapter implements InvocationHandler {

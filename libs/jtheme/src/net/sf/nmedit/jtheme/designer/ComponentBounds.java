@@ -43,6 +43,10 @@ import javax.swing.JComponent;
 public class ComponentBounds extends JComponent
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8688680759876963575L;
     private static final float[] dash = { 6, 3 };
     private static final BasicStroke dashStroke = new BasicStroke(1,
             BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, dash, 0 );
