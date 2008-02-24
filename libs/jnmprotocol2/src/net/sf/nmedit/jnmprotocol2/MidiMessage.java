@@ -337,7 +337,13 @@ public abstract class MidiMessage
         StringBuilder sb = new StringBuilder();
         sb.append(getClass().getName());
         sb.append("[");
-        
+        toStringArgs(sb);
+        sb.append("]");
+        return sb.toString();
+    }
+    
+    protected void toStringArgs(StringBuilder sb)
+    {
         Iterator<Parameter> params = parameters.values().iterator();
         
         if (params.hasNext())
@@ -350,11 +356,9 @@ public abstract class MidiMessage
             sb.append(",");
             sb.append(params.next());
         }
-        
-        sb.append("]");
-        return sb.toString();
     }
 
+    
     private Parameter parameterForName(String name)
     {
         return parameters.get(name);
