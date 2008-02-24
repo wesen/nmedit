@@ -49,6 +49,7 @@ import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 import net.sf.nmedit.jsynth.event.SlotEvent;
 import net.sf.nmedit.jsynth.event.SlotListener;
 import net.sf.nmedit.jsynth.event.SlotManagerListener;
+import net.sf.nmedit.jsynth.midi.MidiDescription;
 import net.sf.nmedit.jsynth.midi.MidiPlug;
 import net.sf.nmedit.jsynth.worker.PatchLocation;
 import net.sf.nmedit.jsynth.worker.StorePatchWorker;
@@ -193,8 +194,10 @@ public class JSynthTest
     {
         Info[] info = NmLookup.lookup(NmLookup.getHardwareDevices(), 1, 1000);
 
-        synth.getPCInPort().setPlug(new MidiPlug(info[0]));
-        synth.getPCOutPort().setPlug(new MidiPlug(info[1]));
+        MidiDescription descIn = new MidiDescription(info[0], 1);
+        MidiDescription descOut = new MidiDescription(info[1], 0);
+        synth.getPCInPort().setPlug(new MidiPlug(descIn));
+        synth.getPCOutPort().setPlug(new MidiPlug(descOut));
     }
     
     private static class SlotManagerInfo implements SlotManagerListener,
