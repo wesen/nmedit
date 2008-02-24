@@ -41,5 +41,12 @@ public class Factory
         setupToolBarButton(button);
         return button;
     }
-    
+
+    public static JButton createSmallToolBarButton(Action action) 
+    {
+        JButton btn = createToolBarButton(action);
+        if (btn.getIcon() != null)
+            btn.setText(null);
+        return btn;
+    }
 }
