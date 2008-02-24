@@ -48,6 +48,7 @@ public class JTMorphModule extends JTModule
     public JTMorphModule(JTContext context)
     {
         super(context);
+        setOpaque(false);
         initSavely();
     }
 
@@ -84,6 +85,7 @@ public class JTMorphModule extends JTModule
                 pad*(morphKnobs.length+2), size+2);
         
         setSize(d);
+        setPreferredSize(d);
         setMinimumSize(d);
         setMaximumSize(d);
     }
