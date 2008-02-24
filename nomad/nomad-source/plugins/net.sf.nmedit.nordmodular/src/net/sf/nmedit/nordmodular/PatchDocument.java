@@ -65,7 +65,7 @@ public class PatchDocument implements Document,
     
     public void setURI(File file)
     {
-        setURI(file.toURI());
+        setURI(file == null ? null : file.toURI());
     }
     
     public void setURI(URI uri)
