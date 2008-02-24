@@ -793,7 +793,7 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
                     else
                     {
                         
-                        if (selectedControl.isExtensionAdapterSet() && e.isAltDown())
+                        if (selectedControl.isExtensionAdapterSet() && isExtensionSelected(e))
                         {
 
                             // TODO compute extension value

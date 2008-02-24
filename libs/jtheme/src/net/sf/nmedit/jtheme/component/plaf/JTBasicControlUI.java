@@ -361,6 +361,13 @@ public abstract class JTBasicControlUI extends JTControlUI
             
             SwingUtilities.replaceUIActionMap(control, null);
         }
+        
+        public boolean isExtensionSelected(MouseEvent e)
+        {
+            if (Platform.isFlavor(Platform.OS.UnixFlavor))
+                return e.isControlDown();
+            return e.isAltDown();
+        }
 
         public void mousePressed( MouseEvent e )
         {
@@ -375,8 +382,8 @@ public abstract class JTBasicControlUI extends JTControlUI
             } 
             else if (SwingUtilities.isLeftMouseButton(e))
             {
-            
-                selectExtensionAdapter = e.isAltDown();
+              
+                selectExtensionAdapter = isExtensionSelected(e);
                 
                 pressedValue = selectExtensionAdapter ? control.getExtNormalizedValue() :
                 control.getNormalizedValue();
