@@ -29,11 +29,13 @@ import net.sf.nmedit.jpatch.AllEventsListener;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
+import net.sf.nmedit.jpatch.clavia.nordmodular.PNMMorphSection;
 import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
 import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentEvent;
 import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.event.PPatchSettingsEvent;
 import net.sf.nmedit.jpatch.clavia.nordmodular.event.PPatchSettingsListener;
+import net.sf.nmedit.jpatch.clavia.nordmodular.parser.Helper;
 import net.sf.nmedit.jpatch.event.PConnectionEvent;
 import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
 import net.sf.nmedit.jpatch.event.PModuleEvent;
@@ -214,6 +216,24 @@ public class NmPatchSynchronizer extends AllEventsListener
             }
             else if ("morph".equals(pclass))
             {
+                // check morph group
+                
+                PModule module = parameter.getParentComponent();
+                PParameter extendedParameter = Helper.getParameter(module, "parameter", Helper.index(parameter));
+                if (extendedParameter == null) return;
+                
+                PNMMorphSection morphSec = patch.getMorphSection();
+                if (morphSec.getAssignedMorph(extendedParameter)<0)
+                {
+                    // not assigned to morph group
+                    if (!morphSec.getAssignments(0).add(extendedParameter))
+                    {
+                        // failed
+                        extendedParameter.setValue(0);
+                        return;
+                    }
+                }
+                
                 MidiMessage message =
                     NmUtils.createMorphRangeChangeMessage(parameter, 
                             slot.getSlotIndex(), slot.getPatchId());
