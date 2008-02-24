@@ -404,49 +404,71 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
             }
             
             this.clear();
-            boolean hasEmpty = false;
-            for (int i=0;i<bank.getPatchCount();i++)
-                if (!bank.containsPatch(i))
-                {
-                    hasEmpty = true;
-                    String name = "<empty>";
-                    if (nameFilter.contains(name))
-                        addChild(new BankPosition(this, name, i));
-                    break;
-                }
-            
+            int firstEmptyIndex = -1;
             for (int i=0;i<bank.getPatchCount();i++)
             {
-                if (bank.containsPatch(i) && bank.isPatchInfoAvailable(i))
+                if (bank.isPatchInfoAvailable(i))
                 {
+                    if (bank.containsPatch(i))
+                        
+                    {
                     String patchname = bank.getPatchName(i);
                     String name = bank.getPatchLocationName(i) +": "+ patchname;
                     if (nameFilter.contains(patchname))
                         addChild(new BankPosition(this, name, i));
+                    }
+                    else
+                    {
+                        if (firstEmptyIndex<0)
+                            firstEmptyIndex = i;
+                    }
                 }
             }
             
+            if (dropped)
+            {
+                // fake node
+                if (getChildCount()==0)
+                    addChild(0, new BankPosition(this, "", firstEmptyIndex /* -1 is ok */));
+            }
+            else
+            {
+                if (firstEmptyIndex>=0)
+                {
+                    String name = "<empty>";
+                    if (nameFilter.contains(name))
+                        addChild(0, new BankPosition(this, name, firstEmptyIndex));
+                }
+            }
             banksTree.fireNodeStructureChanged(this);
         }
 
         public boolean getAllowsChildren()
         {
-            return synth.isConnected();
+            return true;
         }
         
-        public TreeNode getChildAt(int childIndex)
+        public TreeNode getChildAt(int index)
         {
-            if (dropped)
+            ensureBankLoaded();
+            return super.getChildAt(index);
+        }
+        
+        private void ensureBankLoaded()
+        {
+            if (!dropped) return;
+            if (synth.isConnected())
             {
-                if (synth.isConnected())
-                {
-                    bank.update();
-                    dropped = false;
-                }
+                dropped = false;
+                bank.update();
             }
-            return super.getChildAt(childIndex);
         }
 
+        public boolean isLeaf()
+        {
+            return bank.getPatchCount()==0;
+        }
+        
         public void notifyDropChildren()
         {
             dropped = true;
@@ -464,8 +486,7 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
 //        	Throwable ex = new Throwable();
 //        	ex.printStackTrace();
             if (dropped) return;
-            
-            
+           
             SwingUtilities.invokeLater(new Runnable(){public void run(){
             regenerate();
             }});
