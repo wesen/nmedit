@@ -23,6 +23,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import net.sf.nmedit.jnmprotocol2.MorphKeyboardAssignmentMessage;
@@ -31,6 +32,7 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.Knob;
 import net.sf.nmedit.jpatch.clavia.nordmodular.MidiController;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.PNMMorphSection;
+import net.sf.nmedit.jpatch.clavia.nordmodular.PNMMorphSection.Assignments;
 import net.sf.nmedit.jtheme.JTPopupHandler;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTControl;
@@ -341,22 +343,52 @@ public class ControlPopupHandler implements JTPopupHandler
                 name = ZEROMORPH;
             }
             else if (actionCommand == MORPH)
-            {
-                // TODO check if morph is enabled
-                setEnabled(parent.getMorphParameter() != null /*&& morph enabled*/);
-                
-                if (index>4)
-                    throw new IllegalArgumentException("invalid morph group:"+index);
-                
-                name = (index<0) ? "Disable" : ("Group "+(index+1));
+            { 
+                if (index>4) throw new IllegalArgumentException("invalid morph group:"+index);
+                boolean MorphAssignmentSupported = parent.getMorphParameter() != null;
+                if (index>=0)
+                {
+                    name = "Group "+(index+1);
+                    if (MorphAssignmentSupported && index>=0)
+                    {
+                        PNMMorphSection ms = getPatch().getMorphSection();
+                        int assignedToMorph = ms.getAssignedMorph(getParameter());
+                        
+                        if (index == assignedToMorph)
+                        {
+                            name += extraInfo(getParameter());
+                        }
+                        else if (!ms.getAssignments(index).isFull())
+                        {
+                            setEnabled(true);
+                        }
+                    }
+                }
+                else // disable case
+                {
+                    name = "Disable";
+                    boolean assignedToMorph = getPatch().getMorphSection().getAssignedMorph(getParameter())>=0;
+                    setEnabled(assignedToMorph);
+                }
             }
             else if (actionCommand == KNOB)
             {
                 setEnabled(true);
                 if (index<0)
+                {
                     name = "Disable";
+                }
                 else
-                    name = getPatch().getKnobs().get(index).getName();
+                {
+                    Knob k = getPatch().getKnobs().get(index);
+                    name = k.getName();
+                    
+                    if (k.getParameter() != null)
+                    {
+                        name += extraInfo(k.getParameter());
+                    }
+                    
+                }
             }
             else if (actionCommand == MIDI)
             {   
@@ -370,7 +402,8 @@ public class ControlPopupHandler implements JTPopupHandler
                 if (MidiController.isValidCC(index))
                 {
                     setEnabled(!assigned);
-                    name = MidiController.getDefaultName(index);
+                    MidiController mc = getPatch().getMidiControllers().get(index);
+                    name = MidiController.getDefaultName(index)+extraInfo(mc.getParameter());
                 }
                 else
                 {
@@ -390,7 +423,7 @@ public class ControlPopupHandler implements JTPopupHandler
             }
             else if (actionCommand == KB && getParameter().getParentComponent().getParentComponent()==getPatch().getMorphSection())
             {
-                PNMMorphSection ms =
+                PNMMorphSection ms = 
                     (PNMMorphSection)getParameter().getParentComponent().getParentComponent();
                 
                 setEnabled(ms.getKeyboardAssignment(getParameter().getComponentIndex()).getValue()!=index);
@@ -409,6 +442,14 @@ public class ControlPopupHandler implements JTPopupHandler
             
             putValue(NAME, name);
             
+        }
+        
+        private String extraInfo(PParameter p)
+        {
+            if (p == null) return "";
+            String moduleName = p.getParentComponent().getName();
+            String paramName = p.getName();
+            return " ("+moduleName+"/"+paramName+")";
         }
 
         public void actionPerformed(ActionEvent e)
@@ -440,12 +481,17 @@ public class ControlPopupHandler implements JTPopupHandler
             }
             else if (command == MIDI)
             {
-                if (index==-1)
-                    deassignMidiCtrl();
-                else assignMidiCtrl();
+                if (index>=0) assignMidiCtrl();
+                else if (index==-1) deassignMidiCtrl();
+                else if (index==-2) MidiCtrlAssignmentDialog();
             }
         }
         
+        private void MidiCtrlAssignmentDialog()
+        {
+            // TODO
+        }
+
         PParameter getParameter()
         {
             return parent.getParameter();
