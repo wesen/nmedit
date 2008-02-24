@@ -23,7 +23,6 @@
 package net.sf.nmedit.jtheme.component;
 
 import java.awt.AWTEvent;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -38,14 +37,13 @@ import java.util.LinkedList;
 
 import javax.swing.JComponent;
 import javax.swing.RepaintManager;
-import javax.swing.UIDefaults;
 
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.event.PModuleEvent;
 import net.sf.nmedit.jpatch.event.PModuleListener;
+import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
-import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.plaf.JTModuleUI;
 
 public class JTModule extends JTComponent
