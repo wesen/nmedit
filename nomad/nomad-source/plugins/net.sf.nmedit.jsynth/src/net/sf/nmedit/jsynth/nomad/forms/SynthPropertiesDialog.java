@@ -16,7 +16,7 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.nmedit.jsynth.nomad;
+package net.sf.nmedit.jsynth.nomad.forms;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -44,7 +44,6 @@ import net.sf.nmedit.jsynth.midi.MidiDescription;
 import net.sf.nmedit.jsynth.midi.MidiID;
 import net.sf.nmedit.jsynth.midi.MidiPlug;
 import net.sf.nmedit.nomad.core.forms.ExceptionDialog;
-import net.sf.nmedit.nomad.core.forms.NomadMidiDialogFrmHandler;
 import net.sf.nmedit.nomad.core.forms.PropertyDialogForm;
 
 public class SynthPropertiesDialog<S extends Synthesizer> extends PropertyDialogForm

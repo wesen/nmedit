@@ -16,7 +16,7 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.nmedit.nomad.core.forms;
+package net.sf.nmedit.jsynth.nomad.forms;
 
 import java.awt.BorderLayout;
 import java.awt.Dialog;
@@ -41,6 +41,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
+import net.sf.nmedit.nomad.core.forms.NomadJDialog;
 import net.sf.nmedit.nomad.core.misc.NMUtilities;
 
 public class NomadMidiDialog extends NomadJDialog

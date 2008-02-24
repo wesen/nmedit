@@ -16,7 +16,7 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.nmedit.nomad.core.forms;
+package net.sf.nmedit.jsynth.nomad.forms;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -32,11 +32,7 @@ import javax.swing.JPanel;
 
 public class NomadMidiDialogFrm extends JPanel
 {
-   /**
-     * 
-     */
-    private static final long serialVersionUID = -9067659231459021778L;
-JLabel lblInVendor = new JLabel();
+   JLabel lblInVendor = new JLabel();
    JLabel lblInVersion = new JLabel();
    JLabel lblOutVendor = new JLabel();
    JLabel lblOutDescription = new JLabel();
