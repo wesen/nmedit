@@ -307,7 +307,7 @@ public class PatchBuilder implements PContentHandler
             if (module == null)
                 throw new ParseException("[KnobMapDump] Module does not exist at index:"+modIndex);
             
-            p = module.getParameter(paramIndex);
+            p = Helper.getParameter(module, "parameter", paramIndex);
             if (p == null)
                 throw new ParseException("[KnobMapDump] Parameter does not exist at index:"+paramIndex+" (module index: "+modIndex+")");
             
@@ -368,27 +368,18 @@ public class PatchBuilder implements PContentHandler
             int section = record[Format.CTRL_MAP_DUMP_SECTION_INDEX];
             int moduleIndex = record[Format.CTRL_MAP_DUMP_MODULE_INDEX];
             int pindex = record[Format.CTRL_MAP_DUMP_PARAMETER_INDEX];
-            if (section == 0)
+            if (section == 0 || section == 1)
             {
-                PModule module =  patch.getCommonVoiceArea().getModule(moduleIndex);
+                VoiceArea va = section == 0 ? patch.getCommonVoiceArea() : patch.getPolyVoiceArea();
+                
+                PModule module =  va.getModule(moduleIndex);
                 if (module == null)
                     emiterror("Module[index="+moduleIndex+"] does not exist in "+patch.getCommonVoiceArea());
                 
                 if (pindex<0 || pindex>=Helper.getParameterClassCount(module, "parameter"))                    
                     emiterror(module+" has no parameter[index="+pindex+"]");
                 else
-                    p = module.getParameter(pindex);
-            }
-            else if (section==1)
-            {
-                PModule module = patch.getPolyVoiceArea().getModule(moduleIndex);
-                if(module == null)
-                    emiterror("Module[index="+moduleIndex+"] does not exist in "+patch.getPolyVoiceArea());
-                
-                if (pindex<0 || pindex>=Helper.getParameterClassCount(module, "parameter"))
-                    emiterror(module+" has no parameter[index="+pindex+"]");
-                else
-                    p = module.getParameter(pindex);
+                    p = Helper.getParameter(module, "parameter", pindex);
             }
             else if (section==2)
                 p = patch.getMorphSection().getMorph(record[2]);

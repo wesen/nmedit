@@ -32,6 +32,8 @@ import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleContainer;
+import net.sf.nmedit.jpatch.clavia.nordmodular.Format;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Knob;
 import net.sf.nmedit.jpatch.clavia.nordmodular.MidiController;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
@@ -209,7 +211,8 @@ public class PatchExporter
                     {
                         PParameter pp = k.getParameter();
                         PModule m = pp.getParentComponent();
-                        record[0] = m.getParentComponent().getComponentIndex();
+                        PModuleContainer va = m.getParentComponent();
+                        record[0] = va.getComponentIndex();
                         record[1] = m.getComponentIndex();
                         record[2] = Helper.index(pp);
                         record[3] = k.getID();
@@ -218,7 +221,7 @@ public class PatchExporter
                     else if ("morph".equals(pclass))
                     {
                         PParameter  morph = k.getParameter();
-                        record[0] = 2;
+                        record[0] = Format.VALUE_SECTION_MORPH;
                         record[1] = 1; // module index = const(1)
                         record[2] = Helper.index(morph);
                         record[3] = k.getID();
@@ -257,9 +260,11 @@ public class PatchExporter
                     {
                         PParameter pp = mc.getParameter();
                         PModule m = pp.getParentComponent();
+                        
+                        PModuleContainer va = m.getParentComponent();
 
-                        record[0] = m.getParentComponent().getComponentIndex();
-                        record[1] = Helper.index(m);
+                        record[0] = va.getComponentIndex(); // voice area id
+                        record[1] = m.getComponentIndex(); // index in module container
                         record[2] = Helper.index(pp);
                         record[3] = mc.getControlId();
                         
@@ -269,7 +274,7 @@ public class PatchExporter
                     {
                         PParameter morph = mc.getParameter();
 
-                        record[0] = 2;
+                        record[0] = Format.VALUE_SECTION_MORPH;
                         record[1] = 1; // module index = const(1)
                         record[2] = Helper.index(morph); // morph index [0..3]
                         record[3] = mc.getControlId();
