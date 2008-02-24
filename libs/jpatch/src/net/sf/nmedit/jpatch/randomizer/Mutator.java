@@ -19,17 +19,21 @@
 package net.sf.nmedit.jpatch.randomizer;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JPanel;
@@ -57,19 +61,48 @@ public class Mutator {
 		
 		createUI();
 	}
-    
+
+    private static <T extends JComponent> T centerx(T c){
+        c.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+        return c;
+    }
+    private static <T extends JComponent> T right(T c){
+        c.setAlignmentX(JComponent.RIGHT_ALIGNMENT);
+        return c;
+    }
+    private <T extends JComponent> T left(T c){
+        c.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        return c;
+    }
+    private <T extends JComponent> T bottom(T c){
+        c.setAlignmentY(JComponent.BOTTOM_ALIGNMENT);
+        return c;
+    }
+	static final int STRUT = 4;
+	
+	private Component createFiller()
+	{
+	    // note: do not add the same component more than one time to a parent
+	    //return new Box.Filler(new Dimension(10,10),new Dimension(50,50),new Dimension(10,10));
+	    return Box.createRigidArea(new Dimension(0, 10));
+	}
+	
 	private void createUI() {
 		JFrame f = new JFrame("Mutator test");
-	    f.setBounds(30,30,300,300);
+		f.setResizable(false);
+	    f.setBounds(30,30,400,320);
+	    JPanel cp = new JPanel();
 	    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    f.getContentPane().setLayout(new BoxLayout(f.getContentPane(),BoxLayout.PAGE_AXIS));
+	    cp.setLayout(new BoxLayout(cp,BoxLayout.PAGE_AXIS));
+	    f.setContentPane(cp);
+	    cp.setBorder(BorderFactory.createEmptyBorder(2,4,2,4));
 	    
-	    JPanel variationStore = new JPanel(new GridLayout(3,6));
+	    JPanel variationStore = new JPanel(new GridLayout(3,6, 2, 2));
 	  
 	    
 	    final JSpinner rangeSpinner = new JSpinner( new SpinnerNumberModel(10, 0, 50, 1));
-
-	    Box rangeBox = new Box(BoxLayout.Y_AXIS);
+	   
+	    Box rangeBox = Box.createVerticalBox();
 	    
 	    rangeSpinner.setValue((int)(range*50));
 	    rangeSpinner.addChangeListener(new ChangeListener(){
@@ -79,10 +112,11 @@ public class Mutator {
 	    	}
 	    });	    
 
-	    rangeBox.add(rangeSpinner);
-	    rangeBox.add(new JLabel("Range"));
+	    rangeBox.add(Box.createVerticalGlue());
+        rangeBox.add(bottom(left(new JLabel("Range"))));
+	    rangeBox.add(bottom(left(rangeSpinner)));
 	    
-	    Box probBox = new Box(BoxLayout.Y_AXIS);
+	    Box probBox = Box.createVerticalBox();
 	    
 	    final JSpinner probSpinner = new JSpinner(new SpinnerNumberModel(10, 0, 100, 1));
 	    probSpinner.setValue((int)(probability*100));
@@ -93,46 +127,79 @@ public class Mutator {
 	    	}
 	    });	    
 
-	    probBox.add(probSpinner);
-	    probBox.add(new JLabel("Prob."));
+	    probBox.add(Box.createVerticalGlue());
+        probBox.add(left(new JLabel("Prob.")));
+	    probBox.add(left(probSpinner));
+        probBox.setMaximumSize(new Dimension(100, Short.MAX_VALUE));
+        rangeBox.setMaximumSize(new Dimension(100, Short.MAX_VALUE));
 	    
-	    Box spinBox = new Box(BoxLayout.X_AXIS);
+	    Box spinBox = bottom(Box.createHorizontalBox());
 	    
-	    spinBox.add(probBox);
-	    spinBox.add(rangeBox);
+	    spinBox.add(left(probBox));
+	    spinBox.add(Box.createHorizontalStrut(STRUT));
+	    spinBox.add(left(rangeBox));
+        spinBox.add(Box.createHorizontalStrut(STRUT));
 	    
-	    Box varBox = new Box(BoxLayout.X_AXIS);
-	    varBox.add(mother);
+	    Box varBox = Box.createHorizontalBox();
+
+        Box parentBox;
+        
+        parentBox = bottom(left(Box.createVerticalBox()));
+        parentBox.add(bottom(centerx(new JLabel("Mother"))));
+        parentBox.add(bottom(centerx(mother)));
+        Box motherBox = parentBox;
+
+        parentBox = bottom(right(Box.createVerticalBox()));
+        parentBox.add(bottom(centerx(new JLabel("Father"))));
+        parentBox.add(bottom(centerx(father)));
+        Box fatherBox = parentBox;
+	    
+	    varBox.add(motherBox);
+        varBox.add(Box.createHorizontalGlue());
+
+        Box childrenCaptionBox = bottom(centerx(Box.createHorizontalBox()));
+        Box childrenVariationBox = bottom(centerx(Box.createHorizontalBox()));
+
+        childrenCaptionBox.add(centerx(bottom(new JLabel("Children"))));
+        
+        Box childrenBox = bottom(centerx(Box.createVerticalBox()));
+        childrenBox.add(childrenCaptionBox);
+        childrenBox.add(childrenVariationBox);
+        
 	    for (int i  = 0; i < variations.length; i++)
-	    	varBox.add(variations[i]);
-	    varBox.add(father);
-	   
-	    Box.Filler filler = new Box.Filler(new Dimension(10,10),new Dimension(50,50),new Dimension(10,10));
-	    
-	    f.getContentPane().add(filler);
+	    {
+	        if (i>0) childrenVariationBox.add(Box.createHorizontalStrut(4));
+	        childrenVariationBox.add(left(bottom(variations[i])));
+	    }
+	    varBox.add(childrenBox);
+        varBox.add(Box.createHorizontalGlue());
+	    varBox.add(fatherBox);
+
 	    f.getContentPane().add(spinBox);
-	    f.getContentPane().add(filler);
+        f.getContentPane().add(Box.createVerticalGlue());
 	    f.getContentPane().add(varBox);
-	    f.getContentPane().add(filler);
+	    f.getContentPane().add(createFiller());
 	    f.getContentPane().add(variationStore);
 	    
 	    
 	    
-	    JButton randomizeBut = new JButton("Randomize");
+	    JButton randomizeBut = bottom(right(new JButton("Randomize")));
 	    randomizeBut.addActionListener(new ActionListener(){
 	    	public void actionPerformed(ActionEvent arg0) {
 	    		randomize();	    		
 	    	}
 	    });
 	    
-	    JButton mutateBut = new JButton("Mutate");
+	    JButton mutateBut = bottom(right(new JButton("Mutate")));
 	    mutateBut.addActionListener(new ActionListener(){
 	    	public void actionPerformed(ActionEvent arg0) {
 	    		mutate();	    		
 	    	}
 	    });
-	    
+
+        spinBox.add(Box.createHorizontalGlue());
 	    spinBox.add(randomizeBut);
+        spinBox.add(Box.createHorizontalStrut(STRUT));
 	    spinBox.add(mutateBut);
 	    
 	    for (int series = 0; series < 3 ; series ++)
@@ -166,7 +233,6 @@ public class Mutator {
 		for (int variation =0 ; variation < variations.length ; variation++ )
 		{
 			variations[variation].mutate(mother, range, probability);
-			variations[variation].repaint();
 		}
 	}
 	
@@ -175,7 +241,6 @@ public class Mutator {
 		for (int variation =0 ; variation < variations.length ; variation++ )
 		{
 			variations[variation].randomize(mother.getNbValues());
-			variations[variation].repaint();
 		}
 	}
 	

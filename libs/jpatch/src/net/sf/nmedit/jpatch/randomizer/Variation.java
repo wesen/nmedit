@@ -22,19 +22,19 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.Polygon;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Stroke;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 
-import javax.swing.JButton;
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
-import javax.swing.JSlider;
 import javax.swing.TransferHandler;
+import javax.swing.border.Border;
 
 public class Variation extends JComponent { 
 	/**
@@ -43,12 +43,17 @@ public class Variation extends JComponent {
 	private static final long serialVersionUID = -3543257101198489340L;
 	int values[] = null;
 	
+	private static final Border VarBorder = BorderFactory.createLineBorder(Color.GRAY);
+
+	// render to buffer - improves rendering performance of component
+    private BufferedImage renderedImage = null;
+    private boolean modifiedFlag = true;
+	
 	public Variation(){
 		construct();
 	}
 	
 	public Variation(int size) {
-		
 		if (size > 0) {
 			values = new int[size];
 			for (int i = 0; i < size; i ++)
@@ -67,7 +72,15 @@ public class Variation extends JComponent {
 		construct();
 	}
 	
+	private void setModifiedFlag()
+	{
+	    modifiedFlag = true;
+	    repaint();
+	}
+	
 	private void construct(){
+        setBackground(Color.BLACK);
+        setBorder(VarBorder);
 		setTransferHandler(new VariationTransferHandler());
 		
 		VariationListener listener = new VariationListener();
@@ -102,11 +115,13 @@ public class Variation extends JComponent {
 				values[i] = refVar.getValues()[i];
 			}
 		}	
+		
+		setModifiedFlag();
 	}
 	
 	public void randomize(int size)
 	{
-		if (values == null)
+		if (values == null || values.length != size)
 		{
 			values = new int[size];
 		}
@@ -115,6 +130,7 @@ public class Variation extends JComponent {
 		{
 				values[i] = (int)(Math.random()*127);
 		}
+        setModifiedFlag();
 	}
 	
 	public int getNbValues(){
@@ -144,9 +160,12 @@ public class Variation extends JComponent {
 			if (values == null) return null;
 			
 			poly = new Polygon();
-			
-			int w = getWidth()/8;
-			int h = getHeight()/8;
+
+	        Dimension dd = getSizeWithoutInsets();
+	        
+	        int w = dd.width/8;
+	        int h = dd.height/8;
+	        
 			
 			poly.addPoint(w/2,h/2);
 			
@@ -191,6 +210,14 @@ public class Variation extends JComponent {
 		return poly;
 		
 	}
+	
+	private Dimension getSizeWithoutInsets()
+	{
+        Insets insets = getInsets();
+        int ww = getWidth()-insets.left-insets.right;
+        int hh = getHeight()-insets.top-insets.bottom;
+        return new Dimension(ww,hh);
+	}
 
 	double angles[] = new double[64];
 	private Polygon getPolygon2()
@@ -200,8 +227,10 @@ public class Variation extends JComponent {
 		
 		poly = new Polygon();
 		
-		int w = getWidth()/8;
-		int h = getHeight()/8;
+		Dimension dd = getSizeWithoutInsets();
+		
+		int w = dd.width/8;
+		int h = dd.height/8;
 		
 		poly.addPoint(w/2,h/2);
 		
@@ -248,53 +277,106 @@ public class Variation extends JComponent {
 		
 	}
 	
+	public void setBorder(Border b)
+	{
+	    super.setBorder(b);
+	    setModifiedFlag();
+	}
+	
+	public void setBackground(Color bg)
+	{
+	    super.setBackground(bg);
+	    setModifiedFlag();
+	}
+	
 	public void paintComponent(Graphics g)
 	{
-		super.paintComponent(g);
-				
-		Graphics2D g2 = (Graphics2D) g;
+		// not necessary super.paintComponent(g);
+	    BufferedImage image = getRenderedImage();
+	    g.drawImage(image, 0, 0, null);
+    }
+	
+	private BufferedImage getRenderedImage()
+	{
+	    BufferedImage image = renderedImage;
+	    
+	    boolean recreate = image == null || (image.getWidth()!=getWidth()) && image.getHeight()!=getHeight();
+	    
+	    if ((!recreate) && (!modifiedFlag)) return image;
+	    
+	    if (recreate)
+	    {
+	        if (image != null) image.flush(); // free resources
+	        image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+	        renderedImage = image;
+	    }
+	    
+	    Graphics2D g2 = image.createGraphics();
+	    try
+	    {
+	        renderVariation(g2);
+	    }
+	    finally
+	    {
+	        g2.dispose();
+	    }
+
+	    return image;
+	}
+
+	private void renderVariation(Graphics2D g2)
+    {
         //g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        //g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         
 //        if (values != null){
-//        	for (int x = 0 ; x < 8 ; x++)
-//	        {
-//				for (int y = 0 ; y < 8 ; y++)
-//	        	{
-//					int w = getWidth()/8;
-//					int h = getHeight()/8;
-//	        		//Color c =  mutator.getPalette()[mutator.getColors()[series][x+y*8]];
-//	        		Color c = colorValue(getValues()[x+y*8]);
-//	        		g2.setColor(c);
-//	            	g2.fillRect(x*w,y*h,w,h);
-//	         
-//	        		//g.fillRect(0,0,getWidth(),getHeight());
-//	        	} 	            	
-//	        }
+//          for (int x = 0 ; x < 8 ; x++)
+//          {
+//              for (int y = 0 ; y < 8 ; y++)
+//              {
+//                  int w = getWidth()/8;
+//                  int h = getHeight()/8;
+//                  //Color c =  mutator.getPalette()[mutator.getColors()[series][x+y*8]];
+//                  Color c = colorValue(getValues()[x+y*8]);
+//                  g2.setColor(c);
+//                  g2.fillRect(x*w,y*h,w,h);
+//           
+//                  //g.fillRect(0,0,getWidth(),getHeight());
+//              }                   
+//          }
 //        }
-		g2.setColor(Color.black);
-		
-		if (values != null){
-			Polygon p = getPolygon2();
-			g2.setColor(Color.black);
-			g2.fillRect(0,0,getWidth()-1,getHeight()-1);
-			for (int i = 0 ; i < p.xpoints.length-1 ; i ++){
-				if (i%2 == 0){
-					g2.setColor(colorValue((int )(angles[i]*256/Math.PI)));
-				
-					//g2.setStroke(new StrokeWidthManager());
-					//System.out.println(angles[i]*256/Math.PI + " a ");
-				}
-				g2.drawLine(p.xpoints[i],p.ypoints[i],p.xpoints[i+1],p.ypoints[i+1]);
-				
-			}
-		}
-		
-		g2.setColor(Color.DARK_GRAY);
-		g2.drawRect(0,0,getWidth()-1,getHeight()-1);
+
+        Insets insets = getInsets();
+        int w = getWidth()-insets.left-insets.right;
+        int h = getHeight()-insets.top - insets.bottom;
+        
+        g2.setColor(getBackground());
+
+        Border border = getBorder();
+        if (border == null || border.isBorderOpaque())
+            g2.fillRect(0, 0, getWidth(), getHeight());
+        else
+            g2.fillRect(insets.left, insets.top,w,h);
+
+        if (values != null){
+            Polygon p = getPolygon2();
+            for (int i = 0 ; i < p.xpoints.length-1 ; i ++){
+                if (i%2 == 0){
+                    g2.setColor(colorValue((int )(angles[i]*256/Math.PI)));
+                
+                    //g2.setStroke(new StrokeWidthManager());
+                    //System.out.println(angles[i]*256/Math.PI + " a ");
+                }
+                g2.drawLine(p.xpoints[i],p.ypoints[i],p.xpoints[i+1],p.ypoints[i+1]);
+                
+            }
+        }
+        
     }
 
-	public void setValues(int[] values) {
+    public void setValues(int[] values) {
 		this.values = values;
+        setModifiedFlag();
 	}
 	
 	public class VariationListener implements MouseMotionListener, MouseListener{
