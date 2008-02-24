@@ -23,6 +23,7 @@
 package net.sf.nmedit.jsynth.midi;
 
 import javax.sound.midi.MidiDevice;
+import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.MidiDevice.Info;
 
@@ -31,36 +32,38 @@ import net.sf.nmedit.jsynth.Plug;
 public class MidiPlug implements Plug
 {
 
-    private Info devInfo;
+    private MidiDescription synthDesc;
 
-    public MidiPlug(MidiDevice.Info devInfo)
+    public MidiPlug(MidiDescription devInfo)
     {
-        this.devInfo = devInfo;
+        this.synthDesc = devInfo;
     }
 
     public String getName()
     {
-        return devInfo.getName();
+        return synthDesc.getName();
     }
 
     public String getDescription()
     {
-        return devInfo.getDescription();
+        return synthDesc.getDescription();
     }
 
     public String getVendor()
     {
-        return devInfo.getVendor();
+        return synthDesc.getVendor();
     }
 
     public String getVersion()
     {
-        return devInfo.getVersion();
+        return synthDesc.getVersion();
     }
     
     public MidiDevice.Info getDeviceInfo()
     {
-        return devInfo;
+        MidiDevice.Info[] list = MidiSystem.getMidiDeviceInfo();
+        MidiID midiID = new MidiID(list);
+        return midiID.findDeviceInfo(synthDesc);
     }
 
     public boolean isHardwareDevice() throws MidiUnavailableException
@@ -70,7 +73,7 @@ public class MidiPlug implements Plug
     
     public int hashCode()
     {
-        return devInfo.hashCode();
+        return synthDesc.hashCode();
     }
     
     public boolean equals(Object o)
