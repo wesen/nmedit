@@ -20,7 +20,8 @@
 package net.sf.nmedit.jtheme.randomizer;
 
 import net.sf.nmedit.jpatch.PPatch;
-import net.sf.nmedit.jpatch.randomizer.GaussianRandomizer;
+import net.sf.nmedit.jpatch.randomizer.Randomizer;
+import net.sf.nmedit.jpatch.randomizer.RandomizerFactory;
 import net.sf.nmedit.jtheme.component.JTPatch;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.menulayout.ActionHandler;
@@ -73,14 +74,19 @@ public class RandomizerTools
         }
     }
 
+    private static Randomizer randomizer = RandomizerFactory.createGaussianRandomizer();
+    
     public void randomizePatch() 
     {    
         PPatch patch = getSelectedPatch();
         if (patch == null)
             return;
-            
-        GaussianRandomizer randomizer = GaussianRandomizer.getRandomizer();
-        randomizer.randomize(patch);
+        
+        if (randomizer.getPatch()!=patch)
+        {
+            randomizer.setPatch(patch);
+        }
+        randomizer.randomize();
     }
 
 }

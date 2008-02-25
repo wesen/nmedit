@@ -18,34 +18,19 @@
  */
 package net.sf.nmedit.jpatch.randomizer;
 
+import java.util.List;
+
 import net.sf.nmedit.jpatch.PParameter;
-import net.sf.nmedit.jpatch.PPatch;
 
-public class SimpleRandomizer {
-
-    
-	// Randomize all paramaters, except the morph parameters
-	private static SimpleRandomizer randomizer = null;
-	public static SimpleRandomizer getRandomizer(){
-		if (randomizer == null)
-			randomizer = new SimpleRandomizer();
-		return randomizer;
-	}
-	
-	private DefaultParameterIterator parameterIterator = new DefaultParameterIterator()
-	{
-        @Override
-        protected void iterate(PParameter p)
+public class SimpleRandomizerAlgorithm implements RandomizerAlgorithm 
+{
+    public void randomize(List<PParameter> parameterList)
+    {
+        for (PParameter p: parameterList)
         {
             double normalizedValue = p.getDoubleValue();
             normalizedValue = normalizedValue*Math.random();
             p.setDoubleValue(normalizedValue);
         }
-	}
-	;
-	
-	public void randomize(PPatch patch){
-	    parameterIterator.iterate(patch);
-	}
-	
+    }	
 }

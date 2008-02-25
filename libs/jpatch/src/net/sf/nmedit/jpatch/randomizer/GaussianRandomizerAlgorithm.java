@@ -18,14 +18,16 @@
  */
 package net.sf.nmedit.jpatch.randomizer;
 
-import net.sf.nmedit.jpatch.PParameter;
-import net.sf.nmedit.jpatch.PPatch;
+import java.util.List;
 
-public class GaussianRandomizer {
-	private static GaussianRandomizer randomizer = null;
+import net.sf.nmedit.jpatch.PParameter;
+
+public class GaussianRandomizerAlgorithm implements RandomizerAlgorithm
+{
 	private static int flattenedDistribution[];
 	
-	public GaussianRandomizer() {
+	static 
+	{
 		int gaussianDistribution[] = new int[128];
 		for (int i=0; i < 128 ; i++){
 			double x = i/127.0 * 6 - 3 ; 
@@ -50,33 +52,16 @@ public class GaussianRandomizer {
 		//for (int y: flattenedDistribution) System.out.println(y);
 	}
 
-    private DefaultParameterIterator parameterIterator = new DefaultParameterIterator()
+    public void randomize(List<PParameter> parameterList)
     {
-        @Override
-        protected void iterate(PParameter param)
+        System.out.println(parameterList);
+        for (PParameter param: parameterList)
         {
-
             float max = param.getMaxValue();
             float min = param.getMinValue();
         //System.out.println((int)(Math.random()*(max-min)));
             if (max-min ==127)
                 param.setValue(flattenedDistribution[(int)(Math.random()*flattenedDistribution.length)]);
-        
         }
     }
-    ;
-    
-	public static GaussianRandomizer getRandomizer(){
-		if (randomizer == null)
-			randomizer = new GaussianRandomizer();
-		return randomizer;
-	}
-	
-	public void randomize(PPatch patch){
-        parameterIterator.iterate(patch);
-	}
-	
-	public static void main(String[] args) {
-		GaussianRandomizer.getRandomizer();
-	}
 }
