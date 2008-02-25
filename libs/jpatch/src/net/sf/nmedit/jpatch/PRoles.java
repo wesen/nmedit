@@ -19,6 +19,9 @@ import java.util.Collection;
  * assign (assignment of something to something else)
  */
 
+/**
+ * A set of strings defining the role of a component.
+ */
 public interface PRoles extends Collection<String>, Iterable<String>
 {
 
