@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
+import java.util.Collection;
 
 import javax.swing.SwingUtilities;
 
@@ -18,13 +19,15 @@ import net.sf.nmedit.jtheme.component.plaf.mcui.JTModuleContainerUI.EventHandler
 
 public class JTModuleTransferDataWrapper implements JTModuleTransferData
 {
+    private Collection<? extends JTModule> modules;
     private EventHandler delegate;
     private Point dragStartLocation;
     
-    public JTModuleTransferDataWrapper(EventHandler delegate, Point dragStartLocation)
+    public JTModuleTransferDataWrapper(EventHandler delegate, Collection<? extends JTModule> modules, Point dragStartLocation)
     {
-        this.delegate = delegate;
+        this.modules = modules;
         this.dragStartLocation = dragStartLocation;
+        this.delegate = delegate;
     }
 
     public Point getDragStartLocation()
@@ -32,9 +35,9 @@ public class JTModuleTransferDataWrapper implements JTModuleTransferData
         return new Point(dragStartLocation);
     }
 
-    public JTModule[] getModules()
+    public Collection<? extends JTModule> getModules()
     {
-        return delegate.getModules();
+        return modules;
     }
     
     private transient Rectangle boundingBox;
@@ -48,22 +51,17 @@ public class JTModuleTransferDataWrapper implements JTModuleTransferData
     {
         if (boundingBox == null)
         {
-            boundingBox = new Rectangle(0,0,0,0);
+            Collection<? extends JTModule> modules = getModules();
             
-            JTModule[] modules = getModules();
-            
-            if (modules.length>0)
-            {
-                JTModule m = modules[0];
-                boundingBox = m.getBounds(boundingBox);
-                for (int i=modules.length-1;i>=1;i--)
-                {
-                    m = modules[i];
+            for (JTModule m : modules) {
+            	if (boundingBox == null) {
+            		boundingBox = m.getBounds(boundingBox);
+            	} else {
                     SwingUtilities.computeUnion(
                             m.getX(), m.getY(), 
                             m.getWidth(), m.getHeight(), 
                             boundingBox);
-                }
+            	}
             }
         }
         

@@ -18,14 +18,18 @@
  */
 package net.sf.nmedit.jtheme.component;
 
+import java.awt.datatransfer.Clipboard;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 
 import javax.swing.JComponent;
 
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jtheme.JTContext;
+import net.sf.nmedit.nmutils.swing.CopyCutPasteTarget;
 
-public class JTPatch extends JComponent
+public class JTPatch extends JComponent implements CopyCutPasteTarget
 {
 
     /**
@@ -44,6 +48,15 @@ public class JTPatch extends JComponent
     public JTModuleContainer[] getModuleContainers() {
     	JTModuleContainer []res = new JTModuleContainer[1];
     	return (JTModuleContainer[]) moduleContainers.toArray(res);
+    }
+    
+    public Collection<? extends JTModule> getSelectedModules() {
+    	for (JTModuleContainer jtc : getModuleContainers()) {
+    		if (jtc.getSelectionSize() > 0)
+    			return jtc.getSelectedModules();
+    	}
+    	
+    	return new HashSet<JTModule>();
     }
     
     public void addModuleContainer(JTModuleContainer container) {
@@ -67,6 +80,33 @@ public class JTPatch extends JComponent
     public PPatch newPatchWithModules(JTModule modules[]) {
     	return null;
     }
+
+	public boolean canCopy() {
+		return true;
+	}
+
+	public boolean canCut() {
+		return true;
+	}
+
+	public boolean canPaste() {
+		return true;
+	}
+
+	public void performCopy(Clipboard clipBoard) {
+		System.out.println("copy into clipboard " + clipBoard + " i am " + getPatch().getName());
+		for (JTModule m : getSelectedModules()) {
+			System.out.println("selected " + m);
+		}
+	}
+
+	public void performCut(Clipboard clipBoard) {
+		// no op
+	}
+
+	public void performPaste(Clipboard clipBoard) {
+		// no op
+	}
 
 }
 

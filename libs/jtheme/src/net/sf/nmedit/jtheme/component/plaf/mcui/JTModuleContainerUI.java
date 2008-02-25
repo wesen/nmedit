@@ -161,7 +161,7 @@ public class JTModuleContainerUI extends ComponentUI
         Rectangle box = dndBox;
         if (box == null) return;
         
-        if (eventHandler.getSelectionCount()>0)
+        if (jtc.getSelectionSize()>0)
         {
         	if (transferData == null)
         		return;
@@ -627,8 +627,7 @@ public class JTModuleContainerUI extends ComponentUI
             JTModuleContainer jtmc = getModuleContainer();
             PModuleContainer mc = jtmc.getModuleContainer();
             
-            JTModule[] modules = tdata.getModules();
-            for (JTModule jtmodule: modules) {
+            for (JTModule jtmodule: tdata.getModules()) {
                 op.add(jtmodule.getModule());
             }
             
@@ -675,95 +674,31 @@ public class JTModuleContainerUI extends ComponentUI
             dtde.rejectDrag();
         }
 
-        protected Set<JTModule> selectionSet = new HashSet<JTModule>();
-		
-        protected int getSelectionSize()
-        {
-            return selectionSet.size();
-        }
 
-        protected boolean isOnlyThisSelected(Object module)
-        {
-            return getSelectionSize() == 1 && isInSelection(module);
-        }
-
-        protected void selectOnly(JTModule module)
-        {
-            if (!selectionSet.isEmpty())
-            {
-                for (JTModule dif : selectionSet.toArray(new JTModule[selectionSet.size()]))
-                    if (dif != module)
-                        removeSelection(dif);
-            }
-            
-            if (selectionSet.isEmpty())
-                addSelection(module);
-        }
-        
-        protected void addSelection(JTModule module)
-        {
-        	JTPatch patch = getModuleContainer().getPatchContainer();
-        	for (JTModuleContainer c : patch.getModuleContainers()) {
-        		JTModuleContainerUI cUI = c.getUI();
-        		if (cUI != null & cUI != jtcUI && cUI.eventHandler != null) {
-        			cUI.eventHandler.clearSelection();
-        		}
-        	}
-            selectionSet.add(module);
-            module.setSelected(true);
-        }
-
-        protected void removeSelection(JTModule module)
-        {
-            selectionSet.remove(module);
-            module.setSelected(false);
-        }
-
-        protected boolean isInSelection(Object module)
-        {
-            return selectionSet.contains(module);
-        }
-        
-        protected boolean isSelectionEmpty()
-        {
-            return selectionSet.isEmpty();
-        }
-        
-        protected void clearSelection()
-        {
-            if (selectionSet.isEmpty())
-                return;
-            
-            for (JTModule module: selectionSet)
-                module.setSelected(false);
-            
-            selectionSet.clear();
-        }
-        
         public void dragGestureRecognized(DragGestureEvent dge)
         {
-        	
+        	JTModuleContainer jtc = getModuleContainer();
             JTModule module = (JTModule) dge.getComponent();
             if (!module.isEnabled()) return;
           
-            if (isSelectionEmpty())
+            if (jtc.isSelectionEmpty())
             {
-                addSelection(module);
+                jtc.addSelection(module);
             }
-            else if (isInSelection(module))
+            else if (jtc.isInSelection(module))
             {
                 // thats ok
             }
             else
             {
-                if (!isInSelection(module))
+                if (!jtc.isInSelection(module))
                 {
-                    clearSelection();
-                    addSelection(module);
+                	jtc.clearSelection();
+                	jtc.addSelection(module);
                 }
             }
 
-            if (!isSelectionEmpty())
+            if (!jtc.isSelectionEmpty())
             {
                 Component c = dge.getComponent();
                 Point dndOrigin = dge.getDragOrigin();
@@ -772,21 +707,11 @@ public class JTModuleContainerUI extends ComponentUI
                     dndOrigin = SwingUtilities.convertPoint(c, dndOrigin, getModuleContainer());
                 }
                 
-                jtcUI.transferData = new JTModuleTransferDataWrapper(this, dndOrigin);
+                jtcUI.transferData = new JTModuleTransferDataWrapper(this, jtc.getSelectedModules(), dndOrigin);
                 dge.startDrag(DragSource.DefaultMoveDrop, jtcUI.transferData, this);
             }
         }
         
-        public int getSelectionCount()
-        {
-            return selectionSet.size();
-        }
-
-        public JTModule[] getModules()
-        {
-            return selectionSet.toArray(new JTModule[selectionSet.size()]);
-        }
-
         public JTModuleContainer getSource()
         {
             return getModuleContainer();
@@ -825,7 +750,7 @@ public class JTModuleContainerUI extends ComponentUI
         public void mouseClickedAtModuleContainer(MouseEvent e)
         {
             if (SwingUtilities.isLeftMouseButton(e) && !jtcUI.selectBoxActive)
-                clearSelection();
+                getModuleContainer().clearSelection();
         }
         
         public void mouseClickedAtModule(MouseEvent e)
@@ -837,6 +762,7 @@ public class JTModuleContainerUI extends ComponentUI
         	if (Platform.couldBePopupTrigger(e))
                 return;
         	
+        	JTModuleContainer jtc = getModuleContainer();
         	JTModule module = (JTModule) e.getComponent();
             
             boolean shift = e.isShiftDown();
@@ -847,10 +773,10 @@ public class JTModuleContainerUI extends ComponentUI
             		return;
             	
             	if (meta) {
-            		if (isInSelection(module)) {
-            			removeSelection(module);
+            		if (jtc.isInSelection(module)) {
+            			jtc.removeSelection(module);
             		} else {
-            			addSelection(module);
+            			jtc.addSelection(module);
             		}
             		return;
             	}
@@ -859,16 +785,16 @@ public class JTModuleContainerUI extends ComponentUI
                 if (shift && ctrl) return;
                 
             	if (ctrl) { 
-            		removeSelection(module);
+            		jtc.removeSelection(module);
             		return;
             	}
             }
             
             if (shift)
-                addSelection(module);
+            	jtc.addSelection(module);
             else // !(shift||ctrl)
             {
-                selectOnly(module);
+            	jtc.selectOnly(module);
             }
         }
         
@@ -936,7 +862,7 @@ public class JTModuleContainerUI extends ComponentUI
         private void startNewSelectionRectangle(MouseEvent e) {
         	JTModuleContainer mc = jtcUI.getModuleContainer();
 			jtcUI.selectBoxActive = true;
-			oldSelection = new HashSet<JTModule>(selectionSet);
+			oldSelection = new HashSet<JTModule>(mc.getSelectedModules());
 			jtcUI.selectStartPoint = new Point(e.getPoint());
 			jtcUI.selectRectangle = new Rectangle(jtcUI.selectStartPoint);
 			mc.repaintOverlay(jtcUI.selectRectangle);
@@ -946,15 +872,15 @@ public class JTModuleContainerUI extends ComponentUI
 			Point point = e.getPoint();
 			Rectangle select = jtcUI.selectRectangle;
     		Point start = jtcUI.selectStartPoint;
-    		JTModuleContainer mc = jtcUI.getModuleContainer();
-        	mc.repaintOverlay(select);
+    		JTModuleContainer jtc = jtcUI.getModuleContainer();
+        	jtc.repaintOverlay(select);
     		int x1, x2, y1, y2;
     		x1 = Math.min(start.x, point.x);
     		x2 = Math.max(start.x, point.x);
     		y1 = Math.min(start.y, point.y);
     		y2 = Math.max(start.y, point.y);
     		select.setRect(x1, y1, x2-x1, y2-y1);
-    		mc.repaintOverlay(select);
+    		jtc.repaintOverlay(select);
             boolean shift = e.isShiftDown();
             boolean meta = false;
             boolean ctrl = false;
@@ -970,10 +896,10 @@ public class JTModuleContainerUI extends ComponentUI
             }
             
     		if (!meta && !shift && !ctrl) {
-    			clearSelection();
+    			jtc.clearSelection();
     			oldSelection.clear();
     		}
-    		Component[] components = mc.getComponents();
+    		Component[] components = jtc.getComponents();
     		for (int i=components.length-1;i>=0;i--)
     		{
     			Component c = components[i];
@@ -983,23 +909,23 @@ public class JTModuleContainerUI extends ComponentUI
     				if (select.intersects(mui.getBounds())) {
     					if (meta) {
     						if (oldSelection.contains(mui)) {
-    							removeSelection(mui);
+    							jtc.removeSelection(mui);
     						} else {
-    							addSelection(mui);
+    							jtc.addSelection(mui);
     						}
     					} else if (ctrl) {
     						if (oldSelection.contains(mui))
-    							removeSelection(mui);
+    							jtc.removeSelection(mui);
     					} else {
-    						addSelection(mui);
+    						jtc.addSelection(mui);
     					}
     				} else {
     		    		if (meta || shift || ctrl) {
 
     		    			if (oldSelection.contains(mui)) {
-    		    				addSelection(mui);
+    		    				jtc.addSelection(mui);
     		    			} else {
-    		    				removeSelection(mui);
+    		    				jtc.removeSelection(mui);
     		    			}
     		    		}
     				}
