@@ -86,7 +86,11 @@ public class MidiPort extends AbstractPort implements Port
         MidiDevice dev;
         try
         {
-            dev = MidiSystem.getMidiDevice(mp.getDeviceInfo());
+            MidiDevice.Info info = mp.getDeviceInfo();
+            if (info == null)
+                return false;
+            
+            dev = MidiSystem.getMidiDevice(info);
         }
         catch (MidiUnavailableException e)
         {
