@@ -18,14 +18,11 @@
  */
 package net.sf.nmedit.jpatch.impl;
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import net.sf.nmedit.jpatch.PLightDescriptor;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 
 public class PBasicLightDescriptor extends PBasicDescriptor implements
-        PLightDescriptor, Serializable
+        PLightDescriptor//, Serializable
 {
 
     private static final long serialVersionUID = -6555243015172013690L;
@@ -90,7 +87,7 @@ public class PBasicLightDescriptor extends PBasicDescriptor implements
     {
         return parent;
     }
-
+/*
     private void writeObject(java.io.ObjectOutputStream out) throws IOException
     {
         out.defaultWriteObject();
@@ -100,5 +97,5 @@ public class PBasicLightDescriptor extends PBasicDescriptor implements
     {
         in.defaultReadObject();
     }
-    
+    */
 }

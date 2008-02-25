@@ -18,14 +18,11 @@
  */
 package net.sf.nmedit.jpatch.impl;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
@@ -39,7 +36,7 @@ import net.sf.nmedit.jpatch.PParameterDescriptor;
  * @author Christian Schneider
  */
 public class PBasicModuleDescriptor extends PBasicDescriptor
-implements PModuleDescriptor, Serializable
+implements PModuleDescriptor//, Serializable
 {
 
     private static final long serialVersionUID = 5166147655672576230L;
@@ -180,7 +177,7 @@ implements PModuleDescriptor, Serializable
     {
         return getBooleanAttribute("instantiable", true);
     }
-
+/*
     private void writeObject(java.io.ObjectOutputStream out) throws IOException
     {
         out.defaultWriteObject();
@@ -244,5 +241,5 @@ implements PModuleDescriptor, Serializable
                 ((PBasicConnectorDescriptor)d).setParent(this);
         }
     }
-
+*/
 }

@@ -18,13 +18,11 @@
  */
 package net.sf.nmedit.jpatch.impl;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.lang.ref.SoftReference;
 import java.util.List;
 
-import javax.swing.UIDefaults;
 import javax.swing.event.EventListenerList;
 
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
@@ -318,8 +316,8 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
     public PConnector getConnector(PConnectorDescriptor descriptor)
     {
         PDescriptor parent = descriptor.getParentDescriptor();
-        if (!(getDescriptor() == parent
-                || getDescriptor().equals(parent)))
+        PDescriptor thisDescriptor = getDescriptor();
+        if (!(thisDescriptor == parent || thisDescriptor.equals(parent)))
             throw new InvalidDescriptorException(descriptor, "parents are not equal "+descriptor+" in "+this);
         int index = descriptor.getDescriptorIndex();
         if (index<0 || index>=getConnectorCount())

@@ -22,15 +22,10 @@
  */
 package net.sf.nmedit.jpatch;
 
-import java.io.Serializable;
 
-public class ImageSource implements Serializable
+public class ImageSource// implements Serializable
 {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 5392578325330794513L;
     private String src;
     private int width;
     private int height;

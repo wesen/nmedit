@@ -31,7 +31,7 @@ import net.sf.nmedit.jpatch.PSignalTypes;
  * @author Christian Schneider
  */
 public class PBasicConnectorDescriptor extends PBasicDescriptor 
-    implements PConnectorDescriptor, Serializable
+    implements PConnectorDescriptor//, Serializable
 {
 
     private static final long serialVersionUID = -4016101017192946943L;
@@ -79,6 +79,7 @@ public class PBasicConnectorDescriptor extends PBasicDescriptor
         return getParentDescriptor().getModules().getDefinedSignals();
     }
 
+    /*
     private void writeObject(java.io.ObjectOutputStream out) throws IOException
     {
         out.defaultWriteObject();
@@ -87,7 +88,7 @@ public class PBasicConnectorDescriptor extends PBasicDescriptor
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
     {
         in.defaultReadObject();
-    }
+    }*/
     
 
 }

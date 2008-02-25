@@ -18,8 +18,6 @@
  */
 package net.sf.nmedit.jpatch.impl;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -36,7 +34,7 @@ import net.sf.nmedit.jpatch.PRoles;
  * The reference implementation of interface {@link PDescriptor}.
  * @author Christian Schneider
  */
-public class PBasicDescriptor implements PDescriptor, Serializable
+public class PBasicDescriptor implements PDescriptor//, Serializable
 {
     private static final long serialVersionUID = -7021888357211502978L;
     private transient Map<String, Object> attributeMap = null;
@@ -260,7 +258,7 @@ public class PBasicDescriptor implements PDescriptor, Serializable
             }
         }
     }
-
+/*
     private void writeObject(java.io.ObjectOutputStream out) throws IOException
     {
         disposeCache(); // remove all cache entries
@@ -274,7 +272,7 @@ public class PBasicDescriptor implements PDescriptor, Serializable
         in.defaultReadObject();
         attributeMap = (Map<String,Object>) in.readObject();
     }
-    
+  */  
 
     public String toString()
     {
