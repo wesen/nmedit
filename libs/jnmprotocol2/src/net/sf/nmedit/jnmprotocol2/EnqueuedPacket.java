@@ -36,7 +36,7 @@ public class EnqueuedPacket extends FastSysexMessage
         }
         catch (InvalidMidiDataException e)
         {
-            throw new MidiException(e.getMessage(), 0);
+            throw new MidiException(e.getMessage(), MidiException.INVALID_MIDI_DATA);
         }
     }
     

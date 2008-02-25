@@ -915,8 +915,33 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
 
         public void handleError(Throwable t) throws Throwable
         {
+            if (t instanceof MidiException)
+            {
+                MidiException me = (MidiException) t;
+                switch (me.getError())
+                {
+                    case MidiException.INVALID_MIDI_DATA:
+                    case MidiException.MIDI_PARSE_ERROR:
+                    {
+                        me.printStackTrace();
+                        // ignore
+                        // TODO log error
+                        return;
+                    }
+                    case MidiException.TIMEOUT:
+                    {
+                        
+                        // go on: 
+                        EventQueue.invokeLater(this);
+                        throw me;
+                    }
+                }
+            }
+            
             if (nm1.isIgnoreErrorsEnabled())
+            {                
                 t.printStackTrace();
+            }
             else
             {
                 EventQueue.invokeLater(this);
