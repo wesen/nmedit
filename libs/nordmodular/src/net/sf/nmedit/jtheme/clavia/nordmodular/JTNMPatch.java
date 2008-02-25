@@ -790,6 +790,10 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
     	}
     	return nPatch;
     }
+    
+    public PPatch newPatchFromFile(File file) {
+    	return null;	
+    }
 
     public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException
     {

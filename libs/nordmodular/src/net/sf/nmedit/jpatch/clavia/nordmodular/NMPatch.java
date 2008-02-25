@@ -26,6 +26,9 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -485,4 +488,15 @@ public class NMPatch extends PBasicPatch implements PPatch
 		return null;
     }
     
+    public static NMPatch createFromFile(File file) throws ParseException, IOException {
+    	NMData data = NMData.sharedInstance();
+
+    	InputStream in = new FileInputStream(file);
+
+    	NMPatch patch = NmUtils.parsePatch(data.getModuleDescriptions(), in);
+    	in.close();
+
+    	patch.setProperty("file", null);
+    	return patch;
+    }
 }
