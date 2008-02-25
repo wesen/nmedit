@@ -27,9 +27,12 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.datatransfer.Clipboard;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
@@ -50,6 +53,7 @@ import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.plaf.mcui.JTModuleContainerUI;
 import net.sf.nmedit.jtheme.store2.ModuleElement;
+import net.sf.nmedit.nmutils.swing.CopyCutPasteTarget;
 
 public class JTModuleContainer extends JTBaseComponent 
 {
@@ -137,6 +141,75 @@ public class JTModuleContainer extends JTBaseComponent
             }} );
     }
     
+    private Set<JTModule> selectionSet = new HashSet<JTModule>();
+
+    public int getSelectionSize()
+    {
+    	return selectionSet.size();
+    }
+
+    public boolean isOnlyThisSelected(JTModule module)
+    {
+    	return getSelectionSize() == 1 && isInSelection(module);
+    }
+
+    public void selectOnly(JTModule module)
+    {
+    	if (!selectionSet.isEmpty())
+    	{
+    		for (JTModule dif : selectionSet.toArray(new JTModule[selectionSet.size()]))
+    			if (dif != module)
+    				removeSelection(dif);
+    	}
+
+    	if (selectionSet.isEmpty())
+    		addSelection(module);
+    }
+
+    public void addSelection(JTModule module)
+    {
+    	JTPatch patch = getPatchContainer();
+    	for (JTModuleContainer c : patch.getModuleContainers()) {
+    		if (c != null && c != this) { 
+    			c.clearSelection();
+    		}
+    	}
+    	selectionSet.add(module);
+    	module.setSelected(true);
+    }
+
+    public void removeSelection(JTModule module)
+    {
+    	selectionSet.remove(module);
+    	module.setSelected(false);
+    }
+
+    public boolean isInSelection(JTModule module)
+    {
+    	return selectionSet.contains(module);
+    }
+
+    public boolean isSelectionEmpty()
+    {
+    	return selectionSet.isEmpty();
+    }
+    
+    public Collection<? extends JTModule> getSelectedModules()
+    {
+        return new HashSet<JTModule>(selectionSet);
+    }
+    
+    public void clearSelection()
+    {
+    	if (selectionSet.isEmpty())
+    		return;
+
+    	for (JTModule module: selectionSet)
+    		module.setSelected(false);
+
+    	selectionSet.clear();
+    }
+
     private long lastModuleContainerDimensionUpdate = 0;
 
     private JTCableManager cableManager;
@@ -549,6 +622,4 @@ public class JTModuleContainer extends JTBaseComponent
         }
         return null;
     }
-
-
 }
