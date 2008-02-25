@@ -153,6 +153,9 @@ Note:
   	  <param name="plugin_id" value="net.sf.nmedit.nomad.core" />
   	</antcall>
   	<antcall target="make_jar_for_plugin_and_clean">
+  	  <param name="plugin_id" value="net.sf.nmedit.jpatch" />
+  	</antcall>
+  	<antcall target="make_jar_for_plugin_and_clean">
   	  <param name="plugin_id" value="net.sf.nmedit.jtheme" />
   	</antcall>
   	<antcall target="make_jar_for_plugin_and_clean">

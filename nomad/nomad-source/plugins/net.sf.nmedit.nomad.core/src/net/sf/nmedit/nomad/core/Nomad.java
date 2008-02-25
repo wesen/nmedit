@@ -560,9 +560,8 @@ public class Nomad
         return synthPane;
     }
     
-    void setupUI()
+    void setupMenu()
     {
-    	this.clipBoard = new Clipboard("nomad clipboard");
         // before menu builder is used
         RuntimeMenuBuilder.buildNewMenuEntries(menuLayout, "Nord Modular patch 3.0", "Nord Modular");
 
@@ -586,7 +585,6 @@ public class Nomad
         .addActionListener(new ActionHandler(this, true, "editPaste"));
         menuLayout.getEntry("nomad.menu.help.plugins")
         .addActionListener(new ActionHandler(this, true, "pluginsHelp"));
-
         /*
         MLEntry mnLang = menuLayout.getEntry("nomad.menu.window.language");
         
@@ -599,29 +597,32 @@ public class Nomad
         menuBuilder.setResourceBundle(localizedMessages);
         LocaleConfiguration.getLocaleConfiguration().addLocaleChangeListener(new LocaleHandler(menuBuilder));
         final JMenuBar mainMenuBar = menuBuilder.createMenuBar("nomad.menu");
+        mainWindow.setJMenuBar(mainMenuBar);
+        menuBuilder.addActionListener("nomad.menu.file.exit", new ActionHandler(this, true, "handleExit"));
+
+
+        MenuLayout.disableGhosts(menuLayout);
+
+        DocumentSelectionHandler dsh = new DocumentSelectionHandler();
+        pageContainer.addListener(dsh);
+        dsh.setMenuForDocument(pageContainer.getSelection());
+        new DocumentActionActivator(pageContainer, menuLayout);
+        
+    }
+    
+    void setupUI()
+    {
+    	this.clipBoard = new Clipboard("nomad clipboard");
+        
 
         mainWindow.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        mainWindow.setJMenuBar(mainMenuBar);
-
-        menuBuilder.addActionListener("nomad.menu.file.exit", new ActionHandler(this, true, "handleExit"));
         mainWindow.addWindowListener(new WindowAdapter() {
                     public void windowClosing( WindowEvent e )
                     {
                         Nomad.sharedInstance().handleExit();
                     }
                 });
-        
-        
-
-
-        MenuLayout.disableGhosts(menuLayout);
-
-
         pageContainer = new DefaultDocumentManager();
-
-        DocumentSelectionHandler dsh = new DocumentSelectionHandler();
-        pageContainer.addListener(dsh);
-        dsh.setMenuForDocument(pageContainer.getSelection());
 
         Container contentPane = mainWindow.getContentPane();
         
@@ -686,8 +687,6 @@ public class Nomad
         } else {
             registerForMacOSXEvents();
         }
-        new DocumentActionActivator(pageContainer, menuLayout);
-        
         JSplitPane splitLR = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitLR.setResizeWeight(0);
         splitLR.setDividerLocation(200);
