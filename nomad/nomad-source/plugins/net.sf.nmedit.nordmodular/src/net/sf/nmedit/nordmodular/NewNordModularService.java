@@ -86,11 +86,11 @@ public class NewNordModularService
     }
     
     private static NordModular createSynth()
-    {NordModular synth = new NordModular(NMData.sharedInstance().getModuleDescriptions());
+    {NordModular synth = new NordModular(NMContextData.sharedInstance().getModuleDescriptions());
 
-    synth.putClientProperty("icon.nm.micro", NMData.sharedInstance().getMicroIcon());
-    synth.putClientProperty("icon.nm.keyboard", NMData.sharedInstance().getModularIcon());
-    synth.putClientProperty("icon.nm.rack", NMData.sharedInstance().getModularRackIcon());
+    synth.putClientProperty("icon.nm.micro", NMContextData.sharedInstance().getMicroIcon());
+    synth.putClientProperty("icon.nm.keyboard", NMContextData.sharedInstance().getModularIcon());
+    synth.putClientProperty("icon.nm.rack", NMContextData.sharedInstance().getModularRackIcon());
     
 
     Registry<Synthesizer> sreg = GlobalRegistry.getInstance().getRegistry(Synthesizer.class);

@@ -58,7 +58,7 @@ public class NmFileService implements FileService
     
     public static NMPatch openPatch(File file, File sourceFile, final String title, boolean showExceptionDialog)
     {
-        NMData data = NMData.sharedInstance();
+        NMContextData data = NMContextData.sharedInstance();
 
         try
         {
@@ -129,7 +129,7 @@ public class NmFileService implements FileService
 
     public static JTNMPatch createPatchUI(NMPatch patch) throws Exception
     {           
-        JTNM1Context context = NMData.sharedInstance().getJTContext();
+        JTNM1Context context = NMContextData.sharedInstance().getJTContext();
         synchronized(context.getLock())
         {
             return new JTNMPatch(context, patch);
@@ -148,7 +148,7 @@ public class NmFileService implements FileService
 
     public void newFile()
     {
-        NMData data = NMData.sharedInstance();
+        NMContextData data = NMContextData.sharedInstance();
 
         try
         {
