@@ -153,6 +153,24 @@ NewPatchInSlot :=
 	;
 
 Lights :=
+    ( BigLightsMessage$$
+    | UnknownLightsMessage$$)
+    ;
+
+/* happend while sending many many many and much more patch messages
+ * in a short period of time.
+ * all variables were set to 0
+ * see MESSAGE#1: @2008/02/25
+ */ 
+UnknownLightsMessage :=
+    messageId("unknown")
+    0:1 unknown1:7
+    0:1 unknown2:7
+    0:1 unknown3:7
+    0:1 unknown4:7
+    ;
+
+BigLightsMessage :=
 	0:1 startIndex:7
 	0:2 l2:2 l1:2 l0:2
 	0:2 l5:2 l4:2 l3:2
