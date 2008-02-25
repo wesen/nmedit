@@ -1154,9 +1154,10 @@ public class JTModuleContainerUI extends ComponentUI
             	ctrl = e.isControlDown();
                 if (shift && ctrl) return;
             }
-
+            
     		if (!meta && !shift && !ctrl) {
     			clearSelection();
+    			oldSelection.clear();
     		}
     		Component[] components = mc.getComponents();
     		for (int i=components.length-1;i>=0;i--)
@@ -1179,11 +1180,14 @@ public class JTModuleContainerUI extends ComponentUI
     						addSelection(mui);
     					}
     				} else {
-    					if (oldSelection.contains(mui)) {
-    						addSelection(mui);
-    					} else {
-    						removeSelection(mui);
-    					}
+    		    		if (meta || shift || ctrl) {
+
+    		    			if (oldSelection.contains(mui)) {
+    		    				addSelection(mui);
+    		    			} else {
+    		    				removeSelection(mui);
+    		    			}
+    		    		}
     				}
     			}
     		}
