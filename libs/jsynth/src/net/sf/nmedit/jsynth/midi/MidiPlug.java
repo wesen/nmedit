@@ -25,7 +25,6 @@ package net.sf.nmedit.jsynth.midi;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.MidiDevice.Info;
 
 import net.sf.nmedit.jsynth.Plug;
 
