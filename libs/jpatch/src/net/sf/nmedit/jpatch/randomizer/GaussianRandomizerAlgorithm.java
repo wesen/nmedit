@@ -54,7 +54,6 @@ public class GaussianRandomizerAlgorithm implements RandomizerAlgorithm
 
     public void randomize(List<PParameter> parameterList)
     {
-        System.out.println(parameterList);
         for (PParameter param: parameterList)
         {
             float max = param.getMaxValue();
