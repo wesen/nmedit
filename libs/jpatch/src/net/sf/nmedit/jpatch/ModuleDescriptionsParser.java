@@ -39,9 +39,11 @@ import javax.xml.parsers.SAXParserFactory;
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
 import net.sf.nmedit.jpatch.PParameterDescriptor;
 import net.sf.nmedit.jpatch.impl.PBasicConnectorDescriptor;
+import net.sf.nmedit.jpatch.impl.PBasicDescriptor;
 import net.sf.nmedit.jpatch.impl.PBasicLightDescriptor;
 import net.sf.nmedit.jpatch.impl.PBasicModuleDescriptor;
 import net.sf.nmedit.jpatch.impl.PBasicParameterDescriptor;
+import net.sf.nmedit.jpatch.impl.PBasicRoles;
 import net.sf.nmedit.jpatch.js.JSContext;
 import net.sf.nmedit.jpatch.js.JSFormatter;
 import net.sf.nmedit.nmutils.Hex;
@@ -234,6 +236,7 @@ public class ModuleDescriptionsParser
         private static final String KEY = "key";
         private static final String VALUE = "value";
         private static final String NAME = "name";
+        private static final String ROLE = "role";
         private static final String SIGNAL = "signal";
         private static final String COMPONENTID = "component-id";
         
@@ -415,6 +418,8 @@ public class ModuleDescriptionsParser
                         
                         moduled = new PBasicModuleDescriptor(moduleDescriptions, name, str(componentId), true);
 
+                        initRoles(moduled, attributes);
+                        
                         String index = attributes.getValue(INDEX);
                         if (index != null)
                             moduled.setAttribute(INDEX, Integer.parseInt(index));
@@ -524,6 +529,8 @@ public class ModuleDescriptionsParser
                         String defaultValue = attributes.getValue("defaultValue");
 
                         lightd = new PBasicLightDescriptor(moduled, name, str(componentId));
+
+                        initRoles(lightd, attributes);
                         
                         String index = attributes.getValue(INDEX);
                         if (index != null)
@@ -561,6 +568,8 @@ public class ModuleDescriptionsParser
                         
                         parameterd = new PBasicParameterDescriptor(moduled, str(name), componentId);
 
+                        initRoles(parameterd, attributes);
+                        
                         String extension = attributes.getValue("extension");
                         if (extension != null)
                             extensions.put(parameterd, extension);
@@ -683,6 +692,8 @@ public class ModuleDescriptionsParser
                         
                         connectord = new PBasicConnectorDescriptor(moduled, str(name), str(componentId), sig, isOutput);
 
+                        initRoles(connectord, attributes);
+                        
                         String index = attributes.getValue(INDEX);
                         if (index != null)
                             connectord.setAttribute(INDEX, Integer.parseInt(index));
@@ -693,6 +704,18 @@ public class ModuleDescriptionsParser
             }
             
             currentElement = eid;
+        }
+
+        
+        private void initRoles(PBasicDescriptor descriptor, Attributes attributes)
+        {
+            String roleString = attributes.getValue(ROLE);
+            if (roleString!=null)
+            {
+                PRoles roles = PBasicRoles.parseRoles(roleString);
+                if (!roles.isEmpty())
+                    descriptor.setRoles(roles);
+            }
         }
 
         public void endElement (String uri, String localName, String qName)

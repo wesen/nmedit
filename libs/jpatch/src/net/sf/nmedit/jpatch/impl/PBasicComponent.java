@@ -25,6 +25,7 @@ import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PDescriptor;
 import net.sf.nmedit.jpatch.PLight;
 import net.sf.nmedit.jpatch.PParameter;
+import net.sf.nmedit.jpatch.PRoles;
 
 /**
  * The reference implementation of interface {@link PComponent}.
@@ -173,6 +174,11 @@ public abstract class PBasicComponent<P extends PDescriptor> implements PCompone
         sb.append(getParentComponent());
         sb.append("]");
         return sb.toString();
+    }
+    
+    public PRoles getRoles()
+    {
+        return descriptor.getRoles();
     }
     
 }

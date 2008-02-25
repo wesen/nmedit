@@ -216,4 +216,10 @@ public interface PDescriptor
      */
     void setDescriptorIndex(int index);
 
+    /**
+     * The roles of this component.
+     * @return set of roles
+     */
+    PRoles getRoles();
+    
 }
