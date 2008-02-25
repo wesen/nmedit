@@ -30,6 +30,7 @@ import net.sf.nmedit.jpatch.PConnectorDescriptor;
 import net.sf.nmedit.jpatch.PDescriptor;
 import net.sf.nmedit.jpatch.PLightDescriptor;
 import net.sf.nmedit.jpatch.PParameterDescriptor;
+import net.sf.nmedit.jpatch.PRoles;
 
 /**
  * The reference implementation of interface {@link PDescriptor}.
@@ -42,12 +43,24 @@ public class PBasicDescriptor implements PDescriptor, Serializable
     private int descriptorIndex = -1;
     private String name;
     private Object componentId;
+    private PRoles roles = PBasicRoles.empty();
 
     public PBasicDescriptor(String name, Object componentId)
     {
         assert componentId != null : "component id must not be null";
         this.name = name;
         this.componentId = componentId;
+    }
+    
+    public void setRoles(PRoles roles)
+    {
+        if (roles == null) roles = PBasicRoles.empty();
+        this.roles = roles;
+    }
+    
+    public PRoles getRoles()
+    {
+        return roles;
     }
     
     protected Map<String, Object> attributeMap()
@@ -293,8 +306,9 @@ public class PBasicDescriptor implements PDescriptor, Serializable
                 sb.append(";");
             }
         }
-            
+
         sb.append("}");
+        sb.append(",roles={"+PBasicRoles.toString(roles)+"}");
         
         sb.append(",parent=");
         sb.append(getParentDescriptor());

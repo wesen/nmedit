@@ -193,4 +193,6 @@ public interface PComponent
 
     String getName();
     
+    PRoles getRoles();
+    
 }
