@@ -189,7 +189,7 @@ public abstract class MidiMessage
             return mconstructor.newInstance(new Object[]{message.getPacket()});
         } catch (Exception e)
         {
-            MidiException me = new MidiException("could not create instance for messageId "+message.getMessageId(), 0);
+            MidiException me = new MidiException("could not create instance for messageId "+message.getMessageId(), MidiException.UNKNOWN_MIDI_MESSAGE);
             me.initCause(e);
             throw me;
         }

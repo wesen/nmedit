@@ -33,6 +33,7 @@ public class MidiException extends Exception
     public static final int INVALID_MIDI_DATA = -1000;
     public static final int TIMEOUT = -1001;
     public static final int MIDI_PARSE_ERROR = -1002;
+    public static final int UNKNOWN_MIDI_MESSAGE = -1003;
     
     // the midi message which caused this exception
     private byte[] midiMessage;

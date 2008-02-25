@@ -922,6 +922,7 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
                 {
                     case MidiException.INVALID_MIDI_DATA:
                     case MidiException.MIDI_PARSE_ERROR:
+                    case MidiException.UNKNOWN_MIDI_MESSAGE:
                     {
                         me.printStackTrace();
                         // ignore
