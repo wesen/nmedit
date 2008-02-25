@@ -39,7 +39,6 @@ import net.sf.nmedit.nomad.core.service.fileService.FileService;
 import net.sf.nmedit.nomad.core.service.synthService.NewSynthService;
 import net.sf.nmedit.nomad.core.swing.ExtensionFilter;
 import net.sf.nmedit.nomad.core.swing.explorer.FileContext;
-import net.sf.nmedit.nordmodular.NmFileService;
 
 public class RuntimeMenuBuilder
 {   
