@@ -45,6 +45,7 @@ public class NMData
         return instance;
     }
 
+    private NMData() // no subclassing (caused multiple instances of module descriptions => errors)
     {
         moduleDescriptions = NMData.this.initModuleDescriptionsSavely();
     }

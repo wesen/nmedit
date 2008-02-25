@@ -32,7 +32,7 @@ import net.sf.nmedit.nomad.core.jpf.TempDir;
 
 import org.xml.sax.InputSource;
 
-public class NMContextData extends NMData
+public class NMContextData 
 {
 
     private JTNM1Context jtContext;
@@ -156,5 +156,10 @@ public class NMContextData extends NMData
         
         return jtcontext;
     }
+
+    protected InputStream getResourceAsStream(String path)
+    {
+        return getClass().getClassLoader().getResourceAsStream(path);
+    }    
     
 }
