@@ -638,7 +638,7 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
         {
             this.name = name;
             settingsChangedFlag = true;
-            firePropertyChange("name", oldName, name);
+            firePropertyChange(PROPERTY_NAME, oldName, name);
         }
     }
     

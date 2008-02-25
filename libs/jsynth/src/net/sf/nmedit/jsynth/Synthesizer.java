@@ -53,6 +53,7 @@ public interface Synthesizer
     
     // global dsp usage, double value
     public static final String DSP_GLOBAL = "synth.dsp.global";
+    public static final String PROPERTY_NAME = "synth.name";
     
     /*
     PortManager getPortManager();
