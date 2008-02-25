@@ -67,7 +67,7 @@ public class Installer implements InitService
     {
         readSynthConfiguration();
         
-        NMData data = NMData.sharedInstance();
+        NMContextData data = NMContextData.sharedInstance();
         
         ModulePane pane = ModulePane.getSharedInstance();
         pane.setModules(data.getModuleDescriptions());
