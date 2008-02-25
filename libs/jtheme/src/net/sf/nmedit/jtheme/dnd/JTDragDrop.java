@@ -25,7 +25,6 @@ import java.io.IOException;
 
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
-import net.sf.nmedit.jtheme.component.plaf.JTModuleContainerUI.ModuleTransferData;
 
 public final class JTDragDrop
 {
@@ -45,7 +44,7 @@ public final class JTDragDrop
         = new DataFlavor(PModule[].class, "module instances");
 
     public static final DataFlavor ModuleSelectionFlavor 
-        = new DataFlavor(ModuleTransferData.class, "Nomad ModuleSelectionFlavor");
+        = new DataFlavor(JTModuleTransferData.class, "Nomad ModuleSelectionFlavor");
 
     private static final String charset = "ISO-8859-1";
     public static DataFlavor PatchFileFlavor =
