@@ -18,7 +18,6 @@
  */
 package net.sf.nmedit.jpatch;
 
-import java.io.Serializable;
 import java.util.Iterator;
 
 import net.sf.nmedit.nmutils.collections.InsertInsertionSet;
@@ -28,13 +27,8 @@ import net.sf.nmedit.nmutils.collections.UnmodifiableIterator;
  * The reference implementation of interface {@link PTypes}.
  * @author Christian Schneider
  */
-public class PTypes<T extends PType> implements Iterable<T>, Serializable
+public class PTypes<T extends PType> implements Iterable<T>
 {
-
-    /**
-     * serial version UID
-     */
-    private static final long serialVersionUID = 316936284215645866L;
 
     /**
      * the types

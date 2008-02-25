@@ -18,9 +18,6 @@
  */
 package net.sf.nmedit.jpatch.impl;
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import net.sf.nmedit.jpatch.Formatter;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PParameter;
@@ -31,7 +28,7 @@ import net.sf.nmedit.jpatch.PParameterDescriptor;
  * @author Christian Schneider
  */
 public class PBasicParameterDescriptor extends PBasicDescriptor
-    implements PParameterDescriptor, Serializable
+    implements PParameterDescriptor//, Serializable
 {
     private static final long serialVersionUID = -4704592363083615614L;
 
@@ -142,6 +139,7 @@ public class PBasicParameterDescriptor extends PBasicDescriptor
         this.extensionDescriptor = d;
     }
 
+    /*
     private void writeObject(java.io.ObjectOutputStream out) throws IOException
     {
         out.defaultWriteObject();
@@ -150,6 +148,6 @@ public class PBasicParameterDescriptor extends PBasicDescriptor
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
     {
         in.defaultReadObject();
-    }
+    }*/
     
 }
