@@ -23,13 +23,17 @@
 package net.sf.nmedit.nomad.core.swing.explorer;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Enumeration;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.ActionMap;
 import javax.swing.ImageIcon;
+import javax.swing.InputMap;
 import javax.swing.JTree;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.tree.DefaultTreeModel;
@@ -62,6 +66,14 @@ public class ExplorerTree extends JTree
         setModel(model);
         installUI();
         setFocusable(true);
+        
+        InputMap im = getInputMap(WHEN_FOCUSED);
+        for (KeyStroke k : im.allKeys()) {
+        	Object keyAction = im.get(k);
+        	if (keyAction.equals("copy") || keyAction.equals("paste") || keyAction.equals("cut")) {
+        		im.put(k, "nomadDeactivatedAction");
+        	}
+        }
         
         ToolTipManager.sharedInstance().registerComponent(this);
     }
