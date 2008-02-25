@@ -25,7 +25,9 @@ import java.awt.GridLayout;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -36,11 +38,15 @@ import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class Mutator {
-	
+
+    public static final String ACTION_RANDOMIZE = "mutator.randomize";
+    public static final String ACTION_MUTATE = "mutator.mutate";
+    
 	private double probability = .65, range = .15;
 	
 	private Variation variations[] = new Variation[4];
@@ -86,8 +92,12 @@ public class Mutator {
 	    return Box.createRigidArea(new Dimension(0, 10));
 	}
 	
+	
+	private JFrame frame;
+	
 	private void createUI() {
-		JFrame f = new JFrame("Mutator test");
+		frame = new JFrame("Mutator test");
+		JFrame f = frame;
 		f.setResizable(false);
 	    f.setBounds(30,30,400,320);
 	    JPanel cp = new JPanel();
@@ -181,20 +191,11 @@ public class Mutator {
 	    f.getContentPane().add(variationStore);
 	    
 	    
-	    
-	    JButton randomizeBut = bottom(right(new JButton("Randomize")));
-	    randomizeBut.addActionListener(new ActionListener(){
-	    	public void actionPerformed(ActionEvent arg0) {
-	    		randomize();	    		
-	    	}
-	    });
-	    
-	    JButton mutateBut = bottom(right(new JButton("Mutate")));
-	    mutateBut.addActionListener(new ActionListener(){
-	    	public void actionPerformed(ActionEvent arg0) {
-	    		mutate();	    		
-	    	}
-	    });
+	    // actions
+	    MutatorAction actionRandomize = new MutatorAction(ACTION_RANDOMIZE);
+	    MutatorAction actionMutate = new MutatorAction(ACTION_MUTATE);
+	    JButton randomizeBut = bottom(right(new JButton(actionRandomize)));
+	    JButton mutateBut = bottom(right(new JButton(actionMutate)));
 
         spinBox.add(Box.createHorizontalGlue());
 	    spinBox.add(randomizeBut);
@@ -208,9 +209,84 @@ public class Mutator {
 				variationStore.add(new Variation(),series*4+variation);
 			}
 		}
+	}
+	
+	private class MutatorAction extends AbstractAction 
+	{
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -8901333546202462292L;
+        private boolean lengthyOperation = true;
+        // in case there are calls even if the last one is not completed
+        private boolean ignoreActionEvent = false;
         
+	    public MutatorAction(String command)
+	    {
+	        setEnabled(false);
+	        putValue(ACTION_COMMAND_KEY, command);
+	        
+	        // TODO add icons
+	        if (ACTION_RANDOMIZE.equals(command))
+	        {
+                setEnabled(true);
+	            putValue(NAME, "Randomize");
+	        }
+	        else if (ACTION_MUTATE.equals(command))
+	        {
+	            setEnabled(true);
+	            putValue(NAME, "Mutate");
+	        }
+	    }
+
+        public void actionPerformed(final ActionEvent e)
+        {
+            if (!isEnabled()) return;
+            if (ignoreActionEvent) return; 
+            if (lengthyOperation)
+            {
+                ignoreActionEvent = true;
+                SwingUtilities.invokeLater(new Runnable(){
+                    public void run()
+                    {
+                        performAction(e.getActionCommand());
+                    }
+                });
+            }
+            else
+            {
+                performAction(e.getActionCommand());
+            }
+        }
         
-        f.setVisible(true);
+        public void performAction(String command)
+        {
+            // we do the try finally stuff so that
+            // the ignoreActionEvent is guaranteed to be
+            // set back to false
+            try 
+            {
+                // exceptions are ok to occure here
+                performActionUnsave(command);
+            }
+            finally
+            {
+                ignoreActionEvent = false;
+            }
+        }
+
+        private void performActionUnsave(String command)
+        {
+            if (ACTION_RANDOMIZE.equals(command))
+            {
+                randomize();
+            }
+            else if (ACTION_MUTATE.equals(command))
+            {
+                mutate();
+            }
+        }
+
 	}
 
 	public Variation[] getVariations() {
@@ -222,9 +298,7 @@ public class Mutator {
     {
 //		 the eq
 	    final Mutator mutator = new Mutator();
-	   
-    	
-	    
+        mutator.getFrame().setVisible(true);
     }
 
 	public void mutate()
@@ -279,5 +353,10 @@ public class Mutator {
 	public void setVariations(Variation[] variations) {
 		this.variations = variations;
 	}
+
+    public JFrame getFrame()
+    {
+        return frame;
+    }
 
 }
