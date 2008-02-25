@@ -96,6 +96,7 @@ import net.sf.nmedit.nomad.core.utils.OSXAdapter;
 
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.Platform.OS;
+import net.sf.nmedit.nmutils.swing.CopyCutPasteTarget;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -110,11 +111,15 @@ public class Nomad
     private static final String MENU_FILE_SAVEAS = "nomad.menu.file.save.saveas";
     private static final String MENU_FILE_PROPERTIES = "nomad.menu.file.properties";
     private static final String MENU_FILE_EXPORT = "nomad.menu.file.ie.export";
+    private static final String MENU_EDIT_COPY = "nomad.menu.edit.edit.copy";
+    private static final String MENU_EDIT_PASTE = "nomad.menu.edit.edit.paste";
+    private static final String MENU_EDIT_CUT = "nomad.menu.edit.edit.cut";
     
     
     private static Nomad instance;
     private JFrame mainWindow = null;
     private NomadPlugin pluginInstance;
+    private Clipboard clipBoard;
     
     private boolean stopped = false;
     
@@ -185,6 +190,41 @@ public class Nomad
             menuLayout.getEntry(MENU_FILE_EXPORT).setEnabled(d instanceof Transferable);
         }
         
+    }
+
+    protected CopyCutPasteTarget getActiveCopyCutPasteTarget() {
+    	Document doc = Nomad.sharedInstance().getDocumentManager().getSelection();
+    	if (doc == null)
+    		return null;
+    	JComponent c = doc.getComponent();
+    	if (c instanceof CopyCutPasteTarget) 
+    		return (CopyCutPasteTarget)c;
+    	else
+    		return null;
+    }
+    
+    public void editCopy() {
+    	CopyCutPasteTarget target = getActiveCopyCutPasteTarget();
+    	if (target == null)
+    		return;
+    	if (target.canCopy())
+    		target.performCopy(clipBoard);
+    }
+    
+    public void editCut() {
+    	CopyCutPasteTarget target = getActiveCopyCutPasteTarget();
+    	if (target == null)
+    		return;
+    	if (target.canCut())
+    		target.performCut(clipBoard);
+    }
+    
+    public void editPaste() {
+    	CopyCutPasteTarget target = getActiveCopyCutPasteTarget();
+    	if (target == null)
+    		return;
+    	if (target.canPaste())
+    		target.performPaste(clipBoard);
     }
 
     public void export()
@@ -522,6 +562,7 @@ public class Nomad
     
     void setupUI()
     {
+    	this.clipBoard = new Clipboard("nomad clipboard");
         // before menu builder is used
         RuntimeMenuBuilder.buildNewMenuEntries(menuLayout, "Nord Modular patch 3.0", "Nord Modular");
 
@@ -535,11 +576,17 @@ public class Nomad
         .addActionListener(new ActionHandler(this, true, "fileSaveAs"));
         menuLayout.getEntry(MENU_FILE_PROPERTIES)
         .addActionListener(new ActionHandler(this, true, "fileProperties"));
+        menuLayout.getEntry(MENU_FILE_EXPORT)
+        .addActionListener(new ActionHandler(this, true, "export"));
+        menuLayout.getEntry(MENU_EDIT_COPY)
+        .addActionListener(new ActionHandler(this, true, "editCopy"));
+        menuLayout.getEntry(MENU_EDIT_CUT)
+        .addActionListener(new ActionHandler(this, true, "editCut"));
+        menuLayout.getEntry(MENU_EDIT_PASTE)
+        .addActionListener(new ActionHandler(this, true, "editPaste"));
         menuLayout.getEntry("nomad.menu.help.plugins")
         .addActionListener(new ActionHandler(this, true, "pluginsHelp"));
 
-        menuLayout.getEntry(MENU_FILE_EXPORT)
-        .addActionListener(new ActionHandler(this, true, "export"));
         /*
         MLEntry mnLang = menuLayout.getEntry("nomad.menu.window.language");
         
