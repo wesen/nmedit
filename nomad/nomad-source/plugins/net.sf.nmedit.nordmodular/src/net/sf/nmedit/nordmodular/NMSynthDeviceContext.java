@@ -37,9 +37,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.SynthException;
@@ -62,6 +59,9 @@ import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
 import net.sf.nmedit.nomad.core.swing.document.Document;
 import net.sf.nmedit.nomad.core.swing.document.DocumentManager;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class NMSynthDeviceContext extends SynthObjectForm<NordModular>
 {
 
@@ -70,6 +70,9 @@ public class NMSynthDeviceContext extends SynthObjectForm<NordModular>
      */
     private static final long serialVersionUID = 6337542133829436194L;
 
+
+    //private Collection<Action> SpecialActions = null;
+    
     public NMSynthDeviceContext(NordModular synth)
     {
         super(synth);
@@ -81,7 +84,7 @@ public class NMSynthDeviceContext extends SynthObjectForm<NordModular>
     {
         return new NmEventHandler();
     }
-
+    
     public void openOrSelectPatch(Slot slot)
     {
         NmSlot nmslot = (NmSlot) slot;
@@ -380,7 +383,7 @@ public class NMSynthDeviceContext extends SynthObjectForm<NordModular>
         }
     }
 
-    protected void addForms(final SynthPropertiesDialog spd)
+    protected void addForms(final SynthPropertiesDialog<NordModular> spd)
     {
         super.addForms(spd);
         DialogPane<NordModular> dp = new SSF(getSynthesizer());
@@ -490,8 +493,6 @@ public class NMSynthDeviceContext extends SynthObjectForm<NordModular>
                     frm.jtSynthName.setText(text.substring(0, 16));
                     return;
                 }
-                
-                System.out.println("name: "+synth.getName()+" / "+text);
                 
                 synth.setName(text);
                 synth.syncSettings();

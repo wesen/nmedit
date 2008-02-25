@@ -965,7 +965,7 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         }
     }
 
-    protected void addForms(SynthPropertiesDialog spd)
+    protected void addForms(SynthPropertiesDialog<S> spd)
     {
         spd.addSynthInfo();
         spd.addPortSettings();
