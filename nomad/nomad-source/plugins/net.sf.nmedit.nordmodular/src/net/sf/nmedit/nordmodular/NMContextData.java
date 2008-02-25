@@ -51,6 +51,7 @@ public class NMContextData extends NMData
 
     {
         jtContext = NMContextData.this.initContextSavely();
+        JTNM1Context.setCachedContext(jtContext);
         //cr.prepareData();
     }
     
