@@ -854,6 +854,17 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
         return false;
     }
 
+    public static JTNMPatch createPatchUI(NMPatch patch) throws Exception
+    {           
+        JTNM1Context context = JTNM1Context.getCachedContext();
+        if (context == null)
+        	return null;
+        synchronized(context.getLock())
+        {
+            return new JTNMPatch(context, patch);
+        }
+    }
+
     
 }
 
