@@ -57,7 +57,8 @@ public class PNMMorphSection extends PBasicModuleContainer
         {
             if (parameter == null)
                 throw new NullPointerException("parameter must not be null");
-                
+            if (parameter.getExtensionParameter() == null)
+                return false; // no morph support for parameter
             // max capacity/assignments = 25
             if (!isFull()) return assignmentList.add(parameter);
             return false;
