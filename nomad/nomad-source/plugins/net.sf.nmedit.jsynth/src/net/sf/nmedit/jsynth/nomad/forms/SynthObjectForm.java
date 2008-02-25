@@ -44,10 +44,13 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -59,6 +62,8 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
@@ -85,6 +90,9 @@ import net.sf.nmedit.jsynth.worker.StorePatchWorker;
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.forms.ExceptionDialog;
+import net.sf.nmedit.nomad.core.swing.Factory;
+import net.sf.nmedit.nomad.core.swing.JDropDownButtonControl;
+import net.sf.nmedit.nomad.core.swing.SelectedAction;
 import net.sf.nmedit.nomad.core.swing.explorer.ContainerNode;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 import net.sf.nmedit.nomad.core.swing.explorer.LeafNode;
@@ -136,7 +144,7 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
                 Icon icon = (Icon) evt.getNewValue();
                 setSynthIcon(icon);
             }
-            else if ("name".equals(evt.getPropertyName()))
+            else if (Synthesizer.PROPERTY_NAME.equals(evt.getPropertyName()))
             {
                 setSynthName((String)evt.getNewValue());
             }
@@ -528,6 +536,8 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
     static ImageIcon icComReceive = getIcon("tango-icon-theme/16x16/status/network-receive.png");
     static ImageIcon icComTransmit = getIcon("tango-icon-theme/16x16/status/network-transmit.png");
     static ImageIcon icComTransmitReceive = getIcon("tango-icon-theme/16x16/status/network-transmit-receive.png");
+
+    static ImageIcon icAppOther = getIcon("tango-icon-theme/16x16/categories/applications-other.png");
     
     private JLabel synthStatusLabel;
     private JLabel synthIconLabel;
@@ -693,7 +703,13 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
             SynTitleBox.add(top(right(synthStatusLabel)));
 
             Box SynActionBox = top(left(Box.createHorizontalBox()));
-            SynActionBox.add(Box.createHorizontalGlue()); 
+            SynActionBox.add(Box.createHorizontalGlue());
+            Collection<Action> SpecialActions = getSpecialActions();
+            if (!SpecialActions.isEmpty())
+            {
+                SynActionBox.add(hgap());
+                SynActionBox.add(createSpecialActionsComponent(SpecialActions));
+            }
             SynActionBox.add(hgap());
             SynActionBox.add(btnSystem);
             SynActionBox.add(hgap());
@@ -752,7 +768,31 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         return synthpane;
     }
 
+    private JComponent createSpecialActionsComponent(Collection<Action> specialActions)
+    {
+        SelectedAction sa = new SelectedAction();
+        sa.putValue(AbstractAction.SMALL_ICON, icAppOther);
+
+        JPopupMenu pop = new JPopupMenu();
+        JRadioButtonMenuItem rfirst = null;
+        for (Action a: specialActions)
+        {
+            JRadioButtonMenuItem rb = new JRadioButtonMenuItem(a);
+            if (rfirst == null) rfirst = rb;
+            sa.add(rb);
+            pop.add(rb);
+        }
+        JButton btn = Factory.createSmallToolBarButton(sa);
+        new JDropDownButtonControl(btn, pop);
+        return btn;
+    }
     
+    protected Collection<Action> getSpecialActions()
+    {
+        return Collections.emptyList();
+    }
+
+
     final int GAP = 2;
     private Component hgap() { return Box.createRigidArea(new Dimension(GAP,0)); }
     private Component vgap() { return Box.createRigidArea(new Dimension(0, GAP)); }
