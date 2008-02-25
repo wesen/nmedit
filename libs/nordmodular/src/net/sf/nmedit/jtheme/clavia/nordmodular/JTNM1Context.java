@@ -69,6 +69,16 @@ public class JTNM1Context extends JTCustomContext
     public static final Color GRAPH_DISPLAY_LINE = new Color(0xC0C0C0);
     public static final Color GRAPH_DISPLAY_FILL = new Color(0xC0D0C0);
     public static final Color GRAPH_DISPLAY_FILL_LINE = new Color(0x000000);
+    
+    private static JTNM1Context cachedJTContext = null;
+    
+    public static void setCachedContext(JTNM1Context context) {
+    	cachedJTContext = context;
+    }
+    
+    public static JTNM1Context getCachedContext() {
+    	return cachedJTContext;
+    }
 
     private StorageContext stc;
     
