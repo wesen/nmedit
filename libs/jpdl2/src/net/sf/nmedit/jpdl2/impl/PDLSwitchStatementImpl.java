@@ -125,8 +125,8 @@ public class PDLSwitchStatementImpl extends PDLItemImpl implements PDLSwitchStat
                 PDLItem item = casestmt.getBlock();
                 switch(item.getType())
                 {
-                    case Optional: break;
-                    case Conditional: break;
+                    case Optional: minimumCount = 0; break;
+                    case Conditional: minimumCount = 0; break;
                     default:
                     {
                         items++;
@@ -158,8 +158,8 @@ public class PDLSwitchStatementImpl extends PDLItemImpl implements PDLSwitchStat
                 PDLItem item = casestmt.getBlock();
                 switch(item.getType())
                 {
-                    case Optional: break;
-                    case Conditional: break;
+                    case Optional: minimumSize = 0; break;
+                    case Conditional: minimumSize = 0; break;
                     case Fail: break; // invalid path
                     default:
                     {

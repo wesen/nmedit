@@ -81,16 +81,18 @@ public class PDLChoiceImpl extends PDLItemImpl implements PDLChoice
         {
             int items = 0;
             minimumCount = Integer.MAX_VALUE;
+            boolean oneItem = false;
             for (PDLItem item: elements)
             {
                 switch(item.getType())
                 {
-                    case Optional: break;
-                    case Conditional: break;
+                    case Optional: minimumCount = 0; break;
+                    case Conditional: minimumCount = 0; break;
                     default:
                     {
                         items++;
                         minimumCount = Math.min(minimumCount, item.getMinimumCount());
+                        oneItem = true;
                         break;
                     }
                 }
@@ -114,8 +116,8 @@ public class PDLChoiceImpl extends PDLItemImpl implements PDLChoice
             {
                 switch(item.getType())
                 {
-                    case Optional: break;
-                    case Conditional: break;
+                    case Optional: minimumSize = 0; break;
+                    case Conditional:minimumSize = 0; break;
                     default:
                     {
                         items++;
