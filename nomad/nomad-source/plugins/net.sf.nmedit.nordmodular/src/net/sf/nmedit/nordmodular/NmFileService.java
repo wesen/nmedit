@@ -62,10 +62,7 @@ public class NmFileService implements FileService
 
         try
         {
-            InputStream in = new FileInputStream(file);
-
-            NMPatch patch = NmUtils.parsePatch(data.getModuleDescriptions(), in);
-            in.close();
+        	NMPatch patch = NMPatch.createFromFile(file);
 
             if (title != null)
                 patch.setName(title);
@@ -76,11 +73,6 @@ public class NmFileService implements FileService
             {
                 patch.setProperty("file", sourceFile);
                 pd.setURI(sourceFile);
-            }
-            else
-            {
-                patch.setProperty("file", null);
-                pd.setURI((File)null);
             }
                 
             SwingUtilities.invokeLater(new Runnable(){
@@ -122,18 +114,9 @@ public class NmFileService implements FileService
     
     public static PatchDocument createPatchDoc(NMPatch patch) throws Exception
     {
-        JTNMPatch jtp = createPatchUI(patch);
+        JTNMPatch jtp = JTNMPatch.createPatchUI(patch);
         PatchDocument pd = new PatchDocument(jtp);
         return pd;
-    }
-
-    public static JTNMPatch createPatchUI(NMPatch patch) throws Exception
-    {           
-        JTNM1Context context = NMContextData.sharedInstance().getJTContext();
-        synchronized(context.getLock())
-        {
-            return new JTNMPatch(context, patch);
-        }
     }
 
     public Class<? extends Service> getServiceClass()
