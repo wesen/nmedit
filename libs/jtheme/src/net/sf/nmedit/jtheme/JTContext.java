@@ -36,6 +36,7 @@ import net.sf.nmedit.jtheme.cable.ShadowCableRenderer;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTKnob;
 import net.sf.nmedit.jtheme.component.JTLabel;
+import net.sf.nmedit.jtheme.component.JTLight;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.JTSlider;
 import net.sf.nmedit.jtheme.component.plaf.mcui.JTModuleContainerUI;
@@ -91,6 +92,11 @@ public abstract class JTContext
     public JTKnob createKnob() throws JTException
     {
         return (JTKnob) createComponent(TYPE_KNOB);
+    }
+    
+    public JTLight createLight() throws JTException
+    {
+        return (JTLight) createComponent(TYPE_LIGHT);
     }
     
     public JTLabel createLabel() throws JTException
