@@ -63,11 +63,16 @@ public class TempDir
         
         name = s+"-"+pd.getVersion();
        
+        // TODO version checking on temp dir
         File base;
         if (Platform.isFlavor(Platform.OS.MacOSFlavor)) {
         	String userPath = System.getProperty("user.home");
         	base = new File(userPath, "Library/Application Support/Nomad");
-        } else {
+        } else if (Platform.isFlavor(Platform.OS.UnixFlavor)) {
+            String userPath = System.getProperty("user.home");
+            base = new File(userPath, ".nomad");
+        }
+        else {
         	base = new File("plugin-tmp");
         }
         
