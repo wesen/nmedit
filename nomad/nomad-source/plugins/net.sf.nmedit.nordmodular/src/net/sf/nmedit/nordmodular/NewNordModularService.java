@@ -24,6 +24,7 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.JOptionPane;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.NMData;
 import net.sf.nmedit.jsynth.SynthException;
 import net.sf.nmedit.jsynth.Synthesizer;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
@@ -86,7 +87,8 @@ public class NewNordModularService
     }
     
     private static NordModular createSynth()
-    {NordModular synth = new NordModular(NMContextData.sharedInstance().getModuleDescriptions());
+    {
+        NordModular synth = new NordModular(NMData.sharedInstance().getModuleDescriptions());
 
     synth.putClientProperty("icon.nm.micro", NMContextData.sharedInstance().getMicroIcon());
     synth.putClientProperty("icon.nm.keyboard", NMContextData.sharedInstance().getModularIcon());

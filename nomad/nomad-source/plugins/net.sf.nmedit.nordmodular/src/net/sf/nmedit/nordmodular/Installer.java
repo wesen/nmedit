@@ -36,6 +36,7 @@ import javax.sound.midi.MidiDevice;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.NMData;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchExporter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchFileWriter;
@@ -68,9 +69,11 @@ public class Installer implements InitService
         readSynthConfiguration();
         
         NMContextData data = NMContextData.sharedInstance();
+        NMData d = NMData.sharedInstance();
+        
         
         ModulePane pane = ModulePane.getSharedInstance();
-        pane.setModules(data.getModuleDescriptions());
+        pane.setModules(d.getModuleDescriptions());
         pane.setTheme(data.getJTContext());
         
         loadLastSession();

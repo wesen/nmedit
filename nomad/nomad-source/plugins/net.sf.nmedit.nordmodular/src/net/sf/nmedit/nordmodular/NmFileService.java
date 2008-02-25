@@ -28,6 +28,7 @@ import javax.swing.SwingUtilities;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import net.sf.nmedit.jpatch.clavia.nordmodular.NMData;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTNM1Context;
@@ -131,11 +132,9 @@ public class NmFileService implements FileService
 
     public void newFile()
     {
-        NMContextData data = NMContextData.sharedInstance();
-
         try
         {
-            NMPatch patch = new NMPatch(data.getModuleDescriptions());
+            NMPatch patch = new NMPatch(NMData.sharedInstance().getModuleDescriptions());
             patch.getHistory().setEnabled(false);
             PatchDocument pd = createPatchDoc(patch);
             Nomad.sharedInstance()
