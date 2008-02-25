@@ -19,7 +19,6 @@
 
 package net.sf.nmedit.jnmprotocol2;
 
-import net.sf.nmedit.jnmprotocol2.utils.Hexdump;
 import net.sf.nmedit.jpdl2.stream.BitStream;
 
 public class NmProtocol extends AbstractNmProtocol
@@ -37,6 +36,12 @@ public class NmProtocol extends AbstractNmProtocol
         timeout = 0;
     }
 
+    public void reset()
+    {
+        super.reset();
+        timeout = 0; // clear timeout
+    }
+    
     private static long time()
     {
         return System.currentTimeMillis();
@@ -50,7 +55,7 @@ public class NmProtocol extends AbstractNmProtocol
             clearSendQueue();
             long rememberTimeout = timeout; 
             timeout = 0;
-            throw new MidiException("Communication timed out.", (int) rememberTimeout);
+            throw new MidiException("Communication timed out: "+rememberTimeout, MidiException.TIMEOUT);
         }
         
         if (timeout == 0) 

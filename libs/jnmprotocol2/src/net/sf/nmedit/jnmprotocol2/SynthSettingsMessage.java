@@ -160,7 +160,7 @@ public class SynthSettingsMessage extends MidiMessage
     catch (RuntimeException e)
     {
         // TODO do not use RuntimeException in getParamMap()
-        MidiException me = new MidiException(e.getMessage(), 0);
+        MidiException me = new MidiException(e.getMessage(), MidiException.MIDI_PARSE_ERROR);
         me.initCause(e);
     }
     }

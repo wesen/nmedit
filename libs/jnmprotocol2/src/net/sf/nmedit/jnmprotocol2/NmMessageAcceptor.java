@@ -108,7 +108,7 @@ public class NmMessageAcceptor<M extends MidiMessage> extends NmProtocolListener
         {
             if (System.currentTimeMillis()>timeoutThreshold)
             {
-                throw new MidiException("timeout: "+timeout+"ms ("+messageClass.getName()+")", 0);
+                throw new MidiException("timeout: "+timeout+"ms ("+messageClass.getName()+")", MidiException.TIMEOUT);
             }
 
             protocol.heartbeat();

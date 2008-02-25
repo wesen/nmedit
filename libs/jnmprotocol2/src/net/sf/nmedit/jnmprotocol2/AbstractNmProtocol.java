@@ -20,19 +20,13 @@
 package net.sf.nmedit.jnmprotocol2;
 
 import java.awt.EventQueue;
+import java.util.NoSuchElementException;
 import java.util.concurrent.locks.ReentrantLock;
 
-import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.SysexMessage;
 import javax.sound.midi.Transmitter;
 
-import net.sf.nmedit.jnmprotocol2.AbstractNmProtocol;
-import net.sf.nmedit.jnmprotocol2.EnqueuedPacket;
-import net.sf.nmedit.jnmprotocol2.MessageHandler;
-import net.sf.nmedit.jnmprotocol2.MidiException;
-import net.sf.nmedit.jnmprotocol2.MidiMessage;
-import net.sf.nmedit.jnmprotocol2.utils.Hexdump;
 import net.sf.nmedit.jnmprotocol2.utils.QueueBuffer;
 import net.sf.nmedit.jpdl2.stream.BitStream;
 
@@ -427,7 +421,7 @@ public abstract class AbstractNmProtocol
         BitStream stream = midiMessage.getBitStream();
 
         if (stream == null)
-            throw new MidiException("stream is null in "+midiMessage, 0);
+            throw new MidiException("stream is null in "+midiMessage, MidiException.INVALID_MIDI_DATA);
         
         EnqueuedPacket packet = EnqueuedPacket.create(stream.toByteArray(), midiMessage.expectsReply());
         synchronized (sendLock)

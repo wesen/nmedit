@@ -20,6 +20,7 @@
 package net.sf.nmedit.jnmprotocol2;
 
 import net.sf.nmedit.jnmprotocol2.utils.NmCharacter;
+import net.sf.nmedit.jpdl2.stream.BitStream;
 import net.sf.nmedit.jpdl2.utils.PDLUtils;
 
 public class MidiException extends Exception
@@ -29,6 +30,10 @@ public class MidiException extends Exception
      * 
      */
     private static final long serialVersionUID = 5967172605877128644L;
+    public static final int INVALID_MIDI_DATA = -1000;
+    public static final int TIMEOUT = -1001;
+    public static final int MIDI_PARSE_ERROR = -1002;
+    
     // the midi message which caused this exception
     private byte[] midiMessage;
     
@@ -84,5 +89,10 @@ public class MidiException extends Exception
 
     private String message;
     private int error;
+
+    public void setMidiMessage(BitStream bitStream)
+    {
+        setMidiMessage(bitStream.toByteArray());
+    }
     
 }

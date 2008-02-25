@@ -72,9 +72,62 @@ public abstract class MidiMessage
         messageConstructors.put(key, constructor);
     }
     
+    private static BitStream ensureIsValidSysex(BitStream stream)
+    {
+        stream.setPosition(0);
+        
+        // find first 0xF0 and drop previous bytes 
+        int StatusStartPosition = -1;
+        int BehindStatusEndPosition = -1;
+        
+        while (stream.isAvailable(8))
+        {
+            int value = stream.getInt(8);
+            if ((value & 0x80) > 0) // check bit 8
+            {
+                if (value == 0xF7)
+                    BehindStatusEndPosition = stream.getPosition();
+                else if (value == 0xF0) 
+                    StatusStartPosition = stream.getPosition()-8;
+                else
+                {
+                    // crappy message, set invalid position values
+                    StatusStartPosition = -1;
+                }
+            }
+        }
+        
+        if (!(StatusStartPosition>=0 && StatusStartPosition<BehindStatusEndPosition))
+            return null; // corrupted message
+        
+        if (StatusStartPosition>0 || BehindStatusEndPosition<stream.getSize())
+        {
+            // copy sysex 0xF0 ... 0xF7 from original message
+            stream.setPosition(StatusStartPosition);
+            BitStream sysex = new BitStream();
+            while (stream.getPosition()<BehindStatusEndPosition)
+                sysex.append(stream.getInt(8), 8);
+            stream = sysex;
+        }
+        stream.setPosition(0);
+        return stream;
+    }
+    
     public static MidiMessage create(BitStream bitStream)
         throws MidiException
     {   
+        
+        {
+            BitStream sysex = ensureIsValidSysex(bitStream);
+            if (sysex == null)
+            {
+                MidiException me = new MidiException("corrupted message", MidiException.INVALID_MIDI_DATA);
+                me.setMidiMessage(bitStream);
+                throw me;
+            }
+            bitStream = sysex;
+        }
+        
         PDLPacketParser parser = new PDLPacketParser(PDLData.getMidiDoc());
     	
     	PDLMessage message;
@@ -84,7 +137,7 @@ public abstract class MidiMessage
     	}
     	catch (PDLException e)
     	{
-    	    MidiException me = new MidiException("parse failed", 0);
+    	    MidiException me = new MidiException("parse failed", MidiException.MIDI_PARSE_ERROR);
     	    me.setMidiMessage(bitStream.toByteArray());
     	    me.initCause(e);
     	    throw me;
@@ -99,8 +152,8 @@ public abstract class MidiMessage
     	{
     	    System.out.println(message.getMessageId()+": "+PDLUtils.toString(message.getPacket()));
     	    System.out.println(PDLUtils.toHexadecimal(bitStream.toByteArray()));
-    	}
-    	*/
+    	}*/
+    	
     	
     	/*if ("unknownNMInfo".equals(message.getMessageId()))
     	{
@@ -294,16 +347,16 @@ public abstract class MidiMessage
         }
         catch (PDLException e)
         {
-            MidiException me = new MidiException("Could not generate message: "+this,
-                        intStream.getSize() - intStream.getPosition());
+            MidiException me = new MidiException("Could not generate message: "+this+", "+(
+                        intStream.getSize() - intStream.getPosition()), MidiException.MIDI_PARSE_ERROR);
             me.initCause(e);
             throw me;
         }
 
         if (intStream.isAvailable(1))
         {
-            throw new MidiException("Information mismatch in generate. In "+this,
-                        intStream.getSize() - intStream.getPosition());
+            throw new MidiException("Information mismatch in generate. In "+this+", "+(
+                    intStream.getSize() - intStream.getPosition()), MidiException.MIDI_PARSE_ERROR);
         }
         return bitStream;
     }
