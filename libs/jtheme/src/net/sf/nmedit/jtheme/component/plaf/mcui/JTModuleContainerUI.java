@@ -44,10 +44,8 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
-import java.awt.event.ActionEvent;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -55,11 +53,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.swing.AbstractAction;
-import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
-import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.plaf.ComponentUI;
@@ -69,8 +64,6 @@ import net.sf.nmedit.jpatch.MoveOperation;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
-import net.sf.nmedit.jpatch.PatchUtils;
-import net.sf.nmedit.jpatch.history.History;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
@@ -79,7 +72,6 @@ import net.sf.nmedit.jtheme.dnd.JTDragDrop;
 import net.sf.nmedit.jtheme.dnd.JTModuleTransferData;
 import net.sf.nmedit.jtheme.dnd.JTModuleTransferDataWrapper;
 import net.sf.nmedit.nmutils.Platform;
-import net.sf.nmedit.nmutils.swing.NMLazyActionMap;
 import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
 
 public class JTModuleContainerUI extends ComponentUI
@@ -110,65 +102,8 @@ public class JTModuleContainerUI extends ComponentUI
     public void createPopupMenu(JTModuleContainer mc, MouseEvent e)
     {
         JPopupMenu popup = new JPopupMenu();
-        popup.add(new ContainerAction(ContainerAction.DELETE_UNUSED));
+        popup.add(new ContainerAction(this.getModuleContainer(), ContainerAction.DELETE_UNUSED));
         popup.show(mc, e.getX(), e.getY());
-    }
-    
-    public class ContainerAction extends AbstractAction
-    {
-        
-        /**
-         * 
-         */
-        private static final long serialVersionUID = 7135918324094843867L;
-        public static final String DELETE_UNUSED = "delete.unused";
-        public static final String DELETE = "delete";
-
-        public ContainerAction(String command)
-        {
-            if (command == DELETE_UNUSED)
-            {
-                putValue(NAME, "Delete Unused Modules");
-                putValue(ACTION_COMMAND_KEY, command);
-                PModuleContainer t = getTarget();
-                setEnabled(t != null && PatchUtils.hasUnusedModules(t));
-            }
-
-        }
-        
-        protected PModuleContainer getTarget()
-        {
-            return getModuleContainer().getModuleContainer();
-        }
-        
-        public void actionPerformed(ActionEvent e)
-        {
-            if (isEnabled())
-            {
-            	Object key = getValue(ACTION_COMMAND_KEY);
-                if (key==DELETE_UNUSED)
-                {
-                    PModuleContainer mc = getTarget();
-                    if (mc != null)
-                    {
-                        History history = mc.getPatch().getHistory();
-                        try
-                        {
-                            if (history != null)
-                                history.beginRecord();
-                        
-                            while (PatchUtils.removeUnusedModules(mc)>0);
-                        } 
-                        finally
-                        {
-                            if (history != null)
-                                history.endRecord();
-                        }
-                    }
-                }
-            }
-        }
-        
     }
     
     public void installUI(JComponent c) 
@@ -361,73 +296,7 @@ public class JTModuleContainerUI extends ComponentUI
       MouseListener, MouseMotionListener
     {
 
-        public static class Actions extends AbstractAction 
-		{
-		    
-		    // private String action;
-		
-		    /**
-		     * 
-		     */
-		    private static final long serialVersionUID = -2104045982638755995L;
-		
-		    public Actions(String name)
-		    {
-		        super(name);
-		    }
-		
-		    public String getName()
-		    {
-		        return (String) super.getValue(NAME);
-		    }
-		    
-		    public void actionPerformed(ActionEvent e)
-		    {
-		        JTModuleContainer mc = (JTModuleContainer) e.getSource();
-		        
-		        String key = getName();
-		        
-		        if (key == DELETE)
-		        {
-		            for (Component c : mc.getComponents())
-		            {
-		                if (c instanceof JTModule)
-		                {
-		                    JTModule mm = (JTModule) c;
-		                    
-		                    if (mm.isSelected())
-		                        removeModule(mm);
-		                }
-		            }
-		        }
-		    }
-		    
-		    private static void removeModule(JTModule m)
-		    {
-		        PModule nm = m.getModule();
-		        
-		        if (nm != null && nm.getParentComponent() != null)
-		        {
-		            nm.getParentComponent().remove(nm);
-		        }
-		    }
-		
-		    public boolean isEnabled(Object sender) 
-		    {
-		        
-		        if (sender != null && (sender instanceof JTModule)
-		                && !((JTModule)sender).isEnabled())
-		        {
-		            return false;
-		        }
-		        else
-		        {
-		            return true;
-		        }
-		    }
-		}
-
-		private JTModuleContainerUI jtcUI;
+        private JTModuleContainerUI jtcUI;
         private boolean dndAllowed;
 
         public EventHandler(JTModuleContainerUI jtcUI, boolean dndAllowed)
@@ -440,58 +309,6 @@ public class JTModuleContainerUI extends ComponentUI
         }
         
         
-        public static final String DELETE = "delete";
-        public static final String modulecontainerActionMapKey = "modulecontainer.actionMap";
-
-        public static void loadActionMap(NMLazyActionMap map) 
-        {  
-            map.put(new Actions(DELETE));
-        }
-        
-        private transient InputMap inputMapWhenFocused ;
-        protected InputMap createInputMapWhenFocused()
-        {
-            if (inputMapWhenFocused == null)
-            {
-                inputMapWhenFocused = new InputMap();
-                fillInputMap(inputMapWhenFocused);
-            }
-            return inputMapWhenFocused;
-        }
-        
-        protected void fillInputMap(InputMap map)
-        {
-            int vk_delete = KeyEvent.VK_DELETE;
-            
-            if (Platform.flavor() == Platform.OS.MacOSFlavor)
-                vk_delete = KeyEvent.VK_BACK_SPACE;
-            
-            KeyStroke deleteModules = KeyStroke.getKeyStroke(vk_delete, 0);
-            map.put(deleteModules, DELETE);
-        }
-        
-        public void installKeyboardActions( JTModuleContainer mc)
-        {
-            NMLazyActionMap.installLazyActionMap(mc.getContext().getUIDefaults(), 
-                    mc, EventHandler.class, modulecontainerActionMapKey);
-
-            InputMap im = createInputMapWhenFocused();
-            SwingUtilities.replaceUIInputMap(mc, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, im);
-        }
-
-        public void uninstallKeyboardActions(JTModuleContainer mc)
-        {
-            SwingUtilities.replaceUIInputMap(mc, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, null);
-//            SwingUtilities.replaceUIInputMap(module, JComponent.WHEN_FOCUSED, null);
-
-            // TODO this line shouldn't be necessary, but if setUI() was called twice
-            // each time with a new ui instance then the input map will cause a StackOverflowError
-            // if a key was pressed
-            mc.setInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, new InputMap());
-            
-            SwingUtilities.replaceUIActionMap(mc, null);
-        }
-
         
         public JTModuleContainer getModuleContainer()
         {
@@ -502,9 +319,7 @@ public class JTModuleContainerUI extends ComponentUI
         {
             JTModuleContainer jtc = getModuleContainer();
             installAtModuleContainer(jtc);
-            
-            installKeyboardActions(jtc);
-            
+                        
             if (dndAllowed)
             {
                 for (int i=jtc.getComponentCount()-1;i>=0;i--)
@@ -525,7 +340,6 @@ public class JTModuleContainerUI extends ComponentUI
         {
             JTModuleContainer jtc = getModuleContainer();
             uninstallAtModuleContainer(jtc);
-            uninstallKeyboardActions(jtc);
 
             if (dndAllowed)
             {
