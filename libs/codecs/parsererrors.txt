@@ -1,0 +1,194 @@
+*****************************************************************************
+* Please specifify date and number of error messages
+*****************************************************************************
+
+
+
+
+*****************************************************************************
+MESSAGE#3: @2008/02/25
+*****************************************************************************
+
+*************************************
+parse new message, start=Sysex
+bitstream: [F0 33 50 06 02 39 00 10 00 00 00 00 00 00 44 00 00 00 00 44 F7]
+generate:false
+ --- item 240:8 	(reserved:40, pos:0, size:168) 
+ --- item messageId("sysex") 	(reserved:32, pos:8, size:168) 
+ --- item 51:8 	(reserved:32, pos:8, size:168) 
+ --- item manufacturer:="Clavia Digital Instruments" 	(reserved:24, pos:16, size:168) 
+ --- item 0:1 	(reserved:24, pos:16, size:168) 
+ --- item cc:5 	(reserved:18, pos:22, size:168) 	=0x14 (decimal: 20)
+ --- item slot:2 	(reserved:16, pos:24, size:168) 	=0x0 (decimal: 0)
+ --- item 6:8 	(reserved:16, pos:24, size:168) 
+ --- item switch (cc) 	(reserved:8, pos:32, size:168) 
+  --- case '0x14' (20 decimal)
+   --- item NMInfo$data 	(reserved:32, pos:32, size:168) 
+    --- item messageId("nminfo") 	(reserved:32, pos:32, size:168) 
+    --- item 0:1 	(reserved:32, pos:32, size:168) 
+    --- item pid:7 	(reserved:24, pos:40, size:168) 	=0x2 (decimal: 2)
+    --- item 0:1 	(reserved:24, pos:40, size:168) 
+    --- item sc:7 	(reserved:16, pos:48, size:168) 	=0x39 (decimal: 57)
+    --- item switch (sc) 	(reserved:16, pos:48, size:168) 
+     --- case '0x39' (57 decimal)
+      --- item net.sf.nmedit.jpdl2.impl.PDLBlockImpl@782dc6 	(reserved:48, pos:48, size:168) 
+       --- item messageId("lights") 	(reserved:48, pos:48, size:168) 
+       --- item Lights$data 	(reserved:48, pos:48, size:168) 
+        --- item PDLChoice (itemcount: 2) 	(reserved:48, pos:48, size:168) 
+         --- item BigLightsMessage$$ 	(reserved:80, pos:48, size:168) 
+          --- item 0:1 	(reserved:80, pos:48, size:168) 
+          --- item startIndex:7 	(reserved:72, pos:56, size:168) 	=0x0 (decimal: 0)
+          --- item 0:2 	(reserved:72, pos:56, size:168) 
+          --- item l2:2 	(reserved:68, pos:60, size:168) 	=0x1 (decimal: 1)
+          --- item l1:2 	(reserved:66, pos:62, size:168) 	=0x0 (decimal: 0)
+          --- item l0:2 	(reserved:64, pos:64, size:168) 	=0x0 (decimal: 0)
+          --- item 0:2 	(reserved:64, pos:64, size:168) 
+          --- item l5:2 	(reserved:60, pos:68, size:168) 	=0x0 (decimal: 0)
+          --- item l4:2 	(reserved:58, pos:70, size:168) 	=0x0 (decimal: 0)
+          --- item l3:2 	(reserved:56, pos:72, size:168) 	=0x0 (decimal: 0)
+          --- item 0:2 	(reserved:56, pos:72, size:168) 
+          --- item l8:2 	(reserved:52, pos:76, size:168) 	=0x0 (decimal: 0)
+          --- item l7:2 	(reserved:50, pos:78, size:168) 	=0x0 (decimal: 0)
+          --- item l6:2 	(reserved:48, pos:80, size:168) 	=0x0 (decimal: 0)
+          --- item 0:2 	(reserved:48, pos:80, size:168) 
+          --- item l11:2 	(reserved:44, pos:84, size:168) 	=0x0 (decimal: 0)
+          --- item l10:2 	(reserved:42, pos:86, size:168) 	=0x0 (decimal: 0)
+          --- item l9:2 	(reserved:40, pos:88, size:168) 	=0x0 (decimal: 0)
+          --- item 0:2 	(reserved:40, pos:88, size:168) 
+          --- item l14:2 	(reserved:36, pos:92, size:168) 	=0x0 (decimal: 0)
+          --- item l13:2 	(reserved:34, pos:94, size:168) 	=0x0 (decimal: 0)
+          --- item l12:2 	(reserved:32, pos:96, size:168) 	=0x0 (decimal: 0)
+          --- item 0:2 	(reserved:32, pos:96, size:168) 
+          --- item l17:2 	(reserved:28, pos:100, size:168) 	=0x0 (decimal: 0)
+          --- item l16:2 	(reserved:26, pos:102, size:168) 	=0x0 (decimal: 0)
+          --- item l15:2 	(reserved:24, pos:104, size:168) 	=0x0 (decimal: 0)
+          --- item 0:4 	(reserved:24, pos:104, size:168) 
+          --- item l19:2 	(reserved:18, pos:110, size:168) 	=0x0 (decimal: 0)
+          --- item l18:2 	(reserved:16, pos:112, size:168) 	=0x0 (decimal: 0)
+     --- item checksum$$ 	(reserved:16, pos:112, size:168) 
+      --- item @lblDataEnd 	(reserved:16, pos:112, size:168) 
+      --- item 0:1 	(reserved:16, pos:112, size:168) 
+      --- item checksum:7=(([+;0;@lblDataEnd;8;$])%128) 	(reserved:15, pos:113, size:168) 
+  --- item 247:8 	(reserved:8, pos:120, size:168) 
+  parsing failed
+  message: f0 33 50 6 2 39 0 10 0 0 0 0 0 0 44 0 0 0 0 44 f7 
+  error: 	at net.sf.nmedit.jpdl2.PDLException: constant 247:8: constant mismatch: 0 (PDLPacketParser.java:404)
+  +++++++++++++++++++++++++++++++++++++
+
+net.sf.nmedit.jnmprotocol2.MidiException: parse failed [error=-1002,message={[F0 33 50 06 02 39 00 10 00 00 00 00 00 00 44 00 00 00 00 44 F7]},text={...3P...9...D...D}]
+	at net.sf.nmedit.jnmprotocol2.MidiMessage.create(MidiMessage.java:140)
+	at net.sf.nmedit.jnmprotocol2.NmProtocol.heartbeatImpl(NmProtocol.java:85)
+	at net.sf.nmedit.jsynth.clavia.nordmodular.NordModular$SchedulingProtocol.heartbeatImpl(NordModular.java:252)
+	at net.sf.nmedit.jnmprotocol2.AbstractNmProtocol.heartbeat(AbstractNmProtocol.java:154)
+	at net.sf.nmedit.jnmprotocol2.utils.ProtocolRunner.run(ProtocolRunner.java:60)
+	at net.sf.nmedit.jnmprotocol2.utils.StoppableThread.run(StoppableThread.java:100)
+	at java.lang.Thread.run(Thread.java:619)
+Caused by: net.sf.nmedit.jpdl2.PDLException: packet Sysex
+	at net.sf.nmedit.jpdl2.PDLException: constant 247:8: constant mismatch: 0 (PDLPacketParser.java:404)
+	at net.sf.nmedit.jpdl2.PDLPacketParser.parse(PDLPacketParser.java:226)
+	at net.sf.nmedit.jpdl2.PDLPacketParser.parse(PDLPacketParser.java:122)
+	at net.sf.nmedit.jpdl2.PDLPacketParser.parseMessage(PDLPacketParser.java:107)
+	at net.sf.nmedit.jpdl2.PDLPacketParser.parseMessage(PDLPacketParser.java:87)
+	at net.sf.nmedit.jnmprotocol2.MidiMessage.create(MidiMessage.java:136)
+	... 6 more
+
+
+*****************************************************************************
+MESSAGE#2: @2008/02/25
+*****************************************************************************
+
+*************************************
+parse new message, start=Sysex
+bitstream: [F0 33 50 06 02 39 00 01 04 58 F7]
+generate:false
+ --- item 240:8 	(reserved:40, pos:0, size:88) 
+ --- item messageId("sysex") 	(reserved:32, pos:8, size:88) 
+ --- item 51:8 	(reserved:32, pos:8, size:88) 
+ --- item manufacturer:="Clavia Digital Instruments" 	(reserved:24, pos:16, size:88) 
+ --- item 0:1 	(reserved:24, pos:16, size:88) 
+ --- item cc:5 	(reserved:18, pos:22, size:88) 	=0x14 (decimal: 20)
+ --- item slot:2 	(reserved:16, pos:24, size:88) 	=0x0 (decimal: 0)
+ --- item 6:8 	(reserved:16, pos:24, size:88) 
+ --- item switch (cc) 	(reserved:8, pos:32, size:88) 
+  --- case '0x14' (20 decimal)
+   --- item NMInfo$data 	(reserved:32, pos:32, size:88) 
+    --- item messageId("nminfo") 	(reserved:32, pos:32, size:88) 
+    --- item 0:1 	(reserved:32, pos:32, size:88) 
+    --- item pid:7 	(reserved:24, pos:40, size:88) 	=0x2 (decimal: 2)
+    --- item 0:1 	(reserved:24, pos:40, size:88) 
+    --- item sc:7 	(reserved:16, pos:48, size:88) 	=0x39 (decimal: 57)
+    --- item switch (sc) 	(reserved:16, pos:48, size:88) 
+     --- case '0x39' (57 decimal)
+     parsing failed
+     message: f0 33 50 6 2 39 0 1 4 58 f7 
+     error: 	at net.sf.nmedit.jpdl2.PDLException: NMInfo$data (PDLPacketParser.java:558)
+	at net.sf.nmedit.jpdl2.PDLException: { messageid 'lights' Lights$data}: data unavailable: 48=32 + 16 (reserved) (remaining:40) (PDLPacketParser.java:818)
+     +++++++++++++++++++++++++++++++++++++
+
+net.sf.nmedit.jnmprotocol2.MidiException: parse failed [error=-1002,message={[F0 33 50 06 02 39 00 01 04 58 F7]},text={...3P...9...X}]
+	at net.sf.nmedit.jnmprotocol2.MidiMessage.create(MidiMessage.java:140)
+	at net.sf.nmedit.jnmprotocol2.NmProtocol.heartbeatImpl(NmProtocol.java:85)
+	at net.sf.nmedit.jsynth.clavia.nordmodular.NordModular$SchedulingProtocol.heartbeatImpl(NordModular.java:252)
+	at net.sf.nmedit.jnmprotocol2.AbstractNmProtocol.heartbeat(AbstractNmProtocol.java:154)
+	at net.sf.nmedit.jnmprotocol2.utils.ProtocolRunner.run(ProtocolRunner.java:60)
+	at net.sf.nmedit.jnmprotocol2.utils.StoppableThread.run(StoppableThread.java:100)
+	at java.lang.Thread.run(Thread.java:619)
+Caused by: net.sf.nmedit.jpdl2.PDLException: packet Sysex
+	at net.sf.nmedit.jpdl2.PDLException: NMInfo$data (PDLPacketParser.java:558)
+	at net.sf.nmedit.jpdl2.PDLException: { messageid 'lights' Lights$data}: data unavailable: 48=32 + 16 (reserved) (remaining:40) (PDLPacketParser.java:818)
+	at net.sf.nmedit.jpdl2.PDLPacketParser.parse(PDLPacketParser.java:226)
+	at net.sf.nmedit.jpdl2.PDLPacketParser.parse(PDLPacketParser.java:122)
+	at net.sf.nmedit.jpdl2.PDLPacketParser.parseMessage(PDLPacketParser.java:107)
+	at net.sf.nmedit.jpdl2.PDLPacketParser.parseMessage(PDLPacketParser.java:87)
+	at net.sf.nmedit.jnmprotocol2.MidiMessage.create(MidiMessage.java:136)
+	... 6 more
+
+
+*****************************************************************************
+MESSAGE#1: @2008/02/25
+*****************************************************************************
+parse new message, start=Sysex
+bitstream: [F0 33 50 06 02 39 00 00 00 00 5D F7]
+generate:false
+ --- item 240:8 	(reserved:40, pos:0, size:96) 
+ --- item messageId("sysex") 	(reserved:32, pos:8, size:96) 
+ --- item 51:8 	(reserved:32, pos:8, size:96) 
+ --- item manufacturer:="Clavia Digital Instruments" 	(reserved:24, pos:16, size:96) 
+ --- item 0:1 	(reserved:24, pos:16, size:96) 
+ --- item cc:5 	(reserved:18, pos:22, size:96) 	=0x14 (decimal: 20)
+ --- item slot:2 	(reserved:16, pos:24, size:96) 	=0x0 (decimal: 0)
+ --- item 6:8 	(reserved:16, pos:24, size:96) 
+ --- item switch (cc) 	(reserved:8, pos:32, size:96) 
+  --- case '0x14' (20 decimal)
+   --- item NMInfo$data 	(reserved:32, pos:32, size:96) 
+    --- item messageId("nminfo") 	(reserved:32, pos:32, size:96) 
+    --- item 0:1 	(reserved:32, pos:32, size:96) 
+    --- item pid:7 	(reserved:24, pos:40, size:96) 	=0x2 (decimal: 2)
+    --- item 0:1 	(reserved:24, pos:40, size:96) 
+    --- item sc:7 	(reserved:16, pos:48, size:96) 	=0x39 (decimal: 57)
+    --- item switch (sc) 	(reserved:16, pos:48, size:96) 
+     --- case '0x39' (57 decimal)
+     parsing failed
+     message: f0 33 50 6 2 39 0 0 0 0 5d f7 
+     error: 	at net.sf.nmedit.jpdl2.PDLException: NMInfo$data (PDLPacketParser.java:558)
+	at net.sf.nmedit.jpdl2.PDLException: { messageid 'lights' Lights$data}: data unavailable: 80=64 + 16 (reserved) (remaining:48) (PDLPacketParser.java:818)
+     +++++++++++++++++++++++++++++++++++++
+
+net.sf.nmedit.jnmprotocol2.MidiException: parse failed [error=-1002,message={[F0 33 50 06 02 39 00 00 00 00 5D F7]},text={...3P...9...]}]
+	at net.sf.nmedit.jnmprotocol2.MidiMessage.create(MidiMessage.java:140)
+	at net.sf.nmedit.jnmprotocol2.NmProtocol.heartbeatImpl(NmProtocol.java:85)
+	at net.sf.nmedit.jsynth.clavia.nordmodular.NordModular$SchedulingProtocol.heartbeatImpl(NordModular.java:252)
+	at net.sf.nmedit.jnmprotocol2.AbstractNmProtocol.heartbeat(AbstractNmProtocol.java:154)
+	at net.sf.nmedit.jnmprotocol2.utils.ProtocolRunner.run(ProtocolRunner.java:60)
+	at net.sf.nmedit.jnmprotocol2.utils.StoppableThread.run(StoppableThread.java:100)
+	at java.lang.Thread.run(Thread.java:619)
+Caused by: net.sf.nmedit.jpdl2.PDLException: packet Sysex
+	at net.sf.nmedit.jpdl2.PDLException: NMInfo$data (PDLPacketParser.java:558)
+	at net.sf.nmedit.jpdl2.PDLException: { messageid 'lights' Lights$data}: data unavailable: 80=64 + 16 (reserved) (remaining:48) (PDLPacketParser.java:818)
+	at net.sf.nmedit.jpdl2.PDLPacketParser.parse(PDLPacketParser.java:226)
+	at net.sf.nmedit.jpdl2.PDLPacketParser.parse(PDLPacketParser.java:122)
+	at net.sf.nmedit.jpdl2.PDLPacketParser.parseMessage(PDLPacketParser.java:107)
+	at net.sf.nmedit.jpdl2.PDLPacketParser.parseMessage(PDLPacketParser.java:87)
+	at net.sf.nmedit.jnmprotocol2.MidiMessage.create(MidiMessage.java:136)
+	... 6 more
+*****************************************************************************
