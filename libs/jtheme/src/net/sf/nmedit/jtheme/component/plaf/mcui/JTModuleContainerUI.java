@@ -800,6 +800,7 @@ public class JTModuleContainerUI extends ComponentUI
         
         public void mouseClicked(MouseEvent e)
         {
+        	getModuleContainer().requestFocusInWindow();
         }
         
         public void mouseEntered(MouseEvent e)
