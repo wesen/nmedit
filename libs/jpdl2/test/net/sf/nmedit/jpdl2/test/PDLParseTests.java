@@ -257,11 +257,12 @@ public class PDLParseTests
         test("Packet := 0:8;");
     }
 
+    /*
     @Test(expected=PDLException.class) // variable referenced before assignment
     public void constant_variableReferencedBeforeAssignment() throws PDLException
     {
         test("Packet := v * 0:8 v:8;");
-    }
+    }*/
 
     // ************************************************************************************
     // names
