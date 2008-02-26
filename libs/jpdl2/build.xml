@@ -6,6 +6,7 @@
   <property name="test" location="test"/>
   <property name="build" location="build"/>
   <property name="dist" location="dist"/>
+  <property name="api_root" location="docs/api"/>
   <property name="byaccj" location="/usr/local/bin/byaccj"/>
   <property name="jflex" location="/usr/local/lib/jflex-1.4.1/lib/JFlex.jar"/>
 
@@ -32,16 +33,19 @@
 
 	<target name="javadoc" description="Generates the JavaDoc for JPDL2">
 	  <javadoc
-	  	sourcepath="src"
-	  	destdir="docs/api" author="true" version="true" use="true" windowtitle="JPDL2">
+                destdir="${api_root}" author="true" version="true" use="true" windowtitle="JPDL2">
 	      <classpath>
 	        <pathelement path="."/>
 	      </classpath>
 
-	    <fileset dir="src" defaultexcludes="yes">
-	      <include name="net/sf/nmedit/jpatch/**"/>
-	      <exclude name="net/sf/nmedit/jpatch/**/*.html"/>
-	    </fileset>
+	    <packageset dir="src" defaultexcludes="yes">  <!--
+              <include name="net/sf/nmedit/jpdl2/**"/>
+              <include name="net/sf/nmedit/jpdl2/**"/>-->
+              <include name="net/sf/nmedit/jpdl2/**"/>
+              <exclude name="net/sf/nmedit/jpdl2/**/*.html"/>
+              <exclude name="net/sf/nmedit/jpdl2/impl/**"/>
+              <exclude name="net/sf/nmedit/jpdl2/utils/**"/>
+            </packageset>
 
 	    <doctitle><![CDATA[<h1>JPDL 2</h1>]]></doctitle>
 	    <bottom><![CDATA[<i>Copyright &#169; 2007 <a href="http://nmedit.sourceforge.net>nmedit project</a>.</i>]]></bottom>
@@ -96,6 +100,7 @@
           description="clean up">
     <delete dir="${build}"/>
     <delete dir="${dist}"/>
+    <delete dir="${api_root}"/>
   </target>
 </project>
 
