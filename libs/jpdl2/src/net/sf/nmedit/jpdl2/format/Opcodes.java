@@ -18,6 +18,9 @@
 */
 package net.sf.nmedit.jpdl2.format;
 
+/**
+ * Defines constants for each operator.
+ */
 public interface Opcodes
 {
 

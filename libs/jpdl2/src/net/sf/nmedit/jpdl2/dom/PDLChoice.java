@@ -20,9 +20,17 @@ package net.sf.nmedit.jpdl2.dom;
 
 import java.util.List;
 
+/**
+ * Chooses the first item which can be successfully parsed.
+ */
 public interface PDLChoice extends PDLItem, Iterable<PDLBlock>
 {
 
+    /**
+     * The items ordered by priority from highest to lowest, 
+     * from smallest index to highest index.
+     * @return items ordered by their priority
+     */
     List<PDLBlock> getItems();
 
     /**

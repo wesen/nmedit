@@ -19,14 +19,24 @@
 package net.sf.nmedit.jpdl2.dom;
 
 /**
- * The multiplicity is specified as constant (=&gt; variable==null) or as variable (=&gt; constant&lt;0)
+ * Defines the multiplicity for some elements.
  */
 public interface PDLMultiplicity
 {
 
+    /**
+     * Identifies the type of a multiplicity declaration.
+     */
     public enum Type
     {
+        /**
+         * constant multiplicity
+         */
         Constant,
+        
+        /**
+         * variable multiplicity
+         */
         Variable
         /*
         NoneOrMany,
@@ -43,15 +53,25 @@ public interface PDLMultiplicity
         
     }
     
+    /**
+     * Returns the type of this multiplicity declaration.
+     * @return the type of this multiplicity declaration
+     */
     Type getType();
 
     /**
-     * Returns the multiplicity constant.
+     * Returns the constant-multiplicity value.
+     * If the {@link #getType() type} is not
+     * {@link Type#Constant Constant} then the return value is undefined.
+     * @return returns the constant-multiplicity value
      */
     int getConstant();
-    
+
     /**
-     * Returns the multiplicity variable.
+     * Returns the variable name which contains the multiplicity value.
+     * If the {@link #getType() type} is not
+     * {@link Type#Variable Variable} then the return value is undefined.
+     * @return returns the variable name
      */
     String getVariable();
     

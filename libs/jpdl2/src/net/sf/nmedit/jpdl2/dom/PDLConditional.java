@@ -19,7 +19,8 @@
 package net.sf.nmedit.jpdl2.dom;
 
 /**
- * Conditional block
+ * Defines a conditional block.
+ * The block may only be parsed when the condition evaluates to true.
  */
 public interface PDLConditional extends PDLBlock
 {

@@ -355,8 +355,8 @@ public class BitStream implements Cloneable, PDLDataSource
     }
 
     /**
-     * Returns the number of valid bits in this bitstream
-     * @return
+     * Returns the number of valid bits in this bitstream.
+     * @return the number of valid bits in this bitstream
      */
     public int getSize()
     {
@@ -364,8 +364,8 @@ public class BitStream implements Cloneable, PDLDataSource
     }
 
     /**
-     * Returns the current reading position of this bitstream
-     * @return
+     * Returns the current reading position of this bitstream.
+     * @return the current reading position of this bitstream
      */
     public int getPosition()
     {

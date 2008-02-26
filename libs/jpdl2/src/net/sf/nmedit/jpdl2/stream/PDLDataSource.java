@@ -18,6 +18,9 @@
 */
 package net.sf.nmedit.jpdl2.stream;
 
+/**
+ * The data source.
+ */
 public interface PDLDataSource
 {
 
@@ -35,7 +38,7 @@ public interface PDLDataSource
 
     /**
      * Sets the current position.
-     * @return the current position
+     * @param position the new position
      */
     void setPosition(int position);
     

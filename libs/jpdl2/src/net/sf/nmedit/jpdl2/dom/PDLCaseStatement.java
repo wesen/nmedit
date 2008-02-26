@@ -18,13 +18,29 @@
 */
 package net.sf.nmedit.jpdl2.dom;
 
+/**
+ * Defines a case of the {@link PDLSwitchStatement}.
+ */
 public interface PDLCaseStatement
 {
 
+    /**
+     * Returns the case block.
+     * @return the case block
+     */
     PDLBlock getBlock();
     
+    /**
+     * Returns true if this is the default case.
+     * @return true if this is the default case
+     */
     boolean isDefaultCase();
     
+    /**
+     * Returns the case constant. If {@link #isDefaultCase()}
+     * is true, then the return value is undefined.
+     * @return the case constant
+     */
     int getValue();
     
 }

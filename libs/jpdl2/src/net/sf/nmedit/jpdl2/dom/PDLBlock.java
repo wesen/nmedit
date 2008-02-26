@@ -18,6 +18,9 @@
 */
 package net.sf.nmedit.jpdl2.dom;
 
+/**
+ * Groups several {@link PDLItem items} together.
+ */
 public interface PDLBlock extends PDLItem, Iterable<PDLItem>
 {
 

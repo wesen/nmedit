@@ -18,6 +18,9 @@
 */
 package net.sf.nmedit.jpdl2.dom;
 
+/**
+ * A variable, implicit variable, anonymous variable or a variable list.
+ */
 public interface PDLVariable extends PDLItem
 {
     /**
@@ -27,10 +30,10 @@ public interface PDLVariable extends PDLItem
      * <table>
      * <thead><tr><th>{@link PDLItemType ItemType}</th><th>Return Value</th></tr></thead>
      * <tbody>
-     *  <tr><td>{@link PDLItemType#Variable Variable}</td><td>{@link #getSize() size}</td></tr>
-     *  <tr><td>{@link PDLItemType#ImplicitVariable ImplicitVariable}</td><td>{@link #getSize() size}</td></tr>
-     *  <tr><td>{@link PDLItemType#AnonymousVariable ImplicitAnonymVariable}</td><td>0</td></tr>
-     *  <tr><td style="vertical-align:top;">{@link PDLItemType#VariableList VariableList}</td><td>
+     *  <tr><td>{@link PDLItemType#Variable}</td><td>{@link #getSize() size}</td></tr>
+     *  <tr><td>{@link PDLItemType#ImplicitVariable}</td><td>{@link #getSize() size}</td></tr>
+     *  <tr><td>{@link PDLItemType#AnonymousVariable}</td><td>0</td></tr>
+     *  <tr><td style="vertical-align:top;">{@link PDLItemType#VariableList}</td><td>
      *  
      *  <table style="border:solid black 1px;">
      *  <thead><tr><th>multiplicity</th><th>minimum size</th></tr></thead>
@@ -57,10 +60,10 @@ public interface PDLVariable extends PDLItem
      * <table>
      * <thead><tr><th>{@link PDLItemType ItemType}</th><th>Return Value</th></tr></thead>
      * <tbody>
-     *  <tr><td>{@link PDLItemType#Variable Variable}</td><td>1</td></tr>
-     *  <tr><td>{@link PDLItemType#ImplicitVariable ImplicitVariable}</td><td>0</td></tr>
-     *  <tr><td>{@link PDLItemType#AnonymousVariable ImplicitAnonymVariable}</td><td>0</td></tr>
-     *  <tr><td style="vertical-align:top;">{@link PDLItemType#VariableList VariableList}</td><td>
+     *  <tr><td>{@link PDLItemType#Variable}</td><td>1</td></tr>
+     *  <tr><td>{@link PDLItemType#ImplicitVariable}</td><td>0</td></tr>
+     *  <tr><td>{@link PDLItemType#AnonymousVariable}</td><td>0</td></tr>
+     *  <tr><td style="vertical-align:top;">{@link PDLItemType#VariableList}</td><td>
      *  
      *  <table style="border:solid black 1px;">
      *  <thead><tr><th>multiplicity</th><th>minimum size</th></tr></thead>
@@ -82,10 +85,12 @@ public interface PDLVariable extends PDLItem
 
     /**
      * Returns {@link PDLItemType#Variable},
-     * {@link PDLItemType#ImplicitVariable} or
+     * {@link PDLItemType#ImplicitVariable},
+     * {@link PDLItemType#AnonymousVariable} or
      * {@link PDLItemType#VariableList}
      * @return {@link PDLItemType#Variable},
-     * {@link PDLItemType#ImplicitVariable} or
+     * {@link PDLItemType#ImplicitVariable},
+     * {@link PDLItemType#AnonymousVariable} or
      * {@link PDLItemType#VariableList}
      */
     PDLItemType getType();
@@ -121,7 +126,7 @@ public interface PDLVariable extends PDLItem
     /**
      * Returns the {@link PDLMultiplicity multiplicity} of the variable list.
      * 
-     * If the {@link #getType() item type} is not {@link PDLItemType#VariableList VariableList}
+     * If the {@link #getType() item type} is not {@link PDLItemType#VariableList}
      * the return value is undefined.
      * 
      * @return the {@link PDLMultiplicity multiplicity} of the variable list
@@ -131,7 +136,7 @@ public interface PDLVariable extends PDLItem
     /**
      * Returns true if the variable list has a terminal value.
      * 
-     * If the {@link #getType() item type} is not {@link PDLItemType#VariableList VariableList}
+     * If the {@link #getType() item type} is not {@link PDLItemType#VariableList}
      * the return value is undefined.
      * 
      * @return true if the variable list has a terminal value
@@ -141,7 +146,7 @@ public interface PDLVariable extends PDLItem
     /**
      * Returns the terminal value.
      * 
-     * If the {@link #getType() item type} is not {@link PDLItemType#VariableList VariableList}
+     * If the {@link #getType() item type} is not {@link PDLItemType#VariableList}
      * or {@link #hasTerminal()} is false the return value is undefined.
      * 
      * @return the terminal value
