@@ -18,6 +18,10 @@
 */
 package net.sf.nmedit.jpdl2.dom;
 
+/**
+ * Defines a constant.
+ * @author christian
+ */
 public interface PDLConstant extends PDLItem
 {
 
@@ -34,10 +38,9 @@ public interface PDLConstant extends PDLItem
     int getSize();
     
     /**
-     * If null is returned then the constant appears
-     * exactly one time in the stream. Otherwise it depends
-     * on the mulitplicity value.
-     * 
+     * Returns the multiplicity of this constant.
+     * A null value implies a multiplicity value of 1,
+     * otherwise it depends on the mulitplicity value.
      * @return multiplicity of this constant
      */
     PDLMultiplicity getMultiplicity();

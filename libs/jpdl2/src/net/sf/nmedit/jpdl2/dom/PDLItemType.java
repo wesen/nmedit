@@ -35,7 +35,7 @@ package net.sf.nmedit.jpdl2.dom;
  * <tr><td>InlinePacketRef</td><td>{@link PDLPacketRef}</td></tr>
  * <tr><td>PacketRefList</td><td>{@link PDLPacketRef}</td></tr> 
  * <tr><td>Conditional</td><td>{@link PDLConditional}</td></tr>
- * <tr><td>Block</td><td>{@link PDLBlockItem}</td></tr>
+ * <tr><td>Block</td><td>{@link PDLBlock}</td></tr>
  * <tr><td>Choice</td><td>{@link PDLChoice}</td></tr>
  * <tr><td>SwitchStatement</td><td>{@link PDLSwitchStatement}</td></tr>
  * <tr><td>Label</td><td>{@link PDLInstruction}</td></tr> 
@@ -82,7 +82,7 @@ public enum PDLItemType
     PacketRef,
 
     /**
-     * Inline referenced packet
+     * inlined packet
      */
     InlinePacketRef,
     

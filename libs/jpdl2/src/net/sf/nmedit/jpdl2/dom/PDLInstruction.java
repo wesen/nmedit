@@ -18,21 +18,24 @@
 */
 package net.sf.nmedit.jpdl2.dom;
 
+/**
+ * Parser instructions.
+ */
 public interface PDLInstruction extends PDLItem
 {
  
     /**
      * Returns the string value.
      * 
-     * If the {{@link PDLItem#getType() type} of this item is
+     * If the {@link PDLItem#getType() type} of this item is
      * {@link PDLItemType#MessageId MessageId} then the 
      * message-id string value is returned.
      * 
-     * If the {{@link PDLItem#getType() type} of this item is
+     * If the {@link PDLItem#getType() type} of this item is
      * {@link PDLItemType#Label Label} then the 
      * label name is returned.
      * 
-     * If the {{@link PDLItem#getType() type} of this item is
+     * If the {@link PDLItem#getType() type} of this item is
      * {@link PDLItemType#StringDef StringDef} then the 
      * string name is returned.
      * 
@@ -42,11 +45,11 @@ public interface PDLInstruction extends PDLItem
     String getString();
     
     /**
-     * If the {{@link PDLItem#getType() type} of this item is
+     * If the {@link PDLItem#getType() type} of this item is
      * {@link PDLItemType#StringDef StringDef} then the 
      * string value is returned.
      * 
-     * Otherwise the <code>null</code> is returned.
+     * Otherwise <code>null</code> is returned.
      * @return the string value
      */
     String getString2();

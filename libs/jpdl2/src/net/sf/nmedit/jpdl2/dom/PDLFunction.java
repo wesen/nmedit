@@ -23,9 +23,18 @@ import java.util.Collection;
 import net.sf.nmedit.jpdl2.PDLException;
 import net.sf.nmedit.jpdl2.PDLParseContext;
 
+/**
+ * Computes a function.
+ */
 public interface PDLFunction
 {
 
+    /**
+     * Computes this function.
+     * @param context the current context
+     * @return the result
+     * @throws PDLException
+     */
     int compute(PDLParseContext context) throws PDLException;
     
     /**

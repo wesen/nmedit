@@ -22,14 +22,23 @@ import java.util.Collection;
 
 import net.sf.nmedit.jpdl2.PDLParseContext;
 
+/**
+ * A boolean condition used by the {@link PDLConditional} item.
+ */
 public interface PDLCondition
 {
 
     /**
-     * Evaluates the condition.
+     * Evaluates the condition for the specified context.
+     * @param context the current context
+     * @return the condition result
      */
     boolean isConditionTrue(PDLParseContext context);
 
+    /**
+     * The source of this condition.
+     * @return the source
+     */
     String getSource();
 
     /**

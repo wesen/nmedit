@@ -20,13 +20,31 @@ package net.sf.nmedit.jpdl2.dom;
 
 import java.util.List;
 
+/**
+ * Defines several cases, depending on the function result the appropriate case
+ * is picked.
+ */
 public interface PDLSwitchStatement extends PDLItem, Iterable<PDLCaseStatement>
 {
     
+    /**
+     * Returns the function which selects a specific case.
+     * @return the function which selects a specific case 
+     */
     PDLFunction getFunction();
     
+    /**
+     * Returns all case statements including the default case
+     * (if declared).
+     * @return all case statements
+     */
     List<PDLCaseStatement> getItems();
 
+    /**
+     * Returns the item for the specified value.
+     * @param value the case value
+     * @return the item for the specified value
+     */
     PDLBlock getItemForCase(int value);
 
     /**

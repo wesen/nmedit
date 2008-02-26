@@ -19,11 +19,17 @@
 package net.sf.nmedit.jpdl2.dom;
 
 /**
- * A PDL document
+ * The PDL document containing all packet declarations.
  */
 public interface PDLDocument extends Iterable<PDLPacketDecl>
 {
 
+    /**
+     * Returns the name of the packet which the parser use to start parsing.
+     * If null is returned then no stack packet was specified.
+     * 
+     * @return the name of the start packet
+     */
     String getStartPacketName();
     
     /**
