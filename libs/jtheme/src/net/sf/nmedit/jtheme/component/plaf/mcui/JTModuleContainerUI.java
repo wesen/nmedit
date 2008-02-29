@@ -739,7 +739,7 @@ public class JTModuleContainerUI extends ComponentUI
                 // DragSource.isDragImageSupported() returns false on platforms
                 // which support this feature due to some kind of bug in the JRE.
                 // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4874070
-                if (DragSource.isDragImageSupported())
+                if (DragSource.isDragImageSupported() & false) // disable feature until we are sure it works
                 {
                     Image dragImage = renderDragImage( collection );
                     Point imageOffset = new Point( dndOrigin );
