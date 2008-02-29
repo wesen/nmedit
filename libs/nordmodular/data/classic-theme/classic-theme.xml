@@ -691,10 +691,6 @@ label{fill:#000;}
 		<textDisplay x="66" y="32" width="40" height="16">
 			<parameter component-id="p2" alt="STune" />
 		</textDisplay>
-		<textDisplay x="144" y="115" width="50" height="16">
-			<parameter component-id="p1" alt="MTune" />
-		</textDisplay>
-		<label x="156" y="102">Preset</label>
         <light component-id="ledTriggerIn" type="led" x="6" y="50" width="7" height="7" /> 
 	</module>
 	<module component-id="m82" width="255" height="30">
