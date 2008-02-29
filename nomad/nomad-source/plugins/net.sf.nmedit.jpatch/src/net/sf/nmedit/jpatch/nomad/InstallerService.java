@@ -10,6 +10,7 @@ import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.menulayout.MLEntry;
 import net.sf.nmedit.nomad.core.service.Service;
 import net.sf.nmedit.nomad.core.service.initService.InitService;
+import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
 
 public class InstallerService implements InitService
 {
@@ -22,8 +23,12 @@ public class InstallerService implements InitService
         MLEntry mlMutator = new MLEntry("mutator"); // TODO i18n
         mlMutator.putValue(MLEntry.NAME, "Mutator");
         mlMutator.putValue(MLEntry.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.CTRL_DOWN_MASK));
+        
+    	DefaultDocumentManager dm = Nomad.sharedInstance().getDocumentManager();
+       	dm.addListener(MutatorController.sharedInstance());
+       	
         mlMutator.addActionListener(new ActionListener(){
-
+       
             public void actionPerformed(ActionEvent e)
             {
                 MutatorController.sharedInstance().openMutatorWindow();
