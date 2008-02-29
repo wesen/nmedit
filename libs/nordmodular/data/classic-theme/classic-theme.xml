@@ -586,8 +586,8 @@ label{fill:#000;}
 		<label x="21" y="14">Reset</label>
 		<label x="21" y="28">Slv</label>
 		<label x="69" y="1">Rate</label>
-		<label x="185" y="0">24 pulses/b</label>
-		<label x="191" y="12">4 pulses/b</label>
+		<label x="181" y="0">24 pulses/b</label>
+		<label x="187" y="12">4 pulses/b</label>
 		<label x="212" y="26">Sync</label>
 		<textDisplay x="66" y="16" width="46" height="16">
 			<parameter component-id="p1" alt="rate" />
@@ -3583,10 +3583,10 @@ label{fill:#000;}
 	</module>
 	<module component-id="m104" width="255" height="60">
 		<name>EqShelving</name>
-		<connector x="189" y="45" size="13" class="cAUDIO">
+		<connector x="189" y="44" size="13" class="cAUDIO">
 			<connector component-id="c1" alt="in" />
 		</connector>
-		<connector x="237" y="45" size="13" class="cAUDIO">
+		<connector x="237" y="44" size="13" class="cAUDIO">
 			<connector component-id="c2" alt="out" />
 		</connector>
 		<knob x="12" y="23" size="29">
@@ -3600,7 +3600,7 @@ label{fill:#000;}
 			<btn index="0">Hi</btn>
 			<btn index="1">Lo</btn>
 		</button>
-		<button x="215" y="44" width="16" height="16" cyclic="true" landscape="false">
+		<button x="215" y="41" width="16" height="16" cyclic="true" landscape="false">
 			<parameter component-id="p4" alt="bypass" />
 			<btn index="0">B</btn>
 			<btn index="1">B</btn>
@@ -3620,7 +3620,7 @@ label{fill:#000;}
 			<frequency component-id="p1" alt="freq" />
 			<gain component-id="p2" alt="gain" />
 	    </eq-shelving-display>
-   		<light component-id="ledAudioOut" type="led" x="238" y="40" width="7" height="7" /> 
+   		<light component-id="ledAudioOut" type="led" x="240" y="37" width="7" height="7" /> 
 	</module>
 	<module component-id="m72" width="255" height="30">
 		<name>NoteScaler</name>
@@ -4773,14 +4773,14 @@ label{fill:#000;}
 		<connector x="236" y="8" size="13" class="cLOGIC">
 			<connector component-id="c3" alt="out" />
 		</connector>
-		<knob x="186" y="5" size="21">
+		<knob x="186" y="6" size="21">
 			<parameter component-id="p1" alt="divider" />
 		</knob>
-		<textDisplay x="150" y="7" width="30" height="16">
+		<textDisplay x="150" y="10" width="30" height="16">
 			<parameter component-id="p1" alt="divider" />
 		</textDisplay>
 		<label x="58" y="9">Clock</label>
 		<label x="106" y="9">Rst</label>
-		<label x="150" y="2">Divider</label>
+		<label x="150" y="1">Divider</label>
 	</module>
 </modules>
