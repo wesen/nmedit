@@ -704,9 +704,9 @@ public class Nomad
         JToolBar toolbar = new JToolBar();
         toolbar.setBorderPainted(false);
         toolbar.setFloatable(false);
-        toolbar.add(Factory.createSmallToolBarButton(menuLayout.getEntry(MENU_FILE_OPEN)));
+        toolbar.add(Factory.createToolBarButton(menuLayout.getEntry(MENU_FILE_OPEN)));
         toolbar.addSeparator();
-        toolbar.add(Factory.createSmallToolBarButton(menuLayout.getEntry(MENU_FILE_SAVE)));
+        toolbar.add(Factory.createToolBarButton(menuLayout.getEntry(MENU_FILE_SAVE)));
         toolbar.addSeparator();
         
 
@@ -732,7 +732,7 @@ public class Nomad
             }
         }
 
-        JButton btn = Factory.createSmallToolBarButton(sa);
+        JButton btn = Factory.createToolBarButton(sa);
         toolbar.add(btn);
 
         new JDropDownButtonControl(btn, pop);
