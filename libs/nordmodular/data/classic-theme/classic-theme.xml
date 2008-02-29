@@ -2710,18 +2710,18 @@ label{fill:#000;}
 		<connector x="235" y="8" size="13" class="cCONTROL">
 			<connector component-id="c2" alt="out" />
 		</connector>
-		<knob x="125" y="5" size="21">
+		<knob x="125" y="7" size="19">
 			<parameter component-id="p1" alt="range" />
 		</knob>
-		<knob x="163" y="5" size="22">
+		<knob x="163" y="7" size="19">
 			<parameter component-id="p2" alt="notes" />
 		</knob>
-		<textDisplay x="91" y="8" width="30" height="16">
+		<textDisplay x="91" y="10" width="30" height="16">
 			<parameter component-id="p1" alt="range" />
 		</textDisplay>
 		<image x="210" y="9" width="25" height="11" xlink:href="./images/single/decoration-6.png" />
-		<label x="92" y="2">Range</label>
-		<label x="161" y="2">Notes</label>
+		<label x="92" y="1">Range</label>
+		<label x="159" y="1">Notes</label>
 	</module>
 	<module component-id="m18" width="255" height="45">
 		<name>X-Fade</name>
@@ -2756,16 +2756,16 @@ label{fill:#000;}
 	</module>
 	<module component-id="m66" width="255" height="30">
 		<name>ControlMixer</name>
-		<connector x="113" y="8" size="13" class="cCONTROL">
+		<connector x="113" y="10" size="13" class="cCONTROL">
 			<connector component-id="c1" alt="in1" />
 		</connector>
-		<connector x="191" y="8" size="13" class="cCONTROL">
+		<connector x="191" y="10" size="13" class="cCONTROL">
 			<connector component-id="c2" alt="in2" />
 		</connector>
-		<connector x="234" y="8" size="13" class="cCONTROL">
+		<connector x="234" y="10" size="13" class="cCONTROL">
 			<connector component-id="c3" alt="out" />
 		</connector>
-		<button x="81" y="7" width="26" height="16" cyclic="true" landscape="false">
+		<button x="81" y="11" width="26" height="14" cyclic="true" landscape="false">
 			<parameter component-id="p1" alt="inv 1" />
 			<btn index="0">Inv</btn>
 			<btn index="1">Inv</btn>
@@ -2773,7 +2773,7 @@ label{fill:#000;}
 		<knob x="129" y="4" size="22">
 			<parameter component-id="p2" alt="level 1" />
 		</knob>
-		<button x="159" y="7" width="26" height="16" cyclic="true" landscape="false">
+		<button x="159" y="11" width="26" height="14" cyclic="true" landscape="false">
 			<parameter component-id="p3" alt="inv 2" />
 			<btn index="0">Inv</btn>
 			<btn index="1">Inv</btn>
@@ -2781,7 +2781,7 @@ label{fill:#000;}
 		<knob x="207" y="5" size="22">
 			<parameter component-id="p4" alt="level 2" />
 		</knob>
-		<button x="43" y="7" width="26" height="16" cyclic="true" landscape="false">
+		<button x="43" y="11" width="26" height="14" cyclic="true" landscape="false">
 			<parameter component-id="p5" alt="mode" />
 			<btn index="0">Lin</btn>
 			<btn index="1">Lin</btn>
@@ -2789,10 +2789,10 @@ label{fill:#000;}
 	</module>
 	<module component-id="m103" width="255" height="60">
 		<name>EqMid</name>
-		<connector x="189" y="46" size="13" class="cAUDIO">
+		<connector x="189" y="44" size="13" class="cAUDIO">
 			<connector component-id="c1" alt="in" />
 		</connector>
-		<connector x="237" y="46" size="13" class="cAUDIO">
+		<connector x="237" y="44" size="13" class="cAUDIO">
 			<connector component-id="c2" alt="out" />
 		</connector>
 		<knob x="7" y="24" size="29">
@@ -2804,7 +2804,7 @@ label{fill:#000;}
 		<knob x="131" y="32" size="21">
 			<parameter component-id="p3" alt="bandwidth" />
 		</knob>
-		<button x="215" y="44" width="16" height="16" cyclic="true" landscape="false">
+		<button x="215" y="42" width="16" height="16" cyclic="true" landscape="false">
 			<parameter component-id="p4" alt="bypass" />
 			<btn index="0">B</btn>
 			<btn index="1">B</btn>
@@ -2824,13 +2824,13 @@ label{fill:#000;}
 		<label x="50" y="12">Freq</label>
 		<label x="93" y="1">Gain</label>
 		<label x="137" y="1">BW</label>
-		<eq-mid-display x="192" y="2" width="55" height="35">
+		<eq-mid-display x="195" y="2" width="55" height="35">
 			<frequency component-id="p1" alt="freq" />
 			<gain component-id="p2" alt="gain" />
 			<bandwidth component-id="p3" alt="bandwidth" />
 	    </eq-mid-display>
 
-   		<light component-id="ledAudioOut" type="led" x="238" y="40" width="7" height="7" /> 
+   		<light component-id="ledAudioOut" type="led" x="240" y="38" width="7" height="7" /> 
 	</module>
 	<module component-id="m98" width="255" height="60">
 		<name>KeyQuant</name>
@@ -3279,7 +3279,7 @@ label{fill:#000;}
 		<knob x="152" y="21" size="21">
 			<parameter component-id="p2" alt="decay" />
 		</knob>
-		<button x="5" y="11" width="26" height="16" cyclic="true" landscape="false">
+		<button x="5" y="13" width="25" height="14" cyclic="true" landscape="false">
 			<parameter component-id="p3" alt="gate" />
 			<btn index="0">Gate</btn>
 			<btn index="1">Gate</btn>
@@ -3297,7 +3297,7 @@ label{fill:#000;}
 			<attack component-id="p1" alt="attack" />
 			<decay component-id="p2" alt="decay" />
 		</ad-envelope>
-		<light component-id="ledGateIn" type="led" x="20" y="32" width="7" height="7" /> 
+		<light component-id="ledGateIn" type="led" x="23" y="32" width="7" height="7" /> 
 	</module>
 	<module component-id="m37" width="255" height="30">
 		<name>LogicDelay</name>
@@ -4671,6 +4671,8 @@ label{fill:#000;}
 		</knob>
 		<button x="150" y="14" width="26" height="16" cyclic="true" landscape="false">
 			<parameter component-id="p6" alt="invert" />
+			<btn index="0">Inv</btn>
+			<btn index="1">Inv</btn>
 		</button>
 		<label x="23" y="27">Gate</label>
 		<label x="23" y="43">Retrig</label>
@@ -4701,7 +4703,7 @@ label{fill:#000;}
 			<decay component-id="p3" alt="decay" />
 			<inverse component-id="p6" alt="invert" />
 		</adsr-envelope>
-		<light component-id="ledGateIn" type="led" x="7" y="18" width="7" height="7" /> 
+		<light component-id="ledGateIn" type="led" x="9" y="18" width="7" height="7" /> 
 	</module>
 	<module component-id="m110" width="255" height="30">
 		<name>RandomGen</name>
