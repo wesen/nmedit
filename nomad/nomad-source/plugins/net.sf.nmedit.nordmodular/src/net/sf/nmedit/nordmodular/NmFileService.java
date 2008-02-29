@@ -19,19 +19,13 @@
 package net.sf.nmedit.nordmodular;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 
 import javax.swing.Icon;
 import javax.swing.SwingUtilities;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMData;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
-import net.sf.nmedit.jtheme.clavia.nordmodular.JTNM1Context;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTNMPatch;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.forms.ExceptionDialog;
@@ -41,6 +35,9 @@ import net.sf.nmedit.nomad.core.service.fileService.FileService;
 import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
 import net.sf.nmedit.nomad.core.swing.document.Document;
 import net.sf.nmedit.nomad.core.swing.document.DocumentManager;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class NmFileService implements FileService
 {
@@ -225,6 +222,13 @@ public class NmFileService implements FileService
     {
         return getPatch(source) != null;
     }
+    
+    private File getFileWithCorrectExtension(File file)
+    {
+    	String name = file.getName();
+    	if (name.toLowerCase().endsWith(".pch")) return file;
+    	return new File(file.getParentFile(), name+".pch");
+    }
 
     public void save(Object source, File as)
     {
@@ -236,6 +240,7 @@ public class NmFileService implements FileService
         File file = as != null ? as : patch.getFile();
         if (file == null)
             throw new RuntimeException("not file specified");
+        file = getFileWithCorrectExtension(file);
         if (NmUtils.writePatchSavely(patch, file))
             patch.setProperty("file", file);
     }
