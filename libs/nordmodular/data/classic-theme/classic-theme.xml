@@ -925,7 +925,7 @@ label{fill:#000;}
 	</module>
 	<module component-id="m23" width="255" height="90">
 		<name>Mod-Env</name>
-		<connector x="7" y="22" size="13" class="cCONTROL">
+		<connector x="7" y="24" size="13" class="cCONTROL">
 			<connector component-id="c8" alt="amp" />
 		</connector>
 		<connector x="7" y="73" size="13" class="cAUDIO">
@@ -980,10 +980,12 @@ label{fill:#000;}
 			<parameter component-id="p8" alt="release mod" />
 		</knob>
 		<button x="182" y="34" width="24" height="16" cyclic="true" landscape="false">
+			<btn index="0">Inv</btn>
+			<btn index="1">Inv</btn>
 			<parameter component-id="p9" alt="invert" />
 		</button>
-		<label x="3" y="9">Amp</label>
-		<label x="3" y="34">Gate</label>
+		<label x="3" y="12">Amp</label>
+		<label x="3" y="36">Gate</label>
 		<label x="1" y="60">Retrig</label>
 		<image x="211" y="61" width="27" height="19" xlink:href="./images/single/decoration-15.png" />
 		<textDisplay x="34" y="16" width="34" height="16">
@@ -4009,7 +4011,7 @@ label{fill:#000;}
 			<sustain component-id="p10" alt="Sustain seg." />
 			<curve component-id="p11" alt="Curve type" />
    	    </multi-env-display>
-        <light component-id="ledGateIn" type="led" x="8" y="40" width="7" height="7" /> 
+        <light component-id="ledGateIn" type="led" x="8" y="44" width="7" height="7" /> 
 	</module>
 	<module component-id="m90" width="255" height="135">
 		<name>NoteSeqB</name>
