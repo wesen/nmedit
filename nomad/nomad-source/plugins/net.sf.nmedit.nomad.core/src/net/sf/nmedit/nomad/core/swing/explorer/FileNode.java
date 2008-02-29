@@ -393,6 +393,9 @@ public class FileNode implements ETreeNode, MouseListener,
     
     protected void createPopup(MouseEvent e, ExplorerTree et)
     {
+    	// the current line might not be selected yet
+    	int row = et.getRowForLocation(e.getX(), e.getY());
+    	if (row>=0) et.setSelectionRow(row);
         filePopup = new JPopupMenu();
         populatePopup(filePopup, e, et);
         filePopup.show(et, e.getX(), e.getY());
@@ -473,6 +476,7 @@ public class FileNode implements ETreeNode, MouseListener,
         public void actionPerformed(ActionEvent e)
         {
         	TreePath paths[] = et.getSelectionPaths();
+        	if (paths == null) return;
         	for (TreePath path : paths) {
         		Object o = path.getLastPathComponent();
         		if (o instanceof FileNode) {
