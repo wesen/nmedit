@@ -2279,6 +2279,7 @@ label{fill:#000;}
 	</module>
 	<module component-id="m48" width="255" height="30">
 		<name>PortamentoA</name>
+		<image x="210" y="9" width="25" height="11" xlink:href="./images/single/decoration-6.png" />
 		<connector x="197" y="8" size="13" class="cCONTROL">
 			<connector component-id="c1" alt="in" />
 		</connector>
@@ -2293,10 +2294,10 @@ label{fill:#000;}
 		</knob>
 		<label x="99" y="9">Time</label>
 		<label x="159" y="9">On</label>
-		<image x="210" y="9" width="25" height="11" xlink:href="./images/single/decoration-6.png" />
 	</module>
 	<module component-id="m112" width="255" height="30">
 		<name>LevAdd</name>
+		<image x="171" y="4" width="65" height="16" xlink:href="./images/single/decoration-11.png" />
 		<connector x="195" y="8" size="13" class="cAUDIO">
 			<connector component-id="c1" alt="in" />
 		</connector>
@@ -2314,7 +2315,6 @@ label{fill:#000;}
 		<textDisplay x="157" y="7" width="30" height="16">
 			<parameter component-id="p1" alt="offset" />
 		</textDisplay>
-		<image x="171" y="4" width="-1" height="-1" xlink:href="./images/single/decoration-11.png" />
 	</module>
 	<module component-id="m80" width="255" height="60">
 		<name>LFOSlvA</name>
@@ -3172,7 +3172,7 @@ label{fill:#000;}
 		<connector x="160" y="8" size="13" class="cLOGIC">
 			<connector component-id="c5" alt="8" />
 		</connector>
-		<label x="57" y="10">Midi cl</label>
+		<label x="51" y="10">Midi cl</label>
 		<label x="105" y="10">Rst</label>
 		<label x="152" y="9">8</label>
 		<label x="184" y="9">T8</label>
