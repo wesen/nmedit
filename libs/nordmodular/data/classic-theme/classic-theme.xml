@@ -2030,22 +2030,33 @@ label{fill:#000;}
 		<connector x="238" y="74" size="13" class="cLOGIC">
 			<connector component-id="c6" alt="gclk" />
 		</connector>
-		<knob x="191" y="0" size="21">
-			<parameter component-id="p17" alt="step count" />
-		</knob>
-		<knob x="227" y="34" size="21">
-			<parameter component-id="p18" alt="edit position" />
-		</knob>
-		<button x="221" y="0" width="32" height="16" cyclic="true" landscape="false">
+	        <button x="194" y="5" width="24" height="14" cyclic="false" landscape="true" mode="increment">
+	            <parameter component-id="p17" alt="step" />
+        	    <btn index="0"><image xlink:href="url(#btn-left-arrow)" /></btn>
+	            <btn index="1"><image xlink:href="url(#btn-right-arrow)" /></btn>
+        	</button>
+		<button x="228" y="32" width="24" height="13" cyclic="false" landscape="true" mode="increment">
+	            <parameter component-id="p18" alt="currentstep" />
+        	    <btn index="0"><image xlink:href="url(#btn-left-arrow)" /></btn>
+	            <btn index="1"><image xlink:href="url(#btn-right-arrow)" /></btn>
+        	</button>
+		<button x="228" y="5" width="24" height="14" cyclic="true" landscape="false">
 			<parameter component-id="p19" alt="record" />
+			<btn index="0"><image xlink:href="./images/slice/rec_off.png" /></btn>
+			<btn index="1"><image xlink:href="./images/slice/rec_on.png" /></btn>
 		</button>
-		<button x="221" y="17" width="32" height="16" cyclic="true" landscape="false">
-			<parameter component-id="p20" alt="pause" />
-		</button>
-		<button x="107" y="4" width="32" height="16" cyclic="true" landscape="false">
-			<parameter component-id="p21" alt="active" />
-		</button>
-		<textDisplay x="161" y="3" width="30" height="16">
+		<button x="228" y="19" width="24" height="14" cyclic="true" landscape="false">
+			<parameter component-id="p20" alt="play" />
+			<btn index="0"><image xlink:href="./images/slice/start.png" /></btn>
+			<btn index="1"> <image xlink:href="./images/slice/stop.png" /></btn>
+		</button> 
+		<button x="125" y="5" width="20" height="14" cyclic="true" landscape="false">
+			<parameter component-id="p21" alt="loop" />			
+			<btn index="0"> <image xlink:href="./images/slice/loop_off.png" /> </btn>
+			<btn index="1"> <image xlink:href="./images/slice/loop_on.png" /> </btn>
+		</button> 
+		<label x="152" y="5">Step</label>
+		<textDisplay x="174" y="5" width="20" height="14">
 			<parameter component-id="p17" alt="step count" />
 		</textDisplay>
 		<label x="5" y="20">Clk</label>
@@ -2972,7 +2983,7 @@ label{fill:#000;}
 	</module>
 	<module component-id="m17" width="255" height="75">
 		<name>EventSeq</name>
-		<connector x="5" y="11" size="13" class="cLOGIC">
+		<connector x="5" y="13" size="13" class="cLOGIC">
 			<connector component-id="c1" alt="clock" />
 		</connector>
 		<connector x="5" y="35" size="13" class="cLOGIC">
@@ -2990,12 +3001,16 @@ label{fill:#000;}
 		<connector x="237" y="3" size="13" class="cLOGIC">
 			<connector component-id="c6" alt="link" />
 		</connector>
-		<knob x="181" y="1" size="22">
-			<parameter component-id="p1" alt="stepcount" />
-		</knob>
-		<button x="95" y="5" width="24" height="16" cyclic="true" landscape="false">
-			<parameter component-id="p2" alt="active" /> 
-		</button>		
+  			<button x="194" y="5" width="24" height="14" cyclic="false" landscape="true" mode="increment">
+	            <parameter component-id="p1" alt="step" />
+        	    <btn index="0"><image xlink:href="url(#btn-left-arrow)" /></btn>
+	            <btn index="1"><image xlink:href="url(#btn-right-arrow)" /></btn>
+        	</button>
+		<button x="125" y="5" width="20" height="14" cyclic="true" landscape="false">
+			<parameter component-id="p2" alt="loop/active" />			
+			<btn index="0"> <image xlink:href="./images/slice/loop_off.png" /> </btn>
+			<btn index="1"> <image xlink:href="./images/slice/loop_on.png" /> </btn>
+		</button> 
 		<button x="217" y="35" width="14" height="16" cyclic="true" landscape="false">
 			<parameter component-id="p3" alt="gate1" />
 			<btn index="0">G</btn>
@@ -3103,16 +3118,15 @@ label{fill:#000;}
 		<button x="203" y="54" width="12" height="16" cyclic="true" landscape="false">
 			<parameter component-id="p36" alt="seq 2, step 16" />
 		</button>
-		<label x="20" y="10">Clk</label>
-		<label x="5" y="22">Rst</label>
-		<label x="5" y="44">Snc</label>
+		<label x="20" y="13">Clk</label>
+		<label x="5" y="25">Rst</label>
+		<label x="5" y="45">Snc</label>
 		<label x="234" y="23">Out</label>
 		<label x="217" y="4">Link</label>
-		<label x="135" y="4">Step</label>
 		
 		<light component-id="ledStep1-16" type="led-array" x="27" y="28" width="190" height="7" /> 
-		
-		<textDisplay x="155" y="4" width="25" height="16">
+		<label x="152" y="5">Step</label>
+		<textDisplay x="174" y="5" width="20" height="14">
 			<parameter component-id="p1" alt="stepcount" />
 		</textDisplay>
 	</module>
@@ -4065,12 +4079,11 @@ label{fill:#000;}
 		</button> 
 		
 		<label x="152" y="5">Step</label>
-		
-	        <textDisplay x="174" y="5" width="20" height="14">
+	    <textDisplay x="174" y="5" width="20" height="14">
 			<parameter component-id="p19" alt="step" />
 		</textDisplay>
 		
-	        <button x="198" y="5" width="24" height="14" cyclic="false" landscape="true" mode="increment">
+	        <button x="194" y="5" width="24" height="14" cyclic="false" landscape="true" mode="increment">
 	            <parameter component-id="p19" alt="step" />
         	    <btn index="0"><image xlink:href="url(#btn-left-arrow)" /></btn>
 	            <btn index="1"><image xlink:href="url(#btn-right-arrow)" /></btn>
@@ -4367,24 +4380,28 @@ label{fill:#000;}
 		<connector x="238" y="40" size="13" class="cLOGIC">
 			<connector component-id="c5" alt="link" />
 		</connector>
-		<knob x="192" y="0" size="21">
-			<parameter component-id="p17" alt="step" />
-		</knob>
+	        <button x="194" y="5" width="24" height="14" cyclic="false" landscape="true" mode="increment">
+	            <parameter component-id="p17" alt="step" />
+        	    <btn index="0"><image xlink:href="url(#btn-left-arrow)" /></btn>
+	            <btn index="1"><image xlink:href="url(#btn-right-arrow)" /></btn>
+        	</button>
 		<button x="229" y="57" width="24" height="16" cyclic="true" landscape="false">
 			<parameter component-id="p18" alt="uni" />
 			<btn index="0">Uni</btn>
 			<btn index="1">Uni</btn>
 		</button>
-		<button x="106" y="4" width="24" height="16" cyclic="true" landscape="false">
-			<parameter component-id="p19" alt="loop" />
-		</button>
-		<textDisplay x="161" y="3" width="30" height="16">
+		<button x="125" y="5" width="20" height="14" cyclic="true" landscape="false">
+			<parameter component-id="p19" alt="loop" />			
+			<btn index="0"> <image xlink:href="./images/slice/loop_off.png" /> </btn>
+			<btn index="1"> <image xlink:href="./images/slice/loop_on.png" /> </btn>
+		</button> 
+		<label x="152" y="5">Step</label>
+		<textDisplay x="174" y="5" width="20" height="14">
 			<parameter component-id="p17" alt="step" />
 		</textDisplay>
 		<label x="5" y="20">Clk</label>
 		<label x="4" y="47">Rst</label>
 		<label x="2" y="75">Sync</label>
-		<label x="139" y="4">Step</label>
 		<label x="219" y="41">Link</label>
 		<label x="235" y="75">Out</label>
 		<label x="27" y="19">1</label>
