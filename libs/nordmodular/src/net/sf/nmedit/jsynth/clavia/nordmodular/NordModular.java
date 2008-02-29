@@ -354,7 +354,7 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
                 throw new SynthException(e);
             }
 
-            final long timeout = 3000;
+            final long timeout = 10000; // 10 seconds
             iamAcceptor.waitForReply(protocol, timeout);
             
             IAmMessage iam = iamAcceptor.getFirstMessage();
