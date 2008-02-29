@@ -28,7 +28,7 @@ label{fill:#000;}
 
 	<module component-id="m62" width="255" height="45">
 		<name>Overdrive</name>
-		<connector x="78" y="22" size="13" class="cCONTROL">
+		<connector x="76" y="22" size="13" class="cCONTROL">
 			<connector component-id="c1" alt="overdrive mod" />
 		</connector>
 		<connector x="198" y="25" size="13" class="cAUDIO">
@@ -37,13 +37,13 @@ label{fill:#000;}
 		<connector x="236" y="25" size="13" class="cAUDIO">
 			<connector component-id="c3" alt="out" />
 		</connector>
-		<knob x="94" y="18" size="21">
+		<knob x="92" y="18" size="21">
 			<parameter component-id="p1" alt="overdrive mod" />
 		</knob>
-		<knob x="121" y="12" size="29">
+		<knob x="119" y="12" size="29">
 			<parameter component-id="p2" alt="overdrive" />
 		</knob>
-		<label x="114" y="2">Overdrive</label>
+		<label x="110" y="2">Overdrive</label>
 		<image x="211" y="26" width="25" height="11" xlink:href="./images/single/decoration-6.png" />
 		<overdrive-display  x="156" y="4" width="38" height="38">
 			<overdrive component-id="p2" alt="overdrive" />
