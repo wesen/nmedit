@@ -23,6 +23,7 @@
 package net.sf.nmedit.jtheme.clavia.nordmodular;
 
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 
@@ -60,6 +61,8 @@ public class LFODisplay extends JTDisplay implements ChangeListener
     private boolean rebuildpath = true;
     private int w = 0;
     private int h = 0;
+    private int ww = 0;
+    private int hh = 0;
 
     private JTControlAdapter phaseAdapter;
     private JTControlAdapter waveAdapter;
@@ -108,8 +111,8 @@ public class LFODisplay extends JTDisplay implements ChangeListener
         }
     }
     
-    public void paintDynamicLayer(Graphics2D g)
-    {   
+    private void ensurePathBuilt()
+    {
         if (rebuildpath || getWidth()!=w || getHeight()!=h)
         {
             gp.reset();
@@ -136,22 +139,43 @@ public class LFODisplay extends JTDisplay implements ChangeListener
                     break;
             }
 
+            Insets insets = getInsets();
+            
+            this.ww = w-insets.left-insets.right;
+            this.hh = h-insets.top-insets.bottom;
+            
             AffineTransform at = new AffineTransform();
-            at.translate(0, h/2);
-            at.scale(w-1, (h-1)/2d);
+            at.translate(0, 1+(hh-1)/2d);
+            at.scale(ww-1, (hh-1)/2d);
             at.scale(1, -1);
             gp.transform(at);
         }
+    }
+    
+    public void paintDynamicLayer(Graphics2D g)
+    {   
+    	ensurePathBuilt();
+      
+        Graphics2D g2 = (Graphics2D) g.create();
 
-        g.setColor(getForeground());
-        Graphics2D g2 = (Graphics2D) g;
-
-        g2.translate((((1-vphase)-0.5)*(w-1)), 0);
-        g2.draw(gp);
-        g2.translate(-w, 0);
-        g2.draw(gp);
-        g2.translate(2*w, 0);
-        g2.draw(gp);
+        try
+        {
+	        g2.setColor(getForeground());
+	
+	        double tx = (((1-vphase)-0.5)*(ww-1));
+	        double ty = 0;
+	        
+	        g2.translate(tx, ty);
+	        g2.draw(gp);
+	        g2.translate(-ww, 0);
+	        g2.draw(gp);
+	        g2.translate(2*ww, 0);
+	        g2.draw(gp);
+        }
+        finally
+        {
+        	g2.dispose();
+        }
     }
     
     // path bounds:
