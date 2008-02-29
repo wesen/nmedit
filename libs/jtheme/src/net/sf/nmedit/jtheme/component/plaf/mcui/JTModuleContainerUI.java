@@ -24,17 +24,22 @@ package net.sf.nmedit.jtheme.component.plaf.mcui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragSource;
+import java.awt.dnd.DragSourceContext;
 import java.awt.dnd.DragSourceDragEvent;
 import java.awt.dnd.DragSourceDropEvent;
 import java.awt.dnd.DragSourceEvent;
@@ -49,6 +54,7 @@ import java.awt.event.ContainerListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -724,13 +730,102 @@ public class JTModuleContainerUI extends ComponentUI
                     dndOrigin = SwingUtilities.convertPoint(c, dndOrigin, getModuleContainer());
                 }
                 
+                Collection<? extends JTModule> collection = jtc.getSelectedModules();
+
                 JTModuleTransferDataWrapper transfer =
-                    new JTModuleTransferDataWrapper(this, jtc.getSelectedModules(), dndOrigin);
+                    new JTModuleTransferDataWrapper(this, collection, dndOrigin);
                 jtcUI.setCurrentTransfer(transfer);
-                dge.startDrag(DragSource.DefaultMoveDrop, transfer, this);
+                
+                // DragSource.isDragImageSupported() returns false on platforms
+                // which support this feature due to some kind of bug in the JRE.
+                // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4874070
+                if (DragSource.isDragImageSupported())
+                {
+                    Image dragImage = renderDragImage( collection );
+                    Point imageOffset = new Point( dndOrigin );
+                    dge.startDrag(DragSource.DefaultMoveDrop, dragImage, imageOffset, transfer, this);    
+                }
+                else
+                {
+                    dge.startDrag(DragSource.DefaultMoveDrop, transfer, this);
+                }
             }
         }
         
+        private static <T extends JComponent> Image renderDragImage(Collection<T> collection)
+        {
+            // get boundaries
+            Rectangle bounds = new Rectangle(0, 0, 0, 0);
+            Rectangle tmp = new Rectangle();
+            boolean firstComponent = true;
+            boolean nonOpaque = false;
+            for (T component: collection)
+            {
+                // get component bounds
+                tmp = component.getBounds(tmp);
+                // check if at least one component is not opaque
+                nonOpaque |= !component.isOpaque();
+                // compute union
+                if (firstComponent)
+                {
+                    bounds.setBounds(tmp); // otherwise x,y is always 0,0
+                }
+                else
+                {
+                    SwingUtilities.computeUnion(
+                            tmp.x, tmp.y, 
+                            tmp.width, tmp.height, 
+                            bounds);
+                }
+            }
+            BufferedImage image = new BufferedImage( 
+                    bounds.width, bounds.height, // size
+                    collection.size() > 1 || nonOpaque
+                    ? BufferedImage.TYPE_INT_ARGB  // image has alpha
+                    : BufferedImage.TYPE_INT_RGB   // alpha not necessary for single opaque module 
+            );
+            
+            Graphics2D g2 = image.createGraphics();
+
+            try
+            {
+                
+                // translation to image 0,0
+                int tx = -bounds.x;
+                int ty = -bounds.y;
+                
+                for (T component: collection)
+                {
+                    // always use a new graphics instance because
+                    // some components cause an illegal state
+                    
+                    Graphics2D g2c = (Graphics2D) g2.create();
+                    try
+                    {   
+                        g2c.translate(tx+component.getX(), ty+component.getY());
+                        synchronized (component.getTreeLock())
+                        {
+                            g2c.setFont(component.getFont());
+                            g2c.setColor(component.getBackground());
+                            component.paint(g2c);
+                        }
+                    }
+                    finally
+                    {
+                        g2c.dispose();
+                    }
+                }
+                
+            }
+            finally
+            {
+                g2.dispose();
+            }
+            return image;
+        }
+
+
+
         public JTModuleContainer getSource()
         {
             return getModuleContainer();
@@ -748,7 +843,45 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void dragEnter(DragSourceDragEvent dsde)
         {
-            // no op
+            DragSourceContext context = dsde.getDragSourceContext();
+
+            switch (getSourceForEvent(dsde))
+            {
+                case DRAG_MODULES_CREATE:
+                    context.setCursor(DragSource.DefaultLinkDrop);
+                    break;
+                case DRAG_MODULES_FROM_THIS_CONTAINER:
+                    context.setCursor(DragSource.DefaultMoveDrop);
+                    break;
+                case DRAG_MODULES_FROM_OTHER_CONTAINER:
+                    context.setCursor(DragSource.DefaultCopyDrop);
+                    break;
+                // reject ...
+                case DRAG_INVALID: break; 
+                default: break;
+            }
+        }
+
+        static final int DRAG_INVALID = -1; // test for < 0
+        static final int DRAG_MODULES_FROM_THIS_CONTAINER = 0;
+        static final int DRAG_MODULES_FROM_OTHER_CONTAINER = 1;
+        static final int DRAG_MODULES_CREATE = 2;
+        protected int getSourceForEvent(DragSourceEvent e)
+        {
+            DragSourceContext context = e.getDragSourceContext();
+            Transferable transfer = context.getTransferable();
+            if (transfer instanceof JTModuleTransferDataWrapper)
+            {
+                if (jtcUI.jtc == context.getComponent())
+                    return DRAG_MODULES_FROM_THIS_CONTAINER;
+                else
+                    return DRAG_MODULES_FROM_OTHER_CONTAINER;
+            }
+            
+            if (JTDragDrop.isModuleDescriptorFlavorSupported(transfer))
+                return DRAG_MODULES_CREATE;
+            
+            return DRAG_INVALID;
         }
 
         public void dragExit(DragSourceEvent dse)
