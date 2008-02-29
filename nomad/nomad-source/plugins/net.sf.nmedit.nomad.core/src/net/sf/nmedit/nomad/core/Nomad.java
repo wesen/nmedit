@@ -115,7 +115,6 @@ public class Nomad
     private static final String MENU_EDIT_PASTE = "nomad.menu.edit.edit.paste";
     private static final String MENU_EDIT_CUT = "nomad.menu.edit.edit.cut";
     
-    
     private static Nomad instance;
     private JFrame mainWindow = null;
     private NomadPlugin pluginInstance;
@@ -481,7 +480,10 @@ public class Nomad
                 chooser.addChoosableFileFilter(fs.getFileFilter());
         }
 
-        chooser.setSelectedFile(d.getFile());
+        File sfile = d.getFile();
+        if (sfile == null)
+        	sfile = new File(d.getTitle());
+        chooser.setSelectedFile(sfile);
         
         if (!(chooser.showSaveDialog(mainWindow)==JFileChooser.APPROVE_OPTION)) return;
         
