@@ -36,16 +36,21 @@ import javax.swing.border.Border;
  */
 public class JTNM1BorderFactory {
 
+	private static Border NordEditor311LoweredBorder = new NordEditor311Border(false,1);
+	private static Border NordEditor311RaisedBorder = new NordEditor311Border(true,1); 
+	private static Border NordEditor311GroupBoxBorder = new NordEditor311GroupboxBorder();
+
 	public static Border createNordEditor311Border() {
 		return createNordEditor311LoweredBorder();
 	}
 
-	public static Border createNordEditor311RaisedBorder() {
-		return new NordEditor311Border(true,1);
+	public static Border createNordEditor311RaisedBorder() 
+	{
+		return NordEditor311RaisedBorder;
 	}
 
 	public static Border createNordEditor311LoweredBorder() {
-		return new NordEditor311Border(false,1);
+		return NordEditor311LoweredBorder;
 	}
 
 	public static Border createNordEditor311RaisedBorder(int size) {
@@ -61,7 +66,7 @@ public class JTNM1BorderFactory {
 	}
 
 	public static Border createNordEditor311GroupBoxBorder(){
-		return new NordEditor311GroupboxBorder();
+		return NordEditor311GroupBoxBorder;
 	}
 	
 	private static class NordEditor311Border implements Border {
