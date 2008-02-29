@@ -322,11 +322,11 @@ label{fill:#000;}
 	</module>
 	<module component-id="m96" width="255" height="60">
 		<name>FormantOsc</name>
-		<image x="4" y="6" width="140" height="50" xlink:href="url(#groupbox)" />
-		<connector x="7" y="33" size="13" class="cAUDIO">
+		<image x="4" y="14" width="146" height="45" xlink:href="url(#groupbox)" />
+		<connector x="7" y="37" size="13" class="cAUDIO">
 			<connector component-id="c1" alt="pitch mod 1" />
 		</connector>
-		<connector x="47" y="33" size="13" class="cSLAVE">
+		<connector x="47" y="37" size="13" class="cSLAVE">
 			<connector component-id="c2" alt="pitch mod 2" />
 		</connector>
 		<connector x="150" y="14" size="13" class="cCONTROL">
@@ -338,12 +338,6 @@ label{fill:#000;}
 		<connector x="151" y="42" size="13" class="cSLAVE">
 			<connector component-id="c5" alt="slave" />
 		</connector>
-		<knob x="86" y="24" size="29">
-			<parameter component-id="p2" alt="pitch" />
-		</knob>
-		<knob x="118" y="29" size="21">
-			<parameter component-id="p3" alt="pitch fine" />
-		</knob>
 		<button x="174" y="37" width="24" height="16" cyclic="true" landscape="false">
 			<parameter component-id="p4" alt="kbt" />
 			<btn index="1">KBT</btn>
@@ -357,24 +351,30 @@ label{fill:#000;}
 		<knob x="201" y="8" size="21">
 			<parameter component-id="p6" alt="timbre" />
 		</knob>
-		<knob x="22" y="29" size="21">
+		<knob x="22" y="32" size="21">
 			<parameter component-id="p7" alt="pitch mod 1" />
 		</knob>
-		<knob x="62" y="29" size="21">
+		<knob x="62" y="32" size="21">
 			<parameter component-id="p8" alt="pitch mod 2" />
 		</knob>
-		<textDisplay x="27" y="13" width="50" height="16">
+		<knob x="86" y="25" size="29">
+			<parameter component-id="p2" alt="pitch" />
+		</knob>
+		<knob x="118" y="32" size="21">
+			<parameter component-id="p3" alt="pitch fine" />
+		</knob>
+		<textDisplay x="27" y="15" width="50" height="16">
 			<parameter component-id="p2" alt="pitch" />
 		</textDisplay>
 		<textDisplay x="168" y="13" width="30" height="16">
 			<parameter component-id="p6" alt="timbre" />
 		</textDisplay>
 		<label x="5" y="15">Freq</label>
-		<label x="85" y="10">Coarse</label>
-		<label x="120" y="10">Fine</label>
-		<label x="150" y="27">Slv</label>
+		<label x="85" y="15">Coarse</label>
+		<label x="120" y="15">Fine</label>
+		<label x="150" y="30">Slv</label>
 		<label x="169" y="1">Timbre</label>
-		<resetButton x="124" y="22" width="9" height="6">
+		<resetButton x="124" y="25" width="9" height="6">
 			<parameter component-id="p3" alt="pitch fine" />
 		</resetButton>
 	</module>
