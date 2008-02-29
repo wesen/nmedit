@@ -23,7 +23,6 @@
 package net.sf.nmedit.jtheme.component;
 
 import java.awt.AWTEvent;
-import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -34,9 +33,6 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.LinkedList;
-
-import javax.swing.JComponent;
-import javax.swing.RepaintManager;
 
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.event.PModuleEvent;
@@ -108,22 +104,16 @@ public class JTModule extends JTComponent
         	cman.update(cables);
         }
 	}
-
+    
 	public void setSelected(boolean selected)
     {
-        if (this.selected != selected)
+        boolean oldValue = this.selected;
+        boolean newValue = selected;
+        
+        if (oldValue != newValue)
         {
-            this.selected = selected;
+            this.selected = newValue;
             repaint();
-            // repaint parent 
-            Container parent = getParent();
-            if (parent != null && parent instanceof JComponent)
-            {
-                JComponent jparent = (JComponent) parent;
-                RepaintManager
-                .currentManager(jparent)
-                .addDirtyRegion(jparent, getX(), getY(), getWidth()+1, getHeight()+1);
-            }
         }
     }
     
