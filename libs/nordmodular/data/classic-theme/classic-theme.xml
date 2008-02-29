@@ -3439,8 +3439,8 @@ label{fill:#000;}
 		<button x="219" y="3" width="26" height="60" cyclic="false" landscape="false">
 			<parameter component-id="p5" alt="waveform" />
 			<btn index="0"><image xlink:href="./images/slice/wf_sine.png" /></btn>
-			<btn index="1"><image xlink:href="./images/slice/wf_saw.png" /></btn>
-			<btn index="2"><image xlink:href="./images/slice/wf_tri.png" /></btn>
+			<btn index="1"><image xlink:href="./images/slice/wf_tri.png" /></btn>
+			<btn index="2"><image xlink:href="./images/slice/wf_saw.png" /></btn>
 			<btn index="3"><image xlink:href="./images/slice/wf_square.png" /></btn>
 		</button>
 		<knob x="22" y="65" size="21">
