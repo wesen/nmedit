@@ -176,6 +176,8 @@ public class FFTabBarUI extends TabBarUI
     protected int tabPaddingLeftRight = 3;
 
     private int prevTabCount = -1;
+    
+    private int dndPreviousSelectionIndex = -1;
 
     protected transient Insets tmpInsets;
 
@@ -1413,14 +1415,33 @@ public class FFTabBarUI extends TabBarUI
 
         public void dragOver(DropTargetDragEvent dtde)
         {
-            if (!(dropOk(dtde) && transferableOk(dtde.getTransferable())&& actionOk(dtde.getDropAction()) ))
+            Point p = dtde.getLocation();
+            Transferable transfer = dtde.getTransferable();
+            if (!transfer.isDataFlavorSupported(TransferableTab.tabIndexFlavor))
+            {
+                int dragOverTab = ui.getTabIndexForLocation(p.x, p.y);
+                if (dragOverTab>=0)
+                {
+                    // something unknown is dragged around
+                    // store previous selection index
+                    // TODO restore index after drop
+                    if (ui.dndPreviousSelectionIndex < 0)
+                        ui.dndPreviousSelectionIndex = ui.tabBar.getSelectedIndex();
+                    
+                    // select tab below cursor
+                    ui.tabBar.setSelectedIndex(dragOverTab);
+                }
+                dtde.rejectDrag();
+                return;
+            }
+            
+            if (!(dropOk(dtde) && transferableOk(transfer)&& actionOk(dtde.getDropAction()) ))
             {
                 ui.setDropTargetIndex(-1);
                 dtde.rejectDrag();
                 return;
             }
             
-            Point p = dtde.getLocation();
             
             int index = ui.getTabIndexForLocation(p.x, p.y);
 
