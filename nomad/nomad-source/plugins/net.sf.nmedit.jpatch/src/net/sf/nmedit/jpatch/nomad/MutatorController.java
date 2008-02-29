@@ -3,8 +3,10 @@ package net.sf.nmedit.jpatch.nomad;
 import javax.swing.JFrame;
 
 import net.sf.nmedit.jpatch.randomizer.Mutator;
+import net.sf.nmedit.nomad.core.swing.document.DocumentEvent;
+import net.sf.nmedit.nomad.core.swing.document.DocumentListener;
 
-public class MutatorController
+public class MutatorController implements DocumentListener
 {
 
     private static MutatorController instance = new MutatorController();
@@ -30,5 +32,23 @@ public class MutatorController
         ensureMutatorCreated();
         mutator.getFrame().setVisible(true);
     }
+
+	public void documentAdded(DocumentEvent e) {
+		System.out.println("add");
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void documentRemoved(DocumentEvent e) {
+		System.out.println("removed");
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void documentSelected(DocumentEvent e) {
+		System.out.println("selected");
+		// TODO Auto-generated method stub
+		
+	}
 
 }
