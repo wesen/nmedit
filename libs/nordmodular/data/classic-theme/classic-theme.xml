@@ -1608,12 +1608,12 @@ label{fill:#000;}
 		<connector x="236" y="105" size="13" class="cAUDIO">
 			<connector component-id="c3" alt="out" />
 		</connector>
-		<button x="0" y="44" width="24" height="15" cyclic="true" landscape="false">
+		<button x="2" y="44" width="24" height="14" cyclic="true" landscape="false">
 			<parameter component-id="p18" alt="high freq emphasis" />
 			<btn index="0"><image xlink:href="./images/slice/vocoder_emp.png" /></btn>
 			<btn index="1"><image xlink:href="./images/slice/vocoder_emp.png" /></btn>
 		</button>
-		<button x="0" y="62" width="24" height="15" cyclic="true" landscape="false">
+		<button x="2" y="62" width="24" height="14" cyclic="true" landscape="false">
 			<parameter component-id="p19" alt="monitor" />
 			<btn index="0">Mon</btn>
 			<btn index="1">Mon</btn>
@@ -1716,10 +1716,10 @@ label{fill:#000;}
 		 	<btn index="0"><image xlink:href="url(#btn-up-arrow)" /></btn>
 		 	<btn index="1"><image xlink:href="url(#btn-down-arrow)" /></btn>
 		</button>
-		<button x="171" y="102" width="16" height="12" cyclic="true" landscape="true">
+		<button x="171" y="102" width="24" height="14" cyclic="true" landscape="true">
 			<call component="vocoderDisp" method="rnd" />
-			<btn index="0">rnd</btn>
-			<btn index="1">rnd</btn>
+			<btn index="0">Rnd</btn>
+			<btn index="1">Rnd</btn>
 		</button>
 		<knob x="225" y="57" size="21">
 			<parameter component-id="p17" alt="outgain" />
@@ -1742,7 +1742,7 @@ label{fill:#000;}
 		<label x="182" y="8">14</label>
 		<label x="194" y="8">15</label>
 		<label x="206" y="8">16</label>
-		<resetButton x="232" y="50" width="9" height="6">
+		<resetButton x="231" y="49" width="9" height="6">
 			<parameter component-id="p17" alt="outgain" />
 		</resetButton>
 	</module>
@@ -1763,63 +1763,63 @@ label{fill:#000;}
 	</module>
 	<module component-id="m45" width="255" height="75">
 		<name>VocalFilter</name>
-		<image x="33" y="9" width="51" height="63" xlink:href="url(#groupbox)" />
+		<image x="33" y="13" width="51" height="62" xlink:href="url(#groupbox)" />
 		<connector x="202" y="57" size="13" class="cAUDIO">
 			<connector component-id="c1" alt="in" />
 		</connector>
-		<connector x="93" y="47" size="13" class="cCONTROL">
+		<connector x="93" y="53" size="13" class="cCONTROL">
 			<connector component-id="c2" alt="vowel select mod" />
 		</connector>
-		<connector x="40" y="51" size="13" class="cCONTROL">
+		<connector x="40" y="53" size="13" class="cCONTROL">
 			<connector component-id="c3" alt="frequency mod" />
 		</connector>
 		<connector x="237" y="57" size="13" class="cAUDIO">
 			<connector component-id="c4" alt="out" />
 		</connector>
-		<knob x="113" y="19" size="21">
+		<knob x="118" y="26" size="21">
 			<parameter component-id="p1" alt="left vowel" />
 		</knob>
-		<knob x="147" y="21" size="21">
+		<knob x="147" y="24" size="21">
 			<parameter component-id="p2" alt="middle vowel" />
 		</knob>
-		<knob x="179" y="17" size="21">
+		<knob x="177" y="26" size="21">
 			<parameter component-id="p3" alt="right vowel" />
 		</knob>
-		<knob x="177" y="48" size="21">
+		<knob x="177" y="50" size="21">
 			<parameter component-id="p4" alt="in amplification" />
 		</knob>
-		<knob x="147" y="45" size="21">
+		<knob x="147" y="47" size="21">
 			<parameter component-id="p5" alt="vowel select" />
 		</knob>
-		<knob x="118" y="48" size="21">
+		<knob x="118" y="50" size="21">
 			<parameter component-id="p6" alt="vowel select mod" />
 		</knob>
-		<knob x="50" y="19" size="21">
+		<knob x="50" y="23" size="21">
 			<parameter component-id="p7" alt="frequency" />
 		</knob>
-		<knob x="56" y="46" size="21">
+		<knob x="56" y="48" size="21">
 			<parameter component-id="p8" alt="frequency mod" />
 		</knob>
 		<knob x="5" y="39" size="21">
 			<parameter component-id="p9" alt="resonance" />
 		</knob>
 		<label x="8" y="16">Res</label>
-		<label x="35" y="9">Freq</label>
+		<label x="35" y="13">Freq</label>
 		<label x="123" y="0">Vowel navigator</label>
 		<image x="214" y="57" width="25" height="11" xlink:href="./images/single/decoration-6.png" />
-		<textDisplay x="86" y="21" width="27" height="16">
+		<textDisplay x="86" y="26" width="27" height="14">
 			<parameter component-id="p1" alt="left vowel" />
 		</textDisplay>
-		<textDisplay x="144" y="6" width="27" height="16">
+		<textDisplay x="144" y="10" width="27" height="14">
 			<parameter component-id="p2" alt="middle vowel" />
 		</textDisplay>
-		<textDisplay x="209" y="18" width="27" height="16">
+		<textDisplay x="209" y="26" width="27" height="14">
 			<parameter component-id="p3" alt="right vowel" />
 		</textDisplay>
-		<resetButton x="12" y="30" width="9" height="6">
+		<resetButton x="11" y="30" width="9" height="6">
 			<parameter component-id="p9" alt="resonance" />
 		</resetButton>
-		<resetButton x="57" y="13" width="9" height="6">
+		<resetButton x="56" y="16" width="9" height="6">
 			<parameter component-id="p7" alt="frequency" />
 		</resetButton>
 	</module>
