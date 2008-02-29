@@ -36,9 +36,9 @@ import javax.swing.border.Border;
  */
 public class JTNM1BorderFactory {
 
-	private static Border NordEditor311LoweredBorder = new NordEditor311Border(false,1);
-	private static Border NordEditor311RaisedBorder = new NordEditor311Border(true,1); 
-	private static Border NordEditor311GroupBoxBorder = new NordEditor311GroupboxBorder();
+	private static final Border NordEditor311LoweredBorder = new NordEditor311Border(false,1);
+	private static final Border NordEditor311RaisedBorder = new NordEditor311Border(true,1); 
+	private static final Border NordEditor311GroupBoxBorder = new NordEditor311GroupboxBorder();
 
 	public static Border createNordEditor311Border() {
 		return createNordEditor311LoweredBorder();
