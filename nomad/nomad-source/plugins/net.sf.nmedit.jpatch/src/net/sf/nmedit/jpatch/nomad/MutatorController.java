@@ -11,6 +11,8 @@ public class MutatorController implements DocumentListener
 
     private static MutatorController instance = new MutatorController();
     
+    private static final boolean DEBUG= false;
+    
     public static MutatorController sharedInstance()
     {
         return instance;
@@ -34,19 +36,19 @@ public class MutatorController implements DocumentListener
     }
 
 	public void documentAdded(DocumentEvent e) {
-		System.out.println("add");
+		if (DEBUG) System.out.println("add");
 		// TODO Auto-generated method stub
 		
 	}
 
 	public void documentRemoved(DocumentEvent e) {
-		System.out.println("removed");
+		if (DEBUG) System.out.println("removed");
 		// TODO Auto-generated method stub
 		
 	}
 
 	public void documentSelected(DocumentEvent e) {
-		System.out.println("selected");
+		if (DEBUG) System.out.println("selected");
 		// TODO Auto-generated method stub
 		
 	}
