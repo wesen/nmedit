@@ -51,7 +51,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
@@ -67,7 +66,7 @@ import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
-import net.sf.nmedit.jtheme.component.JTPatch;
+import net.sf.nmedit.jtheme.component.plaf.SelectionPainter;
 import net.sf.nmedit.jtheme.dnd.JTDragDrop;
 import net.sf.nmedit.jtheme.dnd.JTModuleTransferData;
 import net.sf.nmedit.jtheme.dnd.JTModuleTransferDataWrapper;
@@ -152,24 +151,28 @@ public class JTModuleContainerUI extends ComponentUI
 
     public void paintChildrenHack(Graphics g)
     {
-        if (selectBoxActive) {
-        	g.setColor(Color.BLUE);
+        if (selectBoxActive) 
+        {
         	Rectangle r = selectRectangle;
-        	g.drawRect(r.x, r.y, r.width - 1, r.height - 1);
+            SelectionPainter.paintSelectionBox(g, 
+                    r.x, r.y, r.width, r.height);
         }    
 
         Rectangle box = dndBox;
-        if (box == null) return;
-        
-        if (jtc.getSelectionSize()>0)
+        if (box != null)
         {
-        	if (transferData == null)
-        		return;
-            Rectangle bbox = transferData.getBoundingBox();
-            g.setColor(Color.BLUE);
-            for (JTModule m : transferData.getModules()) {
-                g.drawRect(box.x + m.getX() - bbox.x, box.y + m.getY() - bbox.y, 
-                		m.getWidth() - 1, m.getHeight() - 1);
+            JTModuleTransferDataWrapper transfer = getCurrentTransfer();
+            if (transfer != null)
+            {
+                Collection<? extends JTModule> components = transfer.getModules();
+                if (!components.isEmpty())
+                {
+                    Rectangle bbox = transfer.getBoundingBox();
+                    SelectionPainter.paintSelectionBox(g, 
+                            transfer.getModules(), 
+                            box.x - bbox.x, 
+                            box.y - bbox.y );
+                }
             }
         }
     }
@@ -177,10 +180,25 @@ public class JTModuleContainerUI extends ComponentUI
     private transient Rectangle dndBox;
     private transient Point dndInitialScrollLocation;
 	protected EventHandler eventHandler;
-	public JTModuleTransferDataWrapper transferData;
+	private JTModuleTransferDataWrapper currentTransferData;
 	public boolean selectBoxActive;
 	public Point selectStartPoint;
 	public Rectangle selectRectangle;
+    
+    private void setCurrentTransfer(JTModuleTransferDataWrapper transfer)
+    {
+        this.currentTransferData = transfer;
+        updateDnDBoundingBox(null);
+    }
+    
+    private JTModuleTransferDataWrapper getCurrentTransfer()
+    {
+        return currentTransferData;
+    }
+    
+    
+    
+    
     
     public void updateDnDBoundingBox(Rectangle box)
     {
@@ -428,20 +446,21 @@ public class JTModuleContainerUI extends ComponentUI
         {
         	DataFlavor flavors[] = dtde.getTransferable().getTransferDataFlavors();
         	
-        	if (jtcUI.transferData == null) {
+            JTModuleTransferDataWrapper transfer = jtcUI.getCurrentTransfer();
+            
+        	if (transfer == null) {
         		Transferable t = dtde.getTransferable();
         		if (t.isDataFlavorSupported(JTDragDrop.ModuleSelectionFlavor)) {
 					try {
-						jtcUI.transferData = (JTModuleTransferDataWrapper)t.getTransferData(JTDragDrop.ModuleSelectionFlavor);
-						jtcUI.updateDnDBoundingBox(null);
+                        transfer = (JTModuleTransferDataWrapper)t.getTransferData(JTDragDrop.ModuleSelectionFlavor);
+                        jtcUI.setCurrentTransfer(transfer);
 					} catch (Throwable e) {
-						jtcUI.transferData = null;
+                        jtcUI.setCurrentTransfer(null);
 					}
         		} else {
-        			System.out.println("falvor not supported");
+        			// System.out.println("flavor not supported");
         		}
         	}
-
 
         	if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable())) {
         		dtde.acceptDrag(DnDConstants.ACTION_COPY);
@@ -454,8 +473,7 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void dragExit(DropTargetEvent dte)
         {
-            jtcUI.updateDnDBoundingBox(null);
-            jtcUI.transferData = null;
+            jtcUI.setCurrentTransfer(null);
         }
 
         public void dragOver(DropTargetDragEvent dtde)
@@ -518,8 +536,7 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void drop(DropTargetDropEvent dtde)
         {
-            jtcUI.updateDnDBoundingBox(null);
-            jtcUI.transferData = null;
+            jtcUI.setCurrentTransfer(null);
             
             DataFlavor chosen = null;
             Object data = null;
@@ -707,8 +724,10 @@ public class JTModuleContainerUI extends ComponentUI
                     dndOrigin = SwingUtilities.convertPoint(c, dndOrigin, getModuleContainer());
                 }
                 
-                jtcUI.transferData = new JTModuleTransferDataWrapper(this, jtc.getSelectedModules(), dndOrigin);
-                dge.startDrag(DragSource.DefaultMoveDrop, jtcUI.transferData, this);
+                JTModuleTransferDataWrapper transfer =
+                    new JTModuleTransferDataWrapper(this, jtc.getSelectedModules(), dndOrigin);
+                jtcUI.setCurrentTransfer(transfer);
+                dge.startDrag(DragSource.DefaultMoveDrop, transfer, this);
             }
         }
         

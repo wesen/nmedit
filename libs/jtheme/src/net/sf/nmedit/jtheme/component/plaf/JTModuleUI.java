@@ -682,17 +682,10 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
     }
 
     public void paintSelection(Graphics g, JTModule module)
-    {
-        
+    {        
         if (module.isSelected() || module.hasFocus())
         {
-            // TODO lookup selection color
-            
-        	// System.out.println("iwdthL " + module.getWidth() + " height " + module.getHeight());
-        	
-            final Color selection = Color.BLUE;
-        	g.setColor(selection);
-            g.drawRect(0, 0, module.getWidth()-1, module.getHeight()-1);
+            SelectionPainter.paintSelection(g, 0, 0, module.getWidth(), module.getHeight());
         }
     }
     
