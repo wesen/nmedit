@@ -928,5 +928,20 @@ public class Nomad
             }
         }
     }
+
+	public Document setSelectedDocumentByFile(File file) 
+	{
+		if (file == null) return null;
+		
+		for (Document d: pageContainer.getDocuments())
+		{
+			if (file.equals(d.getFile()))
+			{
+				pageContainer.setSelection(d);
+				return d;
+			}
+		}
+		return null;
+	}
     
 }
