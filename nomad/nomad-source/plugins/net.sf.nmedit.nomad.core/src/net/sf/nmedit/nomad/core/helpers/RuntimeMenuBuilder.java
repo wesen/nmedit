@@ -27,7 +27,9 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.tree.TreeNode;
 
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nomad.core.Nomad;
@@ -38,6 +40,7 @@ import net.sf.nmedit.nomad.core.service.ServiceRegistry;
 import net.sf.nmedit.nomad.core.service.fileService.FileService;
 import net.sf.nmedit.nomad.core.service.synthService.NewSynthService;
 import net.sf.nmedit.nomad.core.swing.ExtensionFilter;
+import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 import net.sf.nmedit.nomad.core.swing.explorer.FileContext;
 
 public class RuntimeMenuBuilder
@@ -253,7 +256,26 @@ public class RuntimeMenuBuilder
             
             Nomad n = Nomad.sharedInstance();
             
-            FileContext c = new FileContext(n.getExplorer(), location);
+            ExplorerTree explorer = n.getExplorer();
+            
+            TreeNode root = explorer.getRoot();
+            for (int i=root.getChildCount()-1;i>=0;i--)
+            {
+                TreeNode context = root.getChildAt(i);
+                if (context instanceof FileContext)
+                {
+                    File existingLocation = ((FileContext) context).getFile();
+                    if ( location.equals(existingLocation) )
+                    {
+                        JOptionPane.showMessageDialog(n.getWindow().getRootPane(), 
+                                "Location already exists."
+                        );
+                        return;
+                    }
+                }
+            }
+            
+            FileContext c = new FileContext(explorer, location);
             c.setFileFilter( filter );
             
             n.getExplorer().addRootNode(c);
