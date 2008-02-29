@@ -81,11 +81,11 @@ label{fill:#000;}
 	<module component-id="m95" width="255" height="60">
 		<name>PercOsc</name>
 		<image x="96" y="3" width="116" height="54" xlink:href="url(#groupbox)" />
+		<connector x="4" y="25" size="13" class="cAUDIO">
+			<connector component-id="c2" alt="amp" />
+		</connector>
 		<connector x="4" y="42" size="13" class="cAUDIO">
 			<connector component-id="c1" alt="trig" />
-		</connector>
-		<connector x="4" y="21" size="13" class="cAUDIO">
-			<connector component-id="c2" alt="amp" />
 		</connector>
 		<connector x="104" y="38" size="13" class="cCONTROL">
 			<connector component-id="c3" alt="pitchmod" />
@@ -121,7 +121,7 @@ label{fill:#000;}
 		<textDisplay x="99" y="16" width="50" height="16">
 			<parameter component-id="p2" alt="pitch" />
 		</textDisplay>
-		<label x="2" y="7">Amp</label>
+		<label x="2" y="13">Amp</label>
 		<label x="19" y="41">Trig</label>
 		<label x="41" y="9">Click</label>
 		<label x="74" y="9">Dcy</label>
