@@ -21,6 +21,7 @@ package net.sf.nmedit.nordmodular;
 import java.io.File;
 
 import javax.swing.Icon;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMData;
@@ -60,6 +61,23 @@ public class NmFileService implements FileService
 
         try
         {
+        	boolean setFilePointerToNull = false;
+        	if (isFileAlreadyOpen(file))
+        	{
+        		if (JOptionPane.showConfirmDialog(
+        				Nomad.sharedInstance().getWindow().getRootPane(),
+        				"File \""+file+"\" is already open.\nDo you want to open a copy of the file?",
+        				"Open...",
+        				JOptionPane.YES_NO_OPTION)
+        				== JOptionPane.NO_OPTION)
+        		{
+        			Nomad.sharedInstance().setSelectedDocumentByFile(file);
+        			return null;
+        		}
+        		
+        		setFilePointerToNull = true;
+        	}
+        	
         	NMPatch patch = NMPatch.createFromFile(file);
 
             if (title != null)
@@ -67,10 +85,23 @@ public class NmFileService implements FileService
             
             final PatchDocument pd = createPatchDoc(patch);
             
-            if (sourceFile!=null)
+            if (setFilePointerToNull)
             {
-                patch.setProperty("file", sourceFile);
-                pd.setURI(sourceFile);
+            	if (sourceFile != null)
+            	{
+	            	String name = sourceFile.getName();
+	            	if (name.toLowerCase().endsWith(".pch"))
+	            		name = name.substring(0, name.length()-4);
+	            	patch.setName(name);
+            	}
+            }
+            else
+            {
+	            if (sourceFile!=null)
+	            {
+	                patch.setProperty("file", sourceFile);
+	                pd.setURI(sourceFile);
+	            }
             }
                 
             SwingUtilities.invokeLater(new Runnable(){
@@ -180,6 +211,20 @@ public class NmFileService implements FileService
         return patch.getFile();
     }
 
+    public static boolean isFileAlreadyOpen(File file)
+    {
+    	final DefaultDocumentManager dm = Nomad.sharedInstance().getDocumentManager();
+        for (Document d: dm.getDocuments())
+        {
+        	if (d instanceof PatchDocument)
+        	{
+        		if (file.equals(d.getFile()))
+        			return true;
+        	}
+        }
+        return false;
+    }
+    
     public static void selectOrOpen(NMPatch patch)
     {
         final DefaultDocumentManager dm = Nomad.sharedInstance().getDocumentManager();
