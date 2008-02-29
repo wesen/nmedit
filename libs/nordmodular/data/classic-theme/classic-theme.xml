@@ -3180,15 +3180,15 @@ label{fill:#000;}
 	</module>
 	<module component-id="m102" width="255" height="105">
 		<name>Phaser</name>
-		<image x="167" y="28" width="82" height="46" xlink:href="url(#groupbox)" />
-		<image x="3" y="15" width="80" height="80" xlink:href="url(#groupbox)" />
+		<image x="3" y="15" width="82" height="82" xlink:href="url(#groupbox)" />
+		<image x="167" y="38" width="82" height="39" xlink:href="url(#groupbox)" />
 		<connector x="197" y="88" size="13" class="cAUDIO">
 			<connector component-id="c1" alt="in" />
 		</connector>
-		<connector x="91" y="82" size="13" class="cCONTROL">
+		<connector x="91" y="84" size="13" class="cCONTROL">
 			<connector component-id="c2" alt="center freq mod" />
 		</connector>
-		<connector x="207" y="51" size="13" class="cCONTROL">
+		<connector x="207" y="56" size="13" class="cCONTROL">
 			<connector component-id="c3" alt="spread mod" />
 		</connector>
 		<connector x="237" y="88" size="13" class="cAUDIO">
@@ -3202,23 +3202,23 @@ label{fill:#000;}
 			<btn index="0">LFO</btn>
 			<btn index="1">LFO</btn>
 		</button>
-		<knob x="107" y="76" size="21">
+		<knob x="107" y="82" size="19">
 			<parameter component-id="p3" alt="center freq mod" />
 		</knob>
 		<knob x="94" y="43" size="29">
 			<parameter component-id="p4" alt="center freq" />
 		</knob>
-		<knob x="222" y="45" size="21">
-			<parameter component-id="p5" alt="spread mod" />
-		</knob>
-		<knob x="138" y="30" size="21">
+		<knob x="138" y="32" size="21">
 			<parameter component-id="p6" alt="feedback" />
 		</knob>
-		<knob x="139" y="76" size="21">
+		<knob x="139" y="82" size="19">
 			<parameter component-id="p7" alt="peaks" />
 		</knob>
-		<knob x="172" y="41" size="29">
+		<knob x="173" y="46" size="26">
 			<parameter component-id="p8" alt="spread" />
+		</knob>
+		<knob x="222" y="50" size="19">
+			<parameter component-id="p5" alt="spread mod" />
 		</knob>
 		<button x="216" y="87" width="18" height="16" cyclic="true" landscape="false">
 			<parameter component-id="p9" alt="bypass" />
@@ -3228,7 +3228,7 @@ label{fill:#000;}
 		<knob x="54" y="34" size="21">
 			<parameter component-id="p10" alt="depth" />
 		</knob>
-		<knob x="167" y="76" size="21">
+		<knob x="170" y="82" size="19">
 			<parameter component-id="p11" alt="inlevel" />
 		</knob>
 		<textDisplay x="6" y="39" width="40" height="16">
@@ -3241,9 +3241,9 @@ label{fill:#000;}
 		<label x="52" y="19">Depth</label>
 		<label x="83" y="5">Center Freq</label>
 		<label x="134" y="13">FeedBk</label>
-		<label x="139" y="61">Peaks</label>
-		<label x="170" y="27">Spread</label>
-		<resetButton x="145" y="24" width="9" height="6">
+		<label x="139" y="69">Peaks</label>
+		<label x="170" y="37">Spread</label>
+		<resetButton x="144" y="24" width="9" height="6">
 			<parameter component-id="p6" alt="feedback" />
 		</resetButton>
 		<phaser-display x="180" y="2" width="65" height="35">
@@ -3251,7 +3251,7 @@ label{fill:#000;}
 			<peaks component-id="p7" alt="peaks" />
 			<spread component-id="p8" alt="spread" />
 	    </phaser-display>
-   		<light component-id="ledAudioOut" type="led" x="238" y="80" width="7" height="7" /> 
+   		<light component-id="ledAudioOut" type="led" x="240" y="80" width="7" height="7" /> 
 	</module>
 	<module component-id="m84" width="255" height="45">
 		<name>AD-Env</name>
