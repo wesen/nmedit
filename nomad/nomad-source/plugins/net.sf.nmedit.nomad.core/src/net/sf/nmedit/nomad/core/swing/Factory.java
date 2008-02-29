@@ -39,14 +39,9 @@ public class Factory
     {
         JButton button = new JButton(action);
         setupToolBarButton(button);
+        // show either icon or text but not both: 
+        button.putClientProperty("hideActionText", Boolean.TRUE);
         return button;
     }
 
-    public static JButton createSmallToolBarButton(Action action) 
-    {
-        JButton btn = createToolBarButton(action);
-        if (btn.getIcon() != null)
-            btn.setText(null);
-        return btn;
-    }
 }

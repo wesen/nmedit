@@ -782,7 +782,7 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
             sa.add(rb);
             pop.add(rb);
         }
-        JButton btn = Factory.createSmallToolBarButton(sa);
+        JButton btn = Factory.createToolBarButton(sa);
         new JDropDownButtonControl(btn, pop);
         return btn;
     }
