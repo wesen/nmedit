@@ -2124,7 +2124,7 @@ label{fill:#000;}
 	</module>
 	<module component-id="m107" width="255" height="75">
 		<name>SpectralOsc</name>
-		<image x="162" y="5" width="50" height="68" xlink:href="url(#groupbox)" />
+		<image x="157" y="4" width="48" height="72" xlink:href="url(#groupbox)" />
 		<connector x="90" y="57" size="13" class="cAUDIO">
 			<connector component-id="c1" alt="fma" />
 		</connector>
@@ -2134,7 +2134,7 @@ label{fill:#000;}
 		<connector x="47" y="55" size="13" class="cCONTROL">
 			<connector component-id="c3" alt="pitch mod 2" />
 		</connector>
-		<connector x="165" y="55" size="13" class="cCONTROL">
+		<connector x="160" y="55" size="13" class="cCONTROL">
 			<connector component-id="c4" alt="spectral shape mod" />
 		</connector>
 		<connector x="238" y="56" size="13" class="cAUDIO">
@@ -2149,10 +2149,10 @@ label{fill:#000;}
 		<knob x="113" y="22" size="21">
 			<parameter component-id="p3" alt="freq fine" />
 		</knob>
-		<knob x="172" y="23" size="21">
+		<knob x="167" y="25" size="21">
 			<parameter component-id="p4" alt="spectral shape" />
 		</knob>
-		<button x="203" y="26" width="48" height="16" cyclic="false" landscape="true">
+		<button x="203" y="34" width="48" height="16" cyclic="false" landscape="true">
 			<parameter component-id="p5" alt="partials" />
 			<btn index="0">Odd</btn>
 			<btn index="1">All</btn>
@@ -2166,10 +2166,10 @@ label{fill:#000;}
 		<knob x="106" y="50" size="21">
 			<parameter component-id="p8" alt="fma" />
 		</knob>
-		<knob x="182" y="48" size="21">
+		<knob x="177" y="48" size="21">
 			<parameter component-id="p9" alt="spectral shape mod" />
 		</knob>
-		<button x="137" y="52" width="24" height="16" cyclic="true" landscape="false">
+		<button x="132" y="52" width="24" height="16" cyclic="true" landscape="false">
 			<parameter component-id="p10" alt="kbt" />
 			<btn index="0">KBT</btn>
 			<btn index="1">KBT</btn>
@@ -2186,17 +2186,14 @@ label{fill:#000;}
 		<label x="38" y="13">Freq</label>
 		<label x="76" y="6">Coarse</label>
 		<label x="114" y="6">Fine</label>
-		<label x="163" y="4">Spectral\nShape</label>
-		<label x="211" y="5">Partials</label>
+		<label x="162" y="4">Spectral\n Shape</label>
+		<label x="211" y="24">Partials</label>
 		<label x="1" y="42">Pitch</label>
 		<label x="41" y="43">Pitch</label>
 		<label x="85" y="46">FMA</label>
 		<resetButton x="118" y="16" width="9" height="6">
 			<parameter component-id="p3" alt="freq fine" />
 		</resetButton>
-		<textDisplay x="139" y="12" width="27" height="16">
-			<parameter component-id="p5" alt="partials" />
-		</textDisplay>
 	</module>
 	<module component-id="m79" width="255" height="45">
 		<name>4-1Switch</name>
