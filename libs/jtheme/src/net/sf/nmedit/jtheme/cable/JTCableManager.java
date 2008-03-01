@@ -68,6 +68,24 @@ public interface JTCableManager extends Iterable<Cable>
     Cable createCable(JTConnector source, JTConnector destination);
     JComponent getOwner();
     void setOwner(JComponent owner);
+
+    /**
+     * Important setAutoRepaintDisabled() must follow a call to
+     * clearAutoRepaintDisabled(). Always use following construct:
+     * JTCableManager cm;
+     * try
+     * {
+     *    cm.setAutoRepaintDisabled();
+     * }
+     * finally
+     * {
+     *    cm.clearAutoRepaintDisabled();
+     * }
+     *
+     */
+    void setAutoRepaintDisabled();
+    void clearAutoRepaintDisabled();
+    boolean isAutoRepaintEnabled();
     
 }
 
