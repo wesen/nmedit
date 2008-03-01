@@ -168,11 +168,27 @@ public class RetargetMouseEventSupport implements MouseInputListener, MouseWheel
         if (source == null)
             source = e.getComponent();
         Point p = SwingUtilities.convertPoint(source, e.getX(), e.getY(), target);
-        MouseEvent ev = new MouseEvent(target, id, e.getWhen(),
-                                       e.getModifiers() | e.getModifiersEx(),
-                                       p.x, p.y, e.getClickCount(),
-                                       e.isPopupTrigger());
-        target.dispatchEvent(ev);
+        
+        if (e instanceof MouseEvent)
+        {
+            MouseEvent ev = new MouseEvent(target, id, e.getWhen(),
+                                           e.getModifiers() | e.getModifiersEx(),
+                                           p.x, p.y, e.getClickCount(),
+                                           e.isPopupTrigger());
+            target.dispatchEvent(ev);
+        }
+        else if (e instanceof MouseWheelEvent)
+        {
+            MouseWheelEvent w = (MouseWheelEvent) e;
+            MouseEvent ev = new MouseWheelEvent(target, id, e.getWhen(),
+                    e.getModifiers() | e.getModifiersEx(),
+                    p.x, p.y, e.getClickCount(),
+                    e.isPopupTrigger(),
+                    w.getScrollType(),
+                    w.getScrollAmount(),
+                    w.getWheelRotation());
+            target.dispatchEvent(ev);
+        }
     }
 
     public void install(Component c)
