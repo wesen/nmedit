@@ -706,7 +706,7 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
             this.module = module;
             enableEvents(MouseEvent.MOUSE_EVENT_MASK|MouseEvent.MOUSE_MOTION_EVENT_MASK);
         }
-
+        
         protected boolean opacityOverwrite(boolean isOpaque)
         {
             return isOpaque;

@@ -18,17 +18,14 @@
  */
 package net.sf.nmedit.jtheme.component;
 
-import java.awt.AWTEvent;
-import java.awt.Component;
 import java.awt.Graphics;
-import java.awt.event.MouseEvent;
 
 import net.sf.nmedit.jpatch.PLight;
 import net.sf.nmedit.jpatch.PLightDescriptor;
 import net.sf.nmedit.jpatch.event.PLightEvent;
 import net.sf.nmedit.jpatch.event.PLightListener;
 import net.sf.nmedit.jtheme.JTContext;
-import net.sf.nmedit.jtheme.util.JThemeUtils;
+import net.sf.nmedit.jtheme.util.RetargetMouseEventSupport;
 
 public class JTLight extends JTComponent
 implements PLightListener
@@ -51,22 +48,9 @@ implements PLightListener
     {
         super(context);
         setOpaque(false);
-        enableEvents(AWTEvent.MOUSE_EVENT_MASK|AWTEvent.MOUSE_MOTION_EVENT_MASK);
-    }
-
-    protected void processEvent(AWTEvent e)
-    {
-        Component parent = getParent();
-        if (parent != null && e instanceof MouseEvent)
-        {
-            // retarget mouse events
-            MouseEvent me = JThemeUtils.convertMouseEvent(this, (MouseEvent) e, parent);
-            parent.dispatchEvent(me);
-        }
-        else
-        {
-            super.processEvent(e);
-        }
+        
+        RetargetMouseEventSupport rmes = RetargetMouseEventSupport.retargetToParent(this);
+        rmes.install(this);
     }
 
     protected void renderBorder(Graphics g)
