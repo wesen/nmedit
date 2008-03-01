@@ -18,6 +18,7 @@
  */
 package net.sf.nmedit.jtheme.clavia.nordmodular;
 
+import java.awt.Graphics;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseAdapter;
@@ -46,6 +47,7 @@ public class NMNoteSeqEditor extends JTControl
     
     private int maxTranslation = 10;
     private int translation = 0;
+    private boolean modified = true;
 
     public NMNoteSeqEditor(JTContext context)
     {
@@ -53,6 +55,22 @@ public class NMNoteSeqEditor extends JTControl
         computeMaxTranslation();
         setTranslation(maxTranslation/2);
         clear();
+    }
+    
+    protected void setModified(boolean modified)
+    {
+        this.modified = true;
+    }
+    
+    protected void paintComponent(Graphics g)
+    {
+        if (modified)
+        {
+            modified = false;
+            setDoubleBufferNeedsUpdate();
+        }
+        
+        super.paintComponentWithDoubleBuffer(g);
     }
     
     private void computeMaxTranslation()
@@ -77,6 +95,7 @@ public class NMNoteSeqEditor extends JTControl
             // scale translation value
             translation = (max*translation)/maxTranslation;
             this.maxTranslation = max;
+            setModified(true);
             fireStateChanged(); // invokes repaint()
         }
     }
@@ -97,6 +116,7 @@ public class NMNoteSeqEditor extends JTControl
         if (this.translation != t)
         {
             this.translation = t;
+            setModified(true);
             fireStateChanged(); // invokes repaint()
         }
     }
@@ -190,6 +210,7 @@ public class NMNoteSeqEditor extends JTControl
         {
             this.zoom = z;
             computeMaxTranslation();
+            setModified(true);
             repaint();
         }
     }
@@ -239,9 +260,12 @@ public class NMNoteSeqEditor extends JTControl
         JTControlAdapter ca = controlAdapters[index];
         if (ca != null)
         {
-            ca.setValue(value);
-           
-            repaint();
+            if (ca.getValue() != value)
+            {
+                ca.setValue(value);
+                setModified(true);
+                repaint();
+            }
         }
     }
     
@@ -257,9 +281,12 @@ public class NMNoteSeqEditor extends JTControl
         JTControlAdapter ca = controlExtensionAdapters[index];
         if (ca != null)
         {
-            ca.setValue(value);
-           
-            repaint();
+            if (ca.getValue() != value)
+            {
+                ca.setValue(value);
+                setModified(true);
+                repaint();
+            }
         }
     }
     

@@ -44,7 +44,7 @@ public class JTLabel extends JTComponent
         // capture mouse events for retargeting
         installRetargetMouseEventSupport();
     }
-    
+
     protected void installRetargetMouseEventSupport()
     {
         RetargetMouseEventSupport rmes = RetargetMouseEventSupport.retargetToParent(this);

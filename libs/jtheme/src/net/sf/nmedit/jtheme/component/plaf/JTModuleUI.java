@@ -250,6 +250,8 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
 
     private Border border;
     
+    private static transient Insets cachedInsets;
+    
     public void installUI(JComponent c) 
     {
         JTModule module = (JTModule) c;
@@ -266,7 +268,7 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         if (border != null)
             c.setBorder(border);
         
-        Insets i = module.getInsets();
+        Insets i = (cachedInsets=module.getInsets(cachedInsets));
         int left = i.left;
         Icon ic = getModuleTransformationIcon(uidefaults);
         //Icon hov = getModuleTransformationIconHovered(uidefaults);

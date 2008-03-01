@@ -95,7 +95,7 @@ public class JTDisplayUI extends JTComponentUI
         
     }
 
-    private transient Insets cachedInsets;
+    private static transient Insets cachedInsets;
     
     public void paintStaticLayer(Graphics2D g, JTComponent c)
     {

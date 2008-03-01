@@ -165,7 +165,7 @@ public class JTLabelUI extends JTComponentUI implements SwingConstants
         if (splitText == null)
         	return;
         
-        FontMetrics fm = label.getFontMetrics(label.getFont());
+        FontMetrics fm = getFontMetrics(label.getFont(), label);
         Insets insets = c.getInsets(paintViewInsets);
 
         paintViewR.x = insets.left;
@@ -232,7 +232,7 @@ public class JTLabelUI extends JTComponentUI implements SwingConstants
     			((splitText != null) && (font == null)))) {
     		return new Dimension(dx, dy);
     	} else {
-    		FontMetrics fm = label.getFontMetrics(font);
+    		FontMetrics fm = getFontMetrics(font, label);
 
     		textR.x = textR.y = textR.width = textR.height = 0;
     		viewR.x = dx;
