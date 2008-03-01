@@ -22,12 +22,8 @@
  */
 package net.sf.nmedit.jtheme.component;
 
-import java.awt.AWTEvent;
-import java.awt.Component;
-import java.awt.event.MouseEvent;
-
 import net.sf.nmedit.jtheme.JTContext;
-import net.sf.nmedit.jtheme.util.JThemeUtils;
+import net.sf.nmedit.jtheme.util.RetargetMouseEventSupport;
 
 public class JTLabel extends JTComponent
 {
@@ -46,29 +42,13 @@ public class JTLabel extends JTComponent
         setOpaque(false);
         setText("label");
         // capture mouse events for retargeting
-        enableEvents(AWTEvent.MOUSE_EVENT_MASK|AWTEvent.MOUSE_MOTION_EVENT_MASK);
+        installRetargetMouseEventSupport();
     }
     
-    protected boolean retargetMouseEvent(MouseEvent e)
+    protected void installRetargetMouseEventSupport()
     {
-        // retarget mouse events
-       MouseEvent me = JThemeUtils.convertMouseEvent(this, (MouseEvent) e, getParent());
-    	// Work around SwingUtilities bug that doesn't take into account extended modifiers (needed on mac)
-       getParent().dispatchEvent(me);
-        return true;
-    }
-    
-    protected void processEvent(AWTEvent e)
-    {
-        Component parent = getParent();
-        if (parent != null && e instanceof MouseEvent && retargetMouseEvent((MouseEvent)e))
-        {
-            // done
-        }
-        else
-        {
-            super.processEvent(e);
-        }
+        RetargetMouseEventSupport rmes = RetargetMouseEventSupport.retargetToParent(this);
+        rmes.install(this);
     }
 
     public String getUIClassID() 

@@ -36,6 +36,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
+import java.awt.dnd.DragGestureRecognizer;
 import java.awt.dnd.DragSource;
 import java.awt.dnd.DragSourceContext;
 import java.awt.dnd.DragSourceDragEvent;
@@ -426,7 +427,10 @@ public class JTModuleContainerUI extends ComponentUI
             component.addMouseListener(this);
             // JTModule module = (JTModule) component;
             DragSource dragSource = DragSource.getDefaultDragSource();
+            
+            DragGestureRecognizer dgr =
             dragSource.createDefaultDragGestureRecognizer(component, dndActions, this);
+            
         }
 
         protected void uninstallAtChild(Component component)
