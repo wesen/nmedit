@@ -26,6 +26,7 @@ import net.sf.nmedit.jpdl2.dom.PDLChoice;
 import net.sf.nmedit.jpdl2.dom.PDLConditional;
 import net.sf.nmedit.jpdl2.dom.PDLConstant;
 import net.sf.nmedit.jpdl2.dom.PDLDocument;
+import net.sf.nmedit.jpdl2.dom.PDLInstruction;
 import net.sf.nmedit.jpdl2.dom.PDLItem;
 import net.sf.nmedit.jpdl2.dom.PDLItemType;
 import net.sf.nmedit.jpdl2.dom.PDLMultiplicity;
@@ -111,6 +112,8 @@ public class PDLWriter
 
     public void append(PDLVariable variable)
     {
+        if (variable.getType() == PDLItemType.AnonymousVariable)
+            s.append("%");
         if (variable.getMultiplicity() != null)
             append(variable.getMultiplicity());
         s.append(variable.getName());
@@ -199,6 +202,7 @@ public class PDLWriter
             case Variable:
             case VariableList:
             case ImplicitVariable:
+            case AnonymousVariable:
                 append(item.asVariable());
                 break;
             case Optional:
@@ -222,6 +226,12 @@ public class PDLWriter
             case MessageId:
                 s.append("messageId(\""+item.asInstruction().getString()+"\") ");
                 break;
+            case StringDef:
+            {
+                PDLInstruction ins = item.asInstruction();
+                s.append(ins.getString()+":=\""+ins.getString2()+"\"");
+                break;
+            }
             default:
                 throw new InternalError("unsupported type: "+item.getType());
         }    
