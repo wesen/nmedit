@@ -248,9 +248,7 @@ public class JTModuleContainerUI extends ComponentUI
                 
             }
             
-            getModuleContainer().setPreferredSize(
-                getModuleContainer().computePreferredSize(null)        
-            );            
+            getModuleContainer().setPreferredSize(null);            
             dndInitialScrollLocation = null;
         }
         else
@@ -277,7 +275,10 @@ public class JTModuleContainerUI extends ComponentUI
             ) 
             {
                 getModuleContainer().setPreferredSize(new Dimension(r, b));
+                getModuleContainer().invalidate();
             }
+            
+            getModuleContainer().scrollRectToVisible(dndBox);
             
             //getModuleContainer().scrollRectToVisible(dndBox);
         }
@@ -602,7 +603,8 @@ public class JTModuleContainerUI extends ComponentUI
                 dtde.acceptDrop(DnDConstants.ACTION_COPY);
          
                 // compute dimensions of container
-                jtcUI.jtc.updateModuleContainerDimensions();
+                jtcUI.jtc.revalidate();
+                jtcUI.jtc.repaint();
                 dtde.dropComplete(true);
             } else if (dtde.isDataFlavorSupported(JTDragDrop.ModuleSelectionFlavor)
                     && dtde.isLocalTransfer())
@@ -701,8 +703,9 @@ public class JTModuleContainerUI extends ComponentUI
                     cable.updateEndPoints();
                     cm.update(cable);
                 }
-                
-                jtmc.updateModuleContainerDimensions();
+
+                jtmc.revalidate();
+                jtmc.repaint();
             }
             finally
             {

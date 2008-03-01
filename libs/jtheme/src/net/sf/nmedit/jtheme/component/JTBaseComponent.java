@@ -23,10 +23,7 @@
 package net.sf.nmedit.jtheme.component;
 
 import java.awt.Component;
-import java.awt.LayoutManager;
 import java.awt.Rectangle;
-import java.awt.event.ComponentEvent;
-import java.awt.event.HierarchyEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.JComponent;
@@ -50,52 +47,40 @@ import net.sf.nmedit.jtheme.JTContext;
  */
 public class JTBaseComponent extends JComponent
 {
+
+    protected static final int FLAG_INVALIDATE = 1;
+    protected static final int FLAG_VALIDATE = 2;
+    protected static final int FLAG_REVALIDATE = 3;
+    protected static final int FLAG_VALIDATE_TREE = 4;
+    protected static final int DEFAULT_FLAGS = 
+        FLAG_INVALIDATE;
+    
+    private int jtflags = DEFAULT_FLAGS;
+
+    protected void setJTFlag(int aFlag, boolean aValue) {
+        if(aValue) {
+            jtflags |= (1 << aFlag);
+        } else {
+            jtflags &= ~(1 << aFlag);
+        }
+    }
+    
+    protected boolean getJTFlag(int aFlag) {
+        int mask = (1 << aFlag);
+        return ((jtflags & mask) == mask);
+    }
     
     /**
      * 
      */
     private static final long serialVersionUID = 4189716019536899996L;
 
-//    private transient JTBaseComponent repaintOrigin;
-    
     // the context
     private JTContext context;
-    
-    private transient int roDX;
-    private transient int roDY;
 
     public JTBaseComponent(JTContext context)
     {
         this.context = context;
-        enableEvents(HierarchyEvent.HIERARCHY_EVENT_MASK | ComponentEvent.COMPONENT_MOVED);
-    }
-
-    protected void processComponentEvent(ComponentEvent e)
-    {
-        if (e.getID() == ComponentEvent.COMPONENT_MOVED)
-            clearRepaintOrigin();
-        
-        super.processComponentEvent(e);
-    }
-    
-    private void clearRepaintOrigin()
-    {/*
-        repaintOrigin = null;
-        for (int i=getComponentCount()-1;i>=0;i--)
-        {
-            Component c = getComponent(i);
-            if (c instanceof JTBaseComponent)
-            {
-                ((JTBaseComponent)c).clearRepaintOrigin();
-            }
-        }*/
-    }
-
-    protected void processHierarchyEvent(HierarchyEvent e) 
-    {
-        if ((e.getChangeFlags() & HierarchyEvent.PARENT_CHANGED)>0)
-            clearRepaintOrigin();
-        super.processHierarchyEvent(e);
     }
     
     public JTContext getContext()
@@ -103,45 +88,13 @@ public class JTBaseComponent extends JComponent
         return context;
     }
     
-    protected boolean isRepaintOrigin()
-    {
-        return false;
-    }
-    
-    /**
-     * Throws an {@link UnsupportedOperationException}
-     * This component does not support layout managers.
-     * @throws UnsupportedOperationException
-     */
-    public void setLayout(LayoutManager layout)
-    {
-        throw new UnsupportedOperationException();
-    }
-    
-    /**
-     * Returns null.
-     * This component does not support layout managers.
-     * @return returns null.
-     */
-    public LayoutManager getLayout()
-    {
-        return null;
-    }
-    
-    /**
-     * Optimization: calling this method does nothing.
-     */
-    public void doLayout() 
-    {
-        // no op
-    }
-    
     /**
      * Optimization: calling this method does nothing.
      */
     public void invalidate() 
     {
-        // no op
+        if (getJTFlag(FLAG_INVALIDATE))
+            super.invalidate();
     }
     
     /**
@@ -149,7 +102,8 @@ public class JTBaseComponent extends JComponent
      */
     public void validate() 
     {
-        // no op
+        if (getJTFlag(FLAG_VALIDATE))
+            super.validate();
     }
     
     /**
@@ -157,7 +111,8 @@ public class JTBaseComponent extends JComponent
      */
     public void revalidate() 
     {
-        // no op
+        if (getJTFlag(FLAG_REVALIDATE))
+            super.revalidate();
     }
     
     /**
@@ -165,7 +120,8 @@ public class JTBaseComponent extends JComponent
      */
     protected void validateTree() 
     {
-        // no op
+        if (getJTFlag(FLAG_VALIDATE_TREE))
+            super.validateTree();
     }
 
     /**
@@ -363,53 +319,5 @@ public class JTBaseComponent extends JComponent
     {
         repaint(0,r.x,r.y,r.width,r.height);
     }
-    /*
-    private JTBaseComponent findRepaintOrigin()
-    {
-        if (repaintOrigin == null)
-        {
-            roDX = getX();
-            roDY = getY();
-            Container c = getParent();
-            while (c != null && c instanceof JTBaseComponent)
-            {
-                JTBaseComponent b = (JTBaseComponent) c;
-                if (b.isRepaintOrigin())
-                {
-                    repaintOrigin = b;
-                    return b;
-                }
-                roDX += c.getX();
-                roDY += c.getY();
-                c = c.getParent();
-            }
-            roDX = roDY = 0;
-            repaintOrigin = this;
-        }
-        return repaintOrigin;
-    }
-    */
-    /**
-     * Sets the double buffer needs update flag.
-     * @see Component#repaint(long, int, int, int, int)
-     */
-    /*
-    public void repaint(long tm, int x, int y, int width, int height) 
-    {   
-        JTBaseComponent origin = findRepaintOrigin();
-        if (origin != this)
-        {/*
-            Container c = this;
-            while (c != null && c != origin)
-            {
-                x+=c.getX();
-                y+=c.getY();
-                c = c.getParent();
-            }*//*
-            origin.repaint(tm, roDX, roDY, width, height);
-        }
-        else
-            super.repaint(tm, x, y, width, height);
-    }*/
-
+   
 }

@@ -24,8 +24,11 @@ package net.sf.nmedit.jtheme.component;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Insets;
+import java.awt.LayoutManager2;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,7 +36,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
 import net.sf.nmedit.jpatch.PConnection;
@@ -52,7 +54,6 @@ import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.plaf.mcui.JTModuleContainerUI;
 import net.sf.nmedit.jtheme.store2.ModuleElement;
-import net.sf.nmedit.nmutils.swing.CopyCutPasteTarget;
 
 public class JTModuleContainer extends JTBaseComponent 
 {
@@ -71,7 +72,7 @@ public class JTModuleContainer extends JTBaseComponent
     //private CableOverlay overlay;
     
     private JTCableLayer cableLayer;
-
+    
     public JTModuleContainer(JTContext context, JTCableManager cableManager)
     {
         super(context);
@@ -90,14 +91,26 @@ public class JTModuleContainer extends JTBaseComponent
         cs = createContentSynchronisation();
         if (cs != null)
             cs.install();
+
+        setJTFlag(FLAG_INVALIDATE, true);
+        setJTFlag(FLAG_VALIDATE, true);
+        setJTFlag(FLAG_REVALIDATE, true);
+        setJTFlag(FLAG_VALIDATE_TREE, true);
+        
+        setLayout(new ModuleContainerLayout());
     }
 
+    public void remove(Component c)
+    {
+        super.remove(c);
+    }
+    /*
     public void setSize(Dimension size)
     {
     	cableLayer.setSize(size);
         super.setSize(size);
     }
-    
+
     public void setMinimumSize(Dimension minimumSize)
     {
         cableLayer.setMinimumSize(minimumSize);
@@ -108,7 +121,7 @@ public class JTModuleContainer extends JTBaseComponent
     {
         cableLayer.setMaximumSize(maximumSize);
         super.setMaximumSize(maximumSize);
-    }
+    }*/
 
     public void setBounds(Rectangle r)
     {
@@ -124,20 +137,6 @@ public class JTModuleContainer extends JTBaseComponent
     protected boolean isRepaintOrigin()
     {
         return true;
-    }
-    
-    public void updateModuleContainerDimensions()
-    {
-        SwingUtilities.invokeLater( new Runnable() {
-
-            long time = System.currentTimeMillis();
-            
-            public void run()
-            {
-                if (time>lastModuleContainerDimensionUpdate)
-                    updateModuleContainerDimensionsNow();
-                
-            }} );
     }
     
     private Set<JTModule> selectionSet = new HashSet<JTModule>();
@@ -210,23 +209,8 @@ public class JTModuleContainer extends JTBaseComponent
     	selectionSet.clear();
     }
 
-    private long lastModuleContainerDimensionUpdate = 0;
-
     private JTCableManager cableManager;
 
-    private void updateModuleContainerDimensionsNow()
-    {
-        lastModuleContainerDimensionUpdate = System.currentTimeMillis();
-        
-        Dimension d = computePreferredSize(null);
-        Dimension parentSize = getParent().getSize();
-        setPreferredSize(d);
-        d.width = Math.max(parentSize.width, d.width);
-        d.height = Math.max(parentSize.height, d.height);
-        setSize(d);   
-        repaint();
-    }
-    
 /*
     public Component findComponentAt(int x, int y) { 
         if (!(contains(x, y) && isVisible() && isEnabled())) {
@@ -349,6 +333,7 @@ public class JTModuleContainer extends JTBaseComponent
 
         public void removeUI(PModule module)
         {
+            boolean removed = false;
             Component[] components = JTModuleContainer.this.getComponents();
 
             for (int i=components.length-1;i>=0;i--)
@@ -359,17 +344,18 @@ public class JTModuleContainer extends JTBaseComponent
                     JTModule mui = (JTModule) c;
                     if (mui.getModule() == module)
                     {
-                        Rectangle bounds = mui.getBounds();
                         remove(mui);
-                        // TODO revalidate/repaint
-                        repaint(bounds);
-                        
+                        removed = true;
                         break;
                     }
                 }
             }
-
-            updateModuleContainerDimensions();
+            
+            if (removed)
+            {
+                JTModuleContainer.this.revalidate();
+                JTModuleContainer.this.repaint();
+            }
         }
 
         public void connectionAdded(PConnectionEvent e)
@@ -622,4 +608,96 @@ public class JTModuleContainer extends JTBaseComponent
         }
         return null;
     }
+    
+    private class ModuleContainerLayout implements LayoutManager2
+    {
+        
+        private boolean valid = false;
+        private Dimension cachedSize = new Dimension();
+
+        public void invalidateLayout(Container target)
+        {
+            valid = false;
+        }
+
+        public void layoutContainer(Container parent)
+        {
+            JTModuleContainer mc = JTModuleContainer.this;
+            // only layout cable layer
+            JTCableLayer cl = mc.cableLayer;
+            if (cl != null)
+            {
+                synchronized(mc.getTreeLock())
+                {
+                    Insets insets = mc.getInsets();
+                    cl.setBounds(0, 0, mc.getWidth()-insets.left-insets.right,
+                            mc.getHeight()-insets.top-insets.bottom);
+                }
+            }
+        }
+
+        public Dimension minimumLayoutSize(Container parent)
+        {
+            if (valid) return new Dimension(cachedSize);
+
+            Dimension dim = new Dimension(0, 0);
+            JTModuleContainer mc = JTModuleContainer.this;
+            synchronized (mc.getTreeLock())
+            {
+                Insets insets = mc.getInsets();
+                dim.width += insets.left + insets.right;
+                dim.height += insets.top + insets.bottom;
+                for (int i=mc.getComponentCount()-1;i>=0;i--)
+                {
+                    Component c = mc.getComponent(i);
+                    if (mc.cableLayer == c)
+                        continue;
+
+                    dim.width = Math.max(dim.width, c.getX()+c.getWidth());
+                    dim.height = Math.max(dim.height, c.getY()+c.getHeight());
+                }
+            }
+            
+            cachedSize.setSize(dim);
+            valid = true;
+            return dim;
+        }
+
+        public Dimension maximumLayoutSize(Container target)
+        {
+            return new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        }
+
+        public Dimension preferredLayoutSize(Container parent)
+        {
+            return minimumLayoutSize(parent);
+        }
+
+        public float getLayoutAlignmentX(Container target)
+        {
+            return 0;
+        }
+
+        public float getLayoutAlignmentY(Container target)
+        {
+            return 0;
+        }
+
+        public void addLayoutComponent(String name, Component comp)
+        {
+            // no op
+        }
+
+        public void addLayoutComponent(Component comp, Object constraints)
+        {
+            // no op
+        }
+
+        public void removeLayoutComponent(Component comp)
+        {
+            // no op
+        }
+        
+    }
+    
 }

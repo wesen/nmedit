@@ -21,7 +21,6 @@ package net.sf.nmedit.jtheme.clavia.nordmodular;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -43,6 +42,7 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -267,7 +267,8 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
 
         private void removeModule()
         {
-            for (Component c : module.getParent().getComponents())
+            JComponent container = (JComponent) module.getParent();
+            for (Component c : container.getComponents())
             {
                 if (c instanceof JTModule)
                 {
@@ -276,18 +277,18 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
                     if (m == module)
                     {
                         module = null;
-                        removeModule(m);
+                        removeModule(m, false);
                     }
                     else if (m.isSelected())
-                        removeModule(m);
+                        removeModule(m, false);
                 }
             }
             
             if (module != null)
-                removeModule(module);
+                removeModule(module, false);
         }
         
-        private static void removeModule(JTModule m)
+        private static void removeModule(JTModule m, boolean validate)
         {
             PModule nm = m.getModule();
             
@@ -720,9 +721,6 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
             jtmodule.setStaticLayerBackingStore(image);*/
         }
         
-        cont.setPreferredSize(new Dimension(width, height));
-        cont.setSize(new Dimension(width, height));
-        
         JTCableManager cm = cont.getCableManager();
         
         for (PConnection c: va.getConnectionManager())
@@ -737,6 +735,8 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
                 cm.add(cable);
             }
         }
+        
+        cont.revalidate();
     }
 
     public void dispose()
