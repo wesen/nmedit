@@ -58,6 +58,7 @@ public class FilterF extends Curve {
 	
 	private void update()
 	{		
+        setModified(true);
 		points[1].setLocation(-0.1f,resAmplitude);
 		points[2].setLocation(-0.2f+cutOff,resAmplitude);
 		

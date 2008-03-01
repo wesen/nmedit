@@ -29,6 +29,7 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 
@@ -364,7 +365,6 @@ public class JTComponent extends JTBaseComponent
      */
     protected void paintComponent(Graphics g)
     {
-
         paintComponentWithoutDoubleBuffer((Graphics2D)g);
         /*
         
@@ -394,6 +394,36 @@ public class JTComponent extends JTBaseComponent
         }
         doubleBuffer.flip(g);
         */
+    }
+
+    // double buffer 
+    private transient DoubleBuffer db;
+    
+    protected void setDoubleBufferNeedsUpdate()
+    {
+        if (db != null) db.needsUpdate = true;
+    }
+
+    protected void paintComponentWithDoubleBuffer(Graphics g)
+    {
+        if (db == null) db = new DoubleBuffer(false);
+        db.prepareNonVolatile(this);
+        if (db.needsUpdate)
+        {
+            Graphics2D bufferG2 = db.createOffscreenGraphics();
+            try
+            {
+                bufferG2.setFont(getFont());
+                bufferG2.setColor(getBackground());
+                paintComponentWithoutDoubleBuffer(bufferG2);
+            }
+            finally
+            {
+                bufferG2.dispose();
+            }
+            db.needsUpdate = false;
+        }
+        db.flip(g);
     }
     
     /**
@@ -520,6 +550,13 @@ public class JTComponent extends JTBaseComponent
         boolean needsUpdate;
         int w;
         int h;
+        private boolean containsBorder;
+        private Insets insets = new Insets(0,0,0,0);
+        
+        public DoubleBuffer(boolean containsBorder)
+        {
+            this.containsBorder = containsBorder;
+        }
 
         public void prepareNonVolatile(JTComponent c)
         {
@@ -536,7 +573,7 @@ public class JTComponent extends JTBaseComponent
                 flush();
                 image = createNonVolatileImage(c, w, h);
             }
-            else if (needsUpdate && (!c.isOpaque()))
+            else if (needsUpdate && (containsBorder && !c.isOpaque()))
             {
                 erase(image, w, h);
             }
@@ -570,12 +607,12 @@ public class JTComponent extends JTBaseComponent
                 .getDefaultScreenDevice()
                 .getDefaultConfiguration();
             }
-            
+            insets = c.getInsets(insets);
             boolean opaque = c.isOpaque();
-            if (opaque)
+            if (containsBorder)
             {
                 Border b = c.getBorder();
-                if (b != null) opaque = b.isBorderOpaque();
+                if (b != null) opaque &= b.isBorderOpaque();
             }
             
             // Create a non-volatile image that can be optimally blitted.
@@ -596,7 +633,16 @@ public class JTComponent extends JTBaseComponent
 
         public void flip( Graphics g )
         {
-            g.drawImage(image, 0, 0, w, h, 0, 0, w, h, null);
+            int t = insets.top;
+            int b = insets.bottom;
+            int l = insets.left;
+            int r = insets.right;
+            
+            int dx2 = Math.max(0, w-r-l);
+            int dy2 = Math.max(0, h-b-t);
+            
+            g.drawImage(image, l, t, l+dx2, t+dy2, 
+                    l, t, l+dx2, t+dy2, null);
         }
         
     }

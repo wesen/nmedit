@@ -30,8 +30,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Rectangle;
-import java.awt.font.LineMetrics;
-import java.awt.geom.Rectangle2D;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;

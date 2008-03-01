@@ -19,6 +19,7 @@
 
 package net.sf.nmedit.jtheme.clavia.nordmodular;
 
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
@@ -51,6 +52,17 @@ public class JTCompressorDisplay extends JTDisplay implements ChangeListener
         super(context);
         
         compressor = new Compressor();
+    }
+    
+    protected void paintComponent(Graphics g)
+    {
+        if (compressor.isModified())
+        {
+            compressor.setModified(false);
+            setDoubleBufferNeedsUpdate();
+        }
+        
+        super.paintComponentWithDoubleBuffer(g);
     }
 
     protected void paintDynamicLayer(Graphics2D g)

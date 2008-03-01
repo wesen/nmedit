@@ -57,7 +57,7 @@ public class Phaser extends Curve{
 
 	private void update_peaks(){
 		//points[2].setCurve_type(EXP);
-		
+		setModified(true);
 		for (int i = 0; i < nbPeaks ; i++){
 			points[i*2+2].setLocation((1-spread)/2 + spread*i*2/(nbPeaks*2f), feedbackEven);
 			points[i*2+2].setPoint_type(PathIterator.SEG_CUBICTO);

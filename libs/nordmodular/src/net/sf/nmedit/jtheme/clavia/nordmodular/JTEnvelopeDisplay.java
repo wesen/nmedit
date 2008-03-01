@@ -19,6 +19,7 @@
 
 package net.sf.nmedit.jtheme.clavia.nordmodular;
 
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.RenderingHints;
@@ -71,6 +72,7 @@ public class JTEnvelopeDisplay extends JTDisplay implements ChangeListener
     private JTControlAdapter sustainAdapter;
     private JTControlAdapter releaseAdapter;
     private JTControlAdapter inverseAdapter;
+    private boolean modified = true;
 
     public JTEnvelopeDisplay(JTContext context)
     {
@@ -81,6 +83,22 @@ public class JTEnvelopeDisplay extends JTDisplay implements ChangeListener
         setSustain(0.5);
         setRelease(1);
         configure();
+    }
+    
+    protected void setModified(boolean modified)
+    {
+        this.modified = modified;
+    }
+    
+    protected void paintComponent(Graphics g)
+    {
+        if (modified)
+        {
+            modified = false;
+            setDoubleBufferNeedsUpdate();
+        }
+        
+        super.paintComponentWithDoubleBuffer(g);
     }
     
     protected void configure()
@@ -357,6 +375,7 @@ public class JTEnvelopeDisplay extends JTDisplay implements ChangeListener
         }
         if (attackType!=t)
         {
+            setModified(true);
             attackType=t;
             repaint();
         }
@@ -366,6 +385,7 @@ public class JTEnvelopeDisplay extends JTDisplay implements ChangeListener
     {
         if (inverse!=e)
         {
+            setModified(true);
             this.inverse = e;
             repaint();
         }
@@ -385,6 +405,7 @@ public class JTEnvelopeDisplay extends JTDisplay implements ChangeListener
     {
         if (e!=srEnabled)
         {
+            setModified(true);
             srEnabled = e;
             repaint();
         }
@@ -399,6 +420,7 @@ public class JTEnvelopeDisplay extends JTDisplay implements ChangeListener
     {
         if (e!=hEnabled)
         {
+            setModified(true);
             hEnabled = e;
             repaint();
         }
@@ -542,6 +564,7 @@ public class JTEnvelopeDisplay extends JTDisplay implements ChangeListener
         v = bounded(v);
         if (va!=v)
         {
+            setModified(true);
             this.va = v;
             repaint();
         }
@@ -552,6 +575,7 @@ public class JTEnvelopeDisplay extends JTDisplay implements ChangeListener
         v = bounded(v);
         if (vd!=v)
         {
+            setModified(true);
             this.vd = v;
             repaint();
         }
@@ -562,6 +586,7 @@ public class JTEnvelopeDisplay extends JTDisplay implements ChangeListener
         v = bounded(v);
         if (vh!=v)
         {
+            setModified(true);
             this.vh = v;
             repaint();
         }
@@ -572,6 +597,7 @@ public class JTEnvelopeDisplay extends JTDisplay implements ChangeListener
         v = bounded(v);
         if (vs!=v)
         {
+            setModified(true);
             this.vs = v;
             repaint();
         }
@@ -582,6 +608,7 @@ public class JTEnvelopeDisplay extends JTDisplay implements ChangeListener
         v = bounded(v);
         if (vr!=v)
         {
+            setModified(true);
             this.vr = v;
             repaint();
         }

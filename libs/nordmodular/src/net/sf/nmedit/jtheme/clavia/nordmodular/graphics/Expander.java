@@ -36,7 +36,7 @@ public class Expander extends Curve {
 
 
 	private void update(){
-		
+		setModified(true);
 		if (gate<= threshold) {
 			points[0].setLocation(gate,100000.1f);
 			//y coordinate of the intersection of between the vertical

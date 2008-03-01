@@ -20,6 +20,7 @@
 package net.sf.nmedit.jtheme.clavia.nordmodular;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
@@ -56,7 +57,23 @@ public class WaveWrapDisp extends JTDisplay implements ChangeListener
     private int gh = 0;
     private boolean flagForceUpdate = true;
     private GeneralPath gp = new GeneralPath();
+    private boolean modified = true;
 
+    protected void setModified(boolean modified)
+    {
+        this.modified = modified;
+    }
+    protected void paintComponent(Graphics g)
+    {
+        if (modified)
+        {
+            modified = false;
+            setDoubleBufferNeedsUpdate();
+        }
+        
+        super.paintComponentWithDoubleBuffer(g);
+    }
+    
     protected void paintStaticLayer(Graphics2D g)
     {
         super.paintStaticLayer(g);
@@ -124,9 +141,15 @@ public class WaveWrapDisp extends JTDisplay implements ChangeListener
 
     public void setWaveWrap( double v )
     {
-        this.vwrap = bounded(v);
-        flagForceUpdate = true;
-        repaint();
+        double oldValue = this.vwrap;
+        double newValue = bounded(v);
+        if (oldValue != newValue)
+        {
+            this.vwrap = newValue;
+            flagForceUpdate = true;
+            setModified(true);
+            repaint();
+        }
     }
     
     private void updateGraph()

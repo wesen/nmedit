@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */package net.sf.nmedit.jtheme.clavia.nordmodular;
 
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.RenderingHints;
@@ -51,6 +52,17 @@ public class JTFilterEDisplay extends JTDisplay implements ChangeListener
         super(context);
         
         filterE = new FilterE();        
+    }
+
+    protected void paintComponent(Graphics g)
+    {
+        if (filterE.isModified())
+        {
+            filterE.setModified(false);
+            setDoubleBufferNeedsUpdate();
+        }
+        
+        super.paintComponentWithDoubleBuffer(g);
     }
 
     protected void paintDynamicLayer(Graphics2D g)

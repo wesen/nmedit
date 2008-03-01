@@ -40,6 +40,7 @@ public class Overdrive extends Curve {
 	}
 	
 	private void update(){
+        setModified(true);
 		points[1].setLocation(.45f*overdrive, 1f);
 		
 		
