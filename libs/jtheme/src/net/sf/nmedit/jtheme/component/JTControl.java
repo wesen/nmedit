@@ -115,6 +115,7 @@ public abstract class JTControl extends JTComponent implements ChangeListener
     
     protected void fireStateChanged()
     {
+        setDoubleBufferNeedsUpdate();
         repaint();
    
         // Guaranteed to return a non-null array
