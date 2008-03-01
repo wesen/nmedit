@@ -25,6 +25,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
 import javax.swing.SwingUtilities;
+import javax.swing.event.MenuDragMouseEvent;
 import javax.swing.event.MouseInputListener;
 
 public class RetargetMouseEventSupport implements MouseInputListener, MouseWheelListener
@@ -168,16 +169,7 @@ public class RetargetMouseEventSupport implements MouseInputListener, MouseWheel
         if (source == null)
             source = e.getComponent();
         Point p = SwingUtilities.convertPoint(source, e.getX(), e.getY(), target);
-        
-        if (e instanceof MouseEvent)
-        {
-            MouseEvent ev = new MouseEvent(target, id, e.getWhen(),
-                                           e.getModifiers() | e.getModifiersEx(),
-                                           p.x, p.y, e.getClickCount(),
-                                           e.isPopupTrigger());
-            target.dispatchEvent(ev);
-        }
-        else if (e instanceof MouseWheelEvent)
+        if (e instanceof MouseWheelEvent)
         {
             MouseWheelEvent w = (MouseWheelEvent) e;
             MouseEvent ev = new MouseWheelEvent(target, id, e.getWhen(),
@@ -187,6 +179,17 @@ public class RetargetMouseEventSupport implements MouseInputListener, MouseWheel
                     w.getScrollType(),
                     w.getScrollAmount(),
                     w.getWheelRotation());
+            target.dispatchEvent(ev);
+        }
+        else if (e instanceof MenuDragMouseEvent) {
+            // no op
+        }
+        else if (e instanceof MouseEvent)
+        {
+            MouseEvent ev = new MouseEvent(target, id, e.getWhen(),
+                                           e.getModifiers() | e.getModifiersEx(),
+                                           p.x, p.y, e.getClickCount(),
+                                           e.isPopupTrigger());
             target.dispatchEvent(ev);
         }
     }
