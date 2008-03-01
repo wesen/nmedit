@@ -168,8 +168,13 @@ public class PDLVariableImpl extends PDLItemImpl implements PDLVariable
             return 0;
         else if (type == PDLItemType.AnonymousVariable)
             return 0;
-        else
+        else if (type == PDLItemType.Variable)
             return 1;
+        else
+        {
+            PDLUtils.unknownItemTypeError(this);
+            return -1;
+        }
     }
 
     public void setTerminal(Integer terminal)
