@@ -60,6 +60,9 @@ public class JTModule extends JTComponent
         enableEvents(MouseEvent.COMPONENT_EVENT_MASK);
         setFocusable(true);
         setOpaque(true);
+        setJTFlag(FLAG_INVALIDATE, true);
+        setJTFlag(FLAG_VALIDATE, true);
+        setJTFlag(FLAG_REVALIDATE, true);
     }
     
     protected void processEvent(AWTEvent e)

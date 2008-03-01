@@ -875,7 +875,7 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
     }
     
     public void moduleMoved(PModuleEvent e)
-    {
+    {/*
         try
         {
             JTModuleContainer jtc = (JTModuleContainer) module.getParent();
@@ -887,7 +887,7 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         {
             // ignore
         }
-        
+       */ 
         /*
         Module m = e.getModule();
         History h = m.getPatch().getHistory();
