@@ -31,8 +31,7 @@ public class FilterE extends Curve {
 	
 	int slope = 1; // 0 = 12 db, 1 = 24 db
 	int gainControl = 1;
-
-
+    
 	public FilterE(){
 		super(7);
 		
@@ -60,6 +59,7 @@ public class FilterE extends Curve {
 	
 	private void update()
 	{
+        setModified(true);
 		switch(type){
 		//high pass
 			case 2:

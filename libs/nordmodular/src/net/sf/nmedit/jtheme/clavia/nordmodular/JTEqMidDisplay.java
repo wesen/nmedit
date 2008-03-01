@@ -19,6 +19,7 @@
 package net.sf.nmedit.jtheme.clavia.nordmodular;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.RenderingHints;
@@ -51,6 +52,17 @@ public class JTEqMidDisplay extends JTDisplay implements ChangeListener
         super(context);
         
         equalizerMid = new EqualizerMid();
+    }
+    
+    protected void paintComponent(Graphics g)
+    {
+        if (equalizerMid.isModified())
+        {
+            equalizerMid.setModified(false);
+            setDoubleBufferNeedsUpdate();
+        }
+        
+        super.paintComponentWithDoubleBuffer(g);
     }
 
     // do not use field directly, instead use getGraphDisplayLineColor()

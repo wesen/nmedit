@@ -19,6 +19,7 @@
 
 package net.sf.nmedit.jtheme.clavia.nordmodular;
 
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
@@ -51,6 +52,17 @@ public class JTExpanderDisplay extends JTDisplay implements ChangeListener
         super(context);
         
         expander = new Expander();
+    }
+    
+    protected void paintComponent(Graphics g)
+    {
+        if (expander.isModified())
+        {
+            expander.setModified(false);
+            setDoubleBufferNeedsUpdate();
+        }
+        
+        super.paintComponentWithDoubleBuffer(g);
     }
 
     protected void paintDynamicLayer(Graphics2D g)

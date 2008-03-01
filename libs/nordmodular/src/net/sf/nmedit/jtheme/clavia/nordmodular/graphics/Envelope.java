@@ -34,6 +34,17 @@ import java.awt.geom.Rectangle2D;
 
 public class Envelope implements Shape
 {
+    private boolean modified = true;
+    
+    public void setModified(boolean modified)
+    {
+        this.modified = modified;
+    }
+
+    public boolean isModified()
+    {
+        return modified;
+    }
 
     public static class ADEnvelope extends Envelope
     {
@@ -303,6 +314,7 @@ public class Envelope implements Shape
     public void setFillEnabled(boolean enable)
     {
         this.fill = enable;
+        setModified(true);
     }
     
     public boolean isFillEnabled()
@@ -376,6 +388,7 @@ public class Envelope implements Shape
      *  setTime(pointIndex, getTime(pointIndex));*/
     public void setTime(int segIndex, int t)
     {
+        setModified(true);
     	//System.out.println(segIndex +"=index" + points.length );
     	checkSegIndex(segIndex, points.length-1);
     	points[segIndex].setTime(t);
@@ -391,10 +404,12 @@ public class Envelope implements Shape
     }
     
     public void setX(int pointIndex, float t){
+        setModified(true);
     	points[pointIndex].setX(t/(nbSegment));
     }
     
     public float getX(int pointIndex){
+        setModified(true);
     	return points[pointIndex].getX();
     }
     
@@ -406,6 +421,7 @@ public class Envelope implements Shape
     
     public void setCurveType(int segIndex, int type)
     {
+        setModified(true);
         checkSegIndex(segIndex, points.length-1);
         
        // if (type>=0 && type<3)
@@ -425,6 +441,7 @@ public class Envelope implements Shape
     
     public void setLevel(int segIndex, int weight)
     {
+        setModified(true);
         checkSegIndex(segIndex, points.length-1);
         points[segIndex].setWeight(checkBounds(weight));
         points[segIndex].setY(weight/(float)RANGE_MAX);
@@ -443,6 +460,7 @@ public class Envelope implements Shape
     
     public void setIsInverse(boolean inv)
     {
+        setModified(true);
         this.inverse = inv;
         for(int i = 0; i < nbSegment; i++){
         	setLevel(i, RANGE_MAX - getLevel(i));

@@ -35,6 +35,18 @@ public class Curve implements Shape {
 	protected Point points[];
 	
     protected Rectangle bounds = new Rectangle(0,0,1,1);
+
+    private boolean modified = true;
+    
+    public void setModified(boolean modified)
+    {
+        this.modified = modified;
+    }
+
+    public boolean isModified()
+    {
+        return modified;
+    }
 	
     public Curve(int numPts) {
     	points = new Point[numPts];

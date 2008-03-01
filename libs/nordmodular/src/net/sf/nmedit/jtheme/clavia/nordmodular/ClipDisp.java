@@ -20,6 +20,7 @@
 package net.sf.nmedit.jtheme.clavia.nordmodular;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import javax.swing.event.ChangeEvent;
@@ -46,10 +47,27 @@ public class ClipDisp extends JTDisplay implements ChangeListener
 
     private double vclip = 1; // 0 - 1
     private boolean vsym = false; //|log
+    private boolean modified = true;
 
     public ClipDisp(JTContext context)
     {
         super(context);
+    }
+    
+    protected void paintComponent(Graphics g)
+    {
+        if (modified)
+        {
+            modified = false;
+            setDoubleBufferNeedsUpdate();
+        }
+        
+        super.paintComponentWithDoubleBuffer(g);
+    }
+    
+    protected void setModified(boolean modified)
+    {
+        this.modified = true;
     }
 
     public void paintDynamicLayer(Graphics2D g)
@@ -87,14 +105,24 @@ public class ClipDisp extends JTDisplay implements ChangeListener
     
     public void setClip(float v)
     {
-        this.vclip = bounded(v);
-        repaint();
+        float newValue = bounded(v); 
+        if (newValue != vclip)
+        {
+            this.vclip = newValue;
+            setModified(true);
+            repaint();
+        }
     }
     
     public void setSymmetric(boolean v)
     {
-        this.vsym = v;
-        repaint();
+        boolean newValue = v;
+        if (vsym != newValue)
+        {
+            this.vsym = v;
+            setModified(true);
+            repaint();
+        }
     }
 
     protected float bounded(float v)

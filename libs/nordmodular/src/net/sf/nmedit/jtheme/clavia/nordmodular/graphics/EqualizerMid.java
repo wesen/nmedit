@@ -52,6 +52,7 @@ public class EqualizerMid extends Curve {
 	}
 	
 	public void setGain (float gain){
+        setModified(true);
 		points[3].setY(gain);
 	}
 	
@@ -60,6 +61,7 @@ public class EqualizerMid extends Curve {
 	}
 	
 	public void setBW( float bw){
+        setModified(true);
 		float  f = getFreq();
 		points[2].setX(f - bw/2-0.05f);
 		points[4].setX(f + bw/2+0.05f);
@@ -71,6 +73,7 @@ public class EqualizerMid extends Curve {
 	}
 	
 	public void setFreq( float f){
+        setModified(true);
 		float bw = getBW();
 		points[2].setX(f - bw/2);
 		points[4].setX(f + bw/2);

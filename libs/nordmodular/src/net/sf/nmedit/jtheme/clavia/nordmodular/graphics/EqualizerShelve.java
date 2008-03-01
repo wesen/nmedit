@@ -38,6 +38,7 @@ public class EqualizerShelve extends Curve {
 	}
 	
 	public void  setGain(float gain){
+        setModified(true);
 		points[1].setY(1 - gain);
 		points[2].setY(1 - gain);
 	}
@@ -53,6 +54,7 @@ public class EqualizerShelve extends Curve {
 	
 	public void setFreq(float f)
 	{
+        setModified(true);
 		points[2].setX(f*0.7f);
 		points[3].setX((f+0.2f)*.7f);
 	}

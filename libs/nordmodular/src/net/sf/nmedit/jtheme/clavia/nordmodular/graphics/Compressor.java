@@ -34,7 +34,7 @@ public class Compressor extends Curve {
 	}
 	
 	private void update(){
-		
+		setModified(true);
 		if(threshold <= refLevel){			
 			
 			//refLevel point statifies equation: 1-refLevel= -ratio*refLevel +b

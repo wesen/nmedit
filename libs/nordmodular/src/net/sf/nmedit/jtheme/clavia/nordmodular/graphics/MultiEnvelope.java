@@ -61,6 +61,7 @@ public class MultiEnvelope extends Envelope{
      * This function update the curve type when the level of a point is changed
      */    
     private void update_curve(){
+        setModified(true);
     	for (int i = 1; i <= nbSegment; i++){
     		// we must iterate over ALL segments, so we use the getLevel method 
     		// of the Enveloppe class and not the method of the multiEnvClass
