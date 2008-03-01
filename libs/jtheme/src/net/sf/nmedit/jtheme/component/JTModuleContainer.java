@@ -154,15 +154,16 @@ public class JTModuleContainer extends JTBaseComponent
 
     public void selectOnly(JTModule module)
     {
-    	if (!selectionSet.isEmpty())
-    	{
-    		for (JTModule dif : selectionSet.toArray(new JTModule[selectionSet.size()]))
-    			if (dif != module)
-    				removeSelection(dif);
-    	}
-
-    	if (selectionSet.isEmpty())
-    		addSelection(module);
+        if (!isOnlyThisSelected(module))
+        {
+            if (!selectionSet.isEmpty())
+            {
+                for (JTModule m: selectionSet)
+                    m.setSelected(false);
+                selectionSet.clear();
+            }
+            addSelection(module);
+        }
     }
 
     public void addSelection(JTModule module)

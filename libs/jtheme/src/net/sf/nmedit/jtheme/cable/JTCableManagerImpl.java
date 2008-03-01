@@ -39,6 +39,7 @@ public class JTCableManagerImpl implements JTCableManager, Runnable
     private CableRenderer cableRenderer;
     private JComponent view;
     private JComponent owner;
+    private int autorepaintDisabledCounter = 0;
     
     public JTCableManagerImpl(CableRenderer cableRenderer)
     {
@@ -137,9 +138,15 @@ public class JTCableManagerImpl implements JTCableManager, Runnable
     {
         return cables.size();
     }
-
+    
     public void paintCables(Graphics2D g, CableRenderer cableRenderer)
     {
+        Rectangle clip = g.getClipBounds();
+        if (clip != null && (!dirty.isEmpty()) && clip.contains(dirty))
+        {
+            dirty.setBounds(0, 0, 0, 0); // ensure bounds are cleared
+        }
+        
   /*      Rectangle clip = g.getClipBounds();
 
         float innerClipSq = 0;
@@ -303,8 +310,18 @@ public class JTCableManagerImpl implements JTCableManager, Runnable
 
     private void repaintIfDirty()
     {
+        if (!isAutoRepaintEnabled()) return;
         if (!dirty.isEmpty())
-            EventQueue.invokeLater(this); // invokes this.run()
+        {
+            if (EventQueue.isDispatchThread())
+            {
+                run();
+            }
+            else
+            {
+                EventQueue.invokeLater(this); // invokes this.run()
+            }
+        }
     }
 
     public void run()
@@ -363,6 +380,26 @@ public class JTCableManagerImpl implements JTCableManager, Runnable
             }
             
         };
+    }
+
+    public void clearAutoRepaintDisabled()
+    {
+        if (autorepaintDisabledCounter>0)
+        {
+            autorepaintDisabledCounter--;
+            if (isAutoRepaintEnabled())
+                repaintIfDirty();
+        }
+    }
+
+    public boolean isAutoRepaintEnabled()
+    {
+        return autorepaintDisabledCounter<=0;
+    }
+
+    public void setAutoRepaintDisabled()
+    {
+        autorepaintDisabledCounter++;
     }
     
 }

@@ -456,7 +456,7 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
 
         public void componentMoved(ComponentEvent e)
         {
-            ((JTModule)e.getComponent()).getUI().updateCables();
+            //((JTModule)e.getComponent()).getUI().updateCables();
 
             /*  update cables (done in module container ui)
             if (!(e.getComponent() instanceof JTModule))
@@ -879,6 +879,7 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
             JTModuleContainer jtc = (JTModuleContainer) module.getParent();
             if (jtc != null)
                 jtc.updateModuleContainerDimensions();
+            
         }
         catch (ClassCastException cce)
         {

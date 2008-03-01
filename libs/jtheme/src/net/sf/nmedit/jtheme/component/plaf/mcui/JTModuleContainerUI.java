@@ -24,7 +24,6 @@ package net.sf.nmedit.jtheme.component.plaf.mcui;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -32,7 +31,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
@@ -55,6 +53,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -70,6 +69,8 @@ import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jtheme.JTContext;
+import net.sf.nmedit.jtheme.cable.Cable;
+import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.plaf.SelectionPainter;
@@ -576,10 +577,19 @@ public class JTModuleContainerUI extends ComponentUI
                 // causes a NullPointerException in the next line
                 PModuleContainer parent = module.getParentComponent();
                 if (parent != null) {
-                	MoveOperation move = parent.createMoveOperation();
-                	move.setScreenOffset(0, 0);
-                	move.add(module);
-                	move.move();
+                    JTCableManager cm = jtcUI.jtc.getCableManager();
+                    try
+                    {
+                        cm.setAutoRepaintDisabled();
+                    	MoveOperation move = parent.createMoveOperation();
+                    	move.setScreenOffset(0, 0);
+                    	move.add(module);
+                    	move.move();
+                    }
+                    finally
+                    {
+                        cm.clearAutoRepaintDisabled();
+                    }
                 } else {
                 	// XXX concurrency problems probably ?!
                 	throw new RuntimeException("Drop problem on illegal modules: for example 2 midi globals");
@@ -648,6 +658,7 @@ public class JTModuleContainerUI extends ComponentUI
             p.y = p.y-o.y;
             
             JTModuleContainer jtmc = getModuleContainer();
+            JTCableManager cm = jtmc.getCableManager();
             PModuleContainer mc = jtmc.getModuleContainer();
             
             for (JTModule jtmodule: tdata.getModules()) {
@@ -656,27 +667,43 @@ public class JTModuleContainerUI extends ComponentUI
             
             op.setScreenOffset(p.x, p.y);
             
-            op.move();
-            
-            Collection<? extends PModule> moved = op.getMovedModules();
-                        
-            int maxx = 0;
-            int maxy = 0;
-            
-            for (JTModule jtmodule: NmSwingUtilities.getChildren(JTModule.class, jtmc))
+            try
             {
-                PModule module = jtmodule.getModule();
-                if (moved.contains(module))
+                cm.setAutoRepaintDisabled();
+                op.move();
+                
+                Collection<? extends PModule> moved = op.getMovedModules();
+                            
+                int maxx = 0;
+                int maxy = 0;
+                
+                for (JTModule jtmodule: NmSwingUtilities.getChildren(JTModule.class, jtmc))
                 {
-                    jtmodule.setLocation(module.getScreenLocation());
-
-                    maxx = Math.max(jtmodule.getX(), maxx)+jtmodule.getWidth();
-                    maxy = Math.max(jtmodule.getY(), maxy)+jtmodule.getHeight();
+                    PModule module = jtmodule.getModule();
+                    if (moved.contains(module))
+                    {
+                        jtmodule.setLocation(module.getScreenLocation());
+    
+                        maxx = Math.max(jtmodule.getX(), maxx)+jtmodule.getWidth();
+                        maxy = Math.max(jtmodule.getY(), maxy)+jtmodule.getHeight();
+                    }
                 }
                 
+                Collection<Cable> cables = new ArrayList<Cable>(20); 
+                cm.getCables(cables, moved);
+                for (Cable cable: cables)
+                {
+                    cm.update(cable);
+                    cable.updateEndPoints();
+                    cm.update(cable);
+                }
+                
+                jtmc.updateModuleContainerDimensions();
             }
-            
-            jtmc.updateModuleContainerDimensions();
+            finally
+            {
+                cm.clearAutoRepaintDisabled();
+            }
         }
 
         public void dropActionChanged(DropTargetDragEvent dtde)
