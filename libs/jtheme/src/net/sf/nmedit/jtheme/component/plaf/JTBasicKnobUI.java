@@ -124,6 +124,23 @@ public class JTBasicKnobUI extends JTBasicControlUI
         return diameter(c.getWidth(), c.getHeight());
     }
     
+    public boolean contains(JComponent c, int x, int y)
+    {
+        if (super.contains(c, x, y)) // check rectangular region first
+        {
+            int w = c.getWidth();
+            int h = c.getHeight();
+            double r = diameter(w, h)/2d;
+            float mx = w/2f;
+            float my = h/2f; 
+
+            float dx = x-mx;
+            float dy = y-my;
+            return Math.sqrt(dx*dx+dy*dy)<=r;
+        }
+        return false;
+    }
+    
     protected void paintKnobBackground( Graphics2D g, JTControl control )
     {
         int size = diameter(control);
