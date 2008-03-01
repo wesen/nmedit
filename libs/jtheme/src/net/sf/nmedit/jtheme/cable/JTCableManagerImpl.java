@@ -139,81 +139,37 @@ public class JTCableManagerImpl implements JTCableManager, Runnable
         return cables.size();
     }
     
+    private transient Rectangle cachedRect;
+    
     public void paintCables(Graphics2D g, CableRenderer cableRenderer)
     {
         Rectangle clip = g.getClipBounds();
-        if (clip != null && (!dirty.isEmpty()) && clip.contains(dirty))
+        boolean hasClip = clip != null; 
+        
+        if ((!hasClip) || ((!dirty.isEmpty()) && clip.contains(dirty)))
         {
             dirty.setBounds(0, 0, 0, 0); // ensure bounds are cleared
         }
         
-  /*      Rectangle clip = g.getClipBounds();
-
-        float innerClipSq = 0;
-        float outerClipSq = Float.MAX_VALUE;
-*/
         cableRenderer.initRenderer(g);
         
+        if (!hasClip)
         {
             for (Cable c: cables)
                 cableRenderer.render(g, c);
         }
-        
-        
-/*
-        if (sharedRect == null)
-            sharedRect = new Rectangle();
-        
-        cableRenderer.initRenderer(g);
-        if (clip != null)
-        {
-            enlarge(clip);
-            innerClipSq = Math.max(0, computeInnerDistanceSq(clip));
-            outerClipSq = computeOuterDistanceSq(clip);
-            
-            for (int i=0;i<size;i++)
-            {
-                ManagedCable mc = cables[i];
-               
-                //if (mc.innerDistanceSq<=outerClipSq)
-                {   
-                    //if (mc.outerDistanceSq>=innerClipSq)
-                       if (mc.getBounds(sharedRect).intersects(clip))
-                       {
-                           mc.setOldBounds();
-                           cableRenderer.render(g, mc.cable);
-                       }
-                }
-               // else
-                {
-                  //  break;
-                }
-            }
-        }
         else
         {
-        
-            for (int i=0;i<size;i++)
+            for (Cable c: cables)
             {
-                ManagedCable mc = cables[i];
-               
-                if (mc.innerDistanceSq<=outerClipSq)
-                {   
-                    if (mc.outerDistanceSq>=innerClipSq)
-                    {
-                       mc.setOldBounds();
-                       cableRenderer.render(g, mc.cable);
-                    }
-                }
-                else
-                {
-                    break;
-                }
+                Rectangle b = (cachedRect=c.getBounds(cachedRect));
+                enlarge(b, 5); // enlarge so that we don't miss a cable
+                if (g.hitClip(b.x, b.y, b.width, b.height))
+                    cableRenderer.render(g, c);
             }
-        }*/
+        }
+        
     }
-
- //// nbeeeeeeeeeeeeeeeeeeeeee
 
     private Rectangle dirty = new Rectangle(0,0,0,0);
     
