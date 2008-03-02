@@ -508,9 +508,10 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         public JTTransformer(JTContext context)
         {
             super(context);
+            setParentIsProcessingEvents(false);
             enableEvents(MouseEvent.MOUSE_EVENT_MASK|MouseEvent.MOUSE_MOTION_EVENT_MASK);
         }
-
+        
         public boolean isReducible()
         {
             return false;

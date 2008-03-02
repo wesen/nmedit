@@ -34,6 +34,8 @@ public class JTImage extends JTComponent
     private static final long serialVersionUID = -1051395748578312099L;
     public static final String uiClassID = "imageui";
     private ImageIcon icon;
+    
+    private boolean parentIsProcessingEvents = true;
 
     public JTImage(JTContext context)
     {
@@ -44,7 +46,10 @@ public class JTImage extends JTComponent
     public boolean contains(int x, int y)
     {
         // mouse event processing: let parents process events
-        return false;
+    	if (isParentIsProcessingEvents())
+    		return false;
+    	else
+    		return super.contains(x, y);
     }
     
     public String getUIClassID()
@@ -89,6 +94,14 @@ public class JTImage extends JTComponent
     {
         return true;
     }
+
+	protected void setParentIsProcessingEvents(boolean parentIsProcessingEvents) {
+		this.parentIsProcessingEvents = parentIsProcessingEvents;
+	}
+
+	protected boolean isParentIsProcessingEvents() {
+		return parentIsProcessingEvents;
+	}
 
 }
 
