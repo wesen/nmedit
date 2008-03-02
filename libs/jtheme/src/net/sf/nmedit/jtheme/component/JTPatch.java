@@ -45,13 +45,13 @@ public class JTPatch extends JComponent implements CopyCutPasteTarget
         this.context = context;
     }
     
-    public JTModuleContainer[] getModuleContainers() {
-    	JTModuleContainer []res = new JTModuleContainer[1];
-    	return (JTModuleContainer[]) moduleContainers.toArray(res);
+    public JTModuleContainer[] getModuleContainers() 
+    {
+    	return moduleContainers.toArray(new JTModuleContainer[moduleContainers.size()]);
     }
     
     public Collection<? extends JTModule> getSelectedModules() {
-    	for (JTModuleContainer jtc : getModuleContainers()) {
+    	for (JTModuleContainer jtc : moduleContainers) {
     		if (jtc.getSelectionSize() > 0)
     			return jtc.getSelectedModules();
     	}
