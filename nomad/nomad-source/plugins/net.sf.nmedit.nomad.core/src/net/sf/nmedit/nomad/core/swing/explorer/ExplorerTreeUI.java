@@ -276,14 +276,16 @@ public class ExplorerTreeUI extends MetalTreeUI
         	forwardMouseEvent(e);
 
         	Component c = e.getComponent();
-        	//Point p = e.getPoint();
             if (!(c instanceof JTree)) return;
             JTree tree = (JTree) c;
 
-            // avoid having a mouse press select, do it on mouse release
-//            TreePath path = tree.getClosestPathForLocation(p.x, p.y);
-//            if (path != null && tree.isPathSelected(path) && Platform.isFlavor(Platform.OS.MacOSFlavor))
-//        		e.consume();
+            // avoid having a mouse press select, do it on mouse release on macosx
+            if (Platform.isFlavor(Platform.OS.MacOSFlavor)) {
+            	Point p = e.getPoint();
+            	TreePath path = tree.getClosestPathForLocation(p.x, p.y);
+            	if (path != null && tree.isPathSelected(path))
+            		e.consume();
+            }
         }
 
         public void mouseReleased(MouseEvent e)
