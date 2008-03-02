@@ -116,7 +116,10 @@ public class JTModule extends JTComponent
         if (oldValue != newValue)
         {
             this.selected = newValue;
-            repaint();
+            
+            JTModuleUI ui = getUI();
+            if (ui != null)
+                ui.notifySelectionStateChanged(this);
         }
     }
     
@@ -211,14 +214,6 @@ public class JTModule extends JTComponent
     public final void renderStaticLayerImage(Graphics2D g)
     {
         super.renderStaticLayerImage(g);
-    }
-
-    protected void paintBorder(Graphics g)
-    {
-        super.paintBorder(g);
-        
-        if (ui != null && isSelected())
-            getUI().paintSelection(g, this);
     }
     
     /**

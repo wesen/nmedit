@@ -86,6 +86,8 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
 
     public static final String DELETE = "delete";
     public static final String moduleBorder = "ModuleUI.Border";
+    public static final String moduleSelectionBorder = "ModuleUI.Selected.Border";
+    
     private static final String moduleTransIcon = "ModuleUI.transformationIcon";
     private static final String moduleTransIconHovered = "ModuleUI.transformationIcon.hovered";
 
@@ -249,6 +251,7 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
     }
 
     private Border border;
+    private Border selectionBorder;
     
     private static transient Insets cachedInsets;
     
@@ -264,9 +267,10 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         
         if (border == null)
             border = uidefaults.getBorder(moduleBorder);
+        if (selectionBorder == null)
+            selectionBorder = uidefaults.getBorder(moduleSelectionBorder);
 
-        if (border != null)
-            c.setBorder(border);
+        c.setBorder(module.isSelected() ? selectionBorder : border);
         
         Insets i = (cachedInsets=module.getInsets(cachedInsets));
         int left = i.left;
@@ -682,14 +686,6 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
     {
         // no op
     }
-
-    public void paintSelection(Graphics g, JTModule module)
-    {        
-        if (module.isSelected() || module.hasFocus())
-        {
-            SelectionPainter.paintSelection(g, 0, 0, module.getWidth(), module.getHeight());
-        }
-    }
     
     private class TitleLabel extends JTLabel implements 
         FocusListener, ActionListener
@@ -952,5 +948,10 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         		bg = c;
         }
         module.setBackground(bg);
+    }
+
+    public void notifySelectionStateChanged(JTModule module)
+    {
+        module.setBorder(module.isSelected() ? selectionBorder : border);
     }
 }
