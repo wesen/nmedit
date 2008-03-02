@@ -180,7 +180,7 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
         TreePath path = getClosestPathForLocation(tree, p.x, p.y);
         if (path == null)
             return;
-        if (!tree.isPathSelected(path)) {
+        if (!tree.isPathSelected(path) && (tree.getSelectionPaths().length == 0) ) {
         	tree.setSelectionPath(path);
         }
         

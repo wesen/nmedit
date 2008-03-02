@@ -63,7 +63,7 @@ public class ExplorerTree extends JTree
     	TreeSelectionModel selectModel = new DefaultTreeSelectionModel();
     	selectModel.setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
     	setSelectionModel(selectModel);
-        setModel(model);
+    	setModel(model);
         installUI();
         setFocusable(true);
         
