@@ -67,7 +67,6 @@ import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
-import net.sf.nmedit.jtheme.cable.ScrollListener;
 import net.sf.nmedit.jtheme.clavia.nordmodular.misc.NMPatchImageExporter;
 import net.sf.nmedit.jtheme.component.JTConnector;
 import net.sf.nmedit.jtheme.component.JTModule;
@@ -677,12 +676,11 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
         
         JScrollPane scrollPane = new JScrollPane(cont);
         
-        scrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+        scrollPane.getViewport().setScrollMode(JViewport.BLIT_SCROLL_MODE);
         
         // scrollPane.setAutoscrolls(true);
         scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         scrollPane.getHorizontalScrollBar().setUnitIncrement(10);
-        new ScrollListener(scrollPane, cont.getCableManager());
         return scrollPane;
     }
 
