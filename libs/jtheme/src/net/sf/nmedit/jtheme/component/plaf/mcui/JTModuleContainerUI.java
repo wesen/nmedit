@@ -50,6 +50,7 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -58,8 +59,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.plaf.ComponentUI;
@@ -323,7 +326,8 @@ public class JTModuleContainerUI extends ComponentUI
       MouseListener, MouseMotionListener
     {
 
-        private JTModuleContainerUI jtcUI;
+        private static final String DELETE = "delete";
+		private JTModuleContainerUI jtcUI;
         private boolean dndAllowed;
 
         public EventHandler(JTModuleContainerUI jtcUI, boolean dndAllowed)
@@ -342,11 +346,56 @@ public class JTModuleContainerUI extends ComponentUI
             return jtcUI.getModuleContainer();
         }
         
+        private transient InputMap inputMapWhenFocused ;	 
+        protected InputMap createInputMapWhenFocused()	 
+        {	 
+            if (inputMapWhenFocused == null)	 
+            {	 
+                inputMapWhenFocused = new InputMap();	 
+                fillInputMap(inputMapWhenFocused);	 
+            }	 
+            return inputMapWhenFocused;	 
+        }	 
+	 
+        protected void fillInputMap(InputMap map)	 
+        {	 
+            int vk_delete = KeyEvent.VK_DELETE;	 
+	 
+            if (Platform.flavor() == Platform.OS.MacOSFlavor)	 
+                vk_delete = KeyEvent.VK_BACK_SPACE;	 
+	 
+            KeyStroke deleteModules = KeyStroke.getKeyStroke(vk_delete, 0);	 
+            map.put(deleteModules, DELETE);	 
+        }	 
+	 
+        public void installKeyboardActions( JTModuleContainer mc)	 
+        {	 
+//            NMLazyActionMap.installLazyActionMap(module.getContext().getUIDefaults(),	 
+//                    module, BasicEventHandler.class, moduleActionMapKey);	 
+
+        	mc.getActionMap().put(DELETE, new ContainerAction(mc, DELETE));
+            InputMap im = createInputMapWhenFocused();	 
+            SwingUtilities.replaceUIInputMap(mc, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, im);	 
+        }	 
+	 
+        public void uninstallKeyboardActions(JTModuleContainer mc)	 
+        {	 
+            SwingUtilities.replaceUIInputMap(mc, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, null);	 
+	 
+            // TODO this line shouldn't be necessary, but if setUI() was called twice	 
+            // each time with a new ui instance then the input map will cause a StackOverflowError	 
+            // if a key was pressed	 
+            mc.setInputMap(JComponent.WHEN_FOCUSED, new InputMap());	 
+	 
+            SwingUtilities.replaceUIActionMap(mc, null);	 
+        }	 
+
         public void install()
         {
             JTModuleContainer jtc = getModuleContainer();
             installAtModuleContainer(jtc);
                         
+            installKeyboardActions(jtc);
             if (dndAllowed)
             {
                 for (int i=jtc.getComponentCount()-1;i>=0;i--)
@@ -367,6 +416,7 @@ public class JTModuleContainerUI extends ComponentUI
         {
             JTModuleContainer jtc = getModuleContainer();
             uninstallAtModuleContainer(jtc);
+            uninstallKeyboardActions(jtc);
 
             if (dndAllowed)
             {
@@ -986,7 +1036,6 @@ public class JTModuleContainerUI extends ComponentUI
         
         public void mouseClicked(MouseEvent e)
         {
-        	getModuleContainer().requestFocusInWindow();
         }
         
         public void mouseEntered(MouseEvent e)
@@ -1003,6 +1052,7 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void mousePressed(MouseEvent e)
         {
+        	getModuleContainer().requestFocusInWindow();
             JTModuleContainer mc = jtcUI.getModuleContainer();
             if (Platform.isPopupTrigger(e) && e.getComponent() == mc)
             {
