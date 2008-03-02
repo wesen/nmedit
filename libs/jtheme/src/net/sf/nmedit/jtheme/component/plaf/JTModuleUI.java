@@ -38,7 +38,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -49,11 +48,9 @@ import java.util.LinkedList;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
-import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.border.Border;
@@ -74,17 +71,13 @@ import net.sf.nmedit.jtheme.component.JTImage;
 import net.sf.nmedit.jtheme.component.JTLabel;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
-import net.sf.nmedit.jtheme.component.plaf.mcui.ContainerAction;
 import net.sf.nmedit.jtheme.util.JThemeUtils;
-import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.swing.EscapeKeyListener;
 import net.sf.nmedit.nmutils.swing.LimitedText;
-import net.sf.nmedit.nmutils.swing.NMLazyActionMap;
 
 public class JTModuleUI extends JTComponentUI implements PModuleListener
 {
 
-    public static final String DELETE = "delete";
     public static final String moduleBorder = "ModuleUI.Border";
     public static final String moduleSelectionBorder = "ModuleUI.Selected.Border";
     
@@ -360,68 +353,13 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         {
             //module.addComponentListener(this);
             module.addMouseListener(this);
-            
-            installKeyboardActions(module);
         }
 
         public void uninstall(JTModule module)
         {
             //module.removeComponentListener(this);
             module.removeMouseListener(this);
-            
-            uninstallKeyboardActions(module);
         }
-
-        public static void loadActionMap(NMLazyActionMap map)	 
-        {	 
-            // map.put(new Actions(DELETE));
-        	System.out.println("load action map");
-        }	 
-	 
-	 
-        private transient InputMap inputMapWhenFocused ;	 
-        protected InputMap createInputMapWhenFocused()	 
-        {	 
-            if (inputMapWhenFocused == null)	 
-            {	 
-                inputMapWhenFocused = new InputMap();	 
-                fillInputMap(inputMapWhenFocused);	 
-            }	 
-            return inputMapWhenFocused;	 
-        }	 
-	 
-        protected void fillInputMap(InputMap map)	 
-        {	 
-            int vk_delete = KeyEvent.VK_DELETE;	 
-	 
-            if (Platform.flavor() == Platform.OS.MacOSFlavor)	 
-                vk_delete = KeyEvent.VK_BACK_SPACE;	 
-	 
-            KeyStroke deleteModules = KeyStroke.getKeyStroke(vk_delete, 0);	 
-            map.put(deleteModules, DELETE);	 
-        }	 
-	 
-        public void installKeyboardActions( JTModule module )	 
-        {	 
-//            NMLazyActionMap.installLazyActionMap(module.getContext().getUIDefaults(),	 
-//                    module, BasicEventHandler.class, moduleActionMapKey);	 
-
-        	module.getActionMap().put(DELETE, new ContainerAction((JTModuleContainer)module.getParent(), DELETE));
-            InputMap im = createInputMapWhenFocused();	 
-            SwingUtilities.replaceUIInputMap(module, JComponent.WHEN_FOCUSED, im);	 
-        }	 
-	 
-        public void uninstallKeyboardActions(JTModule module)	 
-        {	 
-            SwingUtilities.replaceUIInputMap(module, JComponent.WHEN_FOCUSED, null);	 
-	 
-            // TODO this line shouldn't be necessary, but if setUI() was called twice	 
-            // each time with a new ui instance then the input map will cause a StackOverflowError	 
-            // if a key was pressed	 
-            module.setInputMap(JComponent.WHEN_FOCUSED, new InputMap());	 
-	 
-            SwingUtilities.replaceUIActionMap(module, null);	 
-        }	 
 
         public void mousePressed(MouseEvent e)
         {
