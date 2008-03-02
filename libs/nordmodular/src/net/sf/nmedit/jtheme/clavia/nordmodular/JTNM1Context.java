@@ -23,6 +23,7 @@ import java.awt.Font;
 
 import javax.swing.BorderFactory;
 import javax.swing.UIDefaults;
+import javax.swing.border.Border;
 import javax.swing.plaf.BorderUIResource;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.FontUIResource;
@@ -58,6 +59,7 @@ import net.sf.nmedit.jtheme.component.plaf.mcui.JTModuleContainerUI;
 import net.sf.nmedit.jtheme.component.plaf.JTModuleUI;
 import net.sf.nmedit.jtheme.component.plaf.JTTextDisplayUI;
 import net.sf.nmedit.jtheme.store.StorageContext;
+import net.sf.nmedit.jtheme.util.SimpleSelectionBorder;
 
 public class JTNM1Context extends JTCustomContext
 {
@@ -222,8 +224,12 @@ public class JTNM1Context extends JTCustomContext
         uidefaults.put(WaveWrapDisp.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(ClipDisp.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(NMScrollbar.ScrollBarUIClassID, JTBasicSliderScrollbarUI.class.getName());
+
+        Border moduleBorder = BorderFactory.createRaisedBevelBorder();
+        Border selectionBorder = new SimpleSelectionBorder(moduleBorder, Color.decode("#CC6600"));
+        uidefaults.put(JTModuleUI.moduleBorder, new BorderUIResource(moduleBorder));
+        uidefaults.put(JTModuleUI.moduleSelectionBorder, new BorderUIResource(selectionBorder));
         
-        uidefaults.put(JTModuleUI.moduleBorder, new BorderUIResource(BorderFactory.createRaisedBevelBorder()));
         uidefaults.put(JTModuleContainer.uiClassId, JTModuleContainerUI.class.getName());
         uidefaults.put(JTModuleContainerUI.backgroundKey, new ColorUIResource(0x81818D));
         uidefaults.put(JTModuleContainerUI.DnDAllowedKey, Boolean.TRUE);
