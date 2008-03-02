@@ -975,7 +975,7 @@ public class FFTabBarUI extends TabBarUI
         
         int index = getTabIndexForLocation(x, y);
         if (index<0) return -1;
-        return closeButtonBounds.contains(x-index*tabBounds.width, y+tabBounds.y) ? index : -1;
+        return closeButtonBounds.contains(x-index*tabBounds.width, y-tabBounds.y) ? index : -1;
     }
 
     public void setCloseButtonHoverIndex(int tabIndex)
