@@ -71,7 +71,7 @@ public class JTModuleContainer extends JTBaseComponent
     private ContentSynchronisation cs;
     //private CableOverlay overlay;
     
-    private JTCableLayer cableLayer;
+    private JTLayerRoot cableLayer;
     
     public JTModuleContainer(JTContext context, JTCableManager cableManager)
     {
@@ -84,7 +84,7 @@ public class JTModuleContainer extends JTBaseComponent
         super.add(overlay, 0);
         overlay.setEnabled(false);*/
 
-        this.cableLayer = new JTCableLayer(context);
+        this.cableLayer = new JTLayerRoot(context);
         add(cableLayer);
         
         setCableManager(cableManager);
@@ -562,7 +562,7 @@ public class JTModuleContainer extends JTBaseComponent
         for (int i=getComponentCount()-1;i>=0;i--)
         {
             Component c = getComponent(i);
-            if (c instanceof JTCableLayer)
+            if (c instanceof JTLayerRoot)
             	continue;
             
 
@@ -624,7 +624,7 @@ public class JTModuleContainer extends JTBaseComponent
         {
             JTModuleContainer mc = JTModuleContainer.this;
             // only layout cable layer
-            JTCableLayer cl = mc.cableLayer;
+            JTLayerRoot cl = mc.cableLayer;
             if (cl != null)
             {
                 synchronized(mc.getTreeLock())
