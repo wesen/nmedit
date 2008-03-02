@@ -78,4 +78,38 @@ public class FileUtils {
 		}
 		return( path.delete() );
 	}
+	
+	static public String getFileExtension(File file) {
+		String name = file.getName();
+		int dotIndex = name.lastIndexOf(".");
+		if (dotIndex > 0) { 
+			return name.substring(dotIndex + 1);
+		} else {
+			return null;
+		}
+	}
+
+	static public String getPathnameWithoutExtension(File file) {
+		String name = file.getAbsolutePath();
+		int dotIndex = name.lastIndexOf(".");
+		if (dotIndex > 0) { 
+			return name.substring(0, dotIndex - 1);
+		} else {
+			return name;
+		}
+	}
+	
+	static public File renameWithExtension(File oldFile, File newFile) {
+		String oldExtension = getFileExtension(oldFile);
+		String newExtension = getFileExtension(newFile);
+		
+		if (!(oldExtension == null || newExtension != null)) { 
+			newFile = new File(getPathnameWithoutExtension(newFile) + "." + oldExtension);
+		}
+		if (oldFile.renameTo(newFile)) {
+			return newFile;
+		} else {
+			return null;
+		}
+	}
 }
