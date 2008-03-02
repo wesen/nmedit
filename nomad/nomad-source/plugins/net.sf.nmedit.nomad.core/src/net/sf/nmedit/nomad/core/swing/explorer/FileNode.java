@@ -53,10 +53,15 @@ import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.io.FileUtils;
 import net.sf.nmedit.nomad.core.Nomad;
 
-public class FileNode implements ETreeNode, MouseListener,
+public class FileNode extends DefaultMutableTreeNode implements ETreeNode, MouseListener,
     Transferable
 {
-
+    public static final String OPEN = "Open";
+    public static final String REFRESH = "Refresh";
+    public static final String DELETE_PERMANENTLY = "Delete (Permanently)";
+    public static final String REMOVE_EXPLORER_ENTRY = "Remove Entry";
+    public static final String RENAME = "Rename";
+	
     private final static FileNode[] EMPTY = new FileNode[0];
     private File file;
     private FileNode[] children = null;
@@ -73,6 +78,13 @@ public class FileNode implements ETreeNode, MouseListener,
     {
         return file;
     }
+
+    public void setFile(File file)
+    {
+        this.file = file;
+        updateChildrenNodes();
+    }
+
 
     protected TreeNode[] getPathToRoot(TreeNode aNode, int depth) {
     	TreeNode[]              retNodes;
@@ -405,20 +417,22 @@ public class FileNode implements ETreeNode, MouseListener,
     {
         if (file.isDirectory())
         {
-            popup.add(new FileNodeAction(et, FileNodeAction.REFRESH));
-            popup.add(new FileNodeAction(et, FileNodeAction.DELETE_PERMANENTLY));
+            popup.add(new FileNodeAction(et, FileNode.REFRESH));
+            popup.add(new FileNodeAction(et, FileNode.DELETE_PERMANENTLY));
         }
         else
         {
-            popup.add(new FileNodeAction(et, FileNodeAction.OPEN));
-            popup.add(new FileNodeAction(et, FileNodeAction.DELETE_PERMANENTLY));
+            popup.add(new FileNodeAction(et, FileNode.OPEN));
+            popup.add(new FileNodeAction(et, FileNode.DELETE_PERMANENTLY));
         }
         
         if (getParent() == et.getRoot())
         {
             popup.addSeparator();
-            popup.add(new FileNodeAction(et, FileNodeAction.REMOVE_EXPLORER_ENTRY));
+            popup.add(new FileNodeAction(et, FileNode.REMOVE_EXPLORER_ENTRY));
         }
+        
+        popup.add(new FileNodeAction(et, FileNode.RENAME));
     }
     
     private class FileNodeAction extends AbstractAction
@@ -428,11 +442,6 @@ public class FileNode implements ETreeNode, MouseListener,
          * 
          */
         private static final long serialVersionUID = -1190272224899920323L;
-        public static final String OPEN = "Open";
-        public static final String REFRESH = "Refresh";
-        public static final String DELETE_PERMANENTLY = "Delete (Permanently)";
-        public static final String REMOVE_EXPLORER_ENTRY = "Remove Entry";
-
         private ExplorerTree et;
         
         public FileNodeAction(ExplorerTree et, String command){
@@ -470,6 +479,8 @@ public class FileNode implements ETreeNode, MouseListener,
                     et.getRoot().remove(node);
                     et.fireRootChanged();
                 }
+            } else if (e.getActionCommand() == RENAME) {
+            	et.startEditingAtPath(new TreePath(node.getPath()));
             }
         }
         

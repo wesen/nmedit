@@ -28,7 +28,7 @@ import java.util.Vector;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
-public class RootNode implements TreeNode
+public class RootNode extends DefaultMutableTreeNode implements TreeNode
 {
 
     /** array of children, may be null if this node has no children */
