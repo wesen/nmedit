@@ -29,7 +29,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.LayoutManager2;
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -80,9 +79,6 @@ public class JTModuleContainer extends JTBaseComponent
         setFocusable(true);
         optimizedDrawing = false;// 'true' does not work: !context.hasModuleContainerOverlay();
                                 // we have to overwrite boolean isPaintingOrigin() which is package private
-        /*overlay = new CableOverlay();
-        super.add(overlay, 0);
-        overlay.setEnabled(false);*/
 
         this.cableLayer = new JTLayerRoot(context);
         add(cableLayer);
@@ -98,40 +94,6 @@ public class JTModuleContainer extends JTBaseComponent
         setJTFlag(FLAG_VALIDATE_TREE, true);
         
         setLayout(new ModuleContainerLayout());
-    }
-
-    public void remove(Component c)
-    {
-        super.remove(c);
-    }
-    /*
-    public void setSize(Dimension size)
-    {
-    	cableLayer.setSize(size);
-        super.setSize(size);
-    }
-
-    public void setMinimumSize(Dimension minimumSize)
-    {
-        cableLayer.setMinimumSize(minimumSize);
-        super.setMinimumSize(minimumSize);
-    }
-    
-    public void setMaximumSize(Dimension maximumSize)
-    {
-        cableLayer.setMaximumSize(maximumSize);
-        super.setMaximumSize(maximumSize);
-    }*/
-
-    public void setBounds(Rectangle r)
-    {
-        this.setBounds(r.x, r.y, r.width, r.height);
-    }
-    
-    public void setBounds(int x, int y, int width, int height)
-    {
-        cableLayer.setBounds(0, 0, width, height);
-        super.setBounds(x, y, width, height);
     }
     
     protected boolean isRepaintOrigin()
@@ -240,15 +202,6 @@ public class JTModuleContainer extends JTBaseComponent
         }
         return this;
     }*/
-    public void repaintOverlay(Rectangle r)
-    {
-        repaintOverlay(r.x, r.y, r.width, r.height);
-    }
-    
-    public void repaintOverlay(int x, int y, int width, int height)
-    {
-        /*overlay.*/repaint(x, y, width, height);
-    }
     
     protected ContentSynchronisation createContentSynchronisation()
     {
@@ -527,12 +480,6 @@ public class JTModuleContainer extends JTBaseComponent
             throw new UnsupportedOperationException("border not supported");
     }
     
-    /*public void setLayout(LayoutManager layout)
-    {
-        if (layout != null)
-            throw new UnsupportedOperationException("layout not supported");
-    }*/
-    
     protected final void paintBorder(Graphics g)
     {
         // no op
@@ -545,35 +492,6 @@ public class JTModuleContainer extends JTBaseComponent
         {
             getUI().paintChildrenHack(g);
         }
-    }
-    /*
-    protected void paintComponent(Graphics g)
-    {
-        super.paintComponent(g);
-    }*/
-
-    public Dimension computePreferredSize(Dimension dim)
-    {
-        if (dim == null) 
-            dim = new Dimension(0,0);
-        else
-            dim.setSize(0,0);
-        
-        for (int i=getComponentCount()-1;i>=0;i--)
-        {
-            Component c = getComponent(i);
-            if (c instanceof JTLayerRoot)
-            	continue;
-            
-
-            dim.width = Math.max(dim.width, c.getX()+c.getWidth());
-            dim.height = Math.max(dim.height, c.getY()+c.getHeight());
-            
-        }
-
-        dim.height += 50;
-        dim.width += 50;
-        return dim;
     }
 
     public boolean isDnDAllowed()

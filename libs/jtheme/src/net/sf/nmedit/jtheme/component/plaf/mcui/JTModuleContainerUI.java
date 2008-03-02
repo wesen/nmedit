@@ -230,7 +230,7 @@ public class JTModuleContainerUI extends ComponentUI
             repaint.y-= enlarge;
             repaint.width+= enlarge*2;
             repaint.height+= enlarge*2;*/
-        	getModuleContainer().repaintOverlay(repaint);
+        	getModuleContainer().repaint(repaint);
         }
         
         if (box == null)
@@ -1052,7 +1052,7 @@ public class JTModuleContainerUI extends ComponentUI
 			oldSelection = new HashSet<JTModule>(mc.getSelectedModules());
 			jtcUI.selectStartPoint = new Point(e.getPoint());
 			jtcUI.selectRectangle = new Rectangle(jtcUI.selectStartPoint);
-			mc.repaintOverlay(jtcUI.selectRectangle);
+			mc.repaint(jtcUI.selectRectangle);
         }
 
         private void updateSelectionRectangle(MouseEvent e) {
@@ -1060,14 +1060,14 @@ public class JTModuleContainerUI extends ComponentUI
 			Rectangle select = jtcUI.selectRectangle;
     		Point start = jtcUI.selectStartPoint;
     		JTModuleContainer jtc = jtcUI.getModuleContainer();
-        	jtc.repaintOverlay(select);
+        	jtc.repaint(select);
     		int x1, x2, y1, y2;
     		x1 = Math.min(start.x, point.x);
     		x2 = Math.max(start.x, point.x);
     		y1 = Math.min(start.y, point.y);
     		y2 = Math.max(start.y, point.y);
     		select.setRect(x1, y1, x2-x1, y2-y1);
-    		jtc.repaintOverlay(select);
+    		jtc.repaint(select);
             boolean shift = e.isShiftDown();
             boolean meta = false;
             boolean ctrl = false;
