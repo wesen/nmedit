@@ -24,14 +24,14 @@ import java.awt.Graphics2D;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 
-public class JTCableLayer extends JTBaseComponent
+public class JTLayerRoot extends JTBaseComponent
 {
 
     /**
      * 
      */
     private static final long serialVersionUID = 5019537573216055625L;
-    public JTCableLayer(JTContext context)
+    public JTLayerRoot(JTContext context)
     {
         super(context);
         setOpaque(false);
@@ -65,6 +65,11 @@ public class JTCableLayer extends JTBaseComponent
     
     protected void paintComponent(Graphics g)
     {
+        // nothing to paint
+    }
+    
+    protected void paintCables(Graphics g)
+    {
         if (cableManager != null)
         {
             Graphics gs = g.create();
@@ -76,7 +81,7 @@ public class JTCableLayer extends JTBaseComponent
             {
                 gs.dispose();
             }
-        }
+        }   
     }
     
     public void setSize(Dimension r) {
@@ -85,7 +90,7 @@ public class JTCableLayer extends JTBaseComponent
     
     protected void paintChildren(Graphics g)
     {
-        // nothing to paint
+        paintCables(g);
     }
     
 }
