@@ -58,6 +58,7 @@ import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PParameterDescriptor;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
+import net.sf.nmedit.jpatch.history.History;
 import net.sf.nmedit.jpatch.transform.PTTransformationsBuillder;
 import net.sf.nmedit.jpatch.transform.PTTransformations;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;

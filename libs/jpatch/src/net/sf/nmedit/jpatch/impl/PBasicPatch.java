@@ -30,6 +30,8 @@ import net.sf.nmedit.jpatch.PModuleMetrics;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.PSettings;
+import net.sf.nmedit.jpatch.history.History;
+import net.sf.nmedit.jpatch.history.HistoryImpl;
 
 /**
  * The reference implementation of interface {@link PPatch}.
