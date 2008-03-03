@@ -52,6 +52,7 @@ public class JTBaseComponent extends JComponent
     protected static final int FLAG_VALIDATE = 2;
     protected static final int FLAG_REVALIDATE = 3;
     protected static final int FLAG_VALIDATE_TREE = 4;
+    protected static final int FLAG_PROPERTY_SUPPORT = 5;
     protected static final int DEFAULT_FLAGS = 
         FLAG_INVALIDATE;
     
@@ -129,7 +130,8 @@ public class JTBaseComponent extends JComponent
      */
     public void addPropertyChangeListener(PropertyChangeListener listener) 
     {
-        // no op
+        if (getJTFlag(FLAG_PROPERTY_SUPPORT))
+            super.addPropertyChangeListener(listener); 
     }
     
     /**
@@ -137,7 +139,8 @@ public class JTBaseComponent extends JComponent
      */
     public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) 
     {
-        // no op
+        if (getJTFlag(FLAG_PROPERTY_SUPPORT))
+            super.addPropertyChangeListener(propertyName, listener); 
     }
     
     /**
@@ -161,7 +164,8 @@ public class JTBaseComponent extends JComponent
      */
     public void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) 
     {
-        // no op
+        if (getJTFlag(FLAG_PROPERTY_SUPPORT))
+            super.firePropertyChange(propertyName, oldValue, newValue);
     }
 
     /**
@@ -169,7 +173,8 @@ public class JTBaseComponent extends JComponent
      */
     public void firePropertyChange(String propertyName, byte oldValue, byte newValue) 
     {
-        // no op
+        if (getJTFlag(FLAG_PROPERTY_SUPPORT))
+            super.firePropertyChange(propertyName, oldValue, newValue);
     }
 
     /**
@@ -177,7 +182,8 @@ public class JTBaseComponent extends JComponent
      */
     public void firePropertyChange(String propertyName, short oldValue, short newValue) 
     {
-        // no op
+        if (getJTFlag(FLAG_PROPERTY_SUPPORT))
+            super.firePropertyChange(propertyName, oldValue, newValue);
     }
     
     /**
@@ -185,7 +191,8 @@ public class JTBaseComponent extends JComponent
      */
     public void firePropertyChange(String propertyName, long oldValue, long newValue) 
     {
-        // no op
+        if (getJTFlag(FLAG_PROPERTY_SUPPORT))
+            super.firePropertyChange(propertyName, oldValue, newValue);
     }
 
     /**
@@ -193,7 +200,8 @@ public class JTBaseComponent extends JComponent
      */
     public void firePropertyChange(String propertyName, int oldValue, int newValue) 
     {
-        // no op
+        if (getJTFlag(FLAG_PROPERTY_SUPPORT))
+            super.firePropertyChange(propertyName, oldValue, newValue);
     }
 
     /**
@@ -201,7 +209,8 @@ public class JTBaseComponent extends JComponent
      */
     public void firePropertyChange(String propertyName, float oldValue, float newValue) 
     {
-        // no op
+        if (getJTFlag(FLAG_PROPERTY_SUPPORT))
+            super.firePropertyChange(propertyName, oldValue, newValue);
     }
     
     /**
@@ -209,7 +218,8 @@ public class JTBaseComponent extends JComponent
      */
     public void firePropertyChange(String propertyName, double oldValue, double newValue) 
     {
-        // no op
+        if (getJTFlag(FLAG_PROPERTY_SUPPORT))
+            super.firePropertyChange(propertyName, oldValue, newValue);
     }
     
     /**
@@ -217,71 +227,8 @@ public class JTBaseComponent extends JComponent
      */
     public void firePropertyChange(String propertyName, char oldValue, char newValue) 
     {
-        // no op
-    }
-
-    /**
-     * Allows calling {@link Component#firePropertyChange(java.lang.String, boolean, boolean)}
-     */
-    protected void firePropertyChangeIndirection(String propertyName, boolean oldValue, boolean newValue) 
-    {
-        super.firePropertyChange(propertyName, oldValue, newValue);
-    }
-
-    /**
-     * Allows calling {@link Component#firePropertyChange(java.lang.String, byte, byte)}
-     */
-    protected void firePropertyChangeIndirection(String propertyName, byte oldValue, byte newValue) 
-    {
-        super.firePropertyChange(propertyName, oldValue, newValue);
-    }
-
-    /**
-     * Allows calling {@link Component#firePropertyChange(java.lang.String, short, short)}
-     */
-    protected void firePropertyChangeIndirection(String propertyName, short oldValue, short newValue) 
-    {
-        super.firePropertyChange(propertyName, oldValue, newValue);
-    }
-
-    /**
-     * Allows calling {@link Component#firePropertyChange(java.lang.String, long, long)}
-     */
-    protected void firePropertyChangeIndirection(String propertyName, long oldValue, long newValue) 
-    {
-        super.firePropertyChange(propertyName, oldValue, newValue);
-    }
-
-    /**
-     * Allows calling {@link Component#firePropertyChange(java.lang.String, int, int)}
-     */
-    protected void firePropertyChangeIndirection(String propertyName, int oldValue, int newValue) 
-    {
-        super.firePropertyChange(propertyName, oldValue, newValue);
-    }
-
-    /**
-     * Allows calling {@link Component#firePropertyChange(java.lang.String, float, float)}
-     */
-    public void firePropertyChangeIndirection(String propertyName, float oldValue, float newValue) 
-    {
-        super.firePropertyChange(propertyName, oldValue, newValue);
-    }
-    
-    /**
-     * Allows calling {@link Component#firePropertyChange(java.lang.String, double, double)}
-     */
-    public void firePropertyChangeIndirection(String propertyName, double oldValue, double newValue) 
-    {
-        super.firePropertyChange(propertyName, oldValue, newValue);
-    }
-    
-    /**
-     * Allows calling {@link Component#firePropertyChange(java.lang.String, char, char)}
-     */
-    protected void firePropertyChangeIndirection(String propertyName, char oldValue, char newValue) 
-    {
-        super.firePropertyChange(propertyName, oldValue, newValue);
+        if (getJTFlag(FLAG_PROPERTY_SUPPORT))
+            super.firePropertyChange(propertyName, oldValue, newValue);
     }
 
     /**
