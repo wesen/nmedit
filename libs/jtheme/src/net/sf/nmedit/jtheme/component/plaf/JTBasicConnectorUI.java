@@ -41,6 +41,7 @@ import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
+import javax.swing.undo.UndoableEditSupport;
 
 import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnectionManager;
@@ -48,7 +49,6 @@ import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
 import net.sf.nmedit.jpatch.PSignal;
 import net.sf.nmedit.jpatch.PSignalTypes;
-import net.sf.nmedit.jpatch.history.History;
 import net.sf.nmedit.jtheme.JTCursor;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.DragCable;
@@ -551,13 +551,13 @@ public class JTBasicConnectorUI extends JTConnectorUI
                 cableManager.update(connectedCables);
                 
                 
-                History history = 
-                    c.getConnector().getParentComponent().getPatch().getHistory();
+                UndoableEditSupport ues = 
+                    c.getConnector().getParentComponent().getPatch().getUndoableEditSupport();
                 
                 try
                 {
-                    if (history != null)
-                        history.beginRecord();
+                    if (ues != null)
+                        ues.beginUpdate();
                     
                     
                     if (target != null)
@@ -581,8 +581,8 @@ public class JTBasicConnectorUI extends JTConnectorUI
                 }
                 finally
                 {
-                    if (history != null)
-                        history.endRecord();
+                    if (ues != null)
+                        ues.endUpdate();
                 }
 
                 connectedCables = null;
