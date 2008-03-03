@@ -49,6 +49,7 @@ import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
 import net.sf.nmedit.jpatch.PSignal;
 import net.sf.nmedit.jpatch.PSignalTypes;
+import net.sf.nmedit.jpatch.history.History;
 import net.sf.nmedit.jtheme.JTCursor;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.DragCable;
