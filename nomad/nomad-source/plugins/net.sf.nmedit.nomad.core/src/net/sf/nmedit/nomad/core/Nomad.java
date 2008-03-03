@@ -66,6 +66,7 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.nomad.core.NomadLoader.LocaleHandler;
 import net.sf.nmedit.nomad.core.helpers.DocumentActionActivator;
@@ -97,6 +98,7 @@ import net.sf.nmedit.nomad.core.utils.OSXAdapter;
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.Platform.OS;
 import net.sf.nmedit.nmutils.swing.CopyCutPasteTarget;
+import net.sf.nmedit.nmutils.swing.WorkIndicator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -114,6 +116,7 @@ public class Nomad
     private static final String MENU_EDIT_COPY = "nomad.menu.edit.edit.copy";
     private static final String MENU_EDIT_PASTE = "nomad.menu.edit.edit.paste";
     private static final String MENU_EDIT_CUT = "nomad.menu.edit.edit.cut";
+    private static final String MENU_DEBUG_GC = "nomad.menu.help.debug.gc";
     
     private static Nomad instance;
     private JFrame mainWindow = null;
@@ -481,7 +484,7 @@ public class Nomad
         }
 
         File sfile = d.getFile();
-        if (sfile == null)
+        if (sfile == null && d.getTitle()!=null)
         	sfile = new File(d.getTitle());
         chooser.setSelectedFile(sfile);
         
@@ -530,26 +533,31 @@ public class Nomad
     
     public void fileOpen()
     {
-        JFileChooser chooser = new JFileChooser(new File("/home/christian/Programme/nomad/data/patch/"));
+        // todo keep working directory
+        JFileChooser chooser = new JFileChooser();
         chooser.setMultiSelectionEnabled(true);
         FileServiceTool.addChoosableFileFilters(chooser);
         if (!(chooser.showOpenDialog(mainWindow)==JFileChooser.APPROVE_OPTION))
-        return;
+            return;
+        final File[] selected = chooser.getSelectedFiles();
+        final FileService service = FileServiceTool.lookupFileService(chooser);
         
-        FileService service =
-        FileServiceTool.lookupFileService(chooser);
-        
-        if (service != null)
-        {
-            for (File file:chooser.getSelectedFiles())
-            {
-                service.open(file);
-            }
-        }
-        else
+        if (service == null)
         {
             JOptionPane.showMessageDialog(mainWindow, "Could not find service to open file.");
+            return;
         }
+        Runnable run = new Runnable() 
+        {
+            public void run()
+            {
+                for (File file: selected)
+                {
+                    service.open(file);
+                }
+            }
+        };
+        SwingUtilities.invokeLater(WorkIndicator.create(getWindow(), run));
     }
     
     public ExplorerTree getExplorer()
@@ -587,6 +595,11 @@ public class Nomad
         .addActionListener(new ActionHandler(this, true, "editPaste"));
         menuLayout.getEntry("nomad.menu.help.plugins")
         .addActionListener(new ActionHandler(this, true, "pluginsHelp"));
+        menuLayout.getEntry(MENU_DEBUG_GC)
+        .addActionListener(new ActionHandler(this, true, "debug_gc"));
+        
+        
+        
         /*
         MLEntry mnLang = menuLayout.getEntry("nomad.menu.window.language");
         
@@ -610,6 +623,16 @@ public class Nomad
         dsh.setMenuForDocument(pageContainer.getSelection());
         new DocumentActionActivator(pageContainer, menuLayout);
         
+    }
+    
+    public void debug_gc()
+    {
+        SwingUtilities.invokeLater(new Runnable(){public void run(){
+            Runtime rt = Runtime.getRuntime();
+            System.out.println("garbage collect");
+            System.gc();
+            System.out.println("gc: free:"+rt.freeMemory()+" byte, max:"+rt.maxMemory());
+        }});
     }
     
     void setupUI()
