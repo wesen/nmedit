@@ -22,7 +22,6 @@ import java.io.File;
 
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMData;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
@@ -104,18 +103,12 @@ public class NmFileService implements FileService
 	            }
             }
                 
-            SwingUtilities.invokeLater(new Runnable(){
-                public void run()
-                {
                     DocumentManager dm = 
                     Nomad.sharedInstance()
                     .getDocumentManager();
                     dm.add(pd);
                     dm.setSelection(pd);
-                    
-                }
-            });
-            
+                
             return patch;
         
         }

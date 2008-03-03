@@ -53,6 +53,7 @@ import net.sf.nmedit.jsynth.nomad.forms.SynthPropertiesDialog;
 import net.sf.nmedit.jsynth.nomad.forms.SynthPropertiesDialog.DialogPane;
 import net.sf.nmedit.jsynth.worker.RequestPatchWorker;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTNMPatch;
+import net.sf.nmedit.nmutils.swing.WorkIndicator;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.forms.ExceptionDialog;
 import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
@@ -375,11 +376,22 @@ public class NMSynthDeviceContext extends SynthObjectForm<NordModular>
 
         public void newPatchInSlot(SlotEvent e)
         {
-            NMPatch oldpatch = (NMPatch) e.getOldPatch();
-            NMPatch newpatch = (NMPatch) e.getNewPatch(); 
-            
-            if (newpatch != null)
-                NmFileService.selectOrOpen(newpatch);
+            //NMPatch oldpatch = (NMPatch) e.getOldPatch();
+            final NMPatch newpatch = (NMPatch) e.getNewPatch(); 
+    
+            if (newpatch == null)
+                return;
+                
+            Runnable run = new Runnable()
+            {
+                public void run()
+                {
+                        NmFileService.selectOrOpen(newpatch);
+                }
+            };
+
+            run = WorkIndicator.create(Nomad.sharedInstance().getWindow(), run);
+            SwingUtilities.invokeLater(run);
         }
     }
 
