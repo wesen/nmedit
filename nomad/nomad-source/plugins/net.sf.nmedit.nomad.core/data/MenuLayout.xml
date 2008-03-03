@@ -122,6 +122,9 @@
 			<icon type="enabledIcon" src="&etool;/help_contents.gif" />
 			<icon type="disabledIcon" src="&dtool;/help_contents.gif" />
 		</entry>
+		<entry entryPoint="debug">
+			<entry entryPoint="gc" />
+		</entry>
 	</entry>
   </entry> <!-- end of menu -->
 
