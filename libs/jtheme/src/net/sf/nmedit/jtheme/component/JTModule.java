@@ -46,6 +46,10 @@ public class JTModule extends JTComponent
     implements PModuleListener
 {
 
+    public static final String PROPERTY_MODULE = "module";
+    public static final String PROPERTY_TITLE = "module.title";
+    public static final String PROPERTY_SELECTED = "module.selected";
+    
     /**
      * 
      */
@@ -53,6 +57,7 @@ public class JTModule extends JTComponent
     public static final String uiClassID = "JTModuleUI";
     private PModule module;
     private boolean selected = false;
+    private String title = null;
     
     public JTModule(JTContext context)
     {
@@ -63,6 +68,25 @@ public class JTModule extends JTComponent
         setJTFlag(FLAG_INVALIDATE, true);
         setJTFlag(FLAG_VALIDATE, true);
         setJTFlag(FLAG_REVALIDATE, true);
+        setJTFlag(FLAG_PROPERTY_SUPPORT, true);
+    }
+    
+    public void setTitle(String title)
+    {
+        String oldValue = this.title;
+        String newValue = title;
+        if (oldValue != newValue || (oldValue != null && !oldValue.equals(newValue)))
+        {
+            this.title = newValue;
+            if (module != null)
+                module.setTitle(title);
+            firePropertyChange(PROPERTY_TITLE, oldValue, newValue);
+        }
+    }
+    
+    public String getTitle()
+    {
+        return title;
     }
     
     protected void processEvent(AWTEvent e)
@@ -116,10 +140,7 @@ public class JTModule extends JTComponent
         if (oldValue != newValue)
         {
             this.selected = newValue;
-            
-            JTModuleUI ui = getUI();
-            if (ui != null)
-                ui.notifySelectionStateChanged(this);
+            firePropertyChange(PROPERTY_SELECTED, oldValue, newValue);
         }
     }
     
@@ -268,8 +289,11 @@ public class JTModule extends JTComponent
                         module.getScreenHeight());
                 module.addModuleListener(this);
             }
-            if (ui != null)
-                getUI().moduleChanged(this, oldModule, module);
+            firePropertyChange(PROPERTY_MODULE, oldModule, module);
+            if (module != null)
+                setTitle(module.getTitle());
+            else
+                setTitle(null);
         }
     }
     
@@ -287,12 +311,8 @@ public class JTModule extends JTComponent
 
     public void moduleRenamed(PModuleEvent e)
     {
-        // TODO Auto-generated method stub
-        
-    }
-    
-    public void moduleColorChanged(PModuleEvent e) {
-    	//
+        PModule pmodule = e.getModule();
+        setTitle(pmodule.getTitle());
     }
     
 }
