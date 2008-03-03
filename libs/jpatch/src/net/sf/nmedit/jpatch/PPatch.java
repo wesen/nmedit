@@ -18,7 +18,8 @@
  */
 package net.sf.nmedit.jpatch;
 
-import net.sf.nmedit.jpatch.history.History;
+import javax.swing.undo.UndoManager;
+import javax.swing.undo.UndoableEditSupport;
 
 public interface PPatch
 {
@@ -36,7 +37,8 @@ public interface PPatch
 
     String getName();
     
-    History getHistory();
+    UndoableEditSupport getUndoableEditSupport();
+    UndoManager getUndoManager();
     
     PModule createModule(PModuleDescriptor d);
     

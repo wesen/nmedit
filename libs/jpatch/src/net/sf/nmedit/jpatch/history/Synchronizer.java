@@ -18,82 +18,85 @@
  */
 package net.sf.nmedit.jpatch.history;
 
+import java.awt.Point;
+
+import javax.swing.undo.UndoManager;
+import javax.swing.undo.UndoableEditSupport;
+
 import net.sf.nmedit.jpatch.AllEventsListener;
 import net.sf.nmedit.jpatch.event.PConnectionEvent;
 import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
 import net.sf.nmedit.jpatch.event.PModuleEvent;
 import net.sf.nmedit.jpatch.event.PParameterEvent;
+import net.sf.nmedit.jpatch.history2.PConnectionEdit;
+import net.sf.nmedit.jpatch.history2.PModuleUndoableEdit;
 
 public class Synchronizer extends AllEventsListener
 {
     
-    private HistoryImpl history;
-
-    public Synchronizer(HistoryImpl history)
+    private UndoManager undoableEditSupport;
+    
+    private boolean isHistoryEnabled()
     {
-        this.history = history;
+        return true;
+    }
+
+    public Synchronizer(UndoManager undoableEditSupport)
+    {
+        this.undoableEditSupport = undoableEditSupport;
         listenConnections = true;
         listenModules = true;
-        listenParameters = true;
+        listenParameters = false;
     }
     
     public void moduleAdded(PModuleContainerEvent e)
     {
         super.moduleAdded(e);
-        
-        if (!history.isEnabled())
-            return;
-        Event event = new ModuleDeleteEvent(e.getModule());
-        history.put(event);
+        if (isHistoryEnabled())
+            undoableEditSupport.addEdit(PModuleUndoableEdit.editAdd(e.getModule()));
     }
 
     public void moduleRemoved(PModuleContainerEvent e)
     {
         super.moduleRemoved(e);
-        
-        if (!history.isEnabled())
-            return;
-        Event event = new NewModuleEvent(e.getModule());
-        history.put(event);
+        if (isHistoryEnabled())
+            undoableEditSupport.addEdit(PModuleUndoableEdit.editRemove(e.getContainer(), e.getModule()));
     }
 
     public void connectionAdded(PConnectionEvent e)
     {
-        if (!history.isEnabled())
-            return;
-        Event event = new ConnectionActionEvent(e.getDestination(), e.getSource(), false);
-        history.put(event);
+        if (isHistoryEnabled())
+            undoableEditSupport.addEdit(PConnectionEdit.editConnect(e.getSource(), e.getDestination()));
     }
 
     public void connectionRemoved(PConnectionEvent e)
     {
-        if (!history.isEnabled())
-            return;
-        Event event = new ConnectionActionEvent(e.getDestination(), e.getSource(), true);
-        history.put(event);
+        if (isHistoryEnabled())
+            undoableEditSupport.addEdit(PConnectionEdit.editDisconnect(e.getSource(), e.getDestination()));
     }
 
     public void parameterValueChanged(PParameterEvent e)
     {
-        if (!history.isEnabled())
+        super.parameterValueChanged(e);
+        if (!isHistoryEnabled())
             return;
-        history.markChanged(true);
+        // not supported
     }
 
     public void moduleMoved(PModuleEvent e)
     {
-        if (!history.isEnabled())
+        if (!isHistoryEnabled())
             return;
-        Event event = new ModuleMoveEvent(e.getModule(), e.getOldScreenX(), e.getOldScreenY());
-        history.put(event);
+        if (isHistoryEnabled())
+            undoableEditSupport.addEdit(PModuleUndoableEdit.editMove(e.getModule(), new Point(e.getOldScreenX(), e.getOldScreenY())));
     }
 
     public void moduleRenamed(PModuleEvent e)
     {
-        if (!history.isEnabled())
+        if (!isHistoryEnabled())
             return;
-        Event event = new ModuleRenameEvent(e.getModule(), e.getOldName());
-        history.put(event);
+        if (isHistoryEnabled())
+            undoableEditSupport.addEdit(PModuleUndoableEdit.editRename(e.getModule(), e.getOldName()));
     }
     
 }

@@ -21,9 +21,12 @@ package net.sf.nmedit.nomad.core.helpers;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Action;
 import javax.swing.JMenuItem;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.undo.UndoManager;
+import javax.swing.undo.UndoableEditSupport;
 
 import net.sf.nmedit.nomad.core.menulayout.MLEntry;
 import net.sf.nmedit.nomad.core.menulayout.MenuLayout;
@@ -31,16 +34,16 @@ import net.sf.nmedit.nomad.core.swing.document.Document;
 import net.sf.nmedit.nomad.core.swing.document.DocumentEvent;
 import net.sf.nmedit.nomad.core.swing.document.DocumentListener;
 import net.sf.nmedit.nomad.core.swing.document.DocumentManager;
-import net.sf.nmedit.nomad.core.swing.document.HistoryFeature;
 
 public class DocumentActionActivator
-    implements DocumentListener, ChangeListener, ActionListener
+    implements DocumentListener, ActionListener, UndoableEditListener
 {
 
     private Document selected;
     private MenuLayout menu;
     private DocumentManager documents;
-    private HistoryFeature history;
+    private UndoManager undoManager;
+    private UndoableEditSupport ues;
     
     private MLEntry undoEntry;
     private MLEntry redoEntry;
@@ -91,23 +94,30 @@ public class DocumentActionActivator
             return;
         this.selected = d;
 
-        if (history != null)
-        {
-            history.removeChangeListener(this);
-            history = null;
-        }
-
-        if (d != null)
-        {
-            history = d.getFeature(HistoryFeature.class);
-
-            if (history != null)
-            {
-                history.addChangeListener(this);
-            }
-        }
-
+        UndoManager um = d == null ? null : d.getFeature(UndoManager.class);
+        UndoableEditSupport ues = d==null ? null : d.getFeature(UndoableEditSupport.class);
+        
+        setUndoManager(um, ues);
         updateMenu();
+    }
+
+    private void setUndoManager(UndoManager undoManager, UndoableEditSupport ues)
+    {
+        UndoManager oldManager = this.undoManager;
+        UndoManager newManager = undoManager;
+        UndoableEditSupport oldues = this.ues;
+        UndoableEditSupport newues = ues;
+        if (oldManager != newManager || oldues != newues)
+        {
+            if (oldues != null) oldues.removeUndoableEditListener(this);
+            
+            this.undoManager = newManager;
+            this.ues = newues;
+
+            if (newues != null) newues.addUndoableEditListener(this);
+            
+            updateHistoryMenu();
+        }
     }
 
     private void updateMenu()
@@ -116,8 +126,6 @@ public class DocumentActionActivator
 
         update(close, enabled);
         update(closeall, enabled);
-        
-        updateHistoryMenu();
     }
 
     private void update(MLEntry entry, boolean enabled)
@@ -126,22 +134,19 @@ public class DocumentActionActivator
             entry.setEnabled(enabled);
     }
 
-    public void stateChanged(ChangeEvent e)
-    {
-        updateHistoryMenu();
-    }
-
     private void updateHistoryMenu()
     {
-        if (history == null)
+        if (undoManager == null)
         {
             undoEntry.setEnabled(false);
             redoEntry.setEnabled(false);
         }
         else
         {
-            undoEntry.setEnabled(history.canUndo());
-            redoEntry.setEnabled(history.canRedo());
+            undoEntry.setEnabled(undoManager.canUndo());
+            redoEntry.setEnabled(undoManager.canRedo());
+            undoEntry.putValue(Action.NAME, undoManager.getUndoPresentationName());
+            redoEntry.putValue(Action.NAME, undoManager.getRedoPresentationName());
         }
     }
     
@@ -163,13 +168,13 @@ public class DocumentActionActivator
             }
             else if (undoEntry.isInstalled(item))
             {
-                if (undoEntry.isEnabled() && history != null)
-                    history.undo();
+                if (undoEntry.isEnabled() && undoManager != null && undoManager.canUndo())
+                    undoManager.undo();
             }
             else if (redoEntry.isInstalled(item))
             {
-                if (redoEntry.isEnabled() && history != null)
-                    history.redo();
+                if (redoEntry.isEnabled() && undoManager != null && undoManager.canRedo())
+                    undoManager.redo();
             }
         }
     }
@@ -191,6 +196,11 @@ public class DocumentActionActivator
             documents.remove(d);
             d.dispose();
         }
+    }
+
+    public void undoableEditHappened(UndoableEditEvent e)
+    {
+        updateHistoryMenu();
     }
 
 }

@@ -47,6 +47,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.undo.UndoManager;
 
 import org.xml.sax.InputSource;
 
@@ -57,7 +58,6 @@ import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PParameterDescriptor;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NM1ModuleDescriptions;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
-import net.sf.nmedit.jpatch.history.History;
 import net.sf.nmedit.jpatch.transform.PTTransformationsBuillder;
 import net.sf.nmedit.jpatch.transform.PTTransformations;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
@@ -343,7 +343,6 @@ public class UITest
         {
             in = new BufferedInputStream(new FileInputStream(file));
             patch = NmUtils.parsePatch(modules, in);
-            patch.getHistory().setEnabled(true);
         }
         catch (Exception e)
         {
@@ -395,7 +394,7 @@ public class UITest
         JTNMPatch jtpc = (JTNMPatch) c;
         
         NMPatch patch = jtpc.getPatch();
-        History history = patch.getHistory();
+        UndoManager history = patch.getUndoManager();
         if (undo) history.undo();
         else history.redo();
     }

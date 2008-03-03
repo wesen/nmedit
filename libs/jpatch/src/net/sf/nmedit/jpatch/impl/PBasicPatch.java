@@ -18,6 +18,9 @@
  */
 package net.sf.nmedit.jpatch.impl;
 
+import javax.swing.undo.UndoManager;
+import javax.swing.undo.UndoableEditSupport;
+
 import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.PFactory;
 import net.sf.nmedit.jpatch.PModule;
@@ -27,8 +30,6 @@ import net.sf.nmedit.jpatch.PModuleMetrics;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.PSettings;
-import net.sf.nmedit.jpatch.history.History;
-import net.sf.nmedit.jpatch.history.HistoryImpl;
 
 /**
  * The reference implementation of interface {@link PPatch}.
@@ -41,9 +42,10 @@ public class PBasicPatch implements PPatch
 
     private ModuleDescriptions moduleDescriptions;
     private PFactory pfactory;
-    private History history;
     private String name;
     private Object focusedComponent; 
+    private UndoManager undoManager = new UndoManager();
+    private UndoableEditSupport undoableEditSupport = new UndoableEditSupport();
 
     public PBasicPatch(ModuleDescriptions moduleDescriptions)
     {
@@ -54,14 +56,20 @@ public class PBasicPatch implements PPatch
     {
         this.moduleDescriptions = moduleDescriptions;
         this.pfactory = pfactory;
-        this.history = createHistory();
+        
+        undoableEditSupport.addUndoableEditListener(undoManager);
     }
 
-    protected History createHistory()
+    public UndoManager getUndoManager()
     {
-        return new HistoryImpl();
+        return undoManager;
     }
 
+    public UndoableEditSupport getUndoableEditSupport()
+    {
+        return undoableEditSupport;
+    }
+    
     public ModuleDescriptions getModuleDescriptions()
     {
         return moduleDescriptions;
@@ -75,11 +83,6 @@ public class PBasicPatch implements PPatch
     public PFactory getComponentFactory()
     {
         return pfactory;
-    }
-    
-    public History getHistory()
-    {
-        return history;
     }
 
     public PModuleContainer getModuleContainer(int index)

@@ -7,11 +7,11 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.undo.UndoableEditSupport;
 
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PatchUtils;
-import net.sf.nmedit.jpatch.history.History;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 
@@ -100,18 +100,18 @@ public class ContainerAction extends AbstractAction
         PModuleContainer mc = getTarget();
         if (mc != null)
         {
-            History history = mc.getPatch().getHistory();
+            UndoableEditSupport ues = mc.getPatch().getUndoableEditSupport();
             try
             {
-                if (history != null)
-                    history.beginRecord();
+                if (ues != null)
+                    ues.beginUpdate();
             
                 while (PatchUtils.removeUnusedModules(mc)>0);
             } 
             finally
             {
-                if (history != null)
-                    history.endRecord();
+                if (ues != null)
+                    ues.endUpdate();
             }
         }
     }

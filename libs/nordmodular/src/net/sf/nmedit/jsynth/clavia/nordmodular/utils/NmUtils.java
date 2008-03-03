@@ -453,7 +453,7 @@ public class NmUtils
         parser.parse();
         
         NMPatch patch = builder.getPatch();
-        patch.getHistory().setEnabled(true);
+        // todo enable history
         return patch;
     }
 

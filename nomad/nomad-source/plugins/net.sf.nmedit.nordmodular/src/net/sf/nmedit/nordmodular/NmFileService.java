@@ -156,7 +156,6 @@ public class NmFileService implements FileService
         try
         {
             NMPatch patch = new NMPatch(NMData.sharedInstance().getModuleDescriptions());
-            patch.getHistory().setEnabled(false);
             PatchDocument pd = createPatchDoc(patch);
             Nomad.sharedInstance()
             .getDocumentManager()

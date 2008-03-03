@@ -29,6 +29,8 @@ import java.net.URI;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.undo.UndoManager;
+import javax.swing.undo.UndoableEditSupport;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jsynth.Slot;
@@ -36,7 +38,6 @@ import net.sf.nmedit.jtheme.clavia.nordmodular.JTNMPatch;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
 import net.sf.nmedit.nomad.core.swing.document.Document;
-import net.sf.nmedit.nomad.core.swing.document.HistoryFeature;
 
 public class PatchDocument implements Document, 
     PropertyChangeListener, Transferable
@@ -48,7 +49,6 @@ public class PatchDocument implements Document,
     private JTNMPatch jtpatch;
     private NMPatch nmpatch;
     private URI uri;
-    private HistoryFeature historyFeature;
 
     public PatchDocument(JTNMPatch patch)
     {
@@ -110,14 +110,16 @@ public class PatchDocument implements Document,
             jtpatch.dispose();
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getFeature(Class<T> featureClass)
     {
-        if (HistoryFeature.class.equals(featureClass))
+        if (UndoManager.class.equals(featureClass))
         {
-            if (historyFeature == null)
-                historyFeature = new PatchHistoryFeature(this, jtpatch.getPatch().getHistory());
-            
-            return featureClass.cast(historyFeature);
+            return (T)jtpatch.getPatch().getUndoManager();
+        }
+        else if (UndoableEditSupport.class.equals(featureClass))
+        {
+            return (T)jtpatch.getPatch().getUndoableEditSupport();
         }
         
         return null;
