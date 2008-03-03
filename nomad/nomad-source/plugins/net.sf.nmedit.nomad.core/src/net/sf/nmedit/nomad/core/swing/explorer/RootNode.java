@@ -26,6 +26,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 public class RootNode extends DefaultMutableTreeNode implements TreeNode
@@ -97,9 +98,10 @@ public class RootNode extends DefaultMutableTreeNode implements TreeNode
      *              <code>childIndex</code> is out of bounds
      */
     public void remove(int childIndex) {
-        //TreeNode child = getChildAt(childIndex);
+        TreeNode child = getChildAt(childIndex);
         children.removeElementAt(childIndex);
-     //TODO   child.setParent(null);
+        if (child instanceof MutableTreeNode)
+            ((MutableTreeNode) child).setParent(null);
     }
 
 
