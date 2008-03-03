@@ -22,28 +22,29 @@
  */
 package net.sf.nmedit.jtheme.component.plaf;
 
-import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
-import java.awt.Graphics;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.LinkedList;
+import java.util.EventObject;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
@@ -59,23 +60,16 @@ import net.sf.nmedit.jpatch.ImageSource;
 import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
-import net.sf.nmedit.jpatch.event.PModuleEvent;
-import net.sf.nmedit.jpatch.event.PModuleListener;
 import net.sf.nmedit.jpatch.transform.PTModuleMapping;
 import net.sf.nmedit.jpatch.transform.PTTransformations;
 import net.sf.nmedit.jtheme.JTContext;
-import net.sf.nmedit.jtheme.cable.Cable;
-import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.JTComponent;
-import net.sf.nmedit.jtheme.component.JTImage;
-import net.sf.nmedit.jtheme.component.JTLabel;
 import net.sf.nmedit.jtheme.component.JTModule;
-import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.util.JThemeUtils;
 import net.sf.nmedit.nmutils.swing.EscapeKeyListener;
 import net.sf.nmedit.nmutils.swing.LimitedText;
 
-public class JTModuleUI extends JTComponentUI implements PModuleListener
+public class JTModuleUI extends JTComponentUI
 {
 
     public static final String moduleBorder = "ModuleUI.Border";
@@ -95,7 +89,6 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
     }
     
     private JTModule module;
-    private TitleLabel titleLabel;
     private static JPopupMenu transformPopupMenu;
     
     protected JTModuleUI(JTModule module)
@@ -103,95 +96,69 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         this.module = module;
     }
     
-    // private static transient Map<ModuleDescriptor, Color> backgroundColors;
-
-    public void moduleChanged(JTModule c, PModule oldModule, PModule newModule)
+    private TitleEditor titleEditor;
+    
+    private void setEditModuleTitle(boolean edit)
     {
-        if (oldModule != null)
+        if (edit)
         {
-            oldModule.removeModuleListener(this);
-        }
-        if (newModule != null)
-        {
-            newModule.addModuleListener(this);
-            
-            /*
-            if (c.getStaticLayerBackingStore()==null)
-            {
-                
-                ModuleDescriptor md = newModule.getDescriptor();
-                
-                Color bg = backgroundColors == null ? null : backgroundColors.get(md);
-                if (bg == null)
-                {
-                    Object o = md.getAttribute("background");
-
-                    if (o != null)
-                    
-                    if (o!= null && o instanceof String)
-                    {
-                        String bgstring = (String) o;
-                        // #FfFfFf                        
-                        if (bgstring.length()==7 && bgstring.startsWith("#"))
-                        {
-                            int color = 0;
-                            int i=1;
-                            for (;i<bgstring.length();i++)
-                            {
-                                char ch = Character.toLowerCase(bgstring.charAt(i));
-                                if ('0'<=ch && ch<='9')
-                                    color = color*16+(ch-'0');
-                                else if ('a'<=ch && ch<='f')
-                                    color = color*16+(ch-'a'+10);
-                                else break;
-                            }
-                            if (i==bgstring.length())
-                            {
-                                bg = new Color(color);
-                                
-                                if (backgroundColors == null)
-                                    backgroundColors = new HashMap<ModuleDescriptor, Color>();
-                                backgroundColors.put(md, bg);
-                            }
-                        }
-                    }
-                    
-                }
-                
-                if (bg != null)
-                {
-                    c.setBackground(bg);
-                }
-            }
-            */
+            titleEditor = new TitleEditor();
+            module.add(titleEditor.textfield, 0);
+            titleEditor.init();
         }
         else
         {
-            // set default background
+            TitleEditor te = titleEditor;
+            if (te != null)
+            {
+                if (te.textfield != null)
+                    module.remove(te.textfield);
+                titleEditor = null;
+            }
         }
-        updateTitle();
     }
     
-    protected void updateTitle()
+    // private static transient Map<ModuleDescriptor, Color> backgroundColors;
+
+    private String currentTitle;
+    private String currentShortTitle = ""; // never null
+    
+    private String getShortTitle(JTModule module)
     {
-        PModule m = module.getModule();
-        if (m != null)
+        String title = module.getTitle();
+        String shortTitle = currentShortTitle;
+        if (currentTitle == title) return shortTitle;
+        
+        shortTitle = JThemeUtils.getTitleNoColorKey(title);
+        if (shortTitle == null) shortTitle = "";
+        this.currentTitle = title;
+        this.currentShortTitle = shortTitle;
+        return shortTitle;
+    }
+    
+    protected void updateTitle(JTModule module)
+    {
+        String title = module.getTitle();
+        if (title != null)
         {
-            setTitleLabelText(m.getShortTitle());
-            setModuleColor(m.getColorCode());
+            int colorkey = JThemeUtils.getColorKey(title);
+            setModuleColor(colorkey);
+        }
+        else
+        {
+            setModuleColor(0);
         }
     }
-        
 
-    private Icon getModuleTransformationIcon(UIDefaults def)
+    private ImageIcon getModuleTransformationIcon(UIDefaults def)
     {
         Icon icon = def.getIcon(moduleTransIcon);
-        if (icon == null)
+        if (icon == null || (!(icon instanceof ImageIcon)))
         {
             icon = new ImageIcon(renderModuleTransformationIcon(DEFAULT_MTICON_COLOR));
             def.put(moduleTransIcon, icon);
         }
-        return icon;
+        return (ImageIcon) icon;
     }
 
     protected Icon getModuleTransformationIconHovered(UIDefaults def)
@@ -220,9 +187,6 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         }
         return bi;
     }
-    
-    private transient Polygon arrow ;
-    
     private void paintModuleTransformationIcon(Graphics2D g2, Color c, int w, int h)
     {
         g2.setColor(c);
@@ -233,20 +197,37 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         g2.drawLine(0, h-2, 1, h-2); // BL
         g2.drawLine(w-2, h-2, w-1, h-2); // BR
         // arrow
-        if (arrow == null)
-        {
-            arrow = new Polygon();
-            arrow.addPoint(2, 3);
-            arrow.addPoint(w-2, 3);
-            arrow.addPoint(w/2, h-2);
-        }
+        Polygon arrow = new Polygon();
+        arrow.addPoint(2, 3);
+        arrow.addPoint(w-2, 3);
+        arrow.addPoint(w/2, h-2);
         g2.fill(arrow);
     }
 
     private Border border;
     private Border selectionBorder;
+    private ImageIcon transformationIcon;
     
-    private static transient Insets cachedInsets;
+    private static Insets cachedInsets;
+    private static Font currentFont;
+    private static FontMetrics currentFontMetrics;
+    
+    private FontMetrics getFontMetrics(JComponent c, Font font)
+    {
+        FontMetrics fm = currentFontMetrics;
+        if (currentFont == font && fm != null)
+            return fm;
+        
+        fm = c.getFontMetrics(font);
+        currentFontMetrics = fm;
+        currentFont = font;
+        return fm;
+    }
+    
+    private Insets getInsets(JComponent c)
+    {
+        return cachedInsets = c.getInsets(cachedInsets);
+    }
     
     public void installUI(JComponent c) 
     {
@@ -265,35 +246,8 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
 
         c.setBorder(module.isSelected() ? selectionBorder : border);
         
-        Insets i = (cachedInsets=module.getInsets(cachedInsets));
-        int left = i.left;
-        Icon ic = getModuleTransformationIcon(uidefaults);
-        //Icon hov = getModuleTransformationIconHovered(uidefaults);
+        transformationIcon = getModuleTransformationIcon(uidefaults);
         
-        if (ic != null && ic instanceof ImageIcon)
-        {
-            JTImage jti = new JTTransformer(jtcontext);
-            jti.setIcon((ImageIcon) ic);
-            jti.setUI(JTImageUI.createUI(jti));
-            jti.setLocation(left, i.top);
-            jti.setSize(jti.getPreferredSize());
-            module.add(jti,0);
-            left+=jti.getWidth();
-        }
-        
-        titleLabel = new TitleLabel(jtcontext, module);
-        titleLabel.setUI(JTLabelUI.createUI(titleLabel));
-        titleLabel.setLocation(left, i.top);
-        titleLabel.setSize(60, 13);
-        module.add(titleLabel, 0);
-        
-        PModule mod = module.getModule();
-        if (mod!=null)
-        {
-            setTitleLabelText(mod.getShortTitle());
-            mod.addModuleListener(this);
-            setModuleColor(mod.getColorCode());
-        }
     }
     
     public void uninstallUI(JComponent c)
@@ -304,36 +258,13 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         if (eventHandler != null)
             eventHandler.uninstall(module);
     }
-    
 
-    private static final String MODULE_LISTENER_KEY = JTModuleUI.class.getName()+".MODULE_LISTENER";
-    
-    protected BasicEventHandler createEventHandler(JTModule control) 
+    private static BasicEventHandler beh;
+    protected BasicEventHandler createEventHandler(JTModule module) 
     {
-        BasicEventHandler eventHandler;
-        
-        JTContext context = control.getContext();
-        UIDefaults defaults = (context != null) ? context.getUIDefaults() : null;
-        
-        if (defaults != null)
-        {
-            Object l = defaults.get(MODULE_LISTENER_KEY);
-            if ((l != null) && (l instanceof BasicEventHandler))
-            {
-                eventHandler = (BasicEventHandler) l;
-            }
-            else
-            {
-                eventHandler = new BasicEventHandler();
-                defaults.put(MODULE_LISTENER_KEY, eventHandler);
-            }
-        }
-        else
-        {
-            eventHandler = new BasicEventHandler();
-        }
-        
-        return eventHandler;
+        if (beh == null)
+            beh = new BasicEventHandler();
+        return beh;
     }
 
     protected BasicEventHandler getEventHandler(JTModule module)
@@ -345,20 +276,30 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         return null;
     }
     
-    public static class BasicEventHandler implements MouseListener,
-        ComponentListener
+    public static class BasicEventHandler extends MouseAdapter implements
+        PropertyChangeListener, FocusListener
     {
+        
+        private JTModule getModule(EventObject e)
+        {
+            Object src = e.getSource();
+            if (src != null && src instanceof JTModule)
+                return (JTModule) src;
+            return null;
+        }
 
         public void install(JTModule module)
         {
-            //module.addComponentListener(this);
             module.addMouseListener(this);
+            module.addFocusListener(this);
+            module.addPropertyChangeListener(this);
         }
 
         public void uninstall(JTModule module)
         {
-            //module.removeComponentListener(this);
             module.removeMouseListener(this);
+            module.removeFocusListener(this);
+            module.removePropertyChangeListener(this);
         }
 
         public void mousePressed(MouseEvent e)
@@ -371,174 +312,117 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
                     c.requestFocus();
                 }
             }
-        }
-        
-        public void mouseClicked(MouseEvent e)
-        {
-            // no op
-        }
-
-        public void mouseEntered(MouseEvent e)
-        {
-            // no op
-        }
-
-        public void mouseExited(MouseEvent e)
-        {
-            // no op
-        }
-        
-        public void mouseReleased(MouseEvent e)
-        {
-            // no op
-        }
-
-        public void componentHidden(ComponentEvent e)
-        {
-            // no op
-        }
-
-        public void componentMoved(ComponentEvent e)
-        {
-            //((JTModule)e.getComponent()).getUI().updateCables();
-
-            /*  update cables (done in module container ui)
-            if (!(e.getComponent() instanceof JTModule))
+            JTModule module = getModule(e);
+            if (module == null || module.getUI() == null)
                 return;
             
-            JTModule mod = (JTModule) e.getComponent();
-            // no op
-            if (!(mod.getParent() instanceof JTModuleContainer))
+            if (module.getUI().handleTransformPopup(e))
+                return;
+            if (module.getUI().handleLabelClick(e))
+                return;
+        }
+
+        public void propertyChange(PropertyChangeEvent evt)
+        {
+            JTModule module = getModule(evt);
+            if (module == null || module.getUI() == null)
                 return;
             
-            JTModuleContainer cont = (JTModuleContainer) mod.getParent();
-            JTCableManager cm = cont.getCableManager();
-            if (cm == null)
-                return;
-            
-            LinkedList<Cable> visible = new LinkedList<Cable>();
-            cm.getVisible(visible);
-            for (Cable cable: visible)
+            if (JTModule.PROPERTY_TITLE.equals(evt.getPropertyName()))
             {
-                cm.update(cable);
+                module.getUI().updateTitle(module);
+                module.repaint();
             }
-            cm.notifyRepaintManager(); */
+            else if (JTModule.PROPERTY_SELECTED.equals(evt.getPropertyName()))
+            {
+                JTModuleUI ui = module.getUI();
+                module.setBorder(module.isSelected() ? ui.selectionBorder : ui.border);   
+            }
         }
 
-        public void componentResized(ComponentEvent e)
+        public void focusGained(FocusEvent e)
         {
-            // no op
+            e.getComponent().repaint();
         }
 
-        public void componentShown(ComponentEvent e)
+        public void focusLost(FocusEvent e)
         {
-            // no op
+            e.getComponent().repaint();
         }
+        
     }
     
-    private static class JTTransformer extends JTImage
+    private boolean handleLabelClick(MouseEvent e)
     {
-        /**
-         * 
-         */
-        private static final long serialVersionUID = 3285475892052794842L;
-
-        public JTTransformer(JTContext context)
+        if (e.getClickCount() == 2 && SwingUtilities.isLeftMouseButton(e)
+                && hitTitle(e.getX(), e.getY()))
         {
-            super(context);
-            setParentIsProcessingEvents(false);
-            enableEvents(MouseEvent.MOUSE_EVENT_MASK|MouseEvent.MOUSE_MOTION_EVENT_MASK);
+            setEditModuleTitle(true);
+            return true;
         }
-        
-        public boolean isReducible()
-        {
-            return false;
-        }
-        /*
-        public void paintStaticLayer(Graphics2D g2)
-        {
-            getIcon().paintIcon(this, g2, 0, 0);
-        }
-*/
-        protected void processEvent(AWTEvent e)
-        {
-            if (!(e instanceof MouseEvent))
-            {
-                super.processEvent(e);
-                return;
-            }
-            
-            MouseEvent me = (MouseEvent) e;
-            
-            if ((!me.isConsumed()) && e.getID() == MouseEvent.MOUSE_PRESSED && SwingUtilities.isLeftMouseButton(me))
-            {
-            	if (transformPopupMenu != null && transformPopupMenu.getInvoker()==me.getComponent()) 
-            	{
-            	    // close popup
-            		transformPopupMenu.setVisible(false);
-            		transformPopupMenu = null;
-            	}
-            	else
-            	{
-            	    // show popup
-                    Container p = getParent();
-                    if (p instanceof JTModule)
-                    {
-                        PModule m = ((JTModule) p).getModule();
-                        if (m != null)
-                        {
-                            createPopup(me, m);
-                            return;
-                        }
-                    }
-            	}
-            }
-            
-            super.processEvent(e);
-        }
-
-        protected void processMouseMotionEvent(MouseEvent e)
-        {
-            MouseEvent me = JThemeUtils.convertMouseEvent(e.getComponent(), e, getParent());
-            getParent().dispatchEvent(me);
-        }
-        
-        private void createPopup(MouseEvent e, final PModule source)
-        {
-            ModuleDescriptions md = source.getDescriptor().getModules();
-            
-            ClassLoader loader = md.getModuleDescriptionsClassLoader();
-            
-            PTTransformations t = md.getTransformations();
-            if (t == null)
-                return ;
-            
-            PTModuleMapping[] mappings = t.getMappings(source.getDescriptor());
-
-            // PTBasicTransformations.sort(mappings);
-            Arrays.sort(mappings, new Comparator<PTModuleMapping>() {
-            	public int compare(PTModuleMapping o1, PTModuleMapping o2) {
-                    PModuleDescriptor md1 = o1.getTarget(source.getDescriptor());
-                    PModuleDescriptor md2 = o2.getTarget(source.getDescriptor());
-            		return md1.getName().compareTo(md2.getName());
-            	}
-            });
-            
-            transformPopupMenu = null;
-            if (mappings.length>0)
-            {
-                for (int i=0;i<mappings.length;i++)
-                {
-                	if (transformPopupMenu == null) {
-                        transformPopupMenu = new JPopupMenu();
-                    }
-                    transformPopupMenu.add(new TransformAction(loader, source, mappings[i]));
-                }
-                transformPopupMenu.show(e.getComponent(), e.getX(), e.getY());
-            }
-        }
-
+        return false;
     }
+    
+    private boolean handleTransformPopup(MouseEvent me)
+    {
+        if (SwingUtilities.isLeftMouseButton(me)
+                && hitTransformationIcon(me.getX(), me.getY()) && me.getClickCount()==1)
+        {
+            if (transformPopupMenu != null && transformPopupMenu.getInvoker()==me.getComponent()) 
+            {
+                // close popup
+                transformPopupMenu.setVisible(false);
+                transformPopupMenu = null;
+            }
+            else
+            {
+                // show popup
+                PModule m = module.getModule();
+                if (m != null)
+                {
+                    createPopup(me, m);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void createPopup(MouseEvent e, final PModule source)
+    {
+        ModuleDescriptions md = source.getDescriptor().getModules();
+        
+        ClassLoader loader = md.getModuleDescriptionsClassLoader();
+        
+        PTTransformations t = md.getTransformations();
+        if (t == null)
+            return ;
+        
+        PTModuleMapping[] mappings = t.getMappings(source.getDescriptor());
+
+        // PTBasicTransformations.sort(mappings);
+        Arrays.sort(mappings, new Comparator<PTModuleMapping>() {
+            public int compare(PTModuleMapping o1, PTModuleMapping o2) {
+                PModuleDescriptor md1 = o1.getTarget(source.getDescriptor());
+                PModuleDescriptor md2 = o2.getTarget(source.getDescriptor());
+                return md1.getName().compareTo(md2.getName());
+            }
+        });
+        
+        transformPopupMenu = null;
+        if (mappings.length>0)
+        {
+            for (int i=0;i<mappings.length;i++)
+            {
+                if (transformPopupMenu == null) {
+                    transformPopupMenu = new JPopupMenu();
+                }
+                transformPopupMenu.add(new TransformAction(loader, source, mappings[i]));
+            }
+            transformPopupMenu.show(e.getComponent(), e.getX(), e.getY());
+        }
+    }
+
     
     private static class TransformAction extends AbstractAction
     {
@@ -591,34 +475,114 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
                 PModule result = mapping.transform(source);
 
                 if (result != null) {
-                	String t2 = result.getTitle();
-                	int sep = t1.lastIndexOf('$');
-                	if (sep>=0) {
-                		t2 = t2 + t1.substring(sep);
-                	}
-                	result.setTitle(t2);
+                    int colorKey = JThemeUtils.getColorKey(t1);
+                    result.setTitle(JThemeUtils.setColorKey(result.getTitle(),colorKey));
                 }
             }
         }
     }
     
+    private boolean hitRect(int x, int y, int rwidth, int rheight)
+    {
+        return (0<=x) && (x<rwidth) && (0<=y) && (y<rheight);
+    }
+    
+    public boolean hitTransformationIcon(int x, int y)
+    {
+        if (transformationIcon == null)
+            return false;
+        
+        Insets insets = getInsets(module);
+        x-=insets.left;
+        y-=insets.top;
+        int w = transformationIcon.getIconWidth();
+        int h = transformationIcon.getIconHeight();
+        return hitRect(x, y, w, h);
+    }
+    
+    
     public void paintStaticLayer(Graphics2D g, JTComponent c)
     {
         if (c.isOpaque())
         {
+            Insets insets = getInsets(c);
             g.setColor(c.getBackground());
-            
             Border border = c.getBorder();
+            
             if (border == null || border.isBorderOpaque())
             {
                 g.fillRect(0, 0, c.getWidth(), c.getHeight());
             }
             else
             {
-                Insets i = c.getInsets();
-                g.fillRect(i.left, i.top, c.getWidth()-(i.left+i.right-1), c.getHeight()-(i.top+i.bottom-1));
+                g.fillRect(insets.left, insets.top, 
+                        c.getWidth()-(insets.left+insets.right-1), c.getHeight()-(insets.top+insets.bottom-1));
+            }
+            
+            int left = insets.left;
+            
+            if (transformationIcon != null)
+            {
+                transformationIcon.paintIcon(c, g, insets.left, insets.top);
+                left+=transformationIcon.getIconWidth();
+            }
+            left+=2; //padding - even if no icon is painted
+
+            FontMetrics fm = getFontMetrics(module, module.getFont());
+            if (module.hasFocus())
+            {
+                g.setColor(Color.WHITE);
+                g.fillRect(left, insets.left, TITLE_WIDTH, fm.getHeight());
+            }
+            
+            String title = getShortTitle(module);
+            if (title != null && title.length()>0)
+            {
+                g.setColor(Color.BLACK);
+                g.drawString(title, left, insets.top+fm.getHeight()-fm.getDescent());
             }
         }
+    }
+    
+    final int TITLE_WIDTH = 56; // TODO hard coded values are bad
+    
+    public boolean hitTitle(int x, int y)
+    {
+        Insets insets = getInsets(module);
+        int l = insets.left;
+        int t = insets.top;
+        int h = 0;
+        int w = TITLE_WIDTH; // constant width
+        if (transformationIcon != null)
+        {
+            l+=transformationIcon.getIconWidth();
+        }
+        l+=2; //padding - even if no icon is painted
+
+        String title = getShortTitle(module);
+        if (title != null && title.length()>0)
+        {
+            FontMetrics fm = getFontMetrics(module, module.getFont());
+            h = fm.getHeight();
+        }
+        
+        x-=l;
+        y-=t;
+
+        return hitRect(x, y, w, h);
+    }
+    
+    private Point getTitleTopLeft()
+    {
+        Insets insets = getInsets(module);
+        int l = insets.left;
+        int t = insets.top;
+        if (transformationIcon != null)
+        {
+            l+=transformationIcon.getIconWidth();
+        }
+        l+=2; //padding - even if no icon is painted
+        return new Point(l, t);
     }
     
     public void paintDynamicLayer(Graphics2D g, JTComponent c)
@@ -626,112 +590,33 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         // no op
     }
     
-    private class TitleLabel extends JTLabel implements 
-        FocusListener, ActionListener
+    private class TitleEditor implements FocusListener, ActionListener
     {
         
         /**
          * 
          */
         private static final long serialVersionUID = 7086106076035449738L;
-        private JTModule module;
-        private boolean titleSet = false;
+        private JTextField textfield;
 
-        public TitleLabel(JTContext context, JTModule module)
+        public TitleEditor()
         {
-            super(context);
-            this.module = module;
-            enableEvents(MouseEvent.MOUSE_EVENT_MASK|MouseEvent.MOUSE_MOTION_EVENT_MASK);
+            textfield = new JTextField(new LimitedText(16), getShortTitle(module), 16);
+            textfield.setFont(module.getFont());
+            textfield.addKeyListener(new EscapeKeyListener(this, 0, "escape"));
+            textfield.addActionListener(this);
+            textfield.addFocusListener(this);
+            textfield.setBorder(null);
         }
         
-        protected boolean opacityOverwrite(boolean isOpaque)
+        public void init()
         {
-            return isOpaque;
+            textfield.setLocation(getTitleTopLeft());
+            textfield.setSize(textfield.getPreferredSize());
+            if (!textfield.requestFocusInWindow())
+                setEditModuleTitle(false);
         }
         
-        public String getText() {
-        	String text = super.getText();
-            int colorSeparator = text.lastIndexOf('$');
-            
-            if (colorSeparator>=0)
-            {
-            	return text.substring(0, colorSeparator);
-            } else
-
-        	return text;
-        }
-        
-        public String[] getSplitText() {
-        	return new String[] { getText() };
-        }
-
-        protected void paintStaticLayerOrBackingStore(Graphics2D g2)
-        {
-            paintStaticLayer(g2);
-        }
-        
-        public boolean isReducible()
-        {
-            return false;
-        }
-        
-        public void paint(Graphics g)
-        {
-            if (!titleSet)
-            {
-                PModule m = module.getModule();
-                if (m != null)
-                {
-                    setText(m.getTitle());
-                    titleSet = true;
-                }
-                //setSize(getPreferredSize());
-                
-            }
-            
-            super.paint(g);
-        }
-        
-        protected void processEvent(AWTEvent e)
-        {
-            if (e instanceof MouseEvent)
-            {
-                MouseEvent me = (MouseEvent)e;
-                
-                if (me.getID() == MouseEvent.MOUSE_CLICKED && 
-                        me.getClickCount()==2 && SwingUtilities.isLeftMouseButton(me))
-                {
-                    editModuleName();
-                    return;
-                }
-            }
-
-            super.processEvent(e);
-        }
-        
-        private void editModuleName()
-        {
-            PModule m = module.getModule();
-            if (m == null)
-                return ;
-
-            JTextField tf = new JTextField(new LimitedText(16), m.getShortTitle(), 16);
-            tf.setLocation(getLocation());
-            module.add(tf, 0);
-            tf.setSize(tf.getPreferredSize());
-            tf.addActionListener(this);
-            tf.addKeyListener(new EscapeKeyListener(this, 0, "escape"));
-            
-            tf.addFocusListener(this);
-            
-            if (!tf.requestFocusInWindow())
-            {
-                module.remove(tf);
-                return ;
-            }
-            module.repaint();
-        }
-
         public void focusGained(FocusEvent e)
         {
             // no op
@@ -739,19 +624,7 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
 
         public void focusLost(FocusEvent e)
         {
-            disposeEditor(e.getComponent());
-        }
-        
-        private void disposeEditor(Component ed)
-        {
-            if (ed instanceof JTextField)
-            {
-                JTextField tf = (JTextField) ed;
-                tf.removeFocusListener(this);
-                tf.removeActionListener(this);
-                module.remove(tf);
-                module.repaint();
-            }
+            setEditModuleTitle(false);
         }
 
         public void actionPerformed(ActionEvent e)
@@ -764,95 +637,22 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
                 
             if ("escape".equals(e.getActionCommand()))
             {
-                disposeEditor(tf);
+                setEditModuleTitle(false);
             }
             else if (e.getID() == ActionEvent.ACTION_PERFORMED)
             {
-                String text = tf.getText();
-                
-                module.getModule().setTitle(text);
-                setText(text);
-                disposeEditor(tf);
-                setSize(getPreferredSize());
-                repaint();
+                String title = module.getTitle();
+                int colorkey = JThemeUtils.getColorKey(title);
+
+                title = tf.getText();
+                if (colorkey>0)
+                    title += '$'+colorkey;
+                module.setTitle(title);
+                setEditModuleTitle(false);
+                module.repaint();
             }
         }
 
-    }
-
-    private void updateCables()
-    {
-        JTModuleContainer parent;
-        try
-        {
-            parent = (JTModuleContainer) module.getParent();
-        }
-        catch (ClassCastException cce)
-        {
-            // ignore
-            parent = null;
-        }
-        
-        if (parent != null)
-        {
-            JTCableManager cm = parent.getCableManager();
-            PModule pmodule = module.getModule();
-            if (cm != null && pmodule != null)
-            {
-                java.util.List<Cable> cables = new LinkedList<Cable>();
-                cm.getCables(cables, pmodule);
-                cm.update(cables);
-                for (Cable cable: cables)
-                    cable.updateEndPoints();
-                cm.update(cables);
-            }
-        }
-    }
-    
-    public void moduleMoved(PModuleEvent e)
-    {/*
-        try
-        {
-            JTModuleContainer jtc = (JTModuleContainer) module.getParent();
-            if (jtc != null)
-                jtc.updateModuleContainerDimensions();
-            
-        }
-        catch (ClassCastException cce)
-        {
-            // ignore
-        }
-       */ 
-        /*
-        Module m = e.getModule();
-        History h = m.getPatch().getHistory();
-        
-        if (h != null)
-            h.beginRecord();
-        try
-        {
-            module.setLocation(m.getScreenLocation());
-            
-            List<Cable> cables = new LinkedList<Cable>();
-            JTModuleContainer c = (JTModuleContainer) module.getParent();
-            c.getCableManager().getCables(cables, e.getModule());
-            for (Cable cable: cables)
-                c.getCableManager().update(cable);
-        }
-        finally
-        {
-            if (h!=null)
-                h.endRecord();
-        }*/
-    }
-
-    public void moduleRenamed(PModuleEvent e)
-    {
-        setTitleLabelText(e.getModule().getShortTitle());
-    }
-    
-    public void moduleColorChanged(PModuleEvent e) {
-        setModuleColor(e.getModule().getColorCode());
     }
     
     private Color fill = null;
@@ -867,30 +667,16 @@ public class JTModuleUI extends JTComponentUI implements PModuleListener
         return fill;
     }
     
-    protected void setTitleLabelText(String text)
-    {
-        if (text == null)
-            text = "";
-        titleLabel.setText(text);
-    }
-    
-    protected void setModuleColor(String colorCode){
-        Color bg = getFill();
-        if (bg == null)
-            return;
-        
-        if (colorCode.length() > 0) {
-        	colorCode = "module.background$"+colorCode;
+    protected void setModuleColor(int colorCode){
+        Color bg = null;
+        if (colorCode>0) {
         	UIDefaults defaults = module.getContext().getUIDefaults();
-        	Color c = defaults.getColor(colorCode);
+        	Color c = defaults.getColor("module.background$"+colorCode);
         	if (c != null)
         		bg = c;
         }
+        if (bg == null) bg = getFill();
         module.setBackground(bg);
     }
-
-    public void notifySelectionStateChanged(JTModule module)
-    {
-        module.setBorder(module.isSelected() ? selectionBorder : border);
-    }
+  
 }
