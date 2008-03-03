@@ -51,6 +51,7 @@ import javax.swing.tree.TreePath;
 import net.sf.nmedit.nmutils.FileSort;
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.io.FileUtils;
+import net.sf.nmedit.nmutils.swing.WorkIndicator;
 import net.sf.nmedit.nomad.core.Nomad;
 
 public class FileNode extends DefaultMutableTreeNode implements ETreeNode, MouseListener,
@@ -360,7 +361,15 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
     {     
         if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount()==2)
         {
-            Nomad.sharedInstance().openOrSelect(file);
+            Runnable run = new Runnable() 
+            {
+                public void run()
+                {
+                    Nomad.sharedInstance().openOrSelect(file);
+                }
+            };
+            run = WorkIndicator.create(e.getComponent(), run);
+            SwingUtilities.invokeLater(run);
         }
     }
     
