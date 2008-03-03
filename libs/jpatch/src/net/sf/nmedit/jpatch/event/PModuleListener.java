@@ -39,5 +39,5 @@ public interface PModuleListener extends EventListener
     void moduleMoved(PModuleEvent e);
 
     void moduleRenamed(PModuleEvent e);
-    void moduleColorChanged(PModuleEvent e);
+
 }

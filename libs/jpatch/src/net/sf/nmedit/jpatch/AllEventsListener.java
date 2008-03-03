@@ -157,10 +157,6 @@ public class AllEventsListener
     {
         // no op
     }
-    
-    public void moduleColorChanged(PModuleEvent e) {
-    	// no op
-    }
 
     public void connectionAdded(PConnectionEvent e)
     {

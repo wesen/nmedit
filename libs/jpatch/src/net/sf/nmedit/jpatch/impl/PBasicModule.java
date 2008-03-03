@@ -105,20 +105,11 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
     public void setTitle(String title)
     {        
         String oldTitle = this.title;
-        String oldColorCode = getColorCode();
-        if (!title.contains("$") && getColorCode() != null) {
-        	title = title + "$" + getColorCode();
-        }
         if (!(oldTitle == title || (title!=null && title.equals(oldTitle))))
         {
             this.title = title;
             fireModuleRenamed(oldTitle, title);
         }
-        String newColorCode = getColorCode();
-        if (!oldColorCode.equals(newColorCode)) {
-        	fireModuleColorChanged(oldColorCode, newColorCode);
-        }
-        
     }
 
     public void addModuleListener(PModuleListener l)
@@ -149,28 +140,6 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
                     moduleEvent.moduleRenamed(oldTitle);
                 }
                 ((PModuleListener)listeners[i+1]).moduleRenamed(moduleEvent);
-            }
-        }
-    }
-
-    protected void fireModuleColorChanged(String oldColorCode, String newColorCode)
-    {
-        PModuleEvent moduleEvent = null;
-        // Guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
-        // Process the listeners last to first, notifying
-        // those that are interested in this event
-        for (int i = listeners.length-2; i>=0; i-=2) 
-        {
-            if (listeners[i]==PModuleListener.class) 
-            {
-                // Lazily create the event:
-                if (moduleEvent == null)
-                {
-                    moduleEvent = new PModuleEvent(this);
-                    moduleEvent.moduleRenamed(oldColorCode);
-                }
-                ((PModuleListener)listeners[i+1]).moduleColorChanged(moduleEvent);
             }
         }
     }
@@ -584,33 +553,5 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
 		
 		return newM;
 	}
-	
-    public String getColorCode() {
-    	int colorSeparator = title.lastIndexOf('$');
-    
-    	if (colorSeparator>=0)
-    	{
-    		String code = title.substring(colorSeparator+1);
-    		return code;
-    	} else {
-    		return "";
-    	}
-    }
-
-    public void setColorCode(String colorCode) {
-    	setTitle(getShortTitle() + "$" + colorCode);
-    }
-    
-    public String getShortTitle() {
-    	String title = getTitle();
-    	int colorSeparator = title.lastIndexOf('$');
-    
-    	if (colorSeparator>=0)
-    	{
-    		return title.substring(0, colorSeparator);
-    	} else {
-    		return title;
-    	}
-    }
 
 }
