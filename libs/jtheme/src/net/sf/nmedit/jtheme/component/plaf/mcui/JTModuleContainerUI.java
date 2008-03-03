@@ -1052,8 +1052,11 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void mousePressed(MouseEvent e)
         {
-        	getModuleContainer().requestFocusInWindow();
             JTModuleContainer mc = jtcUI.getModuleContainer();
+            if (e.getComponent() == mc) // do not rob focus from module
+            {
+                getModuleContainer().requestFocusInWindow();
+            }
             if (Platform.isPopupTrigger(e) && e.getComponent() == mc)
             {
                 jtcUI.createPopupMenu(mc, e);
