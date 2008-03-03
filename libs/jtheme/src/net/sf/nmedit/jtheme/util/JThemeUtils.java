@@ -9,6 +9,44 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.MenuDragMouseEvent;
 
 public class JThemeUtils {
+
+    public static String setColorKey(String title, int colorkey)
+    {
+        if (colorkey<=0) return getTitleNoColorKey(title);
+        return getTitleNoColorKey(title)+'$'+colorkey;
+    }
+
+    private static int getColorKeySeparator(String title)
+    {
+        for (int i=title.length()-1;i>=0;i--)
+        {
+            char c = title.charAt(i);
+            if ('0'<=c && c<='9')
+                continue;
+            if ((c == '$') && (i+1<title.length()))
+                return i; // $ and at least one digit
+            break;
+        }
+        return -1;
+    }
+    
+    public static boolean isColorKeyDefined(String title)
+    {
+        return getColorKeySeparator(title)>=0;
+    }
+    
+    public static int getColorKey(String title)
+    {
+        int separator = getColorKeySeparator(title);
+        return separator < 0 ? 0 : Integer.parseInt(title.substring(separator+1));
+    }
+    
+    public static String getTitleNoColorKey(String title)
+    {
+        int separator = getColorKeySeparator(title);
+        return separator < 0 ? title : title.substring(0, separator);
+    }
+    
 	public static MouseEvent convertMouseEvent(Component source,
 			MouseEvent sourceEvent,
 			Component destination) {

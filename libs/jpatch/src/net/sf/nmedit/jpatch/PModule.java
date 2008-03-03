@@ -63,11 +63,6 @@ public interface PModule extends PComponent
  
     String getTitle();
     
-    String getShortTitle();
-    
-    String getColorCode();
-    void setColorCode(String colorCode);
-    
     void setTitle(String title);
     
     /**

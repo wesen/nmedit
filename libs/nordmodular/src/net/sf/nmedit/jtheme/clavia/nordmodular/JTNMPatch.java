@@ -73,6 +73,7 @@ import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.JTPatch;
 import net.sf.nmedit.jtheme.store2.ModuleElement;
+import net.sf.nmedit.jtheme.util.JThemeUtils;
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.graphics.GraphicsToolkit;
 
@@ -142,7 +143,7 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
             
             UIDefaults def = module.getContext().getUIDefaults();
 
-            Color defaultColor = def.getColor("module.background$default");
+            Color defaultColor = def.getColor("module.background");
             if (defaultColor != null)
                 list.add(GraphicsToolkit.renderColorIcon(defaultColor));
             int i=1;
@@ -254,11 +255,11 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
                     JTModule m = (JTModule) c;
                     if (m.isSelected() || m == module)
                     {
-                        PModule pm = m.getModule();
-                        if (pm != null)
-                        {
-                        	pm.setColorCode(Integer.toString(colorIndex));
-                        }
+                        String title = m.getTitle();
+                        if (title == null) title = "";
+                         
+                        title = JThemeUtils.setColorKey(title, colorIndex);
+                        m.setTitle(title);
                     }
                 }
             }
