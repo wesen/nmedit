@@ -21,15 +21,12 @@ package net.sf.nmedit.jpatch.history;
 import java.awt.Point;
 
 import javax.swing.undo.UndoManager;
-import javax.swing.undo.UndoableEditSupport;
 
 import net.sf.nmedit.jpatch.AllEventsListener;
 import net.sf.nmedit.jpatch.event.PConnectionEvent;
 import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
 import net.sf.nmedit.jpatch.event.PModuleEvent;
 import net.sf.nmedit.jpatch.event.PParameterEvent;
-import net.sf.nmedit.jpatch.history2.PConnectionEdit;
-import net.sf.nmedit.jpatch.history2.PModuleUndoableEdit;
 
 public class Synchronizer extends AllEventsListener
 {
@@ -38,7 +35,7 @@ public class Synchronizer extends AllEventsListener
     
     private boolean isHistoryEnabled()
     {
-        return true;
+        return false;// disabled while broken
     }
 
     public Synchronizer(UndoManager undoableEditSupport)
