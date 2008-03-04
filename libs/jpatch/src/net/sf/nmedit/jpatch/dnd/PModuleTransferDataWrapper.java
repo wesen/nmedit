@@ -55,13 +55,14 @@ public class PModuleTransferDataWrapper implements PModuleTransferData {
             throw new UnsupportedFlavorException(flavor);
         if (flavor.equals(PDragDrop.ModuleSelectionFlavor))
         	return this;
-        if (flavor.equals(PDragDrop.PatchFileFlavor)) {
+        if (flavor.equals(PDragDrop.PatchFileFlavor) || flavor.equals(PDragDrop.PatchStringFlavor)) {
 			try {
 //				System.out.println("patch file flavor");
 				PModuleContainer srcMc = sourceContainer;
 				PPatch patch = srcMc.getPatch();
+				int mcIdx = patch.getModuleContainerIndex(sourceContainer);
 				PPatch newPatch = patch.createEmptyPatch();
-				PModuleContainer dstMc = newPatch.getModuleContainer(0);
+				PModuleContainer dstMc = newPatch.getModuleContainer(mcIdx);
 				
 				CopyOperation copy = srcMc.createCopyOperation();
 				copy.setDestination(dstMc);
@@ -72,8 +73,10 @@ public class PModuleTransferDataWrapper implements PModuleTransferData {
 	            copy.copy();
 	            
 	            String str = newPatch.patchFileString();
-	            return new ByteArrayInputStream(str.getBytes());
-
+	            if (flavor.equals(PDragDrop.PatchFileFlavor))
+	            	return new ByteArrayInputStream(str.getBytes());
+	            else
+	            	return str;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -84,7 +87,7 @@ public class PModuleTransferDataWrapper implements PModuleTransferData {
 
     public DataFlavor[] getTransferDataFlavors()
     {
-        DataFlavor[] flavors = {PDragDrop.ModuleSelectionFlavor, PDragDrop.PatchFileFlavor};
+        DataFlavor[] flavors = {PDragDrop.ModuleSelectionFlavor, PDragDrop.PatchFileFlavor, PDragDrop.PatchStringFlavor};
         return flavors;
     }
 

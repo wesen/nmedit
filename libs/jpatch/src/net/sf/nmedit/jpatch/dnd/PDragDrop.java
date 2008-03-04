@@ -24,6 +24,9 @@ public class PDragDrop {
 	private static final String charset = "ISO-8859-1";
 	public static DataFlavor PatchFileFlavor =
 		new DataFlavor("text/patch; charset="+charset+"", "Nord Modular patch 3.0");
+	
+	public static DataFlavor PatchStringFlavor = 
+		new DataFlavor(java.lang.String.class, "patch string");
 
 	public static boolean isModuleDescriptorFlavorSupported(Transferable t)
 	{
