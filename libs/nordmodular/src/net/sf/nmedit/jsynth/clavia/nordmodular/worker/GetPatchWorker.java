@@ -98,6 +98,7 @@ public class GetPatchWorker extends NmProtocolListener implements ScheduledWorke
         //slot.setPatchId(patchId);
         NMPatch patch = patchBuilder.getPatch();
         slot.setPatch(patch);
+        patch.setEditSupportEnabled(true); // enable history
     }
 
     private void sendGetPatchMessage() throws SynthException
@@ -127,8 +128,10 @@ public class GetPatchWorker extends NmProtocolListener implements ScheduledWorke
         messageCount ++;
         
         if (messageCount>=PATCH_MESSAGE_COUNT)
+        {
             synth.removeProtocolListener(this);
-        
+            
+        }
         try
         {
             if (patchBuilder == null)

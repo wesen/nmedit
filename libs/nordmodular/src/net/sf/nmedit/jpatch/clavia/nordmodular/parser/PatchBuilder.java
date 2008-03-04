@@ -68,6 +68,7 @@ public class PatchBuilder implements PContentHandler
         this.errorHandler = errorHandler;
         this.modules = modules;
         reset();
+        patch.setEditSupportEnabled(false); // disable history
     }
     
     public String getPatchName()
