@@ -233,7 +233,8 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
     public Collection<? extends PModule> getModules() {
     	ArrayList<PModule> result = new ArrayList<PModule>();
     	for (PModule m : modules)
-    		result.add(m);
+    		if (m != null)
+    			result.add(m);
     	return result;
     }
 
