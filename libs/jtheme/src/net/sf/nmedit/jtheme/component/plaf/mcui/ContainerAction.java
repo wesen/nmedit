@@ -80,7 +80,7 @@ public class ContainerAction extends AbstractAction
         {
             UndoableEditSupport ues = jmc.getModuleContainer()
                 .getPatch().getUndoableEditSupport(); // TODO null pointer check
-            boolean didRemove = false;
+            boolean didBeginUpdate = false;
             
             try
             {
@@ -93,20 +93,19 @@ public class ContainerAction extends AbstractAction
                         
                         if (mm.isSelected())
                         {
-                            if (removeModule(mm))
+                            if ((!didBeginUpdate) && ues != null)
                             {
-                                if ((!didRemove) && ues != null)
-                                    ues.beginUpdate();
-                                didRemove = true;
+                                ues.beginUpdate();
+                                didBeginUpdate = true;
                             }
-                            
+                            removeModule(mm);
                         }
                     }
                 }
             }
             finally
             {
-                if (didRemove && ues != null)
+                if (didBeginUpdate && ues != null)
                     ues.endUpdate();
                 
             }
