@@ -44,7 +44,7 @@ public class NMCopyOperation extends NMMoveOperation implements CopyOperation {
         }
 
         for (PModule m : modules) {
-        	if (m.getParentComponent() != null)
+        	if (m != null && m.getParentComponent() != null)
         	{
         		PConnectionManager com = va.getConnectionManager();
         		PConnectionManager com2 = destination.getConnectionManager();
