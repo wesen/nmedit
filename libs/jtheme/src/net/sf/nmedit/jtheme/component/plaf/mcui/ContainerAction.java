@@ -63,16 +63,32 @@ public class ContainerAction extends AbstractAction
             	}
             		
             } else if (key == DELETE) {
-            	if (jmc == null) {
-            		Object o = e.getSource();
-            		if (o instanceof JTModuleContainer) {
-            			jmc = (JTModuleContainer)o;
-            		} else if (o instanceof JTModule){
-            			jmc = (JTModuleContainer)((JTModule)o).getParent();
-            		} else {
-            			return;
-            		}
-            	}
+                delete(e.getSource());
+            }
+        }
+    }
+    
+    private void delete(Object o)
+    {
+        if (jmc == null) {
+            if (o instanceof JTModuleContainer) {
+                jmc = (JTModuleContainer)o;
+            } else if (o instanceof JTModule){
+                jmc = (JTModuleContainer)((JTModule)o).getParent();
+            } else {
+                return;
+            }
+        }
+        Component[] components = jmc.getComponents();
+        if (components.length>0)
+        {
+            UndoableEditSupport ues = jmc.getModuleContainer()
+                .getPatch().getUndoableEditSupport(); // TODO null pointer check
+            try
+            {
+                if (ues != null)
+                    ues.beginUpdate();
+                
                 for (Component c : jmc.getComponents())
                 {
                     if (c instanceof JTModule)
@@ -84,10 +100,15 @@ public class ContainerAction extends AbstractAction
                     }
                 }
             }
-            
+            finally
+            {
+                if (ues != null)
+                    ues.endUpdate();
+                
+            }
         }
     }
-    
+
     public boolean isEnabled(Object sender) 
     {
     	Object key = getValue(ACTION_COMMAND_KEY);
