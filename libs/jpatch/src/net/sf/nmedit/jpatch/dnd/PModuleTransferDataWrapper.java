@@ -69,7 +69,9 @@ public class PModuleTransferDataWrapper implements PModuleTransferData {
 	            for (PModule module: getModules()) {
 	                copy.add(module);
 	            }
-	            copy.setScreenOffset(0, 0);
+	            ModulesBoundingBox bbox = new ModulesBoundingBox(getModules(), new Point(0, 0));
+	            Rectangle r = bbox.getBoundingBox();
+	            copy.setScreenOffset(-r.x, -r.y);
 	            copy.copy();
 	            
 	            String str = newPatch.patchFileString();
