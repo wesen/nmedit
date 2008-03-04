@@ -127,5 +127,13 @@ public class Platform
     		return SwingUtilities.isLeftMouseButton(e) && e.isControlDown();
     	}
 	}
+
+	public static boolean isLeftMouseButtonOnly(MouseEvent e) {
+    	if (Platform.isFlavor(OS.MacOSFlavor)) {
+    		return SwingUtilities.isLeftMouseButton(e) && !e.isControlDown();
+    	} else {
+    		return SwingUtilities.isLeftMouseButton(e);
+    	}
+	}
   
 }
