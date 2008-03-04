@@ -160,6 +160,7 @@ public class NmFileService implements FileService
             Nomad.sharedInstance()
             .getDocumentManager()
             .add(pd);
+            patch.setEditSupportEnabled(true); // enable history
         }
         catch (Exception e)
         {
