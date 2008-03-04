@@ -51,7 +51,7 @@ import net.sf.nmedit.jpatch.event.PConnectionListener;
 public class PBasicConnectionManager implements PConnectionManager
 {
 
-    private PModuleContainer container;
+    private PBasicModuleContainer container;
     private Map<PConnector, Node> nodemap;
     private int size;
     private EventListenerList eventListeners = new EventListenerList();
@@ -60,7 +60,7 @@ public class PBasicConnectionManager implements PConnectionManager
     private static final boolean DEBUG = true;
     
     
-    public PBasicConnectionManager(PModuleContainer container)
+    public PBasicConnectionManager(PBasicModuleContainer container)
     {
         this.container = container;
         nodemap = new HashMap<PConnector, Node>();

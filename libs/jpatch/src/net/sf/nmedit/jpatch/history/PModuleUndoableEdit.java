@@ -39,8 +39,10 @@ public class PModuleUndoableEdit extends AbstractUndoableEdit
     protected int id;
     protected PModule module;
     private PModuleContainer container;
-    private String title;
-    private Point location;
+    private String oldtitle;
+    private String newtitle;
+    private Point oldlocation;
+    private Point newlocation;
     
     public static UndoableEdit editAdd(PModule module)
     {
@@ -62,25 +64,32 @@ public class PModuleUndoableEdit extends AbstractUndoableEdit
         return new PModuleUndoableEdit(module, oldTitle);
     }
     
+    private PModuleUndoableEdit(int id)
+    {
+        this.id = id;
+    }
+    
     private PModuleUndoableEdit(PModule module, Point oldScreenLocation)
     {
+        this(MOVE);
         this.module = module;
-        this.location = oldScreenLocation;
-        this.id = MOVE;
+        this.oldlocation = oldScreenLocation;
+        this.newlocation = new Point(module.getScreenX(), module.getScreenY());
     }
     
     private PModuleUndoableEdit(PModule module, String oldTitle)
     {
+        this(RENAME);
         this.module = module;
-        this.title = oldTitle;
-        this.id = RENAME;
+        this.oldtitle = oldTitle;
+        this.newtitle = module.getTitle();
     }
 
     protected PModuleUndoableEdit(PModuleContainer container, PModule module, int id)
     {
+        this(id);
         this.container = container;
         this.module = module;
-        this.id = id;
     }
 
     private String getTitleInQuotes(String title)
@@ -92,15 +101,45 @@ public class PModuleUndoableEdit extends AbstractUndoableEdit
     public void redo() throws CannotRedoException 
     {
         super.redo();
-        if (!undo_or_redo(false))
-            throw new CannotRedoException();
+        switch (id)
+        {
+            case ADD:
+                container.add(module);
+                break;
+            case REMOVE:
+                container.remove(module);
+                break;
+            case MOVE:
+                module.setScreenLocation(newlocation);
+                break;
+            case RENAME:
+                module.setTitle(newtitle);
+                break;
+            default:
+                throw new CannotRedoException();
+        }
     }
 
     public void undo() throws CannotUndoException 
     {
         super.undo();
-        if (!undo_or_redo(true))
-            throw new CannotUndoException();
+        switch (id)
+        {
+            case ADD:
+                container.remove(module);
+                break;
+            case REMOVE:
+                container.add(module);
+                break;
+            case MOVE:
+                module.setScreenLocation(oldlocation);
+                break;
+            case RENAME:
+                module.setTitle(oldtitle);
+                break;
+            default:
+                throw new CannotUndoException();
+        }
     }
     
     public String getPresentationName()
@@ -114,55 +153,10 @@ public class PModuleUndoableEdit extends AbstractUndoableEdit
             case MOVE:
                 return "move "+getTitleInQuotes(module.getTitle());
             case RENAME:
-                return "rename "+getTitleInQuotes(module.getTitle())+" to "+getTitleInQuotes(title);
+                return "rename "+getTitleInQuotes(oldtitle)+" to "+getTitleInQuotes(newtitle);
             default:
                 return "";
         }
-    }
-
-    private boolean undo_or_redo(boolean isUndo)
-    {
-        switch (id)
-        {
-            case ADD:
-                removeModule();
-                return true;
-            case REMOVE:
-                addModule();
-                return true;
-            case MOVE:
-                moveModule();
-                return true;
-            case RENAME:
-                renameModule();
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    private void renameModule()
-    {
-        module.setTitle(title);
-        die();
-    }
-
-    private void moveModule()
-    {
-        module.setScreenLocation(location);
-        die();
-    }
-
-    private void addModule()
-    {
-        container.add(module);
-        die();
-    }
-
-    private void removeModule()
-    {
-        container.remove(module);
-        die();
     }
 
 }

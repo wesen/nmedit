@@ -24,6 +24,7 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoableEdit;
 
 import net.sf.nmedit.jpatch.PConnector;
+import net.sf.nmedit.jpatch.PPatch;
 
 public class PConnectionEdit extends AbstractUndoableEdit
 {
@@ -36,7 +37,7 @@ public class PConnectionEdit extends AbstractUndoableEdit
     private PConnector a;
     private PConnector b;
 
-    public static UndoableEdit editConnect(PConnector a, PConnector b)
+    public static UndoableEdit editConnect( PConnector a, PConnector b)
     {
         return new PConnectionEdit(a, b, CONNECT);
     }
@@ -56,15 +57,37 @@ public class PConnectionEdit extends AbstractUndoableEdit
     public void redo() throws CannotRedoException 
     {
         super.redo();
-        if (!undo_or_redo(false))
-            throw new CannotRedoException();
+        switch (id)
+        {
+            case CONNECT:
+                if (!a.connect(b))
+                    throw new CannotRedoException();
+                break;
+            case DISCONNECT:
+                if (!a.disconnect(b))
+                    throw new CannotRedoException();
+                break;
+            default:
+                throw new CannotRedoException();
+        }
     }
 
     public void undo() throws CannotUndoException 
     {
         super.undo();
-        if (!undo_or_redo(true))
-            throw new CannotUndoException();
+        switch (id)
+        {
+        case CONNECT:
+            if (!a.disconnect(b))
+                throw new CannotRedoException();
+            break;
+        case DISCONNECT:
+            if (!a.connect(b))
+                throw new CannotRedoException();
+            break;
+            default:
+                throw new CannotUndoException();
+        }
     }
     
     public String getPresentationName()
@@ -80,26 +103,4 @@ public class PConnectionEdit extends AbstractUndoableEdit
         }
     }
 
-    private boolean undo_or_redo(boolean isUndo)
-    {
-        switch (id)
-        {
-            case CONNECT:
-                if (a.disconnect(b))
-                {
-                    die();
-                    return true;
-                }
-                return false;
-            case DISCONNECT:
-                if (a.connect(b))
-                {
-                    die();
-                    return true;
-                }
-                return false;
-            default:
-                return false;
-        }
-    }
 }

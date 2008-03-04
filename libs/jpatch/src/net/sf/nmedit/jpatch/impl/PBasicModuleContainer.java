@@ -148,8 +148,8 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
     {
         return add(modules.generateIndex(), module);
     }
-
-    public boolean add(int index, PModule module)
+    
+    private boolean _add(int index, PModule module, boolean postEdit)
     {
         if (!canAdd(index, module))
             return false;
@@ -167,7 +167,14 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
             move.move();
         }*/
         
-        return true;
+        
+        
+        return true;   
+    }
+    
+    public boolean add(int index, PModule module)
+    {
+        return _add(index, module, true);
     }
     
     protected void configure(PModule module, int index)
@@ -255,6 +262,11 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
     }
 
     public boolean remove(PModule module)
+    {
+        return _remove(module, true);
+    }
+    
+    private boolean _remove(PModule module, boolean postEdit)
     {
         int index = indexOf(module);
         if (index>=0)
