@@ -32,13 +32,13 @@ public class ModuleAddEdit extends AbstractUndoableEdit
     public void undo() throws CannotUndoException
     {
         super.undo();
-        doAdd(!inverseEdit);
+        doAdd(inverseEdit);
     }
     
     public void redo() throws CannotRedoException
     {
         super.redo();
-        doAdd(inverseEdit);
+        doAdd(!inverseEdit);
     }
     
     private void doAdd(boolean add)
