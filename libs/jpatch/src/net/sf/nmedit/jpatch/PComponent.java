@@ -20,6 +20,8 @@ package net.sf.nmedit.jpatch;
 
 import java.util.Iterator;
 
+import javax.swing.undo.UndoableEdit;
+
 /**
  * A component in a patch.
  * 
@@ -28,6 +30,21 @@ import java.util.Iterator;
 public interface PComponent
 {
 
+    /**
+     * Posts an edit of this component.
+     * The edit will only be recognized if 
+     * {@link #isUndoableEditSupportEnabled()}
+     * is true.
+     * @param edit
+     */
+    void postEdit(UndoableEdit edit);
+    
+    /**
+     * True if undo support is enabled.
+     * @return true if undo support is enabled
+     */
+    boolean isUndoableEditSupportEnabled();
+    
     /**
      * Returns the descriptor of this component.
      * @return the descriptor of this component
