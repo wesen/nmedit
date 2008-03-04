@@ -19,8 +19,6 @@
 package net.sf.nmedit.jpatch;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
 
 import javax.swing.event.UndoableEditListener;
 import javax.swing.undo.UndoManager;
