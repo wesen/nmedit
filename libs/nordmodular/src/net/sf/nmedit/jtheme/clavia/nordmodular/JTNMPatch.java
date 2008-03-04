@@ -247,19 +247,15 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
         
         private void setColor(int colorIndex)
         {
-            for (Component c : module.getParent().getComponents())
+            for (JTModule m : ((JTModuleContainer) module.getParent()).getModules())
             {
-                if (c instanceof JTModule)
+                if (m.isSelected() || m == module)
                 {
-                    JTModule m = (JTModule) c;
-                    if (m.isSelected() || m == module)
-                    {
-                        String title = m.getTitle();
-                        if (title == null) title = "";
-                         
-                        title = JThemeUtils.setColorKey(title, colorIndex);
-                        m.setTitle(title);
-                    }
+                    String title = m.getTitle();
+                    if (title == null) title = "";
+                     
+                    title = JThemeUtils.setColorKey(title, colorIndex);
+                    m.setTitle(title);
                 }
             }
         }

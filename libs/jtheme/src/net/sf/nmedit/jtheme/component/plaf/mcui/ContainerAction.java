@@ -111,6 +111,11 @@ public class ContainerAction extends AbstractAction
                         removeModule(mm);
                     }
                 }
+                
+                // after the remove we have to update the container
+                jmc.revalidate(); // revalidates the bounds of the container
+                jmc.repaint(); // repaint
+                
             }
             finally
             {
