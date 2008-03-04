@@ -38,7 +38,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -668,6 +672,9 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
         int width = 0;
         int height = 0;
         
+        // keep all connectors for later
+        Set<JTConnector> allConnectors = new HashSet<JTConnector>();
+        
         for (PModule module : va)
         {
             ModuleElement mstore = getContext().getStorageContext()
@@ -686,6 +693,10 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
             height = Math.max(height, jtmodule.getY()+jtmodule.getHeight());
             
             cont.add(jtmodule);
+            
+            // keep connectors
+            allConnectors.addAll(jtmodule.getComponents(JTConnector.class));
+            
             /*
             if (image == null)
             {
@@ -697,12 +708,34 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
         }
         
         JTCableManager cm = cont.getCableManager();
+        Map<PConnector, JTConnector> connectorMap = new HashMap<PConnector, JTConnector>();
         
         for (PConnection c: va.getConnectionManager())
         {
-            JTConnector con1 = cont.findJTConnector(c.getA());
-            JTConnector con2 = cont.findJTConnector(c.getB());
+            PConnector pa = c.getA();
+            PConnector pb = c.getB();
             
+            JTConnector con1 = connectorMap.get(pa);
+            JTConnector con2 = connectorMap.get(pb);
+            if (con1 == null||con2 == null)
+            {
+                // search in map
+                for (JTConnector candidate: allConnectors)
+                {
+                    if (candidate.getConnector() == pa)
+                    {
+                        con1 = candidate; // found
+                        connectorMap.put(pa, candidate); // keep for later
+                        if (con2 != null) break; // both were found
+                    }
+                    if (candidate.getConnector() == pb)
+                    {
+                        con2 = candidate; // found
+                        connectorMap.put(pb, candidate); // keep for later
+                        if (con1 != null) break; // both were found
+                    }
+                }
+            }
             if (con1 != null && con2 != null)
             { 
                 Cable cable = cm.createCable(con1, con2);
