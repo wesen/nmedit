@@ -20,12 +20,11 @@ package net.sf.nmedit.jpatch.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.swing.event.EventListenerList;
 import javax.swing.undo.UndoableEdit;
+import javax.swing.undo.UndoableEditSupport;
 
 import net.sf.nmedit.jpatch.CopyOperation;
 import net.sf.nmedit.jpatch.MoveOperation;
@@ -68,6 +67,11 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
         modules.setMinKey(1);
         this.patch = patch;
         this.connectionManager = createConnectionManager();
+    }
+
+    public UndoableEditSupport getEditSupport()
+    {
+        return patch != null ? patch.getEditSupport() : null;
     }
     
     public void postEdit(UndoableEdit edit)

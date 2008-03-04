@@ -91,7 +91,7 @@ public class PBasicPatch implements PPatch
         return undoManager;
     }
 
-    public UndoableEditSupport getUndoableEditSupport()
+    public UndoableEditSupport getEditSupport()
     {
         return editSupport;
     }

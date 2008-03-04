@@ -49,6 +49,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JViewport;
 import javax.swing.UIDefaults;
+import javax.swing.undo.UndoableEditSupport;
 
 import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnector;
@@ -403,7 +404,21 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
         {
             if (connector == null) return;
             PConnector c = connector.getConnector();
-            if (c != null) c.disconnect();
+            if (c != null && c.isConnected())
+            {
+                UndoableEditSupport ues = c.getEditSupport();
+                try
+                {
+                    if (ues != null)
+                        ues.beginUpdate();
+                    c.disconnect();
+                }
+                finally
+                {
+                    if (ues != null)
+                        ues.endUpdate();
+                }
+            }
         }
 
         private void breakCables()
