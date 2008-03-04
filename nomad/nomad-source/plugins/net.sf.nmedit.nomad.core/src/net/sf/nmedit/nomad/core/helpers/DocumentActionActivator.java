@@ -169,12 +169,18 @@ public class DocumentActionActivator
             else if (undoEntry.isInstalled(item))
             {
                 if (undoEntry.isEnabled() && undoManager != null && undoManager.canUndo())
+                { 
                     undoManager.undo();
+                    updateHistoryMenu();
+                }
             }
             else if (redoEntry.isInstalled(item))
             {
                 if (redoEntry.isEnabled() && undoManager != null && undoManager.canRedo())
+                {
                     undoManager.redo();
+                    updateHistoryMenu();
+                }
             }
         }
     }
