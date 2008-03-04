@@ -159,7 +159,17 @@ public class JTModuleContainer extends JTBaseComponent
     {
         return new HashSet<JTModule>(selectionSet);
     }
-    
+
+    public Collection<? extends PModule> getSelectedPModules()
+    {
+    	HashSet<PModule> result = new HashSet<PModule>();
+    	for (JTModule m : selectionSet) {
+    		result.add(m.getModule());
+    		
+    	}
+    	return result;
+    }
+
     public void clearSelection()
     {
     	if (selectionSet.isEmpty())

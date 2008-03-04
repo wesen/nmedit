@@ -78,9 +78,9 @@ import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.plaf.SelectionPainter;
-import net.sf.nmedit.jtheme.dnd.JTDragDrop;
-import net.sf.nmedit.jtheme.dnd.JTModuleTransferData;
-import net.sf.nmedit.jtheme.dnd.JTModuleTransferDataWrapper;
+import net.sf.nmedit.jpatch.dnd.PDragDrop;
+import net.sf.nmedit.jpatch.dnd.PModuleTransferData;
+import net.sf.nmedit.jpatch.dnd.PModuleTransferDataWrapper;
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
 
@@ -172,14 +172,14 @@ public class JTModuleContainerUI extends ComponentUI
         Rectangle box = dndBox;
         if (box != null)
         {
-            JTModuleTransferDataWrapper transfer = getCurrentTransfer();
+            PModuleTransferDataWrapper transfer = getCurrentTransfer();
             if (transfer != null)
             {
-                Collection<? extends JTModule> components = transfer.getModules();
+                Collection<? extends PModule> components = transfer.getModules();
                 if (!components.isEmpty())
                 {
                     Rectangle bbox = transfer.getBoundingBox();
-                    SelectionPainter.paintSelectionBox(g, 
+                    SelectionPainter.paintPModuleSelectionBox(g, 
                             transfer.getModules(), 
                             box.x - bbox.x, 
                             box.y - bbox.y );
@@ -191,18 +191,18 @@ public class JTModuleContainerUI extends ComponentUI
     private transient Rectangle dndBox;
     private transient Point dndInitialScrollLocation;
 	protected EventHandler eventHandler;
-	private JTModuleTransferDataWrapper currentTransferData;
+	private PModuleTransferDataWrapper currentTransferData;
 	public boolean selectBoxActive;
 	public Point selectStartPoint;
 	public Rectangle selectRectangle;
     
-    private void setCurrentTransfer(JTModuleTransferDataWrapper transfer)
+    private void setCurrentTransfer(PModuleTransferDataWrapper transfer)
     {
         this.currentTransferData = transfer;
         updateDnDBoundingBox(null);
     }
     
-    private JTModuleTransferDataWrapper getCurrentTransfer()
+    private PModuleTransferDataWrapper getCurrentTransfer()
     {
         return currentTransferData;
     }
@@ -281,7 +281,7 @@ public class JTModuleContainerUI extends ComponentUI
                 getModuleContainer().invalidate();
             }
             
-            getModuleContainer().scrollRectToVisible(dndBox);
+//            getModuleContainer().scrollRectToVisible(dndBox);
             
             //getModuleContainer().scrollRectToVisible(dndBox);
         }
@@ -501,20 +501,20 @@ public class JTModuleContainerUI extends ComponentUI
             return
             (action & DnDConstants.ACTION_COPY) >0
             && getContainer().getModuleContainer() != null
-            && JTDragDrop.isModuleDescriptorFlavorSupported(t);
+            && PDragDrop.isModuleDescriptorFlavorSupported(t);
         }
         
         public void dragEnter(DropTargetDragEvent dtde)
         {
         	DataFlavor flavors[] = dtde.getTransferable().getTransferDataFlavors();
         	
-            JTModuleTransferDataWrapper transfer = jtcUI.getCurrentTransfer();
+            PModuleTransferDataWrapper transfer = jtcUI.getCurrentTransfer();
             
         	if (transfer == null) {
         		Transferable t = dtde.getTransferable();
-        		if (t.isDataFlavorSupported(JTDragDrop.ModuleSelectionFlavor)) {
+        		if (t.isDataFlavorSupported(PDragDrop.ModuleSelectionFlavor)) {
 					try {
-                        transfer = (JTModuleTransferDataWrapper)t.getTransferData(JTDragDrop.ModuleSelectionFlavor);
+                        transfer = (PModuleTransferDataWrapper)t.getTransferData(PDragDrop.ModuleSelectionFlavor);
                         jtcUI.setCurrentTransfer(transfer);
 					} catch (Throwable e) {
                         jtcUI.setCurrentTransfer(null);
@@ -526,7 +526,7 @@ public class JTModuleContainerUI extends ComponentUI
 
         	if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable())) {
         		dtde.acceptDrag(DnDConstants.ACTION_COPY);
-        	} else if (dtde.getTransferable().isDataFlavorSupported(JTDragDrop.ModuleSelectionFlavor)) {
+        	} else if (dtde.getTransferable().isDataFlavorSupported(PDragDrop.ModuleSelectionFlavor)) {
         		dtde.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
         	} else {
         		dtde.rejectDrag();
@@ -552,14 +552,14 @@ public class JTModuleContainerUI extends ComponentUI
                 dtde.acceptDrag(DnDConstants.ACTION_COPY);
             }
             else*/
-            if (dtde.getCurrentDataFlavorsAsList().contains(JTDragDrop.ModuleSelectionFlavor))
+            if (dtde.getCurrentDataFlavorsAsList().contains(PDragDrop.ModuleSelectionFlavor))
             {
                 dtde.acceptDrag(dtde.getDropAction() & (DnDConstants.ACTION_MOVE | DnDConstants.ACTION_COPY));
 
-                JTModuleTransferData data;
+                PModuleTransferData data;
                 try
                 {
-                    data = (JTModuleTransferData) dtde.getTransferable().getTransferData(JTDragDrop.ModuleSelectionFlavor);
+                    data = (PModuleTransferData) dtde.getTransferable().getTransferData(PDragDrop.ModuleSelectionFlavor);
 
                     if (data!=null)
                     {
@@ -580,7 +580,7 @@ public class JTModuleContainerUI extends ComponentUI
 
         private transient Rectangle cachedRectangle;
         
-        private void paintDragOver(JTModuleTransferData data, DropTargetDragEvent dtde)
+        private void paintDragOver(PModuleTransferData data, DropTargetDragEvent dtde)
         {
             Rectangle box = (cachedRectangle = data.getBoundingBox(cachedRectangle));
             
@@ -606,7 +606,7 @@ public class JTModuleContainerUI extends ComponentUI
             if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable()))
             {
                 PModuleContainer mc = getModuleContainer().getModuleContainer();
-                PModuleDescriptor md = JTDragDrop.getModuleDescriptor(dtde.getTransferable());
+                PModuleDescriptor md = PDragDrop.getModuleDescriptor(dtde.getTransferable());
                 if (md == null || mc == null)
                 {
                     dtde.rejectDrop();
@@ -656,10 +656,10 @@ public class JTModuleContainerUI extends ComponentUI
                 jtcUI.jtc.revalidate();
                 jtcUI.jtc.repaint();
                 dtde.dropComplete(true);
-            } else if (dtde.isDataFlavorSupported(JTDragDrop.ModuleSelectionFlavor)
+            } else if (dtde.isDataFlavorSupported(PDragDrop.ModuleSelectionFlavor)
                     && dtde.isLocalTransfer())
             {
-                chosen = JTDragDrop.ModuleSelectionFlavor;
+                chosen = PDragDrop.ModuleSelectionFlavor;
 
                 Transferable transfer = dtde.getTransferable();
                 try {
@@ -672,10 +672,10 @@ public class JTModuleContainerUI extends ComponentUI
                     return;
                 }
 
-                if (data!=null && data instanceof JTModuleTransferData)
+                if (data!=null && data instanceof PModuleTransferData)
                 {
                     // Cast the data and create a nice module.
-                    JTModuleTransferData tdata = ((JTModuleTransferData)data);
+                    PModuleTransferData tdata = ((PModuleTransferData)data);
                     
                     //Point p = dtde.getLocation();
 
@@ -683,13 +683,13 @@ public class JTModuleContainerUI extends ComponentUI
 
                     if ((action&DnDConstants.ACTION_MOVE)!=0)
                     {
-                    	MoveOperation op = tdata.getSource().getModuleContainer().createMoveOperation();
+                    	MoveOperation op = tdata.getSourceModuleContainer().createMoveOperation();
                     	op.setDestination(getModuleContainer().getModuleContainer());
                         executeOperationOnSelection(tdata, dtde, op);
                     }
                     else
                     {
-                    	MoveOperation op = tdata.getSource().getModuleContainer().createCopyOperation();
+                    	MoveOperation op = tdata.getSourceModuleContainer().createCopyOperation();
                     	// check for shift pressed to create links XXX
                     	op.setDestination(getModuleContainer().getModuleContainer());
                         executeOperationOnSelection(tdata, dtde, op);
@@ -705,7 +705,7 @@ public class JTModuleContainerUI extends ComponentUI
             jtcUI.updateDnDBoundingBox(null);
         }
 
-        private void executeOperationOnSelection(JTModuleTransferData tdata, DropTargetDropEvent dtde, MoveOperation op)
+        private void executeOperationOnSelection(PModuleTransferData tdata, DropTargetDropEvent dtde, MoveOperation op)
         {
             Point o = tdata.getDragStartLocation();
             Point p = new Point(dtde.getLocation());
@@ -717,8 +717,8 @@ public class JTModuleContainerUI extends ComponentUI
             JTCableManager cm = jtmc.getCableManager();
             PModuleContainer mc = jtmc.getModuleContainer();
             
-            for (JTModule jtmodule: tdata.getModules()) {
-                op.add(jtmodule.getModule());
+            for (PModule module: tdata.getModules()) {
+                op.add(module);
             }
             
             op.setScreenOffset(p.x, p.y);
@@ -772,7 +772,7 @@ public class JTModuleContainerUI extends ComponentUI
                 return;
             }
             
-            if (dtde.getTransferable().isDataFlavorSupported(JTDragDrop.ModuleSelectionFlavor))
+            if (dtde.getTransferable().isDataFlavorSupported(PDragDrop.ModuleSelectionFlavor))
             {
                 dtde.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
                 return;
@@ -814,10 +814,10 @@ public class JTModuleContainerUI extends ComponentUI
                     dndOrigin = SwingUtilities.convertPoint(c, dndOrigin, getModuleContainer());
                 }
                 
-                Collection<? extends JTModule> collection = jtc.getSelectedModules();
+                Collection<? extends PModule> collection = jtc.getSelectedPModules();
 
-                JTModuleTransferDataWrapper transfer =
-                    new JTModuleTransferDataWrapper(this, collection, dndOrigin);
+                PModuleTransferDataWrapper transfer =
+                    new PModuleTransferDataWrapper(this.getModuleContainer().getModuleContainer(), collection, dndOrigin);
                 jtcUI.setCurrentTransfer(transfer);
                 
                 // DragSource.isDragImageSupported() returns false on platforms
@@ -825,9 +825,9 @@ public class JTModuleContainerUI extends ComponentUI
                 // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4874070
                 if (DragSource.isDragImageSupported() & false) // disable feature until we are sure it works
                 {
-                    Image dragImage = renderDragImage( collection );
-                    Point imageOffset = new Point( dndOrigin );
-                    dge.startDrag(DragSource.DefaultMoveDrop, dragImage, imageOffset, transfer, this);    
+//                    Image dragImage = renderDragImage( collection );
+//                    Point imageOffset = new Point( dndOrigin );
+//                    dge.startDrag(DragSource.DefaultMoveDrop, dragImage, imageOffset, transfer, this);    
                 }
                 else
                 {
@@ -954,7 +954,7 @@ public class JTModuleContainerUI extends ComponentUI
         {
             DragSourceContext context = e.getDragSourceContext();
             Transferable transfer = context.getTransferable();
-            if (transfer instanceof JTModuleTransferDataWrapper)
+            if (transfer instanceof PModuleTransferDataWrapper)
             {
                 if (jtcUI.jtc == context.getComponent())
                     return DRAG_MODULES_FROM_THIS_CONTAINER;
@@ -962,7 +962,7 @@ public class JTModuleContainerUI extends ComponentUI
                     return DRAG_MODULES_FROM_OTHER_CONTAINER;
             }
             
-            if (JTDragDrop.isModuleDescriptorFlavorSupported(transfer))
+            if (PDragDrop.isModuleDescriptorFlavorSupported(transfer))
                 return DRAG_MODULES_CREATE;
             
             return DRAG_INVALID;
@@ -1183,6 +1183,7 @@ public class JTModuleContainerUI extends ComponentUI
 	public void updateScrollPosition(Point location) {
 		Rectangle visible = getModuleContainer().getVisibleRect();
 		Dimension dim = getModuleContainer().getSize();
+//		System.out.println("visible " + visible.width + "x" + visible.height + " dim " + dim.width + "x" + dim.height);
         int wScroll = Math.min(visible.width / 3, 40);
         int hScroll = Math.min(visible.height / 3, 40);
         // System.out.println("w " + wScroll + " h " + hScroll);
@@ -1200,7 +1201,7 @@ public class JTModuleContainerUI extends ComponentUI
         	scrollTo.y = location.y + hScroll;
         scrollTo.y = Math.min(scrollTo.y, dim.height);
         
-        // System.out.println("location " + location.x + " " + location.y + " visible " + visible.x + " " + visible.y + " scrollto " + scrollTo.x + " " + scrollTo.y);
+//         System.out.println("location " + location.x + " " + location.y + " visible " + visible.x + " " + visible.y + " scrollto " + scrollTo.x + " " + scrollTo.y);
         
         getModuleContainer().scrollRectToVisible(scrollTo);
 	}
