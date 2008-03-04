@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.border.Border;
@@ -100,6 +101,27 @@ public class JTModuleContainer extends JTBaseComponent
     {
         return true;
     }
+    
+    /**
+     * Returns a mutable list of all modules in this container.
+     * @return modules in this container
+     */
+    public List<JTModule> getModules()
+    {
+        int count = getComponentCount(); // >= result.size();
+        List<JTModule> modules = new ArrayList<JTModule>(count);
+        synchronized (getTreeLock())
+        {
+            for (int i=0;i<count;i++)
+            {
+                Component c = getComponent(i);
+                if (c instanceof JTModule)
+                    modules.add((JTModule)c);
+            }
+        }
+        return modules;
+    }
+    
     
     private Set<JTModule> selectionSet = new HashSet<JTModule>();
 
