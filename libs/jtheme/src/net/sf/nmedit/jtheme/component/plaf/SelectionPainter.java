@@ -26,6 +26,8 @@ import java.util.Collection;
 
 import javax.swing.JComponent;
 
+import net.sf.nmedit.jpatch.PModule;
+
 /**
  * TODO replace class with a customizable approach.
  */
@@ -36,6 +38,28 @@ public class SelectionPainter
     private static final float[] DASH = { 6, 3 };
     private static final BasicStroke DASH_STROKE = new BasicStroke(1,
             BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, DASH, 0 );
+
+	public static void paintPModuleSelectionBox(Graphics g,
+			Collection<? extends PModule> modules, int tx, int ty) {
+        if (modules.isEmpty()) return;
+        g = g.create();
+        try
+        {
+            ((Graphics2D)g).setStroke(DASH_STROKE);
+
+            g.setXORMode(Color.BLACK);
+            g.setColor(SELECTION_COLOR);
+            for (PModule c: modules)
+            {
+                g.drawRect(tx+c.getScreenX(), ty+c.getScreenY(), c.getScreenWidth()-1, c.getScreenHeight()-1);        
+            }
+        }
+        finally
+        {
+            g.dispose();
+        }
+}
+    
 
     public static void paintSelectionBox(Graphics g, Collection<? extends JComponent> components, int tx, int ty)
     {
@@ -88,5 +112,5 @@ public class SelectionPainter
             g.dispose();
         }
     }
-    
+
 }
