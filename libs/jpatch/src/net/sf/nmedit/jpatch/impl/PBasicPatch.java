@@ -19,9 +19,6 @@
 package net.sf.nmedit.jpatch.impl;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
@@ -55,7 +52,7 @@ public class PBasicPatch implements PPatch
     private Object focusedComponent; 
     private UndoManager undoManager = new UndoManager();
     private UndoableEditSupport editSupport = new UndoableEditSupport();
-    private boolean editSupportEnabled = true;
+    private boolean editSupportEnabled = false;
     private PBasicUndoableEditFactory editFactory = new PBasicUndoableEditFactory();
 
     public PBasicPatch(ModuleDescriptions moduleDescriptions)

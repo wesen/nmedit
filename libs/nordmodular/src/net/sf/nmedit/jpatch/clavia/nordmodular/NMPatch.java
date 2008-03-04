@@ -496,6 +496,10 @@ public class NMPatch extends PBasicPatch implements PPatch
 		}
 
     	patch.setProperty("file", null);
+
+        // enable history
+        patch.setEditSupportEnabled(true);
+        
     	return patch;
     }
     
