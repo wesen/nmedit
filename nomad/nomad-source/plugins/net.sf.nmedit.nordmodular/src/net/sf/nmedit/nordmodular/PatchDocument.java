@@ -119,7 +119,7 @@ public class PatchDocument implements Document,
         }
         else if (UndoableEditSupport.class.equals(featureClass))
         {
-            return (T)jtpatch.getPatch().getUndoableEditSupport();
+            return (T)jtpatch.getPatch().getEditSupport();
         }
         
         return null;
