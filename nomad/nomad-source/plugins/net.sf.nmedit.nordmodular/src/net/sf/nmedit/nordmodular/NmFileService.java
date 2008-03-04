@@ -77,7 +77,7 @@ public class NmFileService implements FileService
         		setFilePointerToNull = true;
         	}
         	
-        	NMPatch patch = (NMPatch)NMPatch.createPatchFromFile(file);
+        	NMPatch patch = NMPatch.createPatchFromFile(file);
 
             if (title != null)
                 patch.setName(title);
