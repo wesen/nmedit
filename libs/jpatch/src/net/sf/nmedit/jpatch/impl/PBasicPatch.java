@@ -191,11 +191,15 @@ public class PBasicPatch implements PPatch
 
     public void postEdit(UndoableEdit edit)
     {
-        if (isUndoableEditSupportEnabled() && !editFactory.isIgnoreEditEnabled())
+        if (isUndoableEditSupportEnabled())
         {
-            if (HistoryUtils.DEBUG) System.out.println(edit);
-            // undoManager.addEdit(edit);
-            editSupport.postEdit(edit);
+            if (HistoryUtils.DEBUG) System.out.println("PBasicPatch.postEdit("+edit+"); ignore="
+                    +editFactory.isIgnoreEditEnabled()+"; update-level:"+editSupport.getUpdateLevel());
+            if (!editFactory.isIgnoreEditEnabled())
+            {
+                // undoManager.addEdit(edit);
+                editSupport.postEdit(edit);
+            }
         }
     }
 
