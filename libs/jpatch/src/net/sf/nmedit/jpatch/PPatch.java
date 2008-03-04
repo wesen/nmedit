@@ -55,6 +55,8 @@ public interface PPatch
     Object getFocusedComponent();
     
     String patchFileString();
+
+	int getModuleContainerIndex(PModuleContainer sourceContainer);
         
     
 }
