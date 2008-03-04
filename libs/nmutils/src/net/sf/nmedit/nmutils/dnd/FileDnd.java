@@ -49,7 +49,7 @@ public class FileDnd {
 
 		return files;
 	}
-
+	
 	public static DataFlavor getFileFlavor(DataFlavor[] flavors) {
 		for (DataFlavor f: flavors) {
 			if (f.isMimeTypeEqual("text/uri-list") && f.isFlavorTextType())
@@ -66,6 +66,27 @@ public class FileDnd {
 			if(f.isMimeTypeEqual("text/uri-list") && f.isFlavorTextType())
 				return true;
 		return false;
+	}
+
+	public static boolean isPatchStringFlavor(DataFlavor[] transferDataFlavors) {
+		for (DataFlavor f : transferDataFlavors) {
+			if (f.getRepresentationClass().equals(java.lang.String.class) &&
+					f.getHumanPresentableName().equals("patch string"))
+				return true;
+		}
+		
+		return false;
+	}
+
+	public static DataFlavor getPatchStringFlavor(DataFlavor[] flavors) {
+		for (DataFlavor f: flavors) {
+			if (f.getRepresentationClass().equals(java.lang.String.class) &&
+					f.getHumanPresentableName().equals("patch string"))
+			{
+				return f;
+			}
+		}
+		return null;
 	}
 
 
