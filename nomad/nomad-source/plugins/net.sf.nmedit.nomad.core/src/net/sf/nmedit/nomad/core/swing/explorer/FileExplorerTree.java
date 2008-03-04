@@ -6,6 +6,7 @@ import java.io.FileFilter;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 import net.sf.nmedit.nmutils.io.FileUtils;
 import net.sf.nmedit.nomad.core.swing.ExtensionFilter;
@@ -53,9 +54,13 @@ public class FileExplorerTree extends ExplorerTree {
 				FileNode fNode = (FileNode)node;
 				File newFile =  new File(fNode.getFile().getParentFile(), 
 						node.getUserObject().toString());
-				File realNewFile = FileUtils.renameWithExtension(fNode.getFile(), newFile);
-				if (realNewFile != null)
+				File realNewFile = FileUtils.getNameWithExtension(fNode.getFile(), newFile);
+				if (realNewFile.exists()) {
+					startEditingAtPath(new TreePath(node.getPath()));
+					return;
+				} else if (fNode.getFile().renameTo(realNewFile)) {
 					fNode.setFile(realNewFile);
+				}
 				fNode.updateChildrenNodes();
 			}
 			

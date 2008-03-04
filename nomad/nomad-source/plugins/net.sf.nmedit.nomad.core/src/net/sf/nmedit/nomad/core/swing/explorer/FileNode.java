@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
@@ -240,7 +241,7 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
         return files;
     }
     
-    private TreeNode[] getChildren()
+    private TreeNode[] getChildrenArray()
     {
         if (children == null)
         {
@@ -259,15 +260,23 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
         }
         return children;
     }
-
+    
+    public Collection<? extends TreeNode> getChildren() {
+    	ArrayList<TreeNode> result  = new ArrayList<TreeNode>();
+    	for (TreeNode child : getChildrenArray()) {
+    		result.add(child);
+    	}
+    	return result;
+    }
+    
     public TreeNode getChildAt( int childIndex )
     {
-        return getChildren()[childIndex];
+        return getChildrenArray()[childIndex];
     }
 
     public int getChildCount()
     {
-        return file.isFile() ? 0 : getChildren().length; 
+        return file.isFile() ? 0 : getChildrenArray().length; 
     }
 
     public TreeNode getParent()
@@ -277,7 +286,7 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
 
     public int getIndex( TreeNode node )
     {
-        TreeNode[] children = getChildren();
+        TreeNode[] children = getChildrenArray();
         for (int i=children.length-1;i>=0;i--)
             if (children[i]==node)
                 return i;
@@ -303,7 +312,7 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
             return new Enumeration()
         {
             
-            TreeNode[] items = getChildren();
+            TreeNode[] items = getChildrenArray();
             int index = 0;
 
             public boolean hasMoreElements()
