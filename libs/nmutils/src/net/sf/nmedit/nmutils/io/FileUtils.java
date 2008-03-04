@@ -99,17 +99,14 @@ public class FileUtils {
 		}
 	}
 	
-	static public File renameWithExtension(File oldFile, File newFile) {
+	static public File getNameWithExtension(File oldFile, File newFile) {
 		String oldExtension = getFileExtension(oldFile);
 		String newExtension = getFileExtension(newFile);
 		
 		if (!(oldExtension == null || newExtension != null)) { 
 			newFile = new File(getPathnameWithoutExtension(newFile) + "." + oldExtension);
 		}
-		if (oldFile.renameTo(newFile)) {
-			return newFile;
-		} else {
-			return null;
-		}
+		
+		return newFile;
 	}
 }
