@@ -129,13 +129,13 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
         String newtitle = title;
         if (!(oldtitle == newtitle || (oldtitle!=null && title.equals(oldtitle))))
         {
-            this.title = oldtitle;
+            this.title = newtitle;
             if (isUndoableEditSupportEnabled())
             {
                 UndoableEdit edit = createRenameEdit(oldtitle, newtitle);
                 if (edit != null) postEdit(edit);
             }
-            fireModuleRenamed(oldtitle, title);
+            fireModuleRenamed(oldtitle, newtitle);
         }
     }
 
