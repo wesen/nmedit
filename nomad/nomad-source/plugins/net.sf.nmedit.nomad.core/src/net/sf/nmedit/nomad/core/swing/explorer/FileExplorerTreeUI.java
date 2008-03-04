@@ -414,7 +414,7 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
 				return;
 			try {
 				String data = (String)t.getTransferData(flavor);
-				File newFile = File.createTempFile("macro", ".pch", dest);
+				File newFile = FileUtils.newFileWithPrefix(dest, "macro", ".pch");
 				FileWriter out = new FileWriter(newFile);
 				out.write(data);
 				out.close();

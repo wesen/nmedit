@@ -23,6 +23,7 @@
 package net.sf.nmedit.nomad.core.swing.explorer;
 
 import java.awt.Event;
+import java.awt.PopupMenu;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -63,12 +64,14 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
     public static final String DELETE_PERMANENTLY = "Delete (Permanently)";
     public static final String REMOVE_EXPLORER_ENTRY = "Remove Entry";
     public static final String RENAME = "Rename";
+    public static final String CREATE_DIRECTORY = "Create Directory";
 	
     private final static FileNode[] EMPTY = new FileNode[0];
     private File file;
     private FileNode[] children = null;
     private TreeNode parent;
 	private JPopupMenu filePopup;
+	private boolean popupMenuVisible = false;
     
     public FileNode(TreeNode parent, File file)
     {
@@ -337,7 +340,9 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
 
     public Icon getIcon()
     {
-        return file.isFile() ? ExplorerTreeUI.DefaultFileIcon : ExplorerTreeUI.DefaultFolderIcon; 
+        return file.isFile() ? 
+        		ExplorerTreeUI.DefaultFileIcon : 
+        			ExplorerTreeUI.DefaultFolderIcon; 
     }
 
     public String getToolTipText()
@@ -368,7 +373,7 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
 
     private void openAction(MouseEvent e)
     {     
-        if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount()==2)
+        if (Platform.isLeftMouseButtonOnly(e) && e.getClickCount()==2)
         {
             Runnable run = new Runnable() 
             {
@@ -396,6 +401,12 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
             return;
         if (Platform.isFlavor(Platform.OS.MacOSFlavor))
             openAction(e);
+        
+        if (Platform.couldBePopupTrigger(e) && filePopup != null && filePopup.isVisible())
+        	e.consume();
+        
+        if (Platform.isFlavor(Platform.OS.MacOSFlavor) && Platform.couldBePopupTrigger(e))
+        	e.consume();
     }
 
     private boolean handlePopupTrigger(MouseEvent e)
@@ -406,14 +417,18 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
             
             if (et.isPopupTrigger(e, this, true))
             {
-            	if (filePopup != null && filePopup.getInvoker()== e.getComponent()) 
+            	if (filePopup != null && filePopup.getInvoker()== e.getComponent() && popupMenuVisible)
             	{
             	    // close popup
             		filePopup.setVisible(false);
             		filePopup = null;
+                    popupMenuVisible = false;
+
+            		e.consume();
             		return true;
             	} else { 
             	    createPopup(e, et);
+            	    e.consume();
                 	return true;
             	}
             }
@@ -425,10 +440,12 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
     {
     	// the current line might not be selected yet
     	int row = et.getRowForLocation(e.getX(), e.getY());
-    	if (row>=0) et.setSelectionRow(row);
+    	if (row>=0) et.addSelectionRow(row);
         filePopup = new JPopupMenu();
         populatePopup(filePopup, e, et);
         filePopup.show(et, e.getX(), e.getY());
+        popupMenuVisible = true;
+
     }
     
     protected void populatePopup(JPopupMenu popup, MouseEvent e, ExplorerTree et)
@@ -437,6 +454,7 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
         {
             popup.add(new FileNodeAction(et, FileNode.REFRESH));
             popup.add(new FileNodeAction(et, FileNode.DELETE_PERMANENTLY));
+            popup.add(new FileNodeAction(et, FileNode.CREATE_DIRECTORY));
         }
         else
         {
@@ -499,7 +517,29 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
                 }
             } else if (e.getActionCommand() == RENAME) {
             	et.startEditingAtPath(new TreePath(node.getPath()));
+            } else if (e.getActionCommand() == CREATE_DIRECTORY) {
+            	File f = node.getFile();
+            	try {
+					File newDir = FileUtils.newFileWithPrefix(f, "dir", "");
+					newDir.mkdir();
+					node.updateChildrenNodes();
+					et.expandPath(new TreePath(node.getPath()));
+					((ExplorerTree)et).fireNodeStructureChanged(node);
+
+					for (TreeNode child : node.getChildren()) {
+						if (child instanceof FileNode && ((FileNode)child).getFile().getCanonicalPath().equals(newDir.getCanonicalPath())) {
+			            	et.startEditingAtPath(new TreePath(((FileNode)child).getPath()));
+			            	break;
+						}
+					}
+
+				} catch (IOException e1) {
+					// no op
+					e1.printStackTrace();
+				}
+            	
             }
+            
         }
         
         public void actionPerformed(ActionEvent e)
@@ -513,6 +553,19 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
         			actionPerformed(node, e);
         		}
         	}
+        	
+        }
+        
+        public boolean isEnabled() {
+        	TreePath paths[] = et.getSelectionPaths();
+        	if (paths.length > 1) {
+        		Object action = getValue(ACTION_COMMAND_KEY);
+        		if (action == RENAME)
+        			return false;
+        		if (action == CREATE_DIRECTORY)
+        			return false;
+        	}
+        	return super.isEnabled();
         }
         
     }
