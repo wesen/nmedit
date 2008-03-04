@@ -968,14 +968,19 @@ public class FFTabBarUI extends TabBarUI
         return index<0 ? -1 : index;
     }
 
+    protected boolean isInCloseButtonBounds(int x, int y) {
+        int index = getTabIndexForLocation(x, y);
+        if (index<0) return false;
+        return closeButtonBounds.contains(x-index*tabBounds.width, y-tabBounds.y);
+    }
+    
     public int getCloseButtonHoverIndex(int x, int y)
     {
         if (!tabBar.isCloseActionEnabled())
             return -1;
         
         int index = getTabIndexForLocation(x, y);
-        if (index<0) return -1;
-        return closeButtonBounds.contains(x-index*tabBounds.width, y-tabBounds.y) ? index : -1;
+        return isInCloseButtonBounds(x, y) ? index : -1;
     }
 
     public void setCloseButtonHoverIndex(int tabIndex)
@@ -1207,6 +1212,7 @@ public class FFTabBarUI extends TabBarUI
 
         public void mousePressed(MouseEvent e)
         {   
+        	System.out.println("pressed");
             if (handlePopupTrigger(e))
                 return;
             
@@ -1243,6 +1249,7 @@ public class FFTabBarUI extends TabBarUI
 
         public void mouseReleased(MouseEvent e)
         {
+        	System.out.println("released");
             if (handlePopupTrigger(e))
                 return;
         }
@@ -1329,6 +1336,11 @@ public class FFTabBarUI extends TabBarUI
 
         public void dragGestureRecognized(DragGestureEvent dge)
         {
+        	Point p = dge.getDragOrigin();
+            if (ui.isInCloseButtonBounds(p.x, p.y)) {
+            	return;
+            }
+
             if (dge.getComponent() ==  tabBar && dge.getDragAction() == DnDConstants.ACTION_MOVE)
             {
                 int tabIndex = tabBar.getSelectedIndex();
