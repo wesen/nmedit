@@ -58,7 +58,7 @@ import javax.swing.tree.TreeSelectionModel;
 import net.sf.nmedit.jpatch.ImageSource;
 import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
-import net.sf.nmedit.jtheme.dnd.JTDragDrop;
+import net.sf.nmedit.jpatch.dnd.PDragDrop;
 import net.sf.nmedit.nomad.core.swing.ButtonBarBuilder;
 import net.sf.nmedit.nomad.core.swing.explorer.ContainerNode;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
@@ -321,7 +321,7 @@ public class ModulePane extends JPanel
                     PModuleDescriptor descriptor =
                         ((ModuleDescriptorNode)lpc).getDescriptor();
                     
-                    Transferable t = JTDragDrop.createTransferable(descriptor);
+                    Transferable t = PDragDrop.createTransferable(descriptor);
                     dge.startDrag(DragSource.DefaultCopyDrop, t);
                 }
             }
