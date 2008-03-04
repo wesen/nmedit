@@ -540,7 +540,7 @@ public class JTModuleContainerUI extends ComponentUI
     						
     						for (int i = 0; i < newPatch.getModuleContainerCount(); i++) {
     							newMc = newPatch.getModuleContainer(i);
-    							if (newMc.getModuleCount() < 0)
+    							if (newMc.getModuleCount() > 0)
     								break;
     						}
     						if (newMc != null) {
@@ -760,7 +760,7 @@ public class JTModuleContainerUI extends ComponentUI
 						
 						for (int i = 0; i < newPatch.getModuleContainerCount(); i++) {
 							newMc = newPatch.getModuleContainer(i);
-							if (newMc.getModuleCount() < 0)
+							if (newMc.getModuleCount() > 0)
 								break;
 						}
 						
@@ -775,7 +775,8 @@ public class JTModuleContainerUI extends ComponentUI
                     	for (int i = 0; i < newMc.getModuleCount(); i++) {
                     		op.add(newMc.getModule(i + 1));
                     	}
-                    	op.setScreenOffset(0, 0);
+                        Point p = new Point(dtde.getLocation());
+                        op.setScreenOffset(p.x, p.y);
                     	op.copy();
                         dtde.dropComplete(true);
                         jtcUI.updateDnDBoundingBox(null);
