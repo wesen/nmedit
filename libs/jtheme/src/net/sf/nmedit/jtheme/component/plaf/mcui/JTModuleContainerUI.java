@@ -536,8 +536,19 @@ public class JTModuleContainerUI extends ComponentUI
     				if (files.size() == 1) {
     					PPatch newPatch = patch.createFromFile(files.get(0));
     					if (newPatch != null) {
-    						PModuleContainer newMc = newPatch.getModuleContainer(1);
-    						jtcUI.setCurrentTransfer(newMc.getModules());
+    						PModuleContainer newMc = null;
+    						
+    						for (int i = 0; i < newPatch.getModuleContainerCount(); i++) {
+    							newMc = newPatch.getModuleContainer(i);
+    							if (newMc.getModuleCount() < 0)
+    								break;
+    						}
+    						if (newMc != null) {
+    							jtcUI.setCurrentTransfer(newMc.getModules());
+    						} else {
+    							dtde.rejectDrag();
+    							return;
+    						}
     					}
     				}
         		} else {
@@ -602,8 +613,10 @@ public class JTModuleContainerUI extends ComponentUI
             
             if (FileDnd.testFileFlavor(dtde.getTransferable().getTransferDataFlavors())) {
             	dtde.acceptDrag(DnDConstants.ACTION_COPY);
-                paintDragOver(jtcUI.getCurrentTransfer(), dtde);
-            	return;
+            	if (jtcUI.getCurrentTransfer() != null) { 
+            		paintDragOver(jtcUI.getCurrentTransfer(), dtde);
+            		return;
+            	}
             }
     	
 
@@ -743,7 +756,20 @@ public class JTModuleContainerUI extends ComponentUI
 				if (files.size() == 1) {
 					PPatch newPatch = patch.createFromFile(files.get(0));
 					if (newPatch != null) {
-						PModuleContainer newMc = newPatch.getModuleContainer(1);
+						PModuleContainer newMc = null;
+						
+						for (int i = 0; i < newPatch.getModuleContainerCount(); i++) {
+							newMc = newPatch.getModuleContainer(i);
+							if (newMc.getModuleCount() < 0)
+								break;
+						}
+						
+						if (newMc == null) {
+							dtde.rejectDrop();
+							dtde.dropComplete(false);
+	                        jtcUI.updateDnDBoundingBox(null);
+							return;
+						}
                     	CopyOperation op = newMc.createCopyOperation();
                     	op.setDestination(getModuleContainer().getModuleContainer());
                     	for (int i = 0; i < newMc.getModuleCount(); i++) {
