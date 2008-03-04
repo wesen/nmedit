@@ -1168,7 +1168,7 @@ public class FFTabBarUI extends TabBarUI
 
         public void mouseClicked(MouseEvent e)
         {
-            if (SwingUtilities.isLeftMouseButton(e))
+            if (Platform.isLeftMouseButtonOnly(e))
             {
                 int closeButton = ui.getCloseButtonHoverIndex(e.getX(), e.getY());
                 if (closeButton>=0)
