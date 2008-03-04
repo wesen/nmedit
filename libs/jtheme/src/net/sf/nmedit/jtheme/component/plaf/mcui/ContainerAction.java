@@ -78,8 +78,7 @@ public class ContainerAction extends AbstractAction
         Component[] components = jmc.getComponents();
         if (components.length>0)
         {
-            UndoableEditSupport ues = jmc.getModuleContainer()
-                .getPatch().getUndoableEditSupport(); // TODO null pointer check
+            UndoableEditSupport ues = jmc.getModuleContainer().getEditSupport(); 
             boolean didBeginUpdate = false;
             
             try
@@ -135,7 +134,7 @@ public class ContainerAction extends AbstractAction
         PModuleContainer mc = getTarget();
         if (mc != null)
         {
-            UndoableEditSupport ues = mc.getPatch().getUndoableEditSupport();
+            UndoableEditSupport ues = mc.getEditSupport();
             try
             {
                 if (ues != null)

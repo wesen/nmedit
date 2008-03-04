@@ -21,6 +21,7 @@ package net.sf.nmedit.jpatch.impl;
 import java.util.Iterator;
 
 import javax.swing.undo.UndoableEdit;
+import javax.swing.undo.UndoableEditSupport;
 
 import net.sf.nmedit.jpatch.PComponent;
 import net.sf.nmedit.jpatch.PConnector;
@@ -50,6 +51,12 @@ public abstract class PBasicComponent<P extends PDescriptor> implements PCompone
             : "the specified descriptor is null";
         this.descriptor = descriptor;
         this.componentIndex = componentIndex;
+    }
+    
+    public UndoableEditSupport getEditSupport()
+    {
+        PComponent parent = getParentComponent();
+        return (parent != null) ? parent.getEditSupport() : null;
     }
     
     /**

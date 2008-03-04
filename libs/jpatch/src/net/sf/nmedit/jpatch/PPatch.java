@@ -27,6 +27,10 @@ import javax.swing.undo.UndoableEditSupport;
 
 public interface PPatch 
 {
+    UndoManager getUndoManager();
+    
+    UndoableEditSupport getEditSupport();
+    
     /**
      * Posts an edit of this component.
      * The edit will only be recognized if 
@@ -58,9 +62,6 @@ public interface PPatch
     PFactory getComponentFactory();
 
     String getName();
-    
-    UndoableEditSupport getUndoableEditSupport();
-    UndoManager getUndoManager();
     
     PModule createModule(PModuleDescriptor d);
     

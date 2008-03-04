@@ -79,8 +79,9 @@ public class JTModule extends JTComponent
         {
             this.title = newValue;
             if (module != null)
-                module.setTitle(title);
+                module.setTitle(newValue);
             firePropertyChange(PROPERTY_TITLE, oldValue, newValue);
+            repaint();
         }
     }
     
