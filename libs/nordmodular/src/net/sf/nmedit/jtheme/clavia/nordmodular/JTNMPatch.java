@@ -41,8 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -54,7 +54,6 @@ import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
 import net.sf.nmedit.jpatch.PModule;
-import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.PSignal;
 import net.sf.nmedit.jpatch.PSignalTypes;
 import net.sf.nmedit.jpatch.clavia.nordmodular.Format;
@@ -72,6 +71,7 @@ import net.sf.nmedit.jtheme.component.JTConnector;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.JTPatch;
+import net.sf.nmedit.jtheme.component.plaf.mcui.ContainerAction;
 import net.sf.nmedit.jtheme.store2.ModuleElement;
 import net.sf.nmedit.jtheme.util.JThemeUtils;
 import net.sf.nmedit.nmutils.Platform;
@@ -125,7 +125,6 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
          * 
          */
         private static final long serialVersionUID = -3424440102953404258L;
-        public static final String DELETE = "remove";
         public static final String RENAME = "rename";
         public static final String HELP = "help";
         public static final String COLOR = "color";
@@ -188,8 +187,14 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
                 popup.addSeparator();
             }
             popup.add(new ModuleAction(HELP, module));
-            popup.addSeparator();
-            popup.add(new ModuleAction(DELETE, module));
+            
+            JTModuleContainer container = (JTModuleContainer) module.getParent();
+            Action deleteAction = container.getActionMap().get(ContainerAction.DELETE);
+            if (deleteAction != null)
+            {
+                popup.addSeparator();
+                popup.add(deleteAction);
+            }
             return popup;
         }
         
@@ -199,12 +204,7 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
             this.module = module;
             putValue(ACTION_COMMAND_KEY, action);
 
-            if (action == DELETE)
-            {
-                // TODO rely on actionmap see: ModuleAction.ACTION_COMMAND_KEY
-                putValue(NAME, "Delete");
-            }
-            else if (action == RENAME)
+            if (action == RENAME)
             {
                 putValue(NAME, "Rename");
                 setEnabled(false);
@@ -230,9 +230,7 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
                 return;
             
             String command = e.getActionCommand();
-            if (command == DELETE)
-                removeModule();
-            else if (command == RENAME)
+            if (command == RENAME)
                 throw new UnsupportedOperationException("command not supported: "+command);
             else if (command == HELP)
                 throw new UnsupportedOperationException("command not supported: "+command);
@@ -265,39 +263,6 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
             }
         }
 
-        private void removeModule()
-        {
-            JComponent container = (JComponent) module.getParent();
-            for (Component c : container.getComponents())
-            {
-                if (c instanceof JTModule)
-                {
-                    JTModule m = (JTModule) c;
-                    
-                    if (m == module)
-                    {
-                        module = null;
-                        removeModule(m, false);
-                    }
-                    else if (m.isSelected())
-                        removeModule(m, false);
-                }
-            }
-            
-            if (module != null)
-                removeModule(module, false);
-        }
-        
-        private static void removeModule(JTModule m, boolean validate)
-        {
-            PModule nm = m.getModule();
-            
-            if (nm != null && nm.getParentComponent() != null)
-            {
-                nm.getParentComponent().remove(nm);
-            }
-        }
-        
     }
 
     protected static class ConnectorAction extends AbstractAction
