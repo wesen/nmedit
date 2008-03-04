@@ -68,22 +68,13 @@ public class ContainerAction extends AbstractAction
             	}
             		
             } else if (key == DELETE) {
-                delete(e.getSource());
+                delete();
             }
         }
     }
     
-    private void delete(Object o)
+    private void delete()
     {
-        if (jmc == null) {
-            if (o instanceof JTModuleContainer) {
-                jmc = (JTModuleContainer)o;
-            } else if (o instanceof JTModule){
-                jmc = (JTModuleContainer)((JTModule)o).getParent();
-            } else {
-                return;
-            }
-        }
         Component[] components = jmc.getComponents();
         if (components.length>0)
         {
