@@ -25,6 +25,7 @@ import java.lang.ref.SoftReference;
 import java.util.List;
 
 import javax.swing.event.EventListenerList;
+import javax.swing.undo.UndoableEdit;
 
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
 import net.sf.nmedit.jpatch.PComponent;
@@ -43,6 +44,7 @@ import net.sf.nmedit.jpatch.PParameterDescriptor;
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.event.PModuleEvent;
 import net.sf.nmedit.jpatch.event.PModuleListener;
+import net.sf.nmedit.jpatch.history.edit.ModuleRenameEdit;
 import net.sf.nmedit.jpatch.util.ObjectCache;
 import net.sf.nmedit.jpatch.util.ObjectFilter;
 import net.sf.nmedit.jpatch.util.ObjectFilterResult;
@@ -103,13 +105,25 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
         return title;
     }
 
+    protected UndoableEdit createRenameEdit(String oldtitle, String newtitle)
+    {
+        return new ModuleRenameEdit(this, oldtitle, newtitle);
+    }
+    
     public void setTitle(String title)
     {        
-        String oldTitle = this.title;
-        if (!(oldTitle == title || (title!=null && title.equals(oldTitle))))
+        String oldtitle = this.title;
+        String newtitle = title;
+        if (!(oldtitle == oldtitle || (oldtitle!=null && title.equals(oldtitle))))
         {
-            this.title = title;
-            fireModuleRenamed(oldTitle, title);
+            this.title = oldtitle;
+            
+            if (isUndoableEditSupportEnabled())
+            {
+                UndoableEdit edit = createRenameEdit(oldtitle, newtitle);
+                //postEdit(edit);
+            }
+            fireModuleRenamed(oldtitle, title);
         }
     }
 

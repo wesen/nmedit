@@ -22,7 +22,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEditSupport;
 
@@ -54,7 +55,7 @@ public class PBasicPatch implements PPatch
     private String name;
     private Object focusedComponent; 
     private UndoManager undoManager = new UndoManager();
-    private UndoableEditSupport undoableEditSupport = new UndoableEditSupport();
+    private UndoableEditSupport editSupport = new UndoableEditSupport();
 
     public PBasicPatch(ModuleDescriptions moduleDescriptions)
     {
@@ -65,8 +66,7 @@ public class PBasicPatch implements PPatch
     {
         this.moduleDescriptions = moduleDescriptions;
         this.pfactory = pfactory;
-        
-        undoableEditSupport.addUndoableEditListener(undoManager);
+        editSupport.addUndoableEditListener(undoManager);
     }
 
     public UndoManager getUndoManager()
@@ -76,7 +76,7 @@ public class PBasicPatch implements PPatch
 
     public UndoableEditSupport getUndoableEditSupport()
     {
-        return undoableEditSupport;
+        return editSupport;
     }
     
     public ModuleDescriptions getModuleDescriptions()

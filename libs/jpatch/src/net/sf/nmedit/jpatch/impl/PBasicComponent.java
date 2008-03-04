@@ -20,6 +20,8 @@ package net.sf.nmedit.jpatch.impl;
 
 import java.util.Iterator;
 
+import javax.swing.undo.UndoableEdit;
+
 import net.sf.nmedit.jpatch.PComponent;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PDescriptor;
@@ -46,6 +48,25 @@ public abstract class PBasicComponent<P extends PDescriptor> implements PCompone
             : "the specified descriptor is null";
         this.descriptor = descriptor;
         this.componentIndex = componentIndex;
+    }
+    
+    /**
+     * Posts edits to the parent component.
+     * Overwrite this to implement different bahaviour,
+     * for example like notifying listeners.
+     * 
+     * @param edit
+     */
+    public void postEdit(UndoableEdit edit)
+    {
+        PComponent parent = getParentComponent();
+        if (parent != null) parent.postEdit(edit);
+    }
+    
+    public boolean isUndoableEditSupportEnabled()
+    {
+        PComponent parent = getParentComponent();
+        return parent != null && parent.isUndoableEditSupportEnabled();
     }
 
     public P getDescriptor()
