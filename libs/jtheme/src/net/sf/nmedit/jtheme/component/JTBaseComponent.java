@@ -25,6 +25,8 @@ package net.sf.nmedit.jtheme.component;
 import java.awt.Component;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JComponent;
 
@@ -87,6 +89,32 @@ public class JTBaseComponent extends JComponent
     public JTContext getContext()
     {
         return context;
+    }
+    
+
+    
+    /**
+     * Returns a mutable list of all components, which are instance
+     * of the specified base class, in this container.
+     * @return components in this container
+     */
+    public <C extends Component> List<C> getComponents(Class<C> base)
+    {
+        int count = getComponentCount(); // >= result.size();
+        List<C> components = new ArrayList<C>(count);
+        if (count>0) // grab lock only when necessary
+        {
+            synchronized (getTreeLock())
+            {
+                for (int i=0;i<count;i++)
+                {
+                    Component c = getComponent(i);
+                    if (base.isInstance(c))
+                        components.add(base.cast(c));
+                }
+            }
+        }
+        return components;
     }
     
     /**
