@@ -779,21 +779,6 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
     private static DataFlavor imageFlavor =
         DataFlavor.imageFlavor;
     
-    public PPatch newPatchWithModules(JTModule modules[]) {
-    	NMPatch nPatch = new NMPatch(patch.getModuleDescriptions());
-    	for (JTModule jm : modules) {
-    		PModule module = jm.getModule();
-    		PModule mod2 = module.cloneModule();
-    		nPatch.getCommonVoiceArea().add(mod2);
-    		// XXX add cables
-    	}
-    	return nPatch;
-    }
-    
-    public PPatch newPatchFromFile(File file) {
-    	return null;	
-    }
-
     public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException
     {
         if (uriFlavor.equals(flavor))

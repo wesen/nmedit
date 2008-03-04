@@ -55,9 +55,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.swing.InputMap;
 import javax.swing.JComponent;
@@ -67,21 +69,25 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.plaf.ComponentUI;
 
+import net.sf.nmedit.jpatch.CopyOperation;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
 import net.sf.nmedit.jpatch.MoveOperation;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
+import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.plaf.SelectionPainter;
+import net.sf.nmedit.jpatch.dnd.ModulesBoundingBox;
 import net.sf.nmedit.jpatch.dnd.PDragDrop;
 import net.sf.nmedit.jpatch.dnd.PModuleTransferData;
 import net.sf.nmedit.jpatch.dnd.PModuleTransferDataWrapper;
 import net.sf.nmedit.nmutils.Platform;
+import net.sf.nmedit.nmutils.dnd.FileDnd;
 import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
 
 public class JTModuleContainerUI extends ComponentUI
@@ -172,39 +178,43 @@ public class JTModuleContainerUI extends ComponentUI
         Rectangle box = dndBox;
         if (box != null)
         {
-            PModuleTransferDataWrapper transfer = getCurrentTransfer();
-            if (transfer != null)
-            {
-                Collection<? extends PModule> components = transfer.getModules();
-                if (!components.isEmpty())
+                ModulesBoundingBox transfer = getCurrentTransfer();
+                if (transfer != null && !transfer.getModules().isEmpty())
                 {
-                    Rectangle bbox = transfer.getBoundingBox();
+                	Rectangle bbox = transfer.getBoundingBox();
+
                     SelectionPainter.paintPModuleSelectionBox(g, 
                             transfer.getModules(), 
-                            box.x - bbox.x, 
-                            box.y - bbox.y );
+                            box.x - bbox.x, box.y - bbox.y);
                 }
-            }
         }
     }
     
     private transient Rectangle dndBox;
     private transient Point dndInitialScrollLocation;
 	protected EventHandler eventHandler;
-	private PModuleTransferDataWrapper currentTransferData;
+	private ModulesBoundingBox currentTransferModules;
 	public boolean selectBoxActive;
 	public Point selectStartPoint;
 	public Rectangle selectRectangle;
     
-    private void setCurrentTransfer(PModuleTransferDataWrapper transfer)
+	private void setCurrentTransfer(Collection<? extends PModule> modules) {
+		setCurrentTransfer(modules, new Point(5, 5));
+	}
+    
+    private void setCurrentTransfer(Collection<? extends PModule> modules, Point dragPoint)
     {
-        this.currentTransferData = transfer;
+    	if (modules != null) {
+    		this.currentTransferModules = new ModulesBoundingBox(modules, dragPoint);
+    	} else {
+    		this.currentTransferModules = null;
+    	}
         updateDnDBoundingBox(null);
     }
     
-    private PModuleTransferDataWrapper getCurrentTransfer()
+    private ModulesBoundingBox getCurrentTransfer()
     {
-        return currentTransferData;
+        return currentTransferModules;
     }
     
     
@@ -267,8 +277,8 @@ public class JTModuleContainerUI extends ComponentUI
             
             dndBox = new Rectangle(box);
 
-            if (dndBox.x<0) dndBox.x = 0;
-            if (dndBox.y<0) dndBox.y = 0;
+//            if (dndBox.x<0) dndBox.x = 0;
+//            if (dndBox.y<0) dndBox.y = 0;
 
             int r = dndBox.x + dndBox.width +140;
             int b = dndBox.y + dndBox.height+140;
@@ -508,26 +518,39 @@ public class JTModuleContainerUI extends ComponentUI
         {
         	DataFlavor flavors[] = dtde.getTransferable().getTransferDataFlavors();
         	
-            PModuleTransferDataWrapper transfer = jtcUI.getCurrentTransfer();
+            ModulesBoundingBox currentTransfer = jtcUI.getCurrentTransfer();
+    		Transferable t = dtde.getTransferable();
             
-        	if (transfer == null) {
-        		Transferable t = dtde.getTransferable();
+        	if (currentTransfer == null) {
         		if (t.isDataFlavorSupported(PDragDrop.ModuleSelectionFlavor)) {
 					try {
-                        transfer = (PModuleTransferDataWrapper)t.getTransferData(PDragDrop.ModuleSelectionFlavor);
-                        jtcUI.setCurrentTransfer(transfer);
+                        PModuleTransferDataWrapper transfer = (PModuleTransferDataWrapper) t.getTransferData(PDragDrop.ModuleSelectionFlavor);
+                        jtcUI.setCurrentTransfer(transfer.getModules(), transfer.getDragStartLocation());
 					} catch (Throwable e) {
                         jtcUI.setCurrentTransfer(null);
 					}
+        		} else if (FileDnd.testFileFlavor(t.getTransferDataFlavors())) {
+                	PPatch patch = getModuleContainer().getPatchContainer().getPatch();
+    				DataFlavor fileFlavor = FileDnd.getFileFlavor(t.getTransferDataFlavors());
+    				List<File> files = FileDnd.getTransferableFiles(fileFlavor, t);
+    				if (files.size() == 1) {
+    					PPatch newPatch = patch.createFromFile(files.get(0));
+    					if (newPatch != null) {
+    						PModuleContainer newMc = newPatch.getModuleContainer(1);
+    						jtcUI.setCurrentTransfer(newMc.getModules());
+    					}
+    				}
         		} else {
         			// System.out.println("flavor not supported");
         		}
         	}
-
-        	if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable())) {
+        	
+        	if (isMDDropOk(dtde.getDropAction(), t)) {
         		dtde.acceptDrag(DnDConstants.ACTION_COPY);
-        	} else if (dtde.getTransferable().isDataFlavorSupported(PDragDrop.ModuleSelectionFlavor)) {
+        	} else if (t.isDataFlavorSupported(PDragDrop.ModuleSelectionFlavor)) {
         		dtde.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
+        	} else if (FileDnd.testFileFlavor(t.getTransferDataFlavors())) {
+        		dtde.acceptDrag(DnDConstants.ACTION_COPY);
         	} else {
         		dtde.rejectDrag();
             }
@@ -554,16 +577,20 @@ public class JTModuleContainerUI extends ComponentUI
             else*/
             if (dtde.getCurrentDataFlavorsAsList().contains(PDragDrop.ModuleSelectionFlavor))
             {
-                dtde.acceptDrag(dtde.getDropAction() & (DnDConstants.ACTION_MOVE | DnDConstants.ACTION_COPY));
-
                 PModuleTransferData data;
                 try
                 {
+               
                     data = (PModuleTransferData) dtde.getTransferable().getTransferData(PDragDrop.ModuleSelectionFlavor);
+                    if (data.getSourcePatch() == getModuleContainer().getPatchContainer().getPatch()) {
+                    	dtde.acceptDrag(dtde.getDropAction() & (DnDConstants.ACTION_MOVE | DnDConstants.ACTION_COPY));
+                    } else {
+                    	dtde.acceptDrag(DnDConstants.ACTION_COPY);
+                    }
 
                     if (data!=null)
                     {
-                        paintDragOver(data, dtde);
+                        paintDragOver(jtcUI.getCurrentTransfer(), dtde);
                         return ;
                     }
                 }
@@ -572,6 +599,13 @@ public class JTModuleContainerUI extends ComponentUI
                     ;
                 }
             }
+            
+            if (FileDnd.testFileFlavor(dtde.getTransferable().getTransferDataFlavors())) {
+            	dtde.acceptDrag(DnDConstants.ACTION_COPY);
+                paintDragOver(jtcUI.getCurrentTransfer(), dtde);
+            	return;
+            }
+    	
 
             jtcUI.updateDnDBoundingBox(null);
             
@@ -580,11 +614,11 @@ public class JTModuleContainerUI extends ComponentUI
 
         private transient Rectangle cachedRectangle;
         
-        private void paintDragOver(PModuleTransferData data, DropTargetDragEvent dtde)
+        private void paintDragOver(ModulesBoundingBox modulesBoundingBox, DropTargetDragEvent dtde)
         {
-            Rectangle box = (cachedRectangle = data.getBoundingBox(cachedRectangle));
+            Rectangle box = (cachedRectangle = modulesBoundingBox.getBoundingBox(cachedRectangle));
             
-            Point o = data.getDragStartLocation();
+            Point o = modulesBoundingBox.getDragStartLocation();
             Point p = new Point(dtde.getLocation());
                      
             p.x =p.x-o.x;
@@ -602,6 +636,8 @@ public class JTModuleContainerUI extends ComponentUI
             
             DataFlavor chosen = null;
             Object data = null;
+
+            Transferable transfer = dtde.getTransferable();
             
             if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable()))
             {
@@ -661,7 +697,6 @@ public class JTModuleContainerUI extends ComponentUI
             {
                 chosen = PDragDrop.ModuleSelectionFlavor;
 
-                Transferable transfer = dtde.getTransferable();
                 try {
                     // Get the data
                     dtde.acceptDrop(dtde.getDropAction() & (DnDConstants.ACTION_MOVE | DnDConstants.ACTION_COPY));
@@ -676,12 +711,15 @@ public class JTModuleContainerUI extends ComponentUI
                 {
                     // Cast the data and create a nice module.
                     PModuleTransferData tdata = ((PModuleTransferData)data);
+                    boolean isSamePatch = false;
+                    if (tdata.getSourcePatch() == getModuleContainer().getPatchContainer().getPatch())
+                    	isSamePatch = true;
                     
                     //Point p = dtde.getLocation();
 
                     int action = dtde.getDropAction();
 
-                    if ((action&DnDConstants.ACTION_MOVE)!=0)
+                    if ((action&DnDConstants.ACTION_MOVE)!=0 && isSamePatch)
                     {
                     	MoveOperation op = tdata.getSourceModuleContainer().createMoveOperation();
                     	op.setDestination(getModuleContainer().getModuleContainer());
@@ -698,6 +736,28 @@ public class JTModuleContainerUI extends ComponentUI
                 }
                 dtde.dropComplete(true);
 
+            } else if (FileDnd.testFileFlavor(transfer.getTransferDataFlavors())) {
+            	PPatch patch = getModuleContainer().getPatchContainer().getPatch();
+				DataFlavor fileFlavor = FileDnd.getFileFlavor(transfer.getTransferDataFlavors());
+				List<File> files = FileDnd.getTransferableFiles(fileFlavor, transfer);
+				if (files.size() == 1) {
+					PPatch newPatch = patch.createFromFile(files.get(0));
+					if (newPatch != null) {
+						PModuleContainer newMc = newPatch.getModuleContainer(1);
+                    	CopyOperation op = newMc.createCopyOperation();
+                    	op.setDestination(getModuleContainer().getModuleContainer());
+                    	for (int i = 0; i < newMc.getModuleCount(); i++) {
+                    		op.add(newMc.getModule(i + 1));
+                    	}
+                    	op.setScreenOffset(0, 0);
+                    	op.copy();
+                        dtde.dropComplete(true);
+                        jtcUI.updateDnDBoundingBox(null);
+                        return;
+					}
+				}
+				dtde.rejectDrop();
+				dtde.dropComplete(false);
             } else {
                 dtde.rejectDrop();
                 dtde.dropComplete(false);
@@ -818,7 +878,7 @@ public class JTModuleContainerUI extends ComponentUI
 
                 PModuleTransferDataWrapper transfer =
                     new PModuleTransferDataWrapper(this.getModuleContainer().getModuleContainer(), collection, dndOrigin);
-                jtcUI.setCurrentTransfer(transfer);
+                jtcUI.setCurrentTransfer(transfer.getModules(), transfer.getDragStartLocation());
                 
                 // DragSource.isDragImageSupported() returns false on platforms
                 // which support this feature due to some kind of bug in the JRE.

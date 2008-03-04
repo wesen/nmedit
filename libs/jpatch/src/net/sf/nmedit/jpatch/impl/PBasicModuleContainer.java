@@ -18,13 +18,20 @@
  */
 package net.sf.nmedit.jpatch.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.event.EventListenerList;
 
 import net.sf.nmedit.jpatch.CopyOperation;
+import net.sf.nmedit.jpatch.LayoutTool;
 import net.sf.nmedit.jpatch.MoveOperation;
+import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnectionManager;
+import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PModuleContainerDescriptor;
@@ -205,7 +212,7 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
     {
         return connectionManager;
     }
-
+    
     public PModule getModule(int index)
     {
         return modules.get(index);
@@ -214,6 +221,13 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
     public int getModuleCount()
     {
         return modules.size();
+    }
+    
+    public Collection<? extends PModule> getModules() {
+    	ArrayList<PModule> result = new ArrayList<PModule>();
+    	for (PModule m : modules)
+    		result.add(m);
+    	return result;
     }
 
     public PPatch getPatch()
@@ -287,6 +301,5 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
     {
         return null;
     }
-
 
 }

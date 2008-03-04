@@ -564,17 +564,19 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
 
 	public PModule cloneModule() {
 		PBasicModule newM = new PBasicModule(getDescriptor());
-		for (int i = 0; i < getParameterCount(); i++) {
-			PParameter src = getParameter(i);
-			PParameter dst = newM.getParameter(i);
+		newM.cloneFromModule(this);
+		return newM;
+	}
+	
+	public void cloneFromModule(PModule m) {
+		for (int i = 0; i < m.getParameterCount(); i++) {
+			PParameter src = m.getParameter(i);
+			PParameter dst = getParameter(i);
 			dst.setDoubleValue(src.getDoubleValue());
 			dst.setMorphGroup(src.getMorphGroup());
 		}
-		newM.title = title;
-		newM.sx = sx;
-		newM.sy = sy;
-		
-		return newM;
+		title = m.getTitle();
+		sx = m.getScreenX();
+		sy = m.getScreenY();
 	}
-
 }

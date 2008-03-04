@@ -7,9 +7,11 @@ import java.util.Collection;
 
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
+import net.sf.nmedit.jpatch.PPatch;
 
 public interface PModuleTransferData extends Transferable {
 	PModuleContainer getSourceModuleContainer();
+	PPatch getSourcePatch();
 	Collection<? extends PModule> getModules();
 	Point getDragStartLocation();
 	Rectangle getBoundingBox();

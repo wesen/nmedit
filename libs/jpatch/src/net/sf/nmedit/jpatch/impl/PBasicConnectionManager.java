@@ -409,7 +409,8 @@ public class PBasicConnectionManager implements PConnectionManager
     	Collection<PConnection> r = new LinkedList<PConnection>();
     	
     	for (PModule m : ms) {
-    		r.addAll(connections(m));
+    		if (m != null)
+    			r.addAll(connections(m));
     	}
         
     	return Collections.<PConnection>unmodifiableCollection(r);

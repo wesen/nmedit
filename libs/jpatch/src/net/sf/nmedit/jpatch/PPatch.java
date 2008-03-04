@@ -18,6 +18,10 @@
  */
 package net.sf.nmedit.jpatch;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEditSupport;
 
@@ -28,6 +32,9 @@ public interface PPatch
     
     int getModuleContainerCount();
     PModuleContainer getModuleContainer(int index);
+    
+    PPatch createEmptyPatch();
+    PPatch createFromFile(File file);
     
     ModuleDescriptions getModuleDescriptions();
     
