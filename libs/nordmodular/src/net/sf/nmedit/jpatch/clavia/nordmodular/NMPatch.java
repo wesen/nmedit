@@ -146,10 +146,10 @@ public class NMPatch extends PBasicPatch implements PPatch
         morphSection = new PNMMorphSection(this);
         
         containers = new PModuleContainer[]{commonVoiceArea, polyVoiceArea, morphSection};
-        
+
         setProperty(VERSION, "Nord Modular patch 3.0");
         
-        Synchronizer synch = new Synchronizer(getUndoManager());
+        Synchronizer synch = new Synchronizer(getUndoManager(), getUndoableEditSupport());
         synch.installModuleContainer(polyVoiceArea);
         synch.installModuleContainer(commonVoiceArea);
     }
@@ -489,7 +489,7 @@ public class NMPatch extends PBasicPatch implements PPatch
 		return null;
     }
     
-    public static PPatch createPatchFromFile(File file) {
+    public static NMPatch createPatchFromFile(File file) {
     	NMData data = NMData.sharedInstance();
 
     	NMPatch patch;
@@ -508,7 +508,7 @@ public class NMPatch extends PBasicPatch implements PPatch
     }
     
     
-    public PPatch createFromFile(File file)  {
+    public NMPatch createFromFile(File file)  {
     	return NMPatch.createPatchFromFile(file);
     }
 
@@ -517,7 +517,7 @@ public class NMPatch extends PBasicPatch implements PPatch
     	return null;	
     }
     
-    public PPatch createEmptyPatch() {
+    public NMPatch createEmptyPatch() {
     	return new NMPatch(getModuleDescriptions());
     }
 
