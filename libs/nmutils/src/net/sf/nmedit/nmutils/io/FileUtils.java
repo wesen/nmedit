@@ -109,4 +109,14 @@ public class FileUtils {
 		
 		return newFile;
 	}
+	
+	static public File newFileWithPrefix(File parent, String prefix, String suffix) {
+		File newFile = null;
+		
+		for (int i = 0; true; i++) {
+			newFile = new File(parent, prefix + " (" + i + ")" + suffix);
+			if (!newFile.exists())
+				return newFile;
+		}
+	}
 }
