@@ -20,6 +20,8 @@ package net.sf.nmedit.jpatch;
 
 import java.util.Collection;
 
+import javax.swing.undo.UndoableEdit;
+
 import net.sf.nmedit.jpatch.event.PConnectionListener;
 
 
@@ -253,5 +255,22 @@ public interface PConnectionManager extends Iterable<PConnection>
      * @param l the listener
      */
     void removeConnectionListener(PConnectionListener l);
+
+    /**
+     * Posts an edit of this component.
+     * The edit will only be recognized if 
+     * {@link #isUndoableEditSupportEnabled()}
+     * is true.
+     * @param edit
+     */
+    void postEdit(UndoableEdit edit);
+    
+    /**
+     * True if undo support is enabled.
+     * @return true if undo support is enabled
+     */
+    boolean isUndoableEditSupportEnabled();
+
+    public PUndoableEditFactory getUndoableEditFactory();
     
 }

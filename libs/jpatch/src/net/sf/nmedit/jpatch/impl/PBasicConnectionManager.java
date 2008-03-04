@@ -31,6 +31,7 @@ import java.util.NoSuchElementException;
 import java.util.Queue;
 
 import javax.swing.event.EventListenerList;
+import javax.swing.undo.UndoableEdit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,6 +42,7 @@ import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PSignal;
+import net.sf.nmedit.jpatch.PUndoableEditFactory;
 import net.sf.nmedit.jpatch.event.PConnectionEvent;
 import net.sf.nmedit.jpatch.event.PConnectionListener;
 
@@ -66,6 +68,22 @@ public class PBasicConnectionManager implements PConnectionManager
         nodemap = new HashMap<PConnector, Node>();
     }
 
+    public void postEdit(UndoableEdit edit)
+    {
+        container.postEdit(edit);
+    }
+    
+    public boolean isUndoableEditSupportEnabled()
+    {
+        return container.isUndoableEditSupportEnabled();
+    }
+    
+    public PUndoableEditFactory getUndoableEditFactory()
+    {
+        return container.getUndoableEditFactory();
+    }
+    
+
     public void addConnectionListener( PConnectionListener l )
     {
         eventListeners.add(PConnectionListener.class, l);
@@ -78,6 +96,7 @@ public class PBasicConnectionManager implements PConnectionManager
 
     protected void fireConnectionAdded(PConnector a, PConnector b)
     {
+        connectionAddHappened(a, b);
         PConnectionEvent e = null;
         Object[] listenerList = eventListeners.getListenerList();
         for (int i=listenerList.length-2;i>=0;i-=2)
@@ -92,6 +111,7 @@ public class PBasicConnectionManager implements PConnectionManager
 
     protected void fireConnectionRemoved(PConnector a, PConnector b)
     {
+        connectionRemoveHappened(a, b);
         PConnectionEvent e = null;
         Object[] listenerList = eventListeners.getListenerList();
         for (int i=listenerList.length-2;i>=0;i-=2)
@@ -101,6 +121,26 @@ public class PBasicConnectionManager implements PConnectionManager
                 if (e == null) e = new PConnectionEvent(this, a, b);
                 ((PConnectionListener) listenerList[i+1]).connectionRemoved(e);
             }
+        }
+    }
+
+    protected void connectionRemoveHappened(PConnector a, PConnector b)
+    {
+        if (isUndoableEditSupportEnabled())
+        {
+            PUndoableEditFactory factory = getUndoableEditFactory();
+            if (factory != null)
+                postEdit(factory.createDisconnectEdit(a, b));
+        }
+    }
+    
+    protected void connectionAddHappened(PConnector a, PConnector b)
+    {
+        if (isUndoableEditSupportEnabled())
+        {
+            PUndoableEditFactory factory = getUndoableEditFactory();
+            if (factory != null)
+                postEdit(factory.createConnectEdit(a, b));
         }
     }
   

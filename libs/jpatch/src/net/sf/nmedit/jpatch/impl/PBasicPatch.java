@@ -22,16 +22,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.undo.UndoManager;
+import javax.swing.undo.UndoableEdit;
 import javax.swing.undo.UndoableEditSupport;
 
-import net.sf.nmedit.jpatch.LayoutTool;
 import net.sf.nmedit.jpatch.ModuleDescriptions;
-import net.sf.nmedit.jpatch.PConnection;
-import net.sf.nmedit.jpatch.PConnectionManager;
-import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PFactory;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
@@ -40,6 +36,9 @@ import net.sf.nmedit.jpatch.PModuleMetrics;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.PSettings;
+import net.sf.nmedit.jpatch.PUndoableEditFactory;
+import net.sf.nmedit.jpatch.history.HistoryUtils;
+import net.sf.nmedit.jpatch.history.PBasicUndoableEditFactory;
 
 /**
  * The reference implementation of interface {@link PPatch}.
@@ -56,6 +55,8 @@ public class PBasicPatch implements PPatch
     private Object focusedComponent; 
     private UndoManager undoManager = new UndoManager();
     private UndoableEditSupport editSupport = new UndoableEditSupport();
+    private boolean editSupportEnabled = true;
+    private PBasicUndoableEditFactory editFactory = new PBasicUndoableEditFactory();
 
     public PBasicPatch(ModuleDescriptions moduleDescriptions)
     {
@@ -66,7 +67,26 @@ public class PBasicPatch implements PPatch
     {
         this.moduleDescriptions = moduleDescriptions;
         this.pfactory = pfactory;
-        editSupport.addUndoableEditListener(undoManager);
+        
+        addUndoableEditListener(undoManager);
+    }
+
+    public PUndoableEditFactory getUndoableEditFactory()
+    {
+        return editFactory;
+    }
+    
+    public boolean isEditoSupportEnabled()
+    {
+        return editSupportEnabled;
+    }
+    
+    public void setEditSupportEnabled(boolean enabled)
+    {
+        if (this.editSupportEnabled != enabled)
+        {
+            this.editSupportEnabled = enabled;
+        }
     }
 
     public UndoManager getUndoManager()
@@ -161,11 +181,36 @@ public class PBasicPatch implements PPatch
 
 	public int getModuleContainerIndex(PModuleContainer sourceContainer) {
 		for (int i = 0; i < getModuleContainerCount(); i++) {
-			if (getModuleContainer(i).equals(sourceContainer))
+			if (getModuleContainer(i) == sourceContainer)
 				return i;
 		}
 		return -1;
 	}
+
+    public boolean isUndoableEditSupportEnabled()
+    {
+        return editSupportEnabled;
+    }
+
+    public void postEdit(UndoableEdit edit)
+    {
+        if (isUndoableEditSupportEnabled() && !editFactory.isIgnoreEditEnabled())
+        {
+            if (HistoryUtils.DEBUG) System.out.println(edit);
+            // undoManager.addEdit(edit);
+            editSupport.postEdit(edit);
+        }
+    }
+
+    public void addUndoableEditListener(UndoableEditListener l)
+    {
+        editSupport.addUndoableEditListener(l);
+    }
+
+    public void removeUndoableEditListener(UndoableEditListener l)
+    {
+        editSupport.removeUndoableEditListener(l);
+    }
 
     
 }

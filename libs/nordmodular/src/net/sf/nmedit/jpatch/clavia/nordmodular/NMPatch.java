@@ -27,7 +27,6 @@ import java.beans.PropertyChangeSupport;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +34,6 @@ import java.util.Map;
 import javax.swing.event.EventListenerList;
 
 import net.sf.nmedit.jpatch.ModuleDescriptions;
-import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentEvent;
@@ -45,12 +43,10 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.event.PPatchSettingsListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.ParseException;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchExporter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchFileWriter;
-import net.sf.nmedit.jpatch.history.Synchronizer;
 import net.sf.nmedit.jpatch.impl.PBasicPatch;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NmSlot;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
-import net.sf.nmedit.jtheme.component.JTModule;
 
 /**
  * Implementation of the (virtual) patch according to the patch file format 3.0 specification.
@@ -148,10 +144,6 @@ public class NMPatch extends PBasicPatch implements PPatch
         containers = new PModuleContainer[]{commonVoiceArea, polyVoiceArea, morphSection};
 
         setProperty(VERSION, "Nord Modular patch 3.0");
-        
-        Synchronizer synch = new Synchronizer(getUndoManager(), getUndoableEditSupport());
-        synch.installModuleContainer(polyVoiceArea);
-        synch.installModuleContainer(commonVoiceArea);
     }
 
     public File getFile()

@@ -28,6 +28,7 @@ import net.sf.nmedit.jpatch.PDescriptor;
 import net.sf.nmedit.jpatch.PLight;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.PRoles;
+import net.sf.nmedit.jpatch.PUndoableEditFactory;
 
 /**
  * The reference implementation of interface {@link PComponent}.
@@ -41,6 +42,7 @@ public abstract class PBasicComponent<P extends PDescriptor> implements PCompone
      */
     private P descriptor;
     protected int componentIndex = -1;
+    private transient PUndoableEditFactory editFactory;
 
     public PBasicComponent(P descriptor, int componentIndex)
     {
@@ -69,6 +71,17 @@ public abstract class PBasicComponent<P extends PDescriptor> implements PCompone
         return parent != null && parent.isUndoableEditSupportEnabled();
     }
 
+    public PUndoableEditFactory getUndoableEditFactory()
+    {
+        if (this.editFactory == null)
+        {
+            PComponent parent = getParentComponent();
+            if (parent != null)
+                this.editFactory = parent.getUndoableEditFactory();
+        }
+        return this.editFactory;
+    }
+    
     public P getDescriptor()
     {
         return descriptor;

@@ -42,9 +42,9 @@ import net.sf.nmedit.jpatch.PModuleMetrics;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.PParameterDescriptor;
 import net.sf.nmedit.jpatch.PPatch;
+import net.sf.nmedit.jpatch.PUndoableEditFactory;
 import net.sf.nmedit.jpatch.event.PModuleEvent;
 import net.sf.nmedit.jpatch.event.PModuleListener;
-import net.sf.nmedit.jpatch.history.edit.ModuleRenameEdit;
 import net.sf.nmedit.jpatch.util.ObjectCache;
 import net.sf.nmedit.jpatch.util.ObjectFilter;
 import net.sf.nmedit.jpatch.util.ObjectFilterResult;
@@ -107,21 +107,33 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
 
     protected UndoableEdit createRenameEdit(String oldtitle, String newtitle)
     {
-        return new ModuleRenameEdit(this, oldtitle, newtitle);
+        PUndoableEditFactory factory = getUndoableEditFactory();
+        if (factory != null)
+            return factory.createRenameEdit(this, oldtitle, newtitle);
+        return null;
+    }
+
+    protected UndoableEdit createMoveEdit(int oldScreenX, int oldScreenY,
+            int newScreenX, int newScreenY)
+    {
+        PUndoableEditFactory factory = getUndoableEditFactory();
+        if (factory != null)
+            return factory.createMoveEdit(this, oldScreenX, oldScreenY,
+                    newScreenX, newScreenY);
+        return null;
     }
     
     public void setTitle(String title)
     {        
         String oldtitle = this.title;
         String newtitle = title;
-        if (!(oldtitle == oldtitle || (oldtitle!=null && title.equals(oldtitle))))
+        if (!(oldtitle == newtitle || (oldtitle!=null && title.equals(oldtitle))))
         {
             this.title = oldtitle;
-            
             if (isUndoableEditSupportEnabled())
             {
                 UndoableEdit edit = createRenameEdit(oldtitle, newtitle);
-                //postEdit(edit);
+                if (edit != null) postEdit(edit);
             }
             fireModuleRenamed(oldtitle, title);
         }
@@ -454,6 +466,13 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
         {
             this.sx = x;
             this.sy = y;
+
+            if (isUndoableEditSupportEnabled())
+            {
+                UndoableEdit edit = createMoveEdit(oldx, oldy, x, y);
+                if (edit != null) postEdit(edit);
+            }
+            
             fireModuleMoved(oldx, oldy);
         }
     }
