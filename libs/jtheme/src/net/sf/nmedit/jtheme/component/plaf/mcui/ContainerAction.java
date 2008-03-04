@@ -78,7 +78,14 @@ public class ContainerAction extends AbstractAction
         Component[] components = jmc.getComponents();
         if (components.length>0)
         {
-            UndoableEditSupport ues = jmc.getModuleContainer().getEditSupport(); 
+            /* Get UndoableEditSupport from any component in JPatch
+             * (in this case from PModuleContainer).
+             * ues may be null, usually when there is no undo support.
+             */
+            UndoableEditSupport ues = jmc.getModuleContainer().getEditSupport();
+            /* didBeginUpdate flag is used to determine if we  called
+             * ues.beginUpdate() this when actially an edit happened.
+             */
             boolean didBeginUpdate = false;
             
             try
@@ -92,9 +99,18 @@ public class ContainerAction extends AbstractAction
                         
                         if (mm.isSelected())
                         {
+                            /* Module mm is selected, thus we do an edit 
+                             * and if not done already call ues.beginUpdate()
+                             * (=>didBeginUpdate). ues still might be null.
+                             * The beginUpdate() call causes that all
+                             * edits until the next endUpdate() are collected
+                             * into a single undo event.
+                             */
                             if ((!didBeginUpdate) && ues != null)
                             {
+                                // begin update
                                 ues.beginUpdate();
+                                // Set beginUpdate flag. Important !!!
                                 didBeginUpdate = true;
                             }
                             removeModule(mm);
@@ -105,8 +121,17 @@ public class ContainerAction extends AbstractAction
             finally
             {
                 if (didBeginUpdate && ues != null)
+                {
+                    /* Only if ues.beginUpdate() was called we 
+                     * do the endUpdate(). The try/finally statements
+                     * ensures the endUpdate() is called, even if 
+                     * an exception occures. This is very important
+                     * since otherwise an exception would cause the
+                     * undo manager to enter an invalid state from
+                     * which it will 'never' recover.
+                     */
                     ues.endUpdate();
-                
+                }
             }
         }
     }
