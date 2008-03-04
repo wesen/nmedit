@@ -20,6 +20,7 @@ package net.sf.nmedit.jpatch.impl;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.lang.ref.SoftReference;
 import java.util.List;
 
@@ -470,6 +471,17 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
         PModuleMetrics m = getModuleMetrics();
         return m == null ? sy : m.screenToInternalY(sy);
     }
+    
+    public Rectangle getInternalBounds(Rectangle rv) {
+        if (rv == null) {
+            return new Rectangle(getInternalX(), getInternalY(), getInternalWidth(), getInternalHeight());
+        }
+        else {
+            rv.setBounds(getInternalX(), getInternalY(), getInternalWidth(), getInternalHeight());
+            return rv;
+        }
+    }
+
 
     public Point getInternalLocation()
     {
@@ -511,6 +523,17 @@ public class PBasicModule extends PBasicComponent<PModuleDescriptor> implements 
         PModuleMetrics m = getModuleMetrics();
         return m == null ? getIntAttribute("height", 1) : m.getScreenHeight(this);
     }
+    
+    public Rectangle getScreenBounds(Rectangle rv) {
+        if (rv == null) {
+            return new Rectangle(getScreenX(), getScreenY(), getScreenWidth(), getScreenHeight());
+        }
+        else {
+            rv.setBounds(getScreenX(), getScreenY(), getScreenWidth(), getScreenHeight());
+            return rv;
+        }
+    }
+
 
     public void setInternalSize(int width, int height)
     {

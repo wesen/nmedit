@@ -20,6 +20,7 @@ package net.sf.nmedit.jpatch;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.List;
 
 import net.sf.nmedit.jpatch.event.PModuleListener;
@@ -84,8 +85,11 @@ public interface PModule extends PComponent
 
     int getInternalWidth();
     int getInternalHeight();
+    public Rectangle getInternalBounds(Rectangle rv);
     int getScreenWidth();
     int getScreenHeight();
+    public Rectangle getScreenBounds(Rectangle rv);
+
     void setInternalSize(int width, int height);
     void setScreenSize(int width, int height);
     void setInternalSize(Dimension size);
