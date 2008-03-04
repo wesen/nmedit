@@ -37,7 +37,12 @@ public class ContainerAction extends AbstractAction
         if (command == DELETE_UNUSED)
         {
             putValue(NAME, "Delete Unused Modules");
-        } else {
+        } 
+        else if (command == DELETE)
+        {
+            putValue(NAME, "Delete");
+        }
+        else {
         	putValue(NAME, command);
         }
     }
@@ -84,10 +89,10 @@ public class ContainerAction extends AbstractAction
         {
             UndoableEditSupport ues = jmc.getModuleContainer()
                 .getPatch().getUndoableEditSupport(); // TODO null pointer check
+            boolean didRemove = false;
+            
             try
             {
-                if (ues != null)
-                    ues.beginUpdate();
                 
                 for (Component c : jmc.getComponents())
                 {
@@ -96,13 +101,22 @@ public class ContainerAction extends AbstractAction
                         JTModule mm = (JTModule) c;
                         
                         if (mm.isSelected())
-                            removeModule(mm);
+                        {
+                            if (removeModule(mm))
+                            {
+                                didRemove = true;
+                                if (ues != null)
+                                    ues.beginUpdate();
+                                
+                            }
+                            
+                        }
                     }
                 }
             }
             finally
             {
-                if (ues != null)
+                if (didRemove && ues != null)
                     ues.endUpdate();
                 
             }
@@ -148,14 +162,15 @@ public class ContainerAction extends AbstractAction
         }
     }
     
-    private void removeModule(JTModule m)
+    private boolean removeModule(JTModule m)
     {
         PModule nm = m.getModule();
         
         if (nm != null && nm.getParentComponent() != null)
         {
-            nm.getParentComponent().remove(nm);
+            return nm.getParentComponent().remove(nm);
         }
+        return false;
     }
 
 
