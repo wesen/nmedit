@@ -289,14 +289,7 @@ public class JTModuleContainer extends JTBaseComponent
                 JTModule mui = ms.createModule(getContext(), module);
                 mui.setLocation(module.getScreenLocation());    
                 add(mui);
-                /*
-                if (mui.getStaticLayerBackingStore() == null)
-                {
-                    ms.setStaticLayer(mui.renderStaticLayerImage());
-                    mui.setStaticLayerBackingStore(mui.getStaticLayerBackingStore());
-                }
-                */
-                // TODO revalidate/repaint container
+                JTModuleContainer.this.revalidate();
                 mui.repaint();
             }
             catch (JTException e)
@@ -307,28 +300,20 @@ public class JTModuleContainer extends JTBaseComponent
 
         public void removeUI(PModule module)
         {
-            boolean removed = false;
-            Component[] components = JTModuleContainer.this.getComponents();
-
-            for (int i=components.length-1;i>=0;i--)
+            for (JTModule mui: JTModuleContainer.this.getModules())
             {
-                Component c = components[i];
-                if (c instanceof JTModule)
+                if (mui.getModule() == module)
                 {
-                    JTModule mui = (JTModule) c;
-                    if (mui.getModule() == module)
-                    {
-                        remove(mui);
-                        removed = true;
-                        break;
-                    }
+                    int x = mui.getX();
+                    int y = mui.getY();
+                    int w = mui.getWidth();
+                    int h = mui.getHeight();
+                    
+                    remove(mui);
+                    JTModuleContainer.this.revalidate();
+                    JTModuleContainer.this.repaint(x, y, w, h);
+                    break;
                 }
-            }
-            
-            if (removed)
-            {
-                JTModuleContainer.this.revalidate();
-                JTModuleContainer.this.repaint();
             }
         }
 
