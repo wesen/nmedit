@@ -28,6 +28,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -226,10 +227,21 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
 			File f = getFileAtLocation(location);
 			if ((f == null) || !f.isDirectory())
 				return false;
-//			if (!isFilesTransferable(t))
-//			return false;
+			if (!FileDnd.testFileFlavor(t.getTransferDataFlavors()))
+				return false;
 
 			return true;
+		}
+		
+		private boolean isDropNewFile(Point location, Transferable t) {
+			File f = getFileAtLocation(location);
+			if ((f == null) || !f.isDirectory())
+				return false;
+			
+			if (FileDnd.isPatchStringFlavor(t.getTransferDataFlavors()))
+				return true;
+			
+			return false;
 		}
 
 		private TreeNode getNodeAtLocation(Point location) {
@@ -260,6 +272,8 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
 				dtde.acceptDrag(DnDConstants.ACTION_LINK);
 			else if (isDropFilesOnDir(dtde.getLocation(), dtde.getTransferable()))
 				dtde.acceptDrag(dtde.getDropAction() & (DnDConstants.ACTION_MOVE | DnDConstants.ACTION_COPY));
+			else if (isDropNewFile(dtde.getLocation(), dtde.getTransferable())) 
+				dtde.acceptDrag(DnDConstants.ACTION_COPY);
 			else {
 				dtde.rejectDrag();
 				return false;
@@ -365,13 +379,64 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
 				}
 				dtde.dropComplete(true);
 				return;
+			} else if (isDropNewFile(location, dtde.getTransferable())) {
+				dtde.acceptDrop(DnDConstants.ACTION_COPY);
+				dropNewFileInDir(dtde);
+				dtde.dropComplete(true);
+				return;
 			} else {
 				dtde.rejectDrop();
 				return;
 			}
 
 		}
+		
+		private void dropNewFileInDir(DropTargetDropEvent dtde) {
+			Transferable t = dtde.getTransferable();
+			Point location = dtde.getLocation();
 
+			File dest = getFileAtLocation(location);
+			TreeNode c = getNodeAtLocation(location);
+			TreePath destPath = getClosestPathForLocation(tree, location.x, location.y);
+
+			FileNode parNode = null;
+			if (c instanceof FileNode) {
+				parNode = (FileNode)c;
+			} else {
+				return;
+			}
+
+			if ((dest == null) || !dest.isDirectory())
+				return; // never too sure
+			
+			DataFlavor flavor = FileDnd.getPatchStringFlavor(t.getTransferDataFlavors());
+			if (flavor == null)
+				return;
+			try {
+				String data = (String)t.getTransferData(flavor);
+				File newFile = File.createTempFile("macro", ".pch", dest);
+				FileWriter out = new FileWriter(newFile);
+				out.write(data);
+				out.close();
+				parNode.updateChildrenNodes();
+				tree.expandPath(destPath);
+				((ExplorerTree)tree).fireNodeStructureChanged(parNode);
+
+				for (TreeNode child : parNode.getChildren()) {
+					if (child instanceof FileNode && ((FileNode)child).getFile().getCanonicalPath().equals(newFile.getCanonicalPath())) {
+		            	tree.startEditingAtPath(new TreePath(((FileNode)child).getPath()));
+		            	break;
+					}
+				}
+			} catch (UnsupportedFlavorException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+ 
 		private void dropFilesInDir(DropTargetDropEvent dtde, boolean move) {
 			DataFlavor flavor = FileDnd.getFileFlavor(dtde.getCurrentDataFlavors());
 			if (flavor == null)
