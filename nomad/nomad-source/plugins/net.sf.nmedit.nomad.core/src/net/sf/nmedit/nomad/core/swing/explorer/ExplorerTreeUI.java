@@ -283,15 +283,16 @@ public class ExplorerTreeUI extends MetalTreeUI
             if (Platform.isFlavor(Platform.OS.MacOSFlavor)) {
             	Point p = e.getPoint();
             	TreePath path = tree.getClosestPathForLocation(p.x, p.y);
-            	if (path != null && tree.isPathSelected(path))
+            	if (path != null && tree.isPathSelected(path)) {
             		e.consume();
+            	}
             }
         }
 
         public void mouseReleased(MouseEvent e)
         {
             forwardMouseEvent(e);
-            
+
             // XXX I don't get this part - m-odendahl
             //
             //
