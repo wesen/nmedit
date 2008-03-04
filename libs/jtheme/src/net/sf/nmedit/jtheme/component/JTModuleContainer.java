@@ -108,18 +108,7 @@ public class JTModuleContainer extends JTBaseComponent
      */
     public List<JTModule> getModules()
     {
-        int count = getComponentCount(); // >= result.size();
-        List<JTModule> modules = new ArrayList<JTModule>(count);
-        synchronized (getTreeLock())
-        {
-            for (int i=0;i<count;i++)
-            {
-                Component c = getComponent(i);
-                if (c instanceof JTModule)
-                    modules.add((JTModule)c);
-            }
-        }
-        return modules;
+        return getComponents(JTModule.class);
     }
     
     
