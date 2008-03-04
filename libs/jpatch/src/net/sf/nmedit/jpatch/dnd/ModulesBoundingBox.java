@@ -19,7 +19,7 @@ public class ModulesBoundingBox {
 	public ModulesBoundingBox(Collection<? extends PModule> modules, Point dragStartLocation) {
 		this.dragStartLocation = dragStartLocation;
 		this.modules = modules; 
-		boundingBox = new Rectangle();
+//		boundingBox = new Rectangle();
         for (PModule m : modules) {
         	if (boundingBox == null) {
         		boundingBox = m.getScreenBounds(boundingBox);
