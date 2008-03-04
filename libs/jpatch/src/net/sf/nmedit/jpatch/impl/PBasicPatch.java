@@ -159,5 +159,13 @@ public class PBasicPatch implements PPatch
 		return null;
 	}
 
+	public int getModuleContainerIndex(PModuleContainer sourceContainer) {
+		for (int i = 0; i < getModuleContainerCount(); i++) {
+			if (getModuleContainer(i).equals(sourceContainer))
+				return i;
+		}
+		return -1;
+	}
+
     
 }
