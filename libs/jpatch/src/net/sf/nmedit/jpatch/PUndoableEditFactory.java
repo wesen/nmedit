@@ -16,16 +16,21 @@
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.nmedit.jpatch.history;
+package net.sf.nmedit.jpatch;
 
-public class HistoryUtils
+import javax.swing.undo.UndoableEdit;
+
+public interface PUndoableEditFactory
 {
-    
-    public static final boolean DEBUG = false;
 
-    public static String quote(Object o)
-    {
-        return (o == null) ? "\"\"" : "\""+String.valueOf(o)+"\"";
-    }
+    UndoableEdit createRenameEdit(PModule module, String oldtitle, String newtitle);
+    UndoableEdit createMoveEdit(PModule module, int oldScreenX, int oldScreenY,
+            int newScreenX, int newScreenY);
+    UndoableEdit createConnectEdit(PConnector a, PConnector b);
+    UndoableEdit createDisconnectEdit(PConnector a, PConnector b);
+    UndoableEdit createAddEdit(PModuleContainer container,
+            PModule module, int index);
+    UndoableEdit createRemoveEdit(PModuleContainer container,
+            PModule module, int index);
     
 }

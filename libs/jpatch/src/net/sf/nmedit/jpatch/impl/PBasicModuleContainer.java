@@ -25,19 +25,18 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.event.EventListenerList;
+import javax.swing.undo.UndoableEdit;
 
 import net.sf.nmedit.jpatch.CopyOperation;
-import net.sf.nmedit.jpatch.LayoutTool;
 import net.sf.nmedit.jpatch.MoveOperation;
-import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnectionManager;
-import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PModuleContainerDescriptor;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PModuleMetrics;
 import net.sf.nmedit.jpatch.PPatch;
+import net.sf.nmedit.jpatch.PUndoableEditFactory;
 import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
 import net.sf.nmedit.jpatch.event.PModuleContainerListener;
 import net.sf.nmedit.nmutils.collections.ArrayMap;
@@ -69,6 +68,22 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
         modules.setMinKey(1);
         this.patch = patch;
         this.connectionManager = createConnectionManager();
+    }
+    
+    public void postEdit(UndoableEdit edit)
+    {
+        if (patch != null)
+            patch.postEdit(edit);
+    }
+
+    public PUndoableEditFactory getUndoableEditFactory()
+    {
+        return patch.getUndoableEditFactory();
+    }
+    
+    public boolean isUndoableEditSupportEnabled()
+    {
+        return patch != null && patch.isUndoableEditSupportEnabled();
     }
     
     protected PConnectionManager createConnectionManager()
@@ -144,18 +159,47 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
         }
     }
     
+    protected void moduleRemoved(PModule module, int index)
+    {
+        if (isUndoableEditSupportEnabled())
+        {
+            PUndoableEditFactory factory = getUndoableEditFactory();
+            if (factory != null)
+            {
+                UndoableEdit edit = factory.createRemoveEdit(this, module, index);
+                if (edit != null) postEdit(edit);
+            }
+        }
+    }
+    
+    protected void moduleAdded(PModule module, int index)
+    {
+        if (isUndoableEditSupportEnabled())
+        {
+            PUndoableEditFactory factory = getUndoableEditFactory();
+            if (factory != null)
+            {
+                UndoableEdit edit = factory.createAddEdit(this, module, index);
+                if (edit != null) postEdit(edit);
+            }
+        }
+    }
+
     public boolean add(PModule module)
     {
         return add(modules.generateIndex(), module);
     }
-    
-    private boolean _add(int index, PModule module, boolean postEdit)
+
+    public boolean add(int index, PModule module)
     {
         if (!canAdd(index, module))
             return false;
         configure(module, index);
         modules.put(index, module);
         registerModule(module);
+        
+        
+        moduleAdded(module, index);
         fireModuleAdded(module);
         
         /*
@@ -170,11 +214,6 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
         
         
         return true;   
-    }
-    
-    public boolean add(int index, PModule module)
-    {
-        return _add(index, module, true);
     }
     
     protected void configure(PModule module, int index)
@@ -264,17 +303,13 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
 
     public boolean remove(PModule module)
     {
-        return _remove(module, true);
-    }
-    
-    private boolean _remove(PModule module, boolean postEdit)
-    {
         int index = indexOf(module);
         if (index>=0)
         {
             module.removeAllConnections();
             modules.remove(index);
-            unregisterModule(module);           
+            unregisterModule(module);
+            moduleRemoved(module, index);
             fireModuleRemoved(module, index);
             revertConfigure(module);
             return true;

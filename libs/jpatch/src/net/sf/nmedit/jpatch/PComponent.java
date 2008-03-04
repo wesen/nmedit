@@ -30,6 +30,8 @@ import javax.swing.undo.UndoableEdit;
 public interface PComponent
 {
 
+    PUndoableEditFactory getUndoableEditFactory();
+    
     /**
      * Posts an edit of this component.
      * The edit will only be recognized if 

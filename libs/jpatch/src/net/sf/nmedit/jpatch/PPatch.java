@@ -22,11 +22,28 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
+import javax.swing.event.UndoableEditListener;
 import javax.swing.undo.UndoManager;
+import javax.swing.undo.UndoableEdit;
 import javax.swing.undo.UndoableEditSupport;
 
-public interface PPatch
+public interface PPatch 
 {
+    /**
+     * Posts an edit of this component.
+     * The edit will only be recognized if 
+     * {@link #isUndoableEditSupportEnabled()}
+     * is true.
+     * @param edit
+     */
+    void postEdit(UndoableEdit edit);
+    
+    /**
+     * True if undo support is enabled.
+     * @return true if undo support is enabled
+     */
+    boolean isUndoableEditSupportEnabled();
+    
 
     PSettings getSettings();
     
@@ -58,5 +75,10 @@ public interface PPatch
 
 	int getModuleContainerIndex(PModuleContainer sourceContainer);
         
+    
+    void addUndoableEditListener(UndoableEditListener l);
+    void removeUndoableEditListener(UndoableEditListener l);    
+    
+    PUndoableEditFactory getUndoableEditFactory();
     
 }
