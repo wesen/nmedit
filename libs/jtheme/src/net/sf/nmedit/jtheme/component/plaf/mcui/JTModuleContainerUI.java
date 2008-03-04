@@ -1083,7 +1083,7 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void mouseClickedAtModuleContainer(MouseEvent e)
         {
-            if (SwingUtilities.isLeftMouseButton(e) && !jtcUI.selectBoxActive)
+            if (Platform.isLeftMouseButtonOnly(e) && !jtcUI.selectBoxActive)
                 getModuleContainer().clearSelection();
         }
         
@@ -1174,7 +1174,7 @@ public class JTModuleContainerUI extends ComponentUI
                 mouseClickedAtModule(e);
 
             JTModuleContainer mc = jtcUI.getModuleContainer();
-            if (SwingUtilities.isLeftMouseButton(e) && e.getComponent() == mc && jtcUI.selectBoxActive) {
+            if (Platform.isLeftMouseButtonOnly(e) && e.getComponent() == mc && jtcUI.selectBoxActive) {
             	jtcUI.selectBoxActive = false;
             	mc.repaint();
             }
@@ -1184,7 +1184,7 @@ public class JTModuleContainerUI extends ComponentUI
         	jtcUI.updateScrollPosition(e.getPoint());
         
         	JTModuleContainer mc = jtcUI.getModuleContainer();
-        	if (SwingUtilities.isLeftMouseButton(e) && e.getComponent() == mc) {
+        	if (Platform.isLeftMouseButtonOnly(e) && e.getComponent() == mc) {
         		if (!jtcUI.selectBoxActive) {
         			startNewSelectionRectangle(e);
         		}
