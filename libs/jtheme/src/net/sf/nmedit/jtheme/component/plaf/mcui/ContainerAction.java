@@ -28,6 +28,7 @@ public class ContainerAction extends AbstractAction
     private static final long serialVersionUID = 7135918324094843867L;
     public static final String DELETE_UNUSED = "delete.unused";
     public static final String DELETE = "delete";
+    public static final String SELECT_ALL = "selectAll";
 
     public ContainerAction(JTModuleContainer moduleContainer, String command)
     {
@@ -54,6 +55,13 @@ public class ContainerAction extends AbstractAction
             if (key==DELETE_UNUSED)
             {
             	deleteUnusedModules();
+            } else if (key == SELECT_ALL) {
+            	if (jmc != null) {
+            		for (Component component : jmc.getComponents())
+            			if (component instanceof JTModule)
+            				jmc.addSelection((JTModule)component);
+            	}
+            		
             } else if (key == DELETE) {
             	if (jmc == null) {
             		Object o = e.getSource();
@@ -76,6 +84,7 @@ public class ContainerAction extends AbstractAction
                     }
                 }
             }
+            
         }
     }
     
@@ -91,6 +100,8 @@ public class ContainerAction extends AbstractAction
         		return false;
         	else
         		return true;
+        } else if (key == SELECT_ALL) {
+        	return true;
         } else {
         	return false;
         }
