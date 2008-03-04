@@ -50,6 +50,7 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -89,6 +90,8 @@ import net.sf.nmedit.jpatch.dnd.PModuleTransferDataWrapper;
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.dnd.FileDnd;
 import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
+
+import net.sf.nmedit.jtheme.component.plaf.mcui.ContainerAction;
 
 public class JTModuleContainerUI extends ComponentUI
 {
@@ -336,7 +339,6 @@ public class JTModuleContainerUI extends ComponentUI
       MouseListener, MouseMotionListener
     {
 
-        private static final String DELETE = "delete";
 		private JTModuleContainerUI jtcUI;
         private boolean dndAllowed;
 
@@ -375,7 +377,15 @@ public class JTModuleContainerUI extends ComponentUI
                 vk_delete = KeyEvent.VK_BACK_SPACE;	 
 	 
             KeyStroke deleteModules = KeyStroke.getKeyStroke(vk_delete, 0);	 
-            map.put(deleteModules, DELETE);	 
+            map.put(deleteModules, ContainerAction.DELETE);
+            
+            KeyStroke selectAllKey;
+            if (Platform.isFlavor(Platform.OS.MacOSFlavor)) {
+            	selectAllKey = KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.META_DOWN_MASK);
+            } else {
+            	selectAllKey = KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK);
+            }
+            map.put(selectAllKey, ContainerAction.SELECT_ALL);
         }	 
 	 
         public void installKeyboardActions( JTModuleContainer mc)	 
@@ -383,7 +393,8 @@ public class JTModuleContainerUI extends ComponentUI
 //            NMLazyActionMap.installLazyActionMap(module.getContext().getUIDefaults(),	 
 //                    module, BasicEventHandler.class, moduleActionMapKey);	 
 
-        	mc.getActionMap().put(DELETE, new ContainerAction(mc, DELETE));
+        	mc.getActionMap().put(ContainerAction.DELETE, new ContainerAction(mc, ContainerAction.DELETE));
+        	mc.getActionMap().put(ContainerAction.SELECT_ALL, new ContainerAction(mc, ContainerAction.SELECT_ALL));
             InputMap im = createInputMapWhenFocused();	 
             SwingUtilities.replaceUIInputMap(mc, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, im);	 
         }	 
