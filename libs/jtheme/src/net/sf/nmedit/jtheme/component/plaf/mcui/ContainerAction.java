@@ -62,9 +62,8 @@ public class ContainerAction extends AbstractAction
             	deleteUnusedModules();
             } else if (key == SELECT_ALL) {
             	if (jmc != null) {
-            		for (Component component : jmc.getComponents())
-            			if (component instanceof JTModule)
-            				jmc.addSelection((JTModule)component);
+            		for (JTModule module : jmc.getModules())
+            			jmc.addSelection(module);
             	}
             		
             } else if (key == DELETE) {
@@ -91,30 +90,25 @@ public class ContainerAction extends AbstractAction
             try
             {
                 
-                for (Component c : jmc.getComponents())
+                for (JTModule mm : jmc.getModules())
                 {
-                    if (c instanceof JTModule)
+                    if (mm.isSelected())
                     {
-                        JTModule mm = (JTModule) c;
-                        
-                        if (mm.isSelected())
+                        /* Module mm is selected, thus we do an edit 
+                         * and if not done already call ues.beginUpdate()
+                         * (=>didBeginUpdate). ues still might be null.
+                         * The beginUpdate() call causes that all
+                         * edits until the next endUpdate() are collected
+                         * into a single undo event.
+                         */
+                        if ((!didBeginUpdate) && ues != null)
                         {
-                            /* Module mm is selected, thus we do an edit 
-                             * and if not done already call ues.beginUpdate()
-                             * (=>didBeginUpdate). ues still might be null.
-                             * The beginUpdate() call causes that all
-                             * edits until the next endUpdate() are collected
-                             * into a single undo event.
-                             */
-                            if ((!didBeginUpdate) && ues != null)
-                            {
-                                // begin update
-                                ues.beginUpdate();
-                                // Set beginUpdate flag. Important !!!
-                                didBeginUpdate = true;
-                            }
-                            removeModule(mm);
+                            // begin update
+                            ues.beginUpdate();
+                            // Set beginUpdate flag. Important !!!
+                            didBeginUpdate = true;
                         }
+                        removeModule(mm);
                     }
                 }
             }
