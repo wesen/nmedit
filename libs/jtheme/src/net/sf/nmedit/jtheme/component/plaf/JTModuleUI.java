@@ -66,6 +66,7 @@ import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.util.JThemeUtils;
+import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.swing.EscapeKeyListener;
 import net.sf.nmedit.nmutils.swing.LimitedText;
 
@@ -354,7 +355,7 @@ public class JTModuleUI extends JTComponentUI
     
     private boolean handleLabelClick(MouseEvent e)
     {
-        if (e.getClickCount() == 2 && SwingUtilities.isLeftMouseButton(e)
+        if (e.getClickCount() == 2 && Platform.isLeftMouseButtonOnly(e)
                 && hitTitle(e.getX(), e.getY()))
         {
             setEditModuleTitle(true);
@@ -365,7 +366,7 @@ public class JTModuleUI extends JTComponentUI
     
     private boolean handleTransformPopup(MouseEvent me)
     {
-        if (SwingUtilities.isLeftMouseButton(me)
+        if (Platform.isLeftMouseButtonOnly(me)
                 && hitTransformationIcon(me.getX(), me.getY()) && me.getClickCount()==1)
         {
             if (transformPopupMenu != null && transformPopupMenu.getInvoker()==me.getComponent()) 

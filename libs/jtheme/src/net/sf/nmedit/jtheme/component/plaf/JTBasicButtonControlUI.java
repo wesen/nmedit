@@ -714,7 +714,7 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
             {
                 if (selectedControl.contains(e.getX(), e.getY()))
                 {
-                    if (SwingUtilities.isLeftMouseButton(e))
+                    if (Platform.isLeftMouseButtonOnly(e))
                     {
                         selectedUI.setHoveredAt(-1);
                         selectedUI.setArmedAt(internalSelectedButtonIndex);
@@ -782,7 +782,7 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
         	else if (select(e) && wasPopupTrigger == false)
             {
             	
-                if (SwingUtilities.isLeftMouseButton(e) )//&& e.getClickCount() == 1)
+                if (Platform.isLeftMouseButtonOnly(e) )//&& e.getClickCount() == 1)
                 {
                     
                     CallDescriptor call = selectedControl.getCall();

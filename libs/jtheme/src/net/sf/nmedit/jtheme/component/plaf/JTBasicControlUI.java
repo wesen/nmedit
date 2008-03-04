@@ -380,7 +380,7 @@ public abstract class JTBasicControlUI extends JTControlUI
             {
                 control.showControlPopup(e);
             } 
-            else if (SwingUtilities.isLeftMouseButton(e))
+            else if (Platform.isLeftMouseButtonOnly(e))
             {
               
                 selectExtensionAdapter = isExtensionSelected(e);
@@ -426,7 +426,7 @@ public abstract class JTBasicControlUI extends JTControlUI
         {
             JTControl control = controlFor(e);
 
-            if (SwingUtilities.isLeftMouseButton(e) && control != null)
+            if (Platform.isLeftMouseButtonOnly(e) && control != null)
             {
                 int currentModifier = getValueModifier(control, e);
 

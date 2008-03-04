@@ -418,7 +418,7 @@ public class NoteSeqEditorUI extends JTBasicControlUI
         	    popupTriggered(e);
         		
         	}
-        	else if (SwingUtilities.isLeftMouseButton(e))
+        	else if (Platform.isLeftMouseButtonOnly(e))
         	{
 	    		controlUI.editedNote = e.getX() / controlUI.columnWidth;
 	    		y = e.getY();

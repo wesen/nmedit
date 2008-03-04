@@ -55,6 +55,7 @@ import net.sf.nmedit.jtheme.cable.DragCable;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.JTConnector;
+import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.graphics.RoundGradientPaint;
 
 public class JTBasicConnectorUI extends JTConnectorUI
@@ -384,7 +385,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
             if (!c.hasFocus())
                 c.requestFocus();
 
-            if (!SwingUtilities.isLeftMouseButton(e))
+            if (!Platform.isLeftMouseButtonOnly(e))
                 return ;
         
             pressClickCount = e.getClickCount();
