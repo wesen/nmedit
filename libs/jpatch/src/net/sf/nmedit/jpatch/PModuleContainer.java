@@ -18,6 +18,8 @@
  */
 package net.sf.nmedit.jpatch;
 
+import java.util.Collection;
+
 import net.sf.nmedit.jpatch.event.PModuleContainerListener;
 
 public interface PModuleContainer extends PComponent, Iterable<PModule>
@@ -46,6 +48,8 @@ public interface PModuleContainer extends PComponent, Iterable<PModule>
     int indexOf(PModule module);
 
     boolean contains(PModule module);
+    
+    public Collection<? extends PModule> getModules();
 
     void addModuleContainerListener(PModuleContainerListener l);
     void removeModuleContainerListener(PModuleContainerListener l);

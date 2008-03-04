@@ -55,9 +55,9 @@ import net.sf.nmedit.jtheme.component.plaf.JTDisplayUI;
 import net.sf.nmedit.jtheme.component.plaf.JTImageUI;
 import net.sf.nmedit.jtheme.component.plaf.JTLabelUI;
 import net.sf.nmedit.jtheme.component.plaf.JTLightUI;
-import net.sf.nmedit.jtheme.component.plaf.mcui.JTModuleContainerUI;
 import net.sf.nmedit.jtheme.component.plaf.JTModuleUI;
 import net.sf.nmedit.jtheme.component.plaf.JTTextDisplayUI;
+import net.sf.nmedit.jtheme.component.plaf.mcui.JTModuleContainerUI;
 import net.sf.nmedit.jtheme.store.StorageContext;
 import net.sf.nmedit.jtheme.util.SimpleSelectionBorder;
 

@@ -35,6 +35,7 @@ import java.util.Map;
 import javax.swing.event.EventListenerList;
 
 import net.sf.nmedit.jpatch.ModuleDescriptions;
+import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentEvent;
@@ -44,12 +45,12 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.event.PPatchSettingsListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.ParseException;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchExporter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchFileWriter;
-import net.sf.nmedit.jpatch.history.HistoryImpl;
 import net.sf.nmedit.jpatch.history.Synchronizer;
 import net.sf.nmedit.jpatch.impl.PBasicPatch;
 import net.sf.nmedit.jsynth.Slot;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NmSlot;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
+import net.sf.nmedit.jtheme.component.JTModule;
 
 /**
  * Implementation of the (virtual) patch according to the patch file format 3.0 specification.
@@ -488,15 +489,37 @@ public class NMPatch extends PBasicPatch implements PPatch
 		return null;
     }
     
-    public static NMPatch createFromFile(File file) throws ParseException, IOException {
+    public static PPatch createPatchFromFile(File file) {
     	NMData data = NMData.sharedInstance();
 
-    	InputStream in = new FileInputStream(file);
-
-    	NMPatch patch = NmUtils.parsePatch(data.getModuleDescriptions(), in);
-    	in.close();
+    	NMPatch patch;
+		try {
+	    	InputStream in = new FileInputStream(file);
+			patch = NmUtils.parsePatch(data.getModuleDescriptions(), in);
+	    	in.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 
     	patch.setProperty("file", null);
     	return patch;
     }
+    
+    
+    public PPatch createFromFile(File file)  {
+    	return NMPatch.createPatchFromFile(file);
+    }
+
+    
+    public PPatch newPatchFromFile(File file) {
+    	return null;	
+    }
+    
+    public PPatch createEmptyPatch() {
+    	return new NMPatch(getModuleDescriptions());
+    }
+
+
 }
