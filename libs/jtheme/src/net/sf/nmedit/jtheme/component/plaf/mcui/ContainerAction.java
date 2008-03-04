@@ -95,10 +95,9 @@ public class ContainerAction extends AbstractAction
                         {
                             if (removeModule(mm))
                             {
-                                didRemove = true;
-                                if (ues != null)
+                                if ((!didRemove) && ues != null)
                                     ues.beginUpdate();
-                                
+                                didRemove = true;
                             }
                             
                         }
