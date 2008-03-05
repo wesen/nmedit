@@ -565,7 +565,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
                 try
                 {
                     if (ues != null)
-                        ues.beginUpdate("connect cables");
+                        ues.beginUpdate();
                     
                     
                     if (target != null)
