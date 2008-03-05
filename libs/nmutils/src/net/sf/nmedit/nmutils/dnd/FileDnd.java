@@ -40,6 +40,7 @@ public class FileDnd {
 					}
 				}
 			}
+            r.close(); // always close stream
 		}
 		catch (Throwable e)
 		{
