@@ -77,7 +77,8 @@ public abstract class StorageContext
     }
 
 
-    public abstract ImageResource getCachedImage(Object source);
+    public abstract ImageResource getCachedImage(URL source);
+    public abstract ImageResource getCachedImage(String source);
     
     public CSSStyleRule getStyleRule(String name)
     {
