@@ -191,7 +191,8 @@ public class DefaultStorageContext extends StorageContext
         
         if (cacheDir != null && (!cacheDir.exists()))
         {
-            cacheDir.mkdir();
+            boolean ok = cacheDir.mkdir();
+            // TODO handle ok==false
         }
     }
     
