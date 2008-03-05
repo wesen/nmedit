@@ -23,7 +23,6 @@ import java.io.File;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
-import javax.swing.undo.UndoableEditSupport;
 
 import net.sf.nmedit.jpatch.history.PUndoableEditSupport;
 
