@@ -175,7 +175,7 @@ public class Variation extends JComponent {
 			for (int i = 0; i < values.length ; i += 2)
 			{
 				double angle = 2*Math.PI* values[i]/512f+prevAngle;
-				double amplitude = values[i+1]/2;
+				double amplitude = values[i+1]/2;// shouldn't it be /2d ?
 				int x = (int)(prevX+amplitude*Math.cos(angle));
 				int y = (int)(prevY+amplitude*Math.sin(angle));
 				poly.addPoint(x,y);
@@ -241,7 +241,7 @@ public class Variation extends JComponent {
 		{ 
 			double angle = 2*Math.PI* values[i]/512f+prevAngle;
 			angles[i] = 2*Math.PI* values[i]/512f;  
-			double amplitude = values[i+1]/2;
+			double amplitude = values[i+1]/2;// shouldn't it be /2d ?
 			int x = (int)(prevX+amplitude*Math.cos(angle));
 			int y = (int)(prevY+amplitude*Math.sin(angle));
 			poly.addPoint(x,y);
