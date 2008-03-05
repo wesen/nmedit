@@ -400,6 +400,7 @@ public class JTModuleContainer extends JTBaseComponent
 
         private boolean isSameConnection(PConnection c, Cable cable)
         {
+            // compare connection ((a1, b1) with (a2, b2)) or ((a1, b1) with (b2, a2)) 
             return isSameConnection(c.getA(), c.getB(), cable.getSource(), cable.getDestination())
             || isSameConnection(c.getA(), c.getB(), cable.getDestination(), cable.getSource());
         }
@@ -407,8 +408,8 @@ public class JTModuleContainer extends JTBaseComponent
         private boolean isSameConnection(PConnector a1, PConnector b1,
                 PConnector a2, PConnector b2)
         {
-            // TODO Auto-generated method stub
-            return a2==a2 && b1==b2;
+            // compare connection (a1, b1) with (a2, b2)
+            return a1==a2 && b1==b2;
         }
         
     }
