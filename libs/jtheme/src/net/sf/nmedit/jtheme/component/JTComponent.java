@@ -482,7 +482,8 @@ public class JTComponent extends JTBaseComponent
             }
             finally
             {
-                scratchGraphics.dispose();
+                if (scratchGraphics != null)
+                    scratchGraphics.dispose();
             }
         }
     }
@@ -502,7 +503,8 @@ public class JTComponent extends JTBaseComponent
             }
             finally
             {
-                scratchGraphics.dispose();
+                if (scratchGraphics != null)
+                    scratchGraphics.dispose();
             }
         }
     }
