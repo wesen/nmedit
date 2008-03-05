@@ -22,13 +22,20 @@
  */
 package net.sf.nmedit.jmisc.collections;
 
-public interface Mapping 
+import java.io.Serializable;
+
+public interface Mapping extends Serializable
 {
 
     public int getIndex(Object o);
     
     public static class IDMapping implements Mapping
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -2933401665316464339L;
+
         public int getIndex( Object o )
         {
             return o == null ? -1 : ((Indexed)o).getIndex();
