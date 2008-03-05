@@ -41,10 +41,9 @@ public class SVGImageResource extends AbstractImageResource implements Serializa
 {
 
     /**
-     * serial version 
+     * 
      */
-    private static final long serialVersionUID = -2499486136640044057L;
-
+    private static final long serialVersionUID = 9179004169003176461L;
     private String svgData;
     private transient boolean svgDataInitialized;
     

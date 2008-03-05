@@ -135,26 +135,32 @@ public abstract class StorageContext
     
     public abstract ClassLoader getContextClassLoader();
 
-    private Map<URL, Image> imageMap = new HashMap<URL, Image>();
+    private Map<String, Image> imageMap = new HashMap<String, Image>();
     
     public Image getImage(String imageURL)
     {
+        Image image = imageMap.get(imageURL);
+        if (image != null)
+        {
+            return image;
+        }
+        
         URL url = 
         getContextClassLoader()
         .getResource(imageURL);
-        
         return (url != null) ? getImage(url) : null;
     }
     
     protected Image getImage(URL imageURL)
     {
-        Image image = imageMap.get(imageURL);
+        String key = imageURL.toString();
+        Image image = imageMap.get(key);
         if (image == null)
         {
             try
             {
                 image = ImageIO.read(imageURL);
-                imageMap.put(imageURL, image);
+                imageMap.put(key, image);
             }
             catch (IOException e)
             {
