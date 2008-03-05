@@ -58,7 +58,7 @@ import javax.swing.tree.TreeSelectionModel;
 import net.sf.nmedit.jpatch.ImageSource;
 import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
-import net.sf.nmedit.jpatch.dnd.PDragDrop;
+import net.sf.nmedit.jtheme.util.JThemeUtils;
 import net.sf.nmedit.nomad.core.swing.ButtonBarBuilder;
 import net.sf.nmedit.nomad.core.swing.explorer.ContainerNode;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
@@ -148,7 +148,7 @@ public class ModulePane extends JPanel
         
         add(new JScrollPane(tree), BorderLayout.CENTER);
         
-        (new TreeDnDHandler(tree)).install();
+        (new TreeDnDHandler(tree, this)).install();
         
         TreeSelectionHandler selectionHandler = new TreeSelectionHandler();
         tree.addTreeSelectionListener(selectionHandler);
@@ -297,10 +297,12 @@ public class ModulePane extends JPanel
     {
         private ExplorerTree tree;
         private DragSource dragSource;
+        private ModulePane pane;
 
-        public TreeDnDHandler(ExplorerTree tree)
+        public TreeDnDHandler(ExplorerTree tree, ModulePane pane)
         {
             this.tree = tree;
+            this.pane = pane;
         }
 
         public void install()
@@ -321,7 +323,8 @@ public class ModulePane extends JPanel
                     PModuleDescriptor descriptor =
                         ((ModuleDescriptorNode)lpc).getDescriptor();
                     
-                    Transferable t = PDragDrop.createTransferable(descriptor);
+                    Transferable t = JThemeUtils.createTransferable(pane.getTheme(), descriptor);
+                    
                     dge.startDrag(DragSource.DefaultCopyDrop, t);
                 }
             }
