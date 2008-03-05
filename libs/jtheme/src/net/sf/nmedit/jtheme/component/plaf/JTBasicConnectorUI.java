@@ -41,7 +41,6 @@ import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
-import javax.swing.undo.UndoableEditSupport;
 
 import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnectionManager;
@@ -73,7 +72,15 @@ public class JTBasicConnectorUI extends JTConnectorUI
     
     public void paintDynamicLayer(Graphics2D g, JTComponent c)
     {
-        JTConnector con = (JTConnector) c;
+        JTConnector con;
+        try
+        {
+            con = (JTConnector) c;
+        }
+        catch (ClassCastException e)
+        {
+            throw e;
+        }
         PSignal signal = con.getSignal();
         
         Color color = signal == null ? Color.BLACK : signal.getColor();
