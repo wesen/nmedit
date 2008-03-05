@@ -59,7 +59,7 @@ public class ImageElement extends AbstractElement implements Serializable
      */
     private static final long serialVersionUID = 1462274961082257283L;
     private String src;
-    private Object id;
+    private String id;
     private transient ImageResource imageResource; // TODO serialization
     protected boolean reducible = false;
     
@@ -224,7 +224,7 @@ public class ImageElement extends AbstractElement implements Serializable
                     AbstractImageResource air = createResource(context, src);
                     imageResource = air;
                     imageResource.setImageCache(context.getImageCache());
-                    this.id = air.getResolvedURL();
+                    this.id = air.getResolvedURL().toString();
                     dsc.putImage(id, air);
                 }
             }

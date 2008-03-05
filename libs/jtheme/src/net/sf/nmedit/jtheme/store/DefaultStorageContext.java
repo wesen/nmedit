@@ -68,7 +68,7 @@ public class DefaultStorageContext extends StorageContext
     private ClassLoader classLoader;
     private CSSStyleSheet styleSheet;
 
-    private Map<Object, ImageResource> imageResourceMap = new HashMap<Object, ImageResource>();
+    private Map<String, ImageResource> imageResourceMap = new HashMap<String, ImageResource>();
     
     private ImageCache imageCache = new ImageCache();
 
@@ -99,24 +99,28 @@ public class DefaultStorageContext extends StorageContext
     {
         return context;
     }
-    
-    public ImageResource getCachedImage(Object source)
-    {
-        return imageResourceMap.get(source);
-    }
 
     public ImageResource getCachedImage(URL source)
     {
-        return imageResourceMap.get(source);
+        if (source != null)
+        {
+            return imageResourceMap.get(source.toString());
+        }
+        return null;
     }
 
     public ImageResource getCachedImage(String source)
     {
-        ClassLoader loader = classLoader != null ? classLoader :getClass().getClassLoader();
-        URL url = loader.getResource(source);
-        return url != null ? getCachedImage(url) : null;
+        ImageResource ir = imageResourceMap.get(source);
+        if (ir == null)
+        {
+            ClassLoader loader = classLoader != null ? classLoader :getClass().getClassLoader();
+            URL url = loader.getResource(source);
+            ir = getCachedImage(url);
+        }
+        return ir;
     }
-    
+    /*
     public void putImage(URL url, ImageResource ir)
     {
         if (url != null)
@@ -125,9 +129,9 @@ public class DefaultStorageContext extends StorageContext
                 ir.setImageCache(imageCache);
             imageResourceMap.put(url, ir);
         }
-    }
+    }*/
     
-    public void putImage(Object key, ImageResource ir)
+    public void putImage(String key, ImageResource ir)
     {
         if (key != null)
         {
@@ -391,10 +395,10 @@ public class DefaultStorageContext extends StorageContext
                 if (cl == null) cl = loader;
                 int size = in.readInt();
                 
-                imageResourceMap = new HashMap<Object, ImageResource>(size*2);
+                imageResourceMap = new HashMap<String, ImageResource>(size*2);
                 for (int i=0;i<size;i++)
                 {
-                    Object key = in.readObject();
+                    String key = (String) in.readObject();
                     ImageResource ir = (ImageResource) in.readObject();
                     ir.setCustomClassLoader(cl);
                     ir.setImageCache(imageCache);
