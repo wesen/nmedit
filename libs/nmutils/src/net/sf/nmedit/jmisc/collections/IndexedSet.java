@@ -43,7 +43,7 @@ public class IndexedSet<E> extends AbstractSet<E>
     private transient int modCount;
     private int size = 0;
     private int max = -1;
-    private Mapping mapping;
+    private transient Mapping mapping;
     private E[] elements;
 
     public IndexedSet(Mapping mapper)
