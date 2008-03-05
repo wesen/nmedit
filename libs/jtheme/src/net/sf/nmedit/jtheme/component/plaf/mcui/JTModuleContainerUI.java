@@ -69,7 +69,6 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.undo.UndoableEditSupport;
 
 import net.sf.nmedit.jpatch.CopyOperation;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
@@ -83,6 +82,7 @@ import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
+import net.sf.nmedit.jtheme.component.plaf.PaintableSelection;
 import net.sf.nmedit.jtheme.component.plaf.SelectionPainter;
 import net.sf.nmedit.jpatch.dnd.ModulesBoundingBox;
 import net.sf.nmedit.jpatch.dnd.PDragDrop;
@@ -94,6 +94,7 @@ import net.sf.nmedit.nmutils.dnd.FileDnd;
 import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
 
 import net.sf.nmedit.jtheme.component.plaf.mcui.ContainerAction;
+import net.sf.nmedit.jtheme.util.ModuleImageRenderer;
 
 public class JTModuleContainerUI extends ComponentUI
 {
@@ -173,11 +174,14 @@ public class JTModuleContainerUI extends ComponentUI
 
     public void paintChildrenHack(Graphics g)
     {
-        if (selectBoxActive) 
+        if (hasPaintableSelection()) 
         {
+            paintableSelection.paint(jtc, g);
+            /*
         	Rectangle r = selectRectangle;
             SelectionPainter.paintSelectionBox(g, 
                     r.x, r.y, r.width, r.height);
+                    */
         }    
 
         Rectangle box = dndBox;
@@ -186,11 +190,20 @@ public class JTModuleContainerUI extends ComponentUI
                 ModulesBoundingBox transfer = getCurrentTransfer();
                 if (transfer != null && !transfer.getModules().isEmpty())
                 {
+                    Image transferImage = transfer.getTransferImage();
                 	Rectangle bbox = transfer.getBoundingBox();
 
-                    SelectionPainter.paintPModuleSelectionBox(g, 
-                            transfer.getModules(), 
-                            box.x - bbox.x, box.y - bbox.y);
+                    if (transferImage != null)
+                    {
+                        g.drawImage(transferImage, 
+                            box.x, box.y, null);
+                    }
+                    else
+                    {
+                        SelectionPainter.paintPModuleSelectionBox(g, 
+                                transfer.getModules(), 
+                                box.x - bbox.x, box.y - bbox.y);
+                    }
                 }
         }
     }
@@ -199,18 +212,45 @@ public class JTModuleContainerUI extends ComponentUI
     private transient Point dndInitialScrollLocation;
 	protected EventHandler eventHandler;
 	private ModulesBoundingBox currentTransferModules;
-	public boolean selectBoxActive;
-	public Point selectStartPoint;
-	public Rectangle selectRectangle;
     
-	private void setCurrentTransfer(Collection<? extends PModule> modules) {
-		setCurrentTransfer(modules, new Point(5, 5));
+    private PaintableSelection paintableSelection = null;
+    
+    private boolean hasPaintableSelection()
+    {
+        return paintableSelection != null;
+    }
+    
+    private void setPaintableSelection(PaintableSelection ps)
+    {
+        if (ps != paintableSelection)
+        {
+            if (ps == null)
+            {
+                // repaint and remove
+                paintableSelection.repaint(jtc);
+                paintableSelection = null;
+            }
+            else
+            {
+                paintableSelection = ps;
+            }
+        }
+    }
+    
+    
+	/*public boolean selectBoxActive;
+	public Point selectStartPoint;
+	public Rectangle selectRectangle;*/
+    
+	private void setCurrentTransfer(Collection<? extends PModule> modules, Image transferImage) {
+		setCurrentTransfer(modules, new Point(5, 5), transferImage);
 	}
     
-    private void setCurrentTransfer(Collection<? extends PModule> modules, Point dragPoint)
+    private void setCurrentTransfer(Collection<? extends PModule> modules, Point dragPoint, Image transferImage)
     {
     	if (modules != null) {
     		this.currentTransferModules = new ModulesBoundingBox(modules, dragPoint);
+            this.currentTransferModules.setTransferImage(transferImage);
     	} else {
     		this.currentTransferModules = null;
     	}
@@ -538,9 +578,9 @@ public class JTModuleContainerUI extends ComponentUI
         		if (t.isDataFlavorSupported(PDragDrop.ModuleSelectionFlavor)) {
 					try {
                         PModuleTransferDataWrapper transfer = (PModuleTransferDataWrapper) t.getTransferData(PDragDrop.ModuleSelectionFlavor);
-                        jtcUI.setCurrentTransfer(transfer.getModules(), transfer.getDragStartLocation());
+                        jtcUI.setCurrentTransfer(transfer.getModules(), transfer.getDragStartLocation(), transfer.getTransferImage());
 					} catch (Throwable e) {
-                        jtcUI.setCurrentTransfer(null);
+                        jtcUI.setCurrentTransfer(null, null);
 					}
         		} else if (FileDnd.testFileFlavor(t.getTransferDataFlavors())) {
                 	PPatch patch = getModuleContainer().getPatchContainer().getPatch();
@@ -557,7 +597,7 @@ public class JTModuleContainerUI extends ComponentUI
     								break;
     						}
     						if (newMc != null) {
-    							jtcUI.setCurrentTransfer(newMc.getModules());
+    							jtcUI.setCurrentTransfer(newMc.getModules(), null);
     						} else {
     							dtde.rejectDrag();
     							return;
@@ -582,7 +622,7 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void dragExit(DropTargetEvent dte)
         {
-            jtcUI.setCurrentTransfer(null);
+            jtcUI.setCurrentTransfer(null, null);
         }
 
         public void dragOver(DropTargetDragEvent dtde)
@@ -658,7 +698,7 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void drop(DropTargetDropEvent dtde)
         {
-            jtcUI.setCurrentTransfer(null);
+            jtcUI.setCurrentTransfer(null, null);
             
             DataFlavor chosen = null;
             Object data = null;
@@ -921,11 +961,18 @@ public class JTModuleContainerUI extends ComponentUI
                     dndOrigin = SwingUtilities.convertPoint(c, dndOrigin, getModuleContainer());
                 }
                 
+                Collection<? extends JTModule> jtmodules = jtc.getSelectedModules();
                 Collection<? extends PModule> collection = jtc.getSelectedPModules();
 
                 PModuleTransferDataWrapper transfer =
-                    new PModuleTransferDataWrapper(this.getModuleContainer().getModuleContainer(), collection, dndOrigin);
-                jtcUI.setCurrentTransfer(transfer.getModules(), transfer.getDragStartLocation());
+                    new PModuleTransferDataWrapper(this.getModuleContainer().getModuleContainer(), 
+                            collection, dndOrigin);
+                
+                ModuleImageRenderer mir = new ModuleImageRenderer(jtmodules);
+                mir.setPaintExtraBorder(true);
+                transfer.setTransferImage(mir.render());
+                
+                jtcUI.setCurrentTransfer(transfer.getModules(), transfer.getDragStartLocation(), transfer.getTransferImage());
                 
                 // DragSource.isDragImageSupported() returns false on platforms
                 // which support this feature due to some kind of bug in the JRE.
@@ -1092,7 +1139,7 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void mouseClickedAtModuleContainer(MouseEvent e)
         {
-            if (Platform.isLeftMouseButtonOnly(e) && !jtcUI.selectBoxActive)
+            if (Platform.isLeftMouseButtonOnly(e) && !jtcUI.hasPaintableSelection())
                 getModuleContainer().clearSelection();
         }
         
@@ -1183,9 +1230,8 @@ public class JTModuleContainerUI extends ComponentUI
                 mouseClickedAtModule(e);
 
             JTModuleContainer mc = jtcUI.getModuleContainer();
-            if (Platform.isLeftMouseButtonOnly(e) && e.getComponent() == mc && jtcUI.selectBoxActive) {
-            	jtcUI.selectBoxActive = false;
-            	mc.repaint();
+            if (Platform.isLeftMouseButtonOnly(e) && e.getComponent() == mc && jtcUI.hasPaintableSelection()) {
+            	jtcUI.setPaintableSelection(null);
             }
         }
         
@@ -1194,7 +1240,7 @@ public class JTModuleContainerUI extends ComponentUI
         
         	JTModuleContainer mc = jtcUI.getModuleContainer();
         	if (Platform.isLeftMouseButtonOnly(e) && e.getComponent() == mc) {
-        		if (!jtcUI.selectBoxActive) {
+        		if (!jtcUI.hasPaintableSelection()) {
         			startNewSelectionRectangle(e);
         		}
         		
@@ -1208,17 +1254,22 @@ public class JTModuleContainerUI extends ComponentUI
         
         private void startNewSelectionRectangle(MouseEvent e) {
         	JTModuleContainer mc = jtcUI.getModuleContainer();
-			jtcUI.selectBoxActive = true;
+            
+            PaintableSelection ps = new PaintableSelection();
+            ps.start.setLocation(e.getPoint());
+            ps.bounds.setBounds(e.getX(), e.getY(), e.getX(), e.getY());
 			oldSelection = new HashSet<JTModule>(mc.getSelectedModules());
-			jtcUI.selectStartPoint = new Point(e.getPoint());
-			jtcUI.selectRectangle = new Rectangle(jtcUI.selectStartPoint);
-			mc.repaint(jtcUI.selectRectangle);
+            jtcUI.setPaintableSelection(ps);
+            ps.repaint(jtcUI.jtc);
         }
 
         private void updateSelectionRectangle(MouseEvent e) {
 			Point point = e.getPoint();
-			Rectangle select = jtcUI.selectRectangle;
-    		Point start = jtcUI.selectStartPoint;
+            PaintableSelection ps = jtcUI.paintableSelection;
+            if (ps == null) return;
+            
+			Rectangle select = ps.bounds;
+    		Point start = ps.start;
     		JTModuleContainer jtc = jtcUI.getModuleContainer();
         	jtc.repaint(select);
     		int x1, x2, y1, y2;
