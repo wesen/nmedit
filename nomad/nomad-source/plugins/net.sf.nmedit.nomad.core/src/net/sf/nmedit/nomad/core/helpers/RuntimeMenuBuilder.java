@@ -40,6 +40,7 @@ import net.sf.nmedit.nomad.core.service.ServiceRegistry;
 import net.sf.nmedit.nomad.core.service.fileService.FileService;
 import net.sf.nmedit.nomad.core.service.synthService.NewSynthService;
 import net.sf.nmedit.nomad.core.swing.ExtensionFilter;
+import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 import net.sf.nmedit.nomad.core.swing.explorer.FileContext;
 
@@ -210,7 +211,19 @@ public class RuntimeMenuBuilder
         
         public void run()
         {
+            Nomad n = Nomad.sharedInstance();
+            DefaultDocumentManager pageContainer = n.getDocumentManager();
+            int count = pageContainer.getDocumentCount();
+            
             service.newFile();
+            int newCount = pageContainer.getDocumentCount(); 
+            if (newCount>count)
+            {
+                // condition may be false if fs.newFile() creates the document
+                // on the event dispatch thread
+                pageContainer.setSelectedIndex(newCount-1);
+            }
+
         }
         
     }

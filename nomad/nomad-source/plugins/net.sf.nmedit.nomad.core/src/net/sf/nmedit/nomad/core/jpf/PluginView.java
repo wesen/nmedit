@@ -314,6 +314,11 @@ public class PluginView implements Document
             // TODO Auto-generated method stub
             return null;
         }
+
+		public boolean isModified() {
+			// TODO Auto-generated method stub
+			return false;
+		}
         
     }
 
@@ -531,6 +536,10 @@ public class PluginView implements Document
     {
         // TODO Auto-generated method stub
         return null;
+    }
+    
+    public boolean isModified() {
+    	return false;
     }
     
 }
