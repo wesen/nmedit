@@ -61,8 +61,6 @@ public interface PPatch
     
     PFactory getComponentFactory();
 
-    String getName();
-    
     PModule createModule(PModuleDescriptor d);
     
     PModuleMetrics getModuleMetrics();
@@ -79,5 +77,8 @@ public interface PPatch
     void removeUndoableEditListener(UndoableEditListener l);    
     
     PUndoableEditFactory getUndoableEditFactory();
+    
+    void setName(String name);
+    String getName();
     
 }
