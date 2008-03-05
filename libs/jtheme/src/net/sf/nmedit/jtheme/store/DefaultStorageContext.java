@@ -62,6 +62,8 @@ import com.steadystate.css.parser.CSSOMParser;
 public class DefaultStorageContext extends StorageContext
 {
     
+    private static final boolean DEBUG = false;
+    
     private Map<Object, ModuleElement> moduleStoreMap = new HashMap<Object, ModuleElement>();
     private ClassLoader classLoader;
     private CSSStyleSheet styleSheet;
@@ -211,6 +213,8 @@ public class DefaultStorageContext extends StorageContext
         File imageCacheFile = getImageCacheFile();
         if (imageCacheFile != null && imageCacheFile.exists())
         {
+            if (DEBUG) System.out.println(this+": image cache file "+imageCacheFile+" (exists)");
+            
             try
             {
                 imageCache.readCacheFile(imageCacheFile);
@@ -233,13 +237,33 @@ public class DefaultStorageContext extends StorageContext
 
         try
         {
-            if (cacheFile != null && cacheFile.exists())
-                if (initializeFromCache(cacheFile, loader))
-                    return;
+
+            if (cacheFile != null)
+            {
+                if (DEBUG) System.out.println(this+": element cache file "+cacheFile+" (exists:"+cacheFile.exists()+")");
+            
+                if (cacheFile.exists())
+                {
+                    if (initializeFromCache(cacheFile, loader))
+                    {
+                        if (DEBUG) System.out.println(this+": initialized from cache");
+                        return;
+                    }
+                    else
+                    {
+                        if (DEBUG) System.out.println(this+": initialization from cache failed");
+                    }
+                }
+            }
         }
         catch (Exception e)
         {
             // log this error
+            if (DEBUG) 
+            {
+                System.out.println(this+": exception ...");
+                e.printStackTrace();
+            }
         }
 
         SAXBuilder saxBuilder = new SAXBuilder();
@@ -259,12 +283,14 @@ public class DefaultStorageContext extends StorageContext
         
         if (cacheFile != null)
         {
+            if (DEBUG) System.out.println(this+": writing element cache");
             writeCache(cacheFile);
         }
         
         if (imageCacheFile != null)
         {
             // render images
+            if (DEBUG) System.out.println(this+": render images...");
             
             for (ModuleElement m: moduleStoreMap.values())
             {
@@ -277,6 +303,7 @@ public class DefaultStorageContext extends StorageContext
 
             try
             {
+                if (DEBUG) System.out.println(this+": write image cache...");
                 imageCache.writeCacheFile(imageCacheFile);
             }
             catch (FileNotFoundException e)

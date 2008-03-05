@@ -352,7 +352,7 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
         size = in.readInt();
         if (size>0)
         {
-            valueList = new Integer[size*2];
+            valueList = new Object[size*2];
             for (int i=0;i<size;i+=2)
             {
                 String name = (String) in.readObject();
