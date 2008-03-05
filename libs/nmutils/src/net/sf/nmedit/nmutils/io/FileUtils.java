@@ -37,7 +37,8 @@ public class FileUtils {
 				FileChannel ifc = is.getChannel();
 				File parent = to.getParentFile();
 				if (parent != null) {
-					parent.mkdirs();
+					boolean ok = parent.mkdirs();
+                    // TODO handle ok == false
 				}
 				FileOutputStream os = new FileOutputStream(to);
 				if (USE_NIO) {
