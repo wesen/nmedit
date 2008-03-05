@@ -111,7 +111,7 @@ public class ModulePreview extends ImagePreview
             return;
         }
         
-        Image image = ModuleImageRenderer.render(uiContext, moduleDescriptor);
+        Image image = ModuleImageRenderer.render(uiContext, moduleDescriptor, false);
         setPreviewImage(image);
     }
 
