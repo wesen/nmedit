@@ -153,7 +153,7 @@ public class PDLUtils
                 if (i>0) ints.append(", ");
                 ints.append(Integer.toString(data[i]));
             }
-            return vlist="[\""+sb+"\"|"+ints+"]";
+            return "[\""+sb+"\"|"+ints+"]";
         }
         return defaultResult;
     }
