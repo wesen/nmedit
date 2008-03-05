@@ -69,6 +69,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.undo.UndoableEditSupport;
 
 import net.sf.nmedit.jpatch.CopyOperation;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
@@ -87,6 +88,7 @@ import net.sf.nmedit.jpatch.dnd.ModulesBoundingBox;
 import net.sf.nmedit.jpatch.dnd.PDragDrop;
 import net.sf.nmedit.jpatch.dnd.PModuleTransferData;
 import net.sf.nmedit.jpatch.dnd.PModuleTransferDataWrapper;
+import net.sf.nmedit.jpatch.history.NamedUndoableEditSupport;
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.dnd.FileDnd;
 import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
@@ -812,6 +814,7 @@ public class JTModuleContainerUI extends ComponentUI
             p.y = p.y-o.y;
             
             JTModuleContainer jtmc = getModuleContainer();
+            NamedUndoableEditSupport ues = jtmc.getModuleContainer().getEditSupport();
             JTCableManager cm = jtmc.getCableManager();
             PModuleContainer mc = jtmc.getModuleContainer();
             
@@ -823,8 +826,14 @@ public class JTModuleContainerUI extends ComponentUI
             
             try
             {
-                cm.setAutoRepaintDisabled();
-                op.move();
+            	cm.setAutoRepaintDisabled();
+            	String name = (op instanceof CopyOperation ? "copy modules" : "move modules");
+                ues.beginUpdate(name);
+                try {
+                	op.move();
+                } finally {
+                    ues.endUpdate();
+                }
                 
                 Collection<? extends PModule> moved = op.getMovedModules();
                             
