@@ -222,7 +222,7 @@ public class NMPatch extends PBasicPatch implements PPatch
         {
             if (listeners[i]==PPatchSettingsListener.class) 
             {
-                if (event != null)
+                if (event == null)
                     event = new PPatchSettingsEvent(this);
                 
                 // Lazily create the event:
