@@ -36,7 +36,7 @@ import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.PSettings;
 import net.sf.nmedit.jpatch.PUndoableEditFactory;
 import net.sf.nmedit.jpatch.history.HistoryUtils;
-import net.sf.nmedit.jpatch.history.NamedUndoableEditSupport;
+import net.sf.nmedit.jpatch.history.PUndoableEditSupport;
 import net.sf.nmedit.jpatch.history.PBasicUndoableEditFactory;
 import net.sf.nmedit.jpatch.history.PUndoManager;
 
@@ -53,7 +53,7 @@ public class PBasicPatch implements PPatch
     private PFactory pfactory;
     private String name;
     private Object focusedComponent; 
-    private NamedUndoableEditSupport editSupport = new NamedUndoableEditSupport();
+    private PUndoableEditSupport editSupport = new PUndoableEditSupport();
     private PUndoManager undoManager = new PUndoManager();
     private boolean editSupportEnabled = false;
     private PBasicUndoableEditFactory editFactory = new PBasicUndoableEditFactory();
@@ -104,7 +104,7 @@ public class PBasicPatch implements PPatch
         return undoManager;
     }
 
-    public NamedUndoableEditSupport getEditSupport()
+    public PUndoableEditSupport getEditSupport()
     {
         return editSupport;
     }

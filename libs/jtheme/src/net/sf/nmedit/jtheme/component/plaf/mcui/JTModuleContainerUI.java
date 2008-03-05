@@ -88,7 +88,7 @@ import net.sf.nmedit.jpatch.dnd.ModulesBoundingBox;
 import net.sf.nmedit.jpatch.dnd.PDragDrop;
 import net.sf.nmedit.jpatch.dnd.PModuleTransferData;
 import net.sf.nmedit.jpatch.dnd.PModuleTransferDataWrapper;
-import net.sf.nmedit.jpatch.history.NamedUndoableEditSupport;
+import net.sf.nmedit.jpatch.history.PUndoableEditSupport;
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.dnd.FileDnd;
 import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
@@ -814,7 +814,7 @@ public class JTModuleContainerUI extends ComponentUI
             p.y = p.y-o.y;
             
             JTModuleContainer jtmc = getModuleContainer();
-            NamedUndoableEditSupport ues = jtmc.getModuleContainer().getEditSupport();
+            PUndoableEditSupport ues = jtmc.getModuleContainer().getEditSupport();
             JTCableManager cm = jtmc.getCableManager();
             PModuleContainer mc = jtmc.getModuleContainer();
             

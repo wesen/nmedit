@@ -21,7 +21,6 @@ package net.sf.nmedit.jpatch.impl;
 import java.util.Iterator;
 
 import javax.swing.undo.UndoableEdit;
-import javax.swing.undo.UndoableEditSupport;
 
 import net.sf.nmedit.jpatch.PComponent;
 import net.sf.nmedit.jpatch.PConnector;
@@ -30,7 +29,7 @@ import net.sf.nmedit.jpatch.PLight;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.PRoles;
 import net.sf.nmedit.jpatch.PUndoableEditFactory;
-import net.sf.nmedit.jpatch.history.NamedUndoableEditSupport;
+import net.sf.nmedit.jpatch.history.PUndoableEditSupport;
 
 /**
  * The reference implementation of interface {@link PComponent}.
@@ -54,7 +53,7 @@ public abstract class PBasicComponent<P extends PDescriptor> implements PCompone
         this.componentIndex = componentIndex;
     }
     
-    public NamedUndoableEditSupport getEditSupport()
+    public PUndoableEditSupport getEditSupport()
     {
         PComponent parent = getParentComponent();
         return (parent != null) ? parent.getEditSupport() : null;

@@ -12,7 +12,7 @@ import javax.swing.undo.UndoableEditSupport;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PatchUtils;
-import net.sf.nmedit.jpatch.history.NamedUndoableEditSupport;
+import net.sf.nmedit.jpatch.history.PUndoableEditSupport;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 
@@ -82,7 +82,7 @@ public class ContainerAction extends AbstractAction
              * (in this case from PModuleContainer).
              * ues may be null, usually when there is no undo support.
              */
-            NamedUndoableEditSupport ues = jmc.getModuleContainer().getEditSupport();
+            PUndoableEditSupport ues = jmc.getModuleContainer().getEditSupport();
             /* didBeginUpdate flag is used to determine if we  called
              * ues.beginUpdate() this when actially an edit happened.
              */
@@ -159,7 +159,7 @@ public class ContainerAction extends AbstractAction
         PModuleContainer mc = getTarget();
         if (mc != null)
         {
-            NamedUndoableEditSupport ues = mc.getEditSupport();
+            PUndoableEditSupport ues = mc.getEditSupport();
             try
             {
                 if (ues != null)

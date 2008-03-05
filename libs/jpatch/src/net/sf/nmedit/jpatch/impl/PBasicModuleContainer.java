@@ -38,7 +38,7 @@ import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.PUndoableEditFactory;
 import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
 import net.sf.nmedit.jpatch.event.PModuleContainerListener;
-import net.sf.nmedit.jpatch.history.NamedUndoableEditSupport;
+import net.sf.nmedit.jpatch.history.PUndoableEditSupport;
 import net.sf.nmedit.nmutils.collections.ArrayMap;
 
 /**
@@ -70,7 +70,7 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
         this.connectionManager = createConnectionManager();
     }
 
-    public NamedUndoableEditSupport getEditSupport()
+    public PUndoableEditSupport getEditSupport()
     {
         return patch != null ? patch.getEditSupport() : null;
     }
