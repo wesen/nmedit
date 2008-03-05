@@ -64,9 +64,9 @@ public class EnvelopeStore extends AbstractMultiParameterElement
         link(component, module);
         
         if ("ad-envelope".equals(elementName)) component.configureAD();
-        else if ("adsr-envelope".equals(elementName)) component.configureADSR();
+        else if ("adsr-envelope".equals(elementName)
+                ||"adsr-mod-envelope".equals(elementName)) component.configureADSR();
         else if ("ahd-envelope".equals(elementName)) component.configureAHD();
-        else if ("adsr-mod-envelope".equals(elementName)) component.configureADSR();
         else component.configureADSR();
         
         return component; 
