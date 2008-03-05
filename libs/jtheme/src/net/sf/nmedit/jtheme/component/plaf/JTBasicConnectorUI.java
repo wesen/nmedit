@@ -49,6 +49,7 @@ import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
 import net.sf.nmedit.jpatch.PSignal;
 import net.sf.nmedit.jpatch.PSignalTypes;
+import net.sf.nmedit.jpatch.history.NamedUndoableEditSupport;
 import net.sf.nmedit.jtheme.JTCursor;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.DragCable;
@@ -552,12 +553,12 @@ public class JTBasicConnectorUI extends JTConnectorUI
                 cableManager.update(connectedCables);
                 
                 
-                UndoableEditSupport ues = c.getConnector().getEditSupport();
+                NamedUndoableEditSupport ues = c.getConnector().getEditSupport();
                 
                 try
                 {
                     if (ues != null)
-                        ues.beginUpdate();
+                        ues.beginUpdate("connect cables");
                     
                     
                     if (target != null)
