@@ -18,6 +18,8 @@
  */
 package net.sf.nmedit.jpatch.clavia.nordmodular.parser;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
@@ -33,7 +35,9 @@ import net.sf.nmedit.jpatch.util.ObjectFilter;
 public class Helper
 {
     
-    private static class ParameterClassFilter implements ObjectFilter<PParameter>, Comparator<PParameter>
+    private static class ParameterClassFilter implements ObjectFilter<PParameter>, Comparator<PParameter>,
+        Serializable
+    
     {
         private String classname;
         
@@ -79,6 +83,18 @@ public class Helper
         public int compare(PParameter a, PParameter b)
         {
             return a.getComponentIndex() - b.getComponentIndex();
+        }
+
+        private void writeObject(java.io.ObjectOutputStream out)
+            throws IOException
+        {
+            out.defaultWriteObject();
+        }
+        
+        private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException
+        {
+            in.defaultReadObject();
         }
         
     }
