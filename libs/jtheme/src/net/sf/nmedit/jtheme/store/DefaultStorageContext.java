@@ -210,6 +210,8 @@ public class DefaultStorageContext extends StorageContext
         if (loader == null)
             loader = getClass().getClassLoader();
         
+        long t = 0; // for timing stuff
+        
         File imageCacheFile = getImageCacheFile();
         if (imageCacheFile != null && imageCacheFile.exists())
         {
@@ -217,7 +219,9 @@ public class DefaultStorageContext extends StorageContext
             
             try
             {
+                if (DEBUG) t = System.currentTimeMillis();
                 imageCache.readCacheFile(imageCacheFile);
+                if (DEBUG) System.out.println(this+": image cache read in "+(System.currentTimeMillis()-t)+"ms");
             }
             catch (FileNotFoundException e)
             {
@@ -243,15 +247,16 @@ public class DefaultStorageContext extends StorageContext
                 if (DEBUG) System.out.println(this+": element cache file "+cacheFile+" (exists:"+cacheFile.exists()+")");
             
                 if (cacheFile.exists())
-                {
+                {     if (DEBUG) t = System.currentTimeMillis();
                     if (initializeFromCache(cacheFile, loader))
                     {
-                        if (DEBUG) System.out.println(this+": initialized from cache");
+                        imageCache.readCacheFile(imageCacheFile);
+                        if (DEBUG) System.out.println(this+": elements initialized from cache in "+(System.currentTimeMillis()-t)+"ms");
                         return;
                     }
                     else
                     {
-                        if (DEBUG) System.out.println(this+": initialization from cache failed");
+                        if (DEBUG) System.out.println(this+": initialization of elements from cache failed");
                     }
                 }
             }
