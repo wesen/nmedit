@@ -584,7 +584,11 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
     
     private boolean checkContents()
     {
-        return checkIcons() & checkLabels();
+        boolean result = false;
+        // both check*() methods must be called
+        result |= checkIcons();
+        result |= checkLabels();
+        return result;
     }
     
     private boolean checkPreferredContents()
