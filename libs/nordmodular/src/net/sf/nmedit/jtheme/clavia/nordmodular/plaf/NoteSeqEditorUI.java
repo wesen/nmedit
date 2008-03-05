@@ -130,12 +130,13 @@ public class NoteSeqEditorUI extends JTBasicControlUI
         return new Dimension(204,72);
     }
     
+    private Insets cachedInsets = new Insets(0,0,0,0);
 	
     public void paintStaticLayer(Graphics2D g, JTComponent c)
     {
-        NMNoteSeqEditor ed = (NMNoteSeqEditor) c;
+        NMNoteSeqEditor ed = control;
         
-        Insets insets = ed.getInsets();
+        Insets insets = (cachedInsets=ed.getInsets(cachedInsets));
         
         int x = insets.left;
         int y = insets.top;
@@ -149,9 +150,9 @@ public class NoteSeqEditorUI extends JTBasicControlUI
 
     public void paintDynamicLayer(Graphics2D g, JTComponent c)
     {
-        NMNoteSeqEditor ed = (NMNoteSeqEditor) c;
+        NMNoteSeqEditor ed = control;
         
-        Insets insets = ed.getInsets();
+        Insets insets = (cachedInsets=ed.getInsets(cachedInsets));
         int x = insets.left;
         int y = insets.top;
         int w = ed.getWidth()-(insets.left+insets.right);
