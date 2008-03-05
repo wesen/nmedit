@@ -52,7 +52,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.border.Border;
 
@@ -74,6 +73,7 @@ public class JTModuleUI extends JTComponentUI
 {
 
     public static final String moduleBorder = "ModuleUI.Border";
+    public static final String moduleFont = "ModuleUI.Font";
     public static final String moduleSelectionBorder = "ModuleUI.Selected.Border";
     
     private static final String moduleTransIcon = "ModuleUI.transformationIcon";
@@ -245,6 +245,10 @@ public class JTModuleUI extends JTComponentUI
         if (selectionBorder == null)
             selectionBorder = uidefaults.getBorder(moduleSelectionBorder);
 
+        Font font = uidefaults.getFont(moduleFont);
+        if (font != null)
+            module.setFont(font);
+        
         c.setBorder(module.isSelected() ? selectionBorder : border);
         
         transformationIcon = getModuleTransformationIcon(uidefaults);
@@ -529,7 +533,8 @@ public class JTModuleUI extends JTComponentUI
             }
             left+=2; //padding - even if no icon is painted
 
-            FontMetrics fm = getFontMetrics(module, module.getFont());
+            Font font = module.getFont();
+            FontMetrics fm = getFontMetrics(module, font);
             if (module.hasFocus())
             {
                 g.setColor(Color.WHITE);
@@ -539,6 +544,7 @@ public class JTModuleUI extends JTComponentUI
             String title = getShortTitle(module);
             if (title != null && title.length()>0)
             {
+                g.setFont(font);
                 g.setColor(Color.BLACK);
                 g.drawString(title, left, insets.top+fm.getHeight()-fm.getDescent());
             }

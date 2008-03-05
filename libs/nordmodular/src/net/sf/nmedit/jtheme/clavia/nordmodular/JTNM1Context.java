@@ -210,6 +210,7 @@ public class JTNM1Context extends JTCustomContext
         uidefaults.put(JTDisplayUI.FOREGROUND_KEY, new ColorUIResource(0x00ff00));
         uidefaults.put(JTDisplayUI.BORDER_KEY, new BorderUIResource(JTNM1BorderFactory.createNordEditor311Border()));
         uidefaults.put(JTModule.uiClassID, JTModuleUI.class.getName());
+        uidefaults.put(JTModuleUI.moduleFont, baseFont);
         uidefaults.put(JTEqMidDisplay.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(JTEqShelvingDisplay.uiClassID, JTDisplayUI.class.getName());
         uidefaults.put(JTPhaserDisplay.uiClassID, JTDisplayUI.class.getName());
