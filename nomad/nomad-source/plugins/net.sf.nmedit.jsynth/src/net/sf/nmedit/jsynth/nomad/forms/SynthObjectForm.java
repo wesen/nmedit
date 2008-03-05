@@ -903,7 +903,7 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
         
         protected void processMouseEvent(MouseEvent e)
         {
-            if (e.getID() == MouseEvent.MOUSE_CLICKED && SwingUtilities.isLeftMouseButton(e))
+            if (e.getID() == MouseEvent.MOUSE_CLICKED && Platform.isLeftMouseButtonOnly(e))
             {
                 // click
                 l.actionPerformed(new ActionEvent(this, 0, CLICK));
