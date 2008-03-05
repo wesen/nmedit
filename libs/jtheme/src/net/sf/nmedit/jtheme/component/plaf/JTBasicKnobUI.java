@@ -50,7 +50,7 @@ public class JTBasicKnobUI extends JTBasicControlUI
     public static final String knobGripStartValueKey = "grip.start";
     public static final String knobGripStopValueKey = "grip.stop";
     
-    protected static UIInstance<JTBasicKnobUI> uiInstance = new UIInstance<JTBasicKnobUI>(JTBasicKnobUI.class);
+    protected static final UIInstance<JTBasicKnobUI> uiInstance = new UIInstance<JTBasicKnobUI>(JTBasicKnobUI.class);
 
     public static JTBasicKnobUI createUI(JComponent c) 
     {
