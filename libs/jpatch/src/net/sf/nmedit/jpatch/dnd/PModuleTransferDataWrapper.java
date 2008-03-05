@@ -1,5 +1,6 @@
 package net.sf.nmedit.jpatch.dnd;
 
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.datatransfer.DataFlavor;
@@ -7,13 +8,8 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Hashtable;
-
 
 import net.sf.nmedit.jpatch.CopyOperation;
-import net.sf.nmedit.jpatch.MoveOperation;
-import net.sf.nmedit.jpatch.PConnectionManager;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PPatch;
@@ -22,6 +18,7 @@ public class PModuleTransferDataWrapper implements PModuleTransferData {
     private PModuleContainer sourceContainer;
     
     ModulesBoundingBox boundingBox;
+    private Image transferImage = null;
 
     public PModuleTransferDataWrapper(PModuleContainer delegate, Collection<? extends PModule> modules, Point dragStartLocation)
     {
@@ -108,5 +105,15 @@ public class PModuleTransferDataWrapper implements PModuleTransferData {
 	public Rectangle getBoundingBox(Rectangle r) {
 		return boundingBox.getBoundingBox(r);
 	}
+    
+    public Image getTransferImage()
+    {
+        return transferImage;
+    }
 
+    public void setTransferImage(Image image)
+    {
+        this.transferImage = image;
+    }
+    
 }

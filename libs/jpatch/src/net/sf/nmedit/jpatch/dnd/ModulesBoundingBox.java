@@ -3,6 +3,7 @@
  */
 package net.sf.nmedit.jpatch.dnd;
 
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Collection;
@@ -15,6 +16,7 @@ public class ModulesBoundingBox {
 	private Rectangle boundingBox;
     private Collection<? extends PModule> modules;
     private Point dragStartLocation;
+    private Image transferImage ;
     
 	public ModulesBoundingBox(Collection<? extends PModule> modules, Point dragStartLocation) {
 		this.dragStartLocation = dragStartLocation;
@@ -58,4 +60,14 @@ public class ModulesBoundingBox {
 	public Collection<? extends PModule> getModules() {
 		return modules;
 	}
+    
+    public Image getTransferImage()
+    {
+        return transferImage;
+    }
+    
+    public void setTransferImage(Image image)
+    {
+        this.transferImage = image;
+    }
 }
