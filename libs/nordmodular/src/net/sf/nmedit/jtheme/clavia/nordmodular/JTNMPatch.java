@@ -779,13 +779,13 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
 
     private static final String charset = "ISO-8859-1";
 
-    public static DataFlavor nmPatchFlavor = 
+    public static final DataFlavor nmPatchFlavor = 
         new DataFlavor("ppatch/nmpatch", "Nord Modular patch 3.0");
-    private static DataFlavor inputStreamFlavor =
+    private static final DataFlavor inputStreamFlavor =
         new DataFlavor("text/plain; charset="+charset+"", "Nord Modular patch 3.0");
-    private static DataFlavor uriFlavor =
+    private static final DataFlavor uriFlavor =
         new DataFlavor("text/uri-list; charset=utf-8", "uri list");
-    private static DataFlavor imageFlavor =
+    private static final DataFlavor imageFlavor =
         DataFlavor.imageFlavor;
     
     public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException
