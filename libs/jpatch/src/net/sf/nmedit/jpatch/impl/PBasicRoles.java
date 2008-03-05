@@ -281,6 +281,11 @@ public class PBasicRoles extends AbstractImmutableCollection<String> implements 
             return 0;
         }
         
+        public int hashCode()
+        {
+            return 0;
+        }
+        
         public boolean equals(Object o)
         {
             if (o == null) return false;
