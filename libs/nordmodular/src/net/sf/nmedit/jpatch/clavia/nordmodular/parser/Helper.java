@@ -39,6 +39,10 @@ public class Helper
         Serializable
     
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 7277838392533967421L;
         private String classname;
         
         private ParameterClassFilter(String classname)
