@@ -1003,6 +1003,7 @@ public class JTModuleContainerUI extends ComponentUI
                             collection, dndOrigin);
                 
                 ModuleImageRenderer mir = new ModuleImageRenderer(jtmodules);
+                mir.setForDragAndDrop(true);
                 mir.setPaintExtraBorder(true);
                 transfer.setTransferImage(mir.render());
                 
