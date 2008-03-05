@@ -85,6 +85,11 @@ public class PSignal extends PType
         return color;
     }
     
+    public int hashCode()
+    {
+         return super.hashCode();
+    }
+    
     public boolean equals(Object o)
     {
         if (o == this) return true;
