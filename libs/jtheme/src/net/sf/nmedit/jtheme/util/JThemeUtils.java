@@ -2,13 +2,40 @@ package net.sf.nmedit.jtheme.util;
 
 import java.awt.Component;
 import java.awt.Point;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
 import javax.swing.SwingUtilities;
 import javax.swing.event.MenuDragMouseEvent;
 
+import net.sf.nmedit.jpatch.PModuleDescriptor;
+import net.sf.nmedit.jpatch.dnd.PDragDrop;
+import net.sf.nmedit.jtheme.JTContext;
+import net.sf.nmedit.jtheme.JTException;
+import net.sf.nmedit.nmutils.dnd.DefaultEyeCandyTransferable;
+import net.sf.nmedit.nmutils.dnd.EyeCandyTransferable;
+
 public class JThemeUtils {
+    
+    public static EyeCandyTransferable createTransferable(JTContext context, PModuleDescriptor moduleDescriptor)
+    {
+        Transferable transferable = PDragDrop.createTransferable(moduleDescriptor);
+        DefaultEyeCandyTransferable t = new DefaultEyeCandyTransferable(transferable);
+        if (context != null)
+        {
+            try
+            {
+                t.setTransferImage(ModuleImageRenderer.render(context, moduleDescriptor));
+            } 
+            catch (JTException e)
+            {
+                // ignore
+                // TODO log exception
+            }
+        }
+        return t;
+    }
 
     public static String setColorKey(String title, int colorkey)
     {

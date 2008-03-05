@@ -1,3 +1,21 @@
+/* Copyright (C) 2008 Christian Schneider
+ * 
+ * This file is part of Nomad.
+ * 
+ * Nomad is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * Nomad is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Nomad; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package net.sf.nmedit.jtheme.util;
 
 import java.awt.Dimension;
@@ -14,12 +32,18 @@ import java.util.Set;
 import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
+import net.sf.nmedit.jpatch.impl.PBasicModule;
+import net.sf.nmedit.jtheme.JTContext;
+import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.CableRenderer;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.plaf.SelectionPainter;
+import net.sf.nmedit.jtheme.store.StorageContext;
+import net.sf.nmedit.jtheme.store2.ModuleElement;
 
 public class ModuleImageRenderer
 {
@@ -196,6 +220,27 @@ public class ModuleImageRenderer
     public void setPaintExtraBorder(boolean extra)
     {
         this.extraBorder = extra;
+    }
+    
+    public static Image render(JTContext context, PModuleDescriptor moduleDescriptor) throws JTException
+    {
+        StorageContext sc = context.getStorageContext();
+        ModuleElement scModuleElement = sc.getModuleStoreById(moduleDescriptor.getComponentId());
+        PModule pmodule = new PBasicModule(moduleDescriptor);
+        JTModule module = scModuleElement.createModule(context, pmodule, true);
+        ModuleImageRenderer renderer = new ModuleImageRenderer();
+        renderer.add(module);
+        return renderer.render();
+    }
+
+    public static Image render(JTContext context, PModule pmodule) throws JTException
+    {
+        StorageContext sc = context.getStorageContext();
+        ModuleElement scModuleElement = sc.getModuleStoreById(pmodule.getComponentId());
+        JTModule module = scModuleElement.createModule(context, pmodule, true);
+        ModuleImageRenderer renderer = new ModuleImageRenderer();
+        renderer.add(module);
+        return renderer.render();
     }
     
 }

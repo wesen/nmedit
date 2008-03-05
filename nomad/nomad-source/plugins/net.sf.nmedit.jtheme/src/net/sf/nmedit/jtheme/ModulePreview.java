@@ -22,18 +22,12 @@
  */
 package net.sf.nmedit.jtheme;
 
-import java.awt.Graphics2D;
-import java.awt.Transparency;
-import java.awt.image.BufferedImage;
+import java.awt.Image;
 
 import net.sf.nmedit.jpatch.ModuleDescriptions;
-import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
-import net.sf.nmedit.jpatch.impl.PBasicModule;
-import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.store.StorageContext;
-import net.sf.nmedit.jtheme.store2.ModuleElement;
-import net.sf.nmedit.nmutils.graphics.GraphicsToolkit;
+import net.sf.nmedit.jtheme.util.ModuleImageRenderer;
 
 public class ModulePreview extends ImagePreview
 {
@@ -116,40 +110,8 @@ public class ModulePreview extends ImagePreview
             setPreviewImage(null);
             return;
         }
-
-        ModuleElement store = storageContext
-            .getModuleStoreById ( moduleDescriptor.getComponentId() );
-
-        PModule pmodule = new PBasicModule(moduleDescriptor);
         
-        JTModule module = store.createModule(uiContext, pmodule, true);
-
-        BufferedImage image =
-            GraphicsToolkit.createCompatibleBuffer(
-                    module.getWidth(),
-                    module.getHeight(),
-                    Transparency.OPAQUE);
-
-        Graphics2D g = image.createGraphics();
-        try
-        {
-            add(module);
-            
-            /*
-            if (module.getStaticLayerBackingStore() == null)
-            {
-                BufferedImage background = module.renderStaticLayerImage();
-                store.setStaticLayer(background);
-            }*/
-            
-            module.paint(g);
-        }
-        finally
-        {
-            g.dispose();
-            remove(module);
-        }
-
+        Image image = ModuleImageRenderer.render(uiContext, moduleDescriptor);
         setPreviewImage(image);
     }
 

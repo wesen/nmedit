@@ -27,7 +27,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -55,7 +54,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -83,6 +81,7 @@ import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.plaf.PaintableSelection;
+import net.sf.nmedit.jtheme.component.plaf.PaintableTransfer;
 import net.sf.nmedit.jtheme.component.plaf.SelectionPainter;
 import net.sf.nmedit.jpatch.dnd.ModulesBoundingBox;
 import net.sf.nmedit.jpatch.dnd.PDragDrop;
@@ -227,8 +226,9 @@ public class JTModuleContainerUI extends ComponentUI
             if (ps == null)
             {
                 // repaint and remove
-                paintableSelection.repaint(jtc);
+                PaintableSelection old = paintableSelection;
                 paintableSelection = null;
+                old.repaint(jtc);
             }
             else
             {
@@ -609,9 +609,12 @@ public class JTModuleContainerUI extends ComponentUI
         		}
         	}
         	
-        	if (isMDDropOk(dtde.getDropAction(), t)) {
+        	if (isMDDropOk(dtde.getDropAction(), t)) 
+            {
+                jtcUI.setPaintableSelection(PaintableTransfer.get(t)); // get might return null
         		dtde.acceptDrag(DnDConstants.ACTION_COPY);
-        	} else if (t.isDataFlavorSupported(PDragDrop.ModuleSelectionFlavor)) {
+        	} 
+            else if (t.isDataFlavorSupported(PDragDrop.ModuleSelectionFlavor)) {
         		dtde.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
         	} else if (FileDnd.testFileFlavor(t.getTransferDataFlavors())) {
         		dtde.acceptDrag(DnDConstants.ACTION_COPY);
@@ -622,12 +625,22 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void dragExit(DropTargetEvent dte)
         {
+            jtcUI.setPaintableSelection(null);
             jtcUI.setCurrentTransfer(null, null);
         }
 
         public void dragOver(DropTargetDragEvent dtde)
         {
         	if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable())) {
+                
+                PaintableSelection ps = jtcUI.paintableSelection;
+                if (ps != null)
+                {
+                    ps.repaint(jtcUI.jtc); // old location
+                    ps.bounds.setLocation(dtde.getLocation());
+                    ps.repaint(jtcUI.jtc); // new location
+                }
+                
                 dtde.acceptDrag(DnDConstants.ACTION_COPY);
                 return;
             }
@@ -699,6 +712,7 @@ public class JTModuleContainerUI extends ComponentUI
         public void drop(DropTargetDropEvent dtde)
         {
             jtcUI.setCurrentTransfer(null, null);
+            jtcUI.setPaintableSelection(null);
             
             DataFlavor chosen = null;
             Object data = null;
@@ -990,79 +1004,6 @@ public class JTModuleContainerUI extends ComponentUI
             }
         }
         
-        private static <T extends JComponent> Image renderDragImage(Collection<T> collection)
-        {
-            // get boundaries
-            Rectangle bounds = new Rectangle(0, 0, 0, 0);
-            Rectangle tmp = new Rectangle();
-            boolean firstComponent = true;
-            boolean nonOpaque = false;
-            for (T component: collection)
-            {
-                // get component bounds
-                tmp = component.getBounds(tmp);
-                // check if at least one component is not opaque
-                nonOpaque |= !component.isOpaque();
-                // compute union
-                if (firstComponent)
-                {
-                    bounds.setBounds(tmp); // otherwise x,y is always 0,0
-                }
-                else
-                {
-                    SwingUtilities.computeUnion(
-                            tmp.x, tmp.y, 
-                            tmp.width, tmp.height, 
-                            bounds);
-                }
-            }
-            BufferedImage image = new BufferedImage( 
-                    bounds.width, bounds.height, // size
-                    collection.size() > 1 || nonOpaque
-                    ? BufferedImage.TYPE_INT_ARGB  // image has alpha
-                    : BufferedImage.TYPE_INT_RGB   // alpha not necessary for single opaque module 
-            );
-            
-            Graphics2D g2 = image.createGraphics();
-
-            try
-            {
-                
-                // translation to image 0,0
-                int tx = -bounds.x;
-                int ty = -bounds.y;
-                
-                for (T component: collection)
-                {
-                    // always use a new graphics instance because
-                    // some components cause an illegal state
-                    
-                    Graphics2D g2c = (Graphics2D) g2.create();
-                    try
-                    {   
-                        g2c.translate(tx+component.getX(), ty+component.getY());
-                        synchronized (component.getTreeLock())
-                        {
-                            g2c.setFont(component.getFont());
-                            g2c.setColor(component.getBackground());
-                            component.paint(g2c);
-                        }
-                    }
-                    finally
-                    {
-                        g2c.dispose();
-                    }
-                }
-                
-            }
-            finally
-            {
-                g2.dispose();
-            }
-            return image;
-        }
-
-
 
         public JTModuleContainer getSource()
         {
@@ -1125,11 +1066,19 @@ public class JTModuleContainerUI extends ComponentUI
         public void dragExit(DragSourceEvent dse)
         {
         	// no op
+            jtcUI.setPaintableSelection(null); // 
         }
 
         public void dragOver(DragSourceDragEvent dsde)
         {
             // no op
+            PaintableSelection ps = jtcUI.paintableSelection;
+            if (ps != null)
+            {
+                ps.repaint(jtcUI.jtc);
+                ps.bounds.setLocation(dsde.getLocation());
+                ps.repaint(jtcUI.jtc);
+            }
         }
 
         public void dropActionChanged(DragSourceDragEvent dsde)
