@@ -9,6 +9,9 @@ import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 
 public class PDragDrop {
+    
+    // note: flavors should be final
+    
 	public static final DataFlavor ModuleDescriptorDataFlavor 
 	= new DataFlavor(PModuleDescriptor.class, "module descriptor");
 
@@ -22,10 +25,10 @@ public class PDragDrop {
 	= new DataFlavor(PModuleTransferData.class, "Nomad PModuleSelectionFlavor");
 
 	private static final String charset = "ISO-8859-1";
-	public static DataFlavor PatchFileFlavor =
+	public static final DataFlavor PatchFileFlavor =
 		new DataFlavor("text/patch; charset="+charset+"", "Nord Modular patch 3.0");
 	
-	public static DataFlavor PatchStringFlavor = 
+	public static final DataFlavor PatchStringFlavor = 
 		new DataFlavor(java.lang.String.class, "patch string");
 
 	public static boolean isModuleDescriptorFlavorSupported(Transferable t)
