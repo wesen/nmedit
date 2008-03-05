@@ -388,7 +388,7 @@ public class NMPatch extends PBasicPatch implements PPatch
             if (value==null)
             {
                 properties.remove(name);
-                firePropertyChanged(name, oldValue, value);
+                firePropertyChanged(name, oldValue, null);
             }
             else if (!value.equals(oldValue))
             {
