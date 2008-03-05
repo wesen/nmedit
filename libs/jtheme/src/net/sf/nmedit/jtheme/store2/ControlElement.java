@@ -50,22 +50,25 @@ public abstract class ControlElement extends AbstractElement implements Serializ
     
     protected void setParameter(JTControl control, PModuleDescriptor descriptor, PModule module)
     {
-        PParameterDescriptor parameterDescriptor = null;
-        if (componentId != null)
+        if (componentId != null && module != null)
         {
-            parameterDescriptor = descriptor.getParameterByComponentId(componentId);
-        }
-        if (parameterDescriptor != null)
-        {
-            if (module != null)
+            PParameterDescriptor parameterDescriptor = descriptor.getParameterByComponentId(componentId);
+            PParameter parameter = null;
+            try
             {
-                PParameter parameter = module.getParameter(parameterDescriptor);
-                if (parameter != null)
+                parameter = module.getParameter(parameterDescriptor);
+                control.setAdapter(new JTParameterControlAdapter(parameter));
+                PParameter extension = parameter.getExtensionParameter();
+                if (extension != null)
+                    control.setExtensionAdapter(new JTParameterControlAdapter(extension));
+            }
+            catch (NullPointerException e)
+            {
+                if (parameterDescriptor != null && parameter != null)
+                    throw e; // unexpected
+                else
                 {
-                    control.setAdapter(new JTParameterControlAdapter(parameter));
-                    PParameter extension = parameter.getExtensionParameter();
-                    if (extension != null)
-                        control.setExtensionAdapter(new JTParameterControlAdapter(extension));
+                    // ignore (for now)
                 }
             }
         }
