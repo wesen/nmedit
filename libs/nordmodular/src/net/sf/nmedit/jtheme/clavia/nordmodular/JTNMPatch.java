@@ -67,6 +67,7 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.ParseException;
 import net.sf.nmedit.jpatch.event.PConnectionEvent;
 import net.sf.nmedit.jpatch.event.PConnectionListener;
+import net.sf.nmedit.jpatch.history.PUndoableEditSupport;
 import net.sf.nmedit.jsynth.clavia.nordmodular.utils.NmUtils;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.cable.Cable;
@@ -406,7 +407,7 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
             PConnector c = connector.getConnector();
             if (c != null && c.isConnected())
             {
-                UndoableEditSupport ues = c.getEditSupport();
+                PUndoableEditSupport ues = c.getEditSupport();
                 try
                 {
                     if (ues != null)

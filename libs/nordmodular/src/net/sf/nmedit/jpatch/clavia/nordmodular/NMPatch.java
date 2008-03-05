@@ -36,6 +36,7 @@ import javax.swing.event.EventListenerList;
 import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PPatch;
+import net.sf.nmedit.jpatch.clavia.nordmodular.event.ModifiedListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentEvent;
 import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentListener;
 import net.sf.nmedit.jpatch.clavia.nordmodular.event.PPatchSettingsEvent;
@@ -123,6 +124,8 @@ public class NMPatch extends PBasicPatch implements PPatch
     
     private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     
+    private ModifiedListener modifiedListener;
+    
     /**
      * Creates a new patch.
      */
@@ -142,8 +145,19 @@ public class NMPatch extends PBasicPatch implements PPatch
         morphSection = new PNMMorphSection(this);
         
         containers = new PModuleContainer[]{commonVoiceArea, polyVoiceArea, morphSection};
+        
+        modifiedListener = new ModifiedListener(this);
 
         setProperty(VERSION, "Nord Modular patch 3.0");
+        setProperty(MODIFIED, Boolean.FALSE);
+    }
+    
+    public void installModifiedListener() {
+        modifiedListener.install();
+    }
+
+    public void uninstallModifiedListener() {
+        modifiedListener.uninstall();
     }
 
     public File getFile()
@@ -437,7 +451,9 @@ public class NMPatch extends PBasicPatch implements PPatch
 
     public void setModified(boolean changed)
     {
+    	boolean oldValue = (Boolean)getProperty(MODIFIED);
         setProperty(MODIFIED, changed ? Boolean.TRUE : Boolean.FALSE);
+        firePropertyChanged(MODIFIED, oldValue, changed ? Boolean.TRUE : Boolean.FALSE);
     }
     
     public boolean isModified()
@@ -501,6 +517,8 @@ public class NMPatch extends PBasicPatch implements PPatch
 		}
 
     	patch.setProperty("file", null);
+    	patch.setModified(false);
+    	patch.installModifiedListener();
 
         // enable history
         patch.setEditSupportEnabled(true);

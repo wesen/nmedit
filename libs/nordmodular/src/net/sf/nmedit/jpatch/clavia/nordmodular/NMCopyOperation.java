@@ -17,6 +17,8 @@ public class NMCopyOperation extends NMMoveOperation implements CopyOperation {
 	 Hashtable<PModule,PModule> mapNew;
 	 ArrayList<PConnection> conNew;
 	 
+	 private boolean isDuplicate = false;
+	 
 	public NMCopyOperation(VoiceArea va) {
 		super(va);
 		mapNew = new Hashtable<PModule, PModule>();
@@ -62,16 +64,18 @@ public class NMCopyOperation extends NMMoveOperation implements CopyOperation {
             			ca2 = a2.getConnectorByComponentId(ca.getComponentId());
             			cb2 = b2.getConnectorByComponentId(cb.getComponentId());
             			// comment for now, this allows to "duplicate" (like in reaktor) modules
-//            		} else if (a2 != null) {
-//            			if (!ca.isOutput()) {
-//            				ca2 = a2.getConnectorByComponentId(ca.getComponentId());
-//            				cb2 = cb;
-//            			}
-//            		} else if (b2 != null) {
-//            			if (!cb.isOutput()) {
-//            				ca2 = ca;
-//            				cb2 = b2.getConnectorByComponentId(cb.getComponentId());
-//            			}
+            		} else if (isDuplicate()) {
+            			if (a2 != null) {
+            				if (!ca.isOutput()) {
+            					ca2 = a2.getConnectorByComponentId(ca.getComponentId());
+            					cb2 = cb;
+            				}
+            			} else if (b2 != null) {
+            				if (!cb.isOutput()) {
+            					ca2 = ca;
+            					cb2 = b2.getConnectorByComponentId(cb.getComponentId());
+            				}
+            			}
             		}
             		if (ca2 != null && cb2 != null) {
             			com2.add(ca2, cb2);
@@ -107,6 +111,14 @@ public class NMCopyOperation extends NMMoveOperation implements CopyOperation {
 
 	public Collection<? extends PConnection> getCopiedConnections() {
 		return conNew;
+	}
+
+	public void setDuplicate(boolean isDuplicate) {
+		this.isDuplicate = isDuplicate;
+	}
+
+	public boolean isDuplicate() {
+		return isDuplicate;
 	}
 
 }
