@@ -177,7 +177,7 @@ public abstract class AbstractImageResource implements ImageResource, Serializab
     public int hashCode()
     {
         URL src = getResolvedURL();
-        return src == null ? 0 : src.hashCode();
+        return src == null ? 0 : src.toString().hashCode();
     }
 
     public boolean equals(Object o)
