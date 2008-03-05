@@ -186,10 +186,13 @@ public abstract class AbstractImageResource implements ImageResource, Serializab
         if (o == null || (!(o instanceof AbstractImageResource))) return false;
         
         AbstractImageResource b = (AbstractImageResource) o;
-        if (eq(getResolvedURL(), b.getResolvedURL())) return true;
         
-        return eq(customClassLoader, b.customClassLoader)
-        && (eq(srcURI, b.srcURI)||eq(srcURL, b.srcURL));
+        if (eq(customClassLoader, b.customClassLoader)
+        && (eq(srcURI, b.srcURI)||eq(srcURL, b.srcURL)))
+            return true;
+
+        if (eq(getResolvedURL(), b.getResolvedURL())) return true;
+        return false;
     }
     
     private boolean eq(Object a, Object b)
