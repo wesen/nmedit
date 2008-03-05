@@ -25,11 +25,13 @@ import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 import javax.swing.undo.UndoableEditSupport;
 
+import net.sf.nmedit.jpatch.history.NamedUndoableEditSupport;
+
 public interface PPatch 
 {
     UndoManager getUndoManager();
     
-    UndoableEditSupport getEditSupport();
+    NamedUndoableEditSupport getEditSupport();
     
     /**
      * Posts an edit of this component.
