@@ -449,7 +449,7 @@ public class JTModuleUI extends JTComponentUI
                 return;
             }
             
-            float covering = ((int)(mapping.getCovering()*10000))/100f;
+            //float covering = ((int)(mapping.getCovering()*10000))/100f;
             
           putValue(NAME, md.getName());
             
