@@ -1212,7 +1212,6 @@ public class FFTabBarUI extends TabBarUI
 
         public void mousePressed(MouseEvent e)
         {   
-        	System.out.println("pressed");
             if (handlePopupTrigger(e))
                 return;
             
@@ -1249,7 +1248,6 @@ public class FFTabBarUI extends TabBarUI
 
         public void mouseReleased(MouseEvent e)
         {
-        	System.out.println("released");
             if (handlePopupTrigger(e))
                 return;
         }
