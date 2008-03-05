@@ -35,7 +35,7 @@ public class JTButtonControl extends JTControl
      */
     private static final long serialVersionUID = -5006356339062640600L;
 
-    public static String uiClassID = "ButtonConrolUI";
+    public static final String uiClassID = "ButtonConrolUI";
 
     private Map<Integer, String> textMap;
     private Map<Integer, Icon> iconMap;
