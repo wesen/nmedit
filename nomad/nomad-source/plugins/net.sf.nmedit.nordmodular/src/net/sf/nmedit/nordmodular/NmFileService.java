@@ -78,6 +78,7 @@ public class NmFileService implements FileService
         	}
         	
         	NMPatch patch = NMPatch.createPatchFromFile(file);
+            patch.setEditSupportEnabled(false);
 
             if (title != null)
                 patch.setName(title);
@@ -102,7 +103,9 @@ public class NmFileService implements FileService
 	                pd.setURI(sourceFile);
 	            }
             }
-                
+
+            patch.setEditSupportEnabled(true);
+            patch.setModified(false);
                     DocumentManager dm = 
                     Nomad.sharedInstance()
                     .getDocumentManager();
