@@ -8,4 +8,6 @@ public interface CopyOperation extends MoveOperation {
     Collection<? extends PModule> getCopiedModules();
     PModule getCopiedModule(PModule oldModule);
     Collection<? extends PConnection> getCopiedConnections();
+	public void setDuplicate(boolean isDuplicate);
+	public boolean isDuplicate();
 }
