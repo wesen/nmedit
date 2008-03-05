@@ -175,14 +175,21 @@ public class JTCableManagerImpl implements JTCableManager, Runnable
     
     private void markDirty(Cable c, boolean automaticRepaint)
     {
-        Rectangle bounds = c.getBounds();
-        if (dirty.isEmpty())
-            dirty.setBounds(bounds);
+        if (view != null && view.isShowing())
+        {
+            Rectangle bounds = c.getBounds();
+            if (dirty.isEmpty())
+                dirty.setBounds(bounds);
+            else
+                SwingUtilities.computeUnion(bounds.x, bounds.y, bounds.width, bounds.height, dirty);
+            
+            if (automaticRepaint) 
+                repaintIfDirty();
+        }
         else
-            SwingUtilities.computeUnion(bounds.x, bounds.y, bounds.width, bounds.height, dirty);
-        
-        if (automaticRepaint) 
-            repaintIfDirty();
+        {
+            //System.out.println("not showing");
+        }
     }
     
     private List<Cable> cables = new ArrayList<Cable>();
