@@ -714,149 +714,166 @@ public class JTModuleContainerUI extends ComponentUI
             jtcUI.setCurrentTransfer(null, null);
             jtcUI.setPaintableSelection(null);
             
-            DataFlavor chosen = null;
-            Object data = null;
-
             Transferable transfer = dtde.getTransferable();
-            
+
             if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable()))
             {
-                PModuleContainer mc = getModuleContainer().getModuleContainer();
-                PModuleDescriptor md = PDragDrop.getModuleDescriptor(dtde.getTransferable());
-                if (md == null || mc == null)
-                {
-                    dtde.rejectDrop();
-                    return;
-                }
-                
-                Point l = dtde.getLocation();
-                
-                PModule module;
-                try
-                {
-                    module = mc.createModule(md);
-                    module.setScreenLocation(l.x, l.y);
-                }
-                catch (InvalidDescriptorException e)
-                {
-                    e.printStackTrace();
-                    dtde.rejectDrop();
-                    return;
-                }
-                mc.add(module);
-                // TODO short after dropping a new module and then moving it
-                // causes a NullPointerException in the next line
-                PModuleContainer parent = module.getParentComponent();
-                if (parent != null) {
-                    JTCableManager cm = jtcUI.jtc.getCableManager();
-                    try
-                    {
-                        cm.setAutoRepaintDisabled();
-                    	MoveOperation move = parent.createMoveOperation();
-                    	move.setScreenOffset(0, 0);
-                    	move.add(module);
-                    	move.move();
-                    }
-                    finally
-                    {
-                        cm.clearAutoRepaintDisabled();
-                    }
-                } else {
-                	// XXX concurrency problems probably ?!
-                	throw new RuntimeException("Drop problem on illegal modules: for example 2 midi globals");
-                }
-       
-                dtde.acceptDrop(DnDConstants.ACTION_COPY);
-         
-                // compute dimensions of container
-                jtcUI.jtc.revalidate();
-                jtcUI.jtc.repaint();
-                dtde.dropComplete(true);
+            	dropNewModule(dtde);
             } else if (dtde.isDataFlavorSupported(PDragDrop.ModuleSelectionFlavor)
                     && dtde.isLocalTransfer())
             {
-                chosen = PDragDrop.ModuleSelectionFlavor;
-
-                try {
-                    // Get the data
-                    dtde.acceptDrop(dtde.getDropAction() & (DnDConstants.ACTION_MOVE | DnDConstants.ACTION_COPY));
-                    data = transfer.getTransferData(chosen);
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                    dtde.dropComplete(false);
-                    return;
-                }
-
-                if (data!=null && data instanceof PModuleTransferData)
-                {
-                    // Cast the data and create a nice module.
-                    PModuleTransferData tdata = ((PModuleTransferData)data);
-                    boolean isSamePatch = false;
-                    if (tdata.getSourcePatch() == getModuleContainer().getPatchContainer().getPatch())
-                    	isSamePatch = true;
-                    
-                    //Point p = dtde.getLocation();
-
-                    int action = dtde.getDropAction();
-
-                    if ((action&DnDConstants.ACTION_MOVE)!=0 && isSamePatch)
-                    {
-                    	MoveOperation op = tdata.getSourceModuleContainer().createMoveOperation();
-                    	op.setDestination(getModuleContainer().getModuleContainer());
-                        executeOperationOnSelection(tdata, dtde, op);
-                    }
-                    else
-                    {
-                    	MoveOperation op = tdata.getSourceModuleContainer().createCopyOperation();
-                    	// check for shift pressed to create links XXX
-                    	op.setDestination(getModuleContainer().getModuleContainer());
-                        executeOperationOnSelection(tdata, dtde, op);
-                    }
-
-                }
-                dtde.dropComplete(true);
-
+            	copyMoveModules(dtde);
             } else if (FileDnd.testFileFlavor(transfer.getTransferDataFlavors())) {
-            	PPatch patch = getModuleContainer().getPatchContainer().getPatch();
-				DataFlavor fileFlavor = FileDnd.getFileFlavor(transfer.getTransferDataFlavors());
-				List<File> files = FileDnd.getTransferableFiles(fileFlavor, transfer);
-				if (files.size() == 1) {
-					PPatch newPatch = patch.createFromFile(files.get(0));
-					if (newPatch != null) {
-						PModuleContainer newMc = null;
-						
-						for (int i = 0; i < newPatch.getModuleContainerCount(); i++) {
-							newMc = newPatch.getModuleContainer(i);
-							if (newMc.getModuleCount() > 0)
-								break;
-						}
-						
-						if (newMc == null) {
-							dtde.rejectDrop();
-							dtde.dropComplete(false);
-	                        jtcUI.updateDnDBoundingBox(null);
-							return;
-						}
-                    	CopyOperation op = newMc.createCopyOperation();
-                    	op.setDestination(getModuleContainer().getModuleContainer());
-                    	for (int i = 0; i < newMc.getModuleCount(); i++) {
-                    		op.add(newMc.getModule(i + 1));
-                    	}
-                        Point p = new Point(dtde.getLocation());
-                        op.setScreenOffset(p.x, p.y);
-                    	op.copy();
-                        dtde.dropComplete(true);
-                        jtcUI.updateDnDBoundingBox(null);
-                        return;
-					}
-				}
-				dtde.rejectDrop();
-				dtde.dropComplete(false);
+            	dropPatchFile(dtde);
             } else {
                 dtde.rejectDrop();
                 dtde.dropComplete(false);
             }
             jtcUI.updateDnDBoundingBox(null);
+        }
+        
+        private void dropPatchFile(DropTargetDropEvent dtde) {
+            Transferable transfer = dtde.getTransferable();
+        	PPatch patch = getModuleContainer().getPatchContainer().getPatch();
+			DataFlavor fileFlavor = FileDnd.getFileFlavor(transfer.getTransferDataFlavors());
+			List<File> files = FileDnd.getTransferableFiles(fileFlavor, transfer);
+			if (files.size() == 1) {
+				PPatch newPatch = patch.createFromFile(files.get(0));
+				if (newPatch != null) {
+					PModuleContainer newMc = null;
+					
+					for (int i = 0; i < newPatch.getModuleContainerCount(); i++) {
+						newMc = newPatch.getModuleContainer(i);
+						if (newMc.getModuleCount() > 0)
+							break;
+					}
+					
+					if (newMc == null) {
+						dtde.rejectDrop();
+						dtde.dropComplete(false);
+                        jtcUI.updateDnDBoundingBox(null);
+						return;
+					}
+                	CopyOperation op = newMc.createCopyOperation();
+                	op.setDestination(getModuleContainer().getModuleContainer());
+                	for (int i = 0; i < newMc.getModuleCount(); i++) {
+                		op.add(newMc.getModule(i + 1));
+                	}
+                    Point p = new Point(dtde.getLocation());
+                    op.setScreenOffset(p.x, p.y);
+                	op.copy();
+                    dtde.dropComplete(true);
+                    jtcUI.updateDnDBoundingBox(null);
+				} else {
+					dtde.rejectDrop();
+					dtde.dropComplete(false);
+				}
+			} else {
+				dtde.rejectDrop();
+				dtde.dropComplete(false);
+			}
+        }
+        
+        private void copyMoveModules(DropTargetDropEvent dtde) {
+        	DataFlavor chosen = PDragDrop.ModuleSelectionFlavor;
+            Transferable transfer = dtde.getTransferable();
+            Object data = null;
+            
+            try {
+                // Get the data
+                dtde.acceptDrop(dtde.getDropAction() & (DnDConstants.ACTION_MOVE | DnDConstants.ACTION_COPY));
+                data = transfer.getTransferData(chosen);
+            } catch (Throwable t) {
+                t.printStackTrace();
+                dtde.dropComplete(false);
+                return;
+            }
+
+            if (data!=null && data instanceof PModuleTransferData)
+            {
+                // Cast the data and create a nice module.
+                PModuleTransferData tdata = ((PModuleTransferData)data);
+                boolean isSamePatch = false;
+                if (tdata.getSourcePatch() == getModuleContainer().getPatchContainer().getPatch())
+                	isSamePatch = true;
+                
+                //Point p = dtde.getLocation();
+
+                int action = dtde.getDropAction();
+
+                if ((action&DnDConstants.ACTION_MOVE)!=0 && isSamePatch)
+                {
+                	MoveOperation op = tdata.getSourceModuleContainer().createMoveOperation();
+                	op.setDestination(getModuleContainer().getModuleContainer());
+                    executeOperationOnSelection(tdata, dtde, op);
+                }
+                else
+                {
+                	CopyOperation op = tdata.getSourceModuleContainer().createCopyOperation();                	
+                	// check for shift pressed to create links XXX
+                	if (false) {
+                		op.setDuplicate(true);
+                	}
+                	op.setDestination(getModuleContainer().getModuleContainer());
+                    executeOperationOnSelection(tdata, dtde, op);
+                }
+
+            }
+            dtde.dropComplete(true);
+        }
+        
+        private void dropNewModule(DropTargetDropEvent dtde) {
+            PModuleContainer mc = getModuleContainer().getModuleContainer();
+            PModuleDescriptor md = PDragDrop.getModuleDescriptor(dtde.getTransferable());
+            if (md == null || mc == null)
+            {
+                dtde.rejectDrop();
+                return;
+            }
+            
+            Point l = dtde.getLocation();
+            
+            PModule module;
+            try
+            {
+                module = mc.createModule(md);
+                module.setScreenLocation(l.x, l.y);
+            }
+            catch (InvalidDescriptorException e)
+            {
+                e.printStackTrace();
+                dtde.rejectDrop();
+                return;
+            }
+            mc.add(module);
+            // TODO short after dropping a new module and then moving it
+            // causes a NullPointerException in the next line
+            PModuleContainer parent = module.getParentComponent();
+            if (parent != null) {
+                JTCableManager cm = jtcUI.jtc.getCableManager();
+                try
+                {
+                    cm.setAutoRepaintDisabled();
+                	MoveOperation move = parent.createMoveOperation();
+                	move.setScreenOffset(0, 0);
+                	move.add(module);
+                	move.move();
+                }
+                finally
+                {
+                    cm.clearAutoRepaintDisabled();
+                }
+            } else {
+            	// XXX concurrency problems probably ?!
+            	throw new RuntimeException("Drop problem on illegal modules: for example 2 midi globals");
+            }
+   
+            dtde.acceptDrop(DnDConstants.ACTION_COPY);
+     
+            // compute dimensions of container
+            jtcUI.jtc.revalidate();
+            jtcUI.jtc.repaint();
+            dtde.dropComplete(true);
         }
 
         private void executeOperationOnSelection(PModuleTransferData tdata, DropTargetDropEvent dtde, MoveOperation op)
@@ -882,7 +899,10 @@ public class JTModuleContainerUI extends ComponentUI
             {
             	cm.setAutoRepaintDisabled();
             	String name = (op instanceof CopyOperation ? "copy modules" : "move modules");
-                ues.beginUpdate(name);
+            	if (tdata.getModules().size() > 1)
+            		ues.beginUpdate(name);
+            	else
+            		ues.beginUpdate();
                 try {
                 	op.move();
                 } finally {
