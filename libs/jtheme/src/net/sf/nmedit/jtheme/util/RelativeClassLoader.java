@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
@@ -31,7 +33,7 @@ public class RelativeClassLoader extends ClassLoader
     
     private String absPathPrefix;
 
-    public static ClassLoader fromPath(ClassLoader parent, URL path) throws URISyntaxException
+    public static ClassLoader fromPath(final ClassLoader parent, URL path) throws URISyntaxException
     {
         File file = new File(path.toURI());
         
@@ -42,7 +44,16 @@ public class RelativeClassLoader extends ClassLoader
         String s = file.getAbsolutePath();
         if (!s.endsWith(File.separator))
             s = s + File.separatorChar;
-        return new RelativeClassLoader(s, parent);
+        
+        final String ss = s;
+        
+        ClassLoader loader = AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+            public RelativeClassLoader run() {
+                return new RelativeClassLoader(ss, parent);
+            }
+        }
+        );
+        return loader;
     }
 
     public RelativeClassLoader(File path, ClassLoader parent)
