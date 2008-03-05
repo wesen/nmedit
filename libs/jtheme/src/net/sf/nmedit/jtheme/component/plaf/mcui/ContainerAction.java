@@ -105,7 +105,10 @@ public class ContainerAction extends AbstractAction
                         if ((!didBeginUpdate) && ues != null)
                         {
                             // begin update
-                            ues.beginUpdate("delete modules");
+                        	if (jmc.getModules().size() > 1)
+                        		ues.beginUpdate("delete modules");
+                        	else
+                        		ues.beginUpdate();
                             // Set beginUpdate flag. Important !!!
                             didBeginUpdate = true;
                         }

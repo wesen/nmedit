@@ -512,6 +512,9 @@ public class JTModuleUI extends JTComponentUI
         {
             Insets insets = getInsets(c);
             g.setColor(c.getBackground());
+
+            int left = insets.left;
+            
             Border border = c.getBorder();
             
             if (border == null || border.isBorderOpaque())
@@ -524,7 +527,6 @@ public class JTModuleUI extends JTComponentUI
                         c.getWidth()-(insets.left+insets.right-1), c.getHeight()-(insets.top+insets.bottom-1));
             }
             
-            int left = insets.left;
             
             if (transformationIcon != null)
             {
@@ -541,6 +543,7 @@ public class JTModuleUI extends JTComponentUI
                 g.fillRect(left, insets.left, TITLE_WIDTH, fm.getHeight());
             }
             
+
             String title = getShortTitle(module);
             if (title != null && title.length()>0)
             {
