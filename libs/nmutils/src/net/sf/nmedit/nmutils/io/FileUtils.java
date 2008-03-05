@@ -66,18 +66,20 @@ public class FileUtils {
 	}
 	
 	static public boolean deleteDirectory(File path) {
+        boolean ok = true;
 		if( path.exists() ) {
 			File[] files = path.listFiles();
 			for(int i=0; i<files.length; i++) {
 				if(files[i].isDirectory()) {
-					deleteDirectory(files[i]);
+					ok &= deleteDirectory(files[i]);
 				}
 				else {
-					files[i].delete();
+					ok &= files[i].delete();
 				}
 			}
 		}
-		return( path.delete() );
+        ok &= path.delete();
+        return ok;
 	}
 	
 	static public String getFileExtension(File file) {
