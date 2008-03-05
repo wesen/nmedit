@@ -217,6 +217,11 @@ public class PBasicRoles extends AbstractImmutableCollection<String> implements 
         throw new UnsupportedOperationException();
     }
     
+    public int hashCode()
+    {
+        return set.hashCode();
+    }
+    
     public boolean equals(Object o)
     {
         if (o == null) return false;
