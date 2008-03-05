@@ -34,6 +34,7 @@ public abstract class AbstractImageResource implements ImageResource, Serializab
     private transient URL resolvedURL;
     private transient boolean urlResolved = false;
     private transient ImageCache cache;
+    private transient int hashCode = 0;
     
     protected AbstractImageResource()
     {
@@ -166,6 +167,7 @@ public abstract class AbstractImageResource implements ImageResource, Serializab
             this.srcURI = (String) src;
         else if (src instanceof URL)
             this.srcURL = (URL) src;
+        hashCode = 0; // reset hashCode
         initState();
     }
     
@@ -176,8 +178,12 @@ public abstract class AbstractImageResource implements ImageResource, Serializab
 
     public int hashCode()
     {
-        URL src = getResolvedURL();
-        return src == null ? 0 : src.toString().hashCode();
+        if (hashCode<=0)
+        {
+            URL src = getResolvedURL();
+            hashCode = src == null ? 0 : src.toString().hashCode();
+        }
+        return hashCode;
     }
 
     public boolean equals(Object o)
