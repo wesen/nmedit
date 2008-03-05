@@ -56,6 +56,7 @@ public class PatchDocument implements Document,
         this.nmpatch = jtpatch.getPatch();
         nmpatch.addPropertyChangeListener(NMPatch.NAME, this);
         nmpatch.addPropertyChangeListener("slot", this);
+        nmpatch.addPropertyChangeListener(NMPatch.MODIFIED, this);
     }
     
     public NMPatch getPatch()
@@ -91,6 +92,8 @@ public class PatchDocument implements Document,
         {
             name+=" ("+slot.getName()+")";
         }
+        if (isModified())
+        	name += " *";
         return name;
     }
 
@@ -146,7 +149,14 @@ public class PatchDocument implements Document,
             {
                 dm.updateTitle(this);
             }
-        }
+        } else if (NMPatch.MODIFIED.equals(evt.getPropertyName()))
+            {
+                DefaultDocumentManager dm = Nomad.sharedInstance().getDocumentManager();
+                if (dm.contains(this))
+                {
+                    dm.updateTitle(this);
+                }
+            }
     }
 
     public Object getProperty(String name)
@@ -171,5 +181,8 @@ public class PatchDocument implements Document,
         return jtpatch.isDataFlavorSupported(flavor);
     }
 
+    public boolean isModified() {
+    	return nmpatch.isModified();
+    }
 }
 

@@ -282,8 +282,10 @@ public class NmFileService implements FileService
         if (file == null)
             throw new RuntimeException("not file specified");
         file = getFileWithCorrectExtension(file);
-        if (NmUtils.writePatchSavely(patch, file))
+        if (NmUtils.writePatchSavely(patch, file)) {
             patch.setProperty("file", file);
+            patch.setModified(false);
+        }
     }
 
     public void editProperties(Object source)
