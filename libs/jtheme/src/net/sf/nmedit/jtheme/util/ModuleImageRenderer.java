@@ -18,6 +18,9 @@
  */
 package net.sf.nmedit.jtheme.util;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -48,11 +51,18 @@ import net.sf.nmedit.jtheme.store2.ModuleElement;
 public class ModuleImageRenderer
 {
 
+    private static final AlphaComposite alphaComposite = 
+        AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.75f);
+    private static final AlphaComposite alphaComposite2 = 
+        AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 0.25f);
+    
+
     private boolean renderCables = true;
     private Dimension maximumSize = null;
     private JTModuleContainer container = null;
     private List<JTModule> modules = new ArrayList<JTModule>();
     private boolean extraBorder;
+    private boolean forDragAndDrop = false;
     
     public ModuleImageRenderer()
     {
@@ -64,6 +74,11 @@ public class ModuleImageRenderer
         super();
         for (JTModule module: modules)
             add(module);
+    }
+    
+    public void setForDragAndDrop(boolean even_more_eyecandy)
+    {
+        this.forDragAndDrop = even_more_eyecandy;
     }
     
     public boolean add(JTModule module)
@@ -137,7 +152,9 @@ public class ModuleImageRenderer
             }
         }
         
-        boolean opaque = (modules.size() == 1 && modules.get(0).isOpaque());
+        boolean opaque = 
+            (!forDragAndDrop) &&
+            (modules.size() == 1 && modules.get(0).isOpaque());
         
         BufferedImage image = new BufferedImage(bounds.width, bounds.height, 
                 opaque ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB );
@@ -146,12 +163,19 @@ public class ModuleImageRenderer
         if (renderCables)
             pmodules = new HashSet<PModule>();
         Graphics2D g2 = image.createGraphics();
+        final Composite defaultComposite = g2.getComposite();
+        
         try
         {
             if (container != null)
             {
                 g2.setFont(container.getFont());
                 g2.setColor(container.getBackground());
+            }
+
+            if (forDragAndDrop)
+            {
+                g2.setComposite(alphaComposite);
             }
             
             // paint modules
@@ -160,6 +184,7 @@ public class ModuleImageRenderer
                 Graphics2D gg2 = (Graphics2D) g2.create();
                 try
                 {
+                    
                     // translate 
                     gg2.setFont(module.getFont());
                     gg2.setColor(module.getBackground());
@@ -177,9 +202,6 @@ public class ModuleImageRenderer
                         pmodules.add(pmodule);
                 }
             }
-            
-            if (extraBorder)
-                SelectionPainter.paintSelectionBox(g2, modules, -bounds.x, -bounds.y);
             
             // render cables
             if (container != null && renderCables)
@@ -207,6 +229,19 @@ public class ModuleImageRenderer
                     }
                 }
             }
+
+            if (forDragAndDrop)
+            {
+                g2.setColor(Color.BLACK);
+                g2.setComposite(alphaComposite2);
+                g2.fillRect(0, 0, bounds.width, bounds.height);
+            }
+            
+            g2.setComposite(defaultComposite);
+            
+            if (extraBorder)
+                SelectionPainter.paintSelectionBox(g2, modules, -bounds.x, -bounds.y);
+            
         }
         finally
         {
@@ -222,23 +257,25 @@ public class ModuleImageRenderer
         this.extraBorder = extra;
     }
     
-    public static Image render(JTContext context, PModuleDescriptor moduleDescriptor) throws JTException
+    public static Image render(JTContext context, PModuleDescriptor moduleDescriptor, boolean fordnd) throws JTException
     {
         StorageContext sc = context.getStorageContext();
         ModuleElement scModuleElement = sc.getModuleStoreById(moduleDescriptor.getComponentId());
         PModule pmodule = new PBasicModule(moduleDescriptor);
         JTModule module = scModuleElement.createModule(context, pmodule, true);
         ModuleImageRenderer renderer = new ModuleImageRenderer();
+        renderer.setForDragAndDrop(fordnd);
         renderer.add(module);
         return renderer.render();
     }
 
-    public static Image render(JTContext context, PModule pmodule) throws JTException
+    public static Image render(JTContext context, PModule pmodule, boolean fordnd) throws JTException
     {
         StorageContext sc = context.getStorageContext();
         ModuleElement scModuleElement = sc.getModuleStoreById(pmodule.getComponentId());
         JTModule module = scModuleElement.createModule(context, pmodule, true);
         ModuleImageRenderer renderer = new ModuleImageRenderer();
+        renderer.setForDragAndDrop(fordnd);
         renderer.add(module);
         return renderer.render();
     }

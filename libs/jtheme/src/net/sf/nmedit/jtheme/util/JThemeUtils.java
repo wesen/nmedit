@@ -26,7 +26,8 @@ public class JThemeUtils {
         {
             try
             {
-                t.setTransferImage(ModuleImageRenderer.render(context, moduleDescriptor));
+                t.setTransferImage(ModuleImageRenderer.render(context, moduleDescriptor,
+                        true));
             } 
             catch (JTException e)
             {
