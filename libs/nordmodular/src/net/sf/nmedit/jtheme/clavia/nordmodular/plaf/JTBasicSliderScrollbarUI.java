@@ -32,7 +32,8 @@ import net.sf.nmedit.jtheme.component.plaf.UIInstance;
 public class JTBasicSliderScrollbarUI extends JTBasicSliderUI
 {
 
-    protected static UIInstance<JTBasicSliderScrollbarUI> uiInstance = new UIInstance<JTBasicSliderScrollbarUI>(JTBasicSliderScrollbarUI.class);
+    protected static final UIInstance<JTBasicSliderScrollbarUI> uiInstance = 
+        new UIInstance<JTBasicSliderScrollbarUI>(JTBasicSliderScrollbarUI.class);
   
     public static JTBasicSliderScrollbarUI createUI(JComponent c) 
     {

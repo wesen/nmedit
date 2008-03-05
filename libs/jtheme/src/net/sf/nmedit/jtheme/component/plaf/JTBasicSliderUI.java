@@ -49,7 +49,7 @@ public class JTBasicSliderUI extends JTBasicControlUI implements SwingConstants
     public static final String sliderGripSizeKey = "sliderui.grip.size";
     public static final String borderKey = "sliderui.border";
     
-    protected static UIInstance<JTBasicSliderUI> uiInstance = new UIInstance<JTBasicSliderUI>(JTBasicSliderUI.class);
+    protected static final UIInstance<JTBasicSliderUI> uiInstance = new UIInstance<JTBasicSliderUI>(JTBasicSliderUI.class);
   
     public static JTBasicSliderUI createUI(JComponent c) 
     {
