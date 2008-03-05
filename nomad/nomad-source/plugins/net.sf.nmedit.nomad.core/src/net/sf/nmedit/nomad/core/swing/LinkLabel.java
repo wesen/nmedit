@@ -30,6 +30,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
+import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nomad.core.misc.FocusStroke;
 
 public class LinkLabel extends JLabel
@@ -126,7 +127,7 @@ public class LinkLabel extends JLabel
         
         public void mouseClicked(MouseEvent e)
         {
-            if (SwingUtilities.isLeftMouseButton(e))
+            if (Platform.isLeftMouseButtonOnly(e))
                 ((LinkLabel)e.getComponent()).jump();
         }
         
