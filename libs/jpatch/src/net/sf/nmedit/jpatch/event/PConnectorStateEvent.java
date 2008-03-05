@@ -36,8 +36,7 @@ public class PConnectorStateEvent extends PPatchEvent
      * 
      */
     private static final long serialVersionUID = 9119044209104155846L;
-    private PConnector c;
-
+    
     protected PConnectorStateEvent(  Object target, long when, int id, int x, int y, int key,
             int modifiers, Object arg )
     {
@@ -62,7 +61,7 @@ public class PConnectorStateEvent extends PPatchEvent
     
     public PConnector getConnector()
     {
-        return c;
+        return (PConnector)target;
     }
     
 }
