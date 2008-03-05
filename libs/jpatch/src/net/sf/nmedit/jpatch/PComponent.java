@@ -23,6 +23,8 @@ import java.util.Iterator;
 import javax.swing.undo.UndoableEdit;
 import javax.swing.undo.UndoableEditSupport;
 
+import net.sf.nmedit.jpatch.history.NamedUndoableEditSupport;
+
 /**
  * A component in a patch.
  * 
@@ -33,7 +35,7 @@ public interface PComponent
 
     PUndoableEditFactory getUndoableEditFactory();
     
-    UndoableEditSupport getEditSupport();
+    NamedUndoableEditSupport getEditSupport();
     
     /**
      * Posts an edit of this component.
