@@ -38,9 +38,6 @@ import org.w3c.dom.css.CSSStyleRule;
 public class TextDisplayElement extends ControlElement
 {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 6232380514341586662L;
     private String cssStyleValue;
     private transient CSSStyleDeclaration styleDecl;
@@ -72,10 +69,10 @@ public class TextDisplayElement extends ControlElement
         if (module != null)
         {
             PParameterDescriptor parameterDescriptor = null;
-            if (cachedParameterDescriptor != null)
-                parameterDescriptor = cachedParameterDescriptor;
-            else if (componentId != null)
-                cachedParameterDescriptor = parameterDescriptor = descriptor.getParameterByComponentId(componentId);
+            if (componentId != null)
+            {
+                parameterDescriptor = descriptor.getParameterByComponentId(componentId);
+            }
             if (parameterDescriptor != null)
             {
                 PParameter parameter = module.getParameter(parameterDescriptor);
