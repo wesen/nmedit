@@ -122,4 +122,19 @@ public class FileUtils {
 				return newFile;
 		}
 	}
+	
+	static public boolean isFileParent(File f1, File f2) {
+		try {
+			String p1 = f1.getCanonicalPath();
+			String p2 = f2.getCanonicalPath();
+			if ((p2.length() >= p1.length()) && p2.substring(0, p1.length()).equals(p1))
+				return true;
+			else
+				return false;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
 }
