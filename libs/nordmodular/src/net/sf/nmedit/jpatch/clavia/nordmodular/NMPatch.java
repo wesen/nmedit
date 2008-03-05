@@ -368,6 +368,9 @@ public class NMPatch extends PBasicPatch implements PPatch
 
     public Object getProperty(String name)
     {
+        if (NAME.equals(name))
+            return getName();
+        
         return properties.get(name);
     }
     
@@ -377,6 +380,11 @@ public class NMPatch extends PBasicPatch implements PPatch
         
         if (oldValue!=value)
         {
+            if (NAME.equals(name))
+            {
+                setName((String) value);
+                return;
+            }
             if (value==null)
             {
                 properties.remove(name);
@@ -393,6 +401,13 @@ public class NMPatch extends PBasicPatch implements PPatch
                 }
             }
         }
+    }
+
+    protected void updateName(String oldname, String newname)
+    {
+        // called by setName(String)
+        super.updateName(oldname, newname);
+        firePropertyChanged(NAME, oldname, newname);
     }
     
     protected void firePropertyChanged(String name, Object oldValue, Object newValue)
@@ -429,16 +444,6 @@ public class NMPatch extends PBasicPatch implements PPatch
     {
         Boolean b = (Boolean) getProperty(MODIFIED);
         return b != null ? b : false;
-    }
-
-    public String getName()
-    {
-        return (String) getProperty(NAME);
-    }
-    
-    public void setName(String name)
-    {
-        setProperty(NAME, name);
     }
 
     public String getNote()

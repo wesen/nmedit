@@ -25,6 +25,7 @@ import javax.swing.undo.UndoableEdit;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
+import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.PUndoableEditFactory;
 
 public class PBasicUndoableEditFactory implements PUndoableEditFactory
@@ -72,6 +73,11 @@ public class PBasicUndoableEditFactory implements PUndoableEditFactory
         return wrap(new ModuleAddEdit(container, module, index, true));
     }
 
+    public UndoableEdit createPatchNameEdit(PPatch patch, String oldname, String newname)
+    {
+        return wrap(new PatchNameEdit(patch, oldname, newname));
+    }
+    
     private <E extends UndoableEdit> UndoableEdit wrap(E edit)
     {
         // wrap atomic edits so they don't mess up the undo/redo history

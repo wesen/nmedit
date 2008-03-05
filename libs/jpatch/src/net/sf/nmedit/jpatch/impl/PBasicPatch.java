@@ -36,6 +36,7 @@ import net.sf.nmedit.jpatch.PSettings;
 import net.sf.nmedit.jpatch.PUndoableEditFactory;
 import net.sf.nmedit.jpatch.history.HistoryUtils;
 import net.sf.nmedit.jpatch.history.PBasicUndoableEditFactory;
+import net.sf.nmedit.jpatch.history.PUndoManager;
 
 /**
  * The reference implementation of interface {@link PPatch}.
@@ -50,7 +51,7 @@ public class PBasicPatch implements PPatch
     private PFactory pfactory;
     private String name;
     private Object focusedComponent; 
-    private UndoManager undoManager = new UndoManager();
+    private PUndoManager undoManager = new PUndoManager();
     private UndoableEditSupport editSupport = new UndoableEditSupport();
     private boolean editSupportEnabled = false;
     private PBasicUndoableEditFactory editFactory = new PBasicUndoableEditFactory();
@@ -67,13 +68,23 @@ public class PBasicPatch implements PPatch
         
         addUndoableEditListener(undoManager);
     }
+    
+    public boolean isModified()
+    {
+        return undoManager.isModified();
+    }
+    
+    public void setModified(boolean modified)
+    {
+        undoManager.setModified(true);
+    }
 
     public PUndoableEditFactory getUndoableEditFactory()
     {
         return editFactory;
     }
     
-    public boolean isEditoSupportEnabled()
+    public boolean isEditSupportEnabled()
     {
         return editSupportEnabled;
     }
@@ -133,7 +144,28 @@ public class PBasicPatch implements PPatch
     
     public void setName(String name)
     {
-        this.name = name;
+        String oldvalue = this.name;
+        String newvalue = name;
+        if (oldvalue != newvalue || (oldvalue != null && !oldvalue.equals(name)))
+        {
+            this.name = newvalue;
+            
+            updateName(oldvalue, newvalue);
+        }
+    }
+
+    protected void updateName(String oldname, String newname)
+    {   // for overwriting
+        
+        if (isEditSupportEnabled())
+        {
+            PUndoableEditFactory factory = getUndoableEditFactory();
+            if (factory != null)
+            {
+                UndoableEdit edit = factory.createPatchNameEdit(this, oldname, newname);
+                postEdit(edit);
+            }
+        }
     }
 
     public PSettings getSettings()
