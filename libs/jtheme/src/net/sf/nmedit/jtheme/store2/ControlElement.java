@@ -35,7 +35,6 @@ public abstract class ControlElement extends AbstractElement implements Serializ
 {
 
     protected String componentId;
-    protected transient PParameterDescriptor cachedParameterDescriptor;
 
     @Override
     protected void initElement(StorageContext context, Element e)
@@ -52,10 +51,10 @@ public abstract class ControlElement extends AbstractElement implements Serializ
     protected void setParameter(JTControl control, PModuleDescriptor descriptor, PModule module)
     {
         PParameterDescriptor parameterDescriptor = null;
-        if (cachedParameterDescriptor != null)
-            parameterDescriptor = cachedParameterDescriptor;
-        else if (componentId != null)
-            cachedParameterDescriptor = parameterDescriptor = descriptor.getParameterByComponentId(componentId);
+        if (componentId != null)
+        {
+            parameterDescriptor = descriptor.getParameterByComponentId(componentId);
+        }
         if (parameterDescriptor != null)
         {
             if (module != null)
