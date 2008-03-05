@@ -18,6 +18,8 @@
  */
 package net.sf.nmedit.jpatch.transform;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,8 +72,13 @@ public class PTBasicTransformations implements PTTransformations
      * Compares two mappings and orders them
      * descending by the {@link PTModuleMapping#getCovering()} value.
      */
-    private static class MappingOrder implements Comparator<PTModuleMapping>
+    private static class MappingOrder implements Comparator<PTModuleMapping>, Serializable
     {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 6633285776526783275L;
+
         /**
          * Compares two mappings and orders them
          * descending by the {@link PTModuleMapping#getCovering()} value.
@@ -81,6 +88,18 @@ public class PTBasicTransformations implements PTTransformations
             double c1 = o1.getCovering();
             double c2 = o2.getCovering();
             return (int) Math.signum(c2-c1);
+        }
+
+        private void writeObject(java.io.ObjectOutputStream out)
+            throws IOException
+        {
+            out.defaultWriteObject();
+        }
+        
+        private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException
+        {
+            in.defaultReadObject();
         }
     }
     
