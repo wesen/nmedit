@@ -20,6 +20,7 @@ package net.sf.nmedit.jpatch.impl;
 
 import java.io.File;
 import javax.swing.event.UndoableEditListener;
+import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 import javax.swing.undo.UndoableEditSupport;
@@ -35,6 +36,7 @@ import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.PSettings;
 import net.sf.nmedit.jpatch.PUndoableEditFactory;
 import net.sf.nmedit.jpatch.history.HistoryUtils;
+import net.sf.nmedit.jpatch.history.NamedUndoableEditSupport;
 import net.sf.nmedit.jpatch.history.PBasicUndoableEditFactory;
 import net.sf.nmedit.jpatch.history.PUndoManager;
 
@@ -51,8 +53,8 @@ public class PBasicPatch implements PPatch
     private PFactory pfactory;
     private String name;
     private Object focusedComponent; 
+    private NamedUndoableEditSupport editSupport = new NamedUndoableEditSupport();
     private PUndoManager undoManager = new PUndoManager();
-    private UndoableEditSupport editSupport = new UndoableEditSupport();
     private boolean editSupportEnabled = false;
     private PBasicUndoableEditFactory editFactory = new PBasicUndoableEditFactory();
 
@@ -102,7 +104,7 @@ public class PBasicPatch implements PPatch
         return undoManager;
     }
 
-    public UndoableEditSupport getEditSupport()
+    public NamedUndoableEditSupport getEditSupport()
     {
         return editSupport;
     }

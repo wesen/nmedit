@@ -30,6 +30,7 @@ import net.sf.nmedit.jpatch.PLight;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.PRoles;
 import net.sf.nmedit.jpatch.PUndoableEditFactory;
+import net.sf.nmedit.jpatch.history.NamedUndoableEditSupport;
 
 /**
  * The reference implementation of interface {@link PComponent}.
@@ -53,7 +54,7 @@ public abstract class PBasicComponent<P extends PDescriptor> implements PCompone
         this.componentIndex = componentIndex;
     }
     
-    public UndoableEditSupport getEditSupport()
+    public NamedUndoableEditSupport getEditSupport()
     {
         PComponent parent = getParentComponent();
         return (parent != null) ? parent.getEditSupport() : null;
