@@ -181,7 +181,7 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
 			TreePath path = getClosestPathForLocation(tree, p.x, p.y);
 			if (path == null)
 				return;
-			if (!tree.isPathSelected(path) && (tree.getSelectionPaths().length == 0) ) {
+			if (!tree.isPathSelected(path) && (tree.getSelectionPaths() == null || (tree.getSelectionPaths().length == 0))) {
 				tree.setSelectionPath(path);
 			}
 
@@ -419,6 +419,7 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
 				out.write(data);
 				out.close();
 				parNode.updateChildrenNodes();
+				((ExplorerTree)tree).updateParentRootNodes(parNode);
 				tree.expandPath(destPath);
 				((ExplorerTree)tree).fireNodeStructureChanged(parNode);
 
@@ -485,7 +486,9 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
 
 							if (parent instanceof FileNode) {
 								FileNode parNode = (FileNode)parent;
+								File f1 = parNode.getFile();
 								if (parNode.updateChildrenNodes()) {
+									((ExplorerTree)tree).updateParentRootNodes(parNode);
 									((ExplorerTree)tree).fireNodeStructureChanged(parNode);
 								}
 							}
@@ -497,6 +500,7 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
 			}
 			((FileNode)destNode).updateChildrenNodes();
 			tree.expandPath(destPath);
+			((ExplorerTree)tree).updateParentRootNodes(destNode);
 			((ExplorerTree)tree).fireNodeStructureChanged(destNode);
 		}
 
@@ -515,9 +519,7 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
 
 							for (File file: files) {
 								if (file.isDirectory()) {
-									FileContext fc = new FileContext((ExplorerTree)tree, node == null ? null : node.getFileFilter(), file);
-									((ExplorerTree)tree).getRoot().add(fc);
-									((ExplorerTree)tree).fireRootChanged();
+									addNewRootEntry(file, node == null ? null : node.getFileFilter());
 								}
 							}
 						}
@@ -528,9 +530,7 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
 
 					for (File file: files) {
 						if (file.isDirectory()) {
-							FileContext fc = new FileContext((ExplorerTree)tree, null, file);
-							((ExplorerTree)tree).getRoot().add(fc);
-							((ExplorerTree)tree).fireRootChanged();
+							addNewRootEntry(file, null);
 						}
 					}
 				}
@@ -539,9 +539,11 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
 			}
 		}
 
-
-
-
+		protected void addNewRootEntry(File file, FileFilter filter) {
+			ExplorerTree eTree = (ExplorerTree)tree;
+			FileContext fc = new FileContext(eTree, filter, file);
+			eTree.addRootNode(fc);
+			eTree.fireRootChanged();
+		}
 	}
-
 }

@@ -44,6 +44,7 @@ import java.util.NoSuchElementException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -494,26 +495,54 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
                 	et.fireNodeStructureChanged(node);
                 }
             } else if (e.getActionCommand() == DELETE_PERMANENTLY) {
-        		File f = node.getFile();
+            	Nomad n = Nomad.sharedInstance();
+	            File f = node.getFile();
     			if (f.isFile()) {
-    				if (f.delete())
-    				{
-    					if (node.getParent() instanceof FileNode)
-    						((FileNode)node.getParent()).notifyChildFilesRemoved(et);
+    				int result = JOptionPane.showConfirmDialog(n.getWindow().getRootPane(), 
+                            "Are you sure you want to delete " + f.getName() + " ?", "", JOptionPane.OK_CANCEL_OPTION
+                    );
+    				if (result == JOptionPane.OK_OPTION) {
+    					if (f.delete())
+    					{
+    						if (node.getParent() instanceof FileNode)
+    							((FileNode)node.getParent()).notifyChildFilesRemoved(et);
+    					}
     				}
     			} else if (f.isDirectory())
     			{
-    				FileUtils.deleteDirectory(f);
-    				if (node.getParent() instanceof FileNode)
-    					((FileNode)node.getParent()).notifyChildFilesRemoved(et);
+    				int result = JOptionPane.showConfirmDialog(n.getWindow().getRootPane(), 
+                            "Are you sure you want to delete " + f.getName() + " and all its contents ?", "", JOptionPane.OK_CANCEL_OPTION
+                    );
+    				if (result == JOptionPane.OK_OPTION) {
+    					FileUtils.deleteDirectory(f);
+    					boolean rootChanged = false;
+    					for (FileNode rNode : et.getRootFileNodes()) {
+    						File rFile = rNode.getFile();
+    						if (FileUtils.isFileParent(f, rFile)) {
+    							et.getRoot().remove(rNode);
+    							rootChanged = true;
+    						}
+    					}
+    					if (node.getParent() instanceof FileNode)
+    						((FileNode)node.getParent()).notifyChildFilesRemoved(et);
+    					if (rootChanged)
+    						et.fireRootChanged();
+    				}
     			}
             }
             else if (e.getActionCommand() == REMOVE_EXPLORER_ENTRY)
             {
                 if (node.getParent() == et.getRoot())
                 {
-                    et.getRoot().remove(node);
-                    et.fireRootChanged();
+                	Nomad n = Nomad.sharedInstance();
+                	File f = node.getFile();
+    				int result = JOptionPane.showConfirmDialog(n.getWindow().getRootPane(), 
+                            "Are you sure you want to remove " + f.getName() + " from the tree ?", "", JOptionPane.OK_CANCEL_OPTION
+                    );
+    				if (result == JOptionPane.OK_OPTION) {
+    					et.getRoot().remove(node);
+    					et.fireRootChanged();
+    				}
                 }
             } else if (e.getActionCommand() == RENAME) {
             	et.startEditingAtPath(new TreePath(node.getPath()));
@@ -523,6 +552,7 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
 					File newDir = FileUtils.newFileWithPrefix(f, "dir", "");
 					newDir.mkdir();
 					node.updateChildrenNodes();
+					((ExplorerTree)et).updateParentRootNodes(node);
 					et.expandPath(new TreePath(node.getPath()));
 					((ExplorerTree)et).fireNodeStructureChanged(node);
 
@@ -539,7 +569,6 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
 				}
             	
             }
-            
         }
         
         public void actionPerformed(ActionEvent e)
@@ -553,7 +582,6 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
         			actionPerformed(node, e);
         		}
         	}
-        	
         }
         
         public boolean isEnabled() {
