@@ -25,6 +25,10 @@ package net.sf.nmedit.nomad.core.swing.explorer;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 
 import javax.swing.AbstractAction;
@@ -32,6 +36,7 @@ import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
+import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -43,6 +48,8 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import net.sf.nmedit.nmutils.Platform;
+import net.sf.nmedit.nmutils.io.FileUtils;
+import net.sf.nmedit.nomad.core.Nomad;
 
 public class ExplorerTree extends JTree
 {
@@ -78,8 +85,40 @@ public class ExplorerTree extends JTree
         ToolTipManager.sharedInstance().registerComponent(this);
     }
     
+    public Collection<? extends FileNode> getRootFileNodes() {
+    	ArrayList<FileNode> result = new ArrayList<FileNode>();
+    	RootNode root = getRoot();
+    	for (int i = 0; i < root.getChildCount(); i++) {
+    		TreeNode node = root.getChildAt(i);
+    		if (node instanceof FileNode)
+    			result.add((FileNode)node);
+    	}
+    	return result;
+    }
+    
+
     public void addRootNode(TreeNode node)
     {
+    	RootNode root = getRoot();
+    	if (node instanceof FileNode && root != null) {
+    		File file = ((FileNode)node).getFile();
+    		for (FileNode fNode : getRootFileNodes()) {
+    			try {
+    				if (fNode.getFile().getCanonicalPath().equals(file.getCanonicalPath())) {
+    					Nomad n = Nomad.sharedInstance();
+    					JOptionPane.showMessageDialog(n.getWindow().getRootPane(), 
+    							"Location already exists."
+    					);
+    					return;
+    				}
+    			} catch (IOException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    				return;
+    			}
+    		}
+    	}
+
         getRoot().add(node);
         fireRootChanged();
     }
@@ -116,12 +155,25 @@ public class ExplorerTree extends JTree
     		Enumeration<TreePath> paths = getExpandedDescendants(new TreePath(((FileNode)node).getPath()));
         	getModel().nodeStructureChanged(node);
 
-    		while (paths.hasMoreElements()) {
-    			expandPath(paths.nextElement());
-    		}
+        	if (paths != null) {
+        		while (paths.hasMoreElements()) {
+        			expandPath(paths.nextElement());
+        		}
+        	}
     	} else {
     		getModel().nodeStructureChanged(node);
     	}
+    }
+    
+    public void updateParentRootNodes(FileNode node) {
+    	File f1 = node.getFile();
+		for (FileNode rNode : getRootFileNodes()) {
+			File f2 = rNode.getFile();
+			if (FileUtils.isFileParent(f2, f1)) {
+				rNode.updateChildrenNodes();
+				fireNodeStructureChanged(rNode);
+			}
+		}
     }
     
     public void fireNodeChanged(TreeNode node)

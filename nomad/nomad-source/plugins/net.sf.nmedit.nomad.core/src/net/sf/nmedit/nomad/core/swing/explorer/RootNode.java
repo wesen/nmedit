@@ -98,6 +98,8 @@ public class RootNode extends DefaultMutableTreeNode implements TreeNode
      *              <code>childIndex</code> is out of bounds
      */
     public void remove(int childIndex) {
+    	if (childIndex < 0) 
+    		return;
         TreeNode child = getChildAt(childIndex);
         children.removeElementAt(childIndex);
         if (child instanceof MutableTreeNode)

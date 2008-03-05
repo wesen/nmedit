@@ -42,7 +42,7 @@ public class FileContext extends FileNode implements TreeContext
 
     public FileContext( ExplorerTree etree, FileFilter fileFilter, File file )
     {
-        super( etree.getRoot(), file );
+        super(etree.getRoot(), file );
         this.tree = etree;
         this.fileFilter = fileFilter;
     }

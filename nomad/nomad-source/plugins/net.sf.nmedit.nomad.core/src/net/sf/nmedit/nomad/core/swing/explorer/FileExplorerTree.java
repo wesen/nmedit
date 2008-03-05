@@ -2,10 +2,14 @@ package net.sf.nmedit.nomad.core.swing.explorer;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import net.sf.nmedit.nmutils.io.FileUtils;
@@ -52,17 +56,43 @@ public class FileExplorerTree extends ExplorerTree {
 
 			if (node instanceof FileNode) {
 				FileNode fNode = (FileNode)node;
+				File oldFile = fNode.getFile();
 				File newFile =  new File(fNode.getFile().getParentFile(), 
 						node.getUserObject().toString());
 				File realNewFile = FileUtils.getNameWithExtension(fNode.getFile(), newFile);
 				if (realNewFile.exists()) {
 					startEditingAtPath(new TreePath(node.getPath()));
 					return;
-				} else if (fNode.getFile().renameTo(realNewFile)) {
+				} else if (oldFile.renameTo(realNewFile)) {
 					fNode.setFile(realNewFile);
+
+					boolean rootChanged = false;
+					for (FileNode rNode : getRootFileNodes()) {
+						File rFile = rNode.getFile();
+						if (FileUtils.isFileParent(oldFile, rFile)) {
+							try {
+								String oldPath = oldFile.getCanonicalPath();
+								String newPath = newFile.getCanonicalPath();
+								String renPath = rFile.getCanonicalPath();
+								String newRenPath = newPath + renPath.substring(0, oldPath.length());
+								rNode.setFile(new File(newRenPath));
+								rNode.updateChildrenNodes();
+								((ExplorerTree)tree).updateParentRootNodes(rNode);
+								tree.fireNodeStructureChanged(rNode.getParent());
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							rootChanged = true;
+						}
+					}
+					if (rootChanged)
+						fireRootChanged();
 				}
-				fNode.updateChildrenNodes();
 			}
+			FileNode parNode = (FileNode)node.getParent();
+			parNode.updateChildrenNodes();
+			((ExplorerTree)tree).updateParentRootNodes(parNode);
 			
 			tree.fireNodeStructureChanged(node.getParent());
 		}
