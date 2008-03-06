@@ -58,7 +58,10 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -81,6 +84,7 @@ import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jtheme.JTContext;
+import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.JTModule;
@@ -619,12 +623,19 @@ public class JTModuleContainerUI extends ComponentUI
     								break;
     						}
     						if (newMc != null) {
-//    			                ModuleImageRenderer mir = new ModuleImageRenderer(newMc.getModules);
-//    			                mir.setForDragAndDrop(true);
-//    			                mir.setPaintExtraBorder(true);
-//    			                transfer.setTransferImage(mir.render());
-
-    			                jtcUI.setCurrentTransfer(newMc.getModules(), null);
+                                zeroAlign(newMc);
+                                Image transferImage = null;
+                                try
+                                {
+                                    transferImage = ModuleImageRenderer.createImage(
+                                        jtcUI.jtc, newMc, true, false, true);
+                                }
+                                catch (JTException jte)
+                                {
+                                   transferImage = null; 
+                                }
+                                
+    			                jtcUI.setCurrentTransfer(newMc.getModules(), transferImage);
     						} else {
     							dtde.rejectDrag();
     							return;
@@ -648,6 +659,44 @@ public class JTModuleContainerUI extends ComponentUI
         	} else {
         		dtde.rejectDrag();
             }
+        }
+
+        private void zeroAlign(PModuleContainer mc)
+        {
+            // moves all modules to origin (0, 0) without changing the location relative to each other
+            List<PModule> slist = new ArrayList<PModule>(mc.getModuleCount());
+            Point min = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
+            for (PModule module: mc)
+            {
+                min.x = Math.min(min.x, module.getScreenX());
+                min.y = Math.min(min.y, module.getScreenY());
+                slist.add(module);
+            }
+            // sort modules ascending so moving them does not cause a revalidation of the layout
+            Collections.sort(slist, new ZeroAlignOrder());
+            for (PModule module: slist)
+            {
+                module.setScreenLocation(
+                        module.getScreenX()-min.x,
+                        module.getScreenY()-min.y
+                );
+            }
+        }
+        
+        private static class ZeroAlignOrder implements Comparator<PModule>
+        {
+
+            public int compare(PModule a, PModule b)
+            {
+                int c;
+                // first compare by column
+                c = b.getScreenX()-a.getScreenX();
+                if (c != 0) return Integer.signum(c);
+                // then compare by row
+                c = b.getScreenY()-a.getScreenY();
+                return Integer.signum(c);
+            }
+            
         }
 
         public void dragExit(DropTargetEvent dte)
