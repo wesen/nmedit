@@ -11,6 +11,7 @@ import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnectionManager;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.history.PUndoableEditSupport;
 
 public class NMCopyOperation extends NMMoveOperation implements CopyOperation {
 
@@ -35,70 +36,81 @@ public class NMCopyOperation extends NMMoveOperation implements CopyOperation {
         if (isEmpty())
             return;
         
-        List<PModule>copiedModules = new ArrayList<PModule>();
-        for (PModule m : modules) {
-        	if (m != null) {
-        		PModule newM = m.cloneModule();
-        		copiedModules.add(newM);
-        		destination.add(newM);
-        		mapNew.put(m, newM);
-        	}
-        }
-
-        for (PModule m : modules) {
-        	if (m != null && m.getParentComponent() != null)
-        	{
-        		PConnectionManager com = va.getConnectionManager();
-        		PConnectionManager com2 = destination.getConnectionManager();
-            	Collection<PConnection> connections = com.connections(modules);
-            	for (PConnection c : connections) {
-            		PModule a = c.getModuleA();
-            		PModule b = c.getModuleB();
-            		PModule a2 = getCopiedModule(a);
-            		PModule b2 = getCopiedModule(b);
-
-            		PConnector ca = c.getA();
-        			PConnector cb = c.getB();
-            		PConnector ca2 = null, cb2 = null;
-            		if (a2 != null && b2 != null) {
-            			ca2 = a2.getConnectorByComponentId(ca.getComponentId());
-            			cb2 = b2.getConnectorByComponentId(cb.getComponentId());
-            			// comment for now, this allows to "duplicate" (like in reaktor) modules
-            		} else if (isDuplicate()) {
-            			if (a2 != null) {
-            				if (!ca.isOutput()) {
-            					ca2 = a2.getConnectorByComponentId(ca.getComponentId());
-            					cb2 = cb;
-            				}
-            			} else if (b2 != null) {
-            				if (!cb.isOutput()) {
-            					ca2 = ca;
-            					cb2 = b2.getConnectorByComponentId(cb.getComponentId());
-            				}
-            			}
-            		}
-            		if (ca2 != null && cb2 != null) {
-            			com2.add(ca2, cb2);
-            			conNew.add(new PConnection(ca2, cb2));
-            		}
-            	}
-        	}
-        }
-        
-        LayoutTool layoutTool = new LayoutTool(destination, copiedModules);
-        layoutTool.setDelta(dx, dy);
-        Object[] data = layoutTool.move();
-        List<PModule> tmpMoved = new ArrayList<PModule>(data.length/3);
-        for (int i=0;i<data.length;i+=3)
+        PUndoableEditSupport editSupport = destination.getEditSupport();
+        try
         {
-            PModule m = (PModule) data[i+0];
-            int sx = (Integer) data[i+1];
-            int sy = (Integer) data[i+2];
-            m.setScreenLocation(sx, sy);
-            tmpMoved.add(m);
+            if (editSupport != null)
+                editSupport.beginUpdate("copy/move");
+            
+            List<PModule>copiedModules = new ArrayList<PModule>();
+            for (PModule m : modules) {
+            	if (m != null) {
+            		PModule newM = m.cloneModule();
+            		copiedModules.add(newM);
+            		destination.add(newM);
+            		mapNew.put(m, newM);
+            	}
+            }
+    
+            for (PModule m : modules) {
+            	if (m != null && m.getParentComponent() != null)
+            	{
+            		PConnectionManager com = va.getConnectionManager();
+            		PConnectionManager com2 = destination.getConnectionManager();
+                	Collection<PConnection> connections = com.connections(modules);
+                	for (PConnection c : connections) {
+                		PModule a = c.getModuleA();
+                		PModule b = c.getModuleB();
+                		PModule a2 = getCopiedModule(a);
+                		PModule b2 = getCopiedModule(b);
+    
+                		PConnector ca = c.getA();
+            			PConnector cb = c.getB();
+                		PConnector ca2 = null, cb2 = null;
+                		if (a2 != null && b2 != null) {
+                			ca2 = a2.getConnectorByComponentId(ca.getComponentId());
+                			cb2 = b2.getConnectorByComponentId(cb.getComponentId());
+                			// comment for now, this allows to "duplicate" (like in reaktor) modules
+                		} else if (isDuplicate()) {
+                			if (a2 != null) {
+                				if (!ca.isOutput()) {
+                					ca2 = a2.getConnectorByComponentId(ca.getComponentId());
+                					cb2 = cb;
+                				}
+                			} else if (b2 != null) {
+                				if (!cb.isOutput()) {
+                					ca2 = ca;
+                					cb2 = b2.getConnectorByComponentId(cb.getComponentId());
+                				}
+                			}
+                		}
+                		if (ca2 != null && cb2 != null) {
+                			com2.add(ca2, cb2);
+                			conNew.add(new PConnection(ca2, cb2));
+                		}
+                	}
+            	}
+            }
+            
+            LayoutTool layoutTool = new LayoutTool(destination, copiedModules);
+            layoutTool.setDelta(dx, dy);
+            Object[] data = layoutTool.move();
+            List<PModule> tmpMoved = new ArrayList<PModule>(data.length/3);
+            for (int i=0;i<data.length;i+=3)
+            {
+                PModule m = (PModule) data[i+0];
+                int sx = (Integer) data[i+1];
+                int sy = (Integer) data[i+2];
+                m.setScreenLocation(sx, sy);
+                tmpMoved.add(m);
+            }
+            opModules = tmpMoved;
         }
-        
-        opModules = tmpMoved;
+        finally
+        {
+            if (editSupport != null)
+                editSupport.endUpdate();
+        }
 	}
 
 	public Collection<? extends PModule> getCopiedModules() {
