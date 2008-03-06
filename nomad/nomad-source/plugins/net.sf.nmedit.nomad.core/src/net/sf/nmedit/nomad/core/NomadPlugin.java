@@ -75,6 +75,9 @@ public class NomadPlugin extends ApplicationPlugin implements Application
                 nomad.setupUI();
                 loader.initServices();
                 nomad.setupMenu(); // after service so they can install custom menu items
+
+                nomad.getWindow().invalidate();
+                nomad.getWindow().validate();
                 nomad.getWindow().setVisible(true);
             }
         });
