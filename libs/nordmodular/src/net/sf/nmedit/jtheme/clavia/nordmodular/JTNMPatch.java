@@ -53,7 +53,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JViewport;
 import javax.swing.UIDefaults;
-import javax.swing.undo.UndoableEditSupport;
 
 import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnector;
@@ -657,7 +656,7 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
         eh.adjustModuleColors();
         
         JScrollPane scrollPane = new JScrollPane(cont);
-        
+
         scrollPane.getViewport().setScrollMode(JViewport.BLIT_SCROLL_MODE);
         
         // scrollPane.setAutoscrolls(true);
