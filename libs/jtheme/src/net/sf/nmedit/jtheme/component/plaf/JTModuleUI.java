@@ -59,6 +59,7 @@ import net.sf.nmedit.jpatch.ImageSource;
 import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
+import net.sf.nmedit.jpatch.history.PUndoableEditSupport;
 import net.sf.nmedit.jpatch.transform.PTModuleMapping;
 import net.sf.nmedit.jpatch.transform.PTTransformations;
 import net.sf.nmedit.jtheme.JTContext;
@@ -475,14 +476,20 @@ public class JTModuleUI extends JTComponentUI
         {
             if (isEnabled()) {
             	// XXX color hack
+                PUndoableEditSupport ues = source.getParentComponent().getEditSupport();
                 String t1 = source.getTitle();
                 
-                PModule result = mapping.transform(source);
+        		ues.beginUpdate("Transform " + source.getTitle());
+        		try {
+        			PModule result = mapping.transform(source);
+        			if (result != null) {
+        				int colorKey = JThemeUtils.getColorKey(t1);
+        				result.setTitle(JThemeUtils.setColorKey(result.getTitle(),colorKey));
+        			}
+        		} finally {
+        			ues.endUpdate();
+        		}
 
-                if (result != null) {
-                    int colorKey = JThemeUtils.getColorKey(t1);
-                    result.setTitle(JThemeUtils.setColorKey(result.getTitle(),colorKey));
-                }
             }
         }
     }
