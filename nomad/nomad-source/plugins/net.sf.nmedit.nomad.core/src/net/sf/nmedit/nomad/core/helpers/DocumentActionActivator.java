@@ -190,27 +190,14 @@ public class DocumentActionActivator
     private void close()
     {
         Document d = documents.getSelection();
-        if (d.isModified()) {
-        	Nomad n = Nomad.sharedInstance();
-        	int result = JOptionPane.showConfirmDialog(n.getWindow().getRootPane(), "Are you sure you want to close " + d.getTitle() + " ?",
-        			"", JOptionPane.OK_CANCEL_OPTION);
-        	if (result != JOptionPane.OK_OPTION)
-        		return;
-        	
-        }
-        if (d != null)
-        {
-            documents.remove(d);
-            d.dispose();
-        }
+        documents.closeDocument(d);
     }
-    
+
     private void closeAll()
     {
         for (Document d: documents.getDocuments())
         {
-            documents.remove(d);
-            d.dispose();
+        	documents.closeDocument(d);
         }
     }
 
