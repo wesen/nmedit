@@ -19,6 +19,7 @@
 package net.sf.nmedit.jtheme.component;
 
 import java.awt.datatransfer.Clipboard;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -27,6 +28,7 @@ import javax.swing.JComponent;
 
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jtheme.JTContext;
+import net.sf.nmedit.jtheme.component.plaf.mcui.ContainerAction;
 import net.sf.nmedit.nmutils.swing.CopyCutPasteTarget;
 
 public class JTPatch extends JComponent implements CopyCutPasteTarget
@@ -82,30 +84,45 @@ public class JTPatch extends JComponent implements CopyCutPasteTarget
     }
 
 	public boolean canCopy() {
-		return true;
+		Collection<? extends JTModule> modules = getSelectedModules();
+		return modules.size() > 0;
 	}
 
 	public boolean canCut() {
-		return true;
+		Collection<? extends JTModule> modules = getSelectedModules();
+		return modules.size() > 0;
 	}
 
 	public boolean canPaste() {
-		return true;
+		if (getFocusedContainer() != null)
+			return true;
+		else
+			return false;
 	}
 
-	public void performCopy(Clipboard clipBoard) {
-		System.out.println("copy into clipboard " + clipBoard + " i am " + getPatch().getName());
-		for (JTModule m : getSelectedModules()) {
-			System.out.println("selected " + m);
+	public JTModuleContainer getFocusedContainer() {
+		for (JTModuleContainer mc : getModuleContainers()) {
+			return mc;
 		}
+		return null;
+	}
+	
+	private void performContainerActionOnSelected(String actionName, Clipboard clipBoard) {
+		Collection<? extends JTModule> modules = getSelectedModules();
+		ContainerAction action = new ContainerAction(getFocusedContainer(), actionName, clipBoard);
+		action.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+	}
+	
+	public void performCopy(Clipboard clipBoard) {
+		performContainerActionOnSelected(ContainerAction.COPY, clipBoard);
 	}
 
 	public void performCut(Clipboard clipBoard) {
-		// no op
+		performContainerActionOnSelected(ContainerAction.CUT, clipBoard);
 	}
 
 	public void performPaste(Clipboard clipBoard) {
-		// no op
+		performContainerActionOnSelected(ContainerAction.PASTE, clipBoard);
 	}
 
 }

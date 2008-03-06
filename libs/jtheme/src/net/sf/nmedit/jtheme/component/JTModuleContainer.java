@@ -29,6 +29,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.LayoutManager2;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -38,12 +39,14 @@ import java.util.Set;
 
 import javax.swing.border.Border;
 
+import net.sf.nmedit.jpatch.CopyOperation;
 import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnectionManager;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PModuleMetrics;
+import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.event.PConnectionEvent;
 import net.sf.nmedit.jpatch.event.PConnectionListener;
 import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
@@ -596,5 +599,28 @@ public class JTModuleContainer extends JTBaseComponent
         }
         
     }
+
+	public boolean dropPatch(PPatch newPatch, Point location) {
+		PModuleContainer newMc = null;
+		
+		for (int i = 0; i < newPatch.getModuleContainerCount(); i++) {
+			newMc = newPatch.getModuleContainer(i);
+			if (newMc.getModuleCount() > 0)
+				break;
+		}
+		
+		if (newMc == null) {
+			return false;
+		}
+    	CopyOperation op = newMc.createCopyOperation();
+    	op.setDestination(getModuleContainer());
+    	for (int i = 0; i < newMc.getModuleCount(); i++) {
+    		op.add(newMc.getModule(i + 1));
+    	}
+        op.setScreenOffset(location.x, location.y);
+    	op.copy();		
+    	
+    	return true;
+	}
     
 }
