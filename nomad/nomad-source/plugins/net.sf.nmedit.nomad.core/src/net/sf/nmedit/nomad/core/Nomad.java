@@ -97,6 +97,7 @@ import net.sf.nmedit.nomad.core.utils.OSXAdapter;
 
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.Platform.OS;
+import net.sf.nmedit.nmutils.swing.ApplicationClipboard;
 import net.sf.nmedit.nmutils.swing.CopyCutPasteTarget;
 import net.sf.nmedit.nmutils.swing.WorkIndicator;
 
@@ -638,7 +639,7 @@ public class Nomad
     void setupUI()
     {
     	this.clipBoard = new Clipboard("nomad clipboard");
-        
+    	ApplicationClipboard.setApplicationClipboard(clipBoard);
 
         mainWindow.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         mainWindow.addWindowListener(new WindowAdapter() {
