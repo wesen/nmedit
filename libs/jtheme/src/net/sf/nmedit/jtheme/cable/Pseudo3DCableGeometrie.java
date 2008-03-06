@@ -186,6 +186,7 @@ public class Pseudo3DCableGeometrie extends CubicCurve2D.Float
         if (boundaryChanged || (cachedBounds == null))
         {
             cachedBounds = super.getBounds2D();
+            boundaryChanged = false;
         }
         return cachedBounds;
     }
