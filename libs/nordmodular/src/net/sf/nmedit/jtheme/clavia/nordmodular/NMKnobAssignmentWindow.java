@@ -12,7 +12,10 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
 import net.sf.nmedit.jpatch.PParameter;
+import net.sf.nmedit.jpatch.clavia.nordmodular.Knob;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
+import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentEvent;
+import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentListener;
 import net.sf.nmedit.jpatch.impl.PBasicLight;
 import net.sf.nmedit.jpatch.impl.PBasicLightDescriptor;
 import net.sf.nmedit.jtheme.JTContext;
@@ -20,8 +23,9 @@ import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.component.JTControl;
 import net.sf.nmedit.jtheme.component.JTLabel;
 import net.sf.nmedit.jtheme.component.JTLight;
+import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
 
-public class NMKnobAssignmentWindow implements PropertyChangeListener
+public class NMKnobAssignmentWindow implements PropertyChangeListener, PAssignmentListener
 {
     
     private JFrame frame;
@@ -55,17 +59,36 @@ public class NMKnobAssignmentWindow implements PropertyChangeListener
         if (newValue!=null)
             install(newValue);
     }
+    
+    private KnobInfo getKnobInfo( int id )
+    {
+        if (id<18)
+            return EighteenKnobs[id];
+        for (KnobInfo k: SpecialKnobs)
+            if (k.id == id)
+                return k;
+        return null;
+    }
 
     private void install(NMPatch patch)
     {
-        /*
-        KnobSet knobs = patch.getKnobs();
-        knobs.get(index)*/
+        for (Knob k: patch.getKnobs())
+        {
+            KnobInfo ki = getKnobInfo(k.getID());
+            if (ki != null) ki.setAssignedTo(k.getParameter());
+        }
+        
+        patch.addAssignmentListener(this);
     }
 
     private void uninstall(NMPatch patch)
     {
-        
+        for (Knob k: patch.getKnobs())
+        {
+            KnobInfo ki = getKnobInfo(k.getID());
+            if (ki != null) ki.setAssignedTo(null);
+        }
+        patch.removeAssignmentListener(this);
     }
 
     private void createFrame()
@@ -133,7 +156,7 @@ public class NMKnobAssignmentWindow implements PropertyChangeListener
             }
             
             KnobInfo ki = new KnobInfo(i, context);
-            
+            EighteenKnobs[i] = ki;
             col.add(ki.root);
             col.add(Box.createVerticalGlue());
         }
@@ -188,17 +211,23 @@ public class NMKnobAssignmentWindow implements PropertyChangeListener
             return id>18;
         }
 
+        private JTLabel createLabel(JTContext context) throws JTException
+        {
+            JTLabel label = context.createLabel();
+            label.enableJTFlags();
+            return label;
+        }
         
         private void createComponents(JTContext context) throws JTException
         {
-            lblModule = context.createLabel();
-            lblParam = context.createLabel();
+            lblModule = createLabel(context);
+            lblParam = createLabel(context);
             
             if (!isSpecialKnob())
             {
                 LED = new AssignedLED();
                 knobctrl = context.createKnob();
-                lblId = context.createLabel();
+                lblId = createLabel(context);
                 lblId.setText(Integer.toString(id+1));
 
                 final int KS = 24;
@@ -226,8 +255,9 @@ public class NMKnobAssignmentWindow implements PropertyChangeListener
                 setText(lblParam, param.getName());
                 if (!isSpecialKnob())
                 {
-                    knobctrl.setValue(param.getValue());
-                    liAssigned.setLEDOnValue(1);
+                    knobctrl.setAdapter(new JTParameterControlAdapter(param));
+                    if (param.getExtensionParameter() != null)
+                    knobctrl.setExtensionAdapter(new JTParameterControlAdapter(param.getExtensionParameter()));
                     LED.setValue(1);
                 }
             }
@@ -237,11 +267,18 @@ public class NMKnobAssignmentWindow implements PropertyChangeListener
                 setText(lblParam, null);
                 if (!isSpecialKnob())
                 {
+                    JTParameterControlAdapter pca = (JTParameterControlAdapter) knobctrl.getControlAdapter();
+                    if (pca != null) pca.uninstall();
+                    pca = (JTParameterControlAdapter) knobctrl.getExtensiondapter();
+                    if (pca != null) pca.uninstall();
+                    knobctrl.setAdapter(null);
+                    knobctrl.setExtensionAdapter(null);
                     knobctrl.setValue(0);
-                    liAssigned.setLEDOnValue(0);
                     LED.setValue(0);
                 }
             }
+            root.revalidate();
+            root.repaint();
             //setText(lblModule, "mmm4mmm4mmm4mmmX");
             //setText(lblParam, "Pa"+(Math.random()*1000));
         }
@@ -265,6 +302,8 @@ public class NMKnobAssignmentWindow implements PropertyChangeListener
                 label.setText(shortText);
                 label.setToolTipText(t);
             }
+            
+            label.setSize(label.getPreferredSize());
         }
         
         public void createRoot()
@@ -338,6 +377,37 @@ public class NMKnobAssignmentWindow implements PropertyChangeListener
 
     public void propertyChange(PropertyChangeEvent evt)
     {
+    }
+
+    public void parameterAssigned(PAssignmentEvent e)
+    {
+        handleAssignmentEvent(e);
+    }
+
+    public void parameterDeassigned(PAssignmentEvent e)
+    {
+        handleAssignmentEvent(e);
+    }
+
+    private void handleAssignmentEvent(PAssignmentEvent e)
+    {
+        if (patch == null) return; // should never happen
+        switch (e.getId())
+        {
+            case PAssignmentEvent.KNOB_ASSIGNED:
+                knobChanged(e, true);
+                break;
+            case PAssignmentEvent.KNOB_DEASSIGNED:
+                knobChanged(e, false);
+                break;
+        }
+    }
+
+    private void knobChanged(PAssignmentEvent e, boolean assigned)
+    {
+        KnobInfo ki = getKnobInfo(e.getKnobId());
+        if (ki == null) return;
+        ki.setAssignedTo(assigned ? e.getParameter() : null);
     }
     
 }
