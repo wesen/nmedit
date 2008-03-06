@@ -61,4 +61,6 @@ public interface PModuleContainer extends PComponent, Iterable<PModule>
     MoveOperation createMoveOperation();
     CopyOperation createCopyOperation();
     
+    PPatch createPatchWithModules(Collection<? extends PModule> collection);
+    
 }

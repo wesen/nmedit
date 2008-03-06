@@ -20,6 +20,10 @@ public class PModuleTransferDataWrapper implements PModuleTransferData {
     ModulesBoundingBox boundingBox;
     private Image transferImage = null;
 
+    public PModuleTransferDataWrapper(PModuleContainer delegate, Collection<? extends PModule> modules) {
+    	this(delegate, modules, new Point(0, 0));
+    }
+
     public PModuleTransferDataWrapper(PModuleContainer delegate, Collection<? extends PModule> modules, Point dragStartLocation)
     {
         this.sourceContainer = delegate;
@@ -53,33 +57,12 @@ public class PModuleTransferDataWrapper implements PModuleTransferData {
         if (flavor.equals(PDragDrop.ModuleSelectionFlavor))
         	return this;
         if (flavor.equals(PDragDrop.PatchFileFlavor) || flavor.equals(PDragDrop.PatchStringFlavor)) {
-			try {
-//				System.out.println("patch file flavor");
-				PModuleContainer srcMc = sourceContainer;
-				PPatch patch = srcMc.getPatch();
-				int mcIdx = patch.getModuleContainerIndex(sourceContainer);
-				PPatch newPatch = patch.createEmptyPatch();
-				PModuleContainer dstMc = newPatch.getModuleContainer(mcIdx);
-				
-				CopyOperation copy = srcMc.createCopyOperation();
-				copy.setDestination(dstMc);
-	            for (PModule module: getModules()) {
-	                copy.add(module);
-	            }
-	            ModulesBoundingBox bbox = new ModulesBoundingBox(getModules(), new Point(0, 0));
-	            Rectangle r = bbox.getBoundingBox();
-	            copy.setScreenOffset(-r.x, -r.y);
-	            copy.copy();
-	            
-	            String str = newPatch.patchFileString();
-	            if (flavor.equals(PDragDrop.PatchFileFlavor))
-	            	return new ByteArrayInputStream(str.getBytes());
-	            else
-	            	return str;
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+        	PPatch newPatch = sourceContainer.createPatchWithModules(getModules());
+        	String str = newPatch.patchFileString();
+        	if (flavor.equals(PDragDrop.PatchFileFlavor))
+        		return new ByteArrayInputStream(str.getBytes());
+        	else
+        		return str;
         }
         return null;
     }
