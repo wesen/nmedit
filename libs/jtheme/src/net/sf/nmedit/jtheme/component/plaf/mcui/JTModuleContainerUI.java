@@ -47,6 +47,8 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
 import java.awt.event.InputEvent;
@@ -60,6 +62,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.swing.Action;
+import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
@@ -67,6 +71,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.TransferHandler;
 
 import net.sf.nmedit.jpatch.CopyOperation;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
@@ -90,6 +95,7 @@ import net.sf.nmedit.jpatch.dnd.PModuleTransferDataWrapper;
 import net.sf.nmedit.jpatch.history.PUndoableEditSupport;
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.dnd.FileDnd;
+import net.sf.nmedit.nmutils.swing.ApplicationClipboard;
 import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
 
 import net.sf.nmedit.jtheme.component.plaf.mcui.ContainerAction;
@@ -378,7 +384,7 @@ public class JTModuleContainerUI extends ComponentUI
     public static class EventHandler
       implements ContainerListener, 
       DropTargetListener, DragGestureListener, DragSourceListener,
-      MouseListener, MouseMotionListener
+      MouseListener, MouseMotionListener, ActionListener
     {
 
 		private JTModuleContainerUI jtcUI;
@@ -428,6 +434,16 @@ public class JTModuleContainerUI extends ComponentUI
             	selectAllKey = KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK);
             }
             map.put(selectAllKey, ContainerAction.SELECT_ALL);
+            
+            if (Platform.isFlavor(Platform.OS.MacOSFlavor)) {
+            	map.put(KeyStroke.getKeyStroke("meta X"), ContainerAction.CUT);
+            	map.put(KeyStroke.getKeyStroke("meta C"), ContainerAction.COPY);
+            	map.put(KeyStroke.getKeyStroke("meta V"), ContainerAction.PASTE);
+            } else {
+            	map.put(KeyStroke.getKeyStroke("ctrl X"), ContainerAction.CUT);
+            	map.put(KeyStroke.getKeyStroke("ctrl C"), ContainerAction.COPY);
+            	map.put(KeyStroke.getKeyStroke("ctrl V"), ContainerAction.PASTE);
+            }
         }	 
 	 
         public void installKeyboardActions( JTModuleContainer mc)	 
@@ -435,8 +451,14 @@ public class JTModuleContainerUI extends ComponentUI
 //            NMLazyActionMap.installLazyActionMap(module.getContext().getUIDefaults(),	 
 //                    module, BasicEventHandler.class, moduleActionMapKey);	 
 
-        	mc.getActionMap().put(ContainerAction.DELETE, new ContainerAction(mc, ContainerAction.DELETE));
-        	mc.getActionMap().put(ContainerAction.SELECT_ALL, new ContainerAction(mc, ContainerAction.SELECT_ALL));
+        	ActionMap map = mc.getActionMap();
+        	map.put(ContainerAction.DELETE, new ContainerAction(mc, ContainerAction.DELETE));
+        	map.put(ContainerAction.SELECT_ALL, new ContainerAction(mc, ContainerAction.SELECT_ALL));
+        	map.put(ContainerAction.COPY, new ContainerAction(mc, ContainerAction.COPY, ApplicationClipboard.getApplicationClipboard()));
+        	map.put(ContainerAction.CUT, new ContainerAction(mc, ContainerAction.CUT, ApplicationClipboard.getApplicationClipboard()));
+        	map.put(ContainerAction.PASTE,
+        	        new ContainerAction(mc, ContainerAction.PASTE, ApplicationClipboard.getApplicationClipboard()));
+        	
             InputMap im = createInputMapWhenFocused();	 
             SwingUtilities.replaceUIInputMap(mc, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, im);	 
         }	 
@@ -597,7 +619,12 @@ public class JTModuleContainerUI extends ComponentUI
     								break;
     						}
     						if (newMc != null) {
-    							jtcUI.setCurrentTransfer(newMc.getModules(), null);
+//    			                ModuleImageRenderer mir = new ModuleImageRenderer(newMc.getModules);
+//    			                mir.setForDragAndDrop(true);
+//    			                mir.setPaintExtraBorder(true);
+//    			                transfer.setTransferImage(mir.render());
+
+    			                jtcUI.setCurrentTransfer(newMc.getModules(), null);
     						} else {
     							dtde.rejectDrag();
     							return;
@@ -731,6 +758,12 @@ public class JTModuleContainerUI extends ComponentUI
             }
             jtcUI.updateDnDBoundingBox(null);
         }
+
+        public void actionPerformed(ActionEvent e) {
+            String action = (String)e.getActionCommand();
+            System.out.println("action " + action);
+            
+        }
         
         private void dropPatchFile(DropTargetDropEvent dtde) {
             Transferable transfer = dtde.getTransferable();
@@ -740,29 +773,12 @@ public class JTModuleContainerUI extends ComponentUI
 			if (files.size() == 1) {
 				PPatch newPatch = patch.createFromFile(files.get(0));
 				if (newPatch != null) {
-					PModuleContainer newMc = null;
-					
-					for (int i = 0; i < newPatch.getModuleContainerCount(); i++) {
-						newMc = newPatch.getModuleContainer(i);
-						if (newMc.getModuleCount() > 0)
-							break;
-					}
-					
-					if (newMc == null) {
+					if (getModuleContainer().dropPatch(newPatch, dtde.getLocation())) {
+						dtde.dropComplete(true);
+					} else {
 						dtde.rejectDrop();
 						dtde.dropComplete(false);
-                        jtcUI.updateDnDBoundingBox(null);
-						return;
 					}
-                	CopyOperation op = newMc.createCopyOperation();
-                	op.setDestination(getModuleContainer().getModuleContainer());
-                	for (int i = 0; i < newMc.getModuleCount(); i++) {
-                		op.add(newMc.getModule(i + 1));
-                	}
-                    Point p = new Point(dtde.getLocation());
-                    op.setScreenOffset(p.x, p.y);
-                	op.copy();
-                    dtde.dropComplete(true);
                     jtcUI.updateDnDBoundingBox(null);
 				} else {
 					dtde.rejectDrop();
@@ -1008,20 +1024,7 @@ public class JTModuleContainerUI extends ComponentUI
                 transfer.setTransferImage(mir.render());
                 
                 jtcUI.setCurrentTransfer(transfer.getModules(), transfer.getDragStartLocation(), transfer.getTransferImage());
-                
-                // DragSource.isDragImageSupported() returns false on platforms
-                // which support this feature due to some kind of bug in the JRE.
-                // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4874070
-                if (DragSource.isDragImageSupported() & false) // disable feature until we are sure it works
-                {
-//                    Image dragImage = renderDragImage( collection );
-//                    Point imageOffset = new Point( dndOrigin );
-//                    dge.startDrag(DragSource.DefaultMoveDrop, dragImage, imageOffset, transfer, this);    
-                }
-                else
-                {
-                    dge.startDrag(DragSource.DefaultMoveDrop, transfer, this);
-                }
+                dge.startDrag(DragSource.DefaultMoveDrop, transfer, this);
             }
         }
         

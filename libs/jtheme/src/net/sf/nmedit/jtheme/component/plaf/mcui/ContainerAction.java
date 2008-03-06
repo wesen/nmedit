@@ -4,6 +4,8 @@
 package net.sf.nmedit.jtheme.component.plaf.mcui;
 
 import java.awt.Component;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -12,6 +14,8 @@ import javax.swing.undo.UndoableEditSupport;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PatchUtils;
+import net.sf.nmedit.jpatch.dnd.PModuleTransferData;
+import net.sf.nmedit.jpatch.dnd.PModuleTransferDataWrapper;
 import net.sf.nmedit.jpatch.history.PUndoableEditSupport;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
@@ -30,9 +34,19 @@ public class ContainerAction extends AbstractAction
     public static final String DELETE_UNUSED = "delete.unused";
     public static final String DELETE = "delete";
     public static final String SELECT_ALL = "selectAll";
+    public static final String COPY = "copy";
+    public static final String PASTE = "paste";
+    public static final String CUT = "cut";
+    
+    private Clipboard clipBoard = null;
 
-    public ContainerAction(JTModuleContainer moduleContainer, String command)
+    public ContainerAction(JTModuleContainer moduleContainer, String command) {
+    	this(moduleContainer, command, null);
+    }
+    
+    public ContainerAction(JTModuleContainer moduleContainer, String command, Clipboard clipBoard)
     {
+    	this.clipBoard = clipBoard;
         this.jmc = moduleContainer;
         putValue(ACTION_COMMAND_KEY, command);
         if (command == DELETE_UNUSED)
@@ -68,12 +82,21 @@ public class ContainerAction extends AbstractAction
             	}
             		
             } else if (key == DELETE) {
-                delete();
+            	delete();
+            } else if (key == COPY) {
+            	if (getClipBoard() != null)
+            		copy();
+            } else if (key == PASTE) {
+            	if (getClipBoard() != null)
+            		paste();
+            } else if (key == CUT) {
+            	if (getClipBoard() != null)
+            		cut();
             }
         }
     }
     
-    private void delete()
+	private void delete()
     {
         Component[] components = jmc.getComponents();
         if (components.length>0)
@@ -154,7 +177,7 @@ public class ContainerAction extends AbstractAction
         } else if (key == SELECT_ALL) {
         	return true;
         } else {
-        	return false;
+        	return true;
         }
     }
 
@@ -189,6 +212,30 @@ public class ContainerAction extends AbstractAction
         return false;
     }
 
+	public void setClipBoard(Clipboard clipBoard) {
+		this.clipBoard = clipBoard;
+	}
 
-    
+	public Clipboard getClipBoard() {
+		return clipBoard;
+	}
+
+    private void cut() {
+		getClipBoard().setContents(new PModuleTransferDataWrapper(jmc.getModuleContainer(), jmc.getSelectedPModules()), null);
+		delete();
+	}
+
+	private void paste() {
+		Transferable t = getClipBoard().getContents(this);
+		if (t instanceof PModuleTransferData) {
+			PModuleTransferData tdata = (PModuleTransferData)t;
+			for (PModule m : tdata.getModules()) {
+				System.out.println("paste " + m);
+			}
+		}
+	}
+
+	private void copy() {
+		getClipBoard().setContents(new PModuleTransferDataWrapper(jmc.getModuleContainer(), jmc.getSelectedPModules()), null);
+	}    
 }
