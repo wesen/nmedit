@@ -19,7 +19,7 @@ public class InstallerService implements InitService
     {
         Nomad nomad = Nomad.sharedInstance();
         MLEntry mlPatch = nomad.getMenuLayout().getEntry("nomad.menu.patch");
-        
+        /*
         MLEntry mlMutator = new MLEntry("mutator"); // TODO i18n
         mlMutator.putValue(MLEntry.NAME, "Mutator");
         mlMutator.putValue(MLEntry.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.CTRL_DOWN_MASK));
@@ -35,7 +35,7 @@ public class InstallerService implements InitService
             }
             
         });
-        mlPatch.add(mlMutator);
+        mlPatch.add(mlMutator);*/
     }
 
     public void shutdown()
