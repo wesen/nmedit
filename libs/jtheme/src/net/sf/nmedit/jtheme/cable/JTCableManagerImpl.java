@@ -138,13 +138,16 @@ public class JTCableManagerImpl implements JTCableManager, Runnable
     {
         return cables.size();
     }
-    
+
     private transient Rectangle cachedRect;
+    private Rectangle clipRect = new Rectangle(); // must not be null
     
     public void paintCables(Graphics2D g, CableRenderer cableRenderer)
     {
-        Rectangle clip = g.getClipBounds();
-        boolean hasClip = clip != null; 
+        Rectangle clip = g.getClipBounds(clipRect);
+        boolean hasClip = clip.x>0 || clip.y>0 || view == null
+            || (clip.x+clip.width<view.getWidth())
+            || (clip.y+clip.height<view.getHeight());
         
         if ((!hasClip) || ((!dirty.isEmpty()) && clip.contains(dirty)))
         {
@@ -160,11 +163,11 @@ public class JTCableManagerImpl implements JTCableManager, Runnable
         }
         else
         {
+            enlarge(clip, cableRenderer.getCableDiameter()); // enlarge so that we don't miss a cable
             for (Cable c: cables)
             {
                 Rectangle b = (cachedRect=c.getBounds(cachedRect));
-                enlarge(b, 5); // enlarge so that we don't miss a cable
-                if (g.hitClip(b.x, b.y, b.width, b.height))
+                if (clip.intersects(b))
                     cableRenderer.render(g, c);
             }
         }
