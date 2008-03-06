@@ -18,6 +18,8 @@
  */
 package net.sf.nmedit.jpatch.impl;
 
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -36,6 +38,7 @@ import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PModuleMetrics;
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.PUndoableEditFactory;
+import net.sf.nmedit.jpatch.dnd.ModulesBoundingBox;
 import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
 import net.sf.nmedit.jpatch.event.PModuleContainerListener;
 import net.sf.nmedit.jpatch.history.PUndoableEditSupport;
@@ -354,5 +357,23 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
     {
         return null;
     }
+
+	public PPatch createPatchWithModules(Collection<? extends PModule> modules) {
+		PPatch patch = getPatch();
+		int mcIdx = patch.getModuleContainerIndex(this);
+		PPatch newPatch = patch.createEmptyPatch();
+		PModuleContainer dstMc = newPatch.getModuleContainer(mcIdx);
+		
+		CopyOperation copy = createCopyOperation();
+		copy.setDestination(dstMc);
+        for (PModule module: getModules()) {
+            copy.add(module);
+        }
+        ModulesBoundingBox bbox = new ModulesBoundingBox(getModules(), new Point(0, 0));
+        Rectangle r = bbox.getBoundingBox();
+        copy.setScreenOffset(-r.x, -r.y);
+        copy.copy();
+		return newPatch;
+	}
 
 }
