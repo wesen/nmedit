@@ -28,13 +28,19 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.SwingUtilities;
 
+import net.sf.nmedit.jpatch.PConnection;
+import net.sf.nmedit.jpatch.PConnectionManager;
+import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PModule;
+import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.impl.PBasicModule;
 import net.sf.nmedit.jtheme.JTContext;
@@ -42,6 +48,9 @@ import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.CableRenderer;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
+import net.sf.nmedit.jtheme.cable.JTCableManagerImpl;
+import net.sf.nmedit.jtheme.cable.SimpleCable;
+import net.sf.nmedit.jtheme.component.JTConnector;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.plaf.SelectionPainter;
@@ -257,6 +266,109 @@ public class ModuleImageRenderer
         this.extraBorder = extra;
     }
     
+    public static Image createImage(JTModuleContainer containerInContext, PModuleContainer pmoduleContainer,
+            boolean forDND, boolean extraBorder, boolean renderCables) throws JTException
+    {
+        // create user interface
+        JTContext context = containerInContext.getContext();
+        JTCableManager cm = new JTCableManagerImpl();
+        JTModuleContainer mc = new JTModuleContainer(context, cm);
+        cm.setOwner(mc);
+        cm.setView(mc);
+        cm.setCableRenderer(containerInContext.getCableManager().getCableRenderer());
+        Collection<? extends PModule> pmodules = pmoduleContainer.getModules();
+        
+        List<JTModule> jtmodules = new ArrayList<JTModule>(pmodules.size());
+        Map<PModule, JTModule> moduleMap = new HashMap<PModule, JTModule>();
+        
+        for (PModule pmodule: pmodules)
+        {
+            JTModule jtmodule = createJTModule(context, pmodule);
+            jtmodules.add(jtmodule);
+            mc.add(jtmodule);
+            moduleMap.put(pmodule, jtmodule);
+        }
+        // create cables
+        if (renderCables)
+        {
+                
+            PConnectionManager connectionManager = pmoduleContainer.getConnectionManager();
+    
+            for (PConnection connection: connectionManager)
+            {
+                PConnector pconnectorA = connection.getA();
+                PConnector pconnectorB = connection.getB();
+                PModule pmoduleA = connection.getModuleA();
+                PModule pmoduleB = connection.getModuleB();
+                JTModule jtmoduleA = moduleMap.get(pmoduleA);
+                JTModule jtmoduleB = moduleMap.get(pmoduleB);
+                JTConnector jtcA = null;
+                JTConnector jtcB = null;
+    
+                for (int i=0;i<jtmoduleA.getComponentCount();i++)
+                {
+                    if (jtmoduleA.getComponent(i) instanceof JTConnector)
+                    {
+                        JTConnector jtc = (JTConnector) jtmoduleA.getComponent(i);
+                        if (jtc.getConnector() == pconnectorA)
+                        {
+                            jtcA = jtc;
+                            break;
+                        }
+                        else if (jtc.getConnector() == pconnectorB)
+                        {
+                            jtcB = jtc;
+                            break;
+                        }
+                    }
+                }
+                for (int i=0;i<jtmoduleB.getComponentCount();i++)
+                {
+                    if (jtmoduleB.getComponent(i) instanceof JTConnector)
+                    {
+                        JTConnector jtc = (JTConnector) jtmoduleB.getComponent(i);
+                        if (jtc.getConnector() == pconnectorA)
+                        {
+                            jtcA = jtc;
+                            break;
+                        }
+                        else if (jtc.getConnector() == pconnectorB)
+                        {
+                            jtcB = jtc;
+                            break;
+                        }
+                    }
+                }
+                
+                if (jtcA != null && jtcB != null)
+                {
+                    // create cable
+                    Cable cable = cm.createCable(jtcA, jtcB);
+                    cable.updateEndPoints(); // update location
+                    Color color = pconnectorA.getRootConnector().getSignalType().getColor();
+                    
+                    cable.setColor(color);
+                    cm.add(cable);
+                }
+                
+            }
+        }
+
+        // render image
+        ModuleImageRenderer mir = new ModuleImageRenderer(jtmodules);
+        mir.setForDragAndDrop(forDND);
+        mir.setPaintExtraBorder(extraBorder);
+        mir.setRenderCablesEnabled(renderCables);
+        Image image = mir.render();
+        
+        // disconnect from PModule - uninstall listeners
+        for (JTModule jtmodule: jtmodules)
+        {
+            jtmodule.setModule(null);
+        }
+        return image;
+    }
+    
     public static Image render(JTContext context, PModuleDescriptor moduleDescriptor, boolean fordnd) throws JTException
     {
         StorageContext sc = context.getStorageContext();
@@ -271,13 +383,20 @@ public class ModuleImageRenderer
 
     public static Image render(JTContext context, PModule pmodule, boolean fordnd) throws JTException
     {
-        StorageContext sc = context.getStorageContext();
-        ModuleElement scModuleElement = sc.getModuleStoreById(pmodule.getComponentId());
-        JTModule module = scModuleElement.createModule(context, pmodule, true);
+        JTModule module = createJTModule(context, pmodule);
         ModuleImageRenderer renderer = new ModuleImageRenderer();
         renderer.setForDragAndDrop(fordnd);
         renderer.add(module);
         return renderer.render();
+    }
+    
+    private static JTModule createJTModule(JTContext context, PModule pmodule) throws JTException
+    {
+        StorageContext sc = context.getStorageContext();
+        ModuleElement scModuleElement = sc.getModuleStoreById(pmodule.getComponentId());
+        JTModule module = scModuleElement.createModule(context, pmodule, true);
+        module.setLocation(pmodule.getScreenX(), pmodule.getScreenY());
+        return module;
     }
     
 }
