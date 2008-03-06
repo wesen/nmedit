@@ -19,6 +19,7 @@
 package net.sf.nmedit.nordmodular;
 
 import java.awt.Component;
+import java.awt.event.KeyEvent;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -32,6 +33,7 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.sound.midi.MidiDevice;
+import javax.swing.KeyStroke;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -47,6 +49,7 @@ import net.sf.nmedit.jsynth.midi.MidiDescription;
 import net.sf.nmedit.jtheme.ModulePane;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.jpf.TempDir;
+import net.sf.nmedit.nomad.core.menulayout.MLEntry;
 import net.sf.nmedit.nomad.core.service.Service;
 import net.sf.nmedit.nomad.core.service.initService.InitService;
 import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
@@ -75,6 +78,18 @@ public class Installer implements InitService
         ModulePane pane = ModulePane.getSharedInstance();
         pane.setModules(d.getModuleDescriptions());
         pane.setTheme(data.getJTContext());
+
+        Nomad nomad = Nomad.sharedInstance();
+        MLEntry mlPatch = nomad.getMenuLayout().getEntry("nomad.menu.patch");
+        MLEntry mlKnobs = new MLEntry("knobs"); // TODO i18n
+        mlKnobs.putValue(MLEntry.NAME, "Knobs");
+        mlKnobs.putValue(MLEntry.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_K, KeyEvent.CTRL_DOWN_MASK));
+        
+        DefaultDocumentManager dm = Nomad.sharedInstance().getDocumentManager();
+        KnobController kc = new KnobController();
+        dm.addListener(kc);
+        mlKnobs.addActionListener(kc);
+        mlPatch.add(mlKnobs);
         
         loadLastSession();
     }
