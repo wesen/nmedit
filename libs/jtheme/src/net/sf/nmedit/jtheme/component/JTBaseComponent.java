@@ -91,6 +91,14 @@ public class JTBaseComponent extends JComponent
         return context;
     }
     
+    public void enableJTFlags()
+    {
+        setJTFlag(FLAG_INVALIDATE, true);
+        setJTFlag(FLAG_VALIDATE, true);
+        setJTFlag(FLAG_REVALIDATE, true);
+        setJTFlag(FLAG_VALIDATE_TREE, true);
+        setJTFlag(FLAG_PROPERTY_SUPPORT, true);
+    }
 
     
     /**
