@@ -33,10 +33,12 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.swing.tabs.FFTabBarUI;
 import net.sf.nmedit.nomad.core.swing.tabs.JTabbedPane2;
 
@@ -233,7 +235,8 @@ public class DefaultDocumentManager extends JTabbedPane2 implements DocumentMana
         if ("ask-remove".equals(evt.getPropertyName()))
         {
             int index = (Integer) evt.getNewValue();
-            remove(documentList.get(index));
+            closeDocument(documentList.get(index));
+//            remove(documentList.get(index));
             return;
         }
         if ("show-context-menu".equals(evt.getPropertyName()))
@@ -247,6 +250,23 @@ public class DefaultDocumentManager extends JTabbedPane2 implements DocumentMana
         }
         
     }
+    
+    public void closeDocument(Document d) {
+    	if (d != null) {
+            if (d.isModified()) {
+            	Nomad n = Nomad.sharedInstance();
+            	int result = JOptionPane.showConfirmDialog(n.getWindow().getRootPane(), "Are you sure you want to close " + d.getTitle() + " ?",
+            			"", JOptionPane.OK_CANCEL_OPTION);
+            	if (result != JOptionPane.OK_OPTION)
+            		return;
+            	
+            }
+            remove(d);
+            d.dispose();
+    	}
+    }
+    
+
 
     private static class ContextMenuAction extends AbstractAction
     {
