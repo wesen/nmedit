@@ -341,6 +341,9 @@ public final class PScanner
     
     private final int abortNumber(int charCount, boolean sign) throws IOException
     {
+        if (charCount == 0)
+            return any();
+        
         if (sign)
         {
             sbuffer.append('-');
@@ -434,6 +437,11 @@ public final class PScanner
                     
             }
             take();
+        }
+        
+        if (getPosition()-first == 1 && sign)
+        {
+            return abortNumber(getPosition()-first, sign);
         }
         
         if (sign) ibuffer = -ibuffer;
