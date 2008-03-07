@@ -23,6 +23,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
 
 import javax.swing.InputMap;
 import javax.swing.JComponent;
@@ -104,6 +105,15 @@ public class JTNM1ResetButtonUI extends JTBasicControlUI
             // outer outline
             g.draw(metrics.polygonDraw);
         }
+        else if (control.hasFocus())
+        {
+            configureGraphics(g);
+            metrics.update(c.getWidth(), c.getHeight());
+            
+            g.setColor(clHighlight);
+            // outer outline
+            g.draw(metrics.polygonDraw);
+        }
     }
 
     private transient BasicControlListener rbControlListenerInstance;
@@ -127,7 +137,22 @@ public class JTNM1ResetButtonUI extends JTBasicControlUI
         {
             addDefaultValueKS(map);
         }
+
+        public void mousePressed( MouseEvent e )
+        {
+            JTControl control = controlFor(e);
+            if (control == null)  return;
+            if (!control.hasFocus())
+                control.requestFocus();
+        }
         
+        public void mouseReleased( MouseEvent e )
+        {
+            JTControl control = controlFor(e);
+            if (control == null)  return;
+            control.setValue(control.getDefaultValue());
+        }
+
     }
     
     private static class Metrics 
