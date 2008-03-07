@@ -26,7 +26,6 @@ import java.util.Iterator;
 
 import javax.swing.event.EventListenerList;
 import javax.swing.undo.UndoableEdit;
-import javax.swing.undo.UndoableEditSupport;
 
 import net.sf.nmedit.jpatch.CopyOperation;
 import net.sf.nmedit.jpatch.MoveOperation;
@@ -248,18 +247,7 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
     {
         if (modules.get(index)!=null)
             return false;
-        
-        int limit = module.getDescriptor().getLimit();
-        if (limit>=0)
-        {
-            for (PModule m: this)
-            {
-                if (m.getDescriptor().equals(module.getDescriptor()))
-                    if (--limit<=0) break;
-            }
-            return  limit>0;
-        }
-        return true;
+        return canAdd(module.getDescriptor());
     }
 
     public PConnectionManager getConnectionManager()
@@ -375,5 +363,20 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
         copy.copy();
 		return newPatch;
 	}
+
+    public boolean canAdd(PModuleDescriptor descriptor)
+    {
+        int limit = descriptor.getLimit();
+        if (limit>=0)
+        {
+            for (PModule m: this)
+            {
+                if (m.getDescriptor().equals(descriptor))
+                    if (--limit<=0) break;
+            }
+            return  limit>0;
+        }
+        return true;
+    }
 
 }
