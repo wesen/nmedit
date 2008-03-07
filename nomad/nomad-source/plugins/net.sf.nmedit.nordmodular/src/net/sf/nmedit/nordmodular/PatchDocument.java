@@ -57,6 +57,7 @@ public class PatchDocument implements Document,
         nmpatch.addPropertyChangeListener(NMPatch.NAME, this);
         nmpatch.addPropertyChangeListener("slot", this);
         nmpatch.addPropertyChangeListener(NMPatch.MODIFIED, this);
+    	nmpatch.installModifiedListener();
     }
     
     public NMPatch getPatch()
