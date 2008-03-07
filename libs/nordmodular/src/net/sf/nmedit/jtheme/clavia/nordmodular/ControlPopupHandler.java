@@ -487,7 +487,7 @@ public class ControlPopupHandler implements JTPopupHandler
         
         private void MidiCtrlAssignmentDialog()
         {
-            // TODO
+            MidiCtrlFrm.showDialog(parent.control, getPatch().getMidiControllers());
         }
 
         PParameter getParameter()
