@@ -76,7 +76,9 @@ public class JTConnector extends JTComponent implements PConnectorListener
         if (this.connector != c)
         {
             if (this.connector != null)
+            {
                 this.connector.removeConnectorListener(this);
+            }
             
             this.connector = c;
             
@@ -84,9 +86,13 @@ public class JTConnector extends JTComponent implements PConnectorListener
             {
                 c.addConnectorListener(this);
                 setConnectorDescriptor(c.getDescriptor());
+                setToolTipText(c.getName());
             }
             else
+            {
                 setConnectorDescriptor(null);
+                setToolTipText(null);
+            }
             repaint();
         }
     }
