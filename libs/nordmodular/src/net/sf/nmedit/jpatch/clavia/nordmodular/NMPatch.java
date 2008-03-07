@@ -518,7 +518,7 @@ public class NMPatch extends PBasicPatch implements PPatch
 
     	patch.setProperty("file", null);
     	patch.setModified(false);
-    	patch.installModifiedListener();
+//    	patch.installModifiedListener();
 
         // enable history
         patch.setEditSupportEnabled(true);
