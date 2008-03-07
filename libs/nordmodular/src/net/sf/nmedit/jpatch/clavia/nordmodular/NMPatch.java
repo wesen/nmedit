@@ -126,6 +126,8 @@ public class NMPatch extends PBasicPatch implements PPatch
     
     private ModifiedListener modifiedListener;
     
+    private MorphAutoAssigner morphAutoAssigner;
+    
     /**
      * Creates a new patch.
      */
@@ -148,6 +150,10 @@ public class NMPatch extends PBasicPatch implements PPatch
         
         modifiedListener = new ModifiedListener(this);
 
+        morphAutoAssigner = new MorphAutoAssigner(this);
+        morphAutoAssigner.installAt(polyVoiceArea);
+        morphAutoAssigner.installAt(commonVoiceArea);
+        
         setProperty(VERSION, "Nord Modular patch 3.0");
         setProperty(MODIFIED, Boolean.FALSE);
     }
