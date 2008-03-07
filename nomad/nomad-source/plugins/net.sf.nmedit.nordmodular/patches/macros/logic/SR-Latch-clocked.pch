@@ -1,0 +1,70 @@
+[Header]
+Version=Nord Modular patch 3.0
+0 127 0 127 2 0 0 1 328 2 1 1 0 0 0 0 1 1 1 1 1 1 1 
+[/Header]
+[ModuleDump]
+1
+1 73 0 4 
+2 73 0 8 
+3 70 0 6 
+4 70 0 10 
+5 73 0 0 
+6 73 0 2 
+[/ModuleDump]
+[ModuleDump]
+0
+[/ModuleDump]
+[CableDump]
+1
+2 1 0 0 5 0 1 
+2 1 1 0 4 0 1 
+2 2 0 0 6 0 1 
+2 2 1 0 3 0 1 
+2 3 0 0 1 0 1 
+2 4 0 0 2 0 1 
+6 5 1 0 6 1 0 
+[/CableDump]
+[CableDump]
+0
+[/CableDump]
+[ParameterDump]
+1
+1 73 1 1 
+2 73 1 1 
+5 73 1 0 
+6 73 1 0 
+[/ParameterDump]
+[ParameterDump]
+0
+[/ParameterDump]
+[CustomDump]
+1
+[/CustomDump]
+[CustomDump]
+0
+[/CustomDump]
+[NameDump]
+1
+1 1S$2
+2 1R$2
+3 Q$2
+4 -Q$2
+5 S$2
+6 R$2
+[/NameDump]
+[NameDump]
+0
+[/NameDump]
+[Notes]
+SR-Latch-clocked
+----------------
+inputs: T, S, R
+T (clock / stray cable)
+
+q(t)q(t+1)|R S
+--------------
+0   0     |- 0
+0   1     |0 1
+1   0     |1 0
+1   1     |0 -
+[/Notes]
