@@ -339,9 +339,14 @@ public final class PScanner
         return NEWLINEWS;
     }
     
-    private final int abortNumber(boolean sign) throws IOException
+    private final int abortNumber(int charCount, boolean sign) throws IOException
     {
-        if (sign) sbuffer.append('-');
+        if (sign)
+        {
+            sbuffer.append('-');
+            if (charCount == 1)
+                return any();
+        }
         sbuffer.append(Integer.toString(ibuffer));
         return any();
     }
@@ -385,12 +390,12 @@ public final class PScanner
                         {
                             // -0
                             take();
-                            return abortNumber(sign);
+                            return abortNumber(getPosition()-first, sign);
                         }
                         if (ibuffer==0)
                         {
                             // 00
-                            return abortNumber(sign);
+                            return abortNumber(getPosition()-first, sign);
                         }
                     }
                     
@@ -401,12 +406,12 @@ public final class PScanner
                     
                     if (getPosition()>first && ibuffer==0 && !sign)
                     {
-                        return abortNumber(sign);
+                        return abortNumber(getPosition()-first, sign);
                     }
                     
                     int newbuffer = (ibuffer*10)+(cbuf-'0');
                     // check for overflow (not a number)
-                    if (newbuffer<ibuffer) return abortNumber(sign);
+                    if (newbuffer<ibuffer) return abortNumber(getPosition()-first, sign);
                     // no overflow
                     ibuffer = newbuffer;
                     break;
@@ -425,7 +430,7 @@ public final class PScanner
                     // fall down
                 default:
                     // not a number
-                    return abortNumber(sign);
+                    return abortNumber(getPosition()-first, sign);
                     
             }
             take();
