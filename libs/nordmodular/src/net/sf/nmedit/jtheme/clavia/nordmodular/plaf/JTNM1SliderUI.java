@@ -20,23 +20,29 @@ package net.sf.nmedit.jtheme.clavia.nordmodular.plaf;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 
 import javax.swing.JComponent;
+import javax.swing.SwingConstants;
 import javax.swing.UIDefaults;
 
 import net.sf.nmedit.jtheme.component.JTComponent;
+import net.sf.nmedit.jtheme.component.JTControl;
+import net.sf.nmedit.jtheme.component.JTControlAdapter;
 import net.sf.nmedit.jtheme.component.plaf.JTBasicSliderUI;
 
-public class JTNM1SliderUI extends JTBasicSliderUI
+public class JTNM1SliderUI extends JTBasicSliderUI implements SwingConstants
 {
     public static final String sliderGripBorderLightColorKey = sliderGripColorKey+".light";
     public static final String sliderGripBorderDarkColorKey = sliderGripColorKey+".dark";
 
     public static JTBasicSliderUI createUI(JComponent c) 
     {
+        return new JTNM1SliderUI();
+        /*
         JTBasicSliderUI ui = uiInstance.getInstance(c);
         if (ui == null) uiInstance.setInstance(c, ui = new JTNM1SliderUI());
-        return ui;
+        return ui;*/
     }
     
     private Color sliderGripLight = null;
@@ -67,5 +73,65 @@ public class JTNM1SliderUI extends JTBasicSliderUI
         g.drawLine(gx+1, gy+gh-1, gx+gw-1, gy+gh-1);
         g.drawLine(gx+gw-1, gy+1, gx+gw-1, gy+gh-1);
     }
+
+    protected void paintSliderForegroundUnderlay( Graphics2D g, JTControl control, Insets insets )
+    {
+        if (!control.isExtensionAdapterSet())
+            return;
+        
+        JTControlAdapter valAdapter = control.getControlAdapter();
+        JTControlAdapter extAdapter = control.getExtensiondapter();
+
+        int e = control.getExtensionValue();
+        if (e != 0)
+        {
+            int relative = control.getValue()+e;
+            if (relative<control.getMinValue())
+                relative = control.getMinValue();
+            else if (relative>control.getMaxValue())
+                relative = control.getMaxValue();
+            
+            float d = control.getMaxValue()-control.getMinValue();
+            if (d>0)
+            {
+                float rnorm = (relative-control.getMinValue())/d;
+                
+                double value = valAdapter.getNormalizedValue();
+                paintExtension(g, control, 
+                        getExtensionColor(control.getControlAdapter().getParameter()), 
+                        value, rnorm);
+            }
+        }
+        
+    }
+
+    private void paintExtension(Graphics2D g, 
+            JTControl control, 
+            Color color, double start, double stop)
+    {
+        g.setColor(color);
+        Insets insets = getInsets(control);
+        
+        int width = control.getWidth();
+        int height = control.getHeight();
+        
+        if (control.getOrientation() == HORIZONTAL)
+        {
+            // TODO
+        }
+        else
+        {
+            // start from 0 to 1, from bottom to top
+            
+            // vertical
+            int maxExtend = height-insets.top-insets.bottom;
+            int fromPos = (int)(maxExtend*(1-Math.max(start, stop)));
+            int extend = (int)(maxExtend*(Math.abs(start-stop)));
+            
+            g.fillRect(insets.left, insets.top+fromPos, 
+                    width-insets.left-insets.right, extend);
+        }
+    }
+    
 }
 
