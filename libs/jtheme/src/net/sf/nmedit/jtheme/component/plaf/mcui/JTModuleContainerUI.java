@@ -28,7 +28,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.KeyboardFocusManager;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -49,8 +48,6 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
 import java.awt.event.FocusEvent;
@@ -60,20 +57,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
-import javax.swing.Action;
 import javax.swing.ActionMap;
-import javax.swing.FocusManager;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
@@ -81,37 +73,27 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.TransferHandler;
 
-import net.sf.nmedit.jpatch.CopyOperation;
-import net.sf.nmedit.jpatch.InvalidDescriptorException;
-import net.sf.nmedit.jpatch.MoveOperation;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PPatch;
+import net.sf.nmedit.jpatch.dnd.ModulesBoundingBox;
+import net.sf.nmedit.jpatch.dnd.PDragDrop;
+import net.sf.nmedit.jpatch.dnd.PModuleTransferData;
+import net.sf.nmedit.jpatch.dnd.PModuleTransferDataWrapper;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
-import net.sf.nmedit.jtheme.cable.Cable;
-import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.JTLayerRoot;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.plaf.PaintableSelection;
 import net.sf.nmedit.jtheme.component.plaf.PaintableTransfer;
 import net.sf.nmedit.jtheme.component.plaf.SelectionPainter;
-import net.sf.nmedit.jpatch.dnd.ModulesBoundingBox;
-import net.sf.nmedit.jpatch.dnd.PDragDrop;
-import net.sf.nmedit.jpatch.dnd.PModuleTransferData;
-import net.sf.nmedit.jpatch.dnd.PModuleTransferDataWrapper;
-import net.sf.nmedit.jpatch.history.PUndoableEditSupport;
+import net.sf.nmedit.jtheme.util.ModuleImageRenderer;
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.dnd.FileDnd;
 import net.sf.nmedit.nmutils.swing.ApplicationClipboard;
-import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
-
-import net.sf.nmedit.jtheme.component.plaf.mcui.ContainerAction;
-import net.sf.nmedit.jtheme.util.ModuleImageRenderer;
 
 public class JTModuleContainerUI extends ComponentUI
 {
@@ -396,7 +378,7 @@ public class JTModuleContainerUI extends ComponentUI
     public static class EventHandler
       implements ContainerListener, 
       DropTargetListener, DragGestureListener, DragSourceListener,
-      MouseListener, MouseMotionListener, ActionListener
+      MouseListener, MouseMotionListener
     {
 
 		private JTModuleContainerUI jtcUI;
@@ -500,6 +482,8 @@ public class JTModuleContainerUI extends ComponentUI
 
             if (dndAllowed)
             {
+                
+                
                 for (int i=jtc.getComponentCount()-1;i>=0;i--)
                 {
                     Component component = jtc.getComponent(i);
@@ -579,6 +563,7 @@ public class JTModuleContainerUI extends ComponentUI
         {
             component.addMouseListener(this);
             // JTModule module = (JTModule) component;
+            
             DragSource dragSource = DragSource.getDefaultDragSource();
             
             DragGestureRecognizer dgr =
@@ -600,16 +585,26 @@ public class JTModuleContainerUI extends ComponentUI
 
         protected boolean isMDDropOk(int action, Transferable t)
         {
-            return
+            PModuleContainer pmc = getContainer().getModuleContainer();
+            boolean isOKPass1 =
             (action & DnDConstants.ACTION_COPY) >0
-            && getContainer().getModuleContainer() != null
+            && pmc != null
             && PDragDrop.isModuleDescriptorFlavorSupported(t);
+            
+            if (isOKPass1)
+            {
+                PModuleDescriptor md = PDragDrop.getModuleDescriptor(t);
+                if (pmc.canAdd(md))
+                    return true;
+            }
+            
+            return false;
         }
         
         public void dragEnter(DropTargetDragEvent dtde)
         {
         	DataFlavor flavors[] = dtde.getTransferable().getTransferDataFlavors();
-        	
+
             ModulesBoundingBox currentTransfer = jtcUI.getCurrentTransfer();
     		Transferable t = dtde.getTransferable();
             
@@ -670,7 +665,7 @@ public class JTModuleContainerUI extends ComponentUI
         	} else if (FileDnd.testFileFlavor(t.getTransferDataFlavors())) {
         		dtde.acceptDrag(DnDConstants.ACTION_COPY);
         	} else {
-        		dtde.rejectDrag();
+                dtde.rejectDrag();
             }
         }
 
@@ -776,7 +771,7 @@ public class JTModuleContainerUI extends ComponentUI
     	
 
             jtcUI.updateDnDBoundingBox(null);
-            
+
             dtde.rejectDrag();       
         }
 
@@ -805,12 +800,6 @@ public class JTModuleContainerUI extends ComponentUI
             jtcUI.updateDnDBoundingBox(null);
         }
 
-        public void actionPerformed(ActionEvent e) {
-            String action = (String)e.getActionCommand();
-            System.out.println("action " + action);
-            
-        }
-        
                 public void dropActionChanged(DropTargetDragEvent dtde)
         {
             // no op
@@ -902,6 +891,8 @@ public class JTModuleContainerUI extends ComponentUI
         {
             DragSourceContext context = dsde.getDragSourceContext();
 
+            boolean invalid = false;
+            
             switch (getSourceForEvent(dsde))
             {
                 case DRAG_MODULES_CREATE:
@@ -914,8 +905,20 @@ public class JTModuleContainerUI extends ComponentUI
                     context.setCursor(DragSource.DefaultCopyDrop);
                     break;
                 // reject ...
-                case DRAG_INVALID: break; 
+                case DRAG_INVALID: invalid = true; break;
                 default: break;
+            }
+            
+            if (invalid)
+            {
+                if ((context.getSourceActions() & DnDConstants.ACTION_COPY)>0)
+                    context.setCursor(DragSource.DefaultCopyNoDrop);
+                else if ((context.getSourceActions() & DnDConstants.ACTION_MOVE)>0)
+                    context.setCursor(DragSource.DefaultMoveNoDrop);
+                else if ((context.getSourceActions() & DnDConstants.ACTION_LINK)>0)
+                    context.setCursor(DragSource.DefaultLinkNoDrop);
+                else
+                    context.setCursor(DragSource.DefaultCopyNoDrop);
             }
         }
 
@@ -934,7 +937,7 @@ public class JTModuleContainerUI extends ComponentUI
                 else
                     return DRAG_MODULES_FROM_OTHER_CONTAINER;
             }
-            
+
             if (PDragDrop.isModuleDescriptorFlavorSupported(transfer))
                 return DRAG_MODULES_CREATE;
             
@@ -943,11 +946,11 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void dragExit(DragSourceEvent dse)
         {
-            jtcUI.setPaintableSelection(null); // 
+            //jtcUI.setPaintableSelection(null); // 
         }
 
         public void dragOver(DragSourceDragEvent dsde)
-        {
+        {/*
             PaintableSelection ps = jtcUI.paintableSelection;
             if (ps != null)
             {
@@ -955,6 +958,7 @@ public class JTModuleContainerUI extends ComponentUI
                 ps.bounds.setLocation(dsde.getLocation());
                 ps.repaint(jtcUI.jtc);
             }
+            */
         }
 
         public void dropActionChanged(DragSourceDragEvent dsde)
@@ -1033,7 +1037,7 @@ public class JTModuleContainerUI extends ComponentUI
         {
         	if (jtcUI.isPasting) {
         		jtcUI.isPasting = false;
-        		System.out.println("stop pasting");
+        		// System.out.println("stop pasting");
         		return;
         	}
             JTModuleContainer mc = jtcUI.getModuleContainer();

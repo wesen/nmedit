@@ -26,6 +26,7 @@ import net.sf.nmedit.jpatch.CopyOperation;
 import net.sf.nmedit.jpatch.MoveOperation;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainerDescriptor;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.PNMMorphSection.Assignments;
 import net.sf.nmedit.jpatch.clavia.nordmodular.misc.Cycles;
@@ -90,12 +91,6 @@ public class VoiceArea extends PBasicModuleContainer
         mcset.remove(module);
     }
 
-    protected boolean canAdd(int index, PModule module)
-    {
-        return super.canAdd(index, module)
-        && !(isPolyVoiceArea() && module.getBooleanAttribute("cva-only", false));
-    }
-    
     public static final int UPDATE =-1;
     public static final int MOVE = 0;
     public static final int ADD = 1;
@@ -191,4 +186,10 @@ public class VoiceArea extends PBasicModuleContainer
     	return new NMCopyOperation(this);
     }
 
+    public boolean canAdd(PModuleDescriptor descriptor)
+    {
+        return super.canAdd(descriptor) &&
+        !(isPolyVoiceArea() && descriptor.getBooleanAttribute("cva-only", false));
+    }
+    
 }

@@ -741,7 +741,15 @@ public class JTModuleContainer extends JTBaseComponent
             dtde.rejectDrop();
             return;
         }
-        mc.add(module);
+        boolean moduleAdded = mc.add(module);
+        
+        if (!moduleAdded)
+        {
+            
+            dtde.rejectDrop();
+            return;
+        }
+        
         // TODO short after dropping a new module and then moving it
         // causes a NullPointerException in the next line
         PModuleContainer parent = module.getParentComponent();
