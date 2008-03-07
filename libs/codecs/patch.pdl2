@@ -740,6 +740,14 @@ SynthSettings :=
 	knobMode:1
 	0:5
 	String$name
+	(MidiChannelSlots4$$
+	|MidiChannelSlots1$$)
+	?ExtendedSynthSettings$extended
+	;
+
+// micro modular
+MidiChannelSlots4 :=
+    %slotcount:8 = (4)
 	0:3
 	midiChannelSlot0:5
 	27:8
@@ -752,8 +760,23 @@ SynthSettings :=
 	0:3
 	midiChannelSlot3:5
 	27:8
-	?ExtendedSynthSettings$extended
-	;
+    ;
+// nord modular
+MidiChannelSlots1 :=
+    %slotcount:8 = (1)
+	0:3
+	midiChannelSlot0:5
+	27:8
+	0:3
+	midiChannelSlot1:5
+	0:8
+	0:3
+	midiChannelSlot2:5
+	0:8
+	0:3
+	midiChannelSlot3:5
+	0:8
+    ;
 
 ExtendedSynthSettings :=
     0x07:8
