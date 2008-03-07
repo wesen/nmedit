@@ -181,7 +181,6 @@ public abstract class JTControl extends JTComponent implements ChangeListener
     @BindParameter(name="parameterExtension")
     public void setExtensionAdapter(JTControlAdapter adapter)
     {
-    
         JTControlAdapter oldAdapter = extensionAdapter;
         this.extensionAdapter = adapter;
      
@@ -299,9 +298,9 @@ public abstract class JTControl extends JTComponent implements ChangeListener
     public void setExtNormalizedValue(double value)
     {    	
         if (extensionAdapter != null) {
-            extensionAdapter.setNormalizedValue(value);            
+            extensionAdapter.setNormalizedValue(value);  
+            repaint();          
         }
-        repaint();
     }
 
     public int getExtDefaultValue()
