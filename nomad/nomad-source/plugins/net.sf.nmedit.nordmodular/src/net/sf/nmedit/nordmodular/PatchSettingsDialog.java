@@ -61,6 +61,7 @@ public class PatchSettingsDialog
     private PatchSettingsFrm frm;
     
     private FileService service;
+    JTextArea notesTextArea = new JTextArea();
     
     private PatchSettingsDialog(NMPatch patch, FileService service)
     {
@@ -114,11 +115,10 @@ public class PatchSettingsDialog
 
     protected JComponent createNotesDialog()
     {
-        JTextArea ta = new JTextArea();
-        ta.setFont(new Font("monospaced", Font.PLAIN, 11));
-        ta.setText(patch.getNote());
+        notesTextArea.setFont(new Font("monospaced", Font.PLAIN, 11));
+        notesTextArea.setText(patch.getNote());
         
-        return ta;
+        return notesTextArea;
     }
     
     private JComponent text(String text)
@@ -248,6 +248,8 @@ public class PatchSettingsDialog
         header.setValueWithoutNotification(Format.HEADER_REQUESTED_VOICES, (Integer) frm.spRequestedVoices.getValue());
         
         header.firePatchSettingsChanged();
+        
+        patch.setNote(notesTextArea.getText());
     }
     
     double[] stats(VoiceArea va)
