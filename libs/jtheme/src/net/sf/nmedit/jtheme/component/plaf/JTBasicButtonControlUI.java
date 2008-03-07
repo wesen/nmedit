@@ -266,8 +266,7 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
                 // vertical
                 float btnf = h/(float)range;
                 btnh = (int)btnf;
-                dx = 0;
-                System.out.println(btnf);
+                dx = 0;                
                 dy = btnf;
             }
             
@@ -291,10 +290,17 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
                 {
                 	if (control.isIncrementModeEnabled())
                 	{ // overlay on the + button
-                		xRect = 0;
-	                	yRect = 0;
-	                	wRect = btnw;
-	                	hRect = btnh;
+                		if (control.getOrientation() == HORIZONTAL)
+                		{
+                			xRect = (int)dx;
+    	                	yRect = (int)dy;
+                		} 
+                		else {
+                			xRect = 0;
+	                		yRect = 0;
+                		}
+                		wRect = btnw;
+                		hRect = btnh;
                 	} 
                 	else
                 	{
@@ -308,8 +314,16 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
                 else 
                 {
                 	if (control.isIncrementModeEnabled()) {
-                		xRect = (int)dx;
-	                	yRect = (int)dy;
+                		if (control.getOrientation() == HORIZONTAL)
+                		{
+                			xRect = 0;
+	                		yRect = 0;
+                		} 
+                		else {
+                			xRect = (int)dx;
+    	                	yRect = (int)dy;                			
+                		}
+                		
 	                	wRect = btnw;
 	                	hRect = btnh;
                 		
