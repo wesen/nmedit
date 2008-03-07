@@ -1,0 +1,84 @@
+[Header]
+Version=Nord Modular patch 3.0
+0 127 0 127 2 0 0 1 4000 2 1 1 0 0 0 0 1 1 1 1 1 1 1 
+[/Header]
+[ModuleDump]
+1
+1 73 0 14 
+2 73 0 18 
+3 70 0 16 
+4 70 0 20 
+5 73 0 10 
+6 73 0 12 
+7 70 0 8 
+8 73 0 6 
+9 73 0 2 
+10 73 0 4 
+11 70 0 0 
+[/ModuleDump]
+[ModuleDump]
+0
+[/ModuleDump]
+[CableDump]
+1
+2 1 0 0 5 0 1 
+2 1 1 0 4 0 1 
+2 2 0 0 6 0 1 
+2 2 1 0 3 0 1 
+2 3 0 0 1 0 1 
+2 4 0 0 2 0 1 
+2 5 0 0 7 0 0 
+2 6 0 0 7 0 1 
+2 7 0 0 8 0 1 
+2 8 0 0 10 0 1 
+2 8 1 0 9 0 1 
+2 9 1 0 4 0 1 
+2 10 0 0 11 0 1 
+2 10 1 0 3 0 1 
+6 5 1 0 6 1 0 
+[/CableDump]
+[CableDump]
+0
+[/CableDump]
+[ParameterDump]
+1
+1 73 1 1 
+2 73 1 1 
+5 73 1 0 
+6 73 1 0 
+8 73 1 1 
+9 73 1 0 
+10 73 1 0 
+[/ParameterDump]
+[ParameterDump]
+0
+[/ParameterDump]
+[CustomDump]
+1
+[/CustomDump]
+[CustomDump]
+0
+[/CustomDump]
+[NameDump]
+1
+1 1S$2
+2 1R$2
+3 Q$2
+4 -Q$2
+5 S$2
+6 R$2
+7 D$2
+8 d$2
+9 J$2
+10 and$2
+11 K$2
+[/NameDump]
+[NameDump]
+0
+[/NameDump]
+[Notes]
+JK-FlipFlop
+-----------
+inputs:J,K,T(clock)
+T:cable(S,R)
+[/Notes]
