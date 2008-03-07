@@ -441,6 +441,8 @@ public class Nomad
         fileSave(true);
     }
     
+    private File lastSaveInFolderLocation = null;
+    
     public void fileSave(boolean saveAs)
     {
         Document d = pageContainer.getSelection();
@@ -469,6 +471,7 @@ public class Nomad
         
 
         JFileChooser chooser = new JFileChooser();
+        chooser.setSelectedFile(lastSaveInFolderLocation);
         chooser.setMultiSelectionEnabled(false);
 
         Iterator<FileService> iter = ServiceRegistry.getServices(FileService.class);
@@ -487,7 +490,8 @@ public class Nomad
         File sfile = d.getFile();
         if (sfile == null && d.getTitle()!=null)
         	sfile = new File(d.getTitle());
-        chooser.setSelectedFile(sfile);
+        if (sfile != null)
+            chooser.setSelectedFile(sfile);
         
         if (!(chooser.showSaveDialog(mainWindow)==JFileChooser.APPROVE_OPTION)) return;
         
@@ -504,6 +508,8 @@ public class Nomad
                 return;
 
             service.save(d, newFile);
+            
+            lastSaveInFolderLocation = newFile.getParentFile();
         }
         else
         {
