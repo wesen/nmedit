@@ -4,6 +4,7 @@
 package net.sf.nmedit.jtheme.component.plaf.mcui;
 
 import java.awt.Component;
+import java.awt.Point;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
@@ -13,12 +14,14 @@ import javax.swing.undo.UndoableEditSupport;
 
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
+import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.PatchUtils;
 import net.sf.nmedit.jpatch.dnd.PModuleTransferData;
 import net.sf.nmedit.jpatch.dnd.PModuleTransferDataWrapper;
 import net.sf.nmedit.jpatch.history.PUndoableEditSupport;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
+import net.sf.nmedit.jtheme.util.ModuleImageRenderer;
 
 public class ContainerAction extends AbstractAction
 {
@@ -37,6 +40,7 @@ public class ContainerAction extends AbstractAction
     public static final String COPY = "copy";
     public static final String PASTE = "paste";
     public static final String CUT = "cut";
+    public static final String ABORT_PASTE = "abortPaste";
     
     private Clipboard clipBoard = null;
 
@@ -92,6 +96,8 @@ public class ContainerAction extends AbstractAction
             } else if (key == CUT) {
             	if (getClipBoard() != null)
             		cut();
+            } else if (key == ABORT_PASTE) {
+            	jmc.getUI().abortPaste();
             }
         }
     }
@@ -221,21 +227,36 @@ public class ContainerAction extends AbstractAction
 	}
 
     private void cut() {
-		getClipBoard().setContents(new PModuleTransferDataWrapper(jmc.getModuleContainer(), jmc.getSelectedPModules()), null);
-		delete();
+    	copy();
+    	delete();
 	}
 
 	private void paste() {
 		Transferable t = getClipBoard().getContents(this);
-		if (t instanceof PModuleTransferData) {
-			PModuleTransferData tdata = (PModuleTransferData)t;
-			for (PModule m : tdata.getModules()) {
-				System.out.println("paste " + m);
-			}
+		if (t instanceof PModuleTransferDataWrapper) {
+			PModuleTransferDataWrapper tdata = (PModuleTransferDataWrapper)t;
+			jmc.getUI().startPaste(tdata);
 		}
 	}
 
 	private void copy() {
-		getClipBoard().setContents(new PModuleTransferDataWrapper(jmc.getModuleContainer(), jmc.getSelectedPModules()), null);
+    	PPatch newPatch = jmc.getModuleContainer().createPatchWithModules(jmc.getSelectedPModules());
+		PModuleContainer newMc = null;
+		
+		for (int i = 0; i < newPatch.getModuleContainerCount(); i++) {
+			newMc = newPatch.getModuleContainer(i);
+			if (newMc.getModuleCount() > 0)
+				break;
+		}
+		if (newMc == null)
+			return;
+		
+    	PModuleTransferDataWrapper tdata =new PModuleTransferDataWrapper(newMc, newMc.getModules(), new Point(5, 5));
+		ModuleImageRenderer mir = new ModuleImageRenderer(jmc.getSelectedModules());
+        mir.setForDragAndDrop(true);
+        mir.setPaintExtraBorder(true);
+        tdata.setTransferImage(mir.render());
+
+		getClipBoard().setContents(tdata, null);
 	}    
 }

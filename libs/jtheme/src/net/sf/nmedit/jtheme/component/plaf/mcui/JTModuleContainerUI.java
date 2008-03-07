@@ -28,6 +28,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.KeyboardFocusManager;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.datatransfer.DataFlavor;
@@ -51,11 +53,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,6 +73,7 @@ import java.util.List;
 
 import javax.swing.Action;
 import javax.swing.ActionMap;
+import javax.swing.FocusManager;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
@@ -87,6 +94,7 @@ import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
+import net.sf.nmedit.jtheme.component.JTLayerRoot;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.plaf.PaintableSelection;
@@ -430,7 +438,10 @@ public class JTModuleContainerUI extends ComponentUI
 	 
             KeyStroke deleteModules = KeyStroke.getKeyStroke(vk_delete, 0);	 
             map.put(deleteModules, ContainerAction.DELETE);
-            
+
+            KeyStroke escape = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);	 
+            map.put(escape, ContainerAction.ABORT_PASTE);
+
             KeyStroke selectAllKey;
             if (Platform.isFlavor(Platform.OS.MacOSFlavor)) {
             	selectAllKey = KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.META_DOWN_MASK);
@@ -462,6 +473,7 @@ public class JTModuleContainerUI extends ComponentUI
         	map.put(ContainerAction.CUT, new ContainerAction(mc, ContainerAction.CUT, ApplicationClipboard.getApplicationClipboard()));
         	map.put(ContainerAction.PASTE,
         	        new ContainerAction(mc, ContainerAction.PASTE, ApplicationClipboard.getApplicationClipboard()));
+        	map.put(ContainerAction.ABORT_PASTE, new ContainerAction(mc, ContainerAction.ABORT_PASTE));
         	
             InputMap im = createInputMapWhenFocused();	 
             SwingUtilities.replaceUIInputMap(mc, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, im);	 
@@ -485,6 +497,7 @@ public class JTModuleContainerUI extends ComponentUI
             installAtModuleContainer(jtc);
                         
             installKeyboardActions(jtc);
+
             if (dndAllowed)
             {
                 for (int i=jtc.getComponentCount()-1;i>=0;i--)
@@ -743,7 +756,7 @@ public class JTModuleContainerUI extends ComponentUI
 
                     if (data!=null)
                     {
-                        paintDragOver(jtcUI.getCurrentTransfer(), dtde);
+                        jtcUI.paintDragOver(jtcUI.getCurrentTransfer(), dtde.getLocation());
                         return ;
                     }
                 }
@@ -756,7 +769,7 @@ public class JTModuleContainerUI extends ComponentUI
             if (FileDnd.testFileFlavor(dtde.getTransferable().getTransferDataFlavors())) {
             	dtde.acceptDrag(DnDConstants.ACTION_COPY);
             	if (jtcUI.getCurrentTransfer() != null) { 
-            		paintDragOver(jtcUI.getCurrentTransfer(), dtde);
+            		jtcUI.paintDragOver(jtcUI.getCurrentTransfer(), dtde.getLocation());
             		return;
             	}
             }
@@ -767,40 +780,24 @@ public class JTModuleContainerUI extends ComponentUI
             dtde.rejectDrag();       
         }
 
-        private transient Rectangle cachedRectangle;
-        
-        private void paintDragOver(ModulesBoundingBox modulesBoundingBox, DropTargetDragEvent dtde)
-        {
-            Rectangle box = (cachedRectangle = modulesBoundingBox.getBoundingBox(cachedRectangle));
-            
-            Point o = modulesBoundingBox.getDragStartLocation();
-            Point p = new Point(dtde.getLocation());
-                     
-            p.x =p.x-o.x;
-            p.y =p.y-o.y;
-
-            box.x += p.x;
-            box.y += p.y;
-
-            jtcUI.updateDnDBoundingBox(box);
-        }
-
         public void drop(DropTargetDropEvent dtde)
         {
             jtcUI.setCurrentTransfer(null, null);
             jtcUI.setPaintableSelection(null);
             
+            JTModuleContainer jtmc = jtcUI.getModuleContainer();
+            
             Transferable transfer = dtde.getTransferable();
 
             if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable()))
             {
-            	dropNewModule(dtde);
+            	jtmc.dropNewModule(dtde);
             } else if (dtde.isDataFlavorSupported(PDragDrop.ModuleSelectionFlavor)
                     && dtde.isLocalTransfer())
             {
-            	copyMoveModules(dtde);
+            	jtmc.copyMoveModules(dtde);
             } else if (FileDnd.testFileFlavor(transfer.getTransferDataFlavors())) {
-            	dropPatchFile(dtde);
+            	jtmc.dropPatchFile(dtde);
             } else {
                 dtde.rejectDrop();
                 dtde.dropComplete(false);
@@ -814,202 +811,7 @@ public class JTModuleContainerUI extends ComponentUI
             
         }
         
-        private void dropPatchFile(DropTargetDropEvent dtde) {
-            Transferable transfer = dtde.getTransferable();
-        	PPatch patch = getModuleContainer().getPatchContainer().getPatch();
-			DataFlavor fileFlavor = FileDnd.getFileFlavor(transfer.getTransferDataFlavors());
-			List<File> files = FileDnd.getTransferableFiles(fileFlavor, transfer);
-			if (files.size() == 1) {
-				PPatch newPatch = patch.createFromFile(files.get(0));
-				if (newPatch != null) {
-					if (getModuleContainer().dropPatch(newPatch, dtde.getLocation())) {
-						dtde.dropComplete(true);
-					} else {
-						dtde.rejectDrop();
-						dtde.dropComplete(false);
-					}
-                    jtcUI.updateDnDBoundingBox(null);
-				} else {
-					dtde.rejectDrop();
-					dtde.dropComplete(false);
-				}
-			} else {
-				dtde.rejectDrop();
-				dtde.dropComplete(false);
-			}
-        }
-        
-        private void copyMoveModules(DropTargetDropEvent dtde) {
-        	DataFlavor chosen = PDragDrop.ModuleSelectionFlavor;
-            Transferable transfer = dtde.getTransferable();
-            Object data = null;
-            
-            try {
-                // Get the data
-                dtde.acceptDrop(dtde.getDropAction() & (DnDConstants.ACTION_MOVE | DnDConstants.ACTION_COPY));
-                data = transfer.getTransferData(chosen);
-            } catch (Throwable t) {
-                t.printStackTrace();
-                dtde.dropComplete(false);
-                return;
-            }
-
-            if (data!=null && data instanceof PModuleTransferData)
-            {
-                // Cast the data and create a nice module.
-                PModuleTransferData tdata = ((PModuleTransferData)data);
-                boolean isSamePatch = false;
-                if (tdata.getSourcePatch() == getModuleContainer().getPatchContainer().getPatch())
-                	isSamePatch = true;
-                
-                //Point p = dtde.getLocation();
-
-                int action = dtde.getDropAction();
-
-                if ((action&DnDConstants.ACTION_MOVE)!=0 && isSamePatch)
-                {
-                	MoveOperation op = tdata.getSourceModuleContainer().createMoveOperation();
-                	op.setDestination(getModuleContainer().getModuleContainer());
-                    executeOperationOnSelection(tdata, dtde, op);
-                }
-                else
-                {
-                	CopyOperation op = tdata.getSourceModuleContainer().createCopyOperation();                	
-                	// check for shift pressed to create links XXX
-                	if (false) {
-                		op.setDuplicate(true);
-                	}
-                	op.setDestination(getModuleContainer().getModuleContainer());
-                    executeOperationOnSelection(tdata, dtde, op);
-                }
-
-            }
-            dtde.dropComplete(true);
-        }
-        
-        private void dropNewModule(DropTargetDropEvent dtde) {
-            PModuleContainer mc = getModuleContainer().getModuleContainer();
-            PModuleDescriptor md = PDragDrop.getModuleDescriptor(dtde.getTransferable());
-            if (md == null || mc == null)
-            {
-                dtde.rejectDrop();
-                return;
-            }
-            
-            Point l = dtde.getLocation();
-            
-            PModule module;
-            try
-            {
-                module = mc.createModule(md);
-                module.setScreenLocation(l.x, l.y);
-            }
-            catch (InvalidDescriptorException e)
-            {
-                e.printStackTrace();
-                dtde.rejectDrop();
-                return;
-            }
-            mc.add(module);
-            // TODO short after dropping a new module and then moving it
-            // causes a NullPointerException in the next line
-            PModuleContainer parent = module.getParentComponent();
-            if (parent != null) {
-                JTCableManager cm = jtcUI.jtc.getCableManager();
-                try
-                {
-                    cm.setAutoRepaintDisabled();
-                	MoveOperation move = parent.createMoveOperation();
-                	move.setScreenOffset(0, 0);
-                	move.add(module);
-                	move.move();
-                }
-                finally
-                {
-                    cm.clearAutoRepaintDisabled();
-                }
-            } else {
-            	// XXX concurrency problems probably ?!
-            	throw new RuntimeException("Drop problem on illegal modules: for example 2 midi globals");
-            }
-   
-            dtde.acceptDrop(DnDConstants.ACTION_COPY);
-     
-            // compute dimensions of container
-            jtcUI.jtc.revalidate();
-            jtcUI.jtc.repaint();
-            dtde.dropComplete(true);
-        }
-
-        private void executeOperationOnSelection(PModuleTransferData tdata, DropTargetDropEvent dtde, MoveOperation op)
-        {
-            Point o = tdata.getDragStartLocation();
-            Point p = new Point(dtde.getLocation());
-
-            p.x = p.x-o.x;
-            p.y = p.y-o.y;
-            
-            JTModuleContainer jtmc = getModuleContainer();
-            PUndoableEditSupport ues = jtmc.getModuleContainer().getEditSupport();
-            JTCableManager cm = jtmc.getCableManager();
-            PModuleContainer mc = jtmc.getModuleContainer();
-            
-            for (PModule module: tdata.getModules()) {
-                op.add(module);
-            }
-            
-            op.setScreenOffset(p.x, p.y);
-            
-            try
-            {
-            	cm.setAutoRepaintDisabled();
-            	String name = (op instanceof CopyOperation ? "copy modules" : "move modules");
-            	if (tdata.getModules().size() > 1)
-            		ues.beginUpdate(name);
-            	else
-            		ues.beginUpdate();
-                try {
-                	op.move();
-                } finally {
-                    ues.endUpdate();
-                }
-                
-                Collection<? extends PModule> moved = op.getMovedModules();
-                            
-                int maxx = 0;
-                int maxy = 0;
-                
-                for (JTModule jtmodule: NmSwingUtilities.getChildren(JTModule.class, jtmc))
-                {
-                    PModule module = jtmodule.getModule();
-                    if (moved.contains(module))
-                    {
-                        jtmodule.setLocation(module.getScreenLocation());
-    
-                        maxx = Math.max(jtmodule.getX(), maxx)+jtmodule.getWidth();
-                        maxy = Math.max(jtmodule.getY(), maxy)+jtmodule.getHeight();
-                    }
-                }
-                
-                Collection<Cable> cables = new ArrayList<Cable>(20); 
-                cm.getCables(cables, moved);
-                for (Cable cable: cables)
-                {
-                    cm.update(cable);
-                    cable.updateEndPoints();
-                    cm.update(cable);
-                }
-
-                jtmc.revalidate();
-                jtmc.repaint();
-            }
-            finally
-            {
-                cm.clearAutoRepaintDisabled();
-            }
-        }
-
-        public void dropActionChanged(DropTargetDragEvent dtde)
+                public void dropActionChanged(DropTargetDragEvent dtde)
         {
             // no op
             if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable()))
@@ -1031,26 +833,29 @@ public class JTModuleContainerUI extends ComponentUI
         public void dragGestureRecognized(DragGestureEvent dge)
         {
         	JTModuleContainer jtc = getModuleContainer();
-            JTModule module = (JTModule) dge.getComponent();
-            if (!module.isEnabled()) return;
+        	Component src = dge.getComponent();
+        	if (src instanceof JTModule) {
+        		JTModule module = (JTModule) dge.getComponent();
+        		if (!module.isEnabled()) return;
           
-            if (jtc.isSelectionEmpty())
-            {
-                jtc.addSelection(module);
-            }
-            else if (jtc.isInSelection(module))
-            {
-                // thats ok
-            }
-            else
-            {
-                if (!jtc.isInSelection(module))
-                {
-                	jtc.clearSelection();
-                	jtc.addSelection(module);
-                }
-            }
-
+        		if (jtc.isSelectionEmpty())
+        		{
+        			jtc.addSelection(module);
+        		}
+        		else if (jtc.isInSelection(module))
+        		{
+        			// thats ok
+        		}
+        		else
+        		{
+        			if (!jtc.isInSelection(module))
+        			{
+        				jtc.clearSelection();
+        				jtc.addSelection(module);
+        			}
+        		}
+        	}
+        	
             if (!jtc.isSelectionEmpty())
             {
                 Component c = dge.getComponent();
@@ -1138,13 +943,11 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void dragExit(DragSourceEvent dse)
         {
-        	// no op
             jtcUI.setPaintableSelection(null); // 
         }
 
         public void dragOver(DragSourceDragEvent dsde)
         {
-            // no op
             PaintableSelection ps = jtcUI.paintableSelection;
             if (ps != null)
             {
@@ -1228,6 +1031,11 @@ public class JTModuleContainerUI extends ComponentUI
 
         public void mousePressed(MouseEvent e)
         {
+        	if (jtcUI.isPasting) {
+        		jtcUI.isPasting = false;
+        		System.out.println("stop pasting");
+        		return;
+        	}
             JTModuleContainer mc = jtcUI.getModuleContainer();
             if (e.getComponent() == mc) // do not rob focus from module
             {
@@ -1271,8 +1079,6 @@ public class JTModuleContainerUI extends ComponentUI
 		}
 
         HashSet<JTModule> oldSelection = null;
-        
-
         
         private void startNewSelectionRectangle(MouseEvent e) {
         	JTModuleContainer mc = jtcUI.getModuleContainer();
@@ -1355,9 +1161,11 @@ public class JTModuleContainerUI extends ComponentUI
 		}
 
 		public void mouseMoved(MouseEvent e) {
-			// TODO Auto-generated method stub
+//			if (jtcUI.isPasting) {
+//	        	jtcUI.updateScrollPosition(e.getPoint());
+//	        	paintDragOver(jtcUI.getCurrentTransfer(), e.getPoint());
+//			}
 		}
-        
     }
 
 	public void updateScrollPosition(Point location) {
@@ -1385,5 +1193,127 @@ public class JTModuleContainerUI extends ComponentUI
         
         getModuleContainer().scrollRectToVisible(scrollTo);
 	}
+
+    private transient Rectangle cachedRectangle;
     
+    private void paintDragOver(ModulesBoundingBox modulesBoundingBox, Point p)
+    {
+        Rectangle box = (cachedRectangle = modulesBoundingBox.getBoundingBox(cachedRectangle));
+        Point o = modulesBoundingBox.getDragStartLocation();
+//        Point p = new Point(dtde.getLocation());
+                 
+        p.x =p.x-o.x;
+        p.y =p.y-o.y;
+
+        box.x += p.x;
+        box.y += p.y;
+
+        updateDnDBoundingBox(box);
+    }
+
+
+	protected class PasteEventHandler implements MouseListener, MouseMotionListener, FocusListener {
+		protected JTModuleContainerUI jtcUI;
+		
+		public PasteEventHandler(JTModuleContainerUI ui) {
+			this.jtcUI = ui;
+		}
+		
+		public void mouseClicked(MouseEvent e) {
+			jtcUI.pasteAt(e.getPoint());
+		}
+
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void mouseDragged(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void mouseMoved(MouseEvent e) {
+            jtcUI.paintDragOver(jtcUI.getCurrentTransfer(), e.getPoint());
+		}
+
+		Object previousOwner = null;
+
+
+		public void focusGained(FocusEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void focusLost(FocusEvent e) {
+    		jtcUI.abortPaste();
+			
+		}
+
+	}
+
+    private boolean isPasting = false;
+    PasteEventHandler handler = null;
+    PModuleTransferDataWrapper pasteTransfer = null;
+
+    public void pasteAt(Point p) {
+    	getModuleContainer().copyModules(pasteTransfer, p);
+    	abortPaste();
+    }
+    
+	public void abortPaste() {
+		if (isPasting) {
+            updateDnDBoundingBox(null);
+
+			JTLayerRoot root = getModuleContainer().getLayerRoot();
+			if (handler != null) {
+				root.removeMouseListener(handler);
+				root.removeMouseMotionListener(handler);
+			}
+			getModuleContainer().getLayerRoot().ignoreMouseEvents();
+			isPasting = false;
+			pasteTransfer = null;
+		}
+		
+	}
+	
+	public void startPaste(PModuleTransferDataWrapper transfer) {
+		isPasting = true;
+		if (handler == null) {
+			handler = new PasteEventHandler(this);
+			getModuleContainer().addFocusListener(handler);
+		}
+		pasteTransfer = transfer;
+
+//		FocusManager focusManager = FocusManager.getCurrentManager();
+//        focusManager.addPropertyChangeListener(handler);
+        
+        getModuleContainer().requestFocus();
+        
+		JTLayerRoot root = getModuleContainer().getLayerRoot();
+		root.addMouseListener(handler);
+		root.addMouseMotionListener(handler);
+		root.captureMouseEvents();
+        
+		
+		Point onScreen = MouseInfo.getPointerInfo().getLocation();
+		SwingUtilities.convertPointFromScreen(onScreen, getModuleContainer());
+        setCurrentTransfer(transfer.getModules(), new Point(0, 0), transfer.getTransferImage());
+		paintDragOver(getCurrentTransfer(), onScreen);
+	}
 }
