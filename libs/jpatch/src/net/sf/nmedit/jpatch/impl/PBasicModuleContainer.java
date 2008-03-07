@@ -366,10 +366,10 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
 		
 		CopyOperation copy = createCopyOperation();
 		copy.setDestination(dstMc);
-        for (PModule module: getModules()) {
+        for (PModule module: modules) {
             copy.add(module);
         }
-        ModulesBoundingBox bbox = new ModulesBoundingBox(getModules(), new Point(0, 0));
+        ModulesBoundingBox bbox = new ModulesBoundingBox(modules, new Point(0, 0));
         Rectangle r = bbox.getBoundingBox();
         copy.setScreenOffset(-r.x, -r.y);
         copy.copy();
