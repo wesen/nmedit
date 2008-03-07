@@ -163,12 +163,14 @@ public abstract class JTControl extends JTComponent implements ChangeListener
             {
                 oldAdapter.setComponent(null);
                 oldAdapter.setChangeListener(null);
+                setToolTipText(null);
             }
             
             if (adapter != null)
             {
                 adapter.setComponent(this);
                 adapter.setChangeListener(this);
+                setToolTipText(adapter.getParameter().getName());
             }
             
             repaint();
