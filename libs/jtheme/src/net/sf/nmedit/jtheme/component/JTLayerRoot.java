@@ -21,12 +21,17 @@ package net.sf.nmedit.jtheme.component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JComponent;
+
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 
 public class JTLayerRoot extends JTBaseComponent
 {
-
+	private boolean ignoreMouseEvents = true;
+	
     /**
      * 
      */
@@ -40,7 +45,10 @@ public class JTLayerRoot extends JTBaseComponent
     public boolean contains(int x, int y)
     {
         // ensure this component gets no mouse events or similar events
-        return false;
+    	if (ignoreMouseEvents)
+    		return false;
+    	else
+    		return super.contains(x, y);
     }
     
     private JTCableManager cableManager;
@@ -65,7 +73,7 @@ public class JTLayerRoot extends JTBaseComponent
     
     protected void paintComponent(Graphics g)
     {
-        // nothing to paint
+        paintCables(g);
     }
     
     protected void paintCables(Graphics g)
@@ -84,13 +92,16 @@ public class JTLayerRoot extends JTBaseComponent
         }   
     }
     
+    
     public void setSize(Dimension r) {
     	super.setSize(r);
     }
     
-    protected void paintChildren(Graphics g)
-    {
-        paintCables(g);
+    public void ignoreMouseEvents() {
+    	ignoreMouseEvents = true;
     }
     
+    public void captureMouseEvents() {
+    	ignoreMouseEvents = false;
+    }
 }

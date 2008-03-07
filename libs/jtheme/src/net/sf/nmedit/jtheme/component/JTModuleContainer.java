@@ -30,6 +30,11 @@ import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.LayoutManager2;
 import java.awt.Point;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTargetDropEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -40,23 +45,31 @@ import java.util.Set;
 import javax.swing.border.Border;
 
 import net.sf.nmedit.jpatch.CopyOperation;
+import net.sf.nmedit.jpatch.InvalidDescriptorException;
+import net.sf.nmedit.jpatch.MoveOperation;
 import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnectionManager;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
+import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PModuleMetrics;
 import net.sf.nmedit.jpatch.PPatch;
+import net.sf.nmedit.jpatch.dnd.PDragDrop;
+import net.sf.nmedit.jpatch.dnd.PModuleTransferData;
 import net.sf.nmedit.jpatch.event.PConnectionEvent;
 import net.sf.nmedit.jpatch.event.PConnectionListener;
 import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
 import net.sf.nmedit.jpatch.event.PModuleContainerListener;
+import net.sf.nmedit.jpatch.history.PUndoableEditSupport;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.plaf.mcui.JTModuleContainerUI;
 import net.sf.nmedit.jtheme.store2.ModuleElement;
+import net.sf.nmedit.nmutils.dnd.FileDnd;
+import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
 
 public class JTModuleContainer extends JTBaseComponent 
 {
@@ -120,6 +133,10 @@ public class JTModuleContainer extends JTBaseComponent
     public int getSelectionSize()
     {
     	return selectionSet.size();
+    }
+    
+    public JTLayerRoot getLayerRoot() {
+    	return cableLayer;
     }
 
     public boolean isOnlyThisSelected(JTModule module)
@@ -622,5 +639,205 @@ public class JTModuleContainer extends JTBaseComponent
     	
     	return true;
 	}
+
+	public void dropPatchFile(DropTargetDropEvent dtde) {
+        Transferable transfer = dtde.getTransferable();
+    	PPatch patch = getModuleContainer().getPatch();
+		DataFlavor fileFlavor = FileDnd.getFileFlavor(transfer.getTransferDataFlavors());
+		List<File> files = FileDnd.getTransferableFiles(fileFlavor, transfer);
+		if (files.size() == 1) {
+			PPatch newPatch = patch.createFromFile(files.get(0));
+			if (newPatch != null) {
+				if (dropPatch(newPatch, dtde.getLocation())) {
+					dtde.dropComplete(true);
+				} else {
+					dtde.rejectDrop();
+					dtde.dropComplete(false);
+				}
+			} else {
+				dtde.rejectDrop();
+				dtde.dropComplete(false);
+			}
+		} else {
+			dtde.rejectDrop();
+			dtde.dropComplete(false);
+		}
+    }
     
+    public void copyMoveModules(DropTargetDropEvent dtde) {
+    	DataFlavor chosen = PDragDrop.ModuleSelectionFlavor;
+        Transferable transfer = dtde.getTransferable();
+        Object data = null;
+        
+        try {
+            // Get the data
+            dtde.acceptDrop(dtde.getDropAction() & (DnDConstants.ACTION_MOVE | DnDConstants.ACTION_COPY));
+            data = transfer.getTransferData(chosen);
+        } catch (Throwable t) {
+            t.printStackTrace();
+            dtde.dropComplete(false);
+            return;
+        }
+
+        if (data!=null && data instanceof PModuleTransferData)
+        {
+            // Cast the data and create a nice module.
+            PModuleTransferData tdata = ((PModuleTransferData)data);
+            boolean isSamePatch = false;
+            if (tdata.getSourcePatch() == getModuleContainer().getPatch())
+            	isSamePatch = true;
+            
+            //Point p = dtde.getLocation();
+
+            int action = dtde.getDropAction();
+
+            if ((action&DnDConstants.ACTION_MOVE)!=0 && isSamePatch)
+            {
+        		MoveOperation op = tdata.getSourceModuleContainer().createMoveOperation();
+        		op.setDestination(getModuleContainer());
+        		executeOperationOnSelection(tdata, dtde.getLocation(), op);
+            }
+            else
+            {
+            	copyModules(tdata, dtde.getLocation());
+            }
+
+        }
+        dtde.dropComplete(true);
+    }
+    
+    public void copyModules(PModuleTransferData tdata, Point p) {
+    	if (tdata != null && tdata.getSourceModuleContainer() != null) {
+        	CopyOperation op = tdata.getSourceModuleContainer().createCopyOperation();                	
+        	// check for shift pressed to create links XXX
+        	if (false) {
+        		op.setDuplicate(true);
+        	}
+        	op.setDestination(getModuleContainer());
+            executeOperationOnSelection(tdata, p, op);
+    	}
+    }
+    
+    public void dropNewModule(DropTargetDropEvent dtde) {
+        PModuleContainer mc = getModuleContainer();
+        PModuleDescriptor md = PDragDrop.getModuleDescriptor(dtde.getTransferable());
+        if (md == null || mc == null)
+        {
+            dtde.rejectDrop();
+            return;
+        }
+        
+        Point l = dtde.getLocation();
+        
+        PModule module;
+        try
+        {
+            module = mc.createModule(md);
+            module.setScreenLocation(l.x, l.y);
+        }
+        catch (InvalidDescriptorException e)
+        {
+            e.printStackTrace();
+            dtde.rejectDrop();
+            return;
+        }
+        mc.add(module);
+        // TODO short after dropping a new module and then moving it
+        // causes a NullPointerException in the next line
+        PModuleContainer parent = module.getParentComponent();
+        if (parent != null) {
+            JTCableManager cm = getCableManager();
+            try
+            {
+                cm.setAutoRepaintDisabled();
+            	MoveOperation move = parent.createMoveOperation();
+            	move.setScreenOffset(0, 0);
+            	move.add(module);
+            	move.move();
+            }
+            finally
+            {
+                cm.clearAutoRepaintDisabled();
+            }
+        } else {
+        	// XXX concurrency problems probably ?!
+        	throw new RuntimeException("Drop problem on illegal modules: for example 2 midi globals");
+        }
+
+        dtde.acceptDrop(DnDConstants.ACTION_COPY);
+ 
+        // compute dimensions of container
+        revalidate();
+        repaint();
+        dtde.dropComplete(true);
+    }
+
+    public void executeOperationOnSelection(PModuleTransferData tdata, Point p, MoveOperation op)
+    {
+        Point o = tdata.getDragStartLocation();
+
+        p.x = p.x-o.x;
+        p.y = p.y-o.y;
+        
+        JTModuleContainer jtmc = this;
+        PUndoableEditSupport ues = jtmc.getModuleContainer().getEditSupport();
+        JTCableManager cm = jtmc.getCableManager();
+        PModuleContainer mc = jtmc.getModuleContainer();
+        
+        for (PModule module: tdata.getModules()) {
+            op.add(module);
+        }
+        
+        op.setScreenOffset(p.x, p.y);
+        
+        try
+        {
+        	cm.setAutoRepaintDisabled();
+        	String name = (op instanceof CopyOperation ? "copy modules" : "move modules");
+        	if (tdata.getModules().size() > 1)
+        		ues.beginUpdate(name);
+        	else
+        		ues.beginUpdate();
+            try {
+            	op.move();
+            } finally {
+                ues.endUpdate();
+            }
+            
+            Collection<? extends PModule> moved = op.getMovedModules();
+                        
+            int maxx = 0;
+            int maxy = 0;
+            
+            for (JTModule jtmodule: NmSwingUtilities.getChildren(JTModule.class, jtmc))
+            {
+                PModule module = jtmodule.getModule();
+                if (moved.contains(module))
+                {
+                    jtmodule.setLocation(module.getScreenLocation());
+
+                    maxx = Math.max(jtmodule.getX(), maxx)+jtmodule.getWidth();
+                    maxy = Math.max(jtmodule.getY(), maxy)+jtmodule.getHeight();
+                }
+            }
+            
+            Collection<Cable> cables = new ArrayList<Cable>(20); 
+            cm.getCables(cables, moved);
+            for (Cable cable: cables)
+            {
+                cm.update(cable);
+                cable.updateEndPoints();
+                cm.update(cable);
+            }
+
+            jtmc.revalidate();
+            jtmc.repaint();
+        }
+        finally
+        {
+            cm.clearAutoRepaintDisabled();
+        }
+    }
+
+
 }
