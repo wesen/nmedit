@@ -290,15 +290,11 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
                 {
                 	if (control.isIncrementModeEnabled())
                 	{ // overlay on the + button
-                		if (control.getOrientation() == HORIZONTAL)
-                		{
-                			xRect = (int)dx;
-    	                	yRect = (int)dy;
-                		} 
-                		else {
-                			xRect = 0;
-	                		yRect = 0;
-                		}
+                		// TODO: check whether this inversion is needed, normally this is 
+                		// done previously, only increment mode need that. 
+                		xRect = control.getOrientation() == HORIZONTAL ? (int)dx:0;
+                		yRect = control.getOrientation() == HORIZONTAL ? (int)dy:0;
+                		
                 		wRect = btnw;
                 		hRect = btnh;
                 	} 
@@ -314,15 +310,8 @@ public class JTBasicButtonControlUI extends JTButtonControlUI implements SwingCo
                 else 
                 {
                 	if (control.isIncrementModeEnabled()) {
-                		if (control.getOrientation() == HORIZONTAL)
-                		{
-                			xRect = 0;
-	                		yRect = 0;
-                		} 
-                		else {
-                			xRect = (int)dx;
-    	                	yRect = (int)dy;                			
-                		}
+                		xRect = control.getOrientation() == HORIZONTAL ? 0:(int)dx;
+                		yRect = control.getOrientation() == HORIZONTAL ? 0:(int)dy;                		
                 		
 	                	wRect = btnw;
 	                	hRect = btnh;
