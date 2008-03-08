@@ -521,15 +521,6 @@ public class JTModuleContainer extends JTBaseComponent
         // no op
     }
     
-    protected void paintChildren(Graphics g)
-    {
-        super.paintChildren(g);
-        if (ui != null)
-        {
-            getUI().paintChildrenHack(g);
-        }
-    }
-
     public boolean isDnDAllowed()
     {
         return getContext().isDnDAllowed();
@@ -540,6 +531,7 @@ public class JTModuleContainer extends JTBaseComponent
         
         private boolean valid = false;
         private Dimension cachedSize = new Dimension();
+        private Insets cachedInsets = new Insets(0,0,0,0);
 
         public void invalidateLayout(Container target)
         {
@@ -570,9 +562,6 @@ public class JTModuleContainer extends JTBaseComponent
             JTModuleContainer mc = JTModuleContainer.this;
             synchronized (mc.getTreeLock())
             {
-                Insets insets = mc.getInsets();
-                dim.width += insets.left + insets.right;
-                dim.height += insets.top + insets.bottom;
                 for (int i=mc.getComponentCount()-1;i>=0;i--)
                 {
                     Component c = mc.getComponent(i);
@@ -584,7 +573,37 @@ public class JTModuleContainer extends JTBaseComponent
                 }
             }
             
-            cachedSize.setSize(dim);
+            boolean keepSize = false;
+            
+            JTLayerRoot cl = mc.cableLayer;
+            if (cl != null)
+            {
+                final int EXTRA = 200;
+                // also search through layers
+                synchronized (cl.getTreeLock())
+                {
+                    for (int i=cl.getComponentCount()-1;i>=0;i--)
+                    {
+                        Component c = cl.getComponent(i);
+                        dim.width = Math.max(dim.width, c.getX()+c.getWidth()+EXTRA);
+                        dim.height = Math.max(dim.height, c.getY()+c.getHeight()+EXTRA);
+                        keepSize = true;
+                    }
+                }
+            }
+            Insets insets = mc.getInsets(cachedInsets);
+            dim.width += insets.left + insets.right;
+            dim.height += insets.top + insets.bottom;
+            
+            if (keepSize)
+            {
+                cachedSize.width = Math.max(cachedSize.width, dim.width);
+                cachedSize.height = Math.max(cachedSize.height, dim.height);
+            }
+            else
+            {
+                cachedSize.setSize(dim);
+            }
             valid = true;
             return dim;
         }
@@ -633,6 +652,8 @@ public class JTModuleContainer extends JTBaseComponent
 			newMc = newPatch.getModuleContainer(i);
 			if (newMc.getModuleCount() > 0)
 				break;
+            else
+                newMc = null;
 		}
 		
 		if (newMc == null) {
@@ -640,8 +661,8 @@ public class JTModuleContainer extends JTBaseComponent
 		}
     	CopyOperation op = newMc.createCopyOperation();
     	op.setDestination(getModuleContainer());
-    	for (int i = 0; i < newMc.getModuleCount(); i++) {
-    		op.add(newMc.getModule(i + 1));
+        for (PModule module: newMc){
+    		op.add(module);
     	}
         op.setScreenOffset(location.x, location.y);
     	op.copy();		

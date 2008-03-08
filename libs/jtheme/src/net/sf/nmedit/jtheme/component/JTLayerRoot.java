@@ -21,9 +21,6 @@ package net.sf.nmedit.jtheme.component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
-
-import javax.swing.JComponent;
 
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
@@ -40,6 +37,10 @@ public class JTLayerRoot extends JTBaseComponent
     {
         super(context);
         setOpaque(false);
+        setJTFlag(FLAG_INVALIDATE, true);
+        setJTFlag(FLAG_VALIDATE, true);
+        setJTFlag(FLAG_REVALIDATE, true);
+        setJTFlag(FLAG_VALIDATE_TREE, true);
     }
     
     public boolean contains(int x, int y)
