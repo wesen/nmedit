@@ -33,9 +33,6 @@ import java.util.Queue;
 import javax.swing.event.EventListenerList;
 import javax.swing.undo.UndoableEdit;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnectionManager;
 import net.sf.nmedit.jpatch.PConnector;
@@ -45,6 +42,9 @@ import net.sf.nmedit.jpatch.PSignal;
 import net.sf.nmedit.jpatch.PUndoableEditFactory;
 import net.sf.nmedit.jpatch.event.PConnectionEvent;
 import net.sf.nmedit.jpatch.event.PConnectionListener;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * The reference implementation of interface {@link PConnectionManager}.
@@ -579,7 +579,36 @@ public class PBasicConnectionManager implements PConnectionManager
     
     public boolean remove(PConnector c)
     {
-        return removeAllConnections(connections(c));
+        PConnector parent = c.getParentConnector();
+        Collection<PConnector> children = c.getChildren();
+        
+        boolean removed = false;
+        
+        // remove connection to parent
+        if (parent != null)
+            removed |= remove(c, parent);
+        // remove connections to children
+        for (PConnector child: children)
+            removed |= remove(c, child);
+        
+        if (parent != null)
+        {
+            // connect children with parent
+            for (PConnector child: children)
+                add(child, parent);
+        }
+        else
+        {
+            // connect children with each other
+            PConnector previous = null;
+            for (PConnector child: children)
+            {
+                if (previous != null)
+                    add(previous, child);
+                previous = child;
+            }
+        }
+        return removed;
     }
 
     public int size()
