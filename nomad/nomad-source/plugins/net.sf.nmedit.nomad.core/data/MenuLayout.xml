@@ -140,4 +140,19 @@
       </entry>
     </entry>
   </entry>
+  
+  <entry entryPoint="fileexplorer">
+    <entry entryPoint="item" flat="true">
+      <entry entryPoint="open" />
+      <entry entryPoint="delete" />
+    </entry>
+    <entry entryPoint="rename" />
+    <entry entryPoint="entry" flat="true">
+      <entry entryPoint="refresh" />
+      <entry entryPoint="remove" />
+    </entry>
+    <entry entryPoint="dir" flat="true">
+      <entry entryPoint="newdir" />
+    </entry>
+  </entry>
 </entry>
