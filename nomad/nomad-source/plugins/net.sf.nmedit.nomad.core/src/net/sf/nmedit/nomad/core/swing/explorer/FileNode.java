@@ -412,6 +412,14 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
 
     public boolean isActionCommandPossible(ExplorerTree tree, String command)
     {
+        if (this instanceof FileContext)
+        {
+            return command == FileExplorerTree.ACTION_DIR_NEWDIR
+            || command == FileExplorerTree.ACTION_ITEM_DELETE
+            || command == FileExplorerTree.ACTION_REFRESH
+            || command == FileExplorerTree.ACTION_RENAME
+            || command == FileExplorerTree.ACTION_ENTRY_REMOVE;   
+        }
         if (file.isDirectory())
         {
             return command == FileExplorerTree.ACTION_DIR_NEWDIR
@@ -424,14 +432,6 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
             return command == FileExplorerTree.ACTION_ITEM_OPEN
             || command == FileExplorerTree.ACTION_ITEM_DELETE
             || command == FileExplorerTree.ACTION_RENAME;
-        }
-        else if (this instanceof FileContext)
-        {
-            return command == FileExplorerTree.ACTION_DIR_NEWDIR
-            || command == FileExplorerTree.ACTION_ITEM_DELETE
-            || command == FileExplorerTree.ACTION_REFRESH
-            || command == FileExplorerTree.ACTION_RENAME
-            || command == FileExplorerTree.ACTION_ENTRY_REMOVE;   
         }
         return false;
     }
