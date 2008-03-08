@@ -15,7 +15,7 @@
 	
   <target name="clean">
   	<!-- only delete contents of classes folder, not the folder itself -->
-    <delete includeEmptyDirs="true">
+    <delete includeEmptyDirs="true" failonerror="false">
       <fileset dir="${classes}" includes="**/*"/>
     </delete>
   	<delete file="classes.jar" />
