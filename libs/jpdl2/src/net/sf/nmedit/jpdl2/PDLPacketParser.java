@@ -29,6 +29,7 @@ import net.sf.nmedit.jpdl2.dom.PDLDocument;
 import net.sf.nmedit.jpdl2.dom.PDLFunction;
 import net.sf.nmedit.jpdl2.dom.PDLInstruction;
 import net.sf.nmedit.jpdl2.dom.PDLItem;
+import net.sf.nmedit.jpdl2.dom.PDLMultiplicity;
 import net.sf.nmedit.jpdl2.dom.PDLOptional;
 import net.sf.nmedit.jpdl2.dom.PDLPacketDecl;
 import net.sf.nmedit.jpdl2.dom.PDLPacketRef;
@@ -646,8 +647,34 @@ public class PDLPacketParser
                 addReserved(-getMinSize(item));
                 
                 PDLVariable variable = item.asVariable(); 
-
-                int multiplicity = PDLUtils.getMultiplicity(packet, variable.getMultiplicity()); 
+    
+    			// this is a hack and will be removed later
+    			final String HACK = "HACK";
+    
+                boolean hack = false;
+                int multiplicity;
+                
+                PDLMultiplicity vm = variable.getMultiplicity();
+                
+                if (vm != null && vm.getType() == PDLMultiplicity.Type.Variable
+                        && HACK.equals(vm.getVariable()))
+                {
+                    hack = true;
+                    int hackedValue;
+                    if (generate)
+                    {
+                        hackedValue = input.getSize()-input.getPosition(); // remaining stream
+                    }
+                    else
+                    {
+                        hackedValue = (input.getSize()-input.getPosition())/8-2; // remaining stream with out last two byte
+                    }
+                    packet.setVariable(HACK, hackedValue);
+                    if (DEBUG) println("HACKED VALUE="+hackedValue);
+                }
+                
+                multiplicity = PDLUtils.getMultiplicity(packet, variable.getMultiplicity());
+                
                 final int bitcount = (generate?1:variable.getSize()) * multiplicity;
                 
                 if (!variable.hasTerminal())

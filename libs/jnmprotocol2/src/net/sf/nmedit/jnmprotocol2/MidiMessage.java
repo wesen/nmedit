@@ -165,6 +165,7 @@ public abstract class MidiMessage
     	    PDLPacket packet = message.getPacket();
             {
                 // check for type = 0x03 = (data1 << 1) | ((data2 >>> 6) & 0x1)
+                /*
                 PDLPacket pp = packet.getPacket("data:next");
                 int data1 = pp == null ? -1 : pp.getVariable("data");
                 if (data1 == 0x01)
@@ -172,6 +173,15 @@ public abstract class MidiMessage
                     pp = pp.getPacket("next");
                     int data2 = pp == null ? -1 : pp.getVariable("data");
                     if ((data2 & 0x40) > 0) 
+                    {
+                        return new SynthSettingsMessage(packet);
+                    }
+                }*/
+                PDLPacket pp = packet.getPacket("data");
+                if (pp != null)
+                {
+                    int[] embedded_stream = pp.getVariableList("embedded_stream");
+                    if (embedded_stream.length>=2 && embedded_stream[0] == 0x01 && embedded_stream[1]==0x40)
                     {
                         return new SynthSettingsMessage(packet);
                     }
