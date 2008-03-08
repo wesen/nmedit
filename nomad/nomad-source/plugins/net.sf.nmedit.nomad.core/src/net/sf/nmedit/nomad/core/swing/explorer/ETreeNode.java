@@ -38,5 +38,7 @@ public interface ETreeNode extends TreeNode
     
     String getToolTipText();
     void processEvent(MouseEvent e);
+    boolean isActionCommandPossible(ExplorerTree tree, String command);
+    void actionCommandPerformed(ExplorerTree tree, String command);
     
 }
