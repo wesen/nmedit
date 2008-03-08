@@ -37,15 +37,22 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import javax.swing.JMenu;
+import javax.swing.JPopupMenu;
 import javax.swing.border.Border;
 
 import net.sf.nmedit.jpatch.CopyOperation;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
+import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.MoveOperation;
 import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnectionManager;
@@ -62,10 +69,12 @@ import net.sf.nmedit.jpatch.event.PConnectionListener;
 import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
 import net.sf.nmedit.jpatch.event.PModuleContainerListener;
 import net.sf.nmedit.jpatch.history.PUndoableEditSupport;
+import net.sf.nmedit.jpatch.util.DescriptorNameComparator;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.JTException;
 import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
+import net.sf.nmedit.jtheme.component.plaf.mcui.InsertModuleAction;
 import net.sf.nmedit.jtheme.component.plaf.mcui.JTModuleContainerUI;
 import net.sf.nmedit.jtheme.store2.ModuleElement;
 import net.sf.nmedit.nmutils.dnd.FileDnd;
@@ -846,6 +855,46 @@ public class JTModuleContainer extends JTBaseComponent
             cm.clearAutoRepaintDisabled();
         }
     }
+
+	public void installModulesMenu(JPopupMenu menu) {
+		PModuleContainer container = getModuleContainer();
+		ModuleDescriptions modules = getModuleContainer().getPatch().getModuleDescriptions();
+        Map<String, List<PModuleDescriptor>> categoryMap = new HashMap<String, List<PModuleDescriptor>>();
+
+        for (PModuleDescriptor module : modules)
+        {
+            if (module.isInstanciable() && container.canAdd(module))
+            {
+                String cat = module.getCategory();
+                List<PModuleDescriptor> catList = categoryMap.get(cat);
+                if (catList == null)
+                {
+                    catList = new ArrayList<PModuleDescriptor>();
+                    categoryMap.put(cat, catList);
+                }
+                catList.add(module);
+            }
+        }
+        
+        Comparator<PModuleDescriptor> order = new DescriptorNameComparator<PModuleDescriptor>();
+        List<String> categories = new ArrayList<String>();
+        categories.addAll(categoryMap.keySet());
+        Collections.sort(categories);
+        
+        for (String cat: categories)
+        {
+            List<PModuleDescriptor> catList = categoryMap.get(cat);
+            Collections.sort(catList, order);
+            
+            JMenu catMenu = new JMenu(cat);
+            for (PModuleDescriptor m: catList)
+            {
+            	catMenu.add(new InsertModuleAction(m, this));
+            }
+
+            menu.add(catMenu);
+        }
+	}
 
 
 }
