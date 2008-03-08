@@ -124,6 +124,8 @@ public class JTModuleContainerUI extends ComponentUI
     {
         JPopupMenu popup = new JPopupMenu();
         popup.add(new ContainerAction(this.getModuleContainer(), ContainerAction.DELETE_UNUSED));
+        popup.addSeparator();
+        getModuleContainer().installModulesMenu(popup);
         popup.show(mc, e.getX(), e.getY());
     }
     
@@ -262,10 +264,6 @@ public class JTModuleContainerUI extends ComponentUI
         return currentTransferModules;
     }
     
-    
-    
-    
-    
     public void updateDnDBoundingBox(Rectangle box)
     {
     	Rectangle repaint;
@@ -380,7 +378,6 @@ public class JTModuleContainerUI extends ComponentUI
       DropTargetListener, DragGestureListener, DragSourceListener,
       MouseListener, MouseMotionListener
     {
-
 		private JTModuleContainerUI jtcUI;
         private boolean dndAllowed;
 
@@ -1036,8 +1033,7 @@ public class JTModuleContainerUI extends ComponentUI
         public void mousePressed(MouseEvent e)
         {
         	if (jtcUI.isPasting) {
-        		jtcUI.isPasting = false;
-        		// System.out.println("stop pasting");
+        		jtcUI.abortPaste();
         		return;
         	}
             JTModuleContainer mc = jtcUI.getModuleContainer();
