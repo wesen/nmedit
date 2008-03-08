@@ -449,9 +449,21 @@ Note :=
 GetCurrentNotes :=
 	;
 
+/*
+ * We use a temporary hack until the PDLPacketParser does not throw
+ * StackOverFlow exceptions any more (this happens with large patch messages).
+ * HACK is a variable containing the number of bytes of the embedded stream.
+ *
+ * previous code:
+ *    ?PatchData$next
+ */
 PatchPacket :=
     messageId("PatchPacket")
-	0:1 command:1 pid:6 ?PatchData$next
+	0:1 command:1 pid:6 
+	
+	%HACK:16 = (0)
+	HACK * embedded_stream:8
+	
 	checksum$$
 	;
 

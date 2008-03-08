@@ -27,6 +27,7 @@ import net.sf.nmedit.jpdl2.PDLPacketParser;
 import net.sf.nmedit.jpdl2.dom.PDLDocument;
 import net.sf.nmedit.jpdl2.stream.BitStream;
 import net.sf.nmedit.jpdl2.stream.IntStream;
+import net.sf.nmedit.jpdl2.utils.PDLUtils;
 
 public class PatchMessage extends MidiMessage
 {
@@ -46,16 +47,29 @@ public class PatchMessage extends MidiMessage
 	isreply = true;
     }
 
+    public static BitStream getEmbeddedStream(PDLPacket packet)
+    {
+        int[] embedded_stream = packet.getVariableList("data:embedded_stream");
+        
+        BitStream bitStream = new BitStream(embedded_stream.length/4);
+        for (int value: embedded_stream)
+            bitStream.append(value&0x7F, 7);
+        // Remove padding
+        bitStream.setSize((bitStream.getSize()/8)*8);
+        return bitStream;
+    }
+    
     public PatchMessage(PDLPacket packet)
     {
 	this();
 	bitstream = new BitStream(); // not really ok
-    patchStream = new BitStream();
+    patchStream = getEmbeddedStream(packet);
 	setAll(packet);
 	
     isFirstInSequence = packet.getVariable("first")>0;
     isLastInSequence = packet.getVariable("last")>0;
-	
+
+    /*
 	packet = packet.getPacket("data:next");
 	while (packet != null) {
 	    patchStream.append(packet.getVariable("data"), 7);
@@ -63,6 +77,7 @@ public class PatchMessage extends MidiMessage
 	}
 	// Remove padding
 	patchStream.setSize((patchStream.getSize()/8)*8);
+    */
     }
 
     public PatchMessage(BitStream section, int slot, int sectionIndex, int sectionCount) throws MidiException

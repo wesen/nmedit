@@ -143,7 +143,9 @@ public class SynthSettingsMessage extends MidiMessage
     {
     this();
     setAll(packet);
+    settingsStream = PatchMessage.getEmbeddedStream(packet);
     
+    /*
     packet = packet.getPacket("data:next");
     while (packet != null) {
         settingsStream.append(packet.getVariable("data"), 7);
@@ -151,7 +153,7 @@ public class SynthSettingsMessage extends MidiMessage
     }
     // Remove padding
     settingsStream.setSize((settingsStream.getSize()/8)*8);
-    
+    */
     // parse settings
     try
     {
