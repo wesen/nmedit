@@ -47,6 +47,7 @@ import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.component.JTSlider;
 import net.sf.nmedit.jtheme.component.JTTextDisplay;
+import net.sf.nmedit.jtheme.component.layer.DNDLayer;
 import net.sf.nmedit.jtheme.component.plaf.JTBasicButtonControlUI;
 import net.sf.nmedit.jtheme.component.plaf.JTBasicConnectorUI;
 import net.sf.nmedit.jtheme.component.plaf.JTBasicLightUI;
@@ -59,6 +60,7 @@ import net.sf.nmedit.jtheme.component.plaf.JTModuleUI;
 import net.sf.nmedit.jtheme.component.plaf.JTTextDisplayUI;
 import net.sf.nmedit.jtheme.component.plaf.mcui.JTModuleContainerUI;
 import net.sf.nmedit.jtheme.store.StorageContext;
+import net.sf.nmedit.jtheme.util.BoundingBoxBorder;
 import net.sf.nmedit.jtheme.util.SimpleSelectionBorder;
 
 public class JTNM1Context extends JTCustomContext
@@ -198,6 +200,7 @@ public class JTNM1Context extends JTCustomContext
         uidefaults.put(JTButtonControlUI.BACKGROUND_STATE_KEY, new ColorUIResource(0xC4F6ED));
         uidefaults.put(JTButtonControlUI.BACKGROUND_SELECTED_KEY, new ColorUIResource(0xC6CCDE));
 
+        uidefaults.put(DNDLayer.DND_BOUNDINGBOX_BORDER, new BorderUIResource(new BoundingBoxBorder()));
         uidefaults.put(JTLight.uiClassId, JTBasicLightUI.class.getName());
         uidefaults.put(JTLightUI.BORDER_KEY,  new BorderUIResource(JTNM1BorderFactory.createNordEditor311Border()));
         uidefaults.put(JTImage.uiClassID, JTImageUI.class.getName());
