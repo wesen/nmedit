@@ -129,7 +129,7 @@ public class Nomad
     private DefaultDocumentManager pageContainer ;
     private MenuLayout menuLayout;
     private MenuBuilder menuBuilder;
-    private ExplorerTree explorerTree;
+    private FileExplorerTree explorerTree;
     private JTabbedPane2 toolPane;
     private JTabbedPane2 synthPane;
     
@@ -660,6 +660,9 @@ public class Nomad
         
         explorerTree = new FileExplorerTree();
         explorerTree.setFont(new Font("Arial", Font.PLAIN, 11));
+        
+        explorerTree.createPopup(menuBuilder);
+        
         JScrollPane explorerTreeScroller = new JScrollPane(explorerTree);
         toolPane = new JTabbedPane2();
         toolPane.setCloseActionEnabled(false);

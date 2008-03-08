@@ -154,5 +154,17 @@ public class ContainerNode implements ETreeNode
         
     }
 
+    public void actionCommandPerformed(ExplorerTree tree, String command)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public boolean isActionCommandPossible(ExplorerTree tree, String command)
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }
 

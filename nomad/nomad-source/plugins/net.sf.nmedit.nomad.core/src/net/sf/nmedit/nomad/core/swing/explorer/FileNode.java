@@ -22,12 +22,11 @@
  */
 package net.sf.nmedit.nomad.core.swing.explorer;
 
+import java.awt.Component;
 import java.awt.Event;
-import java.awt.PopupMenu;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.ByteArrayInputStream;
@@ -42,10 +41,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.NoSuchElementException;
 
-import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -60,19 +57,10 @@ import net.sf.nmedit.nomad.core.Nomad;
 public class FileNode extends DefaultMutableTreeNode implements ETreeNode, MouseListener,
     Transferable
 {
-    public static final String OPEN = "Open";
-    public static final String REFRESH = "Refresh";
-    public static final String DELETE_PERMANENTLY = "Delete (Permanently)";
-    public static final String REMOVE_EXPLORER_ENTRY = "Remove Entry";
-    public static final String RENAME = "Rename";
-    public static final String CREATE_DIRECTORY = "Create Directory";
-	
     private final static FileNode[] EMPTY = new FileNode[0];
     private File file;
     private FileNode[] children = null;
     private TreeNode parent;
-	private JPopupMenu filePopup;
-	private boolean popupMenuVisible = false;
     
     public FileNode(TreeNode parent, File file)
     {
@@ -376,226 +364,165 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
     {     
         if (Platform.isLeftMouseButtonOnly(e) && e.getClickCount()==2)
         {
-            Runnable run = new Runnable() 
-            {
-                public void run()
-                {
-                    Nomad.sharedInstance().openOrSelect(file);
-                }
-            };
-            run = WorkIndicator.create(e.getComponent(), run);
-            SwingUtilities.invokeLater(run);
+            justOpenIt(e.getComponent());
         }
+    }
+    
+    private void justOpenIt(Component c)
+    {
+        Runnable run = new Runnable() 
+        {
+            public void run()
+            {
+                Nomad.sharedInstance().openOrSelect(file);
+            }
+        };
+        run = WorkIndicator.create(c, run);
+        SwingUtilities.invokeLater(run);
     }
     
     public void mousePressed(MouseEvent e)
     {
+        ExplorerTree et = (ExplorerTree) e.getComponent();
+        // the current line might not be selected yet
+        int row = et.getRowForLocation(e.getX(), e.getY());
+        if (row>=0) et.addSelectionRow(row);
+        
+        /*
         if (handlePopupTrigger(e))
-            return;
+            return;*/
         if (!Platform.isFlavor(Platform.OS.MacOSFlavor))
             openAction(e);
     }
 
     public void mouseReleased(MouseEvent e)
     {
-        if (handlePopupTrigger(e))
-            return;
         if (Platform.isFlavor(Platform.OS.MacOSFlavor))
             openAction(e);
-        
-        if (Platform.couldBePopupTrigger(e) && filePopup != null && filePopup.isVisible())
+        /*
+        if (Platform.couldBePopupTrigger(e) && filePopup != null)
+        {
+            ((ExplorerTree)e.getComponent()).cancelEditing();
         	e.consume();
+        }
         
         if (Platform.isFlavor(Platform.OS.MacOSFlavor) && Platform.couldBePopupTrigger(e))
-        	e.consume();
+        	e.consume();*/
     }
 
-    private boolean handlePopupTrigger(MouseEvent e)
+    public boolean isActionCommandPossible(ExplorerTree tree, String command)
     {
-        if ((e.getComponent() instanceof ExplorerTree))
+        if (file.isDirectory())
         {
-            ExplorerTree et = (ExplorerTree) e.getComponent();
-            
-            if (et.isPopupTrigger(e, this, true))
-            {
-            	if (filePopup != null && filePopup.getInvoker()== e.getComponent() && popupMenuVisible)
-            	{
-            	    // close popup
-            		filePopup.setVisible(false);
-            		filePopup = null;
-                    popupMenuVisible = false;
-
-            		e.consume();
-            		return true;
-            	} else { 
-            	    createPopup(e, et);
-            	    e.consume();
-                	return true;
-            	}
-            }
+            return command == FileExplorerTree.ACTION_DIR_NEWDIR
+            || command == FileExplorerTree.ACTION_ITEM_DELETE
+            || command == FileExplorerTree.ACTION_REFRESH
+            || command == FileExplorerTree.ACTION_RENAME;
+        }
+        else if (file.isFile())
+        {
+            return command == FileExplorerTree.ACTION_ITEM_OPEN
+            || command == FileExplorerTree.ACTION_ITEM_DELETE
+            || command == FileExplorerTree.ACTION_RENAME;
+        }
+        else if (this instanceof FileContext)
+        {
+            return command == FileExplorerTree.ACTION_DIR_NEWDIR
+            || command == FileExplorerTree.ACTION_ITEM_DELETE
+            || command == FileExplorerTree.ACTION_REFRESH
+            || command == FileExplorerTree.ACTION_RENAME
+            || command == FileExplorerTree.ACTION_ENTRY_REMOVE;   
         }
         return false;
     }
     
-    protected void createPopup(MouseEvent e, ExplorerTree et)
+    public void actionCommandPerformed(ExplorerTree tree, String command)
     {
-    	// the current line might not be selected yet
-    	int row = et.getRowForLocation(e.getX(), e.getY());
-    	if (row>=0) et.addSelectionRow(row);
-        filePopup = new JPopupMenu();
-        populatePopup(filePopup, e, et);
-        filePopup.show(et, e.getX(), e.getY());
-        popupMenuVisible = true;
-
-    }
-    
-    protected void populatePopup(JPopupMenu popup, MouseEvent e, ExplorerTree et)
-    {
-        if (file.isDirectory())
+        ExplorerTree et = tree;
+        FileNode node = this;
+        if (command == FileExplorerTree.ACTION_ITEM_OPEN)
         {
-            popup.add(new FileNodeAction(et, FileNode.REFRESH));
-            popup.add(new FileNodeAction(et, FileNode.DELETE_PERMANENTLY));
-            popup.add(new FileNodeAction(et, FileNode.CREATE_DIRECTORY));
+            justOpenIt(tree);
         }
-        else
-        {
-            popup.add(new FileNodeAction(et, FileNode.OPEN));
-            popup.add(new FileNodeAction(et, FileNode.DELETE_PERMANENTLY));
-        }
-        
-        if (getParent() == et.getRoot())
-        {
-            popup.addSeparator();
-            popup.add(new FileNodeAction(et, FileNode.REMOVE_EXPLORER_ENTRY));
-        }
-        
-        popup.add(new FileNodeAction(et, FileNode.RENAME));
-    }
-    
-    private class FileNodeAction extends AbstractAction
-    {
-
-        /**
-         * 
-         */
-        private static final long serialVersionUID = -1190272224899920323L;
-        private ExplorerTree et;
-        
-        public FileNodeAction(ExplorerTree et, String command){
-            this.et = et;
-            putValue(ACTION_COMMAND_KEY, command); 
-            putValue(NAME, command); 
-            if (command == OPEN)
-                setEnabled(false); // not implemented yet
-        }
-
-        public void actionPerformed(FileNode node, ActionEvent e) {
-            if (e.getActionCommand() == REFRESH) {
-            	if (node.updateChildrenNodes()) {
-                	et.fireNodeStructureChanged(node);
-                }
-            } else if (e.getActionCommand() == DELETE_PERMANENTLY) {
-            	Nomad n = Nomad.sharedInstance();
-	            File f = node.getFile();
-    			if (f.isFile()) {
-    				int result = JOptionPane.showConfirmDialog(n.getWindow().getRootPane(), 
-                            "Are you sure you want to delete " + f.getName() + " ?", "", JOptionPane.OK_CANCEL_OPTION
-                    );
-    				if (result == JOptionPane.OK_OPTION) {
-    					if (f.delete())
-    					{
-    						if (node.getParent() instanceof FileNode)
-    							((FileNode)node.getParent()).notifyChildFilesRemoved(et);
-    					}
-    				}
-    			} else if (f.isDirectory())
-    			{
-    				int result = JOptionPane.showConfirmDialog(n.getWindow().getRootPane(), 
-                            "Are you sure you want to delete " + f.getName() + " and all its contents ?", "", JOptionPane.OK_CANCEL_OPTION
-                    );
-    				if (result == JOptionPane.OK_OPTION) {
-    					FileUtils.deleteDirectory(f);
-    					boolean rootChanged = false;
-    					for (FileNode rNode : et.getRootFileNodes()) {
-    						File rFile = rNode.getFile();
-    						if (FileUtils.isFileParent(f, rFile)) {
-    							et.getRoot().remove(rNode);
-    							rootChanged = true;
-    						}
-    					}
-    					if (node.getParent() instanceof FileNode)
-    						((FileNode)node.getParent()).notifyChildFilesRemoved(et);
-    					if (rootChanged)
-    						et.fireRootChanged();
-    				}
-    			}
+        else if (command == FileExplorerTree.ACTION_REFRESH) {
+            if (node.updateChildrenNodes()) {
+                et.fireNodeStructureChanged(node);
             }
-            else if (e.getActionCommand() == REMOVE_EXPLORER_ENTRY)
+        } else if (command == FileExplorerTree.ACTION_ITEM_DELETE) {
+            Nomad n = Nomad.sharedInstance();
+            File f = node.getFile();
+            if (f.isFile()) {
+                int result = JOptionPane.showConfirmDialog(n.getWindow().getRootPane(), 
+                        "Are you sure you want to delete " + f.getName() + " ?", "", JOptionPane.OK_CANCEL_OPTION
+                );
+                if (result == JOptionPane.OK_OPTION) {
+                    if (f.delete())
+                    {
+                        if (node.getParent() instanceof FileNode)
+                            ((FileNode)node.getParent()).notifyChildFilesRemoved(et);
+                    }
+                }
+            } else if (f.isDirectory())
             {
-                if (node.getParent() == et.getRoot())
-                {
-                	Nomad n = Nomad.sharedInstance();
-                	File f = node.getFile();
-    				int result = JOptionPane.showConfirmDialog(n.getWindow().getRootPane(), 
-                            "Are you sure you want to remove " + f.getName() + " from the tree ?", "", JOptionPane.OK_CANCEL_OPTION
-                    );
-    				if (result == JOptionPane.OK_OPTION) {
-    					et.getRoot().remove(node);
-    					et.fireRootChanged();
-    				}
+                int result = JOptionPane.showConfirmDialog(n.getWindow().getRootPane(), 
+                        "Are you sure you want to delete " + f.getName() + " and all its contents ?", "", JOptionPane.OK_CANCEL_OPTION
+                );
+                if (result == JOptionPane.OK_OPTION) {
+                    FileUtils.deleteDirectory(f);
+                    boolean rootChanged = false;
+                    for (FileNode rNode : et.getRootFileNodes()) {
+                        File rFile = rNode.getFile();
+                        if (FileUtils.isFileParent(f, rFile)) {
+                            et.getRoot().remove(rNode);
+                            rootChanged = true;
+                        }
+                    }
+                    if (node.getParent() instanceof FileNode)
+                        ((FileNode)node.getParent()).notifyChildFilesRemoved(et);
+                    if (rootChanged)
+                        et.fireRootChanged();
                 }
-            } else if (e.getActionCommand() == RENAME) {
-            	et.startEditingAtPath(new TreePath(node.getPath()));
-            } else if (e.getActionCommand() == CREATE_DIRECTORY) {
-            	File f = node.getFile();
-            	try {
-					File newDir = FileUtils.newFileWithPrefix(f, "dir", "");
-					newDir.mkdir();
-					node.updateChildrenNodes();
-					((ExplorerTree)et).updateParentRootNodes(node);
-					et.expandPath(new TreePath(node.getPath()));
-					((ExplorerTree)et).fireNodeStructureChanged(node);
-
-					for (TreeNode child : node.getChildren()) {
-						if (child instanceof FileNode && ((FileNode)child).getFile().getCanonicalPath().equals(newDir.getCanonicalPath())) {
-			            	et.startEditingAtPath(new TreePath(((FileNode)child).getPath()));
-			            	break;
-						}
-					}
-
-				} catch (IOException e1) {
-					// no op
-					e1.printStackTrace();
-				}
-            	
             }
         }
-        
-        public void actionPerformed(ActionEvent e)
+        else if (command == FileExplorerTree.ACTION_ENTRY_REMOVE)
         {
-        	TreePath paths[] = et.getSelectionPaths();
-        	if (paths == null) return;
-        	for (TreePath path : paths) {
-        		Object o = path.getLastPathComponent();
-        		if (o instanceof FileNode) {
-        			FileNode node = (FileNode)o;
-        			actionPerformed(node, e);
-        		}
-        	}
+            if (node.getParent() == et.getRoot())
+            {
+                Nomad n = Nomad.sharedInstance();
+                File f = node.getFile();
+                int result = JOptionPane.showConfirmDialog(n.getWindow().getRootPane(), 
+                        "Are you sure you want to remove " + f.getName() + " from the tree ?", "", JOptionPane.OK_CANCEL_OPTION
+                );
+                if (result == JOptionPane.OK_OPTION) {
+                    et.getRoot().remove(node);
+                    et.fireRootChanged();
+                }
+            }
+        } else if (command == FileExplorerTree.ACTION_RENAME) {
+            et.startEditingAtPath(new TreePath(node.getPath()));
+        } else if (command == FileExplorerTree.ACTION_DIR_NEWDIR) {
+            File f = node.getFile();
+            try {
+                File newDir = FileUtils.newFileWithPrefix(f, "dir", "");
+                newDir.mkdir();
+                node.updateChildrenNodes();
+                ((ExplorerTree)et).updateParentRootNodes(node);
+                et.expandPath(new TreePath(node.getPath()));
+                ((ExplorerTree)et).fireNodeStructureChanged(node);
+
+                for (TreeNode child : node.getChildren()) {
+                    if (child instanceof FileNode && ((FileNode)child).getFile().getCanonicalPath().equals(newDir.getCanonicalPath())) {
+                        et.startEditingAtPath(new TreePath(((FileNode)child).getPath()));
+                        break;
+                    }
+                }
+
+            } catch (IOException e1) {
+                // no op
+                e1.printStackTrace();
+            }
         }
-        
-        public boolean isEnabled() {
-        	TreePath paths[] = et.getSelectionPaths();
-        	if (paths.length > 1) {
-        		Object action = getValue(ACTION_COMMAND_KEY);
-        		if (action == RENAME)
-        			return false;
-        		if (action == CREATE_DIRECTORY)
-        			return false;
-        	}
-        	return super.isEnabled();
-        }
-        
+            
     }
     
     protected static DataFlavor fileFlavor = new DataFlavor(File.class, "File");

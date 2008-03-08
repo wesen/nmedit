@@ -23,7 +23,6 @@
 package net.sf.nmedit.nomad.core.swing.explorer;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +32,6 @@ import java.util.Enumeration;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.ActionMap;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JOptionPane;
@@ -59,7 +57,7 @@ public class ExplorerTree extends JTree
      */
     private static final long serialVersionUID = 5896673886593869850L;
 
-    public final static int ACTION_OPEN = 1;
+    //public final static int ACTION_OPEN = 1;
     
     private RootNode root = new RootNode();
     
@@ -321,7 +319,7 @@ public class ExplorerTree extends JTree
         }
         return false;
     }
-    
+
     
   /*
     public void addAsRoot(Entry entry)
