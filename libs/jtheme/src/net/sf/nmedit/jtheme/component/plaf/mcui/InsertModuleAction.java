@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
@@ -24,6 +25,10 @@ public class InsertModuleAction extends AbstractAction {
 		this.descriptor = descriptor;
 		this.jmc = jmc;
 		putValue(NAME, descriptor.getName());
+        
+        Image iconImage = descriptor.getModules().getImage(descriptor.get16x16IconSource());
+        if (iconImage != null)
+            putValue(SMALL_ICON, new ImageIcon(iconImage));
 	}
 
 	public void actionPerformed(ActionEvent e) {
