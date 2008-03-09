@@ -4,7 +4,6 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;

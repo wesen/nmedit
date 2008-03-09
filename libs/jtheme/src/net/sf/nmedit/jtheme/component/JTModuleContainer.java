@@ -701,8 +701,9 @@ public class JTModuleContainer extends JTBaseComponent
         
         try {
             // Get the data
-            dtde.acceptDrop(dtde.getDropAction() & (DnDConstants.ACTION_MOVE | DnDConstants.ACTION_COPY));
             data = transfer.getTransferData(chosen);
+
+            dtde.acceptDrop(dtde.getDropAction() & (DnDConstants.ACTION_MOVE | DnDConstants.ACTION_COPY | DnDConstants.ACTION_LINK));
         } catch (Throwable t) {
             t.printStackTrace();
             dtde.dropComplete(false);
@@ -729,18 +730,18 @@ public class JTModuleContainer extends JTBaseComponent
             }
             else
             {
-            	copyModules(tdata, dtde.getLocation());
+            	copyModules(tdata, dtde.getLocation(), ((dtde.getDropAction() & DnDConstants.ACTION_LINK) != 0));
             }
 
         }
         dtde.dropComplete(true);
     }
     
-    public void copyModules(PModuleTransferData tdata, Point p) {
+    public void copyModules(PModuleTransferData tdata, Point p, boolean link) {
     	if (tdata != null && tdata.getSourceModuleContainer() != null) {
         	CopyOperation op = tdata.getSourceModuleContainer().createCopyOperation();                	
         	// check for shift pressed to create links XXX
-        	if (false) {
+            if (tdata.getSourcePatch() == getPatchContainer().getPatch() && link) {
         		op.setDuplicate(true);
         	}
         	op.setDestination(getModuleContainer());

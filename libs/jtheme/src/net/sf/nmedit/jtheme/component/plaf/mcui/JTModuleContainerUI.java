@@ -407,7 +407,8 @@ public class JTModuleContainerUI extends ComponentUI
         }
 
         protected DropTarget moduleContainerDropTarget;
-        protected int dndActions =  DnDConstants.ACTION_COPY_OR_MOVE;
+        protected int dndActions =  DnDConstants.ACTION_COPY_OR_MOVE | DnDConstants.ACTION_LINK;
+//      protected int dndActions =  DnDConstants.ACTION_COPY_OR_MOVE;
         protected DropTargetListener dropTargetListener;
 
         protected DropTargetListener createDropTargetListener()
@@ -621,7 +622,7 @@ public class JTModuleContainerUI extends ComponentUI
                
                     data = (PModuleTransferData) dtde.getTransferable().getTransferData(PDragDrop.ModuleSelectionFlavor);
                     if (data.getSourcePatch() == getModuleContainer().getPatchContainer().getPatch()) {
-                    	dtde.acceptDrag(dtde.getDropAction() & (DnDConstants.ACTION_MOVE | DnDConstants.ACTION_COPY));
+                    	dtde.acceptDrag(dtde.getDropAction() & (DnDConstants.ACTION_MOVE | DnDConstants.ACTION_COPY | DnDConstants.ACTION_LINK));
                     } else {
                     	dtde.acceptDrag(DnDConstants.ACTION_COPY);
                     }
@@ -676,9 +677,8 @@ public class JTModuleContainerUI extends ComponentUI
             }
         }
 
-                public void dropActionChanged(DropTargetDragEvent dtde)
+        public void dropActionChanged(DropTargetDragEvent dtde)
         {
-            // no op
             if (isMDDropOk(dtde.getDropAction(), dtde.getTransferable()))
             {
                 dtde.acceptDrag(DnDConstants.ACTION_COPY);
@@ -1108,7 +1108,7 @@ public class JTModuleContainerUI extends ComponentUI
     PModuleTransferDataWrapper pasteTransfer = null;
 
     public void pasteAt(Point p) {
-    	getModuleContainer().copyModules(pasteTransfer, p);
+    	getModuleContainer().copyModules(pasteTransfer, p, false);
     	abortPaste();
     }
     
