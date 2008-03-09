@@ -39,7 +39,6 @@ import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeNode;
@@ -261,7 +260,8 @@ public class ExplorerTree extends JTree
         public CollapseAllAction(ExplorerTree tree)
         {
             this.tree = tree;
-            putValue(SHORT_DESCRIPTION, "collapse all");
+            putValue(NAME, "Collapse All");
+            putValue(SHORT_DESCRIPTION, "Collapse All");
             putValue(SMALL_ICON, getImage("/swing/browser/collapseall.gif"));
         }
 
