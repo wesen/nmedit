@@ -325,7 +325,8 @@ public class Header
         if (oldValue != value)
         {
             data[index] = value;
-            firePatchSettingsChanged();
+            boolean ignoreModified = (index == Format.HEADER_SECTION_SEPARATOR_POSITION);
+            firePatchSettingsChanged(ignoreModified);
         }
     }
 
@@ -334,9 +335,9 @@ public class Header
         return data[index];
     }
     
-    public void firePatchSettingsChanged()
+    public void firePatchSettingsChanged(boolean ignoreModified)
     {
-        patch.firePatchSettingsChanged();
+        patch.firePatchSettingsChanged(ignoreModified);
     }
 
     public void setValueWithoutNotification( int index, int value )
