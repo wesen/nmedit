@@ -11,6 +11,7 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import net.sf.nmedit.nmutils.io.FileUtils;
@@ -193,9 +194,12 @@ public class FileExplorerTree extends ExplorerTree {
 						fireRootChanged();
 				}
 			}
-			FileNode parNode = (FileNode)node.getParent();
-			parNode.updateChildrenNodes();
-			((ExplorerTree)tree).updateParentRootNodes(parNode);
+			TreeNode parNode = node.getParent();
+			if (parNode instanceof FileNode) {
+				FileNode fNode = (FileNode)parNode;
+				fNode.updateChildrenNodes();
+				((ExplorerTree)tree).updateParentRootNodes(fNode);
+			}
 			
 			tree.fireNodeStructureChanged(node.getParent());
 		}
