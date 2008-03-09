@@ -230,7 +230,7 @@ public class NMPatch extends PBasicPatch implements PPatch
         listenerList.remove(PPatchSettingsListener.class, l);
     }
     
-    public void firePatchSettingsChanged()
+    public void firePatchSettingsChanged(boolean ignoreModified)
     {
         // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
@@ -245,6 +245,9 @@ public class NMPatch extends PBasicPatch implements PPatch
             {
                 if (event == null)
                     event = new PPatchSettingsEvent(this);
+                
+                if (ignoreModified && listeners[i+1]==modifiedListener)
+                    continue;
                 
                 // Lazily create the event:
                 ((PPatchSettingsListener)listeners[i+1]).patchSettingsChanged(event);

@@ -247,7 +247,7 @@ public class PatchSettingsDialog
 
         header.setValueWithoutNotification(Format.HEADER_REQUESTED_VOICES, (Integer) frm.spRequestedVoices.getValue());
         
-        header.firePatchSettingsChanged();
+        header.firePatchSettingsChanged(false);
         
         patch.setNote(notesTextArea.getText());
     }
