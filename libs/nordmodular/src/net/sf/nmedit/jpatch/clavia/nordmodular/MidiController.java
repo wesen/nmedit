@@ -100,7 +100,7 @@ public class MidiController
     }
     
     public final static boolean isValidCC(int cc) {
-        return (0<=cc && cc<=120) && (cc!=32);
+        return (0<=cc && cc<120) && (cc!=32);
     }
     
     public String getName()
@@ -132,7 +132,7 @@ public class MidiController
             case 95: return "Phaser Depth";
             case 96: return "Data Increment";
             case 97: return "Data Decrement";
-            default: return null;
+            default: return "Controller " + midiControllerID;
         }
     }
 
