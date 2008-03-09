@@ -121,13 +121,26 @@ public class ControlPopupHandler implements JTPopupHandler
             popup = new JPopupMenu();
             popup.add(new ParameterAction(this, ParameterAction.DEFAULTVALUE));
             popup.add(new ParameterAction(this, ParameterAction.ZEROMORPH));
-            popup.addSeparator();
+
             // Knob
             submenuKnob = new JMenu("Knob");
             
             tmp = getPatch().getKnobs().getKnobIndex(parameter);
-            
-            
+            if (tmp >= 0) {
+            	popup.add(new ParameterAction(this, ParameterAction.DISABLE_KNOB, tmp));
+            }
+            int tmpM = getPatch().getMorphSection().getAssignedMorph(getParameter());
+            if (tmpM >= 0) {
+            	popup.add(new ParameterAction(this, ParameterAction.DISABLE_MORPH, tmpM));
+            }
+            for (int i = 0; i < 120; i++) {
+            	if (getPatch().getMidiControllers().get(i).getParameter() == getParameter()) {
+            		popup.add(new ParameterAction(this, ParameterAction.DISABLE_MIDI, i));
+            	}
+            }
+
+            popup.addSeparator();
+
             for (int i=0;i<=20;i++)
             {
                 tmpa = new ParameterAction(this, ParameterAction.KNOB, i);
@@ -170,6 +183,15 @@ public class ControlPopupHandler implements JTPopupHandler
             submenuMIDI.add(new ParameterAction(this, ParameterAction.MIDI, MidiController.MODULATION_WHEEL));
             submenuMIDI.add(new ParameterAction(this, ParameterAction.MIDI, MidiController.FootPedal));
             submenuMIDI.add(new ParameterAction(this, ParameterAction.MIDI, MidiController.VOLUME));
+            submenuMIDI.addSeparator();
+            for (int i = 0; i < 120; i+=10) {
+            	JMenu subMenu = new JMenu("CC " + i + " to " + (i  + 9 ));
+            	for (int j = i ; j < (i + 10) && j <= 120; j++) {
+            		if (MidiController.isValidCC(j))
+            			subMenu.add(new ParameterAction(this, ParameterAction.MIDI, j));
+            	}
+            	submenuMIDI.add(subMenu);
+            }
             submenuMIDI.addSeparator();
             submenuMIDI.add(new ParameterAction(this, ParameterAction.MIDI, -2));
             submenuMIDI.addSeparator();
@@ -307,6 +329,9 @@ public class ControlPopupHandler implements JTPopupHandler
         public static final String ZEROMORPH = "Zero morph";
         public static final String KNOB = "Knob";
         public static final String MORPH = "Morph";
+        public static final String DISABLE_KNOB = "Disable Knob";
+        public static final String DISABLE_MORPH = "Disable Morph";
+        public static final String DISABLE_MIDI = "Disable Midi";
         public static final String MIDI = "MIDI";
         public static final String KB = "KB";
         
@@ -340,6 +365,10 @@ public class ControlPopupHandler implements JTPopupHandler
                 setEnabled(parent.getMorphParameter() != null /*&& morph enabled*/);
                 name = ZEROMORPH;
             }
+            else if (actionCommand == DISABLE_MORPH) {
+            	name = "Disable Morph " + (index + 1);
+            	setEnabled(true);
+            }
             else if (actionCommand == MORPH)
             { 
                 if (index>4) throw new IllegalArgumentException("invalid morph group:"+index);
@@ -369,7 +398,12 @@ public class ControlPopupHandler implements JTPopupHandler
                     setEnabled(assignedToMorph);
                 }
             }
-            else if (actionCommand == KNOB)
+            else if (actionCommand == DISABLE_KNOB) {
+            	name = "Disable ";
+            	Knob k = getPatch().getKnobs().get(index);
+            	name += k.getName();
+            	setEnabled(true);
+            } else if (actionCommand == KNOB)
             {
                 setEnabled(true);
                 if (index<0)
@@ -387,6 +421,11 @@ public class ControlPopupHandler implements JTPopupHandler
                     }
                     
                 }
+            }
+            else if (actionCommand == DISABLE_MIDI) {
+            	name = "Disable ";
+                name += MidiController.getDefaultName(index);
+            	setEnabled(true);
             }
             else if (actionCommand == MIDI)
             {   
@@ -461,6 +500,13 @@ public class ControlPopupHandler implements JTPopupHandler
                 if (index<0)
                     deassignKnob();
                 else assignKnob();
+            }
+            else if (command == DISABLE_KNOB){
+            	deassignKnob();
+            } else if (command == DISABLE_MORPH) {
+            	deassignMorph();
+            } else if (command == DISABLE_MIDI) {
+            	deassignMidiCtrl();
             }
             else if (command == MORPH)
             {
