@@ -23,6 +23,7 @@
 package net.sf.nmedit.nomad.core;
 
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.beans.PropertyChangeEvent;
@@ -142,18 +143,18 @@ public class NomadLoader
         initLookAndFeel(lafClassName, themeClassName, defaultLafOnPlatform);
         // 1.6 initialize main window's menu
         progress.setProgress(0.3f);
-        
+
 
   /*     NomadActionControl nomadActions = new NomadActionControl( Nomad.sharedInstance() );
         nomadActions.installActions(menuBuilder);
     */    
-        progress.setProgress(0.8f);
+        progress.setProgress(0.5f);
         progress.setText("Initializing main window...");
 
         activatePlugins();
         
         progress.setText("Initializing services...");
-        
+
         JPFServiceInstallerTool.activateAllServices(plugin);
         progress.setText("Starting Nomad...");
         
@@ -161,7 +162,7 @@ public class NomadLoader
 
         Nomad nomad = new Nomad(plugin,menuLayout);
         getPreferredWindowBounds(nomad.getWindow(), nomadProperties);
-        
+
         return nomad;
     }
     
@@ -211,10 +212,28 @@ public class NomadLoader
     {
         Collection<InitService> orderedServices =
             jpfOrderByDepencies(ServiceRegistry.getServices(InitService.class));
+
+        final SplashHandler progress = Boot.getSplashHandler();
+        List<InitService> serviceList = new ArrayList<InitService>();
         
         for (Iterator<InitService> i=orderedServices.iterator(); i.hasNext();)
         {
-            InitService s = i.next();
+            serviceList.add(i.next());
+        }
+        
+        PluginManager manager = PluginManager.lookup(this);
+        
+        for (int i=0;i<serviceList.size();i++)
+        {
+            InitService s = serviceList.get(i);
+
+            float progressValue = 0.5f+(((float)i/(serviceList.size()-1))/2f);   
+            PluginDescriptor descriptor = manager.getPluginFor(s).getDescriptor();
+            String text = "init "+descriptor.getId()+" "+descriptor.getVersion();
+            // does not update splash ???:
+           // progress.setProgress(progressValue);
+           // progress.setText(text);
+            
             try
             {
                 s.init();
@@ -224,6 +243,7 @@ public class NomadLoader
                 t.printStackTrace();
             }
         }
+        
     }
     
     private void activatePlugins()
