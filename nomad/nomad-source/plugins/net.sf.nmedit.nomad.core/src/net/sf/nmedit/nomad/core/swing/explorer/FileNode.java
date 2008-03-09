@@ -385,9 +385,6 @@ public class FileNode implements ETreeNode, MouseListener,
     public void mousePressed(MouseEvent e)
     {
         ExplorerTree et = (ExplorerTree) e.getComponent();
-        // the current line might not be selected yet
-        int row = et.getRowForLocation(e.getX(), e.getY());
-        if (row>=0) et.addSelectionRow(row);
         
         /*
         if (handlePopupTrigger(e))
