@@ -34,6 +34,7 @@ public class FileContext extends FileNode implements TreeContext
 
     private FileFilter fileFilter;
     private ExplorerTree tree;
+    private String name = null;
 
     public FileContext( ExplorerTree etree, File file )
     {
@@ -46,7 +47,7 @@ public class FileContext extends FileNode implements TreeContext
         this.tree = etree;
         this.fileFilter = fileFilter;
     }
-
+    
     public void processEvent(Event event)
     {
         if (event instanceof ContextEvent)
@@ -78,6 +79,8 @@ public class FileContext extends FileNode implements TreeContext
     
     public String toString()
     {
+    	if (getName() != null)
+    		return getName();
         if (fileFilter != null && fileFilter instanceof ExtensionFilter)
         {
             ExtensionFilter ef = (ExtensionFilter) fileFilter;
@@ -88,5 +91,13 @@ public class FileContext extends FileNode implements TreeContext
             return super.toString() + " (*.*)";
         }
     }
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
 
 }
