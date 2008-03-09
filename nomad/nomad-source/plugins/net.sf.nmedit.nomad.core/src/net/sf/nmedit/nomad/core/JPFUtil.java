@@ -22,6 +22,8 @@
  */
 package net.sf.nmedit.nomad.core;
 
+import java.io.File;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.java.plugin.PathResolver;
@@ -41,6 +43,22 @@ public class JPFUtil
     public static PluginManager getPluginManager()
     {
         return pluginManager;
+    }
+
+    public static File getPluginDirectory(Object anObject)
+    {
+        URL url = pluginManager.getPluginFor(anObject).getDescriptor().getLocation();
+        File dir = null;
+        try
+        {
+            File plugin_xml = new File(url.toURI());
+            dir = plugin_xml.getParentFile();
+        }
+        catch (URISyntaxException e)
+        {
+            return null;
+        }
+        return dir;
     }
     
     public static ClassLoader getPluginClassLoader(PluginDescriptor descr)
