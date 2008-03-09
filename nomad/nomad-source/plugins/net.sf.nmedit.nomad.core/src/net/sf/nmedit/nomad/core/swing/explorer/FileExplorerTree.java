@@ -41,8 +41,6 @@ public class FileExplorerTree extends ExplorerTree {
             popupMadeInvisible = false;
             return;
         }
-        System.out.println("start editing "+path);
-        (new RuntimeException()).printStackTrace();
         super.startEditingAtPath(path);
     }
     
