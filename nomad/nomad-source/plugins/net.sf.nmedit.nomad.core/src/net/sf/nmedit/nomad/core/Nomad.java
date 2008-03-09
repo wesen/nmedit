@@ -47,7 +47,6 @@ import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -60,7 +59,6 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
@@ -68,6 +66,11 @@ import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
+import net.sf.nmedit.nmutils.Platform;
+import net.sf.nmedit.nmutils.Platform.OS;
+import net.sf.nmedit.nmutils.swing.ApplicationClipboard;
+import net.sf.nmedit.nmutils.swing.CopyCutPasteTarget;
+import net.sf.nmedit.nmutils.swing.WorkIndicator;
 import net.sf.nmedit.nomad.core.NomadLoader.LocaleHandler;
 import net.sf.nmedit.nomad.core.helpers.DocumentActionActivator;
 import net.sf.nmedit.nomad.core.helpers.RuntimeMenuBuilder;
@@ -81,7 +84,6 @@ import net.sf.nmedit.nomad.core.service.ServiceRegistry;
 import net.sf.nmedit.nomad.core.service.fileService.FileService;
 import net.sf.nmedit.nomad.core.service.fileService.FileServiceTool;
 import net.sf.nmedit.nomad.core.service.initService.InitService;
-import net.sf.nmedit.nomad.core.swing.ButtonBarBuilder;
 import net.sf.nmedit.nomad.core.swing.ExtensionFilter;
 import net.sf.nmedit.nomad.core.swing.Factory;
 import net.sf.nmedit.nomad.core.swing.JDropDownButtonControl;
@@ -95,14 +97,7 @@ import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 import net.sf.nmedit.nomad.core.swing.explorer.FileContext;
 import net.sf.nmedit.nomad.core.swing.explorer.FileExplorerTree;
 import net.sf.nmedit.nomad.core.swing.tabs.JTabbedPane2;
-import net.sf.nmedit.nomad.core.utils.ClonedAction;
 import net.sf.nmedit.nomad.core.utils.OSXAdapter;
-
-import net.sf.nmedit.nmutils.Platform;
-import net.sf.nmedit.nmutils.Platform.OS;
-import net.sf.nmedit.nmutils.swing.ApplicationClipboard;
-import net.sf.nmedit.nmutils.swing.CopyCutPasteTarget;
-import net.sf.nmedit.nmutils.swing.WorkIndicator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -680,22 +675,7 @@ public class Nomad
         toolPane = new JTabbedPane2();
         toolPane.setCloseActionEnabled(false);
         
-        JPanel explorerPane = new JPanel();
-        explorerPane.setLayout(new BorderLayout());
-        
-        ButtonBarBuilder ebuttonBar = new ButtonBarBuilder();
-        
-        Action newLocAction = new ClonedAction(RuntimeMenuBuilder.getNewLocationAction(menuLayout));
-        newLocAction.putValue(Action.NAME, null);
-
-        ebuttonBar.add(newLocAction);
-        ebuttonBar.addBox();
-        ebuttonBar.addFlatButton(explorerTree.createCollapseAllAction());
-
-        explorerPane.add(ebuttonBar.getContainer(), BorderLayout.NORTH);
-        explorerPane.add(explorerTreeScroller, BorderLayout.CENTER);
-        
-        toolPane.addTab("Explorer", getImage("/icons/eview16/filenav_nav.gif"), explorerPane);
+        toolPane.addTab("Explorer", getImage("/icons/eview16/filenav_nav.gif"), explorerTreeScroller);
 
         new DropTarget(contentPane, new URIListDropHandler() {
             public void uriListDropped(URI[] uriList)
@@ -723,14 +703,15 @@ public class Nomad
         sidebarSplit.setBottomComponent(synthPane);
         sidebarSplit.setResizeWeight(0.8);
         sidebarSplit.setOneTouchExpandable(true);
-        
+        /*
         JComponent sidebar = new JPanel(new BorderLayout());
         sidebar.setBorder(null);
         sidebar.add(sidebarSplit, BorderLayout.CENTER);
-
+*/
         if (!Platform.isFlavor(OS.MacOSFlavor)) {
+            /*
             JToolBar tb = createQuickActionToolbar();
-            sidebar.add(tb, BorderLayout.NORTH);
+            sidebar.add(tb, BorderLayout.NORTH);*/
 
         } else {
             registerForMacOSXEvents();
@@ -739,7 +720,7 @@ public class Nomad
         splitLR.setResizeWeight(0);
         splitLR.setDividerLocation(200);
         splitLR.setRightComponent(pageContainer);
-        splitLR.setLeftComponent(sidebar);
+        splitLR.setLeftComponent(sidebarSplit);
             
         contentPane.setLayout(new BorderLayout());
         contentPane.add(splitLR, BorderLayout.CENTER);
