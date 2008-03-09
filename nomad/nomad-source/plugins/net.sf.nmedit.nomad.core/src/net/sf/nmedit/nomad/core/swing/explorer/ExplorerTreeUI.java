@@ -248,8 +248,15 @@ public class ExplorerTreeUI extends MetalTreeUI
     
     public TreePath getClosestPathForLocation(JTree tree, int x, int y)
     {   
+        Insets insets = tree.getInsets();
+        int maxY = tree.getRowCount()*tree.getRowHeight()-insets.top;
+        
+        if (y>maxY)
+            return null;
+        
         return super.getClosestPathForLocation(tree, x, y);
     }
+
     protected void selectPathForEvent(TreePath path, MouseEvent event) {
     	if (getSelectionModel().isPathSelected(path) && Platform.isPopupTrigger(event)) {
     		// we don't want to deselect with right clicking
