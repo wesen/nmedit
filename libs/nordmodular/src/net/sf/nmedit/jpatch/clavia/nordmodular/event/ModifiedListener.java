@@ -18,24 +18,8 @@ package net.sf.nmedit.jpatch.clavia.nordmodular.event;
  * along with Nomad; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import net.sf.nmedit.jnmprotocol2.MidiMessage;
-import net.sf.nmedit.jnmprotocol2.MorphAssignmentMessage;
-import net.sf.nmedit.jnmprotocol2.NmProtocol;
-import net.sf.nmedit.jnmprotocol2.SetPatchTitleMessage;
 import net.sf.nmedit.jpatch.AllEventsListener;
-import net.sf.nmedit.jpatch.PModule;
-import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
-import net.sf.nmedit.jpatch.clavia.nordmodular.PNMMorphSection;
-import net.sf.nmedit.jpatch.clavia.nordmodular.VoiceArea;
-import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentEvent;
-import net.sf.nmedit.jpatch.clavia.nordmodular.event.PAssignmentListener;
-import net.sf.nmedit.jpatch.clavia.nordmodular.event.PPatchSettingsEvent;
-import net.sf.nmedit.jpatch.clavia.nordmodular.event.PPatchSettingsListener;
-import net.sf.nmedit.jpatch.clavia.nordmodular.parser.Helper;
 import net.sf.nmedit.jpatch.event.PConnectionEvent;
 import net.sf.nmedit.jpatch.event.PModuleContainerEvent;
 import net.sf.nmedit.jpatch.event.PModuleEvent;
