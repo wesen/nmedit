@@ -40,7 +40,6 @@ import net.sf.nmedit.jtheme.store.StorageContext;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.w3c.dom.css.CSSStyleDeclaration;
-import org.w3c.dom.css.CSSStyleRule;
 
 public class ModuleElement extends AbstractElement implements Serializable, Iterable<ComponentElement>
 {
@@ -78,26 +77,14 @@ public class ModuleElement extends AbstractElement implements Serializable, Iter
     public JTModule createComponent(JTContext context,
             PModuleDescriptor descriptor, PModule module) throws JTException
     {
-        JTModule component = (JTModule) context.createComponent(JTContext.TYPE_MODULE);
-        setBounds(component);
-        applyStyle(component);
-
-        JTModule jtmodule = (JTModule) component;
+        JTModule jtmodule = (JTModule) context.createComponent(JTContext.TYPE_MODULE);
+        setBounds(jtmodule);
+        applyStyle(jtmodule);
         if (module != null)
             jtmodule.setModule(module);
-        return component;
-    }
-/*
-    public Image getStaticLayer()
-    {
-        return staticLayerBackingStore;
+        return jtmodule;
     }
 
-    public void setStaticLayer(Image staticLayer)
-    {
-        this.staticLayerBackingStore = staticLayer;
-    }
-*/
     public JTModule createModule(JTContext context) throws JTException
     {
         return createModule(context, null);
@@ -125,13 +112,6 @@ public class ModuleElement extends AbstractElement implements Serializable, Iter
     public void initializeElement(StorageContext context)
     {
         styleDecl = CSSUtils.getStyleDeclaration("module", cssStyleValue, context);
-        if (styleDecl == null)
-        {
-            CSSStyleRule rule = context.getStyleRule("module");
-            if (rule != null)
-                styleDecl = rule.getStyle();
-        }
-        
         for (int i=childStore.size()-1;i>=0;i--)
         {
             childStore.get(i).initializeElement(context);

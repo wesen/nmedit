@@ -154,21 +154,19 @@ public class CSSUtils
 
     
     public static CSSStyleDeclaration getStyleDeclaration(String cssClassName, String styleAttribute, StorageContext context)
-    {
-        CSSStyleSheet css = context.getStyleSheet();
+    {  
         CSSStyleRule rule = context.getStyleRule(cssClassName);
-        
-        CSSStyleDeclarationImpl decl = styleAttribute == null ? null
-                : (CSSStyleDeclarationImpl) parseStyleDeclaration(styleAttribute, css);
-        
-        if (decl != null)
+        CSSStyleDeclarationImpl decl = null;
+        if (styleAttribute != null)
         {
+            CSSStyleSheet css = context.getStyleSheet();
+            decl = (CSSStyleDeclarationImpl) parseStyleDeclaration(styleAttribute, css);
+
             if (rule != null)
                 decl.setParentRule(rule);
             
             return decl;
         }
-        
         if (rule != null)
             return rule.getStyle();
         
@@ -179,7 +177,7 @@ public class CSSUtils
     {
         Attribute styleAtt = e.getAttribute("style");
         if (styleAtt != null)
-            return parseStyleDeclaration(e, parent);
+            return parseStyleDeclaration(styleAtt.getValue(), parent);
         return null;
     }
 

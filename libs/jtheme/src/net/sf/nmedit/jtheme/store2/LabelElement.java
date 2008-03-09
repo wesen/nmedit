@@ -19,12 +19,12 @@
 package net.sf.nmedit.jtheme.store2;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.io.IOException;
 import java.io.Serializable;
 
 import org.jdom.Element;
 import org.w3c.dom.css.CSSStyleDeclaration;
-import org.w3c.dom.css.CSSStyleRule;
 
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
@@ -38,14 +38,11 @@ import net.sf.nmedit.jtheme.store.StorageContext;
 public class LabelElement extends AbstractElement implements Serializable
 {
 
-
-    
-    private static final long serialVersionUID = -5265904722291199511L;
+    private static final long serialVersionUID = 1749017917737034553L;
     private String cssStyleValue;
     private transient CSSStyleDeclaration styleDecl;
     private transient Color clFill;
   //  private int fontSize = -1;
-    protected boolean reducible = false;
     protected String text;
 
     public static AbstractElement createElement(StorageContext context, Element element)
@@ -61,13 +58,6 @@ public class LabelElement extends AbstractElement implements Serializable
     public void initializeElement(StorageContext context)
     {
         styleDecl = CSSUtils.getStyleDeclaration("label", cssStyleValue, context);
-        if (styleDecl == null)
-        {
-            CSSStyleRule rule = context.getStyleRule("label");
-            if (rule != null)
-                styleDecl = rule.getStyle();
-        }
-
         if (styleDecl != null)
         {
             clFill = CSSUtils.getColor(styleDecl, "fill");
@@ -88,14 +78,12 @@ public class LabelElement extends AbstractElement implements Serializable
             PModuleDescriptor descriptor, PModule module) throws JTException
     {
         JTLabel label = context.createLabel();
-        this.reducible = label.isReducible();
         label.setText(text);
        // label.setFont(defaultFont);
         applyStyles(label);
         setName(label);
-        label.setSize(label.getPreferredSize());
-        label.setLocation(x, y);//, y-label.getHeight());
-        
+        Dimension pref = label.getPreferredSize(); 
+        label.setBounds(x, y, pref.width, pref.height); // only once
         return label;
     }
 
