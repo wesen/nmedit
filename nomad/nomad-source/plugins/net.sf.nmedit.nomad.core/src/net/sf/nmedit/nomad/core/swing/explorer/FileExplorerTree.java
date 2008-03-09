@@ -2,6 +2,7 @@ package net.sf.nmedit.nomad.core.swing.explorer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 
@@ -10,7 +11,6 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
@@ -23,13 +23,69 @@ public class FileExplorerTree extends ExplorerTree {
      * 
      */
     private static final long serialVersionUID = -1065473531878285689L;
+    private boolean popupVisible = false;
+    private FETPopupMenuListener popupMenuListener = new FETPopupMenuListener();
     
     public FileExplorerTree() {
     	super();
     	setEditable(true);
     	getModel().addTreeModelListener(new FileExplorerModelListener(this));
+        enableEvents(MouseEvent.MOUSE_EVENT_MASK);
     }
     
+    protected void processMouseEvent(MouseEvent e)
+    {
+        // update the cursor location
+        switch (e.getID())
+        {
+            case MouseEvent.MOUSE_PRESSED:
+            case MouseEvent.MOUSE_RELEASED:
+            case MouseEvent.MOUSE_CLICKED:
+                if (popupVisible)
+                    updateSelectionAndPopupForLocation(e.getX(), e.getY());
+                break;
+            default:
+                break;
+        }        
+        super.processMouseEvent(e);
+    }
+    
+    private void updateSelectionAndPopupForLocation(int x, int y)
+    {
+        // select node at cursor
+        int row = getClosestRowForLocation(x, y);
+        if (!isRowSelected(row))
+            setSelectionRow(row);
+        updatePopupForSelection(row<0);
+    }
+    
+    private void updatePopupForSelection(boolean setDisabled)
+    {
+        FileExplorerTree tree = FileExplorerTree.this;
+        Object last = tree.getLastSelectedPathComponent();
+        if (last != null && last instanceof ETreeNode && (!setDisabled))
+        {
+            ETreeNode node = (ETreeNode) last;
+            
+            enableAction(node, ACTION_REFRESH);     
+            enableAction(node, ACTION_ENTRY_REMOVE);
+            enableAction(node, ACTION_RENAME);
+            enableAction(node, ACTION_DIR_NEWDIR);
+            enableAction(node, ACTION_ITEM_DELETE);
+            enableAction(node, ACTION_ITEM_OPEN);
+            return;
+        }
+        else
+        {
+            disableAction(ACTION_REFRESH);     
+            disableAction(ACTION_ENTRY_REMOVE);
+            disableAction(ACTION_RENAME);
+            disableAction(ACTION_DIR_NEWDIR);
+            disableAction(ACTION_ITEM_DELETE);
+            disableAction(ACTION_ITEM_OPEN);
+        }
+    }
+
     private MenuLayout menuLayout;
 
     public void createPopup(MenuBuilder menuBuilder)
@@ -45,7 +101,7 @@ public class FileExplorerTree extends ExplorerTree {
         createAction(l, ACTION_DIR_NEWDIR);     
         createAction(l, ACTION_ITEM_DELETE);     
         createAction(l, ACTION_ITEM_OPEN);
-        popup.addPopupMenuListener(new FETPopupMenuListener());
+        popup.addPopupMenuListener(popupMenuListener);
         setComponentPopupMenu(popup);
     }
 
@@ -72,40 +128,33 @@ public class FileExplorerTree extends ExplorerTree {
 
         public void popupMenuCanceled(PopupMenuEvent e)
         {
-            // ignore
+            popupVisible = false;
         }
 
         public void popupMenuWillBecomeInvisible(PopupMenuEvent e)
         {
-            // ignore
+            popupVisible = false;
         }
 
         public void popupMenuWillBecomeVisible(PopupMenuEvent e)
         {
-            FileExplorerTree tree = FileExplorerTree.this;
-            Object last = tree.getLastSelectedPathComponent();
-            if (last == null) return;
-            if (last instanceof ETreeNode)
-            {
-                ETreeNode node = (ETreeNode) last;
-                
-                enableAction(node, ACTION_REFRESH);     
-                enableAction(node, ACTION_ENTRY_REMOVE);     
-                enableAction(node, ACTION_RENAME);     
-                enableAction(node, ACTION_DIR_NEWDIR);     
-                enableAction(node, ACTION_ITEM_DELETE);     
-                enableAction(node, ACTION_ITEM_OPEN);
-            }
+            popupVisible = true;
+            updatePopupForSelection(false);
+
         }
 
-        private void enableAction(ETreeNode node, String entryPoint)
-        {
-            boolean enable = node.isActionCommandPossible(FileExplorerTree.this,
-                    entryPoint);
+    }
 
-            menuLayout.getEntry(entryPoint).setEnabled(enable);
-        }
-        
+    private void disableAction(String entryPoint)
+    {
+        menuLayout.getEntry(entryPoint).setEnabled(false);
+    }
+
+    private void enableAction(ETreeNode node, String entryPoint)
+    {
+        boolean enable = node.isActionCommandPossible(FileExplorerTree.this,
+                entryPoint);
+        menuLayout.getEntry(entryPoint).setEnabled(enable);
     }
     
     private class ETActionListener implements ActionListener
