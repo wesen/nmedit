@@ -73,6 +73,7 @@ import net.sf.nmedit.nomad.core.helpers.DocumentActionActivator;
 import net.sf.nmedit.nomad.core.helpers.RuntimeMenuBuilder;
 import net.sf.nmedit.nomad.core.i18n.LocaleConfiguration;
 import net.sf.nmedit.nomad.core.jpf.PluginView;
+import net.sf.nmedit.nomad.core.jpf.TempDir;
 import net.sf.nmedit.nomad.core.menulayout.ActionHandler;
 import net.sf.nmedit.nomad.core.menulayout.MenuBuilder;
 import net.sf.nmedit.nomad.core.menulayout.MenuLayout;
@@ -81,6 +82,7 @@ import net.sf.nmedit.nomad.core.service.fileService.FileService;
 import net.sf.nmedit.nomad.core.service.fileService.FileServiceTool;
 import net.sf.nmedit.nomad.core.service.initService.InitService;
 import net.sf.nmedit.nomad.core.swing.ButtonBarBuilder;
+import net.sf.nmedit.nomad.core.swing.ExtensionFilter;
 import net.sf.nmedit.nomad.core.swing.Factory;
 import net.sf.nmedit.nomad.core.swing.JDropDownButtonControl;
 import net.sf.nmedit.nomad.core.swing.SelectedAction;
@@ -90,6 +92,7 @@ import net.sf.nmedit.nomad.core.swing.document.Document;
 import net.sf.nmedit.nomad.core.swing.document.DocumentEvent;
 import net.sf.nmedit.nomad.core.swing.document.DocumentListener;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
+import net.sf.nmedit.nomad.core.swing.explorer.FileContext;
 import net.sf.nmedit.nomad.core.swing.explorer.FileExplorerTree;
 import net.sf.nmedit.nomad.core.swing.tabs.JTabbedPane2;
 import net.sf.nmedit.nomad.core.utils.ClonedAction;
@@ -662,6 +665,16 @@ public class Nomad
         explorerTree.setFont(new Font("Arial", Font.PLAIN, 11));
         
         explorerTree.createPopup(menuBuilder);
+
+    	TempDir tempDir = TempDir.generalTempDir();
+    	File userPatches = tempDir.getTempFile("patches");
+    	if (userPatches.exists()) {
+    		FileContext libraryContext = new FileContext(explorerTree, new ExtensionFilter("Nord Modular Patch", "pch", true), userPatches);
+    		libraryContext.setName("Library");
+    		libraryContext.setNailed(true);
+    		explorerTree.addRootNode(libraryContext);
+    	}
+
         
         JScrollPane explorerTreeScroller = new JScrollPane(explorerTree);
         toolPane = new JTabbedPane2();

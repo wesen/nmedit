@@ -61,6 +61,7 @@ public class FileNode implements ETreeNode, MouseListener,
     private File file;
     private FileNode[] children = null;
     private TreeNode parent;
+    private boolean nailed = false;
     
     public FileNode(TreeNode parent, File file)
     {
@@ -412,6 +413,11 @@ public class FileNode implements ETreeNode, MouseListener,
 
     public boolean isActionCommandPossible(ExplorerTree tree, String command)
     {
+    	if (nailed && ((command == FileExplorerTree.ACTION_ENTRY_REMOVE) ||
+    			(command == FileExplorerTree.ACTION_ITEM_DELETE) ||
+    			(command == FileExplorerTree.ACTION_RENAME)))
+    		return false;
+    	
         if (this instanceof FileContext)
         {
             return command == FileExplorerTree.ACTION_DIR_NEWDIR
@@ -564,5 +570,13 @@ public class FileNode implements ETreeNode, MouseListener,
                 return true;
         return false;
     }
+
+	public void setNailed(boolean nailed) {
+		this.nailed = nailed;
+	}
+
+	public boolean isNailed() {
+		return nailed;
+	}
 
 }
