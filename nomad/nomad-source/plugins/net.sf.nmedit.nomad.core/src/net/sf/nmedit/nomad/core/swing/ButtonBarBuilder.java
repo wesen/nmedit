@@ -76,13 +76,16 @@ public class ButtonBarBuilder
 
     public void addButton(Action action)
     {
-        add(new JButton(action));
+        JButton btn = new JButton(action);
+        btn.putClientProperty("hideActionText", Boolean.TRUE); 
+        add(btn);
     }
 
     public void addFlatButton(Action action)
     {
         JButton btn = new JButton(action);
         flat(btn);
+        btn.putClientProperty("hideActionText", Boolean.TRUE);
         add(btn);
     }
 
