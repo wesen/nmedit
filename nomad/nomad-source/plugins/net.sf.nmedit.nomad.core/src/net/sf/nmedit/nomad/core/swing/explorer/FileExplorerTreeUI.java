@@ -283,10 +283,10 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
 		}
 
 		protected void dumpTransferable(Transferable t) {
-			System.out.println("dump");
+			/*System.out.println("dump");
 			for (DataFlavor f : t.getTransferDataFlavors()) {
 				System.out.println("flavor " + f.getMimeType() + f.getPrimaryType() + " " + f.getSubType());
-			}
+			}*/
 		}
 
 		public void dragEnter(DropTargetDragEvent dtde)
