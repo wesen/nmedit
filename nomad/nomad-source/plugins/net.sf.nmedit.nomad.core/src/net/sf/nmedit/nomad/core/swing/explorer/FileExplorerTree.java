@@ -24,6 +24,7 @@ public class FileExplorerTree extends ExplorerTree {
      */
     private static final long serialVersionUID = -1065473531878285689L;
     private boolean popupVisible = false;
+    private boolean popupMadeInvisible = false;
     private FETPopupMenuListener popupMenuListener = new FETPopupMenuListener();
     
     public FileExplorerTree() {
@@ -31,6 +32,18 @@ public class FileExplorerTree extends ExplorerTree {
     	setEditable(true);
     	getModel().addTreeModelListener(new FileExplorerModelListener(this));
         enableEvents(MouseEvent.MOUSE_EVENT_MASK);
+    }
+    
+    public void startEditingAtPath(TreePath path) {
+        if (popupVisible) return; // no
+        if (popupMadeInvisible) 
+        {
+            popupMadeInvisible = false;
+            return;
+        }
+        System.out.println("start editing "+path);
+        (new RuntimeException()).printStackTrace();
+        super.startEditingAtPath(path);
     }
     
     protected void processMouseEvent(MouseEvent e)
@@ -129,11 +142,13 @@ public class FileExplorerTree extends ExplorerTree {
         public void popupMenuCanceled(PopupMenuEvent e)
         {
             popupVisible = false;
+            popupMadeInvisible = true;
         }
 
         public void popupMenuWillBecomeInvisible(PopupMenuEvent e)
         {
             popupVisible = false;
+            popupMadeInvisible = true;
         }
 
         public void popupMenuWillBecomeVisible(PopupMenuEvent e)
