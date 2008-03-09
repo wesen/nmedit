@@ -94,13 +94,28 @@ public class ExplorerLocationMemory implements InitService
         Enumeration<TreeNode> nodes = Nomad.sharedInstance().getExplorer().getRoot().children();
         
         List<FileContext> locations = new ArrayList<FileContext>();
+    	TempDir tempDir = TempDir.generalTempDir();
+    	File userPatches = tempDir.getTempFile("patches");
+		String canonicalPatches = null;
+        try {
+        	canonicalPatches = userPatches.getCanonicalPath();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
         while (nodes.hasMoreElements())
         {
             TreeNode node = nodes.nextElement();
             if (node instanceof FileContext)
             {
                 FileContext fc = (FileContext) node;
-                locations.add(fc);
+                try {
+					if (!fc.getFile().getCanonicalPath().equals(canonicalPatches))
+						locations.add(fc);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         }
         
