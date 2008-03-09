@@ -160,24 +160,27 @@ public class ControlPopupHandler implements JTPopupHandler
                 tmpa.setEnabled(false);
             submenuKnob.add(tmpa);
             popup.add(submenuKnob);
-            // Morph
-            submenuMorph = new JMenu("Morph");
             
-            tmp = getPatch().getMorphSection().getAssignedMorph(getParameter());
-            
-            for (int i=0;i<4;i++)
-            {
-                tmpa = new ParameterAction(this, ParameterAction.MORPH, i);
-                if (i==tmp)
-                    tmpa.setEnabled(false);
+            if (!(control.getParent() instanceof JTMorphModule)) {
+            	// Morph
+            	submenuMorph = new JMenu("Morph");
+
+            	tmp = getPatch().getMorphSection().getAssignedMorph(getParameter());
+
+            	for (int i=0;i<4;i++)
+            	{
+            		tmpa = new ParameterAction(this, ParameterAction.MORPH, i);
+            		if (i==tmp)
+            			tmpa.setEnabled(false);
+            		submenuMorph.add(tmpa);
+            	}
+            	submenuMorph.addSeparator();
+            	tmpa = new ParameterAction(this, ParameterAction.MORPH);
+            	if (tmp<0)
+            		tmpa.setEnabled(false);
                 submenuMorph.add(tmpa);
+                popup.add(submenuMorph);
             }
-            submenuMorph.addSeparator();
-            tmpa = new ParameterAction(this, ParameterAction.MORPH);
-            if (tmp<0)
-                tmpa.setEnabled(false);
-            submenuMorph.add(tmpa);
-            popup.add(submenuMorph);
             // MIDI Controller
             submenuMIDI = new JMenu("MIDI Controller");
             submenuMIDI.add(new ParameterAction(this, ParameterAction.MIDI, MidiController.MODULATION_WHEEL));
