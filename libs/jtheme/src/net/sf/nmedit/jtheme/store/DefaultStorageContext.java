@@ -211,14 +211,20 @@ public class DefaultStorageContext extends StorageContext
     public void parseStore(InputSource source, ClassLoader loader)
     throws JTException
     {
+        final boolean DEBUG_DISABLE_CACHE = false;
+        
         
         if (loader == null)
             loader = getClass().getClassLoader();
         
         long t = 0; // for timing stuff
+
+        boolean imageCacheRead = false;
+        boolean elementCacheRead = false;
+        
         
         File imageCacheFile = getImageCacheFile();
-        if (imageCacheFile != null && imageCacheFile.exists())
+        if (imageCacheFile != null && imageCacheFile.exists() && (!DEBUG_DISABLE_CACHE))
         {
             if (DEBUG) System.out.println(this+": image cache file "+imageCacheFile+" (exists)");
             
@@ -226,6 +232,7 @@ public class DefaultStorageContext extends StorageContext
             {
                 if (DEBUG) t = System.currentTimeMillis();
                 imageCache.readCacheFile(imageCacheFile);
+                imageCacheRead = true;
                 if (DEBUG) System.out.println(this+": image cache read in "+(System.currentTimeMillis()-t)+"ms");
             }
             catch (FileNotFoundException e)
@@ -247,7 +254,7 @@ public class DefaultStorageContext extends StorageContext
         try
         {
 
-            if (cacheFile != null)
+            if (cacheFile != null && (!DEBUG_DISABLE_CACHE))
             {
                 if (DEBUG) System.out.println(this+": element cache file "+cacheFile+" (exists:"+cacheFile.exists()+")");
             
@@ -255,9 +262,8 @@ public class DefaultStorageContext extends StorageContext
                 {     if (DEBUG) t = System.currentTimeMillis();
                     if (initializeFromCache(cacheFile, loader))
                     {
-                        imageCache.readCacheFile(imageCacheFile);
+                        elementCacheRead = true;
                         if (DEBUG) System.out.println(this+": elements initialized from cache in "+(System.currentTimeMillis()-t)+"ms");
-                        return;
                     }
                     else
                     {
@@ -275,56 +281,72 @@ public class DefaultStorageContext extends StorageContext
                 e.printStackTrace();
             }
         }
-
-        SAXBuilder saxBuilder = new SAXBuilder();
-        try
-        {
-            Document document = saxBuilder.build(source);
-            buildStore(document);
-        }
-        catch (JDOMException e)
-        {
-            throw new JTException(e);
-        }
-        catch (IOException e)
-        {
-            throw new JTException(e);
-        }
         
-        if (cacheFile != null)
-        {
-            if (DEBUG) System.out.println(this+": writing element cache");
-            writeCache(cacheFile);
-        }
+        if (imageCacheRead && elementCacheRead)
+            return;
         
-        if (imageCacheFile != null)
+        if (!elementCacheRead)
         {
-            // render images
-            if (DEBUG) System.out.println(this+": render images...");
-            
-            for (ModuleElement m: moduleStoreMap.values())
-            {
-                for (ComponentElement e: m)
-                {
-                    if (e instanceof ImageElement)
-                        ((ImageElement) e).renderImage(this);
-                }
-            }
-
+            SAXBuilder saxBuilder = new SAXBuilder();
             try
-            {
-                if (DEBUG) System.out.println(this+": write image cache...");
-                imageCache.writeCacheFile(imageCacheFile);
+            {    
+                if (DEBUG) t = System.currentTimeMillis();
+                Document document = saxBuilder.build(source);
+                buildStore(document);
+                if (DEBUG) System.out.println(this+": built store in "+(System.currentTimeMillis()-t)+"ms");
             }
-            catch (FileNotFoundException e)
+            catch (JDOMException e)
             {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                throw new JTException(e);
             }
             catch (IOException e)
             {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                throw new JTException(e);
+            }
+            
+            if (cacheFile != null && (!DEBUG_DISABLE_CACHE))
+            {
+                if (DEBUG) System.out.println(this+": writing element cache");
+                writeCache(cacheFile);
+            }
+        }
+        
+        if (!imageCacheRead)
+        {
+            if (imageCacheFile != null)
+            {
+                // render images
+                if (DEBUG) System.out.println(this+": render images...");
+
+                if (DEBUG) t = System.currentTimeMillis();
+                for (ModuleElement m: moduleStoreMap.values())
+                {
+                    for (ComponentElement e: m)
+                    {
+                        if (e instanceof ImageElement)
+                            ((ImageElement) e).renderImage(this);
+                    }
+                }
+                if (DEBUG) System.out.println(this+": rendered in "+(System.currentTimeMillis()-t)+"ms");
+    
+                try
+                {
+                    if (!DEBUG_DISABLE_CACHE)
+                    {
+                        if (DEBUG) System.out.println(this+": write image cache...");
+                        imageCache.writeCacheFile(imageCacheFile);
+                    }
+                }
+                catch (FileNotFoundException e)
+                {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                catch (IOException e)
+                {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
         }
         
