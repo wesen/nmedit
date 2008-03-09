@@ -125,7 +125,7 @@ public class NmFileService implements FileService
             if (showExceptionDialog)
             {
                 ExceptionDialog.showErrorDialog(Nomad.sharedInstance().getWindow().getRootPane(), 
-                    "Could not open file '"+file+"'", "Could not open file.", e);
+                    "Could not open file '"+file+"' ("+e.getMessage()+")", "Could not open file", e);
             }
         }
         
