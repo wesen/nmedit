@@ -28,6 +28,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -47,6 +49,9 @@ import net.sf.nmedit.jsynth.midi.MidiID;
 import net.sf.nmedit.jsynth.midi.MidiPlug;
 import net.sf.nmedit.jsynth.midi.MidiDescription;
 import net.sf.nmedit.jtheme.ModulePane;
+import net.sf.nmedit.jtheme.util.RelativeClassLoader;
+import net.sf.nmedit.nmutils.io.FileUtils;
+import net.sf.nmedit.nomad.core.JPFUtil;
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.jpf.TempDir;
 import net.sf.nmedit.nomad.core.menulayout.MLEntry;
@@ -69,11 +74,11 @@ public class Installer implements InitService
 
     public void init()
     {
+    	installPatches();
         readSynthConfiguration();
         
         NMContextData data = NMContextData.sharedInstance();
         NMData d = NMData.sharedInstance();
-        
         
         ModulePane pane = ModulePane.getSharedInstance();
         pane.setModules(d.getModuleDescriptions());
@@ -114,6 +119,15 @@ public class Installer implements InitService
         
         storeSynthConfiguration(synthList);
         
+    }
+    
+    public void installPatches() {
+    	File pluginDir = JPFUtil.getPluginDirectory(this);
+    	File patches = new File(pluginDir, "patches/");
+    	TempDir tempDir = TempDir.generalTempDir();
+    	File userPatches = tempDir.getTempFile("patches");
+    	if (!userPatches.exists())
+    		FileUtils.copy(patches, userPatches);
     }
 
     private File getSessionFile(TempDir dir)
