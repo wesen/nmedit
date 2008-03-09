@@ -418,12 +418,22 @@ public class PParser implements ErrorHandler
                 case PScanner.BROPEN:
                     break loop;
                 default:
-                    keyValuePair();
+                    try
+                    {
+                        testVersionKey = true;
+                        keyValuePair();
+                    }
+                    finally
+                    {
+                        testVersionKey = false;
+                    }
                     break;
             }
         }
         handler.endSection(IHEADER);
     }
+    
+    private boolean testVersionKey = false;
 
     private void keyValuePair() throws IOException, ParseException
     {
@@ -456,7 +466,15 @@ public class PParser implements ErrorHandler
                 take();
             }
             
-            handler.header(key, value.toString());
+            String valueString = value.toString();
+            
+            if (key != null && "version".contains(key.toLowerCase()))
+            {
+                if (valueString.contains("2.10"))
+                    emiterror("unsupported patch format:\""+valueString+"\"");
+            }
+            
+            handler.header(key, valueString);
         }
     }
 
