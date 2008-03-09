@@ -70,9 +70,13 @@ public abstract class AbstractElement extends ComponentElement
         }
     }
 
+    static int IC = 0;
+    
     protected void initAttributes(StorageContext context, Attribute att)
     {
         String name = att.getName();
+     
+        //System.out.println("->>"+(++IC));
         
         if (ATT_NAME.equals(name))
             this.name = att.getValue();
