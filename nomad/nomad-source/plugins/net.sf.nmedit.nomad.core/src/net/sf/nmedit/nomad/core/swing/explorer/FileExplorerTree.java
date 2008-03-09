@@ -11,6 +11,8 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
@@ -32,6 +34,51 @@ public class FileExplorerTree extends ExplorerTree {
     	setEditable(true);
     	getModel().addTreeModelListener(new FileExplorerModelListener(this));
         enableEvents(MouseEvent.MOUSE_EVENT_MASK);
+    }
+    
+    protected DefaultTreeModel createTreeModel(RootNode root, boolean asksAllowsChildren)
+    {
+        return new FileTreeModel(root, asksAllowsChildren);
+    }
+    
+    private class FileTreeModel extends DefaultTreeModel
+    {
+
+        public FileTreeModel(TreeNode root, boolean asksAllowsChildren)
+        {
+            super(root, asksAllowsChildren);
+        }
+
+        public void valueForPathChanged(TreePath path, Object newValue) 
+        {
+            Object aNode = path.getLastPathComponent();
+            if (aNode instanceof FileNode)
+            {
+                String name = (String) newValue;
+                if (name == null || name.length() == 0)
+                    return;
+                
+                FileNode fileNode = (FileNode) aNode;
+                File oldFile = fileNode.getFile();
+                
+                if (name.equals(oldFile.getName()))
+                    return;
+                
+                File newFile = new File(oldFile.getParent(), name);
+                oldFile.renameTo(newFile);
+                TreeNode parent = fileNode.getParent();
+                if (parent instanceof FileNode)
+                {
+                    ((FileNode)parent).updateChildrenNodes(true);
+                }
+                FileExplorerTree.this.fireNodeStructureChanged(fileNode.getParent());
+            }
+            else
+            {
+                super.valueForPathChanged(path, newValue);
+            }
+        }
+        
     }
     
     public void startEditingAtPath(TreePath path) {
@@ -243,7 +290,7 @@ public class FileExplorerTree extends ExplorerTree {
 								String renPath = rFile.getCanonicalPath();
 								String newRenPath = newPath + renPath.substring(0, oldPath.length());
 								rNode.setFile(new File(newRenPath));
-								rNode.updateChildrenNodes();
+								rNode.updateChildrenNodes(true);
 								((ExplorerTree)tree).updateParentRootNodes(rNode);
 								tree.fireNodeStructureChanged(rNode.getParent());
 							} catch (IOException e1) {

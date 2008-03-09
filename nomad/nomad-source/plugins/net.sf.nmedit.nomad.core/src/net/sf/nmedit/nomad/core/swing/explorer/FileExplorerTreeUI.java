@@ -418,7 +418,7 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
 				FileWriter out = new FileWriter(newFile);
 				out.write(data);
 				out.close();
-				parNode.updateChildrenNodes();
+				parNode.updateChildrenNodes(true);
 				((ExplorerTree)tree).updateParentRootNodes(parNode);
 				tree.expandPath(destPath);
 				((ExplorerTree)tree).fireNodeStructureChanged(parNode);
@@ -487,7 +487,7 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
 							if (parent instanceof FileNode) {
 								FileNode parNode = (FileNode)parent;
 								File f1 = parNode.getFile();
-								if (parNode.updateChildrenNodes()) {
+								if (parNode.updateChildrenNodes(true)) {
 									((ExplorerTree)tree).updateParentRootNodes(parNode);
 									((ExplorerTree)tree).fireNodeStructureChanged(parNode);
 								}
@@ -498,7 +498,7 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-			((FileNode)destNode).updateChildrenNodes();
+			((FileNode)destNode).updateChildrenNodes(true);
 			tree.expandPath(destPath);
 			((ExplorerTree)tree).updateParentRootNodes(destNode);
 			((ExplorerTree)tree).fireNodeStructureChanged(destNode);

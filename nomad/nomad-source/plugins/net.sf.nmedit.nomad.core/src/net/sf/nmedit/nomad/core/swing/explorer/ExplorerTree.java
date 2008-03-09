@@ -39,6 +39,7 @@ import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeNode;
@@ -63,7 +64,7 @@ public class ExplorerTree extends JTree
     
     public ExplorerTree()
     {
-    	DefaultTreeModel model = new DefaultTreeModel(root, true);
+    	DefaultTreeModel model = createTreeModel(root, true);
     	model.setAsksAllowsChildren(false);
     	TreeSelectionModel selectModel = new DefaultTreeSelectionModel();
     	selectModel.setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
@@ -81,6 +82,11 @@ public class ExplorerTree extends JTree
         }
         
         ToolTipManager.sharedInstance().registerComponent(this);
+    }
+    
+    protected DefaultTreeModel createTreeModel(RootNode root, boolean asksAllowsChildren)
+    {
+        return new DefaultTreeModel(root, asksAllowsChildren);
     }
     
     public Collection<? extends FileNode> getRootFileNodes() {
@@ -168,7 +174,7 @@ public class ExplorerTree extends JTree
 		for (FileNode rNode : getRootFileNodes()) {
 			File f2 = rNode.getFile();
 			if (FileUtils.isFileParent(f2, f1)) {
-				rNode.updateChildrenNodes();
+				rNode.updateChildrenNodes(true);
 				fireNodeStructureChanged(rNode);
 			}
 		}
