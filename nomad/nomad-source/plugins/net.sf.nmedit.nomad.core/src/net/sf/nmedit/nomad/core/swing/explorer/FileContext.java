@@ -72,7 +72,7 @@ public class FileContext extends FileNode implements TreeContext
     public void setFileFilter(FileFilter f)
     {
         this.fileFilter = f;
-        if (updateChildrenNodes()) {
+        if (updateChildrenNodes(true)) {
         	tree.fireNodeStructureChanged(this);
         }
     }

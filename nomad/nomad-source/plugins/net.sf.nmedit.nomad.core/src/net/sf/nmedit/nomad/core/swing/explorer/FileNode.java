@@ -77,7 +77,7 @@ public class FileNode implements ETreeNode, MouseListener,
     public void setFile(File file)
     {
         this.file = file;
-        updateChildrenNodes();
+        updateChildrenNodes(true);
     }
 
 
@@ -122,7 +122,7 @@ public class FileNode implements ETreeNode, MouseListener,
         }
     }
 
-    public boolean updateChildrenNodes() {
+    public boolean updateChildrenNodes(boolean deep) {
     	boolean updated = false;
     	
     	if (children != null) {
@@ -180,13 +180,16 @@ public class FileNode implements ETreeNode, MouseListener,
     			}
     		}
     		
+            if (deep)
+            {
     		for (FileNode child : children) {
     			if (child.getChildCount() > 0) {
-    				if (child.updateChildrenNodes()) {
+    				if (child.updateChildrenNodes(deep)) {
                         updated = true;
     				}
     			}
     		}
+            }
     	}
 
     	return updated;
@@ -194,7 +197,7 @@ public class FileNode implements ETreeNode, MouseListener,
     
     public void notifyDropChildren()
     {
-        //children = null;
+        children = null;
     }
     
     private void updateChildrenArray(int removed) {
@@ -448,7 +451,7 @@ public class FileNode implements ETreeNode, MouseListener,
             justOpenIt(tree);
         }
         else if (command == FileExplorerTree.ACTION_REFRESH) {
-            if (node.updateChildrenNodes()) {
+            if (node.updateChildrenNodes(true)) {
                 et.fireNodeStructureChanged(node);
             }
         } else if (command == FileExplorerTree.ACTION_ITEM_DELETE) {
@@ -508,7 +511,7 @@ public class FileNode implements ETreeNode, MouseListener,
             try {
                 File newDir = FileUtils.newFileWithPrefix(f, "dir", "");
                 newDir.mkdir();
-                node.updateChildrenNodes();
+                node.updateChildrenNodes(true);
                 ((ExplorerTree)et).updateParentRootNodes(node);
                 et.expandPath(new TreePath(node.getPath()));
                 ((ExplorerTree)et).fireNodeStructureChanged(node);
