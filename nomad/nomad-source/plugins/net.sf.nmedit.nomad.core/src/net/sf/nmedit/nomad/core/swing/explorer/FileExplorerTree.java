@@ -6,17 +6,18 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import net.sf.nmedit.nmutils.io.FileUtils;
+import net.sf.nmedit.nomad.core.helpers.RuntimeMenuBuilder;
 import net.sf.nmedit.nomad.core.menulayout.MenuBuilder;
 import net.sf.nmedit.nomad.core.menulayout.MenuLayout;
 
@@ -159,6 +160,12 @@ public class FileExplorerTree extends ExplorerTree {
         createAction(l, ACTION_DIR_NEWDIR);     
         createAction(l, ACTION_ITEM_DELETE);     
         createAction(l, ACTION_ITEM_OPEN);
+        
+        // new location
+        popup.add(new JMenuItem((RuntimeMenuBuilder.getNewLocationAction(menuLayout))));
+        
+        popup.addSeparator();
+        popup.add(createCollapseAllAction());
         popup.addPopupMenuListener(popupMenuListener);
         setComponentPopupMenu(popup);
     }
