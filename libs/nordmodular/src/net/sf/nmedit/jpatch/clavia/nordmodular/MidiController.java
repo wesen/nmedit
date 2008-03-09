@@ -112,26 +112,26 @@ public class MidiController
     {
         switch (midiControllerID)
         {
-            case 1: return "Modulation Wheel";
-            case 2: return "Breath Controller";
-            case 4: return "Foot Pedal";
-            case 5: return "Portamento Time";
-            case 6: return "Data Entry Slider";
-            case 7: return "Volume";
-            case 8: return "Balance";
-            case 10: return "Pan";
-            case 11: return "Expression";
-            case 65: return "Portamento";
-            case 66: return "Sostenuto";
-            case 67: return "Soft Pedal";
-            case 69: return "Hold 2 Pedal";
-            case 91: return "Effects Depth";
-            case 92: return "Tremolo Depth";
-            case 93: return "Chorus Depth";
-            case 94: return "Celeste Depth";
-            case 95: return "Phaser Depth";
-            case 96: return "Data Increment";
-            case 97: return "Data Decrement";
+            case 1: return "Modulation Wheel (CC 1)";
+            case 2: return "Breath Controller (CC 2)";
+            case 4: return "Foot Pedal (CC 4)";
+            case 5: return "Portamento Time (CC 5)";
+            case 6: return "Data Entry Slider (CC 6)";
+            case 7: return "Volume (CC 7)";
+            case 8: return "Balance (CC 8)";
+            case 10: return "Pan (CC 10)";
+            case 11: return "Expression (CC 11)";
+            case 65: return "Portamento (CC 65)";
+            case 66: return "Sostenuto (CC 66)";
+            case 67: return "Soft Pedal (CC 67)";
+            case 69: return "Hold 2 Pedal (CC 69)";
+            case 91: return "Effects Depth (CC 91)";
+            case 92: return "Tremolo Depth (CC 92)";
+            case 93: return "Chorus Depth (CC 93)";
+            case 94: return "Celeste Depth (CC 94)";
+            case 95: return "Phaser Depth (CC 95)";
+            case 96: return "Data Increment (CC 96)";
+            case 97: return "Data Decrement (CC 97)";
             default: return "Controller " + midiControllerID;
         }
     }
