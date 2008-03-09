@@ -37,10 +37,34 @@ public class TempDir
         this.plugin = plugin;
     }
     
+    protected static File getBaseDir() {
+    	File base = null;
+        if (Platform.isFlavor(Platform.OS.MacOSFlavor)) {
+        	String userPath = System.getProperty("user.home");
+        	base = new File(userPath, "Library/Application Support/Nomad");
+        } else if (Platform.isFlavor(Platform.OS.UnixFlavor)) {
+            String userPath = System.getProperty("user.home");
+            base = new File(userPath, ".nomad");
+        }
+        else {
+        	base = new File("plugin-tmp");
+        }
+        
+        if (!base.exists()) {
+            boolean result = base.mkdirs();
+        }
+        return base;
+    }
     public static TempDir forObject(Object o)
     {
         TempDir tmp = new TempDir(PluginManager.lookup(o).getPluginFor(o));
         return tmp;
+    }
+    
+    public static TempDir generalTempDir() {
+    	TempDir tmp = new TempDir(null);
+    	tmp.root = getBaseDir();
+    	return tmp;
     }
     
     public Plugin getPlugin()
@@ -62,23 +86,9 @@ public class TempDir
             throw new IllegalStateException("plugin class name not specified in plugin: "+pd);
         
         name = s+"-"+pd.getVersion();
-       
+
+        File base = TempDir.getBaseDir();
         // TODO version checking on temp dir
-        File base;
-        if (Platform.isFlavor(Platform.OS.MacOSFlavor)) {
-        	String userPath = System.getProperty("user.home");
-        	base = new File(userPath, "Library/Application Support/Nomad");
-        } else if (Platform.isFlavor(Platform.OS.UnixFlavor)) {
-            String userPath = System.getProperty("user.home");
-            base = new File(userPath, ".nomad");
-        }
-        else {
-        	base = new File("plugin-tmp");
-        }
-        
-        if (!base.exists()) {
-            boolean result = base.mkdirs();
-        }
         
         root = new File(base,name);
         if (!root.exists())
