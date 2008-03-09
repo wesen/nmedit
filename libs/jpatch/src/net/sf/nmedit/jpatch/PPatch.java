@@ -54,7 +54,7 @@ public interface PPatch
     PModuleContainer getModuleContainer(int index);
     
     PPatch createEmptyPatch();
-    PPatch createFromFile(File file);
+    PPatch createFromFile(File file) throws Exception;
     
     ModuleDescriptions getModuleDescriptions();
     

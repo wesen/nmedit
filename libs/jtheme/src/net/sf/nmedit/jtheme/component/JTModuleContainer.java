@@ -676,7 +676,15 @@ public class JTModuleContainer extends JTBaseComponent
 		DataFlavor fileFlavor = FileDnd.getFileFlavor(transfer.getTransferDataFlavors());
 		List<File> files = FileDnd.getTransferableFiles(fileFlavor, transfer);
 		if (files.size() == 1) {
-			PPatch newPatch = patch.createFromFile(files.get(0));
+			PPatch newPatch;
+            try
+            {
+                newPatch = patch.createFromFile(files.get(0));
+            }
+            catch (Exception e)
+            {
+                newPatch = null;
+            }
 			if (newPatch != null) {
 				if (dropPatch(newPatch, dtde.getLocation())) {
 					dtde.dropComplete(true);

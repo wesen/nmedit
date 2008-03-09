@@ -501,7 +501,15 @@ public class JTModuleContainerUI extends ComponentUI
     				DataFlavor fileFlavor = FileDnd.getFileFlavor(t.getTransferDataFlavors());
     				List<File> files = FileDnd.getTransferableFiles(fileFlavor, t);
     				if (files.size() == 1) {
-    					PPatch newPatch = patch.createFromFile(files.get(0));
+    					PPatch newPatch;
+                        try
+                        {
+                            newPatch = patch.createFromFile(files.get(0));
+                        }
+                        catch (Exception e)
+                        {
+                            newPatch = null;
+                        }
     					if (newPatch != null) {
     						PModuleContainer newMc = null;
     						

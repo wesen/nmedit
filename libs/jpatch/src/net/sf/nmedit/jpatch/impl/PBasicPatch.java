@@ -206,7 +206,7 @@ public class PBasicPatch implements PPatch
 		return null;
 	}
 
-	public PPatch createFromFile(File file) {
+	public PPatch createFromFile(File file) throws Exception {
 		return null;
 	}
 
