@@ -54,7 +54,7 @@ import net.sf.nmedit.nmutils.io.FileUtils;
 import net.sf.nmedit.nmutils.swing.WorkIndicator;
 import net.sf.nmedit.nomad.core.Nomad;
 
-public class FileNode extends DefaultMutableTreeNode implements ETreeNode, MouseListener,
+public class FileNode implements ETreeNode, MouseListener,
     Transferable
 {
     private final static FileNode[] EMPTY = new FileNode[0];
@@ -182,7 +182,7 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
     		for (FileNode child : children) {
     			if (child.getChildCount() > 0) {
     				if (child.updateChildrenNodes()) {
-    					updated = true;
+                        updated = true;
     				}
     			}
     		}
@@ -193,7 +193,7 @@ public class FileNode extends DefaultMutableTreeNode implements ETreeNode, Mouse
     
     public void notifyDropChildren()
     {
-        children = null;
+        //children = null;
     }
     
     private void updateChildrenArray(int removed) {

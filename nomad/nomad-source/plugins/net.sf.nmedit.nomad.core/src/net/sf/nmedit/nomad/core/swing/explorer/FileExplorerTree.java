@@ -100,9 +100,10 @@ public class FileExplorerTree extends ExplorerTree {
 
         private void enableAction(ETreeNode node, String entryPoint)
         {
-            menuLayout.getEntry(entryPoint)
-            .setEnabled(node.isActionCommandPossible(FileExplorerTree.this,
-                    entryPoint));
+            boolean enable = node.isActionCommandPossible(FileExplorerTree.this,
+                    entryPoint);
+
+            menuLayout.getEntry(entryPoint).setEnabled(enable);
         }
         
     }
@@ -143,8 +144,8 @@ public class FileExplorerTree extends ExplorerTree {
 		}
 
 		public void treeNodesChanged(TreeModelEvent e) {
-			DefaultMutableTreeNode node;
-			node = (DefaultMutableTreeNode)(e.getTreePath().getLastPathComponent());
+            Object node;
+			node = (e.getTreePath().getLastPathComponent());
 
 			/*
 			 * If the event lists children, then the changed
@@ -154,18 +155,18 @@ public class FileExplorerTree extends ExplorerTree {
 			 */
 			try {
 				int index = e.getChildIndices()[0];
-				node = (DefaultMutableTreeNode)
-				(node.getChildAt(index));
+                
+                node = ((FileNode)node).getChildAt(index);
 			} catch (NullPointerException exc) {}
 
 			if (node instanceof FileNode) {
 				FileNode fNode = (FileNode)node;
 				File oldFile = fNode.getFile();
-				File newFile =  new File(fNode.getFile().getParentFile(), 
-						node.getUserObject().toString());
+				File newFile =  new File(fNode.getFile().getParentFile(),
+                        fNode.getFile().getName());
 				File realNewFile = FileUtils.getNameWithExtension(fNode.getFile(), newFile);
 				if (realNewFile.exists()) {
-					startEditingAtPath(new TreePath(node.getPath()));
+					startEditingAtPath(new TreePath(fNode.getPath()));
 					return;
 				} else if (oldFile.renameTo(realNewFile)) {
 					fNode.setFile(realNewFile);
@@ -192,16 +193,17 @@ public class FileExplorerTree extends ExplorerTree {
 					}
 					if (rootChanged)
 						fireRootChanged();
-				}
-			}
-			TreeNode parNode = node.getParent();
-			if (parNode instanceof FileNode) {
-				FileNode fNode = (FileNode)parNode;
-				fNode.updateChildrenNodes();
-				((ExplorerTree)tree).updateParentRootNodes(fNode);
-			}
-			
-			tree.fireNodeStructureChanged(node.getParent());
+                }
+                
+                TreeNode parNode = fNode.getParent();
+                /*if (parNode instanceof FileNode) {
+                    FileNode fNode = (FileNode)parNode;
+                    fNode.updateChildrenNodes();
+                    ((ExplorerTree)tree).updateParentRootNodes(fNode);
+                }
+                */
+                tree.fireNodeStructureChanged(parNode);
+           }
 		}
 
 		public void treeNodesInserted(TreeModelEvent e) {
