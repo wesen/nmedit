@@ -66,7 +66,20 @@ public class FileExplorerTree extends ExplorerTree {
                     return;
                 
                 File newFile = new File(oldFile.getParent(), name);
-                oldFile.renameTo(newFile);
+
+                File realNewFile;
+				if (oldFile.isDirectory()) {
+					realNewFile = newFile;
+				} else {
+					realNewFile = FileUtils.getNameWithExtension(oldFile, newFile);
+				}
+				
+				if (realNewFile.exists()) {
+					startEditingAtPath(new TreePath(fileNode.getPath()));
+					return;
+				} else {
+					fileNode.renameTo(FileExplorerTree.this, realNewFile);
+				}
                 TreeNode parent = fileNode.getParent();
                 if (parent instanceof FileNode)
                 {
@@ -281,46 +294,27 @@ public class FileExplorerTree extends ExplorerTree {
 				FileNode fNode = (FileNode)node;
 				File oldFile = fNode.getFile();
 				File newFile =  new File(fNode.getFile().getParentFile(),
-                        fNode.getFile().getName());
-				File realNewFile = FileUtils.getNameWithExtension(fNode.getFile(), newFile);
+						fNode.getFile().getName());
+			
+				File realNewFile;
+				if (oldFile.isDirectory()) {
+					realNewFile = newFile;
+				} else {
+					realNewFile = FileUtils.getNameWithExtension(fNode.getFile(), newFile);
+				}
+				
 				if (realNewFile.exists()) {
 					startEditingAtPath(new TreePath(fNode.getPath()));
 					return;
-				} else if (oldFile.renameTo(realNewFile)) {
-					fNode.setFile(realNewFile);
-
-					boolean rootChanged = false;
-					for (FileNode rNode : getRootFileNodes()) {
-						File rFile = rNode.getFile();
-						if (FileUtils.isFileParent(oldFile, rFile)) {
-							try {
-								String oldPath = oldFile.getCanonicalPath();
-								String newPath = newFile.getCanonicalPath();
-								String renPath = rFile.getCanonicalPath();
-								String newRenPath = newPath + renPath.substring(0, oldPath.length());
-								rNode.setFile(new File(newRenPath));
-								rNode.updateChildrenNodes(true);
-								((ExplorerTree)tree).updateParentRootNodes(rNode);
-								tree.fireNodeStructureChanged(rNode.getParent());
-							} catch (IOException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-							rootChanged = true;
-						}
-					}
-					if (rootChanged)
-						fireRootChanged();
+				} else {
+					fNode.renameTo(tree, realNewFile);
+				}
+		        TreeNode parNode = fNode.getParent();
+                if (parNode instanceof FileNode)
+                {
+                    ((FileNode)parNode).updateChildrenNodes(true);
                 }
-                
-                TreeNode parNode = fNode.getParent();
-                /*if (parNode instanceof FileNode) {
-                    FileNode fNode = (FileNode)parNode;
-                    fNode.updateChildrenNodes();
-                    ((ExplorerTree)tree).updateParentRootNodes(fNode);
-                }
-                */
-                tree.fireNodeStructureChanged(parNode);
+		        tree.fireNodeStructureChanged(parNode);
            }
 		}
 
