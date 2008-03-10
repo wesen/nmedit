@@ -19,6 +19,9 @@
 
 package net.sf.nmedit.jtheme.randomizer;
 
+import java.util.Collection;
+
+import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.randomizer.Randomizer;
 import net.sf.nmedit.jpatch.randomizer.RandomizerFactory;
@@ -88,5 +91,12 @@ public class RandomizerTools
         }
         randomizer.randomize();
     }
-
+    
+    public void randomizeModules(Collection <? extends PModule> modules) {
+    	Randomizer tmpRandom = RandomizerFactory. createGaussianRandomizer();
+    	for (PModule module : modules) {
+    		tmpRandom.addModule(module);
+    	}
+    	tmpRandom.randomize();
+    }
 }

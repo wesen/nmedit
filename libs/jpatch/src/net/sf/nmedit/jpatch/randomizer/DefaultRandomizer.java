@@ -86,7 +86,6 @@ public class DefaultRandomizer
         if (oldValue != null) uninstall(oldValue);
         this.patch = newValue;
         if (newValue != null) install(newValue);
-        
     }
 
     private boolean acceptParameter(PParameter p)
@@ -182,5 +181,9 @@ public class DefaultRandomizer
     {
         uninstall(e.getModule());
     }
+
+	public void addModule(PModule module) {
+		install(module);
+	}
 
 }
