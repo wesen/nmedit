@@ -187,18 +187,20 @@ public class DocumentActionActivator
         }
     }
     
-    private void close()
+    private boolean close()
     {
         Document d = documents.getSelection();
-        documents.closeDocument(d);
+        return documents.closeDocument(d);
     }
 
-    private void closeAll()
+    private boolean closeAll()
     {
         for (Document d: documents.getDocuments())
         {
-        	documents.closeDocument(d);
+        	if (!documents.closeDocument(d))
+        		return false;
         }
+        return true;
     }
 
     public void undoableEditHappened(UndoableEditEvent e)
