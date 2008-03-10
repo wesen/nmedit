@@ -663,7 +663,7 @@ public class JTModuleUI extends JTComponentUI
 
                 title = tf.getText();
                 if (colorkey>0)
-                    title += '$'+colorkey;
+                    title += "$"+colorkey;
                 module.setTitle(title);
                 setEditModuleTitle(false);
                 module.repaint();
