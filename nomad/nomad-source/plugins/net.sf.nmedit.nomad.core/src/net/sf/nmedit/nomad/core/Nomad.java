@@ -859,8 +859,14 @@ public class Nomad
         {
             for (Document d: getDocumentManager().getDocuments())
             {
-            	if (!getDocumentManager().closeDocument(d))
-            		return false;
+                if (d.isModified()) {
+                	Nomad n = Nomad.sharedInstance();
+                	int result = JOptionPane.showConfirmDialog(n.getWindow().getRootPane(), "Are you sure you want to quit without saving " + d.getTitle() + " ?\nChanges will not be lost upon quit, as the patch will be saved in the current session.",
+                			"", JOptionPane.OK_CANCEL_OPTION);
+                	if (result != JOptionPane.OK_OPTION)
+                		return false;
+                	
+                }
             }
             stop();
             return stopped;
