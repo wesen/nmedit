@@ -219,7 +219,8 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
 		}
 
 		private boolean isDropOnExplorer(Point location) {
-			TreePath path = tree.getPathForLocation(location.x, location.y);
+			
+			TreePath path = tree.getPathForLocation(tree.getWidth()-1, location.y);
 			return (path == null);
 		}
 
