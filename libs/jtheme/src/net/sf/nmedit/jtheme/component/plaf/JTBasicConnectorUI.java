@@ -527,7 +527,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
             if (isDragging())
                 return;
             
-            connectedCables = getConnectedCables(c);
+            connectedCables = c.getConnectedCables();
             
             if (connectedCables.length>0)
                 dragSource = c;
@@ -594,7 +594,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
                 }
 
                 connectedCables = null;
-                cables = NO_CABLES;
+                cables = JTConnector.NO_CABLES;
                 //System.out.println("X not deleted(cables=):"+cables.length);
                 return;
             }
@@ -603,7 +603,7 @@ public class JTBasicConnectorUI extends JTConnectorUI
             {
                 cableManager.remove(cables);
             }
-            cables = NO_CABLES;
+            cables = JTConnector.NO_CABLES;
 
             if (target != null)
             {
@@ -630,26 +630,10 @@ public class JTBasicConnectorUI extends JTConnectorUI
             return dragSource != null;
         }
         
-        private static final Cable[] NO_CABLES = new Cable[0];
         private JTConnector dragSource;
-        private Cable[] cables = NO_CABLES;
+        private Cable[] cables = JTConnector.NO_CABLES;
         private boolean dragCreate = true;
         
-        public Cable[] getConnectedCables(JTConnector c)
-        {
-            JTCableManager cableManager = c.getCableManager();
-            List<Cable> cableList = new ArrayList<Cable>();
-            for (Cable cable : cableManager)
-            {
-                if (cable.getSourceComponent() == c || cable.getDestinationComponent()==c)
-                    cableList.add(cable);
-            }
-            if (cableList.isEmpty())
-                return NO_CABLES;
-            
-            return cableList.toArray(new Cable[cableList.size()]);
-        }
-
     }
 
 }

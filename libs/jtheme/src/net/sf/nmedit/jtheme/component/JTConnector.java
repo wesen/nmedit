@@ -23,6 +23,8 @@
 package net.sf.nmedit.jtheme.component;
 
 import java.awt.Container;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
@@ -30,6 +32,7 @@ import net.sf.nmedit.jpatch.PSignal;
 import net.sf.nmedit.jpatch.event.PConnectorListener;
 import net.sf.nmedit.jpatch.event.PConnectorStateEvent;
 import net.sf.nmedit.jtheme.JTContext;
+import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.plaf.JTConnectorUI;
 
@@ -158,5 +161,24 @@ public class JTConnector extends JTComponent implements PConnectorListener
     {
         repaint();
     }
+    
+    public static final Cable[] NO_CABLES = new Cable[0];
+    
+    public Cable[] getConnectedCables()
+    {
+        JTCableManager cableManager = getCableManager();
+        List<Cable> cableList = new ArrayList<Cable>();
+        for (Cable cable : cableManager)
+        {
+            if (cable.getSourceComponent() == this || cable.getDestinationComponent()==this)
+                cableList.add(cable);
+        }
+        if (cableList.isEmpty())
+            return NO_CABLES;
+        
+        return cableList.toArray(new Cable[cableList.size()]);
+    }
+
+
     
 }
