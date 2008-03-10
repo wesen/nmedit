@@ -52,6 +52,18 @@ public class NMCopyOperation extends NMMoveOperation implements CopyOperation {
             	}
             }
     
+            LayoutTool layoutTool = new LayoutTool(destination, copiedModules);
+            layoutTool.setDelta(dx, dy);
+            Object[] data = layoutTool.move();
+            List<PModule> tmpMoved = new ArrayList<PModule>(data.length/3);
+            for (int i=0;i<data.length;i+=3)
+            {
+                PModule m = (PModule) data[i+0];
+                int sx = (Integer) data[i+1];
+                int sy = (Integer) data[i+2];
+                m.setScreenLocation(sx, sy);
+                tmpMoved.add(m);
+            }
             for (PModule m : modules) {
             	if (m != null && m.getParentComponent() != null)
             	{
@@ -92,18 +104,8 @@ public class NMCopyOperation extends NMMoveOperation implements CopyOperation {
             	}
             }
             
-            LayoutTool layoutTool = new LayoutTool(destination, copiedModules);
-            layoutTool.setDelta(dx, dy);
-            Object[] data = layoutTool.move();
-            List<PModule> tmpMoved = new ArrayList<PModule>(data.length/3);
-            for (int i=0;i<data.length;i+=3)
-            {
-                PModule m = (PModule) data[i+0];
-                int sx = (Integer) data[i+1];
-                int sy = (Integer) data[i+2];
-                m.setScreenLocation(sx, sy);
-                tmpMoved.add(m);
-            }
+
+            
             opModules = tmpMoved;
         }
         finally
