@@ -81,15 +81,22 @@ public class RandomizerTools
     
     public void randomizePatch() 
     {    
-        PPatch patch = getSelectedPatch();
-        if (patch == null)
-            return;
-        
-        if (randomizer.getPatch()!=patch)
-        {
-            randomizer.setPatch(patch);
-        }
-        randomizer.randomize();
+    	JTPatch jtpatch = getSelectedJTPatch();
+    	Collection<? extends PModule> modules = jtpatch.getSelectedPModules();
+    	
+    	if (!modules.isEmpty()) {
+    		randomizeModules(modules);
+    	} else {
+    		PPatch patch = getSelectedPatch();
+    		if (patch == null)
+    			return;
+
+    		if (randomizer.getPatch()!=patch)
+    		{
+    			randomizer.setPatch(patch);
+    		}
+    		randomizer.randomize();
+    	}
     }
     
     public void randomizeModules(Collection <? extends PModule> modules) {
