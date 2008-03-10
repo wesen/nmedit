@@ -27,9 +27,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.swing.KeyStroke;
-
-import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nomad.core.xml.ApplicationXMLReaderFactory;
 
 import org.xml.sax.Attributes;

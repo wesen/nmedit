@@ -42,6 +42,7 @@ import javax.swing.plaf.metal.MetalTreeUI;
 import javax.swing.tree.TreePath;
 
 import net.sf.nmedit.nmutils.Platform;
+import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.swing.explorer.helpers.ExplorerCellRenderer;
 import net.sf.nmedit.nomad.core.swing.explorer.helpers.TreeDynamicTreeExpansion;
 
@@ -53,13 +54,21 @@ public class ExplorerTreeUI extends MetalTreeUI
         return url == null ? null : new ImageIcon(url);
     }
 
+    private static Icon getIcon2(String name)
+    {
+        URL url = Nomad.sharedInstance().getClass()
+        .getResource("/icons/tango/16x16/"+name);
+        return url == null ? null : new ImageIcon(url);
+    }
+
     static Icon openIcon = getIcon("node-state-opened.png");
     static Icon closedIcon = getIcon("node-state-closed.png");
     static Icon openIconHov = getIcon("node-state-opened-hovered.png");
     static Icon closedIconHov = getIcon("node-state-closed-hovered.png");
 
-    public static final Icon DefaultFolderIcon = getIcon("fldr_obj.gif");
-    public static final Icon DefaultFileIcon = getIcon("file_obj.gif");
+    public static final Icon DefaultFolderOpenedIcon = getIcon2("status/folder-open.png");
+    public static final Icon DefaultFolderClosedIcon = getIcon2("places/folder.png");
+    public static final Icon DefaultFileIcon = getIcon2("mimetypes/text-x-generic.png");
     //Icon leafIcon = new ImageIcon("net/sf/nmedit/nomad/cbrowser/images/...");
      
     public final static Color defaultSelectionBackground = Color.decode("#A8A8A8");
@@ -78,8 +87,8 @@ public class ExplorerTreeUI extends MetalTreeUI
         tree.setRootVisible(false);
         ExplorerCellRenderer tcr = new ExplorerCellRenderer();
         tree.setCellRenderer(tcr);
-        tcr.setOpenIcon(DefaultFolderIcon);
-        tcr.setClosedIcon(DefaultFolderIcon);
+        tcr.setOpenIcon(DefaultFolderOpenedIcon);
+        tcr.setClosedIcon(DefaultFolderClosedIcon);
         tcr.setLeafIcon(DefaultFileIcon);
         tree.addTreeExpansionListener(new TreeDynamicTreeExpansion(tree));
         tree.setShowsRootHandles(true);

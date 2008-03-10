@@ -17,9 +17,6 @@
 		<library id="jsynth-integration" path="classes/" type="code">
 			<export prefix="*"/>
 		</library>
-		<library id="jsynth-data" path="data/" type="resources">
-			<export prefix="*"/>
-		</library>
 	</runtime>
 	<extension plugin-id="net.sf.nmedit.nomad.core"
 	  point-id="Service" id="SynthLibInstaller">

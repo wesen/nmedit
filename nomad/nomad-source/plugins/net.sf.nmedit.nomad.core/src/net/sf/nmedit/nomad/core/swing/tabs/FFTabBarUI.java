@@ -79,6 +79,7 @@ import javax.swing.plaf.ColorUIResource;
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.swing.NMLazyActionMap;
 import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
+import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.menulayout.MLEntry;
 import net.sf.nmedit.nomad.core.misc.FocusStroke;
 
@@ -205,7 +206,7 @@ public class FFTabBarUI extends TabBarUI
     
     // icons
 
-    public final static Icon defaultIcon = getIcon("file_obj.gif");
+    public final static Icon defaultIcon = getIcon2("mimetypes/text-x-generic.png");
 
     final static Icon navBackwardEnabledIcon = getIcon("backward-enabled.png");
 
@@ -233,7 +234,14 @@ public class FFTabBarUI extends TabBarUI
     private static Icon getIcon(String name)
     {
         URL url = FFTabBarUI.class.getResource(PATH_PREFIX+name);
-        
+        if (url == null) return null;
+        return new ImageIcon(url);
+    }
+    private static Icon getIcon2(String name)
+    {
+        final String PATH_PREFIX2 = "/icons/tango/16x16/";
+        URL url = Nomad.sharedInstance().getClass().getResource(PATH_PREFIX2+name);
+        if (url == null) return null;
         return new ImageIcon(url);
     }
 
