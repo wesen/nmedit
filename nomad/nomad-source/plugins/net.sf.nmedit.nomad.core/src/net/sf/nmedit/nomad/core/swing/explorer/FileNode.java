@@ -334,8 +334,7 @@ public class FileNode implements ETreeNode, MouseListener,
     public Icon getIcon()
     {
         return file.isFile() ? 
-        		ExplorerTreeUI.DefaultFileIcon : 
-        			ExplorerTreeUI.DefaultFolderIcon; 
+        		ExplorerTreeUI.DefaultFileIcon : null; 
     }
 
     public String getToolTipText()

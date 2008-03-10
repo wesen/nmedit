@@ -14,7 +14,7 @@
 		<entry entryPoint="new">
 			<entry entryPoint="global" flat="true">
 				<entry entryPoint="location">
-					<icon type="enabledIcon" src="&etool;/newfolder_wiz.gif" />
+					<icon type="enabledIcon" src="&tango;/actions/folder-new.png" />
 				</entry>
 				<entry entryPoint="synth">
 					<icon type="enabledIcon" src="&etool;/new_wiz.gif" />
@@ -33,16 +33,16 @@
 		</entry>
 		<entry entryPoint="save" flat="true">
 			<entry entryPoint="save">
-				<icon type="enabledIcon" src="&etool;/save_edit.gif" />
-				<icon type="disabledIcon" src="&dtool;/save_edit.gif" />
+				<icon type="enabledIcon" src="&tango;/actions/document-save.png" />
+				<icon type="disabledIcon" src="&tango;/actions/document-save.png" />
 			</entry>
 			<entry entryPoint="saveas">
-				<icon type="enabledIcon" src="&etool;/saveas_edit.gif" />
-				<icon type="disabledIcon" src="&dtool;/saveas_edit.gif" />
+				<icon type="enabledIcon" src="&tango;/actions/document-save-as.png" />
+				<icon type="disabledIcon" src="&tango;/actions/document-save-as.png" />
 			</entry>
 			<entry entryPoint="saveall">
-				<icon type="enabledIcon" src="&etool;/saveall_edit.gif" />
-				<icon type="disabledIcon" src="&dtool;/saveall_edit.gif" />
+				<icon type="enabledIcon" src="&tango;/actions/document-save-as.png" />
+				<icon type="disabledIcon" src="&tango;/actions/document-save-as.png" />
 			</entry>
 			<entry entryPoint="saveinsynth" />
 		</entry>
@@ -58,36 +58,42 @@
 				<accelerator desc="control E" descmac="meta E"/>
 			</entry>
 		</entry>
-		<entry entryPoint="properties" />
+		<entry entryPoint="properties" >
+			<icon type="enabledIcon" src="&tango;/actions/document-properties.png" />
+			<icon type="disabledIcon" src="&tango;/actions/document-properties.png" />
+     	</entry>
 		<entry entryPoint="exit" />
 	</entry>
 	<entry entryPoint="edit">
 		<entry entryPoint="history" flat="true">
 			<entry entryPoint="undo">
-				<icon type="enabledIcon" src="&etool;/undo_edit.gif"/>
-				<icon type="disabledIcon" src="&dtool;/undo_edit.gif"/>
+				<icon type="enabledIcon" src="&tango;/actions/edit_undo.png"/>
+				<icon type="disabledIcon" src="&tango;/actions/edit_undo.png"/>
 			</entry>
 			<entry entryPoint="redo">
-				<icon type="enabledIcon" src="&etool;/redo_edit.gif" />
-				<icon type="disabledIcon" src="&dtool;/redo_edit.gif" />
+				<icon type="enabledIcon" src="&tango;/actions/edit-redo.png" />
+				<icon type="disabledIcon" src="&tango;/actions/edit-redo.png" />
 			</entry>
 		</entry>
 		<entry entryPoint="edit" flat="true">
 			<entry entryPoint="cut">
-				<icon type="enabledIcon" src="&etool;/cut_edit.gif" />
-				<icon type="disabledIcon" src="&dtool;/cut_edit.gif" />
+				<icon type="enabledIcon" src="&tango;/actions/edit-cut.png" />
+				<icon type="disabledIcon" src="&tango;/actions/edit-cut.png" />
 			</entry>
 			<entry entryPoint="copy">
-				<icon type="enabledIcon" src="&etool;/copy_edit.gif" />
-				<icon type="disabledIcon" src="&dtool;/copy_edit.gif" />
+				<icon type="enabledIcon" src="&tango;/actions/edit-copy.png" />
+				<icon type="disabledIcon" src="&tango;/actions/edit-copy.png" />
 			</entry>
 			<entry entryPoint="paste">
-				<icon type="enabledIcon" src="&etool;/paste_edit.gif" />
-				<icon type="disabledIcon" src="&dtool;/paste_edit.gif" />
+				<icon type="enabledIcon" src="&tango;/actions/edit-paste.png" />
+				<icon type="disabledIcon" src="&tango;/actions/edit-paste.png" />
 			</entry>
 		</entry>
 		<entry entryPoint="app" flat="true">
-			<entry entryPoint="preferences" />
+			<entry entryPoint="preferences">
+				<icon type="enabledIcon" src="&tango;/actions/document-properties.png" />
+				<icon type="disabledIcon" src="&tango;/actions/document-properties.png" />
+			</entry>
 		</entry>
 	</entry>
 	<!--
@@ -112,15 +118,15 @@
 	</entry> -->
 	<entry entryPoint="help">
 		<entry entryPoint="plugins">
-			<icon type="enabledIcon" src="&etool;/plugin.gif" />
+			<icon type="enabledIcon" src="&tango;/apps/help-browser.png" />
 		</entry>
 		<entry entryPoint="license">
-			<icon type="enabledIcon" src="&etool;/help_contents.gif" />
-			<icon type="disabledIcon" src="&dtool;/help_contents.gif" />
+			<icon type="enabledIcon" src="&tango;/apps/help-browser.png" />
+			<icon type="disabledIcon" src="&tango;/apps/help-browser.png" />
 		</entry>
 		<entry entryPoint="about">
-			<icon type="enabledIcon" src="&etool;/help_contents.gif" />
-			<icon type="disabledIcon" src="&dtool;/help_contents.gif" />
+			<icon type="enabledIcon" src="&tango;/apps/help-browser.png" />
+			<icon type="disabledIcon" src="&tango;/apps/help-browser.png" />
 		</entry>
 		<entry entryPoint="debug">
 			<entry entryPoint="gc" />
@@ -143,16 +149,26 @@
   
   <entry entryPoint="fileexplorer">
     <entry entryPoint="item" flat="true">
-      <entry entryPoint="open" />
-      <entry entryPoint="delete" />
+      <entry entryPoint="open">
+		  <icon type="enabledIcon" src="&tango;/actions/document-open.png" />
+		</entry>
+      <entry entryPoint="delete">
+		  <icon type="enabledIcon" src="&tango;/actions/edit-delete.png" />
+		</entry>
     </entry>
     <entry entryPoint="rename" />
     <entry entryPoint="entry" flat="true">
-      <entry entryPoint="refresh" />
-      <entry entryPoint="remove" />
+      <entry entryPoint="refresh">
+		  <icon type="enabledIcon" src="&tango;/actions/view-refresh.png" />
+		</entry>
+      <entry entryPoint="remove"  >
+		  <icon type="enabledIcon" src="&tango;/actions/list-remove.png" />
+		</entry>
     </entry>
     <entry entryPoint="dir" flat="true">
-      <entry entryPoint="newdir" />
+      <entry entryPoint="newdir" >
+		  <icon type="enabledIcon" src="&tango;/actions/folder-new.png" />
+		</entry>
     </entry>
   </entry>
 </entry>

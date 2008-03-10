@@ -71,6 +71,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import org.java.plugin.PluginManager;
+import org.java.plugin.registry.PluginDescriptor;
+
 import net.sf.nmedit.jsynth.Bank;
 import net.sf.nmedit.jsynth.Port;
 import net.sf.nmedit.jsynth.Slot;
@@ -304,7 +307,8 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
 
     private static ImageIcon getIcon(String name)
     {
-        URL url = SynthObjectForm.class.getClassLoader().getResource(name);
+        name = "/icons/tango/16x16/"+name;
+        URL url = Nomad.sharedInstance().getClass().getResource(name);
         
         if (url == null)
             return null;
@@ -519,25 +523,25 @@ public class SynthObjectForm<S extends Synthesizer> extends JPanel
     }
     
 
-    static ImageIcon icfolder = getIcon("tango-icon-theme/16x16/places/folder.png");
-    static ImageIcon icfolderopen = getIcon("tango-icon-theme/16x16/status/folder-open.png");
-    static ImageIcon icfolderDragAccept = getIcon("tango-icon-theme/16x16/status/folder-drag-accept.png");
-    static ImageIcon icstart = getIcon("tango-icon-theme/16x16/actions/media-playback-start.png");
-    static ImageIcon icstop = getIcon("tango-icon-theme/16x16/actions/media-playback-stop.png");
-    static ImageIcon icsystem = getIcon("tango-icon-theme/16x16/emblems/emblem-system.png");
+    static ImageIcon icfolder = getIcon("places/folder.png");
+    static ImageIcon icfolderopen = getIcon("status/folder-open.png");
+    static ImageIcon icfolderDragAccept = getIcon("status/folder-drag-accept.png");
+    static ImageIcon icstart = getIcon("actions/media-playback-start.png");
+    static ImageIcon icstop = getIcon("actions/media-playback-stop.png");
+    static ImageIcon icsystem = getIcon("actions/document-properties.png");
     // TODO find a good connect/disconnected icon
-    static ImageIcon icconnected = getIcon("tango-icon-theme/16x16/emotes/face-angel.png");
+    static ImageIcon icconnected = getIcon("categories/applications-other.png");
     static ImageIcon icdisconnected = icconnected;
 
 
-    static ImageIcon icComIdle = getIcon("tango-icon-theme/16x16/status/network-idle.png");
-    static ImageIcon icComOffline = getIcon("tango-icon-theme/16x16/status/network-offline.png");
-    static ImageIcon icComError = getIcon("tango-icon-theme/16x16/status/network-error.png");
-    static ImageIcon icComReceive = getIcon("tango-icon-theme/16x16/status/network-receive.png");
-    static ImageIcon icComTransmit = getIcon("tango-icon-theme/16x16/status/network-transmit.png");
-    static ImageIcon icComTransmitReceive = getIcon("tango-icon-theme/16x16/status/network-transmit-receive.png");
+    static ImageIcon icComIdle = getIcon("status/network-idle.png");
+    static ImageIcon icComOffline = getIcon("status/network-offline.png");
+    static ImageIcon icComError = getIcon("status/network-error.png");
+    static ImageIcon icComReceive = getIcon("status/network-receive.png");
+    static ImageIcon icComTransmit = getIcon("status/network-transmit.png");
+    static ImageIcon icComTransmitReceive = getIcon("status/network-transmit-receive.png");
 
-    static ImageIcon icAppOther = getIcon("tango-icon-theme/16x16/categories/applications-other.png");
+    static ImageIcon icAppOther = getIcon("categories/applications-other.png");
     
     private JLabel synthStatusLabel;
     private JLabel synthIconLabel;

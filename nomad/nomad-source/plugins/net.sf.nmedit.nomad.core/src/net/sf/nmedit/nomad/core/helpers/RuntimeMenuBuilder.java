@@ -55,7 +55,7 @@ public class RuntimeMenuBuilder
     private static Icon getNewFileIcon()
     {
         if (newFileIcon == null)
-            newFileIcon = getIcon("/icons/etool16/new_untitled_text_file.gif");
+            newFileIcon = getIcon("/icons/tango/16x16/actions/document-new.png");
         return newFileIcon;
     }
     
