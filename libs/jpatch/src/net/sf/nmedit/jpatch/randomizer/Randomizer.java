@@ -18,6 +18,7 @@
  */
 package net.sf.nmedit.jpatch.randomizer;
 
+import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PPatch;
 
 public interface Randomizer
@@ -26,6 +27,8 @@ public interface Randomizer
     void setPatch(PPatch patch);
     
     PPatch getPatch();
+    
+    void addModule(PModule module);
     
     void randomize();
     
