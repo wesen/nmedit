@@ -31,6 +31,7 @@ import net.sf.nmedit.jpatch.clavia.nordmodular.Knob;
 import net.sf.nmedit.jpatch.clavia.nordmodular.MidiController;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.PNMMorphSection;
+import net.sf.nmedit.jpatch.clavia.nordmodular.PNMMorphSection.Assignments;
 import net.sf.nmedit.jtheme.JTPopupHandler;
 import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTControl;
@@ -120,7 +121,9 @@ public class ControlPopupHandler implements JTPopupHandler
             
             popup = new JPopupMenu();
             popup.add(new ParameterAction(this, ParameterAction.DEFAULTVALUE));
-            popup.add(new ParameterAction(this, ParameterAction.ZEROMORPH));
+            if (!(control.getParent() instanceof JTMorphModule)) {
+            	popup.add(new ParameterAction(this, ParameterAction.ZEROMORPH));
+            }
 
             // Knob
             submenuKnob = new JMenu("Knob");
@@ -180,7 +183,21 @@ public class ControlPopupHandler implements JTPopupHandler
             		tmpa.setEnabled(false);
                 submenuMorph.add(tmpa);
                 popup.add(submenuMorph);
+            } else {
+            	JTMorphModule morphModule = (JTMorphModule)control.getParent();
+            	int idx = morphModule.getMorphIndex(control);
+            	if (idx >= 0) {
+            		Assignments assignments = getPatch().getMorphSection().getAssignments(idx);
+            		if (assignments.size() > 0) {
+            			popup.addSeparator();
+            			for (PParameter p : assignments) {
+            				popup.add(new ParameterAction(this, ParameterAction.DISABLE_FROM_MORPH, p));
+            			}
+            			popup.addSeparator();
+            		}
+            	}
             }
+            
             // MIDI Controller
             submenuMIDI = new JMenu("MIDI Controller");
             submenuMIDI.add(new ParameterAction(this, ParameterAction.MIDI, MidiController.MODULATION_WHEEL));
@@ -334,21 +351,37 @@ public class ControlPopupHandler implements JTPopupHandler
         public static final String MORPH = "Morph";
         public static final String DISABLE_KNOB = "Disable Knob";
         public static final String DISABLE_MORPH = "Disable Morph";
+        public static final String DISABLE_FROM_MORPH = "Disable From Morph";
         public static final String DISABLE_MIDI = "Disable Midi";
         public static final String MIDI = "MIDI";
         public static final String KB = "KB";
         
         private ControlPopup parent;
         private int index;
+        private PParameter parameter = null;
         
-
+        public PParameter getMorphParameter()
+        {
+            return (getParameter() == null) ? null : getParameter().getExtensionParameter();
+        }
+        
         public ParameterAction(ControlPopup parent, String actionCommand)
         {
             this(parent, actionCommand, -1);
         }
-        
-        public ParameterAction(ControlPopup parent, String actionCommand, int index)
+
+        public ParameterAction(ControlPopup parent, String actionCommand, PParameter parameter)
         {
+            this(parent, actionCommand, -1, parameter);
+        }
+        
+        public ParameterAction(ControlPopup parent, String actionCommand, int index) {
+        	this(parent, actionCommand, index, null);
+        }
+
+        public ParameterAction(ControlPopup parent, String actionCommand, int index, PParameter parameter)
+        {
+        	this.parameter = parameter;
             putValue(ACTION_COMMAND_KEY, actionCommand);
             this.parent = parent;
             setEnabled(false);
@@ -365,17 +398,21 @@ public class ControlPopupHandler implements JTPopupHandler
             else if (actionCommand == ZEROMORPH)
             {
                 // TODO check if morph is enabled
-                setEnabled(parent.getMorphParameter() != null /*&& morph enabled*/);
+                setEnabled(getMorphParameter() != null /*&& morph enabled*/);
                 name = ZEROMORPH;
             }
             else if (actionCommand == DISABLE_MORPH) {
             	name = "Disable Morph " + (index + 1);
             	setEnabled(true);
             }
+            else if (actionCommand == DISABLE_FROM_MORPH) {
+            	name = "Remove Morph from " + getParameter().getParentComponent().getTitle() + extraInfo(getParameter());
+            	setEnabled(getMorphParameter() != null);
+            }
             else if (actionCommand == MORPH)
             { 
                 if (index>4) throw new IllegalArgumentException("invalid morph group:"+index);
-                boolean MorphAssignmentSupported = parent.getMorphParameter() != null;
+                boolean MorphAssignmentSupported = getMorphParameter() != null;
                 if (index>=0)
                 {
                     name = "Group "+(index+1);
@@ -508,6 +545,8 @@ public class ControlPopupHandler implements JTPopupHandler
             	deassignKnob();
             } else if (command == DISABLE_MORPH) {
             	deassignMorph();
+            } else if (command == DISABLE_FROM_MORPH) {
+            	deassignMorph();
             } else if (command == DISABLE_MIDI) {
             	deassignMidiCtrl();
             }
@@ -519,7 +558,7 @@ public class ControlPopupHandler implements JTPopupHandler
             }
             else if (command == ZEROMORPH)
             {
-            	parent.getMorphParameter().setValue(0);
+            	getMorphParameter().setValue(0);
             }
             else if (command == DEFAULTVALUE)
             {
@@ -541,7 +580,10 @@ public class ControlPopupHandler implements JTPopupHandler
 
         PParameter getParameter()
         {
-            return parent.getParameter();
+        	if (parameter == null)
+        		return parent.getParameter();
+        	else
+        		return parameter;
         }
         
         NMPatch getPatch()
@@ -573,12 +615,12 @@ public class ControlPopupHandler implements JTPopupHandler
 
         public void deassignMorph()
         {
+            getMorphParameter().setValue(0);
+
             PNMMorphSection m = getPatch().getMorphSection();
             int group = m.getAssignedMorph(getParameter());
             if (group>=0)
                 m.getAssignments(group).remove(getParameter());
-            
-            parent.getMorphParameter().setValue(0);
         }
 
         public void assignMorph()

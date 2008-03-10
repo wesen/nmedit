@@ -90,6 +90,14 @@ public class JTMorphModule extends JTModule
         setMaximumSize(d);
     }
     
+    public int getMorphIndex(JTControl knob) {
+    	for (int i = 0; i < morphKnobs.length; i++) {
+    		if (morphKnobs[i] == knob)
+    			return i;
+    	}
+    	return -1;
+    }
+    
     public void setModule(PModule module)
     {
         super.setModule(module);
