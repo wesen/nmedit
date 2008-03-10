@@ -661,16 +661,6 @@ public class Nomad
         
         explorerTree.createPopup(menuBuilder);
 
-    	TempDir tempDir = TempDir.generalTempDir();
-    	File userPatches = tempDir.getTempFile("patches");
-    	if (userPatches.exists()) {
-    		FileContext libraryContext = new FileContext(explorerTree, new ExtensionFilter("Nord Modular Patch", "pch", true), userPatches);
-    		libraryContext.setName("Library");
-    		libraryContext.setNailed(true);
-    		explorerTree.addRootNode(libraryContext);
-    	}
-
-        
         JScrollPane explorerTreeScroller = new JScrollPane(explorerTree);
         toolPane = new JTabbedPane2();
         toolPane.setCloseActionEnabled(false);
