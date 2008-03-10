@@ -45,10 +45,17 @@ public class NMCopyOperation extends NMMoveOperation implements CopyOperation {
             List<PModule>copiedModules = new ArrayList<PModule>();
             for (PModule m : modules) {
             	if (m != null) {
-            		PModule newM = m.cloneModule();
-            		copiedModules.add(newM);
-            		destination.add(newM);
-            		mapNew.put(m, newM);
+            		if (destination.canAdd(m.getDescriptor())) {
+            			PModule newM = m.cloneModule();
+            			copiedModules.add(newM);
+            			destination.add(newM);
+            			mapNew.put(m, newM);
+            		} else {
+            			Collection<? extends PModule> similarModules = destination.getModulesWithDescriptor(m.getDescriptor());
+            			if (similarModules.size() == 1) {
+            				mapNew.put(m, similarModules.iterator().next());
+            			}
+            		}
             	}
             }
     

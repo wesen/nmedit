@@ -379,4 +379,14 @@ public class PBasicModuleContainer extends PBasicComponent<PModuleContainerDescr
         return true;
     }
 
+	public Collection<? extends PModule> getModulesWithDescriptor(PModuleDescriptor descriptor) {
+		ArrayList<PModule> result = new ArrayList<PModule>();
+		for (PModule m : this) { 
+			if (m.getDescriptor().equals(descriptor))
+				result.add(m);
+		}
+		
+		return result;
+	}
+
 }
