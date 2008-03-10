@@ -226,6 +226,10 @@ public class RootNode extends DefaultMutableTreeNode implements TreeNode
         insert(newChild, getChildCount());
     }
 
+    public void add(TreeNode newChild, int i) {
+        insert(newChild, i);
+    }
+
     //
     //  Tree Queries
     //

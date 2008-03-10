@@ -102,6 +102,10 @@ public class ExplorerTree extends JTree
 
     public void addRootNode(TreeNode node)
     {
+    	addRootNode(node, getRoot().getChildCount());
+    	}
+
+    public void addRootNode(TreeNode node, int i) {
     	RootNode root = getRoot();
     	if (node instanceof FileNode && root != null) {
     		File file = ((FileNode)node).getFile();
@@ -119,11 +123,11 @@ public class ExplorerTree extends JTree
     				e.printStackTrace();
     				return;
     			}
-    		}
-    	}
 
-        getRoot().add(node);
-        fireRootChanged();
+    		}
+    		root.add(node, i);
+    		fireRootChanged();
+    	}
     }
     
     public RootNode getRoot()
