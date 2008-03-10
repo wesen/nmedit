@@ -857,6 +857,11 @@ public class Nomad
     {
         if (!stopped)
         {
+            for (Document d: getDocumentManager().getDocuments())
+            {
+            	if (!getDocumentManager().closeDocument(d))
+            		return false;
+            }
             stop();
             return stopped;
         }
@@ -900,9 +905,9 @@ public class Nomad
         }
     }
     
-    public void handleExit()
+    public boolean handleExit()
     {
-        askStopApplication();
+        return askStopApplication();
     }
 
     public MenuLayout getMenuLayout()

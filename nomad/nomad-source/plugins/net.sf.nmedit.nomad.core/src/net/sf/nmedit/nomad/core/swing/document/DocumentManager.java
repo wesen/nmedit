@@ -38,6 +38,6 @@ public interface DocumentManager
     
     int indexOf(Document d);
     
-    void closeDocument(Document d);
+    boolean closeDocument(Document d);
     
 }

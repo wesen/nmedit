@@ -251,19 +251,20 @@ public class DefaultDocumentManager extends JTabbedPane2 implements DocumentMana
         
     }
     
-    public void closeDocument(Document d) {
+    public boolean closeDocument(Document d) {
     	if (d != null) {
             if (d.isModified()) {
             	Nomad n = Nomad.sharedInstance();
             	int result = JOptionPane.showConfirmDialog(n.getWindow().getRootPane(), "Are you sure you want to close " + d.getTitle() + " ?",
             			"", JOptionPane.OK_CANCEL_OPTION);
             	if (result != JOptionPane.OK_OPTION)
-            		return;
+            		return false;
             	
             }
             remove(d);
             d.dispose();
     	}
+    	return true;
     }
     
 
