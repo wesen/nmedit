@@ -372,7 +372,7 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
 				// check copy, move
 				if ((dtde.getDropAction() & DnDConstants.ACTION_MOVE) != 0) {
 					dtde.acceptDrop(DnDConstants.ACTION_MOVE);
-					dropFilesInDir(dtde, true);
+					dropFilesInDir(dtde, dtde.isLocalTransfer());
 				} else if  ((dtde.getDropAction() & DnDConstants.ACTION_COPY) != 0) {
 					dtde.acceptDrop(DnDConstants.ACTION_COPY);
 					dropFilesInDir(dtde, false);
