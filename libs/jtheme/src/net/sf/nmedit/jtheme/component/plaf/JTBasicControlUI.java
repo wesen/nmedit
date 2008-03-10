@@ -257,7 +257,7 @@ public abstract class JTBasicControlUI extends JTControlUI
     FocusListener
     {
         
-        protected double pressedValue;
+        protected double pressedNormalizedValue;
         protected int pressedModifier;
         protected boolean selectExtensionAdapter = false;
 
@@ -290,6 +290,7 @@ public abstract class JTBasicControlUI extends JTControlUI
         }
 
         private transient InputMap inputMapWhenFocused ;
+		private int pressedValue;
         protected InputMap createInputMapWhenFocused()
         {
             if (inputMapWhenFocused == null)
@@ -385,8 +386,9 @@ public abstract class JTBasicControlUI extends JTControlUI
               
                 selectExtensionAdapter = isExtensionSelected(e);
                 
-                pressedValue = selectExtensionAdapter ? control.getExtNormalizedValue() :
+                pressedNormalizedValue = selectExtensionAdapter ? control.getExtNormalizedValue() :
                 control.getNormalizedValue();
+                pressedValue = control.getValue();
                 pressedModifier = getValueModifier(control, e);
             }
             
@@ -398,6 +400,13 @@ public abstract class JTBasicControlUI extends JTControlUI
         public void mouseReleased( MouseEvent e )
         {
             JTControl control = controlFor(e);
+            if (control.getControlAdapter() != null) {
+            	PParameter parameter = control.getControlAdapter().getParameter();
+            	int newValue = control.getValue();
+            	if (newValue != pressedValue && parameter.isUndoableEditSupportEnabled()) {
+            		parameter.postEdit(parameter.createParameterValueEdit(pressedValue, newValue));
+            	}
+            }
             
             if (Platform.isPopupTrigger(e))
             {
@@ -430,11 +439,15 @@ public abstract class JTBasicControlUI extends JTControlUI
             {
                 int currentModifier = getValueModifier(control, e);
 
+                try {
+                	control.getControlAdapter().getParameter().disableUndo();
                 if (control.getOrientation()!=SwingConstants.VERTICAL)
-                    updateValue(control, currentModifier, pressedModifier, pressedValue);
+                    updateValue(control, currentModifier, pressedModifier, pressedNormalizedValue);
                 else // horizontal
-                    updateValue(control, pressedModifier, currentModifier, pressedValue);
-               
+                    updateValue(control, pressedModifier, currentModifier, pressedNormalizedValue);
+                } finally {
+                	control.getControlAdapter().getParameter().enableUndo();
+                }
             } 
         }
 
@@ -443,7 +456,7 @@ public abstract class JTBasicControlUI extends JTControlUI
             double modifier = (currentModifier-pressedModifier)/128d;
             // assure value in range [0..1]
             double nvalue = Math.max(0, Math.min(pressedValue+modifier, 1));
-            
+
             if (selectExtensionAdapter) {
                 control.setExtNormalizedValue(nvalue);
                 
