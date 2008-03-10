@@ -58,8 +58,11 @@ import net.sf.nmedit.nomad.core.jpf.TempDir;
 import net.sf.nmedit.nomad.core.menulayout.MLEntry;
 import net.sf.nmedit.nomad.core.service.Service;
 import net.sf.nmedit.nomad.core.service.initService.InitService;
+import net.sf.nmedit.nomad.core.swing.ExtensionFilter;
 import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
 import net.sf.nmedit.nomad.core.swing.document.Document;
+import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
+import net.sf.nmedit.nomad.core.swing.explorer.FileContext;
 import net.sf.nmedit.nomad.core.swing.tabs.JTabbedPane2;
 
 public class Installer implements InitService
@@ -125,6 +128,16 @@ public class Installer implements InitService
     	File userPatches = tempDir.getTempFile("patches");
     	if (!userPatches.exists())
     		FileUtils.copy(patches, userPatches);
+    	if (userPatches.exists()) {
+    		ExplorerTree explorerTree = Nomad.sharedInstance().getExplorer();
+    		FileContext libraryContext = new FileContext(explorerTree, new ExtensionFilter("Nord Modular Patch", "pch", true), userPatches);
+    		libraryContext.setName("Library");
+    		libraryContext.setNailed(true);
+    		explorerTree.addRootNode(libraryContext, 0);
+    	}
+
+        
+
     }
 
     private File getSessionFile(TempDir dir)
