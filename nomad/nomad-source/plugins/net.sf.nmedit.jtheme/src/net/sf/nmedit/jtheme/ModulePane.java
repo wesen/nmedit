@@ -135,7 +135,7 @@ public class ModulePane extends JPanel
         filterBar.addSpace();
         filterBar.add(tfFilter);
         filterBar.addSpace();
-        JButton btnClear = new JButton("x");
+        JButton btnClear = new JButton("Clear");
         btnClear.setToolTipText("clear");
         btnClear.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e)
