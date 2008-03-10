@@ -125,9 +125,9 @@ public class ExplorerTree extends JTree
     			}
 
     		}
-    		root.add(node, i);
-    		fireRootChanged();
     	}
+        root.add(node, i);
+        fireRootChanged();
     }
     
     public RootNode getRoot()
