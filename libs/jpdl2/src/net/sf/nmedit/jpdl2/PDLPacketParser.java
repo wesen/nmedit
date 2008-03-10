@@ -46,7 +46,7 @@ import net.sf.nmedit.jpdl2.utils.PDLUtils;
 public class PDLPacketParser
 {
     
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private static final boolean LOG_ONLY_ERRORS = true;
     
     private PDLDataSource input;
