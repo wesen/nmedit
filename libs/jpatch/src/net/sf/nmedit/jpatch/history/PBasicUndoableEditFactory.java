@@ -79,7 +79,7 @@ public class PBasicUndoableEditFactory implements PUndoableEditFactory
         return wrap(new PatchNameEdit(patch, oldname, newname));
     }
 
-    public UndoableEdit createParameterValueEdit(PParameter parameter, double oldValue, double newValue)
+    public UndoableEdit createParameterValueEdit(PParameter parameter, int oldValue, int newValue)
     {
         return wrap(new ParameterValueEdit(parameter, oldValue, newValue));
     }

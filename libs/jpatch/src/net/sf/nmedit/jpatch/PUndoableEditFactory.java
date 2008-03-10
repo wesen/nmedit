@@ -33,5 +33,6 @@ public interface PUndoableEditFactory
     UndoableEdit createRemoveEdit(PModuleContainer container,
             PModule module, int index);
     UndoableEdit createPatchNameEdit(PPatch patch, String oldvalue, String newvalue);
+    UndoableEdit createParameterValueEdit(PParameter parameter, int oldValue, int newValue);
     
 }

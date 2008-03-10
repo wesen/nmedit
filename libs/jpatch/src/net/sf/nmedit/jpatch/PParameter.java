@@ -18,6 +18,8 @@
  */
 package net.sf.nmedit.jpatch;
 
+import javax.swing.undo.UndoableEdit;
+
 import net.sf.nmedit.jpatch.event.PParameterListener;
 
 /**
@@ -175,4 +177,15 @@ public interface PParameter extends PComponent
      * @param group index of the group. If group < 0, parameter is not part of a group 
      */
     void setMorphGroup(int group);
+
+    
+    /**
+     * Make undo operations visible because parameter require special handling.
+     */
+	void disableUndo();
+
+	void enableUndo();
+	
+    public UndoableEdit createParameterValueEdit(int oldValue, int newValue); 
+
 }
