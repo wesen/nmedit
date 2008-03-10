@@ -413,7 +413,7 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
 			if (flavor == null)
 				return;
 			try {
-				String data = (String)t.getTransferData(flavor);
+				String data = FileDnd.getPatchString(t);
 				File newFile = FileUtils.newFileWithPrefix(dest, "macro", ".pch");
 				FileWriter out = new FileWriter(newFile);
 				out.write(data);
@@ -429,9 +429,6 @@ public class FileExplorerTreeUI extends ExplorerTreeUI {
 		            	break;
 					}
 				}
-			} catch (UnsupportedFlavorException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
