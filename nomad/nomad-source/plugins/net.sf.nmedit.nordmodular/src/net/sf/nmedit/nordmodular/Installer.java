@@ -50,6 +50,7 @@ import net.sf.nmedit.jsynth.midi.MidiPlug;
 import net.sf.nmedit.jsynth.midi.MidiDescription;
 import net.sf.nmedit.jtheme.ModulePane;
 import net.sf.nmedit.jtheme.util.RelativeClassLoader;
+import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.io.FileUtils;
 import net.sf.nmedit.nomad.core.JPFUtil;
 import net.sf.nmedit.nomad.core.Nomad;
@@ -85,16 +86,12 @@ public class Installer implements InitService
         pane.setTheme(data.getJTContext());
 
         Nomad nomad = Nomad.sharedInstance();
-        MLEntry mlPatch = nomad.getMenuLayout().getEntry("nomad.menu.patch");
-        MLEntry mlKnobs = new MLEntry("knobs"); // TODO i18n
-        mlKnobs.putValue(MLEntry.NAME, "Knobs");
-        mlKnobs.putValue(MLEntry.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_K, KeyEvent.CTRL_DOWN_MASK));
+        MLEntry mlKnobs = nomad.getMenuLayout().getEntry("nomad.menu.patch.knobs");
         
         DefaultDocumentManager dm = Nomad.sharedInstance().getDocumentManager();
         KnobController kc = new KnobController();
         dm.addListener(kc);
         mlKnobs.addActionListener(kc);
-        mlPatch.add(mlKnobs);
         
         loadLastSession();
     }
