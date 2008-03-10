@@ -19,12 +19,14 @@
 package net.sf.nmedit.jpatch.impl;
 
 import javax.swing.event.EventListenerList;
+import javax.swing.undo.UndoableEdit;
 
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PParameter;
 import net.sf.nmedit.jpatch.PParameterDescriptor;
 import net.sf.nmedit.jpatch.PPatch;
+import net.sf.nmedit.jpatch.PUndoableEditFactory;
 import net.sf.nmedit.jpatch.event.PParameterEvent;
 import net.sf.nmedit.jpatch.event.PParameterListener;
 
@@ -43,6 +45,14 @@ public class PBasicParameter
     private int value;
     private int morphGroup; 
     private EventListenerList listenerList = new EventListenerList();
+    private boolean undoEnabled = true;
+    private int lastValueBeforeDisableUndo = 0;
+    
+    public boolean isUndoableEditSupportEnabled()
+    {
+    	return super.isUndoableEditSupportEnabled() && undoEnabled;
+    }
+
     
     private PParameter extensionParameter;
 
@@ -50,7 +60,7 @@ public class PBasicParameter
             PModule parent, int componentIndex)
     {
         super(descriptor, componentIndex);
-        this.value = getDefaultValue();
+        this.lastValueBeforeDisableUndo = this.value = getDefaultValue();
         this.parent = parent;
         // initially the parameter is not assigned to a morph group
         this.morphGroup = -1;
@@ -96,10 +106,24 @@ public class PBasicParameter
         if (oldValue != value)
         {
             this.value = value;
+            if (isUndoableEditSupportEnabled())
+            {
+            	int newValue = this.value;
+            	UndoableEdit edit = createParameterValueEdit(oldValue, newValue);
+                if (edit != null) postEdit(edit);
+            }
             fireParameterValueChanged(oldValue, value);
         }
     }
     
+    public UndoableEdit createParameterValueEdit(int oldValue, int newValue) 
+    {
+        PUndoableEditFactory factory = getUndoableEditFactory();
+        if (factory != null)
+            return factory.createParameterValueEdit(this, oldValue, newValue);
+        return null;
+    }
+
     public double getDoubleValue()
     {
         int min = getMinValue();
@@ -244,6 +268,14 @@ public class PBasicParameter
 				}
 			}
 		}
+	}
+
+	public void disableUndo() {
+		undoEnabled = false;
+	}
+
+	public void enableUndo() {
+		undoEnabled = true;
 	}
 
 

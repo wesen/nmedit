@@ -9,10 +9,10 @@ import net.sf.nmedit.jpatch.PParameter;
 public class ParameterValueEdit extends AbstractUndoableEdit {
 	
 	private PParameter parameter;
-	private double oldValue;
-	private double newValue;
+	private int oldValue;
+	private int newValue;
 	
-	public ParameterValueEdit(PParameter parameter, double oldValue, double newValue) {
+	public ParameterValueEdit(PParameter parameter, int oldValue, int newValue) {
 		this.parameter = parameter;
 		this.oldValue = oldValue;
 		this.newValue = newValue;
@@ -20,19 +20,19 @@ public class ParameterValueEdit extends AbstractUndoableEdit {
 
     public String getPresentationName()
     {
-        return "modify parameter " + parameter.getName();
+        return "modify " + parameter.getName();
     }
     
     public void undo() throws CannotUndoException
     {
         super.undo();
-        parameter.setDoubleValue(oldValue);
+        parameter.setValue(oldValue);
     }
     
     public void redo() throws CannotRedoException
     {
         super.redo();
-        parameter.setDoubleValue(newValue);
+        parameter.setValue(newValue);
     }
 
 }
