@@ -387,7 +387,8 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
                 deleteCables();
             else 
             {
-                if (signalType != null) setColor(signalType);
+                if (signalType != null) 
+                	setColor(signalType);
             }
         }
 
@@ -397,7 +398,10 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
             PConnector c = connector.getConnector();
             if (c == null) return;
             
-            // c.setConnectionColor(signal);
+//            for (Cable cable : connector.getConnectedCables()) {
+//            	cable.setColor(signal.getColor());
+//            }
+//            connector.getCableManager().update(connector.getConnectedCables());
         }
         
         private void deleteCables()
