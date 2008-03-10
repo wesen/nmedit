@@ -280,6 +280,11 @@ public class PluginView implements Document
             return "License "+pluginTitle;
         }
 
+        public String getTitleExtended()
+        {
+        	return getTitle();
+        }
+
         public void actionPerformed(ActionEvent e)
         {
             DocumentManager docs = Nomad.sharedInstance().getDocumentManager();
@@ -513,6 +518,11 @@ public class PluginView implements Document
     public String getTitle()
     {
         return "Plugins";
+    }
+
+    public String getTitleExtended()
+    {
+        return getTitle();
     }
 
     public void dispose()

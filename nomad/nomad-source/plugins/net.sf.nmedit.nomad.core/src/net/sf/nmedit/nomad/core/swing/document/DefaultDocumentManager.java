@@ -169,7 +169,7 @@ public class DefaultDocumentManager extends JTabbedPane2 implements DocumentMana
         if (icon == null)
             icon = FFTabBarUI.defaultIcon;
         
-        container.addTab(d.getTitle(), icon, d.getComponent());
+        container.addTab(d.getTitleExtended(), icon, d.getComponent());
         fireDocumentAdded(d);
     }
     
@@ -223,7 +223,7 @@ public class DefaultDocumentManager extends JTabbedPane2 implements DocumentMana
         {
             if (document.getComponent() == getComponentAt(i))
             {
-                setTitleAt( i, document.getTitle() );
+                setTitleAt( i, document.getTitleExtended() );
                 return;
             }
         }
