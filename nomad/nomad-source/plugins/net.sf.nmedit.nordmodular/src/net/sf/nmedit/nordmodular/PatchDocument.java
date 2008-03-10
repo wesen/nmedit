@@ -54,6 +54,8 @@ public class PatchDocument implements Document,
     {
         this.jtpatch = patch;
         this.nmpatch = jtpatch.getPatch();
+        if (nmpatch.getName() == null)
+        	nmpatch.setName("Untitled");
         nmpatch.addPropertyChangeListener(NMPatch.NAME, this);
         nmpatch.addPropertyChangeListener("slot", this);
         nmpatch.addPropertyChangeListener(NMPatch.MODIFIED, this);
@@ -85,8 +87,7 @@ public class PatchDocument implements Document,
         return jtpatch;
     }
 
-    public String getTitle()
-    {
+    public String getTitleExtended() {
         String name = nmpatch.getName();
         Slot slot = nmpatch.getSlot();
         if (slot != null)
@@ -96,6 +97,10 @@ public class PatchDocument implements Document,
         if (isModified())
         	name += " *";
         return name;
+    }
+    public String getTitle()
+    {
+    	return nmpatch.getName();
     }
 
     public Icon getIcon()
@@ -141,7 +146,7 @@ public class PatchDocument implements Document,
             DefaultDocumentManager m = Nomad.sharedInstance().getDocumentManager();
             int index = m.indexOf(this);
             if (index>=0)
-                m.setTitleAt(index, getTitle());
+                m.setTitleAt(index, getTitleExtended());
         }
         else if ("slot".equals(evt.getPropertyName()))
         {

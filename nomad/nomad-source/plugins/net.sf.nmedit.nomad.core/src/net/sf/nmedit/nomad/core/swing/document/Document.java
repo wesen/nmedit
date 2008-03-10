@@ -37,6 +37,7 @@ public interface Document
     
     public File getFile();
     public String getTitle();
+    public String getTitleExtended();
     public JComponent getComponent();
     Icon getIcon();
     void dispose();
