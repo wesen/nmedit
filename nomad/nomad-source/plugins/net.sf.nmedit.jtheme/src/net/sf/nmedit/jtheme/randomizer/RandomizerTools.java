@@ -23,6 +23,7 @@ import java.util.Collection;
 
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PPatch;
+import net.sf.nmedit.jpatch.history.PUndoableEditSupport;
 import net.sf.nmedit.jpatch.randomizer.Randomizer;
 import net.sf.nmedit.jpatch.randomizer.RandomizerFactory;
 import net.sf.nmedit.jtheme.component.JTPatch;
@@ -82,12 +83,19 @@ public class RandomizerTools
     public void randomizePatch() 
     {    
     	JTPatch jtpatch = getSelectedJTPatch();
+		PPatch patch = getSelectedPatch();
     	Collection<? extends PModule> modules = jtpatch.getSelectedPModules();
     	
+        PUndoableEditSupport ues = patch.getEditSupport();
+
     	if (!modules.isEmpty()) {
-    		randomizeModules(modules);
+    		ues.beginUpdate("Randomize modules");
+    		try {
+    			randomizeModules(modules);
+    		} finally {
+    			ues.endUpdate();
+    		}
     	} else {
-    		PPatch patch = getSelectedPatch();
     		if (patch == null)
     			return;
 
@@ -95,7 +103,12 @@ public class RandomizerTools
     		{
     			randomizer.setPatch(patch);
     		}
-    		randomizer.randomize();
+    		ues.beginUpdate("Randomize patch");
+    		try {
+    			randomizer.randomize();
+    		} finally {
+    			ues.endUpdate();
+    		}
     	}
     }
     
