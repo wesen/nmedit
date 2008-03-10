@@ -131,6 +131,10 @@ public class ExplorerTree extends JTree
         return root;
     }
     
+    public TreePath getRootPath() {
+    	return new TreePath(getRoot().getPath());
+    }
+    
     public DefaultTreeModel getModel()
     {
         return (DefaultTreeModel) super.getModel();
@@ -154,8 +158,14 @@ public class ExplorerTree extends JTree
     
     public void fireNodeStructureChanged(TreeNode node)
     {
-    	if (node instanceof FileNode) {
-    		Enumeration<TreePath> paths = getExpandedDescendants(new TreePath(((FileNode)node).getPath()));
+    	if (node instanceof FileNode || node instanceof RootNode) {
+    		TreePath path = null;
+    		if (node instanceof FileNode) {
+    			path = new TreePath(((FileNode)node).getPath());
+    		} else if (node instanceof RootNode) {
+    			path = getRootPath();
+    		}
+    		Enumeration<TreePath> paths = getExpandedDescendants(path);
         	getModel().nodeStructureChanged(node);
 
         	if (paths != null) {

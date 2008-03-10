@@ -577,5 +577,38 @@ public class FileNode implements ETreeNode, MouseListener,
 	public boolean isNailed() {
 		return nailed;
 	}
+	
+	public boolean renameTo(ExplorerTree etree, File realNewFile) {
+		File oldFile = getFile();
+		if (oldFile.renameTo(realNewFile)) {
+			setFile(realNewFile);
+			
+			boolean rootChanged = false;
+			for (FileNode rNode : etree.getRootFileNodes()) {
+				File rFile = rNode.getFile();
+				if (FileUtils.isFileParent(oldFile, rFile)) {
+					try {
+						String oldPath = oldFile.getCanonicalPath();
+						String newPath = realNewFile.getCanonicalPath();
+						String renPath = rFile.getCanonicalPath();
+						String newRenPath = newPath + renPath.substring(oldPath.length());
+						rNode.setFile(new File(newRenPath));
+						etree.updateParentRootNodes(rNode);
+						etree.fireNodeStructureChanged(rNode.getParent());
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					rootChanged = true;
+				} else if (FileUtils.isFileParent(rFile, oldFile)) {
+					rNode.updateChildrenNodes(true);
+				}
+			}
+			if (rootChanged)
+				etree.fireRootChanged();
+        }
+
+		return true;
+	}
 
 }
