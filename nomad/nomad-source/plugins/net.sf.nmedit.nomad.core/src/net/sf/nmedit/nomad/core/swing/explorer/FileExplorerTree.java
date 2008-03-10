@@ -237,12 +237,14 @@ public class FileExplorerTree extends ExplorerTree {
         public void actionPerformed(ActionEvent e)
         {
             FileExplorerTree tree = FileExplorerTree.this;
-            Object last = tree.getLastSelectedPathComponent();
-            if (last == null) return;
-            if (last instanceof ETreeNode)
-            {
-                ((ETreeNode)last).actionCommandPerformed(FileExplorerTree.this,
-                        command);
+            for (TreePath path : tree.getSelectionPaths()) {
+            	Object last = path.getLastPathComponent();
+            	if (last == null) continue;
+            	if (last instanceof ETreeNode)
+            	{
+            		((ETreeNode)last).actionCommandPerformed(FileExplorerTree.this,
+            				command);
+            	}
             }
         }
         
