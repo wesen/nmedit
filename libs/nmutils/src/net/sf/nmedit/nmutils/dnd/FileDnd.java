@@ -2,11 +2,16 @@ package net.sf.nmedit.nmutils.dnd;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.sf.nmedit.nmutils.Platform;
 
 public class FileDnd {
 	public static List<File> getTransferableFiles(DataFlavor flavor,
@@ -30,6 +35,12 @@ public class FileDnd {
 							uri.getScheme() != null && uri.getScheme().equals("file")) {
 						// OSX has file://localhost/bla uris, transform them for java.io.File
 						uri = new URI(uri.getScheme(), uri.getPath(), uri.getFragment());
+					}
+					
+					if (Platform.isFlavor(Platform.OS.MacOSFlavor)) {
+						if (uri.getAuthority() == null && uri.getScheme().equals("file")) {
+							uri = new URI(uri.getScheme(), uri.getPath(), uri.getFragment());
+						}
 					}
 
 					File file = new File(uri);
@@ -68,24 +79,52 @@ public class FileDnd {
 				return true;
 		return false;
 	}
+	public static boolean isPatchStringFlavor(DataFlavor f) {
+		if (f.isFlavorTextType() && (f.getHumanPresentableName().contains("patch") ||
+				f.getHumanPresentableName().contains("Patch"))) {
+			return true;
+		}
+		if (f.getRepresentationClass().equals(java.lang.String.class) &&
+				f.getHumanPresentableName().equals("patch string"))
+			return true;
+		return false;
+	}
 
 	public static boolean isPatchStringFlavor(DataFlavor[] transferDataFlavors) {
 		for (DataFlavor f : transferDataFlavors) {
-			if (f.getRepresentationClass().equals(java.lang.String.class) &&
-					f.getHumanPresentableName().equals("patch string"))
+			if (isPatchStringFlavor(f))
 				return true;
 		}
 		
 		return false;
 	}
+	
+	public static String getPatchString(Transferable t) {
+		DataFlavor f = getPatchStringFlavor(t.getTransferDataFlavors());
+		if (f == null)
+			return null;
+		Reader r;
+		try {
+			r = f.getReaderForText(t);
+	        StringBuffer buf = new StringBuffer();
+	        int c;
+	        while ((c = r.read()) != -1) {
+	            buf.append((char)c);
+	        }
+	        r.close();
+	        
+	        return buf.toString();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	public static DataFlavor getPatchStringFlavor(DataFlavor[] flavors) {
 		for (DataFlavor f: flavors) {
-			if (f.getRepresentationClass().equals(java.lang.String.class) &&
-					f.getHumanPresentableName().equals("patch string"))
-			{
+			if (isPatchStringFlavor(f))
 				return f;
-			}
 		}
 		return null;
 	}
