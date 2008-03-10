@@ -802,7 +802,6 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
             if (file == null)
                 throw new UnsupportedFlavorException(flavor);
             return new ByteArrayInputStream(file.toURI().toString().getBytes());
-            
         }
 
         if (inputStreamFlavor.equals(flavor))
@@ -838,7 +837,7 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
         List<DataFlavor> flavorList = new ArrayList<DataFlavor>(2);
         flavorList.add(inputStreamFlavor);
         flavorList.add(imageFlavor);
-        if (patch.getFile() != null)
+        if (patch.getFile() != null && patch.getFile().exists())
             flavorList.add(uriFlavor);
         flavorList.add(nmPatchFlavor);
         return flavorList.toArray(new DataFlavor[flavorList.size()]);
