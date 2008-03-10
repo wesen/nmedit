@@ -1062,7 +1062,7 @@ public class JTModuleContainerUI extends ComponentUI
 		}
 		
 		public void mouseClicked(MouseEvent e) {
-			jtcUI.pasteAt(e.getPoint());
+			// no op
 		}
 
 		public void mouseEntered(MouseEvent e) {
@@ -1081,7 +1081,7 @@ public class JTModuleContainerUI extends ComponentUI
 		}
 
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
+			jtcUI.pasteAt(e.getPoint());
 			
 		}
 
