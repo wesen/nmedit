@@ -54,6 +54,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JViewport;
 import javax.swing.UIDefaults;
 
+import sun.awt.datatransfer.DataTransferer;
+
 import net.sf.nmedit.jpatch.PConnection;
 import net.sf.nmedit.jpatch.PConnector;
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
@@ -784,7 +786,7 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
     private static final String charset = "ISO-8859-1";
 
     public static final DataFlavor nmPatchFlavor = 
-        new DataFlavor("ppatch/nmpatch", "Nord Modular patch 3.0");
+        new DataFlavor(NMPatch.class, "Nord Modular patch 3.0");
     private static final DataFlavor inputStreamFlavor =
         new DataFlavor("text/plain; charset="+charset+"", "Nord Modular patch 3.0");
     private static final DataFlavor uriFlavor =
@@ -824,6 +826,7 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
         
         if (nmPatchFlavor.equals(flavor))
         {
+        	System.out.println("ask for patch " + DataTransferer.isFlavorCharsetTextType(flavor) + " class " + flavor.getRepresentationClass());
             return patch;
         }
         
