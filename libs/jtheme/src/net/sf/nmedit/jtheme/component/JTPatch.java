@@ -26,6 +26,7 @@ import java.util.HashSet;
 
 import javax.swing.JComponent;
 
+import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.plaf.mcui.ContainerAction;
@@ -60,6 +61,16 @@ public class JTPatch extends JComponent implements CopyCutPasteTarget
     	
     	return new HashSet<JTModule>();
     }
+
+    public Collection<? extends PModule> getSelectedPModules() {
+    	for (JTModuleContainer jtc : moduleContainers) {
+    		if (jtc.getSelectionSize() > 0)
+    			return jtc.getSelectedPModules();
+    	}
+    	
+    	return new HashSet<PModule>();
+    }
+
     
     public void addModuleContainer(JTModuleContainer container) {
     	moduleContainers.add(container);
