@@ -50,6 +50,7 @@ public interface PModuleContainer extends PComponent, Iterable<PModule>
     boolean contains(PModule module);
     
     public Collection<? extends PModule> getModules();
+    public Collection<? extends PModule> getModulesWithDescriptor(PModuleDescriptor descriptor);
 
     void addModuleContainerListener(PModuleContainerListener l);
     void removeModuleContainerListener(PModuleContainerListener l);
