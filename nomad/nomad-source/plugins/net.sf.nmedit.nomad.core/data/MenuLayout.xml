@@ -107,6 +107,7 @@
 		<entry entryPoint="settings" />
 		<entry entryPoint="randomize">
 		</entry>
+		<entry entryPoint="knobs"/>
 	</entry>
 	<!--
 	<entry entryPoint="window">
