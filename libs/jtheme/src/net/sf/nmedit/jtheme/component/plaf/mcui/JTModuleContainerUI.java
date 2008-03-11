@@ -942,6 +942,11 @@ public class JTModuleContainerUI extends ComponentUI
             if (Platform.isLeftMouseButtonOnly(e) && e.getComponent() == mc && jtcUI.hasPaintableSelection()) {
             	jtcUI.setPaintableSelection(null);
             }
+            if (Platform.isPopupTrigger(e) && e.getComponent() == mc)
+            {
+                jtcUI.createPopupMenu(mc, e);
+            }
+            
         }
         
         public void mouseDragged(MouseEvent e) {

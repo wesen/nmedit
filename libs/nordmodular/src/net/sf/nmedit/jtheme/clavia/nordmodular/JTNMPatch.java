@@ -542,8 +542,8 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
                     c.removeMouseListener(this);
             }
         }
-
-        public void mousePressed(MouseEvent e)
+        
+        public void handlePopup(MouseEvent e)
         {
             if (!Platform.isPopupTrigger(e)) return;
             
@@ -560,6 +560,16 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
                 .createPopup((JTConnector)c)
                 .show(c, e.getX(), e.getY());
             }
+        }
+
+        public void mousePressed(MouseEvent e)
+        {
+            handlePopup(e);
+        }
+
+        public void mouseReleased(MouseEvent e)
+        {
+            handlePopup(e);
         }
         
         public void install()
