@@ -23,7 +23,6 @@
 package net.sf.nmedit.nomad.core;
 
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.beans.PropertyChangeEvent;
