@@ -25,6 +25,8 @@ package net.sf.nmedit.nomad.core;
 
 import javax.swing.SwingUtilities;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.java.plugin.PluginManager;
 import org.java.plugin.boot.Application;
 import org.java.plugin.boot.ApplicationPlugin;
@@ -67,6 +69,12 @@ public class NomadPlugin extends ApplicationPlugin implements Application
 
     public void startApplication() throws Exception
     {
+        
+        Log log = LogFactory.getLog(getClass());
+        if (log != null)
+            logOsInfo(log);
+        
+        
         final NomadLoader loader = new NomadLoader();
         nomad = loader.createNomad(NomadPlugin.this);
         SwingUtilities.invokeLater(new Runnable(){
@@ -82,5 +90,53 @@ public class NomadPlugin extends ApplicationPlugin implements Application
             }
         });
         
+    }
+
+    private void logOsInfo(Log log)
+    {
+        String properties[] = {
+                "java.version",
+                "java.vendor",
+                "java.vendor.url",
+                "java.home",
+                "java.vm.specification.version",
+                "java.vm.specification.vendor",
+                "java.vm.specification.name",
+                "java.vm.version",
+                "java.vm.vendor",
+                "java.vm.name",
+                "java.specification.version",
+                "java.specification.vendor",
+                "java.specification.name",
+                "java.class.version",
+                "java.class.path",
+                "java.library.path",
+                "java.io.tmpdir",
+                "java.compiler",
+                "java.ext.dirs",
+                "os.name",
+                "os.arch",
+                "os.version",
+                "file.separator",
+                "path.separator",
+                "line.separator",
+                "user.name",
+                "user.home",
+                "user.dir"  };    
+        
+        try
+        {
+            log.info("\t[System Properties]");
+            for (String key: properties)
+            {
+                String value = System.getProperty(key);
+                log.info("\t"+key+"="+value);
+            }
+            log.info("\t[/System Properties]");
+        }
+        catch (SecurityException  e)
+        {
+            log.error("logOsInfo(Log)", e);
+        }
     }
 }
