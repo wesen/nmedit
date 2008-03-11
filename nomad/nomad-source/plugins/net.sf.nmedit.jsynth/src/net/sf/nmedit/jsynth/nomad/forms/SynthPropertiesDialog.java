@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.sound.midi.MidiDevice;
-import javax.sound.midi.MidiSystem;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -41,7 +40,6 @@ import javax.swing.SwingUtilities;
 import net.sf.nmedit.jsynth.DefaultMidiPorts;
 import net.sf.nmedit.jsynth.Synthesizer;
 import net.sf.nmedit.jsynth.midi.MidiDescription;
-import net.sf.nmedit.jsynth.midi.MidiID;
 import net.sf.nmedit.jsynth.midi.MidiPlug;
 import net.sf.nmedit.nomad.core.forms.ExceptionDialog;
 import net.sf.nmedit.nomad.core.forms.PropertyDialogForm;
@@ -239,13 +237,13 @@ public class SynthPropertiesDialog<S extends Synthesizer> extends PropertyDialog
             {
                 if (synth.isConnected())
                     synth.setConnected(false);
-                
-                MidiDevice.Info info = midiDialogFrmHandler.getSelectedInput();
-                MidiDescription descIn = new MidiDescription(info, 1);
-                MidiDescription descOut = new MidiDescription(info, 0);
-                mdp.getDefaultMidiInPort().setPlug(info != null ? new MidiPlug(descIn) : null);
-                info = midiDialogFrmHandler.getSelectedOutput();
-                mdp.getDefaultMidiOutPort().setPlug(info != null ? new MidiPlug(descOut) : null);
+
+                MidiDevice.Info info1 = midiDialogFrmHandler.getSelectedInput();
+                MidiDevice.Info info2 = midiDialogFrmHandler.getSelectedOutput();
+                MidiDescription descIn = new MidiDescription(info1, 1);
+                MidiDescription descOut = new MidiDescription(info2, 0);
+                mdp.getDefaultMidiInPort().setPlug(info1 != null ? new MidiPlug(descIn) : null);
+                mdp.getDefaultMidiOutPort().setPlug(info2 != null ? new MidiPlug(descOut) : null);
 
                 formSetPreviousPorts();
                 
