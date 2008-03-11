@@ -19,7 +19,6 @@
 package net.sf.nmedit.nordmodular;
 
 import java.awt.Component;
-import java.awt.event.KeyEvent;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -28,29 +27,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import javax.sound.midi.MidiDevice;
-import javax.swing.KeyStroke;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMData;
 import net.sf.nmedit.jpatch.clavia.nordmodular.NMPatch;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchExporter;
 import net.sf.nmedit.jpatch.clavia.nordmodular.parser.PatchFileWriter;
 import net.sf.nmedit.jsynth.clavia.nordmodular.NordModular;
+import net.sf.nmedit.jsynth.midi.MidiDescription;
 import net.sf.nmedit.jsynth.midi.MidiID;
 import net.sf.nmedit.jsynth.midi.MidiPlug;
-import net.sf.nmedit.jsynth.midi.MidiDescription;
 import net.sf.nmedit.jtheme.ModulePane;
-import net.sf.nmedit.jtheme.util.RelativeClassLoader;
-import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.io.FileUtils;
 import net.sf.nmedit.nomad.core.JPFUtil;
 import net.sf.nmedit.nomad.core.Nomad;
@@ -64,6 +55,9 @@ import net.sf.nmedit.nomad.core.swing.document.Document;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 import net.sf.nmedit.nomad.core.swing.explorer.FileContext;
 import net.sf.nmedit.nomad.core.swing.tabs.JTabbedPane2;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class Installer implements InitService
 {
@@ -478,6 +472,7 @@ public class Installer implements InitService
     {
         if (plug == null) return;
         MidiDevice.Info info = plug.getDeviceInfo();
+        if (info == null) return;
 
         properties.put(prefix+"id", Integer.toString(midiID.getID(info)));
         properties.put(prefix+"name", info.getName());
