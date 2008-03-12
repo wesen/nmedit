@@ -189,7 +189,7 @@ public class ModulePane extends JPanel
         {
             String t = tfFilter.getText();
             if (t == null) t = "";
-            else t = t.trim();
+            else t = t.trim().toLowerCase();
             
             if (prevFilter.equals(t)) return;
             prevFilter = t;
