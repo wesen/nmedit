@@ -107,13 +107,13 @@
 
   <module component-id="morph" index="0" name="Morph" category="Morph" role="morph">
     <parameter component-id="morph1" index="0" name="Morph 1"  class="morph" role="morph" defaultValue="0" maxValue="127" />
-    <parameter component-id="morph2" index="1" name="Morph 1"  class="morph" role="morph" defaultValue="0" maxValue="127" />
-    <parameter component-id="morph3" index="2" name="Morph 2"  class="morph" role="morph" defaultValue="0" maxValue="127" />
-    <parameter component-id="morph4" index="3" name="Morph 3"  class="morph" role="morph" defaultValue="0" maxValue="127" />
+    <parameter component-id="morph2" index="1" name="Morph 2"  class="morph" role="morph" defaultValue="0" maxValue="127" />
+    <parameter component-id="morph3" index="2" name="Morph 3"  class="morph" role="morph" defaultValue="0" maxValue="127" />
+    <parameter component-id="morph4" index="3" name="Morph 4"  class="morph" role="morph" defaultValue="0" maxValue="127" />
     <parameter component-id="mkb1" index="0" name="Keyboard Assignment, Morph 1" defaultValue="0" maxValue="3" formatter="fmtMorphKbAssignment" role="morph,assign" />
-    <parameter component-id="mkb2" index="1" name="Keyboard Assignment, Morph 1" defaultValue="0" maxValue="3" formatter="fmtMorphKbAssignment" role="morph,assign" />
-    <parameter component-id="mkb3" index="2" name="Keyboard Assignment, Morph 2" defaultValue="0" maxValue="3" formatter="fmtMorphKbAssignment" role="morph,assign" />
-    <parameter component-id="mkb4" index="3" name="Keyboard Assignment, Morph 3" defaultValue="0" maxValue="3" formatter="fmtMorphKbAssignment" role="morph,assign" />
+    <parameter component-id="mkb2" index="1" name="Keyboard Assignment, Morph 2" defaultValue="0" maxValue="3" formatter="fmtMorphKbAssignment" role="morph,assign" />
+    <parameter component-id="mkb3" index="2" name="Keyboard Assignment, Morph 3" defaultValue="0" maxValue="3" formatter="fmtMorphKbAssignment" role="morph,assign" />
+    <parameter component-id="mkb4" index="3" name="Keyboard Assignment, Morph 4" defaultValue="0" maxValue="3" formatter="fmtMorphKbAssignment" role="morph,assign" />
     
     <attribute name="instantiable" type="boolean" value="false" />
   </module>
