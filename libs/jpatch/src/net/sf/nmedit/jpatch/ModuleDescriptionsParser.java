@@ -424,6 +424,7 @@ public class ModuleDescriptionsParser
                         if (index != null)
                             moduled.setAttribute(INDEX, Integer.parseInt(index));
                         
+                        moduled.setAttribute("fullname", str(attributes.getValue("fullname")));
                         moduled.setAttribute("category", str(attributes.getValue("category")));
                         moduled.setAttribute(CLASS, str(attributes.getValue(CLASS)));
                         

@@ -226,14 +226,14 @@ public class ModulePane extends JPanel
                 ModuleDescriptorNode nsrc = 
                     (ModuleDescriptorNode) csrc.getChildAt(i);
                 
-                if (matches(nsrc.getText()))
+                if (matches(nsrc.getName()) || matches(nsrc.getFullName()))
                 {
                     if (cdst == null)
                         cdst = new ContainerNode(csrc.getParent(), csrc.getTitle());
                     
                     cdst.addChild(new ModuleDescriptorNode(
                             cdst, nsrc.getIcon(),
-                            nsrc.getDescriptor().getName(), 
+                            nsrc.getDisplayName(), 
                             nsrc.getDescriptor()));
                 }
             }
@@ -393,14 +393,14 @@ public class ModulePane extends JPanel
                 
              //   ImageSource.*/
                 
-                String title = m.getName();
+                String displayName = m.getStringAttribute("fullname");
                 double cycles = m.getDoubleAttribute("cycles", -1);
                 if (cycles >=0)
                 {
-                    title += " ("+(Math.round(cycles*100d)/100d)+"%)";
+                    displayName += " ("+(Math.round(cycles*100d)/100d)+"%)";
                 }
-                
-                LeafNode n = new ModuleDescriptorNode(catNode, icon, title, m);
+
+                LeafNode n = new ModuleDescriptorNode(catNode, icon, displayName, m);
                 catNode.addChild(n);
             }   
         }
@@ -449,6 +449,9 @@ public class ModulePane extends JPanel
         public ModuleDescriptorNode(TreeNode parent, Icon icon, String displayName, PModuleDescriptor m)
         {
             super(parent, icon, displayName);
+            this.setName(m.getName());
+            this.setFullName(m.getStringAttribute("fullname"));
+            this.setToolTipText(m.getName());
             this.descriptor = m;
         }
         
