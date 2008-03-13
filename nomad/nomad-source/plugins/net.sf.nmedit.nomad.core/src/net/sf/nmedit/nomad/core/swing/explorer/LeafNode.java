@@ -35,7 +35,10 @@ public class LeafNode implements ETreeNode
 
     private TreeNode parent;
     private Icon icon;
-    private String text;
+    private String displayName;
+    private String name;
+    private String fullName;
+    private String toolTipText;
 
     public LeafNode(TreeNode parent)
     {
@@ -53,21 +56,41 @@ public class LeafNode implements ETreeNode
             ((ETreeNode) parent).processEvent(event);
     }
     
-    public LeafNode(TreeNode parent, Icon icon, String text)
+    public LeafNode(TreeNode parent, Icon icon, String displayName)
     {
         this.parent = parent;
         this.icon = icon;
-        this.text = text;
+        this.displayName = displayName;
     }
 
-    public void setText(String t)
+    public void setDisplayName(String t)
     {
-        this.text = t;
+        this.displayName = t;
     }
     
-    public String getText()
+    public String getDisplayName()
     {
-        return this.text;
+        return this.displayName;
+    }
+    
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+    
+    public String getName()
+    {
+        return this.name==null?this.displayName:this.name;
+    }
+    
+    public void setFullName(String fullName)
+    {
+        this.fullName = fullName;
+    }
+    
+    public String getFullName()
+    {
+        return this.fullName==null?this.displayName:this.fullName;
     }
     
     public Icon getIcon()
@@ -117,13 +140,19 @@ public class LeafNode implements ETreeNode
 
     public String toString()
     {
-        return text;
+        return displayName;
     }
 
+    public void setToolTipText(String toolTipText)
+    {
+        // TODO Auto-generated method stub
+        this.toolTipText = toolTipText;
+    }
+    
     public String getToolTipText()
     {
         // TODO Auto-generated method stub
-        return null;
+        return this.toolTipText==null?this.displayName:this.toolTipText;
     }
 
     public void processEvent(MouseEvent e)

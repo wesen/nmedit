@@ -105,7 +105,7 @@
 -->
 <body>
 
-  <module component-id="morph" index="0" name="Morph" category="Morph" role="morph">
+  <module component-id="morph" index="0" name="Morph" fullname="Morph" category="Morph" role="morph">
     <parameter component-id="morph1" index="0" name="Morph 1"  class="morph" role="morph" defaultValue="0" maxValue="127" />
     <parameter component-id="morph2" index="1" name="Morph 2"  class="morph" role="morph" defaultValue="0" maxValue="127" />
     <parameter component-id="morph3" index="2" name="Morph 3"  class="morph" role="morph" defaultValue="0" maxValue="127" />
@@ -118,7 +118,7 @@
     <attribute name="instantiable" type="boolean" value="false" />
   </module>
 
-  <module component-id="m1" index="1" name="Keyboard" category="In/Out">
+  <module component-id="m1" index="1" name="Keyboard" fullname="Keyboard" category="In/Out">
     <image type="screenshot" src="img/modules/module-1.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-1.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-1.png" width="32" height="32" />
@@ -137,7 +137,7 @@
     <attribute name="limit" type="integer" value="1" />
     <attribute name="background" value="#a1d0ed" />
   </module>
-  <module component-id="m2" index="2" name="AudioIn" category="In/Out">
+  <module component-id="m2" index="2" name="AudioIn" fullname="Audio In" category="In/Out">
     <image type="screenshot" src="img/modules/module-2.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-2.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-2.png" width="32" height="32" />
@@ -160,7 +160,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#a1d0ed" />
   </module>
-  <module component-id="m3" index="3" name="4Output" category="In/Out">
+  <module component-id="m3" index="3" name="4Output" fullname="4 Output" category="In/Out">
     <image type="screenshot" src="img/modules/module-3.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-3.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-3.png" width="32" height="32" />
@@ -181,7 +181,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#a1d0ed" />
   </module>
-  <module component-id="m4" index="4" name="2Output" category="In/Out">
+  <module component-id="m4" index="4" name="2Output" fullname="2 Output" category="In/Out">
     <image type="screenshot" src="img/modules/module-4.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-4.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-4.png" width="32" height="32" />
@@ -204,7 +204,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#a1d0ed" />
   </module>
-  <module component-id="m5" index="5" name="1Output" category="In/Out">
+  <module component-id="m5" index="5" name="1Output" fullname="1 Output" category="In/Out">
     <image type="screenshot" src="img/modules/module-5.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-5.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-5.png" width="32" height="32" />
@@ -226,7 +226,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#a1d0ed" />
   </module>
-  <module component-id="m7" index="7" name="OscA" category="Osc">
+  <module component-id="m7" index="7" name="OscA" fullname="Multiple Oscillator A" category="Oscillator">
     <image type="screenshot" src="img/modules/module-7.png" width="256" height="90" />
     <image type="icon16x16" src="img/icons/16x16/module-id-7.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-7.png" width="32" height="32" />
@@ -272,7 +272,7 @@
     <attribute name="height" type="integer" value="6" />
     <attribute name="background" value="#87ae99" />
   </module>
-  <module component-id="m8" index="8" name="OscB" category="Osc">
+  <module component-id="m8" index="8" name="OscB" fullname="Multiple Oscillator B" category="Oscillator">
     <image type="screenshot" src="img/modules/module-8.png" width="256" height="90" />
     <image type="icon16x16" src="img/icons/16x16/module-id-8.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-8.png" width="32" height="32" />
@@ -315,7 +315,7 @@
     <attribute name="height" type="integer" value="6" />
     <attribute name="background" value="#87ae99" />
   </module>
-  <module component-id="m9" index="9" name="OscC" category="Osc">
+  <module component-id="m9" index="9" name="OscC" fullname="Sine Oscillator" category="Oscillator">
     <image type="screenshot" src="img/modules/module-9.png" width="256" height="60" />
     <image type="icon16x16" src="img/icons/16x16/module-id-9.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-9.png" width="32" height="32" />
@@ -351,7 +351,7 @@
     <attribute name="height" type="integer" value="4" />
     <attribute name="background" value="#87ae99" />
   </module>
-  <module component-id="m10" index="10" name="OscSlvB" category="Osc">
+  <module component-id="m10" index="10" name="OscSlvB" fullname="Square/Pulse Slave Oscillator" category="Oscillator">
     <image type="screenshot" src="img/modules/module-10.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-10.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-10.png" width="32" height="32" />
@@ -383,7 +383,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#87ae99" />
   </module>
-  <module component-id="m11" index="11" name="OscSlvC" category="Osc">
+  <module component-id="m11" index="11" name="OscSlvC" fullname="Sawtooth Slave Oscillator" category="Oscillator">
     <image type="screenshot" src="img/modules/module-11.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-11.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-11.png" width="32" height="32" />
@@ -413,7 +413,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#87ae99" />
   </module>
-  <module component-id="m12" index="12" name="OscSlvD" category="Osc">
+  <module component-id="m12" index="12" name="OscSlvD" fullname="Triangle Slave Oscillator" category="Oscillator">
     <image type="screenshot" src="img/modules/module-12.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-12.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-12.png" width="32" height="32" />
@@ -443,7 +443,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#87ae99" />
   </module>
-  <module component-id="m13" index="13" name="OscSlvE" category="Osc">
+  <module component-id="m13" index="13" name="OscSlvE" fullname="Sine Slave Oscillator" category="Oscillator">
     <image type="screenshot" src="img/modules/module-13.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-13.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-13.png" width="32" height="32" />
@@ -474,7 +474,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#87ae99" />
   </module>
-  <module component-id="m14" index="14" name="OscSlvA" category="Osc">
+  <module component-id="m14" index="14" name="OscSlvA" fullname="Multiple Slave Oscillator" category="Oscillator">
     <image type="screenshot" src="img/modules/module-14.png" width="256" height="60" />
     <image type="icon16x16" src="img/icons/16x16/module-id-14.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-14.png" width="32" height="32" />
@@ -490,12 +490,13 @@
     <!-- parameter(s) -->
     <parameter component-id="p2" index="0" name="detune coarse" class="parameter" defaultValue="64" formatter="value-64" extension="m2" />
     <parameter component-id="p3" index="1" name="detune fine" class="parameter" defaultValue="64" formatter="value-64" extension="m3" />
-    <parameter component-id="p4" index="2" name="shape" class="parameter" maxValue="3" extension="m4" />
+    <!--parameter component-id="p4" index="2" name="shape" class="parameter" maxValue="3" extension="m4" /-->
+    <parameter component-id="p4" index="2" name="waveform" class="parameter" maxValue="3" extension="m4" />
     <parameter component-id="p5" index="3" name="FMA mod" class="parameter" extension="m5" />
     <parameter component-id="p6" index="4" name="mute" class="parameter" maxValue="1" formatter="fmtOffOn" extension="m6" role="mute" />
     <parameter component-id="m2" index="0" name="morph:detune coarse" class="morph" role="morph"  minValue="-127" maxValue="127" />
     <parameter component-id="m3" index="1" name="morph:detune fine" class="morph" role="morph"  minValue="-127" maxValue="127" />
-    <parameter component-id="m4" index="2" name="morph:shape" class="morph" role="morph"  minValue="-3" maxValue="3" />
+    <parameter component-id="m4" index="2" name="morph:waveform" class="morph" role="morph"  minValue="-3" maxValue="3" />
     <parameter component-id="m5" index="3" name="morph:FMA mod" class="morph" role="morph"  minValue="-127" maxValue="127"/>
     <parameter component-id="m6" index="4" name="morph:mute" class="morph" role="morph"  minValue="-1" maxValue="1" />
     <!-- custom attributes -->
@@ -508,7 +509,7 @@
     <attribute name="height" type="integer" value="4" />
     <attribute name="background" value="#87ae99" />
   </module>
-  <module component-id="m15" index="15" name="NoteSeqA" category="Seq">
+  <module component-id="m15" index="15" name="NoteSeqA" fullname="Note Sequencer A" category="Seqencer">
     <image type="screenshot" src="img/modules/module-15.png" width="256" height="105" />
     <image type="icon16x16" src="img/icons/16x16/module-id-15.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-15.png" width="32" height="32" />
@@ -569,7 +570,7 @@
     <attribute name="height" type="integer" value="7" />
     <attribute name="background" value="#e5babf" />
   </module>
-  <module component-id="m16" index="16" name="PortamentoB" category="Ctrl">
+  <module component-id="m16" index="16" name="PortamentoB" fullname="Portamento (Interruptable)" category="Control">
     <image type="screenshot" src="img/modules/module-16.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-16.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-16.png" width="32" height="32" />
@@ -589,7 +590,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#abbe89" />
   </module>
-  <module component-id="m17" index="17" name="EventSeq" category="Seq">
+  <module component-id="m17" index="17" name="EventSeq" fullname="Event Sequencer" category="Seqencer">
     <image type="screenshot" src="img/modules/module-17.png" width="256" height="75" />
     <image type="icon16x16" src="img/icons/16x16/module-id-17.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-17.png" width="32" height="32" />
@@ -685,7 +686,7 @@
     <attribute name="height" type="integer" value="5" />
     <attribute name="background" value="#e5babf" />
   </module>
-  <module component-id="m18" index="18" name="X-Fade" category="Mixer" role="mixer">
+  <module component-id="m18" index="18" name="X-Fade" fullname="Crossfader" category="Mixer" role="mixer">
     <image type="screenshot" src="img/modules/module-18.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-18.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-18.png" width="32" height="32" />
@@ -707,7 +708,7 @@
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="3" />
   </module>
-  <module component-id="m19" index="19" name="Mixer (3)" category="Mixer" role="mixer">
+  <module component-id="m19" index="19" name="Mixer (3)" fullname="Three Inputs Mixer" category="Mixer" role="mixer">
     <image type="screenshot" src="img/modules/module-19.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-19.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-19.png" width="32" height="32" />
@@ -732,7 +733,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#6CB5C0" />
   </module>
-  <module component-id="m20" index="20" name="ADSR" category="Env">
+  <module component-id="m20" index="20" name="ADSR" fullname="ADSR Envelope" category="Envelope">
     <image type="screenshot" src="img/modules/module-20.png" width="256" height="75" />
     <image type="icon16x16" src="img/icons/16x16/module-id-20.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-20.png" width="32" height="32" />
@@ -766,7 +767,7 @@
     <attribute name="height" type="integer" value="5" />
     <attribute name="background" value="#f6e2b8" />
   </module>
-  <module component-id="m21" index="21" name="Compressor" category="Audio">
+  <module component-id="m21" index="21" name="Compressor" fullname="Stereo Compressor/Limiter" category="Audio">
     <image type="screenshot" src="img/modules/module-21.png" width="256" height="105" />
     <image type="icon16x16" src="img/icons/16x16/module-id-21.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-21.png" width="32" height="32" />
@@ -808,7 +809,7 @@
     <attribute name="height" type="integer" value="7" />
     <attribute name="background" value="#eda0a4" />
   </module>
-  <module component-id="m22" index="22" name="PartialGen" category="Ctrl">
+  <module component-id="m22" index="22" name="PartialGen" fullname="Partial Generator" category="Control">
     <image type="screenshot" src="img/modules/module-22.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-22.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-22.png" width="32" height="32" />
@@ -827,7 +828,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#abbe89" />
   </module>
-  <module component-id="m23" index="23" name="Mod-Env" category="Env">
+  <module component-id="m23" index="23" name="Mod-Env" fullname="Modulated Envelope" category="Envelope">
     <image type="screenshot" src="img/modules/module-23.png" width="256" height="90" />
     <image type="icon16x16" src="img/icons/16x16/module-id-23.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-23.png" width="32" height="32" />
@@ -871,7 +872,7 @@
     <attribute name="height" type="integer" value="6" />
     <attribute name="background" value="#f6e2b8" />
   </module>
-  <module component-id="m24" index="24" name="LFOA" category="LFO">
+  <module component-id="m24" index="24" name="LFOA" fullname="Multiple LFO (phase)" category="LFO">
     <image type="screenshot" src="img/modules/module-24.png" width="256" height="75" />
     <image type="icon16x16" src="img/icons/16x16/module-id-24.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-24.png" width="32" height="32" />
@@ -907,7 +908,7 @@
     <attribute name="height" type="integer" value="5" />
     <attribute name="background" value="#e6c2df" />
   </module>
-  <module component-id="m25" index="25" name="LFOB" category="LFO">
+  <module component-id="m25" index="25" name="LFOB" fullname="Square/Pulse LFO" category="LFO">
     <image type="screenshot" src="img/modules/module-25.png" width="256" height="75" />
     <image type="icon16x16" src="img/icons/16x16/module-id-25.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-25.png" width="32" height="32" />
@@ -944,7 +945,7 @@
     <attribute name="height" type="integer" value="5" />
     <attribute name="background" value="#e6c2df" />
   </module>
-  <module component-id="m26" index="26" name="LFOC" category="LFO">
+  <module component-id="m26" index="26" name="LFOC" fullname="Multiple LFO" category="LFO">
     <image type="screenshot" src="img/modules/module-26.png" width="256" height="60" />
     <image type="icon16x16" src="img/icons/16x16/module-id-26.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-26.png" width="32" height="32" />
@@ -975,7 +976,7 @@
     <attribute name="height" type="integer" value="4" />
     <attribute name="background" value="#e6c2df" />
   </module>
-  <module component-id="m27" index="27" name="LFOSlvB" category="LFO">
+  <module component-id="m27" index="27" name="LFOSlvB" fullname="Sawtooth Slave LFO" category="LFO">
     <image type="screenshot" src="img/modules/module-27.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-27.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-27.png" width="32" height="32" />
@@ -999,7 +1000,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#e6c2df" />
   </module>
-  <module component-id="m28" index="28" name="LFOSlvC" category="LFO">
+  <module component-id="m28" index="28" name="LFOSlvC" fullname="Sine Slave LFO" category="LFO">
     <image type="screenshot" src="img/modules/module-28.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-28.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-28.png" width="32" height="32" />
@@ -1023,7 +1024,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#e6c2df" />
   </module>
-  <module component-id="m29" index="29" name="LFOSlvD" category="LFO">
+  <module component-id="m29" index="29" name="LFOSlvD" fullname="Square/Pulse Slave LFO" category="LFO">
     <image type="screenshot" src="img/modules/module-29.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-29.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-29.png" width="32" height="32" />
@@ -1047,7 +1048,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#e6c2df" />
   </module>
-  <module component-id="m30" index="30" name="LFOSlvE" category="LFO">
+  <module component-id="m30" index="30" name="LFOSlvE" fullname="Triangle Slave LFO" category="LFO">
     <image type="screenshot" src="img/modules/module-30.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-30.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-30.png" width="32" height="32" />
@@ -1070,7 +1071,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#e6c2df" />
   </module>
-  <module component-id="m31" index="31" name="Noise" category="Osc">
+  <module component-id="m31" index="31" name="Noise" fullname="Noise Generator" category="Oscillator">
     <image type="screenshot" src="img/modules/module-31.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-31.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-31.png" width="32" height="32" />
@@ -1088,7 +1089,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#87ae99" />
   </module>
-  <module component-id="m32" index="32" name="FilterBank" category="Filter">
+  <module component-id="m32" index="32" name="FilterBank" fullname="14 Band Filter Bank" category="Filter">
     <image type="screenshot" src="img/modules/module-32.png" width="256" height="105" />
     <image type="icon16x16" src="img/icons/16x16/module-id-32.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-32.png" width="32" height="32" />
@@ -1135,7 +1136,7 @@
     <attribute name="height" type="integer" value="7" />
     <attribute name="background" value="#b1a1c3" />
   </module>
-  <module component-id="m33" index="33" name="ClkRndGen" category="LFO">
+  <module component-id="m33" index="33" name="ClkRndGen" fullname="Clocked Random Step Generator" category="LFO">
     <image type="screenshot" src="img/modules/module-33.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-33.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-33.png" width="32" height="32" />
@@ -1156,7 +1157,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#e6c2df" />
   </module>
-  <module component-id="m34" index="34" name="RndStepGen" category="LFO">
+  <module component-id="m34" index="34" name="RndStepGen" fullname="Random Step Generator" category="LFO">
     <image type="screenshot" src="img/modules/module-34.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-34.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-34.png" width="32" height="32" />
@@ -1179,7 +1180,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#e6c2df" />
   </module>
-  <module component-id="m35" index="35" name="RndPulsGen" category="LFO">
+  <module component-id="m35" index="35" name="RndPulsGen" fullname="Random Pulse Generator" category="LFO">
     <image type="screenshot" src="img/modules/module-35.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-35.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-35.png" width="32" height="32" />
@@ -1198,7 +1199,7 @@
     <attribute name="background" value="#e6c2df" />
     <light component-id="ledLogicOut" name="LED Logic Out" index="0" type="led" />
   </module>
-  <module component-id="m36" index="36" name="PosEdgeDelay" category="Logic">
+  <module component-id="m36" index="36" name="PosEdgeDelay" fullname="Positive Edge delay" category="Logic">
     <image type="screenshot" src="img/modules/module-36.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-36.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-36.png" width="32" height="32" />
@@ -1217,7 +1218,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#fc8642" />
   </module>
-  <module component-id="m37" index="37" name="LogicDelay" category="Logic">
+  <module component-id="m37" index="37" name="LogicDelay" fullname="Logic Delay" category="Logic">
     <image type="screenshot" src="img/modules/module-37.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-37.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-37.png" width="32" height="32" />
@@ -1236,7 +1237,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#fc8642" />
   </module>
-  <module component-id="m38" index="38" name="Pulse" category="Logic">
+  <module component-id="m38" index="38" name="Pulse" fullname="Pulse" category="Logic">
     <image type="screenshot" src="img/modules/module-38.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-38.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-38.png" width="32" height="32" />
@@ -1255,7 +1256,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#fc8642" />
   </module>
-  <module component-id="m39" index="39" name="Smooth" category="Ctrl">
+  <module component-id="m39" index="39" name="Smooth" fullname="Control Signal Smoother" category="Control">
     <image type="screenshot" src="img/modules/module-39.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-39.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-39.png" width="32" height="32" />
@@ -1274,7 +1275,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#abbe89" />
   </module>
-  <module component-id="m40" index="40" name="Mixer (8)" category="Mixer" role="mixer">
+  <module component-id="m40" index="40" name="Mixer (8)" fullname="Eight Inputs Mixer" category="Mixer" role="mixer">
     <image type="screenshot" src="img/modules/module-40.png" width="256" height="60" />
     <image type="icon16x16" src="img/icons/16x16/module-id-40.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-40.png" width="32" height="32" />
@@ -1318,7 +1319,7 @@
     <attribute name="height" type="integer" value="4" />
     <attribute name="background" value="#6CB5C0" />
   </module>
-  <module component-id="m43" index="43" name="Constant" category="Ctrl">
+  <module component-id="m43" index="43" name="Constant" fullname="Constant" category="Control">
     <image type="screenshot" src="img/modules/module-43.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-43.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-43.png" width="32" height="32" />
@@ -1338,7 +1339,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#abbe89" />
   </module>
-  <module component-id="m44" index="44" name="GainControl" category="Mixer">
+  <module component-id="m44" index="44" name="GainControl" fullname="Gain Control" category="Mixer">
     <image type="screenshot" src="img/modules/module-44.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-44.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-44.png" width="32" height="32" />
@@ -1358,7 +1359,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#6CB5C0" />
   </module>
-  <module component-id="m45" index="45" name="VocalFilter" category="Filter">
+  <module component-id="m45" index="45" name="VocalFilter" fullname="Vocal Filter" category="Filter">
     <image type="screenshot" src="img/modules/module-45.png" width="256" height="75" />
     <image type="icon16x16" src="img/icons/16x16/module-id-45.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-45.png" width="32" height="32" />
@@ -1395,7 +1396,7 @@
     <attribute name="height" type="integer" value="5" />
     <attribute name="background" value="#b1a1c3" />
   </module>
-  <module component-id="m46" index="46" name="AHD" category="Env">
+  <module component-id="m46" index="46" name="AHD" fullname="ADH Envelope" category="Envelope">
     <image type="screenshot" src="img/modules/module-46.png" width="256" height="75" />
     <image type="icon16x16" src="img/icons/16x16/module-id-46.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-46.png" width="32" height="32" />
@@ -1431,7 +1432,7 @@
     <attribute name="height" type="integer" value="5" />
     <attribute name="background" value="#f6e2b8" />
   </module>
-  <module component-id="m47" index="47" name="Pan" category="Mixer" role="mixer">
+  <module component-id="m47" index="47" name="Pan" fullname="Stereo Panorama" category="Mixer" role="mixer">
     <image type="screenshot" src="img/modules/module-47.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-47.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-47.png" width="32" height="32" />
@@ -1454,7 +1455,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#6CB5C0" />
   </module>
-  <module component-id="m48" index="48" name="PortamentoA" category="Ctrl">
+  <module component-id="m48" index="48" name="PortamentoA" fullname="Portamento" category="Control">
     <image type="screenshot" src="img/modules/module-48.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-48.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-48.png" width="32" height="32" />
@@ -1473,8 +1474,37 @@
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#abbe89" />
+  </module><module component-id="m50" index="50" name="FilterC" fullname="12dB Static Multimode Filter" category="Filter">
+    <image type="screenshot" src="img/modules/module-50.png" width="256" height="60" />
+    <image type="icon16x16" src="img/icons/16x16/module-id-50.png" width="16" height="16" />
+    <image type="icon32x32" src="img/icons/32x32/module-id-50.png" width="32" height="32" />
+    <connector component-id="c1" index="0" name="in" type="input" signal="audio" />
+    <connector component-id="c2" index="0" name="LP" type="output" signal="audio" />
+    <connector component-id="c3" index="1" name="BP" type="output" signal="audio" />
+    <connector component-id="c4" index="2" name="HP" type="output" signal="audio" />
+    <!-- custom parameter(s) -->
+    <parameter component-id="p1" index="0" name="freq display units" class="custom" role="ui" maxValue="1">
+      <attribute name="custom" type="boolean" value="yes" />
+    </parameter>
+    <!-- parameter(s) -->
+    <parameter component-id="p2" index="0" name="freq" class="parameter" defaultValue="60" formatter="fmtFilterHz2" extension="m2" />
+    <parameter component-id="p3" index="1" name="resonance" class="parameter" extension="m3" />
+    <parameter component-id="p4" index="2" name="gain control" class="parameter" maxValue="1" defaultValue="1" formatter="fmtOffOn" extension="m4" />
+    <parameter component-id="m2" index="0" name="morph:freq" class="morph" role="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="1" name="morph:resonance" class="morph" role="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="2" name="morph:gain control" class="morph" role="morph" minValue="-1" maxValue="1" />
+    <!-- custom attributes -->
+    <attribute name="cycles" type="double" value="1.78125" />
+    <attribute name="x-mem" type="double" value="0.21875" />
+    <attribute name="y-mem" type="double" value="0.15625" />
+    <attribute name="prog-mem" type="double" value="0.4375" />
+    <attribute name="dyn-mem" type="double" value="0.40625" />
+    <attribute name="zero-page" type="double" value="2.625" />
+    <attribute name="height" type="integer" value="4" />
+    <attribute name="background" value="#b1a1c3" />
   </module>
-  <module component-id="m49" index="49" name="FilterD" category="Filter">
+  
+  <module component-id="m49" index="49" name="FilterD" fullname="12dB Dynamic Multimode Filter" category="Filter">
     <image type="screenshot" src="img/modules/module-49.png" width="256" height="75" />
     <image type="icon16x16" src="img/icons/16x16/module-id-49.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-49.png" width="32" height="32" />
@@ -1492,10 +1522,10 @@
     <parameter component-id="p3" index="1" name="kbt" class="parameter" defaultValue="64" extension="m3" />
     <parameter component-id="p4" index="2" name="resonance" class="parameter" extension="m4" />
     <parameter component-id="p5" index="3" name="freqmod" class="parameter" extension="m5" />
-    <parameter component-id="m2" index="0" name="morph:freq" class="morph" role="morph"  minValue="-127" maxValue="127" />
-    <parameter component-id="m3" index="1" name="morph:kbt" class="morph" role="morph"  minValue="-127" maxValue="127" />
-    <parameter component-id="m4" index="2" name="morph:resonance" class="morph" role="morph"  minValue="-127" maxValue="127"/>
-    <parameter component-id="m5" index="3" name="morph:freqmod" class="morph" role="morph"  minValue="-127" maxValue="127"/>
+    <parameter component-id="m2" index="0" name="morph:freq" class="morph" role="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m3" index="1" name="morph:kbt" class="morph" role="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m4" index="2" name="morph:resonance" class="morph" role="morph" minValue="-127" maxValue="127" />
+    <parameter component-id="m5" index="3" name="morph:freqmod" class="morph" role="morph" minValue="-127" maxValue="127" />
     <!-- custom attributes -->
     <attribute name="cycles" type="double" value="4.03125" />
     <attribute name="x-mem" type="double" value="0.5625" />
@@ -1506,36 +1536,7 @@
     <attribute name="height" type="integer" value="5" />
     <attribute name="background" value="#b1a1c3" />
   </module>
-  <module component-id="m50" index="50" name="FilterC" category="Filter">
-    <image type="screenshot" src="img/modules/module-50.png" width="256" height="60" />
-    <image type="icon16x16" src="img/icons/16x16/module-id-50.png" width="16" height="16" />
-    <image type="icon32x32" src="img/icons/32x32/module-id-50.png" width="32" height="32" />
-    <connector component-id="c1" index="0" name="in" type="input" signal="audio" />
-    <connector component-id="c2" index="0" name="LP" type="output" signal="audio" />
-    <connector component-id="c3" index="1" name="BP" type="output" signal="audio" />
-    <connector component-id="c4" index="2" name="HP" type="output" signal="audio" />
-    <!-- custom parameter(s) -->
-    <parameter component-id="p1" index="0" name="freq display units" class="custom" role="ui" maxValue="1">
-      <attribute name="custom" type="boolean" value="yes" />
-    </parameter>
-    <!-- parameter(s) -->
-    <parameter component-id="p2" index="0" name="freq" class="parameter" defaultValue="60" formatter="fmtFilterHz2" extension="m2" />
-    <parameter component-id="p3" index="1" name="resonance" class="parameter" extension="m3" />
-    <parameter component-id="p4" index="2" name="gain control" class="parameter" maxValue="1" defaultValue="1" formatter="fmtOffOn" extension="m4" />
-    <parameter component-id="m2" index="0" name="morph:freq" class="morph" role="morph"  minValue="-127" maxValue="127" />
-    <parameter component-id="m3" index="1" name="morph:resonance" class="morph" role="morph"  minValue="-127" maxValue="127"/>
-    <parameter component-id="m4" index="2" name="morph:gain control" class="morph" role="morph"  minValue="-1" maxValue="1" />
-    <!-- custom attributes -->
-    <attribute name="cycles" type="double" value="1.78125" />
-    <attribute name="x-mem" type="double" value="0.21875" />
-    <attribute name="y-mem" type="double" value="0.15625" />
-    <attribute name="prog-mem" type="double" value="0.4375" />
-    <attribute name="dyn-mem" type="double" value="0.40625" />
-    <attribute name="zero-page" type="double" value="2.625" />
-    <attribute name="height" type="integer" value="4" />
-    <attribute name="background" value="#b1a1c3" />
-  </module>
-  <module component-id="m51" index="51" name="FilterE" category="Filter">
+  <module component-id="m51" index="51" name="FilterE" fullname="12/24dB Dynamic Multimode Filter" category="Filter">
     <image type="screenshot" src="img/modules/module-51.png" width="256" height="90" />
     <image type="icon16x16" src="img/icons/16x16/module-id-51.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-51.png" width="32" height="32" />
@@ -1579,7 +1580,7 @@
     <attribute name="height" type="integer" value="6" />
     <attribute name="background" value="#b1a1c3" />
   </module>
-  <module component-id="m52" index="52" name="Multi-Env" category="Env">
+  <module component-id="m52" index="52" name="Multi-Env" fullname="Multiple Envelope" category="Envelope">
     <image type="screenshot" src="img/modules/module-52.png" width="256" height="105" />
     <image type="icon16x16" src="img/icons/16x16/module-id-52.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-52.png" width="32" height="32" />
@@ -1622,7 +1623,7 @@
     <attribute name="height" type="integer" value="7" />
     <attribute name="background" value="#f6e2b8" />
   </module>
-  <module component-id="m53" index="53" name="Sample&amp;Hold" category="Audio">
+  <module component-id="m53" index="53" name="Sample&amp;Hold" fullname="Sample and Hold" category="Audio">
     <image type="screenshot" src="img/modules/module-53.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-53.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-53.png" width="32" height="32" />
@@ -1639,7 +1640,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#eda0a4" />
   </module>
-  <module component-id="m54" index="54" name="Quantizer" category="Audio">
+  <module component-id="m54" index="54" name="Quantizer" fullname="Quantizer" category="Audio">
     <image type="screenshot" src="img/modules/module-54.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-54.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-54.png" width="32" height="32" />
@@ -1658,7 +1659,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#eda0a4" />
   </module>
-  <module component-id="m57" index="57" name="InvLevShift" category="Audio">
+  <module component-id="m57" index="57" name="InvLevShift" fullname="Inversable Level Shifter" category="Audio">
     <image type="screenshot" src="img/modules/module-57.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-57.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-57.png" width="32" height="32" />
@@ -1679,7 +1680,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#eda0a4" />
   </module>
-  <module component-id="m58" index="58" name="DrumSynth" category="Osc">
+  <module component-id="m58" index="58" name="DrumSynth" fullname="Drum Synthesizer" category="Oscillator">
     <image type="screenshot" src="img/modules/module-58.png" width="256" height="135" />
     <image type="icon16x16" src="img/icons/16x16/module-id-58.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-58.png" width="32" height="32" />
@@ -1731,7 +1732,7 @@
     <attribute name="height" type="integer" value="9" />
     <attribute name="background" value="#87ae99" />
   </module>
-  <module component-id="m59" index="59" name="CompareLev" category="Logic">
+  <module component-id="m59" index="59" name="CompareLev" fullname="Constant Comparator" category="Logic">
     <image type="screenshot" src="img/modules/module-59.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-59.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-59.png" width="32" height="32" />
@@ -1750,7 +1751,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#fc8642" />
   </module>
-  <module component-id="m61" index="61" name="Clip" category="Audio">
+  <module component-id="m61" index="61" name="Clip" fullname="Clip" category="Audio">
     <image type="screenshot" src="img/modules/module-61.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-61.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-61.png" width="32" height="32" />
@@ -1774,7 +1775,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#eda0a4" />
   </module>
-  <module component-id="m62" index="62" name="Overdrive" category="Audio">
+  <module component-id="m62" index="62" name="Overdrive" fullname="Overdrive" category="Audio">
     <image type="screenshot" src="img/modules/module-62.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-62.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-62.png" width="32" height="32" />
@@ -1796,7 +1797,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#eda0a4" />
   </module>
-  <module component-id="m63" index="63" name="KeyboardPatch" category="In/Out">
+  <module component-id="m63" index="63" name="KeyboardPatch" fullname="Keyboard Patch" category="In/Out">
     <image type="screenshot" src="img/modules/module-63.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-63.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-63.png" width="32" height="32" />
@@ -1815,7 +1816,7 @@
     <attribute name="limit" type="integer" value="1" />
     <attribute name="background" value="#a1d0ed" />
   </module>
-  <module component-id="m64" index="64" name="NegEdgeDelay" category="Logic">
+  <module component-id="m64" index="64" name="NegEdgeDelay" fullname="Negative Edge Delay" category="Logic">
     <image type="screenshot" src="img/modules/module-64.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-64.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-64.png" width="32" height="32" />
@@ -1834,7 +1835,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#fc8642" />
   </module>
-  <module component-id="m65" index="65" name="MIDIGlobal" category="In/Out">
+  <module component-id="m65" index="65" name="MIDIGlobal" fullname="MIDI Global" category="In/Out">
     <image type="screenshot" src="img/modules/module-65.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-65.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-65.png" width="32" height="32" />
@@ -1852,7 +1853,7 @@
     <attribute name="limit" type="integer" value="1" />
     <attribute name="background" value="#a1d0ed" />
   </module>
-  <module component-id="m66" index="66" name="ControlMixer" category="Ctrl" role="mixer">
+  <module component-id="m66" index="66" name="ControlMixer" fullname="Control Signal Mixer" category="Control" role="mixer">
     <image type="screenshot" src="img/modules/module-66.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-66.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-66.png" width="32" height="32" />
@@ -1880,7 +1881,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#abbe89" />
   </module>
-  <module component-id="m67" index="67" name="NoteDetect" category="In/Out">
+  <module component-id="m67" index="67" name="NoteDetect" fullname="Note Detector" category="In/Out">
     <image type="screenshot" src="img/modules/module-67.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-67.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-67.png" width="32" height="32" />
@@ -1900,7 +1901,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#a1d0ed" />
   </module>
-  <module component-id="m68" index="68" name="ClkGen" category="LFO">
+  <module component-id="m68" index="68" name="ClkGen" fullname="Clock Generator" category="LFO">
     <image type="screenshot" src="img/modules/module-68.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-68.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-68.png" width="32" height="32" />
@@ -1924,7 +1925,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#e6c2df" />
   </module>
-  <module component-id="m69" index="69" name="ClkDiv" category="Logic">
+  <module component-id="m69" index="69" name="ClkDiv" fullname="Clock Divider" category="Logic">
     <image type="screenshot" src="img/modules/module-69.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-69.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-69.png" width="32" height="32" />
@@ -1944,7 +1945,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#fc8642" />
   </module>
-  <module component-id="m70" index="70" name="LogicInv" category="Logic">
+  <module component-id="m70" index="70" name="LogicInv" fullname="Logic Inverter" category="Logic">
     <image type="screenshot" src="img/modules/module-70.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-70.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-70.png" width="32" height="32" />
@@ -1960,7 +1961,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#fc8642" />
   </module>
-  <module component-id="m71" index="71" name="EnvFollower" category="Env">
+  <module component-id="m71" index="71" name="EnvFollower" fullname="Envelope Follower" category="Envelope">
     <image type="screenshot" src="img/modules/module-71.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-71.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-71.png" width="32" height="32" />
@@ -1981,7 +1982,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#f6e2b8" />
   </module>
-  <module component-id="m72" index="72" name="NoteScaler" category="Ctrl">
+  <module component-id="m72" index="72" name="NoteScaler" fullname="Note Scaler" category="Control">
     <image type="screenshot" src="img/modules/module-72.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-72.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-72.png" width="32" height="32" />
@@ -2000,7 +2001,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#abbe89" />
   </module>
-  <module component-id="m73" index="73" name="LogicProc" category="Logic">
+  <module component-id="m73" index="73" name="LogicProc" fullname="Logic Processor" category="Logic">
     <image type="screenshot" src="img/modules/module-73.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-73.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-73.png" width="32" height="32" />
@@ -2020,7 +2021,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#fc8642" />
   </module>
-  <module component-id="m74" index="74" name="WaveWrap" category="Audio">
+  <module component-id="m74" index="74" name="WaveWrap" fullname="Wave Wrapper" category="Audio">
     <image type="screenshot" src="img/modules/module-74.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-74.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-74.png" width="32" height="32" />
@@ -2042,7 +2043,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#eda0a4" />
   </module>
-  <module component-id="m75" index="75" name="NoteQuant" category="Ctrl">
+  <module component-id="m75" index="75" name="NoteQuant" fullname="Note Quantizer" category="Control">
     <image type="screenshot" src="img/modules/module-75.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-75.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-75.png" width="32" height="32" />
@@ -2063,7 +2064,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#abbe89" />
   </module>
-  <module component-id="m76" index="76" name="OnOff" category="Mixer" role="mixer">
+  <module component-id="m76" index="76" name="OnOff" fullname="On/Off Switch" category="Mixer" role="mixer">
     <image type="screenshot" src="img/modules/module-76.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-76.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-76.png" width="32" height="32" />
@@ -2082,7 +2083,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#6CB5C0" />
   </module>
-  <module component-id="m77" index="77" name="ClkDivFix" category="Logic">
+  <module component-id="m77" index="77" name="ClkDivFix" fullname="Fixed Clock Divider" category="Logic">
     <image type="screenshot" src="img/modules/module-77.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-77.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-77.png" width="32" height="32" />
@@ -2101,7 +2102,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#fc8642" />
   </module>
-  <module component-id="m78" index="78" name="Delay" category="Audio">
+  <module component-id="m78" index="78" name="Delay" fullname="Delay" category="Audio">
     <image type="screenshot" src="img/modules/module-78.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-78.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-78.png" width="32" height="32" />
@@ -2124,7 +2125,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#eda0a4" />
   </module>
-  <module component-id="m79" index="79" name="4-1Switch" category="Mixer" role="mixer">
+  <module component-id="m79" index="79" name="4-1Switch" fullname="4 to 1 Switch" category="Mixer" role="mixer">
     <image type="screenshot" src="img/modules/module-79.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-79.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-79.png" width="32" height="32" />
@@ -2156,7 +2157,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#6CB5C0" />
   </module>
-  <module component-id="m80" index="80" name="LFOSlvA" category="LFO">
+  <module component-id="m80" index="80" name="LFOSlvA" fullname="Multiple Slave LFO" category="LFO">
     <image type="screenshot" src="img/modules/module-80.png" width="256" height="60" />
     <image type="icon16x16" src="img/icons/16x16/module-id-80.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-80.png" width="32" height="32" />
@@ -2189,7 +2190,7 @@
     <attribute name="height" type="integer" value="4" />
     <attribute name="background" value="#e6c2df" />
   </module>
-  <module component-id="m81" index="81" name="Amplifier" category="Mixer" role="mixer">
+  <module component-id="m81" index="81" name="Amplifier" fullname="Amplifier" category="Mixer" role="mixer">
     <image type="screenshot" src="img/modules/module-81.png" width="256" height="29" />
     <image type="icon16x16" src="img/icons/16x16/module-id-81.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-81.png" width="32" height="32" />
@@ -2208,7 +2209,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#6CB5C0" />
   </module>
-  <module component-id="m82" index="82" name="Diode" category="Audio">
+  <module component-id="m82" index="82" name="Diode" fullname="Diode Processor" category="Audio">
     <image type="screenshot" src="img/modules/module-82.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-82.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-82.png" width="32" height="32" />
@@ -2227,7 +2228,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#eda0a4" />
   </module>
-  <module component-id="m83" index="83" name="Shaper" category="Audio">
+  <module component-id="m83" index="83" name="Shaper" fullname="Signal Shaper" category="Audio">
     <image type="screenshot" src="img/modules/module-83.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-83.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-83.png" width="32" height="32" />
@@ -2246,7 +2247,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#eda0a4" />
   </module>
-  <module component-id="m84" index="84" name="AD-Env" category="Env">
+  <module component-id="m84" index="84" name="AD-Env" fullname="AD Envelope" category="Envelope">
     <image type="screenshot" src="img/modules/module-84.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-84.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-84.png" width="32" height="32" />
@@ -2273,7 +2274,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#f6e2b8" />
   </module>
-  <module component-id="m85" index="85" name="OscSlvFM" category="Osc">
+  <module component-id="m85" index="85" name="OscSlvFM" fullname="FM Slave Oscillator" category="Oscillator">
     <image type="screenshot" src="img/modules/module-85.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-85.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-85.png" width="32" height="32" />
@@ -2306,7 +2307,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#87ae99" />
   </module>
-  <module component-id="m86" index="86" name="FilterA" category="Filter">
+  <module component-id="m86" index="86" name="FilterA" fullname="6dB Low Pass Filter" category="Filter">
     <image type="screenshot" src="img/modules/module-86.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-86.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-86.png" width="32" height="32" />
@@ -2325,7 +2326,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#b1a1c3" />
   </module>
-  <module component-id="m87" index="87" name="FilterB" category="Filter">
+  <module component-id="m87" index="87" name="FilterB" fullname="6dB High Pass Filter" category="Filter">
     <image type="screenshot" src="img/modules/module-87.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-87.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-87.png" width="32" height="32" />
@@ -2344,7 +2345,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#b1a1c3" />
   </module>
-  <module component-id="m88" index="88" name="1-4Switch" category="Mixer" role="mixer">
+  <module component-id="m88" index="88" name="1-4Switch" fullname="1 to 4 Switch" category="Mixer" role="mixer">
     <image type="screenshot" src="img/modules/module-88.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-88.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-88.png" width="32" height="32" />
@@ -2370,7 +2371,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#6CB5C0" />
   </module>
-  <module component-id="m89" index="89" name="CompareAB" category="Logic">
+  <module component-id="m89" index="89" name="CompareAB" fullname="Control Signal Comparator" category="Logic">
     <image type="screenshot" src="img/modules/module-89.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-89.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-89.png" width="32" height="32" />
@@ -2387,7 +2388,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#fc8642" />
   </module>
-  <module component-id="m90" index="90" name="NoteSeqB" category="Seq">
+  <module component-id="m90" index="90" name="NoteSeqB" fullname="Note Sequencer B" category="Seqencer">
     <image type="screenshot" src="img/modules/module-90.png" width="256" height="135" />
     <image type="icon16x16" src="img/icons/16x16/module-id-90.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-90.png" width="32" height="32" />
@@ -2457,7 +2458,7 @@
     <attribute name="height" type="integer" value="9" />
     <attribute name="background" value="#e5babf" />
   </module>
-  <module component-id="m91" index="91" name="CtrlSeq" category="Seq">
+  <module component-id="m91" index="91" name="CtrlSeq" fullname="Control Sequencer" category="Seqencer">
     <image type="screenshot" src="img/modules/module-91.png" width="256" height="105" />
     <image type="icon16x16" src="img/icons/16x16/module-id-91.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-91.png" width="32" height="32" />
@@ -2517,7 +2518,7 @@
     <attribute name="height" type="integer" value="7" />
     <attribute name="background" value="#e5babf" />
   </module>
-  <module component-id="m92" index="92" name="FilterF" category="Filter">
+  <module component-id="m92" index="92" name="FilterF" fullname="12/18/24dB Classic Low Pass Filter" category="Filter">
     <image type="screenshot" src="img/modules/module-92.png" width="256" height="90" />
     <image type="icon16x16" src="img/icons/16x16/module-id-92.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-92.png" width="32" height="32" />
@@ -2554,7 +2555,7 @@
     <attribute name="height" type="integer" value="6" />
     <attribute name="background" value="#b1a1c3" />
   </module>
-  <module component-id="m94" index="94" name="StereoChorus" category="Audio">
+  <module component-id="m94" index="94" name="StereoChorus" fullname="Stereo Chorus" category="Audio">
     <image type="screenshot" src="img/modules/module-94.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-94.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-94.png" width="32" height="32" />
@@ -2578,7 +2579,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#eda0a4" />
   </module>
-  <module component-id="m95" index="95" name="PercOsc" category="Osc">
+  <module component-id="m95" index="95" name="PercOsc" fullname="Percussion Oscillator" category="Oscillator">
     <image type="screenshot" src="img/modules/module-95.png" width="256" height="60" />
     <image type="icon16x16" src="img/icons/16x16/module-id-95.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-95.png" width="32" height="32" />
@@ -2615,7 +2616,7 @@
     <attribute name="height" type="integer" value="4" />
     <attribute name="background" value="#87ae99" />
   </module>
-  <module component-id="m96" index="96" name="FormantOsc" category="Osc">
+  <module component-id="m96" index="96" name="FormantOsc" fullname="Formant Oscillator" category="Oscillator">
     <image type="screenshot" src="img/modules/module-96.png" width="256" height="60" />
     <image type="icon16x16" src="img/icons/16x16/module-id-96.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-96.png" width="32" height="32" />
@@ -2653,7 +2654,7 @@
     <attribute name="height" type="integer" value="4" />
     <attribute name="background" value="#87ae99" />
   </module>
-  <module component-id="m97" index="97" name="MasterOsc" category="Osc">
+  <module component-id="m97" index="97" name="MasterOsc" fullname="Master Oscillator" category="Oscillator">
     <image type="screenshot" src="img/modules/module-97.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-97.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-97.png" width="32" height="32" />
@@ -2685,7 +2686,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#87ae99" />
   </module>
-  <module component-id="m98" index="98" name="KeyQuant" category="Ctrl">
+  <module component-id="m98" index="98" name="KeyQuant" fullname="Key Quantizer" category="Control">
     <image type="screenshot" src="img/modules/module-98.png" width="256" height="60" />
     <image type="icon16x16" src="img/icons/16x16/module-id-98.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-98.png" width="32" height="32" />
@@ -2716,7 +2717,7 @@
     <attribute name="height" type="integer" value="4" />
     <attribute name="background" value="#abbe89" />
   </module>
-  <module component-id="m99" index="99" name="PatternGen" category="LFO">
+  <module component-id="m99" index="99" name="PatternGen" fullname="Clocked Pattern Generator" category="LFO">
     <image type="screenshot" src="img/modules/module-99.png" width="256" height="60" />
     <image type="icon16x16" src="img/icons/16x16/module-id-99.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-99.png" width="32" height="32" />
@@ -2745,7 +2746,7 @@
     <attribute name="height" type="integer" value="4" />
     <attribute name="background" value="#e6c2df" />
   </module>
-  <module component-id="m100" index="100" name="KeybSplit" category="In/Out">
+  <module component-id="m100" index="100" name="KeybSplit" fullname="Keyboard Splitter" category="In/Out">
     <image type="screenshot" src="img/modules/module-100.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-100.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-100.png" width="32" height="32" />
@@ -2770,7 +2771,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#a1d0ed" />
   </module>
-  <module component-id="m102" index="102" name="Phaser" category="Audio">
+  <module component-id="m102" index="102" name="Phaser" fullname="14 Pole Phaser" category="Audio">
     <image type="screenshot" src="img/modules/module-102.png" width="256" height="105" />
     <image type="icon16x16" src="img/icons/16x16/module-id-102.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-102.png" width="32" height="32" />
@@ -2812,7 +2813,7 @@
     <attribute name="height" type="integer" value="7" />
     <attribute name="background" value="#eda0a4" />
   </module>
-  <module component-id="m103" index="103" name="EqMid" category="Filter">
+  <module component-id="m103" index="103" name="EqMid" fullname="Center Frequency Equalizer" category="Filter">
     <image type="screenshot" src="img/modules/module-103.png" width="256" height="60" />
     <image type="icon16x16" src="img/icons/16x16/module-id-103.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-103.png" width="32" height="32" />
@@ -2840,7 +2841,7 @@
     <attribute name="height" type="integer" value="4" />
     <attribute name="background" value="#b1a1c3" />
   </module>
-  <module component-id="m104" index="104" name="EqShelving" category="Filter">
+  <module component-id="m104" index="104" name="EqShelving" fullname="Hi/Lo Shelving Equalizer" category="Filter">
     <image type="screenshot" src="img/modules/module-104.png" width="256" height="60" />
     <image type="icon16x16" src="img/icons/16x16/module-id-104.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-104.png" width="32" height="32" />
@@ -2868,7 +2869,7 @@
     <attribute name="height" type="integer" value="4" />
     <attribute name="background" value="#b1a1c3" />
   </module>
-  <module component-id="m105" index="105" name="Expander" category="Audio">
+  <module component-id="m105" index="105" name="Expander" fullname="Stereo Expander/Gate" category="Audio">
     <image type="screenshot" src="img/modules/module-105.png" width="256" height="105" />
     <image type="icon16x16" src="img/icons/16x16/module-id-105.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-105.png" width="32" height="32" />
@@ -2911,7 +2912,7 @@
     <attribute name="height" type="integer" value="7" />
     <attribute name="background" value="#eda0a4" />
   </module>
-  <module component-id="m106" index="106" name="OscSineBank" category="Osc">
+  <module component-id="m106" index="106" name="OscSineBank" fullname="Sine Bank Slave Oscillator" category="Oscillator">
     <image type="screenshot" src="img/modules/module-106.png" width="256" height="150" />
     <image type="icon16x16" src="img/icons/16x16/module-id-106.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-106.png" width="32" height="32" />
@@ -2984,7 +2985,7 @@
     <attribute name="height" type="integer" value="10" />
     <attribute name="background" value="#87ae99" />
   </module>
-  <module component-id="m107" index="107" name="SpectralOsc" category="Osc">
+  <module component-id="m107" index="107" name="SpectralOsc" fullname="Spectral Oscillator" category="Oscillator">
     <image type="screenshot" src="img/modules/module-107.png" width="256" height="75" />
     <image type="icon16x16" src="img/icons/16x16/module-id-107.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-107.png" width="32" height="32" />
@@ -3029,7 +3030,7 @@
     <attribute name="height" type="integer" value="5" />
     <attribute name="background" value="#87ae99" />
   </module>
-  <module component-id="m108" index="108" name="Vocoder" category="Filter">
+  <module component-id="m108" index="108" name="Vocoder" fullname="16 Band Vocoder" category="Filter">
     <image type="screenshot" src="img/modules/module-108.png" width="256" height="120" />
     <image type="icon16x16" src="img/icons/16x16/module-id-108.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-108.png" width="32" height="32" />
@@ -3085,7 +3086,7 @@
     <attribute name="height" type="integer" value="8" />
     <attribute name="background" value="#b1a1c3" />
   </module>
-  <module component-id="m110" index="110" name="RandomGen" category="LFO">
+  <module component-id="m110" index="110" name="RandomGen" fullname="Random Generator" category="LFO">
     <image type="screenshot" src="img/modules/module-110.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-110.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-110.png" width="32" height="32" />
@@ -3109,7 +3110,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#e6c2df" />
   </module>
-  <module component-id="m111" index="111" name="LevMult" category="Mixer">
+  <module component-id="m111" index="111" name="LevMult" fullname="Level Multi (Attenuator/Phase Shift)" category="Mixer">
     <image type="screenshot" src="img/modules/module-111.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-111.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-111.png" width="32" height="32" />
@@ -3130,7 +3131,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#6CB5C0" />
   </module>
-  <module component-id="m112" index="112" name="LevAdd" category="Mixer" role="mixer">
+  <module component-id="m112" index="112" name="LevAdd" fullname="Level Offset (Bias)" category="Mixer" role="mixer">
     <image type="screenshot" src="img/modules/module-112.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-112.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-112.png" width="32" height="32" />
@@ -3151,7 +3152,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#6CB5C0" />
   </module>
-  <module component-id="m113" index="113" name="1to2Fade" category="Mixer" role="mixer">
+  <module component-id="m113" index="113" name="1to2Fade" fullname="1 to 2 Fader" category="Mixer" role="mixer">
     <image type="screenshot" src="img/modules/module-113.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-113.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-113.png" width="32" height="32" />
@@ -3171,7 +3172,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#6CB5C0" />
   </module>
-  <module component-id="m114" index="114" name="2to1Fade" category="Mixer" role="mixer">
+  <module component-id="m114" index="114" name="2to1Fade" fullname="2 to 1 Fader" category="Mixer" role="mixer">
     <image type="screenshot" src="img/modules/module-114.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-114.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-114.png" width="32" height="32" />
@@ -3191,7 +3192,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#6CB5C0" />
   </module>
-  <module component-id="m115" index="115" name="NoteVelScal" category="Ctrl">
+  <module component-id="m115" index="115" name="NoteVelScal" fullname="Note Velocity Scaler" category="Control">
     <image type="screenshot" src="img/modules/module-115.png" width="256" height="60" />
     <image type="icon16x16" src="img/icons/16x16/module-id-115.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-115.png" width="32" height="32" />
@@ -3217,7 +3218,7 @@
     <attribute name="height" type="integer" value="4" />
     <attribute name="background" value="#abbe89" />
   </module>
-  <module component-id="m117" index="117" name="RingMod" category="Audio">
+  <module component-id="m117" index="117" name="RingMod" fullname="Ring/Amplitude Modulator" category="Audio">
     <image type="screenshot" src="img/modules/module-117.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-117.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-117.png" width="32" height="32" />
@@ -3240,7 +3241,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#eda0a4" />
   </module>
-  <module component-id="m118" index="118" name="Digitizer" category="Audio">
+  <module component-id="m118" index="118" name="Digitizer" fullname="Signal Digitizer" category="Audio">
     <image type="screenshot" src="img/modules/module-118.png" width="256" height="45" />
     <image type="icon16x16" src="img/icons/16x16/module-id-118.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-118.png" width="32" height="32" />
@@ -3268,7 +3269,7 @@
     <attribute name="height" type="integer" value="3" />
     <attribute name="background" value="#eda0a4" />
   </module>
-  <module component-id="m127" index="127" name="PolyAreaIn" category="In/Out">
+  <module component-id="m127" index="127" name="PolyAreaIn" fullname="Polyphonic Area In" category="In/Out">
     <image type="screenshot" src="img/modules/module-127.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-127.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-127.png" width="32" height="32" />
