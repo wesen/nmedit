@@ -116,7 +116,6 @@ public abstract class MidiMessage
     public static MidiMessage create(BitStream bitStream)
         throws MidiException
     {   
-        
         {
             BitStream sysex = ensureIsValidSysex(bitStream);
             if (sysex == null)
@@ -181,7 +180,7 @@ public abstract class MidiMessage
                 if (pp != null)
                 {
                     int[] embedded_stream = pp.getVariableList("embedded_stream");
-                    if (embedded_stream.length>=2 && embedded_stream[0] == 0x01 && embedded_stream[1]==0x40)
+                    if (embedded_stream.length>=2 && embedded_stream[0] == 0x01 && (embedded_stream[1]&0x40)>0)
                     {
                         return new SynthSettingsMessage(packet);
                     }
