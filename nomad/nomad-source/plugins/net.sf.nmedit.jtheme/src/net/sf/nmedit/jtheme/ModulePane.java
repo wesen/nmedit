@@ -233,7 +233,7 @@ public class ModulePane extends JPanel
                     
                     cdst.addChild(new ModuleDescriptorNode(
                             cdst, nsrc.getIcon(),
-                            nsrc.getText(), 
+                            nsrc.getDisplayName(), 
                             nsrc.getDescriptor()));
                 }
             }
@@ -449,11 +449,15 @@ public class ModulePane extends JPanel
         public ModuleDescriptorNode(TreeNode parent, Icon icon, String displayName, PModuleDescriptor m)
         {
             super(parent, icon, displayName);
-            this.setSearchText(m.getName() + ";" + m.getStringAttribute("fullname"));
             this.setToolTipText(m.getName());
             this.descriptor = m;
         }
         
+        public String getSearchText()
+        {
+            return descriptor.getName() + ";" + descriptor.getStringAttribute("fullname");
+        }
+
         public PModuleDescriptor getDescriptor()
         {
             return descriptor;
