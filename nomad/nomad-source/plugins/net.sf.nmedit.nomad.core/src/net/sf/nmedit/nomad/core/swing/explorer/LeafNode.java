@@ -35,10 +35,9 @@ public class LeafNode implements ETreeNode
 
     private TreeNode parent;
     private Icon icon;
-    private String displayName;
-    private String name;
-    private String fullName;
+    private String text;
     private String toolTipText;
+    private String searchText;
 
     public LeafNode(TreeNode parent)
     {
@@ -56,41 +55,31 @@ public class LeafNode implements ETreeNode
             ((ETreeNode) parent).processEvent(event);
     }
     
-    public LeafNode(TreeNode parent, Icon icon, String displayName)
+    public LeafNode(TreeNode parent, Icon icon, String text)
     {
         this.parent = parent;
         this.icon = icon;
-        this.displayName = displayName;
+        this.text = text;
     }
 
-    public void setDisplayName(String t)
+    public void setText(String t)
     {
-        this.displayName = t;
+        this.text = t;
     }
     
-    public String getDisplayName()
+    public String getText()
     {
-        return this.displayName;
+        return this.text;
     }
     
-    public void setName(String name)
+    public void setSearchText(String t)
     {
-        this.name = name;
+        this.searchText = t;
     }
     
-    public String getName()
+    public String getSearchText()
     {
-        return this.name==null?this.displayName:this.name;
-    }
-    
-    public void setFullName(String fullName)
-    {
-        this.fullName = fullName;
-    }
-    
-    public String getFullName()
-    {
-        return this.fullName==null?this.displayName:this.fullName;
+        return this.searchText;
     }
     
     public Icon getIcon()
@@ -140,7 +129,7 @@ public class LeafNode implements ETreeNode
 
     public String toString()
     {
-        return displayName;
+        return text;
     }
 
     public void setToolTipText(String toolTipText)
@@ -152,7 +141,7 @@ public class LeafNode implements ETreeNode
     public String getToolTipText()
     {
         // TODO Auto-generated method stub
-        return this.toolTipText==null?this.displayName:this.toolTipText;
+        return this.toolTipText==null?this.text:this.toolTipText;
     }
 
     public void processEvent(MouseEvent e)
