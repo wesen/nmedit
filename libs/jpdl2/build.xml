@@ -36,6 +36,7 @@
                 destdir="${api_root}" author="true" version="true" use="true" windowtitle="JPDL2">
 	      <classpath>
 	        <pathelement path="."/>
+	        <pathelement location="../java_depencies/commons-logging/commons-logging.jar"/>
 	      </classpath>
 
 	    <packageset dir="src" defaultexcludes="yes">  <!--
@@ -60,7 +61,12 @@
 
   <target name="compile" depends="init"
           description="compile the source">
-    <javac srcdir="${src}" destdir="${build}" debug="true" target="1.5" source="1.5" />
+    <javac srcdir="${src}" destdir="${build}" debug="true" target="1.5" source="1.5">
+        <classpath>
+          <pathelement path="."/>
+          <pathelement location="../java_depencies/commons-logging/commons-logging.jar"/>
+        </classpath>
+    </javac>
     <copy todir="${build}">
       <fileset dir=".">
         <include name="CHANGELOG"/>

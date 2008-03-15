@@ -13,6 +13,7 @@
     <javac srcdir="${src}" destdir="${build}" debug="true" target="1.5" source="1.5">
       <classpath>
         <pathelement path="."/>
+        <pathelement location="../java_depencies/commons-logging/commons-logging.jar"/>
       </classpath>
 	</javac>
   </target>
@@ -26,6 +27,7 @@
     <javac srcdir="${test}" destdir="${build}" debug="true">
       <classpath>
         <pathelement path="."/>
+        <pathelement location="../java_depencies/commons-logging/commons-logging.jar"/>
       </classpath>
     </javac>
   </target>

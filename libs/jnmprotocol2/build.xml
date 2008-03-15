@@ -16,6 +16,7 @@
       <classpath>
         <pathelement path="."/>
         <pathelement location="../jpdl2/dist/lib/jpdl2.jar"/>
+        <pathelement location="../java_depencies/commons-logging/commons-logging.jar"/>
       </classpath>
     </javac>
     <copy todir="${build}">
