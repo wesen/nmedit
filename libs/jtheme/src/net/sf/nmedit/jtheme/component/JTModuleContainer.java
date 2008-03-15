@@ -50,6 +50,9 @@ import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.border.Border;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.sf.nmedit.jpatch.CopyOperation;
 import net.sf.nmedit.jpatch.InvalidDescriptorException;
 import net.sf.nmedit.jpatch.ModuleDescriptions;
@@ -82,6 +85,8 @@ import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
 
 public class JTModuleContainer extends JTBaseComponent 
 {
+    
+    private static final Log log = LogFactory.getLog(JTModuleContainer.class);
     
     /**
      * 
@@ -323,7 +328,10 @@ public class JTModuleContainer extends JTBaseComponent
             }
             catch (JTException e)
             {
-                e.printStackTrace();
+                if (log.isErrorEnabled())
+                {
+                    log.error("createUIFor(PModule) failed for module: "+module, e);
+                }
             }
         }
 
@@ -713,7 +721,10 @@ public class JTModuleContainer extends JTBaseComponent
 
             dtde.acceptDrop(dtde.getDropAction() & (DnDConstants.ACTION_MOVE | DnDConstants.ACTION_COPY | DnDConstants.ACTION_LINK));
         } catch (Throwable t) {
-            t.printStackTrace();
+            if (log.isWarnEnabled())
+            {
+                log.warn("copyMoveModules(DropTargetDropEvent="+dtde+") failed", t);
+            }
             dtde.dropComplete(false);
             return;
         }
@@ -776,7 +787,10 @@ public class JTModuleContainer extends JTBaseComponent
         }
         catch (InvalidDescriptorException e)
         {
-            e.printStackTrace();
+            if (log.isErrorEnabled())
+            {
+                log.error("could not create module: "+md, e);
+            }
             dtde.rejectDrop();
             return;
         }
