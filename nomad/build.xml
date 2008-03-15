@@ -134,7 +134,7 @@ Note:
   	
 
   	<copy file="${nomad-source}/boot.properties" todir="${dist}" />
-	<copy file="${nomad-source}/log4j.properties" todir="${dist}" />
+	<copy file="${nomad-source}/log4j.dist.properties" tofile="${dist}/log4j.properties" />
 	<copy file="${nomad-source}/commons-logging.properties" todir="${dist}" />
 	<copy file="${nomad-source}/LICENSE_nomad.txt" todir="${dist}" />
 	<copy file="${nomad-source}/nomad.jar" todir="${dist}" />
