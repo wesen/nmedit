@@ -14,6 +14,7 @@
         <classpath>
           <pathelement path="."/>
           <pathelement location="../nmutils/dist/lib/nmutils.jar"/>
+            <pathelement location="../java_depencies/commons-logging/commons-logging.jar"/>
         </classpath>
   	</javac>
   </target>
