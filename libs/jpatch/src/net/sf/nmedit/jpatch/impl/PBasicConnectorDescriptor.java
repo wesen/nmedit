@@ -18,9 +18,6 @@
  */
 package net.sf.nmedit.jpatch.impl;
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import net.sf.nmedit.jpatch.PConnectorDescriptor;
 import net.sf.nmedit.jpatch.PModuleDescriptor;
 import net.sf.nmedit.jpatch.PSignal;

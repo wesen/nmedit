@@ -27,7 +27,6 @@ import net.sf.nmedit.jpdl2.PDLPacketParser;
 import net.sf.nmedit.jpdl2.dom.PDLDocument;
 import net.sf.nmedit.jpdl2.stream.BitStream;
 import net.sf.nmedit.jpdl2.stream.IntStream;
-import net.sf.nmedit.jpdl2.utils.PDLUtils;
 
 public class PatchMessage extends MidiMessage
 {

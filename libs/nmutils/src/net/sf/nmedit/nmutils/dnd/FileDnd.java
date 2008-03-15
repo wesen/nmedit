@@ -2,10 +2,8 @@ package net.sf.nmedit.nmutils.dnd;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.Reader;
 import java.net.URI;
 import java.util.ArrayList;
