@@ -65,6 +65,8 @@ import org.apache.commons.logging.LogFactory;
 
 public class NordModular extends AbstractSynthesizer implements Synthesizer, DefaultMidiPorts
 {
+    
+    private final static Log log = LogFactory.getLog(NordModular.class);
 
     private double dspGlobal = 0;
     
@@ -314,6 +316,11 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
     
     private void connect() throws SynthException
     {
+        if (log.isInfoEnabled())
+        {
+            log.info("connect()");
+        }
+        
         midiDriver = createMidiDriver();
         try
         {
@@ -321,6 +328,10 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
         }
         catch (MidiUnavailableException e)
         {
+            if (log.isWarnEnabled())
+            {
+                log.warn("mididriver.connect() failed", e);
+            }
             throw new SynthException(e);
         }
         
@@ -331,6 +342,10 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
         }
         catch (Throwable t)
         {
+            if (log.isWarnEnabled())
+            {
+                log.warn("setting receiver/transmitter failed", t);
+            }
             throw new SynthException(t);
         }
 
@@ -345,12 +360,22 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
         {
             multicaster.addProtocolListener(iamAcceptor);
 
+
+            if (log.isInfoEnabled())
+            {
+                log.info("sending "+IAmMessage.class.getName()+", expecting reply...");
+            }
+            
             try
             {
                 protocol.send(new IAmMessage());
             }
             catch (Exception e)
             {
+                if (log.isWarnEnabled())
+                {
+                    log.warn("sending "+IAmMessage.class.getName()+" failed", e);
+                }
                 throw new SynthException(e);
             }
 
@@ -358,6 +383,12 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
             iamAcceptor.waitForReply(protocol, timeout);
             
             IAmMessage iam = iamAcceptor.getFirstMessage();
+
+            if (log.isInfoEnabled())
+            {
+                log.info("received "+IAmMessage.class.getName()+": "+iam);
+            }
+
             validateVersion(iam, 3, 3);
             
             deviceId = iam.getDeviceId();
@@ -373,13 +404,10 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
                     break;
                 default:
                 {
-                    Log log = LogFactory.getLog(getClass());
-                    if (log.isWarnEnabled())
-                    {
-                        log.warn("unknown deviceId: "+deviceId+", assume device is 'Nord Modular Keyboard'");
-                    }
+                    log.warn("unknown deviceId: "+deviceId+" ("+iam+")"+", assume device is 'Nord Modular Keyboard'");
                     // assume keyboard
                     deviceId = IAmMessage.NORD_MODULAR_KEYBOARD;
+                    break;
                 }
             }
             
@@ -387,6 +415,10 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
 
             // request synth settings
 
+            if (log.isInfoEnabled())
+            {
+                log.info("requesting synth settings");
+            }
             multicaster.addProtocolListener(settingsAcceptor);
             try
             {
@@ -394,19 +426,40 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
             }
             catch (Exception e)
             {
+                if (log.isWarnEnabled())
+                {
+                    log.warn("sending "+RequestSynthSettingsMessage.class.getName()+" failed", e);
+                }
                 throw new SynthException("Request synth settings failed.", e);
             }
             
             settingsAcceptor.waitForReply(protocol, timeout);
+
+            if (log.isInfoEnabled())
+            {
+                log.info("synth settings received");
+            }
             setSettings(settingsAcceptor.getFirstMessage());
+            if (log.isInfoEnabled())
+            {
+                log.info("adapted properties to received synth settings");
+            }
         }
         catch (SynthException e)
         {
+            if (log.isWarnEnabled())
+            {
+                log.warn("connect() failed.", e);
+            }
             disconnect();
             throw e;
         }
         catch (Exception e)
         {
+            if (log.isWarnEnabled())
+            {
+                log.warn("connect() failed.", e);
+            }
             disconnect();
             throw new SynthException(e);
         }
@@ -415,18 +468,30 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
             multicaster.removeProtocolListener(settingsAcceptor);
             multicaster.removeProtocolListener(iamAcceptor);
         }
-        
+
+        if (log.isInfoEnabled())
+        {
+            log.info("starting protocol thread...");
+        }
         // now everything is fine - start the protocol thread
         protocolThread.start();
 
         // request patches 
-        
+
+        if (log.isInfoEnabled())
+        {
+            log.info("requesting patches...");
+        }
         for (int i=0;i<slotManager.getSlotCount();i++)
         {
             NmSlot slot = slotManager.getSlot(i);
             
             if (slot.isEnabled())
                 slot.requestPatch();
+        }
+        if (log.isInfoEnabled())
+        {
+            log.info("connect() successfull.");
         }
     }
     
@@ -730,6 +795,10 @@ public class NordModular extends AbstractSynthesizer implements Synthesizer, Def
 
     private void disconnect()
     {
+        if (log.isInfoEnabled())
+        {
+            log.info("disconnect()");
+        }
         this.serial = -1;
         this.deviceId = -1;
         protocolThread.stop();
