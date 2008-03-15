@@ -23,7 +23,6 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 
-import net.sf.nmedit.jpatch.clavia.nordmodular.NMData;
 import net.sf.nmedit.jtheme.clavia.nordmodular.JTNM1Context;
 import net.sf.nmedit.jtheme.clavia.nordmodular.NMStorageContext;
 import net.sf.nmedit.jtheme.store.DefaultStorageContext;

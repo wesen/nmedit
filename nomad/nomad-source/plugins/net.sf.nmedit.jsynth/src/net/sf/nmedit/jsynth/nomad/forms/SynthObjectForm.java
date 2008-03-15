@@ -71,9 +71,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import org.java.plugin.PluginManager;
-import org.java.plugin.registry.PluginDescriptor;
-
 import net.sf.nmedit.jsynth.Bank;
 import net.sf.nmedit.jsynth.Port;
 import net.sf.nmedit.jsynth.Slot;
