@@ -39,7 +39,7 @@ import org.apache.commons.logging.LogFactory;
 
 public class SVGImageResource extends AbstractImageResource implements Serializable
 {
-
+    
     /**
      * 
      */
@@ -194,7 +194,11 @@ public class SVGImageResource extends AbstractImageResource implements Serializa
             }
             catch (IOException e)
             {
-                e.printStackTrace();
+                Log log = LogFactory.getLog(ImageResource.class);
+                if (log.isWarnEnabled())
+                {
+                    log.warn("could not close stream", e);
+                }
             }
         }
         

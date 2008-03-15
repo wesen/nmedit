@@ -20,7 +20,6 @@ package net.sf.nmedit.jtheme.store2;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
@@ -31,6 +30,8 @@ import net.sf.nmedit.jtheme.component.JTComponent;
 import net.sf.nmedit.jtheme.component.JTParameterControlAdapter;
 import net.sf.nmedit.jtheme.store.StorageContext;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
@@ -210,15 +211,12 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
 						    	}
 						    }
 						}
-					} catch (IllegalArgumentException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (InvocationTargetException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					} catch (Throwable t) {
+						Log log = LogFactory.getLog(getClass());
+						if (log.isTraceEnabled())
+						{
+						    log.trace("error in link("+component+","+module+")", t);
+						}
 					}
              
             }
@@ -245,7 +243,11 @@ public abstract class AbstractMultiParameterElement extends AbstractElement
                     }
                     catch (Exception e)
                     {
-                        e.printStackTrace();
+                        Log log = LogFactory.getLog(getClass());
+                        if (log.isTraceEnabled())
+                        {
+                            log.trace("error in link("+component+","+module+")", e);
+                        }
                     }
                 }
             }

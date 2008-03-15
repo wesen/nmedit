@@ -31,6 +31,8 @@ import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.ModuleDescriptionsParser;
 import net.sf.nmedit.jpatch.impl.PBasicModuleMetrics;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -47,8 +49,12 @@ public class NM1ModuleDescriptions extends ModuleDescriptions
         }
         catch (SAXParseException spe)
         {
-            System.err.println("@"+spe.getLineNumber()+":"+spe.getColumnNumber());
-            spe.printStackTrace();
+            Log log = LogFactory.getLog(NM1ModuleDescriptions.class);
+            if (log.isErrorEnabled())
+            {
+                log.error("error in parse("+loader+","+stream+"); " +
+                		"@"+spe.getLineNumber()+":"+spe.getColumnNumber(), spe);
+            }
         }
         return mod;
     }

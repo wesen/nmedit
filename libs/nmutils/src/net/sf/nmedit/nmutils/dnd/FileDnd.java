@@ -9,9 +9,13 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.sf.nmedit.nmutils.Platform;
 
 public class FileDnd {
+    
 	public static List<File> getTransferableFiles(DataFlavor flavor,
 			Transferable transferable) {
 
@@ -53,7 +57,12 @@ public class FileDnd {
 		}
 		catch (Throwable e)
 		{
-			e.printStackTrace();
+		    Log log = LogFactory.getLog(FileDnd.class);
+		    if (log.isTraceEnabled())
+		    {
+		        log.trace("getTransferableFiles(DataFlavor "+flavor+", Transferable "
+		                +transferable+") failed", e);
+		    }
 			return null;
 		}
 
@@ -113,8 +122,11 @@ public class FileDnd {
 	        
 	        return buf.toString();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            Log log = LogFactory.getLog(FileDnd.class);
+            if (log.isTraceEnabled())
+            {
+                log.trace("getPatchString(Transferable "+t+") failed", e);
+            }
 		}
 		return null;
 	}

@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class FileUtils {
 	public static boolean copy(File from, File to, String what) {
 		return copy(new File(from, what), new File(to, what));
@@ -54,7 +57,11 @@ public class FileUtils {
 				is.close();
 				os.close();
 			} catch (IOException ex) {
-				ex.printStackTrace();
+			    Log log = LogFactory.getLog(FileUtils.class);
+			    if (log.isTraceEnabled())
+			    {
+			        log.trace("copy from "+from+" to "+to+" failed", ex);
+			    }
 			}
 		}
 		
@@ -132,8 +139,11 @@ public class FileUtils {
 			else
 				return false;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            Log log = LogFactory.getLog(FileUtils.class);
+            if (log.isTraceEnabled())
+            {
+                log.trace("isFileParent "+f1+", "+f2+" failed", e);
+            }
 			return false;
 		}
 	}

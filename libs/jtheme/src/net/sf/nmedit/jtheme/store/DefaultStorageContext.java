@@ -62,6 +62,8 @@ import com.steadystate.css.parser.CSSOMParser;
 public class DefaultStorageContext extends StorageContext
 {
     
+    private static final Log log = LogFactory.getLog(DefaultStorageContext.class);
+    
     private static final boolean DEBUG = false;
     
     private Map<Object, ModuleElement> moduleStoreMap = new HashMap<Object, ModuleElement>();
@@ -235,17 +237,10 @@ public class DefaultStorageContext extends StorageContext
                 imageCacheRead = true;
                 if (DEBUG) System.out.println(this+": image cache read in "+(System.currentTimeMillis()-t)+"ms");
             }
-            catch (FileNotFoundException e)
+            catch (Throwable et)
             {
-                e.printStackTrace();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-            catch (ClassNotFoundException e)
-            {
-                e.printStackTrace();
+                if (log.isTraceEnabled())
+                    log.trace("loading images from cache failed", et);
             }
         }
         
@@ -274,12 +269,8 @@ public class DefaultStorageContext extends StorageContext
         }
         catch (Exception e)
         {
-            // log this error
-            if (DEBUG) 
-            {
-                System.out.println(this+": exception ...");
-                e.printStackTrace();
-            }
+            if (log.isTraceEnabled())
+                log.trace("loading elements from cache failed", e);
         }
         
         if (imageCacheRead && elementCacheRead)
@@ -337,15 +328,10 @@ public class DefaultStorageContext extends StorageContext
                         imageCache.writeCacheFile(imageCacheFile);
                     }
                 }
-                catch (FileNotFoundException e)
+                catch (Exception e)
                 {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                catch (IOException e)
-                {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    if (log.isWarnEnabled())
+                        log.warn("could not write image cache to: "+imageCacheFile, e);
                 }
             }
         }
@@ -360,7 +346,8 @@ public class DefaultStorageContext extends StorageContext
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            if (log.isErrorEnabled())
+                log.error("writeCache("+(cacheFile==null?null:cacheFile.getAbsolutePath())+") failed", e);
         }
     }
 
