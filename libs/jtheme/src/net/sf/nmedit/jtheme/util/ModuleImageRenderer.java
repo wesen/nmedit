@@ -49,7 +49,6 @@ import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.CableRenderer;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.cable.JTCableManagerImpl;
-import net.sf.nmedit.jtheme.cable.SimpleCable;
 import net.sf.nmedit.jtheme.component.JTConnector;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;

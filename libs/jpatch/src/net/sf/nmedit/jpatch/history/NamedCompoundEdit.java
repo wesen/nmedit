@@ -2,7 +2,6 @@ package net.sf.nmedit.jpatch.history;
 
 import javax.swing.UIManager;
 import javax.swing.undo.CompoundEdit;
-import javax.swing.undo.UndoableEdit;
 
 public class NamedCompoundEdit extends CompoundEdit {
 	protected String presentationName;

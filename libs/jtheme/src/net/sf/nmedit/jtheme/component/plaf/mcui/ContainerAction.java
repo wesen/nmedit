@@ -10,13 +10,10 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
-import javax.swing.undo.UndoableEditSupport;
-
 import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PModuleContainer;
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.PatchUtils;
-import net.sf.nmedit.jpatch.dnd.PModuleTransferData;
 import net.sf.nmedit.jpatch.dnd.PModuleTransferDataWrapper;
 import net.sf.nmedit.jpatch.history.PUndoableEditSupport;
 import net.sf.nmedit.jtheme.component.JTModule;

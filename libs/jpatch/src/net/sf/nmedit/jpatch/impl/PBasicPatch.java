@@ -20,11 +20,8 @@ package net.sf.nmedit.jpatch.impl;
 
 import java.io.File;
 import javax.swing.event.UndoableEditListener;
-import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
-import javax.swing.undo.UndoableEditSupport;
-
 import net.sf.nmedit.jpatch.ModuleDescriptions;
 import net.sf.nmedit.jpatch.PFactory;
 import net.sf.nmedit.jpatch.PModule;
