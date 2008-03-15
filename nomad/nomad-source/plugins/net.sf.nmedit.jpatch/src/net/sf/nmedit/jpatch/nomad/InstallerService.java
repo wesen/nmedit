@@ -1,16 +1,9 @@
 package net.sf.nmedit.jpatch.nomad;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
-
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.menulayout.MLEntry;
 import net.sf.nmedit.nomad.core.service.Service;
 import net.sf.nmedit.nomad.core.service.initService.InitService;
-import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
 
 public class InstallerService implements InitService
 {
