@@ -91,7 +91,7 @@ public class JTCableManagerImpl implements JTCableManager, Runnable
 
     public Cable createCable(JTConnector source, JTConnector destination)
     {
-        return new SimpleCable(source, destination, new Pseudo3DCableGeometrie());
+        return new SimpleCable(source, destination, new SimpleCableGeometrie());
     }
 
     public CableRenderer getCableRenderer()
