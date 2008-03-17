@@ -601,8 +601,6 @@ public class JTBasicConnectorUI extends JTConnectorUI
             {
                 cableManager.remove(cables);
             }
-            cables = JTConnector.NO_CABLES;
-
             if (target != null)
             {
                 if (dragCreate)
@@ -613,14 +611,19 @@ public class JTBasicConnectorUI extends JTConnectorUI
                     {
                         Cable cable = cableManager.createCable(c, target);
                      
+                        if (cables.length == 1)
+                            cable.setShake(cables[0].getShake());
                         cableManager.add(cable);
                     }
                     else if (a != null && b != null)
                     {
+                        // TODO create new cable with same 'shake' value
                         a.getConnectionManager().add(a, b);
                     }
                 }
             }
+            cables = JTConnector.NO_CABLES;
+
         }
         
         public boolean isDragging()

@@ -16,6 +16,7 @@ import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.PatchUtils;
 import net.sf.nmedit.jpatch.dnd.PModuleTransferDataWrapper;
 import net.sf.nmedit.jpatch.history.PUndoableEditSupport;
+import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.JTModule;
 import net.sf.nmedit.jtheme.component.JTModuleContainer;
 import net.sf.nmedit.jtheme.util.ModuleImageRenderer;
@@ -37,6 +38,7 @@ public class ContainerAction extends AbstractAction
     public static final String COPY = "copy";
     public static final String PASTE = "paste";
     public static final String CUT = "cut";
+    public static final String SHAKE = "Shake";
     public static final String ABORT_PASTE = "abortPaste";
     
     private Clipboard clipBoard = null;
@@ -57,6 +59,12 @@ public class ContainerAction extends AbstractAction
         else if (command == DELETE)
         {
             putValue(NAME, "Delete");
+        }
+        else if (command == SHAKE)
+        {
+            JTCableManager cm = jmc.getCableManager();
+            setEnabled(cm != null);
+            putValue(NAME, "Shake");
         }
         else {
         	putValue(NAME, command);
@@ -95,6 +103,11 @@ public class ContainerAction extends AbstractAction
             		cut();
             } else if (key == ABORT_PASTE) {
             	jmc.getUI().abortPaste();
+            }
+            else if (key == SHAKE)
+            {
+                JTCableManager cm = jmc.getCableManager();
+                if (cm != null) cm.shake();
             }
         }
     }

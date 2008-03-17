@@ -367,5 +367,16 @@ public class JTCableManagerImpl implements JTCableManager, Runnable
     {
         autorepaintDisabledCounter++;
     }
+
+    public void shake()
+    {
+        for (Cable cable: cables)
+        {
+            markDirty(cable, false);
+            cable.shake();
+            markDirty(cable, false);
+        }
+        repaintIfDirty();
+    }
     
 }

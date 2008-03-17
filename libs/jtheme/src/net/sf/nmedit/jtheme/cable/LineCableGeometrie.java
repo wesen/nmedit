@@ -104,6 +104,21 @@ public class LineCableGeometrie extends Float implements CableGeometrie
         return new Point((int)getX2(), (int)getY2());
     }
 
+    public double getShake()
+    {
+        return 0;
+    }
+
+    public void setShake(double shake)
+    {
+        // not supported
+    }
+
+    public void shake()
+    {
+        // not supported
+    }
+
     
     
 }
