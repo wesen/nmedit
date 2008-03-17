@@ -122,6 +122,8 @@ public class JTModuleContainerUI extends ComponentUI
         JPopupMenu popup = new JPopupMenu();
         popup.add(new ContainerAction(this.getModuleContainer(), ContainerAction.DELETE_UNUSED));
         popup.addSeparator();
+        popup.add(new ContainerAction(this.getModuleContainer(), ContainerAction.SHAKE));
+        popup.addSeparator();
         getModuleContainer().installModulesMenu(popup);
         popup.show(mc, e.getX(), e.getY());
     }

@@ -38,5 +38,9 @@ public interface CableGeometrie
     Point getStart();
     Point getStop();
     
+    void setShake(double shake);
+    double getShake();
+    void shake();
+    
 }
 

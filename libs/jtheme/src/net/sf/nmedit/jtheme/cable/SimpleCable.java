@@ -187,5 +187,20 @@ public class SimpleCable implements Cable
         return c == null ? null : c.getParentComponent();
     }
 
+    public double getShake()
+    {
+        return cableGeometrie.getShake();
+    }
+
+    public void setShake(double shake)
+    {
+        cableGeometrie.setShake(shake);
+    }
+
+    public void shake()
+    {
+        cableGeometrie.shake();
+    }
+
 }
 

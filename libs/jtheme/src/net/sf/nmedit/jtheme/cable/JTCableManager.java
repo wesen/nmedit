@@ -29,6 +29,7 @@ import net.sf.nmedit.jtheme.component.JTConnector;
 public interface JTCableManager extends Iterable<Cable>
 {
 
+    void shake();
     void add(Cable cable);
     void remove(Cable cable);
     void remove(Cable[] cables);

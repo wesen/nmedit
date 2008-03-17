@@ -216,4 +216,19 @@ public class Pseudo3DCableGeometrie extends CubicCurve2D.Float
         return new Point((int)getX2(), (int)getY2());
     }
 
+    public double getShake()
+    {
+        return 0;
+    }
+
+    public void setShake(double shake)
+    {
+        // not supported
+    }
+
+    public void shake()
+    {
+        // not supported
+    }
+
 }

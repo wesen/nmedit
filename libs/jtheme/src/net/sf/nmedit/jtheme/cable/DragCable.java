@@ -204,5 +204,20 @@ public class DragCable implements Cable
         return c == null ? null : c.getParentComponent();
     }
 
+    public double getShake()
+    {
+        return peer.getShake();
+    }
+
+    public void setShake(double shake)
+    {
+        peer.setShake(shake);
+    }
+
+    public void shake()
+    {
+        peer.shake();
+    }
+
 }
 

@@ -92,20 +92,24 @@ public class SimpleCableGeometrie extends QuadCurve2D.Float
 			this.y1 = y1;
 			this.x2 = x2;
 			this.y2 = y2;
-
-			updateControlPoints();
+	        updateControlPoints();
 		}
+
 	}
 
+    private double shake = Math.random();
+    
 	private void updateControlPoints() 
     {
-		float length = (float)Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+		double length = Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
 		
 		// x in the middle, but with a slight offset
 		int isLeft  = x1<x2 ? -1 : +1;
 		ctrlx = ((x1+x2) / 2) + (hangingOffset * isLeft);
 		// y is hanging a bit with a max
-		ctrly = Math.max(y1, y2) + Math.min(hangingMax, hangingMin + (hangingWeight * length));
+		ctrly = Math.max(y1, y2) + Math.min(hangingMax, (float) (hangingMin + (hangingWeight * length)));
+		
+		ctrlx += ((shake*2 - 1)*20);
 		
         boundaryChanged = true;
 	}
@@ -167,6 +171,22 @@ public class SimpleCableGeometrie extends QuadCurve2D.Float
     public Point getStop()
     {
         return new Point((int)getX2(), (int)getY2());
+    }
+
+    public double getShake()
+    {
+        return shake;
+    }
+
+    public void setShake(double shake)
+    {
+        this.shake = shake;
+        updateControlPoints();
+    }
+
+    public void shake()
+    {
+        setShake(Math.random());
     }
 
 }
