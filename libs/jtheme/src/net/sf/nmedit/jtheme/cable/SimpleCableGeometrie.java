@@ -42,7 +42,8 @@ public class SimpleCableGeometrie extends QuadCurve2D.Float
     
     private final static int hangingMin = 5;
     private final static int hangingMax = 55;
-    private final static float hangingWeight = (float)0.3; 
+    private final static float hangingWeight = 0.3F; 
+    private final static int hangingOffset = 18;
 
 	public SimpleCableGeometrie() 
     {
@@ -98,12 +99,13 @@ public class SimpleCableGeometrie extends QuadCurve2D.Float
 
 	private void updateControlPoints() 
     {
-		double length = Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+		float length = (float)Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
 		
-		// x in the middle
-		ctrlx = (x1+x2) / 2;
+		// x in the middle, but with a slight offset
+		int isLeft  = x1<x2 ? -1 : +1;
+		ctrlx = ((x1+x2) / 2) + (hangingOffset * isLeft);
 		// y is hanging a bit with a max
-		ctrly = Math.max(y1, y2) + Math.min(hangingMax, hangingMin + (float)(hangingWeight * length));
+		ctrly = Math.max(y1, y2) + Math.min(hangingMax, hangingMin + (hangingWeight * length));
 		
         boundaryChanged = true;
 	}
