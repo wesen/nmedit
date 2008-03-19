@@ -22,6 +22,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
+import java.util.Vector;
 
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
@@ -48,7 +49,7 @@ public class VariationTransferHandler extends TransferHandler {
     public boolean importData(JComponent c, Transferable t) {
     	//System.out.println("import data");
         Variation target;
-    	int data[]= null;
+    	Vector<Integer> data = null;
         
         if (!canImport(c, t.getTransferDataFlavors())) {
             return false;
@@ -57,7 +58,7 @@ public class VariationTransferHandler extends TransferHandler {
         try {
             target = (Variation)c;
             if (hasVariationFlavor(t.getTransferDataFlavors())) {
-                data = (int[])t.getTransferData(variationFlavor);
+                data = (Vector<Integer>)t.getTransferData(variationFlavor);
             } else {
                 return false;
             }
@@ -69,13 +70,8 @@ public class VariationTransferHandler extends TransferHandler {
             return false;
         }
 
-        target.setValues(new int[data.length]);
-        
-        for (int i = 0; i < data.length; i++)
-        {
-        	target.getValues()[i]= data[i];
-        }
-        
+        target.getState().updateValues(new Vector<Integer>(data));
+         
         c.repaint();
         return true;
     }
@@ -114,8 +110,8 @@ public class VariationTransferHandler extends TransferHandler {
 //    	System.out.println("transferable creation");
         if (c instanceof Variation) {
             Variation source = (Variation)c;
-            //System.out.println("transferable creation");
-            return new VariationTransferable(source.getValues());
+            //System.out.println("transferable creation"); 
+            return new VariationTransferable(source.getState().getValues());
         }
         return null;
     }
@@ -130,9 +126,9 @@ public class VariationTransferHandler extends TransferHandler {
 //    }
 //
     public class VariationTransferable implements Transferable {
-    	int data[];
+    	Vector<Integer> data;
 
-        public VariationTransferable(int data[]) {
+        public VariationTransferable(Vector<Integer> data) {
             this.data = data;
         }
 

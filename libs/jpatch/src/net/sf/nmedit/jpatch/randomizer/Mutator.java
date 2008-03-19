@@ -24,6 +24,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import java.awt.event.ActionEvent;
+import java.util.HashMap;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -39,16 +40,25 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public class Mutator {
+import net.sf.nmedit.jpatch.PPatch;
+
+public class Mutator implements VariationSelectionListener{
 
     public static final String ACTION_RANDOMIZE = "mutator.randomize";
     public static final String ACTION_MUTATE = "mutator.mutate";
+
     
 	private double probability = .65, range = .15;
 	
 	private Variation variations[] = new Variation[4];
-	private Variation mother = new Variation(60), father = new Variation(60);
+	// TODO: rename and remove static size
+	private Variation variationStorage[] = new Variation[18]; 
+	private Variation mother = new Variation(), father = new Variation();
 	
+	private HashMap<PPatch, MutatorState> mutatorStates = new HashMap<PPatch, MutatorState>();
+
+    private MutatorState state = null;
+    
 	public Color colorValue(int hue)
 	{	
 		return Color.getHSBColor(hue/127f, 1f, 0.8f);
@@ -59,7 +69,17 @@ public class Mutator {
 		for (int i = 0 ; i < variations.length; i ++)
 		{
 			variations[i]= new Variation();
+			variations[i].addVariationSelectionListener(this);
 		}
+		
+		for (int i = 0 ; i < variationStorage.length; i ++)
+		{
+			variationStorage[i]= new Variation();
+			variationStorage[i].addVariationSelectionListener(this);
+		}
+		
+		mother.addVariationSelectionListener(this);
+		father.addVariationSelectionListener(this);
 		
 		createUI();
 	}
@@ -93,7 +113,7 @@ public class Mutator {
 	private JFrame frame;
 	
 	private void createUI() {
-		frame = new JFrame("Mutator test");
+		frame = new JFrame("Patch Mutator");
 		JFrame f = frame;
 		f.setResizable(false);
 	    f.setBounds(30,30,400,320);
@@ -203,7 +223,9 @@ public class Mutator {
 	    {		
 			for (int variation =0 ; variation < 6 ; variation++ )
 			{
-				variationStore.add(new Variation(),series*4+variation);
+			//	Variation v = new Variation();
+				variationStore.add(variationStorage[series*6+variation],series*4+variation);
+			//	variationStorage[series*6+variation] = v; 
 			}
 		}
 	}
@@ -286,6 +308,32 @@ public class Mutator {
 
 	}
 
+	public void addPatch(PPatch p) {		
+		mutatorStates.put(p, new MutatorState(p));
+	}
+	
+	public void removePatch(PPatch p) {
+		mutatorStates.remove(p);
+	}
+	
+	public void selectPatch(PPatch p) {
+		setState(mutatorStates.get(p));
+	}
+	
+	private void setState(MutatorState s) {
+		if (s != null) {
+			state = s;
+			mother.setState(s.getMother());
+			father.setState(s.getFather());
+			for (int i = 0 ; i < variationStorage.length; i ++) {
+				variationStorage[i].setState(s.getVariations().get(i));				
+			}
+			for (int i = 0 ; i < variations.length; i ++) {
+				variations[i].setState(s.getWorkingVariations().get(i));				
+			}			
+		}
+	}
+	
 	public Variation[] getVariations() {
 		return variations;
 	}
@@ -301,8 +349,8 @@ public class Mutator {
 	public void mutate()
 	{
 		for (int variation =0 ; variation < variations.length ; variation++ )
-		{
-			variations[variation].mutate(mother, range, probability);
+		{			
+			variations[variation].getState().mutate(mother.getState(), range, probability);
 		}
 	}
 	
@@ -310,7 +358,7 @@ public class Mutator {
 	{
 		for (int variation =0 ; variation < variations.length ; variation++ )
 		{
-			variations[variation].randomize(mother.getNbValues());
+			variations[variation].getState().randomize();
 		}
 	}
 	
@@ -331,29 +379,33 @@ public class Mutator {
 		this.range = range;
 	}
 
-	public Variation getFather() {
-		return father;
-	}
-
-	public void setFather(Variation father) {
-		this.father = father;
-	}
-
-	public Variation getMother() {
-		return mother;
-	}
-
-	public void setMother(Variation mother) {
-		this.mother = mother;
-	}
-
-	public void setVariations(Variation[] variations) {
-		this.variations = variations;
-	}
+//	public Variation getFather() {
+//		return father;
+//	}
+//
+//	public void setFather(Variation father) {
+//		this.father = father;
+//	}
+//
+//	public Variation getMother() {
+//		return mother;
+//	}
+//
+//	public void setMother(Variation mother) {
+//		this.mother = mother;
+//	}
+//
+//	public void setVariations(Variation[] variations) {
+//		this.variations = variations;
+//	}
 
     public JFrame getFrame()
     {
         return frame;
     }
+
+	public void variationSelectionChanged(Variation v) {		
+		state.setSelectedVariation(v.getState());	
+	}
 
 }
