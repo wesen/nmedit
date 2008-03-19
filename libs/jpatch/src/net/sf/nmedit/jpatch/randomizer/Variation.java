@@ -30,18 +30,21 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-public class Variation extends JComponent { 
+
+public class Variation extends JComponent implements ChangeListener{ 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3543257101198489340L;
-	int values[] = null;
+	
+	private VariationState state;	
 	
 	private static final Border VarBorder = BorderFactory.createLineBorder(Color.GRAY);
 
@@ -49,96 +52,51 @@ public class Variation extends JComponent {
     private BufferedImage renderedImage = null;
     private boolean modifiedFlag = true;
 	
-	public Variation(){
-		construct();
-	}
-	
-	public Variation(int size) {
-		if (size > 0) {
-			values = new int[size];
-			for (int i = 0; i < size; i ++)
-			{
-				values[i]=(int)(128*Math.random() );
-				//System.out.println(values[i]);
-			}
-		}
-		construct();
-	}
-	
-	public Variation(Variation v,double range,double probability) {
-		values = new int[v.getNbValues()];
+    public Variation(){
+
+    	setBackground(Color.BLACK);
+    	setBorder(VarBorder);
+    	setTransferHandler(new VariationTransferHandler());
+
+    	VariationListener listener = new VariationListener();
+    	addMouseListener(listener);
+    	addMouseMotionListener(listener);
+
+    	setPreferredSize(new Dimension(50,50));
+    	setMaximumSize(new Dimension(50,50));
+    	setMinimumSize(new Dimension(50,50));
+    }
+
+    
+    
+    public void addVariationSelectionListener(VariationSelectionListener l) {    	
+    	listenerList.add(VariationSelectionListener.class, l);
+    }
+    
+    public void removeVariationSelectionListener(VariationSelectionListener l) {
+    	listenerList.remove(VariationSelectionListener.class, l);
+    }
+    
+    protected transient ChangeEvent changeEvent; // this is source
+    
+	protected void fireSelectionChanged() {
+		Object[] listeners = listenerList.getListenerList();
 		
-		mutate(v,range,probability);		
-		construct();
+		for (int i = listeners.length-2; i>=0; i-=2) {	
+		
+	        if (listeners[i]==VariationSelectionListener.class) {	        
+	            // Lazily create the event:
+//	            if (changeEvent == null)
+//	                changeEvent = new ChangeEvent(this);
+	            ((VariationSelectionListener)listeners[i+1]).variationSelectionChanged(this);
+	        }
+	    }
 	}
-	
+    
 	private void setModifiedFlag()
 	{
 	    modifiedFlag = true;
 	    repaint();
-	}
-	
-	private void construct(){
-        setBackground(Color.BLACK);
-        setBorder(VarBorder);
-		setTransferHandler(new VariationTransferHandler());
-		
-		VariationListener listener = new VariationListener();
-		addMouseListener(listener);
-		addMouseMotionListener(listener);
-		
-		setPreferredSize(new Dimension(50,50));
-		setMaximumSize(new Dimension(50,50));
-		setMinimumSize(new Dimension(50,50));
-		
-	}
-	
-	public void mutate(Variation refVar,double range,double probability )
-	{
-		if (values == null)
-		{
-			values = new int[refVar.getNbValues()];
-		}
-		
-		
-		for (int i = 0 ; i  < values.length ; i++)
-		{
-			
-			if (Math.random() < probability)
-			{
-				double amplitude = 127*2*range;
-				int offset = (int)(Math.random()* amplitude
-							-amplitude/2);
-				int val = refVar.getValues()[i] + offset;
-				values[i] = val < 0 ? 0: val > 128 ? 127:val;
-			} else {
-				values[i] = refVar.getValues()[i];
-			}
-		}	
-		
-		setModifiedFlag();
-	}
-	
-	public void randomize(int size)
-	{
-		if (values == null || values.length != size)
-		{
-			values = new int[size];
-		}
-		
-		for (int i = 0 ; i  < values.length ; i++)
-		{
-				values[i] = (int)(Math.random()*127);
-		}
-        setModifiedFlag();
-	}
-	
-	public int getNbValues(){
-		return values.length;
-	}
-	
-	public int[] getValues() {
-		return values;
 	}
 	
 	public Color colorValue(int hue){
@@ -154,62 +112,62 @@ public class Variation extends JComponent {
 
 	private Polygon poly = null;
 	
-	private Polygon getPolygon()
-	{
-		//if (poly==null){ 
-			if (values == null) return null;
-			
-			poly = new Polygon();
-
-	        Dimension dd = getSizeWithoutInsets();
-	        
-	        int w = dd.width/8;
-	        int h = dd.height/8;
-	        
-			
-			poly.addPoint(w/2,h/2);
-			
-			int prevX = w/2;
-			int prevY = h/2;
-			double prevAngle = 0;
-			for (int i = 0; i < values.length ; i += 2)
-			{
-				double angle = 2*Math.PI* values[i]/512f+prevAngle;
-				double amplitude = values[i+1]/2;// shouldn't it be /2d ?
-				int x = (int)(prevX+amplitude*Math.cos(angle));
-				int y = (int)(prevY+amplitude*Math.sin(angle));
-				poly.addPoint(x,y);
-				prevX = x;
-				prevY = y;
-				prevAngle = angle;
-			}
-			
-			Rectangle bound = poly.getBounds();
-			
-			// translate the poly to 0,0
-			if (bound.x < 0) poly.translate(-bound.x, 0);
-			if (bound.y < 0) poly.translate(0,-bound.y);
-			
-			// scale it
-			double scaleX = bound.width/((double)getWidth()-10d);
-			double scaleY = bound.height/((double)getHeight()-10d);
-			
-			//System.out.println(scaleX+" "+scaleY);
-			for (int i=0; i < poly.xpoints.length;  i++)
-			{
-				poly.xpoints[i] /= scaleX;
-				poly.xpoints[i] += 5;
-			}
-			for (int i=0; i < poly.ypoints.length;  i++)
-			{
-				poly.ypoints[i] /= scaleY;
-				poly.ypoints[i] += 5;
-			}
-			//System.out.println(p.getBounds());
-		//}
-		return poly;
-		
-	}
+//	private Polygon getPolygon()
+//	{
+//		//if (poly==null){ 
+//			if (values == null) return null;
+//			
+//			poly = new Polygon();
+//
+//	        Dimension dd = getSizeWithoutInsets();
+//	        
+//	        int w = dd.width/8;
+//	        int h = dd.height/8;
+//	        
+//			
+//			poly.addPoint(w/2,h/2);
+//			
+//			int prevX = w/2;
+//			int prevY = h/2;
+//			double prevAngle = 0;
+//			for (int i = 0; i < values.size() ; i += 2)
+//			{
+//				double angle = 2*Math.PI* values.get(i)/512f+prevAngle;
+//				double amplitude = values.get(i+1)/2;// shouldn't it be /2d ?
+//				int x = (int)(prevX+amplitude*Math.cos(angle));
+//				int y = (int)(prevY+amplitude*Math.sin(angle));
+//				poly.addPoint(x,y);
+//				prevX = x;
+//				prevY = y;
+//				prevAngle = angle;
+//			}
+//			
+//			Rectangle bound = poly.getBounds();
+//			
+//			// translate the poly to 0,0
+//			if (bound.x < 0) poly.translate(-bound.x, 0);
+//			if (bound.y < 0) poly.translate(0,-bound.y);
+//			
+//			// scale it
+//			double scaleX = bound.width/((double)getWidth()-10d);
+//			double scaleY = bound.height/((double)getHeight()-10d);
+//			
+//			//System.out.println(scaleX+" "+scaleY);
+//			for (int i=0; i < poly.xpoints.length;  i++)
+//			{
+//				poly.xpoints[i] /= scaleX;
+//				poly.xpoints[i] += 5;
+//			}
+//			for (int i=0; i < poly.ypoints.length;  i++)
+//			{
+//				poly.ypoints[i] /= scaleY;
+//				poly.ypoints[i] += 5;
+//			}
+//			//System.out.println(p.getBounds());
+//		//}
+//		return poly;
+//		
+//	}
 	
 	private Dimension getSizeWithoutInsets()
 	{
@@ -223,7 +181,7 @@ public class Variation extends JComponent {
 	private Polygon getPolygon2()
 	{
 		//if (poly==null){ 
-		if (values == null) return null;
+		if (state.getValues() == null) return null;
 		
 		poly = new Polygon();
 		
@@ -237,11 +195,11 @@ public class Variation extends JComponent {
 		int prevX = w/2;
 		int prevY = h/2;
 		double prevAngle = 0;
-		for (int i = 0; i < values.length ; i += 2)
+		for (int i = 0; i < state.getValues().size()-1 ; i += 2)
 		{ 
-			double angle = 2*Math.PI* values[i]/512f+prevAngle;
-			angles[i] = 2*Math.PI* values[i]/512f;  
-			double amplitude = values[i+1]/2;// shouldn't it be /2d ?
+			double angle = 2*Math.PI* state.getValues().get(i)/512f+prevAngle;
+			angles[i] = 2*Math.PI* state.getValues().get(i)/512f;  
+			double amplitude = state.getValues().get(i+1)/2d;// shouldn't it be /2d ?
 			int x = (int)(prevX+amplitude*Math.cos(angle));
 			int y = (int)(prevY+amplitude*Math.sin(angle));
 			poly.addPoint(x,y);
@@ -358,7 +316,7 @@ public class Variation extends JComponent {
         else
             g2.fillRect(insets.left, insets.top,w,h);
 
-        if (values != null){
+        if (state.getValues() != null){
             Polygon p = getPolygon2();
             for (int i = 0 ; i < p.xpoints.length-1 ; i ++){
                 if (i%2 == 0){
@@ -374,10 +332,24 @@ public class Variation extends JComponent {
         
     }
 
-    public void setValues(int[] values) {
-		this.values = values;
-        setModifiedFlag();
-	}
+//	public void setParameters(Vector<PParameter> parameters) {
+//		this.parameters = parameters;
+//	}
+//	
+//	public void setValues(Vector<Integer> values) {
+//		this.values = values;
+//		setModifiedFlag();
+//	}
+//	
+//    public void updateValues(Vector<Integer> values) {
+//    	this.values.clear();
+//    	
+//    	for (Integer integer : values) {
+//			this.values.add(integer);
+//		}   
+//    	
+//    	setModifiedFlag();
+//	}
 	
 	public class VariationListener implements MouseMotionListener, MouseListener{
 
@@ -411,9 +383,14 @@ public class Variation extends JComponent {
 			
 		}
 
-		public void mouseClicked(MouseEvent arg0) {
+		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
+//			Variation v = (Variation) (e.getSource());
+			for(int i = 0 ; i < state.getParameters().size(); i++) {
+				state.getParameters().get(i).setValue(state.getValues().get(i));
+			}
 			
+			fireSelectionChanged();
 		}
 
 		public void mouseEntered(MouseEvent arg0) {
@@ -426,8 +403,7 @@ public class Variation extends JComponent {
 			
 		}
 
-		public void mousePressed(MouseEvent e) {
-			System.out.println("ee");
+		public void mousePressed(MouseEvent e) {			
 			firstMouseEvent = e;
 	        e.consume();
 		}
@@ -437,5 +413,23 @@ public class Variation extends JComponent {
 			
 		}
 		
+	}
+
+	public void stateChanged(ChangeEvent e) {		
+		setModifiedFlag();
+	}
+
+	public VariationState getState() {
+		return state;
+	}
+
+	public void setState(VariationState state) {		
+		if (this.state != null) {
+			this.state.removeChangeListener(this);
+		}
+		this.state = state;
+		this.state.addChangeListener(this);	
+		
+		setModifiedFlag();
 	}
 } 

@@ -56,8 +56,8 @@ public class GaussianRandomizerAlgorithm implements RandomizerAlgorithm
     {
         for (PParameter param: parameterList)
         {
-            float max = param.getMaxValue();
-            float min = param.getMinValue();
+            int max = param.getMaxValue();
+            int min = param.getMinValue();
         //System.out.println((int)(Math.random()*(max-min)));
             if (max-min ==127)
                 param.setValue(flattenedDistribution[(int)(Math.random()*flattenedDistribution.length)]);
