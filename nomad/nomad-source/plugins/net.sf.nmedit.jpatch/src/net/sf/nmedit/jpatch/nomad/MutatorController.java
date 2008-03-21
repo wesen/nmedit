@@ -2,6 +2,9 @@ package net.sf.nmedit.jpatch.nomad;
 
 import javax.swing.JFrame;
 
+import net.sf.nmedit.nomad.core.swing.document.Document; 
+
+import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jpatch.randomizer.Mutator;
 import net.sf.nmedit.nomad.core.swing.document.DocumentEvent;
 import net.sf.nmedit.nomad.core.swing.document.DocumentListener;
@@ -25,7 +28,7 @@ public class MutatorController implements DocumentListener
         if (mutator == null)
         {
             mutator = new Mutator();
-            mutator.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            mutator.getFrame().setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         }
     }
 
@@ -36,21 +39,30 @@ public class MutatorController implements DocumentListener
     }
 
 	public void documentAdded(DocumentEvent e) {
-		if (DEBUG) System.out.println("add");
-		// TODO Auto-generated method stub
-		
+		ensureMutatorCreated();
+		PPatch patch = (PPatch) e.getDocument().getProperty("patch");
+		mutator.addPatch(patch);
+		mutator.selectPatch(patch);
 	}
 
-	public void documentRemoved(DocumentEvent e) {
-		if (DEBUG) System.out.println("removed");
-		// TODO Auto-generated method stub
+	public void documentRemoved(DocumentEvent e){
+		ensureMutatorCreated();
+		PPatch patch = (PPatch) e.getDocument().getProperty("patch");
+		mutator.removePatch(patch);	
 		
 	}
 
 	public void documentSelected(DocumentEvent e) {
-		if (DEBUG) System.out.println("selected");
-		// TODO Auto-generated method stub
+		ensureMutatorCreated();
+		Document d = e.getDocument();
 		
+		if (d != null) {
+			PPatch patch = (PPatch) d.getProperty("patch");
+			mutator.selectPatch(patch);	
+		} else {
+			mutator.selectPatch(null);
+		}
+	
 	}
 
 }

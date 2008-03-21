@@ -77,10 +77,8 @@ public class VariationTransferHandler extends TransferHandler {
     }
 
     protected void exportDone(JComponent c, Transferable data, int action) {
-//    	System.out.println("export done" + data);
     	
         if ((action == MOVE)) {
-        	System.out.println("Move");
         	c.repaint();
         }
     }
@@ -107,11 +105,14 @@ public class VariationTransferHandler extends TransferHandler {
 //
     @Override
     protected Transferable createTransferable(JComponent c) {
-//    	System.out.println("transferable creation");
+
         if (c instanceof Variation) {
             Variation source = (Variation)c;
-            //System.out.println("transferable creation"); 
-            return new VariationTransferable(source.getState().getValues());
+            VariationState s = source.getState();
+            if (s!=null) 
+            	return new VariationTransferable(source.getState().getValues());
+            else 
+            	return null;
         }
         return null;
     }
