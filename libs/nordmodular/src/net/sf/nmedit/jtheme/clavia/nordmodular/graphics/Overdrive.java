@@ -41,13 +41,15 @@ public class Overdrive extends Curve {
 	
 	private void update(){
         setModified(true);
+        
 		points[1].setLocation(.45f*overdrive, 1f);
 		
 		
 		points[2].setLocation(1-.45f*overdrive, 0f);
 		
-		points[2].setBezier(points[1].getX(),points[1].getY(),.25f,.25f,0f,180f);
-	}
+		// from -45° to 0 , and from 135 to 180 for bezier angles
+		points[2].setBezier(points[1].getX(),points[1].getY(),.25f,.25f,-45*(1-overdrive),180f-45*(1-overdrive));
+		}
 
 	public int getOverdrive() {
 		return (int)(overdrive);
