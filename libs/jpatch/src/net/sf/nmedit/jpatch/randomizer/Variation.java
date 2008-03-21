@@ -44,7 +44,7 @@ public class Variation extends JComponent implements ChangeListener{
 	 */
 	private static final long serialVersionUID = -3543257101198489340L;
 	
-	private VariationState state;	
+	private VariationState state = null;	
 	
 	private static final Border VarBorder = BorderFactory.createLineBorder(Color.GRAY);
 
@@ -180,8 +180,10 @@ public class Variation extends JComponent implements ChangeListener{
 	double angles[] = new double[64];
 	private Polygon getPolygon2()
 	{
-		//if (poly==null){ 
-		if (state.getValues() == null) return null;
+
+		// 4 param means no modules added by the user
+		if (state.getValues() == null || state.getValues().size() == 0)
+			return null;			
 		
 		poly = new Polygon();
 		
@@ -197,8 +199,9 @@ public class Variation extends JComponent implements ChangeListener{
 		double prevAngle = 0;
 		for (int i = 0; i < state.getValues().size()-1 ; i += 2)
 		{ 
-			double angle = 2*Math.PI* state.getValues().get(i)/512f+prevAngle;
-			angles[i] = 2*Math.PI* state.getValues().get(i)/512f;  
+			
+			double angle = 2*Math.PI* state.getValues().get(i)/512d+prevAngle;
+			angles[i] = 2*Math.PI* state.getValues().get(i)/512d;  
 			double amplitude = state.getValues().get(i+1)/2d;// shouldn't it be /2d ?
 			int x = (int)(prevX+amplitude*Math.cos(angle));
 			int y = (int)(prevY+amplitude*Math.sin(angle));
@@ -215,6 +218,8 @@ public class Variation extends JComponent implements ChangeListener{
 		if (bound.y < 0) poly.translate(0,-bound.y);
 		
 		// scale it
+		
+		//System.out.println(bound.width+ " " +bound.height+" " + bound.x+ " "+ bound.y);
 		double scaleX = bound.width/((double)getWidth()-10d);
 		double scaleY = bound.height/((double)getHeight()-10d);
 		
@@ -229,8 +234,7 @@ public class Variation extends JComponent implements ChangeListener{
 			poly.ypoints[i] /= scaleY;
 			poly.ypoints[i] += 5;
 		}
-		//System.out.println(p.getBounds());
-		//}
+		
 		return poly;
 		
 	}
@@ -316,18 +320,37 @@ public class Variation extends JComponent implements ChangeListener{
         else
             g2.fillRect(insets.left, insets.top,w,h);
 
-        if (state.getValues() != null){
+        if (state != null && state.getValues() != null){
+        	
+        	if (state.isSelected())  {
+        		g2.setColor(Color.RED);
+        		g2.drawRect(insets.left, insets.top,w-1,h-1);
+        		/*if (border == null || border.isBorderOpaque()) {
+                    g2.drawRect(1, 1, getWidth()-3, getHeight()-2);
+        			//System.out.println(0+" "+ 0+ " "+ getWidth()+ " "+ getHeight());
+        		}
+                else {
+                	g2.drawRect(insets.left, insets.top,w,h);
+                	//System.out.println(insets.left+" "+ insets.top+ " "+w+" " +h);
+                }*/
+                    
+        		
+        		
+        	}
+        	
             Polygon p = getPolygon2();
-            for (int i = 0 ; i < p.xpoints.length-1 ; i ++){
-                if (i%2 == 0){
-                    g2.setColor(colorValue((int )(angles[i]*256/Math.PI)));
-                
-                    //g2.setStroke(new StrokeWidthManager());
-                    //System.out.println(angles[i]*256/Math.PI + " a ");
-                }
-                g2.drawLine(p.xpoints[i],p.ypoints[i],p.xpoints[i+1],p.ypoints[i+1]);
-                
-            }
+            
+            if (p!= null)
+	            for (int i = 0 ; i < p.xpoints.length-1 ; i ++){
+	                if (i%2 == 0){
+	                    g2.setColor(colorValue((int )(angles[i]*256/Math.PI)));
+	                
+	                    //g2.setStroke(new StrokeWidthManager());
+	                    //System.out.println(angles[i]*256/Math.PI + " a ");
+	                }
+	                g2.drawLine(p.xpoints[i],p.ypoints[i],p.xpoints[i+1],p.ypoints[i+1]);
+	                
+	            }
         }
         
     }
@@ -386,9 +409,6 @@ public class Variation extends JComponent implements ChangeListener{
 		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
 //			Variation v = (Variation) (e.getSource());
-			for(int i = 0 ; i < state.getParameters().size(); i++) {
-				state.getParameters().get(i).setValue(state.getValues().get(i));
-			}
 			
 			fireSelectionChanged();
 		}
@@ -427,9 +447,12 @@ public class Variation extends JComponent implements ChangeListener{
 		if (this.state != null) {
 			this.state.removeChangeListener(this);
 		}
-		this.state = state;
-		this.state.addChangeListener(this);	
 		
+		this.state = state;
+		
+		if (this.state != null) {
+			this.state.addChangeListener(this);	
+		}
 		setModifiedFlag();
 	}
 } 

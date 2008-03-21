@@ -23,6 +23,17 @@ public class VariationState extends JComponent {
 	
 	private Vector<PParameter> paraVector = new Vector<PParameter>();
 		
+	private boolean isSelected = false;
+	
+	public boolean isSelected() {
+		return isSelected;
+	}
+
+	public void setSelected(boolean isSelected) {
+		this.isSelected = isSelected;
+		fireStateChanged();
+	}
+
 	public VariationState() {
 		super();
 	}
@@ -40,11 +51,14 @@ public class VariationState extends JComponent {
 	}
 	
 	public void updateValues(Vector<Integer> values) {
-    	this.values.clear();
+		    	
+    	for (int i = 0; i < values.size(); i ++) {    		
+    		PParameter param = paraVector.get(i);
+			this.parametersValues.put(param, values.get(i));
+		}  
+    	valuesDirty = true;
     	
-    	for (Integer integer : values) {
-			this.values.add(integer);
-		}   
+    	fireStateChanged();
 	}	
 	
 	void setParameters(Vector<PParameter> p) {
@@ -53,6 +67,10 @@ public class VariationState extends JComponent {
 	
 	Vector<PParameter> getParameters() {
 		return paraVector;
+	}
+	
+	public HashMap<PParameter, Integer> getParametersValues() {
+		return parametersValues;
 	}
 	
 	void setParameterValue(PParameter p, int value) {
@@ -104,10 +122,8 @@ public class VariationState extends JComponent {
 	
 	public void mutate(VariationState refVar,double range,double probability )
 	{
-		values = new Vector<Integer>(refVar.getValues());
-		
-		
-		for (int i = 0 ; i  < values.size() ; i++)
+			
+		for (PParameter param: paraVector)
 		{
 			
 			if (Math.random() < probability)
@@ -115,12 +131,12 @@ public class VariationState extends JComponent {
 				double amplitude = 127*2*range;
 				int offset = (int)(Math.random()* amplitude
 							-amplitude/2);
-				int val = refVar.getValues().get(i) + offset;
-				values.set(i, val < 0 ? 0: val > 128 ? 127:val);
-			} else {
-				values.set(i, refVar.getValues().get(i));
-			}
+				int val = refVar.getParametersValues().get(param) + offset;
+				parametersValues.put(param, val < 0 ? 0: val > 128 ? 127:val);
+			} 
 		}	
+		
+		valuesDirty = true;
 		
 		fireStateChanged();
 	}
@@ -129,8 +145,12 @@ public class VariationState extends JComponent {
 	{
 		for (int i = 0 ; i  < values.size() ; i++)
 		{
-			values.set(i, (int)(Math.random()*127));
+			for (PParameter p: paraVector){
+				parametersValues.put(p, (int)(Math.random()*127));
+			}
+			
 		}
+		valuesDirty = true;
 		fireStateChanged();
 	}
 

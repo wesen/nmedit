@@ -1,9 +1,16 @@
 package net.sf.nmedit.jpatch.nomad;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
 import net.sf.nmedit.nomad.core.Nomad;
 import net.sf.nmedit.nomad.core.menulayout.MLEntry;
 import net.sf.nmedit.nomad.core.service.Service;
 import net.sf.nmedit.nomad.core.service.initService.InitService;
+import net.sf.nmedit.nomad.core.swing.document.DefaultDocumentManager;
 
 public class InstallerService implements InitService
 {
@@ -12,7 +19,7 @@ public class InstallerService implements InitService
     {
         Nomad nomad = Nomad.sharedInstance();
         MLEntry mlPatch = nomad.getMenuLayout().getEntry("nomad.menu.patch");
-        /*
+        
         MLEntry mlMutator = new MLEntry("mutator"); // TODO i18n
         mlMutator.putValue(MLEntry.NAME, "Mutator");
         mlMutator.putValue(MLEntry.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.CTRL_DOWN_MASK));
@@ -28,7 +35,7 @@ public class InstallerService implements InitService
             }
             
         });
-        mlPatch.add(mlMutator);*/
+        mlPatch.add(mlMutator);
     }
 
     public void shutdown()

@@ -154,6 +154,10 @@ public class MutatorState implements PModuleContainerListener,
          if (max-min ==127)
         	 return true;
          
+         // TODO: user filter there. 
+         if (param.getName().startsWith("Morph"))
+        	 return false;
+         
          return false;
 	}
 
@@ -223,6 +227,10 @@ public class MutatorState implements PModuleContainerListener,
 	}
 	
 	public void setSelectedVariation(VariationState s) {
+		if (selectedState != null)
+			selectedState.setSelected(false);
+		
 		selectedState = s;
+		selectedState.setSelected(true);
 	}
 }

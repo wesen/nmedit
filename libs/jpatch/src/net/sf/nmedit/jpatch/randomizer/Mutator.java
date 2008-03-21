@@ -308,7 +308,7 @@ public class Mutator implements VariationSelectionListener{
 
 	}
 
-	public void addPatch(PPatch p) {		
+	public void addPatch(PPatch p) {
 		mutatorStates.put(p, new MutatorState(p));
 	}
 	
@@ -317,12 +317,15 @@ public class Mutator implements VariationSelectionListener{
 	}
 	
 	public void selectPatch(PPatch p) {
-		setState(mutatorStates.get(p));
+		if (p!= null)
+			setState(mutatorStates.get(p));
+		else setState(null);
 	}
 	
 	private void setState(MutatorState s) {
-		if (s != null) {
+		if (s !=null) {
 			state = s;
+
 			mother.setState(s.getMother());
 			father.setState(s.getFather());
 			for (int i = 0 ; i < variationStorage.length; i ++) {
@@ -331,7 +334,21 @@ public class Mutator implements VariationSelectionListener{
 			for (int i = 0 ; i < variations.length; i ++) {
 				variations[i].setState(s.getWorkingVariations().get(i));				
 			}			
+
+			state.setSelectedVariation(mother.getState());
+		} 
+		else {
+			state = null;
+			mother.setState(null);
+			father.setState(null);
+			for (int i = 0 ; i < variationStorage.length; i ++) {
+				variationStorage[i].setState(null);				
+			}
+			for (int i = 0 ; i < variations.length; i ++) {
+				variations[i].setState(null);				
+			}
 		}
+		
 	}
 	
 	public Variation[] getVariations() {
@@ -348,18 +365,20 @@ public class Mutator implements VariationSelectionListener{
 
 	public void mutate()
 	{
-		for (int variation =0 ; variation < variations.length ; variation++ )
-		{			
-			variations[variation].getState().mutate(mother.getState(), range, probability);
-		}
+		if (state != null)
+			for (int variation =0 ; variation < variations.length ; variation++ )
+			{			
+				variations[variation].getState().mutate(mother.getState(), range, probability);
+			}
 	}
 	
 	public void randomize()
 	{
-		for (int variation =0 ; variation < variations.length ; variation++ )
-		{
-			variations[variation].getState().randomize();
-		}
+		if (state != null)
+			for (int variation =0 ; variation < variations.length ; variation++ )
+			{
+				variations[variation].getState().randomize();
+			}
 	}
 	
 	
@@ -379,33 +398,20 @@ public class Mutator implements VariationSelectionListener{
 		this.range = range;
 	}
 
-//	public Variation getFather() {
-//		return father;
-//	}
-//
-//	public void setFather(Variation father) {
-//		this.father = father;
-//	}
-//
-//	public Variation getMother() {
-//		return mother;
-//	}
-//
-//	public void setMother(Variation mother) {
-//		this.mother = mother;
-//	}
-//
-//	public void setVariations(Variation[] variations) {
-//		this.variations = variations;
-//	}
 
     public JFrame getFrame()
     {
-        return frame;
+    	return frame;
     }
 
-	public void variationSelectionChanged(Variation v) {		
-		state.setSelectedVariation(v.getState());	
+    public void variationSelectionChanged(Variation v) {
+    	if (state != null) {
+    		state.setSelectedVariation(v.getState());	
+    		for(int i = 0 ; i < state.getParameters().size(); i++) {    		
+    			
+    			v.getState().getParameters().get(i).setValue(v.getState().getValues().get(i));
+    		}
+    	}
 	}
 
 }
