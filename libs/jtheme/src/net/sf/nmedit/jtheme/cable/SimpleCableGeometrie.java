@@ -40,10 +40,9 @@ public class SimpleCableGeometrie extends QuadCurve2D.Float
     private boolean boundaryChanged = true;
     private transient Rectangle2D cachedBounds;
     
-    private final static int hangingMin = 5;
+    private final static int hangingMin = 4;
     private final static int hangingMax = 55;
     private final static float hangingWeight = 0.3F; 
-    private final static int hangingOffset = 40;
 
 	public SimpleCableGeometrie() 
     {
@@ -102,21 +101,12 @@ public class SimpleCableGeometrie extends QuadCurve2D.Float
 	private void updateControlPoints() 
     {
 		float length = (float) Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+		int isLeft = ((x1<x2 && y1<y2) || (x1>x2 && y1>y2)) ? -1 : +1;
 		
-		// x in the middle, but with a slight offset
-		int isLeft  = x1<x2 ^ y1<y2 ? -1 : +1;
+		float shakeDepLen = (float) ((shake / 5) * (length / 2));
 		
-		float cx = ((x1+x2) / 2);
-
-        float shakeDepLen = Math.min((float)shake, length/100f); // small cables are not allowed to shake too much
-        
-		float cx_offset = isLeft*(float)(hangingOffset*shakeDepLen);
-        
-		ctrlx = Math.max(0, cx + cx_offset);
-		// y is hanging a bit with a max
-		ctrly = Math.max(y1, y2) + Math.min(hangingMax, (hangingMin + (hangingWeight * length)));
-
-		ctrly += 10*shakeDepLen;
+		ctrlx = ((x1+x2) / 2) + (hangingMin + shakeDepLen) * isLeft;
+		ctrly = ((y1+y2) / 2) + Math.min(hangingMax, ((hangingWeight) * length) + shakeDepLen);
 		
         boundaryChanged = true;
 	}
