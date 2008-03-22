@@ -25,8 +25,10 @@ package net.sf.nmedit.nomad.core;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -37,12 +39,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.RenderedImage;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.net.URI;
 import java.util.Iterator;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
@@ -68,6 +73,8 @@ import javax.swing.SwingUtilities;
 
 import net.sf.nmedit.nmutils.Platform;
 import net.sf.nmedit.nmutils.Platform.OS;
+import net.sf.nmedit.nmutils.properties.SystemProperties;
+import net.sf.nmedit.nmutils.properties.SystemPropertyFactory;
 import net.sf.nmedit.nmutils.swing.ApplicationClipboard;
 import net.sf.nmedit.nmutils.swing.CopyCutPasteTarget;
 import net.sf.nmedit.nmutils.swing.WorkIndicator;
@@ -76,9 +83,11 @@ import net.sf.nmedit.nomad.core.helpers.DocumentActionActivator;
 import net.sf.nmedit.nomad.core.helpers.RuntimeMenuBuilder;
 import net.sf.nmedit.nomad.core.i18n.LocaleConfiguration;
 import net.sf.nmedit.nomad.core.jpf.PluginView;
+import net.sf.nmedit.nomad.core.jpf.TempDir;
 import net.sf.nmedit.nomad.core.menulayout.ActionHandler;
 import net.sf.nmedit.nomad.core.menulayout.MenuBuilder;
 import net.sf.nmedit.nomad.core.menulayout.MenuLayout;
+import net.sf.nmedit.nomad.core.misc.NMUtilities;
 import net.sf.nmedit.nomad.core.service.ServiceRegistry;
 import net.sf.nmedit.nomad.core.service.fileService.FileService;
 import net.sf.nmedit.nomad.core.service.fileService.FileServiceTool;
@@ -94,6 +103,7 @@ import net.sf.nmedit.nomad.core.swing.document.DocumentListener;
 import net.sf.nmedit.nomad.core.swing.explorer.ExplorerTree;
 import net.sf.nmedit.nomad.core.swing.explorer.FileExplorerTree;
 import net.sf.nmedit.nomad.core.swing.tabs.JTabbedPane2;
+import net.sf.nmedit.nomad.core.utils.NomadPropertyFactory;
 import net.sf.nmedit.nomad.core.utils.OSXAdapter;
 
 import org.apache.commons.logging.Log;
@@ -104,6 +114,8 @@ import org.java.plugin.boot.Boot;
 public class Nomad
 {
 
+    private static final String PROPERY_WINDOW_BOUNDS = "window.bounds";
+    
     private static final String MENU_FILE_OPEN = "nomad.menu.file.open";
     private static final String MENU_FILE_SAVE = "nomad.menu.file.save.save";
     private static final String MENU_FILE_SAVEAS = "nomad.menu.file.save.saveas";
@@ -127,6 +139,36 @@ public class Nomad
     private FileExplorerTree explorerTree;
     private JTabbedPane2 toolPane;
     private JTabbedPane2 synthPane;
+
+    public static final String NOMAD_PROPERTIES="nomad.properties";
+    
+    protected void storeProperties()
+    {
+        // store properties
+        SystemPropertyFactory factory = 
+            SystemPropertyFactory.sharedInstance().getFactory();
+        if (factory instanceof NomadPropertyFactory)
+        {
+            Properties p = ((NomadPropertyFactory)factory).getProperties();
+            
+            try
+            {
+            OutputStream out = new BufferedOutputStream(new FileOutputStream(getCorePropertiesFile()));
+            p.store(out, "do not edit");
+            out.flush();
+            out.close();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    public static File getCorePropertiesFile()
+    {
+        return new File(TempDir.getBaseDir(), NOMAD_PROPERTIES);
+    }
     
     public DefaultDocumentManager getDocumentManager()
     {
@@ -140,6 +182,25 @@ public class Nomad
         this.pluginInstance = plugin;
         Nomad.instance = this;
         this.menuLayout = menuLayout;
+        
+        SystemProperties properties = SystemPropertyFactory.getProperties(Nomad.class);
+        
+        properties.defineRectangleProperty(PROPERY_WINDOW_BOUNDS, null);
+        
+        Rectangle bounds = properties.rectangleValue(PROPERY_WINDOW_BOUNDS);
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        if (bounds == null)
+        {
+            bounds = new Rectangle(0, 0, 640, 480);
+            NMUtilities.fitRectangle(bounds, screen);
+            NMUtilities.centerRectangle(bounds, screen);
+        }
+        if (bounds.x<0) bounds.x = 0;
+        if (bounds.y<0) bounds.y = 0;
+        if (bounds.width<=100) bounds.width = 100;
+        if (bounds.height<=100) bounds.height = 100;
+        
+        mainWindow.setBounds(bounds);
     }
     
     public void pluginsHelp()
@@ -866,6 +927,10 @@ public class Nomad
         stopped = true;
         getWindow().setVisible(false);
 
+        SystemProperties properties = SystemPropertyFactory.getProperties(getClass());
+        
+        properties.setRectangleValue(PROPERY_WINDOW_BOUNDS, mainWindow.getBounds());
+        
         for (Iterator<InitService> i=ServiceRegistry.getServices(InitService.class); i.hasNext();)
         {
             try
@@ -877,6 +942,9 @@ public class Nomad
                 t.printStackTrace();
             }
         }
+        
+        storeProperties();
+        
         shutDownPlugin();
         getPluginManager().shutdown();
         System.exit(0);

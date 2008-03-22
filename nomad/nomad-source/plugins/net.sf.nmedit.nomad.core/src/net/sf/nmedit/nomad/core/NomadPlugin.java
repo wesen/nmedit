@@ -38,9 +38,9 @@ public class NomadPlugin extends ApplicationPlugin implements Application
      * This plug-in ID.
      */
     public static final String PLUGIN_ID = "net.sf.nmedit.nomad.core";
-    
+
     private Nomad nomad = null;
-    
+
     public NomadPlugin()
     {
         super();
@@ -64,7 +64,7 @@ public class NomadPlugin extends ApplicationPlugin implements Application
     @Override
     protected void doStop() throws Exception
     {
-        // nothing to do
+        // no op
     }
 
     public void startApplication() throws Exception
