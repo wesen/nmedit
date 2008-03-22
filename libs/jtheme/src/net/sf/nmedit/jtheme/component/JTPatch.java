@@ -30,6 +30,7 @@ import net.sf.nmedit.jpatch.PModule;
 import net.sf.nmedit.jpatch.PPatch;
 import net.sf.nmedit.jtheme.JTContext;
 import net.sf.nmedit.jtheme.component.plaf.mcui.ContainerAction;
+import net.sf.nmedit.jtheme.help.HelpHandler;
 import net.sf.nmedit.nmutils.swing.CopyCutPasteTarget;
 
 public class JTPatch extends JComponent implements CopyCutPasteTarget
@@ -41,11 +42,23 @@ public class JTPatch extends JComponent implements CopyCutPasteTarget
     private static final long serialVersionUID = 794652007213898614L;
     private JTContext context;
     protected ArrayList<JTModuleContainer> moduleContainers;
-
+    private HelpHandler helpHandler;
+    
+    
     public JTPatch(JTContext context)
     {
     	moduleContainers = new ArrayList<JTModuleContainer>();
         this.context = context;
+    }
+    
+    public HelpHandler getHelpHandler()
+    {
+        return helpHandler;
+    }
+    
+    public void setHelpHandler(HelpHandler h)
+    {
+        this.helpHandler = h;
     }
     
     public JTModuleContainer[] getModuleContainers() 

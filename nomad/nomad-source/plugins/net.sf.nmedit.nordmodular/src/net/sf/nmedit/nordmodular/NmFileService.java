@@ -140,6 +140,7 @@ public class NmFileService implements FileService
     public static PatchDocument createPatchDoc(NMPatch patch) throws Exception
     {
         JTNMPatch jtp = JTNMPatch.createPatchUI(patch);
+        jtp.setHelpHandler(NMContextData.sharedInstance().getHelpHandler());
         PatchDocument pd = new PatchDocument(jtp);
         return pd;
     }

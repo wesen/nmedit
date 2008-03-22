@@ -79,6 +79,7 @@ import net.sf.nmedit.jtheme.cable.Cable;
 import net.sf.nmedit.jtheme.cable.JTCableManager;
 import net.sf.nmedit.jtheme.component.plaf.mcui.InsertModuleAction;
 import net.sf.nmedit.jtheme.component.plaf.mcui.JTModuleContainerUI;
+import net.sf.nmedit.jtheme.help.HelpHandler;
 import net.sf.nmedit.jtheme.store2.ModuleElement;
 import net.sf.nmedit.nmutils.dnd.FileDnd;
 import net.sf.nmedit.nmutils.swing.NmSwingUtilities;
@@ -125,6 +126,11 @@ public class JTModuleContainer extends JTBaseComponent
         setJTFlag(FLAG_VALIDATE_TREE, true);
         
         setLayout(new ModuleContainerLayout());
+    }
+
+    public HelpHandler getHelpHandler()
+    {
+        return patchContainer != null ? patchContainer.getHelpHandler() : null;
     }
     
     protected boolean isRepaintOrigin()

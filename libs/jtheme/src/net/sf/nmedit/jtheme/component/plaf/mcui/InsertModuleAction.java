@@ -23,7 +23,12 @@ public class InsertModuleAction extends AbstractAction {
 	public InsertModuleAction(PModuleDescriptor descriptor, JTModuleContainer jmc) {
 		this.descriptor = descriptor;
 		this.jmc = jmc;
-		putValue(NAME, descriptor.getName());
+		
+		String name = descriptor.getStringAttribute("fullname");
+		if (name == null)
+		    name = descriptor.getName();
+		
+		putValue(NAME, name);
         
         Image iconImage = descriptor.getModules().getImage(descriptor.get16x16IconSource());
         if (iconImage != null)

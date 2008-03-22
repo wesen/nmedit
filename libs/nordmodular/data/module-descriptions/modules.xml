@@ -103,6 +103,9 @@
 
 </containers>
 -->
+
+<documentation lang="en" src="modules-documentation.xml" />
+
 <body>
 
   <module component-id="morph" index="0" name="Morph" fullname="Morph" category="Morph" role="morph">
@@ -708,7 +711,7 @@
     <attribute name="zero-page" type="double" value="0.875" />
     <attribute name="height" type="integer" value="3" />
   </module>
-  <module component-id="m19" index="19" name="Mixer (3)" fullname="Three Inputs Mixer" category="Mixer" role="mixer">
+  <module component-id="m19" index="19" name="Mixer (3)" fullname="3 Inputs Mixer" category="Mixer" role="mixer">
     <image type="screenshot" src="img/modules/module-19.png" width="256" height="30" />
     <image type="icon16x16" src="img/icons/16x16/module-id-19.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-19.png" width="32" height="32" />
@@ -1275,7 +1278,7 @@
     <attribute name="height" type="integer" value="2" />
     <attribute name="background" value="#abbe89" />
   </module>
-  <module component-id="m40" index="40" name="Mixer (8)" fullname="Eight Inputs Mixer" category="Mixer" role="mixer">
+  <module component-id="m40" index="40" name="Mixer (8)" fullname="8 Inputs Mixer" category="Mixer" role="mixer">
     <image type="screenshot" src="img/modules/module-40.png" width="256" height="60" />
     <image type="icon16x16" src="img/icons/16x16/module-id-40.png" width="16" height="16" />
     <image type="icon32x32" src="img/icons/32x32/module-id-40.png" width="32" height="32" />
