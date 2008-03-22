@@ -39,6 +39,7 @@ public class NMContextData
     private ImageIcon nmMicroIcon;
     private ImageIcon nmRackIcon;
     private ImageIcon nmModularIcon;
+    private NMHelpHandler helpHandler = new NMHelpHandler();
 
     public static NMContextData sharedInstance()
     {
@@ -52,6 +53,11 @@ public class NMContextData
         jtContext = NMContextData.this.initContextSavely();
         JTNM1Context.setCachedContext(jtContext);
         //cr.prepareData();
+    }
+
+    public NMHelpHandler getHelpHandler()
+    {
+        return helpHandler;
     }
     
     private ImageIcon loadIcon(String name)

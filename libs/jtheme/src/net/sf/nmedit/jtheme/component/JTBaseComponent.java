@@ -23,6 +23,7 @@
 package net.sf.nmedit.jtheme.component;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -31,6 +32,8 @@ import java.util.List;
 import javax.swing.JComponent;
 
 import net.sf.nmedit.jtheme.JTContext;
+import net.sf.nmedit.jtheme.help.HelpHandler;
+import net.sf.nmedit.jtheme.help.HelpSupport;
 
 /**
  * A specialized version of JComponent.
@@ -47,7 +50,7 @@ import net.sf.nmedit.jtheme.JTContext;
  * 
  * @author Christian Schneider
  */
-public class JTBaseComponent extends JComponent
+public class JTBaseComponent extends JComponent implements HelpSupport
 {
 
     protected static final int FLAG_INVALIDATE = 1;
@@ -84,6 +87,26 @@ public class JTBaseComponent extends JComponent
     public JTBaseComponent(JTContext context)
     {
         this.context = context;
+    }
+
+    public HelpHandler getHelpHandler()
+    {
+        Container c = getParent();
+        if (c != null && c instanceof HelpSupport)
+            return ((HelpSupport) c).getHelpHandler();
+        return null;
+    }
+    
+    public void showHelpFor(Object o)
+    {
+        HelpHandler h = getHelpHandler();
+        if (h != null) h.showHelpFor(o);
+    }
+    
+    public boolean hasHelpFor(Object o)
+    {
+        HelpHandler h = getHelpHandler();
+        return h != null && h.hasHelpFor(o);
     }
     
     public JTContext getContext()

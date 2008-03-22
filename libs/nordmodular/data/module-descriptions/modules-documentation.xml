@@ -1,0 +1,2096 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Copyright (C) Clavia
+
+Permission to use official documentation within Nomad as long project
+is open source granted by Clavia.
+-->
+
+
+<module-documentation>
+
+<module component-id="m1">
+  <h1>Keyboard</h1>
+  <p>The Keyboard voice module provides you with access to a few basic and important signals associated
+  with the keyboard on Nord Modular, or a keyboard connected to the synth via MIDI. The signals are generated from
+  each key played and affect one voice at a time. </p>
+  
+  <div>
+    <h2>Note</h2>
+    <p>This blue output provides you with a pitch (note number) signal from the Nord Modular keyboard or from the MIDI IN port. This signal is hardwired to every module that has a KBT control or switch. There is no need to patch this output to every oscillator you are controlling from the keyboard or via MIDI. This is also the output for any pitch bend data that appears at the Nord Modular MIDI IN port. The pitch bend will be scaled together with the note information, with the ratio of the pitch bend parameter. This ratio is set in the Patch|Patch Settings menu, see “Bend range” on page 57 and page 68. </p>
+    <p>E4 (MIDI note 64), which is the middle E on the Nord Modular keyboard when the OCT SHIFT selector is in the center position, represents an output signal level of 0 units. MIDI note 0 (C-1) represents -64 units and MIDI note 127 (G9) represents +63 units. </p>
+    <p>Signal: Bipolar. </p>
+  </div>
+  <div>
+  <h2>Gate</h2>
+  <p>This yellow output sends a high logic signal (+64 units) every time a key is pressed on the keyboard, or a MIDI note-on is received at the MIDI IN port. The logic signal switches back to zero (0 units) when the key is released. If a sustain pedal is activated, the logic signal will be high for as long as the pedal is pressed. </p>
+  <p>Signal: Logic. </p>
+  </div>
+  <div>
+  <h2>Vel</h2>
+  <p>This blue output transmits the note-on velocity signals from the keys that you play on Nord Modular or any velocity that is received on the MIDI IN port. The velocity response of the Nord Modular keyboard is linear. </p>
+  <p>Signal: Unipolar. </p>
+  </div>
+  <div>
+  <h2>Rel-Vel</h2>
+  <p>This blue output provides you with the release velocity signal from the keys that you play on the Nord Modular, or any release velocity that is received via MIDI. </p>
+  <p>Signal: Unipolar. </p>
+  </div>
+</module>
+<module component-id="m63"><h1>KeyboardPatch</h1>
+  <p>This module provides four different control signals. The signals are generated from the latest key played and affect all allocated voices, in contrast to the Keyboard module described above. </p>
+  <div>
+  <h2>Latest Note</h2>
+  <p>This blue output provides you with a pitch (note number) signal from the latest note that was played on the keyboard, or that was received at the MIDI IN port. </p>
+  <p>E4 (MIDI note 64), which is the middle E on the Nord Modular keyboard when the OCT SHIFT selector is in the center position, represents a signal level of 0 units. MIDI note 0 (C-1) represents -64 units and MIDI note 127 (G9) represents +63 units. </p>
+  <p>Signal: Bipolar. </p>
+  </div>
+  <div>
+  <h2>Patch Gate</h2>
+  <p>This yellow output sends a high (+64 units) logic signal every time a key is pressed on the keyboard or a MIDI note-on is received at the MIDI IN port. The logic signal switches back to zero (0 units) when the last key is released. You can use this signal to start envelopes in the single-trigger fashion. If a sustain pedal is activated, the logic signal will be high for as long as the pedal is pressed. </p>
+  <p>Signal: Logic. </p>
+  </div>
+  <div>
+  <h2>Latest Vel On</h2>
+  <p>This blue output provides you with a control signal from the latest note-on velocity. The velocity response of the Nord Modular keyboard is linear. </p>
+  <p>Signal: Unipolar. </p>
+  </div>
+  <div>
+  <h2>Latest Rel Vel</h2>
+  <p>This blue output provides you with a control signal from the release velocity of the latest note. </p>
+  <p>Signal: Unipolar. </p>
+  </div>
+</module>
+
+<module component-id="m65">
+  <h1>MidiGlobal</h1>
+  <p>This module generates logic signals that can be used for trigging and synchronizing modules featuring logic inputs. </p>
+  <div>
+  <h2>Clock</h2>
+  <p>This yellow output provides you with logic signals from the MIDI Clock in Nord Modular. This output transmits 24 pulses for each quarter note. (The Clock Divider module in the Logic module group can divide these pulses to a division set by you.) </p>
+  <p>Signal: Logic. </p><ul><li>
+  <p>To set the clock speed and the clock source of the MIDI Clock, press the SYSTEM button on the Modular panel, select &lt;SYNTH&gt; and navigate to the MIDI Clock function. See “MIDI Clock” on page 52. You can also set the clock source and speed from the Synth|Synth Settings menu in the Editor. See page 70 for details. </p></li><li>
+  <p>The MIDI protocol allows MIDI devices to continue to send clock pulses even if they are stopped. This means that if you synchronize Nord Modular with an external sequencer as master, this output may keep on sending clock pulses even if the sequencer is stopped. The MIDI Start, Stop and Continue commands are present at the Active output of this module. </p></li></ul>
+  </div>
+  <div>
+  <h2>Sync</h2>
+  <p>This yellow output provides you with a logic signal, which is calculated from the MIDI Clock, at a rate set by the Global Sync parameter, see “Global Sync” on page 53 and “MIDI clock” on page 70. The Sync function provides a method of telling the Nord Modular sequencer modules where the first beat in a bar is. Patch this output to the Rst (reset) input of a sequencer module. This function is absolutely essential to use if you plan to synchronize patches in different slots to each other, or if you want to synchronize Nord Modular to an external sequencer. </p>
+  <p>Signal: Logic.</p><ul><li>
+  <p>Try to make a habit out of always using this function if you are using more than one sequencer module in a patch, especially if you want to mix modules clocked with e.g. triplet resolutions with other modules clocked with eighth or sixteenth notes. </p></li></ul>
+  </div>
+  <div>
+  <h2>Active</h2>
+  <p>This yellow output provides you with a logic high signal whenever a MIDI Start or MIDI Continue command is received at the MIDI IN port. The logic signal will switch to zero when Nord Modular receives a MIDI Stop signal at the MIDI IN port. </p>
+  <p>Signal: Logic. </p>
+  </div>
+</module>
+<module component-id="m2">
+  <h1>AudioIn</h1>
+  <p>This module routes the line level audio signals from the INPUT L and INPUT R inputs on the rear panel of Nord Modular to your patch. Two separate audio channels can be patched into the system. The input meters indicate the level of the incoming signals. The 0dB indication on the module indicates the headroom limit of the Nord Modular system. Signals above 0dB will cause the system to clip, causing distortion. </p>
+  <p>It’s important that you amplify any input signals to line level externally to get good sound quality. If you put in a too low signal and amplify it, using for example the Amplifter module, the sound quality won’t be good. The reason for this is that the Amplifter module amplifies the signal digitally, and a low analog input signal will result in low resolution. A low resolution signal that is digitally amplified will sound distorted. </p>
+  <div>
+  <h2>Outputs L/R</h2>
+  <p>Signal: Bipolar. </p>
+  <p>Note: If you want to process a stereo signal, any processing modules (filters etc.) has to be duplicated in the patch. </p>
+  </div>
+</module>
+<module component-id="m127">
+  <h1>PolyAreaIn</h1>
+  <p>This module should be used when you want to route audio signals from the Poly Voice Area to the Common Voice Area. The PolyAreaIn module can only be used once, and only in the Common Voice Area of the patch window. Since the PolyAreaIn module processes the sum of all voices from the Poly Voice Area, the volume depends on the number of notes you play simultaneously. The input meters indicate the level of the incoming signals. The 0dB indication on the module indicates the headroom limit of the Nord Modular system. Signals above 0dB will cause the system to clip. If you feel the volume is too low, click the ‘+6dB’ button to amplify the input signals by 6dB. (See an example of how to use the Poly and Common Voice Areas in “Poly and Common Voice patch sections” on page 43.) </p>
+  <div>
+  <h2>+6db</h2>
+  <p>Click to amplify the input signals by 6dB. </p>
+  </div>
+  <div>
+    <h2>Outputs L/R</h2>
+  <p>From these outputs you can patch signals, from the CVA L and R mix buses of any of the Output modules described below, to modules in the Common Voice Area. </p>
+  <p>Signal: Bipolar. </p>
+  </div>
+</module>
+<module component-id="m5">
+  <h1>1 Output</h1>
+  <p>This module takes one signal and routes it to one of the six mix buses. </p>
+  <div>
+  <h2>Dest</h2>
+  <p>Select a destination mix bus with the buttons. Clicking the CVA L or R destination button will route the signal to the corresponding output of the PolyAreaIn module that can be used in the Common Voice Area of the patch. (See an example of how to use the Poly and Common Voice Areas in “Poly and Common Voice patch sections” on page 43). </p>
+  </div>
+  <div>
+  <h2>M</h2>
+  <p>Click to mute the selected mix bus. </p>
+  </div>
+  <div>
+  <h2>Mix</h2>
+  <p>The audio input. </p>
+  </div>
+  <div>
+  <h2>Level</h2>
+  <p>The total audio level to the mix bus can be attenuated with the level knob. </p>
+  </div>
+</module>
+<module component-id="m4">
+  <h1>2 Outputs</h1>
+  <p>This module takes two signals and routes them to the mix buses, grouped together as a stereo signal. </p>
+  <div>
+  <h2>Destination</h2>
+  <p>Select which pair of mix buses to route the incoming signals to. Clicking the CVA destination button will route the signals to the corresponding outputs of the PolyAreaIn module that can be used in the Common Voice Area of the patch. (See an example of how to use the Poly and Common Voice Areas in “Poly and Common Voice patch sections” on page 43). </p>
+  </div>
+  <div>
+  <h2>M</h2>
+  <p>Click to mute the selected mix bus pair. </p>
+  </div>
+  <div>
+  <h2>Mix Bus L, R</h2>
+  <p>The audio inputs. </p>
+  </div>
+  <div>
+  <h2>Level</h2>
+  <p>The total audio level to the mix buses can be attenuated with the level knob. </p>
+  </div>
+</module>
+<module component-id="m3">
+  <h1>4 Outputs</h1>
+  <p>This module routes four separate signals to one mix bus each. </p>
+  <div>
+  <h2>Mix Bus</h2>
+  <p>The audio inputs to the respective mix bus and physical OUT jack of the synthesizer. </p>
+  </div>
+  <div>
+  <h2>Level</h2>
+  <p>The total audio level to the mix buses can be attenuated with the level knob. </p>
+  </div>
+</module>
+<module component-id="m67">
+  <h1>NoteDetect</h1>
+  <p>This module can detect a note, either from the Nord Modular keyboard or from the MIDI INPUT. A </p>
+  <p>logic high signal will be transmitted, together with a velocity control signal, when the selected key is detected. The logic signal will switch to zero, and a release velocity control signal will be sent, when the selected key is released. The Note Detect module is global and affects all voices assigned in a patch. The behavior is similar to the Keyboard Patch module described earlier in this chapter. </p>
+  <p>The Note detect module is not affected by the polyphony of the patch. It will detect notes, even if you run out of polyphony. </p>
+  <div>
+  <h2>Note Knob</h2>
+  <p>Select the note to be detected. Range: C-1 to G9. </p>
+  </div>
+  <div>
+  <h2>Outputs</h2>
+  <p>Gate signal: Logic. </p>
+  <p>V (Velocity signal): Unipolar. </p>
+  <p>R (Release velocity signal): Unipolar. </p>
+  </div>
+</module>
+<module component-id="m100">
+  <h1>KeybSplit</h1>
+  <p>Keyboard split gives you the possibility to create split sounds using only one patch. It functions as a “key filter” in which you set the limits for the key range that should pass through. </p>
+  <div>
+  <h2>Lower, Upper</h2>
+  <p>Here you set the lower and upper limit of the keyboard range. The notes are displayed in the respective display boxes. Only notes played within the set limits will pass through to the output(s). Ranges: C-1 to G9. </p>
+  </div>
+  <div>
+  <h2>Note, Gate and Vel Inputs</h2>
+  <p>‘Note’ is the note control signal input. Patch the Note output of the Keyboard Patch or Keyboard Voice module to this input. ‘Gate’ is the logic gate input. This input must always receive a high logic gate signal to activate the module. Connect it to the Gate output of the Keyboard Patch or Keyboard Voice module, for instance. ‘Vel’ is the velocity control signal input. If a gate signal and a note control signal that lies within the Lower and Upper limits are received, the velocity value of the ‘Vel’ input will be transmitted to the ‘Vel’ output. </p>
+  </div>
+  <div>
+  <h2>Note, Gate and Vel Outputs</h2>
+  <p>These are the outputs for the note, gate and velocity signals. </p>
+  <p>Note signal: Bipolar </p>
+  <p>Gate signal: Logic </p>
+  <p>Velocity signal: Unipolar </p>
+  </div>
+</module>
+<module component-id="m97">
+  <h1>MasterOsc</h1>
+  <p>The Master Oscillator does not generate any waveforms itself. Instead it can be used to control one or several slave oscillators. For that purpose it is very useful since it offers an easy way of controlling “global” functions, such as coarse tuning and pitch modulation, of the connected slave oscillators. A big advantage with the Master Oscillator is that it saves Sound engine power compared to other oscillators. </p>
+  <div>
+  <h2>Slv Output</h2>
+  <p>This is the gray slave output for controlling the pitch of slave oscillators. Patch this output to a Mst input of a slave module. It is also possible to control a slave LFO with this signal. The LFO rate will then be five octaves below the master oscillator pitch. </p>
+  </div>
+  <div>
+  <h2>Display Box</h2>
+  <p>Click on the display box to change from Hz to Notes. Range: C-1 to G9 (7.94 Hz to 12910 Hz). </p>
+  </div>
+  <div>
+  <h2>Coarse</h2>
+  <p>Sets the coarse tuning of the oscillator. Range: C-1 to G9 in steps of one semitone. </p>
+  </div>
+  <div>
+  <h2>Fine</h2>
+  <p>Sets the fine tuning of the oscillator. The range is +/- half a semitone divided into 128 steps. Click on the triangle above the control to reset the fine tuning to 0, which is the preset value. </p>
+  </div>
+  <div>
+  <h2>Pitch Modulation Inputs [ATTENUATOR TYPE II]</h2>
+  <p>There are two blue modulation inputs for modulating the oscillator pitch on this module. The modulation amount is attenuated with the rotary knob next to each input. See “Pitch modulation” on page 34 for more info. </p>
+  </div>
+  <div>
+  <h2>KBT</h2>
+  <p>KBT is the hardwired connection between the oscillator and the keyboard (and the MIDI input). If KBT is activated the oscillator will track the keyboard at the rate of one semitone for each key. If KBT is not activated, the keyboard will not affect the oscillator frequency. </p>
+  </div>
+</module>
+<module component-id="m7">
+  <h1>OscA</h1>
+  <p>This oscillator can produce one of four waveforms: Square/Pulse, Sawtooth, Triangle or Sine. The oscillator has two pitch modulation inputs, one frequency modulation (FMA) input, a sync input and an input to modulate the width of the Pulse wave. </p>
+  <h2>Freq Display Box</h2>
+  <p>Click on the display box switch between Hz and Notes. Range: C-1 to G9 (7.94 Hz to 12910 Hz). </p>
+  <h2>Slv Output</h2>
+  <p>This is a gray control output for controlling the pitch of a slave oscillator. Patch this output to a Mst input on a slave module. If you control a slave LFO with this signal, the pitch of the LFO will be 5 octaves below the pitch of the master oscillator. </p>
+  <h2>Coarse</h2>
+  <p>Sets the coarse tuning of the oscillator. Range: C-1 to G9 (8.18 Hz to 12540 Hz). </p>
+  <h2>Fine</h2>
+  <p>This control fine-tunes the oscillator. The range is +/– half a semitone, divided into 128 increments. </p>
+  <p>Click on the triangle above the control to reset the fine-tuning to 0, which is the preset value. </p>
+  <h2>KBT</h2>
+  <p>This is the hardwired connection between the oscillator and the keyboard. At the Key value, the oscillator will track the keyboard at the rate of one semitone for each key. Turning the KBT control to the maximum clockwise position (2.0) will produce a two-octave span from one octave on the keyboard, a value of 0.50 will produce a one octave span from two octaves played on the keyboard. Off removes the keyboard tracking completely. Click on the triangle above the knob to reset the KBT setting to Key, which is the preset value. </p>
+  <h2>Pitch Modulation Inputs [ATTENUATOR TYPE II]</h2>
+  <p>There are two red modulation inputs for modulating the oscillator pitch on this module. The modulation amount is attenuated with the rotary knob next to each input. See “Pitch modulation” on page 34 for more info. </p>
+  <h2>FMA Modulation Input [ATTENUATOR TYPE II]</h2>
+  <p>A red modulation input where a signal will affect the frequency of the oscillator. The FM amount is attenuated with the rotary knob next to the input. See “Frequency modulation (FM)” on page 35 for more info. </p>
+  <h2>Sync Input</h2>
+  <p>This red input is used for synchronizing the oscillator to a control source, which could be another oscillator, an LFO or the keyboard. Synchronization forces the oscillator to restart its waveform cycle, in sync with the waveform cycle of the controlling device. The oscillator will restart whenever a signal present at the sync input increases from 0 units to anything above 0 units. </p>
+  
+  <p>The pitch of the controlling oscillator will interact with the controlled oscillator pitch. For a traditional synthesizer sync-sound, start with the two oscillators to the same pitch and connect only the sync-controlled oscillator to an output. Turning the tuning knob or modulating the pitch of the sync-controlled oscillator will produce radical changes in the timbre. See “Sync” on page 35 for more information. </p>
+  <h2>PWidth</h2>
+  <p>Sets the initial width of the two sections of a Pulse waveform period. The range is from 1% to 99%. Click on the triangle above the knob to reset the initial pulse width to 50%, which is the preset value. </p>
+  <h2>Pulse Width Modulation Input [ATTENUATOR TYPE I]</h2>
+  <p>This is a red input for controlling the width of a Pulse waveform with a modulator, starting at the initial width you have set with the Pulse Width control. The modulation amount is determined by the rotary knob next to the input. See page 33 for modulation examples. </p>
+  <h2>Waveform Selectors</h2>
+  <p>Selects one of the four available waveforms. </p>
+  <h2>M</h2>
+  <p>Click on this button to mute the audio output of the oscillator. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m8">
+  <h1>OscB</h1>
+  <p>This oscillator can produce one of four waveforms: Square/Pulse, Sawtooth, Triangle or Sine. The oscillator has two pitch modulation inputs, one frequency modulation (FMA) input and a Pulse width modulation input. </p>
+  <h2>Slv Output</h2>
+  <p>This is a gray control output for controlling the pitch of a slave oscillator. Patch this output to a Mst input on a slave module. If you control a slave LFO with this signal, the pitch of the LFO will be 5 octaves below the pitch of the master oscillator. </p>
+  <h2>Display Box</h2>
+  <p>Click on the display box switch between Hz and Notes. Range: C-1 to G9 (7.94 Hz to 12910 Hz). </p>
+  <h2>Coarse</h2>
+  <p>Sets the coarse tuning of the oscillator. Range: C-1 to G9 (8.18 Hz to 12540 Hz). </p>
+  <h2>Fine</h2>
+  <p>This control fine-tunes the oscillator. The range is +/– half a semitone, divided in 128 increments. Click on the triangle above the control to reset the fine-tuning to 0, which is the preset value. </p>
+  <h2>KBT</h2>
+  <p>This is the hardwired connection between the oscillator and the keyboard (and the MIDI input). At the “Key" value, the oscillator will track the keyboard at the rate of one semitone for each key. Turning the KBT control to the maximum clockwise position (2.0) will produce a two-octave span from one octave on the keyboard, a value of 0.50 will produce a one octave span from two octaves played on the keyboard. Off removes the keyboard tracking completely. Click on the triangle above the knob to reset the KBT setting to Key, which is the preset value. </p>
+  <h2>Pitch Modulation Inputs [ATTENUATOR TYPE II]</h2>
+  <p>There are two blue modulation inputs for modulating the oscillator pitch on this module. The modulation amount is attenuated with the rotary knob next to each input. See “Pitch modulation” on page 34 for more info. </p>
+  <h2>FMA Modulation Input [ATTENUATOR TYPE II]</h2>
+  <p>A red modulation input where a signal will affect the frequency of the oscillator. The FM amount is attenuated with the rotary knob next to the input. See “Frequency modulation (FM)” on page 35 for more info. </p>
+  <h2>PWidth Modulation Input [ATTENUATOR TYPE I]</h2>
+  <p>This is a blue input for modulating the width of the Pulse waveform, starting at the initial width of 50%. The modulation amount is determined by the rotary knob next to the input. See page 33 for modulation examples. </p>
+  <h2>Waveform Selectors</h2>
+  <p>Selects one of the four available waveforms. Clicking on a selected button will mute the audio output of the oscillator. </p>
+  <h2>M</h2>
+  <p>Click on this button to mute the audio output of the oscillator. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m9">
+  <h1>OscC</h1>
+  <p>This oscillator produces a Sine wave. It has one pitch modulation input, one amplitude modulation input and one FMA modulation input. </p>
+  <h2>Freq Display Box</h2>
+  <p>Click on the display box switch between Hz and Notes. Range: C-1 to G9 (7.94 Hz to 12910 Hz). </p>
+  <h2>Slv Output</h2>
+  <p>This is a gray control output for controlling the pitch of a slave oscillator. Patch this output to a Mst input on a slave module. If you control a slave LFO with this signal, the pitch of the LFO will be 5 octaves below the pitch of the master oscillator. </p>
+  <h2>Coarse</h2>
+  <p>Sets the coarse tuning of the oscillator. Range: C-1 to G9 (8.18 Hz to 12540 Hz). </p>
+  <h2>Fine</h2>
+  <p>This control fine-tunes the oscillator. The range is +/– half a semitone, divided in 128 increments. Click on the triangle above the control to reset the fine-tuning to 0, which is the preset value. </p>
+  <h2>Pitch Modulation Input [ATTENUATOR TYPE II]</h2>
+  <p>There is one red modulation input for modulating the oscillator pitch on this module. The modulation amount is attenuated with the rotary knob next to the input. See “Pitch modulation” on page 34 for more info. </p>
+  <h2>AM Modulation Input</h2>
+  <p>This red input allows you to modulate the amplitude of the oscillator wave. The amount of this modulation is fixed at a ratio of 1:1. </p>
+  <h2>FMA Modulation Input [ATTENUATOR TYPE II]</h2>
+  <p>A red modulation input where a signal will affect the pitch of the oscillator in a linear way. The FM amount is attenuated with the rotary knob next to the input. See “Frequency modulation (FM)” on page 35 for more info. </p>
+  <h2>KBT</h2>
+  <p>This is the hardwired connection between the oscillator and the keyboard (and the MIDI input). When this function is activated, the oscillator will track the keyboard at the rate of one semitone for each key. </p>
+  <h2>M</h2>
+  <p>Click on this button to mute the audio output of the oscillator. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m107">
+  <h1>SpectralOsc</h1>
+  <p>The Spectral shape oscillator is an oscillator with a built-in overtone generator. The waveforms are generated by synched noise. The oscillator generates a signal that contains either odd and even partials or only odd partials. It is possible to control the amount of overtones generated. </p>
+  <h2>Slv Output</h2>
+  <p>This is a gray slave output for controlling slave oscillators. Patch this output to a Mst input of a slave module. If you control a slave LFO with this signal, the rate of the LFO will be five octaves below the pitch of the master oscillator. </p>
+  <h2>Freq Display Box</h2>
+  <p>Click on the display box switch between Hz and Notes. Range: C-1 to G9 (7.94 Hz to 12910 Hz). </p>
+  <h2>Coarse</h2>
+  <p>Sets the coarse tuning of the oscillator. Range: C-1 to G9 (8.18 Hz to 12540 Hz). </p>
+  <h2>Fine</h2>
+  <p>Sets the fine tuning of the oscillator. The range is +/- half a semitone divided into 128 steps. Click on the triangle above the control to reset the fine tuning to 0, which is the preset value. </p>
+  <h2>Pitch Modulation Inputs [ATTENUATOR TYPE II]</h2>
+  <p>There are two blue modulation inputs for modulating the oscillator pitch on this module. The modulation amount is attenuated with the rotary knob next to each input. See “Pitch modulation” on page 34 for more info. </p>
+  <h2>FMA Modulation Input [ATTENUATOR TYPE II]</h2>
+  <p>A red modulation input where a signal will affect the frequency of the oscillator. The FM amount is attenuated with the rotary knob next to the input. See “Frequency modulation (FM)” on page 35 for more info. </p>
+  <h2>KBT</h2>
+  <p>KBT is the hardwired connection between the oscillator and the keyboard (and the MIDI input). If KBT is activated the oscillator will track the keyboard at the rate of one semitone for each key. If KBT is not activated, the keyboard will not affect the oscillator frequency.</p>
+  <h2>Spectral Shape</h2>
+  <p>With the Spectral shape function you select the amount of overtones of the waveform. Use the rotary knob to set the amount. There is also a blue modulation input for controlling the overtone amount from an external source. The rotary knob next to it attenuates the modulation amount. </p>
+  <h2>Partials</h2>
+  <p>By pressing one of the buttons All or Odd, you determine whether you want the wave to contain either odd and even partials or only odd partials. </p>
+  <h2>M</h2>
+  <p>Click on this button to mute the audio output of the oscillator. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar </p>
+</module>
+<module component-id="m96">
+  <h1>FormantOsc</h1>
+  <p>The Formant oscillator is used for generating vocal-sounding waveforms. It generates a new type of "nontransposed" spectrum with strong "body resonance" character. 128 (127 + rnd) timbre variations can be selected. The timbre can also be modulated. </p>
+  <h2>Freq Display Box</h2>
+  <p>Click on the display box switch between Hz and Notes. Range: C-1 to G9 (7.94 Hz to 12910 Hz). </p>
+  <h2>Coarse</h2>
+  <p>Sets the coarse tuning of the oscillator. Range: C-1 to G9 (8.18 Hz to 12540 Hz). </p>
+  <h2>Fine</h2>
+  <p>Sets the fine tuning of the oscillator. The range is +/- half a semitone divided into 128 steps. Click on the triangle above the control to reset the fine tuning to 0, which is the preset value. </p>
+  <h2>Pitch Modulation Inputs [ATTENUATOR TYPE II]</h2>
+  <p>There are two blue modulation inputs for modulating the oscillator pitch on this module. The modulation amount is attenuated with the rotary knob next to each input. See “Pitch modulation” on page 34 for more info. </p>
+  <h2>Timbre</h2>
+  <p>Use the rotary knob to select different timbres (1-127 and Random). The selected timbre is shown in the display box. There is also a blue modulation input for controlling timbre changes from an external source. </p>
+  <h2>Slv Output</h2>
+  <p>This is a gray slave output for controlling slave oscillators. Patch this output to a Mst input of a slave module. If you control a slave LFO with this signal, the rate of the LFO will be five octaves below the pitch of the master oscillator. </p>
+  <h2>KBT</h2>
+  <p>KBT is the hardwired connection between the oscillator and the keyboard (and the MIDI input). If KBT is activated the oscillator will track the keyboard at the rate of one semitone for each key. If KBT is not activated, the keyboard will not affect the oscillator frequency. </p>
+  <h2>M</h2>
+  <p>Click on this button to mute the audio output of the oscillator. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar </p>
+</module>
+<module component-id="m14">
+  <h1>OscSlvA</h1>
+  <p>This slave oscillator can produce one of four waveforms. You can select Sine wave, Triangle wave, Sawtooth or a Square/Pulse wave. It has an FMA, an AM and a Sync modulation input. </p>
+  <h2>Sync Input</h2>
+  <p>This red input is used for synchronizing the oscillator to a control source, which could be another oscillator, an LFO or the keyboard. Synchronization forces the oscillator to restart its waveform cycle, in sync with the waveform cycle of the controlling device. The oscillator will restart whenever a signal present at the sync input increases from 0 units to anything above 0 units. </p>
+  
+  <p>The pitch of the controlling oscillator will interact with the controlled oscillator pitch. For a traditional synthesizer sync-sound, start with the two oscillators to the same pitch and connect only the sync-controlled oscillator to an output. Turning the tuning knob or modulating the pitch of the sync-controlled oscillator will produce radical changes in the timbre. See “Sync” on page 35 for more information. </p>
+  <h2>Mst Input</h2>
+  <p>The gray control input from a master oscillator. Connect this input to a Slv output from a master module. If you connect a master LFO to this input, the slave oscillator will track the LFO five octaves above the pitch of the LFO. </p>
+  <h2>Display Box</h2>
+  <p>Click on the info window to switch between Semitones, Hz and Ratio. Range: C-1 to G9 (7.94 Hz to 12910 Hz or x 0.0241 to x 39.152). </p>
+  <h2>Partials</h2>
+  <p>Select a preset transposition value of the slave oscillator. The transposition ratio will be displayed as multiples of the frequency of the master oscillator. Range 1:32 to 32:1. </p>
+  <h2>Detune</h2>
+  <p>Set the detune of the slave oscillator, in semitone steps. The tuning will relate to the tuning of the master oscillator connected to the Mst input. The preset value is 0 (1:1). If you select the Semitone display, a second number inside a parenthesis will indicate a musical interval (a fifth, a seventh etc.). </p>
+  <h2>Fine</h2>
+  <p>Fine-tunes the slave oscillator. The range is +/– half a semitone, divided in 128 increments. Click on the triangle above the control to reset the fine-tuning to 0, which is the preset value. </p>
+  <h2>Waveform Selectors</h2>
+  <p>Select one of the available waveforms. </p>
+  <h2>FMA Modulation Input [ATTENUATOR TYPE II]</h2>
+  <p>A red modulation input where a signal will affect the pitch of the oscillator in a linear way. The FM amount is attenuated with the rotary knob next to the input. See “Frequency modulation (FM)” on page 35 for more info. </p>
+  <h2>AM Modulation Input</h2>
+  <p>This red input allows you to modulate the amplitude of the slave oscillator. The amount of this modulation is fixed at a ratio of 1:1. </p>
+  <h2>M</h2>
+  <p>Click on this button to mute the audio output of the oscillator. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m10">
+  <h1>OscSlvB</h1>
+  <p>This slave oscillator produces a Square/Pulse waveform. The pulse width can be modulated. </p>
+  <h2>Mst Input</h2>
+  <p>The gray control input from a master oscillator. If you connect a master LFO to this input, the slave oscillator will track the LFO five octaves above the pitch of the LFO. </p>
+  <h2>Display Box</h2>
+  <p>Click on the info window to switch between Semitones, Hz and Ratio. Range: C-1 to G9 (7.94 Hz to 12910 Hz or x 0.0241 to x 39.152). </p>
+  <h2>Partials</h2>
+  <p>Select a preset transposition value of the slave oscillator. The transposition ratio will be displayed as multiples of the frequency of the master oscillator. Range 1:32 to 32:1. </p>
+  <h2>Detune</h2>
+  <p>Set the detune of the slave oscillator, in semitone steps. The tuning will relate to the tuning of the master oscillator connected to the Mst input. The preset value is 0 (1:1). If you select the Semitone display, a second number inside a parenthesis will indicate a musical interval (a fifth, a seventh etc.). </p>
+  <h2>Fine</h2>
+  <p>Fine-tunes the slave oscillator. The range is +/– half a semitone, divided in 128 increments. Click on the triangle above the control to reset the fine-tuning to 0, which is the preset value. </p>
+  <h2>PW Modulation Input [ATTENUATOR TYPE I]</h2>
+  <p>This is a red input for modulating the width of the Pulse waveform, starting at the initial width set with the PW control. The modulation amount is determined by the rotary knob next to the input. See page 33 for modulation examples. </p>
+  <h2>PW</h2>
+  <p>Sets the initial width of the two periods of a Pulse waveform. The range is from 1% to 99%. Click on the triangle above the knob to reset the initial pulse width to 50%, which is the preset value. </p>
+  <h2>M</h2>
+  <p>Click on this button to mute the audio output of the oscillator. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m11">
+  <h1>OscSlvC</h1>
+  <p>This slave oscillator produces a Sawtooth wave. It has a FMA modulation input. </p>
+  <h2>Mst Input</h2>
+  <p>The gray control input from a master oscillator. If you connect a master LFO to this input, the slave oscillator will track the LFO five octaves above the pitch of the LFO. </p>
+  <h2>Display Box</h2>
+  <p>Click on the info window to switch between Semitones, Hz and Ratio. Range: C-1 to G9 (7.94 Hz to 12910 Hz or x 0.0241 to x 39.152). </p>
+  <h2>Partials</h2>
+  <p>Select a preset transposition value of the slave oscillator. The transposition ratio will be displayed as multiples of the frequency of the master oscillator. Range 1:32 to 32:1. </p>
+  <h2>Detune</h2>
+  <p>Set the detune of the slave oscillator, in semitone steps. The tuning will relate to the tuning of the master oscillator connected to the Mst input. The preset value is 0 (1:1). If you select the Semitone display, a second number inside a parenthesis will indicate a musical interval (a fifth, a seventh etc.). </p>
+  <h2>Fine</h2>
+  <p>Fine-tunes the slave oscillator. The range is +/– half a semitone, divided in 128 increments. Click on the triangle above the control to reset the fine-tuning to 0, which is the preset value. </p>
+  <h2>FMA Modulation Input [ATTENUATOR TYPE II]</h2>
+  <p>A red modulation input where a signal will affect the pitch of the oscillator in a linear way. The FM </p>
+  <p>amount is attenuated with the rotary knob next to the input. See “Frequency modulation (FM)” on </p>
+  <p>page 35 for more info. </p>
+  <h2>M</h2>
+  <p>Click on this button to mute the audio output of the oscillator. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m12">
+  <h1>OscSlvD</h1>
+  <p>This slave oscillator produces a Triangle wave. It has an FMA modulation input. </p>
+  <h2>Mst Input</h2>
+  <p>The gray control input from a master oscillator. If you connect a master LFO to this input, the slave oscillator will track the LFO five octaves above the pitch of the LFO. </p>
+  <h2>Display Box</h2>
+  <p>Click on the info window to switch between Semitones, Hz and Ratio. Range: C-1 to G9 (7.94 Hz to 12910 Hz or x 0.0241 to x 39.152). </p>
+  <h2>Partials</h2>
+  <p>Select a preset transposition value of the slave oscillator. The transposition ratio will be displayed as multiples of the frequency of the master oscillator. Range 1:32 to 32:1. </p>
+  <h2>Detune</h2>
+  <p>Set the detune of the slave oscillator, in semitone steps. The tuning will relate to the tuning of the master oscillator connected to the Mst input. The preset value is 0 (1:1). If you select the Semitone display, a second number inside a parenthesis will indicate a musical interval (a fifth, a seventh etc.). </p>
+  <h2>Fine</h2>
+  <p>Fine-tunes the slave oscillator. The range is +/– half a semitone, divided in 128 increments. Click on the triangle above the control to reset the fine-tuning to 0, which is the preset value. </p>
+  <h2>FMA Modulation Input [ATTENUATOR TYPE II]</h2>
+  <p>A red modulation input where a signal will affect the pitch of the oscillator in a linear way. The FM </p>
+  <p>amount is attenuated with the rotary knob next to the input. See “Frequency modulation (FM)” on </p>
+  <p>page 35 for more info. </p>
+  <h2>M</h2>
+  <p>Click on this button to mute the audio output of the oscillator. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m13">
+  <h1>OscSlvE</h1>
+  <p>This slave oscillator produces a Sine wave. It has an FMA- and an amplitude modulation input. </p>
+  <h2>Mst Input</h2>
+  <p>The gray control input from a master oscillator. If you connect a master LFO to this input, the slave oscillator will track the LFO five octaves above the pitch of the LFO. </p>
+  <h2>Display Box</h2>
+  <p>Click on the info window to switch between Semitones, Hz and Ratio. Range: C-1 to G9 (7.94 Hz to 12910 Hz or x 0.0241 to x 39.152). </p>
+  <h2>Partials</h2>
+  <p>Select a preset transposition value of the slave oscillator. The transposition ratio will be displayed as multiples of the frequency of the master oscillator. Range 1:32 to 32:1. </p>
+  <h2>Detune</h2>
+  <p>Set the detune of the slave oscillator, in semitone steps. The tuning will relate to the tuning of the master oscillator connected to the Mst input. The preset value is 0 (1:1). If you select the Semitone display, a second number inside a parenthesis will indicate a musical interval (a fifth, a seventh etc.). </p>
+  <h2>Fine</h2>
+  <p>Fine-tunes the slave oscillator. The range is +/– half a semitone, divided in 128 increments. Click on the triangle above the control to reset the fine-tuning to 0, which is the preset value. </p>
+  <h2>FMA Modulation Input [ATTENUATOR TYPE II]</h2>
+  <p>A red modulation input where a signal will affect the frequency of the oscillator. The FM amount is attenuated with the rotary knob next to the input. See “Frequency modulation (FM)” on page 35 for more info. </p>
+  <h2>AM Input</h2>
+  <p>This red input allows you to modulate the amplitude of the slave oscillator. The amount of this modulation is fixed at a ratio of 1:1. </p>
+  <h2>M</h2>
+  <p>Click on this button to mute the audio output of the oscillator. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m106">
+  <h1>OscSineBank</h1>
+  <p>The Sine slave oscillator bank oscillator features six sine wave oscillators. These can be tuned and AM modulated independently. It is also possible to sync all the waves from an external source. </p>
+  <h2>Display Boxes</h2>
+  <p>The display boxes display the transposition ratio for each of the six sine wave oscillators. Range: 0.0241 to 39.152 times the master oscillator pitch. </p>
+  <h2>Partial Selectors</h2>
+  <p>Click on the up or down button to select a partial number based on the frequency of the master oscillator connected to the module (see Mst input below). The partial number selection ranges from 1:32 to 32:1 times the master oscillator frequency. </p>
+  <h2>Tune and Fine Tune</h2>
+  <p>With the Tune rotary knob you can select partials in steps of one semitone. With the Fine Tune rotary knob below you can change the pitch in steps of 1/128 of a semitone. Clicking on the green triangle above the knob resets the Fine Tune to 0.</p>
+  <h2>M</h2>
+  <p>Click on these buttons to mute the audio output of each oscillator. </p>
+  <h2>AM Input</h2>
+  <p>This audio input allows you to modulate the amplitude of the slave oscillator. The amount of this modulation is fixed at a ratio of 1:1. </p>
+  <h2>Level</h2>
+  <p>These rotary knobs are used for controlling each oscillator´s output level. </p>
+  <h2>Mst Input</h2>
+  <p>This gray master input is used to connect the module to a master oscillator. If you connect a master LFO to this input, the slave oscillator will track the LFO five octaves above the pitch of the LFO. </p>
+  <h2>Sync Input</h2>
+  <p>This audio input is used for synchronizing the oscillators to a control source, which could be another oscillator, an LFO or the keyboard. Synchronization forces the oscillators to restart their waveform cycles in sync with the waveform cycle of the controlling device. The oscillators will restart whenever a signal present at the sync input increases from 0 units to anything above 0 units. The pitch of the controlling oscillator will interact with the controlled oscillator pitches. Turning the Tune knobs of the sync-controlled sine wave oscillators will produce radical changes in the timbre. See “Sync” on page 35 for more information. </p>
+  <h2>Mix In</h2>
+  <p>Use this audio input to mix in another audio signal. The input signal will be mixed with the sine wave oscillator signals and sent to the output. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar </p>
+</module>
+<module component-id="m85">
+  <h1>OscSlvFM</h1>
+  <p>This slave oscillator produces a Sine wave. It has a sync and a special FMB-modulation input. This oscillator is especially suitable for creating classic FM sounds. </p>
+  <h2>Mst Input</h2>
+  <p>The gray control input from a master oscillator. If you connect a master LFO to this input, the slave oscillator will track the LFO five octaves above the pitch of the LFO. </p>
+  <h2>Display Box</h2>
+  <p>Click on the info window to switch between Semitones, Hz and Ratio. Range: C-1 to G9 (7.94 Hz to 12910 Hz or x 0.0241 to x 39.152). </p>
+  <h2>Partials</h2>
+  <p>Select a preset transposition value of the slave oscillator. The transposition ratio will be displayed as multiples of the frequency of the master oscillator. Range 1:32 to 32:1. </p>
+  <h2>Detune</h2>
+  <p>Set the detune of the slave oscillator, in semitone steps. The tuning will relate to the tuning of the master oscillator connected to the Mst input. The preset value is 0 (1:1). If you select the Semitone display, a second number inside a parenthesis will indicate a musical interval (a fifth, a seventh etc.). </p>
+  <h2>Fine</h2>
+  <p>Fine-tunes the slave oscillator. The range is +/– half a semitone, divided in 128 increments. Click on the triangle above the control to reset the fine-tuning to 0, which is the preset value. </p>
+  <h2>Sync Input</h2>
+  <p>This red input is used for synchronizing the oscillator to a control source, which could be another oscillator, an LFO or the keyboard. Synchronization forces the oscillator to restart its waveform cycle, in sync with the waveform cycle of the controlling device. The oscillator will restart whenever a signal present at the sync input increases from 0 units to anything above 0 units. </p>
+  
+  <p>The pitch of the controlling oscillator will interact with the controlled oscillator pitch. For a traditional synthesizer sync-sound, start with the two oscillators to the same pitch and connect only the sync-con- trolled oscillator to an output. Turning the Detune knob of the sync-controlled oscillator will produce radical changes in the timbre. See “Sync” on page 35 for more information. </p>
+  <h2>FMB Modulation Input [ATTENUATOR TYPE II]</h2>
+  <p>A red modulation input where a signal will affect the oscillator pitch creating classic FM-type sounds. The FM amount is attenuated with the rotary knob next to the input. See “Frequency modulation (FM)” on page 35 for more info. </p>
+  <h2>-3 Oct</h2>
+  <p>Transposes the coarse pitch of the oscillator to three octaves below the master oscillator. </p>
+  <h2>M</h2>
+  <p>Click on this button to mute the audio output of the oscillator. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m31">
+  <h1>Noise</h1>
+  <p>This sound source generates noise, selectable from white to colored. </p>
+  <h2>White/Colored</h2>
+  <p>Set the color of the noise with the control knob. Colored noise contains less high frequency energy than white noise. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m95">
+  <h1>PercOsc</h1>
+  <p>This is an oscillator that generates percussive sounds. The amplitude and pitch of the sound can be modulated from external sources. </p>
+  <h2>Amp Input</h2>
+  <p>A signal at this audio input modulates the amplitude of the sound. The attenuation is fixed at a 1:1 ratio. </p>
+  <h2>Trig Input</h2>
+  <p>Use this input to trig the sound. Any signal that increases from 0 units or less, to anything above 0 units will trig the sound. The red color of the input indicates that it also accepts full audio frequency signals. </p>
+  <h2>Click</h2>
+  <p>With the Click knob you can add a clicking sound to the attack of the sound. </p>
+  <h2>Decay</h2>
+  <p>Sets the decay time of the sound. </p>
+  <h2>Display Box</h2>
+  <p>Click on the display box to switch between notes and Hz. Range: C-1 to G9 (7.94 Hz to 12910 Hz). </p>
+  <h2>Pitch</h2>
+  <p>Sets the coarse pitch of the oscillator. Range: C-1 to G9 (8.18 Hz to 12540 Hz). </p>
+  <h2>Fine</h2>
+  <p>Sets the fine tuning of the oscillator. The range is +/- half a semitone divided into 128 steps. Click on the triangle above the control to reset the fine tuning to 0, which is the preset value. </p>
+  <h2>Pitch Modulation Input [ATTENUATOR TYPE II]</h2>
+  <p>There is a blue modulation input for modulating the oscillator pitch on this module. The modulation </p>
+  <p>amount is attenuated with the rotary knob next to the input. See “Pitch modulation” on page 34 for more info. </p>
+  <h2>Punch</h2>
+  <p>Changes the characteristics of the sound and adds a more distinct attack. </p>
+  <h2>M</h2>
+  <p>Click on this button to mute the audio output of the oscillator. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m58">
+  <h1>DrumSynth</h1>
+  <p>The Drum synth module is designed to generate classic analog drum sounds. It consists of a master and a slave oscillator in combination with a noise source and a multimode noise filter. The global parameters include a bend function and a click and noise mixer. (See “Voice definition” on page 210 for an example on how to build a multi drum synth patch using only one single voice in Nord Modular.) </p>
+  <h2>Trig</h2>
+  <p>The yellow Trig input trigs the Drum synth module each time it receives a signal that changes from 0 units or below to anything above 0 units. This signal could come from a gate output of a Keyboard or Sequencer module, for example. A green LED indicates when a trig signal is received.</p>
+  <h2>Vel Modulation Input</h2>
+  <p>This blue control input is used to receive velocity information from an external source. The input velocity signal will affect Master and Slave Oscillator Level, Noise Filter Sweep, Bend Amount, Click Level and Noise Level. Maximum input velocity will force the parameters to reach their current settings. </p>
+  <h2>Pitch Modulation Input</h2>
+  <p>This blue control input is used to receive pitch data from an external module such as a Keyboard or Sequencer module, for example. </p>
+  <h2>Master and Slave Display Boxes</h2>
+  <p>The Master display box shows the master pitch in Hz, and the Slave display box the pitch ratio related to the master pitch. Range: Master: 20.0 Hz to 784 Hz. Slave: 1:1 to 6.26. </p>
+  <h2>Master and Slave Knobs</h2>
+  <p>These are the parameters of the two oscillators that generate the basic drum waveform. </p>
+  <p>Tune: </p>
+  <p>        The tune of the Master can be set between 20.0 and 784 Hz. The Slave ranges from 1 to 6.26         times the Master frequency.</p>
+  <p>Dcy: </p>
+  <p>        Decay determines the decay time for each oscillator. Range: 0.5 ms to 45 s.</p>
+  <p>Lvl: </p>
+  <p>        With the Level knobs you set the respective volume of the two oscillators.</p>
+  <h2>Noise Filter</h2>
+  <p>Here you can filter and affect the noise title of the Drum synth module. </p>
+  <p>Freq: </p>
+  <p>        With the Freq knob you set the cutoff frequency of the noise. Range: 10 Hz to 15.8 kHz.</p>
+  <p>Res: </p>
+  <p>        With the Res knob you set the resonance amount around the cutoff frequency.</p>
+  <p>Swp: </p>
+  <p>        With the Sweep knob you set a sweep range for the cutoff frequency. The setting results in a         sweep from a high cutoff frequency down to the frequency you set with the Freq knob.         Range: 0 to 5 octaves.</p>
+  <p>Dcy: </p>
+  <p>        The Decay knob sets the noise sweep and decay time. Range: 0.5 ms to 45 s.</p>
+  <p>HP/BP/LP: </p>
+  <p>        Click on the HP, BP or LP button to select filter mode: highpass, bandpass or lowpass.</p>
+  <h2>Bend</h2>
+  <p>Bend is a global function for the Master and Slave oscillators. </p>
+  <p>Amt: </p>
+  <p>        With the Amt knob you set the bend amount, i.e. the frequency range to bend through. The         bending always start from the higher frequency and sweeps down in frequency. Range: 0 to         5 octaves.</p>
+  <p>Dcy: </p>
+  <p>        With the Dcy knob you set the bend decay time. The bend time can be considered more as a         bend rate, since the actual decay time is determined by the Decay knobs of the two         oscillators. Range: 0.5 to 45 s.</p>
+  <h2>Click</h2>
+  <p>With the Click knob you can add a clicking sound to the attack of the sound. </p>
+  <h2>Noise</h2>
+  <p>With the Noise knob you set the noise level in the total mix. </p>
+  <h2>Preset</h2>
+  <p>Here you can choose between a number of factory presets by clicking on the up or down buttons. The preset name is shown in the display box. </p>
+  <h2>M</h2>
+  <p>Click on this button to mute the audio output of the Drum synth module. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar </p>
+</module>
+<module component-id="m24">
+  <h1>LFOA</h1>
+  <p>This LFO produces one of five different modulation waveforms. The rate of the LFO can be modulated from an external source. The wave can be forced to restart, and the phase of the wave can be set. </p>
+  <h2>Rst Input</h2>
+  <p>The yellow Rst input forces the LFO to restart each time it receives a signal that changes from 0 units or below to anything above 0 units. This signal could come from a gate output of a Keyboard or Sequencer module, for example. </p>
+  <h2>Slv Output</h2>
+  <p>This is a gray output for controlling the rate of a slave LFO. Patch this output to a Mst input on a slave module. If you control a slave oscillator, it will track the LFO five octaves above the LFO rate. </p>
+  <h2>Rate Display Box</h2>
+  <p>The Rate display box shows the LFO rate, either in seconds/cycle or in Hz depending on current rate. Range: 699 seconds/cycle to 392 Hz. </p>
+  <h2>Rate</h2>
+  <p>Set the frequency of the LFO, the rate, with the knob. The Output LED will show you an approximation of the rate, while the display box will indicate the exact frequency in Hertz, or in seconds if the range is set to Low or Sub. </p>
+  <h2>Rate Modulation Input [ATTENUATOR TYPE II]</h2>
+  <p>Input for a modulation source to control the rate of the LFO. The modulation amount is attenuated by the rotary knob next to the input. </p>
+  <h2>Mono</h2>
+  <p>Synchronizes modules in polyphonic patches to each other. This means that if you play a chord, the module will control all voices in sync (see “The Mono parameter” on page 44 for details). The preset setting of this parameter is Off. </p>
+  <h2>Hi, Lo, Sub</h2>
+  <p>Selects one of three ranges of the LFO rate, high, low or sub. The Hi range is from 0.26 Hz to 392 Hz, the Lo range is from 0.02 Hz to 24.4 Hz and the Sub range is from one cycle completed in 699 seconds to one cycle completed in 5.46 seconds. </p>
+  <h2>Phase</h2>
+  <p>Sets the starting point of the LFO cycle. Range: -180 to +177 degrees. The set degree is shown in the display box to the left of the knob. </p>
+  <h2>Graph</h2>
+  <p>The graph illustrates one cycle and its phase. </p>
+  <h2>KBT</h2>
+  <p>This is the keyboard tracking function. If this is set to Key, the LFO will track the keyboard with a doubling of the LFO frequency for each octave. Turning clockwise from the center position will increase the tracking, turning counter clockwise, will decrease it. Off disconnects the keyboard tracking completely. Click on the triangle above the control to set the keyboard tracking to Key. The preset value is Off. </p>
+  <h2>Waveform Selectors</h2>
+  <p>Selects one of the five available waveforms. </p>
+  <h2>M</h2>
+  <p>Click on this button to mute the control signal output of the module. </p>
+  <h2>Out</h2>
+  <p>The LED above the output shows an approximation of the current LFO rate. </p>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m25">
+  <h1>LFOB</h1>
+  <p>This LFO produces a square/pulse wave. The width of the pulse can be controlled and modulated. The rate of the LFO can be modulated by a modulation source and the keyboard. The wave cycle can be forced to restart and the phase of the waveform can be controlled. </p>
+  <h2>Rst Input</h2>
+  <p>The yellow Rst input forces the LFO to restart each time it receives a signal that changes from 0 units or below to anything above 0 units. This signal could come from a gate output of a Keyboard or Sequencer module, for example. </p>
+  <h2>Slv Output</h2>
+  <p>This is a gray output for controlling the rate of a slave LFO. Patch this output to a Mst input on a slave module. If you control a slave oscillator, it will track the LFO five octaves above the LFO rate. </p>
+  <h2>Rate Display Box</h2>
+  <p>The Rate display box shows the LFO rate, either in seconds/cycle or in Hz depending on current rate. Range: 699 seconds/cycle to 392 Hz. </p>
+  <h2>Rate</h2>
+  <p>Set the frequency of the LFO, the rate, with the knob. The Output LED will show you an approximation of the rate, while the display box will indicate the exact frequency in Hertz, or in seconds if the range is set to Low or Sub. </p>
+  <h2>Rate Modulation Input [ATTENUATOR TYPE II]</h2>
+  <p>Input for a modulation source to control the rate of the LFO. The modulation amount is attenuated by the rotary knob next to the input. </p>
+  <h2>Mono</h2>
+  <p>Synchronizes modules in polyphonic patches to each other. This means that if you play a chord, the module will control all voices in sync (see “The Mono parameter” on page 44 for details). The preset setting of this parameter is Off. </p>
+  <h2>Hi, Lo, Sub</h2>
+  <p>Selects one of three ranges of the LFO rate, high, low or sub. The Hi range is from 0.26 Hz to 392 Hz, the Lo range is from 0.02 Hz to 24.4 Hz and the Sub range is from one cycle completed in 699 seconds to one cycle completed in 5.46 seconds. </p>
+  <h2>Phase</h2>
+  <p>Sets the starting point of the LFO cycle. Range: -180 to +177 degrees. The set degree is shown in the display box to the left of the knob. </p>
+  <h2>Graph</h2>
+  <p>The graph illustrates one cycle and its phase. </p>
+  <h2>KBT</h2>
+  <p>This is the keyboard tracking function. If this is set to Key, the LFO will track the keyboard with a doubling of the LFO frequency for each octave. Turning clockwise from the center position will increase the tracking, turning counter clockwise, will decrease it. Off disconnects the keyboard tracking completely. Click on the triangle above the control to set the keyboard tracking to Key. The preset value is Off. </p>
+  <h2>PW Modulation Input [ATTENUATOR TYPE I]</h2>
+  <p>This is a blue input for modulating the width of the pulse wave, starting at the initial width set with the PW control. The modulation amount is determined by the rotary knob next to the input.</p>
+  <h2>PW</h2>
+  <p>Sets the initial width of the waveform. The range is from 1% to 99%. Click on the triangle above the knob to reset the initial pulse width to 50%. This is the preset value. </p>
+  <h2>Out</h2>
+  <p>The LED above the output shows an approximation of the current LFO rate. </p>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m26">
+  <h1>LFOC</h1>
+  <p>This LFO produces one of four selectable waveforms. The rate of the LFO can be modulated. </p>
+  <h2>Slv Output</h2>
+  <p>This is a gray control output for controlling the rate of a slave LFO. Patch this output to a Mst input on a slave module. If you control a slave oscillator, it will track the LFO five octaves above the LFO rate. </p>
+  <h2>Display Box</h2>
+  <p>The display box shows the LFO rate, either in seconds/cycle or in Hz depending on current rate. Range: 699 seconds/cycle to 392 Hz. </p>
+  <h2>Rate Modulation Input [ATTENUATOR TYPE II]</h2>
+  <p>A blue input for a modulation source to control the rate of the LFO. The modulation amount is set by the rotary knob next to the input. </p>
+  <h2>Rate</h2>
+  <p>Set the frequency of the LFO, the rate, with the knob. The Output LED will show you an approximation of the rate, while the display box will indicate the exact frequency in Hertz, or in seconds if the range is set to Low or Sub. </p>
+  <h2>Hi, Lo, Sub</h2>
+  <p>Selects one of three ranges of the LFO rate, high, low or sub. The Hi range is from 0.26 Hz to 392 Hz, the Lo range is from 0.02 Hz to 24.4 Hz and the Sub range is from one cycle completed in 699 seconds to one cycle completed in 5.46 seconds. </p>
+  <h2>Waveform Selectors</h2>
+  <p>Selects one of the four available waveforms. </p>
+  <h2>Mono</h2>
+  <p>Synchronizes modules in polyphonic patches to each other. This means that if you play a chord, the module will control all voices in sync (see “The Mono parameter” on page 44 for details). The preset setting of this parameter is Off. </p>
+  <h2>M</h2>
+  <p>Click on this button to mute the control signal output of the module. </p>
+  <h2>Out</h2>
+  <p>The LED above the output shows an approximation of the current LFO rate. </p>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m80">
+  <h1>LFOSlvA</h1>
+  <p>This slave LFO produces one of five selectable waveforms. The rate can be controlled from a master LFO, the cycle can be forced to restart and the phase of the waveform can be controlled. </p>
+  <h2>Mst Input</h2>
+  <p>A gray control input, for the frequency of the slave LFO to be controlled by a master module. Patch this input to a Slv output on a master module. If you connect a master oscillator to this input, the slave LFO will track the oscillator five octaves below the pitch of the oscillator. </p>
+  <h2>Rst Input</h2>
+  <p>The yellow Rst input forces the LFO to restart each time it receives a signal that changes from 0 units or below to anything above 0 units. This signal could come from a gate output of a Keyboard or Sequencer module, for example. </p>
+  <h2>Display Box</h2>
+  <p>Displays either the LFO ratio related to the master rate, or the rate in Hz or seconds. Click to switch unit. </p>
+  <h2>Rate</h2>
+  <p>Sets the frequency of the LFO. The frequency will be displayed as a ratio, in relation to the master module connected to the Mst input. The rate LED above the output will show you an approximation of the frequency. Range: 0.025 to 38.05 times the master rate or 62.9 seconds/cycle to 24.4 Hz. </p>
+  <h2>Mono</h2>
+  <p>Synchronizes modules in polyphonic patches to each other. This means that if you play a chord, the module will control all voices in sync (see “The Mono parameter” on page 44 for details). The preset setting of this parameter is Off. </p>
+  <h2>Phase</h2>
+  <p>Sets the starting point of the LFO cycle. Range: -180 to +177 degrees. The set degree is shown in the display box to the left of the knob. </p>
+  <h2>Graph</h2>
+  <p>The graph illustrates one cycle and its phase. </p>
+  <h2>Waveform Selectors</h2>
+  <p>Selects one of the five available waveforms. </p>
+  <h2>M</h2>
+  <p>Click on this button to mute the control signal output of the module. </p>
+  <h2>Out</h2>
+  <p>The LED above the output shows an approximation of the current LFO rate. </p>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m27">
+  <h1>LFOSlvB</h1>
+  <p>This slave LFO produces a Sawtooth waveform. </p>
+  <h2>Mst Input</h2>
+  <p>A gray control input, for the frequency of the slave LFO to be controlled by a master module. Patch this input to a Slv output on a master module. If you connect a master oscillator to this input, the LFO will track the oscillator five octaves below the pitch of the oscillator. </p>
+  <h2>Display Box</h2>
+  <p>Displays either the LFO ratio related to the master rate, or the rate in Hz or seconds. Click to switch unit. </p>
+  <h2>Rate Knob</h2>
+  <p>Sets the frequency of the LFO. The frequency will be displayed as a ratio, in relation to the master module connected to the Mst input. The rate LED above the output will show you an approximation of the frequency. Range: 0.025 to 38.05 times the master rate or 62.9 seconds/cycle to 24.4 Hz. </p>
+  <h2>Out</h2>
+  <p>The LED above the output shows an approximation of the current LFO rate. </p>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m28">
+  <h1>LFOSlvC</h1>
+  <p>This slave LFO produces a Sine wave. </p>
+  <h2>Mst Input</h2>
+  <p>A gray control input, for the frequency of the slave LFO to be controlled by a master module. Patch this input to a Slv output on a master module. If you connect a master oscillator to this input, the LFO will track the oscillator five octaves below the pitch of the oscillator. </p>
+  <h2>Display Box</h2>
+  <p>Displays either the LFO ratio related to the master rate, or the rate in Hz or seconds. Click to switch unit. </p>
+  <h2>Rate Knob</h2>
+  <p>Sets the frequency of the LFO. The frequency will be displayed as a ratio, in relation to the master module connected to the Mst input. The rate LED above the output will show you an approximation of the frequency. Range: 0.025 to 38.05 times the master rate or 62.9 seconds/cycle to 24.4 Hz. </p>
+  <h2>Out</h2>
+  <p>The LED above the output shows an approximation of the current LFO rate. </p>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m29">
+  <h1>LFOSlvD</h1>
+  <p>This slave LFO produces a Square wave. </p>
+  <h2>Mst Input</h2>
+  <p>A gray control input, for the frequency of the slave LFO to be controlled by a master module. Patch this input to a Slv output on a master module. If you connect a master oscillator to this input, the LFO will track the oscillator five octaves below the pitch of the oscillator. </p>
+  <h2>Display Box</h2>
+  <p>Displays either the LFO ratio related to the master rate, or the rate in Hz or seconds. Click to switch unit. </p>
+  <h2>Rate Knob</h2>
+  <p>Sets the frequency of the LFO. The frequency will be displayed as a ratio, in relation to the master module connected to the Mst input. The rate LED above the output will show you an approximation of the frequency. Range: 0.025 to 38.05 times the master rate or 62.9 seconds/cycle to 24.4 Hz. </p>
+  <h2>Out</h2>
+  <p>The LED above the output shows an approximation of the current LFO rate. </p>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m30">
+  <h1>LFOSlvE</h1>
+  <p>This slave LFO produces a Triangle wave. </p>
+  <h2>Mst Input</h2>
+  <p>A gray control input, for the frequency of the slave LFO to be controlled by a master module. Patch this input to a Slv output on a master module. If you connect a master oscillator to this input, the LFO will track the oscillator five octaves below the pitch of the oscillator. </p>
+  <h2>Display Box</h2>
+  <p>Displays either the LFO ratio related to the master rate, or the rate in Hz or seconds. Click to switch unit. </p>
+  <h2>Rate Knob</h2>
+  <p>Sets the frequency of the LFO. The frequency will be displayed as a ratio, in relation to the master module connected to the Mst input. The rate LED above the output will show you an approximation of the frequency. Range: 0.025 to 38.05 times the master rate or 62.9 seconds/cycle to 24.4 Hz. </p>
+  <h2>Out</h2>
+  <p>The LED above the output shows an approximation of the current LFO rate. </p>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m68">
+  <h1>ClkGen</h1>
+  <p>The clock generator module generates a stream of logic signals. The module can also act as a master to slave LFOs. </p>
+  <p>The Clock generator is not dependant on any MIDI clock signals, but acts on its own. If you want to sync to MIDI clock, you must instead use the Clock output of the ‘MIDI Global’ module described on page 95). </p>
+  <h2>Reset Input</h2>
+  <p>The yellow Reset input forces the clock generator to restart each time it receives a signal that changes from 0 units or below to anything above 0 units. This signal could come from a gate output of a Keyboard or Sequencer module, for example. When the clock generator is reset, it transmits a high logic signal on the Sync output. </p>
+  <h2>Slv Output</h2>
+  <p>A gray slave signal output for controlling the rate of slave LFOs. If the ratio of the slave LFO is set to 1:1, 1 BPM on the clock generator module corresponds to 1 Hz on the slave LFO. Patch this output to a Mst input on a slave LFO. </p>
+  <h2>Rate Display Box</h2>
+  <p>Displays the rate in beats per minute, BPM. Range: 24 to 214 BPM. </p>
+  <h2>Rate Knob</h2>
+  <p>Set the desired rate, in beats per minute, with the knob. Range: 24 to 214 BPM. </p>
+  <h2>On/Off</h2>
+  <p>Starts and stops the generation of clock pulses. </p>
+  <h2>24 Pulses/B Output</h2>
+  <p>This yellow output transmits 24 clock pulses for each quarter note. </p>
+  <p>Signal: Logic. </p>
+  <h2>4 Pulses/B Output</h2>
+  <p>This yellow output transmits 4 clock pulses for each quarter note. </p>
+  <p>Signal: Logic. </p>
+  <h2>Sync Output</h2>
+  <p>This yellow output transmits a high logic signal when the generator is reset or started. </p>
+  <p>Signal: Logic. </p>
+</module>
+<module component-id="m33">
+  <h1>ClkRndGen</h1>
+  <p>The Clocked Random Step Generator module generates a random control signal. The module transmits a new random value for each logic signal received at the Clk input. </p>
+  <h2>Mono</h2>
+  <p>Synchronizes modules in polyphonic patches to each other. This means that if you play a chord, the module will control all voices in sync (see “The Mono parameter” on page 44 for details). The preset setting </p>
+  <p>of this parameter is Off. </p>
+  <h2>Col</h2>
+  <p>This sets the “color" of the random control signal. The colored setting is more gentle and contains less radical differences between adjacent values. The “white" setting is completely random. </p>
+  <h2>Clk Input</h2>
+  <p>A logic signal or a periodic control signal from e.g. a clock generator or an LFO can be used to clock the output of the module.</p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m34">
+  <h1>RndStepGen</h1>
+  <p>The Random Step Generator module generates a random control signal. The control signal is “colored". This means the effect is more gentle than a true, random signal. It contains less radical differences between adjacent values. </p>
+  <h2>Mst Input</h2>
+  <p>A gray control input, for the generator to be controlled by a master module. Patch this input to a Slv </p>
+  <p>output on a master module. If you connect a master oscillator to this input, the Random Step Generator will track the oscillator five octaves below the pitch of the oscillator. </p>
+  <h2>Display Box</h2>
+  <p>Displays either the LFO ratio related to the master rate, or the rate in Hz or seconds. Click to alter. </p>
+  <h2>Rate Knob</h2>
+  <p>Sets the frequency of the LFO. The frequency will be displayed as a ratio, in relation to the master module connected to the Mst input. The rate LED above the output will show you an approximation of the frequency. Range: 0.025 to 38.05 times the master rate or 62.9 seconds/cycle to 24.4 Hz. </p>
+  <h2>Out</h2>
+  <p>The LED above the output shows an approximation of the current rate. </p>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m110">
+  <h1>RandomGen</h1>
+  <p>The Random Generator is a slave LFO that generates smooth random control signal steps at a steady frequency. </p>
+  <h2>Mst Input</h2>
+  <p>A gray control input, for the generator to be controlled by a master module. Patch this input to a Slv </p>
+  <p>output on a master module. If you connect a master oscillator to this input, the Random Step Generator will track the oscillator five octaves below the pitch of the oscillator. </p>
+  <h2>Display Box</h2>
+  <p>Displays either the LFO ratio related to the master rate, or the rate in Hz or seconds. Click to alter. </p>
+  <h2>Rate Knob</h2>
+  <p>Sets the frequency of the LFO. The frequency will be displayed as a ratio, in relation to the master module connected to the Mst input. The rate LED above the output will show you an approximation of the frequency. Range: 0.025 to 38.05 times the master rate or 62.9 seconds/cycle to 24.4 Hz. </p>
+  <h2>Out</h2>
+  <p>The LED above the output shows an approximation of the current rate. </p>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m35">
+  <h1>RndPulsGen</h1>
+  <p>The Random Pulse Generator module generates random logic pulses with a selectable density. </p>
+  <h2>Density</h2>
+  <p>Sets the average frequency and average pulse width of the logic signal. Low density results in few but longer pulses, and high density results in more but shorter pulses. The interval between the high and low logic signal levels are completely random. </p>
+  <h2>Out</h2>
+  <p>The LED above the output shows an approximation of the current rate and density. </p>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m99">
+  <h1>PatternGen</h1>
+  <p>The Clocked Pattern Generator generates 16384 different patterns (128 banks with 128 patterns each) with selectable length. </p>
+  <h2>Clk Input</h2>
+  <p>The yellow logic Clk input can be connected to a Clk output of an external module, such as the Clock generator. At each clock pulse the Pattern generator advances one step. </p>
+  <h2>Rst Input</h2>
+  <p>The yellow logic Rst input is used to restart the selected pattern. When receiving a logic restart signal, the Pattern generator restarts at step one. The restart isn’t performed until the next the clock pulse is received at the Clk input. This guarantees perfect timing. </p>
+  <h2>Pattern and Bank Display Boxes</h2>
+  <p>Displays selected Pattern and Bank number. </p>
+  <h2>Pattern and Bank</h2>
+  <p>With the rotary buttons you select Pattern (0-127) and Bank (0-127). Pattern and Bank selection can also be controlled externally using the blue control signal input to the left of the knobs. </p>
+  <h2>Step Display Box</h2>
+  <p>Displays the selected number of Steps in the pattern(s). </p>
+  <h2>Step</h2>
+  <p>Click on the up and down arrow to select number of steps in the pattern (1-128). </p>
+  <h2>Mono</h2>
+  <p>Synchronizes modules in polyphonic patches to each other. This means that if you play a chord, the module will control all voices in sync (see “The Mono parameter” on page 44 for details). </p>
+  <h2>Delta</h2>
+  <p>Click to select High or Low. High Delta value produces great difference in output level between steps, and Low Delta produces low difference. The default setting is High. </p>
+  <h2>Out</h2>
+  <p>Signal: Unipolar </p>
+</module>
+<module component-id="m20">
+  <h1>ADSR-Env</h1>
+  <p>This is a four-step ADSR envelope (Attack, Decay, Sustain and Release). The envelope contains a gain control function, which is automatically modulated by the envelope. This enables you to control the amplitude of an external audio- or control signal. </p>
+  <h2>Gate Input</h2>
+  <p>A high logic signal appearing at this yellow input will start and can keep the envelope in an open-gate state. The LED lights up while the envelope is receiving a high logic signal. </p>
+  <h2>Retrig Input</h2>
+  <p>The envelope can be restarted by a high logic signal connected to the yellow Retrig input. The envelope Gate input must be receive a gate signal to make the envelope retrig. </p>
+  <h2>Amp Input</h2>
+  <p>A blue control signal input used for controlling the overall amplitude of the envelope. </p>
+  <h2>Attack Characteristics Buttons</h2>
+  <p>Set the characteristics of the attack part of the envelope with one of the three buttons, logarithmic, linear or exponential. (This selector can not be assigned to a Morph group). </p>
+  <h2>Invert</h2>
+  <p>This inverts the control signal of the envelope. </p>
+  <h2>A</h2>
+  <p>Sets the attack time. When the envelope receives a high logic signal at the Gate input, the output control signal from the envelope rises up to the maximum output, +64 units. The time to get from 0 to +64 units is the attack time. If the logic Gate signal drops to zero before the envelope has completed the attack stage, it will skip the decay and sustain stages and immediately proceed with the release stage. The attack time is displayed in milliseconds or seconds in the corresponding display box. Range: 0.5 ms to 45 s. </p>
+  <p>Note: A very short attack time can produce a click in the beginning of the sound. This is only normal according to physics theory. To eliminate any click, just increase the attack time slightly. </p>
+  <h2>D</h2>
+  <p>Sets the decay time. After the envelope has completed the attack part, it will drop down to the sustain level with the decay time. The decay is exponential. If the sustain level is 64, the decay stage will not be needed, there is simply nothing to decay down to. If the logic Gate signal drops to zero before the envelope has completed the decay stage, it will immediately proceed with the release stage. The decay time is displayed in milliseconds or seconds in the corresponding display box. Range: 0.5 ms to 45 s. </p>
+  <h2>S</h2>
+  <p>Sets the sustain level. This level will be held (sustained) for as long as the logic Gate signal is high. When the logic Gate signal drops to zero, the envelope will proceed with the release stage. The sustain level is displayed in ‘units’ in the corresponding display box. Range: 0 to 64 units. </p>
+  <h2>R</h2>
+  <p>Sets the release time. When the logic Gate signal drops to zero, the envelope will decrease from the sustain level to zero with the release time. The release is exponential. The release time is displayed in milliseconds or seconds in the corresponding display box. Range: 0.5 ms to 45 s. </p>
+  <h2>Graph</h2>
+  <p>The info graph shows an approximation of the envelope gain curve. The yellow line represents the sustain level, which is not defined in time since it depends on the gate signal time. </p>
+  <h2>Input</h2>
+  <p>The red audio signal input. Here you patch a signal to the envelope controlled amplifter. </p>
+  <h2>Envelope Output</h2>
+  <p>The blue control signal output from the envelope generator. </p>
+  <p>Signal: Unipolar. </p>
+  <h2>Output</h2>
+  <p>The red output from the envelope controlled amplifter. </p>
+  <p>Signal: Bipolar.</p>
+</module>
+<module component-id="m84">
+  <h1>AD-Env</h1>
+  <p>This is a smaller envelope with two stages, attack and decay. If the envelope finishes the attack stage while still receiving a high Gate signal, the envelope proceeds with the decay stage. If the logic Gate signal drops to zero during the attack stage, the envelope starts the decay stage with the set decay time. </p>
+  <h2>Gate/TRIG SELECTOR</h2>
+  <p>This determines whether the envelope should behave like a gated envelope or like an unconditional envelope. The gated (Gate mode) envelope needs a high logic signal for at least a short period of the attack stage. The unconditional (Trig mode) envelope only needs a short high logic signal to start. When the envelope has started after a Trig signal, it will proceed to the very end of the cycle even if the Trig signal drops to zero. Please note the arrow that appears next to the yellow input when Trig mode is selected. </p>
+  <h2>Gate/TRIG Input</h2>
+  <p>A high logic signal at this yellow input will start the envelope. The LED lights up while the envelope is receiving a high logic signal. </p>
+  <h2>Amp Input</h2>
+  <p>A blue control signal input used for controlling the overall amplitude of the envelope. </p>
+  <h2>Attack</h2>
+  <p>Sets the attack time. When the envelope receives a high logic signal at the Gate/Trig input, the output control signal from the envelope rises up to the maximum output, +64 units. The time to get from 0 to +64 units is the attack time. The attack is linear. If the logic Gate signal drops to zero before the envelope has completed the attack stage, it will immediately proceed with the decay stage. If the logic input is set to Trig, the entire attack phase will be completed. The attack time is displayed in milliseconds or seconds in the display box. Range: 0.5 ms to 45 s. </p>
+  <p>Note: A very short attack time can produce a click in the beginning of the sound. This is only normal according to physics theory. To eliminate any click, just increase the attack time slightly. </p>
+  <h2>Dcy</h2>
+  <p>Sets the decay time. After the envelope has completed the attack part, it will drop down to 0 units with the decay time. The decay is exponential. If the logic Gate/Trig signal drops to zero before the envelope has completed the decay stage, it will still continue through the whole decay stage. The decay time is displayed in milliseconds or seconds in the display box. Range: 0.5 ms to 45 s. </p>
+  <h2>Graph</h2>
+  <p>The info graph shows an approximation of the envelope gain curve. </p>
+  <h2>Input</h2>
+  <p>The red audio signal input. Here you patch a signal to the envelope controlled amplifter. </p>
+  <h2>Envelope Output</h2>
+  <p>The blue control signal output from the envelope generator. </p>
+  <p>Signal: Unipolar. </p>
+  <h2>Output</h2>
+  <p>The red output from the envelope controlled amplifter. </p>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m23">
+  <h1>Mod-Env</h1>
+  <p>The Mod Envelope is an ADSR envelope with inputs to control attack, decay, sustain and release from external sources. </p>
+  <h2>Amp Input</h2>
+  <p>A blue control signal input used for controlling the overall amplitude of the envelope. </p>
+  <h2>Gate Input</h2>
+  <p>A logic control signal input that is used to start and hold the envelope for as long as the logic signal is high. A green LED indicates when a gate signal is received. </p>
+  <h2>Retrig Input</h2>
+  <p>The envelope can be restarted with a logic signal at this input. Note that the envelope must receive a gate signal at the gate input to be able to retrig. </p>
+  <h2>A</h2>
+  <p>Sets the attack time. When the envelope receives a high logic signal at the Gate input, the output control signal from the envelope rises up to the maximum output, +64 units. The time to get from 0 to +64 units is the attack time. If the logic Gate signal drops to zero before the envelope has completed the attack stage, it will skip the decay and sustain stages and immediately proceed with the release stage. The attack time is displayed in milliseconds or seconds in the corresponding display box. Range: 0.5 ms to 45 s. </p>
+  <p>Note: A very short attack time can produce a click in the beginning of the sound. This is only normal according to physics theory. To eliminate any click, just increase the attack time slightly. </p>
+  <h2>D</h2>
+  <p>Sets the decay time. After the envelope has completed the attack part, it will drop down to the sustain level with the decay time. The decay is exponential. If the sustain level is 64, the decay stage will not be needed, there is simply nothing to decay down to. If the logic Gate signal drops to zero before the envelope has completed the decay stage, it will immediately proceed with the release stage. The decay time is displayed in milliseconds or seconds in the corresponding display box. Range: 0.5 ms to 45 s. </p>
+  <h2>S</h2>
+  <p>Sets the sustain level. This level will be held (sustained) for as long as the logic Gate signal is high. When the logic Gate signal drops to zero, the envelope will proceed with the release stage. The sustain level is displayed in ‘units’ in the corresponding display box. Range: 0 to 64 units. </p>
+  <h2>R</h2>
+  <p>Sets the release time. When the logic Gate signal drops to zero, the envelope will decrease from the sustain level to zero with the release time. The release is exponential. The release time is displayed in milliseconds or seconds in the corresponding display box. Range: 0.5 ms to 45 s. </p>
+  <h2>A, D, S, R Control Inputs [ATTENUATOR TYPE I]</h2>
+  <p>Each of the attack, decay, sustain and release values can be controlled externally by using the corresponding control signal input below the A, D, S and R knobs. You can adjust the level of each control signal by turning the corresponding rotary knob. Note that the A, D and R control inputs handles bipolar control signals. Positive control signals shortens the times and negative control signals increase the times. </p>
+  <h2>Graph</h2>
+  <p>The info graph shows an approximation of the envelope gain curve. The yellow line represents the sustain level, which is not defined in time since it depends on the gate signal hold time. </p>
+  <h2>Invert</h2>
+  <p>This inverts the control signal of the envelope. </p>
+  <h2>Input</h2>
+  <p>The red audio signal input. Here you patch a signal to the envelope controlled amplifter. </p>
+  <h2>Envelope Output</h2>
+  <p>The blue control signal output from the envelope generator. </p>
+  <p>Signal: Unipolar. </p>
+  <h2>Output</h2>
+  <p>The red output from the envelope controlled amplifter. </p>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m46">
+  <h1>AHD-Env</h1>
+  <p>The Attack-Hold-Decay envelope is an envelope with inputs to control attack, hold and release times. </p>
+  <h2>TRIG Input</h2>
+  <p>A logic control signal input that is used to start the envelope. Note that this is a Trig input and not a gate input. This means the envelope will always complete all the envelope stages. A green LED indicates when a trig signal is received </p>
+  <h2>Amp Input</h2>
+  <p>A blue control signal input used for controlling the overall amplitude of the envelope. </p>
+  <h2>A</h2>
+  <p>Sets the attack time. When the envelope receives a high logic signal at the Trig input, the output control signal from the envelope rises up to the maximum output, +64 units. The time to get from 0 to +64 units is the attack time. The attack is linear. The attack time is displayed in milliseconds or seconds in the corresponding display box. Range: 0.5 ms to 45 s. </p>
+  <p>Note: A very short attack time can produce a click in the beginning of the sound. This is only normal according to physics theory. To eliminate any click, just increase the attack time slightly. </p>
+  <h2>H</h2>
+  <p>Sets the time the envelope should remain at +64 units. The hold time is displayed in milliseconds or seconds in the corresponding display box. Range: 0.5 ms to 45 s. </p>
+  <h2>D</h2>
+  <p>Sets the decay time. After the envelope has completed the hold stage, it will drop down to 0 units with the decay time. The decay is exponential. The decay time is displayed in milliseconds or seconds in the corresponding display box. Range: 0.5 ms to 45 s. </p>
+  <h2>A, H, D Control Inputs [ATTENUATOR TYPE I]</h2>
+  <p>Each of the attack, hold and decay times can be controlled externally by using the corresponding control signal input below the A, H and D knobs. You can attenuate the level of each control signal by turning the corresponding rotary knob. Note that the A, H and D control inputs handles bipolar control signals. Positive control signals on the A and D control inputs shortens the times and negative control signals increase the times. With the H parameter it is the other way around. </p>
+  <h2>Graph</h2>
+  <p>The info graph shows an approximation of the envelope gain curve. </p>
+  <h2>Input</h2>
+  <p>The red audio signal input. Here you patch a signal to the envelope controlled amplifter. </p>
+  <h2>Envelope Output</h2>
+  <p>The blue control signal output from the envelope generator. </p>
+  <p>Signal: Unipolar. </p>
+  <h2>Output</h2>
+  <p>The red output from the envelope controlled amplifter. </p>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m52">
+  <h1>Multi-Env</h1>
+  <p>The Multi stage envelope is a 5-segment time and level envelope with selectable sustain segment. </p>
+  <h2>Gate Input</h2>
+  <p>A logic control signal is used to start and hold the envelope for as long as the logic signal is high. A green LED indicates when a gate signal is received. </p>
+  <h2>Amp Input</h2>
+  <p>A blue control signal input used for controlling the overall amplitude of the envelope. </p>
+  <h2>Bipolar Linear/Unipolar Exponential/Unipolar Linear Buttons</h2>
+  <p>Click on the buttons to switch between Bipolar with linear time segments characteristics, Unipolar with exponential attack time segment(s) characteristics, or Unipolar with linear attack time segment(s) characteristics. Note that it is only the attack segments of the unipolar envelopes that can be selected to be linear or exponential. The decay segments of the unipolar envelopes are always exponential. An attack segment is defined as a level shift from a low value to a higher value, and a decay segment is defined as a level shift from a high value to a lower value. </p>
+  <h2>L1-L4</h2>
+  <p>By turning the rotary knobs L1 to L4 you can set the amplitude of each of the four level segments in the envelope. The levels can be either unipolar or bipolar as described above. The levels are displayed in units in the corresponding display box. Ranges: 0 to +64 units (unipolar) or -64 to +64 units (bipolar). </p>
+  <h2>T1-T5</h2>
+  <p>Here you set the times between the four levels plus a fifth release time from L4 to zero. The times are displayed in milliseconds or seconds in the corresponding display box. Ranges: 0.5 ms to 45 s.  </p>
+  <p>Note: Very short times can produce clicks in the sound. This is only normal according to physics theory. To eliminate any click, just increase the times slightly. </p>
+  <h2>Graph</h2>
+  <p>The info graph shows an approximation of the envelope gain curve. The yellow line represents the sustain level, which is not defined in time since it depends on the gate signal hold time. If ‘bipolar’ is selected, a horizontal broken line represents the 0 units output level. </p>
+  <h2>Sustain</h2>
+  <p>By clicking on the up and down arrow buttons you define the sustain segment. This segment can be any of the four level segments, or, if you wish, none at all. The sustain segment works like in an ordinary ADSR envelope, i.e this is the level that sustains as you hold down the key(s). After releasing the key(s) the envelope will continue till the end of T5. Range: None and L1 to L4. </p>
+  <h2>Input</h2>
+  <p>The red audio signal input. Here you patch a signal to the envelope controlled amplifter. </p>
+  <h2>Env Output</h2>
+  <p>The blue control signal output of the envelope. </p>
+  <p>Signal: Unipolar or Bipolar </p>
+  <h2>Output</h2>
+  <p>The red output from the envelope controlled amplifter. </p>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m71">
+  <h1>EnvFollower</h1>
+  <p>This module will extract an envelope from a signal, i.e follow the amplitude envelope of an incoming signal. When a signal at the input of this module increases in amplitude, this module “follows" the amplitude with the time set as Attack time. When a signal decreases, it “follows" the amplitude with the time set as Release time. </p>
+  <h2>Atk</h2>
+  <p>Sets the time it should take for the envelope follower to track increasing amplitude of the input signal. </p>
+  <p>Range: Fast(0.5 ms) to 767 ms. The set value is shown in the corresponding display box. </p>
+  <h2>Rel</h2>
+  <p>Sets the time it should take for the envelope follower to track decreasing amplitude of the input signal. </p>
+  <p>Range: 40 ms to 3.26 s. The set value is shown in the corresponding display box. </p>
+  <h2>Input</h2>
+  <p>The red audio signal input. Patch this input to an output of the Audio In module, for example, to track the amplitude of an external audio signal. </p>
+  <h2>Output</h2>
+  <p>The output of the generated envelope signal. </p>
+  <p>Signal: Unipolar. </p>
+</module>
+<module component-id="m86">
+  <h1>FilterA</h1>
+  <p>This is a static, non-resonant lowpass filter with a slope of 6 dB/octave. </p>
+  <h2>Display Box</h2>
+  <p>Shows the set cut-off frequency. Range: 12 Hz to 20 kHz. </p>
+  <h2>Frequency Knob</h2>
+  <p>Sets the cut-off frequency of the filter. The cut-off frequency is indicated in the info window. Range: 12 Hz to 20 kHz. </p>
+  <h2>Input</h2>
+  <p>The red audio signal input. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m87">
+  <h1>FilterB</h1>
+  <p>This is a static, non-resonant highpass filter with a slope of 6 dB/octave. </p>
+  <h2>Display Box</h2>
+  <p>Shows the set cut-off frequency. Range: 12 Hz to 20 kHz. </p>
+  <h2>Frequency Knob</h2>
+  <p>Sets the cut-off frequency of the filter. The cut-off frequency is indicated in the info window. Range: 12 Hz to 20 kHz. </p>
+  <h2>Input</h2>
+  <p>The red audio signal input. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m50">
+  <h1>FilterC</h1>
+  <p>This is a static multimode filter with a slope of 12 dB/octave and resonance control. It is a multi-mode filter with three outputs: one highpass, one lowpass and one bandpass.</p>
+  <h2>Freq Display Box</h2>
+  <p>Displays the cut-off frequency in Hz or notes. Range: E-1 to B9 or 10 Hz to 15.8 kHz. Click in the display box to change unit. </p>
+  <h2>Freq Knob</h2>
+  <p>Sets the cut-off frequency of the filter. Range: E-1 to B9 or 10 Hz to 15.8 kHz. </p>
+  <h2>Resonance Display Box</h2>
+  <p>Displays the resonance in ‘units’. Range: 0 to 127 units. </p>
+  <h2>Resonance Knob</h2>
+  <p>This is a function that emphasizes the frequencies that is at, or close to, the set cut-off frequency. If set to 127, the filter starts to self-oscillate and produces a sine wave. Range: 0 to 127 units. </p>
+  <h2>Gc</h2>
+  <p>This is the Gain Compensation parameter. When activated, it will lower the gain of the signal inside the filter if the resonance is increased, something that otherwise will boost the level within the filter. If several sound sources are processed in a filter and the resonance control is raised, clipping of the signal might occur inside the filter. Activating the GC parameter will reduce the levels, to reduce the risk of any unwanted clipping. </p>
+  <h2>Input</h2>
+  <p>The red audio input of the filter module. </p>
+  <h2>Outputs</h2>
+  <p>Three filter characteristics are available at these red outputs. You can use all three at the same time if you like. HP is a Highpass filter, BP is a Bandpass filter and LP is a Lowpass filter. </p>
+  <p>Signals: Bipolar. </p>
+</module>
+<module component-id="m49">
+  <h1>FilterD</h1>
+  <p>This is a dynamic multimode filter with a slope of 12 dB/octave and resonance control. It is a multi-mode filter with three outputs: one highpass, one lowpass and one bandpass. The cut-off frequency can be modulated from an external source. </p>
+  <h2>Freq Display Box</h2>
+  <p>Displays the cut-off frequency in Hz or notes. Range: E-1 to B9 or 10 Hz to 15.8 kHz. Click in the display box to change unit. </p>
+  <h2>Frequency Modulation Input [ATTENUATOR TYPE III]</h2>
+  <p>The blue input for modulating the cut-off frequency from a control source. The modulation amount is determined by the rotary knob next to the input. Read more about the modulation types in “Modulation inputs” on page 32. </p>
+  <h2>Frequency Knob</h2>
+  <p>Sets the initial cut-off frequency of the filter. The cut-off frequency is indicated in the display box. Range: E-1 to B9 or 10 Hz to 15.8 kHz. </p>
+  <h2>KBT</h2>
+  <p>This is a hardwired connection between the cut-off frequency and the keyboard. At the preset value “Key", the keyboard will control the cut-off frequency at a rate of one semitone for each key. Turning clockwise from the center position will increase the tracking, turning counter-clockwise, will decrease it. Off disconnects the keyboard tracking completely. Click on the triangle above the control to reset the keyboard tracking to Key. </p>
+  <h2>Resonance Display Box</h2>
+  <p>Displays the resonance in ‘units’. Range: 0 to 127 units. </p>
+  <h2>Resonance Knob</h2>
+  <p>This is a function that emphasizes the frequencies that is at, or close to, the set cut-off frequency. If set to 127, the filter starts to self-oscillate and produces a sine wave. Range: 0 to 127 units. </p>
+  <h2>Input</h2>
+  <p>The red audio input. </p>
+  <h2>Outputs</h2>
+  <p>Three filter characteristics are available at these red outputs. You can use all three at the same time if you like. HP is a Highpass filter, BP is a Bandpass filter and LP is a Lowpass filter. </p>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m51">
+  <h1>FilterE</h1>
+  <p>This is a dynamic synthesizer filter with a slope of either 12 or 24 dB/octave. It is a multi-mode filter, providing a highpass, a lowpass, a bandpass or a bandreject filter. The cut-off frequency and the resonance can be modulated from external sources. </p>
+  <h2>Frequency Modulation Inputs [ATTENUATOR TYPE III]</h2>
+  <p>The two red inputs for connecting cut-off frequency modulators. The modulation amount is determined by the rotary knobs next to each input. Read more about the modulation types in “Modulation inputs” on page 32. </p>
+  <h2>Freq Display Box</h2>
+  <p>Displays the cut-off (or center in BR mode) frequency in Hz or notes. Range: E-1 to B9 or 10 Hz to 15.8 kHz. Click in the display box to change unit. </p>
+  <h2>Frequency Knob</h2>
+  <p>Sets the initial cut-off (or center in BR mode) frequency of the filter. Range: E-1 to B9 or 10 Hz to 15.8 kHz. </p>
+  <h2>KBT</h2>
+  <p>The connection between the filter cut-off frequency and the keyboard. At the preset value “Key" the keyboard will control the cut-off frequency at a rate of one semitone for each key. Turning clockwise from the center position will increase the tracking, turning counter clockwise, will decrease it. Off disconnects the keyboard tracking completely. Click on the triangle above the control to reset the keyboard tracking to Key. </p>
+  <h2>Filter Selector</h2>
+  <p>Select the filter type with the buttons. (This selector cannot be assigned to a Morph group). HP is a Highpass filter, BP is a Bandpass filter and LP is a Lowpass filter. BR is a Band reject filter. When this filter is selected, the Resonance knob will control the width of the frequency band to be rejected.</p>
+  <h2>Gc</h2>
+  <p>This is the Gain Compensation parameter. When activated, it will lower the gain of the signal inside the filter if the resonance is increased, something that otherwise will boost the level within the filter. If several sound sources are processed in a filter and the resonance control is raised, clipping of the signal might occur inside the filter. Activating the GC parameter will reduce the levels, to reduce the risk of any unwanted clipping. </p>
+  <h2>Resonance Display Box</h2>
+  <p>Displays the resonance in ‘units’. Range: 0 to 127 units. </p>
+  <h2>Res</h2>
+  <p>This is a function that emphasizes the frequencies that is at, or close to, the set cut-off frequency in LP, HP, and BP mode. If set to 127, the filter starts to self-oscillate and produces a sine wave. In BR mode this controls the width of the frequency band to be rejected. Range: 0 to 127 units. </p>
+  <h2>Resonance Modulation Input [TYPE I]</h2>
+  <p>The red input for modulating the resonance from a control source. The modulation amount is determined by the rotary knob next to the input. </p>
+  <h2>Graph</h2>
+  <p>Displays a schematic graph of the selected filter characteristics. The Y-axis represents level and the X-axis the frequency. The horizontal line represents the 0 dB level. </p>
+  <h2>DB/OCT</h2>
+  <p>Select the roll-off slope of the filter, 12 or 24 decibels for each octave. </p>
+  <h2>Input</h2>
+  <p>The red audio input of the filter. </p>
+  <h2>B</h2>
+  <p>Click to bypass the input signal and leave it unaffected. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m92">
+  <h1>FilterF</h1>
+  <p>This is a lowpass filter which simulates classic analog synthesizer filters. The slope is selectable between 12, 18 or 24 dB/octave. The cut-off frequency can be modulated from two external sources. </p>
+  <h2>Frequency Modulation Inputs [ATTENUATOR TYPE III]</h2>
+  <p>Two blue inputs for modulating the cut-off frequency with a control source. The modulation amount is determined by the rotary knobs next to the inputs. Read more about the modulation types in “Modulation inputs” on page 32. </p>
+  <h2>Freq Display Box</h2>
+  <p>Displays the cut-off frequency in Hz or notes. Range: E-1 to B9 or 10 Hz to 15.8 kHz. Click in the display box to change unit. </p>
+  <h2>Frequency Knob</h2>
+  <p>Sets the initial cut-off frequency of the filter. Range: E-1 to B9 or 10 Hz to 15.8 kHz. </p>
+  <h2>KBT</h2>
+  <p>The connection between the filter cut-off frequency and the keyboard. At the preset value “Key" the keyboard will control the cut-off frequency at a rate of one semitone for each key. Turning clockwise from the center position will increase the tracking, turning counter clockwise, will decrease it. Off disconnects the keyboard tracking completely. Click on the triangle above the control to reset the keyboard tracking to Key. </p>
+  <h2>Resonance Display Box</h2>
+  <p>Displays the resonance in ‘units’. Range: 0 to 127 units. </p>
+  <h2>Res</h2>
+  <p>This is a function that emphasizes the frequencies that is at, or close to, the cut-off frequency. If you set the control to 127 the filter will start to self-oscillate and produce a sine wave. Range: 0 to 127 units. </p>
+  <h2>Graph</h2>
+  <p>Displays a schematic graph of the selected filter characteristics. The Y-axis represents level and the X-axis the frequency. The horizontal line represents the 0 dB level. </p>
+  <h2>db/Oct</h2>
+  <p>Select the roll-off slope of the filter, 12, 18 or 24 decibels for each octave. </p>
+  <h2>Input</h2>
+  <p>The red audio input of the filter. </p>
+  <h2>B</h2>
+  <p>Click to bypass the input signal and leave it unaffected. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m45">
+  <h1>VocalFilter</h1>
+  <p>The Vocal Filter module is designed to simulate the vocal tract. You can select between a number of preset vowels and change and modulate them to generate really amazing effects. Waveforms with a lot of overtones, such as sawtooth or pulse waves, are best suited to be used with the Vocal Filter. </p>
+  <h2>RES</h2>
+  <p>This function emphasizes the frequency peaks of the vowels. The more resonance, the more clearly the vowels appear. Click on the green triangle above the rotary knob to reset to a medium value. </p>
+  <h2>Frequ</h2>
+  <p>Sets the initial center frequency offsets of the vowels. The practical result of turning this knob would be like pitch-shifting a sampled voice. Click on the green triangle above the rotary knob to reset to a medium value. </p>
+  <h2>Frequency Modulation Input [ATTENUATOR TYPE II]</h2>
+  <p>The input for modulating the center frequency offset from a control source. The modulation amount is determined by the rotary knob next to the inputs. </p>
+  <h2>Vowel Display Boxes</h2>
+  <p>Displays the three different selected vowels. Presets: A, E, I, O, U, Y, AA, AE, OE. </p>
+  <h2>Vowel Navigator Buttons</h2>
+  <p>Selects the vowels to be used. You can select up to three vowels and navigate between these with the navigator knob (see below). Presets: A, E, I, O, U, Y, AA, AE, OE. </p>
+  <h2>Vowel Modulation Input [ATTENUATOR TYPE I]</h2>
+  <p>The input for modulating the navigation between the selected vowels. The knob next to the input is used for attenuating the input level. </p>
+  <h2>Vowel Navigator Knob</h2>
+  <p>Navigates between the vowels you selected with the vowel selectors. Note that this is a transformation function - not a mix function. </p>
+  <h2>Input</h2>
+  <p>The audio input of the filter module. The knob next to it is used for attenuating the input level. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m108">
+  <h1>Vocoder</h1>
+  <p>The Vocoder module is a 16 band vocoder with the ability to reroute the analysis bands. The basic principle of a vocoder is to filter a synthesizer sound with the help of another sound - a human voice for example. The result when filtering a synth sound with a voice would be a “singing” synthesizer.The actual notes that come out of the vocoder are the notes played on the synthesizer. To reach this effect the analysis frequency spectrum is divided into separate frequency bands, in this case 16. These 16 frequency bands work like 16 bandpass filters, each controlling a defined frequency band of the synthesizer bank. An envelope follower for each band determines the amplitude changes of the modulated sound. </p>
+  
+  <p>With this vocoder module it is possible to reroute the analysis bands to any of the frequency bands of the synthesis bank, creating really interesting frequency combinations. </p>
+  
+  <p>Of course you can use any kind of sound in the analysis bank to shape the synthesizer sound. Some like to use drum sounds to get percussive synth sounds, for example. Feel free to experiment. </p>
+  <h2>Analysis Bank Ctrl Input</h2>
+  <p>Patch the signal you want to use as “modulator” to the red audio signal input on the upper left of the </p>
+  <p>module. </p>
+  <h2>High Frequency Emphasis</h2>
+  <p>Click on the button below the Analysis bank input to emphasize the high frequencies of the analysis signal. This is a very useful function to get a more even frequency response in the modulated sound. </p>
+  <h2>Mon</h2>
+  <p>Click on this button to bypass the modulator (Ctrl) signal to the output. </p>
+  <h2>Graph</h2>
+  <p>This graph shows the routing between the Analysis and Synthesis bands. </p>
+  <h2>Reroute Buttons</h2>
+  <p>Click on the up and down buttons to reroute each of the synthesizer signal’s frequency bands to any of the frequency bands of the Analysis bank. </p>
+  <h2>Presets</h2>
+  <p>Click on the Preset buttons to reroute all Synthesis bands the number of steps indicated on the buttons. </p>
+  <p>The Inv button inverts the band routing, i.e routes the Analysis band 1 to Synthesis band 16 and so on. </p>
+  <p>The Rnd button reroutes all bands completely randomly - great for experiments. </p>
+  <h2>Output Gain</h2>
+  <p>Use this knob to adjust the level of the modulated synthesizer signal. Range: 0.25 to 4 times the input level. Click on the green triangle to leave the signal level unaffected. </p>
+  <h2>Synthesizer Input</h2>
+  <p>The red audio signal input to the lower right is where you patch the synthesizer audio signal. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar </p>
+</module>
+<module component-id="m32">
+  <h1>Filter-Bank</h1>
+  <p>The Filter Bank is a 14-band static filter with attenuation controls for each frequency band. The Filter Bank is very suitable for simulating different kinds of body resonance (formants). It can also be used to filter out a specific frequency range of an external audio signal. For example, you could connect a CD player or similar to the AUDIO IN jacks, and route the signals via the Audio In module to the Filter Bank and filter out kick and snare hits and have them trig different modules in the patch. </p>
+  <h2>Band Attenuator Sliders</h2>
+  <p>Attenuate each filter band with the sliders, or by clicking the up and down arrow buttons that appear when you focus a slider. Above each slider, the center frequency of each band is shown in Hz or kHz. </p>
+  <h2>Presets</h2>
+  <p>Click on Min to get minimum output level (maximum attenuation of all bands), and on Max to get maximum output level (minimum attenuation). </p>
+  <h2>Input</h2>
+  <p>The red audio input. </p>
+  <h2>B</h2>
+  <p>Click on the B button to bypass the input signal and leave it unaffected. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar </p>
+</module>
+<module component-id="m103">
+  <h1>EqMid</h1>
+  <p>EqMid offers parametric equalization with center frequency, gain and bandwidth controls. </p>
+  <h2>Frequency Knob</h2>
+  <p>With the big rotary knob you change the center frequency. Range: 20 Hz to 16 kHz. </p>
+  <h2>Freq Display Box</h2>
+  <p>Displays the center frequency in Hz. Range: 20Hz to 16kHz. </p>
+  <h2>Gain Display Box</h2>
+  <p>Displays the gain in dB. Range -18 to 18dB. </p>
+  <h2>Gain Knob</h2>
+  <p>With the Gain rotary knob you change the gain at the center frequency. Range -18 to 18dB. </p>
+  <h2>Bw Display Box</h2>
+  <p>Displays the bandwidth in octaves. Range 2 to 0.02 octaves. </p>
+  <h2>Bw Knob</h2>
+  <p>Use the BW rotary knob to set the bandwidth around the center frequency. Range 2 to 0.02 octaves. </p>
+  <h2>Graph</h2>
+  <p>Displays a schematic graph of the equalization characteristics. The Y-axis represents level and the X-axis the frequency. The horizontal line in the middle represents the 0dB level. </p>
+  <h2>Input</h2>
+  <p>This is the red audio input of the equalizer. With the rotary knob to the left of the input you can attenuate the input signal [Attenuator Type I]. </p>
+  <h2>B</h2>
+  <p>Press the B button to bypass the equalization and leave the signal unaffected. </p>
+  <h2>Output</h2>
+  <p>The multi-color LED above the output indicates the output level and have the following meaning: Green: normal signal level, Yellow: signal reaching headroom, Red: overload. Signal: Bipolar </p>
+</module>
+<module component-id="m104">
+  <h1>EQShelving</h1>
+  <p>The Hi and Lo Shelving EQ is a treble and bass equalizer with cutoff frequency, gain and Hi/Low selector. </p>
+  <h2>Frequency Knob</h2>
+  <p>With the big rotary knob you change the cut-off frequency. Range: 20Hz to 16kHz. </p>
+  <h2>Freq Display Box</h2>
+  <p>Displays the cut-off frequency in Hz. Range: 20Hz to 16kHz. </p>
+  <h2>Gain Display Box</h2>
+  <p>Displays the gain in dB. Range -18 to 18dB. </p>
+  <h2>Gain Knob</h2>
+  <p>With the Gain rotary knob you change the gain at the cut-off frequency. Range -18 to 18dB. </p>
+  <h2>HI and LO</h2>
+  <p>Select if you want the gain control to affect the lower or upper frequency band. </p>
+  <h2>Graph</h2>
+  <p>Displays a schematic graph of the equalization characteristics. The Y-axis represents level and the X-axis the frequency. The horizontal line in the middle represents the 0 dB level. </p>
+  <h2>Input</h2>
+  <p>This is the red audio input of the equalizer. With the rotary button to the left you can attenuate the input signal [Attenuator Type I]. </p>
+  <h2>Bypass</h2>
+  <p>Press the Bypass button to disable the equalization effect. </p>
+  <h2>Output</h2>
+  <p>The multi-color LED above the output indicates the output level and have the following meaning: Green: normal signal level, Yellow: signal reaching headroom, Red: overload. Signal: Bipolar </p>
+</module>
+<module component-id="m19">
+  <h1>3 Inputs Mixer</h1>
+  <p>This mixer has three inputs and one output. Each input is equipped with an attenuation control. </p>
+  <h2>Inputs</h2>
+  <p>Connect audio or control signals to these red inputs. Attenuate the signals with the corresponding knobs  </p>
+  <p>[Attenuator Type I]. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar. </p>
+  </module>
+<module component-id="m40">
+  <h2>8 Inputs Mixer</h2>
+  <p>This mixer has eight inputs and one output. Each input is equipped with a separate attenuation control. </p>
+  <h2>Inputs</h2>
+  <p>Connect audio or control signals to these red inputs. Attenuate the signals with the corresponding knobs. The preset attenuation value is set to 100 to reduce the risk of distortion [Attenuator Type I]. </p>
+  <h2>-6db</h2>
+  <p>This function attenuates the output signal with -6dB. If you experience distortion when mixing several signals, try activating this function. </p>
+  <h2>Output</h2>
+  <p>The multi-color LED to the left of the output indicates the output level and have the following meaning: Green: normal signal level, Yellow: signal reaching headroom, Red: overload. </p>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m44">
+  <h1>GainControl</h1>
+  <p>This module perform the same functions as a traditional VCA, a voltage controlled amplifier, in a analog system would do. It provides you with modulation control over the amplitude of an incoming signal. It can also function as a ring- and amplitude modulator (see example below). See also the RingMod module </p>
+  <p>on page 164 </p>
+  <h2>Control Input</h2>
+  <p>Connect a modulator to this red input. A signal with a level of 0 units will close the gain control function, a signal with a level of +64 units will open the gain control function completely. A signal with a level of -64 units will invert the polarity of the modulated signal. </p>
+  <h2>Unipolar Button</h2>
+  <p>The Unipolar function changes a bipolar signal at the Control input to a unipolar signal by dividing the signal at the control input by 2 and adding a bias of +32 units (see pictures below). </p>
+  <p>+64 units -64 units  </p>
+  <p>The left picture shows a bipolar control signal, and by clicking the Unipolar button, the signal becomes positive unipolar (the right picture) </p>
+  <h2>Input</h2>
+  <p>Connect the signal to be modulated (the carrier) to this red input. </p>
+  <h2>Output</h2>
+  <p>The output of the Gain control module. Signal: Bipolar. </p>
+</module>
+<module component-id="m18">
+  <h1>X-Fade</h1>
+  <p>This mixer can be modulated by a control signal to produce a crossfade between two incoming signals. </p>
+  <h2>X-Fade Modulation Input [ATTENUATOR TYPE I]</h2>
+  <p>The red modulation input of the X-fade module. Connect a modulator here. The amount of modulation is controlled with the knob. </p>
+  <h2>1/2 Knob</h2>
+  <p>Sets the initial mix of the two signals. If you set the knob towards 1, the initial mix will have more of the signal connected to the number 1 input, if you set it towards 2, the initial mix will have more of the signal connected to the number 2 input. Clicking on the triangle will set the mix to an equal amount of both signals. </p>
+  <h2>Input 1, 2</h2>
+  <p>The red audio inputs. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m47">
+  <h1>Pan</h1>
+  <p>This module takes a signal and places it somewhere in a stereo panorama. </p>
+  <h2>Pan Modulation Input [ATTENUATOR TYPE I]</h2>
+  <p>The red modulation input of the Pan module. Connect a modulator to modulate the position of the signal in the two outputs. The amount of modulation is controlled with the knob. </p>
+  <h2>L/R Knob</h2>
+  <p>Sets the initial pan position. Click on the triangle to reset the initial position to an equal amount of the incoming signal at both the outputs. </p>
+  <h2>Input</h2>
+  <p>The red audio input. </p>
+  <h2>L/R Outputs</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m113">
+  <h1>1To2Fade</h1>
+  <p>This is a fader with one input and two outputs, and a fader rotary knob to fade the input signal between the two outputs. </p>
+  <h2>Fade</h2>
+  <p>With the Fade rotary knob you fade the input signal between the two outputs. In the 12 o’clock position both outputs are silent. </p>
+  <h2>Input</h2>
+  <p>This is the red audio input. </p>
+  <h2>Output 1 and 2</h2>
+  <p>Signal: Bipolar </p>
+</module>
+<module component-id="m114">
+  <h1>2To1Fade</h1>
+  <p>This is a fader with two inputs and one output, and a fader rotary knob to fade between the two input signals. </p>
+  <h2>Fade</h2>
+  <p>With the Fade rotary knob you fade the between the two input signals. In the 12 o’clock position the output is silent. </p>
+  <h2>Input 1 and 2</h2>
+  <p>The two red audio inputs. </p>
+  <h2>Output</h2>
+  <p>This is the red audio signal output. Signal: Bipolar </p>
+</module>
+<module component-id="m111">
+  <h1>LevMult</h1>
+  <p>The Adjustable gain control module is a signal attenuator. </p>
+  <h2>Uni</h2>
+  <p>Select if the control signal should be Unipolar or Bipolar. </p>
+  <h2>Gain Control</h2>
+  <p>Set the gain control signal value with the rotary button. Range: -127 to +127 units or 0 to 127 units if Unipolar is selected. A setting of +127 leaves the input signal unaffected. A negative value in the Bipolar mode results in a 180 degree phase-shift of the output signal. </p>
+  <h2>Display Box</h2>
+  <p>Displays the gain value. Range: -127 to +127 units or 0 to 127 units if Unipolar is selected. </p>
+  <h2>Input</h2>
+  <p>The red audio input. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m112">
+  <h1>LevAdd</h1>
+  <p>The Adjustable offset module can is used to add or subtract an offset (bias) to a signal. </p>
+  <h2>Uni</h2>
+  <p>Select if the control signal should be Unipolar or Bipolar. </p>
+  <h2>Offset Control</h2>
+  <p>Set the offset value with the rotary button. Range: -64 to +64 units or 0 to +64 units if Unipolar is selected. </p>
+  <h2>Display Box</h2>
+  <p>Displays the offset value. Range: -64 to +64 units or 0 to +64 units if Unipolar is selected. </p>
+  <h2>Input</h2>
+  <p>The red audio input. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m76">
+  <h1>OnOff</h1>
+  <p>This is a one input, one output module with an on/off switch, If no signal is patched to the input, the </p>
+  <p>output produces a signal with the value 0 units when the switch is set to Off, and a signal with the value +64 units when switched On. </p>
+  <h2>ON</h2>
+  <p>Selects whether the incoming signal should pass through to the output or not. If no signal is patched to the input, Off (button not depressed) outputs 0 units and On (button depressed) +64 units. </p>
+  <h2>Input</h2>
+  <p>The red audio input. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar, Unipolar or Logic depending on the input signal. </p>
+</module>
+<module component-id="m79">
+  <h1>4-1SWITCH</h1>
+  <p>This module allows you to route an incoming signal from one of the four inputs, to the output. </p>
+  <h2>Inputs</h2>
+  <p>The red audio inputs. You can attenuate the incoming signal with the knobs next to the corresponding input [Attenuator Type I]. </p>
+  <h2>Input Selector</h2>
+  <p>Routes one of the inputs to the output. </p>
+  <h2>M</h2>
+  <p>Mutes the output of the module. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m88">
+  <h1>1-4Switch</h1>
+  <p>This module allows you to route an incoming signal to one of the four outputs. </p>
+  <h2>Input</h2>
+  <p>The red audio input with attenuation control [Attenuator Type I]. </p>
+  <h2>Output Selector</h2>
+  <p>Routes the input to one of the four outputs. </p>
+  <h2>M</h2>
+  <p>Mutes the outputs of the module. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m81">
+  <h1>Amplifier</h1>
+  <p>This module can amplify or attenuate a signal. </p>
+  <h2>Amplification Knob</h2>
+  <p>Select the desired amplification/attenuation with the slider. Any value above 1.0 amplifies the signal, any value below attenuates it. Range: 0.25 to 4.0 times the input level. </p>
+  <h2>Display Box</h2>
+  <p>Displays the attenuation or amplification. Range: x0.25 to x4.0 </p>
+  <h2>Input</h2>
+  <p>The red audio input. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m61">
+  <h1>Clip</h1>
+  <p>This module can produce digital distortion by decreasing the clip level limit(s) below the normal headroom. </p>
+  <h2>Sym</h2>
+  <p>Toggle switch for the symmetrical mode. If this is set to Off (not depressed), only the positive peaks of a signal will be clipped. If this is set to On (depressed), both the positive and the negative peaks of a signal will be clipped. </p>
+  <h2>Modulation Input [ATTENUATOR TYPE I]</h2>
+  <p>Connect a modulator to this red input. The amount of modulation is attenuated with the knob. </p>
+  <h2>Clip</h2>
+  <p>Sets the initial clip limit(s). </p>
+  <h2>Graph</h2>
+  <p>Displays the initial clip limit(s) graphically. The Y-axis represents the output signal values, and the X-axis the input signal values. </p>
+  <h2>In</h2>
+  <p>The red audio input. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m62">
+  <h1>Overdrive</h1>
+  <p>This module distorts an audio signal by amplifying the input signal and force it to hit the headroom. The special amplification characteristics makes this module produce a warm distortion. </p>
+  <h2>Modulation Input [ATTENUATOR TYPE I]</h2>
+  <p>Connect a modulator to this blue input. The amount of modulation is attenuated with the knob. </p>
+  <h2>Overdrive</h2>
+  <p>Sets the initial overdrive amount. </p>
+  <h2>Graph</h2>
+  <p>Displays the initial overdrive amount graphically. The Y-axis represents the output signal values, and the X-axis the input signal values. </p>
+  <h2>In</h2>
+  <p>The red audio input. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m74">
+  <h1>Wavewrapper</h1>
+  <p>This module amplifies a signal until it hits the headroom. Instead of clipping the signal, it folds down, “wraps around". The waveform of the signal will be heavily transformed, with a lot of new overtones, which gives it distortion- or FM-like characteristics. </p>
+  <h2>Modulation Input [ATTENUATOR TYPE I]</h2>
+  <p>Connect a modulator to this red input. The amount of modulation is attenuated with the knob. </p>
+  <h2>Wrap</h2>
+  <p>Sets the initial wrap amount. </p>
+  <h2>Graph</h2>
+  <p>Displays the initial wrap amount graphically. The Y-axis represents the output signal values, and the X axis the input signal values. </p>
+  <h2>In</h2>
+  <p>The red audio input. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m54">
+  <h1>Quantizer</h1>
+  <p>The Quantizer module modifies an incoming signal by changing its bit resolution to a selected value. This module can e.g. transform a smooth envelope to a jagged curve, or quantize a clean, audio signal down to a dirty 7 bit signal. </p>
+  <h2>Display Box</h2>
+  <p>Displays the selected bit resolution. Range: Off, 12 to 1 bits. </p>
+  <h2>Bits</h2>
+  <p>Select a bit resolution value with the buttons. Range: Off, 12 to 1 bits. Off leaves the signal unmodified. </p>
+  <h2>In</h2>
+  <p>The red audio input. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m78">
+  <h1>Delay</h1>
+  <p>The Delay module can delay an audio signal. The delay time can be modulated from an external source. This allows you to do e.g. flanger and phaser effects. </p>
+  <h2>Modulation Input [ATTENUATOR TYPE I]</h2>
+  <p>You can modulate the delay time with a modulation source connect to this blue input. The amount of modulation is attenuated with the knob. </p>
+  <h2>Display Box</h2>
+  <p>Displays the initially set delay time. Range: 0 to 2.65 ms. </p>
+  <h2>TIME Knob</h2>
+  <p>Set the delay time with the slider or by clicking on the arrow buttons on either side. Range: 0 to 2.65ms. </p>
+  <h2>In</h2>
+  <p>The red audio input. </p>
+  <h2>2.65ms Output</h2>
+  <p>The fixed delay-time output of the Delay module with the maximum possible delay time, 2.65 ms. </p>
+  <p>Signal: Bipolar. </p>
+  <h2>Output</h2>
+  <p>The variable delay time output. </p>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m53">
+  <h1>Sample&amp;Hold</h1>
+  <p>This module takes samples of the values of an incoming signal. The sampling occurs every time a signal shifting from 0 units or below to anything above 0 units appears at the yellow logic input. Inbetween these trig signals, the module transmits the value of the latest sample to the output. </p>
+  <h2>Trig Input</h2>
+  <p>Connect the signal to activate the sampling process to this yellow input. </p>
+  <h2>Input</h2>
+  <p>The red audio input. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+  <p>To create the traditional Sample &amp; Hold or random LFO synthesizer effect, connect the output of a white noise generator module to the input of the Sample &amp; Hold module and trig the Sample &amp; Hold module with an LFO. Connect the output of the Sample &amp; Hold module to a Pitch modulation input of an oscillator according to the figure below: </p>
+</module>
+<module component-id="m82">
+  <h1>Diode</h1>
+  <p>The Diode Processing module can change a bipolar signal to a unipolar signal. You can choose whether you want to discard of any negative input levels, or if you want to transform these to positive levels. </p>
+  <h2>Selector</h2>
+  <p>Sets the operation of the module. The leftmost position leaves the signal unchanged (bypass), the middle (Half) position discards of any negative input signal levels and the right (Full) position transforms (mirrors) any negative signal levels to positive levels. </p>
+  <h2>In</h2>
+  <p>The red audio input. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar or Unipolar. </p>
+</module>
+<module component-id="m94">
+  <h1>Stereo Chorus</h1>
+  <p>This module simulates the effect of multiple stereo voices. </p>
+  <h2>Detune</h2>
+  <p>Sets the detune depth of the chorus effect. </p>
+  <h2>Amount</h2>
+  <p>Adjusts the balance between the dry signal and the wet “chorused” signal. </p>
+  <h2>In</h2>
+  <p>The red audio input. </p>
+  <h2>B</h2>
+  <p>Click to bypass the signal and leave it unaffected. </p>
+  <h2>L, R Outputs</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m102">
+  <h1>Phaser</h1>
+  <p>This is a 14 pole phaser with peak spread control and adjustable feedback. It features six allpass filters which displace the phase 180 degrees each. It is possible to select the number of allpass filters (1-6) to be used, giving from one to six peak resonance frequencies. </p>
+  <h2>Rate Display Box</h2>
+  <p>Displays the internal LFO rate in Hz or seconds. Range: 62.9 s to 24.4 Hz. </p>
+  <h2>Rate</h2>
+  <p>With the Rate knob you set the rate of the built-in LFO. Range: 62.9 s/cycle to 24.4 Hz. </p>
+  <h2>Depth</h2>
+  <p>With the Depth rotary knob you set the LFO depth. A high depth amount results in greater changes of the phaser effect. </p>
+  <h2>LFO</h2>
+  <p>Below the Depth knob is the LFO on/off button. Use it to switch on and off the LFO. </p>
+  <h2>Center Freq Display Box</h2>
+  <p>Displays the set center frequency in Hz. Range 100 Hz to 16 kHz. </p>
+  <h2>Center Frequ</h2>
+  <p>With the big Center Freq rotary knob you set the center frequency. Range 100 Hz to 16 kHz. </p>
+  <h2>Center Freq Modulation Input [ATTENUATOR TYPE I]</h2>
+  <p>The center frequency can be controlled externally using the blue control signal input and the attenuator. </p>
+  <h2>FeedBk</h2>
+  <p>With the Feedback rotary knob you set the phaser feedback, i.e the feedback to the allpass filters. You can have a negative or positive feedback. At the 12 o’clock position feedback is zero. Click on the green triangle above the knob to set the feedback to 0. </p>
+  <h2>Peaks</h2>
+  <p>By clicking on the up and down arrow buttons you select the number of resonance peaks (allpass filters). 1 to 6 peaks can be selected. </p>
+  <h2>Graph</h2>
+  <p>Displays the selected phaser characteristics graphically. The Y-axis represents level and the X-axis the frequency. </p>
+  <h2>Spread</h2>
+  <p>With the Spread rotary knob you set the distance between the peaks. </p>
+  <h2>Spread Modulation Input [ATTENUATOR TYPE I]</h2>
+  <p>The peak distance can be modulated from an external source using the blue control signal input and the level attenuator below the Spread knob. </p>
+  <h2>Input</h2>
+  <p>To the bottom right of the module is the red audio input together with an input level attenuator [Attenuator Type I]. </p>
+  <h2>B</h2>
+  <p>Click to bypass the signal and leave it unaffected. </p>
+  <h2>Output</h2>
+  <p>The audio signal output. The LED above indicates the output level and have the following meaning: </p>
+  <p>Green: normal signal level, Yellow: signal reaching headroom, Red: overload. </p>
+  <p>Signal: Bipolar </p>
+</module>
+<module component-id="m57">
+  <h1>InvLevShift</h1>
+  <p>This is a combined level shifter and inverter module. You can use it either to change polarity of the incoming signal, or change it from a bipolar to a unipolar signal (positive or negative), or both. </p>
+  <h2>Inv</h2>
+  <p>Click the Inv button to change polarity of the incoming signal. This button can be used in combination with any of the other three buttons to the right. </p>
+  <h2>Bipolar</h2>
+  <p>Click the Bipolar button (the leftmost) if you want to keep the incoming signal bipolar. Use this button in combination with the Inv button to just change polarity of the signal. </p>
+  <h2>Unipolar, Negative</h2>
+  <p>Press this button (in the middle) to change the incoming signal from bipolar to a negative unipolar signal. This function divides the signal by 2 and subtracts a bias of 32 units. If Inv is pressed, the polarity will be inverted but the signal will still be negative unipolar. </p>
+  <h2>Unipolar, Positive</h2>
+  <p>Press this button (the rightmost) to change the incoming signal from bipolar to a positive unipolar signal. This function divides the signal by 2 and adds a bias of 32 units. If Inv is pressed, the polarity will be inverted but the signal will still be positive unipolar. </p>
+  <h2>Input</h2>
+  <p>The red audio input. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar or Unipolar (Negative or Positive) </p>
+</module>
+<module component-id="m83">
+  <h1>Shaper</h1>
+  <p>This module transforms a signal using one of five different amplification/attenuation characteristics. The curves on the buttons describes the transformation functions, i.e the amplification/attenuation of each value of the input signal. The middle button can be considered as a “bypass” function, i.e the amplification/attenuation is 1:1 on all input signal values. </p>
+  <h2>Shape Buttons</h2>
+  <p>Set the desired transformation characteristics with the selectors, Log2, Log1, Linear, Exp1 or Exp2. </p>
+  <h2>In</h2>
+  <p>The red audio input. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+  <p>• As mentioned, the Shaper affects each single value of an incoming signal, not the total level. To show this more clearly, take a look at the figures below. The X-axis in the diagram represents the incoming signal values, and the Y-axis the output values. </p>
+  <p>Output value </p>
+  <p>Input value </p>
+  <p>If a sine wave is sent to the input of the Shaper, and the Log2 curve is selected, the resulting wave on the output would be more like a square wave. </p>
+  <p>Shaper module </p>
+  <p>In              Out</p>
+  <p>Log2 </p>
+  <p>If the Exp2 curve is selected, a sine wave on the input would result in a triangle-like wave on the output. </p>
+  <p>Shaper module </p>
+  <p>In              Out</p>
+  <p>Exp2 </p>
+</module>
+<module component-id="m21">
+  <h1>Compressor</h1>
+  <p>The Compressor module is a combined stereo compressor and limiter. The theory behind a compressor is to compress (decrease) the dynamic range of a signal with high dynamic range. The compressor decreases strong signals and increases weak signals according to the module settings. The practical result of a compressed signal is that the volume is more even. </p>
+  <h2>Input L, R</h2>
+  <p>The red stereo audio inputs. </p>
+  <h2>Side Chain, ACT, MON</h2>
+  <p>The Side Chain input is used for an external audio signal to control the compressor. The Side Chain signal will not be mixed with the other input signals, it will just be used to control the compressor. Activate the Side Chain function by pressing the Act button. If you want to listen to the Side Chain signal alone, press the Mon button. </p>
+  <h2>Graph</h2>
+  <p>Shows the selected compression characteristics graphically. The Y-axis represents the output values and the X-axis the input values. The diagonal line represents 1:1 amplification. The cross hair indicates the set reference level (se explanation below). </p>
+  <h2>Gain Reduction Indicator</h2>
+  <p>This LED indicator shows the gain reduction of the sum of the left and right channels in dB. </p>
+  <h2>Lim Active</h2>
+  <p>This LED is lit when the limiter is active. </p>
+  <h2>Attack</h2>
+  <p>With the Attack rotary knob you set the response time of the compressor, i.e the time between input signal above the Threshold level and compressor activation. Range: Fast (0.5 ms) to 767 ms. </p>
+  <h2>Release</h2>
+  <p>With the Release rotary knob you set the release time, i.e the time it takes for the compressor to return to the original input level. Range: 125 ms to 10.2 s. </p>
+  <h2>Thresh.</h2>
+  <p>With the Threshold rotary knob you set the threshold above which compression is activated, i.e the minimum input value to activate the compression. Range: -30 to 11 dB and Off. </p>
+  <h2>Ratio</h2>
+  <p>With the Ratio rotary knob you set the compression ratio above the set Threshold level. 1.0:1 means no compression and 80:1 maximum compression. Range: 1.0:1 to 80:1. </p>
+  <h2>Ref Lvl</h2>
+  <p>With the Ref Level rotary knob you set the compression reference level. This is the level that the signals will be compressed towards. The higher the Ref Level, the stronger the output signal(s). Range: -30 to 12 dB. </p>
+  <h2>Limiter</h2>
+  <p>With the Limiter rotary knob you can set a maximum output level. If set lower than the Ref Level, it will decrease the output level to the Limiter value. Range: -30 to 11 dB and Off. </p>
+  <h2>B</h2>
+  <p>Press this button to deactivate the compressor effect. </p>
+  <h2>Output L, R</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m105">
+  <h1>Expander</h1>
+  <p>The Expander module is a combined stereo expander and gate. The theory behind an expander is to increase the dynamic range of a signal with low dynamic range. The expander does not affect strong signals but decreases weak signals according to the settings. Expanders are often used for noise reduction. </p>
+  <h2>Input L, R</h2>
+  <p>The red stereo audio inputs. </p>
+  <h2>Side Chain, ACT, MON</h2>
+  <p>The Side Chain input is used for an external audio signal to control the expander. The Side Chain signal will not be mixed with the other input signals, it will just be used to control the expander. Activate the Side Chain function by pressing the Act button. If you want to listen to the Side Chain signal, press the Mon button. </p>
+  <h2>Graph</h2>
+  <p>Shows the selected expansion characteristics graphically. The Y-axis represents the output values and the X-axis the input values. The broken diagonal line represents 1:1 amplification. </p>
+  <h2>Gain Reduction Indicator</h2>
+  <p>This LED chain shows the gain reduction of the sum of the left and right channels in dB. </p>
+  
+  <h2>Gate Active</h2>
+  <p>This LED is lit when the gate is active. </p>
+  <h2>Attack</h2>
+  <p>With the Attack rotary knob you set the response time of the expander, i.e the time between input signal below the Threshold level and expander activation. Range: Fast (0.5 ms) to 767 ms. </p>
+  <h2>Release</h2>
+  <p>With the Release rotary knob you set the release time, i.e the time it takes for the expander to return to the original input level. Range: 125 ms to 10.2 s. </p>
+  <h2>Thresh.</h2>
+  <p>With the Threshold rotary knob you set the threshold below which expansion is activated, i.e the maximum input value to activate the expansion. Range: Off and -83 to 0 dB. </p>
+  <h2>Ratio</h2>
+  <p>With the Ratio rotary knob you set the expansion ratio below the set Threshold level. 1:1.0 means no expansion and 1:80 maximum expansion. Range: 1:1.0 to 1:80. </p>
+  <h2>Gate</h2>
+  <p>With the Gate rotary knob you set the threshold below which gating is activated, i.e the maximum input value to activate gating. Range: Off and -83 to -12 dB </p>
+  <h2>Hold</h2>
+  <p>With the Hold rotary knob you set the gate hold time. This is used to avoid that fluctuating signals open and close the gate too often. Range: Off and 4 to 508 ms. </p>
+  <h2>B</h2>
+  <p>Press this button to deactivate the expander effect. </p>
+  <h2>Output L, R</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m117">
+  <h1>RingMod</h1>
+  <p>The Ring/Amplitude modulator can be used to new overtones in a sound. The module has a function which lets you transform the signal gradually from unmodified, via amplitude- to ring modulation. </p>
+  <h2>Mod Depth Input [ATTENUATOR TYPE I]</h2>
+  <p>You can modulate the AM/RM depth with a modulation source connect to this input. The amount of modulation can be attenuated with the knob.</p>
+  <h2>0/AM/RM</h2>
+  <p>Set the modulation amount with this rotary knob. In the 12 o’clock position you get maximum amplitude modulation, and past this position, ring modulation occurs. </p>
+  <h2>Mod</h2>
+  <p>Patch the modulator (oscillator or other sound generator) to this input. </p>
+  <h2>In</h2>
+  <p>Patch the carrier (oscillator or other sound generator) to this input </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+  <p>• To illustrate what ring- and amplitude modulation actually does to a sound, we have created an example with three sine waves, one carrier and two different modulators (Ring and Amplitude). The graphs </p>
+  <p>to the left show the amplitude as a function of time, and to the right the amplitude as a function of the </p>
+  <p>frequency. </p>
+  <p>amplitude                                  amplitude</p>
+  
+  
+  <p>As you can see in the figures above, the main practical difference between amplitude- and ring modulation is the sideband amplitudes and the appearance of the carrier wave in the frequency spectrum. Another difference is that the resulting ring modulation wave phase-shifts 180 degrees every half modulator </p>
+  <p>period. </p>
+  <p>If more complex waveforms are used for amplitude- or ring modulation, sidebands will be generated for </p>
+  <p>each partial of the wave. </p>
+</module>
+<module component-id="m118">
+  <h1>Digitizer</h1>
+  <p>The Digitizer module continuously samples an incoming signal at a selectable sample rate and bit resolution. The module can e.g. sample a clean audio signal and transform it down to a dirty 8 bit, 5 kHz signal. Great for “low-fi” effects with lots of aliasing. </p>
+  <h2>Quant Off</h2>
+  <p>Clicking this button leaves the signal quantization unmodified. </p>
+  <h2>Bits Display Box</h2>
+  <p>Displays the bit resolution. Range: 1 to 12 bits. </p>
+  <h2>Bits</h2>
+  <p>Select the bit resolution with the arrow buttons. Range: 1 to 12 bits. </p>
+  <h2>Sample Display Box</h2>
+  <p>Displays selected initial sample rate in Hz. Range: 32.70 Hz to 50.18 kHz. </p>
+  <h2>Sample OFF</h2>
+  <p>Clicking this button disables the sample rate conversion and leaves the signal at full audio bandwidth. </p>
+  <h2>Sample Rate Modulation Input [ATTENUATOR TYPE I]</h2>
+  <p>You can modulate the sample rate from a modulation source patched to this input. Attenuate the input signal with the knob. </p>
+  <h2>Rate</h2>
+  <p>Set desired sample rate in Hz. Range: 32.70 Hz to 50.18 kHz. </p>
+  <h2>In</h2>
+  <p>The red audio input. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m43">
+  <h1>Constant</h1>
+  <p>This module produces a control signal at a selectable value. </p>
+  <h2>Uni</h2>
+  <p>Selects whether to send unipolar or bipolar signals. In bipolar mode (button not depressed) you can send from -64 to +64 units in increments of 1 unit. In unipolar mode (button depressed) you can send from 0 to +64 units in increments of 0.5 units. </p>
+  <h2>Display Box</h2>
+  <p>Displays set control signal value. Range: 0 to +64 units or -64 to +64 units. </p>
+  <h2>Control Signal Knob</h2>
+  <p>Set the control signal value with the knob. Range: 0 to +64 units or -64 to +64 units. </p>
+  <h2>Output</h2>
+  <p>Signal: Unipolar or Bipolar. </p>
+</module>
+<module component-id="m39">
+  <h1>Smooth</h1>
+  <p>The Smooth module can smooth out transitions in control signals. Set the time it should take for the </p>
+  <p>module to gradually output the input signal level after a transition. An application could be to input a logic signal, and smooth out its “sharp” edges. </p>
+  <h2>Display Box</h2>
+  <p>Displays set smooth time. Range: 0.32 to 318 ms. </p>
+  <h2>Time Knob</h2>
+  <p>Set the time it should take for the module to smooth out the transitions. Range: 0.32 to 318 ms. </p>
+  <h2>Input</h2>
+  <p>The blue control signal input. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m48">
+  <h1>PortamentoA</h1>
+  <p>This module can provide a smooth, gliding transition between the values of a incoming control signal. The transition is activated by a high logic signal at the On input. </p>
+  <h2>Time</h2>
+  <p>Set the transition (glide) time with the slider. Range: 5.3 to 1355 ms. </p>
+  <h2>In</h2>
+  <p>The blue input of the PortamentoA module. </p>
+  <h2>On</h2>
+  <p>Patch a high logic signal here to activate the gliding transition between the input signal levels. If no connection is made, the portamento will be constantly active. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m16">
+  <h1>PortamentoB</h1>
+  <p>This module can provide a smooth, gliding transition between the values of a control signal. The transition can be temporarily interrupted by a high logic signal at the Jmp input. </p>
+  <h2>Time</h2>
+  <p>Set the transition (glide) time with the knob. Range: 5.3 to 1355 ms. </p>
+  <h2>Jmp</h2>
+  <p>Patch a high logic trig signal to this yellow input to temporarily interrupt the portamento transition, leaving the signal unaffected. If no connection is made, the portamento will be constantly active. </p>
+  <h2>In</h2>
+  <p>The blue input of the PortamentoB module. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar. </p>
+  <p>• To make a legato introduced portamento, patch the Patch gate from the Keyboard Patch module to </p>
+  <p>the Jmp input of the Portamento module. Make sure that the KBT function is turned off on oscillators that you are using. Patch the Note output from the Keyboard module to the input of the Portamento module, and from the output of the Portamento module to the pitch-mod input of the oscillators that you wish to control with the keyboard. Set a desired portamento time with the slider and activate the portamento by playing the keyboard in a legato fashion. </p>
+</module>
+<module component-id="m72">
+  <h1>NoteScaler</h1>
+  <p>This module works like a control signal attenuator. You set the output peak-to-peak limits in semitones. This could be useful if you want to “tune" the output from a controller. The Note Scaler works with either uni- or bipolar signals.</p>
+  <h2>Display Box</h2>
+  <p>Displays the note range limits. Useful musical intervals will be indicated in the parenthesis (octaves, fifths etc.). Range: 0 to +/-64 semitones. Note that for the display box to show the correct limits, it is assumed that the input signal uses the full range -64 to +64 semitones. </p>
+  <h2>Range Knob</h2>
+  <p>Set the semitone range with the slider. Range: 0 to +/-64 semitones. </p>
+  <h2>In</h2>
+  <p>The blue control signal input. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m75">
+  <h1>NoteQuant</h1>
+  <p>This module will quantize the values of a continuous control signal to produce discrete, semitone steps. The total range of the incoming signal can be attenuated at the input. </p>
+  <h2>Range Display Box</h2>
+  <p>Displays the note range. Range: 0 to +/-64 semitones. Note that for the display box to show the correct limits, it is assumed that the input signal uses the full range -64 to +64 semitones. </p>
+  <h2>Range Knob</h2>
+  <p>Set the signal range with the knob. </p>
+  <h2>Notes Display Box</h2>
+  <p>Displays the selected quantization grid (interval) in semitones. Range: Off, 1-127. </p>
+  <h2>Notes</h2>
+  <p>Set the desired quantization grid (interval), in semitones, with the buttons. Range: Off and 1 to 127 semitones. </p>
+  <h2>In</h2>
+  <p>The blue control signal input. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m98">
+  <h1>KeyQuant</h1>
+  <p>This module quantizes the values of a continuous control signal and generates note values according to a user-defined key. It is great for arpeggio-like effects. </p>
+  <h2>Notes</h2>
+  <p>Set the desired key by clicking the notes you want to quantize to. The note interval for the shown octave is automatically duplicated across the whole key Range. </p>
+  <h2>Range Display Box</h2>
+  <p>Displays the set key range. For the display to show the correct note value, it is assumed that the input signal uses its whole dynamic range (+/- 64 units). </p>
+  <h2>Range Knob</h2>
+  <p>Set the key range in semitones. Range +/- 64 semitones. </p>
+  <h2>Cont</h2>
+  <p>Click this button to force the module to “split up” the key quantization grid in equally big sections per octave. This makes it easier to output the selected notes at a steady rate when using a linear control signal. We have selected the notes input values C#, G# and A to quantize to in every octave. We do not use the Cont function. As you can see, the quantization will be to the closest output notes matching note. Here we have activated the input values Cont function. As you can see, the input signal will be quantized to the selected notes in equal sections, per octave, across the selected output notes range. </p>
+  <h2>In</h2>
+  <p>The Range control signal input. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+  
+  <p>The example below shows the principle for creating a simple arpeggiator. </p>
+  <p>LFO A is set to generate a triangle wave, since this signal has linear, symmetrical ramps. This guarantees even change of control values over time. We have pressed four Note buttons and selected a Range of +/-32 semitones on the KeyQuant module. The output signal from the KeyQuant module is routed to one of the Pitch inputs of the Osc A module. The Pitch mod attenuator of the Osc A module is set to 127 to ensure correct semitone intervals. </p>
+</module>
+<module component-id="m22">
+  <h1>PartialGen</h1>
+  <p>This module generates a control signal that will transpose an OSC to one of its harmonic partials. The range of the partial generator is 0 to +/- 64 partials in steps of 0.5 partials. Note that the practical limit of Nord Modular is +/- 32 partials. If the range is set above +/- 32 partials, the oscillator will remain on its 32nd partial until the control signal amplitude has decreased below +/- 32 partials. </p>
+  <h2>Range Display Box</h2>
+  <p>Displays the control signal range set with the attenuator knob. For the display to show the correct range, it is assumed that the input signal uses its whole dynamic range (+/- 64 units). Values exceeding +/- 32 partials are shown with an asterisk, indicating that the practical output limit is exceeded. </p>
+  <h2>Range Knob</h2>
+  <p>Set the control signal range. Range +/- 64 units. </p>
+  <h2>Input</h2>
+  <p>The blue control signal input. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m66">
+  <h1>ControlMixer</h1>
+  <p>This is a mixer for control signals. You can select between linear and exponential attenuator characteristics to better suit your modulation needs. It can also invert the polarity of an incoming signal. </p>
+  <h2>Lin</h2>
+  <p>Switch between linear [Type I] and exponential [Type II] characteristics for the two attenuators. See “Mod-amount knobs (attenuators)” on page 32 for more info. </p>
+  <h2>Inv Switches</h2>
+  <p>Inverts the polarity of the incoming control signal. </p>
+  <h2>Inputs and KnobS</h2>
+  <p>Patch signals to these two blue inputs. You can attenuate the signal with the corresponding knob. </p>
+  <h2>Output</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m115">
+  <h1>NoteVelScal</h1>
+  <p>This is a note and velocity scaler for control signals. You can use it to produce control signals based on input note and velocity values. You can set a break point key and different amplification/attenuation slopes for the two key sections. This module is very suitable for controlling the amplitude in modules featuring amplitude modulation input(s). </p>
+  <h2>Vel</h2>
+  <p>Patch this input to e.g. the velocity output of any of the Input modules (Keyboard voice or Keyboard Patch). </p>
+  <h2>Note</h2>
+  <p>Patch this input to e.g. the note output of any of the Input modules (Keyboard voice or Keyboard Patch). </p>
+  <h2>Vel Sens [ATTENUATOR TYPE I]</h2>
+  <p>With this rotary knob you set how much the input velocity should affect the output value. If set to min (0) the velocity output title is always 64 units. If set to max (127) the output can vary between 0 and 85 units. If set to max (127), a velocity input of 48 units results in an output value of 64. </p>
+  <h2>L Gain</h2>
+  <p>Set the amplification/attenuation slope for the lower key section with the knob. The value is displayed in the corresponding display box. Range: +/-24 dB per octave. </p>
+  <h2>BrkPnt</h2>
+  <p>Set the break point key. The value is displayed in the corresponding display box. Range: C-1 to G9. </p>
+  <h2>R Gain</h2>
+  <p>Set the amplification/attenuation slope for the upper key section with the knob. The value is displayed in the corresponding display box. Range: +/-24 dB per octave. </p>
+  <h2>Graph</h2>
+  <p>Displays the two gain slopes and the break point graphically. The Y-axis represents the output level (logarithmic) and the X-axis the entire note range (C-1 to G9). the horizontal line represents the +64 units (0 dB) output level. See figure below for further explanation. </p>
+  <h2>Output</h2>
+  <p>The output value is the combined result of the note and velocity input values. </p>
+  <p>Signal: Bipolar. </p>
+  <p>• The figures below illustrate the output signals for different Gain and Velocity Sensitivity settings. </p>
+  <p>Figure 1. Velocity sensitivity is </p>
+  <p>set to zero, which means that note </p>
+  <p>values affect the output according to the set Gains, beginning at </p>
+  <p>the offset 64 units (0 dB) at the </p>
+  <p>break point. </p>
+  <p>Figure 2. Velocity sensitivity is </p>
+  <p>increased, which means that note </p>
+  <p>values affect the output according to the Gains, but the offset has </p>
+  <p>now become a velocity range. </p>
+  <p>The velocity range is controlled </p>
+  <p>with the Vel Sens knob. </p>
+</module>
+<module component-id="m36">
+  <h1>PosEdgeDelay</h1>
+  <p>This module will delay the positive edge of a logic signal. Set the delay time with the slider. The negative edge of the logic signal will not be affected. </p>
+  <h2>Display Box</h2>
+  <p>Displays selected delay time. Range: 1.0 ms to 18 s. </p>
+  <h2>TIME Knob</h2>
+  <p>Set the desired delay time with the knob. The module will not transmit a delayed positive edge if the incoming signal switch to zero before the delay time has elapsed. Range: 1.0 ms to 18 s. </p>
+  <h2>Input</h2>
+  <p>The yellow input of the module. Any signal changing from 0 units or below to anything above 0 units will activate the delay and then produce a high logic output signal. </p>
+  <h2>Output</h2>
+  <p>Signal: Logic. </p>
+</module>
+<module component-id="m64">
+  <h1>NegEdgeDelay</h1>
+  <p>This module will delay the negative edge of a logic signal. Set the delay time with the slider. The positive edge of the logic signal will not be affected. </p>
+  <h2>Display Box</h2>
+  <p>Displays selected delay time. Range: 1.0 ms to 18 s. </p>
+  <h2>Time Knob</h2>
+  <p>Set the delay time with the knob. The range is from 1.0 milliseconds to 18 seconds. If the module receives a new positive edge before it has completed a delay cycle, the module will simply extend the duration of the high level signal with the time set with the knob. </p>
+  <h2>Input</h2>
+  <p>The yellow input of the module. Any signal changing from 0 units or below to anything above 0 units will generate a high logic output signal. When the input signal switches back to 0 units, the delay time activated. </p>
+  <h2>Output</h2>
+  <p>Signal: Logic. </p>
+</module>
+<module component-id="m38">
+  <h1>Pulse</h1>
+  <p>This module can use a signal that increases from 0 units to anything greater than 0 units, to produce a high logic signal. You set the duration of the generated high logic signal with the slider. </p>
+  <h2>Display Box</h2>
+  <p>Displays selected pulse time. Range: 1.0 ms to 18 s. </p>
+  <h2>Time Knob</h2>
+  <p>Set the duration of the produced high logic signal with the knob. If the module receives another level change, from 0 units to anything greater than 0 units during the duration of the produced high signal, it will extend the duration, with the value set with the knob. Range: 1.0 ms to 18 s. </p>
+  <h2>Input</h2>
+  <p>The yellow input of the module. Any signal changing from 0 units or below to anything above 0 units will generate a high logic output pulse. </p>
+  <h2>Output</h2>
+  <p>Signal: Logic. </p>
+</module>
+<module component-id="m37">
+  <h1>LogicDelay</h1>
+  <p>This module delays a signal that increases from 0 units to anything greater than 0 units, and produces a high logic output signal. The cycle length of the input signal is unaffected. </p>
+  <h2>Display Box</h2>
+  <p>Displays selected pulse delay time. Range: 1.0 ms to 18 s. </p>
+  <h2>Time Knob</h2>
+  <p>Set the pulse delay time with the knob. Range: 1.0 ms to 18 s. </p>
+  <h2>Input</h2>
+  <p>The yellow input of the module. Any signal changing from 0 units or below to anything above 0 units will generate a high logic output signal after the set delay time. When the input signal switches back to 0 units, the output generates a low logic signal after the set delay time. </p>
+  <h2>Output</h2>
+  <p>Signal: Logic. </p>
+</module>
+<module component-id="m70">
+  <h1>LogicInv</h1>
+  <p>The Logic Inverter module produces a logic low or high signal depending on the input value. When an incoming signal is between +1 and +64 units, the module transmits a low logic signal. When an incoming signal is between 0 and -64 units it transmits a logic high signal. </p>
+  <h2>Input</h2>
+  <p>When an incoming signal is between +1 and +64 units, the module transmits a low logic signal on the output. When an incoming signal is between 0 and -64 units it transmits a logic high signal. </p>
+  <h2>Output</h2>
+  <p>Signal: Logic. </p>
+</module>
+<module component-id="m73">
+  <h1>LogicProc</h1>
+  <p>This Logic Processor module transmits a high logic signal whenever any incoming signals meet a condition set by you. The input signals are considered “high” at any value equal to, or above, +1 unit. The transmitted logic signal will be high for as long as the incoming signals meet the condition. </p>
+  <h2>Condition Buttons</h2>
+  <p>AND produces a high logic signal when the two incoming signals, each with a level greater than 0 units, is present at the two inputs at the same time. </p>
+  <p>OR produces a high logic signal if at least one signal, with a level greater than 0 units, appears at the input(s). </p>
+  <p>XOR produces a high logic signal when only one signal, with a level greater than 0 units, appears at one of the inputs. </p>
+  <h2>Inputs</h2>
+  <p>The two yellow inputs of the Logic processor module. </p>
+  <h2>Output</h2>
+  <p>Signal: Logic. </p>
+</module>
+<module component-id="m59">
+  <h1>CompareLev</h1>
+  <p>This module produces a high logic signal by comparing a control signal level to a level limit set by you. If the value of a signal appearing at the input equals, or is greater than the value set in the window, the module produces a high logic signal. The logic signal will switch back to zero when the incoming signal drops to a level below the value set in the window. </p>
+  <h2>Display Box</h2>
+  <p>Displays the set level limit in units. Range: -64 to +64 units. </p>
+  <h2>Level Limit Knob</h2>
+  <p>Set the level limit for the comparison with the knob. Range: -64 to +64 units. </p>
+  <h2>A</h2>
+  <p>The blue control signal input. Patch the signal to be compared to the selected value. </p>
+  <h2>Out</h2>
+  <p>Signal: Logic. </p>
+</module>
+<module component-id="m89">
+  <h2>CompareAB</h2>
+  <p>This module produces a high logic signal by comparing two control signals. If the value of a signal appearing at the A input equals, or is greater than the value of a signal appearing at the B input, the module produces a high logic signal. The logic signal will remain high for as long as the incoming control signals meet the condition. </p>
+  <h2>A, B</h2>
+  <p>The two blue control signal inputs. </p>
+  <h2>A&gt;=B</h2>
+  <p>The output. Signal: Logic. </p>
+</module>
+<module component-id="m69">
+  <h1>ClkDiv</h1>
+  <p>The Clock Divider module can be used for dividing incoming clock pulses by a factor set by you. The module transmits a high logic signal after it has received a user-defined number of signals containing high/low transitions. </p>
+  <h2>Clock</h2>
+  <p>Connect an incoming signal to this yellow input. </p>
+  <h2>Rst</h2>
+  <p>Any high logic signal appearing at this yellow input will reset the counter in the Clock divider. </p>
+  <h2>Divider Display Box</h2>
+  <p>Displays the set denumerator. Range 1-128. </p>
+  <h2>Divider</h2>
+  <p>Set the desired division with the buttons, 1-128. If you want to divide the MIDI clock (which transmits 24 pulses for each quarter note from the clock output on the MIDI Global module) to 16 pulses at a 4/4 time signature, use the division of 6. If you want to use 8 note triplets (12 pulses for one bar of 4/4), divide the clock by 8. Range: 1 to 128. </p>
+  <h2>Output</h2>
+  <p>Signal: Logic. </p>
+</module>
+<module component-id="m77">
+  <h1>ClkDivFix</h1>
+  <p>The Fixed Clock Divider module divides an incoming clock signal to three fixed resulting signals. This provides you with an easy way of extracting 8 note, 8 note-triplets and 16th note clock pulses from the MIDI clock. </p>
+  <h2>Midi Cl</h2>
+  <p>The yellow clock input of the module. </p>
+  <h2>Rst</h2>
+  <p>Any high logic signal appearing at this input will reset the counter in the module. </p>
+  <p>8 </p>
+  <p>The output where 24 incoming pulses are divided to 2 pulses. Signal: Logic. </p>
+  <p>T8 </p>
+  <p>The output where 24 incoming pulses are divided to 3 pulses. Signal: Logic. </p>
+  <p>16 </p>
+  <p>The output where 24 incoming pulses are divided to 4 pulses. Signal: Logic. </p>
+</module>
+<module component-id="m17">
+  <h1>EventSeq</h1>
+  <p>This is a trigger sequencer. Each step can send two separate logic pulses on the two separate outputs. Activate a step by clicking on one or more of the 32 available trigger buttons. </p>
+  <h2>Clk</h2>
+  <p>This is the yellow input for the clock pulses. These pulses will advance the sequencer one step for each pulse. </p>
+  <h2>Rst</h2>
+  <p>This is a yellow input where a high logic signal will reset the sequencer (force it to step 1 again). The restart isn’t performed until the next the clock pulse is received at the Clk input. This guarantees perfect timing. </p>
+  <h2>Snc</h2>
+  <p>This yellow output transmits a high logic signal whenever a sequence starts from step 1. </p>
+  <p>Signal: Logic. </p>
+  <h2>Clr</h2>
+  <p>Pressing this button will reset every trigger button in the two rows. </p>
+  <h2>Loop Button</h2>
+  <p>If the loop mode is on, the Event sequencer will automatically restart from step 1 after the last step. If the loop mode is off, the sequencer will stop at the last step. </p>
+  <h2>Step</h2>
+  <p>Set the last step in the sequence. The sequencer will return to step 1 if loop mode is on, or stop if loop mode is off. Set the last step with the buttons. Range: 1 to 128 steps. </p>
+  <h2>Link</h2>
+  <p>This yellow output transmits a high logic signal whenever the Event sequencer goes beyond step number 16. This is used for linking several Event sequencers in series. See more about linking at the end of this chapter. </p>
+  <p>Signal: Logic. </p>
+  <h2>Trigger Buttons</h2>
+  <p>Click on the buttons to make the sequencer send a pulse each time it passes the step. Note that the two Trigger Button rows work parallel on the two different outputs. </p>
+  <h2>G Buttons</h2>
+  <p>Toggle between the trigger and the gate mode with these buttons. In the trigger mode, every step transmits its own logic signal, at a 50% duration cycle. In the gate mode, two or more adjacent activated steps will mix into a “longer" logic signal. </p>
+  <h2>Out</h2>
+  <p>Signal: Logic. </p>
+</module>
+<module component-id="m91">
+  <h1>CtrlSeq</h1>
+  <p>This is a Control Sequencer which sends one control signal value for each step. </p>
+  <h2>Clk</h2>
+  <p>This is the yellow input for the clock pulses. These pulses will advance the sequencer one step for each pulse. </p>
+  <h2>Rst</h2>
+  <p>This is a yellow input where a high logic signal will reset the sequencer (force it to step 1 again). The restart isn’t performed until the next the clock pulse is received at the Clk input. This guarantees perfect timing. </p>
+  <h2>Snc</h2>
+  <p>This yellow output transmits a high logic signal whenever a sequence starts from step 1. </p>
+  <p>Signal: Logic. </p>
+  <h2>Loop</h2>
+  <p>If the loop mode is on, the Control sequencer will automatically restart from step 1 after the last step. If the loop mode is off, the sequencer will stop at the last step. </p>
+  <h2>Step</h2>
+  <p>This sets the last step in the sequence. The sequencer will return to step 1 if loop mode is on, or stop if loop mode is off. Set the last step with the buttons. Range: 1 to 128 steps. </p>
+  <h2>Clr</h2>
+  <p>Pressing this button will reset all control values to 0. </p>
+  <h2>Rnd</h2>
+  <p>This produces a random set of control signal values for each of the 16 steps. </p>
+  <h2>Sliders</h2>
+  <p>You set the control signal level of each step by moving the vertical slider or clicking the arrow buttons that appear below each slider when you move the cursor over it. Note that when you click-hold to move the slider, the cursor becomes invisible. Range: +/- 64 in bipolar mode and 0-64 in unipolar mode (see below). </p>
+  <h2>Link</h2>
+  <p>This yellow output transmits a high logic signal whenever the Control sequencer goes beyond step </p>
+  <p>number 16. This is used for linking several Control sequencers in series. See more about linking at the end of this chapter. </p>
+  <p>Signal: Logic. </p>
+  <h2>Uni</h2>
+  <p>Selects uni- or bipolar control signals of the output of the Control sequencer. </p>
+  <h2>Out</h2>
+  <p>Signal: Unipolar or Bipolar. </p>
+</module>
+<module component-id="m15">
+  <h1>NoteSeqA</h1>
+  <p>This is a Note Sequencer which sends one bipolar control signal value for each step. It also sends a logic gate signal for each step on a separate output. </p>
+  <h2>Clk</h2>
+  <p>This is the yellow input for the clock pulses. These pulses will advance the sequencer one step for each pulse. </p>
+  <h2>Rst</h2>
+  <p>This is a yellow input where a high logic signal will reset the sequencer to step 1. The restart isn’t performed until the next the clock pulse is received at the Clk input. This guarantees perfect timing. </p>
+  <h2>Snc</h2>
+  <p>This yellow output transmits a logic signal at the high level whenever a sequence starts from step 1. </p>
+  <p>Signal: Logic. </p>
+  <h2>Clr</h2>
+  <p>Pressing this button will reset all the control values to 0. </p>
+  <h2>Loop</h2>
+  <p>If the loop mode is on, the Note Sequencer will automatically restart from step 1 after the last step. If the loop mode is off, the sequencer will stop at the last step. </p>
+  <h2>Step</h2>
+  <p>This sets the last step in the sequence. The sequencer will return to step 1 if loop mode is on, or stop if loop mode is off. Set the last step with the buttons. Range: 1 to 128 steps. </p>
+  <h2>Record Button</h2>
+  <p>Activating the record function enables you to use the keyboard or incoming MIDI messages to program the steps in the sequence. Pressing a key will advance the edit point to the next step. The control signal from the keyboard will be present at the sequencer output. When the sequencer reaches step 16, the record function will be deactivated and the sequencer will return to step 1. The sequencer may be sequencing while you program the steps, if the Stop selector is in the Go position. You can move the edit point back and forth by using the arrow keys beneath the Stop button. The edit point can also be selected by clicking on a step LED.</p>
+  <h2>Stop</h2>
+  <p>Activating Stop stops the sequencer module, even if it is receiving a clock pulse at the Clk input. If you activate the record function when the sequencer is stopped, it may be programmed in a step mode fashion. Activating Go will put the sequencer back under the influence of a clock, connected to the Clk input. </p>
+  <h2>&lt; &gt;</h2>
+  <p>Use these buttons to scroll through the steps. </p>
+  <h2>Sliders</h2>
+  <p>You set the control signal level of each step by moving the vertical slider or clicking the arrow buttons that appear below each slider when you move the cursor over it. Note that when you click-hold to move the slider, the cursor becomes invisible. Range: +/- 64. </p>
+  <h2>Link</h2>
+  <p>This yellow output transmits a high logic signal whenever the Note Sequencer goes beyond step number 16. This is used for linking several Note Sequencers in series. See more about linking at the end of this chapter. </p>
+  <p>Signal: Logic. </p>
+  <h2>GClk</h2>
+  <p>This output transmits a high logic signal when the sequencer moves from one step to another. If the sequencer is stopped and you scroll manually through the steps, the Gclk will transmit one logic signal for each step, even if you scroll backwards. It will also transmit a logic signal when you are recording with the keyboard, if the Stop selector is in the stop position. </p>
+  <p>Signal: Logic. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+<module component-id="m90">
+  <h1>NoteSeqB</h1>
+  <p>This is a Note Sequencer with one bipolar control value for each step and a grid pattern for easy note editing. It also sends a logic gate signal for each step on a separate output. If you move the cursor over the grid, it becomes a magnifying glass with a + sign next to it. Clicking in the grid will zoom in, and Ctrl[PC]/Alt[Mac]-clicking will zoom out. Choose an overview from 1 to 6 octaves. </p>
+  <h2>Clk</h2>
+  <p>This is the yellow input for the clock pulses. These pulses will advance the sequencer one step for each pulse. </p>
+  <h2>Rst</h2>
+  <p>This is a yellow input where a high logic signal will reset the sequencer to step 1. The restart isn’t performed until the next the clock pulse is received at the Clk input. This guarantees perfect timing. </p>
+  <h2>Clr</h2>
+  <p>Pressing this button will reset all the note values to 0. </p>
+  <h2>Rnd</h2>
+  <p>This will produce a random set of control signal values for each of the 16 steps. The values generated will be inside the boundaries of the visible grid. </p>
+  <h2>Snc</h2>
+  <p>This output transmits a high logic signal whenever a sequence starts from step 1. </p>
+  <p>Signal: Logic. </p>
+  <h2>Loop</h2>
+  <p>If the loop mode is on, the Note Sequencer will automatically restart from step 1 after the last step. If the loop mode is off, the sequencer will stop at the last step. </p>
+  <h2>Step</h2>
+  <p>This sets the last step in the sequence. The sequencer will return to step 1 if loop mode is on, or stop if loop mode is off. Set the last step with the buttons. Range: 1 to 128 steps. </p>
+  <h2>Record Button</h2>
+  <p>Activating the record function enables you to use the keyboard or incoming MIDI messages to program the steps in the sequence. Pressing a key will advance the edit point to the next step. The control signal from the keyboard will be present at the sequencer output. When the sequencer reaches step 16, the record function will be deactivated and the sequencer will return to step 1. The sequencer may be sequencing while you program the steps, if the Stop selector is in the Go position. You can move the edit point back and forth by using the arrow keys beneath the Stop button. The edit point can also be selected by clicking on a step LED. </p>
+  <h2>Stop</h2>
+  <p>Activating Stop stops the sequencer module, even if it is receiving a clock pulse at the Clk input. If you activate the record function when the sequencer is stopped, it may be programmed in a step mode fashion. Activating Go will put the sequencer back under the influence of a clock, connected to the Clk input. </p>
+  <h2>&lt; &gt;</h2>
+  <p>Use these buttons to scroll through the steps. </p>
+  <h2>Control Signal Arrow Buttons</h2>
+  <p>You set the control signal value for each step in the sequence with the arrow buttons below each step. If you move the cursor over the grid, it becomes a magnifying glass. Clicking in the grid will zoom in, and Ctrl[PC]/Alt[Mac]-clicking will zoom out. Choose an overview from 1 to 6 octaves. </p>
+  <h2>Grid Position Scroll Bar</h2>
+  <p>With the scroll bar to the right, you move the grid up or down in the window. You can also use the up and down arrow buttons to move the grid. The guide lines in the grid indicates the “E" notes of a six octave range. If you move the cursor over the grid, it becomes a magnifying glass. Clicking in the grid will zoom in, and Ctrl[PC]/Alt[Mac]-clicking will zoom out. Choose an overview from 1 to 6 octaves. </p>
+  <h2>Link</h2>
+  <p>This yellow output transmits a high logic signal whenever the Note Sequencer goes beyond step number 16. This is used for linking several Note Sequencers in series. See more about linking at the end of this chapter. </p>
+  <p>Signal: Logic. </p>
+  <h2>GClk</h2>
+  <p>This output transmits a high logic signal when the sequencer moves from one step to another. If the sequencer is stopped and you scroll manually through the steps, the Gclk will transmit one logic signal for each step, even if you scroll backwards. It will also transmit a logic signal when you are recording with the keyboard, if the Stop selector is in the stop position. </p>
+  <p>Signal: Logic. </p>
+  <h2>Out</h2>
+  <p>Signal: Bipolar. </p>
+</module>
+</module-documentation>

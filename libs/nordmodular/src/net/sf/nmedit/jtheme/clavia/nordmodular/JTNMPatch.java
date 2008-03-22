@@ -217,7 +217,6 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
             else if (action == HELP)
             {
                 putValue(NAME, "Help");
-                setEnabled(false);
             }
             else if (action == COLOR)
             {
@@ -236,10 +235,17 @@ public class JTNMPatch extends JTPatch implements Transferable, PropertyChangeLi
             
             String command = e.getActionCommand();
             if (command == RENAME)
+            {
                 throw new UnsupportedOperationException("command not supported: "+command);
+            }
             else if (command == HELP)
-                throw new UnsupportedOperationException("command not supported: "+command);
-            else setColor();
+            {
+                module.showHelpFor(module.getModule());
+            }
+            else 
+            {
+                setColor();
+            }
         }
         
         private void setColor()
