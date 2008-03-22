@@ -1,13 +1,13 @@
-package net.sf.nmedit.jpatch.nomad;
+package net.sf.nmedit.patchmodifier.nomad;
 
 import javax.swing.JFrame;
 
 import net.sf.nmedit.nomad.core.swing.document.Document; 
 
 import net.sf.nmedit.jpatch.PPatch;
-import net.sf.nmedit.jpatch.randomizer.Mutator;
 import net.sf.nmedit.nomad.core.swing.document.DocumentEvent;
 import net.sf.nmedit.nomad.core.swing.document.DocumentListener;
+import net.sf.nmedit.patchmodifier.mutator.Mutator;
 
 public class MutatorController implements DocumentListener
 {
@@ -41,6 +41,7 @@ public class MutatorController implements DocumentListener
 	public void documentAdded(DocumentEvent e) {
 		ensureMutatorCreated();
 		PPatch patch = (PPatch) e.getDocument().getProperty("patch");
+		// TODO addPatch is not called for already existing documents
 		mutator.addPatch(patch);
 		mutator.selectPatch(patch);
 	}

@@ -1,4 +1,4 @@
-package net.sf.nmedit.jpatch.nomad;
+package net.sf.nmedit.patchmodifier.nomad;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,6 +36,7 @@ public class InstallerService implements InitService
             
         });
         mlPatch.add(mlMutator);
+        RandomizerTools.sharedInstance().install();
     }
 
     public void shutdown()
