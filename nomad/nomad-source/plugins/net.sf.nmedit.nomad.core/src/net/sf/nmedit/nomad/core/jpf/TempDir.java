@@ -37,7 +37,7 @@ public class TempDir
         this.plugin = plugin;
     }
     
-    protected static File getBaseDir() {
+    public static File getBaseDir() {
     	File base = null;
         if (Platform.isFlavor(Platform.OS.MacOSFlavor)) {
         	String userPath = System.getProperty("user.home");

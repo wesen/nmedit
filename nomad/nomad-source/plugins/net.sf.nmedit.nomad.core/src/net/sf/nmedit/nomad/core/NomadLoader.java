@@ -22,12 +22,11 @@
  */
 package net.sf.nmedit.nomad.core;
 
-import java.awt.Dimension;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -41,20 +40,22 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-import javax.swing.JFrame;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.MetalTheme;
 
 import net.sf.nmedit.nmutils.Platform;
+import net.sf.nmedit.nmutils.properties.RootSystemProperties;
+import net.sf.nmedit.nmutils.properties.SystemProperties;
+import net.sf.nmedit.nmutils.properties.SystemPropertyFactory;
 import net.sf.nmedit.nomad.core.i18n.LocaleConfiguration;
 import net.sf.nmedit.nomad.core.jpf.JPFServiceInstallerTool;
 import net.sf.nmedit.nomad.core.menulayout.MenuBuilder;
 import net.sf.nmedit.nomad.core.menulayout.MenuLayout;
-import net.sf.nmedit.nomad.core.misc.NMUtilities;
 import net.sf.nmedit.nomad.core.service.ServiceRegistry;
 import net.sf.nmedit.nomad.core.service.initService.InitService;
+import net.sf.nmedit.nomad.core.utils.NomadPropertyFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -73,7 +74,6 @@ import com.jgoodies.looks.plastic.PlasticTheme;
 public class NomadLoader
 {
 
-    public static final String NOMAD_PROPERTIES="nomad.properties";
     public static final String NOMAD_FRAME_BOUNDS="nomad.frame.bounds";
     public static final String NOMAD_CURRENT_LOCALE="nomad.locale.current";
     
@@ -93,10 +93,14 @@ public class NomadLoader
         progress.setProgress(0.1f);
         // now we read all property files
         // 1. nomad.properties
-        final Properties nomadProperties = new Properties();
-        getProperties(nomadProperties, NOMAD_PROPERTIES);
+        final Properties nProperties = new Properties();
+        getProperties(nProperties, Nomad.getCorePropertiesFile());
+       
+        RootSystemProperties sproperties = new RootSystemProperties(nProperties);
+        SystemPropertyFactory.sharedInstance().setFactory(new NomadPropertyFactory(sproperties));
+        
         // 1.2 init locale
-        initLocale(nomadProperties);
+        initLocale();
         // 1.4 menu layout configuration
         InputStream mlIn = null;
         try
@@ -160,8 +164,6 @@ public class NomadLoader
        // SwingUtilities.invokeLater(run);
 
         Nomad nomad = new Nomad(plugin,menuLayout);
-        getPreferredWindowBounds(nomad.getWindow(), nomadProperties);
-
         return nomad;
     }
     
@@ -284,72 +286,23 @@ public class NomadLoader
                 new PluginManager.PluginLocation.        });
     }
 */
-    private static boolean getProperties(Properties p, String location)
+    private static boolean getProperties(Properties p, File file)
     {
-        InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream(location);
+        if (file == null)
+            return false;
         
-        boolean success = false;
-        if (in != null)
+        InputStream in;
+        try
         {
-            in = new BufferedInputStream(in);
-            try
-            {
-                p.load(in);
-                success = true;
-                in.close();
-            }
-            catch (IOException e)
-            {
-                // ignore
-            }
-        }
-        return success;
-    }
-/*
-    private static boolean writeProperties(Properties p, String location, String comments)
-    {
-        boolean success = false;
-        if (location != null)
+            in = new BufferedInputStream(new FileInputStream(file));
+            p.load(in);
+            in.close();
+            return true;
+        } 
+        catch (IOException e)
         {
-            try
-            {
-                OutputStream out = new BufferedOutputStream(new FileOutputStream(location));
-                try
-                {
-                    p.store(out, comments);
-                    success = true;
-                    out.flush();
-                    out.close();
-                }
-                catch (IOException e)
-                {
-                    // ignore
-                }
-            }
-            catch (FileNotFoundException e)
-            {
-                // ignore
-            }
+            return false;
         }
-        return success;
-    }
-    */
-    private void getPreferredWindowBounds(JFrame target, Properties properties)
-    {
-        Rectangle b = NMUtilities.getRectangleProperty(properties, NOMAD_FRAME_BOUNDS, null);
-        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        if (b == null)
-        {
-            b = new Rectangle(0, 0, 640, 480);
-            NMUtilities.fitRectangle(b, screen);
-            NMUtilities.centerRectangle(b, screen);
-        }
-        else
-        {
-            
-        }
-     
-        target.setBounds(b);
     }
 
     private void initLookAndFeel(String lafClassName, String themeClassName, String defaultLafOnPlatform)
@@ -469,9 +422,13 @@ public class NomadLoader
         
     }
     
-    private void initLocale(Properties properties)
+    private void initLocale()
     {
-        String locale = properties.getProperty(NOMAD_CURRENT_LOCALE);
+        SystemProperties properties =
+            SystemPropertyFactory.getProperties(NomadLoader.class);
+        
+        properties.defineStringProperty(NOMAD_CURRENT_LOCALE, null);
+        String locale = properties.stringValue(NOMAD_CURRENT_LOCALE);
         if (locale != null)
         {
             for (Locale l:Locale.getAvailableLocales())
