@@ -16,17 +16,8 @@
 			<export prefix="*"/>
 		</library>
 		 -->
-		<library id="additional-classes" path="classes.jar" type="code">
-			<export prefix="*"/>
-		</library>
 		<library id="jpatch" path="lib/jpatch.jar" type="code" >
 		<export prefix="*"/>
 		</library>
 	</runtime>
-	<extension plugin-id="net.sf.nmedit.nomad.core"
-	  point-id="Service" id="JPatchInstaller">
-		<parameter id="class" value="net.sf.nmedit.jpatch.nomad.InstallerService"/>
-		<parameter id="service" value="net.sf.nmedit.nomad.core.service.initService.InitService"/>
-		<parameter id="description" value="JPatch Installer"/>
-	</extension>
 </plugin>

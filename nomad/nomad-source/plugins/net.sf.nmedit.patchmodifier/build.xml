@@ -1,9 +1,9 @@
-<project name="jpatch" basedir=".">
+<project name="patchmodifier" basedir=".">
   <typedef classpath="../../../jpf/jpf-tools.jar:../../libs/jpf.jar" 
   	resource="org/java/plugin/tools/ant/jpf-tasks.properties" />
 
   <!-- jpf-plugin-id -->
-  <property name="plugin_id" value="net.sf.nmedit.jpatch" />
+  <property name="plugin_id" value="net.sf.nmedit.patchmodifier" />
   <!-- jpf-specific: compiled java classes -->
   <property name="classes" value="classes" />
   <!-- src directory -->
