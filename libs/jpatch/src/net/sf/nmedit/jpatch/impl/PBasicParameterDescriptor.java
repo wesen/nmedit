@@ -99,6 +99,15 @@ public class PBasicParameterDescriptor extends PBasicDescriptor
         return defaultValue;
     }
 
+    public String getDisplayValue(int value)
+    {
+        Formatter f = getFormatter();
+        if (f == null)
+            return Integer.toString(value);
+        else
+            return f.getString(this, value);
+    }
+    
     public String getDisplayValue(PParameter parameter, int value)
     {
         Formatter f = getFormatter();

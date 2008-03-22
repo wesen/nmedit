@@ -22,6 +22,7 @@ import org.mozilla.javascript.Function;
 
 import net.sf.nmedit.jpatch.Formatter;
 import net.sf.nmedit.jpatch.PParameter;
+import net.sf.nmedit.jpatch.PParameterDescriptor;
 
 public class JSFormatter implements Formatter
 {
@@ -37,6 +38,16 @@ public class JSFormatter implements Formatter
     }
     
     public String getString(PParameter parameter, int value)
+    {
+        return getString(value);
+    }
+
+    public String getString(PParameterDescriptor parameter, int value)
+    {
+        return getString(value);
+    }
+
+    private String getString(int value)
     {
         if (args == null)
             args = new Object[1];

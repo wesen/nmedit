@@ -95,6 +95,7 @@ public interface PParameterDescriptor extends PDescriptor
      * then the minimum value or larger then the maximum value.
      */
     String getDisplayValue(PParameter parameter, int value);
+    String getDisplayValue(int value);
 
     /**
      * Returns the parent module descriptor.

@@ -27,5 +27,6 @@ public interface Formatter
 {
 
     String getString(PParameter parameter, int value);
+    String getString(PParameterDescriptor parameter, int value);
     
 }
