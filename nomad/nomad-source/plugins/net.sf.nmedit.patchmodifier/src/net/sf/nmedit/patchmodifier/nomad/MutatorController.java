@@ -38,18 +38,30 @@ public class MutatorController implements DocumentListener
         mutator.getFrame().setVisible(true);
     }
 
+    private PPatch getPatch(Document d)
+    {
+        Object maybePatch = d.getProperty("patch");
+        if (maybePatch != null && maybePatch instanceof PPatch)
+            return (PPatch) maybePatch;
+        return null;
+    }
+    
 	public void documentAdded(DocumentEvent e) {
 		ensureMutatorCreated();
-		PPatch patch = (PPatch) e.getDocument().getProperty("patch");
-		// TODO addPatch is not called for already existing documents
-		mutator.addPatch(patch);
-		mutator.selectPatch(patch);
+		PPatch patch = getPatch(e.getDocument());
+		if (patch != null)   
+		{
+    		// TODO addPatch is not called for already existing documents
+    		mutator.addPatch(patch);
+    		mutator.selectPatch(patch);
+		}
 	}
 
 	public void documentRemoved(DocumentEvent e){
 		ensureMutatorCreated();
-		PPatch patch = (PPatch) e.getDocument().getProperty("patch");
-		mutator.removePatch(patch);	
+        PPatch patch = getPatch(e.getDocument());
+        if (patch != null)
+		    mutator.removePatch(patch);	
 		
 	}
 
@@ -58,7 +70,7 @@ public class MutatorController implements DocumentListener
 		Document d = e.getDocument();
 		
 		if (d != null) {
-			PPatch patch = (PPatch) d.getProperty("patch");
+			PPatch patch = getPatch(d);
 			mutator.selectPatch(patch);	
 		} else {
 			mutator.selectPatch(null);
