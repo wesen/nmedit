@@ -27,7 +27,10 @@ import net.sf.nmedit.jpatch.event.PParameterListener;
  * 
  * @author Christian Schneider
  */
-
+/**
+ * @author distrinet
+ *
+ */
 public interface PParameter extends PComponent
 {
     
