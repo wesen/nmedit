@@ -67,8 +67,8 @@
 	<entry entryPoint="edit">
 		<entry entryPoint="history" flat="true">
 			<entry entryPoint="undo">
-				<icon type="enabledIcon" src="&tango;/actions/edit_undo.png"/>
-				<icon type="disabledIcon" src="&tango;/actions/edit_undo.png"/>
+				<icon type="enabledIcon" src="&tango;/actions/edit-undo.png"/>
+				<icon type="disabledIcon" src="&tango;/actions/edit-undo.png"/>
 			</entry>
 			<entry entryPoint="redo">
 				<icon type="enabledIcon" src="&tango;/actions/edit-redo.png" />
