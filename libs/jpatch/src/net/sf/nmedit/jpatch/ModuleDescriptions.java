@@ -31,6 +31,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.ref.SoftReference;
@@ -41,6 +42,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.xml.sax.InputSource;
 
 import net.sf.nmedit.jpatch.impl.PBasicModuleDescriptor;
 import net.sf.nmedit.jpatch.js.JSContext;
@@ -60,10 +65,68 @@ public class ModuleDescriptions implements Iterable<PModuleDescriptor>
     private SoftReference<Map<ImageSource, Image>> imageCacheReference;
     private JSContext jscontext;
     
+    private DocumentationSrc documentationSrc;
+    
+    final class DocumentationSrc
+    {
+        private String lang;
+        private String src;
+        private Map<String, String> documentation = null;
+        private boolean triedParsing = false;
+
+        public DocumentationSrc(String lang, String src)
+        {
+            this.lang = lang;
+            this.src = src;
+        }
+        
+        void loadDocumentation()
+        {
+            if (triedParsing) return;
+            
+            triedParsing = true;
+            ClassLoader loader =
+                ModuleDescriptions.this.getModuleDescriptionsClassLoader();
+            if (loader == null)
+                loader = ModuleDescriptions.this.getClass().getClassLoader();
+            
+            try
+            {
+                InputStream is = loader.getResourceAsStream(src);
+                documentation = PModuleDocumentationParser.build(new InputSource(is));
+            }
+            catch (Exception e)
+            {
+                Log log = LogFactory.getLog(DocumentationSrc.class);
+                if (log.isErrorEnabled())
+                    log.trace(e);
+            }
+        }
+
+        public String getDocumentationForKey(Object componentId)
+        {
+            loadDocumentation();
+            return documentation != null ? documentation.get(componentId) : null;
+        }
+    }
+    
+    
     public ModuleDescriptions(ClassLoader resourceClassLoader)
     {
         this.loader = resourceClassLoader;
         jscontext = new JSContext();
+    }
+    
+    public String getDocumentationFor(PModuleDescriptor module)
+    {
+        if (documentationSrc == null)
+            return null;
+        return documentationSrc.getDocumentationForKey(module.getComponentId());
+    }
+    
+    void setDocumentationSrc(String lang, String src)
+    {
+        this.documentationSrc = new DocumentationSrc(lang, src);
     }
     
     public JSContext getJSContext()
@@ -86,6 +149,12 @@ public class ModuleDescriptions implements Iterable<PModuleDescriptor>
     protected ClassLoader getResourceClassLoader()
     {
         return loader == null ? getClass().getClassLoader() : loader;
+    }
+    
+
+    public URL getImageURL(ImageSource source)
+    {
+        return getResourceClassLoader().getResource(source.getSource());
     }
     
     public Image getImage(ImageSource source)
