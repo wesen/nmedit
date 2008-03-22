@@ -126,6 +126,7 @@ public class ModuleDescriptionsParser
         static final int light = 29;
         static final int doc = 30;
         static final int script = 31;
+        static final int documentation = 32;
 
         Locator locator = null;
         
@@ -162,7 +163,8 @@ public class ModuleDescriptionsParser
           "mail",
           "light",
           "doc",
-          "script"
+          "script",
+          "documentation"
         };
         
         static String[] attributes = new String[]
@@ -378,6 +380,15 @@ public class ModuleDescriptionsParser
                     docElement = true;
                     docText.setLength(0);
                     break;
+                
+                case documentation:
+                {
+                    String lang = attributes.getValue("lang");
+                    String src = attributes.getValue("src");
+                    moduleDescriptions.setDocumentationSrc(lang, src);
+                    break;
+                }
+                    
                 case script:
                 {
                     
