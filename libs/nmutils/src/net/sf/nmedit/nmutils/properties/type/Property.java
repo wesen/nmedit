@@ -167,6 +167,8 @@ public abstract class Property<E>
         public java.awt.Rectangle parseString(java.lang.String stringValue)
                 throws IllegalArgumentException
         {
+            if (stringValue == null)
+                return null;
             int[] values = parseIntList(stringValue, 4);
             if (values == null)
                 throw new IllegalArgumentException("invalid argument:"+stringValue);
@@ -232,6 +234,8 @@ public abstract class Property<E>
         public java.awt.Dimension parseString(java.lang.String stringValue)
                 throws IllegalArgumentException
         {
+            if (stringValue == null)
+                return null;
             int[] values = parseIntList(stringValue, 2);
             if (values == null)
                 throw new IllegalArgumentException("invalid argument:"+stringValue);
@@ -261,6 +265,8 @@ public abstract class Property<E>
         public java.awt.Point parseString(java.lang.String stringValue)
                 throws IllegalArgumentException
         {
+            if (stringValue == null)
+                return null;
             int[] values = parseIntList(stringValue, 2);
             if (values == null)
                 throw new IllegalArgumentException("invalid argument:"+stringValue);
