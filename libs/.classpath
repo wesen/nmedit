@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="jnmprotocol/test"/>
+	<classpathentry kind="src" path="jnmprotocol2/src"/>
+	<classpathentry kind="src" path="jnmprotocol/src"/>
+	<classpathentry kind="src" path="jpatch/src"/>
+	<classpathentry kind="src" path="jpatch/test"/>
+	<classpathentry kind="src" path="jpdl/src"/>
+	<classpathentry kind="src" path="jpdl/test"/>
+	<classpathentry kind="src" path="jpdl2/src"/>
+	<classpathentry kind="src" path="jpdl2/test"/>
+	<classpathentry kind="src" path="jsynth/src"/>
+	<classpathentry kind="src" path="jtheme/src"/>
+	<classpathentry kind="src" path="nmutils/src"/>
+	<classpathentry kind="src" path="nmutils/test"/>
+	<classpathentry kind="src" path="nordmodular/src"/>
+	<classpathentry kind="src" path="patchmodifier/src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/commons-logging/commons-logging.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/cssparser/cssparser.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/jdom/jdom.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/log4j/log4j.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/rhino/js.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/xerces-j/resolver.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/xerces-j/serializer.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/xerces-j/xercesImpl.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/junit/junit-4.13-rc-1.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/batik/batik-awt-util.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/batik/batik-bridge.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/batik/batik-css.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/batik/batik-dom.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/batik/batik-ext-original.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/batik/batik-ext.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/batik/batik-extension.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/batik/batik-gvt.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/batik/batik-parser.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/batik/batik-rasterizer.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/batik/batik-script.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/batik/batik-svg-dom.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/batik/batik-svggen.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/batik/batik-swing.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/batik/batik-transcoder.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/batik/batik-util.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="java_depencies/batik/batik-xml.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="nordmodular/data"/>
+	<classpathentry kind="output" path="jsynth/build"/>
+</classpath>
