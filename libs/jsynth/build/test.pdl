@@ -1,0 +1,18 @@
+
+Sysex % 1 :=
+	0xf0:8 0x33:8 0:1 cc:5 slot:2 0x06:8
+	#cc=0x16 => ACK$data
+	0xf7:8
+	;
+
+ACK % 1 :=
+	0:1 pid1:7 0:1 0x7f:7 0:1 pid2:7 0:1 checksum:7
+	;
+
+Variable % 1 :=
+	1:8 Greedy$data 2*tail:4/15 6:8
+	;
+
+Greedy % 1 :=
+	data:8 ?Greedy$next
+	;
