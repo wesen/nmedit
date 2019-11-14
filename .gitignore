@@ -1,1 +1,13 @@
-libs/nmutils/build/
+libs/*/build/
+libs/*/dist/
+nomad/nomad-dist/
+nomad/nomad-source/plugins/
+nomad/nomad-source/plugin-tmp/
+nomad/nomad-source/libs/
+nomad/nomad-source/*/build/
+nomad/nomad-source/*/dist/
+*.class
+nomad/jpf-boot-error.txt
+nomad/nomad-source/logfile.txt
+nomad/nomad-source/nomad.jar
+nomad/project-utils/project-utils.jar
