@@ -13,8 +13,14 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="nomad-source/libs/jpf.jar"/>
 	<classpathentry kind="lib" path="nomad-source/libs/jpf-boot.jar"/>
-	<classpathentry kind="lib" path="nomad-source/libs/commons-logging-1.2.1.1.jar"/>
 	<classpathentry kind="lib" path="nomad-source/plugins/com.jgoodies.forms/lib/forms-1.1.0.jar"/>
 	<classpathentry kind="lib" path="nomad-source/plugins/com.jgoodies.looks/lib/looks-2.1.4.jar"/>
+	<classpathentry kind="lib" path="nomad-source/libs/commons-logging.jar"/>
+	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.nmutils/lib/nmutils.jar"/>
+	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.nordmodular/lib/nordmodular.jar"/>
+	<classpathentry kind="lib" path="/nmlibs/jpatch/dist/lib/jpatch.jar"/>
+	<classpathentry kind="lib" path="nomad-dist/plugins/net.sf.nmedit.jtheme/lib/jtheme.jar"/>
+	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.nordmodular/lib/jnmprotocol2.jar"/>
+	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.jpdl2/lib/jpdl2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
