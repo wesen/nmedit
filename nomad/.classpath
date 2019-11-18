@@ -24,5 +24,6 @@
 	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.jpdl2/lib/jpdl2.jar"/>
 	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.jpatch/lib/jpatch.jar"/>
 	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.patchmodifier/lib/patchmodifier.jar"/>
+	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.jsynth/lib/jsynth.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
