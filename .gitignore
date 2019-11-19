@@ -1,5 +1,6 @@
 libs/*/build/
 libs/*/dist/
+nomad/osx-dist/
 nomad/nomad-dist/
 nomad/nomad-source/plugins/
 nomad/nomad-source/plugin-tmp/
