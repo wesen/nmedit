@@ -19,11 +19,11 @@
 	<classpathentry kind="lib" path="nomad-source/libs/commons-logging.jar"/>
 	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.nmutils/lib/nmutils.jar"/>
 	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.nordmodular/lib/nordmodular.jar"/>
-	<classpathentry kind="lib" path="nomad-dist/plugins/net.sf.nmedit.jtheme/lib/jtheme.jar"/>
 	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.nordmodular/lib/jnmprotocol2.jar"/>
 	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.jpdl2/lib/jpdl2.jar"/>
 	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.jpatch/lib/jpatch.jar"/>
 	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.patchmodifier/lib/patchmodifier.jar"/>
 	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.jsynth/lib/jsynth.jar"/>
+	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.jtheme/lib/jtheme.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
