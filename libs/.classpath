@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="jnmprotocol/test"/>
 	<classpathentry kind="src" path="jnmprotocol2/src"/>
+	<classpathentry kind="src" path="jpdl/test"/>
 	<classpathentry kind="src" path="jnmprotocol/src"/>
+	<classpathentry kind="src" path="jpdl/src"/>
+	<classpathentry kind="src" path="jnmprotocol2/test"/>
 	<classpathentry kind="src" path="jpatch/src"/>
 	<classpathentry kind="src" path="jpatch/test"/>
-	<classpathentry kind="src" path="jpdl/src"/>
-	<classpathentry kind="src" path="jpdl/test"/>
 	<classpathentry kind="src" path="jpdl2/src"/>
 	<classpathentry kind="src" path="jpdl2/test"/>
 	<classpathentry kind="src" path="jsynth/src"/>

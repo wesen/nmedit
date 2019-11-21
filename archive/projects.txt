@@ -1,0 +1,12 @@
+Archived Projects:
+
+jMod        First NM Editor GUI (0.1)
+patchloader First NM Patch Loader
+java-nmcom  First Java NM Communication
+nmedit      Second NM Editor, above three projects combined (0.2)
+
+Archived Code:
+
+libs        Libraries and Plugins for Nomad
+Nomad       Universal Plugin-based Synth Editor, NM synth support only (0.3)
+            The Nomad directory will contain archived code, not the complete project
