@@ -17,13 +17,13 @@
 	<classpathentry kind="lib" path="nomad-source/plugins/com.jgoodies.forms/lib/forms-1.1.0.jar"/>
 	<classpathentry kind="lib" path="nomad-source/plugins/com.jgoodies.looks/lib/looks-2.1.4.jar"/>
 	<classpathentry kind="lib" path="nomad-source/libs/commons-logging.jar"/>
-	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.nmutils/lib/nmutils.jar"/>
-	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.nordmodular/lib/nordmodular.jar"/>
-	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.nordmodular/lib/jnmprotocol2.jar"/>
-	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.jpdl2/lib/jpdl2.jar"/>
-	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.jpatch/lib/jpatch.jar"/>
-	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.patchmodifier/lib/patchmodifier.jar"/>
-	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.jsynth/lib/jsynth.jar"/>
-	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.jtheme/lib/jtheme.jar"/>
+	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.nmutils/lib/nmutils.jar" sourcepath="/nmlibs/nmutils/src"/>
+	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.nordmodular/lib/nordmodular.jar" sourcepath="/nmlibs/nordmodular/src"/>
+	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.nordmodular/lib/jnmprotocol2.jar" sourcepath="/nmlibs/jnmprotocol2/src"/>
+	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.jpdl2/lib/jpdl2.jar" sourcepath="/nmlibs/jpdl2/src"/>
+	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.jpatch/lib/jpatch.jar" sourcepath="/nmlibs/jpatch/src"/>
+	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.patchmodifier/lib/patchmodifier.jar" sourcepath="/nmlibs/patchmodifier/src/"/>
+	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.jsynth/lib/jsynth.jar" sourcepath="/nmlibs/jsynth/src"/>
+	<classpathentry kind="lib" path="nomad-source/plugins/net.sf.nmedit.jtheme/lib/jtheme.jar" sourcepath="/nmlibs/jtheme/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
