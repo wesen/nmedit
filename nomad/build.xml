@@ -77,6 +77,7 @@ Note:
     		<fileset dir="${nomad-source}/libs">
 	            <include name="jpf-boot.jar"/>
 	            <include name="nomad-splash.jar"/>
+	            <include name="coremidi4j-1.2.jar"/>
     	    </fileset>
         </classpath>
     </java>
@@ -87,7 +88,7 @@ Note:
   	<jar destfile="${nomad-source}/nomad.jar">
   	    <manifest>
   	        <attribute name="Main-class" value="org.java.plugin.boot.Boot"/>
-  	        <attribute name="Class-Path" value="libs/nomad-splash.jar libs/jpf-boot.jar"/>
+  	        <attribute name="Class-Path" value="libs/nomad-splash.jar libs/jpf-boot.jar libs/coremidi4j-1.2.jar"/>
   	    </manifest>
   	</jar>
   </target>
@@ -165,8 +166,6 @@ Note:
   	  <param name="plugin_id" value="net.sf.nmedit.nordmodular" />
   	</antcall>
   	
-  	<!-- dont include miniworks plugin -->
-  	<delete includeEmptyDirs="true" dir="${dist}/plugins/net.sf.nmedit.waldorf.miniworks4pole" />
   	<!-- delete unused files -->
   	<delete includeEmptyDirs="true" dir="${dist}/plugins/net.sf.nmedit.nomad.core/forms" />
   	<delete includeEmptyDirs="true" dir="${dist}/plugins/net.sf.nmedit.jsynth/forms" />
@@ -198,7 +197,8 @@ Note:
   	<delete file="${dist}/libs/NOTICE_commons-logging.txt" />
   	
   	<!-- validate dist -->
-    <antcall inheritAll="false" target="validate-dist"></antcall>
+  	<!-- IH: Turned off for coremidi4j, as this is not Java 5 compatible. Is there an 8 equivalent? -->
+    <!-- antcall inheritAll="false" target="validate-dist"></antcall-->
   	
   </target>
   

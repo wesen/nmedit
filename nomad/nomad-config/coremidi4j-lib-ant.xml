@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="coremidi4j-lib" basedir="." default="info">
+
+    <!-- the base path -->
+    <property name="base-path" value="../../"/>
+    <!-- the path to the referenced project -->
+    <property name="build-path" value="${base-path}/libs/java_depencies/coremidi4j/"/>
+    <!-- path to the plugin folder -->
+    <property name="target-path" value="${base-path}/nomad/nomad-source/libs" />
+
+    <!-- 
+         target info:   default target
+         description:   prints supported targets, build will fail if no target is specified
+    -->
+    <target name="info" description="info">
+<fail>
+No target specified.
+  Following targets are available:
+  install - installs the referenced library in the plugin folder
+  uninstall - uninstalls the library from the plugin folder
+</fail>
+    </target>
+
+    <!-- 
+            installs the referenced library
+    -->
+    <target name="install" description="install libarary">
+      <echo>installing library</echo>
+      <copy todir="${target-path}/" overwrite="true">
+        <fileset dir="${build-path}/"/>
+      </copy>
+    </target>
+
+    <!-- 
+            uninstalls the referenced library
+    -->
+    <target name="uninstall" description="uninstall libarary">
+      <echo>uninstalling library</echo>
+      <delete file="${target-path}/coremidi4j.jar" />
+    </target>
+
+</project>
